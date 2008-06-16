@@ -28,6 +28,16 @@ namespace spatial_index {
     rtree_leaf(const boost::shared_ptr< rtree_node<Point,Value> > &parent, const unsigned int &L) 
       : rtree_node<Point,Value>(parent, 0, 0, 0), L_(L), level_(0) {}
 
+    /// query method
+    virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r)
+    {
+      for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	if(overlaps(it->first, e)) {
+	  r.push_back(it->second);
+	}
+      }
+    }
+
     /// compute bounding box for this leaf
     virtual geometry::box<Point> compute_box(void) const
     {

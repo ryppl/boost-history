@@ -9,6 +9,8 @@
 
 #include <geometry/area.hpp>
 
+#include "helpers.hpp"
+
 #include "rtree_node.hpp"
 #include "rtree_leaf.hpp"
 
@@ -88,8 +90,9 @@ namespace spatial_index {
 
     virtual std::deque<Value> find(const geometry::box<Point> &r)
     {
-	std::deque<Value> result;
-	return result;
+      std::deque<Value> result;
+      root_->find(r, result);
+      return result;
     }
 
     virtual unsigned int elements(void) { return element_count; }
