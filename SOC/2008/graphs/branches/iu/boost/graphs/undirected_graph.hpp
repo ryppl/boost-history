@@ -29,6 +29,7 @@
 #include "edge_vector.hpp"
 #include "edge_list.hpp"
 #include "edge_set.hpp"
+#include "edge_iterator.hpp"
 
 #include "adjacency_iterator.hpp"
 
@@ -39,6 +40,7 @@ template <
     typename EdgeStore>
 class undirected_graph
 {
+    typedef undirected_graph<VertexProps, EdgeProps, VertexStore, EdgeStore> this_type;
 public:
     typedef VertexProps vertex_properties;
     typedef EdgeProps edge_properties;
@@ -82,7 +84,7 @@ public:
 
     // Because edges are "distributed" among vertices, the edge iterators are
     // somewhat special.
-    typedef none edge_iterator;
+    typedef basic_edge_iterator<this_type> edge_iterator;
     typedef std::pair<edge_iterator, edge_iterator> edge_range;
 
     // FIXME: This is a bit hacky, but without constrained members, we need a key
