@@ -1,4 +1,4 @@
-//               -- basic_gateway_fwd.hpp --
+//                     -- write.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,14 +6,18 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_BASIC_GATEWAY_FWD_HPP_INCLUDED__
-#define CGI_BASIC_GATEWAY_FWD_HPP_INCLUDED__
+#ifndef CGI_WRITE_HPP_INCLUDED
+#define CGI_WRITE_HPP_INCLUDED
+
+#include <boost/asio/write.hpp>
 
 namespace cgi {
+ namespace common {
 
-  template<typename>
-  class basic_gateway;
+  using boost::asio::write;
+  using boost::asio::async_write;
 
+ } // namespace common
 } // namespace cgi
 
-#endif // CGI_BASIC_GATEWAY_FWD_HPP_INCLUDED__
+#endif // CGI_WRITE_HPP_INCLUDED

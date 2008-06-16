@@ -13,32 +13,27 @@
 
 #include <string>
 #include <cstdlib>
+///////////////////////////////////////////////////////////
 #include <boost/assert.hpp>
 #include <boost/regex.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/algorithm/string/find.hpp>
-
+///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/basic_client.hpp"
-#include "boost/cgi/role_type.hpp"
-#include "boost/cgi/status_type.hpp"
-#include "boost/cgi/detail/extract_params.hpp"
-#include "boost/cgi/detail/save_environment.hpp"
+#include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
-
+#include "boost/cgi/common/status_type.hpp"
 #include "boost/cgi/common/form_parser.hpp"
 #include "boost/cgi/common/request_base.hpp"
+#include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/detail/save_environment.hpp"
 
 namespace cgi {
-
- namespace detail {
-
-
- } // namespace detail
-
+// **FIXME** Wrong namespace (should be cgi::detail?).
 
   template<typename RequestImplType>
   class cgi_service_impl_base
@@ -87,7 +82,7 @@ namespace cgi {
      */
     bool is_open(implementation_type& impl)
     {
-      return impl.status() >= aborted;
+      return impl.status() >= common::aborted;
     }
 
     /// Return the connection associated with the request
@@ -99,9 +94,11 @@ namespace cgi {
 
     int request_id(implementation_type& impl) { return 1; }
 
-    int close(implementation_type& impl, http::status_code& http_s, int status)
+    // **FIXME** should return error_code
+    int close(implementation_type& impl, common::http::status_code& http_s
+      , int status, boost::system::error_code& ec)
     {
-      impl.status() = closed;
+      impl.status() = common::closed;
       impl.http_status() = http_s;
       return status;
     }
@@ -114,12 +111,12 @@ namespace cgi {
       load(implementation_type& impl, bool parse_stdin
           , boost::system::error_code& ec)
     {
-      detail::save_environment(impl.env_vars());
-      std::string const& cl = impl.env_vars()["CONTENT_LENGTH"];
+      detail::save_environment(env_vars(impl.vars_));
+      std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
       impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
       impl.client_.bytes_left() = impl.characters_left_;
 
-      std::string const& request_method = impl.env_vars()["REQUEST_METHOD"];
+      std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
       if (request_method == "GET")
         this->parse_get_vars(impl, ec);
       else
@@ -129,13 +126,13 @@ namespace cgi {
       if (ec) return ec;
 
       this->parse_cookie_vars(impl, ec);
-      impl.status() = loaded;
+      impl.status() = common::loaded;
 
       //BOOST_ASSERT(impl.status() >= loaded);
 
       return ec;
     }
-
+/*
     // TODO: use `greedy`
     std::string
       form(implementation_type& impl, const std::string& name
@@ -166,7 +163,7 @@ namespace cgi {
 			if (rm == "POST")
 			  return POST(impl, ec);
 		}
-
+*/
     role_type
       get_role(implementation_type& impl)
     {
@@ -174,8 +171,17 @@ namespace cgi {
     }
 
     /// Set the http status (this does nothing for aCGI)
-    void set_status(implementation_type& impl, http::status_code&)
+    void set_status(implementation_type& impl, common::http::status_code&)
     {
+    }
+
+    /// Read some data from the client.
+    template<typename MutableBufferSequence>
+    std::size_t
+      read_some(implementation_type& impl, const MutableBufferSequence& buf
+               , boost::system::error_code& ec)
+    {
+      return impl.client_.read_some(buf,ec);
     }
 
   protected:

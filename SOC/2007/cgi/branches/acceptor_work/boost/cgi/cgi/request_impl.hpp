@@ -11,15 +11,16 @@
 
 #include <map>
 #include <string>
-#include <boost/noncopyable.hpp>
+///////////////////////////////////////////////////////////
 #include <boost/shared_ptr.hpp>
-
-#include "boost/cgi/http/status_code.hpp"
-#include "boost/cgi/basic_client.hpp"
-#include "boost/cgi/connections/stdio.hpp"
-#include "boost/cgi/role_type.hpp"
-#include "boost/cgi/status_type.hpp"
+#include <boost/noncopyable.hpp>
+///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
+#include "boost/cgi/basic_client.hpp"
+#include "boost/cgi/common/role_type.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/connections/stdio.hpp"
+#include "boost/cgi/common/status_type.hpp"
 #include "boost/cgi/detail/cgi_request_impl_base.hpp"
 
 // Make this ProtocolService-independent
@@ -38,10 +39,12 @@ namespace cgi {
    * restricted but if someone really wants to copy the data, then they can.
    */
   class cgi_request_impl
-    : public cgi_request_impl_base<common::stdio_connection>
+    : public detail::cgi_request_impl_base<common::stdio_connection>
   {
   public:
-    typedef ::cgi::common::basic_client<common::stdio_connection, tags::cgi> client_type;
+    typedef common::basic_client<
+                common::stdio_connection, common::tags::cgi
+            > client_type;
 
     /// Constructor
     /**
@@ -50,12 +53,12 @@ namespace cgi {
      */
     template<typename ProtocolService>
     cgi_request_impl(ProtocolService& pserv)
-      : cgi_request_impl_base<connection_type>(pserv)
+      : detail::cgi_request_impl_base<connection_type>(pserv)
     {
     }
 
     cgi_request_impl()
-      : cgi_request_impl_base<connection_type>()
+      : detail::cgi_request_impl_base<connection_type>()
     {
     }
 

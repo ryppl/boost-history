@@ -9,28 +9,44 @@
 #ifndef CGI_DETAIL_FORM_PARSER_IPP_INCLUDED__
 #define CGI_DETAIL_FORM_PARSER_IPP_INCLUDED__
 
+#include "boost/cgi/error.hpp"
+#include "boost/cgi/basic_client.hpp"
+#include "boost/cgi/detail/url_decode.hpp"
 #include "boost/cgi/common/form_parser.hpp"
 
 namespace cgi {
  namespace detail {
 
-    template<typename T>
-    form_parser<T>::form_parser
-    (
-      implementation_type& impl
+    template<typename T> BOOST_CGI_INLINE
+    form_parser<T>::form_parser (
+        implementation_type& impl
     )
       : impl_(impl)
       , bytes_left_(impl.client_.bytes_left_)
       //, stdin_data_read_(impl.stdin_data_read_)
       , offset_(0)
+      , callback_(NULL)
     {
     }
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
+    form_parser<T>::form_parser (
+        implementation_type& impl
+      , callback_type const& callback
+    )
+      : impl_(impl)
+      , bytes_left_(impl.client_.bytes_left_)
+      //, stdin_data_read_(impl.stdin_data_read_)
+      , offset_(0)
+      , callback_(callback)
+    {
+    }
+
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse(boost::system::error_code& ec)
     {
-      std::string content_type (impl_.env_vars()["CONTENT_TYPE"]);
+      std::string content_type (env_vars(impl_.vars_)["CONTENT_TYPE"]);
 
       BOOST_ASSERT(!content_type.empty());
 
@@ -40,14 +56,18 @@ namespace cgi {
         parse_url_encoded_form(ec);
       }
       else
+      if (boost::algorithm::ifind_first(content_type,
+            "multipart/form-data"))
       {
         parse_multipart_form(ec);
       }
+      else
+        return ec = error::invalid_form_type;
 
       return ec;
     }
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse_url_encoded_form(boost::system::error_code& ec)
     {
@@ -88,13 +108,13 @@ namespace cgi {
             str.append(1, ' ');
             break;
         case ' ': // skip spaces
-            continue;
+            break;
         case '=': // the name is complete, now get the corresponding value
             name.swap(str);
             break;
         case '&': // we now have the name/value pair, so save it
             // **FIXME** have to have .c_str() ?
-            impl_.post_vars()[name.c_str()] = str;
+            post_vars(impl_.vars_)[name.c_str()] = str;
             str.clear();
             name.clear();
            break;
@@ -105,13 +125,13 @@ namespace cgi {
       // save the last param (it won't have a trailing &)
       if( !name.empty() )
           // **FIXME** have to have .c_str() ?
-          impl_.post_vars()[name.c_str()] = str;
+          post_vars(impl_.vars_)[name.c_str()] = str;
 
       return ec;
     }
 
     /// Parse a multipart form.
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse_multipart_form(boost::system::error_code& ec)
     {
@@ -132,7 +152,7 @@ namespace cgi {
     }
 
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse_form_part(boost::system::error_code& ec)
     {
@@ -143,7 +163,7 @@ namespace cgi {
       return ec;
     }
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse_form_part_data(boost::system::error_code& ec)
     {
@@ -194,7 +214,7 @@ namespace cgi {
              // = boost::range_iterator<;
              = std::make_pair(matches[1].first, matches[1].second);
             // **FIXME**
-            impl_.post_vars()[form_parts_.back().name.c_str()] = matches[1];
+            post_vars(impl_.vars_)[form_parts_.back().name.c_str()] = matches[1];
             //std::ofstream of("c:/cc/log/post_vars.log");
             //of<< "var == " << matches[1] << std::endl;
             offset_ = offset + matches[0].length();
@@ -209,7 +229,9 @@ namespace cgi {
           }
           else
           {
-            std::size_t bytes_read = impl_.client_.read_some(prepare(64), ec);
+            std::size_t bytes_read
+                = //callback_(prepare(64), ec);
+                            impl_.client_.read_some(prepare(64), ec);
 
             if (bytes_read == 0 && impl_.client_.bytes_left_ == 0) // **FIXME**
             {
@@ -229,7 +251,7 @@ namespace cgi {
       return ec;
     }
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse_form_part_meta_data(boost::system::error_code& ec)
     {
@@ -335,7 +357,9 @@ namespace cgi {
          }
 
         }else{
-          bytes_read = impl_.client_.read_some(prepare(64), ec);
+          bytes_read
+            = //callback_(prepare(64), ec);
+                        impl_.client_.read_some(prepare(64), ec);
           if (ec)
             return ec;
           if (++runs > 40)
@@ -349,7 +373,7 @@ namespace cgi {
       return ec;
     }
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::move_to_start_of_first_part(boost::system::error_code& ec)
     {
@@ -374,7 +398,10 @@ namespace cgi {
       std::size_t bytes_read = 0;
       for(;;)
       {
-        bytes_read = impl_.client_.read_some(prepare(32), ec);
+        bytes_read
+          = //callback_(prepare(32), ec);
+            impl_.client_.read_some(prepare(32), ec);
+
         if (ec || (bytes_read == 0))
           return ec;
         buffer_iter begin(impl_.buffer_.begin());// + offset);
@@ -406,12 +433,12 @@ namespace cgi {
       return ec;
     }
 
-    template<typename T>
+    template<typename T> BOOST_CGI_INLINE
     boost::system::error_code
       form_parser<T>::parse_boundary_marker(boost::system::error_code& ec)
     {
       // get the meta-data appended to the content_type
-      std::string content_type_(impl_.env_vars()["CONTENT_TYPE"]);
+      std::string content_type_(env_vars(impl_.vars_)["CONTENT_TYPE"]);
       //BOOST_ASSERT(!content_type.empty());
 
       boost::regex re("; ?boundary=\"?([^\"\n\r]+)\"?");

@@ -11,39 +11,37 @@
 
 #include "boost/cgi/acgi/service.hpp"
 #include "boost/cgi/basic_client.hpp"
-#include "boost/cgi/detail/cgi_request_impl_base.hpp"
+#include "boost/cgi/common/status_type.hpp"
 #include "boost/cgi/connections/async_stdio.hpp"
+#include "boost/cgi/detail/cgi_request_impl_base.hpp"
 
 // Make this ProtocolService-independent
 
 namespace cgi {
+ namespace acgi {
 
-  // Forward declaration
-  class acgi_service_impl;
-
-  class acgi_request_impl
-    : public cgi_request_impl_base<common::async_stdio_connection>
+  class request_impl
+    : public detail::cgi_request_impl_base<common::async_stdio_connection>
   {
   public:
-    typedef acgi_service    protocol_service_type;
-    typedef common::async_stdio_connection connection_type;
+    typedef ::cgi::acgi::service            protocol_service_type;
+    typedef common::async_stdio_connection  connection_type;
     typedef
       ::cgi::common::basic_client<
-        connection_type, tags::acgi
+        connection_type, common::tags::acgi
       >
     client_type;
 
-    acgi_request_impl()
-      : cgi_request_impl_base<connection_type>()
+    request_impl()
+      : detail::cgi_request_impl_base<connection_type>()
     {
     }
 
     protocol_service_type* service_;
-  protected:
-    //acgi_request_impl(); // private default constructor
-    friend class acgi_service_impl;
   };
 
+ } // namespace acgi
 } // namespace cgi
 
 #endif // CGI_ASYNC_CGI_REQUEST_IMPL_HPP_INCLUDED__
+

@@ -12,13 +12,11 @@
 #include "boost/cgi/detail/push_options.hpp"
 
 #include <boost/utility/enable_if.hpp>
-
-//#include "is_async.hpp"
-#include "boost/cgi/io_service.hpp"
+///////////////////////////////////////////////////////////
+#include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/common/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
-//#include "service_selector.hpp"
 
 namespace cgi {
  namespace common {
@@ -52,7 +50,7 @@ namespace cgi {
     //{
     //}
 
-    request_service(::cgi::io_service& ios)
+    request_service(::cgi::common::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
       , service_impl_(boost::asio::use_service<service_impl_type>(ios))
     {

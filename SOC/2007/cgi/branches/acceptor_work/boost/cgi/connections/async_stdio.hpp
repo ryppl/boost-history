@@ -13,15 +13,85 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/asio/posix/stream_descriptor.hpp>
+///////////////////////////////////////////////////////////
+#include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/import/io_service.hpp"
 
-#include "boost/cgi/connections/stdio.hpp"
-#include "boost/cgi/io_service.hpp"
-#include "boost/cgi/tags.hpp"
+#if ! defined(BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR)
+#    include "boost/cgi/connections/stdio.hpp"
+#endif // defined(BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR)
 
 namespace cgi {
  namespace common {
 
-  // Asynchronous access to stdio
+#if defined(BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR)
+
+  template<>
+  class basic_connection<tags::async_stdio>
+  {
+  public:
+    typedef basic_connection<tags::async_stdio>    type;
+    typedef boost::shared_ptr<type>                pointer;
+    typedef boost::asio::posix::stream_descriptor  next_layer_type;
+
+    basic_connection(common::io_service& ios)
+      : in_(ios, 0)
+      , out_(ios, 1)
+    {
+    }
+
+    bool is_open() const
+    {
+      return in_.is_open() && out_.is_open();
+    }
+    
+    void close()
+    {
+      in_.close();
+      out_.close();
+    }
+
+    static pointer create(::cgi::common::io_service& ios)
+    {
+      return pointer(new basic_connection<tags::async_stdio>(ios));
+    }
+
+    template<typename MutableBufferSequence>
+    std::size_t read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
+    {
+      return in_.read_some(buf, ec);
+    }
+
+    template<typename MutableBufferSequence, typename Handler>
+    void async_read_some(const MutableBufferSequence& buf, Handler handler)
+    {
+      in_.async_read_some(buf, handler);
+    }
+
+    template<typename ConstBufferSequence>
+    std::size_t write_some(const ConstBufferSequence& buf, boost::system::error_code& ec)
+    {
+      return out_.write_some(buf, ec);
+    }
+
+    template<typename ConstBufferSequence, typename Handler>
+    void async_write_some(const ConstBufferSequence& buf, Handler handler)
+    {
+      out_.async_write_some(buf, handler);
+    }
+
+    boost::asio::posix::stream_descriptor in_;
+    boost::asio::posix::stream_descriptor out_;
+  };
+
+#else
+
+  /// Simple, pseudo-asynchronous access to stdio.
+  /**
+   * This will only appear asynchronous if the io_service is being run
+   * in multiple threads. This doesn't spawn any hidden threads.
+   */
   template<>
   class basic_connection<tags::async_stdio>
     : public basic_connection<tags::stdio>
@@ -31,7 +101,7 @@ namespace cgi {
     typedef basic_connection<tags::async_stdio> type;
     typedef boost::shared_ptr<type>             pointer;
 
-    basic_connection(::cgi::io_service& ios)
+    basic_connection(common::io_service& ios)
       : basic_connection<tags::stdio>()
       , io_service_(ios)
     {
@@ -47,7 +117,7 @@ namespace cgi {
       is_open_ = false;
     }
 
-    static pointer create(::cgi::io_service& ios)
+    static pointer create(::cgi::common::io_service& ios)
     {
       return pointer(new basic_connection<tags::async_stdio>(ios));
     }
@@ -119,8 +189,10 @@ namespace cgi {
     }
 
   private:
-    ::cgi::io_service& io_service_;
+    ::cgi::common::io_service& io_service_;
   };
+
+#endif // defined(BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR)
 
   typedef basic_connection<tags::async_stdio> async_stdio_connection;
 

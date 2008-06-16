@@ -16,10 +16,12 @@
 //
 
 #include <fstream>
+///////////////////////////////////////////////////////////
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options/environment_iterator.hpp>
-
-#include <boost/cgi/fcgi.hpp>
+///////////////////////////////////////////////////////////
+#include "boost/cgi/fcgi.hpp"
+#include "boost/cgi/common/header.hpp"
 
 using namespace std;
 using namespace boost::fcgi;
@@ -28,8 +30,8 @@ using namespace boost::fcgi;
 #define LOG_FILE "/var/www/log/fcgi_echo.txt"
 
 //
-// This function writes the title and map contents to the ostream in an
-// HTML-encoded format (to make them easier on the eye).
+// Write the title and map contents to the ostream in an HTML-encoded
+// format (to make them easier on the eye).
 //
 template<typename Map, typename OStream>
 void format_map(OStream& os, Map& m, const std::string& title)
@@ -41,6 +43,15 @@ void format_map(OStream& os, Map& m, const std::string& title)
   {
     os<< "<b>" << i->first << "</b> = <i>" << i->second << "</i><br />";
   }
+}
+
+std::size_t process_id()
+{
+#if defined(BOOST_WINDOWS)
+  return _getpid();
+#else
+  return getpid();
+#endif
 }
 
 /// This function accepts and handles a single request.
@@ -71,10 +82,11 @@ int handle_request(Request& req, LogStream& of)
   // You can also stream text to a response object. 
       << "Hello there, universe!<p />"
       << "Request id = " << req.id() << "<p />"
+      << "Process id = " << process_id() << "<p />"
       << "<form method=POST enctype='multipart/form-data'>"
-          "<input type=text name=name value='" << req.POST("name") << "' />"
+          "<input type=text name=name value='" << req[post]["name"] << "' />"
           "<br />"
-          "<input type=text name=hello value='" << req.POST("hello") << "' />"
+          "<input type=text name=hello value='" << req[post]["hello"] << "' />"
           "<br />"
           "<input type=file name=user_file />"
           "<input type=hidden name=cmd value=multipart_test />"
@@ -85,16 +97,17 @@ int handle_request(Request& req, LogStream& of)
   //
   // Use the function defined above to show some of the request data.
   //
-  format_map(resp, req[env_data], "Environment Variables");
-  format_map(resp, req[get_data], "GET Variables");
-  format_map(resp, req[post_data], "POST Variables");
-  format_map(resp, req[cookie_data], "Cookie Variables");
+  format_map(resp, req[env], "Environment Variables");
+  format_map(resp, req[get], "GET Variables");
+  format_map(resp, req[post], "POST Variables");
+  format_map(resp, req[cookies], "Cookie Variables");
 
   //
   // Response headers can be added at any time before send/flushing it:
   //
-  resp<< "<content-length == " << content_length(resp.content_length())
-      << content_length(resp.content_length()) << ">";
+  resp<< "<content-length == "
+      << content_length(resp)
+      << content_length(resp) << ">";
 
   //
   //

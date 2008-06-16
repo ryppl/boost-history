@@ -11,15 +11,13 @@
 #include "boost/cgi/detail/push_options.hpp"
 
 #include <boost/utility/enable_if.hpp>
-
-//#include "is_async.hpp"
-#include "boost/cgi/io_service.hpp"
+///////////////////////////////////////////////////////////
+#include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
-#include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
-//#include "service_selector.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/fcgi/acceptor_service_impl.hpp"
+#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
 
@@ -31,7 +29,7 @@ namespace cgi {
    * which takes a ProtocolService (**LINK**). If the protocol isn't async then
    * the class can be used without a ProtocolService.
    */
-  template<typename Protocol_ = fcgi_>
+  template<typename Protocol_ = common::fcgi_>
   class fcgi_request_acceptor_service
     : public detail::service_base<fcgi_request_acceptor_service<Protocol_> >
   {
@@ -40,7 +38,8 @@ namespace cgi {
 
     typedef fcgi::acceptor_service_impl<>               service_impl_type;
     typedef service_impl_type::implementation_type      implementation_type;
-    typedef typename implementation_type::protocol_type          protocol_type;
+    typedef
+      typename implementation_type::protocol_type       protocol_type;
     typedef implementation_type::endpoint_type          endpoint_type;
     typedef typename service_impl_type::native_type     native_type;
     //typedef basic_protocol_service<protocol_type>       protocol_service_type;
@@ -48,7 +47,7 @@ namespace cgi {
     /// The unique service identifier
     //static boost::asio::io_service::id id;
 
-    fcgi_request_acceptor_service(::cgi::io_service& ios)
+    fcgi_request_acceptor_service(common::io_service& ios)
       : detail::service_base<fcgi_request_acceptor_service<protocol_type> >(ios)
       , service_impl_(ios)
     {
@@ -164,6 +163,17 @@ namespace cgi {
       return service_impl_.assign(impl, protocol, native_acceptor, ec);
     }
 
+    service_impl_type::native_type
+    native(implementation_type& impl)
+    {
+      return service_impl_.native(impl);
+    }
+
+    bool
+    is_cgi(implementation_type& impl)
+    {
+      return service_impl_.is_cgi(impl);
+    }
   public:
     service_impl_type service_impl_;
   };

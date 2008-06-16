@@ -1,4 +1,4 @@
-//                     -- streambuf.hpp --
+//              -- common/status_type.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,20 +6,24 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_STREAMBUF_HPP_INCLUDED__
-#define CGI_STREAMBUF_HPP_INCLUDED__
-
-#include <boost/asio/streambuf.hpp>
+#ifndef CGI_COMMON_STATUS_TYPE_HPP_INCLUDED__
+#define CGI_COMMON_STATUS_TYPE_HPP_INCLUDED__
 
 namespace cgi {
  namespace common {
 
-  using boost::asio::streambuf;
+   enum status_type
+     { null
+     , unloaded
+     , activated
+     , loaded
+     , ok = loaded
+     , aborted
+     , closed
+     };
 
  } // namespace common
-
-   using common::streambuf;
-
 } // namespace cgi
 
-#endif // CGI_STREAMBUF_HPP_INCLUDED__
+#endif // CGI_COMMON_STATUS_TYPE_HPP_INCLUDED__
+

@@ -12,22 +12,20 @@
 #include "boost/cgi/detail/push_options.hpp"
 
 #include <boost/ref.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/bind.hpp>
-#include <boost/asio.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/asio.hpp> // **FIXME**
 #include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/system/error_code.hpp>
-
-//#include "is_async.hpp"
-#include "boost/cgi/io_service.hpp"
-#include "boost/cgi/detail/throw_error.hpp"
-#include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/basic_protocol_service_fwd.hpp"
-#include "boost/cgi/detail/service_base.hpp"
-//#include "service_selector.hpp"
+///////////////////////////////////////////////////////////
 #include "boost/cgi/fcgi/request.hpp"
+#include "boost/cgi/import/io_service.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
    
@@ -75,7 +73,7 @@ namespace cgi {
     * which takes a ProtocolService (**LINK**). If the protocol isn't async then
     * the class can be used without a ProtocolService.
     */
-   template<typename Protocol_ = ::cgi::fcgi_>
+   template<typename Protocol_ = ::cgi::common::fcgi_>
    class acceptor_service_impl
      : public detail::service_base< ::cgi::fcgi::acceptor_service_impl<Protocol_> >
    {
@@ -128,7 +126,7 @@ namespace cgi {
        type::implementation_type::endpoint_type          endpoint_type;
  
 
-     explicit acceptor_service_impl(::cgi::io_service& ios)
+     explicit acceptor_service_impl(::cgi::common::io_service& ios)
        : detail::service_base< ::cgi::fcgi::acceptor_service_impl<Protocol_> >(ios)
        , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios))
        //, endpoint(boost::asio::ip::tcp::v4())
@@ -312,6 +310,26 @@ namespace cgi {
        return acceptor_service_.local_endpoint(impl.acceptor_, ec);
      }
 
+     native_type
+     native(implementation_type& impl)
+     {
+       return acceptor_service_.native(impl.acceptor_);
+     }
+
+     bool
+     is_cgi(implementation_type& impl)
+     {
+       boost::system::error_code ec;
+#if ! defined(BOOST_WINDOWS)
+       socklen_t len
+         = static_cast<socklen_t>(local_endpoint(impl,ec).capacity());
+       int ret = getpeername(native(impl), local_endpoint(impl,ec).data(), &len);
+       return ( ret != 0 && errno == ENOTCONN ) ? false : true;
+#else
+       return false;
+#endif
+     }
+ 
    public:
      template<typename CommonGatewayRequest, typename Handler>
      void check_for_waiting_request(implementation_type& impl

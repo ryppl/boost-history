@@ -13,33 +13,44 @@
 //
 
 #include <boost/cgi/fcgi.hpp>
+#include <boost/cgi.hpp>
 
 using namespace std;
 using namespace boost::fcgi;
+
+=======
+/// Handle a FastCGI request
+template<typename Acceptor>
+int handle_request(Acceptor& a)
+{
+  int ret = 0;
+  for (;;) // Handle requests until something goes wrong
+           // (an exception will be thrown).
+>>>>>>> .r46066
 
 int main()
 {
 try
 {
   service s;        // This becomes useful with async operations.
-  acceptor a(s);    // This is used to accept requests from the server.
-  request req(s);   // Our request.
-
-  for (;;) // Handle requests until something goes wrong
-           // (an exception will be thrown).
+  acceptor a(s);
+  
+  for (;;)
   {
-    a.accept(req);
-    response resp;    // A response object to make our lives easier.
-
-    // This is a minimal response. The content_type(...) may go before or after
-    // the response text.
-    resp<< content_type("text/plain")
-        << "Hello there, universe.";
-
-    resp.send(req.client());  // Send the response.
-    req.close(resp.status()); // Close the request (we can reuse this object now).
+    request req(s);   // Our request.
+  
+    for (;;) // Handle requests until something goes wrong
+             // (an exception will be thrown).
+    {
+      a.accept(req);
+      response resp;    // A response object to make our lives easier.
+      ret = handle_request(req, resp);
+      if (ret) break; // Use a new request if something went wrong.
+    }
+    if (!a.is_open()) break; // Quit completely if the acceptor bails out.
   }
-  return 0;
+
+  return ret;
 }
 catch(boost::system::system_error& err)
 {

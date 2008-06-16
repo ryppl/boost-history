@@ -10,13 +10,13 @@
 #define CGI_BASIC_REQUEST_ACCEPTOR_HPP_INCLUDED__
 
 #include <boost/noncopyable.hpp>
+#include <boost/asio/ip/tcp.hpp>
 #include <boost/system/error_code.hpp>
-
 #include <boost/asio/basic_io_object.hpp>
 #include <boost/asio/ip/basic_endpoint.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/cgi/basic_protocol_service.hpp>
+///////////////////////////////////////////////////////////
 #include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/common/basic_protocol_service.hpp"
 
 namespace cgi {
  namespace common {
@@ -277,6 +277,17 @@ namespace cgi {
       local_endpoint(boost::system::error_code& ec) const
     {
       return this->service.local_endpoint(this->implementation, ec);
+    }
+
+    native_type
+    native()
+    {
+      return this->service.native(this->implementation);
+    }
+
+    bool is_cgi()
+    {
+      return this->service.is_cgi(this->implementation);
     }
   };
 

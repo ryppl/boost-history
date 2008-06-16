@@ -16,83 +16,75 @@
 
 #include "boost/cgi/detail/push_options.hpp"
 
-#include <boost/noncopyable.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/assert.hpp>
-#include <boost/system/error_code.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/system/error_code.hpp>
 #include <boost/asio/basic_io_object.hpp>
-
-#include "boost/cgi/detail/throw_error.hpp"
+///////////////////////////////////////////////////////////
+// **FIXME** Half of these are probably useless
 #include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/request_base.hpp"
-#include "boost/cgi/role_type.hpp"
-#include "boost/cgi/common/source_enums.hpp"
-#include "boost/cgi/status_type.hpp"
-#include "boost/cgi/is_async.hpp"
-#include "boost/cgi/connection_base.hpp"
-#include "boost/cgi/http/status_code.hpp"
-#include "boost/cgi/request_service.hpp"
-#include "boost/cgi/basic_protocol_service_fwd.hpp"
-#include "boost/cgi/basic_request_fwd.hpp"
-#include "boost/cgi/basic_sync_io_object.hpp"
-#include "boost/cgi/basic_io_object.hpp"
 #include "boost/cgi/common/map.hpp"
+#include "boost/cgi/common/is_async.hpp"
+#include "boost/cgi/common/role_type.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/common/status_type.hpp"
+#include "boost/cgi/common/source_enums.hpp"
+#include "boost/cgi/fwd/basic_request_fwd.hpp"
+#include "boost/cgi/common/request_service.hpp"
+#include "boost/cgi/import/basic_io_object.hpp"
+#include "boost/cgi/detail/basic_sync_io_object.hpp"
+#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
  namespace common {
 
   /// The basic_request class, primary entry point to the library
   /**
-   * Note: This class is supposed to make simple use of the library easy.
-   * This comes with some restrictions, such as being noncopyable, and also
-   * providing copies of the meta-variables rather than references. This makes
-   * sure the internal data is protected.
-   * The underlying impl_type classes aren't like this (and as such aren't
-   * quite as 'safe' to use) but they may be more suited to certain needs.
+   * Note: By default, synchronous protocols (ie. cgi) auto-load AND parse
+   * STDIN,whereas async protocols don't.
    *
-   * Note: By default, synchronous protocols (ie. cgi) auto-load AND parse STDIN,
-   * whereas async protocols don't.
+   * Note: The alternative functions which take a boost::system::error_code are
+   * the non-throwing versions. Instead of a boost::system::system_error being
+   * thrown in case of an error, the passed error_code will be set to the value
+   * of the error, s.t. if (error) evaluates to true.`
    * 
    * Note: This class isn't thread safe: carrying around a mutex-per-request
    * seems prohibitively expensive. There could be functions which take a mutex
    * as an arguement and lock it. (Async calls could get messy if you need a
-   * protected request object)
-   *
-   * Note: From 10/07/07 this class is going to require a protocol_service be
-   * passed to it. This is good for FastCGI/SCGI and asynchronous CGI. A full
-   * specialisation of this class for sync CGI can be provided... The reasoning
-   * for this is that the added complexity for allowing a non-async CGI request
-   * to use the acceptor and this class doesn't seem worth it: it makes the
-   * whole library much simpler to do it this way.
-   */
+   * protected request object).
+  **/
   template<typename RequestService
           , typename ProtocolService
           , role_type Role
           , typename Allocator>
   class basic_request
-    : //public request_base
-     public boost::mpl::if_c<is_async<typename RequestService::protocol_type>::value
-                             , basic_io_object<RequestService>
-                             , basic_sync_io_object<RequestService>
-                             >::type
+    : public boost::mpl::if_c<
+                 is_async<typename RequestService::protocol_type>::type::value
+               , basic_io_object<RequestService>
+               , detail::basic_sync_io_object<RequestService>
+               >::type
   {
   public:
     typedef basic_request<RequestService, ProtocolService
                          , Role, Allocator >             type;
-    typedef ::cgi::common::map                                   map_type;
+    typedef ::cgi::common::map                           map_type;
     typedef RequestService                               service_type;
     typedef typename service_type::protocol_type         protocol_type;
     typedef ProtocolService                              protocol_service_type;
     typedef boost::shared_ptr<type>                      pointer;
     typedef typename RequestService::implementation_type implementation_type;
+    typedef typename implementation_type::char_type      char_type;
+    typedef typename implementation_type::string_type    string_type;
     typedef typename implementation_type::client_type    client_type;
 
 
     // Throws
     basic_request(bool load_now = true, bool parse_post = true)
-      : basic_sync_io_object<service_type>()
+      : detail::basic_sync_io_object<service_type>()
     {
       if (load_now) load(parse_post);//this->service.load(this->implementation, true, ec);
     }
@@ -101,7 +93,7 @@ namespace cgi {
     basic_request(boost::system::error_code& ec
                  , const bool load_now = true
                  , const bool parse_post = true)
-      : basic_sync_io_object<service_type>()
+      : detail::basic_sync_io_object<service_type>()
     {
       if (load_now) load(ec, parse_post);//this->service.load(this->implementation, true, ec);
     }
@@ -126,6 +118,7 @@ namespace cgi {
     }
 
     /// Make a new mutiplexed request from an existing connection.
+    // Throws.
     basic_request(implementation_type& impl)
       : basic_io_object<service_type>(impl.service_->io_service())
     {
@@ -137,6 +130,7 @@ namespace cgi {
     }
 
     /// Make a new mutiplexed request from an existing connection.
+    // Won't throw.
     basic_request(implementation_type& impl, boost::system::error_code& ec)
       : basic_io_object<service_type>(impl.service_->io_service())
     {
@@ -212,17 +206,20 @@ namespace cgi {
      *
      * @returns The value of program_status
      */
-    int close(http::status_code http_status = http::ok
+    int close(common::http::status_code http_status = http::ok
              , int program_status = 0)
     {
       //BOOST_ASSERT( request_status_ != status_type::ended );
 
       //this->service.set_status(this->implementation, http_status);
-      return this->service.close(this->implementation, http_status
-                                , program_status);
+      boost::system::error_code ec;
+      this->service.close(this->implementation, http_status,
+          program_status, ec);
+      detail::throw_error(ec);
+      return program_status;
     }
 
-    int close(http::status_code http_status
+    int close(common::http::status_code http_status
              , int program_status
              , boost::system::error_code& ec)
     {
@@ -290,252 +287,78 @@ namespace cgi {
     }
     */
 
-    /// Find the get meta-variable matching name
-    /**
-     * @throws `boost::system::system_error` if an error occurred. This may
-     * fail with `cgi::error::request_aborted` if the request has been aborted
-     * by the client.
-     */
-    std::string GET(const std::string& name)
+    /// Search through environment variables for the matching name
+    string_type var(string_type const& name, boost::system::error_code& ec)
+    {
+      return env_vars(this->implementation)[name.c_str()];
+    }
+
+    string_type var(string_type const& name)
     {
       boost::system::error_code ec;
-      std::string ret = this->service.GET(this->implementation, name, ec);
+      string_type ret (var(name, ec));
       detail::throw_error(ec);
       return ret;
-    }
-
-    /// Find the get meta-variable matching name
-    /**
-     * @param ec Set such that `(!ec == false)` if an error occurred. This may
-     * fail with `ec == cgi::error::request_aborted` if the request has been
-     * aborted by the client.
-     */
-    std::string GET(const std::string& name, boost::system::error_code& ec)
-    {
-      return this->service.GET(this->implementation, name, ec);
-    }
-
-    /// Find the post meta-variable matching name
-    /**
-     * @param greedy This determines whether more data can be read to find
-     * the variable. The default is true to cause least surprise in the common
-     * case of having not parsed any of the POST data.
-     *
-     * @throws `boost::system::system_error` if an error occurred. This may
-     * fail with `cgi::error::request_aborted` if the request has been aborted
-     * by the client.
-     */
-    std::string POST(const std::string& name, bool greedy = true)
-    {
-      boost::system::error_code ec;
-      std::string ret
-        = this->service.POST(this->implementation, name, ec, greedy);
-      detail::throw_error(ec);
-      return ret;
-    }
-
-    /**
-     * @param ec Set such that `(!ec == false)` if an error occurred. This may
-     * fail with `ec == cgi::error::request_aborted` if the request has been
-     * aborted by the client.
-     */
-    std::string POST(const std::string& name, boost::system::error_code& ec
-                          , bool greedy = true)
-    {
-      return this->service.POST(this->implementation, name, ec, greedy);
-    }
-
-    /// Find the form variable matching name
-    /**
-     * Depending on the request's request_method, either the GET or the POST
-     * meta-variables are searched.
-     *
-     * @throws `boost::system::system_error` if an error occurred. This may
-     * fail with `cgi::error::request_aborted` if the request has been aborted
-     * by the client.
-     */
-    std::string form(const std::string& name, bool greedy = true)
-    {
-      boost::system::error_code ec;
-      std::string ret = form(name, ec, greedy);
-      detail::throw_error(ec);
-      return ret;
-    }
-
-    /**
-     * @param ec Set such that `(!ec == false)` if an error occurred. This may
-     * fail with `ec == cgi::error::request_aborted` if the request has been
-     * aborted by the client.
-     */
-    std::string form(const std::string& name, boost::system::error_code& ec
-                         , bool greedy = true)
-    {
-      std::string rm(request_method());
-      if (rm == "GET")
-        return this->service.GET(this->implementation, name, ec);
-      else
-      if (rm == "POST")
-        return this->service.POST(this->implementation, name, ec, greedy);
-      else
-        return "";
-    }
-
-    /// Find the cookie meta-variable matching name
-    /**
-     * @throws `boost::system::system_error` if an error occurred. This may
-     * fail with `cgi::error::request_aborted` if the request has been aborted
-     * by the client.
-     */
-    std::string cookie(const std::string& name)
-    {
-      boost::system::error_code ec;
-      std::string ret
-        = this->service.cookie(this->implementation, name, ec);
-      detail::throw_error(ec);
-      return ret;
-    }
-
-    /// Find the cookie meta-variable matching name
-    /**
-     * @param ec Set such that `(!ec == false)` if an error occurred. This may
-     * fail with `ec == cgi::error::request_aborted` if the request has been
-     * aborted by the client.
-     */
-    std::string cookie(const std::string& name, boost::system::error_code& ec)
-    {
-      return this->service.cookie(this->implementation, name, ec);
-    }
-
-    /// Find the environment meta-variable matching name
-    /**
-     * @throws `boost::system::system_error` if an error occurred. This may
-     * fail with `cgi::error::request_aborted` if the request has been aborted
-     * by the client.
-     */
-    std::string env(const std::string& name)
-    {
-      boost::system::error_code ec;
-      std::string ret = this->service.env(this->implementation, name, ec);
-      detail::throw_error(ec);
-      return ret;
-    }
-
-    /// Find the environment meta-variable matching name
-    /**
-     * @param ec Set such that `(!ec == false)` if an error occurred. This may
-     * fail with `ec == cgi::error::request_aborted` if the request has been
-     * aborted by the client.
-     */
-    std::string env(const std::string& name, boost::system::error_code& ec)
-    {
-      return this->service.env(this->implementation, name, ec);
-    }
-
-    /// Search through all meta vars for the meta-variable matching name
-    /**
-     * The policy w.r.t. POST data (ie. whether it should all
-     * be read/parsed and included in this search or not) is 
-     * to be decided.
-     *
-     * Notes:
-     * One option is to parse everything, making this option
-     * very inefficient.
-     * Another is to leave this function as a 'lazy' search:
-     * it'll search with what it's got and no more. Then, also
-     * provide a meta_var_all() function which is greedy; the
-     * ugly/long name there to discourage use.
-     */
-    std::string var(std::string const& name, bool greedy = false)
-    {
-      boost::system::error_code ec;
-      std::string ret = var(name, ec, greedy);
-      return this->service.var(this->implementation, name, greedy);
-      std::string request_method( env("REQUEST_METHOD") );
-
-      std::string tmp;
-
-      // If it's not a POST request search meta_get first (to save time)
-      if (request_method.empty() || request_method == "GET")
-      {
-        tmp = GET(name);
-        if (!tmp.empty())
-          return tmp;
-      }
-
-      tmp = cookie(name);
-      if (!tmp.empty())
-	      return tmp;
-
-      tmp = env(name);
-      if (!tmp.empty())
-	      return tmp;
-
-      if (!request_method.empty() && request_method == "POST")
-      {
-        tmp = POST(name);
-        if (!tmp.empty())
-          return tmp;
-      }
-
-      tmp = GET(name);
-      return tmp.empty() ? "" : tmp;
     }
 
     // [helper-functions for the basic CGI 1.1 meta-variables.
-    std::string auth_type()
-    { return env("AUTH_TYPE"); }
+    string_type auth_type()
+    { return env_("AUTH_TYPE"); }
 
-    std::string content_length()
-    { return env("CONTENT_LENGTH"); }
+    string_type content_length()
+    { return env_("CONTENT_LENGTH"); }
 
-    std::string content_type()
-    { return env("CONTENT_TYPE"); }
+    string_type content_type()
+    { return env_("CONTENT_TYPE"); }
 
-    std::string gateway_interface()
-    { return env("GATEWAY_INTERFACE"); }
+    string_type gateway_interface()
+    { return env_("GATEWAY_INTERFACE"); }
 
-    std::string path_info()
-    { return env("PATH_INFO"); }
+    string_type path_info()
+    { return env_("PATH_INFO"); }
 
-    std::string path_translated()
-    { return env("PATH_TRANSLATED"); }
+    string_type path_translated()
+    { return env_("PATH_TRANSLATED"); }
 
-    std::string query_string()
-    { return env("QUERY_STRING"); }
+    string_type query_string()
+    { return env_("QUERY_STRING"); }
 
-    std::string remote_addr()
-    { return env("REMOTE_ADDR"); }
+    string_type remote_addr()
+    { return env_("REMOTE_ADDR"); }
 
-    std::string remote_host()
-    { return env("REMOTE_HOST"); }
+    string_type remote_host()
+    { return env_("REMOTE_HOST"); }
 
-    std::string remote_ident()
-    { return env("REMOTE_IDENT"); }
+    string_type remote_ident()
+    { return env_("REMOTE_IDENT"); }
 
-    std::string remote_user()
-    { return env("REMOTE_USER"); }
+    string_type remote_user()
+    { return env_("REMOTE_USER"); }
 
-    std::string request_method()
-    { return env("REQUEST_METHOD"); }
+    string_type request_method()
+    { return env_("REQUEST_METHOD"); }
 
-    std::string script_name()
-    { return env("SCRIPT_NAME"); }
+    string_type script_name()
+    { return env_("SCRIPT_NAME"); }
 
-    std::string server_name()
-    { return env("SERVER_NAME"); }
+    string_type server_name()
+    { return env_("SERVER_NAME"); }
 
-    std::string server_port()
-    { return env("SERVER_PORT"); }
+    string_type server_port()
+    { return env_("SERVER_PORT"); }
 
-    std::string server_protocol()
-    { return env("SERVER_PROTOCOL"); }
+    string_type server_protocol()
+    { return env_("SERVER_PROTOCOL"); }
 
-    std::string server_software()
-    { return env("SERVER_SOFTWARE"); }
+    string_type server_software()
+    { return env_("SERVER_SOFTWARE"); }
+
+    string_type referer()
+    { return env_("HTTP_REFERER"); }
     // -- end helper-functions]
 
     /// Get the charset from the CONTENT_TYPE header
-    std::string charset()
+    string_type charset()
     {
       // Not sure if regex is needlessly heavy-weight here.
       boost::regex re(";[ ]?charset=([-\\w]+);");
@@ -559,7 +382,7 @@ namespace cgi {
       return this->service.get_role(this->implementation);
     }
 
-    void set_status(http::status_code const& status)
+    void set_status(common::http::status_code const& status)
     {
       this->service.set_status(this->implementation, status);
     }
@@ -571,40 +394,60 @@ namespace cgi {
     // compile-time (I hope) retrieval of different data
     // maps.
     //
+
+    // The first three overloads are for directly looking into the 
+    // environment.
+    // eg.
+    // string_type& val = req["some name"];
+    string_type& operator[](string_type const& n)
+    {
+      return env_vars(this->implementation.vars_)[n.c_str()];
+    }
+
+    string_type& operator[](const char* n)
+    {
+      return env_vars(this->implementation.vars_)[n];
+    }
+
+    string_type& operator[](common::name const& n)
+    {
+      return env_vars(this->implementation.vars_)[n];
+    }
+
     /// Get a `common::env_map&` of all the environment variables.
     env_map& operator[](common::env_data_type const&)
     {
-      return this->implementation.env_vars();
+      return env_vars(this->implementation.vars_);
     }
 
     /// Get a `common::get_map&` of all the GET variables.
     get_map& operator[](common::get_data_type const&)
     {
-      return this->implementation.get_vars();
+      return get_vars(this->implementation.vars_);
     }
 
     /// Get a `common::post_map&` of all the POST variables.
     post_map& operator[](common::post_data_type const&)
     {
-      return this->implementation.post_vars();
+      return post_vars(this->implementation.vars_);
     }
 
     /// Get a `common::cookie_map&` of all the cookies.
     cookie_map& operator[](common::cookie_data_type const&)
     {
-      return this->implementation.cookie_vars();
+      return cookie_vars(this->implementation.vars_);
     }
 
     /// Get a `common::form_map&` of either the GET or POST variables.
     form_map& operator[](common::form_data_type const&)
     {
       if (request_method() == "GET")
-        return this->implementation.get_vars();
+        return get_vars(this->implementation.vars_);
       else
       if (request_method() == "POST")
-        return this->implementation.post_vars();
+        return post_vars(this->implementation.vars_);
       else
-        return this->implementation.env_vars();
+        return env_vars(this->implementation.vars_);
     }
     ////////////////////////////////////////////////////////////
 
@@ -618,6 +461,13 @@ namespace cgi {
     int id()
     {
       return this->service.request_id(this->implementation);
+    }
+
+  private:
+    // Internal shortcut for named env-var functions (eg. script_name() above).
+    string_type& env_(const char* name)
+    {
+      return env_vars(this->implementation.vars_)[name];
     }
   };
 

@@ -1,4 +1,4 @@
-//                   -- cgi.hpp --
+//                -- common_headers.hpp --
 //
 //           Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,23 +6,24 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_CGI_CGI_HPP_INCLUDED__
-#define CGI_CGI_CGI_HPP_INCLUDED__
+#ifndef CGI_DETAIL_COMMON_HEADERS_HPP_INCLUDED__
+#define CGI_DETAIL_COMMON_HEADERS_HPP_INCLUDED__
 
 // #include all protocol-independent headers only. Protocol-specific
 // headers can just include this after other headers.
 
-#include "boost/cgi/buffer.hpp"
-#include "boost/cgi/common/map.hpp"
-#include "boost/cgi/io_service.hpp"
-#include "boost/cgi/streambuf.hpp"
-#include "boost/cgi/basic_request.hpp"
-//#include "boost/cgi/basic_request_acceptor.hpp"
-#include "boost/cgi/response.hpp"
 //#include "boost/cgi/logger.hpp"
-#include "boost/cgi/read.hpp"
-#include "boost/cgi/write.hpp"
-#include "boost/cgi/header.hpp"
-#include "boost/cgi/return.hpp"
+#include "boost/cgi/common/map.hpp"
+#include "boost/cgi/import/read.hpp"
+#include "boost/cgi/import/write.hpp"
+#include "boost/cgi/basic_request.hpp"
+#include "boost/cgi/import/buffer.hpp"
+#include "boost/cgi/common/header.hpp"
+#include "boost/cgi/common/return.hpp"
+#include "boost/cgi/common/response.hpp"
+#include "boost/cgi/import/streambuf.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/import/io_service.hpp"
 
-#endif // CGI_CGI_CGI_HPP_INCLUDED__
+#endif // CGI_DETAIL_COMMON_HEADERS_HPP_INCLUDED__
+
