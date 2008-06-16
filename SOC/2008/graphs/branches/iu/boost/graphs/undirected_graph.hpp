@@ -30,6 +30,8 @@
 #include "edge_list.hpp"
 #include "edge_set.hpp"
 
+#include "adjacency_iterator.hpp"
+
 template <
     typename VertexProps,
     typename EdgeProps,
@@ -68,6 +70,9 @@ public:
     typedef incidence_iterator<typename vertex_type::iterator> incident_edge_iterator;
     typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
 
+    typedef adjacency_iterator<incident_edge_iterator> adjacent_vertex_iterator;
+    typedef std::pair<adjacent_vertex_iterator, adjacent_vertex_iterator> adjacent_vertex_range;
+
     // The vertex store and related properties can also be built on the vertex
     // type.
     typedef typename VertexStore::template store<vertex_type>::type vertex_store;
@@ -87,53 +92,63 @@ public:
     // Constructors
     undirected_graph();
 
-    // Add vertices
+    /** @name Vertex Set
+     * These functions operate (mostly) on the vertices of the graph. These
+     * functions include the ability to add, disconnect, and remove vertices.
+     */
+    //@{
     vertex_descriptor add_vertex();
     vertex_descriptor add_vertex(vertex_properties const&);
     vertex_descriptor add_vertex(key_type const&, vertex_properties const&);
-
-    // Disconnect and Remove vertices
     void disconnect_vertex(vertex_descriptor);
     void remove_vertex(vertex_descriptor);
+    //@{
 
-    // Add edges
+    /** @name Edge Set
+     * These functions operate on the edges of the graph. This functions
+     * include the ability to add and remove edges.
+     */
+    //@{
     edge_descriptor add_edge(vertex_descriptor, vertex_descriptor);
     edge_descriptor add_edge(vertex_descriptor, vertex_descriptor, edge_properties const&);
-
     void remove_edge(edge_descriptor);
     void remove_edges(vertex_descriptor, vertex_descriptor);
+    //@}
 
     /** @name Vertex Iteration
-     * These functions allow the iteration over the vertex set.
+     * These functions allow iteration over the vertex set.
      */
     //@{
     vertex_range vertices() const;
     vertex_iterator begin_vertices() const;
     vertex_iterator end_vertices() const;
+    vertices_size_type num_vertices() const;
     //@}
 
     /** @name Edge Iteration
-     * These function allow the iteration over the edge set.
+     * These function allow iteration over the edge set.
      */
     //@{
     edge_range edges() const;
     edge_iterator begin_edges() const;
     edge_iterator end_edges() const;
-    //@}
-
-    /** @name Graph Size
-     * These functions return the number of vertices and edges in the graph.
-     */
-    //@{
-    vertices_size_type num_vertices() const;
     edges_size_type num_edges() const;
     //@}
 
-    // Edge incidence
+    /** @name Incident Edge Iteration
+     * These functions allow iteration over the incident edges of a vertex.
+     */
+    //@{
     incident_edge_iterator begin_incident_edges(vertex_descriptor) const;
     incident_edge_iterator end_incident_edges(vertex_descriptor) const;
     incident_edge_range incident_edges(vertex_descriptor) const;
+
+    adjacent_vertex_iterator begin_adjacent_vertices(vertex_descriptor) const;
+    adjacent_vertex_iterator end_adjacent_vertices(vertex_descriptor) const;
+    adjacent_vertex_range adjacent_vertices(vertex_descriptor) const;
+
     incident_edges_size_type degree(vertex_descriptor) const;
+    //@{
 
     // Property accesors
     vertex_properties& operator[](vertex_descriptor);
@@ -192,6 +207,11 @@ undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
         // Remove all the properties too. Does this make sense here?
         _props.remove(e.properties());
     }
+
+    // Clear the incident edge set of the vertex. We don't do this in the
+    // previous loop because we'll probably end up invalidating our own
+    // iterators.
+    _verts.vertex(v).disconnect();
 }
 
 /**
@@ -284,7 +304,6 @@ undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
     src.disconnect(v, p);
     tgt.disconnect(u, p);
 
-    std::cout << "removing properties: " << _props.properties(p) << std::endl;
     _props.remove(p);
 }
 
@@ -393,6 +412,37 @@ undirected_graph<VP,EP,VS,ES>::incident_edges(vertex_descriptor v) const
 }
 
 /**
+ * Return an iterator to the first adjacent vertex of the the given vertex.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::adjacent_vertex_iterator
+undirected_graph<VP,EP,VS,ES>::begin_adjacent_vertices(vertex_descriptor v) const
+{
+    return begin_incident_edges(v);
+}
+
+/**
+ * Return an iterator past the end of the adjacent vertices of the given vertex.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::adjacent_vertex_iterator
+undirected_graph<VP,EP,VS,ES>::end_adjacent_vertices(vertex_descriptor v) const
+{
+    return end_incident_edges(v);
+}
+
+/**
+ * Return an iterator range over the adjacent vertices of the given vertex.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::adjacent_vertex_range
+undirected_graph<VP,EP,VS,ES>::adjacent_vertices(vertex_descriptor v) const
+{
+    return std::make_pair(begin_adjacent_vertices(v), end_adjacent_vertices(v));
+}
+
+
+/**
  * Return the degree (number of incdent edges) of the given vertex.
  */
 template <BOOST_GRAPH_UG_PARAMS>
@@ -423,6 +473,8 @@ undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
 }
 
 #undef BOOST_GRAPH_UG_PARAMS
+
+#include "traits.hpp"
 
 #endif
 

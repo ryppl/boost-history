@@ -16,9 +16,10 @@ class incidence_iterator
 {
     typedef Iter base_iterator;
     typedef typename base_iterator::value_type base_value_type;
+public:
     typedef typename base_value_type::first_type vertex_descriptor;
     typedef typename base_value_type::second_type property_descriptor;
-public:
+
     // This is a little misleading. This iterator can be either bidi or random.
     // Clearly, we're going to be constraining members using some concept stuff
     // when it becomes available.
@@ -47,6 +48,22 @@ public:
         : _base(v), _iter(x)
     { }
 
+    /**
+     * Extended iterator functionality. Return the source vertex of the
+     * iterator. This is the vertex for which the iterator was originally
+     * created.
+     */
+    vertex_descriptor source() const
+    { return _base; }
+
+    /**
+     * Extended iterator functionality. Return the opposite vertex of the
+     * edge indicated by the iterator. This is mostly provided for use by
+     * the adjacency iterator.
+     */
+    vertex_descriptor opposite() const
+    { return _iter->first; }
+
     inline incidence_iterator& operator++()
     { ++_iter; return *this; }
 
@@ -54,18 +71,18 @@ public:
     { --_iter; return *this; }
 
     // Iterators are equivalent if they reference the same edge.
-    inline bool operator==(incidence_iterator const& x)
+    inline bool operator==(incidence_iterator const& x) const
     { return **this == *x; }
 
-    inline bool operator!=(incidence_iterator const& x)
+    inline bool operator!=(incidence_iterator const& x) const
     { return !this->operator==(x); }
 
     inline reference operator*() const
     { return reference(_base, _iter->first, _iter->second); }
 
 private:
-    vertex_descriptor _base;
-    base_iterator _iter;
+    vertex_descriptor   _base;
+    base_iterator       _iter;
 };
 
 

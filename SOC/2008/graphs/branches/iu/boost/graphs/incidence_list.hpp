@@ -35,11 +35,9 @@ public:
     inline iterator find(incidence_pair);
     inline const_iterator find(incidence_pair) const;
 
+    inline void clear();
     inline void remove(incidence_pair);
     template <typename Eraser> inline void remove(vertex_descriptor, Eraser);
-
-    inline void clear();
-
 
     inline size_type size() const
     { return _edges.size(); }
@@ -63,6 +61,20 @@ incidence_list<E,A>::incidence_list()
 { }
 
 /**
+ * Incidence lists always allow the addition of edges, assuming that no policy
+ * conflicts exist. The first element of the return is the end() of the list.
+ *
+ * @complexity O(1)
+ */
+template <BOOST_GRAPH_IL_PARAMS>
+std::pair<typename incidence_list<E,A>::const_iterator, bool>
+incidence_list<E,A>::allow(vertex_descriptor v) const
+{
+    // Since there's no policy, there we must be able to add the edge.
+    return make_pair(_edges.end(), true);
+}
+
+/**
  * Add the incident edge to the incidence set.
  *
  * @complexity O(1)
@@ -75,17 +87,15 @@ incidence_list<E,A>::add(incidence_pair p)
 }
 
 /**
- * Incidence lists always allow the addition of edges, assuming that no policy
- * conflicts exist. The first element of the return is the end() of the list.
+ * Remove all incident edges from this set.
  *
- * @complexity O(1)
+ * @complexity  O(d)
  */
-template <BOOST_GRAPH_IL_PARAMS>
-std::pair<typename incidence_list<E,A>::const_iterator, bool>
-incidence_list<E,A>::allow(vertex_descriptor v) const
+template <typename E, typename A>
+void
+incidence_list<E,A>::clear()
 {
-    // Since there's no policy, there we must be able to add the edge.
-    return make_pair(_edges.end(), true);
+    _edges.clear();
 }
 
 /**

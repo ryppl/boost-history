@@ -43,12 +43,10 @@ public:
     inline iterator find(incidence_pair);
     inline const_iterator find(incidence_pair) const;
 
-    // Remove the edge.
+    // Remove edges.
+    inline void clear();
     inline void remove(incidence_pair);
     template <typename Eraser> inline void remove(vertex_descriptor, Eraser);
-
-    // Remove all edges.
-    inline void clear();
 
 
     inline size_type size() const
@@ -102,6 +100,16 @@ void
 incidence_set<E,C,A>::add(incidence_pair p)
 {
     _edges.insert(p);
+}
+
+/**
+ * Remove all incident edges from this edge set.
+ */
+template <typename E, typename C, typename A>
+void
+incidence_set<E,C,A>::clear()
+{
+    _edges.clear();
 }
 
 /**

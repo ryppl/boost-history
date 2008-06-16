@@ -27,8 +27,14 @@ public:
     inline vertex();
     inline vertex(vertex_properties const& vp);
 
+    /** @name Edge Connection and Disconnection
+     * These functions control how edges are added to and removed from the
+     * vertex. The allow() function determines whether or not the edge
+     * connection is allowed and/or already existing.
+     */
     inline std::pair<iterator, bool> allow(vertex_descriptor) const;
     inline void connect(vertex_descriptor, property_descriptor);
+    inline void disconnect();
     inline void disconnect(vertex_descriptor, property_descriptor);
     template <typename Eraser> inline void disconnect(vertex_descriptor, Eraser);
 
@@ -87,6 +93,17 @@ void
 vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
 {
     _edges.add(make_pair(v, p));
+}
+
+/**
+ * Disconect all edges from this vertex. This does not remove the connection
+ * from adjacent vertices to this vertex.
+ */
+template <typename VP, typename IS>
+void
+vertex<VP,IS>::disconnect()
+{
+    _edges.clear();
 }
 
 /**
