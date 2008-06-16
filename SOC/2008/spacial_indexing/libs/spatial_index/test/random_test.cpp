@@ -51,26 +51,26 @@ int test_main(int, char* [])
   // number of points to find on the search phase
   const unsigned int find_count = 50;
   
-  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , std::vector<unsigned int>::iterator > > 
-    q(new boost::spatial_index::quadtree< geometry::point_xy<double>, std::vector<unsigned int>::iterator >(plane));
+  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
+    q(new boost::spatial_index::quadtree<geometry::point_xy<double>, unsigned int>(plane));
 
-      // generate random data
-      for(unsigned int i = 0; i < points_count; i++) {
-	double x = drandom((int) MAX_X);
-	double y = drandom((int) MAX_Y);
+  // generate random data
+  for(unsigned int i = 0; i < points_count; i++) {
+    double x = drandom((int) MAX_X);
+    double y = drandom((int) MAX_Y);
+    
+    ids.push_back(i);
+    points.push_back(geometry::point_xy<double>(x, y));
 
-	ids.push_back(i);
-	points.push_back(geometry::point_xy<double>(x, y));
+    // std::cerr << "insert " << i << " -> (" << x << ", " << y << ")" << std::endl;
+  }
 
-	// std::cerr << "insert " << i << " -> (" << x << ", " << y << ")" << std::endl;
-      }
-
-      // insert data
-      std::cerr << " --> bulk insert" << std::endl;
-      std::vector<unsigned int>::iterator b, e;
-      b = ids.begin();
-      e = ids.end();
-      q->bulk_insert(b,e, points);
+  // insert data
+  std::cerr << " --> bulk insert" << std::endl;
+  // std::vector<unsigned int>::iterator b, e;
+  // b = ids.begin();
+  // e = ids.end();
+  q->bulk_insert(ids, points);
 
       // search
       std::vector<geometry::point_xy<double> > search_positions;
@@ -85,13 +85,13 @@ int test_main(int, char* [])
 
       // search data and compare
       for(unsigned int j=0; j < find_count; j++) {
-	std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
+	unsigned int i = q->find(search_positions[j]);
 	std::cout << search_data[j] 
 		  << " - found in (" << geometry::get<0>(search_positions[j]) << "," << geometry::get<1>(search_positions[j])
-		  << ") --> " << *it << std::endl;
+		  << ") --> " << i << std::endl;
 	
 	// check if the retrieved data is equal to the stored data
-	BOOST_CHECK_EQUAL(*it, search_data[j]);
+	BOOST_CHECK_EQUAL(i, search_data[j]);
       }
 
       return 0;

@@ -38,8 +38,8 @@ public:
   /// insert data with envelope 'e' with key 'k'
   virtual void insert(const geometry::box<Point> &e, const Value &v) = 0;
 	
-  /// bulk insert data from (v_begin, v_end)
-  virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Point> &v) = 0;
+  /// bulk insert data from values
+  virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) = 0;
 
   /// find element with key 'k'
   virtual Value find(const Point &k) = 0;

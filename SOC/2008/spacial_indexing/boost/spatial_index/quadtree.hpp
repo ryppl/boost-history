@@ -26,46 +26,58 @@ private:
 	unsigned int node_size_;
 
 public:
- 	quadtree(const geometry::box<Point> &r)
-		: root(r, 1), element_count(0), node_size_(1)  {}
+  quadtree(const geometry::box<Point> &r)
+    : root(r, 1), element_count(0), node_size_(1)  {}
 	  
-	virtual void insert(const Point &k, const Value &v)
-	{
-		element_count++;
-		root.insert(k, v);
-	}
+  virtual void insert(const Point &k, const Value &v)
+  {
+    element_count++;
+    root.insert(k, v);
+  }
 
-	virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Point> &v)
-	{
-// 		boost::xtime xt1, xt2;
-// 		boost::xtime_get(&xt1, boost::TIME_UTC);
+  virtual void print(void) const
+  {
+    std::cerr << "Not implemented." << std::endl;
+  }
 
-		//unsigned int counter = 0;
+  /// insert data with envelope 'e' with key 'k'
+  virtual void insert(const geometry::box<Point> &e, const Value &v)
+  {
+    std::cerr << "Box insertion not implemented." << std::endl;
+  }
 
-		typename std::vector<Point>::iterator it_point;
-		it_point = v.begin();
-		Value it_data = v_begin;
-		while(it_data != v_end && it_point != v.end()) {
-			insert(*it_point, it_data);
-			      
-			it_data++;
-			it_point++;
 
-			//counter++;
-			//if(counter%10000 == 0) {
-				//std::cerr << "counter: [" << counter << "]" << std::endl;
-			//}
-		}
+  virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) 
+  {
+    // boost::xtime xt1, xt2;
+    // boost::xtime_get(&xt1, boost::TIME_UTC);
 
-// 		boost::xtime_get(&xt2, boost::TIME_UTC);
-// 		std::cerr << "secs: " << xt2.sec - xt1.sec;
-// 		std::cerr << " nsecs: " << xt2.nsec - xt1.nsec << std::endl;
-	}
+    // unsigned int counter = 0;
 
-	virtual Value find(const Point &k)
-	{
-		return root.find(k);
-	}
+    typename std::vector<Point>::iterator it_point;
+    typename std::vector<Value>::iterator it_value;
+    it_point = points.begin();
+    it_value = values.begin();
+    while(it_value != values.end() && it_point != points.end()) {
+      insert(*it_point, *it_value);
+      
+      it_point++;
+      it_value++;
+
+      // counter++;
+      // if(counter%10000 == 0) {
+      // std::cerr << "counter: [" << counter << "]" << std::endl;
+      // }
+    }
+    // boost::xtime_get(&xt2, boost::TIME_UTC);
+    // std::cerr << "secs: " << xt2.sec - xt1.sec;
+    // std::cerr << " nsecs: " << xt2.nsec - xt1.nsec << std::endl;
+  }
+
+  virtual Value find(const Point &k)
+  {
+    return root.find(k);
+  }
 
  	virtual std::deque<Value> find(const geometry::box<Point> &r)
 	{

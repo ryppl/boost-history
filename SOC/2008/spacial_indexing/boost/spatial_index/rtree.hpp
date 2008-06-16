@@ -79,12 +79,30 @@ namespace spatial_index {
       element_count++;
     }
 
-    virtual void bulk_insert(Value &v_begin, Value &v_end, std::vector<Point> &v)
+    virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points)
     {
+      typename std::vector<Point>::iterator it_point;
+      typename std::vector<Value>::iterator it_value;
+      it_point = points.begin();
+      it_value = values.begin();
+      while(it_value != values.end() && it_point != points.end()) {
+	geometry::box<geometry::point_xy<double> > box(*it_point, *it_point);
+	insert(box, *it_value);
+
+	it_point++;
+	it_value++;
+      }
     }
 
     virtual Value find(const Point &k)
     {
+      std::deque<Value> result;
+      geometry::box<geometry::point_xy<double> > query_box(k, k);
+
+      root_->find(query_box, result);
+      if(result.size() >= 1) {
+	return result[0];
+      }
       return Value();
     }
 
@@ -171,10 +189,10 @@ namespace spatial_index {
 	    
 	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
 
-	    std::cerr << "Remaining: " << remaining;
-	    std::cerr << " n1: " << n1->elements();
-	    std::cerr << " n2: " << n2->elements();
-	    std::cerr << std::endl;
+// 	    std::cerr << "Remaining: " << remaining;
+// 	    std::cerr << " n1: " << n1->elements();
+// 	    std::cerr << " n2: " << n2->elements();
+// 	    std::cerr << std::endl;
 
 	    if(n1->elements() + remaining == m_) {
 	      n1->add_value(it->first, it->second);

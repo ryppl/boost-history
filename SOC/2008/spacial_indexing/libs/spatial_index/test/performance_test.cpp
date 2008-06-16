@@ -103,17 +103,17 @@ int test_main(int, char* [])
     ids.push_back(i);
   }
 
-  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , std::vector<unsigned int>::iterator > > 
-    q(new boost::spatial_index::quadtree< geometry::point_xy<double>, std::vector<unsigned int>::iterator >(plane));
+  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
+    q(new boost::spatial_index::quadtree< geometry::point_xy<double>, unsigned int >(plane));
 
       // load data
       std::cerr << " --> bulk insert" << std::endl;
       std::vector<unsigned int>::iterator b, e;
-      b = ids.begin();
-      e = ids.end();
+//       b = ids.begin();
+//       e = ids.end();
 
       start = time(NULL);
-      q->bulk_insert(b,e, points);
+      q->bulk_insert(ids, points);
       std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
 
       // -- wait to check memory
@@ -133,19 +133,20 @@ int test_main(int, char* [])
 
 
       start = time(NULL);
-      std::deque< std::vector<unsigned int>::iterator > d = q->find(query_box);
+      std::deque<unsigned int> d = q->find(query_box);
       std::cerr << " --> find rectangle" << std::endl;
       BOOST_CHECK_EQUAL(rect_count, d.size());
       std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
 
       start = time(NULL);
       for(unsigned int j=0; j < find_count; j++) {
-	std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
+ 	unsigned int i = q->find(search_positions[j]);
+// 	std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
 	//std::cout << search_data[j] 
 	//  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
 	//  << *it << std::endl;
 
-	BOOST_CHECK_EQUAL(*it, search_data[j]);
+	BOOST_CHECK_EQUAL(i, search_data[j]);
       }
       std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 

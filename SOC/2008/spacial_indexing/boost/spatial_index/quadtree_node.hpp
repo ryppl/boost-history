@@ -82,7 +82,7 @@ public:
   void insert(const Point &k, const Value &v)
   {
     if(m_.size() < node_size_) {
-      std::cerr << "Empty quadtree_node --> inserting (" << *v << ")" << std::endl;
+//       std::cerr << "Empty quadtree_node --> inserting (" << v << ")" << std::endl;
       m_[k] = v;
     } else {
       // std::cerr << "Quadtree_Node division: ";

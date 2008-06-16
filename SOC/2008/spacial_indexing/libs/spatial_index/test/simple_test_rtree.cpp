@@ -16,35 +16,45 @@
 
 int test_main(int, char* [])
 {
-	std::vector<std::string> data;
-	std::vector< geometry::point_xy<double> > points;	
-
-	data.push_back("test0");
-	data.push_back("test1");
-	data.push_back("test2");
-	data.push_back("test3");
-	data.push_back("test4");
-	data.push_back("test5");
-
-	points.push_back(geometry::point_xy<double>(1.0,1.0));
-	points.push_back(geometry::point_xy<double>(2.0,1.0));
-	points.push_back(geometry::point_xy<double>(5.0,5.0));
-	points.push_back(geometry::point_xy<double>(1.0,6.0));
-	points.push_back(geometry::point_xy<double>(9.0,9.0));
-	points.push_back(geometry::point_xy<double>(9.0,8.0));
-
 	geometry::box<geometry::point_xy<double> > b(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(20.0, 20.0));
+
+	{
+	  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
+	    q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(b, 4, 2, 4));
+
+	  std::cerr << std::endl;
+	  std::cerr << " --> bulk insert" << std::endl;
+	  std::cerr << std::endl;
+
+	  std::vector<unsigned int> data;
+	  std::vector< geometry::point_xy<double> > points;	
+
+	  points.push_back(geometry::point_xy<double>(2.0,2.0));
+	  points.push_back(geometry::point_xy<double>(1.0,3.0));
+	  points.push_back(geometry::point_xy<double>(1.5,5.0));
+	  points.push_back(geometry::point_xy<double>(5.5,5.0));
+	  points.push_back(geometry::point_xy<double>(2.0,5.0));
+
+	  data.push_back(1);
+	  data.push_back(2);
+	  data.push_back(3);
+	  data.push_back(4);
+	  data.push_back(5);
+
+	  q->bulk_insert(data, points);
+
+	  q->print();
+	}
+
+	  std::cerr << std::endl;
+	  std::cerr << " --> end bulk insert" << std::endl;
+	  std::cerr << std::endl;
+
+
+	/// insertion tests
  
 	boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
 	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(b, 4, 2, 4));
-
-// 	std::cerr << " --> bulk insert" << std::endl;
-// 	std::vector<std::string>::iterator b, e;
-// 	b = data.begin();
-// 	e = data.end();
-// 	q->bulk_insert(b,e, points);
-
-//  	std::vector<std::string>::iterator it = data.begin();
 
 	geometry::box<geometry::point_xy<double> > e1(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));
 	geometry::box<geometry::point_xy<double> > e2(geometry::point_xy<double>(0.0, 1.0), geometry::point_xy<double>(2.0, 2.0));
@@ -63,7 +73,7 @@ int test_main(int, char* [])
 
 	geometry::box<geometry::point_xy<double> > e12(geometry::point_xy<double>(10.0, 10.0), geometry::point_xy<double>(12.0, 13.0));
 	geometry::box<geometry::point_xy<double> > e13(geometry::point_xy<double>(10.0, 12.0), geometry::point_xy<double>(13.0, 13.0));
-	geometry::box<geometry::point_xy<double> > e14(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(12.0, 13.5));
+	geometry::box<geometry::point_xy<double> > e14(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(10.0, 13.0));
 	geometry::box<geometry::point_xy<double> > e15(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(12.0, 14.0));
 
 
@@ -91,39 +101,40 @@ int test_main(int, char* [])
  	q->insert(e15, 15);
  	q->print();
 
-	std::cerr << " --> find rectangle" << std::endl;
+	/// find everything overlaping with an envelope
+	std::cerr << " --> find in envelope" << std::endl;
+
+	/// expected result
+	std::deque<unsigned int> result;
+	result.push_back(2);
+	result.push_back(1);
+	result.push_back(9);
+	result.push_back(10);
+	result.push_back(11);
 	geometry::box<geometry::point_xy<double> > query_box(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(2.0, 2.0));
 	std::deque< unsigned int > d = q->find(query_box);
-// 	BOOST_CHECK_EQUAL(d.size(), 3u);
+ 	BOOST_CHECK_EQUAL(d.size(), 5u);
 	unsigned int i = 0;
 	for(std::deque<unsigned int>::const_iterator dit = d.begin(); dit != d.end(); ++dit) {
 		std::cerr << "Value: " << *dit << std::endl;
-// 		BOOST_CHECK_EQUAL(*(*dit), res[i++]);
+ 		BOOST_CHECK_EQUAL(*dit, result[i++]);
 	}
 
+	/// find individual points (not found)
+	{
+	  std::cerr << " --> find" << std::endl;
+	  unsigned int v = q->find(geometry::point_xy<double>(0.0,0.0));
+	  BOOST_CHECK_EQUAL(v, 0u);
+	  std::cout << "Value:  " << v << std::endl;
+	}
 
-// 	std::vector<std::string>::iterator it1;
-
-// 	std::cerr << " --> find" << std::endl;
-// 	it1 = q->find(geometry::point_xy<double>(9.0,9.0));
-// 	BOOST_CHECK_EQUAL(*it1, "test4");
-// 	std::cout << "  " << *it1 << std::endl;
-
-// 	std::cerr << " --> find" << std::endl;
-// 	it1 = q->find(geometry::point_xy<double>(5.0,5.0));
-// 	BOOST_CHECK_EQUAL(*it1, "test2");
-// 	std::cout << "  " << *it1 << std::endl;
-
-// 	// expected result
-// 	std::vector<std::string> res;
-// 	res.push_back("test0");
-// 	res.push_back("test1");
-// 	res.push_back("test2");
-
-// 	std::cerr << "Elements: " << q->elements() << std::endl;
-// 	BOOST_CHECK_EQUAL(q->elements(), 6u);
-
-
+	/// find individual points (found)
+	{
+	  std::cerr << " --> find" << std::endl;
+	  unsigned int v = q->find(geometry::point_xy<double>(10.0,13.0));
+	  BOOST_CHECK_EQUAL(v, 14u);
+	  std::cout << "Value:  " << v << std::endl;
+	}
 
 	return 0;
 };
