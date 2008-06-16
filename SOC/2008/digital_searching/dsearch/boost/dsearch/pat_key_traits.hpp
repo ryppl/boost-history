@@ -23,6 +23,10 @@ class pat_key_traits{
 		return key.end();
 	}
 
+	static inline std::size_t size(std::string const &key)
+	{
+		return key.size();
+	}
 	static inline element_type  get_element(const const_iterator &it) 
 	{
 		return static_cast<unsigned char>(*it);
