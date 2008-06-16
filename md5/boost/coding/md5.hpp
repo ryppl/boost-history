@@ -1,0 +1,680 @@
+// Boost md5.hpp header file  ------------------------------------------------//
+
+// (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
+// License, Version 1.0.  (See the accompanying file LICENSE_1_0.txt or a copy
+// at <http://www.boost.org/LICENSE_1_0.txt>.)
+
+// See <http://www.boost.org/libs/coding> for documentation.
+
+/** \file
+    \brief  Declarations of MD5 computation components
+
+    Contains the declaration of types and functions used for computing MD5
+    message digests of given data blocks and granting I/O capability to any
+    applicable types.
+ */
+
+#ifndef BOOST_CODING_MD5_HPP
+#define BOOST_CODING_MD5_HPP
+
+#include <boost/coding_fwd.hpp>
+
+#include <boost/array.hpp>                 // for boost::array
+#include <boost/integer.hpp>               // for boost::uint_t
+#include <boost/serialization/access.hpp>  // for boost::serialization::access
+#include <boost/typeof/typeof.hpp>         // for BOOST_AUTO
+
+#include <algorithm>  // for std::equal
+#include <cstddef>    // for std::size_t
+#include <cstring>    // for std::strlen
+#include <ios>        // for std::ios
+#include <istream>    // for std::basic_istream
+#include <locale>     // for std::use_facet, ctype
+#include <ostream>    // for std::basic_ostream
+
+
+namespace boost
+{
+namespace coding
+{
+
+
+//  Forward declarations  ----------------------------------------------------//
+
+// None right now
+
+
+//  MD5 message-digest class declaration  ------------------------------------//
+
+/** \brief  A class for storing a MD5 message digest.
+
+    This type is as basic as possible, meant to be the return type for MD5
+    hashing operations.  It is supposed to mirror the buffer described in RFC
+    1321, sections 3.3&ndash;3.5.  Comparisons are supported for check-summing
+    purposes, but not ordering.  Persistence is supported through the standard
+    text stream I/O system.
+
+    \see  boost::coding::md5_computer
+    \see  boost::coding::compute_md5(void const*,std::size_t)
+ */
+class md5_digest
+{
+public:
+    /** \brief  Number of bits for word-sized quantities
+
+        Represents the number of bits per word as given in RFC 1321, section 2.
+     */
+    static  int const  bits_per_word = 32;
+
+    /** \brief  Type of MD register
+
+        Represents the type of each register of the MD buffer.
+     */
+    typedef uint_t<bits_per_word>::least  word_type;
+
+    /** \brief  Length of MD buffer
+
+        Represents the number of registers in a MD buffer.
+     */
+    static  std::size_t const  words_per_digest = 4u;
+
+    /** \brief  The MD5 message digest checksum
+
+        Represents the checksum from a MD5 hashing, mirroring for format of the
+        MD buffer (see RFC 1321, section 3.3).  The zero-index corresponds to
+        the "A" register, up to index 3 representing the "D" register.
+     */
+    word_type  hash[ words_per_digest ];
+
+};  // md5_digest
+
+
+//  MD5 message-digest computation class declaration  ------------------------//
+
+/** \brief  A class for generating a MD5 message digest from submitted data.
+
+    This class can accept data in several runs and produce a hash based on that
+    data from the MD5 message-digest algorithm described in RFC 1321.  It should
+    have a similar interface to Boost.CRC, plus specialized function object
+    interfaces for bit- and byte-level processing (inspired by Boost.Bimap).
+    Comparisons are supported for check-summing purposes, but not ordering.
+    Persistence is supported though Boost.Serialization.
+
+    \see  boost::coding::md5_digest
+    \see  boost::coding::compute_md5(void const*,std::size_t)
+ */
+class md5_computer
+{
+    /** \brief  A class for submitting bit-oriented data for a MD5 message
+                digest in a function-object interface.
+
+        This class represents objects that are proxy views to their owning MD5
+        computing object.  The proxy interface appears as a function object that
+        takes a \c bool value, which passes it on to the owning computer for
+        processing.  It should be suitable STL-like algorithms that use such a
+        function object.  It supports assignment to work with \c std::for_each
+        and other algorithms that can return a post-use function object.
+
+        \see  boost::coding::md5_computer
+        \see  boost::coding::md5_computer::byte_applicator
+        \see  boost::coding::md5_computer::bits
+     */
+    class bit_applicator
+    {
+        friend class md5_computer;
+        md5_computer  *parent_;
+        explicit  bit_applicator( md5_computer &p )  : parent_( &p )  {};
+    public:
+        //! Application
+        void              operator ()( bool v );
+        //! Copy assignment
+        bit_applicator &  operator  =( bit_applicator const &c );
+
+    };  // bit_applicator
+
+    /** \brief  A class for submitting byte-oriented data for a MD5 message
+                digest in a function-object interface.
+
+        This class represents objects that are proxy views to their owning MD5
+        computing object.  The proxy interface appears as a function object that
+        takes an <code>unsigned char</code> value, which passes it on to the
+        owning computer for processing.  It should be suitable STL-like
+        algorithms that use such a function object.  It supports assignment to
+        work with \c std::for_each and other algorithms that can return a
+        post-use function object.
+
+        \see  boost::coding::md5_computer
+        \see  boost::coding::md5_computer::bit_applicator
+        \see  boost::coding::md5_computer::bytes
+     */
+    class byte_applicator
+    {
+        friend class md5_computer;
+        md5_computer  *parent_;
+        explicit  byte_applicator( md5_computer &p )  : parent_( &p )  {};
+    public:
+        //! Application
+        void              operator ()( unsigned char v );
+        //! Copy assignment
+        byte_applicator &  operator  =( byte_applicator const &c );
+
+    };  // byte_applicator
+
+public:
+    // Special application interface
+    /** \brief  Proxy for bit-oriented application interface
+
+        Accesses an interface where <code>*this</code> can be used as a function
+        object take can take a single \c bool value as input.  It cannot be
+        reseated from <code>*this</code>, but assignment to it will copy the
+        other's owner's state to <code>*this</code>, enabling algorithms that
+        return updated function objects to work.
+
+        \see  boost::coding::md5_computer::bit_applicator
+     */
+    bit_applicator   bits;
+    /** \brief  Proxy for byte-oriented application interface
+
+        Accesses an interface where <code>*this</code> can be used as a function
+        object take can take a single <code>unsigned char</code> value as input.
+        It cannot be reseated from <code>*this</code>, but assignment to it will
+        copy the other's owner's state to <code>*this</code>, enabling
+        algorithms that return updated function objects to work.
+
+        \see  boost::coding::md5_computer::byte_applicator
+     */
+    byte_applicator  bytes;
+
+    // Constants
+    /** \brief  Number of bits for length quantities
+
+        Represents the number of significant (low-order) bits kept for the
+        message length, which can also be processed as two words, all as given
+        in RFC 1321, section 3.2, paragraph 1.
+     */
+    static  int const  significant_bits_per_length = 2 *
+     md5_digest::bits_per_word;
+
+    // Types
+    /** \brief  Type of checksums
+
+        Represents the type of hashes generated by this type.
+     */
+    typedef md5_digest  value_type;
+    /** \brief  Type of size values
+
+        Represents the type used for sizing parameters and returns.  It should
+        be an unsigned integer.
+     */
+    typedef std::size_t  size_type;
+
+    /** \brief  Type of MD message lengths
+
+        Represents the type needed to store the significant count of bits read.
+     */
+    typedef uint_least64_t  length_type;
+      // replace w/ uint_t<significant_bits_per_length>::least
+    /** \brief  Type of MD buffers
+
+        Represents the intermediate MD buffer, holding the checksum for all
+        prior \e completed hashed blocks.  The zero-index corresponds to the "A"
+        register, up to index 3 representing the "D" register.
+     */
+    typedef array<md5_digest::word_type, md5_digest::words_per_digest>
+      buffer_type;
+
+    // Lifetime management (use automatic destructor)
+    //! Default construction
+    md5_computer();
+    //! Copy construction
+    md5_computer( md5_computer const &c );
+
+    /*! \name Assignment */ //@{
+    // Assignment
+    //! Sets state back to initial conditions
+    void  reset();
+    //! Changes the current state to a copy of another object's
+    void  assign( md5_computer const &c );
+
+    //! Exchanges state with another object
+    void  swap( md5_computer &other );//@}
+
+    /*! \name Inspection */ //@{
+    // Inspectors
+    //! Returns the count of bits read so far
+    length_type  bits_read() const;
+    //! Returns the count of bits not hashed into the buffer yet
+    length_type  bits_unbuffered() const;
+    //! Returns the checksum buffer of hashed bits
+    buffer_type  last_buffer() const;
+
+    //! Copies out the unhashed bits
+    template < typename OutputIterator >
+     OutputIterator  copy_unbuffered( OutputIterator o );//@}
+
+    /*! \name Bit-stream reading */ //@{
+    // Input processing
+    //! Enters one bit for hashing
+    void  process_bit( bool bit );
+    //! Enters part of a byte for hashing
+    void  process_bits( unsigned char bits, size_type bit_count );
+    //! Enters several bits, all of the same value, for hashing
+    void  process_bit_copies( bool value, size_type bit_count );
+
+    //! Enters a whole byte for hashing
+    void  process_byte( unsigned char byte );
+    //! Enters several bytes, all of the same value, for hashing
+    void  process_byte_copies( unsigned char value, size_type byte_count );
+
+    //! Enters a range of bytes in memory for hashing
+    void  process_block( void const *bytes_begin, void const *bytes_end );
+    //! Enters a byte buffer in memory for hashing
+    void  process_bytes( void const *buffer, size_type byte_count );//@}
+
+    /*! \name Message-digest writing */ //@{
+    // Output processing
+    //! Returns the message digest, assuming all bits have been hashed
+    value_type  checksum() const;//@}
+
+    /*! \name Operators */ //@{
+    // Operators
+    //! Copy-assignment
+    md5_computer &  operator =( md5_computer const &c );
+
+    //! Equals
+    bool  operator ==( md5_computer const &c ) const;
+    //! Not-equal
+    bool  operator !=( md5_computer const &c ) const;
+
+    //! Application
+    value_type  operator ()() const;//@}
+
+private:
+    // State maintainence
+    bool  test_invariant() const;
+
+    // Serialization
+    friend class serialization::access;
+
+    /*! \name Persistence */ //@{
+    //! Enables persistence with Boost.Serialization-compatible archives
+    template < class Archive >
+     void  serialize( Archive &ar, const unsigned int version );//@}
+       // may have to do save/load split; support XML archives
+
+    // Implementation types & constants
+    typedef uint_fast64_t  ilength_type;
+      // replace w/ uint_t<significant_bits_per_length>::fast
+    typedef uint_t<md5_digest::bits_per_word>::fast  iword_type;
+    typedef array<iword_type, md5_digest::words_per_digest>  ibuffer_type;
+
+    static  std::size_t const  words_per_block = 16u;
+      // from RFC 1321, section 3.4
+    static  std::size_t const  bits_per_block = words_per_block *
+     md5_digest::bits_per_word;
+
+    typedef array<bool, bits_per_block>  block_type;
+
+    // (Computation) member data
+    ilength_type  length_;
+    ibuffer_type  buffer_;
+    block_type    unbuffered_;
+
+    static  ibuffer_type const  initial_buffer_;
+
+};  // md5_computer
+
+
+//! \cond
+//  Implementation details  --------------------------------------------------//
+
+namespace detail
+{
+
+// MD5 message digest constants, especially for I/O
+struct md5_constants
+{
+    // Nybbles and hexadecimal digits
+    static  std::size_t const  nybbles_per_hexadecimal_digit = 1u;
+    static  std::size_t const  bits_per_nybble = 4u;
+
+    static  std::size_t const  number_of_hexadecimal_digits = 16u;  // duh!
+
+    static  char const  hex_digits_lc[ number_of_hexadecimal_digits + 1 ];
+    static  char const  hex_digits_uc[ number_of_hexadecimal_digits + 1 ];
+
+    // MD words
+    static  std::size_t const  nybbles_per_word = md5_digest::bits_per_word /
+     bits_per_nybble;
+
+    // MD strings
+    static  std::size_t const  characters_per_digest = md5_digest::bits_per_word
+     * md5_digest::words_per_digest / ( nybbles_per_hexadecimal_digit *
+     bits_per_nybble );
+
+};  // md5_constants
+
+}  // namespace detail
+//! \endcond
+
+
+//  MD5 message-digest structure non-member operator function definitions  ---//
+
+/** \brief  Equals
+
+    Compares MD5 message digests for equivalence.  Such digests are equal if all
+    of the corresponding parts of their hashes are equal.
+
+    \param l  The left-side operand to be compared.
+    \param r  The right-side operand to be compared.
+
+    \retval true   \p l and \p r are equivalent.
+    \retval false  \p l and \p r are not equivalent.
+
+    \relates  boost::coding::md5_digest
+ */
+inline
+bool
+operator ==( md5_digest const &l, md5_digest const &r )
+{
+    return std::equal( l.hash, l.hash + md5_digest::words_per_digest, r.hash );
+}
+
+/** \brief  Not-equals
+
+    Compares MD5 message digests for non-equivalence.  Such digests are unequal
+    if at least one set of corresponding parts in their hashes are unequal.
+
+    \param l  The left-side operand to be compared.
+    \param r  The right-side operand to be compared.
+
+    \retval true   \p l and \p r are not equivalent.
+    \retval false  \p l and \p r are equivalent.
+
+    \see  boost::coding::operator==(md5_digest const&,md5_digest const&)
+
+    \relates  boost::coding::md5_digest
+ */
+inline
+bool
+operator !=( md5_digest const &l, md5_digest const &r )
+{
+    return !( l == r );
+}
+
+/** \brief  Reads a \c md5_digest from an input stream
+
+    Receives a \c md5_digest object from an input stream.  The format is as
+    given in RFC 1321, section 3.5, i.e. go from the least-significant octet of
+    the first hash component to the most-significant octet of the last hash
+    component.  The format for each octet read is two hexadecimal digits
+    (0&ndash;9 and either a&ndash;f or A&ndash;F), with the digit for the
+    most-significant nybble read first.  The letter-case of the higher-order
+    hexadecimal digits does not matter.  (Note that exactly 32 characters are
+    read, not counting how \c std::ios_base::skipws for \p i is set.)
+
+    \param i  The input stream to perform the reading.
+    \param n  The \c md5_digest object to store the read.
+
+    \return  \p i
+
+    \see  boost::coding::operator<<(std::basic_ostream<Ch,Tr>&,md5_digest const&)
+
+    \relates  boost::coding::md5_digest
+ */
+template < typename Ch, class Tr >
+std::basic_istream<Ch, Tr> &
+operator >>( std::basic_istream<Ch, Tr> &i, md5_digest &n )
+{
+    typename std::basic_istream<Ch, Tr>::sentry  is( i );
+
+    if ( is )
+    {
+        // Set up
+        BOOST_AUTO( const &  f, std::use_facet< std::ctype<Ch> >(i.getloc()) );
+        std::size_t  nybble_index = 0u;
+        md5_digest   temp = { {0} };
+
+        // Read the exact number of characters
+        for ( std::istreambuf_iterator<Ch, Tr>  ii(i), ie ; (ie != ii) &&
+         (nybble_index < detail::md5_constants::characters_per_digest) ; ++ii,
+         ++nybble_index )
+        {
+            // Read a character, which represents one nybble
+            md5_digest::word_type  nybble = 0u;
+
+            switch ( f.narrow(*ii, '\0') )
+            {
+            case 'F': case 'f':  ++nybble;  // FALL THROUGH
+            case 'E': case 'e':  ++nybble;  // FALL THROUGH
+            case 'D': case 'd':  ++nybble;  // FALL THROUGH
+            case 'C': case 'c':  ++nybble;  // FALL THROUGH
+            case 'B': case 'b':  ++nybble;  // FALL THROUGH
+            case 'A': case 'a':  ++nybble;  // FALL THROUGH
+            case '9':  ++nybble;  // FALL THROUGH
+            case '8':  ++nybble;  // FALL THROUGH
+            case '7':  ++nybble;  // FALL THROUGH
+            case '6':  ++nybble;  // FALL THROUGH
+            case '5':  ++nybble;  // FALL THROUGH
+            case '4':  ++nybble;  // FALL THROUGH
+            case '3':  ++nybble;  // FALL THROUGH
+            case '2':  ++nybble;  // FALL THROUGH
+            case '1':  ++nybble;  // FALL THROUGH
+            case '0':  break;
+            default:   goto abort_read;
+            }
+
+            // Place the nybble within its word.  (Octets are read lowest to
+            // highest, but the nybbles are read in the reverse order, so swap
+            // the positions of the high and low nybbles when putting them in
+            // the appropriate octet.)
+            temp.hash[ nybble_index / detail::md5_constants::nybbles_per_word ]
+             |= nybble << ( detail::md5_constants::bits_per_nybble * ((
+             nybble_index % detail::md5_constants::nybbles_per_word ) ^ 0x01u)
+             );
+        }
+
+abort_read:
+        // Finish up
+        if ( nybble_index < detail::md5_constants::characters_per_digest )
+        {
+            // Incomplete read
+            i.setstate( std::ios_base::failbit );
+        }
+        else
+        {
+            // Successful read
+            n = temp;
+        }
+    }
+
+    return i;
+}
+
+/** \brief  Writes a \c md5_digest to an output stream
+
+    Sends a \c md5_digest object to an output stream.  The format is as given
+    in RFC 1321, section 3.5, i.e. go from the least-significant octet of the
+    first hash component to the most-significant octet of the last hash
+    component.  The format for each octet written is two hexadecimal digits
+    (0&ndash;9 and either a&ndash;f or A&ndash;F), with the digit for the
+    most-significant nybble written first.  The setting of
+    \c std::ios_base::uppercase in \p o affects which characters are used for
+    the higher-order hexadecimal digits.  (Note that exactly 32 characters are
+    written, not counting how <code><var>o</var>.width()</code> is set.)
+
+    \param o  The output stream to perform the writing.
+    \param n  The \c md5_digest object to be written.
+
+    \return  \p o
+
+    \see  boost::coding::operator>>(std::basic_istream<Ch,Tr>&,md5_digest&)
+
+    \relates  boost::coding::md5_digest
+ */
+template < typename Ch, class Tr >
+std::basic_ostream<Ch, Tr> &
+operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
+{
+    // The message always has an exact number of characters; plot it out.
+    // (Leave an extra character for the NUL terminator.)
+    char    hex_string[ detail::md5_constants::characters_per_digest + 1u ];
+    char *  p = hex_string;
+
+    // Each nybble will be printed as a hexadecimal digit.
+    char const  (&digits)[ detail::md5_constants::number_of_hexadecimal_digits +
+     1 ] = ( o.flags() & std::ios_base::uppercase )
+     ? detail::md5_constants::hex_digits_uc
+     : detail::md5_constants::hex_digits_lc;
+
+    // Print each nybble.  Since the nybble progression within an octet is the
+    // reverse of the octet and word progressions, stick in a reversal flag
+    // while indexing.
+    for ( std::size_t  nybble_index = 0u ; nybble_index <
+     detail::md5_constants::characters_per_digest ; ++nybble_index )
+    {
+        *p++ = digits[ 0x0Fu & (n.hash[ nybble_index /
+         detail::md5_constants::nybbles_per_word ] >> (
+         detail::md5_constants::bits_per_nybble * (( nybble_index %
+         detail::md5_constants::nybbles_per_word ) ^ 0x01u) )) ];
+    }
+    *p = '\0';
+
+    // Print the message, taking stream settings into account
+    return o << hex_string;
+}
+
+
+//  MD5 computation special applicator operator definitions  -----------------//
+
+/** Calls <code><var>o</var>.process_bit( <var>v</var> )</code>, where
+    \p o is the owning \c md5_computer of <code>*this</code>.
+
+    \param v  The bit to process.
+
+    \see  boost::coding::md5_computer::process_bit(bool)
+ */
+inline
+void
+md5_computer::bit_applicator::operator ()( bool v )
+{
+    this->parent_->process_bit( v );
+}
+
+/** Calls <code>this-&lt;<var>p</var> = <var>c.p</var></code>, where
+    \p p holds the owning \c md5_computer of a particular proxy.
+
+    \return  <code>*this</code>
+
+    \see  boost::coding::md5_computer::operator=(md5_computer const&)
+ */
+inline
+md5_computer::bit_applicator &
+md5_computer::bit_applicator::operator  =
+(
+    md5_computer::bit_applicator const &  c
+)
+{
+    this->parent_ = c.parent_;
+    return *this;
+}
+
+/** Calls <code><var>o</var>.process_byte( <var>v</var> )</code>, where
+    \p o is the owning \c md5_computer of <code>*this</code>.
+
+    \param v  The byte to process.
+
+    \see  boost::coding::md5_computer::process_byte(unsigned char)
+ */
+inline
+void
+md5_computer::byte_applicator::operator ()( unsigned char v )
+{
+    this->parent_->process_byte( v );
+}
+
+/** Calls <code>this-&lt;<var>p</var> = <var>c.p</var></code>, where
+    \p p holds the owning \c md5_computer of a particular proxy.
+
+    \return  <code>*this</code>
+
+    \see  boost::coding::md5_computer::operator=(md5_computer const&)
+ */
+inline
+md5_computer::byte_applicator &
+md5_computer::byte_applicator::operator  =
+(
+    md5_computer::byte_applicator const &  c
+)
+{
+    this->parent_ = c.parent_;
+    return *this;
+}
+
+
+//  MD5 message-digest computation miscellaneous function definitions  -------//
+
+/** \brief  Non-member swapping function for \c md5_computer
+
+    Exchanges the states of two \c md5_computer objects.  This specialization of
+    the algorithm can be called by generic code that uses free-function
+    (template) swap assisted with Koenig lookup.
+
+    \param a  The first object involved in the swap.
+    \param b  The second object involved in the swap.
+
+    \post  <code><var>a</var> == <var>old_b</var> &amp;&amp; <var>old_a</var> ==
+           <var>b</var></code>
+
+    \see  boost::coding::md5_computer::swap
+
+    \relates  boost::coding::md5_computer
+ */
+inline
+void
+swap
+(
+    md5_computer  a,
+    md5_computer  b
+)
+{
+    a.swap( b );
+}
+
+
+//  MD5 message-digest computation function definition  ----------------------//
+
+/** \brief  Immediate MD5 message-digest computation
+
+    Determines the MD5 message-digest of a given block of data, without
+    requiring the setup of a computation object.
+
+    \pre  \p buffer must point to a valid region of memory that contains at
+          least \p byte_count bytes past the given pointer.
+
+    \param buffer      Points to the beginning of the data block to be
+                       processed.
+    \param byte_count  The length of the data block to be processed, in bytes.
+
+    \return  The MD5 message digest of the data block.
+ */
+inline
+md5_digest
+compute_md5
+(
+    void const *  buffer,
+    std::size_t   byte_count
+)
+{
+    md5_computer  c;
+
+    c.process_bytes( buffer, byte_count );
+    return c.checksum();
+}
+
+
+}  // namespace coding
+}  // namespace boost
+
+
+#endif  // BOOST_CODING_MD5_HPP
