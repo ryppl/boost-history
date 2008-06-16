@@ -30,7 +30,7 @@ public:
   virtual void insert(const geometry::box<Point> &e, const Value &v) = 0;
 
   /// remove data with key 'k'
-  virtual void remove(const Point &k) = 0;
+  virtual void remove(const geometry::box<Point> &k) = 0;
 	
   /// bulk insert data from values
   virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) = 0;

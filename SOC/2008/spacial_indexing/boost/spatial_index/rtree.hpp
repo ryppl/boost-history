@@ -44,9 +44,31 @@ namespace spatial_index {
 
     /// remove the element with key 'k'
     /// TODO: implement
-    virtual void remove(const Point &k)
+    virtual void remove(const geometry::box<Point> &k)
     {
-      std::cerr << "Not implemented yet." << std::endl;
+      try {
+	boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(k));
+
+	l->remove(k);
+
+	condense_tree(l);
+
+	// if the root has only one child, make it the root
+	if(root_->elements() == 1) {
+	  root_ = root_->first_element();
+	  root_->set_root();
+	}
+
+	element_count--;
+      } catch(std::logic_error &e) {
+	// not found
+	return;
+      }
+    }
+
+    void condense_tree(const boost::shared_ptr<rtree_node<Point,Value> > &l)
+    {
+      std::cerr << "Condensing tree." << std::endl;
     }
 
     virtual void print(void) const

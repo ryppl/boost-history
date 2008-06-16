@@ -47,6 +47,15 @@ namespace spatial_index {
       return nodes_.size();
     }
 
+    /// first element, to replace root in case of condensing
+    boost::shared_ptr<rtree_node<Point, Value> > first_element(void) const
+    {
+      if(nodes_.size() == 0) {
+	throw std::logic_error("first_element in empty node");
+      }
+      return nodes_.begin()->second;
+    }
+
     /// true if it is a leaf node
     virtual bool is_leaf(void) const { return false; }
 
@@ -127,6 +136,12 @@ namespace spatial_index {
       }
       std::cerr << "adjust_node: node not found." << std::endl;
     }
+
+    virtual void remove(const geometry::box<Point> &k)
+    {
+      // TODO
+    }
+
 
     /// replace the node in the nodes_ vector and recompute the box
     void replace_node(const boost::shared_ptr<rtree_node<Point, Value> > &l, boost::shared_ptr<rtree_node<Point, Value> > &new_l)

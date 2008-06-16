@@ -97,6 +97,22 @@ namespace spatial_index {
 
     virtual Value get_value(const unsigned int i) const { return nodes_[i].second; }
 
+
+    /// remove value with key 'k' in this leaf
+    virtual void remove(const geometry::box<Point> &k)
+    {
+
+      for(typename leaves_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	if(it->first.min() == k.min() && it->first.max() == k.max()) {
+	  std::cerr << "Erasing node." << std::endl;
+	  nodes_.erase(it);
+	  return;
+	}
+      }
+
+    }
+
+
     virtual std::vector< geometry::box<Point> > get_boxes(void) const
     {
       std::vector< geometry::box<Point> > r;
