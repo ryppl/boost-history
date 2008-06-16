@@ -11,12 +11,19 @@ template <typename Iter> class proplist_descriptor;
  * The property list implements global list of properties for node-based edge
  * storage. Note that we can get away with only a list because the edge
  * addition logic is implemented by the incidence list.
+ *
+ * The property store actually maintains the number of elements internally.
+ * Because this store is built over a list, but only allows the insertion and
+ * removal of one element at a time, we do this to optimize calls to the size()
+ * function (which is used for the number of edges).
  */
 template <typename Props, typename Alloc>
 class property_list
 {
     typedef std::list<Props, Alloc> store_type;
 public:
+    typedef typename store_type::size_type size_type;
+
     typedef Props property_type;
     typedef proplist_descriptor<typename store_type::iterator> property_descriptor;
 
@@ -32,12 +39,13 @@ public:
     // Property access.
     inline property_type& properties(property_descriptor);
 
-    // Don't ever call this function.
-    inline typename store_type::size_type size() const
-    { return _props.size(); }
+    /** Return the number of properties. */
+    inline size_type size() const
+    { return _size; }
 
 private:
-    store_type _props;
+    store_type  _props;
+    size_type   _size;
 };
 
 /**
@@ -56,6 +64,7 @@ public:
 template <typename P, typename A>
 property_list<P,A>::property_list()
     : _props()
+    , _size(0)
 { }
 
 /**
@@ -65,6 +74,7 @@ template <typename P, typename A>
 typename property_list<P,A>::property_descriptor
 property_list<P,A>::add()
 {
+    ++_size;
     return add(property_type());
 }
 
@@ -75,6 +85,7 @@ template <typename P, typename A>
 typename property_list<P,A>::property_descriptor
 property_list<P,A>::add(property_type const& p)
 {
+    ++_size;
     return _props.insert(_props.end(), p);
 }
 
@@ -88,6 +99,7 @@ template <typename P, typename A>
 void
 property_list<P,A>::remove(property_descriptor p)
 {
+    --_size;
     _props.erase(p.iter);
 }
 

@@ -13,6 +13,8 @@ class property_vector
 {
     typedef std::vector<Props, Alloc> store_type;
 public:
+    typedef typename store_type::size_type size_type;
+
     typedef Props property_type;
     typedef std::size_t property_descriptor;
 
@@ -22,6 +24,10 @@ public:
     property_descriptor add(property_type const&);
 
     property_type& properties(property_descriptor);
+
+    /** Return the number of properties in the store. */
+    inline size_type size() const
+    { return _props.size(); }
 
 private:
     store_type _props;

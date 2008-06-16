@@ -21,9 +21,9 @@ public:
     typedef typename IncEdge::second_type property_descriptor;
 private:
     // Actually, the incident set, as it fundamentally implements a simple
-    // graph is based on a map keyed on the adjacenct vertex and mapped to
-    // the edge properties that describe it.
-    // We're basically undwinding and rebuilding the edge pair for this map.
+    // graph is based on a map keyed on the adjacenct vertex and mapped to the
+    // edge properties that describe it. We're basically undwinding and
+    // rebuilding the edge pair for this map.
     typedef std::map<vertex_descriptor, property_descriptor, Compare, Alloc> store_type;
 public:
     typedef typename store_type::iterator iterator;

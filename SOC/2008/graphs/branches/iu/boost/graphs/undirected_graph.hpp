@@ -2,8 +2,6 @@
 #ifndef UNDIRECTED_GRAPH_HPP
 #define UNDIRECTED_GRAPH_HPP
 
-#include <boost/bind.hpp>
-
 #include "none.hpp"
 
 // Various issues...
@@ -47,6 +45,7 @@ public:
     // it's basically independant of everything else, but contributes to almost
     // everything in the class by virtue of the property descriptor.
     typedef typename EdgeStore::template property_store<edge_properties>::type property_store;
+    typedef typename property_store::size_type edges_size_type;
 
     // Generate a bunch of descriptors. The vertex descriptor is fairly
     // straightforward since, like the property store, its independant of almost
@@ -62,18 +61,24 @@ public:
 
     // Generate the vertex type over the given properties and the incidence
     // store. Then, turn around and use that to generate the vertex store and its
-    // related types.
+    // related types. Incident edge iterators are abstracted over the iterators
+    // of the vertex.
     typedef vertex<vertex_properties, incidence_store> vertex_type;
     typedef typename vertex_type::size_type incident_edges_size_type;
-
-    // Incident edge iterators are abstracted over the iterators of the vertex.
     typedef incidence_iterator<typename vertex_type::iterator> incident_edge_iterator;
     typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
 
+    // The vertex store and related properties can also be built on the vertex
+    // type.
     typedef typename VertexStore::template store<vertex_type>::type vertex_store;
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
+
+    // Because edges are "distributed" among vertices, the edge iterators are
+    // somewhat special.
+    typedef none edge_iterator;
+    typedef std::pair<edge_iterator, edge_iterator> edge_range;
 
     // FIXME: This is a bit hacky, but without constrained members, we need a key
     // type to enable mapped vertices.
@@ -98,10 +103,31 @@ public:
     void remove_edge(edge_descriptor);
     void remove_edges(vertex_descriptor, vertex_descriptor);
 
+    /** @name Vertex Iteration
+     * These functions allow the iteration over the vertex set.
+     */
+    //@{
     vertex_range vertices() const;
     vertex_iterator begin_vertices() const;
     vertex_iterator end_vertices() const;
+    //@}
+
+    /** @name Edge Iteration
+     * These function allow the iteration over the edge set.
+     */
+    //@{
+    edge_range edges() const;
+    edge_iterator begin_edges() const;
+    edge_iterator end_edges() const;
+    //@}
+
+    /** @name Graph Size
+     * These functions return the number of vertices and edges in the graph.
+     */
+    //@{
     vertices_size_type num_vertices() const;
+    edges_size_type num_edges() const;
+    //@}
 
     // Edge incidence
     incident_edge_iterator begin_incident_edges(vertex_descriptor) const;
@@ -165,7 +191,6 @@ undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
 
         // Remove all the properties too. Does this make sense here?
         _props.remove(e.properties());
-
     }
 }
 
@@ -271,9 +296,6 @@ void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
                                             vertex_descriptor v)
 {
-    using boost::bind;
-    using boost::ref;
-
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
@@ -328,6 +350,16 @@ typename undirected_graph<VP,EP,VS,ES>::vertices_size_type
 undirected_graph<VP,EP,VS,ES>::num_vertices() const
 {
     return _verts.size();
+}
+
+/**
+ * Return the number of edges in this graph.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edges_size_type
+undirected_graph<VP,EP,VS,ES>::num_edges() const
+{
+    return _props.size();
 }
 
 /**
