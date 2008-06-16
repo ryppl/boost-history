@@ -2,6 +2,7 @@
 #include <iostream>
 #include <set>
 
+#include <boost/assert.hpp>
 #include <boost/utility.hpp>
 #include <boost/graphs/undirected_graph.hpp>
 
@@ -29,96 +30,52 @@ void print_types(const Graph&)
 }
 
 template <typename Graph>
-void add_verts(Graph& g)
+void test_add_vertices()
 {
-    cout << "*** Add Vertices" << endl;
-    cout << "*** " << demangle(typeid(Graph).name()) << endl;
+    Graph g;
+    list<typename Graph::vertex_descriptor> V;
     for(int i = 0; i < 5; ++i) {
-        g.add_vertex(i);
+        V.push_back(g.add_vertex(i));
     }
 }
 
 template <typename Graph>
-void del_verts(Graph& g)
+void test_add_remove_vertices()
 {
-    // Just remove the first two vertices
-    typename Graph::vertex_descriptor u = *g.begin_vertices();
-    typename Graph::vertex_descriptor v = *next(g.begin_vertices());
-    g.remove_vertex(u);
-    g.remove_vertex(v);
-}
-
-template <typename Graph>
-void add_edges(Graph& g)
-{
-    cout << "*** Add Edges" << endl;
-    cout << "*** " << demangle(typeid(Graph).name()) << endl;
-    typename Graph::vertex_descriptor u = g.add_vertex(100);
-    typename Graph::vertex_descriptor v = g.add_vertex(101);
-    typename Graph::vertex_descriptor w = g.add_vertex(102);
-    g.add_edge(v, u);
-    g.add_edge(w, u);
-}
-
-template <typename Graph>
-void add_and_del_edges(Graph& g)
-{
-    cout << "*** Add/Delete Edges" << endl;
-    cout << "*** " << demangle(typeid(Graph).name()) << endl;
-    typename Graph::vertex_descriptor u = g.add_vertex(100);
-    typename Graph::vertex_descriptor v = g.add_vertex(101);
-    typename Graph::vertex_descriptor w = g.add_vertex(102);
-    typename Graph::edge_descriptor e1 = g.add_edge(v, u);
-    typename Graph::edge_descriptor e2 = g.add_edge(w, u);
-
-    g.remove_edge(e1);
-    g.remove_edge(e2);
-}
-
-template <typename Graph>
-void test_multi_edge(Graph& g)
-{
-    cout << "*** Add/Delete Multi-Edges" << endl;
-    cout << "*** " << demangle(typeid(Graph).name()) << endl;
-    typename Graph::vertex_descriptor u = g.add_vertex(200);
-    typename Graph::vertex_descriptor v = g.add_vertex(201);
-    g.add_edge(u, v);
-    g.add_edge(v, u);
-    g.add_edge(u, v);
-    g.add_edge(v, u);
-    g.remove_edges(u, v);
-}
-
-template <typename Graph>
-void test_remove_vert(Graph& g)
-{
-    cout << "*** Remove Vertex" << endl;
-    cout << "*** " << demangle(typeid(Graph).name()) << endl;
-    typename Graph::vertex_descriptor u = g.add_vertex(300);
-    typename Graph::vertex_descriptor v = g.add_vertex(301);
-    typename Graph::vertex_descriptor w = g.add_vertex(302);
-    g.add_edge(u, v, 1);
-    g.add_edge(v, w, 2);
-    g.remove_vertex(v);
-}
-
-template <typename Graph>
-void print_verts(Graph& g)
-{
-    typename Graph::vertex_range rng = g.vertices();
-    for( ; rng.first != rng.second; ++rng.first) {
-        typename Graph::vertex_descriptor v = *rng.first;
-        cout << "vert: " << g[v] << " w/degree == " << g.degree(v) << endl;
+    Graph g;
+    list<typename Graph::vertex_descriptor> V;
+    for(int i = 0; i < 5; ++i) {
+        V.push_back(g.add_vertex(i));
     }
+    BOOST_ASSERT(g.num_vertices() == 5);
+    while(!V.empty()) {
+        g.remove_vertex(V.front());
+        V.pop_front();
+    }
+    BOOST_ASSERT(g.num_vertices() == 0);
 }
+
+template <typename Graph>
+void test_make_simple_triangle()
+{
+    Graph g;
+    vector<typename Graph::vertex_descriptor> V;
+    for(int i = 0; i < 3; ++i) {
+        V.push_back(g.add_vertex(i));
+    }
+    g.add_edge(V[0], V[1]);
+    g.add_edge(V[1], V[2]);
+    g.add_edge(V[2], V[0]);
+    BOOST_ASSERT(g.num_vertices() == 3);
+    BOOST_ASSERT(g.num_edges() == 3);
+}
+
 
 int main()
 {
-    // vec_vec();
-    // cout << endl << endl;
+    vec_vec();
     list_list();
-    // cout << endl << endl;
-    // set_set();
+    set_set();
 
     return 0;
 }
@@ -126,10 +83,8 @@ int main()
 void vec_vec()
 {
     typedef undirected_graph<City, Road, vertex_vector, edge_vector> Graph;
-
-    Graph g;
-    add_verts(g);
-    add_edges(g);
+    test_add_vertices<Graph>();
+    test_make_simple_triangle<Graph>();
 }
 
 void list_list()
@@ -137,20 +92,15 @@ void list_list()
     typedef undirected_graph<City, Road, vertex_list, edge_list> Graph;
 
     Graph g;
-    // add_verts(g);
-    // add_and_del_edges(g);
-    // test_multi_edge(g);
-    test_remove_vert(g);
+    test_add_remove_vertices<Graph>();
+    test_make_simple_triangle<Graph>();
 }
 
 
 void set_set()
 {
     typedef undirected_graph<City, Road, vertex_set<>, edge_set<> > Graph;
-
-    Graph g;
-    add_verts(g);
-    add_and_del_edges(g);
-    test_multi_edge(g);
+    test_add_remove_vertices<Graph>();
+    test_make_simple_triangle<Graph>();
 }
 
