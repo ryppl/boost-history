@@ -18,6 +18,8 @@
 namespace boost {
 namespace tree {
 
+// These algorithms are actually mostly preorder, as it's most efficient, but I
+// think it doesn't make much sense having in- and postorder versions of them. 
 
 // What about the subtree shapes?
 /**
@@ -49,9 +51,6 @@ bool equal(InCursor1 c1, InCursor2 c2)
 }
 
 
-// Is it really a good idea to use InCursor::size_type?
-// For a binary_cursor, a boolean size_type would be enough - but
-// not for a subtree algorithm like this one.
 /**
  *  @brief		Calculates the number of elements in a subtree.
  *  @param c	An input cursor.

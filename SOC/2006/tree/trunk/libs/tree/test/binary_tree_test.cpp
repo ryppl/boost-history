@@ -166,6 +166,7 @@ int test_main(int, char* [])
 	// Fill empty tree2 with different data
 	create_test_data_tree(tree2);
 	validate_test_data_tree(tree2);
+	BOOST_CHECK(tree1 != tree2);
 	
 	// Swap
 	test_swap_binary_trees(tree1, tree2);

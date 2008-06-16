@@ -14,6 +14,11 @@
 [section TODO]
 
 General:
+* Is it really a good idea to use InCursor::size_type for size(Cursor)?
+  For a binary_cursor, a boolean size_type would be enough - but
+  not for a subtree algorithm like this one. Maybe we need two different size_types for
+  cursor - a "children" one for iterator compatibility and a "subtree" one for
+  "larger scale".
 * Use the example trees form Knuth as test example data.
 * Write (internal/external?) adaptors for other tree libraries, as Kaspar Peeters' or
   Adobe's.
