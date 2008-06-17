@@ -4,7 +4,7 @@
 
 #include <boost/type_traits.hpp>
 
-#include "edge.hpp"
+#include "undirected_edge.hpp"
 
 /**
  * The incidence iterator is an abstraction over the incidence iterators of

@@ -19,13 +19,13 @@
 
 #include "descriptor.hpp"
 
-#include "vertex.hpp"
+#include "undirected_vertex.hpp"
 #include "vertex_iterator.hpp"
 #include "vertex_vector.hpp"
 #include "vertex_list.hpp"
 #include "vertex_set.hpp"
 
-#include "edge.hpp"
+#include "undirected_edge.hpp"
 #include "edge_vector.hpp"
 #include "edge_list.hpp"
 #include "edge_set.hpp"
@@ -67,7 +67,7 @@ public:
     // store. Then, turn around and use that to generate the vertex store and its
     // related types. Incident edge iterators are abstracted over the iterators
     // of the vertex.
-    typedef vertex<vertex_properties, incidence_store> vertex_type;
+    typedef undirected_vertex<vertex_properties, incidence_store> vertex_type;
     typedef typename vertex_type::size_type incident_edges_size_type;
     typedef incidence_iterator<typename vertex_type::iterator> incident_edge_iterator;
     typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
