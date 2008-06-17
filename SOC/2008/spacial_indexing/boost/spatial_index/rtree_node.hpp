@@ -120,8 +120,15 @@ namespace spatial_index {
       unsigned int index = 0;
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
 	if(it->second.get() == n.get()) {
-// 	  std::cerr << "Node found!" << std::endl;
+ 	  std::cerr << "---------------------------------------->" << std::endl;
+  	  std::cerr << "Node found!" << std::endl;
+ 	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().min()) << " , " <<geometry::get<1>(n->compute_box().min()) << std::endl;
+ 	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().max()) << " , " <<geometry::get<1>(n->compute_box().max()) << std::endl;
+	  if(it->second->get_parent().get() != n->get_parent().get()) {
+	    std::cerr << "ERR" << std::endl;
+	  }
 	  nodes_[index] = std::make_pair(n->compute_box(), n);
+ 	  std::cerr << "---------------------------------------->" << std::endl;
 	  return;
 	}
       }
@@ -218,6 +225,20 @@ namespace spatial_index {
     /// projector for parent
     boost::shared_ptr<rtree_node<Point,Value> > get_parent(void) const {
       return parent_;
+    }
+
+    // update the parent of all the childs
+    void update_parent(const boost::shared_ptr<rtree_node<Point,Value> > &p)
+    {
+      for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	it->second->set_parent(p);
+      }
+    }
+
+    // setter for parent
+    void set_parent(const boost::shared_ptr<rtree_node<Point,Value> > &p) 
+    {
+       parent_ = p;
     }
 
     /// value projector for leaf_node (not allowed here)

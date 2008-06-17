@@ -91,12 +91,25 @@ namespace spatial_index {
 	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent()));
 
 	split_node(l, n1, n2);
-// 	std::cerr << "Node splited." << std::endl;
-// 	n1->print();
-// 	n2->print();
-	adjust_tree(l, n1, n2);
+	std::cerr << std::endl;
+	std::cerr << std::endl;
+	std::cerr << std::endl;
+ 	std::cerr << "Node splited." << std::endl;
 
+ 	std::cerr << "ORIG" << std::endl;
+ 	l->print();
+	
+ 	std::cerr << "N1" << std::endl;
+  	n1->print();
+ 	std::cerr << "N2" << std::endl;
+  	n2->print();
+
+	std::cerr << "L parent." << std::endl;
+	l->get_parent()->print();
+
+	adjust_tree(l, n1, n2);
       } else {
+	std::cerr << "Insert without split" << std::endl;
 	l->insert(e, v);
 	adjust_tree(l);
       }
@@ -147,7 +160,17 @@ namespace spatial_index {
     void condense_tree(const boost::shared_ptr<rtree_node<Point,Value> > &l)
     {
       std::cerr << "Condensing tree." << std::endl;
+
+      if(l->is_root()) {
+	// if it's the root we are done
+	return;
+      }
+
       /// TODO: implement
+
+      boost::shared_ptr<rtree_node<Point,Value> > parent = l->get_parent();
+      parent->adjust_box(l);
+      condense_tree(parent);
     }
 
 
@@ -155,11 +178,13 @@ namespace spatial_index {
     {
       if(n->is_root()) {
 	// we finished the adjust
+	std::cerr << "It's the root" << std::endl;
 	return;
       }
       // as there are no splits just adjust the box of the parent and go on
       boost::shared_ptr<rtree_node<Point,Value> > parent = n->get_parent();
       parent->adjust_box(n);
+//       parent->print();
       adjust_tree(parent);
     }
 
@@ -167,14 +192,21 @@ namespace spatial_index {
 		     boost::shared_ptr<rtree_node<Point, Value> > &n1,
 		     boost::shared_ptr<rtree_node<Point, Value> > &n2)
     {
-      boost::shared_ptr<rtree_node<Point,Value> > N = n1;
-      boost::shared_ptr<rtree_node<Point,Value> > NN = n2;
       if(l->is_root()) {
-// 	std::cerr << "Root   ---------> split."<< std::endl;
+ 	std::cerr << "Root   ---------> split."<< std::endl;
 	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1));
 	new_root->set_root();
 	new_root->add_node(n1->compute_box(), n1);
 	new_root->add_node(n2->compute_box(), n2);
+
+	n1->set_parent(new_root);
+	n2->set_parent(new_root);
+
+	n1->update_parent(n1);
+	n2->update_parent(n2);
+
+	std::cerr << "Adjust tree N1: " << std::endl;
+	n1->get_parent()->print();
 	root_ = new_root;
 	return;
       }
@@ -182,12 +214,20 @@ namespace spatial_index {
       parent->replace_node(l, n1);
       if(parent->elements() >= M_) {
 	parent->add_node(n2->compute_box(), n2);
-// 	std::cerr << "parent is full" << std::endl;
+	std::cerr << "L Parent with the split added"<< std::endl;
+	parent->print();
+ 	std::cerr << "parent is full" << std::endl;
 
 	boost::shared_ptr< rtree_node<Point, Value> > p1(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level()));
 	boost::shared_ptr< rtree_node<Point, Value> > p2(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level()));
 
 	split_node(parent, p1, p2);
+
+	std::cerr << "P1: " << std::endl;
+	p1->print();
+	std::cerr << "P2: " << std::endl;
+	p2->print();
+
 	adjust_tree(parent, p1, p2);
       } else {
 	parent->add_node(n2->compute_box(), n2);
@@ -204,6 +244,9 @@ namespace spatial_index {
 
       unsigned int seed1, seed2;
       std::vector< geometry::box<Point> > boxes = n->get_boxes();
+
+      n1->set_parent(n->get_parent());
+      n2->set_parent(n->get_parent());
 
       linear_pick_seeds(n, seed1, seed2);
 
