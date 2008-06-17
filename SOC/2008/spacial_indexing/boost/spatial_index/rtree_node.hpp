@@ -130,9 +130,8 @@ namespace spatial_index {
 
     virtual void remove(const geometry::box<Point> &k)
     {
-      // TODO
+      throw std::logic_error("Remove from a node, not a leaf");
     }
-
 
     /// replace the node in the nodes_ vector and recompute the box
     void replace_node(const boost::shared_ptr<rtree_node<Point, Value> > &l, boost::shared_ptr<rtree_node<Point, Value> > &new_l)
@@ -269,31 +268,6 @@ namespace spatial_index {
     node_map nodes_;
 
   };
-
-  /// given two boxes, create the minimal box that contains them
-  template<typename Point>
-  geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
-  {
-    Point min(
-	      geometry::get<0>(b1.min()) < geometry::get<0>(b2.min()) ? geometry::get<0>(b1.min()) : geometry::get<0>(b2.min()),
-	      geometry::get<1>(b1.min()) < geometry::get<1>(b2.min()) ? geometry::get<1>(b1.min()) : geometry::get<1>(b2.min())
-	      );
-
-    Point max(
-	      geometry::get<0>(b1.max()) > geometry::get<0>(b2.max()) ? geometry::get<0>(b1.max()) : geometry::get<0>(b2.max()),
-	      geometry::get<1>(b1.max()) > geometry::get<1>(b2.max()) ? geometry::get<1>(b1.max()) : geometry::get<1>(b2.max())
-	      );
-
-    return geometry::box<Point>(min, max);
-  }
-
-  /// compute the area of the union of b1 and b2
-  template<typename Point>
-  double compute_union_area(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
-  {
-    geometry::box<Point> enlarged_box = enlarge_box(b1, b2);
-    return geometry::area(enlarged_box);
-  }
 
 
 

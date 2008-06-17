@@ -11,6 +11,33 @@ namespace boost {
 namespace spatial_index {
 
 
+  /// given two boxes, create the minimal box that contains them
+  template<typename Point>
+  geometry::box<Point> enlarge_box(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
+  {
+    Point min(
+	      geometry::get<0>(b1.min()) < geometry::get<0>(b2.min()) ? geometry::get<0>(b1.min()) : geometry::get<0>(b2.min()),
+	      geometry::get<1>(b1.min()) < geometry::get<1>(b2.min()) ? geometry::get<1>(b1.min()) : geometry::get<1>(b2.min())
+	      );
+
+    Point max(
+	      geometry::get<0>(b1.max()) > geometry::get<0>(b2.max()) ? geometry::get<0>(b1.max()) : geometry::get<0>(b2.max()),
+	      geometry::get<1>(b1.max()) > geometry::get<1>(b2.max()) ? geometry::get<1>(b1.max()) : geometry::get<1>(b2.max())
+	      );
+
+    return geometry::box<Point>(min, max);
+  }
+
+  /// compute the area of the union of b1 and b2
+  template<typename Point>
+  double compute_union_area(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
+  {
+    geometry::box<Point> enlarged_box = enlarge_box(b1, b2);
+    return geometry::area(enlarged_box);
+  }
+
+
+
   template<typename Point>
   bool overlaps(const geometry::box<Point> &b1, const geometry::box<Point> &b2)
   {

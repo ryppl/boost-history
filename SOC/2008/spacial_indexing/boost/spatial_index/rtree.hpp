@@ -21,6 +21,7 @@ namespace spatial_index {
   class rtree : public spatial_index<Point, Value>
   {
   private:
+    // numbers of elements in the tree
     unsigned int element_count;
 
     // minimum number of elements per node
@@ -61,12 +62,6 @@ namespace spatial_index {
 	// not found
 	return;
       }
-    }
-
-    void condense_tree(const boost::shared_ptr<rtree_node<Point,Value> > &l)
-    {
-      std::cerr << "Condensing tree." << std::endl;
-      /// TODO: implement
     }
 
     virtual void print(void) const
@@ -148,6 +143,13 @@ namespace spatial_index {
     virtual ~rtree() {}
 
   private:
+
+    void condense_tree(const boost::shared_ptr<rtree_node<Point,Value> > &l)
+    {
+      std::cerr << "Condensing tree." << std::endl;
+      /// TODO: implement
+    }
+
 
     void adjust_tree(boost::shared_ptr<rtree_node<Point, Value> > &n)
     {
