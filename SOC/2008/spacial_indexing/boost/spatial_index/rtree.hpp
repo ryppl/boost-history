@@ -23,8 +23,6 @@ namespace spatial_index {
   private:
     unsigned int element_count;
 
-    // maximum number of elements per leaf
-    unsigned int L_;
     // minimum number of elements per node
     unsigned int m_;
     // maximum number of elements per node
@@ -34,16 +32,15 @@ namespace spatial_index {
 
   public:
     rtree(const geometry::box<Point> &initial_box, const unsigned int &L, const unsigned int &m, const unsigned int &M) 
-      : element_count(0), L_(L), m_(m), M_(M),
-	root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1, m, M))
+      : element_count(0), m_(m), M_(M),
+	root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
     {
       root_->set_root();
-      boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(root_, L));
+      boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(root_));
       root_->add_leaf_node(initial_box, new_leaf);
     }
 
     /// remove the element with key 'k'
-    /// TODO: implement
     virtual void remove(const geometry::box<Point> &k)
     {
       try {
@@ -69,6 +66,7 @@ namespace spatial_index {
     void condense_tree(const boost::shared_ptr<rtree_node<Point,Value> > &l)
     {
       std::cerr << "Condensing tree." << std::endl;
+      /// TODO: implement
     }
 
     virtual void print(void) const
@@ -85,14 +83,14 @@ namespace spatial_index {
     {
       boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(e));
 
-      if(l->is_full()) {
+      if(l->elements() >= M_) {
 // 	std::cerr << "Node full. Split." << std::endl;
 
 	l->insert(e, v);
 	
 	// split!
-	boost::shared_ptr< rtree_node<Point, Value> > n1(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
-	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent(), l->get_capacity()));
+	boost::shared_ptr< rtree_node<Point, Value> > n1(new rtree_leaf<Point,Value>(l->get_parent()));
+	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent()));
 
 	split_node(l, n1, n2);
 // 	std::cerr << "Node splited." << std::endl;
@@ -170,7 +168,7 @@ namespace spatial_index {
       boost::shared_ptr<rtree_node<Point,Value> > NN = n2;
       if(l->is_root()) {
 // 	std::cerr << "Root   ---------> split."<< std::endl;
-	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1, m_, M_));
+	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1));
 	new_root->set_root();
 	new_root->add_node(n1->compute_box(), n1);
 	new_root->add_node(n2->compute_box(), n2);
@@ -179,12 +177,12 @@ namespace spatial_index {
       }
       boost::shared_ptr<rtree_node<Point,Value> > parent = l->get_parent();
       parent->replace_node(l, n1);
-      if(parent->is_full()) {
+      if(parent->elements() >= M_) {
 	parent->add_node(n2->compute_box(), n2);
 // 	std::cerr << "parent is full" << std::endl;
 
-	boost::shared_ptr< rtree_node<Point, Value> > p1(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level(), m_, M_));
-	boost::shared_ptr< rtree_node<Point, Value> > p2(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level(), m_, M_));
+	boost::shared_ptr< rtree_node<Point, Value> > p1(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level()));
+	boost::shared_ptr< rtree_node<Point, Value> > p2(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level()));
 
 	split_node(parent, p1, p2);
 	adjust_tree(parent, p1, p2);

@@ -24,9 +24,9 @@ namespace spatial_index {
     typedef std::vector< std::pair< geometry::box<Point>, Value > > leaves_map;
 
   public:
-    rtree_leaf(void) : L_(8), level_(0) {}
-    rtree_leaf(const boost::shared_ptr< rtree_node<Point,Value> > &parent, const unsigned int &L) 
-      : rtree_node<Point,Value>(parent, 0, 0, 0), L_(L), level_(0) {}
+    rtree_leaf(void) : level_(0) {}
+    rtree_leaf(const boost::shared_ptr< rtree_node<Point,Value> > &parent)
+      : rtree_node<Point,Value>(parent, 0), level_(0) {}
 
     /// query method
     virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r)
@@ -56,8 +56,6 @@ namespace spatial_index {
 
     /// yes, we are a leaf
     virtual bool is_leaf(void) const { return true; }
-
-    virtual bool is_full(void) const { return nodes_.size() >= L_; }
 
     /// element count
     virtual unsigned int elements(void) const
@@ -90,11 +88,6 @@ namespace spatial_index {
       nodes_.clear();
     }
 
-    virtual unsigned int get_capacity(void) const
-    {
-      return L_;
-    }
-
     virtual Value get_value(const unsigned int i) const { return nodes_[i].second; }
 
 
@@ -125,7 +118,7 @@ namespace spatial_index {
     virtual void print(void) const
     {
       std::cerr << " --> Leaf --------" << std::endl;
-      std::cerr << "  Size / Capacity: " << nodes_.size() << " / " << L_ << std::endl;
+      std::cerr << "  Size: " << nodes_.size() << std::endl;
       for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	std::cerr << "  | ";
 	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
@@ -141,9 +134,6 @@ namespace spatial_index {
     }
 
   private:
-
-    // maximum number of elements per leaf
-    unsigned int L_;
 
     // level of this node
     unsigned int level_;

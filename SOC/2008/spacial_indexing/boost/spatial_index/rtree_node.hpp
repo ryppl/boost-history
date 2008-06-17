@@ -29,14 +29,11 @@ namespace spatial_index {
 
   public:
     /// default constructor (needed for the containers)
-    rtree_node(void) : m_(4), M_(8), root_(false) {}
+    rtree_node(void) : root_(false) {}
 
     /// normal constructor
-    rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level, const unsigned int &m, const unsigned int &M) 
-      : parent_(parent), level_(level), m_(m), M_(M), root_(false) {}
-
-    /// true if the node is full
-    virtual bool is_full(void) const { return nodes_.size() >= M_; }
+    rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level) 
+      : parent_(parent), level_(level), root_(false) {}
 
     /// level projector
     virtual unsigned int get_level(void) const { return level_; }
@@ -105,12 +102,6 @@ namespace spatial_index {
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
       std::cerr << "Insert in node!" << std::endl;
-    }
-
-    /// projector for the node capacity
-    virtual unsigned int get_capacity(void) const
-    {
-      return M_;
     }
 
     /// get the envelopes of a node
@@ -242,7 +233,7 @@ namespace spatial_index {
       std::cerr << " --> Node --------" << std::endl;
       std::cerr << "  Is Root: " << is_root() << std::endl;
       std::cerr << "  Level: " << level_ << std::endl;
-      std::cerr << "  Size / Min / Max: " << nodes_.size() << " / " << m_ << " / " << M_ << std::endl;
+      std::cerr << "  Size: " << nodes_.size() << std::endl;
       std::cerr << "  | ";
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
@@ -271,20 +262,11 @@ namespace spatial_index {
     // level of this node
     unsigned int level_;
 
-    // minimum number of elements per node
-    unsigned int m_;
-
-    // maximum number of elements per node
-    unsigned int M_;
-
     // true if it is the root
     bool root_;
 
-
     /// child nodes
     node_map nodes_;
-
-  private:
 
   };
 
