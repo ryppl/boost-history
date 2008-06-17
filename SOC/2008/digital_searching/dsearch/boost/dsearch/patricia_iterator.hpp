@@ -1,6 +1,8 @@
 #ifndef BOOST_DSEARCH_PATRICIA_ITERATOR_HPP
 #define BOOST_DSEARCH_PATRICIA_ITERATOR_HPP
 #include<boost/iterator/iterator_facade.hpp>
+#include<boost/utility/enable_if.hpp>
+#include<boost/type_traits/is_convertible.hpp>
 
 namespace boost{
 namespace dsearch{
@@ -9,6 +11,7 @@ class patricia_iterator
 :public iterator_facade< patricia_iterator<Value_type,Node_type, Alloc>, 
 Value_type, bidirectional_traversal_tag >
 {
+	struct enabler {};
 	friend class boost::iterator_core_access;
 	Node_type *cur;
 	Node_type *next;
@@ -61,8 +64,11 @@ Value_type, bidirectional_traversal_tag >
 		return next->value;
 	}
 	
-	template<class T>
-	bool equal(T &other ) const
+	template<class V,class N,class A>
+	bool equal(patricia_iterator<V,N,A> const &other,
+	typename enable_if< is_convertible<V*,Value_type*>, 
+				enabler >::type = enabler()
+	) const
 	{
 		if ( cur == other.cur && next == other.next )
 			return true;
@@ -76,7 +82,6 @@ Value_type, bidirectional_traversal_tag >
 
 	patricia_iterator(Node_type *root, bool start)
 	{
-		
 		if(start)
 		{
 			if(root==0) 
@@ -100,6 +105,14 @@ Value_type, bidirectional_traversal_tag >
 			cur=0;
 		}
 		return;
+	}
+	
+	template<class V,class N,class A>
+	patricia_iterator ( patricia_iterator<V,N,A> const& other,
+				typename enable_if< is_convertible<V*,Value_type*>, 
+				enabler >::type = enabler()
+		    		) : cur(other.cur),next(other.next)
+	{
 	}
 };
 	
