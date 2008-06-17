@@ -57,25 +57,75 @@ void insert_test_2()
 	pat.insert(std::make_pair("bad",1));
 	pat.insert(std::make_pair("bad",2));
 
+	it=pat.begin();
+	BOOST_CHECK((*it).first ==std::string("bad"));
+	BOOST_CHECK( ++it == pat.end() );
+
 	pat.insert(std::make_pair("",3));
 	pat.insert(std::make_pair("",4));
+
+	it=pat.begin();
+	BOOST_CHECK((*it).first == "" );
+	BOOST_CHECK((*++it).first == "bad" );
+	std::cout<<"the iterator points to:"<<(*it).first<<std::endl;
+	BOOST_CHECK( ++it == pat.end() );
 
 	pat.insert(std::make_pair("h",5));
 	pat.insert(std::make_pair("h",6));
 
+	it=pat.begin();
+	BOOST_CHECK((*it).first == "" );
+	BOOST_CHECK((*++it).first == "bad" );
+	BOOST_CHECK((*++it).first == "h" );
+	BOOST_CHECK( ++it == pat.end() );
+
+
 	pat.insert(std::make_pair("hello",7));
 	pat.insert(std::make_pair("hello",8));
+
+	it=pat.begin();
+	BOOST_CHECK((*it).first == "" );
+	BOOST_CHECK((*++it).first == "bad" );
+	BOOST_CHECK((*++it).first == "h" );
+	BOOST_CHECK((*++it).first == "hello" );
+	BOOST_CHECK( ++it == pat.end() );
 
 
 	pat.insert(std::make_pair("hell",9));
 	pat.insert(std::make_pair("hell",10));
 
+	it=pat.begin();
+	BOOST_CHECK((*it).first == "" );
+	BOOST_CHECK((*++it).first == "bad" );
+	BOOST_CHECK((*++it).first == "h" );
+	BOOST_CHECK((*++it).first == "hell" );
+	BOOST_CHECK((*++it).first == "hello" );
+	BOOST_CHECK( ++it == pat.end() );
+
 	pat.insert(std::make_pair("wicked",11));
 	pat.insert(std::make_pair("wicked",12));
+
+	it=pat.begin();
+	BOOST_CHECK((*it).first == "" );
+	BOOST_CHECK((*++it).first == "bad" );
+	BOOST_CHECK((*++it).first == "h" );
+	BOOST_CHECK((*++it).first == "hell" );
+	BOOST_CHECK((*++it).first == "hello" );
+	BOOST_CHECK((*++it).first == "wicked" );
+	BOOST_CHECK( ++it == pat.end() );
 
 	pat.insert(std::make_pair("we",13));
 	pat.insert(std::make_pair("we",14));
 
+	it=pat.begin();
+	BOOST_CHECK((*it).first == "" );
+	BOOST_CHECK((*++it).first == "bad" );
+	BOOST_CHECK((*++it).first == "h" );
+	BOOST_CHECK((*++it).first == "hell" );
+	BOOST_CHECK((*++it).first == "hello" );
+	BOOST_CHECK((*++it).first == "we" );
+	BOOST_CHECK((*++it).first == "wicked" );
+	BOOST_CHECK( ++it == pat.end() );
 
 	BOOST_CHECK( pat.find("") );
 	BOOST_CHECK( pat.find("bad") );
@@ -83,11 +133,12 @@ void insert_test_2()
 	BOOST_CHECK( pat.find("h") );
 	BOOST_CHECK( pat.find("wicked") );
 	BOOST_CHECK( pat.find("we") );
+	
+	
 	 // 4<<h 6<< hell 10<< hello 8<< bad 2<< wicked 12<< we 14
 
-
-	const char * key[]={ "","h","hell","hello","bad","wicked","we"};
-	int data[]=  {  4, 6,     10,      8,   2,       12,  14 };
+	const char * key[]={ "","bad", "h","hell","hello","we","wicked"};
+	int data[]=        {  4,   2 ,   6,    10,     8,   14,    12  };
 	
 	it=pat.begin();
 	int pos=0;
@@ -95,7 +146,7 @@ void insert_test_2()
 	{
 		BOOST_CHECK ( (*it).first.compare( std::string((char *)key[pos]) ) == 0 );
 		BOOST_CHECK ( (*it).second == data[pos] );
-		//std::cout<<(*it).first<<"==="<<(*it).second<<std::endl;
+		std::cout<<(*it).first<<"==="<<(*it).second<<std::endl;
 		++pos;
 	}
 }
