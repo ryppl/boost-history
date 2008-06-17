@@ -354,7 +354,7 @@ class patricia{
 
 	inline std::size_t get_nth_bit(const key_element_type &element,const int &n) const 
 	{
-		return n==0? 1 : ( element & (1<<(n-1)) );
+		return n==0? 1 : ( ( element&(1<<(bit_width - n )) )  !=0 );
 	}
 
 	//returns inclusive of end bit after each pos and the not(un) common bit in k1;
@@ -389,13 +389,14 @@ class patricia{
 		{
 			t1=Key_traits::get_element(k1_it);
 			t2=Key_traits::get_element(k2_it);
-			while((t1 & 0x1)==( t2 & 0x1))
+			//TODO:optimize this part!!!
+			key_element_type x= (key_element_type(1)<<(bit_width-1));
+			while((t1 & x)==( t2 & x))//possibly make this ( t1 &  x) != ( t1 &  x )
 			{
-				t1>>=1;
-				t2>>=1;
+				x>>=1;
 				++pos;
 			}
-			uncommon_bit=t1%2;
+			uncommon_bit= ((t1 & x)!=0);
 			++pos;
 		}
 		else
@@ -704,5 +705,3 @@ class patricia{
 }//namespace boost
 
 #endif //BOOST_DSEARCH_PATRICIA_HPP
-
-
