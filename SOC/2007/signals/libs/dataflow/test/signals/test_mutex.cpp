@@ -19,7 +19,7 @@ int test_main(int, char* [])
         signals::timed_generator<void ()> banger1;
         signals::timed_generator<void ()> banger2;
         signals::mutex<void ()> lock;
-        signals::counter<void (), signals::unfused, volatile int> counter;
+        signals::counter<void (), signals::output::unfused, volatile int> counter;
         
         banger1 >>= lock >>= counter;
         banger2 >>= lock;
@@ -35,10 +35,10 @@ int test_main(int, char* [])
     }
     {
         //[ test_mutex_fused
-        signals::timed_generator<void (), signals::fused> banger1;
-        signals::timed_generator<void (), signals::fused> banger2;
-        signals::mutex<void (), signals::fused> lock;
-        signals::counter<void (), signals::fused, volatile int> counter;
+        signals::timed_generator<void (), signals::output::fused> banger1;
+        signals::timed_generator<void (), signals::output::fused> banger2;
+        signals::mutex<void (), signals::output::fused> lock;
+        signals::counter<void (), signals::output::fused, volatile int> counter;
 
         banger1 >>= lock >>= counter;
         banger2 >>= lock;

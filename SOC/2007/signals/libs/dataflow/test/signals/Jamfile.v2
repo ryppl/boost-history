@@ -38,3 +38,5 @@ run test_multi_args.cpp ;
 run test_same_type.cpp ;
 run test_multi_out.cpp ;
 
+run test_composition.cpp ;
+

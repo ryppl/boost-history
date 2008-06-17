@@ -195,7 +195,7 @@ For example,
 
     signals::storage<int (int, int &, const std::string &>), signals::unfused> unfused_storage;
     signals::storage<int (int, int &, const std::string &>)> unfused_storage_by_default;
-    signals::storage<int (int, int &, const std::string &>), signals::fused> fused_storage;
+    signals::storage<int (int, int &, const std::string &>), signals::output::fused> fused_storage;
 
 In the above case, `unfused_storage` is similar to `f` above, and can be used as a slot
 for signals which carry regular, unfused arguments.

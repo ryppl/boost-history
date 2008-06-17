@@ -115,7 +115,7 @@ is specified as the second template parameter.
 There are three options:
 
 * `signals::unfused` provides an unfused output signal named `out`.
-* `signals::fused` provides a fused output signal named `fused_out`.
+* `signals::output::fused` provides a fused output signal named `fused_out`.
 * `signals::combined` provides an unfused output signal named `out`,
   and a fused adapter for the signal named `fused_out`.
   This is useful for components which wish to use fusion internally but output

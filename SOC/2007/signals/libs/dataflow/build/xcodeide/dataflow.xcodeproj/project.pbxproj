@@ -143,6 +143,7 @@
 		08A0E54C0D7A7674009B11DD /* quick_start_examples.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quick_start_examples.cpp; sourceTree = "<group>"; };
 		08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_has_call_operator.cpp; sourceTree = "<group>"; };
 		08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = has_call_operator.hpp; sourceTree = "<group>"; };
+		08B234E40DC92C3A002A7FFE /* fusion_filter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fusion_filter.hpp; sourceTree = "<group>"; };
 		08B9D4190CC3D0790050F10B /* test_binary_op.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_binary_op.cpp; sourceTree = "<group>"; };
 		08B9D41E0CC3D0A80050F10B /* my_producer_consumer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_producer_consumer.hpp; sourceTree = "<group>"; };
 		08BD9AFB0CEB9D330069AFE2 /* get_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = get_port.hpp; sourceTree = "<group>"; };
@@ -261,7 +262,6 @@
 		08F5FF070D07082200FDBAEE /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08F5FF130D070A1400FDBAEE /* test_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_port.cpp; sourceTree = "<group>"; };
 		08F71D3E0CA3547C0010099E /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
-		08F71D3F0CA3547C0010099E /* test_bind_object.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_bind_object.cpp; sourceTree = "<group>"; };
 		08F71D400CA3547C0010099E /* test_branching.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_branching.cpp; sourceTree = "<group>"; };
 		08F71D410CA3547C0010099E /* test_chain.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_chain.cpp; sourceTree = "<group>"; };
 		08F71D420CA3547C0010099E /* test_connect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_connect.cpp; sourceTree = "<group>"; };
@@ -299,6 +299,7 @@
 		08FCEFCE0CB9CEB000BBB599 /* future.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = future.qbk; sourceTree = "<group>"; };
 		08FD5E4D0C1BA60800F00877 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08FD5E4E0C1BA60800F00877 /* dataflow.qbk */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = dataflow.qbk; sourceTree = "<group>"; };
+		08FDEF940DC8E91800422676 /* test_composition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_composition.cpp; sourceTree = "<group>"; };
 		08FFDD6F0CEB70AD009318A8 /* blueprint_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blueprint_example.cpp; sourceTree = "<group>"; };
 		08FFDD740CEB71A2009318A8 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -475,6 +476,7 @@
 				08EF9B260C5D506A00D4D206 /* counter.hpp */,
 				08EF9B2C0C5D506A00D4D206 /* filter.hpp */,
 				08EF9B2D0C5D506A00D4D206 /* filter_base.hpp */,
+				08B234E40DC92C3A002A7FFE /* fusion_filter.hpp */,
 				08EF9B2E0C5D506A00D4D206 /* function.hpp */,
 				08EF9B2F0C5D506A00D4D206 /* instantiator.hpp */,
 				08EF9B300C5D506A00D4D206 /* junction.hpp */,
@@ -743,7 +745,6 @@
 			children = (
 				08F71D3E0CA3547C0010099E /* Jamfile.v2 */,
 				08F216430CC95C3800DD25D3 /* test_result_of_defined.cpp */,
-				08F71D3F0CA3547C0010099E /* test_bind_object.cpp */,
 				08F71D420CA3547C0010099E /* test_connect.cpp */,
 				08F71D460CA3547C0010099E /* test_filter.cpp */,
 				08F71D440CA3547C0010099E /* test_counter.cpp */,
@@ -764,6 +765,7 @@
 				08FBDA3A0CD272ED00CC3891 /* test_multiplexer.cpp */,
 				089B93720D5AA99700F6EEAA /* test_filter_base.cpp */,
 				083F14A50D8A250700D0F8B7 /* test_connect_result.cpp */,
+				08FDEF940DC8E91800422676 /* test_composition.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";
@@ -909,7 +911,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# shell script goes here\nstyle=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \nbjam --v2 --toolset=darwin ../../test $style";
+			shellScript = "# shell script goes here\nstyle=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \nbjam ../../test $style";
 		};
 		08668C510C19A16F00ACB19A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -935,7 +937,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# shell script goes here\nstyle=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \nbjam --v2 --toolset=darwin --clean ../../test $style";
+			shellScript = "# shell script goes here\nstyle=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \nbjam --v2 --clean ../../test $style";
 		};
 		08F0836D0C1DF6DE00687E1B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

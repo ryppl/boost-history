@@ -44,6 +44,55 @@ namespace detail {
 
 }
 
+template<typename T>
+struct is_boost_signal
+    : public mpl::false_
+{};
+
+template<
+    typename Signature,
+    typename Combiner,
+    typename Group,
+    typename GroupCompare>
+struct is_boost_signal<boost::signal<Signature, Combiner, Group, GroupCompare> >
+    : public mpl::true_
+{};
+
+template<typename T>
+struct underlying_signal
+{
+    typedef typename underlying_signal<typename T::signal_type>::type type;    
+};
+
+template<
+    typename Signature,
+    typename Combiner,
+    typename Group,
+    typename GroupCompare>
+struct underlying_signal<boost::signal<Signature, Combiner, Group, GroupCompare> >
+{
+    typedef boost::signal<Signature, Combiner, Group, GroupCompare> type;
+};
+
+template<typename T, typename Enable=void>
+struct get_underlying_signal
+{
+    T &operator()(T &t) const
+    {
+        return t;
+    }
+};
+
+template<typename T>
+struct get_underlying_signal<T, typename disable_if<is_boost_signal<T> >::type>
+{
+    typename underlying_signal<T>::type & operator()(T &t) const
+    {
+        return get_underlying_signal<typename T::signal_type>()(t.default_signal());
+    }
+};
+
+
 /// ComponentTraits for a Dataflow.Signals filter.
 /// \param[in] Filter Filter type (the class deriving filter)
 /// \param[in] Signals A boost::signal type or void (will be: a fusion sequence of signals)
@@ -52,7 +101,7 @@ template<typename Filter, typename Signals, typename InSignatures>
 struct filter_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
-            Signals &,
+            typename underlying_signal<Signals>::type &,
             dataflow::port_adapter<
                 Filter,
                 dataflow::signals::call_consumer<InSignatures>,
@@ -64,7 +113,7 @@ struct filter_component_traits
     static typename filter_component_traits::fusion_ports get_ports(Component &component)
     {
         return typename filter_component_traits::fusion_ports(
-            component.default_signal(),
+            get_underlying_signal<Filter>()(component),
             component);
     };
 };

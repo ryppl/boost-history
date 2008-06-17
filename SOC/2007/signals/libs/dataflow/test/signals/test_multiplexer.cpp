@@ -43,8 +43,8 @@ int test_main(int, char* [])
     }
     {
         //[ test_multiplexer_fused
-        signals::storage<void (float), signals::fused> one(1.0f), two(2.0f), collector(-1.0f);
-        signals::multiplexer<void (float), signals::fused> multiplexer;
+        signals::storage<void (float), signals::output::fused> one(1.0f), two(2.0f), collector(-1.0f);
+        signals::multiplexer<void (float), signals::output::fused> multiplexer;
         
         one >>= multiplexer.slot<1>();
         two >>= multiplexer.slot<2>();

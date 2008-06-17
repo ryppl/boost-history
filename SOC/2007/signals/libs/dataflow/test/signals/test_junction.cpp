@@ -46,9 +46,9 @@ int test_main(int, char* [])
     }
     {
         //[ test_junction_fused
-        signals::storage<void (), signals::fused> banger1, banger2;
-        signals::counter<void (), signals::fused> counter1, counter2;
-        signals::junction<void (), signals::fused> junction;
+        signals::storage<void (), signals::output::fused> banger1, banger2;
+        signals::counter<void (), signals::output::fused> counter1, counter2;
+        signals::junction<void (), signals::output::fused> junction;
         
         banger1 >>= junction >>= counter1;
         banger2 >>= junction >>= counter2;

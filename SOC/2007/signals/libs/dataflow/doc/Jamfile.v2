@@ -97,7 +97,7 @@ boostbook standalone
       dataflow_blueprint_doxygen
     :
         # pull in the online .css and images
-        <xsl:param>project.root=http://beta.boost.org/development
+        <xsl:param>project.root=http://dancinghacker.com
         # without the next line, build complains
         <xsl:param>annotation.support=1
         # pulled this from the doc_test Jamfile

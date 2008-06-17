@@ -8,6 +8,7 @@
 
 #include <boost/dataflow/support/traits.hpp>
 #include <boost/mpl/is_sequence.hpp>
+#include <boost/static_assert.hpp>
 
 namespace boost { namespace dataflow {
 

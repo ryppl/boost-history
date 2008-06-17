@@ -30,12 +30,12 @@ int test_main(int, char* [])
     }
     {
         //[ test_function_fused
-        signals::function<void (float), float(float), signals::fused>
+        signals::function<void (float), float(float), signals::output::fused>
             double_fun1(boost::bind(std::multiplies<float>(), _1, 2.0f));
-        signals::function<void (float), float(float), signals::fused>
+        signals::function<void (float), float(float), signals::output::fused>
             double_fun2(boost::bind(std::multiplies<float>(), _1, 2.0f));
-        signals::storage<void (float), signals::fused> floater(1.0f);
-        signals::storage<void (float), signals::fused> collector(0.0f);
+        signals::storage<void (float), signals::output::fused> floater(1.0f);
+        signals::storage<void (float), signals::output::fused> collector(0.0f);
         
         floater >>= double_fun1 >>= double_fun2 >>= collector;
         floater.send();

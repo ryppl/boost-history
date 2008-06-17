@@ -59,7 +59,7 @@ int main(int, char* [])
 {
 //[ fused_signal_void_counter_main
     FusedSignalVoidCounter counter;
-    signals::storage<void(), signals::fused> storage;
+    signals::storage<void(), signals::output::fused> storage;
 
     storage >>= counter;
     for (int i=0; i<33; i++)

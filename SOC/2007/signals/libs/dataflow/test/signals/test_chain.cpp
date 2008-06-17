@@ -23,7 +23,7 @@ public:
 	void operator()(float x) {out(2*x);}
 };
 
-class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (float), mpl::vector<>, signals::fused>
+class FusedDoublerClass : public signals::fusion_filter<FusedDoublerClass, void (float), mpl::vector<>, signals::output::fused>
 {
 public:
     typedef void result_type;
@@ -54,8 +54,8 @@ int test_main(int, char* [])
     {
         //[ test_chain_fused
         signals::chain<void(float), FusedDoublerClass> doubling_chain(4, NULL);
-        signals::storage<void (float), signals::fused> floater(1.0f);
-        signals::storage<void (float), signals::fused> collector(0.0f);
+        signals::storage<void (float), signals::output::fused> floater(1.0f);
+        signals::storage<void (float), signals::output::fused> collector(0.0f);
         
         floater >>= doubling_chain >>= collector;
         floater.send();

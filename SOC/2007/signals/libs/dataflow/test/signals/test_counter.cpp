@@ -22,7 +22,7 @@ int test_main(int, char* [])
     }
     {
         //[ test_counter_fused
-        signals::counter<void (), signals::fused> counter;
+        signals::counter<void (), signals::output::fused> counter;
         
         for (int i=0; i<33; i++)
             counter(boost::fusion::vector<>());

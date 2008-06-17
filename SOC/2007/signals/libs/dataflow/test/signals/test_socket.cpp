@@ -67,9 +67,9 @@ int test_main(int, char* [])
 	socket.connect(endpoint_recv);
 
 	// instatiate the components
-    signals::socket_receiver<void (float), signals::fused> receiver(socket);
-	signals::storage<void (float), signals::fused> collector(0.0f);
-	signals::condition<void (float), signals::fused> receive_condition(cond, mutex_);
+    signals::socket_receiver<void (float), signals::output::fused> receiver(socket);
+	signals::storage<void (float), signals::output::fused> collector(0.0f);
+	signals::condition<void (float), signals::output::fused> receive_condition(cond, mutex_);
 
 	// set up the network
 	receiver >>= collector;

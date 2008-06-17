@@ -5,7 +5,7 @@
 
 #ifdef SIGNAL_NETWORK_GENERIC_CLASS
 
-#include <boost/dataflow/signals/component/filter.hpp>
+#include <boost/dataflow/signals/component/fusion_filter.hpp>
 
 #ifndef SIGNAL_NETWORK_GENERIC_USE_TEMPLATED
 #include <boost/dataflow/signals/component/detail/unfused_inherited.hpp>
@@ -36,14 +36,14 @@ template<
     typename SignalArgs
     >
 class BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl)
-    : public filter<
+    : public fusion_filter<
         Derived,
         Signature,
         mpl::vector<
             Signature,
             typename fused_signal_type<Signature>::signature_type
         >,
-        typename OutSignal::filter_type,
+        OutSignal,
         SignalArgs>
 {
 public:    

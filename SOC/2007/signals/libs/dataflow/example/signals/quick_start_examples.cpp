@@ -71,10 +71,9 @@ public:
     }
 };
 
-// If we use void instead of a signature, there will be no output signal.
-// But another benefit of inheriting from filter is that we can implement
+// Inheriting from signals::filter or signals::consumer allows us to implement
 // signal consumer ports as overloads of operator() - later you will see that
-// that we we can access them more easily.
+// that allows us to access them more easily.
 class consumer_component
     : public signals::consumer<consumer_component>
 {
@@ -91,7 +90,7 @@ void component_component_example()
     producer_component producer;
     consumer_component consumer;
     
-    // Because we inherited from filter, connecting is easy.
+    // Because we inherited from filter/consumer, connecting is easy.
     connect(producer, consumer);
     producer.invoke(); // producer sends "Hello World" to consumer.
 };

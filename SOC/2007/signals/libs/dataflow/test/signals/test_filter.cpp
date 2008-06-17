@@ -3,7 +3,7 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/dataflow/signals/component/filter.hpp>
+#include <boost/dataflow/signals/component/fusion_filter.hpp>
 #include <boost/dataflow/signals/connection/operators.hpp>
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
@@ -46,7 +46,7 @@ struct fused_receiver : public signals::consumer<fused_receiver>
     int stored;
 };
 
-class FusedDoublerClass : public signals::filter<FusedDoublerClass, void (int), void(const fusion::vector<int> &), signals::fused>
+class FusedDoublerClass : public signals::fusion_filter<FusedDoublerClass, void (int), void(const fusion::vector<int> &), signals::output::fused>
 {
 public:
     void operator()(const fusion::vector<int> &x)

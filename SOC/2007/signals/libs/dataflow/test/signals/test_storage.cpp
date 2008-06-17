@@ -51,9 +51,9 @@ int test_main(int, char* [])
     {
         //[ test_storage_fused
         // instantiate all of the components we need
-        signals::storage<void (), signals::fused> banger;
-        signals::storage<void (float), signals::fused> floater(2.5f);
-        signals::storage<void (float), signals::fused> collector(0.0f);
+        signals::storage<void (), signals::output::fused> banger;
+        signals::storage<void (float), signals::output::fused> floater(2.5f);
+        signals::storage<void (float), signals::output::fused> collector(0.0f);
 
         // create the network (banger to floater.send, floater to collector)
         banger >>= floater.send_slot();
