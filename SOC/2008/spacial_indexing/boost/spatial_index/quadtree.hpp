@@ -36,6 +36,13 @@ public:
     std::cerr << "Not implemented yet." << std::endl;
   }
 
+  /// remove data with key 'k'
+  /// TODO: implement
+  virtual void remove(const geometry::box<Point> &k)
+  {
+    std::cerr << "Not implemented yet." << std::endl;
+  }
+
 	  
   virtual void insert(const Point &k, const Value &v)
   {
