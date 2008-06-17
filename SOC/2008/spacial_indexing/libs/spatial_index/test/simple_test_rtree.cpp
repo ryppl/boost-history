@@ -139,10 +139,10 @@ int test_main(int, char* [])
 	}
 
 	// remove test
-// 	std::cerr << " --> remove" << std::endl;
-// 	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
+ 	std::cerr << " --> remove" << std::endl;
+ 	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
 
-//  	q->print();
+  	q->print();
 
 	return 0;
 };
