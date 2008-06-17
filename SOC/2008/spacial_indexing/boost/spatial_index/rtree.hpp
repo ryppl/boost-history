@@ -28,12 +28,12 @@ namespace spatial_index {
     // maximum number of elements per node
     unsigned int M_;
 
+    // tree root
     boost::shared_ptr< rtree_node<Point,Value> > root_;
 
   public:
-    rtree(const geometry::box<Point> &initial_box, const unsigned int &L, const unsigned int &m, const unsigned int &M) 
-      : element_count(0), m_(m), M_(M),
-	root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
+    rtree(const geometry::box<Point> &initial_box, const unsigned int &M, const unsigned int &m)
+      : element_count(0), m_(m), M_(M), root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
     {
       root_->set_root();
       boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(root_));
@@ -71,7 +71,10 @@ namespace spatial_index {
 
     virtual void print(void) const
     {
+      std::cerr << "===================================" << std::endl;
+      std::cerr << " Min/Max: " << m_ << " / " << M_ << std::endl;
       root_->print();
+      std::cerr << "===================================" << std::endl;
     }
 
     virtual void insert(const Point &k, const Value &v)
@@ -141,10 +144,8 @@ namespace spatial_index {
     }
 
     virtual unsigned int elements(void) { return element_count; }
-    
 
     virtual ~rtree() {}
-
 
   private:
 
@@ -212,14 +213,8 @@ namespace spatial_index {
 	typename rtree_leaf<Point,Value>::leaves_map nodes = n->get_leaves();
 	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
 	  if(index != seed1 && index != seed2) {
-	    // TODO: check if the remaining elements should be in one group because of the minimum
-	    
-	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
 
-// 	    std::cerr << "Remaining: " << remaining;
-// 	    std::cerr << " n1: " << n1->elements();
-// 	    std::cerr << " n2: " << n2->elements();
-// 	    std::cerr << std::endl;
+	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
 
 	    if(n1->elements() + remaining == m_) {
 	      n1->add_value(it->first, it->second);
@@ -279,14 +274,9 @@ namespace spatial_index {
 	typename rtree_node<Point,Value>::node_map nodes = n->get_nodes();
 	for(typename rtree_node<Point,Value>::node_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
 	  if(index != seed1 && index != seed2) {
-	    // TODO: check if the remaining elements should be in one group because of the minimum
 
 	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
 
-	    std::cerr << "Remaining: " << remaining;
-	    std::cerr << " n1: " << n1->elements();
-	    std::cerr << " n2: " << n2->elements();
-	    std::cerr << std::endl;
 	    if(n1->elements() + remaining == m_) {
 	      n1->add_node(it->first, it->second);
 	      continue;
