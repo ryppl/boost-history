@@ -94,6 +94,10 @@ int test_main(int, char* [])
 	geometry::box<geometry::point_xy<double> > e28(geometry::point_xy<double>(9.0, 13.0), geometry::point_xy<double>(10.0,14.0));
 	geometry::box<geometry::point_xy<double> > e29(geometry::point_xy<double>(9.0, 10.0), geometry::point_xy<double>(15.0,15.0));
 
+	geometry::box<geometry::point_xy<double> > e30(geometry::point_xy<double>(9.0, 13.0), geometry::point_xy<double>(9.5,14.0));
+	geometry::box<geometry::point_xy<double> > e31(geometry::point_xy<double>(10.0, 10.0), geometry::point_xy<double>(14.0,15.0));
+
+
 
  	std::cerr << " --> insert env" << std::endl;
  	q->insert(e1, 1);
@@ -141,6 +145,9 @@ int test_main(int, char* [])
       	q->insert(e28, 28);
       	q->insert(e29, 29);
 
+      	q->insert(e30, 30);
+      	q->insert(e31, 31);
+
      	q->print();
 
 	/// find everything overlaping with an envelope
@@ -178,16 +185,23 @@ int test_main(int, char* [])
 	  std::cout << "Value:  " << v << std::endl;
 	}
 
-	return 0;
-
 	// remove test
  	std::cerr << " --> remove" << std::endl;
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
+   	q->print();
 
  	std::cerr << " --> remove" << std::endl;
-//   	q->print();
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(7.0,4.0), geometry::point_xy<double>(12.0,7.0)));
    	q->print();
+
+ 	std::cerr << " --> remove" << std::endl;
+ 	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,12.0), geometry::point_xy<double>(13.0,13.0)));
+   	q->print();
+
+ 	std::cerr << " --> remove" << std::endl;
+ 	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(11.0,11.0)));
+   	q->print();
+
 
 	return 0;
 }
