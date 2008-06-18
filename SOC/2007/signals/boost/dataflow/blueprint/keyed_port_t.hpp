@@ -51,7 +51,7 @@ class port_t<
     : public detail::vector_port_impl<keyed_port, PortOrRef, Tag>
 {
     typedef detail::vector_port_impl<keyed_port, PortOrRef, Tag> base_type;
-    using base_type::port_traits_type;
+    typedef typename base_type::port_traits_type port_traits_type;
 
     typedef array<
         const std::type_info *,
