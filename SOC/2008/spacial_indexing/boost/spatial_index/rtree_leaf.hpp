@@ -29,11 +29,17 @@ namespace spatial_index {
       : rtree_node<Point,Value>(parent, 0), level_(0) {}
 
     /// query method
-    virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r)
+    virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r, const bool exact_match)
     {
       for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
-	if(overlaps(it->first, e)) {
-	  r.push_back(it->second);
+	if(exact_match) {
+	  if(it->first.max() == e.max() && it->first.min() == e.min()) {
+	    r.push_back(it->second);
+	  }
+	} else {
+	  if(overlaps(it->first, e)) {
+	    r.push_back(it->second);
+	  }
 	}
       }
     }

@@ -87,6 +87,13 @@ int test_main(int, char* [])
 	geometry::box<geometry::point_xy<double> > e24(geometry::point_xy<double>(13.0, 12.0), geometry::point_xy<double>(13.5,12.5));
 	geometry::box<geometry::point_xy<double> > e25(geometry::point_xy<double>(13.0, 13.0), geometry::point_xy<double>(13.5,13.5));
 
+	geometry::box<geometry::point_xy<double> > e26(geometry::point_xy<double>(11.0, 13.0), geometry::point_xy<double>(13.5,15.5));
+	geometry::box<geometry::point_xy<double> > e27(geometry::point_xy<double>(11.0, 13.0), geometry::point_xy<double>(13.5,13.5));
+
+
+	geometry::box<geometry::point_xy<double> > e28(geometry::point_xy<double>(9.0, 13.0), geometry::point_xy<double>(10.0,14.0));
+	geometry::box<geometry::point_xy<double> > e29(geometry::point_xy<double>(9.0, 10.0), geometry::point_xy<double>(15.0,15.0));
+
 
  	std::cerr << " --> insert env" << std::endl;
  	q->insert(e1, 1);
@@ -117,40 +124,24 @@ int test_main(int, char* [])
      	q->insert(e18, 18);
      	q->insert(e19, 19);
      	q->insert(e20, 20);
-
-    	q->print();
-
       	q->insert(e21, 21);
 
-    	q->print();
-	return 0;
 
       	q->insert(e22, 22);
       	q->insert(e23, 23);
 
+      	q->insert(e24, 24);
+      	q->insert(e25, 25);
 
+//      	q->print();
 
-//      	q->insert(e24, 24);
-//      	q->insert(e25, 25);
+      	q->insert(e26, 26);
+      	q->insert(e27, 27);
 
-//     	q->print();
+      	q->insert(e28, 28);
+      	q->insert(e29, 29);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     	q->print();
 
 	/// find everything overlaping with an envelope
 	std::cerr << " --> find in envelope" << std::endl;
@@ -187,6 +178,8 @@ int test_main(int, char* [])
 	  std::cout << "Value:  " << v << std::endl;
 	}
 
+	return 0;
+
 	// remove test
  	std::cerr << " --> remove" << std::endl;
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
@@ -194,8 +187,7 @@ int test_main(int, char* [])
  	std::cerr << " --> remove" << std::endl;
 //   	q->print();
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(7.0,4.0), geometry::point_xy<double>(12.0,7.0)));
-//   	q->print();
-
+   	q->print();
 
 	return 0;
-};
+}

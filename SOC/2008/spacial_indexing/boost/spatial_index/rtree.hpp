@@ -154,7 +154,7 @@ namespace spatial_index {
       std::deque<Value> result;
       geometry::box<geometry::point_xy<double> > query_box(k, k);
 
-      root_->find(query_box, result);
+      root_->find(query_box, result, true);
       if(result.size() >= 1) {
 	return result[0];
       }
@@ -164,7 +164,7 @@ namespace spatial_index {
     virtual std::deque<Value> find(const geometry::box<Point> &r)
     {
       std::deque<Value> result;
-      root_->find(r, result);
+      root_->find(r, result, false);
       return result;
     }
 

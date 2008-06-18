@@ -66,11 +66,11 @@ namespace spatial_index {
     boost::shared_ptr< rtree_node<Point, Value> > get_node(const unsigned int i) { return nodes_[i].second; }
 
     /// query method
-    virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r)
+    virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r, const bool exact_match)
     {
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	if(overlaps(it->first, e)) {
-	  it->second->find(e, r);
+	  it->second->find(e, r, exact_match);
 	}
       }
     }
