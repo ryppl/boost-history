@@ -46,8 +46,18 @@ namespace spatial_index {
     {
       try {
 	boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(k));
+	typename rtree_leaf<Point,Value>::leaves_map q_leaves;
 
 	l->remove(k);
+
+	if(l->elements() < m_) {
+	  std::cerr << "Few elements in Node." << std::endl;
+
+	  q_leaves = l->get_leaves();
+
+	  // we remove the leaf_node in the parent node because now it's empty
+	  l->get_parent()->remove(l->get_parent()->get_box(l));
+	}
 
 	condense_tree(l);
 
@@ -57,9 +67,16 @@ namespace spatial_index {
 	  root_->set_root();
 	}
 
+	std::cerr << "Reinserting leaves " << q_leaves.size() << std::endl;
+
+	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = q_leaves.begin(); it != q_leaves.end(); ++it) {
+	  insert(it->first, it->second);
+	}
+
 	element_count--;
       } catch(std::logic_error &e) {
 	// not found
+	std::cerr << e.what() << std::endl;
 	return;
       }
     }
@@ -82,7 +99,7 @@ namespace spatial_index {
       boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(e));
 
       if(l->elements() >= M_) {
-// 	std::cerr << "Node full. Split." << std::endl;
+ 	std::cerr << "Node full. Split." << std::endl;
 
 	l->insert(e, v);
 	
@@ -91,25 +108,25 @@ namespace spatial_index {
 	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent()));
 
 	split_node(l, n1, n2);
-	std::cerr << std::endl;
-	std::cerr << std::endl;
-	std::cerr << std::endl;
- 	std::cerr << "Node splited." << std::endl;
+//  	std::cerr << std::endl;
+//  	std::cerr << std::endl;
+//  	std::cerr << std::endl;
+//   	std::cerr << "Node splited." << std::endl;
 
- 	std::cerr << "ORIG" << std::endl;
- 	l->print();
+//   	std::cerr << "ORIG" << std::endl;
+//   	l->print();
 	
- 	std::cerr << "N1" << std::endl;
-  	n1->print();
- 	std::cerr << "N2" << std::endl;
-  	n2->print();
+//   	std::cerr << "N1" << std::endl;
+//    	n1->print();
+//   	std::cerr << "N2" << std::endl;
+//    	n2->print();
 
-	std::cerr << "L parent." << std::endl;
-	l->get_parent()->print();
+//  	std::cerr << "L parent." << std::endl;
+//  	l->get_parent()->print();
 
 	adjust_tree(l, n1, n2);
       } else {
-	std::cerr << "Insert without split" << std::endl;
+// 	std::cerr << "Insert without split" << std::endl;
 	l->insert(e, v);
 	adjust_tree(l);
       }
@@ -161,6 +178,8 @@ namespace spatial_index {
     {
       std::cerr << "Condensing tree." << std::endl;
 
+      typename rtree_node<Point,Value>::node_map q_nodes;
+
       if(l->is_root()) {
 	// if it's the root we are done
 	return;
@@ -170,6 +189,21 @@ namespace spatial_index {
 
       boost::shared_ptr<rtree_node<Point,Value> > parent = l->get_parent();
       parent->adjust_box(l);
+      
+      if(parent->elements() < m_) {
+	std::cerr << "condense_node: underfull node" << std::endl;
+
+	q_nodes = parent->get_nodes();
+
+	if(parent->is_root()) {
+	  std::cerr << "The underfull node is the root, returning." << std::endl;
+	  return;
+	} else {
+	  // we remove the node in the parent node because now it should be re inserted
+	  parent->get_parent()->remove(parent->get_parent()->get_box(parent));
+	}
+      }
+
       condense_tree(parent);
     }
 
@@ -205,32 +239,60 @@ namespace spatial_index {
 	n1->update_parent(n1);
 	n2->update_parent(n2);
 
-	std::cerr << "Adjust tree N1: " << std::endl;
-	n1->get_parent()->print();
+// 	std::cerr << "Adjust tree N1: " << std::endl;
+// 	n1->get_parent()->print();
 	root_ = new_root;
 	return;
       }
       boost::shared_ptr<rtree_node<Point,Value> > parent = l->get_parent();
+//       std::cerr << std::endl;
+//       std::cerr << "1";
+//       parent->print();
+//       std::cerr << std::endl;
+//       std::cerr << std::endl;
+
       parent->replace_node(l, n1);
-      if(parent->elements() >= M_) {
-	parent->add_node(n2->compute_box(), n2);
-	std::cerr << "L Parent with the split added"<< std::endl;
-	parent->print();
- 	std::cerr << "parent is full" << std::endl;
+
+//       std::cerr << "l parent" << l->get_parent().get() << std::endl;
+//       std::cerr << "n1 parent" << n1->get_parent().get() << std::endl;
+//       std::cerr << "l" << l.get() << std::endl;
+//       std::cerr << "n1" << n1.get() << std::endl;
+//       std::cerr << "n2" << n2.get() << std::endl;
+
+
+//       std::cerr << std::endl;
+//       std::cerr << "2";
+//       parent->print();
+//       std::cerr << std::endl;
+//       std::cerr << std::endl;
+
+
+      parent->add_node(n2->compute_box(), n2);
+
+//       std::cerr << std::endl;
+//       std::cerr << "3";
+//       parent->print();
+//       std::cerr << std::endl;
+//       std::cerr << std::endl;
+
+
+      if(parent->elements() > M_) {
+//   	std::cerr << "parent is full" << std::endl;
 
 	boost::shared_ptr< rtree_node<Point, Value> > p1(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level()));
 	boost::shared_ptr< rtree_node<Point, Value> > p2(new rtree_node<Point,Value>(parent->get_parent(), parent->get_level()));
 
 	split_node(parent, p1, p2);
 
-	std::cerr << "P1: " << std::endl;
-	p1->print();
-	std::cerr << "P2: " << std::endl;
-	p2->print();
+// 	std::cerr << "P1: " << std::endl;
+// 	p1->print();
+// 	std::cerr << "P2: " << std::endl;
+// 	p2->print();
 
 	adjust_tree(parent, p1, p2);
       } else {
-	parent->add_node(n2->compute_box(), n2);
+// 	std::cerr << "parent is not full." << std::endl;
+// 	parent->print();
 	adjust_tree(parent);
       }
     }
@@ -256,19 +318,28 @@ namespace spatial_index {
 
 	unsigned int index = 0;
 	typename rtree_leaf<Point,Value>::leaves_map nodes = n->get_leaves();
+	unsigned int remaining = nodes.size()-2;
 	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
 	  if(index != seed1 && index != seed2) {
 
-	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
+// 	    std::cerr << "n1.elements: " << n1->elements() << std::endl;
+// 	    std::cerr << "n2.elements: " << n2->elements() << std::endl;
+// 	    std::cerr << "size: " << nodes.size() << std::endl;
+// 	    std::cerr << "index: " << index << std::endl;
+// 	    std::cerr << "remaining: " << remaining << std::endl;
 
 	    if(n1->elements() + remaining == m_) {
+// 	      std::cerr << "Adding to n1 because few elements" << std::endl;
 	      n1->add_value(it->first, it->second);
 	      continue;
 	    }
 	    if(n2->elements() + remaining == m_) {
+// 	      std::cerr << "Adding to n2 because few elements" << std::endl;
 	      n2->add_value(it->first, it->second);
 	      continue;
 	    }
+
+	    remaining--;
 
 	    /// current boxes of each group
 	    geometry::box<Point> b1, b2;
@@ -308,7 +379,6 @@ namespace spatial_index {
 		}
 	      }
 	    }
-
 	  }
 	}
       } else {
@@ -317,10 +387,9 @@ namespace spatial_index {
 
 	unsigned int index = 0;
 	typename rtree_node<Point,Value>::node_map nodes = n->get_nodes();
+	unsigned int remaining = nodes.size()-2;
 	for(typename rtree_node<Point,Value>::node_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
 	  if(index != seed1 && index != seed2) {
-
-	    unsigned int remaining = nodes.size() - index; // 2 because of the seeds
 
 	    if(n1->elements() + remaining == m_) {
 	      n1->add_node(it->first, it->second);
@@ -330,6 +399,8 @@ namespace spatial_index {
 	      n2->add_node(it->first, it->second);
 	      continue;
 	    }
+
+	    remaining--;
 
 	    /// current boxes of each group
 	    geometry::box<Point> b1, b2;

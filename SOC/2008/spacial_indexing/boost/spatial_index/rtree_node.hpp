@@ -132,12 +132,18 @@ namespace spatial_index {
 	  return;
 	}
       }
-      std::cerr << "adjust_node: node not found." << std::endl;
+//       std::cerr << "adjust_node: node not found." << std::endl;
     }
 
     virtual void remove(const geometry::box<Point> &k)
     {
-      throw std::logic_error("Remove from a node, not a leaf");
+      for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	if(it->first.min() == k.min() && it->first.max() == k.max()) {
+	  std::cerr << "Erasing node." << std::endl;
+	  nodes_.erase(it);
+	  return;
+	}
+      }
     }
 
     /// replace the node in the nodes_ vector and recompute the box
@@ -148,6 +154,7 @@ namespace spatial_index {
 	if(it->second.get() == l.get()) {
 // 	  std::cerr << "Node found!" << std::endl;
 	  nodes_[index] = std::make_pair(new_l->compute_box(), new_l);
+	  new_l->update_parent(new_l);
 	  return;
 	}
       }
@@ -158,6 +165,7 @@ namespace spatial_index {
     virtual void add_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_node<Point, Value> > &n)
     {
       nodes_.push_back(std::make_pair(b, n));
+      n->update_parent(n);
     }
 
     /// add a value (not allowed in nodes)
@@ -244,6 +252,21 @@ namespace spatial_index {
     /// value projector for leaf_node (not allowed here)
     virtual Value get_value(const unsigned int i) const { throw std::logic_error("No values in a non-leaf node."); }
 
+    /// box projector for node
+    virtual geometry::box<Point> get_box(const unsigned int i) const { return nodes_[i].first; }
+
+    /// box projector for node
+    virtual geometry::box<Point> get_box(const boost::shared_ptr<rtree_node<Point, Value> > &l) const
+    {
+      for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	if(it->second.get() == l.get()) {
+	  return it->first;
+	}
+      }
+      throw std::logic_error("Node not found");
+    }
+
+
     /// value projector for the nodes
     node_map get_nodes(void) const { return nodes_; }
 
@@ -251,11 +274,17 @@ namespace spatial_index {
     virtual void print(void) const
     {
       std::cerr << " --> Node --------" << std::endl;
+      std::cerr << "  Address: " << this << std::endl;
       std::cerr << "  Is Root: " << is_root() << std::endl;
       std::cerr << "  Level: " << level_ << std::endl;
       std::cerr << "  Size: " << nodes_.size() << std::endl;
       std::cerr << "  | ";
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+
+	if(it->second->get_parent().get() != this) {
+	  std::cerr << "ERROR - " << this  << " is not  " <<it->second->get_parent().get() << " ";
+	}
+
 	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
 	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
 	std::cerr << " | ";

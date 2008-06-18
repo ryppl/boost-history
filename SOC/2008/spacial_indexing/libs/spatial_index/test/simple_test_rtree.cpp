@@ -76,6 +76,17 @@ int test_main(int, char* [])
 	geometry::box<geometry::point_xy<double> > e14(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(10.0, 13.0));
 	geometry::box<geometry::point_xy<double> > e15(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(12.0, 14.0));
 
+	geometry::box<geometry::point_xy<double> > e16(geometry::point_xy<double>(7.0, 7.0), geometry::point_xy<double>(8.8,8.8));
+	geometry::box<geometry::point_xy<double> > e17(geometry::point_xy<double>(8.0, 9.0), geometry::point_xy<double>(9.0,10.0));
+	geometry::box<geometry::point_xy<double> > e18(geometry::point_xy<double>(10.0, 10.0), geometry::point_xy<double>(11.0,11.0));
+	geometry::box<geometry::point_xy<double> > e19(geometry::point_xy<double>(10.0, 11.0), geometry::point_xy<double>(12.0,12.5));
+	geometry::box<geometry::point_xy<double> > e20(geometry::point_xy<double>(11.0, 10.0), geometry::point_xy<double>(14.0,14.0));
+	geometry::box<geometry::point_xy<double> > e21(geometry::point_xy<double>(12.0, 12.0), geometry::point_xy<double>(14.0,14.0));
+	geometry::box<geometry::point_xy<double> > e22(geometry::point_xy<double>(12.0, 12.0), geometry::point_xy<double>(12.5,12.5));
+	geometry::box<geometry::point_xy<double> > e23(geometry::point_xy<double>(13.0, 11.0), geometry::point_xy<double>(13.5,11.5));
+	geometry::box<geometry::point_xy<double> > e24(geometry::point_xy<double>(13.0, 12.0), geometry::point_xy<double>(13.5,12.5));
+	geometry::box<geometry::point_xy<double> > e25(geometry::point_xy<double>(13.0, 13.0), geometry::point_xy<double>(13.5,13.5));
+
 
  	std::cerr << " --> insert env" << std::endl;
  	q->insert(e1, 1);
@@ -83,25 +94,63 @@ int test_main(int, char* [])
  	q->insert(e3, 3);
  	q->insert(e4, 4);
  	q->insert(e5, 5);
-//  	q->print();
-
- 	q->insert(e6, 6);
- 	q->insert(e7, 7);
-//  	q->print();
-
- 	q->insert(e8, 8);
- 	q->insert(e9, 9);
- 	q->insert(e10, 10);
- 	q->insert(e11, 11);
 //   	q->print();
 
- 	q->insert(e12, 12);
- 	q->insert(e13, 13);
+  	q->insert(e6, 6);
+  	q->insert(e7, 7);
+//   	q->print();
+
+  	q->insert(e8, 8);
+  	q->insert(e9, 9);
+  	q->insert(e10, 10);
+  	q->insert(e11, 11);
+
+  	q->insert(e12, 12);
+  	q->insert(e13, 13);
+  	q->insert(e14, 14);
+    	q->insert(e15, 15);
+
+//    	q->print();
+
+    	q->insert(e16, 16);
+     	q->insert(e17, 17);
+     	q->insert(e18, 18);
+     	q->insert(e19, 19);
+     	q->insert(e20, 20);
+
     	q->print();
- 	q->insert(e14, 14);
+
+      	q->insert(e21, 21);
+
     	q->print();
-   	q->insert(e15, 15);
-    	q->print();
+	return 0;
+
+      	q->insert(e22, 22);
+      	q->insert(e23, 23);
+
+
+
+//      	q->insert(e24, 24);
+//      	q->insert(e25, 25);
+
+//     	q->print();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/// find everything overlaping with an envelope
 	std::cerr << " --> find in envelope" << std::endl;
@@ -142,7 +191,11 @@ int test_main(int, char* [])
  	std::cerr << " --> remove" << std::endl;
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
 
-  	q->print();
+ 	std::cerr << " --> remove" << std::endl;
+//   	q->print();
+ 	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(7.0,4.0), geometry::point_xy<double>(12.0,7.0)));
+//   	q->print();
+
 
 	return 0;
 };

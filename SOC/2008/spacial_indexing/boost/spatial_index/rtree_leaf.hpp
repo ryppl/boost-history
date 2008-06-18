@@ -90,6 +90,9 @@ namespace spatial_index {
 
     virtual Value get_value(const unsigned int i) const { return nodes_[i].second; }
 
+    /// box projector for leaf
+    virtual geometry::box<Point> get_box(const unsigned int i) const { return nodes_[i].first; }
+
 
     /// remove value with key 'k' in this leaf
     virtual void remove(const geometry::box<Point> &k)
@@ -117,20 +120,18 @@ namespace spatial_index {
 
     virtual void print(void) const
     {
-      std::cerr << " --> Leaf --------" << std::endl;
-      std::cerr << "  Size: " << nodes_.size() << std::endl;
+      std::cerr << "\t" << " --> Leaf --------" << std::endl;
+      std::cerr << "\t" << "  Size: " << nodes_.size() << std::endl;
       for(typename leaves_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
-	std::cerr << "  | ";
+
+	std::cerr << "\t" << "  | ";
 	std::cerr << "( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
 	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
 	std::cerr << " -> ";
 	std::cerr << it->second;
 	std::cerr << " | " << std::endl;;
-
-
       }
-      std::cerr << std::endl;
-      std::cerr << " --< Leaf --------" << std::endl;
+      std::cerr << "\t" << " --< Leaf --------" << std::endl;
     }
 
   private:
