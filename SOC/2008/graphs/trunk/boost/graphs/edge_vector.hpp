@@ -20,16 +20,21 @@
 // C are actually interpreted by the callers of the metafunctions - it ain't
 // pretty, but it may actually work.
 
-namespace undirected
-{
-
 /**
  * The basic_edge_vector is the outer part of the metafunctions that generate
  * types for adjacency lists.
+ *
+ * This is not the prettiest solution, but it does reuse the same outer
+ * metafunction for both directed and undirected graphs. The meaning of the
+ * first and second allocator differ depending on the type of graph. For
+ * undirected graphs, FirstAlloc is the allocator for the per-vertex incidence
+ * store and the SecondAlloc is the allocator for properties. For directed
+ * graphs, FirstAlloc and SecondAlloc are the per-vertex allocators for
+ * out- and in-edge stores respectively.
  */
 template <
-    template <typename> class IncAlloc,
-    template <typename> class PropAlloc>
+    template <typename> class FirstAlloc,
+    template <typename> class SecondAlloc>
 struct basic_edge_vector
 {
     // The property store metafunction generates the type of vector used to
@@ -37,7 +42,8 @@ struct basic_edge_vector
     template <typename EdgeProps>
     struct property_store
     {
-        typedef property_vector<EdgeProps, PropAlloc<EdgeProps> > type;
+        typedef SecondAlloc<EdgeProps> property_allocator;
+        typedef property_vector<EdgeProps, property_allocator > type;
     };
 
     // The incidence store metafunction generates the type of vector used to
@@ -46,38 +52,20 @@ struct basic_edge_vector
     struct incidence_store
     {
         typedef std::pair<VertexDesc, PropDesc> incidence_pair;
-        typedef IncAlloc<incidence_pair> incidence_allocator;
+        typedef FirstAlloc<incidence_pair> incidence_allocator;
         typedef incidence_vector<incidence_pair, incidence_allocator> type;
     };
 
-};
-
-/**
- * The default edge vector is a basic edge vector that uses the standard
- * allocators for both the property store and the incidence store.
- */
-struct edge_vector : basic_edge_vector<std::allocator, std::allocator> { };
-
-} // namespace undirected
-
-namespace directed
-{
-    
-template <
-    template <typename> class OutAlloc,
-    template <typename> class InAlloc>
-struct basic_edge_vector
-{
     // The out store metafunction generates the type of vector used to store
     // out edges of a vertex in a directed graph.
     template <typename VertexDesc, typename Props>
     struct out_store
     {
         typedef std::pair<VertexDesc, Props> out_pair;
-        typedef OutAlloc<out_pair> out_allocator;
+        typedef FirstAlloc<out_pair> out_allocator;
         typedef out_vector<out_pair, out_allocator> type;
     };
-    
+
     // The in store metafunction generates the type of vector used to store
     // incoming edges (actually just the referencing vertex) of directed graph.
     // In edges are partially represented by the referencing vertex and a
@@ -86,14 +74,16 @@ struct basic_edge_vector
     struct in_store
     {
         typedef std::pair<VertexDesc, Props*> in_pair;
-        typedef InAlloc<in_pair> in_allocator;
+        typedef SecondAlloc<in_pair> in_allocator;
         typedef in_vector<in_pair, in_allocator> type;
     };
 };
 
+/**
+ * The default edge vector is a basic edge vector that uses the standard
+ * allocators for both the first and second allocators.
+ */
 struct edge_vector : basic_edge_vector<std::allocator, std::allocator> { };
-
-} // namespace directed
 
 #endif
 
