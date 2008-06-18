@@ -1,3 +1,5 @@
 
 exe un : un.cpp : <include>../../ <include>/usr/local/include ;
 exe di : di.cpp : <include>../../ <include>/usr/local/include ;
+exe set : set.cpp : <include>../../ <include>/usr/local/include ;
+exe map : map.cpp : <include>../../ <include>/usr/local/include ;
