@@ -25,6 +25,7 @@
 
 #include <stack>
 #include <limits>
+#include <utility>
 
 // Bypassing linkage by default
 #define BOOST_SH_DISABLE_THREADS
@@ -33,7 +34,6 @@
 #include <boost/thread/tss.hpp>
 #include <boost/pool/pool.hpp>
 #include <boost/pool/pool_alloc.hpp>
-#include <boost/numeric/interval.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/remove_extent.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
@@ -64,59 +64,66 @@ class owned_base;
 
 
 /**
-    Syntax helper.
-*/
-
-typedef std::list< numeric::interval<unsigned>, fast_pool_allocator< numeric::interval<unsigned> > > pool_lii;
-
-
-/**
     Allocator wrapper tracking allocations.
 */
 
-struct pool : boost::pool<>,
-#ifndef BOOST_SH_DISABLE_THREADS
-    thread_specific_ptr<pool_lii>
-#else
-    std::auto_ptr<pool_lii>
-#endif
+class pool : public boost::pool<>
 {
+    typedef std::list< std::pair<char *, char *>, fast_pool_allocator< std::pair<char *, char *> > > lpp;
+
+#ifndef BOOST_SH_DISABLE_THREADS
+    thread_specific_ptr<lpp> alloc_, constr_;
+#else
+    std::auto_ptr<lpp> alloc_, constr_;
+#endif
+
+public:
     pool() : boost::pool<>(1)
     {
-        reset(new pool_lii());
+        alloc_.reset(new lpp());
+        constr_.reset(new lpp());
     }
+    
+    /**
+        @brief
+        This function returns the most recent allocation block that contains p.
+    */
     
     owned_base * top(void * p)
     {
-        pool_lii::reverse_iterator i;
+        char * const q = static_cast<char *>(p);
         
-        for (i = get()->rbegin(); i != get()->rend(); i ++)
-            if (in((unsigned)(p), * i))
+        lpp::reverse_iterator i;
+        for (i = alloc_.get()->rbegin(); i != alloc_.get()->rend(); i ++)
+            if (i->first <= q && q <= i->second)
                 break;
 
-        get()->erase(i.base(), get()->end());
+        alloc_.get()->erase(i.base(), alloc_.get()->end());
+        //constr_.get()->splice(constr_.get()->end(), * alloc_.get(), i.base());
         
-        return (owned_base *)(i->lower());
+        return (owned_base *)(i->first);
     }
     
     void * allocate(std::size_t s)
     {
-        void * p = ordered_malloc(s);
+        char * p = static_cast<char *>(ordered_malloc(s));
         
-        get()->push_back(numeric::interval<unsigned>((unsigned) p, unsigned((char *)(p) + s)));
+        alloc_.get()->push_back(std::make_pair(p, p + s));
         
         return p;
     }
 
     void deallocate(void * p, std::size_t s)
     {
-        pool_lii::reverse_iterator i;
+        char * const q = static_cast<char *>(p);
         
-        for (i = get()->rbegin(); i != get()->rend(); i ++)
-            if (in((unsigned)(p), * i))
+        lpp::reverse_iterator i;
+        for (i = alloc_.get()->rbegin(); i != alloc_.get()->rend(); i ++)
+            if (i->first <= q && q <= i->second)
                 break;
         
-        get()->erase(i.base(), get()->end());
+        alloc_.get()->erase(i.base(), alloc_.get()->end());
+        //constr_.get()->splice(constr_.get()->end(), * alloc_.get(), i.base());
         free(p, s);
     }
 };
