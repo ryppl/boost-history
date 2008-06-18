@@ -11,6 +11,8 @@
 using namespace std;
 using namespace boost;
 
+namespace u = undirected;
+
 typedef int City;
 typedef int Road;
 
@@ -82,7 +84,7 @@ int main()
 
 void vec_vec()
 {
-    typedef undirected_graph<City, Road, vertex_vector, edge_vector> Graph;
+    typedef undirected_graph<City, Road, vertex_vector, u::edge_vector> Graph;
     test_add_vertices<Graph>();
     test_make_simple_triangle<Graph>();
 }

@@ -81,15 +81,15 @@ public:
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
+    // FIXME: This is a bit hacky, but without constrained members, we need a key
+    // type to enable mapped vertices.
+    typedef typename VertexStore::key_type key_type;
 
     // Because edges are "distributed" among vertices, the edge iterators are
     // somewhat special.
     typedef basic_edge_iterator<this_type> edge_iterator;
     typedef std::pair<edge_iterator, edge_iterator> edge_range;
 
-    // FIXME: This is a bit hacky, but without constrained members, we need a key
-    // type to enable mapped vertices.
-    typedef typename VertexStore::key_type key_type;
 
     // Constructors
     undirected_graph();
@@ -104,7 +104,7 @@ public:
     vertex_descriptor add_vertex(key_type const&, vertex_properties const&);
     void disconnect_vertex(vertex_descriptor);
     void remove_vertex(vertex_descriptor);
-    //@{
+    //@}
 
     /** @name Edge Set
      * These functions operate on the edges of the graph. This functions

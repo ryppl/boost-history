@@ -7,12 +7,18 @@
 // Forward declarations
 template <typename V, typename A> struct vertex_vector_impl;
 
+/**
+ *
+ */
 template <template <typename> class Allocator>
 struct basic_vertex_vector
 {
     typedef none key_type;
     typedef std::size_t descriptor_type;
 
+    // The store metafunction generates the type used to store vertices in
+    // either a directed or undirected graph. This metafunction takes the
+    // fully configured vertex type as a type parameter.
     template <typename Vertex>
     struct store
     {

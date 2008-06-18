@@ -13,14 +13,14 @@
  * This type allows constant-time edge addition and a linear search. Removal
  * is not supported.
  */
-template <typename IncEdge, typename Alloc>
+template <typename Edge, typename Alloc>
 class incidence_vector
 {
-    typedef std::vector<IncEdge, Alloc> store_type;
+    typedef std::vector<Edge, Alloc> store_type;
 public:
-    typedef IncEdge incidence_pair;
-    typedef typename IncEdge::first_type vertex_descriptor;
-    typedef typename IncEdge::second_type property_descriptor;
+    typedef Edge incidence_pair;
+    typedef typename Edge::first_type vertex_descriptor;
+    typedef typename Edge::second_type property_descriptor;
 
     typedef typename store_type::iterator iterator;
     typedef typename store_type::const_iterator const_iterator;
@@ -29,9 +29,8 @@ public:
     // Constructors
     incidence_vector();
 
-    void add(incidence_pair);
-
     std::pair<const_iterator, bool> allow(vertex_descriptor) const;
+    void add(incidence_pair);
     iterator find(incidence_pair);
     const_iterator find(incidence_pair) const;
 

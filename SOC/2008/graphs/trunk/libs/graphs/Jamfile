@@ -1,2 +1,3 @@
 
 exe un : un.cpp : <include>../../ <include>/usr/local/include ;
+exe di : di.cpp : <include>../../ <include>/usr/local/include ;
