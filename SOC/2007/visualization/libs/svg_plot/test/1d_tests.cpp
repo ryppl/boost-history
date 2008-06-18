@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( test1 )
   BOOST_CHECK_EQUAL(tl2.second, 20.); 
 
   BOOST_CHECK_EQUAL(my_plot.title(), "Plot of data"); // Title of plot.
-  my_plot.title("test");
+  my_plot.title("Plot of data");
   BOOST_CHECK_EQUAL(my_plot.title(), "test");
 
   BOOST_CHECK_EQUAL(my_plot.legend_title(), ""); // Default no legend title.
@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_CASE( test1 )
 
   my_plot.y_axis_on(false); // But leave false - as always should be for 1D?
 
- 	BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(0, 0, 0)); //  Check default color.
+ 	BOOST_CHECK_EQUAL(my_plot.title_color(), blank); //  Check default color.
   my_plot.title_color(svg_color(red)); // 
  	BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(red)); // & check.
 
@@ -324,11 +324,11 @@ BOOST_AUTO_TEST_CASE( test1 )
   my_plot.y_axis_color( svg_color(red)); // 
  	BOOST_CHECK_EQUAL(my_plot.y_axis_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(black)); //  Check default color.
+ 	BOOST_CHECK_EQUAL(my_plot.x_label_color(), blank); //  Check default color.
   my_plot.x_label_color( svg_color(red)); // 
  	BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(black)); //  Check default color.
+ 	BOOST_CHECK_EQUAL(my_plot.y_label_color(), blank); //  Check default color.
   my_plot.y_label_color(svg_color(red)); // 
  	BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(red)); // & check.
 
@@ -361,12 +361,12 @@ BOOST_AUTO_TEST_CASE( test1 )
  	BOOST_CHECK_EQUAL(my_plot.x_axis_width(), 2); // & check.
 
  	BOOST_CHECK_EQUAL(my_plot.x_label(), "X Axis"); //  Check default label.
-  my_plot.x_label("X"); // 
+  my_plot.x_label("X Axis"); // 
  	BOOST_CHECK_EQUAL(my_plot.x_label(), "X"); // & check.
  	BOOST_CHECK_EQUAL(my_plot.x_label(), "X"); // & check.
 
  	BOOST_CHECK_EQUAL(my_plot.x_label_units(), " (units)"); //  Check default label.
-  my_plot.x_label_units(" (meter)"); // 
+  my_plot.x_label_units(" (units)"); // 
  	BOOST_CHECK_EQUAL(my_plot.x_label_units()," (meter)"); // & check.
 
  	BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 2.); //  Check default.

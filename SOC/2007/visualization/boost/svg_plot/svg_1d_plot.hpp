@@ -50,12 +50,12 @@ namespace svg
   class svg_1d_plot; // 1D Plot.
   class svg_1d_plot_series; // 1D Plot data series.
 
-// -----------------------------------------------------------------
+// ------------------------------------------------------------------
 // This allows us to store plot state locally in svg_plot.
 // Not stored in "svg" because transforming the points after they are
 // written to the document would be difficult. We store the Cartesian
 // coordinates locally and transform them before we write them.
-// -----------------------------------------------------------------
+// ------------------------------------------------------------------
 class svg_1d_plot_series
 {
 public:
@@ -67,119 +67,138 @@ public:
   plot_point_style limit_point_style_; // Default is cone pointing down.
   plot_line_style line_style_; // No line style for 1-D, only for 2-D.
 
-  // -------------------------------------------------------------
-  // Scan each data point between the iterators that are passed,
-  // sorting them into the correct std::vector, normal or not.
-  // -------------------------------------------------------------
+  // Constructor svg_1d_plot_series.
   template <class T> // T an STL container: array, vector<double>, set, map ...
-  svg_1d_plot_series(T begin, T end, const std::string& title = "")
-  : // Constructor.
-  title_(title),
-  point_style_(black, blank, 5, vertical_line), // Default point style.
-  limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
-  line_style_(black, blank, 2, true, false) // Default line style, black, no fill, width, line_on, bezier_on false
-  // Meaning of line style for 1-D as yet undefined?
-  {
-    for(T i = begin; i != end; ++i)
-    {  // No defaults for begin and end?
-      double temp = *i;
-      if(detail::is_limit(temp))
-      {
-        series_limits.push_back(temp); // 'limit' values: too big, too small or NaN.
-      }
-      else
-      {
-        series.push_back(temp); // Normal 'OK to plot' data values.
-      }
-    }
-  } // svg_plot_series
+  svg_1d_plot_series(T begin, T end, const std::string& title = "");
+  // Scan each data point between the iterators that are passed,
+  // sorting them into the correct std::vectors, normal or not.
 
-  // Set functions for the plot series.
-  svg_1d_plot_series& fill_color(const svg_color& col_)
-  {
-    point_style_.fill_color_ = col_;
-    return *this;
-  }
+  // Declarations of Set functions for the plot series.
 
-  svg_1d_plot_series& stroke_color(const svg_color& col_)
-  {
-    point_style_.stroke_color_ = col_;
-    return *this;
-  }
-
-  svg_1d_plot_series& shape(point_shape shape_)
-  {
-    point_style_.shape_ = shape_;
-    return *this;
-  }
-
-   point_shape shape()
-  {
-    return point_style_.shape_;
-  }
-
-
-  svg_1d_plot_series& symbols(const std::string s)
-  {
-    point_style_.symbols_ = s;
-    return *this;
-  }
-
-  svg_1d_plot_series& size(int size_)
-  {
-    //point_style_.size_ = size_;
-    //point_style_.symbols_style_.font_size(i); // in case using a symbol.
-    point_style_.size(size_);
-
-    return *this;
-  }
-
-  int size()
-  {
-    return point_style_.size();
-  }
-
-  const std::string symbols()
-  {
-    return point_style_.symbols_;
-  }
-
-
-  svg_1d_plot_series& line_color(const svg_color& col_)
-  {
-    line_style_.stroke_color_ = col_;
-    return *this;
-  }
-
-  svg_1d_plot_series& line_width(double wid_)
-  {
-    line_style_.width_ = wid_;
-    return *this;
-  }
+  svg_1d_plot_series& fill_color(const svg_color& col_);
+  svg_1d_plot_series& stroke_color(const svg_color& col_);
+  svg_1d_plot_series& shape(point_shape shape_);
+  point_shape shape();
+  svg_1d_plot_series& symbols(const std::string s);
+  svg_1d_plot_series& size(int size_);
+  int size();
+  const std::string symbols();
+  svg_1d_plot_series& line_color(const svg_color& col_);
+  svg_1d_plot_series& line_width(double wid_);
 
   // Get functions for the plot series.
-  double line_width()
-  {
-    return line_style_.width_;
-  }
 
-  svg_1d_plot_series& line_on(bool on_)
-  {
-    line_style_.line_on_ = on_;
-    return *this;
-  }
+  double line_width();
+  svg_1d_plot_series& line_on(bool on_);
+  svg_1d_plot_series& bezier_on(bool on_);
+  bool bezier_on();
+}; // class svg_1d_plot_series
 
-  svg_1d_plot_series& bezier_on(bool on_)
-  {
-    line_style_.bezier_on_ = on_;
-    return *this;
+// class svg_1d_plot_series Constructor
+template <class T> // T an STL container: array, vector<double>, set, map ...
+svg_1d_plot_series::svg_1d_plot_series(T begin, T end, const std::string& title)
+: // Constructor.
+title_(title),
+point_style_(black, blank, 5, vertical_line), // Default point style.
+limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
+line_style_(black, blank, 2, true, false) // Default line style, black, no fill, width, line_on, bezier_on false
+// Meaning of line style for 1-D as yet undefined?
+{
+  for(T i = begin; i != end; ++i)
+  {  // No defaults for begin and end?
+    double temp = *i;
+    if(detail::is_limit(temp))
+    {
+      series_limits.push_back(temp); // 'limit' values: too big, too small or NaN.
+    }
+    else
+    {
+      series.push_back(temp); // Normal 'OK to plot' data values.
+    }
   }
+} // svg_plot_series constructor.
 
-  bool bezier_on()
-  {
-    return line_style_.bezier_on_;
-  }
-}; // class svg_plot_series()
+// Definitions of svg_plot_series Member Functions.
+
+svg_1d_plot_series& svg_1d_plot_series::fill_color(const svg_color& col_)
+{
+  point_style_.fill_color_ = col_;
+  return *this;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::stroke_color(const svg_color& col_)
+{
+  point_style_.stroke_color_ = col_;
+  return *this;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::shape(point_shape shape_)
+{
+  point_style_.shape_ = shape_;
+  return *this;
+}
+
+point_shape svg_1d_plot_series::shape()
+{
+  return point_style_.shape_;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::symbols(const std::string s)
+{
+  point_style_.symbols_ = s;
+  return *this;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::size(int size_)
+{
+  //point_style_.size_ = size_;
+  //point_style_.symbols_style_.font_size(i); // in case using a symbol.
+  point_style_.size(size_);
+  return *this;
+}
+
+int svg_1d_plot_series::size()
+{
+  return point_style_.size();
+}
+
+const std::string svg_1d_plot_series::symbols()
+{
+  return point_style_.symbols_;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::line_color(const svg_color& col_)
+{
+  line_style_.stroke_color_ = col_;
+  return *this;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::line_width(double wid_)
+{
+  line_style_.width_ = wid_;
+  return *this;
+}  double svg_1d_plot_series::line_width()
+{
+  return line_style_.width_;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::line_on(bool on_)
+{
+  line_style_.line_on_ = on_;
+  return *this;
+}
+
+svg_1d_plot_series& svg_1d_plot_series::bezier_on(bool on_)
+{
+  line_style_.bezier_on_ = on_;
+  return *this;
+}
+bool  svg_1d_plot_series::bezier_on()
+{
+  return line_style_.bezier_on_;
+}
+
+// End Definitions of svg_plot_series Member Functions.
 
 class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
 { // See also svg_2d_plot.hpp for 2-D version.
@@ -639,7 +658,6 @@ public:
     } // for
   } //   void update_image()
 
-
   // ------------------------------------------------------------------------
   // write() has two versions: to an ostream and to a file.
   // The stream version first clears all unnecessary data from the graph,
@@ -647,8 +665,24 @@ public:
   // document node, which calls all other nodes through the Visitor pattern.
   // The file version opens an ostream, and calls the stream version.
   // ------------------------------------------------------------------------
+  svg_1d_plot& write(const std::string& file);
+  svg_1d_plot& write(std::ostream& s_out);
 
-  svg_1d_plot& write(const std::string& file)
+  // Versions of plot functions to add data series.
+  template <class T>
+  svg_1d_plot_series& plot(const T& container, const std::string& title = "");
+  template <class T>
+  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "");
+  template <class T, class U>
+  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_convert);
+  template <class T, class U>
+  svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_convert);
+}; // end svg_1d_plot::
+
+
+// svg_1d_plot Member functions definitions.
+
+  svg_1d_plot& svg_1d_plot::write(const std::string& file)
   {
     std::string filename(file); // Copy to avoid problems with const if need to append.
     if (filename.find(".svg") == std::string::npos)
@@ -666,7 +700,7 @@ public:
     return *this;
   }
 
-  svg_1d_plot& write(std::ostream& s_out)
+  svg_1d_plot& svg_1d_plot::write(std::ostream& s_out)
   {
     update_image();
     // Default stream precision 6 decimal digits is probably excessive.
@@ -679,9 +713,8 @@ public:
     return (svg_1d_plot&)*this;
   }
 
-  // Versions of plot functions to add data series.
   template <class T>
-  svg_1d_plot_series& plot(const T& container, const std::string& title = "")
+  svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /*= "" */)
   { // Add a data series to the plot (by default, converting to doubles).
     // Note that this version assumes that *ALL* the data value in the container is used.
     series.push_back(
@@ -691,11 +724,11 @@ public:
       title)
     );
    // For example:  my_1d_plot.plot(my_data, "All my container");
-    return series[series.size() - 1]; // Number of data series added so far.
+    return series[series.size() - 1]; // Reference to data series just added.
   }
 
   template <class T>
-  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "")
+  svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title)
   { // Add a data series to the plot (by default, converting to doubles).
     // Note that this version permits a partial range,
     // begin to end, of the container to be used.
@@ -708,11 +741,11 @@ public:
     // For example:  my_1d_plot.plot(my_data.begin(), my_data.end(), "My container");
     // my_1d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
     // Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
-    return series[series.size() - 1]; // Number of data series added so far.
-  }
-
+    return series[series.size() - 1]; // Reference to data series just added.
+  } 
+  
   template <class T, class U>
-  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_convert)
+  svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title /* = ""*/, U functor /* = boost_default_convert */)
   { // Add a data series to the plot. (Version with custom functor, rather than to double).
     series.push_back(
       svg_1d_plot_series(
@@ -720,11 +753,11 @@ public:
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size() - 1]; // Number of data series added so far.
+    return series[series.size() - 1]; // Reference to data series just added.
   }
 
   template <class T, class U>
-  svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_convert)
+  svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /* = "" */, U functor/*= boost_default_convert*/)
   { // Add a data series to the plot. (Version with functor, rather than to double).
     series.push_back(
       svg_1d_plot_series(
@@ -732,10 +765,10 @@ public:
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size() - 1]; // Number of data series added so far.
+    return series[series.size() - 1]; // Reference to data series just added.
   }
 
-}; // end svg_1d_plot
+// End svg_1d_plot Member functions definitions.
 
 #if defined (BOOST_MSVC)
 #  pragma warning(pop)

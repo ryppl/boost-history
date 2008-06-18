@@ -1180,7 +1180,8 @@ namespace boost
 
 
             // Unclear how to get this uncertainty information into this function,
-            // so these arepurely imaginary for now.
+            // so these are purely imaginary for now.
+            // Migh template so can use an uncertain type instead of double?
             double ux = 0.0123;
             double uy = 0.00321;
             double dfx = 23;
@@ -1319,1648 +1320,262 @@ namespace boost
           }
         public:
           // Set & get member function Declarations:
-          // See svg_fwd.hpp
-          // -----------------------------------------------------------------
+          // All set functions return derived() == *this to permit chaining,
+          // for example: my_plot.background_color(red).background_border_color(blue)...
 
-          // Get functions:
-          // =========== Image & plot window ==============
-          // Derived& image_size(unsigned int x, unsigned int y);
-          // unsigned int image_x_size();
-          // unsigned int image_y_size()
-          // bool plot_window_on()
-          // svg_color background_color()
-          // svg_color background_border_color()
-          // svg_color plot_background_color()
-          //
-          // std::pair<double, double> plot_window_x()
-          // std::pair<double, double> plot_window_y()
-
-          // ========= Title & legend ============
-          // bool title_on()
-          // const std::string title()
-          // unsigned int title_font_size()
-          // const std::string title_font()
-          // svg_color title_color()
-          // bool legend_on()
-          // const std::string legend_title()
-          // svg_color legend_background_color()
-          // svg_color legend_border_color()
-          // unsigned int legend_title_font_size()
-          // ========= Axes & Ticks ============
-          // bool x_axis_on()
-          // unsigned int x_axis_width()
-          // bool x_external_style_on()
-          // bool x_ticks_up_on()
-          // bool x_ticks_down_on()
-          // std::pair<double, double> x_range()
-          // double x_minimum()
-          // double x_maximum()
-          // double x_major_interval()
-          // unsigned int x_num_minor__ticks()
-          // double x_major_tick()
-          // svg_color x_major_tick_color()
-          // svg_color x_minor_tick_color()
-          // unsigned int x_major_tick_length()
-          // unsigned int x_major_tick_width_()
-          // unsigned int x_minor_tick_length_()
-          // unsigned int x_minor_tick_width_()
-          // ========= Labels ============
-          // bool x_label_on() // Show X-axis label text.
-          // std::string x_label()
-          // bool x_label_units_on() //
-          // std::string x_label_units() // Show X-axis units text.
-          // int x_major_labels_side()
-          // svg_color x_label_color()
-          // bool axes_on()
-          // svg_color x_axis_color()
-          // bool y_axis_on()
-          // svg_color y_axis_color()
-          // std::string y_label()
-          // svg_color y_label_color()
-          // ========= grid ============
-          // bool x_major_grid_on()
-          // bool x_minor_grid_on()
-          // unsigned int x_major_grid_width()
-          // unsigned int x_minor_grid_width()
-          // svg_color x_major_grid_color()
-          // svg_color x_minor_grid_color()
-
-          // Set functions:
-
-          //Derived& image_size(unsigned int x, unsigned int y)
-          //Derived& image_x_size(unsigned int x);
-          //Derived& image_y_size(unsigned int y);
-
-          //Derived& title(const std::string& title)
-
-          //Derived& document_title(const std::string&);
-          //Derived& description(const std::string&);
-          //Derived& copyright_date(const std::string&);
-          //Derived& copyright_holder(const std::string&);
-
-          //Derived& title_font_size(unsigned int size)
-          //Derived& legend_title_font_size(unsigned int size)
-          //Derived& legend_on(bool cmd)
-          //Derived& plot_window_on(bool cmd)
-          //Derived& plot_window_x(unsigned int min_x, unsigned int max_x)
-          //Derived& plot_window_y(unsigned int min_y, unsigned int max_y)
-          //Derived& x_external_style_on(bool cmd)
-          //Derived& x_ticks_up_on(bool cmd)
-          //Derived& x_ticks_down_on(bool cmd)
-          //Derived& x_label_on(bool cmd)
-          //Derived& x_label_units_on(bool cmd)
-          //Derived& x_major_labels_side(int cmd)
-          //Derived& title_on(bool cmd)
-          //Derived& x_major_grid_on(bool is)
-          //Derived& x_minor_grid_on(bool is)
-          //Derived& axes_on(bool is)
-          //Derived& x_axis_on(bool is)
-          //Derived& y_axis_on(bool is);
-          //Derived& title_color(const svg_color& col)
-          //Derived& background_color(const svg_color& col)
-          //Derived& legend_background_color(const svg_color& col)
-          //Derived& legend_border_color(const svg_color& col)
-          //Derived& legend_title_font_size(unsigned int size)
-          //Derived& legend_color(const svg_color& col)
-          //Derived& legend_font_family(const std::string& family)
-          //Derived& legend_font_weight(const std::string& weight)
-          //Derived& background_border_color(const svg_color& col)
-          //Derived& background_border_width(double width)
-          //Derived& plot_background_color(const svg_color& col)
-          //Derived& x_axis_color(const svg_color& col)
-          //Derived& y_axis_color(const svg_color& col)
-          //Derived& x_label_color(const svg_color& col)
-          //Derived& x_label_color(const svg_color& col)
-          //Derived& y_label_color(const svg_color& col)
-          //Derived& x_major_tick_color(const svg_color& col)
-          //Derived& x_minor_tick_color(const svg_color& col)
-          //Derived& x_major_grid_color(const svg_color& col)
-          //Derived& x_major_grid_width(unsigned int w)
-          //Derived& x_minor_grid_color(const svg_color& col)
-          //Derived& x_minor_grid_width(unsigned int w)
-          //Derived& x_axis_width(unsigned int width)
-          //Derived& x_label(const std::string& str)
-          //Derived& x_label_units(const std::string& str)
-          //Derived& y_label(const std::string& str)
-          //Derived& x_major_interval(double inter)
-          //Derived& x_major_tick_length(unsigned int length)
-          //Derived& x_major_tick_width_(unsigned int width)
-          //Derived& x_minor_tick_length_(unsigned int length)
-          //Derived& x_minor_tick_width_(unsigned)
-          //Derived& x_major_tick(double d) int width)
-          //Derived& x_num_minor_ticks(unsigned int num)
-          //Derived& x_range(double min_x, double max_x)
-          //Derived& x_minimum(double min_x)
-          //Derived& x_maximum(double max_x)
-          //Derived& load_stylesheet(const std::string& file)
-          // svg& get_svg()
-
-          // Shapes and glyphs need BOTH fill and stroke to be set.
+          // Shapes and glyphs can have (or may need) BOTH fill and stroke to be set.
           // Both are usually the same in this application.
           // If both are set, stroke is considered 'more important',
           // and so is returned by get functions.
 
-
-          // Member functions to set plot options.
-          // All return derived() == *this to permit chaining.
-
-          //-------------------------------------------------------
-
-          Derived& image_size(unsigned int x, unsigned int y)
-          { // Might put default sizes here?
-            // Check on sanity of these values?
-            derived().image.image_size(x, y);
-            return derived();
-          }
-
-          unsigned int image_x_size()
-          {
-            return derived().image.x_size();
-          }
-
-          Derived& image_x_size(unsigned int i)
-          {
-            derived().image.x_size(i);
-            return derived();
-          }
-
-          unsigned int image_y_size()
-          {
-            return derived().image.y_size();
-          }
-
-          Derived& image_y_size(unsigned int i)
-          {
-            derived().image.y_size(i);
-            return derived();
-          }
-
-          svg_color background_color()
-          {
-            return derived().image.g(PLOT_BACKGROUND).style().fill_color();
-          }
-
-          Derived& background_border_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_BACKGROUND).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color background_border_color()
-          {
-            return derived().image.g(PLOT_BACKGROUND).style().stroke_color();
-          }
-
-          Derived& background_border_width(double w)
-          {
-            derived().image.g(PLOT_BACKGROUND).style().stroke_width(w);
-            return derived();
-          }
-
-          double background_border_width()
-          {
-            return derived().image.g(PLOT_BACKGROUND).style().stroke_width();
-          }
-
-          Derived& description(const std::string d)
-          { // Writes description to the document(for header as <desc>).
-            derived().image.description(d);
-            return derived();
-          }
-
-          const std::string& description()
-          { // Gets description of the document(for header as <desc>).
-            return derived().image.description();
-          }
-
-          Derived& document_title(const std::string d)
-          { // Writes document title to the document(for header as <title>)..
-            derived().image.document_title(d);
-            return derived();
-          }
-          std::string document_title()
-          { // Get document title to the document(for header as <title>)..
-            return derived().image.document_title();
-          }
-
-          Derived& copyright_holder(const std::string d)
-          { // Writes copyright_holder to the document
-            // (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
-            // and as metadata: meta name="copyright" content="Paul A. Bristow" />
-            derived().image.copyright_holder(d);
-            return derived();
-          }
-
-          const std::string copyright_holder()
-          { // Get copyright_holder.
-            return derived().image.copyright_holder();
-          }
-
-          Derived& copyright_date(const std::string d)
-          { // Writes copyright_date to the document.
-            // and as metadata <meta name="date" content="2007" />
-            derived().image.copyright_date(d);
-            return derived();
-          }
-
-          const std::string copyright_date()
-          { // Get copyright_date.
-            return derived().image.copyright_date();
-          }
-
+          Derived& image_size(unsigned int x, unsigned int y);
+          unsigned int image_x_size();
+          Derived& image_x_size(unsigned int i);
+          unsigned int image_y_size();
+          Derived& image_y_size(unsigned int i);
+          svg_color background_color();
+          Derived& background_color(const svg_color& col);
+          Derived& background_border_color(const svg_color& col);
+          svg_color background_border_color();
+          Derived& background_border_width(double w);
+          double background_border_width();
+          Derived& description(const std::string d);
+          const std::string& description();
+          Derived& document_title(const std::string d);
+          std::string document_title();
+          Derived& copyright_holder(const std::string d);
+          const std::string copyright_holder();
+          Derived& copyright_date(const std::string d);
+          const std::string copyright_date();
           Derived& license(std::string repro = "permits",
             std::string distrib = "permits",
             std::string attrib = "requires",
             std::string commercial = "permits",
-            std::string derivative = "permits")
-          { // Might check these are "permits", "requires", or "prohibits"?
-            derived().image.license(repro, distrib, attrib, commercial, derivative);
-            return derived();
-          }
-
-          bool license_on()
-          {
-            return derived().image.license_on();
-          }
-
-          Derived&  license_on(bool l)
-          {
-            derived().image.license_on(l);
-            return derived();
-          }
-          bool boost_license_on()
-          {
-            return derived().image.boost_license_one();
-          }
-
-          Derived& boost_license_on(bool l)
-          {
-            derived().image.boost_license_on(l);
-            return derived();
-          }
-
-          const std::string license_reproduction()
-          { // Get copyright_date.
-            return derived().image.reproduction();
-          }
-
-          const std::string license_distribution()
-          { // Get copyright_date.
-            return derived().image.distribution();
-          }
-
-          const std::string license_attribution()
-          { // Get copyright_date.
-            return derived().image.attribution();
-          }
-
-          const std::string license_commercialuse()
-          { // Get copyright_date.
-            return derived().image.commercialuse();
-          }
-
-          Derived& coord_precision(int digits)
-          { // Precision of coordinates in decimal digits (default 3).
-            derived().image.coord_precision(digits);
-            return derived();
-          }
-
-          int coord_precision()
-          { //
-            return derived().image.coord_precision();
-          }
-
-          Derived& x_value_precision(int digits)
-          { // Precision of X tick label values in decimal digits (default 3).
-            derived().x_ticks_.value_precision_ = digits;
-            return derived();
-          }
-
-          int x_value_precision()
-          { //
-            return derived().x_ticks_.value_precision_;
-          }
-
-          Derived& x_value_ioflags(int flags)
-          { // IO flags of X tick label values (default 0X201).
-            derived().x_ticks_.value_ioflags_ = flags;
-            return derived();
-          }
-
-          int x_value_ioflags()
-          { // ALL stream ioflags for control of format of X value labels.
-            return derived().x_ticks_.value_ioflags_;
-          }
-
-          Derived& x_labels_strip_e0s(bool cmd)
-          {
-            derived().x_ticks_.strip_e0s_ = cmd;
-            return derived();
-          }
-
-          bool y_labels_strip_e0s()
-          {
-            return derived().x_ticks_.strip_e0s_;
-          }
-
-          Derived& title(const std::string title)
-          { // Plot title.  TODO
-            // new text parent code pushback
-            // effectively concatenates with any existing title.
-            // So clear the existing string first but doesn't work,
-            // so need to clear the whole g_element.
-            //derived().image.g(PLOT_TITLE).clear();
-            derived().title_info_.text(title);
-            derived().title_on_ = true; // Assume display wanted, if bother to set title.
-            return derived();
-          }
-
-          const std::string title()
-          {
-            return derived().title_info_.text();
-          }
-
-          Derived& title_font_size(unsigned int i)
-          {
-            derived().title_info_.style().font_size(i);
-            return derived();
-          }
-
-          unsigned int title_font_size()
-          {
-            return derived().title_info_.style().font_size();
-          }
-
-          Derived& title_font_family(const std::string& family)
-          {
-            derived().title_info_.style().font_family(family);
-            return derived();
-          }
-
-          const std::string& title_font_family()
-          {
-            return derived().title_info_.style().font_family();
-          }
-
-          Derived& title_font_style(const std::string& style)
-          {
-            derived().title_info_.style().font_style(style);
-            return derived();
-          }
-
-          const std::string& title_font_style()
-          {
-            return derived().title_info_.style().font_style();
-          }
-
-          Derived& title_font_weight(const std::string& weight)
-          {
-            derived().title_info_.style().font_weight(weight);
-            return derived();
-          }
-
-          const std::string& title_font_weight()
-          {
-            return derived().title_info_.style().font_weight();
-          }
-
-          Derived& title_font_stretch(const std::string& stretch)
-          {
-            derived().title_info_.style().font_stretch(stretch);
-            return derived();
-          }
-
-          const std::string& title_font_stretch()
-          {
-            return derived().title_info_.style().font_stretch();
-          }
-
-          Derived& title_font_decoration(const std::string& decoration)
-          {
-            derived().title_info_.style().font_decoration(decoration);
-            return derived();
-          }
-
-          const std::string& title_font_decoration()
-          {
-            return derived().title_info_.style().font_decoration();
-          }
-
-          Derived& title_font_rotation(rotate_style rotate)
-          { // Degrees (0 to 360).
-            derived().title_info_.rotation(rotate);
-            return derived();
-          }
-
-          int title_font_rotation()
-          {
-            return derived().title_info_.rotation();
-          }
-
-          Derived& title_font_alignment(align_style alignment)
-          {
-            derived().title_info_.alignment(alignment);
-            return derived();
-          }
-
-          align_style title_font_alignment()
-          {
-            return derived().title_info_.alignment();
-          }
-
+            std::string derivative = "permits");
+          bool license_on();
+          Derived&  license_on(bool l);
+          bool boost_license_on();
+          Derived& boost_license_on(bool l);
+          const std::string license_reproduction();
+          const std::string license_distribution();
+          const std::string license_attribution();
+          const std::string license_commercialuse();
+          Derived& coord_precision(int digits);
+          int coord_precision();
+          Derived& x_value_precision(int digits);
+          int x_value_precision();
+          Derived& x_value_ioflags(int flags);
+          int x_value_ioflags();
+          Derived& x_labels_strip_e0s(bool cmd);
+          bool y_labels_strip_e0s();
+          Derived& title(const std::string title);
+          const std::string title();
+          Derived& title_font_size(unsigned int i);
+          unsigned int title_font_size();
+          Derived& title_font_family(const std::string& family);
+          const std::string& title_font_family();
+          Derived& title_font_style(const std::string& style);
+          const std::string& title_font_style();
+          Derived& title_font_weight(const std::string& weight);
+          const std::string& title_font_weight();
+          Derived& title_font_stretch(const std::string& stretch);
+          const std::string& title_font_stretch();
+          Derived& title_font_decoration(const std::string& decoration);
+          const std::string& title_font_decoration();
+          Derived& title_font_rotation(rotate_style rotate);
+          int title_font_rotation();
+          Derived& title_font_alignment(align_style alignment);
+          align_style title_font_alignment();
           // Legend.
-
-          Derived& legend_width(double width)
-          {
-            derived().legend_width_ = width;
-            return derived();
-          }
-
-          double legend_width()
-          {
-            return derived().legend_width_;
-          }
-
-          Derived& legend_title(const std::string title)
-          {
-            derived().legend_header_.text(title);
-            return derived();
-          }
-
-          const std::string legend_title()
-          {
-            return derived().legend_header_.text();
-          }
-
-          Derived& legend_font_weight(const std::string& weight)
-          {
-            derived().legend_header_.style().font_weight(weight);
-            return derived();
-          }
-
-          const std::string& legend_font_weight()
-          {
-            return derived().legend_header_.style().font_weight();
-          }
-
-          Derived& legend_font_family(const std::string& family)
-          {
-            derived().legend_header_.style().font_family(family);
-            return derived();
-          }
-
-          const std::string& legend_font_family()
-          {
-            return derived().legend_header_.style().font_family();
-          }
-
-          Derived& legend_title_font_size(unsigned int size)
-          {
-            derived().legend_header_.style().font_size(size);
-            return derived();
-          }
-
-          unsigned int legend_title_font_size()
-          {
-            return derived().legend_header_.style().font_size();
-          }
-
-          Derived& legend_top_left(double x, double y)
-          { // Position of top left of legend box (svg coordinates).
-            // Bottom right is controlled by contents, so cannot set it.
-            if((x < 0) || (x > derived().image.x_size()) || (y < 0) || (y > derived().image.y_size()))
-            {
-              throw std::runtime_error("Legend box position outside image!");
-            }
-            derived().legend_left_ = x;
-            derived().legend_top_ = y;
-            return derived();
-          }
-
-          const std::pair<double, double> legend_top_left()
-          {// Top left of legend box.
-            std::pair<double, double> r;
-            r.first = derived().legend_left_;
-            r.second = derived().legend_top_;
-            return r;
-          }
-
-          const std::pair<double, double> legend_bottom_right()
-          {// Bottom right of legend box.
-            std::pair<double, double> r;
-            r.first = derived().legend_right_;
-            r.second = derived().legend_bottom_;
-            return r;
-          }
-
-          Derived& legend_lines(bool is)
-          { // If legend should include samples of the lines joining data points.
-            derived().legend_lines_ = is;
-            return derived();
-          }
-
-          bool legend_lines()
-          {
-            return derived().legend_lines_;
-          }
-
-          Derived& legend_on(bool cmd)
-          {
-            derived().legend_on_ = cmd;
-            return derived();
-          }
-
-          bool legend_on()
-          {
-            return derived().legend_on_;
-          }
-
-          Derived& legend_place(legend_places l)
-          {
-            derived().legend_place_ = l;
-            return derived();
-          }
-
-          legend_places legend_place()
-          {
-            return derived().legend_place_;
-          }
-
-          bool legend_outside()
-          {
-            return derived().outside_legend_on_;
-          }
-
-
-          Derived& legend_header_font_size(int size)
-          {
-            derived().legend_header_.style().font_size(size);
-            return *this;
-          }
-
-          int legend_header_font_size()
-          {
-            return derived().legend_header_.style().font_size();
-          }
-
-          Derived& plot_window_on(bool cmd)
-          {
-            derived().plot_window_on_ = cmd;
-
-            if(cmd)
-            { // Set plot window
-              derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style()
-                .fill_color(derived().plot_window_border_.fill_) // background color and
-                .stroke_color(derived().plot_window_border_.stroke_); // border color.
-            }
-            //derived().legend_place_ = outside_right;
-            return derived();
-          }
-
-          bool plot_window_on()
-          {
-            return derived().plot_window_on_;
-          }
-
-          Derived& plot_border_color(const svg_color& col)
-          {
-            derived().plot_window_border_.stroke_ = col;
-            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color plot_border_color()
-          {
-            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
-          }
-
-          double plot_border_width()
-          {
-            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
-          }
-
-          Derived& plot_border_width(double w)
-          {
-            derived().plot_window_border_.width_ = w;
-            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
-            return derived();
-          }
-
-          Derived& image_border_margin(double w)
-          {
-            derived().image_border_.margin_ = w;
-            return derived();
-          }
-
-          double image_border_margin()
-          {
-            return derived().image_border_.margin_;
-          }
-
-          Derived& image_border_width(double w)
-          {
-            derived().image_border_.width_ = w;
-            return derived();
-          }
-
-          double image_border_width()
-          {
-            return derived().image_border_.width_;
-          }
-
-          Derived& plot_window_x(double min_x, double max_x)
-          { // This is normally calculated from other plot values.
-            if(max_x <= min_x)
-            {
-              throw std::runtime_error("plot_window X: x_max_ <= x_min_");
-            }
-            if((max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000)
-            { // Range too small to display.
-              throw std::runtime_error("plot_window X range too small!" );
-            }
-            derived().plot_left_ = min_x;
-            derived().plot_right_ = max_x;
-            return derived();
-          }
-
-          Derived& plot_window_y(double min_y, double max_y)
-          { // This is normally calculated from other plot values.
-
-            if(max_y <= min_y)
-            {
-              throw std::runtime_error("plot_window Y: y_max_ <= x_min_");
-            }
-            if(max_y <= min_y)
-            {
-              throw std::runtime_error("plot_window Y range too small!");
-            }
-            derived().plot_top_ = min_y;
-            derived().plot_bottom_ = max_y;
-            return derived();
-          }
-
-          std::pair<double, double> plot_window_x()
-          {
-            std::pair<double, double> r;
-            r.first = derived().plot_left_;
-            r.second = derived().plot_right_;
-            return r;
-          }
-
-          double plot_window_x_left()
-          {
-            return derived().plot_left_;
-          }
-          double plot_window_x_right()
-          {
-            return derived().plot_right_;
-          }
-          double plot_window_y_top()
-          {
-            return derived().plot_top_;
-          }
-          double plot_window_y_bottom()
-          {
-            return derived().plot_bottom_;
-          }
-
-          std::pair<double, double> plot_window_y()
-          {
-            std::pair<double, double> r;
-            r.first = derived().plot_top_;
-            r.second = derived().plot_bottom_;
-            return r;
-          }
-
-          double x_minor_interval()
-          {
-            return derived().x_ticks_.minor_interval_;  // interval
-          }
-
-          double y_minor_interval()
-          {
-            return derived().y_ticks_.minor_interval_;  // interval
-          }
-
-          Derived& x_ticks_up_on(bool cmd)
-          {
-            derived().x_ticks_.up_ticks_on_ = cmd;
-            return derived();
-          }
-
-          bool x_ticks_up_on()
-          {
-            return derived().x_ticks_.up_ticks_on_;
-          }
-
-          Derived& x_ticks_down_on(bool cmd)
-          {
-            derived().x_ticks_.down_ticks_on_ = cmd;
-            return derived();
-          }
-
-          bool x_ticks_down_on()
-          {
-            return derived().x_ticks_.down_ticks_on_;
-          }
-          // Only need y_ticks_left_on & y_ticks_right_on in 2D
-
-          Derived& x_label_on(bool cmd)
-          { // Show X-axis label text, or not.
-            // Also switched on by setting label text.
-            // (on the assumption that if label text is set, display is also wanted,
-            // but can be switched off if *not* required).
-            derived().x_axis_.label_on_ = cmd;
-            return derived();
-          }
-
-          bool x_label_on()
-          {
-            return derived().x_axis_.label_on_;
-          }
-
-          Derived& x_label_font_size(unsigned int i)
-          {
-            derived().x_label_info_.style().font_size(i);
-            return derived();
-          }
-
-          unsigned int x_label_font_size()
-          {
-            return derived().x_label_info_.style().font_size();
-          }
-
-          Derived& x_value_font_size(unsigned int i)
-          {
-            derived().x_value_value.style().font_size(i);
-            return derived();
-          }
-
-          unsigned int x_value_font_size()
-          {
-            return derived().x_value_value.style().font_size();
-          }
-
-          Derived& x_label_font_family(const std::string& family)
-          {
-            derived().x_label_info_.style().font_family(family);
-            return derived();
-          }
-
-          const std::string& x_label_font_family()
-          {
-            return derived().x_label_info_.style().font_family();
-          }
-
-         Derived& x_axis_label_color(const svg_color& col)
-          { // Set BOTH stroke and fill to the same color.
-            derived().image.g(detail::PLOT_X_LABEL).style().fill_color(col);
-            derived().image.g(detail::PLOT_X_LABEL).style().stroke_color(col);
-            return *this;
-          }
-
-          svg_color x_axis_label_color()
-          { // But only return the stroke color.
-            return derived().image.g(detail::PLOT_X_LABEL).style().stroke_color();
-          }
-
-          Derived& x_axis_value_color(const svg_color& col)
-          { // Set BOTH stroke and fill to the same color.
-            derived().image.g(detail::PLOT_VALUE_LABELS).style().fill_color(col);
-            derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
-            return *this;
-          }
-
-          svg_color x_axis_value_color()
-          { // But only return the stroke color.
-            return derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
-          }
-
-          Derived& x_ticks_on_window_or_axis(int cmd)
-          { // External style, top = +1, bottom = -1 (default).
-            derived().x_ticks_.ticks_on_window_or_axis_ = cmd;
-            return derived();
-          }
-
-          int x_ticks_on_window_or_axis()
-          { // External style = true.
-            return derived().x_ticks_.ticks_on_window_or_axis_;
-          }
-
-          Derived& x_label_units_on(bool cmd)
-          {
-            derived().x_axis_.label_units_on_ = cmd;
-            return derived();
-          }
-
-          bool x_label_units_on()
-          {
-            return derived().x_axis_.label_units_on_;
-          }
-
-          Derived& x_major_value_labels_side(int cmd)
-          {
-            derived().x_ticks_.major_value_labels_side_ = cmd;
-            return derived();
-          }
-
-          int x_major_value_labels_side()
-          {
-            return derived().x_ticks_.major_value_labels_side_;
-          }
-
-          Derived& x_major_label_rotation(rotate_style rot)
-          {
-            derived().x_ticks_.label_rotation_ = rot;
-            return derived();
-          }
-
-          rotate_style x_major_label_rotation()
-          {
-            return derived().x_ticks_.label_rotation_;
-          }
-
-          Derived& title_on(bool cmd)
-          {
-            derived().title_on_ = cmd;
-            return derived();
-          }
-
-          bool title_on()
-          {
-            return derived().title_on_;
-          }
-
-          Derived& x_major_grid_on(bool is)
-          {
-            derived().x_ticks_.major_grid_on_ = is;
-            return derived();
-          }
-
-          bool x_major_grid_on()
-          {
-            return derived().x_ticks_.major_grid_on_;
-          }
-
-          Derived& x_minor_grid_on(bool is)
-          {
-            derived().x_ticks_.minor_grid_on_ = is;
-            return derived();
-          }
-
-          bool x_minor_grid_on()
-          {
-            return derived().x_ticks_.minor_grid_on_;
-          }
-
-          Derived& axes_on(bool is)
-          { // Draw *both* x and y axes (note plural).
-            derived().x_axis_.axis_line_on_ = is;
-            derived().y_axis_.axis_line_on_ = is; // Unsuitable for 1D?
-            return derived();
-          }
-
-          bool axes_on()
-          { // Used X in preference to Y for 1D, but now require *both* x and y axis on.
-            return derived().x_axis_.axis_line_on_ && derived().y_axis_.axis_line_on_;
-          }
-
-          Derived& x_axis_on(bool is)
-          { // Draw a horizontal x_axis_ line.
-            derived().x_axis_.axis_line_on_ = is;
-            return derived();
-          }
-
-          bool x_axis_on()
-          { // Use X in preference to Y for 1D
-            return derived().x_axis_.axis_line_on_;
-          }
-
-          Derived& y_axis_on(bool is)
-          {// Draw a vertical y_axis_ line.
-            derived().y_axis_.axis_line_on_ = is;
-            return derived();
-          }
-
-          bool y_axis_on()
-          { // Should be always false for 1D.
-            return derived().y_axis_.axis_line_on_;
-          }
-
-          // enums like PLOT_TITLE provide a std:string like "title"
-          // colors .stroke_color, .stroke_width and font are set in the appropriate g_element.
-
-          Derived& title_color(const svg_color& col)
-          { // Function title_color could set both fill (middle) and stroke (outside),
-            // but just setting fill if simplest,
-            // but does not allow separate inside & outside colors.
-            derived().image.g(PLOT_TITLE).style().fill_color(col);
-            //derived().image.g(PLOT_TITLE).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color title_color()
-          { // Function title_color could get either fill and stroke,
-            // return derived().image.g(PLOT_TITLE).style().stroke_color();
-            return derived().image.g(PLOT_TITLE).style().fill_color();
-          }
-
-          //Derived& title_font_width(double width)
-          //{ // width of text is effectively the boldness.
-          //  // Not useful with current browsers, setting this may cause lower quality graphic fonts
-          //  // perhaps because the font is created using graphics rather than a built-in font.
-          //  derived().image.g(PLOT_TITLE).style().stroke_width(width);
-          //  return derived();
-          //}
-
-          //double title_font_width()
-          //{
-          //  return derived().image.g(PLOT_TITLE).style().stroke_width();
-          //}
-
-          Derived& legend_color(const svg_color& col)
-          {
-            // derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
-            derived().image.g(PLOT_LEGEND_TEXT).style().fill_color(col);
-            return derived();
-          }
-
-          svg_color legend_color()
-          { // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
-            // (It produces much lower quality fonts on some browsers).
-            return derived().image.g(PLOT_LEGEND_TEXT).style().fill_color();
-            // return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
-          }
-
-          //Derived& legend_font_width(double width)
-          //{ // width of text is effectively the boldness.
-          //  derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
-          //  return derived();
-          //}
-
-          //double legend_font_width()
-          //{ // Probably not useful at present (se above).
-          //  return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
-          //}
-
-          Derived& background_color(const svg_color& col)
-          { // plot background
-            derived().plot_window_border_.fill(col);
-            derived().image.g(PLOT_BACKGROUND).style().fill_color(col);
-            return derived();
-          }
-
-          Derived& legend_background_color(const svg_color& col)
-          {
-            derived().legend_box_.fill(col);
-            derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
-            return derived();
-          }
-
-          svg_color legend_background_color()
-          {
-            return derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
-          }
-
-          bool legend_box_fill_on()
-          {
-            return derived().legend_box_.fill_on();
-          }
-
-          Derived& legend_border_color(const svg_color& col)
-          {
-            derived().legend_box_.stroke(col);
-            derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color legend_border_color()
-          {
-            return  derived().legend_box_.stroke();
-            // return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
-          }
-
-          Derived& plot_background_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
-            return derived();
-          }
-
-          svg_color plot_background_color()
-          {
-            return derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
-          }
-
-          const std::string x_axis_position()
-          { // Return the position of the X-axis.
-            switch(derived().x_axis_position_)
-            {
-            case top:
-              return "x_axis_position top (all Y values < 0)"; break;
-            case x_intersects_y:
-              return "x_axis_position intersects Y axis (Y range includes zero)"; break;
-            case bottom:
-              return "x_axis_position bottom (all Y values > 0)"; break;
-            default:
-              return "?"; break;
-            }
-          }
-
-          Derived& x_axis_color(const svg_color& col)
-          { // Note only stroke color is set.
-            derived().image.g(PLOT_X_AXIS).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color x_axis_color()
-          {
-            return derived().image.g(PLOT_X_AXIS).style().stroke_color();
-          }
-
-          Derived& y_axis_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_Y_AXIS).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color y_axis_color()
-          {
-            return derived().image.g(PLOT_Y_AXIS).style().stroke_color();
-          }
-
-          Derived& x_label_color(const svg_color& col)
-          { // add fill as well PAB Oct 07
-            derived().image.g(PLOT_X_LABEL).style().fill_color(col);
-            derived().image.g(PLOT_X_LABEL).style().stroke_color(col);
-            return derived();
-          }
-
-          // Removed until browsers implement better.
-          //Derived& x_label_width(double width)
-          //{ // width of text is effectively the boldness.
-          //  derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
-          //  return derived();
-          //}
-
-          //double x_label_width()
-          //{
-          //  return derived().image.g(PLOT_X_LABEL).style().stroke_width();
-          //}
-
-          svg_color x_label_color()
-          {
-            return derived().image.g(PLOT_X_LABEL).style().fill_color();
-          }
-
-          Derived& y_label_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_Y_LABEL).style().fill_color(col);
-            derived().image.g(PLOT_Y_LABEL).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color y_label_color()
-          {
-            return derived().image.g(PLOT_Y_LABEL).style().fill_color();
-          }
-
-          Derived& x_major_tick_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color x_major_tick_color()
-          {
-            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
-          }
-
-          Derived& x_minor_tick_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color x_minor_tick_color()
-          {
-            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color();
-          }
-
-          Derived& x_major_grid_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color x_major_grid_color()
-          {
-            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color();
-          }
-
-          Derived& x_major_grid_width(double w)
-          {
-            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width(w);
-            return derived();
-          }
-
-          double x_major_grid_width()
-          {
-            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width();
-          }
-
-          Derived& x_minor_grid_color(const svg_color& col)
-          {
-            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color x_minor_grid_color()
-          {
-            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color();
-          }
-
-          Derived& x_minor_grid_width(double w)
-          {
-            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width(w);
-            return derived();
-          }
-
-          double x_minor_grid_width()
-          {
-            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width();
-          }
-
-          Derived& x_axis_width(double width)
-          {
-            derived().image.g(PLOT_X_AXIS).style().stroke_width(width);
-            return derived();
-          }
-
-          double x_axis_width()
-          {
-            return derived().image.g(PLOT_X_AXIS).style().stroke_width();
-          }
-
-          Derived& data_lines_width(double width)
-          {
-            derived().image.g(PLOT_DATA_LINES).style().stroke_width(width);
-            return derived();
-          }
-
-          double data_lines_width()
-          {
-            return derived().image.g(PLOT_DATA_LINES).style().stroke_width();
-          }
-
-          Derived& x_label(const std::string& str)
-          {
-            derived().x_label_info_.text(str);
-            derived().x_axis_.label_on_ = true; // Assume want x_label string displayed.
-            // Might switch label_on false if null string?
-            return derived();
-          }
-
-          std::string x_label()
-          {
-            return derived().x_label_info_.text();
-          }
-
-          Derived& x_label_units(const std::string& str)
-          {
-            derived().x_units_info_.text(str);
-            derived().x_axis_.label_on_ = true; // Assume want x_label string displayed.
-            return derived();
-          }
-
-          std::string x_label_units()
-          {
-            return derived().x_units_info_.text();
-          }
-
-          // y_label not needed in 1D.
-          Derived& y_label(const std::string& str)
-          {
-            derived().y_label_info_.text(str);
-            derived().y_axis_.label_on_ = true; // Assume want y_label string displayed.
-            return derived();
-          }
-
-          std::string y_label()
-          {
-            return derived().y_label_info_.text();
-          }
-
-          Derived& y_label_units(const std::string& str)
-          {
-            derived().y_units_info_.text(str);
-            derived().y_axis_.label_on_ = true; // Assume want y_label string displayed.
-            return derived();
-          }
-
-          std::string y_label_units()
-          {
-            return derived().y_units_info_.text();
-          }
-
-          Derived& x_values_on(bool b)
-          { // Show values near data points.
-            derived().x_values_on_ = b;
-            return derived();
-          }
-
-          bool x_values_on()
-          { // Label data points with X values.
-            return derived().x_values_on_;
-          }
-
-          Derived& x_values_font_size(unsigned int i)
-          {
-            derived().x_values_style_.values_text_style_.font_size(i);
-            return derived();
-          }
-
-          unsigned int x_values_font_size()
-          {
-            return derived().x_values_style_.values_text_style_.font_size();
-          }
-
-          Derived& x_values_font_family(const std::string& family)
-          {
-            derived().x_values_style_.values_text_style_.font_family(family);
-            return derived();
-          }
-
-          const std::string& x_values_font_family()
-          {
-            return derived().x_values_style_.values_text_style_.font_family();
-          }
-
-          Derived& x_major_interval(double inter)
-          {
-            derived().x_ticks_.major_interval_ = inter;
-            return derived();
-          }
-
-          Derived& x_values_color(const svg_color& col)
-          { // Function could set both fill (middle) and stroke (outside),
-            // but just setting fill if simplest,
-            // but does not allow separate inside & outside colors.
-            derived().image.g(PLOT_X_POINT_VALUES).style().fill_color(col);
-            //derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color(col);
-            return derived();
-          }
-
-          svg_color x_values_color()
-          { // Function could get either fill and stroke,
-            // return derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color();
-            return derived().image.g(PLOT_X_POINT_VALUES).style().fill_color();
-          }
-
-          Derived& x_values_rotation(rotate_style rotate)
-          { // Degrees (0 to 360).
-            derived().x_values_style_.value_label_rotation_ = rotate;
-            return derived();
-          }
-
-          int x_values_rotation()
-          {
-            return derived().x_values_style_.value_label_rotation_;
-          }
-
-          Derived& x_values_precision(int p)
-          { // set iostream precision
-            derived().x_values_style_.value_precision_ = p;
-            return derived();
-          }
-
-          int x_values_precision()
-          {
-            return derived().x_values_style_.value_precision_;
-          }
-
-          Derived& x_values_ioflags(std::ios_base::fmtflags f)
-          { // set iostream format flags
-            derived().x_values_style_.value_ioflags_ = f;
-            return derived();
-          }
-
-          std::ios_base::fmtflags x_values_ioflags()
-          {
-            return derived().x_values_style_.value_ioflags_;
-          }
-
-          Derived& x_plusminus_on(bool b)
-          { // set if uncertainty to be append to X values labels.
-            derived().x_values_style_.plusminus_on_ = b;
-            return derived();
-          }
-
-          bool x_plusminus_on()
-          {
-            return derived().x_values_style_.plusminus_on_;
-          }
-          Derived& x_df_on(bool b)
-          { // set if uncertainty to be append to X values labels.
-            derived().x_values_style_.df_on_ = b;
-            return derived();
-          }
-
-          bool x_df_on()
-          {
-            return derived().x_values_style_.df_on_;
-          }
-
-          double x_major_interval()
-          {
-            return derived().x_ticks_.major_interval_;
-          }
-
-          Derived& x_major_tick_length(double length)
-          {
-            derived().x_ticks_.major_tick_length_ = length;
-            return derived();
-          }
-
-          double x_major_tick_length()
-          {
-            return derived().x_ticks_.major_tick_length_;
-          }
-
-          Derived& x_major_tick_width(double width)
-          {
-            derived().x_ticks_.major_tick_width_ = width; // Redundant?
-            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
-            return derived();
-          }
-
-          double x_major_tick_width()
-          {
-            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
-          }
-
-          Derived& x_minor_tick_length(double length)
-          {
-            derived().x_ticks_.minor_tick_length_ = length;
-            return derived();
-          }
-
-          double x_minor_tick_length()
-          {
-            return derived().x_ticks_.minor_tick_length_;
-          }
-
-          Derived& x_minor_tick_width(double width)
-          {
-            derived().x_ticks_.minor_tick_width_ = width;
-            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width(width);
-            return derived();
-          }
-
-          double x_minor_tick_width()
-          {
-            // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
-            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width();
-          }
-
-          Derived& x_major_tick(double d)
-          { // Interval (Cartesian units) between major ticks.
-            derived().x_ticks_.major_interval_ = d;
-          }
-
-          double x_major_tick()
-          { // Interval (Cartesian units) between major ticks.
-            return derived().x_ticks_.major_interval_;
-          }
-
-          Derived& x_minor_interval(double interval)
-          { // aka x_minor_tick
-            derived().x_ticks_.minor_interval_ = interval;
-            return derived();
-          }
-
-          Derived& x_num_minor_ticks(unsigned int num)
-          {
-            derived().x_ticks_.num_minor_ticks_ = num;
-            return derived();
-          }
-
-          unsigned int x_num_minor_ticks()
-          { // NB NOT float or double!
-            return derived().x_ticks_.num_minor_ticks_;
-          }
-
-          Derived& x_range(double min_x, double max_x)
-          {
-            if (!boost::math::isfinite(min_x))
-            {
-              throw std::runtime_error("X range: min not finite!");
-            }
-            if (!boost::math::isfinite(max_x))
-            {
-              throw std::runtime_error("X range: max not finite!");
-            }
-            if(max_x <= min_x)
-            { // max_x <= min_x.
-              throw std::runtime_error("X range: max <= min!");
-            }
-            if( (abs(max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000 * abs(max_x))
-              || (abs(max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000 * abs(min_x))
-              )
-            { // Range too small to display.
-              throw std::runtime_error("X range too small!" );
-            }
-            derived().x_axis_.min_ = min_x;
-            derived().x_axis_.max_ = max_x;
-            //derived().x_ticks_.max_ = min_x;
-            //derived().y_ticks_.max_ = max_x;
-            // done in calculate_plot_window.
-            // TODO May be best to combine these?
-            derived().x_autoscale_ = false; // because range has just been set.
-            return derived();
-          }
-
-          std::pair<double, double> x_range()
-          { // Need to use boost::svg::detail::operator<< to display this.
-            std::pair<double, double> r;
-            r.first = derived().x_axis_.min_;
-            r.second = derived().x_axis_.max_;
-            return r;
-          }
-
-          Derived& x_min(double min_x)
-          {
-            // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
-            derived().x_axis_.min_ = min_x;
-            return derived();
-          }
-
-          double x_min()
-          {
-            return derived().x_axis_.min_;
-          }
-
-          Derived& x_max(double x)
-          {
-            // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
-            derived().x_axis_.max_ = x;
-            return derived();
-          }
-
-          double x_max()
-          {
-            return derived().x_axis_.max_;
-          }
-
-          bool autoscale_check_limits()
-          {
-            return derived().autoscale_check_limits_;
-          }
-
-          Derived& autoscale_check_limits(bool b)
-          { // Default is true, but can switch off checks for speed.
-            derived().autoscale_check_limits_ = b;
-            return derived();
-          }
-
-          bool x_autoscale()
-          { // Get autoscale setting.
-           return derived().x_autoscale_;
-          }
-
-          Derived& x_autoscale(bool b)
-          { // set whether to use autoscaled values.
-             if (b && derived().x_auto_tick_interval_ < 0)
-             { // No autoscale values have been calculated, so not safe to make x_autoscale true.
-                throw std::runtime_error("X autoscale has not been calculated yet!" );
-             }
-            derived().x_autoscale_ = b;
-            return derived();
-          }
-
-          bool autoscale()
-          { // AKA x_autoscale.
-           return derived().x_autoscale_;
-          }
-
-          Derived& autoscale(bool b)
-          { // AKA x_autoscale - set whether to use X autoscaled values.
-
-             if (derived().x_auto_tick_interval_ < 0)
-             { // No autoscale values have been calculated, so not safe to make x_autoscale true.
-                throw std::runtime_error("X-axis autoscale has not been calculated yet!" );
-             }
-            derived().x_autoscale_ = b;
-            return derived();
-          }
-
-          Derived& x_autoscale(std::pair<double, double> p)
-          { // Use X min & max pair values to autoscale.
-              scale_axis(p.first, p.second, // double min and max from pair.
-              &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_,
-              derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
-            derived().x_autoscale_ = true; // Default to use any calculated values?
-            return derived();
-          } // autoscale(pair<double, double> p)
-
-          template <class T> // T an STL container: array, vector ...
-          Derived& x_autoscale(const T& begin, const T& end) // Data series using iterators
-          { // to calculate autoscaled values.
-              scale_axis(begin, end,
-              &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_,
-              derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
-
-            derived().x_autoscale_ = true; // Default to use calculated values.
-            return derived();
-          } // x_autoscale(const T& begin, const T& end)
-
-          template <class T> // T an STL container: array, vector ...
-          Derived& x_autoscale(const T& container) // Whole data series.
-          { // to use to calculate autoscaled values.
-              //scale_axis(container.begin(), container.end(), // All the container.
-              scale_axis(container, // All the container.
-              &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_,
-              derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
-
-            derived().x_autoscale_ = true; // Default to use calculated values.
-            return derived();
-          } // x_autoscale(const T& container)
-
+          Derived& legend_width(double width);
+          double legend_width();
+          Derived& legend_title(const std::string title);
+          const std::string legend_title();
+          Derived& legend_font_weight(const std::string& weight);
+          const std::string& legend_font_weight();
+          Derived& legend_font_family(const std::string& family);
+          const std::string& legend_font_family();
+          Derived& legend_title_font_size(unsigned int size);
+          unsigned int legend_title_font_size();
+          Derived& legend_top_left(double x, double y);
+          const std::pair<double, double> legend_top_left();
+          const std::pair<double, double> legend_bottom_right();
+          Derived& legend_lines(bool is);
+          bool legend_lines();
+          Derived& legend_on(bool cmd);
+          bool legend_on();
+          Derived& legend_place(legend_places l);
+          legend_places legend_place();
+          bool legend_outside();
+          Derived& legend_header_font_size(int size);
+          int legend_header_font_size();
+          Derived& plot_window_on(bool cmd);
+          bool plot_window_on();
+          Derived& plot_border_color(const svg_color& col);
+          svg_color plot_border_color();
+          double plot_border_width();
+          Derived& plot_border_width(double w);
+          Derived& image_border_margin(double w);
+          double image_border_margin();
+          Derived& image_border_width(double w); 
+          double image_border_width();
+          Derived& plot_window_x(double min_x, double max_x);
+          Derived& plot_window_y(double min_y, double max_y);
+          std::pair<double, double> plot_window_x();
+          double plot_window_x_left();
+          double plot_window_x_right();
+          double plot_window_y_top();
+          double plot_window_y_bottom();
+          std::pair<double, double> plot_window_y();
+          double x_minor_interval();
+          double y_minor_interval();
+          Derived& x_ticks_up_on(bool cmd);
+          bool x_ticks_up_on();
+          Derived& x_ticks_down_on(bool cmd);
+          bool x_ticks_down_on();
+          Derived& x_label_on(bool cmd);
+          bool x_label_on();
+          Derived& x_label_font_size(unsigned int i);
+          unsigned int x_label_font_size();
+          Derived& x_value_font_size(unsigned int i);
+          unsigned int x_value_font_size(); 
+          Derived& x_label_font_family(const std::string& family);
+          const std::string& x_label_font_family();
+          Derived& x_axis_label_color(const svg_color& col);
+          svg_color x_axis_label_color();
+          Derived& x_axis_value_color(const svg_color& col);
+          svg_color x_axis_value_color();
+          Derived& x_ticks_on_window_or_axis(int cmd);
+          int x_ticks_on_window_or_axis();
+          Derived& x_label_units_on(bool cmd);
+          bool x_label_units_on();
+          Derived& x_major_value_labels_side(int cmd);
+          int x_major_value_labels_side();
+          Derived& x_major_label_rotation(rotate_style rot);
+          rotate_style x_major_label_rotation();
+          Derived& title_on(bool cmd);
+          bool title_on();
+          Derived& x_major_grid_on(bool is);
+          bool x_major_grid_on();
+          Derived& x_minor_grid_on(bool is);
+          bool x_minor_grid_on();
+          Derived& axes_on(bool is);
+          bool axes_on();
+          Derived& x_axis_on(bool is);
+          bool x_axis_on();
+          Derived& y_axis_on(bool is);
+          bool y_axis_on();
+          Derived& title_color(const svg_color& col);
+          svg_color title_color();
+          Derived& legend_color(const svg_color& col);
+          svg_color legend_color();
+          Derived& legend_background_color(const svg_color& col);
+          svg_color legend_background_color();
+          bool legend_box_fill_on();
+          Derived& legend_border_color(const svg_color& col);
+          svg_color legend_border_color();
+          Derived& plot_background_color(const svg_color& col);
+          svg_color plot_background_color();
+          const std::string x_axis_position();
+          Derived& x_axis_color(const svg_color& col);
+          svg_color x_axis_color();
+          Derived& y_axis_color(const svg_color& col);
+          svg_color y_axis_color();
+          Derived& x_label_color(const svg_color& col);
+          Derived& x_label_width(double width);
+          double x_label_width();
+          svg_color x_label_color();
+          Derived& y_label_color(const svg_color& col);
+          svg_color y_label_color();
+          Derived& x_major_tick_color(const svg_color& col);
+          svg_color x_major_tick_color(); 
+          Derived& x_minor_tick_color(const svg_color& col);
+          svg_color x_minor_tick_color();
+          Derived& x_major_grid_color(const svg_color& col);
+          svg_color x_major_grid_color();
+          Derived& x_major_grid_width(double w);
+          double x_major_grid_width();
+          Derived& x_minor_grid_color(const svg_color& col);
+          svg_color x_minor_grid_color();
+          Derived& x_minor_grid_width(double w);
+          double x_minor_grid_width();
+          Derived& x_axis_width(double width);
+          double x_axis_width();
+          Derived& data_lines_width(double width);
+          double data_lines_width();
+          Derived& x_label(const std::string& str);
+          std::string x_label();
+          Derived& x_label_units(const std::string& str);
+          std::string x_label_units();
+          Derived& y_label(const std::string& str);
+          std::string y_label();
+          Derived& y_label_units(const std::string& str);
+          std::string y_label_units();
+          Derived& x_values_on(bool b);
+          bool x_values_on();
+          Derived& x_values_font_size(unsigned int i);
+          unsigned int x_values_font_size();
+          Derived& x_values_font_family(const std::string& family);
+          const std::string& x_values_font_family();
+          Derived& x_major_interval(double inter);
+          Derived& x_values_color(const svg_color& col);
+          svg_color x_values_color();
+          Derived& x_values_rotation(rotate_style rotate);
+          int x_values_rotation();
+          Derived& x_values_precision(int p);
+          int x_values_precision();
+          Derived& x_values_ioflags(std::ios_base::fmtflags f);
+          std::ios_base::fmtflags x_values_ioflags();
+          Derived& x_plusminus_on(bool b);
+          bool x_plusminus_on();
+          Derived& x_df_on(bool b);
+          bool x_df_on();
+          double x_major_interval();
+          Derived& x_major_tick_length(double length);
+          double x_major_tick_length();
+          Derived& x_major_tick_width(double width);
+          double x_major_tick_width();
+          Derived& x_minor_tick_length(double length);
+          double x_minor_tick_length();
+          Derived& x_minor_tick_width(double width);
+          double x_minor_tick_width();
+          Derived& x_major_tick(double d);
+          double x_major_tick();
+          Derived& x_minor_interval(double interval);
+          Derived& x_num_minor_ticks(unsigned int num);
+          unsigned int x_num_minor_ticks();
+          Derived& x_range(double min_x, double max_x);
+          std::pair<double, double> x_range();
+          Derived& x_min(double min_x);
+          double x_min();
+          Derived& x_max(double x);
+          double x_max();
           // Set & get autoscale parameters,
           // Note: all these *MUST* preceed x_autoscale(data) call.
-
-          Derived& x_with_zero(bool b)
-          { // Set autoscale to include zero (default = false).
-            // Must preceed x_autoscale(data) call.
-            derived().x_include_zero_ = b;
-            return derived();
-          }
-
-          bool x_with_zero()
-          { //
-           return derived().x_include_zero_;
-          }
-
-          Derived& x_min_ticks(int min_ticks)
-          { // Set autoscale to include at least min_ticks (default = 6).
-            // Must preceed x_autoscale(data) call.
-            derived().x_min_ticks_ = min_ticks;
-            return derived();
-          }
-
-          int x_min_ticks()
-          { //
-           return derived().x_min_ticks_;
-          }
-
-          Derived& x_steps(int steps)
-          { // Set autoscale to set ticks in steps 2,4,6,8,10, or 1,5,10 or 2,5,10.
-            // default = 0 (none)
-            // Must preceed x_autoscale(data) call.
-            derived().x_steps_ = steps;
-            return derived();
-          }
-
-          int x_steps()
-          { //
-           return derived().x_steps_;
-          }
-
-          Derived& x_tight(double tight)
-          { // Set autoscale to include permit data points slightly outside both end ticks.
-            // default 0.
-            // Must preceed x_autoscale(data) call.
-            derived().x_tight_ = tight;
-            return derived();
-          }
-
-          double x_tight()
-          { //
-           return derived().x_tight_;
-          }
-
+          bool autoscale_check_limits();
+          Derived& autoscale_check_limits(bool b);
+          bool x_autoscale();
+          Derived& x_autoscale(bool b);
+          bool autoscale();
+          Derived& autoscale(bool b);
+          Derived& x_autoscale(std::pair<double, double> p);
+          template <class T> // T an STL container: array, vector ...
+          Derived& x_autoscale(const T& container); // Whole data series.
+          template <class T> // T an STL container: array, vector ...
+          Derived& x_autoscale(const T& begin, const T& end); // Data series using iterators.
+          Derived& x_with_zero(bool b);
+          bool x_with_zero();
+          Derived& x_min_ticks(int min_ticks);
+          int x_min_ticks();
+          Derived& x_steps(int steps);
+          int x_steps();
+          Derived& x_tight(double tight);
+          double x_tight();
           // Get results of autoscaling.
-          double x_auto_min_value()
-          {
-           return derived().x_auto_min_value_;
-          }
-
-          double x_auto_max_value()
-          {
-           return derived().x_auto_max_value_;
-          }
-
-          double x_auto_tick_interval()
-          {
-           return derived().x_auto_tick_interval_;
-          }
-
-           int x_auto_ticks()
-          {
-           return derived().x_auto_ticks_;
-          }
+          double x_auto_min_value();
+          double x_auto_max_value();
+          double x_auto_tick_interval();
+          int x_auto_ticks();
 
           //// Stylesheet.
           // Removed for now to avoid compile warning in spirit.
@@ -2985,6 +1600,1793 @@ namespace boost
           //  return derived().image;
           //}
         }; // template <class Derived> class axis_plot_frame
+
+        // class axis_plot_frame Member function Definitions (for .ipp file):
+
+          template <class Derived>
+          template <class T> // T an STL container: array, vector ...
+          Derived& axis_plot_frame<Derived>::x_autoscale(const T& begin, const T& end)
+          { // Data series using iterators to calculate autoscaled values.
+              scale_axis(begin, end,
+              &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
+              derived().autoscale_check_limits_,
+              derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
+
+            derived().x_autoscale_ = true; // Default to use calculated values.
+            return derived();
+          } // x_autoscale(const T& begin, const T& end)
+
+
+          template <class Derived>
+          template <class T> // T an STL container: array, vector ...
+          Derived& axis_plot_frame<Derived>::x_autoscale(const T& container) // Whole data series.
+          { // to use to calculate autoscaled values.
+              //scale_axis(container.begin(), container.end(), // All the container.
+              scale_axis(container, // All the container.
+              &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
+              derived().autoscale_check_limits_,
+              derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
+
+            derived().x_autoscale_ = true; // Default to use calculated values.
+            return derived();
+          } // x_autoscale(const T& container)
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::image_size(unsigned int x, unsigned int y)
+          { // Might put default sizes here?
+            // Check on sanity of these values?
+            derived().image.image_size(x, y);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::image_x_size()
+          {
+            return derived().image.x_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::image_x_size(unsigned int i)
+          {
+            derived().image.x_size(i);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::image_y_size()
+          {
+            return derived().image.y_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::image_y_size(unsigned int i)
+          {
+            derived().image.y_size(i);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::background_color()
+          {
+            return derived().image.g(PLOT_BACKGROUND).style().fill_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::background_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_BACKGROUND).style().fill_color(col);
+            return derived();
+          }
+
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::background_border_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_BACKGROUND).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::background_border_color()
+          {
+            return derived().image.g(PLOT_BACKGROUND).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::background_border_width(double w)
+          {
+            derived().image.g(PLOT_BACKGROUND).style().stroke_width(w);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::background_border_width()
+          {
+            return derived().image.g(PLOT_BACKGROUND).style().stroke_width();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::description(const std::string d)
+          { // Writes description to the document(for header as <desc>).
+            derived().image.description(d);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::description()
+          { // Gets description of the document(for header as <desc>).
+            return derived().image.description();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::document_title(const std::string d)
+          { // Writes document title to the document(for header as <title>)..
+            derived().image.document_title(d);
+            return derived();
+          }
+          template <class Derived> 
+          std::string axis_plot_frame<Derived>::document_title()
+          { // Get document title to the document(for header as <title>)..
+            return derived().image.document_title();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::copyright_holder(const std::string d)
+          { // Writes copyright_holder to the document
+            // (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
+            // and as metadata: meta name="copyright" content="Paul A. Bristow" />
+            derived().image.copyright_holder(d);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::copyright_holder()
+          { // Get copyright_holder.
+            return derived().image.copyright_holder();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::copyright_date(const std::string d)
+          { // Writes copyright_date to the document.
+            // and as metadata <meta name="date" content="2007" />
+            derived().image.copyright_date(d);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::copyright_date()
+          { // Get copyright_date.
+            return derived().image.copyright_date();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::license(std::string repro,
+            std::string distrib ,
+            std::string attrib,
+            std::string commercial,
+            std::string derivative)
+          { // Might check these are "permits", "requires", or "prohibits"?
+            derived().image.license(repro, distrib, attrib, commercial, derivative);
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::license_on()
+          {
+            return derived().image.license_on();
+          }
+
+          template <class Derived> 
+          Derived&  axis_plot_frame<Derived>::license_on(bool l)
+          {
+            derived().image.license_on(l);
+            return derived();
+          }
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::boost_license_on()
+          {
+            return derived().image.boost_license_one();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::boost_license_on(bool l)
+          {
+            derived().image.boost_license_on(l);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::license_reproduction()
+          { // Get copyright_date.
+            return derived().image.reproduction();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::license_distribution()
+          { // Get copyright_date.
+            return derived().image.distribution();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::license_attribution()
+          { // Get copyright_date.
+            return derived().image.attribution();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::license_commercialuse()
+          { // Get copyright_date.
+            return derived().image.commercialuse();
+          }
+
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::coord_precision(int digits)
+          { // Precision of coordinates in decimal digits (default 3).
+            derived().image.coord_precision(digits);
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::coord_precision()
+          { //
+            return derived().image.coord_precision();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_value_precision(int digits)
+          { // Precision of X tick label values in decimal digits (default 3).
+            derived().x_ticks_.value_precision_ = digits;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_value_precision()
+          { //
+            return derived().x_ticks_.value_precision_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_value_ioflags(int flags)
+          { // IO flags of X tick label values (default 0X201).
+            derived().x_ticks_.value_ioflags_ = flags;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_value_ioflags()
+          { // ALL stream ioflags for control of format of X value labels.
+            return derived().x_ticks_.value_ioflags_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_labels_strip_e0s(bool cmd)
+          {
+            derived().x_ticks_.strip_e0s_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::y_labels_strip_e0s()
+          {
+            return derived().x_ticks_.strip_e0s_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title(const std::string title)
+          { // Plot title.  TODO
+            // new text parent code pushback
+            // effectively concatenates with any existing title.
+            // So clear the existing string first but doesn't work,
+            // so need to clear the whole g_element.
+            //derived().image.g(PLOT_TITLE).clear();
+            derived().title_info_.text(title);
+            derived().title_on_ = true; // Assume display wanted, if bother to set title.
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::title()
+          {
+            return derived().title_info_.text();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_size(unsigned int i)
+          {
+            derived().title_info_.style().font_size(i);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::title_font_size()
+          {
+            return derived().title_info_.style().font_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_family(const std::string& family)
+          {
+            derived().title_info_.style().font_family(family);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::title_font_family()
+          {
+            return derived().title_info_.style().font_family();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_style(const std::string& style)
+          {
+            derived().title_info_.style().font_style(style);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::title_font_style()
+          {
+            return derived().title_info_.style().font_style();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_weight(const std::string& weight)
+          {
+            derived().title_info_.style().font_weight(weight);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::title_font_weight()
+          {
+            return derived().title_info_.style().font_weight();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_stretch(const std::string& stretch)
+          {
+            derived().title_info_.style().font_stretch(stretch);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::title_font_stretch()
+          {
+            return derived().title_info_.style().font_stretch();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_decoration(const std::string& decoration)
+          {
+            derived().title_info_.style().font_decoration(decoration);
+            return derived();
+          }
+
+           template <class Derived> 
+         const std::string& axis_plot_frame<Derived>::title_font_decoration()
+          {
+            return derived().title_info_.style().font_decoration();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_rotation(rotate_style rotate)
+          { // Degrees (0 to 360).
+            derived().title_info_.rotation(rotate);
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::title_font_rotation()
+          {
+            return derived().title_info_.rotation();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_font_alignment(align_style alignment)
+          {
+            derived().title_info_.alignment(alignment);
+            return derived();
+          }
+
+          template <class Derived> 
+          align_style axis_plot_frame<Derived>::title_font_alignment()
+          {
+            return derived().title_info_.alignment();
+          }
+
+          // Legend.
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_width(double width)
+          {
+            derived().legend_width_ = width;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::legend_width()
+          {
+            return derived().legend_width_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_title(const std::string title)
+          {
+            derived().legend_header_.text(title);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::legend_title()
+          {
+            return derived().legend_header_.text();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_font_weight(const std::string& weight)
+          {
+            derived().legend_header_.style().font_weight(weight);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::legend_font_weight()
+          {
+            return derived().legend_header_.style().font_weight();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_font_family(const std::string& family)
+          {
+            derived().legend_header_.style().font_family(family);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::legend_font_family()
+          {
+            return derived().legend_header_.style().font_family();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_title_font_size(unsigned int size)
+          {
+            derived().legend_header_.style().font_size(size);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::legend_title_font_size()
+          {
+            return derived().legend_header_.style().font_size();
+          }
+
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_top_left(double x, double y)
+          { // Position of top left of legend box (svg coordinates).
+            // Bottom right is controlled by contents, so cannot set it.
+            if((x < 0) || (x > derived().image.x_size()) || (y < 0) || (y > derived().image.y_size()))
+            {
+              throw std::runtime_error("Legend box position outside image!");
+            }
+            derived().legend_left_ = x;
+            derived().legend_top_ = y;
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::pair<double, double> axis_plot_frame<Derived>::legend_top_left()
+          {// Top left of legend box.
+            std::pair<double, double> r;
+            r.first = derived().legend_left_;
+            r.second = derived().legend_top_;
+            return r;
+          }
+
+          template <class Derived> 
+          const std::pair<double, double> axis_plot_frame<Derived>::legend_bottom_right()
+          {// Bottom right of legend box.
+            std::pair<double, double> r;
+            r.first = derived().legend_right_;
+            r.second = derived().legend_bottom_;
+            return r;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_lines(bool is)
+          { // If legend should include samples of the lines joining data points.
+            derived().legend_lines_ = is;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::legend_lines()
+          {
+            return derived().legend_lines_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_on(bool cmd)
+          {
+            derived().legend_on_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::legend_on()
+          {
+            return derived().legend_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_place(legend_places l)
+          {
+            derived().legend_place_ = l;
+            return derived();
+          }
+
+
+          template <class Derived> 
+          legend_places axis_plot_frame<Derived>::legend_place()
+          {
+            return derived().legend_place_;
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::legend_outside()
+          {
+            return derived().outside_legend_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_header_font_size(int size)
+          {
+            derived().legend_header_.style().font_size(size);
+            return *this;
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::legend_header_font_size()
+          {
+            return derived().legend_header_.style().font_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::plot_window_on(bool cmd)
+          {
+            derived().plot_window_on_ = cmd;
+
+            if(cmd)
+            { // Set plot window
+              derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style()
+                .fill_color(derived().plot_window_border_.fill_) // background color and
+                .stroke_color(derived().plot_window_border_.stroke_); // border color.
+            }
+            //derived().legend_place_ = outside_right;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::plot_window_on()
+          {
+            return derived().plot_window_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::plot_border_color(const svg_color& col)
+          {
+            derived().plot_window_border_.stroke_ = col;
+            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::plot_border_color()
+          {
+            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::plot_border_width()
+          {
+            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::plot_border_width(double w)
+          {
+            derived().plot_window_border_.width_ = w;
+            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
+            return derived();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::image_border_margin(double w)
+          {
+            derived().image_border_.margin_ = w;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::image_border_margin()
+          {
+            return derived().image_border_.margin_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::image_border_width(double w)
+          {
+            derived().image_border_.width_ = w;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::image_border_width()
+          {
+            return derived().image_border_.width_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::plot_window_x(double min_x, double max_x)
+          { // This is normally calculated from other plot values.
+            if(max_x <= min_x)
+            {
+              throw std::runtime_error("plot_window X: x_max_ <= x_min_");
+            }
+            if((max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000)
+            { // Range too small to display.
+              throw std::runtime_error("plot_window X range too small!" );
+            }
+            derived().plot_left_ = min_x;
+            derived().plot_right_ = max_x;
+            return derived();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::plot_window_y(double min_y, double max_y)
+          { // This is normally calculated from other plot values.
+
+            if(max_y <= min_y)
+            {
+              throw std::runtime_error("plot_window Y: y_max_ <= x_min_");
+            }
+            if(max_y <= min_y)
+            {
+              throw std::runtime_error("plot_window Y range too small!");
+            }
+            derived().plot_top_ = min_y;
+            derived().plot_bottom_ = max_y;
+            return derived();
+          }
+
+          template <class Derived> 
+          std::pair<double, double> axis_plot_frame<Derived>::plot_window_x()
+          {
+            std::pair<double, double> r;
+            r.first = derived().plot_left_;
+            r.second = derived().plot_right_;
+            return r;
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::plot_window_x_left()
+          {
+            return derived().plot_left_;
+          }
+          template <class Derived> 
+          double axis_plot_frame<Derived>::plot_window_x_right()
+          {
+            return derived().plot_right_;
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::plot_window_y_top()
+          {
+            return derived().plot_top_;
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::plot_window_y_bottom()
+          {
+            return derived().plot_bottom_;
+          }
+
+
+          template <class Derived> 
+          std::pair<double, double> axis_plot_frame<Derived>::plot_window_y()
+          {
+            std::pair<double, double> r;
+            r.first = derived().plot_top_;
+            r.second = derived().plot_bottom_;
+            return r;
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_minor_interval()
+          {
+            return derived().x_ticks_.minor_interval_;  // interval
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::y_minor_interval()
+          {
+            return derived().y_ticks_.minor_interval_;  // interval
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_ticks_up_on(bool cmd)
+          {
+            derived().x_ticks_.up_ticks_on_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_ticks_up_on()
+          {
+            return derived().x_ticks_.up_ticks_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_ticks_down_on(bool cmd)
+          {
+            derived().x_ticks_.down_ticks_on_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_ticks_down_on()
+          {
+            return derived().x_ticks_.down_ticks_on_;
+          }
+          // Only need y_ticks_left_on & y_ticks_right_on in 2D
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_on(bool cmd)
+          { // Show X-axis label text, or not.
+            // Also switched on by setting label text.
+            // (on the assumption that if label text is set, display is also wanted,
+            // but can be switched off if *not* required).
+            derived().x_axis_.label_on_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_label_on()
+          {
+            return derived().x_axis_.label_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_font_size(unsigned int i)
+          {
+            derived().x_label_info_.style().font_size(i);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::x_label_font_size()
+          {
+            return derived().x_label_info_.style().font_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_value_font_size(unsigned int i)
+          {
+            derived().x_value_value.style().font_size(i);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::x_value_font_size()
+          {
+            return derived().x_value_value.style().font_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_font_family(const std::string& family)
+          {
+            derived().x_label_info_.style().font_family(family);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::x_label_font_family()
+          {
+            return derived().x_label_info_.style().font_family();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_axis_label_color(const svg_color& col)
+          { // Set BOTH stroke and fill to the same color.
+            derived().image.g(detail::PLOT_X_LABEL).style().fill_color(col);
+            derived().image.g(detail::PLOT_X_LABEL).style().stroke_color(col);
+            return *this;
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_axis_label_color()
+          { // But only return the stroke color.
+            return derived().image.g(detail::PLOT_X_LABEL).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_axis_value_color(const svg_color& col)
+          { // Set BOTH stroke and fill to the same color.
+            derived().image.g(detail::PLOT_VALUE_LABELS).style().fill_color(col);
+            derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
+            return *this;
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_axis_value_color()
+          { // But only return the stroke color.
+            return derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_ticks_on_window_or_axis(int cmd)
+          { // External style, top = +1, bottom = -1 (default).
+            derived().x_ticks_.ticks_on_window_or_axis_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_ticks_on_window_or_axis()
+          { // External style = true.
+            return derived().x_ticks_.ticks_on_window_or_axis_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_units_on(bool cmd)
+          {
+            derived().x_axis_.label_units_on_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_label_units_on()
+          {
+            return derived().x_axis_.label_units_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_value_labels_side(int cmd)
+          {
+            derived().x_ticks_.major_value_labels_side_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_major_value_labels_side()
+          {
+            return derived().x_ticks_.major_value_labels_side_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_label_rotation(rotate_style rot)
+          {
+            derived().x_ticks_.label_rotation_ = rot;
+            return derived();
+          }
+
+          template <class Derived> 
+          rotate_style axis_plot_frame<Derived>::x_major_label_rotation()
+          {
+            return derived().x_ticks_.label_rotation_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_on(bool cmd)
+          {
+            derived().title_on_ = cmd;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::title_on()
+          {
+            return derived().title_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_grid_on(bool is)
+          {
+            derived().x_ticks_.major_grid_on_ = is;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_major_grid_on()
+          {
+            return derived().x_ticks_.major_grid_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_grid_on(bool is)
+          {
+            derived().x_ticks_.minor_grid_on_ = is;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_minor_grid_on()
+          {
+            return derived().x_ticks_.minor_grid_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::axes_on(bool is)
+          { // Draw *both* x and y axes (note plural).
+            derived().x_axis_.axis_line_on_ = is;
+            derived().y_axis_.axis_line_on_ = is; // Unsuitable for 1D?
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::axes_on()
+          { // Used X in preference to Y for 1D, but now require *both* x and y axis on.
+            return derived().x_axis_.axis_line_on_ && derived().y_axis_.axis_line_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_axis_on(bool is)
+          { // Draw a horizontal x_axis_ line.
+            derived().x_axis_.axis_line_on_ = is;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_axis_on()
+          { // Use X in preference to Y for 1D
+            return derived().x_axis_.axis_line_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::y_axis_on(bool is)
+          {// Draw a vertical y_axis_ line.
+            derived().y_axis_.axis_line_on_ = is;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::y_axis_on()
+          { // Should be always false for 1D.
+            return derived().y_axis_.axis_line_on_;
+          }
+
+          // enums like PLOT_TITLE provide a std:string like "title"
+          // colors .stroke_color, .stroke_width and font are set in the appropriate g_element.
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::title_color(const svg_color& col)
+          { // Function title_color could set both fill (middle) and stroke (outside),
+            // but just setting fill if simplest,
+            // but does not allow separate inside & outside colors.
+            derived().image.g(PLOT_TITLE).style().fill_color(col);
+            //derived().image.g(PLOT_TITLE).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::title_color()
+          { // Function title_color could get either fill and stroke,
+            // return derived().image.g(PLOT_TITLE).style().stroke_color();
+            return derived().image.g(PLOT_TITLE).style().fill_color();
+          }
+
+          //Derived& title_font_width(double width)
+          //{ // width of text is effectively the boldness.
+          //  // Not useful with current browsers, setting this may cause lower quality graphic fonts
+          //  // perhaps because the font is created using graphics rather than a built-in font.
+          //  derived().image.g(PLOT_TITLE).style().stroke_width(width);
+          //  return derived();
+          //}
+
+         //Derived& legend_font_width(double width)
+          //{ // width of text is effectively the boldness.
+          //  derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
+          //  return derived();
+          //}
+
+          //double legend_font_width()
+          //{ // Probably not useful at present (se above).
+          //  return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
+          //}
+          //double title_font_width()
+          //{
+          //  return derived().image.g(PLOT_TITLE).style().stroke_width();
+          //}
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_color(const svg_color& col)
+          {
+            // derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
+            derived().image.g(PLOT_LEGEND_TEXT).style().fill_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::legend_color()
+          { // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
+            // (It produces much lower quality fonts on some browsers).
+            return derived().image.g(PLOT_LEGEND_TEXT).style().fill_color();
+            // return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_background_color(const svg_color& col)
+          {
+            derived().legend_box_.fill(col);
+            derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::legend_background_color()
+          {
+            return derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::legend_box_fill_on()
+          {
+            return derived().legend_box_.fill_on();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::legend_border_color(const svg_color& col)
+          {
+            derived().legend_box_.stroke(col);
+            derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::legend_border_color()
+          {
+            return  derived().legend_box_.stroke();
+            // return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::plot_background_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::plot_background_color()
+          {
+            return derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
+          }
+
+          template <class Derived> 
+          const std::string axis_plot_frame<Derived>::x_axis_position()
+          { // Return the position of the X-axis.
+            switch(derived().x_axis_position_)
+            {
+            case top:
+              return "x_axis_position top (all Y values < 0)"; break;
+            case x_intersects_y:
+              return "x_axis_position intersects Y axis (Y range includes zero)"; break;
+            case bottom:
+              return "x_axis_position bottom (all Y values > 0)"; break;
+            default:
+              return "?"; break;
+            }
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_axis_color(const svg_color& col)
+          { // Note only stroke color is set.
+            derived().image.g(PLOT_X_AXIS).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_axis_color()
+          {
+            return derived().image.g(PLOT_X_AXIS).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::y_axis_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_Y_AXIS).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::y_axis_color()
+          {
+            return derived().image.g(PLOT_Y_AXIS).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_color(const svg_color& col)
+          { // add fill as well PAB Oct 07
+            derived().image.g(PLOT_X_LABEL).style().fill_color(col);
+            derived().image.g(PLOT_X_LABEL).style().stroke_color(col);
+            return derived();
+          }
+
+         // Browsers could implement better.
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_width(double width)
+          { // width of text is effectively the boldness.
+            derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_label_width()
+          {
+            return derived().image.g(PLOT_X_LABEL).style().stroke_width();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_label_color()
+          {
+            return derived().image.g(PLOT_X_LABEL).style().fill_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::y_label_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_Y_LABEL).style().fill_color(col);
+            derived().image.g(PLOT_Y_LABEL).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::y_label_color()
+          {
+            return derived().image.g(PLOT_Y_LABEL).style().fill_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_tick_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
+            return derived();
+          }
+
+ 
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_major_tick_color()
+          {
+            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_tick_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_minor_tick_color()
+          {
+            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_grid_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_major_grid_color()
+          {
+            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_grid_width(double w)
+          {
+            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width(w);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_major_grid_width()
+          {
+            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width();
+          }
+
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_grid_color(const svg_color& col)
+          {
+            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_minor_grid_color()
+          {
+            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_grid_width(double w)
+          {
+            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width(w);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_minor_grid_width()
+          {
+            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_axis_width(double width)
+          {
+            derived().image.g(PLOT_X_AXIS).style().stroke_width(width);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_axis_width()
+          {
+            return derived().image.g(PLOT_X_AXIS).style().stroke_width();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::data_lines_width(double width)
+          {
+            derived().image.g(PLOT_DATA_LINES).style().stroke_width(width);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::data_lines_width()
+          {
+            return derived().image.g(PLOT_DATA_LINES).style().stroke_width();
+          }
+
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label(const std::string& str)
+          {
+            derived().x_label_info_.text(str);
+            derived().x_axis_.label_on_ = true; // Assume want x_label string displayed.
+            // Might switch label_on false if null string?
+            return derived();
+          }
+
+          template <class Derived> 
+          std::string axis_plot_frame<Derived>::x_label()
+          {
+            return derived().x_label_info_.text();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_label_units(const std::string& str)
+          {
+            derived().x_units_info_.text(str);
+            derived().x_axis_.label_on_ = true; // Assume want x_label string displayed.
+            return derived();
+          }
+
+          template <class Derived> 
+          std::string axis_plot_frame<Derived>::x_label_units()
+          {
+            return derived().x_units_info_.text();
+          }
+
+          // y_label not needed in 1D.
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::y_label(const std::string& str)
+          {
+            derived().y_label_info_.text(str);
+            derived().y_axis_.label_on_ = true; // Assume want y_label string displayed.
+            return derived();
+          }
+
+          template <class Derived> 
+          std::string axis_plot_frame<Derived>::y_label()
+          {
+            return derived().y_label_info_.text();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::y_label_units(const std::string& str)
+          {
+            derived().y_units_info_.text(str);
+            derived().y_axis_.label_on_ = true; // Assume want y_label string displayed.
+            return derived();
+          }
+
+          template <class Derived> 
+          std::string axis_plot_frame<Derived>::y_label_units()
+          {
+            return derived().y_units_info_.text();
+          }
+          
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_on(bool b)
+          { // Show values near data points.
+            derived().x_values_on_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_values_on()
+          { // Label data points with X values.
+            return derived().x_values_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_font_size(unsigned int i)
+          {
+            derived().x_values_style_.values_text_style_.font_size(i);
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::x_values_font_size()
+          {
+            return derived().x_values_style_.values_text_style_.font_size();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_font_family(const std::string& family)
+          {
+            derived().x_values_style_.values_text_style_.font_family(family);
+            return derived();
+          }
+
+          template <class Derived> 
+          const std::string& axis_plot_frame<Derived>::x_values_font_family()
+          {
+            return derived().x_values_style_.values_text_style_.font_family();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_interval(double inter)
+          {
+            derived().x_ticks_.major_interval_ = inter;
+            return derived();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_color(const svg_color& col)
+          { // Function could set both fill (middle) and stroke (outside),
+            // but just setting fill if simplest,
+            // but does not allow separate inside & outside colors.
+            derived().image.g(PLOT_X_POINT_VALUES).style().fill_color(col);
+            //derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color(col);
+            return derived();
+          }
+
+          template <class Derived> 
+          svg_color axis_plot_frame<Derived>::x_values_color()
+          { // Function could get either fill and stroke,
+            // return derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color();
+            return derived().image.g(PLOT_X_POINT_VALUES).style().fill_color();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_rotation(rotate_style rotate)
+          { // Degrees (0 to 360).
+            derived().x_values_style_.value_label_rotation_ = rotate;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_values_rotation()
+          {
+            return derived().x_values_style_.value_label_rotation_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_precision(int p)
+          { // set iostream precision
+            derived().x_values_style_.value_precision_ = p;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_values_precision()
+          {
+            return derived().x_values_style_.value_precision_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_values_ioflags(std::ios_base::fmtflags f)
+          { // set iostream format flags
+            derived().x_values_style_.value_ioflags_ = f;
+            return derived();
+          }
+
+          template <class Derived> 
+          std::ios_base::fmtflags axis_plot_frame<Derived>::x_values_ioflags()
+          {
+            return derived().x_values_style_.value_ioflags_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_plusminus_on(bool b)
+          { // set if uncertainty to be append to X values labels.
+            derived().x_values_style_.plusminus_on_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_plusminus_on()
+          {
+            return derived().x_values_style_.plusminus_on_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_df_on(bool b)
+          { // set if uncertainty to be append to X values labels.
+            derived().x_values_style_.df_on_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_df_on()
+          {
+            return derived().x_values_style_.df_on_;
+          }
+ 
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_major_interval()
+          {
+            return derived().x_ticks_.major_interval_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_tick_length(double length)
+          {
+            derived().x_ticks_.major_tick_length_ = length;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_major_tick_length()
+          {
+            return derived().x_ticks_.major_tick_length_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_tick_width(double width)
+          {
+            derived().x_ticks_.major_tick_width_ = width; // Redundant?
+            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_major_tick_width()
+          {
+            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_tick_length(double length)
+          {
+            derived().x_ticks_.minor_tick_length_ = length;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_minor_tick_length()
+          {
+            return derived().x_ticks_.minor_tick_length_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_tick_width(double width)
+          {
+            derived().x_ticks_.minor_tick_width_ = width;
+            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width(width);
+            return derived();
+          }
+
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_minor_tick_width()
+          {
+            // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
+            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_major_tick(double d)
+          { // Interval (Cartesian units) between major ticks.
+            derived().x_ticks_.major_interval_ = d;
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_major_tick()
+          { // Interval (Cartesian units) between major ticks.
+            return derived().x_ticks_.major_interval_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_minor_interval(double interval)
+          { // aka x_minor_tick
+            derived().x_ticks_.minor_interval_ = interval;
+            return derived();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_num_minor_ticks(unsigned int num)
+          {
+            derived().x_ticks_.num_minor_ticks_ = num;
+            return derived();
+          }
+
+          template <class Derived> 
+          unsigned int axis_plot_frame<Derived>::x_num_minor_ticks()
+          { // NB NOT float or double!
+            return derived().x_ticks_.num_minor_ticks_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_range(double min_x, double max_x)
+          {
+            if (!boost::math::isfinite(min_x))
+            {
+              throw std::runtime_error("X range: min not finite!");
+            }
+            if (!boost::math::isfinite(max_x))
+            {
+              throw std::runtime_error("X range: max not finite!");
+            }
+            if(max_x <= min_x)
+            { // max_x <= min_x.
+              throw std::runtime_error("X range: max <= min!");
+            }
+            if( (abs(max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000 * abs(max_x))
+              || (abs(max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000 * abs(min_x))
+              )
+            { // Range too small to display.
+              throw std::runtime_error("X range too small!" );
+            }
+            derived().x_axis_.min_ = min_x;
+            derived().x_axis_.max_ = max_x;
+            //derived().x_ticks_.max_ = min_x;
+            //derived().y_ticks_.max_ = max_x;
+            // done in calculate_plot_window, so need to duplicate here.
+            derived().x_autoscale_ = false; // Because explicit range has just been set.
+            return derived();
+          }
+
+          template <class Derived> 
+          std::pair<double, double> axis_plot_frame<Derived>::x_range()
+          { // Need to use boost::svg::detail::operator<< to display this.
+            std::pair<double, double> r;
+            r.first = derived().x_axis_.min_;
+            r.second = derived().x_axis_.max_;
+            return r;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_min(double min_x)
+          {
+            // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
+            derived().x_axis_.min_ = min_x;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_min()
+          {
+            return derived().x_axis_.min_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_max(double x)
+          {
+            // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
+            derived().x_axis_.max_ = x;
+            return derived();
+          }
+
+          template <class Derived> 
+          double axis_plot_frame<Derived>::x_max()
+          {
+            return derived().x_axis_.max_;
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::autoscale_check_limits()
+          {
+            return derived().autoscale_check_limits_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::autoscale_check_limits(bool b)
+          { // Default is true, but can switch off checks for speed.
+            derived().autoscale_check_limits_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_autoscale()
+          { // Get autoscale setting.
+           return derived().x_autoscale_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_autoscale(bool b)
+          { // set whether to use autoscaled values.
+             if (b && derived().x_auto_tick_interval_ < 0)
+             { // No autoscale values have been calculated, so not safe to make x_autoscale true.
+                throw std::runtime_error("X autoscale has not been calculated yet!" );
+             }
+            derived().x_autoscale_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::autoscale()
+          { // AKA x_autoscale.
+           return derived().x_autoscale_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::autoscale(bool b)
+          { // AKA x_autoscale - set whether to use X autoscaled values.
+            // Used by boxplot too.
+             if (derived().x_auto_tick_interval_ < 0)
+             { // No autoscale values have been calculated, so not safe to make x_autoscale true.
+                throw std::runtime_error("X-axis autoscale has not been calculated yet!" );
+             }
+            derived().x_autoscale_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_autoscale(std::pair<double, double> p)
+          { // Use X min & max pair values to autoscale.
+              scale_axis(p.first, p.second, // double min and max from pair.
+              &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
+              derived().autoscale_check_limits_,
+              derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
+            derived().x_autoscale_ = true; // Default to use any calculated values?
+            return derived();
+          } // autoscale(pair<double, double> p)
+
+
+       //  unable to match function definition to an existing declaration definition
+       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(const T &,const T &)'
+       // existing declarations
+       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(const T &)'
+       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(const T &,const T &)'
+       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(std::pair<_Ty1,_Ty2>)'
+       // with
+       // [
+       //     _Ty1=double,
+       //     _Ty2=double
+       // ]
+       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(bool)'
+       //'bool boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(void)'
+
+
+
+
+
+          // 
+          //template <class Derived, class T> // T an STL container: array, vector ...
+          //Derived& axis_plot_frame<Derived>::x_autoscale(const T& begin, const T& end)
+          //{ // Data series using iterators to calculate autoscaled values.
+          //    scale_axis(begin, end,
+          //    &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
+          //    derived().autoscale_check_limits_,
+          //    derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
+
+          //  derived().x_autoscale_ = true; // Default to use calculated values.
+          //  return derived();
+          //} // x_autoscale(const T& begin, const T& end)
+
+          //template <class Derived, class T> // T an STL container: array, vector ...
+          //Derived& axis_plot_frame<Derived>::x_autoscale(const T& container) // Whole data series.
+          //{ // to use to calculate autoscaled values.
+          //    //scale_axis(container.begin(), container.end(), // All the container.
+          //    scale_axis(container, // All the container.
+          //    &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
+          //    derived().autoscale_check_limits_,
+          //    derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
+
+          //  derived().x_autoscale_ = true; // Default to use calculated values.
+          //  return derived();
+          //} // x_autoscale(const T& container)
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_with_zero(bool b)
+          { // Set autoscale to include zero (default = false).
+            // Must preceed x_autoscale(data) call.
+            derived().x_include_zero_ = b;
+            return derived();
+          }
+
+          template <class Derived> 
+          bool axis_plot_frame<Derived>::x_with_zero()
+          { //
+           return derived().x_include_zero_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_min_ticks(int min_ticks)
+          { // Set autoscale to include at least min_ticks (default = 6).
+            // Must preceed x_autoscale(data) call.
+            derived().x_min_ticks_ = min_ticks;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_min_ticks()
+          { //
+           return derived().x_min_ticks_;
+          }
+
+          template <class Derived> 
+          Derived& axis_plot_frame<Derived>::x_steps(int steps)
+          { // Set autoscale to set ticks in steps 2,4,6,8,10, or 1,5,10 or 2,5,10.
+            // default = 0 (none)
+            // Must preceed x_autoscale(data) call.
+            derived().x_steps_ = steps;
+            return derived();
+          }
+
+          template <class Derived> 
+          int axis_plot_frame<Derived>::x_steps()
+          { //
+           return derived().x_steps_;
+          }
+
+          template <class Derived> 
+         Derived& axis_plot_frame<Derived>::x_tight(double tight)
+          { // Set autoscale to include permit data points slightly outside both end ticks.
+            // default 0.
+            // Must preceed x_autoscale(data) call.
+            derived().x_tight_ = tight;
+            return derived();
+          }
+
+         template <class Derived> 
+         double axis_plot_frame<Derived>::x_tight()
+          { //
+           return derived().x_tight_;
+          }
+
+         template <class Derived> 
+         double axis_plot_frame<Derived>::x_auto_min_value()
+          {
+           return derived().x_auto_min_value_;
+          }
+
+        template <class Derived> 
+          double axis_plot_frame<Derived>::x_auto_max_value()
+          {
+           return derived().x_auto_max_value_;
+          }
+
+         template <class Derived> 
+         double axis_plot_frame<Derived>::x_auto_tick_interval()
+          {
+           return derived().x_auto_tick_interval_;
+          }
+ 
+
+        template <class Derived> 
+        int axis_plot_frame<Derived>::x_auto_ticks()
+        {
+         return derived().x_auto_ticks_;
+        }
 
       } // detail
     } // svg

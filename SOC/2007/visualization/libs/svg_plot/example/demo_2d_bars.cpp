@@ -36,9 +36,9 @@ int main()
 	       .x_range(-1, 11)
 	       .background_border_color(black);
 
-	my_plot1.plot(map1, "Series 1").fill_color(blue).shape(none).line_on(false).bar(x_stick).bar_width(5).bar_color(red);
+	my_plot1.plot(map1, "Series 1").fill_color(blue).shape(none).line_on(false).bar_opt(x_stick).bar_width(5).bar_color(red);
   my_plot1.write("./demo_2d_bar_x_stick.svg");
-	my_plot1.plot(map1, "Series 1").shape(none).line_on(false).bar(x_block).bar_width(10);
+	my_plot1.plot(map1, "Series 1").shape(none).line_on(false).bar_opt(x_block).bar_width(10);
   my_plot1.write("./demo_2d_bar_x_block.svg");
 
 	svg_2d_plot my_plot2;
@@ -48,9 +48,9 @@ int main()
 	       .x_range(-10, 10)
 	       .background_border_color(blue);
 
-	my_plot2.plot(map2, "Series 2").fill_color(green).shape(none).line_on(false).bar(y_stick).bar_width(5).bar_color(cyan);
+	my_plot2.plot(map2, "Series 2").fill_color(green).shape(none).line_on(false).bar_opt(y_stick).bar_width(5).bar_color(cyan);
   my_plot2.write("./demo_2d_bar_y_stick.svg");
-	my_plot2.plot(map2, "Series 2").shape(none).line_on(false).bar(y_block).bar_width(10).bar_color(green).bar_area_fill(magenta);
+	my_plot2.plot(map2, "Series 2").shape(none).line_on(false).bar_opt(y_block).bar_width(10).bar_color(green).bar_area_fill(magenta);
   my_plot2.write("./demo_2d_bar_y_block.svg");
 
 	return 0;

@@ -86,7 +86,6 @@ int main()
 	my_map[999.] = +numeric_limits<double>::infinity();
 
 
-
   /*`Next a 2D plot is created using defaults for the very many possible settings.
   */
 	svg_2d_plot my_plot;
@@ -99,6 +98,7 @@ int main()
   //my_plot.autoscale_check_limits(false);  // Skip checks for speed.
   // Will fail at run-time if any infinite or NaNs.
 
+  // my_plot.y_autoscale(0., 9.);  // autoscale using two doubles.
 	my_plot.xy_autoscale(my_map);
 
 	my_plot.plot(my_map);

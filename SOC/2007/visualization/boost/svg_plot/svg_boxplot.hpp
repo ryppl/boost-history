@@ -18,7 +18,7 @@
 // Michael Frigge, David C. Hoaglin and Boris Iglewicz
 // The American Statistician, Vol. 43, No. 1 (Feb., 1989), pp. 50-54
 
-// The Bagplot: A Bivariate Boxplot
+// See also : The Bagplot: A Bivariate Boxplot
 // Peter J. Rousseeuw, Ida Ruts and John W. Tukey
 // The American Statistician, Vol. 53, No. 4 (Nov., 1999), pp. 382-387 
 
@@ -39,6 +39,7 @@
 #include "detail/svg_boxplot_detail.hpp"
 #include "detail/functors.hpp"
 #include "detail/axis_plot_frame.hpp"
+#include "detail/auto_axes.hpp" // 
 #include "quantile.hpp"
 
 #include <vector>
@@ -674,7 +675,7 @@ private:
   bool y_include_zero_; // If autoscaled, include zero.
   int  y_min_ticks_;  // If autoscaled, set a minimum number of Y ticks.
   double y_tight_;
-  int  y_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+  int y_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
     // Values calculated by scale_axis, and is used only if y_autoscale == true.
   double y_auto_min_value_;
@@ -741,8 +742,14 @@ public:
   x_autoscale_(false),
   x_include_zero_(false), // If autoscaled, include zero.
   x_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
-  x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
+  x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none (0).
   x_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+
+  y_include_zero_(false), // If autoscaled, include zero on Y-axis.
+  y_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
+  y_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
+  y_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+
   y_autoscale_(false), // Not used for 1-D.
 
   text_margin_(2.), // for axis label text, as a multiplier of the font size.
@@ -760,8 +767,8 @@ public:
   // Used to transform Cartesian to SVG.
   x_scale_(1.), x_shift_(0.),
   y_scale_(1.), y_shift_(0.),
-  x_axis_position_(x_intersects_y), 
-  y_axis_position_(0),
+  x_axis_position_(bottom),  // Default, but can be changed to top.
+  y_axis_position_(left), // Default, but can be changed to right.
 
   // Box'n'whiskers default values (used in svg_boxplot_series construction)
   // Can be changed for all plots using svg_boxplot member functions.
@@ -817,7 +824,7 @@ public:
       image.g(boxplot::Y_MINOR_GRID).style().stroke_width(y_ticks_.minor_grid_width_).stroke_color(svg_color(200, 220, 255));
     }
 
-    image.g(boxplot::X_LABEL).style().fill_color(black); // for text only specify fill_color
+    image.g(boxplot::X_LABEL).style().fill_color(black); // for text only specify fill_color (NOT stroke color).
     image.g(boxplot::Y_LABEL).style().fill_color(black);
     image.g(boxplot::VALUE_LABELS).style().fill_color(black);
     image.g(boxplot::PLOT_TITLE).style().fill_color(black);
@@ -915,9 +922,9 @@ public:
       x_ticks_.ticks_on_window_or_axis_ = +1; // top = true;
     }
     // Y axis position is NOT determined by the range of X values.
-    y_axis_position_ = y_intersects_x;  // Assume Y-axis will intersect X-axis (X range includes zero).
-    //x_axis_position_ = x_intersects_y;  // Assume X-axis will intersect Y-axis (X range includes zero).
-    x_axis_position_ = bottom;  // Assume X-axis will intersect Y-axis (X range includes zero).
+    //x_axis_position_ = bottom;  // Assume X-axis will intersect Y-axis (X range includes zero).
+    //y_axis_position_ = left;  // Assume X-axis will intersect Y-axis (X range includes zero).
+    // Default in constructor, but could be changed to top and/or left.
 
     // Ensure both axis and ticks have the *same* range.
     // (To use the separation, made to give the potential for different ranges,
@@ -1055,9 +1062,10 @@ public:
     } // if (use_x_axis_line_)
 
     if (y_axis_.axis_line_on_)
-    { // Want a vertical Y-axis line, so check if range includes zero, so axes intersect,
+    { // Want a vertical Y-axis line,
+      // For boxplot do not check if range includes zero, so axes intersect,
       // and y_axis_ is svg coordinate of X-axis (usually x = 0).
-      // If not fix axis to left (or right) of the plot window.
+      // Instead fix axis to left (or right) of the plot window.
       if ((y_axis_position_ == left) // All X values definitely > zero.
          //&& !(y_ticks_.ticks_on_window_or_axis_ < 0) // & not already at left.
          )
@@ -1070,12 +1078,13 @@ public:
         )
       {
         y_axis_.axis_ = plot_right_; // Y-axis to right of plot window,
-      }
-      else
-      { 
-        x_axis_position_ = x_intersects_y;
-        // Calculate below after transform is calculated.
-      }
+    }
+    //else
+    // for boxplot, Y-axis is always to right or left.
+    //{ 
+    //  x_axis_position_ = x_intersects_y;
+    //  // Calculate below after transform is calculated.
+    //}
     } // if (use_y_axis_line_)
 
     // plot window now calculated, so make some checks (might also check it fits into image?).
@@ -1107,15 +1116,16 @@ public:
         x_axis_.axis_ = y; // svg Y coordinate of horizontal X-axis line.
       }
     }
-    if (y_axis_.axis_line_on_)
-    { // May need to calculate axes, if will intersect.
-      if(y_axis_position_ == y_intersects_x)
-      { // X Range *does* include zero, so y_axis_ not yet calculated.
-        double x(0.);
-        transform_x(x);
-        y_axis_.axis_ = x; // SVG x coordinate of vertical Y-axis.
-      }
-    }
+    // For boxplot, Y axis is only ever left or right.
+    //if (y_axis_.axis_line_on_)
+    //{ // May need to calculate axes, if will intersect.
+    //  if(y_axis_position_ == y_intersects_x)
+    //  { // X Range *does* include zero, so y_axis_ not yet calculated.
+    //    double x(0.);
+    //    transform_x(x);
+    //    y_axis_.axis_ = x; // SVG x coordinate of vertical Y-axis.
+    //  }
+    //}
     if (plot_window_on_)
     { // Draw plot window rectangle with border and/or background.
       image.g(detail::PLOT_WINDOW_BACKGROUND).push_back(
@@ -1136,21 +1146,23 @@ public:
   } // void draw_title()
 
   void draw_x_axis()
-  { // Draw the horizontal X axis line.
-    double y(0.);
-    transform_y(y);
-    //x_axis_. = y; 
-
+  { // Draw the horizontal X-axis line.
     if (x_axis_.axis_line_on_)
-    { // Want a Y-axis line.
-
+    { // Want a X-axis line.
       if (x_axis_position_ == top)
       { // horizontal line at top of plot window.
-         image.g(boxplot::X_TICKS).line(plot_left_, plot_top_, plot_right_, plot_top_);
+         image.g(boxplot::X_AXIS).line(plot_left_, plot_top_, plot_right_, plot_top_);
       }
       else if (x_axis_position_ == bottom)
       {// horizontal line at bottom of plot window.
-         image.g(boxplot::X_TICKS).line(plot_left_, plot_bottom_, plot_right_, plot_bottom_);
+         image.g(boxplot::X_AXIS).line(plot_left_, plot_bottom_, plot_right_, plot_bottom_);
+      }
+      else
+      { // horizontal line at y = 0
+        double y(0.);
+        transform_y(y);
+        //x_axis_. = y; 
+         image.g(boxplot::X_AXIS).line(plot_left_, y, plot_right_, y);
       }
     }
     path_element& major_tick_path = image.g(boxplot::X_TICKS).path();
@@ -1165,6 +1177,18 @@ public:
 
   void draw_y_axis()
   {
+    if (y_axis_.axis_line_on_)
+    { // Want a vertical Y-axis line, for boxplot only ever left or right.
+      if (y_axis_position_ == left)
+      { // Vertical line at left of plot window.
+         image.g(boxplot::Y_AXIS).line(plot_left_, plot_bottom_, plot_left_, plot_top_);
+      }
+      else if (y_axis_position_ == right)
+      {// Vertical line at right of plot window.
+         image.g(boxplot::Y_AXIS).line(plot_right_, plot_bottom_, plot_right_, plot_top_);
+      }
+    }
+
     path_element& minor_tick_path = image.g(boxplot::Y_MINOR_TICKS).path();
     path_element& major_tick_path = image.g(boxplot::Y_MAJOR_TICKS).path();
     path_element& major_grid_path = image.g(boxplot::Y_MAJOR_GRID).path();
@@ -1783,9 +1807,9 @@ public:
 
   // Declarations of user boxplot functions.
 
-  svg_boxplot& write(const std::string& file);
-  svg_boxplot& write(std::ostream& s_out);
-  svg_boxplot& title_on(bool cmd);
+  svg_boxplot& write(const std::string& file); // Write SVG plot to file.
+  svg_boxplot& write(std::ostream& s_out); // Write SVG plot to ostream.
+  svg_boxplot& title_on(bool cmd); // If to include title in plot.
   svg_boxplot& x_label_on(bool cmd);
   svg_boxplot& median_values_on(bool cmd);
   bool median_values_on();
@@ -1805,6 +1829,7 @@ public:
   svg_boxplot& plot_background_color(const svg_color& col);
   svg_boxplot& plot_border_color(const svg_color& col);
   svg_boxplot& y_range(double min_y, double max_y);
+  std::pair<double, double> svg_boxplot::y_range();
   svg_boxplot& y_label(const std::string& str);
   svg_boxplot& image_size(unsigned int x, unsigned int y);
   svg_boxplot& y_label_font_size(unsigned int size);
@@ -1825,7 +1850,7 @@ public:
   svg_boxplot& y_minor_tick_width(unsigned int width);
   unsigned int image_x_size();
   unsigned int image_y_size();
-  std::string title();
+  std::string title(); // title assigned to boxplot.
   bool x_label_on();
   int x_major_labels();
   // get color information
@@ -1847,6 +1872,10 @@ public:
   double whisker_length();
   svg_boxplot& box_width(double width); // Width of the box, not the border.
   double box_width(); // Width of the box, not the border.
+  svg_boxplot& x_axis_position(int pos); // Position of the horizontal X-axis line (on the border).
+  double x_axis_position(); // Position of the horizontal X-axis line (on the border).
+  svg_boxplot& y_axis_position(int pos); // Position of the vertical Y-axis line (on the border).
+  double y_axis_position(); // Position of the vertical Y-axis line (on the border).
   svg_boxplot& box_fill(const svg_color& color); // Color of box fill, not border. 
   svg_color box_fill(); // Color of box fill, not border. 
   svg_boxplot& box_border(const svg_color& color); // Color of border (not fill) to box.
@@ -1887,7 +1916,19 @@ public:
   svg_boxplot& svg_boxplot::quartile_definition(int def); // H&F quartile definition.
   int svg_boxplot::quartile_definition(); // H&F quartile definition.
 
+  bool svg_boxplot::y_autoscale(); // If to use y_autoscaled values.
+  svg_boxplot& svg_boxplot::y_autoscale(bool b); // If to use y_autoscaled values.
 
+  svg_boxplot& svg_boxplot::y_autoscale(double first, double second);// Autoscale using two doubles.
+
+  svg_boxplot& svg_boxplot::y_autoscale(std::pair<double, double> p); // Autoscale using minmax pair of doubles.
+
+  template <class T> // T an STL container: array, vector ...
+  svg_boxplot& y_autoscale(const T& begin, const T& end); // Autoscale using iterators into container.
+  // explicit svg_boxplot::y_autoscale causes C2442 here, but omitting svg_boxplot:: is OK????
+
+  template <class T> // T an STL container: array, vector ...
+  svg_boxplot& y_autoscale(const T& container); //// Autoscale using whole container.
 
   // Plot member function to add a Data Series Boxplot.
 
@@ -2112,7 +2153,15 @@ public:
     y_axis_.max_ = max_y;
     y_autoscale_ = false;
     return *this;
-  } // svg_boxplot& y_range(double y1, double y2  
+  } // svg_boxplot& y_range(double y1, double y2)
+
+  std::pair<double, double> svg_boxplot::y_range()
+  {
+    std::pair<double, double> r;
+    r.first = y_axis_.min_;
+    r.second = y_axis_.max_;
+    return r;
+  } //   std::pair<double, double> svg_boxplot::y_range()
 
   svg_boxplot& svg_boxplot::y_label(const std::string& str)
   {
@@ -2149,6 +2198,31 @@ public:
     return *this;
   }
 
+  svg_boxplot& svg_boxplot::x_axis_position(int pos)
+  {  // Position of the horizontal X-axis line (on the border).
+     x_axis_position_ = pos; // top or bottom
+     // But controlled by the intersection with Y-axis,
+     // so this only changes the default position from bottom to top,
+     // but will be changed if X-axis intersects the Y-axis
+     // (that is if Y-axis includes zero).
+    return *this; // Make chainable.
+  }
+
+  double svg_boxplot::x_axis_position()
+  {  // Position of the horizontal X-axis line (on the border).
+    return x_axis_position_; // top or bottom
+  }
+
+  svg_boxplot& svg_boxplot::y_axis_position(int pos)
+  { // Position of the vertical Y-axis line (on the border).
+     y_axis_position_ = pos; // left or right
+    return *this; // Make chainable.
+  }
+
+  double svg_boxplot::y_axis_position()
+  { // Position of the vertical Y-axis line (on the border).
+    return y_axis_position_; // left or right
+  }
 
   svg_boxplot& svg_boxplot::x_label(const std::string& str)
   {
@@ -2171,8 +2245,7 @@ public:
   {
     y_ticks_.major_interval_ = inter;
     return *this;
-  }
-  svg_boxplot& svg_boxplot::x_tick_length(unsigned int length)
+  }  svg_boxplot& svg_boxplot::x_tick_length(unsigned int length)
   {
     x_ticks_.major_tick_length_ = length;
     return *this;
@@ -2482,7 +2555,58 @@ public:
     return quartile_definition_;
   }
 
+  bool svg_boxplot::y_autoscale()
+  {
+    return y_autoscale_;
+  }
 
+  svg_boxplot& svg_boxplot::y_autoscale(bool b)
+  {
+    y_autoscale_ = b;
+    return *this;
+  }
+
+  svg_boxplot& svg_boxplot::y_autoscale(std::pair<double, double> p)
+  { // Use Y min & max pair values to autoscale.
+    scale_axis(p.first, p.second, // double min and max from pair.
+    &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+    autoscale_check_limits_,
+    y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+    y_autoscale_ = true;  // Change (from default false) to use calculated values.
+    return *this; // Make chainable.
+  } // autoscale(pair<double, double> p)
+
+  svg_boxplot& svg_boxplot::y_autoscale(double first, double second)
+  { // Use Y min & max pair values to autoscale.
+    scale_axis(first, second, // double min and max from two doubles.
+    &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+    autoscale_check_limits_,
+    y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+    y_autoscale_ = true;  // Change (from default false) to use calculated values.
+    return *this; // Make chainable.
+  } // autoscale(pair<double, double> p)
+
+  template <class T> // T an STL container: array<double>, vector<double> ...
+  svg_boxplot& svg_boxplot::y_autoscale(const T& begin, const T& end) // Data series using iterators to
+  { // to use to calculate autoscaled values.
+    scale_axis(begin, end,
+    &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+    autoscale_check_limits_,
+    y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+    y_autoscale_ = true; // Change (from default false) to use calculated values.
+    return *this; // Make chainable.
+  } // y_autoscale(const T& begin, const T& end)
+
+  template <class T> // T an STL container: array, vector ...
+  svg_boxplot& svg_boxplot::y_autoscale(const T& container) // Whole data series.
+  { // to use to calculate autoscaled values.
+    scale_axis(container.begin(), container.end(), // All the container.
+    &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+    autoscale_check_limits_,
+    y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+    y_autoscale_ = true;  // Change (from default false) to use calculated values.
+    return *this; // Make chainable.
+  } // y_autoscale(const T& container) 
 
 
 #if defined (BOOST_MSVC)

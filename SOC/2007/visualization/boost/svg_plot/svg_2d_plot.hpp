@@ -46,16 +46,15 @@ namespace boost
     class svg_2d_plot; // Plot framework.
     class svg_2d_plot_series; // plot data series.
 
-    // -----------------------------------------------------------------
+    // ------------------------------------------------------------------
     // This allows us to store plot state locally in svg_plot. We don't
     // store it in "svg" because transforming the points after they are
     // written to the document would be difficult. We store the Cartesian
     // coordinates locally and transform them before we write them.
-    // -----------------------------------------------------------------
+    // ------------------------------------------------------------------
 
     class svg_2d_plot_series
     {
-
     friend svg_2d_plot_series;
     friend void draw_straight_lines(const svg_2d_plot_series&);
 
@@ -75,186 +74,221 @@ namespace boost
       bar_style bar_style_;
       histogram_style histogram_style_;
 
+      // Constructor.
       template <class T>  // T an STL container: for example: multimap.
-      svg_2d_plot_series(T begin, T end, // of data series.
-        std::string title = "") // Title of data series.
-        :
-        title_(title),
-        // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
-        // int size = 10, point_shape shape = round, const std::string& symbols = "X")
-        point_style_(black, blank, 10, round), // Default point style.
-        limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
-        line_style_(black, blank, 2, true, false), // Default line style, no fill, width 2, line_on, bezier off.
-        bar_style_(black, blank, 3, no_bar), // Default black, no fill, stick width 3, no bar.
-        // -2 block to Y-axis, -1 stick to Y-axis, no_bar,  +1 stick to x_axis, -2 block to X-axis.
-        histogram_style_(no_histogram)
-
-      { // Constructor.
-        for(T i = begin; i != end; ++i)
-        { // Sort data points into normal and limited series.
-          if(detail::pair_is_limit(*i))
-          { // Either x and/or y is at limit.
-            series_limits.insert(*i);
-          }
-          else
-          { // Normal data values for both x and y.
-            series.insert(*i);
-          }
-        }
-      } // svg_2d_plot_series
-
+      svg_2d_plot_series(T begin, T end, // Container of data series.
+        std::string title = ""); // Title of data series.
 
       // Set functions for the plot series.
-      svg_2d_plot_series& fill_color(const svg_color& col_)
-      { // Point fill color.
-        point_style_.fill_color_ = col_;
-        return *this;
-      }
-
-      svg_2d_plot_series& stroke_color(const svg_color& col_)
-      {
-        point_style_.stroke_color_ = col_;
-        return *this;
-      }
-
-      svg_2d_plot_series& shape(point_shape shape_)
-      {
-        point_style_.shape_ = shape_;
-        return *this;
-      }
-
-      svg_2d_plot_series& size(int size_)
-      {
-        point_style_.size_ = size_;
-        return *this;
-      }
-
-      svg_2d_plot_series& line_color(const svg_color& col_)
-      {
-        line_style_.stroke_color_ = col_;
-        return *this;
-      }
-
-      svg_2d_plot_series& area_fill(const svg_color& col_)
-      {
-        line_style_.area_fill_ = col_;
-        // Note that area_fill(false) will produce a *blank* color, and so NO FILL.
-        // area_fill(blank) will produce the default non-blank color (black?).
-        return *this;
-      }
-
-      svg_2d_plot_series& line_width(double wid_)
-      {
-        line_style_.width_ = wid_; // Sets legend line width too.
-        return *this; // Make chainable.
-      }
-
-      svg_2d_plot_series& line_on(bool on_)
-      {
-        line_style_.line_on_ = on_;
-        return *this; // Make chainable.
-      }
-
-      svg_2d_plot_series& bezier_on(bool on_)
-      {
-        line_style_.bezier_on_ = on_;
-        return *this; // Make chainable.
-      }
-
-      svg_2d_plot_series& bar(bar_option opt_)
-      {
-        bar_style_.bar_option_ = opt_;
-        return *this; // Make chainable.
-      }
-
-      svg_2d_plot_series& bar_width(double wid_)
-      {
-        bar_style_.width_ = wid_;
-        return *this; // Make chainable.
-      }
-
-      svg_2d_plot_series& bar_color(const svg_color& col)
-      {
-        bar_style_.color_ = col;
-        return *this; // Make chainable.
-      }
-
-      svg_2d_plot_series& bar_area_fill(const svg_color& col)
-      {
-        bar_style_.area_fill_ = col;
-        return *this; // Make chainable.
-      }
+      svg_2d_plot_series& fill_color(const svg_color& col_);
+      svg_2d_plot_series& stroke_color(const svg_color& col_);
+      svg_2d_plot_series& shape(point_shape shape_);
+      svg_2d_plot_series& size(int size_);
+      svg_2d_plot_series& line_color(const svg_color& col_);
+      svg_2d_plot_series& area_fill(const svg_color& col_);
+      svg_2d_plot_series& line_width(double wid_);
+      svg_2d_plot_series& line_on(bool on_);
+      svg_2d_plot_series& bezier_on(bool on_);
+      svg_2d_plot_series& bar_opt(bar_option);
+      svg_2d_plot_series& bar_width(double wid_);
+      svg_2d_plot_series& bar_color(const svg_color& col);
+      svg_2d_plot_series& bar_area_fill(const svg_color& col);
 
       // Get functions for the plot series.
-      plot_line_style line_style()
-      {
-        return line_style_;
-      }
-
-      double line_width()
-      {
-        return line_style_.width_;
-      }
-
-      bool bezier_on()
-      {
-        return line_style_.bezier_on_;
-      }
-
-      bool line_on()
-      {
-        return line_style_.line_on_;
-      }
-
-      svg_color& line_color()
-      {
-        return line_style_.stroke_color_;
-      }
-
-      svg_color& area_fill()
-      {
-        return line_style_.area_fill_;
-      }
-
-      int size()
-      {
-        return point_style_.size_;
-      }
-
-      point_shape shape()
-      {
-        return point_style_.shape_;
-      }
-
-      bar_option bar_option()
-      {
-        return bar_style_.bar_option_;
-      }
-
-      double bar_width()
-      {
-        return bar_style_.width_;
-      }
-
-      svg_color& bar_color()
-      {
-        return bar_style_.color_;
-      }
-
-      svg_color& bar_area_fill()
-      {
-        return bar_style_.area_fill_;
-      }
-
-      svg_2d_plot_series& histogram(histogram_option opt_)
-      { // column = -1, // Bar or row line (stroke width) horizontal to Y-axis.
-        // no_histogram = 0,
-        // bar = +1 // Stick or column line (stroke width) vertical to X-axis.
-        histogram_style_.histogram_option_ = opt_;
-        return *this; // Make chainable.
-      }
-
+      plot_line_style line_style();
+      double line_width();
+      bool bezier_on();
+      bool line_on();
+      svg_color& line_color();
+      svg_color& area_fill();
+      int size();
+      point_shape shape();
+      bar_option bar_opt();
+      double bar_width();
+      svg_color& bar_color();
+      svg_color& bar_area_fill();
+      svg_2d_plot_series& histogram(histogram_option opt_);
    }; // class svg_2d_plot_series
+
+   // svg_2d_plot_series Member Functions Definitions.
+
+   // svg_2d_plot_series constructor.
+
+  template <class T>  // T an STL container: for example: multimap.
+  svg_2d_plot_series::svg_2d_plot_series(T begin, T end, // of data series.
+    std::string title) // Title of data series.
+    :
+    title_(title),
+    // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
+    // int size = 10, point_shape shape = round, const std::string& symbols = "X")
+    point_style_(black, blank, 10, round), // Default point style.
+    limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
+    line_style_(black, blank, 2, true, false), // Default line style, no fill, width 2, line_on, bezier off.
+    bar_style_(black, blank, 3, no_bar), // Default black, no fill, stick width 3, no bar.
+    // -2 block to Y-axis, -1 stick to Y-axis, no_bar,  +1 stick to x_axis, -2 block to X-axis.
+    histogram_style_(no_histogram)
+  { // Constructor.
+    for(T i = begin; i != end; ++i)
+    { // Sort data points into normal and limited series.
+      if(detail::pair_is_limit(*i))
+      { // Either x and/or y is at limit.
+        series_limits.insert(*i);
+      }
+      else
+      { // Normal data values for both x and y.
+        series.insert(*i);
+      }
+    }
+  } // svg_2d_plot_series
+
+  svg_2d_plot_series& svg_2d_plot_series::fill_color(const svg_color& col_)
+  { // Point fill color.
+    point_style_.fill_color_ = col_;
+    return *this;
+  }
+
+   svg_2d_plot_series& svg_2d_plot_series::stroke_color(const svg_color& col_)
+  {
+    point_style_.stroke_color_ = col_;
+    return *this;
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::shape(point_shape shape_)
+  {
+    point_style_.shape_ = shape_;
+    return *this;
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::size(int size_)
+  {
+    point_style_.size_ = size_;
+    return *this;
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::line_color(const svg_color& col_)
+  {
+    line_style_.stroke_color_ = col_;
+    return *this;
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::area_fill(const svg_color& col_)
+  {
+    line_style_.area_fill_ = col_;
+    // Note that area_fill(false) will produce a *blank* color, and so NO FILL.
+    // area_fill(blank) will produce the default non-blank color (black?).
+    return *this;
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::line_width(double wid_)
+  {
+    line_style_.width_ = wid_; // Sets legend line width too.
+    return *this; // Make chainable.
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::line_on(bool on_)
+  {
+    line_style_.line_on_ = on_;
+    return *this; // Make chainable.
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::bezier_on(bool on_)
+  {
+    line_style_.bezier_on_ = on_;
+    return *this; // Make chainable.
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::bar_opt(bar_option opt_)
+  {
+    bar_style_.bar_option_ = opt_;
+    return *this; // Make chainable.
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::bar_width(double wid_)
+  {
+    bar_style_.width_ = wid_;
+    return *this; // Make chainable.
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::bar_color(const svg_color& col)
+  {
+    bar_style_.color_ = col;
+    return *this; // Make chainable.
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::bar_area_fill(const svg_color& col)
+  {
+    bar_style_.area_fill_ = col;
+    return *this; // Make chainable.
+  }
+
+  plot_line_style svg_2d_plot_series::line_style()
+  {
+    return line_style_;
+  }
+
+  double svg_2d_plot_series::line_width()
+  {
+    return line_style_.width_;
+  }
+
+  bool svg_2d_plot_series::bezier_on()
+  {
+    return svg_2d_plot_series::line_style_.bezier_on_;
+  }
+
+  bool svg_2d_plot_series::line_on()
+  {
+    return svg_2d_plot_series::line_style_.line_on_;
+  }
+
+ svg_color& svg_2d_plot_series::line_color()
+  {
+    return line_style_.stroke_color_;
+  }
+
+  svg_color& svg_2d_plot_series::area_fill()
+  {
+    return line_style_.area_fill_;
+  }
+
+  int svg_2d_plot_series::size()
+  {
+    return point_style_.size_;
+  }
+
+  point_shape svg_2d_plot_series::shape()
+  {
+    return point_style_.shape_;
+  }
+
+  bar_option svg_2d_plot_series::bar_opt()
+  {
+    return bar_style_.bar_option_;
+  }
+
+  double svg_2d_plot_series::bar_width()
+  {
+    return bar_style_.width_;
+  }
+
+  svg_color& svg_2d_plot_series::bar_color()
+  {
+    return bar_style_.color_;
+  }
+
+  svg_color& svg_2d_plot_series::bar_area_fill()
+  {
+    return bar_style_.area_fill_;
+  }
+
+  svg_2d_plot_series& svg_2d_plot_series::histogram(histogram_option opt_)
+  { // column = -1, // Bar or row line (stroke width) horizontal to Y-axis.
+    // no_histogram = 0,
+    // bar = +1 // Stick or column line (stroke width) vertical to X-axis.
+    histogram_style_.histogram_option_ = opt_;
+    return *this; // Make chainable.
+  }
+  // end svg_2d_plot_series Member Functions Definitions.
 
     class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
     { // See also svg_1d_plot.hpp for 1-D version.
@@ -303,7 +337,6 @@ namespace boost
       value_style y_values_style_; // Data point Y value marking.
       //bool x_plusminus_on_; // http://en.wikipedia.org/wiki/Plus-minus_sign
       //// Unicode &#0xB1; HTML &plusmn;
-
 
       //rotate_style y_value_label_rotation_; // Direction point Y value labels written.
       //int y_value_precision_;
@@ -1677,254 +1710,363 @@ namespace boost
     } // void update_image()
 
 
-    public: // Member functions
-      // -----------------------------------------------------------------
+    public: // Declarations of member functions (definitions in separate file).
+
+      // All return *this to permit chaining.
+
       // write() has two flavors, a file and a ostream.
       // The file version opens an ostream, and calls the stream version.
       // The stream version first clears all unnecessary data from the graph,
       // builds the document tree, and then calls the write function for the root
       // document node, which calls all other nodes through the Visitor pattern.
-      // -----------------------------------------------------------------
-
-      svg_2d_plot& write(const std::string& file)
-      { // Write the plot image to a named file.
-        std::string filename(file); // Copy to avoid problem with const if try to append.
-        if (filename.find(".svg") == std::string::npos)
-        { // No file type suffix, so provide the default .svg.
-          filename.append(".svg");
-        }
-
-        std::ofstream fout(filename.c_str());
-        if(fout.fail())
-        {
-          throw std::runtime_error("Unable to open " + filename);
-        }
-        write(fout); // Using the ostream version.
-        return *this;
-      }
-
-      svg_2d_plot& write(std::ostream& s_out)
-      { // Write the image to an ostream.
-        update_image();
-        image.write(s_out); // Use the ostream version of write.
-        return *this;
-      }
+      svg_2d_plot& write(const std::string& file);
+      svg_2d_plot& write(std::ostream& s_out);
 
       // Member functions to set and get plot options.
-      // All return *this to permit chaining.
 
       // These below only refer to 2D plot.
       // See axis_plot_label.hpp for all the many 1D functions X-Axis.
 
-      axis_line_style& x_axis()
+      axis_line_style& x_axis();
+      axis_line_style& y_axis();
+      ticks_labels_style& x_ticks();
+      ticks_labels_style& y_ticks();
+      svg_2d_plot& y_label_on(bool cmd);
+      bool y_label_on();
+      svg_2d_plot& x_label_on(bool cmd);
+      bool x_label_on();
+      svg_2d_plot& y_major_labels_on(int cmd);
+      int y_major_labels_on();
+      svg_2d_plot& y_major_label_rotation(rotate_style rot);
+      int y_major_label_rotation();
+      svg_2d_plot& y_axis_width(double width);
+      double y_axis_width();
+      svg_2d_plot& y_value_precision(int digits);
+      int y_value_precision();
+      svg_2d_plot& y_value_ioflags( std::ios_base::fmtflags flags);
+      int y_value_ioflags();
+      svg_2d_plot& y_labels_strip_e0s(bool cmd);
+      bool y_labels_strip_e0s();
+      svg_2d_plot& y_axis_color(const svg_color& col); 
+      svg_color y_axis_color();
+      svg_2d_plot& y_axis_label_color(const svg_color& col);
+      svg_color y_axis_label_color();
+      svg_2d_plot& y_label_units_on(bool b);
+      bool y_label_units_on();
+      svg_2d_plot& y_axis_value_color(const svg_color& col);
+      svg_color y_axis_value_color();
+      svg_2d_plot& y_label_width(double width);
+      double y_label_width();
+      svg_2d_plot& y_major_grid_color(const svg_color& col);
+      const svg_color y_major_grid_color();
+      svg_2d_plot& y_minor_grid_color(const svg_color& col);
+      const svg_color y_minor_grid_color();
+      svg_2d_plot& y_major_tick_color(const svg_color& col);
+      const svg_color y_major_tick_color();
+      svg_2d_plot& y_minor_tick_color(const svg_color& col);
+      const svg_color y_minor_tick_color();
+      const std::string y_axis_position();
+      svg_2d_plot& y_range(double min_y, double max_y);
+      std::pair<double, double> y_range();
+      double y_min();
+      double y_max();
+      bool y_autoscale();
+      svg_2d_plot& y_autoscale(bool b);
+      bool y_values_on();
+      svg_2d_plot& y_values_on(bool b);
+      bool xy_values_on();
+      svg_2d_plot& xy_values_on(bool b);
+      bool y_plusminus_on();
+      svg_2d_plot& y_plusminus_on(bool b);
+      bool y_df_on();
+      svg_2d_plot& y_df_on(bool b);
+      svg_2d_plot& y_autoscale(double first, double second);
+      svg_2d_plot& y_autoscale(std::pair<double, double> p);
+      template <class T> // T an STL container: array, vector ...
+      svg_2d_plot& y_autoscale(const T& begin, const T& end); // Data series using iterators to
+      template <class T> // T an STL container: array, vector ...
+      svg_2d_plot& y_autoscale(const T& container); // Whole data series.
+      template <class T> // T a 2D STL container: array, vector ...
+      svg_2d_plot& xy_autoscale(const T& container); // Whole data series,
+      bool xy_autoscale();
+      double y_major_tick_length();
+      svg_2d_plot& y_major_tick_length(double length);
+      double y_major_interval();
+      svg_2d_plot& y_major_interval(double inter);
+      svg_2d_plot& y_minor_tick_length(double length);
+      double y_minor_tick_length();
+      svg_2d_plot& y_num_minor_ticks(unsigned int num);
+      unsigned int y_num_minor_ticks();
+      svg_2d_plot& y_label_axis(const std::string& str);
+      std::string y_label_axis();
+      svg_2d_plot& y_major_tick_width(double width);
+      double y_major_tick_width();
+      svg_2d_plot& y_minor_tick_width(double width);
+      double y_minor_tick_width();
+      svg_2d_plot& x_ticks_on_window_or_axis(int is);
+      int x_ticks_on_window_or_axis();
+      svg_2d_plot& x_major_value_labels_side(int is);
+      int x_major_value_labels_side();
+      svg_2d_plot& y_ticks_on_window_or_axis(int is);
+      int y_ticks_on_window_or_axis();
+      svg_2d_plot& y_major_value_labels_side(int is);
+      int y_major_value_labels_side();
+      svg_2d_plot& y_ticks_left_on(bool cmd);
+      bool y_ticks_left_on();
+      svg_2d_plot& y_ticks_right_on(bool cmd);
+      bool y_ticks_right_on();
+      svg_2d_plot& y_major_grid_on(bool is);
+      bool y_major_grid_on();
+      svg_2d_plot& y_minor_grid_on(bool is);
+      bool y_minor_grid_on();
+      svg_2d_plot& y_minor_grid_width(double width);
+      double y_minor_grid_width();
+      svg_2d_plot& y_major_grid_width(double width);
+      double y_major_grid_width();
+      svg_2d_plot& y_label_font_size(unsigned int i);
+      unsigned int y_label_font_size();
+      svg_2d_plot& y_label_weight(std::string s);
+      const std::string& y_label_weight();
+      svg_2d_plot& y_label_font_family(const std::string& family);
+      const std::string& y_label_font_family();
+      svg_2d_plot& y_values_font_size(unsigned int i);
+      unsigned int y_values_font_size();
+      svg_2d_plot& y_values_font_family(const std::string& family);
+      const std::string& y_values_font_family();
+      svg_2d_plot& y_values_color(const svg_color& col);
+      svg_color y_values_color();
+       svg_2d_plot& y_values_rotation(rotate_style rotate);
+      int y_values_rotation();
+      svg_2d_plot& y_values_precision(int p);
+      int y_values_precision();
+      svg_2d_plot& y_values_ioflags(std::ios_base::fmtflags f);
+      std::ios_base::fmtflags y_values_ioflags();
+
+      // Versions of plot functions to add data series, all or part.
+      template <class T>
+      svg_2d_plot_series& plot(const T& container, const std::string& title = "");
+      template <class T, class U>
+      svg_2d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_2d_convert);
+      template <class T>
+      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "");
+      template <class T, class U>
+      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_2d_convert);
+
+ }; // class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
+
+  // Definition of member functions, (ready to be) externally defined in another (.ipp) file.
+
+  axis_line_style& svg_2d_plot::x_axis()
       {
         return x_axis_;
       }
 
-      axis_line_style& y_axis()
+     axis_line_style&  svg_2d_plot::y_axis()
       {
         return y_axis_;
       }
 
-      ticks_labels_style& x_ticks()
+      ticks_labels_style& svg_2d_plot::x_ticks()
       {
         return x_ticks_;
       }
 
-      ticks_labels_style& y_ticks()
+      ticks_labels_style& svg_2d_plot::y_ticks()
       {
         return y_ticks_;
       }
 
-      svg_2d_plot& y_label_on(bool cmd)
+      svg_2d_plot& svg_2d_plot::y_label_on(bool cmd)
       { // If Y axis name or label.
         y_axis_.label_on_ = cmd;
         return *this; // Make chainable.
       }
 
-      bool y_label_on()
+      bool svg_2d_plot::y_label_on()
       {
         return y_axis_.label_on_;
       }
 
-      svg_2d_plot& x_label_on(bool cmd)
+      svg_2d_plot& svg_2d_plot::x_label_on(bool cmd)
       {
         x_axis_.label_on_ = cmd;
         return *this;
       }
 
-      bool x_label_on()
+      bool svg_2d_plot::x_label_on()
       {
         return x_axis_.label_on_;
       }
 
-      svg_2d_plot& y_major_labels_on(int cmd)
+      svg_2d_plot& svg_2d_plot::y_major_labels_on(int cmd)
       { //< 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top).
         y_ticks_.major_value_labels_side_ = cmd;
         return *this;
       }
 
-      int y_major_labels_on()
+      int svg_2d_plot::y_major_labels_on()
       {
         return y_ticks_.major_value_labels_side_;
       }
 
-      svg_2d_plot& y_major_label_rotation(rotate_style rot)
+      svg_2d_plot& svg_2d_plot::y_major_label_rotation(rotate_style rot)
       {
         y_ticks_.label_rotation_ = rot;
         return *this;
       }
 
-      int y_major_label_rotation()
+      int svg_2d_plot::y_major_label_rotation()
       {
         return  y_ticks_.label_rotation_ ;
       }
 
-      svg_2d_plot& y_axis_width(double width)
+
+      svg_2d_plot& svg_2d_plot::y_axis_width(double width)
       {
         image.g(detail::PLOT_Y_AXIS).style().stroke_width(width);
         return *this;
       }
 
-      double y_axis_width()
+      double svg_2d_plot::y_axis_width()
       {
         return image.g(detail::PLOT_Y_AXIS).style().stroke_width();
       }
 
-      svg_2d_plot& y_value_precision(int digits)
+      svg_2d_plot& svg_2d_plot::y_value_precision(int digits)
       { // Precision of Y tick label values in decimal digits (default 3).
         y_ticks_.value_precision_ = digits;
         return *this;
       }
 
-      int y_value_precision()
+      int svg_2d_plot::y_value_precision()
       { // Precision of Y tick label values in decimal digits (default 3).
         return y_ticks_.value_precision_;
       }
 
-      svg_2d_plot& y_value_ioflags( std::ios_base::fmtflags flags)
+      svg_2d_plot& svg_2d_plot::y_value_ioflags( std::ios_base::fmtflags flags)
       { // IO flags of Y tick label values (default 0X201).
         y_ticks_.value_ioflags_ = flags;
         return *this;
       }
 
-      int y_value_ioflags()
+      int svg_2d_plot::y_value_ioflags()
       { // ALL stream ioflags for control of format of Y value labels.
         return y_ticks_.value_ioflags_;
       }
 
-      svg_2d_plot& y_labels_strip_e0s(bool cmd)
+      svg_2d_plot& svg_2d_plot::y_labels_strip_e0s(bool cmd)
       {
         y_ticks_.strip_e0s_ = cmd;
         return *this;
       }
 
-      bool y_labels_strip_e0s()
+      bool svg_2d_plot::y_labels_strip_e0s()
       {
         return y_ticks_.strip_e0s_;
       }
 
-      svg_2d_plot& y_axis_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_axis_color(const svg_color& col)
       { // Set only stroke color.
         image.g(detail::PLOT_Y_AXIS).style().stroke_color(col);
         return *this;
       }
 
-      svg_color y_axis_color()
+      svg_color svg_2d_plot::y_axis_color()
       { // return the stroke color.
         return image.g(detail::PLOT_Y_AXIS).style().stroke_color();
       }
 
-      svg_2d_plot& y_axis_label_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_axis_label_color(const svg_color& col)
       { // Set stroke color.
         image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
         return *this;
       }
 
-      svg_color y_axis_label_color()
+      svg_color svg_2d_plot::y_axis_label_color()
       { // But only return the stroke color.
         //return y_label_info_.style().stroke_color();
         return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
-      svg_2d_plot& y_label_units_on(bool b)
+      svg_2d_plot& svg_2d_plot::y_label_units_on(bool b)
       {
         y_axis_.label_units_on_ = b;
         return *this;
       }
 
-      bool y_label_units_on()
+      bool svg_2d_plot::y_label_units_on()
       {
         return y_axis_.label_units_on_;
       }
 
-      svg_2d_plot& y_axis_value_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_axis_value_color(const svg_color& col)
       {
         image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
         return *this;
       }
 
-      svg_color y_axis_value_color()
+      svg_color svg_2d_plot::y_axis_value_color()
       { // Only return the stroke color.
         return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
-      svg_2d_plot& y_label_width(double width)
+
+     svg_2d_plot& svg_2d_plot::y_label_width(double width)
       {
         image.g(detail::PLOT_Y_LABEL).style().stroke_width(width);
         return *this;
       }
 
-      double y_label_width()
+      double svg_2d_plot::y_label_width()
       {
         return image.g(detail::PLOT_Y_LABEL).style().stroke_width();
       }
 
-      svg_2d_plot& y_major_grid_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_major_grid_color(const svg_color& col)
       {
         image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_color(col);
         return *this;
       }
 
-      const svg_color y_major_grid_color()
+      const svg_color svg_2d_plot::y_major_grid_color()
       {
         return image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_color();
       }
 
-      svg_2d_plot& y_minor_grid_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_minor_grid_color(const svg_color& col)
       {
         image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_color(col);
         return *this;
       }
 
-      const svg_color y_minor_grid_color()
+      const svg_color svg_2d_plot::y_minor_grid_color()
       {
         return image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_color();
       }
 
-      svg_2d_plot& y_major_tick_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_major_tick_color(const svg_color& col)
       {
         image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(col);
         return *this;
       }
 
-      const svg_color y_major_tick_color()
+      const svg_color svg_2d_plot::y_major_tick_color()
       {
         return image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color();
       }
 
-      svg_2d_plot& y_minor_tick_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_minor_tick_color(const svg_color& col)
       {
         image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
         return *this;
       }
 
-      const svg_color y_minor_tick_color()
+      const svg_color svg_2d_plot::y_minor_tick_color()
       {
         return image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color();
       }
 
-      const std::string y_axis_position()
+      const std::string svg_2d_plot::y_axis_position()
       {
         switch(y_axis_position_)
         {
@@ -1937,9 +2079,9 @@ namespace boost
         default:
           return "?"; break;
         }
-      }
+      } // const std::string svg_2d_plot::y_axis_position()
 
-      svg_2d_plot& y_range(double min_y, double max_y)
+        svg_2d_plot& svg_2d_plot::y_range(double min_y, double max_y)
       { // Set the range (max and min) for Y values.
         if (!boost::math::isfinite(min_y))
         {
@@ -1964,7 +2106,7 @@ namespace boost
        return *this;
       }
 
-      std::pair<double, double> y_range()
+      std::pair<double, double> svg_2d_plot::y_range()
       {
         std::pair<double, double> r;
         r.first = y_axis_.min_;
@@ -1972,72 +2114,83 @@ namespace boost
         return r;
       }
 
-      double y_min()
+      double svg_2d_plot::y_min()
       { // Can't check finite ness and relation to y_max.
         return y_axis_.min_;
       }
 
-      double y_max()
+      double svg_2d_plot::y_max()
       { // Can't check finite ness and relation to y_min.
         return y_axis_.max_;
       }
 
-      bool y_autoscale()
+      bool svg_2d_plot::y_autoscale()
       {
         return y_autoscale_;
       }
 
-      svg_2d_plot& y_autoscale(bool b)
+      svg_2d_plot& svg_2d_plot::y_autoscale(bool b)
       {
         y_autoscale_ = b;
         return *this;
       }
 
-      bool y_values_on()
+      bool  svg_2d_plot::y_values_on()
       {
         return y_values_on_;
       }
 
-      svg_2d_plot& y_values_on(bool b)
+      svg_2d_plot&  svg_2d_plot::y_values_on(bool b)
       {
         y_values_on_ = b;
         return *this;
       }
 
-      bool xy_values_on()
+      bool  svg_2d_plot::xy_values_on()
       {
         return xy_values_on_;
       }
 
-      svg_2d_plot& xy_values_on(bool b)
+      svg_2d_plot&  svg_2d_plot::xy_values_on(bool b)
       {
         xy_values_on_ = b;
         return *this;
       }
 
-      bool y_plusminus_on()
+
+      bool svg_2d_plot::y_plusminus_on()
       {
         return y_values_style_.plusminus_on_;
       }
 
-      svg_2d_plot& y_plusminus_on(bool b)
+      svg_2d_plot& svg_2d_plot::y_plusminus_on(bool b)
       {
         y_values_style_.plusminus_on_ = b;
         return *this;
       }
 
-      bool y_df_on()
+      bool svg_2d_plot::y_df_on()
       {
-        return y_values_style_.df_on_;
+        return svg_2d_plot::y_values_style_.df_on_;
       }
 
-      svg_2d_plot& y_df_on(bool b)
+      svg_2d_plot& svg_2d_plot::y_df_on(bool b)
       {
         y_values_style_.df_on_ = b;
         return *this;
       }
+  
+      svg_2d_plot& svg_2d_plot::y_autoscale(double first, double second)
+      { // Use Y min & max values to autoscale.
+        scale_axis(first, second, // double min and max from two doubles.
+        &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
+        autoscale_check_limits_,
+        y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
+        y_autoscale_ = true;  // Default to use calculated values.
+        return *this;
+      } // autoscale(pair<double, double> p)
 
-      svg_2d_plot& y_autoscale(std::pair<double, double> p)
+      svg_2d_plot& svg_2d_plot::y_autoscale(std::pair<double, double> p)
       { // Use Y min & max pair values to autoscale.
         scale_axis(p.first, p.second, // double min and max from pair.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
@@ -2047,8 +2200,8 @@ namespace boost
         return *this;
       } // autoscale(pair<double, double> p)
 
-      template <class T> // T an STL container: array, vector ...
-      svg_2d_plot& y_autoscale(const T& begin, const T& end) // Data series using iterators to
+       template <class T> // T an STL container: array, vector ...
+      svg_2d_plot& svg_2d_plot::y_autoscale(const T& begin, const T& end) // Data series using iterators to
       { // to use to calculate autoscaled values.
         scale_axis(begin, end,
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
@@ -2058,8 +2211,10 @@ namespace boost
         return *this;
       }
 
+
+
       template <class T> // T an STL container: array, vector ...
-      svg_2d_plot& y_autoscale(const T& container) // Whole data series.
+      svg_2d_plot& svg_2d_plot::y_autoscale(const T& container) // Whole data series.
       { // to use to calculate autoscaled values.
         scale_axis(container.begin(), container.end(), // All the container.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
@@ -2070,7 +2225,7 @@ namespace boost
       }
 
       template <class T> // T a 2D STL container: array, vector ...
-      svg_2d_plot& xy_autoscale(const T& container) // Whole data series,
+      svg_2d_plot& svg_2d_plot::xy_autoscale(const T& container) // Whole data series,
       { // to use to calculate autoscaled values for *both* X and Y axes.
         scale_axis(container, // All the container.
           &x_auto_min_value_, &x_auto_max_value_, &x_auto_tick_interval_, &x_auto_ticks_,
@@ -2083,269 +2238,265 @@ namespace boost
         return *this;
       } // xy_autoscale
 
-      bool xy_autoscale()
+      bool svg_2d_plot::xy_autoscale()
       {
         return y_autoscale_ && x_autoscale_;
       }
 
-      svg_2d_plot& y_major_interval(double inter)
+      svg_2d_plot& svg_2d_plot::y_major_interval(double inter)
       {
         y_ticks_.major_interval_ = inter;
         return *this;
       }
 
-      double y_major_interval()
+      double svg_2d_plot::y_major_interval()
       {
         return y_ticks_.major_interval_;
       }
 
-      svg_2d_plot& y_major_tick_length(double length)
+      svg_2d_plot& svg_2d_plot::y_major_tick_length(double length)
       {
         y_ticks_.major_tick_length_ = length;
         return *this;
       }
 
-      double y_major_tick_length()
+      double svg_2d_plot::y_major_tick_length()
       {
         return y_ticks_.major_tick_length_;
       }
 
-      svg_2d_plot& y_minor_tick_length(double length)
+      svg_2d_plot& svg_2d_plot::y_minor_tick_length(double length)
       {
         y_ticks_.minor_tick_length_ = length;
         return *this;
       }
 
-      double y_minor_tick_length()
+      double svg_2d_plot::y_minor_tick_length()
       {
         return y_ticks_.minor_tick_length_;
       }
 
-      svg_2d_plot& y_num_minor_ticks(unsigned int num)
+      svg_2d_plot& svg_2d_plot::y_num_minor_ticks(unsigned int num)
       {
         y_ticks_.num_minor_ticks_ = num;
         return *this;
       }
 
-      unsigned int y_num_minor_ticks()
+      unsigned int svg_2d_plot::y_num_minor_ticks()
       {
         return y_ticks_.num_minor_ticks_;
       }
-
-      svg_2d_plot& y_label_axis(const std::string& str)
+      
+      svg_2d_plot& svg_2d_plot::y_label_axis(const std::string& str)
       { // Set label for Y-axis.
         y_label_info_.text(str);
         return *this;
       }
 
-      std::string y_label_axis()
+      std::string svg_2d_plot::y_label_axis()
       { // text to label Y axis.
         return y_label_info_.text();
       }
 
-      svg_2d_plot& y_major_tick_width(double width)
+      svg_2d_plot& svg_2d_plot::y_major_tick_width(double width)
       {
         y_ticks_.major_tick_width_ = width;
         image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_width(width);
         return *this;
       }
 
-      double y_major_tick_width()
+      double svg_2d_plot::y_major_tick_width()
       {
         return y_ticks_.major_tick_width_;
       }
 
-      svg_2d_plot& y_minor_tick_width(double width)
+      svg_2d_plot& svg_2d_plot::y_minor_tick_width(double width)
       {
         y_ticks_.minor_tick_width_ = width;
         image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_width(width);
         return *this;
       }
 
-      double y_minor_tick_width()
+      double svg_2d_plot::y_minor_tick_width()
       {
         return y_ticks_.minor_tick_width_;
       }
 
-      svg_2d_plot& x_ticks_on_window_or_axis(int is)
+      svg_2d_plot& svg_2d_plot::x_ticks_on_window_or_axis(int is)
       {
         x_ticks_.ticks_on_window_or_axis_ = is;
         return *this;
       }
 
-      int x_ticks_on_window_or_axis()
+      int svg_2d_plot::x_ticks_on_window_or_axis()
       {
         return x_ticks_.ticks_on_window_or_axis_;
       }
 
-      svg_2d_plot& x_major_value_labels_side(int is)
+      svg_2d_plot& svg_2d_plot::x_major_value_labels_side(int is)
       { // Label values side for major ticks left -1, (right +1 or none 0).
         x_ticks_.major_value_labels_side_ = is;
         return *this;
       }
 
-      int x_major_value_labels_side()
+      int svg_2d_plot::x_major_value_labels_side()
       { // Label values side for major ticks left -1, (right +1 or none 0).
         return x_ticks_.major_value_labels_side_;
       }
 
-      svg_2d_plot& y_ticks_on_window_or_axis(int is)
+      svg_2d_plot& svg_2d_plot::y_ticks_on_window_or_axis(int is)
       {
         y_ticks_.ticks_on_window_or_axis_ = is;
         return *this;
       }
 
-      int y_ticks_on_window_or_axis()
+      int svg_2d_plot::y_ticks_on_window_or_axis()
       {
         return y_ticks_.ticks_on_window_or_axis_;
       }
-
-      svg_2d_plot& y_major_value_labels_side(int is)
+ 
+      svg_2d_plot& svg_2d_plot::y_major_value_labels_side(int is)
       {  // Label values side for major ticks left -1, (right +1 or none 0).
         y_ticks_.major_value_labels_side_ = is;
         return *this;
       }
 
-      int y_major_value_labels_side()
+      int svg_2d_plot::y_major_value_labels_side()
       { // Label values side for major ticks left -1, (right +1 or none 0).
         return y_ticks_.major_value_labels_side_;
       }
 
-      svg_2d_plot& y_ticks_left_on(bool cmd)
+      svg_2d_plot& svg_2d_plot::y_ticks_left_on(bool cmd)
       {
         y_ticks_.left_ticks_on_ = cmd;
         return *this;
       }
 
-      bool y_ticks_left_on()
+      bool svg_2d_plot::y_ticks_left_on()
       {
         return y_ticks_.left_ticks_on_;
       }
 
-      svg_2d_plot& y_ticks_right_on(bool cmd)
+
+
+      svg_2d_plot& svg_2d_plot::y_ticks_right_on(bool cmd)
       {
         y_ticks_.right_ticks_on_ = cmd;
         return *this;
       }
 
-      bool y_ticks_right_on()
+      bool svg_2d_plot::y_ticks_right_on()
       {
         return y_ticks_.right_ticks_on_;
       }
       // Only need y_ticks_left_on & y_ticks_right_on in 2D
 
 
-      svg_2d_plot& y_major_grid_on(bool is)
+      svg_2d_plot& svg_2d_plot::y_major_grid_on(bool is)
       {
         y_ticks_.major_grid_on_ = is;
         return *this;
       }
 
-      bool y_major_grid_on()
+      bool svg_2d_plot::y_major_grid_on()
       {
         return y_ticks_.major_grid_on_;
       }
 
-      svg_2d_plot& y_minor_grid_on(bool is)
+
+      svg_2d_plot& svg_2d_plot::y_minor_grid_on(bool is)
       {
         y_ticks_.minor_grid_on_ = is;
         return *this;
       }
 
-      bool y_minor_grid_on()
+      bool svg_2d_plot::y_minor_grid_on()
       {
         return y_ticks_.minor_grid_on_;
       }
 
-      svg_2d_plot& y_minor_grid_width(double width)
+      svg_2d_plot& svg_2d_plot::y_minor_grid_width(double width)
       {
         y_ticks_.minor_grid_width_ = width;
         image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_width(width);
         return *this;
       }
 
-      double y_minor_grid_width()
+      double svg_2d_plot::y_minor_grid_width()
       {
         return y_ticks_.minor_grid_width_;
       }
 
-      svg_2d_plot& y_major_grid_width(double width)
+
+
+        svg_2d_plot& svg_2d_plot::y_major_grid_width(double width)
       {
         y_ticks_.major_grid_width_ = width;
         image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_width(width);
         return *this;
       }
 
-      double y_major_grid_width()
+      double svg_2d_plot::y_major_grid_width()
       {
         return y_ticks_.major_grid_width_;
       }
 
-      svg_2d_plot& y_label_font_size(unsigned int i)
+      svg_2d_plot& svg_2d_plot::y_label_font_size(unsigned int i)
       { // May be best to tie label & unit font sizes together?
         x_axis_label_style_.font_size(i);
         // y_units_info_.font_size(i);
         return *this;
       }
 
-      unsigned int y_label_font_size()
+      unsigned int svg_2d_plot::y_label_font_size()
       {
         return y_axis_label_style_.font_size();
       }
 
-      // Note useful until browsers support.
-      //svg_2d_plot& y_label_weight(std::string s)
-      //{ // "bold" is only one that works so far.
-      //  x_axis_label_style_.font_weight(s);
-      //  return *this;
-      //}
-
-      //const std::string& y_label_weight()
-      //{
-      //  return x_axis_label_style_.font_weight();
-      //}
 
 
+      svg_2d_plot& svg_2d_plot::y_label_weight(std::string s)
+      { // "bold" is only one that works so far.
+        x_axis_label_style_.font_weight(s);
+        return *this;
+      }
 
-      svg_2d_plot& y_label_font_family(const std::string& family)
+      const std::string& svg_2d_plot::y_label_weight()
+      {
+        return x_axis_label_style_.font_weight();
+      }
+
+
+      svg_2d_plot& svg_2d_plot::y_label_font_family(const std::string& family)
       {
         x_axis_label_style_.font_family(family);
         return *this;
       }
 
-      const std::string& y_label_font_family();
-      //const std::string& y_label_font_family()
-      //{
-      //  return y_label_info_.font_family();
-      //}
 
-      // Example of declaration but definition below.
-      // TODO Probably better done this way,
-
-
-      svg_2d_plot& y_values_font_size(unsigned int i)
+      svg_2d_plot& svg_2d_plot::y_values_font_size(unsigned int i)
       {
         y_values_style_.values_text_style_.font_size(i);
         return *this;
       }
 
-      unsigned int y_values_font_size()
+        unsigned int svg_2d_plot::y_values_font_size()
       {
         return y_values_style_.values_text_style_.font_size();
       }
 
-      svg_2d_plot& y_values_font_family(const std::string& family)
+      svg_2d_plot& svg_2d_plot::y_values_font_family(const std::string& family)
       {
         y_values_style_.values_text_style_.font_family(family);
         return *this;
       }
 
-      const std::string& y_values_font_family()
+      const std::string& svg_2d_plot::y_values_font_family()
       {
         return y_values_style_.values_text_style_.font_family();
       }
 
-      svg_2d_plot& y_values_color(const svg_color& col)
+      svg_2d_plot& svg_2d_plot::y_values_color(const svg_color& col)
       { // Function could set both fill (middle) and stroke (outside),
         // but just setting fill if simplest,
         // but does not allow separate inside & outside colors.
@@ -2354,113 +2505,133 @@ namespace boost
         return *this;
       }
 
-      svg_color y_values_color()
+      svg_color svg_2d_plot::y_values_color()
       { // Function could get either fill and stroke,
         // return svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color();
         return image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color();
       }
 
-      svg_2d_plot& y_values_rotation(rotate_style rotate)
+      svg_2d_plot& svg_2d_plot::y_values_rotation(rotate_style rotate)
       { // Degrees (0 to 360).
         y_values_style_.value_label_rotation_ = rotate;
         return *this;
       }
 
-      int y_values_rotation()
+      int svg_2d_plot::y_values_rotation()
       {
         return y_values_style_.value_label_rotation_;
       }
 
-      svg_2d_plot& y_values_precision(int p)
+
+      svg_2d_plot& svg_2d_plot::y_values_precision(int p)
       { // set iostream precision
         y_values_style_.value_precision_ = p;
         return *this;
       }
 
-      int y_values_precision()
+      int svg_2d_plot::y_values_precision()
       {
         return y_values_style_.value_precision_;
       }
 
-      svg_2d_plot& y_values_ioflags(std::ios_base::fmtflags f)
+      svg_2d_plot& svg_2d_plot::y_values_ioflags(std::ios_base::fmtflags f)
       { // set iostream format flags
         y_values_style_.value_ioflags_ = f;
         return *this;
       }
 
-      std::ios_base::fmtflags y_values_ioflags()
+      std::ios_base::fmtflags svg_2d_plot::y_values_ioflags()
       {
         return y_values_style_.value_ioflags_;
       }
 
 
-      // Versions of plot functions to add data series, all or part.
-
-      template <class T>
-      svg_2d_plot_series& plot(const T& container, const std::string& title = "")
-      { // Version converting to double.
-        // Note that this version assumes that *ALL* the data value in the container is used.
-        series.push_back(
-          svg_2d_plot_series(
-          boost::make_transform_iterator(container.begin(), detail::boost_default_2d_convert()),
-          boost::make_transform_iterator(container.end(), detail::boost_default_2d_convert()),
-          title)
-        );
-        return series[series.size()-1]; // Number of data series added so far.
-      }
-
-      template <class T, class U>
-      svg_2d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_2d_convert)
-      { // Version with functor.
-        // Note that this version assumes that *ALL* the data value in the container is used.
-        series.push_back(
-          svg_2d_plot_series(
-          boost::make_transform_iterator(container.begin(), functor),
-          boost::make_transform_iterator(container.end(),   functor),
-          title)
-        );
-        return series[series.size()-1]; // Number of data series added so far.
-      }
-
-      template <class T>
-      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "")
-      { // Add a data series to the plot (by default, converting to doubles).
-        // Note that this version permits a *partial range*,
-        // begin to end, of the container to be used.
-        series.push_back(
-          svg_2d_plot_series(
-          boost::make_transform_iterator(begin, detail::boost_default_convert()),
-          boost::make_transform_iterator(end, detail::boost_default_convert()),
-          title)
-        );
-        // For example:  my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
-        // my_2d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
-        // Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
-        return series[series.size() - 1]; // Number of data series added so far.
-      }
-
-      template <class T, class U>
-      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_2d_convert)
-      { // Add a data series to the plot. (Version with custom functor, rather than to double).
-        // Note that this version permits a partial range,
-        // begin to end, of the container to be used.
-        series.push_back(
-          svg_2d_plot_series(
-          boost::make_transform_iterator(container.begin(), functor),
-          boost::make_transform_iterator(container.end(),   functor),
-          title)
-        );
-        return series[series.size() - 1]; // Number of data series added so far.
-      }
-
- }; // class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
-
-    // sample of declared function, externally defined in another .cpp file.
-    // TODO May be useful to refactor all functions this way.
-    const std::string& svg_2d_plot::y_label_font_family()
-    {
-      return y_axis_label_style_.font_family();
+  svg_2d_plot& svg_2d_plot::write(const std::string& file)
+  { // Write the plot image to a named file.
+    std::string filename(file); // Copy to avoid problem with const if try to append.
+    if (filename.find(".svg") == std::string::npos)
+    { // No file type suffix, so provide the default .svg.
+      filename.append(".svg");
     }
+
+    std::ofstream fout(filename.c_str());
+    if(fout.fail())
+    {
+      throw std::runtime_error("Unable to open " + filename);
+    }
+    write(fout); // Using the ostream version.
+    return *this;
+  }
+  
+  template <class T>
+  svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
+  { // Version converting to double.
+    // Note that this version assumes that *ALL* the data value in the container is used.
+    series.push_back(
+      svg_2d_plot_series(
+      boost::make_transform_iterator(container.begin(), detail::boost_default_2d_convert()),
+      boost::make_transform_iterator(container.end(), detail::boost_default_2d_convert()),
+      title)
+    );
+    return series[series.size()-1]; // Reference to data series just added.
+  }
+
+  template <class T, class U>
+  svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title /* = "" */, U functor /* = boost_default_2d_convert*/)
+  { // Version with functor.
+    // Note that this version assumes that *ALL* the data value in the container is used.
+    series.push_back(
+      svg_2d_plot_series(
+      boost::make_transform_iterator(container.begin(), functor),
+      boost::make_transform_iterator(container.end(),   functor),
+      title)
+    );
+    return series[series.size()-1];// Reference to data series just added.
+  }
+
+  template <class T>
+  svg_2d_plot_series& svg_2d_plot::plot(const T& begin, const T& end, const std::string& title)
+  { // Add a data series to the plot (by default, converting to doubles).
+    // Note that this version permits a *partial range*,
+    // begin to end, of the container to be used.
+    series.push_back(
+      svg_2d_plot_series(
+      boost::make_transform_iterator(begin, detail::boost_default_convert()),
+      boost::make_transform_iterator(end, detail::boost_default_convert()),
+      title)
+    );
+    // For example:  my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
+    // my_2d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
+    // Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
+    return series[series.size() - 1]; // Reference to data series just added.
+  } // plot(const T& begin, const T& end, const std::string& title = "")
+
+  template <class T, class U>
+  svg_2d_plot_series& svg_2d_plot::plot(const T& begin, const T& end, const std::string& title, U functor)
+  { // Add a data series to the plot. (Version with custom functor, rather than to double).
+    // Note that this version permits a partial range,
+    // begin to end, of the container to be used.
+    series.push_back(
+      svg_2d_plot_series(
+      boost::make_transform_iterator(container.begin(), functor),
+      boost::make_transform_iterator(container.end(),   functor),
+      title)
+    );
+    return series[series.size() - 1]; // Reference to data series just added.
+  }
+
+     svg_2d_plot& svg_2d_plot::write(std::ostream& s_out)
+      { // Write the image to an ostream.
+        update_image();
+        image.write(s_out); // Use the ostream version of write.
+        return *this;
+      }
+
+
+  const std::string& svg_2d_plot::y_label_font_family()
+  {
+    return y_axis_label_style_.font_family();
+  }
 
 #if defined (BOOST_MSVC)
 #  pragma warning(pop)

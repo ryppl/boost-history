@@ -11,6 +11,8 @@
 #ifndef BOOST_SVG_QUANTILE_HPP
 #define BOOST_SVG_QUANTILE_HPP
 
+#include <vector>
+using std::vector;
 
 // Estimate p th quantile of data using one of 5 definitions.
 // Default is the recommendation of Hyndman and Fan = definition #8.

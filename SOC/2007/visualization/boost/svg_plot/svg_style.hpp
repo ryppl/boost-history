@@ -32,14 +32,16 @@ namespace svg
 {
 
 // Forward declarations of classes in svg_style.hpp
-class svg_style;
-class text_style;
-class value_style;
-class plot_point_style;
-class plot_line_style;
-class axis_line_style;
-class ticks_labels_style;
-class box_style;
+class svg_style; // Holds the basic stroke, fill colors and width, and their switches.
+class text_style; // Text font family, size ...
+class value_style; // Data series point value information, text, color, uncertainty & df, orientation.
+class plot_point_style; // Shape, color, (optional value & uncertainty) of data point markers.
+class plot_line_style; // Style of line joining data series values.
+class axis_line_style; // Style of the x and/or y axes lines. But NOT the ticks and value labels.
+class ticks_labels_style; // Style of the x and y axes ticks, grids and their value labels..
+class box_style; //  Box colors, size and border switches.
+class histogram_style;  // Options for histograms.
+class bar_style;  // Style of bars.
 
 enum rotate_style
 { // Rotation in degrees from horizontal.
@@ -120,12 +122,14 @@ public:
   void write(std::ostream& os); // Output to file or stream.
 
   // operators useful for testing at least.
+  // TODO add operator << ?
   bool operator==(svg_style& s);
   bool operator!=(svg_style& s);
 
 }; // class svg_style
 
 // class svg Definitions.
+// Constructors.
 
   svg_style::svg_style(const svg_color& stroke, const svg_color& fill, unsigned int width)
   :
@@ -143,6 +147,7 @@ public:
   { // Default constructor initialises all private data.
   }
 
+  // Member Functions definitions.
   svg_color svg_style::fill_color() const
   {
     return svg_color(fill_); 
@@ -274,7 +279,7 @@ public:
   // End of svg_style definitions.
 
 class text_style
-{
+{ // text style - font family, size, weight, style, stretch, decoration.
   friend std::ostream& operator<< (std::ostream&, const text_style&);
   friend bool operator== (const text_style&, const text_style&);
   friend bool operator!= (const text_style&, const text_style&);
@@ -316,7 +321,7 @@ public:
 
 }; //   class text_style
 
-// class text_style function *Definitions* separated.
+// class text_style function *Definitions*.
 
   text_style::text_style(
     int size,  
@@ -502,7 +507,16 @@ public:
   bool df_on_; // If an degrees of freedom estimate is to be appended.
 
   public:
-    value_style()
+    value_style();
+    value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
+    text_style ts, const svg_color& scol /* = black */, svg_color fcol, bool pm /*= false*/, bool df /*= false*/);
+
+}; // class value_style 
+
+// class value_style Member Functions definitions.
+// Constructor.
+
+value_style::value_style()
     :
     value_label_rotation_(horizontal),
     value_precision_(3), // Reduced from default of 6 which is usually too long.
@@ -516,7 +530,7 @@ public:
     { // Default constructor initialises all private data.
     }
 
-    value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
+    value_style::value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
       text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false)
     :
     value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
@@ -524,7 +538,7 @@ public:
     { // Constructor.
     }
 
-}; // class value_style 
+// End class value_style Member Functions definitions.
 
 enum point_shape
 { // Marking a data point.
@@ -560,7 +574,7 @@ enum point_shape
 }; // enum point_shape
 
 class plot_point_style
-{
+{ // Shape, color, (optional value & uncertainty) of data point markers.
   friend std::ostream& operator<< (std::ostream&, plot_point_style);
 
 public:
@@ -586,7 +600,27 @@ public:
   //text_style value_style_; // Size, font, color etc of the value.
 
   plot_point_style(const svg_color& stroke = black, const svg_color& fill = blank,
-    int size = 10, point_shape shape = round, const std::string& symbols = "X")
+    int size = 10, point_shape shape = round, const std::string& symbols = "X");
+
+  plot_point_style& size(int i);
+  int size();
+  plot_point_style& fill_color(const svg_color& f);
+  svg_color& fill_color();
+  plot_point_style& stroke_color(const svg_color& f);
+  svg_color& stroke_color();
+  plot_point_style& shape(point_shape s);
+  point_shape shape();
+  plot_point_style& symbols(const std::string s);
+  std::string& symbols();
+  plot_point_style& style(text_style ts);
+  text_style& style() const;
+}; // struct plot_point_style
+
+// class plot_point_style function Definitions.
+// Constructor.
+
+  plot_point_style::plot_point_style(const svg_color& stroke, const svg_color& fill,
+    int size, point_shape shape, const std::string& symbols)
   :
     fill_color_(fill), stroke_color_(stroke), size_(size),
     shape_(shape), symbols_(symbols),
@@ -597,73 +631,76 @@ public:
     symbols_style_.font_size(size);
   }
 
-  plot_point_style& size(int i)
+// Member function Definitions.
+
+ plot_point_style& plot_point_style::size(int i)
   {
     size_ = i; // Shapes.
     symbols_style_.font_size(i); // In case using a symbol.
     return *this;
   }
 
-  int size()
+  int plot_point_style::size()
   {
     return size_;
   }
 
-  plot_point_style& fill_color(const svg_color& f)
+  plot_point_style& plot_point_style::fill_color(const svg_color& f)
   {
     fill_color_ = f;
     return *this;
   }
 
-  svg_color& fill_color()
+  svg_color& plot_point_style::fill_color()
   {
     return fill_color_;
   }
 
-  plot_point_style& stroke_color(const svg_color& f)
+  plot_point_style& plot_point_style::stroke_color(const svg_color& f)
   {
     stroke_color_ = f;
     return *this;
   }
 
-  svg_color& stroke_color()
+  svg_color& plot_point_style::stroke_color()
   {
     return stroke_color_;
   }
 
-  plot_point_style& shape(point_shape s)
+  plot_point_style& plot_point_style::shape(point_shape s)
   {
     shape_ = s;
     return *this;
   }
 
-  point_shape shape()
+  point_shape plot_point_style::shape()
   {
     return shape_;
   }
 
-  plot_point_style& symbols(const std::string s)
+  plot_point_style& plot_point_style::symbols(const std::string s)
   { // Override default symbol "X" - only effective if .shape(symbol) used.
     symbols_ = s;
     return *this;
   }
 
-  std::string& symbols()
+  std::string& plot_point_style::symbols()
   {
     return symbols_;
   }
 
-  plot_point_style& style(text_style ts)
+  plot_point_style& plot_point_style::style(text_style ts)
   {
     symbols_style_ = ts;
     return *this;
   }
 
-  text_style& style() const
+  text_style& plot_point_style::style() const
   { // To allow control of symbol font, size, decoration etc.
     return const_cast<text_style&>(symbols_style_); 
   }
-}; // struct plot_point_style
+
+// End class plot_point_style function *Definitions* separated.
 
 std::ostream& operator<< (std::ostream& os, plot_point_style p)
 {  //
@@ -689,69 +726,89 @@ public:
     double width_;
     bool line_on_;
     bool bezier_on_;
+    plot_line_style(const svg_color& col = black, const svg_color& fill_col = blank, double width = 2, bool line_on = true, bool bezier_on = false);
 
-    plot_line_style(const svg_color& col = black, const svg_color& fill_col = blank, double width = 2, bool line_on = true, bool bezier_on = false)
+  plot_line_style& width(double w);
+  double width();
+  plot_line_style& color(const svg_color& f);
+  svg_color& color();
+  plot_line_style& area_fill(const svg_color& f);
+  svg_color& area_fill();
+  bool line_on() const;
+  plot_line_style& line_on(bool is) ;
+  bool bezier_on() const;
+  plot_line_style& bezier_on(bool is); 
+
+}; // class plot_line_style
+
+// class plot_line_style function Definitions.
+
+// Constructor.
+  plot_line_style::plot_line_style(const svg_color& col, const svg_color& fill_col, double width, bool line_on, bool bezier_on)
     :
     stroke_color_(col), area_fill_(fill_col), width_(width), line_on_(line_on), bezier_on_(bezier_on)
     { // Defaults for all private data.
     }
 
-  plot_line_style& width(double w)
+// Member Functions.
+
+  plot_line_style& plot_line_style::width(double w)
   {
     width_ = w;
     return *this; // Make chainable.
   }
 
-  double width()
+  double plot_line_style::width()
   {
     return width_;
   }
 
-  plot_line_style& color(const svg_color& f)
+  plot_line_style& plot_line_style::color(const svg_color& f)
   {
     stroke_color_ = f;
     return *this; // Make chainable.
   }
 
-  svg_color& color()
+  svg_color& plot_line_style::color()
   {
     return stroke_color_;
   }
 
-  plot_line_style& area_fill(const svg_color& f)
+  plot_line_style& plot_line_style::area_fill(const svg_color& f)
   {
     area_fill_ = f;
     return *this; // Make chainable.
   }
 
-  svg_color& area_fill()
+  svg_color& plot_line_style::area_fill()
   {
     return area_fill_;
   }
 
-  bool line_on() const
+  bool plot_line_style::line_on() const
   {
     return line_on_;
   }
 
-  plot_line_style& line_on(bool is) 
+  plot_line_style& plot_line_style::line_on(bool is) 
   {
     line_on_ = is;
     return *this; // Make chainable.
   }
 
-  bool bezier_on() const
+  bool plot_line_style::bezier_on() const
   {
     return bezier_on_;
   }
 
-  plot_line_style& bezier_on(bool is) 
+  plot_line_style& plot_line_style::bezier_on(bool is) 
   {
     bezier_on_ = is;
     return *this; // Make chainable.
   }
 
-}; // class plot_line_style
+// End class plot_line_style function Definitions.
+
 
 std::ostream& operator<< (std::ostream& os, plot_line_style p)
 {  //
@@ -794,13 +851,41 @@ public:
   bool label_units_on_; // Label X-axis units, example: "cm".
   bool axis_line_on_; // Draw a X horizontal or Y vertical axis line.
 
+  // class axis_line_style constructor. 
   axis_line_style(dim d = X,
-    double min = -10., double max = +10., // Defaults.
+    double min = -10.,
+    double max = +10., // Defaults.
     // See also default in ticks_labels_style.
-    const svg_color col = black, double width = 1,
-    int axis_position = 0, bool label_on = true,
+    const svg_color col = black,
+    double width = 1,
+    int axis_position = 0,
+    bool label_on = true,
     bool label_units_on = false,
-    bool axis_lines_on = true)
+    bool axis_lines_on = true);
+
+  // class axis_line_style member functions Declarations:
+  // Set and get member functions.
+  axis_line_style& color(const svg_color& color);
+  svg_color color();
+  axis_line_style& width(double w);
+  double width();
+  bool label_on() const;
+  axis_line_style& label_on(bool is) ;
+  bool label_units_on() const;
+  axis_line_style& label_units_on(bool is) ;
+  axis_line_style& position(int pos);
+  double position();
+}; // class axis_line_style
+
+// class axis_line_style Member Functions Definitions:
+
+  axis_line_style::axis_line_style(dim d,
+    double min, double max, // Defaults.
+    // See also default in ticks_labels_style.
+    const svg_color col, double width,
+    int axis_position, bool label_on,
+    bool label_units_on,
+    bool axis_lines_on)
     :
     dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
     axis_position_(axis_position),
@@ -819,51 +904,63 @@ public:
     }
  } // axis_line_style constructor
 
-  // Set and get functions.
-  axis_line_style& color(const svg_color& color)
+axis_line_style& axis_line_style::color(const svg_color& color)
   {
     color_ = color;
     return *this; // Make chainable.
   }
 
-  svg_color color()
+  svg_color axis_line_style::color()
   {
     return color_;
   }
    
-  axis_line_style& width(double w)
+  axis_line_style& axis_line_style::width(double w)
   {
     axis_width_ = w;
     return *this; // Make chainable.
   }
 
-  double width()
+  double axis_line_style::width()
   {
     return axis_width_;
   }
 
-  bool label_on() const
+  bool axis_line_style::label_on() const
   {
     return label_on_;
   }
 
-  axis_line_style& label_on(bool is) 
+  axis_line_style& axis_line_style::label_on(bool is) 
   {
     label_on_ = is;
     return *this; // Make chainable.
   }
 
-  bool label_units_on() const
+  bool axis_line_style::label_units_on() const
   {
     return label_units_on_;
   }
 
-  axis_line_style& label_units_on(bool is) 
+  axis_line_style& axis_line_style::label_units_on(bool is) 
   {
     label_units_on_ = is;
     return *this; // Make chainable.
   }
-}; // class axis_line_style
+
+  axis_line_style& axis_line_style::position(int pos)
+  {
+    axis_position_ = pos;
+    return *this; // Make chainable.
+  }
+
+  double axis_line_style::position()
+  {
+    return axis_position_;
+  }
+
+
+// End class axis_line_style member functions definitions:
 
 
 class ticks_labels_style
@@ -1096,12 +1193,38 @@ public:
     bool border_on_; // Display the border.
     bool fill_on_; // Color fill the box.
 
-    box_style(const svg_color& scolor = black,
+     box_style(const svg_color& scolor = black,
       const svg_color& fcolor = white, // No fill.
       double width = 1, // of border
       double margin = 4., // 
       bool border_on = true, // Draw a border of width.
-      bool fill_on = false) // Apply fill color.
+      bool fill_on = false); // Apply fill color.
+
+  box_style& stroke(const svg_color& color);
+  svg_color stroke();
+  box_style& fill(const svg_color& color);
+  svg_color fill();
+  box_style& width(double w);
+  double width();
+  box_style& margin(double w);
+  double margin();
+  bool border_on() const;
+  box_style& border_on(bool is) ;
+  bool fill_on() const;
+  box_style& fill_on(bool is) ;
+
+}; // class box_style
+
+// class box_style Definitions.
+
+// Constructor.
+
+box_style::box_style(const svg_color& scolor, // = black,
+      const svg_color& fcolor, // = white, // No fill.
+      double width,//  = 1, // of border
+      double margin, // = 4., // 
+      bool border_on,// = true, // Draw a border of width.
+      bool fill_on) //= false) // Apply fill color.
       :
     stroke_(scolor), fill_(fcolor), width_(width),
     margin_(margin),
@@ -1110,73 +1233,76 @@ public:
     { // Initializes all private data with defaults.
     }
 
-  box_style& stroke(const svg_color& color)
+// Member Functions definitions.
+
+  box_style& box_style::stroke(const svg_color& color)
   {
     stroke_ = color;
     return *this; // Make chainable.
   }
 
-  svg_color stroke()
+  svg_color box_style::stroke()
   {
     return stroke_;
   }
 
-  box_style& fill(const svg_color& color)
+  box_style& box_style::fill(const svg_color& color)
   {
     fill_ = color;
     return *this; // Make chainable.
   }
 
-  svg_color fill()
+  svg_color box_style::fill()
   {
     return fill_;
   }
 
-  box_style& width(double w)
+  box_style& box_style::width(double w)
   { 
     width_ = w;
     return *this; // Make chainable.
   }
 
-  double width()
+  double box_style::width()
   {
     return width_;
   }
 
-  box_style& margin(double w)
+  box_style& box_style::margin(double w)
   {
     margin_ = w;
     return *this; // Make chainable.
   }
 
-  double margin()
+   double box_style::margin()
   {
     return margin_;
   }
 
-  bool border_on() const
+  bool box_style::border_on() const
   {
     return border_on_;
   }
 
-  box_style& border_on(bool is) 
+  box_style& box_style::border_on(bool is) 
   {
     border_on_ = is;
     return *this; // Make chainable.
   }  
   
-  bool fill_on() const
+  bool box_style::fill_on() const
   {
     return fill_on_;
   }
 
-  box_style& fill_on(bool is) 
+  box_style& box_style::fill_on(bool is) 
   {
     fill_on_ = is;
     return *this; // Make chainable.
   }
 
-}; // class box_style
+// End class box_style Definitions.
+
 
 enum bar_option
 {
@@ -1199,29 +1325,40 @@ enum histogram_option
 };
 
 class histogram_style
-{
+{ // Options for histograms.
 public:
   histogram_option histogram_option_; // bar, no_histogram or column.
 
-  histogram_style(histogram_option opt = no_histogram)
-  :
-  histogram_option_(opt)
-  { // Default for all private data.
-    // Line width and area-fill are taken from the plot_line_style style.
-  }
+  histogram_style(histogram_option opt = no_histogram);
 
-  histogram_style& histogram(histogram_option opt)
-  { // stick or bar.
-    histogram_option_ = opt;
-    return *this; // Make chainable.
-  }
-
-  double histogram()
-  { // 
-    return histogram_option_;
-  }
-
+  histogram_style& histogram(histogram_option opt);
+  double histogram();
 }; // class histogram_style
+
+
+// class histogram_style Definitions.
+
+// Constructor.
+histogram_style::histogram_style(histogram_option opt)
+:
+histogram_option_(opt)
+{ // Default for all private data.
+  // Line width and area-fill are taken from the plot_line_style style.
+}
+
+// Member Functions Definitions.
+
+histogram_style& histogram_style::histogram(histogram_option opt)
+{ // stick or bar.
+  histogram_option_ = opt;
+  return *this; // Make chainable.
+}
+
+double histogram_style::histogram()
+{ // 
+  return histogram_option_;
+}
+// End class histogram_style Definitions.
 
 class bar_style
 { // TODO should inherit from svg_style?
@@ -1231,57 +1368,76 @@ public:
   double width_; // of bar, not enclosing line width.
   bar_option bar_option_; // stick or bar.
 
-  bar_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bar_option opt = no_bar)
-  :
-  color_(col), area_fill_(acol), width_(width),  bar_option_(opt)
-  { // Defaults for all private data.
-  }
-
-  bar_style& width(double w)
-  { // of bar, not the enclosing line (stroke) width.
-    width_ = w;
-    return *this; // Make chainable.
-  }
-
-  double width()
-  { // of bar, not enclosing line width.
-    return width_;
-  }
-
-  bar_style& color(const svg_color& f)
-  { // of line or enclosing line.
-    color_ = f;
-    return *this; // Make chainable.
-  }
-
-  svg_color& color()
-  { // of line or enclosing line.
-    return color_;
-  }
-
-  bar_style& area_fill(const svg_color& f)
-  { // rectangle fill color.
-    area_fill_ = f;
-    return *this; // Make chainable.
-  }
-
-  svg_color& area_fill()
-  { // rectangle fill color.
-    return area_fill_;
-  }
-
-  bar_style& bar(bar_option option)
-  { // stick or bar.
-    bar_option_ = option;
-    return *this; // Make chainable.
-  }
-
-  double bar_option()
-  { // stick or bar.
-    return bar_option_;
-  }
+  bar_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bar_option opt = no_bar);
+  bar_style& width(double w);
+  double width();
+  bar_style& color(const svg_color& f);
+  svg_color& color();
+  bar_style& area_fill(const svg_color& f);
+  svg_color& area_fill();
+  bar_style& bar_opt(bar_option option);
+  double bar_opt();
 
 }; // class bar_style
+
+// class bar_style Definitions.
+
+// Constructor.
+
+bar_style::bar_style(const svg_color& col, const svg_color& acol, double width, bar_option opt)
+:
+color_(col), area_fill_(acol), width_(width),  bar_option_(opt)
+{ // Defaults for all private data.
+}
+
+// Member Functions Definitions.
+
+bar_style& bar_style::width(double w)
+{ // of bar, not the enclosing line (stroke) width.
+  width_ = w;
+  return *this; // Make chainable.
+}
+
+double bar_style::width()
+{ // of bar, not enclosing line width.
+  return width_;
+}
+
+bar_style& bar_style::color(const svg_color& f)
+{ // of line or enclosing line.
+  color_ = f;
+  return *this; // Make chainable.
+}
+
+svg_color& bar_style::color()
+{ // of line or enclosing line.
+  return color_;
+}
+
+bar_style& bar_style::area_fill(const svg_color& f)
+{ // rectangle fill color.
+  area_fill_ = f;
+  return *this; // Make chainable.
+}
+
+svg_color& bar_style::area_fill()
+{ // rectangle fill color.
+  return area_fill_;
+}
+
+bar_style& bar_style::bar_opt(bar_option option)
+{ // stick or bar.
+  bar_option_ = option;
+  return *this; // Make chainable.
+}
+
+double bar_style::bar_opt()
+{ // stick or bar.
+  return bar_option_;
+}
+
+// End class bar_style Member Functions Definitions.
+
 
 const std::string strip_e0s(std::string s);
 
