@@ -20,6 +20,7 @@ namespace dsearch{
 template<class Key,class Mapped,class Key_traits,class Alloc=std::allocator<char> >
 class patricia{
 	private: 
+	typedef patricia<Key,Mapped,Key_traits,Alloc> self;
 	typedef typename Key_traits::const_iterator key_iterator;
 	typedef typename Key_traits::element_type key_element_type;
 
@@ -52,12 +53,11 @@ class patricia{
 		patricia_node(const key_type& key_,const std::size_t &index_,patricia_node *left_
 		,patricia_node *right_,patricia_node *par_) 
 		:par(par_),value(make_pair(key_,0)),index(index_),left(left_),right(right_)
-		{	
-			/*this->index=index;
-			this->left=left;
-			this->right=right;
-			this->par=par;
-			this->value.first=key;*/
+		{
+		}
+		patricia_node(const patricia_node &other)
+		:par(0),value(other.value),index(other.index),left(0),right(0)
+		{
 		}
 	};
 	typedef typename Alloc::template rebind<patricia_node>::other node_allocator_type;
@@ -70,6 +70,11 @@ class patricia{
 
 	patricia(): root(0)
 	{
+	}
+	
+	patricia(const self &other)
+	{
+		copy_patricia(other.root);
 	}
 
 	data_type &operator [](const key_type &k)
@@ -125,6 +130,45 @@ class patricia{
 		//if(root)
 		//	std::cout<<"NOT EMPTY "<<root->value.first<<std::endl;
 		return root==0;
+	}
+
+	void clear()
+	{
+		patricia_node *cur,*next;
+		if(root==0) return;
+		cur=root;
+		root=0;
+		while(true)
+		{
+			next=cur->left?cur->left:cur->right;
+			if(next==0)
+			{
+				next=cur->par;
+				delete cur;
+				if(next==0) return; 
+				if(next->left==cur)
+					next->left=0;
+				else
+					next->right=0;
+				cur=next;
+			}
+			else
+			if( next->par!=cur ) 
+			{
+				//entered up link. so mark the thing as zero.
+				if(cur->left==next)
+					cur->left=0;
+				else
+					cur->right=0;
+			}
+			else
+			cur=next;
+		}
+	}
+	
+	~patricia()
+	{
+		this->clear();
 	}
 
 	private:
@@ -402,7 +446,6 @@ class patricia{
 		else
 			uncommon_bit=(k1_it==k1_end)?((k2_it==k2_end)?2:0):1;
 
-
 		return std::make_pair<std::size_t,int>(pos,uncommon_bit);
 	}
 
@@ -448,6 +491,18 @@ class patricia{
 		}
 		return next;
 	}
+
+	/*key_iterator move_iterator(const key_iterator it,const iterator end_it,const std::size_t &cur_pos,const std::size_t &dest_pos)
+	{
+		std::size_t i=dest_pos-cur_pos;
+		key_iterator ret_it=it;
+		while(i){
+			if ( ret_it==end_it ) return end_it;
+			++ret_it;
+			--i;
+		}
+		return ret_it;
+	}*/
 
 	patricia_node* find_node(const patricia_node *cur, const key_type &key,rand_tag,std::size_t key_size=0)
 	{
@@ -699,6 +754,88 @@ class patricia{
 		to->index=found->index;
 	}
 
+	//used by copy_patricia
+	patricia_node *copy_patricia_find_par(patricia_node* const &this_cur,
+	const patricia_node* const &other_cur,const patricia_node * const &par)
+	{
+		patricia_node *cur=this_cur;
+		const patricia_node* o_cur=other_cur;
+		if(other_cur==0) return 0;
+		while(o_cur!=par)
+		{
+			cur=cur->par;
+			o_cur=o_cur->par;
+		}
+		return cur;
+	}
+
+	void copy_patricia(const patricia_node *other_root)
+	{
+		const patricia_node *const*other_cur,*other_temp,*other_prev;
+		patricia_node **cur,*prev;
+		if(other_root==0)
+		{
+			this->root=0;
+			return;
+		}
+
+		cur=&root;
+		std::cout<<"OTHER ROOT:"<<other_root<<std::endl;
+		other_cur=&other_root;
+		other_prev=0;
+		prev=0;
+		while(true)
+		{
+			assert(prev!=other_root);
+			if( (*other_cur) && (*other_cur)->par==other_prev)
+			{
+				(*cur)=node_allocator.allocate(1);
+				new(*cur) patricia_node(**other_cur);
+				assert((*cur)!=other_root);
+				assert(other_root);
+				assert((*cur)->right!=other_root);
+				(*cur)->par = prev;
+				std::cout<<(**cur).value.first<<" "<<(prev==0?"NULL":prev->value.first)<<std::endl;
+				other_prev=*other_cur;
+				other_cur=&(other_prev->left);
+				prev=*cur;
+				cur=&(prev->left);
+				std::cout<<"copy:here1"<<std::endl;
+				continue;
+			}
+			std::cout<<"copy:here2"<<std::endl;
+			(*cur)=copy_patricia_find_par(prev,other_prev,*other_cur);
+			assert((*cur)!=other_root);
+			//leaf node!!
+			if((*other_cur)==other_prev->left)
+			{
+				//assert(*cur!=other_root);
+				other_cur=&(other_prev->right);
+				//assert(other_prev!=prev);
+				cur=&(prev->right);
+				std::cout<<prev->value.first<<std::endl;
+				std::cout<<( (*other_cur)?(*other_cur)->value.first:"HOW NULL" )<<std::endl;
+				assert((*cur)!=other_root);
+			}
+			else
+			{
+				other_temp=other_prev->right;
+				while(other_temp==other_prev->right)
+				{
+					other_temp=other_prev;
+					other_prev=other_prev->par;
+					prev=prev->par;
+					if(other_prev==0) 
+					{
+						std::cout<<"ROOT:"<<root<<std::endl;
+						return;
+					}
+				}
+				other_cur=&other_prev->right;
+				cur=&prev->right;
+			}
+		}
+	}
 };
 
 }//namespace dsearch
