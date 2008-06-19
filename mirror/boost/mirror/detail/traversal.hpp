@@ -203,7 +203,7 @@ namespace detail {
 					MetaClass(), 
 					meta_path::make_node_context(
 						ClassNodePath(),
-						MetaClass::base_classes()
+						typename MetaClass::base_classes()
 					)
 				);
 			}
@@ -214,7 +214,7 @@ namespace detail {
 					MetaClass(), 
 					meta_path::make_node_context(
 						ClassNodePath(),
-						MetaClass::base_classes()
+						typename MetaClass::base_classes()
 					)
 				);
 			}
