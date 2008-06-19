@@ -21,14 +21,15 @@ template <typename V, typename A> class vertex_list_impl;
 template <template <typename> class Allocator>
 struct basic_vertex_list
 {
-    typedef none key_type;
+    typedef unused key_type;
     typedef void* descriptor_type;
 
     template <typename Vertex>
     struct store
     {
         typedef vertex_list_elem<Vertex, Allocator> stored_vertex;
-        typedef vertex_list_impl<stored_vertex, Allocator<stored_vertex> > type;
+        typedef Allocator<stored_vertex> allocator_type;
+        typedef vertex_list_impl<stored_vertex, allocator_type > type;
     };
 };
 
@@ -83,26 +84,47 @@ public:
     // Add/remove vertices.
     vertex_descriptor add();
     vertex_descriptor add(vertex_properties const& vp);
-
-    // Remove vertices.
+    vertex_descriptor find(vertex_properties const& vp);
     void remove(vertex_descriptor v);
+    void remove(vertex_properties const& vp);
 
-    // Number of vertices.
-    size_type size() const;
+    /** Return the number of vertices in the set. */
+    size_type size() const
+    { return _size; }
 
-    // Vertex iteration.
-    vertex_range vertices() const;
-    vertex_iterator begin_vertices() const;
-    vertex_iterator end_vertices() const;
+    /** @name Vertex Iterators */
+    //@{
+    vertex_iterator begin_vertices() const
+    { return _verts.begin(); }
 
-    // Vertex accessors.
-    vertex_type& vertex(vertex_descriptor);
-    vertex_type const& vertex(vertex_descriptor) const;
-    vertex_properties& properties(vertex_descriptor);
-    vertex_properties const& properties(vertex_descriptor) const;
+    vertex_iterator end_vertices() const
+    { return _verts.end(); }
+
+    vertex_range vertices() const
+    { return std::make_pair(begin_vertices(), end_vertices()); }
+    //@}
+
+    /** @name Vertex Accessors */
+    //@{
+    vertex_type& vertex(vertex_descriptor v)
+    { return *static_cast<vertex_type*>(v); }
+
+    vertex_type const& vertex(vertex_descriptor v) const
+    { return *static_cast<vertex_type*>(v); }
+    //@}
+
+    /** @name Vertex Properties */
+    //@{
+    vertex_properties& properties(vertex_descriptor v)
+    { return vertex(v).properties(); }
+
+    vertex_properties const& properties(vertex_descriptor v) const
+    { return vertex(v).properties(); }
+    //@}
 
 private:
     vertex_store _verts;
+    size_type _size;
 };
 
 #define BOOST_GRAPH_VL_PARAMS \
@@ -114,6 +136,7 @@ private:
 template <BOOST_GRAPH_VL_PARAMS>
 vertex_list_impl<V,A>::vertex_list_impl()
     : _verts()
+    , _size(0)
 { }
 
 /**
@@ -140,9 +163,24 @@ template <BOOST_GRAPH_VL_PARAMS>
 typename vertex_list_impl<V,A>::vertex_descriptor
 vertex_list_impl<V,A>::add(vertex_properties const& vp)
 {
-    typename vertex_store::iterator i = _verts.insert(_verts.end(), vertex_type(vp));
+    ++_size;
+    iterator i = _verts.insert(_verts.end(), vertex_type(vp));
     i->iter = i;
     return &(*i);
+}
+
+/**
+ * Find the vertex with the given properties. If there are multiple vertices
+ * with the given properties, only the first is returned.
+ *
+ * @complexity O(V)
+ * @requires EqualityComparable<VertexProps>
+ */
+template <typename V, typename A>
+typename vertex_list_impl<V,A>::vertex_descriptor
+vertex_list_impl<V,A>::find(vertex_properties const& vp)
+{
+    return &const_cast<vertex_type&>(*std::find(_verts.begin(), _verts.end(), vp));
 }
 
 /**
@@ -155,145 +193,26 @@ template <BOOST_GRAPH_VL_PARAMS>
 void
 vertex_list_impl<V,A>::remove(vertex_descriptor v)
 {
+    --_size;
     vertex_type* vp = static_cast<vertex_type*>(v);
     _verts.erase(vp->iter);
 }
 
 /**
- * Return an iterator range over the vertices in this graph.
+ * Remove the vertex with the given properties from the list. This searches
+ * the list for the first element with the given vertex and erases it. If there
+ * are multiple elements with these properties, only the first is removed.
+ *
+ * @complexity O(V)
  */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::vertex_range
-vertex_list_impl<V,A>::vertices() const
+template <typename V, typename A>
+void
+vertex_list_impl<V,A>::remove(vertex_properties const& vp)
 {
-    return std::make_pair(begin_vertices(), end_vertices());
-}
-
-/**
- * Return an iterator to the first vertex in the list.
- */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::vertex_iterator
-vertex_list_impl<V,A>::begin_vertices() const
-{
-    return _verts.begin();
-}
-
-/**
- * Return an iterator past the end of the vertices in the list.
- */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::vertex_iterator
-vertex_list_impl<V,A>::end_vertices() const
-{
-    return _verts.end();
-}
-
-/**
- * Return the number of vertices in the store.
- */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::size_type
-vertex_list_impl<V,A>::size() const
-{
-    return _verts.size();
-}
-
-/**
- * Get access to the given vertex.
- */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::vertex_type&
-vertex_list_impl<V,A>::vertex(vertex_descriptor v)
-{
-    return *static_cast<vertex_type*>(v);
-}
-
-/**
- * Get access to the given vertex.
- */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::vertex_type const&
-vertex_list_impl<V,A>::vertex(vertex_descriptor v) const
-{
-    return *static_cast<vertex_type*>(v);
-}
-
-/**
- * Get the properties ofthe given vertex.
- */
-template <BOOST_GRAPH_VL_PARAMS>
-typename vertex_list_impl<V,A>::vertex_properties&
-vertex_list_impl<V,A>::properties(vertex_descriptor v)
-{
-    return vertex(v).properties();
+    remove(find(vp));
 }
 
 #undef BOOST_GRAPH_VL_PARAMS
-
-#if 0
-
-/**
- * Return the number of vertices in the vertex store.
- *
- * @complexity O(V)
- *
- * @todo I'm not sure about the interface I'd like to build for list storage.
- * If we don't include a lot of splice-style operations, then it's not a big
- * deal to manage the size of this list internally.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertices_size_type
-vertex_list_impl<V,A>::num_vertices() const
-{
-    return _verts.size();
-}
-
-/**
- * Return the iterator range for the graph.
- */
-template <typename V, template <typename> class A>
-std::pair<
-    typename vertex_list_impl<V,A>::vertex_iterator,
-    typename vertex_list_impl<V,A>::vertex_iterator
->
-vertex_list_impl<V,A>::vertices() const
-{
-    return std::make_pair(_verts.begin(), _verts.end());
-}
-
-/**
- * Return the iterator for the begining of the vertices.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertex_iterator
-vertex_list_impl<V,A>::begin_vertices() const
-{
-    return _verts.begin();
-}
-
-/**
- * Return the iterator for the begining of the vertices.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertex_iterator
-vertex_list_impl<V,A>::end_vertices() const
-{
-    return _verts.end();
-}
-
-
-/**
- * Access the properties ofthe given vertex.
- */
-template <typename V, template <typename> class A>
-typename vertex_list_impl<V,A>::vertex_properties const&
-vertex_list_impl<V,A>::properties(vertex_descriptor v) const
-{
-    return *vertex(v);
-}
-
-#endif
 
 #endif
 

@@ -3,17 +3,25 @@
 #define VERTEX_VECTOR_HPP
 
 #include <vector>
+#include <algorithm>
 
 // Forward declarations
 template <typename V, typename A> struct vertex_vector_impl;
 
 /**
+ * The vertex vector stores vertices in a vector, allowing for fast inserts
+ * and iteration, but slow finds and removals.
  *
+ * The Alloc parameter is a unary template class responsible for allocating
+ * the stored vertices. We use a template rather than a type because the caller
+ * does not know the actual types being allocated.
+ *
+ * @param Alloc A unary template class that will allocate stored vertices.
  */
-template <template <typename> class Allocator>
+template <template <typename> class Alloc>
 struct basic_vertex_vector
 {
-    typedef none key_type;
+    typedef unused key_type;
     typedef std::size_t descriptor_type;
 
     // The store metafunction generates the type used to store vertices in
@@ -22,7 +30,9 @@ struct basic_vertex_vector
     template <typename Vertex>
     struct store
     {
-        typedef vertex_vector_impl<Vertex, Allocator<Vertex> > type;
+        typedef Vertex stored_vertex;
+        typedef Alloc<stored_vertex> allocator_type;
+        typedef vertex_vector_impl<stored_vertex, allocator_type> type;
     };
 };
 
@@ -59,32 +69,54 @@ public:
     // Constructors
     vertex_vector_impl();
 
-    // Add/remove vertex.
+    /** @name Add Vertex */
+    //@{
     vertex_descriptor add();
-    vertex_descriptor add(vertex_properties const& vp);
+    vertex_descriptor add(vertex_properties const&);
+    //@}
 
-    // Number of vertices.
-    size_type size() const;
+    /** Return the vertex with the given properties */
+    vertex_descriptor find(vertex_properties const&) const;
 
-    // Vertex iteration.
-    vertex_range vertices() const;
-    vertex_iterator begin_vertices() const;
-    vertex_iterator end_vertices() const;
+    /** Rerturn the number of vertices in the vector. */
+    size_type size() const
+    { return _verts.size(); }
 
-    // Vertex/vertex property accessors.
-    vertex_type& vertex(vertex_descriptor v);
-    vertex_type const& vertex(vertex_descriptor v) const;
-    vertex_properties& properties(vertex_descriptor);
-    vertex_properties const& properties(vertex_descriptor) const;
+    /** @name Vertex Iterators */
+    //@{
+    vertex_iterator begin_vertices() const
+    { return _verts.begin(); }
+
+    vertex_iterator end_vertices() const
+    { return _verts.end(); }
+
+    vertex_range vertices() const
+    { return std::make_pair(begin_vertices(), end_vertices()); }
+    //@}
+
+    /** @name Vertex Accessors */
+    //@{
+    vertex_type& vertex(vertex_descriptor v)
+    { return _verts[v]; }
+
+    vertex_type const& vertex(vertex_descriptor v) const
+    { return _verts[v]; }
+    //@{
+
+    /** @name Property Accessors */
+    //@{
+    vertex_properties& properties(vertex_descriptor v)
+    { return vertex(v).properties(); }
+
+    vertex_properties const& properties(vertex_descriptor v) const
+    { return vertex(v).properties(); }
+    //@{
 
 private:
     vertex_store _verts;
 };
 
-#define BOOST_GRAPH_VV_PARAMS \
-    typename V, typename A
-
-template <BOOST_GRAPH_VV_PARAMS>
+template <typename V, typename A>
 vertex_vector_impl<V,A>::vertex_vector_impl()
     : _verts()
 { }
@@ -94,9 +126,9 @@ vertex_vector_impl<V,A>::vertex_vector_impl()
  * the descriptor to the added vertex. Adding a vertex does not invalidate
  * any vertices or edges.
  *
- * @complexity O(1) amortized
+ * @complexity O(~1)
  */
-template <BOOST_GRAPH_VV_PARAMS>
+template <typename V, typename A>
 typename vertex_vector_impl<V,A>::vertex_descriptor
 vertex_vector_impl<V,A>::add()
 {
@@ -107,9 +139,9 @@ vertex_vector_impl<V,A>::add()
  * Add a vertex to the store with the given properties. Adding a vertex does
  * not invalidate any other descriptors.
  *
- * @complexity O(1) amortized
+ * @complexity O(~1)
  */
-template <BOOST_GRAPH_VV_PARAMS>
+template <typename V, typename A>
 typename vertex_vector_impl<V,A>::vertex_descriptor
 vertex_vector_impl<V,A>::add(vertex_properties const& vp)
 {
@@ -119,135 +151,16 @@ vertex_vector_impl<V,A>::add(vertex_properties const& vp)
 }
 
 /**
- * Return an iterator range over the vertices in this graph.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::vertex_range
-vertex_vector_impl<V,A>::vertices() const
-{
-    return std::make_pair(begin_vertices(), end_vertices());
-}
-
-/**
- * Return an iterator to the first vertex in the vector.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::vertex_iterator
-vertex_vector_impl<V,A>::begin_vertices() const
-{
-    return vertex_iterator(_verts, _verts.begin());
-}
-
-/**
- * Return an iterator past the end of the vertices in the vector.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::vertex_iterator
-vertex_vector_impl<V,A>::end_vertices() const
-{
-    return vertex_iterator(_verts, _verts.end());
-}
-
-/**
- * Return the number of vertices in the store.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::size_type
-vertex_vector_impl<V,A>::size() const
-{
-    return _verts.size();
-}
-
-/**
- * Get access to the underlying vertex.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::vertex_type&
-vertex_vector_impl<V,A>::vertex(vertex_descriptor v)
-{
-    return _verts[v];
-}
-
-/**
- * Get access to the underlying vertex.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::vertex_type const&
-vertex_vector_impl<V,A>::vertex(vertex_descriptor v) const
-{
-    return _verts[v];
-}
-
-/**
- * Get the properties of the given vertex.
- */
-template <BOOST_GRAPH_VV_PARAMS>
-typename vertex_vector_impl<V,A>::vertex_properties&
-vertex_vector_impl<V,A>::properties(vertex_descriptor v)
-{
-    return vertex(v).properties();
-}
-
-#undef BOOST_GRAPH_VV_PARAMS
-
-#if 0
-
-/**
- * Return the number of vertices in the vertex store.
+ * Find the vertex with the given properties.
  *
- * @complexity constant
+ * @complexity O(V)
  */
-template <typename V, template <typename> class A>
-typename vertex_vector_impl<V,A>::vertices_size_type
-vertex_vector_impl<V,A>::num_vertices() const
+template <typename V, typename A>
+typename vertex_vector_impl<V,A>::vertex_descriptor
+vertex_vector_impl<V,A>::find(vertex_properties const& vp) const
 {
-    return _verts.size();
+    return std::distance(_verts.begin(),
+                         std::find(_verts.begin(), _verts.end(), vp));
 }
-
-/**
- * Return the iterator range for the graph.
- */
-template <typename V, template <typename> class A>
-std::pair<
-    typename vertex_vector_impl<V,A>::vertex_iterator,
-    typename vertex_vector_impl<V,A>::vertex_iterator
->
-vertex_vector_impl<V,A>::vertices() const
-{
-    return std::make_pair(begin_vertices(), end_vertices());
-}
-
-/**
- * Get an iterator to the beginning of the vertices.
- */
-template <typename V, template <typename> class A>
-typename vertex_vector_impl<V,A>::vertex_iterator
-vertex_vector_impl<V,A>::begin_vertices() const
-{
-    return vertex_iterator(_verts, _verts.begin());
-}
-
-/**
- * Get an iterator past the end of the vertices.
- */
-template <typename V, template <typename> class A>
-typename vertex_vector_impl<V,A>::vertex_iterator
-vertex_vector_impl<V,A>::end_vertices() const
-{
-    return vertex_iterator(_verts, _verts.end());
-}
-
-
-/**
- * Get access to the properties of the given vertex.
- */
-template <typename V, template <typename> class A>
-typename vertex_vector_impl<V,A>::vertex_properties const&
-vertex_vector_impl<V,A>::properties(vertex_descriptor v) const
-{
-    return *vertex(v);
-}
-
-#endif
 
 #endif

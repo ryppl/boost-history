@@ -17,6 +17,9 @@
 //   need to exist. We can just pretend to allocate them and return
 //   an integer "pseudo descriptor".
 
+// Note that the graph interface will fail to compile if a mapped graph is
+// requested whose key and property types are the same.
+
 #include "descriptor.hpp"
 
 #include "undirected_vertex.hpp"
@@ -24,12 +27,12 @@
 #include "vertex_vector.hpp"
 #include "vertex_list.hpp"
 #include "vertex_set.hpp"
+#include "vertex_map.hpp"
 
 #include "undirected_edge.hpp"
 #include "edge_vector.hpp"
 #include "edge_list.hpp"
 #include "edge_set.hpp"
-#include "edge_iterator.hpp"
 
 #include "adjacency_iterator.hpp"
 
@@ -83,28 +86,82 @@ public:
     typedef typename vertex_store::vertex_range vertex_range;
     // FIXME: This is a bit hacky, but without constrained members, we need a key
     // type to enable mapped vertices.
-    typedef typename VertexStore::key_type key_type;
-
-    // Because edges are "distributed" among vertices, the edge iterators are
-    // somewhat special.
-    typedef basic_edge_iterator<this_type> edge_iterator;
-    typedef std::pair<edge_iterator, edge_iterator> edge_range;
+    typedef typename VertexStore::key_type vertex_key;
 
 
     // Constructors
     undirected_graph();
 
-    /** @name Vertex Set
-     * These functions operate (mostly) on the vertices of the graph. These
-     * functions include the ability to add, disconnect, and remove vertices.
+    /** @name Add Vertex
+     * Add a vertex to the graph. Add operations are determined by the concepts
+     * modeled by the vertex set.
+     *
+     * UnlabeledVertices        add_vertex()
+     * LabeledVerteces          add_vertex(vertex_properties)
+     * LabeledUniqueVertices    add_vertex(vertex_properties)
+     * MappedUniqueVertices     add_vertex(vertex_key)
      */
     //@{
     vertex_descriptor add_vertex();
     vertex_descriptor add_vertex(vertex_properties const&);
-    vertex_descriptor add_vertex(key_type const&, vertex_properties const&);
-    void disconnect_vertex(vertex_descriptor);
-    void remove_vertex(vertex_descriptor);
+    vertex_descriptor add_vertex(vertex_key const&, vertex_properties const&);
     //@}
+
+    /** @name Find Vertex
+     * Find a vertex in the graph. These methods only exist for graphs that
+     * have UniqueVertices. These functions can also be used to find the first
+     * vertex of a non-unique vertices.
+     *
+     * LabeledUniqueVertices    find_vertex(vertex_properties)
+     * MappedUniqueVertices     find_vertex(vertex_key)
+     */
+    //@{
+    vertex_descriptor find_vertex(vertex_properties const&) const;
+    vertex_descriptor find_vertex(vertex_key const&) const;
+    //@{
+
+    /** @name Disconnect Vertex
+     * Disconnect a vertex from the graph by removing all of its incident edges.
+     * These functions only exist for graphs with ReducibleEdgeSets. Functions
+     * that take properties or keys are provided for convenience, but have
+     * additional dependencies and cost. These additonal functions are
+     * equivalent to disconnect_vertex(find_vertex(x)) where x is either a
+     * vertex_properties or vertex_key.
+     *
+     * ReducibleEdgeSet         disconnect_vertex(vertex_descriptor)
+     * LabeledUniqueVertices    disconnect_vertex(vertex_properties)
+     * MappedUniqueVertices     disconnect_vertex(vertex_key)
+     */
+    //@{
+    void disconnect_vertex(vertex_descriptor);
+    void disconnect_vertex(vertex_properties const&);
+    void disconnect_vertex(vertex_key const&);
+    //@}
+
+    /** @name Remove Vertex
+     * Remove a vertex from the graph. These functions only exist for graphs
+     * with ReducibleVertexSets. Functions that take properties or keys are
+     * provided for convenience, but have additional requirements and cost.
+     * These additional functions are equivalent to remove_vertex(find_vertex(x))
+     * where x is either a vertex_properties or vertex_key.
+     *
+     * ReducibleVertexSet       remove_vertex(vertex_descriptor)
+     * LabeledUniqueVertices    remove_vertex(vertex_properties)
+     * MappedUniqueVertices     remove_vertex(vertex_key)
+     */
+    //@{
+    void remove_vertex(vertex_descriptor);
+    void remove_vertex(vertex_properties const&);
+    void remove_vertex(vertex_key const&);
+    //@}
+
+    /** @name Vertex Key
+     * Return the key for the given vertex. This is only provided for graphs
+     * with MappedVertices (can be multimapped).
+     */
+    //@{
+    vertex_key const& key(vertex_descriptor) const;
+    //@{
 
     /** @name Edge Set
      * These functions operate on the edges of the graph. This functions
@@ -131,9 +188,9 @@ public:
      * These function allow iteration over the edge set.
      */
     //@{
-    edge_range edges() const;
-    edge_iterator begin_edges() const;
-    edge_iterator end_edges() const;
+    // edge_range edges() const;
+    // edge_iterator begin_edges() const;
+    // edge_iterator end_edges() const;
     edges_size_type num_edges() const;
     //@}
 
@@ -152,9 +209,13 @@ public:
     incident_edges_size_type degree(vertex_descriptor) const;
     //@{
 
-    // Property accesors
+    /** @name Property Accessors
+     * Access the properties of the given vertex or edge.
+     */
+    //@{
     vertex_properties& operator[](vertex_descriptor);
     edge_properties& operator[](edge_descriptor);
+    //@{
 
 private:
     property_store _props;
@@ -184,6 +245,44 @@ typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
 undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_properties const& vp)
 {
     return _verts.add(vp);
+}
+
+/**
+ * Add a new vertex with the given properties to the graph and map it to the
+ * given key.
+ *
+ * @requires VertexMap<Graph>
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
+undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_key const& k, vertex_properties const& vp)
+{
+    return _verts.add(k, vp);
+}
+
+/**
+ * Find the vertex with the given properties, returning a descriptor to it.
+ *
+ * @requires LabeledUniqueVertex<Graph> ???
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
+undirected_graph<VP,EP,VS,ES>::find_vertex(vertex_properties const& vp) const
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    return _verts.find(vp);
+}
+
+/**
+ * Find the vertex with the given properties, returning a descriptor to it.
+ *
+ * @requires MappedUniqueVertex<Graph>
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
+undirected_graph<VP,EP,VS,ES>::find_vertex(vertex_key const& k) const
+{
+    return _verts.find(k);
 }
 
 /**
@@ -217,6 +316,35 @@ undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
 }
 
 /**
+ * Disconnect the vertex having the given properties from the graph.
+ *
+ * @requires UniqueLabeledVertex<Graph>
+ *
+ * @todo What does this do for multiset vertex stores.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_properties const& vp)
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    disconnect_vertex(find_vertex(vp));
+}
+
+/**
+ * Disconnect the vertex having the given key from the graph.
+ *
+ * @requires UniqueMappedVertex<Graph>
+ *
+ * @todo What does this do for multimap vertex stores.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_key const& k)
+{
+    disconnect_vertex(find_vertex(k));
+}
+
+/**
  * Remove the vertex from the graph. This will disconnect the vertex from the
  * graph prior to remove.
  */
@@ -227,6 +355,41 @@ undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_descriptor v)
     disconnect_vertex(v);
     _verts.remove(v);
 }
+
+/**
+ * Remove the vertex from the graph identified by the given properties.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_properties const& vp)
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    disconnect_vertex(vp);
+    _verts.remove(vp);
+}
+
+/**
+ * Remove the vertex from the graph identified by the given key.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_key const& k)
+{
+    disconnect_vertex(k);
+    _verts.remove(k);
+}
+
+/**
+ * Return the key associated with the given vertex. This function is only
+ * available for graphs with mapped vertices.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::vertex_key const&
+undirected_graph<VP,EP,VS,ES>::key(vertex_descriptor v) const
+{
+    return _verts.key(v);
+}
+
 
 /**
  * Create an edge, connecting the vertices u and v.
