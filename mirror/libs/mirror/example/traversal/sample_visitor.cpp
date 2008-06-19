@@ -22,10 +22,6 @@
 #include <boost/mirror/meta_types/boost_tuple.hpp>
 #include <boost/mirror/meta_classes/boost_tuple.hpp>
 
-#include <boost/mirror/meta_path/self.hpp>
-#include <boost/mirror/meta_path/ancestors.hpp>
-#include <boost/mirror/meta_path/size.hpp>
-
 #include <boost/mirror/visitors/sample.hpp>
 #include <boost/mirror/traversal.hpp>
 

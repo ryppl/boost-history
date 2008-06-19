@@ -20,6 +20,11 @@
 // container size
 #include <boost/mirror/algorithm/size.hpp>
 //
+// meta-path related stuff
+#include <boost/mirror/meta_path/self.hpp>
+#include <boost/mirror/meta_path/ancestors.hpp>
+#include <boost/mirror/meta_path/size.hpp>
+
 //
 #include <boost/type_traits/is_fundamental.hpp>
 
@@ -150,13 +155,10 @@ public:
 			MetaAttribute::base_name() <<
 			"' static='" <<
 			(MetaAttribute::traits::is_static::value?"true":"false") <<
+			"' depth='" <<
+			meta_path::size<meta_path::ancestors<Context> >::value <<
 			"'>" << 
 			endl;
-bcout << 
-	"---" << meta_path::size<meta_path::self<Context> >::value << "---" << 
-	endl << 
-	"---" << meta_path::size<meta_path::ancestors<Context> >::value << "---" << 
-	endl;
 	}
 
 	template <class MetaAttribute, class Context>
