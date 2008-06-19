@@ -24,7 +24,7 @@
 #include <boost/detail/winapi/winbase.h>
 #endif
 
-#if defined(BOOST_DETAIL_NO_TAGGED_COMPARE_AND_SWAP_POINTER)
+#if 1 // defined(BOOST_DETAIL_NO_TAGGED_COMPARE_AND_SWAP_POINTER)
 #define BOOST_MEMORY_NO_LOCKFREE
 #else
 #ifndef BOOST_LOCKFREE_STACK_HPP
