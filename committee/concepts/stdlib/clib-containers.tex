@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Containers\\
-(Revision 1)
+(Revision 2)
 
 \vspace{0.5in}
 
@@ -61,8 +61,8 @@ Pablo Halpern,  Bloomberg, L.P. $\langle$\href{mailto:phalpern@halpernwightsoftw
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2623=08-0133\vspace{-6pt}
-\par\noindent Revises document number: N2085=06-0155\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2623=08-0133\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -198,7 +198,7 @@ by calling
 \tcode{<allocator_type>::move_assign()},
 \changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}\tcode{<allocator_type>
 ::copy_assign()}, or
-\changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}\tcode{allocator_type>::swap()}
+\changedConcepts{\mbox{\tcode{allocator_propogation_map}}}{\mbox{\tcode{AllocatorPropagation}}}\tcode{<allocator_type>::swap()}
 within the implementation of the corresponding container operation. In
 all container types defined in this clause, the member
 \tcode{get_allocator()} returns a copy of the \tcode{Allocator} object
@@ -843,25 +843,27 @@ namespace std {
 
     // \ref{deque.cons} construct/copy/destroy:
     explicit deque(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires DefaultConstructible<T>}@ explicit deque(size_type n);
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit deque(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
-      deque(size_type n, const T& value,const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
+      deque(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@ 
-      deque(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
+      deque(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ deque(const deque<T,Alloc@\removedConcepts{ator}@>& x);
-    deque(deque&&);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ deque(deque&&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ deque(const deque&, const Alloc@\removedConcepts{ator}@&);
-    deque(deque&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ deque(deque&&, const Alloc@\removedConcepts{ator}@&);
 
    ~deque();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@
       deque<T,Alloc@\removedConcepts{ator}@>& operator=(const deque<T,Alloc@\removedConcepts{ator}@>& x);
-    deque<T,Alloc@\removedConcepts{ator}@>& operator=(const deque<T,Alloc@\removedConcepts{ator}@>&& x);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+      deque<T,Alloc@\removedConcepts{ator}@>& operator=(@\removedCC{const}@ deque<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+          @\addedCC{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@ 
       void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
 
@@ -883,9 +885,9 @@ namespace std {
     // \ref{deque.capacity} capacity:
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires DefaultConstructible<T> \&\& MoveAssignable<T>}@ 
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>} \removedCCC{\&\& MoveAssignable<T>}@ 
       void resize(size_type sz);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@    
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \removedCCC{\&\& MoveAssignable<T>}@
       void resize(size_type sz, const T& c);
     bool empty() const;
 
