@@ -31,11 +31,14 @@ struct basic_vertex_vector
     struct store
     {
         typedef Vertex stored_vertex;
-        typedef Alloc<stored_vertex> allocator_type;
-        typedef vertex_vector_impl<stored_vertex, allocator_type> type;
+        typedef Alloc<stored_vertex> allocator;
+        typedef vertex_vector_impl<stored_vertex, allocator> type;
     };
 };
 
+/**
+ * The default vertex vector uses the standard allocator.
+ */
 struct vertex_vector : basic_vertex_vector<std::allocator> { };
 
 

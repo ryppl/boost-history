@@ -4,22 +4,6 @@
 
 #include "none.hpp"
 
-// Various issues...
-// * Undirected graphs have a global property store.
-// * Global property stores are lists (for node-based edge stores) and
-//   vectors (for vector edge stores).
-// * Edge descriptors are a triple: an unordered pair consisting of
-//   vertex descriptors, and an a property descriptor.
-// * The property descriptor provide access to the properties of the
-//   given edge. This would best be described as the edge property
-//   accessors.
-// * If there are no properties, then the property store doesn't really
-//   need to exist. We can just pretend to allocate them and return
-//   an integer "pseudo descriptor".
-
-// Note that the graph interface will fail to compile if a mapped graph is
-// requested whose key and property types are the same.
-
 #include "descriptor.hpp"
 
 #include "undirected_vertex.hpp"
@@ -233,13 +217,28 @@ undirected_graph<VP,EP,VS,ES>::undirected_graph()
     , _verts()
 { }
 
+/**
+ * Add a vertex to the graph with no or default properties, and return a
+ * descriptor to the vertex. Although supported for all adjacency lists, this
+ * function should not be used with graphs that have LabeledUniqueVertices
+ * as it will always return the same default-propertied vertex iterator.
+ */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
 undirected_graph<VP,EP,VS,ES>::add_vertex()
 {
+    // BOOST_STATIC_ASSERT(!LabeledUniqueVertices<this_type>);
     return _verts.add();
 }
 
+/**
+ * Add a vertex to the graph with the given properties, and return a descriptor
+ * to the added vertes. If the graph has LabeledUniqe vertices, and a vertex
+ * with the given properties already exists in the graph, then a new vertex
+ * is not added and returned descriptor refers to the existing vertex.
+ *
+ * @requires LabeledVertices<Graph>
+ */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
 undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_properties const& vp)
@@ -251,7 +250,7 @@ undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_properties const& vp)
  * Add a new vertex with the given properties to the graph and map it to the
  * given key.
  *
- * @requires VertexMap<Graph>
+ * @requires MappedUniqueVertices<Graph>
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
@@ -262,8 +261,6 @@ undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_key const& k, vertex_properties
 
 /**
  * Find the vertex with the given properties, returning a descriptor to it.
- *
- * @requires LabeledUniqueVertex<Graph> ???
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
@@ -275,8 +272,6 @@ undirected_graph<VP,EP,VS,ES>::find_vertex(vertex_properties const& vp) const
 
 /**
  * Find the vertex with the given properties, returning a descriptor to it.
- *
- * @requires MappedUniqueVertex<Graph>
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
@@ -317,10 +312,6 @@ undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
 
 /**
  * Disconnect the vertex having the given properties from the graph.
- *
- * @requires UniqueLabeledVertex<Graph>
- *
- * @todo What does this do for multiset vertex stores.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void
@@ -332,10 +323,6 @@ undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_properties const& vp)
 
 /**
  * Disconnect the vertex having the given key from the graph.
- *
- * @requires UniqueMappedVertex<Graph>
- *
- * @todo What does this do for multimap vertex stores.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void

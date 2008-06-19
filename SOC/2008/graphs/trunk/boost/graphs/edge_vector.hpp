@@ -67,13 +67,12 @@ struct basic_edge_vector
     };
 
     // The in store metafunction generates the type of vector used to store
-    // incoming edges (actually just the referencing vertex) of directed graph.
-    // In edges are partially represented by the referencing vertex and a
-    // pointer to the properties.
-    template <typename VertexDesc, typename Props>
+    // incoming edges of directed graph. In edges are represented by the
+    // referencing vertex and an out edge descriptor.
+    template <typename VertexDesc, typename OutDesc>
     struct in_store
     {
-        typedef std::pair<VertexDesc, Props*> in_pair;
+        typedef std::pair<VertexDesc, OutDesc> in_pair;
         typedef SecondAlloc<in_pair> in_allocator;
         typedef in_vector<in_pair, in_allocator> type;
     };

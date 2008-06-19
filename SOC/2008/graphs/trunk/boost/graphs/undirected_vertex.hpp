@@ -1,19 +1,26 @@
 
-#ifndef VERTEX_HPP
-#define VERTEX_HPP
+#ifndef UNDIRECTED_VERTEX_HPP
+#define UNDIRECTED_VERTEX_HPP
 
 #include "incidence_iterator.hpp"
 
-// A vertex, at least for an undirected graph, is simply an repository
-// for the vertex' properties and an interface for the its incidence
-// list.
-//
-// For directed graphs, it's basically the same, but has an out edge
-// list and/or an in edge list, and the edge properties are stored on
-// the out edge list.
-
+/**
+ * A vertex, at least for an undirected graph, is simply an repository
+ * for the vertex' properties and an interface for the its incidence
+ * list.
+ *
+ * For directed graphs, it's basically the same, but has an out edge
+ * list and/or an in edge list, and the edge properties are stored on
+ * the out edge list.
+ * The default comparison of vertices always delegates the comparison to the
+ * stored vertex properties. This allows developers to express custom
+ * comparitors with respect to the properties and have the vertex sets or other
+ * vertex ordering operations work as they might expect.
+ *
+ * @requires LessThanComparable<vertex_properties>.
+ */
 template <typename VertexProps, typename IncStore>
-class vertex
+class undirected_vertex
 {
     typedef IncStore incidence_store;
 public:
@@ -24,8 +31,8 @@ public:
     typedef typename incidence_store::const_iterator iterator;
     typedef typename incidence_store::size_type size_type;
 
-    inline vertex();
-    inline vertex(vertex_properties const& vp);
+    inline undirected_vertex();
+    inline undirected_vertex(vertex_properties const& vp);
 
     /** @name Edge Connection and Disconnection
      * These functions control how edges are added to and removed from the
@@ -51,7 +58,14 @@ public:
     inline size_type degree() const
     { return _edges.size(); }
 
-    inline bool operator<(vertex const&) const;
+    inline bool operator==(undirected_vertex const& x) const
+    { return _props == x._props; }
+
+    inline bool operator!=(undirected_vertex const& x) const
+    { return !this->operator==(x); }
+
+    inline bool operator<(undirected_vertex const& x) const
+    { return _props < x._props; }
 
 private:
     vertex_properties _props;
@@ -59,13 +73,13 @@ private:
 };
 
 template <typename VP, typename IS>
-vertex<VP,IS>::vertex()
+undirected_vertex<VP,IS>::undirected_vertex()
     : _props()
     , _edges()
 { }
 
 template <typename VP, typename IS>
-vertex<VP,IS>::vertex(vertex_properties const& vp)
+undirected_vertex<VP,IS>::undirected_vertex(vertex_properties const& vp)
     : _props(vp)
     , _edges()
 { }
@@ -79,8 +93,8 @@ vertex<VP,IS>::vertex(vertex_properties const& vp)
  * @complexity O(lg(d))
  */
 template <typename VP, typename IS>
-std::pair<typename vertex<VP,IS>::iterator, bool>
-vertex<VP,IS>::allow(vertex_descriptor v) const
+std::pair<typename undirected_vertex<VP,IS>::iterator, bool>
+undirected_vertex<VP,IS>::allow(vertex_descriptor v) const
 {
     return _edges.allow(v);
 }
@@ -90,7 +104,7 @@ vertex<VP,IS>::allow(vertex_descriptor v) const
  */
 template <typename VP, typename IS>
 void
-vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
+undirected_vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
 {
     _edges.add(make_pair(v, p));
 }
@@ -101,7 +115,7 @@ vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
  */
 template <typename VP, typename IS>
 void
-vertex<VP,IS>::disconnect()
+undirected_vertex<VP,IS>::disconnect()
 {
     _edges.clear();
 }
@@ -111,7 +125,7 @@ vertex<VP,IS>::disconnect()
  */
 template <typename VP, typename IS>
 void
-vertex<VP,IS>::disconnect(vertex_descriptor v, property_descriptor p)
+undirected_vertex<VP,IS>::disconnect(vertex_descriptor v, property_descriptor p)
 {
     _edges.remove(make_pair(v, p));
 }
@@ -119,7 +133,7 @@ vertex<VP,IS>::disconnect(vertex_descriptor v, property_descriptor p)
 template <typename VP, typename IS>
 template <typename Eraser>
 void
-vertex<VP,IS>::disconnect(vertex_descriptor v, Eraser erase)
+undirected_vertex<VP,IS>::disconnect(vertex_descriptor v, Eraser erase)
 {
     _edges.remove(v, erase);
 }
@@ -128,8 +142,8 @@ vertex<VP,IS>::disconnect(vertex_descriptor v, Eraser erase)
  * Return the properties associated with this vertex (if any).
  */
 template <typename VP, typename IS>
-typename vertex<VP,IS>::vertex_properties&
-vertex<VP,IS>::properties()
+typename undirected_vertex<VP,IS>::vertex_properties&
+undirected_vertex<VP,IS>::properties()
 {
     return _props;
 }
@@ -138,26 +152,10 @@ vertex<VP,IS>::properties()
  * Return the properties associated with this vertex (if any).
  */
 template <typename VP, typename IS>
-typename vertex<VP,IS>::vertex_properties const&
-vertex<VP,IS>::properties() const
+typename undirected_vertex<VP,IS>::vertex_properties const&
+undirected_vertex<VP,IS>::properties() const
 {
     return _props;
 }
 
-/**
- * The default comparison of vertices always delegates the comparison to the
- * stored vertex properties. This allows developers to express custom
- * comparitors with respect to the properties and have the vertex sets or other
- * vertex ordering operations work as they might expect.
- *
- * @requires LessThanComparable<vertex_properties>.
- */
-template <typename VP, typename IS>
-bool
-vertex<VP,IS>::operator<(vertex const& v) const
-{
-    return _props < v._props;
-}
-
 #endif
-
