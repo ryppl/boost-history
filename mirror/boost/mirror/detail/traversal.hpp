@@ -224,7 +224,7 @@ namespace detail {
 			{
 				typedef typename mpl::push_back<
 					ClassNodePath,
-					MetaClass::base_classes
+					typename MetaClass::base_classes
 				>::type BaseClassesNodePath;
 				BaseClassesNodePath path;
 				//
