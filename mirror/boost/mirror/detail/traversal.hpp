@@ -222,7 +222,6 @@ namespace detail {
 
 		template <
 			class VisitorType, 
-			class Context, 
 			class InstanceType
 		>
 		inline static void lead_to_instance(
@@ -244,7 +243,6 @@ namespace detail {
 	private:
 		template <
 			class VisitorType, 
-			class Context, 
 			class InstanceType
 		>
 		inline static void do_lead_to_instance(
@@ -257,7 +255,6 @@ namespace detail {
 
 		template <
 			class VisitorType, 
-			class Context, 
 			class InstanceType
 		>
 		inline static void do_lead_to_instance(
