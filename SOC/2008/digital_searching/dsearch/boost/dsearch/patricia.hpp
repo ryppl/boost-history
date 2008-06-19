@@ -12,14 +12,18 @@
 #include<boost/iterator/iterator_traits.hpp>
 #include<boost/dsearch/patricia_iterator.hpp>
 
-//replace all key assignement operations with key_copy
-//replace all key.size() with key_traits::size();
+//replace all key assignement operations with key_copy.
+//replace all key.size() with key_traits::size().
+//remove key.size() calculation where not needed.
 
 namespace boost{
 namespace dsearch{
+
 template<class Key,class Mapped,class Key_traits,class Alloc=std::allocator<char> >
 class patricia{
-	private: 
+	private:
+	template<class V_t, class N_t, class A>
+	friend class patricia_iterator;
 	typedef patricia<Key,Mapped,Key_traits,Alloc> self;
 	typedef typename Key_traits::const_iterator key_iterator;
 	typedef typename Key_traits::element_type key_element_type;
@@ -36,7 +40,6 @@ class patricia{
 	private:
 	typedef typename std::iterator_traits<typename Key_traits::const_iterator>::iterator_category iterator_cat;
 	typedef typename std::random_access_iterator_tag rand_tag;
-
 
 	class patricia_node {
 		typedef patricia_node self;
@@ -67,11 +70,13 @@ class patricia{
 	public:
 	typedef patricia_iterator<value_type, patricia_node, Alloc> iterator;
 	typedef patricia_iterator<const value_type, const patricia_node, Alloc> const_iterator;
+	typedef patricia_reverse_iterator<value_type, patricia_node, Alloc> reverse_iterator;
+	typedef patricia_reverse_iterator<const value_type, const patricia_node, Alloc> const_reverse_iterator;
 
 	patricia(): root(0)
 	{
 	}
-	
+
 	patricia(const self &other)
 	{
 		copy_patricia(other.root);
@@ -100,8 +105,38 @@ class patricia{
 	{
 		return iterator ( root, false );
 	}
+	
+	const_iterator begin() const
+	{
+		return const_iterator (root, true);	
+	}
 
-	bool find(const key_type &k)
+	const_iterator end() const
+	{
+		return const_iterator ( root, false );
+	}
+	
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(root,true);
+	}
+	
+	reverse_iterator rend()
+	{
+		return reverse_iterator(root,false);
+	}
+	
+	const_reverse_iterator rbegin() const
+	{
+		return const_reverse_iterator(root,true);
+	}
+	
+	const_reverse_iterator rend() const 
+	{
+		return const_reverse_iterator(root,false);
+	}
+
+	bool exists(const key_type &k)
 	{
 		std::pair<std::size_t,int> common;
 		patricia_node *node;
@@ -113,7 +148,23 @@ class patricia{
 		if(node==0) return 0;
 		common=get_common_bits(node->value.first,k);
 		return (common.second==2);
-		return true;
+	}
+	
+	iterator find(const key_type &k)
+	{
+		std::pair<patricia_node*,patricia_node*> node_pair;
+		#ifndef FORWARD
+			node_pair=find_node_prev(root,k,iterator_cat());
+		#else
+			node_pair=find_node_prev(root,k,0);
+		#endif
+		if ( node_pair.first==0) return end();
+		return iterator(node_pair.first,node_pair.second);
+	}
+	
+	const_iterator find(const key_type &k) const
+	{
+		return const_cast<patricia *>(this)->find(k);
 	}
 
 	void erase(const key_type &k)
@@ -124,11 +175,14 @@ class patricia{
 			erase(k,0);
 		#endif
 	}
+	
+	void erase(const iterator &it)
+	{
+		erase(it.next,it.cur);
+	}
 
 	bool empty() const
 	{
-		//if(root)
-		//	std::cout<<"NOT EMPTY "<<root->value.first<<std::endl;
 		return root==0;
 	}
 
@@ -166,6 +220,45 @@ class patricia{
 		}
 	}
 	
+	std::size_t size() const 
+	{
+		patricia_node *cur,*prev;
+		std::size_t ret_size=0;
+		
+		prev=cur=root;
+		while(cur)
+		{
+			if(cur->left==prev && cur->left->par==cur)
+			{
+				prev=cur;
+				cur=(cur->right && cur->right->par==cur)?cur->right:cur->par;
+			}
+			else
+			if(cur->right==prev && cur->right->par==cur)
+			{
+				prev=cur;
+				cur=cur->par;
+			}
+			else
+			{
+				ret_size++;
+				std::cout<<cur->value.first<<std::endl;
+				prev=cur;
+				assert(cur!=cur->par);
+				//assert(cur->right!=cur);
+				//assert(cur->right->par==cur);
+				//std::cout<<"RIGHT: "<<cur->right->value.first<<std::endl;
+				cur=(cur->left && cur->left->par==cur)? cur->left
+				: ( (cur->right && cur->right->par==cur)? cur->right
+				: cur->par );
+			}
+			//std::cout<<((prev->left==cur)?"GOING LEFT":(prev->right==cur)?
+			//"GOING RIGHT":"GOING UP")<<std::endl;
+			assert(ret_size!=10);
+		}
+		return ret_size;
+	}
+
 	~patricia()
 	{
 		this->clear();
@@ -401,8 +494,9 @@ class patricia{
 		return n==0? 1 : ( ( element&(1<<(bit_width - n )) )  !=0 );
 	}
 
-	//returns inclusive of end bit after each pos and the not(un) common bit in k1;
-	//returns not common bit as two if both keys are equal.
+	/* returns inclusive of end bit after each pos and the not(un) common bit in k1;
+	 * returns not common bit as two if both keys are equal.
+	 */
 	inline std::pair<std::size_t,int> get_common_bits(const key_type &k1,const key_type &k2) const 
 	{
 		key_iterator k1_it,k2_it,k1_end,k2_end;
@@ -619,51 +713,27 @@ class patricia{
 		return std::make_pair(next,cur);
 	}
 
-	template<class T>
-	void erase(const key_type& key,T)
+	/* The node pointed to by found. where prev is the found 
+	 * has a uplink from prev.
+	 * Used by erase(key) and erase(iterator);
+	 */
+	void erase(patricia_node*found,patricia_node *prev)
 	{
-		if(root==0) return;
-		patricia_node  *cur,*next=0,*found;
-		key_iterator it, end_it;
-		it=Key_traits::begin(key);
+		if(root==0 || found==0) return;
 		
-		std::size_t key_size=key.size();
-		std::pair<patricia_node*,patricia_node*> temp_pair,check_pair;
-		
-		if(root==0) return;
-		assert(root->par==0);
-		std::cout<< ((root->left!=0)?" \"\" exists":"\"\" does not exists")<<std::endl;
-		
-		assert( (root->left!=0 && root->left!=root)? root->left->par==root: 1 );
-		
-		std::cout<<(root->par==0)<<" root key:"<<root->value.first<<std::endl;
-		cur=root;
-		next=root;
-
-
-		temp_pair=find_node_prev(root,key,T(),key_size);
-		found=next=temp_pair.first;
-		cur=temp_pair.second;
-		if(found==0) return;
-		check_pair=find_node_prev(root,key,rand_tag(),key_size);
-		std::cout<<"KEY=="<<key<<";Next key=="<<temp_pair.first->value.first
-		<<";Cur key=="<<temp_pair.second->value.first<<std::endl;
-
-		assert(check_pair==temp_pair);
-
-		std::cout<<"in erase: found "<<found->value.first<<" and prev "<<cur->value.first<<std::endl;
+		std::cout<<"in erase: found "<<found->value.first<<" and prev "<<prev->value.first<<std::endl;
 
 		if ( found-> par == 0 ) {  //root node
 			std::cout<<"par"<<std::endl;
 			assert(root==found);
 
-			if( (found->right==0 || found->left==0) && found==cur){ //only root or only ""
+			if( (found->right==0 || found->left==0) && found==prev){ //only root or only ""
 				deallocate_node(found);		
 				root=0;
 				return;
 			}
 			std::cout<<"wrong place"<<std::endl;
-			if(cur==found){ //also takes care of "" at the root
+			if(prev==found){ //also takes care of "" at the root
 				root=(found->right==found)?found->left:found->right;
 				if(root) root->par=0;
 				deallocate_node(found);
@@ -672,18 +742,24 @@ class patricia{
 		}
 		else
 		if ( found->right==0 || found->left==0 )
-			cur=found;
+			prev=found;
 
 		std::cout<<"here"<<std::endl;
-		if ( cur == found ) {		//deleting the leaf node. //this case for root node is handled before
+		if ( prev == found ) {		//deleting the leaf node. //this case for root node is handled before
 				if ( found->par->right == found )
+				{
 					found->par->right = (found->right==found)?found->left:found->right;
+					if( found->par->right && found==found->par->right->par ) found->par->right->par=found->par;
+				}
 				else
 				if ( found->par->left == found )
+				{
 					found->par->left = (found->right==found)?found->left:found->right;
+					if( found->par->left && found==found->par->left->par ) found->par->left->par=found->par;
+				}
 				else
 					assert(false);
-				std::cout<<"cur==found with key="<<key<<std::endl;
+				//std::cout<<"prev==found with key="<<key<<std::endl;
 				if ( found->right==0 || found->left==0 )
 				{
 					assert(found->par==root);
@@ -693,33 +769,45 @@ class patricia{
 				return;
 		}
 		
-		temp_pair=find_node_prev(cur,cur->value.first,T(),cur->value.first.size());
-		/*check_pair=find_node_prev(cur,cur->value.first,rand_tag(),cur->value.first.size());
-
-		std::cout<<"KEY=="<<cur->value.first<<";Next key=="<<temp_pair.first->value.first
-		<<";Cur key=="<<temp_pair.second->value.first<<std::endl;
-		std::cout<<"KEY=="<<cur->value.first<<";Next key=="<<check_pair.first->value.first
-		<<";Cur key=="<<check_pair.second->value.first<<std::endl;
-		assert(check_pair==temp_pair);*/
-		
-		next=temp_pair.first;
-		cur=temp_pair.second;
-		assert(next->par);
-		
-		if(next->par->right==next) {
-			next->par->right=(next->right==found)?next->left:next->right;
-			if( next->right!=next && next->left!=next && next->par->right ) next->par->right->par=next->par;
+		if(prev->par->right==prev) {
+			prev->par->right=(prev->right==found)?prev->left:prev->right;
+			if( prev->right!=prev && prev->left!=prev && prev->par->right ) prev->par->right->par=prev->par;
 		}
 		else {
 			std::cout<<"far away here"<<std::endl;
-			next->par->left=(next->right==found)?next->left:next->right;
-			if( next->right!=next && next->left!=next && next->par->left) next->par->left->par=next->par;
+			prev->par->left=(prev->right==found)?prev->left:prev->right;
+			if( prev->right!=prev && prev->left!=prev && prev->par->left) prev->par->left->par=prev->par;
 		}
 
 		if(found->par==0)
-			root=next;
-		copy_node_ptr(next,found);
+			root=prev;
+		copy_node_ptr(prev,found);
 		deallocate_node(found);
+	}
+
+	template<class T>
+	void erase(const key_type& key,T)
+	{
+		patricia_node  *cur,*found;
+		std::pair<patricia_node*,patricia_node*> temp_pair,check_pair;
+		
+		if(root==0) return;
+		
+		assert(root->par==0);
+		
+		std::cout<< ((root->left!=0)?" \"\" exists":"\"\" does not exists")<<std::endl;
+		
+		assert( (root->left!=0 && root->left!=root)? root->left->par==root: 1 );
+
+		temp_pair=find_node_prev(root,key,T());
+		found=temp_pair.first;
+		cur=temp_pair.second;
+		if(found==0) return;
+
+		//check_pair=find_node_prev(root,key,rand_tag());
+		//assert(check_pair==temp_pair);
+		
+		erase(found,cur);	
 	}
 
 	void inline deallocate_node(patricia_node *&found)
@@ -780,27 +868,27 @@ class patricia{
 		}
 
 		cur=&root;
-		std::cout<<"OTHER ROOT:"<<other_root<<std::endl;
+		//std::cout<<"OTHER ROOT:"<<other_root<<std::endl;
 		other_cur=&other_root;
 		other_prev=0;
 		prev=0;
 		while(true)
 		{
-			assert(prev!=other_root);
+			//assert(prev!=other_root);
 			if( (*other_cur) && (*other_cur)->par==other_prev)
 			{
 				(*cur)=node_allocator.allocate(1);
 				new(*cur) patricia_node(**other_cur);
-				assert((*cur)!=other_root);
-				assert(other_root);
-				assert((*cur)->right!=other_root);
+				//assert((*cur)!=other_root);
+				//assert(other_root);
+				//assert((*cur)->right!=other_root);
 				(*cur)->par = prev;
-				std::cout<<(**cur).value.first<<" "<<(prev==0?"NULL":prev->value.first)<<std::endl;
+				//std::cout<<(**cur).value.first<<" "<<(prev==0?"NULL":prev->value.first)<<std::endl;
 				other_prev=*other_cur;
 				other_cur=&(other_prev->left);
 				prev=*cur;
 				cur=&(prev->left);
-				std::cout<<"copy:here1"<<std::endl;
+				//std::cout<<"copy:here1"<<std::endl;
 				continue;
 			}
 			std::cout<<"copy:here2"<<std::endl;
@@ -815,7 +903,7 @@ class patricia{
 				cur=&(prev->right);
 				std::cout<<prev->value.first<<std::endl;
 				std::cout<<( (*other_cur)?(*other_cur)->value.first:"HOW NULL" )<<std::endl;
-				assert((*cur)!=other_root);
+				//assert((*cur)!=other_root);
 			}
 			else
 			{
@@ -827,7 +915,7 @@ class patricia{
 					prev=prev->par;
 					if(other_prev==0) 
 					{
-						std::cout<<"ROOT:"<<root<<std::endl;
+						//std::cout<<"ROOT:"<<root<<std::endl;
 						return;
 					}
 				}
@@ -836,7 +924,30 @@ class patricia{
 			}
 		}
 	}
+
 };
+
+template<class Key,class Mapped,class Key_traits,class Alloc >
+bool operator == (const patricia<Key,Mapped,Key_traits,Alloc> & p1, 
+	const patricia<Key,Mapped,Key_traits,Alloc>& p2)
+{
+	typedef typename patricia<Key,Mapped,Key_traits,Alloc>::const_iterator const_iterator;
+	const_iterator it_1, it_2, end_it_1, end_it_2;
+	
+	it_1=p1.begin();
+	it_2=p2.begin();
+
+	while ( it_1 != p1.end() && it_2 != p2.end() 
+	&& (*it_1).first == (*it_2).first &&  (*it_1).second == (*it_2).second )
+	{
+		it_1++;
+		it_2++;
+	}
+
+	if( it_1 == p1.end() && it_2 == p2.end() )
+		return true;
+	return false;
+}
 
 }//namespace dsearch
 }//namespace boost
