@@ -222,7 +222,6 @@ namespace detail {
 
 		template <
 			class VisitorType, 
-			class MetaClass,
 			class Context, 
 			class InstanceType
 		>
@@ -245,7 +244,6 @@ namespace detail {
 	private:
 		template <
 			class VisitorType, 
-			class MetaClass,
 			class Context, 
 			class InstanceType
 		>
@@ -259,7 +257,6 @@ namespace detail {
 
 		template <
 			class VisitorType, 
-			class MetaClass,
 			class Context, 
 			class InstanceType
 		>
