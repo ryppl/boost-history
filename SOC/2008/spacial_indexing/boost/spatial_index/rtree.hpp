@@ -58,12 +58,10 @@ namespace spatial_index {
 
 	typename rtree_node<Point,Value>::node_map q_nodes;
 	condense_tree(l, q_nodes);
+
 	std::vector<std::pair<geometry::box<Point>, Value> > s;
 	for(typename rtree_node<Point,Value>::node_map::const_iterator it = q_nodes.begin(); it != q_nodes.end(); ++it) {
 	  typename rtree_leaf<Point,Value>::leaves_map leaves =  it->second->get_leaves();
-	  std::cerr << "Leaves to reinsert: " << leaves.size() << std::endl;
-	  it->second->print();
-	  std::cerr << "--------------------------->>"<<std::endl;
 
 	  // reinserting leaves from nodes
 	  for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator itl = leaves.begin(); itl != leaves.end(); ++itl) {
@@ -203,6 +201,11 @@ namespace spatial_index {
       parent->adjust_box(l);
       
       if(parent->elements() < m_) {
+	if(parent->is_root()) {
+	  // if the parent is underfull and it's the root we just exit
+	  return;
+	}
+
 	std::cerr << "condense_node: underfull node (" << parent.get() << ")" << std::endl;
 
 	typename rtree_node<Point,Value>::node_map this_nodes = parent->get_nodes();
@@ -211,13 +214,8 @@ namespace spatial_index {
 	  q_nodes.push_back(*it);
 	}
 
-	if(parent->is_root()) {
-	  std::cerr << "The underfull node is the root, returning." << std::endl;
-	  return;
-	} else {
-	  // we remove the node in the parent node because now it should be re inserted
-	  parent->get_parent()->remove(parent->get_parent()->get_box(parent));
-	}
+	// we remove the node in the parent node because now it should be re inserted
+	parent->get_parent()->remove(parent->get_parent()->get_box(parent));
       }
 
       condense_tree(parent, q_nodes);

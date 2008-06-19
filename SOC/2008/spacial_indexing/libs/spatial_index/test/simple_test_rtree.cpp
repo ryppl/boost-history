@@ -183,19 +183,13 @@ int test_main(int, char* [])
 
 	// remove test
  	std::cerr << " --> remove" << std::endl;
-   	q->print();
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
-   	q->print();
-
-	return 0;
 
  	std::cerr << " --> remove" << std::endl;
  	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(7.0,4.0), geometry::point_xy<double>(12.0,7.0)));
-   	q->print();
 
   	std::cerr << " --> remove" << std::endl;
   	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,12.0), geometry::point_xy<double>(13.0,13.0)));
-    	q->print();
 
   	std::cerr << " --> remove" << std::endl;
   	q->remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(11.0,11.0)));
