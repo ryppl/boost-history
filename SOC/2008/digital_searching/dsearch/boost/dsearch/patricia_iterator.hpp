@@ -6,11 +6,12 @@
 
 namespace boost{
 namespace dsearch{
-template<class Value_type, class Node_type, class Alloc=std::allocator<char> >
+template<class Value_type, class Node_type, class Alloc>
 class patricia_iterator
 :public iterator_facade< patricia_iterator<Value_type,Node_type, Alloc>, 
 Value_type, bidirectional_traversal_tag >
 {
+	protected:
 	struct enabler {};
 	friend class boost::iterator_core_access;
 	Node_type *cur;
@@ -36,14 +37,17 @@ Value_type, bidirectional_traversal_tag >
 
 	void decrement()
 	{
-		while(cur && ( cur->left==next || cur->left==0 ) )
-		{
-			next=cur;
-			cur=cur->par;
-		}
-
 		if(cur)
+		{
+			while(cur && ( cur->left==next || cur->left==0 ) )
+			{
+				next=cur;
+				cur=cur->par;
+			}
+			if(cur==0)
+				return;
 			next=cur->left;
+		}
 		else
 		{
 			cur=next;
@@ -70,8 +74,10 @@ Value_type, bidirectional_traversal_tag >
 				enabler >::type = enabler()
 	) const
 	{
+		
 		if ( cur == other.cur && next == other.next )
 			return true;
+		//std::cout<<"In equal"<<next->value.first << "!=" << other.next->value.first<<std::endl;
 		return false;
 	}
 
@@ -114,8 +120,73 @@ Value_type, bidirectional_traversal_tag >
 		    		) : cur(other.cur),next(other.next)
 	{
 	}
-};
 	
+	patricia_iterator (Node_type* found,Node_type *prev):
+	cur(prev),next(found)
+	{
+	}
+};
+
+template<class Value_type, class Node_type, class Alloc >
+class patricia_reverse_iterator:
+public patricia_iterator<Value_type, Node_type, Alloc>
+{
+	typedef patricia_iterator<Value_type, Node_type, Alloc> forward_type;
+	private:
+	struct enabler {};
+	void decrement()
+	{
+		forward_type::increment();
+	}
+	
+	void increment()
+	{
+		forward_type::decrement();
+	}
+	
+	template<class V,class N,class A>
+	bool equal(patricia_reverse_iterator<V,N,A> const &other,
+	typename enable_if< is_convertible<V*,Value_type*>, 
+				enabler >::type = enabler()
+	) const
+	{
+		if ( forward_type::cur == other.cur && forward_type::next == other.next )
+			return true;
+		return false;
+	}
+	
+	Value_type &dereference() const
+	{
+		return forward_type::dereference();
+	}
+	public:
+	patricia_reverse_iterator(): forward_type()
+	{
+	}
+	patricia_reverse_iterator(Node_type *found,Node_type*prev)
+	: forward_type(found,prev)
+	{
+	}
+	
+	patricia_reverse_iterator(Node_type *root,bool start) 
+	{
+		forward_type::cur=0;
+		forward_type::next=root;
+		if(start)
+		{
+			decrement();
+		}
+	}
+	template<class V,class N,class A>
+	patricia_reverse_iterator ( patricia_reverse_iterator<V,N,A> const& other,
+				typename enable_if< is_convertible<V*,Value_type*>, 
+				enabler >::type = enabler()
+		    		) 
+	: forward_type(other.next,other.cur)
+	{
+	}
+};
+
 }
 }
 #endif //BOOST_DSEARCH_PATRICIA_ITERATOR_HPP
