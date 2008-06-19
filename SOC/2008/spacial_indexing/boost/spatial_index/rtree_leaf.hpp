@@ -111,7 +111,9 @@ namespace spatial_index {
 	  return;
 	}
       }
-
+      std::cerr << "remove: node not found" << std::endl;
+      print();
+      std::cerr << "remove: node not found" << std::endl;
     }
 
 

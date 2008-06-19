@@ -75,12 +75,19 @@ namespace spatial_index {
       }
     }
 
-
-    /// get leaves
-    virtual std::vector< std::pair< geometry::box<Point>, Value > > get_leaves(void) const
+    void find_leaves(const geometry::box<Point> &e, typename std::vector<boost::shared_ptr<rtree_node<Point,Value> > > &result) const
     {
-      throw std::logic_error("No leaves in a non-leaf node.");
+      for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	if(overlaps(it->first, e)) {
+	  if(it->second->is_leaf()) {
+	    result.push_back(it->second);
+	  } else {
+	    it->second->find_leaves(e, result);
+	  }
+	}
+      }
     }
+
 
     /// compute bounding box for this leaf
     virtual geometry::box<Point> compute_box(void) const
@@ -120,15 +127,15 @@ namespace spatial_index {
       unsigned int index = 0;
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
 	if(it->second.get() == n.get()) {
- 	  std::cerr << "---------------------------------------->" << std::endl;
-  	  std::cerr << "Node found!" << std::endl;
- 	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().min()) << " , " <<geometry::get<1>(n->compute_box().min()) << std::endl;
- 	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().max()) << " , " <<geometry::get<1>(n->compute_box().max()) << std::endl;
+//  	  std::cerr << "---------------------------------------->" << std::endl;
+//   	  std::cerr << "Node found!" << std::endl;
+//  	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().min()) << " , " <<geometry::get<1>(n->compute_box().min()) << std::endl;
+//  	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().max()) << " , " <<geometry::get<1>(n->compute_box().max()) << std::endl;
 	  if(it->second->get_parent().get() != n->get_parent().get()) {
 	    std::cerr << "ERR" << std::endl;
 	  }
 	  nodes_[index] = std::make_pair(n->compute_box(), n);
- 	  std::cerr << "---------------------------------------->" << std::endl;
+//  	  std::cerr << "---------------------------------------->" << std::endl;
 	  return;
 	}
       }
@@ -270,6 +277,24 @@ namespace spatial_index {
     /// value projector for the nodes
     node_map get_nodes(void) const { return nodes_; }
 
+
+    /// get leaves for a node
+    virtual std::vector< std::pair< geometry::box<Point>, Value > > get_leaves(void) const
+    {
+      std::vector< std::pair< geometry::box<Point>, Value > > l;
+
+      for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+	typename std::vector< std::pair< geometry::box<Point>, Value > > this_leaves = it->second->get_leaves();
+
+	for(typename std::vector<std::pair<geometry::box<Point>, Value> >::iterator it_leaf = this_leaves.begin(); it_leaf != this_leaves.end(); ++it_leaf) {
+	  l.push_back(*it_leaf);
+	}
+
+      }
+
+      return l;
+    }
+
     /// print node
     virtual void print(void) const
     {
@@ -298,6 +323,16 @@ namespace spatial_index {
 	it->second->print();
       }
     }
+
+//     boost::shared_ptr<rtree_node<Point, Value> > get_node(const geometry::box<Point> &e) const
+//     {
+//       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+// 	if(it->first.max() == e.max() && it->first.min() == e.min()) {
+// 	  return it->second;
+// 	}
+//       }
+
+//     }
 
     /// destructor (virtual because we have virtual functions)
     virtual ~rtree_node(void) {}
