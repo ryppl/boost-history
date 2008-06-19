@@ -184,5 +184,10 @@
 			- Tested with gcc 4.3.0 on SuSE
 			- Tested with intel 10.1 on SuSE
 		</revision>
+		<revision id="20080618" major="0" minor="1" micro="29" author="m_ch">
+			- Added meta-attribute traits (currently containing only is_static 'flag')
+			- Done some cleanup in the sources
+			- Tested with MSVC++ 2008 EE On Vista
+		</revision>
 	</revisions>
 </library>

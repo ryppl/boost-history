@@ -42,34 +42,34 @@ namespace mirror {
  *  gets never used it is (hopefully) culled out of the final binary.
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, ARG_COUNT) \
-	static call_traits<TYPE>::param_type do_get(Class& context, mpl::int_<NUMBER>, mpl::bool_<true>)\
+	static call_traits<TYPE>::param_type do_get(Class& instance, mpl::int_<NUMBER>, mpl::bool_<true>)\
 	{\
-		return context.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
+		return instance.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
 	} \
-	static call_traits<TYPE>::param_type do_get(const Class& context, mpl::int_<NUMBER>, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&Class::GETTER_NAME), function_types::const_qualified>::value>)\
+	static call_traits<TYPE>::param_type do_get(const Class& instance, mpl::int_<NUMBER>, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&Class::GETTER_NAME), function_types::const_qualified>::value>)\
 	{\
-		return const_cast<Class&>(context).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
+		return const_cast<Class&>(instance).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE)));\
 	} \
 	template <typename DestType>\
-	static DestType& do_query(Class& context, mpl::int_<NUMBER>, DestType& dest, mpl::bool_<true>)\
+	static DestType& do_query(Class& instance, mpl::int_<NUMBER>, DestType& dest, mpl::bool_<true>)\
 	{\
-		dest = DestType(context.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
+		dest = DestType(instance.GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
 		return dest;\
 	} \
 	template <typename DestType>\
-	static DestType& do_query(const Class& context, mpl::int_<NUMBER>, DestType& dest, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&Class::GETTER_NAME), function_types::const_qualified>::value>)\
+	static DestType& do_query(const Class& instance, mpl::int_<NUMBER>, DestType& dest, mpl::bool_<function_types::is_member_function_pointer<BOOST_TYPEOF(&Class::GETTER_NAME), function_types::const_qualified>::value>)\
 	{\
-		dest = DestType(const_cast<Class&>(context).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
+		dest = DestType(const_cast<Class&>(instance).GETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, GETTER_ARGS_TUPLE))));\
 		return dest;\
 	} \
-	template <class SomeClass> static call_traits<TYPE>::param_type get(SomeClass& context, mpl::int_<NUMBER>)\
+	template <class SomeClass> static call_traits<TYPE>::param_type get(SomeClass& instance, mpl::int_<NUMBER>)\
 	{\
-		return do_get(context, mpl::int_<NUMBER>(), mpl::bool_<true>());\
+		return do_get(instance, mpl::int_<NUMBER>(), mpl::bool_<true>());\
 	}\
 	template <class SomeClass, typename DestType> \
-	static DestType& query(SomeClass& context, mpl::int_<NUMBER>, DestType& dest)\
+	static DestType& query(SomeClass& instance, mpl::int_<NUMBER>, DestType& dest)\
 	{\
-		return do_query(context, mpl::int_<NUMBER>(), dest, mpl::bool_<true>());\
+		return do_query(instance, mpl::int_<NUMBER>(), dest, mpl::bool_<true>());\
 	}
 
 
@@ -78,9 +78,9 @@ namespace mirror {
 /** Helper macro for implementing setter based set meta-class function 
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, ARG_COUNT) \
-	static void set(Class& context, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
+	static void set(Class& instance, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val)\
 	{\
-		context.SETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, SETTER_ARGS_TUPLE)));\
+		instance.SETTER_NAME(BOOST_PP_LIST_ENUM(BOOST_PP_TUPLE_TO_LIST(ARG_COUNT, SETTER_ARGS_TUPLE)));\
 	} 
 
 
@@ -91,7 +91,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, ARG_COUNT)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_W_ARGS
  *  for getter functions with no bound arguments
@@ -107,7 +107,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE_NAMESPACE::TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, ARG_COUNT)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE_NAMESPACE::TYPE)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_W_ARGS
  *  for getter functions with no bound arguments
@@ -125,7 +125,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, ARG_COUNT)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, ATTRIB_NAME)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_W_ARGS
  *  for getter functions with no bound arguments
@@ -141,7 +141,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE_NAMESPACE::TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, ARG_COUNT)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_W_ARGS
  *  for getter functions with no bound arguments.
@@ -157,7 +157,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, ARG_COUNT)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_W_ARGS
  *  for getter functions with no bound arguments
@@ -173,7 +173,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE_NAMESPACE::TYPE)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE_NAMESPACE::TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, ARG_COUNT)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_W_ARGS
  *  for getter functions with no bound arguments. 
@@ -190,7 +190,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, ATTRIB_NAME)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, ARG_COUNT)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_W_ARGS
  *  for setter functions with no bound arguments besides the value to be set
@@ -206,7 +206,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE_NAMESPACE::TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, ARG_COUNT)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_W_ARGS
  *  for setter functions with no bound arguments besides the value to be set.
@@ -233,7 +233,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, GETTER_ARG_COUNT)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, SETTER_ARG_COUNT)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER_W_ARGS
  *  for getter and setter functions with no bound arguments
@@ -262,7 +262,7 @@ namespace mirror {
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, ATTRIB_NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_GETTER_ARGS(NUMBER, TYPE_NAMESPACE::TYPE, GETTER_NAME, GETTER_ARGS_TUPLE, GETTER_ARG_COUNT)\
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SETTER_ARGS(NUMBER, TYPE_NAMESPACE::TYPE, SETTER_NAME, SETTER_ARGS_TUPLE, SETTER_ARG_COUNT)\
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME) 
+	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, ATTRIB_NAME, false) 
 
 /** Simpler version of the BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER_W_ARGS_TD
  *  for getter and setter functions with no bound arguments

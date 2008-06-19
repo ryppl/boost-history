@@ -14,6 +14,9 @@
 #include <boost/mirror/detail/meta_attribs_base.hpp>
 // macros for declaration of meta attributes accessed through getters/setters
 #include <boost/mirror/detail/meta_attribs_getset.hpp>
+//
+#include <boost/typeof/typeof.hpp>
+#include <boost/mpl/eval_if.hpp>
 
 namespace boost {
 namespace mirror {
@@ -316,9 +319,9 @@ namespace detail {
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
 				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+					::position new_position;
 
-				return meta_class::attributes::base_name(new_pos_type());
+				return meta_class::attributes::base_name(new_position());
 			}
 
 			template <int I>
@@ -326,9 +329,9 @@ namespace detail {
 			base_name(mpl::int_<I> pos, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+					::position new_position;
 
-				return meta_class::attributes::base_name(new_pos_type());
+				return meta_class::attributes::base_name(new_position());
 			}
 
 		
@@ -337,23 +340,23 @@ namespace detail {
 		 	 */
 			template <class Class, int I>
 			static typename result_of_get<I>::type
-			get(Class context, mpl::int_<I> pos, mpl::bool_<true>)
+			get(Class instance, mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
 				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+					::position new_position;
 
-				return meta_class::attributes::get(context, new_pos_type());
+				return meta_class::attributes::get(instance, new_position());
 
 			}
 			template <class Class, int I>
 			static typename result_of_get<I>::type
-			get(Class context, mpl::int_<I> pos, mpl::bool_<false>)
+			get(Class instance, mpl::int_<I> pos, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
-				return meta_class::attributes::get(context, new_pos_type());
+					::position new_position;
+				return meta_class::attributes::get(instance, new_position());
 			}
 
 		
@@ -362,24 +365,24 @@ namespace detail {
 		 	 */
 			template <class Class, int I, typename DestType>
 			static DestType&
-			query(Class context, mpl::int_<I> pos, DestType& dest, mpl::bool_<true>)
+			query(Class instance, mpl::int_<I> pos, DestType& dest, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
 				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+					::position new_position;
 
-				return meta_class::attributes::query(context, new_pos_type(), dest);
+				return meta_class::attributes::query(instance, new_position(), dest);
 
 			}
 
 			template <class Class, int I, typename DestType>
 			static DestType&
-			query(Class context, mpl::int_<I> pos, DestType& dest, mpl::bool_<false>)
+			query(Class instance, mpl::int_<I> pos, DestType& dest, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
-				return meta_class::attributes::query(context, new_pos_type(), dest);
+					::position new_position;
+				return meta_class::attributes::query(instance, new_position(), dest);
 			}
 
 		
@@ -388,30 +391,86 @@ namespace detail {
 		 	 */
 			template <class Class, int I, typename ValueType>
 			static void
-			set(Class& context, mpl::int_<I> pos, ValueType value, mpl::bool_<true>)
+			set(Class& instance, mpl::int_<I> pos, ValueType value, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
 				typedef typename inherited_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
+					::position new_position;
 
-				meta_class::attributes::set(context, new_pos_type(), value);
+				meta_class::attributes::set(instance, new_position(), value);
 			}
 
 			template <class Class, int I, typename ValueType>
 			static void
-			set(Class& context, mpl::int_<I> pos, ValueType value, mpl::bool_<false>)
+			set(Class& instance, mpl::int_<I> pos, ValueType value, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
-					::position new_pos_type;
-				meta_class::attributes::set(context, new_pos_type(), value);
+					::position new_position;
+				meta_class::attributes::set(instance, new_position(), value);
 			}
+
+			template <int I>
+			struct inherited_attrib_meta_class
+			{
+				typedef typename inherited_attrib_meta_class_and_pos<I>
+					::meta_class type;
+			};
+
+			struct own_attrib_meta_class
+			{
+				typedef meta_class type;
+			};
+
+			template <int I>
+			struct inherited_attrib_position
+			{
+				typedef typename inherited_attrib_meta_class_and_pos<I>
+					::position type;
+			};
+
+			template <int I>
+			struct own_attrib_position
+			{
+				typedef typename own_attrib_meta_class_and_pos<I>
+					::position type;
+			};
+
+			template <int I, class Inherited>
+			struct result_of_get_traits
+			{
+				// get the right meta-class
+				typedef typename mpl::eval_if<
+					Inherited,
+					inherited_attrib_meta_class<I>,
+					own_attrib_meta_class
+				>::type meta_class;
+
+				// get the position inside of the meta-class' attributes
+				typedef typename mpl::eval_if<
+					Inherited,
+					inherited_attrib_position<I>,
+					own_attrib_position<I>
+				>::type position;
+
+
+				// get the return value type of the get_traits function
+				BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+					detail, 
+					meta_class::attributes::get_traits(position())
+				)
+
+				// the traits of the i-th attribute
+				typedef typename detail::type type;
+
+			}; // struct result_of_get_traits
 
 		}; // struct detail
 		
 		/** The list of inherited attribute types
 		 */
-		typedef typename detail::inherited_member_attrib_type_list inherited_type_list;
+		typedef typename detail::inherited_member_attrib_type_list 
+			inherited_type_list;
 
 		/** The size of the type_list, i.e. the count of inherited attributes
 		 */
@@ -425,7 +484,26 @@ namespace detail {
 		/** The size of the type_list, i.e. the count of all attributes
 		 */
 		struct size : public mpl::size<type_list> { };
-		
+
+		template <int I>
+		struct result_of_is_inherited
+		{
+			typedef typename mpl::less<
+				mpl::int_<I>,
+				inherited_size
+			>::type type;
+		};
+
+		/** Returns mpl::bool_<true> if the i-th attrib is inherited
+		 *  returns mpl::bool_<false> otherwise
+		 */
+		template <int I>
+		static typename result_of_is_inherited<I>::type 
+		is_inherited(mpl::int_<I>)
+		{
+			return typename result_of_is_inherited<I>::type();
+		}
+
 		/** Gets the name of the I-th member (including
 		 *  the inherited ones)
 		 */
@@ -433,12 +511,10 @@ namespace detail {
 		static const bchar* 
 		base_name(mpl::int_<I> pos)
 		{
-			typedef typename mpl::less<
-				mpl::int_<I>,
-				inherited_size
-			>::type is_inherited;
-
-			return detail::base_name(pos, is_inherited());
+			return detail::base_name(
+				pos, 
+				is_inherited(pos)
+			);
 		}
 
 		/** Gets the value of the I-th member (including 
@@ -446,14 +522,13 @@ namespace detail {
 		 */
 		template <class Class, int I>
 		static typename detail::template result_of_get<I>::type
-		get(Class context, mpl::int_<I> pos)
+		get(Class instance, mpl::int_<I> pos)
 		{
-			typedef typename mpl::less<
-				mpl::int_<I>,
-				inherited_size
-			>::type is_inherited;
-
-			return detail::get(context, pos, is_inherited());
+			return detail::get(
+				instance, 
+				pos, 
+				is_inherited(pos)
+			);
 		}
 
 		/** Queries the value of the I-th member (including 
@@ -461,14 +536,14 @@ namespace detail {
 		 */
 		template <class Class, int I, typename DestType>
 		static DestType&
-		query(Class context, mpl::int_<I> pos, DestType& dest)
+		query(Class instance, mpl::int_<I> pos, DestType& dest)
 		{
-			typedef typename mpl::less<
-				mpl::int_<I>,
-				inherited_size
-			>::type is_inherited;
-
-			return detail::query(context, pos, dest, is_inherited());
+			return detail::query(
+				instance, 
+				pos, 
+				dest, 
+				is_inherited(pos)
+			);
 		}
 
 		/** Sets the value of the I-th member (including 
@@ -476,15 +551,24 @@ namespace detail {
 		 */
 		template <class Class, int I, typename ValueType>
 		static void
-		set(Class& context, mpl::int_<I> pos, ValueType value)
+		set(Class& instance, mpl::int_<I> pos, ValueType value)
 		{
-			typedef typename mpl::less<
-				mpl::int_<I>,
-				inherited_size
-			>::type is_inherited;
-
-			detail::set(context, pos, value, is_inherited());
+			detail::set(
+				instance, 
+				pos, 
+				value, 
+				is_inherited(pos)
+			);
 		}
+
+		/** The attribute traits getter
+		 */
+		template <int I>
+		static typename detail::result_of_get_traits<
+			I,
+			typename result_of_is_inherited<I>::type
+		>::type get_traits(mpl::int_<I>);
+
 	}; // all_attributes
 
 	/** Instances of this template are used to store information 
@@ -518,10 +602,10 @@ namespace detail {
 
 		// the meta-attributes list (own/all)
 		// into which the attribute belongs
-		// in this context
+		// in this instance
 		typedef MetaAttributes meta_attributes;
 
-		// the position of the meta-attribute in the context
+		// the position of the meta-attribute in the instance
 		typedef AttribPos position;
 
 		// the type of the attribute
@@ -529,6 +613,7 @@ namespace detail {
 			typename meta_attributes::type_list,
 			position
 		>::type type;
+
 
 		// base name getter
 		inline static const bchar* base_name(void)
@@ -546,31 +631,40 @@ namespace detail {
 
 		// value getter
 		inline static typename detail::result_of_get::type
-		get(const reflected_class& context)
+		get(const reflected_class& instance)
 		{
-			return meta_attributes::get(context, position());
+			return meta_attributes::get(instance, position());
 		}
 
 		// value query
 		template <typename DestType>
 		inline static DestType& 
-		query(const reflected_class& context, DestType& dest)
+		query(const reflected_class& instance, DestType& dest)
 		{
-			return meta_attributes::query(context, position(), dest);
+			return meta_attributes::query(instance, position(), dest);
 		}
 
 		// value setter
 		inline static void 
-		set(reflected_class& context, typename call_traits<type>::param_type val)
+		set(reflected_class& instance, typename call_traits<type>::param_type val)
 		{
-			meta_attributes::set(context, position(), val);
+			meta_attributes::set(instance, position(), val);
 		}
+
 		// value setter
 		inline static void 
-		set(const reflected_class& context, typename call_traits<type>::param_type val)
+		set(const reflected_class& instance, typename call_traits<type>::param_type val)
 		{
-			meta_attributes::set(context, position(), val);
+			meta_attributes::set(instance, position(), val);
 		}
+
+		// attribute traits
+		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+			detail_traits, 
+			meta_attributes::get_traits(position())
+		)
+		typedef typename detail_traits::type traits;
+
 	};
 } // namespace detail
 } // namespace mirror

@@ -77,6 +77,13 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	{
 	}
 	//
+
+	// traits getter
+	template <int I>
+	static meta_class_attribute_traits<false> 
+	get_traits(mpl::int_<I>);
+
+	//
 	typedef template_params
 BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_END
 
