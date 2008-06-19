@@ -53,12 +53,12 @@ public:
 
 	static void* BOOST_MEMORY_CALL allocate(const size_t cbData)
 	{
-		_tls_gcAlloc->get().allocate(cbData);
+		return _tls_gcAlloc->get().allocate(cbData);
 	}
 
 	static void* BOOST_MEMORY_CALL allocate(const size_t cbData0, destructor_t fn)
 	{
-		_tls_gcAlloc->get().allocate(cbData0, fn);
+		return _tls_gcAlloc->get().allocate(cbData0, fn);
 	}
 
 	static void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)

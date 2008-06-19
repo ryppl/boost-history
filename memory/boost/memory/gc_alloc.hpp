@@ -12,7 +12,9 @@
 #ifndef BOOST_MEMORY_GC_ALLOC_HPP
 #define BOOST_MEMORY_GC_ALLOC_HPP
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4786)
+#endif
 
 #ifndef BOOST_MEMORY_SCOPED_ALLOC_HPP
 #include "scoped_alloc.hpp"
@@ -81,7 +83,7 @@ private:
 		// HeaderSizeT cbNodeSize : 30; // cbNodeSize = cbSize + sizeof(MemHeader)
 		// HeaderSizeT nodeType : 2;	// enum MemNodeType
 		
-		HeaderSizeT BOOST_MEMORY_CALL getNodeType() const {
+		int BOOST_MEMORY_CALL getNodeType() const {
 			return NodeTypeMask & dataMemHeader;
 		}
 		HeaderSizeT BOOST_MEMORY_CALL getNodeSize() const {

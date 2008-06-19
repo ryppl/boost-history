@@ -31,7 +31,9 @@
 #endif
 
 #pragma pack() // default pack
+#if defined(_MSC_VER)
 #pragma warning(disable:4786)
+#endif
 // warning: identifier was truncated to '255' characters in the debug information
 
 // =========================================================================
