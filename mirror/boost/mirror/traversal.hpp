@@ -16,11 +16,11 @@ namespace boost {
 namespace mirror {
 
 
-template <class MetaClass, class Context = mpl::vector0<> >
+template <class MetaClass, class NodePath = mpl::vector0<> >
 class deep_traversal_of 
 : detail::traversal_utils<
 	MetaClass,
-	Context,
+	NodePath,
 	typename MetaClass::attributes,
 	deep_traversal_of
 >
@@ -51,11 +51,17 @@ private:
 	)
 	{
 		MetaClass mc;
-		Context ctx;
+		NodePath path;
 		// enter the type
-		visitor.get().enter_type(mc, ctx);
+		visitor.get().enter_type(
+			mc, 
+			meta_path::make_node_context(
+				path,
+				mc
+			)
+		);
 		// visit the instance
-		lead_to_instance(visitor, mc, ctx, ptr_to_inst);
+		lead_to_instance(visitor, mc, path, ptr_to_inst);
 		// go through the base classes
 		for_each<typename MetaClass::base_classes>(
 			cref(show_bases_to(visitor, ptr_to_inst))
@@ -65,15 +71,21 @@ private:
 			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
-		visitor.get().leave_type(mc, ctx);
+		visitor.get().leave_type(
+			mc, 
+			meta_path::make_node_context(
+				path,
+				mc
+			)
+		);
 	}
 };
 
-template <class MetaClass, class Context = mpl::vector0<> >
+template <class MetaClass, class NodePath = mpl::vector0<> >
 class flat_traversal_of
 : detail::traversal_utils<
 	MetaClass, 
-	Context,
+	NodePath,
 	typename MetaClass::all_attributes,
 	flat_traversal_of
 >
@@ -103,17 +115,29 @@ private:
 	)
 	{
 		MetaClass mc;
-		Context ctx;
+		NodePath path;
 		// enter the type
-		visitor.get().enter_type(mc, ctx);
+		visitor.get().enter_type(
+			mc, 
+			meta_path::make_node_context(
+				path,
+				mc
+			)
+		);
 		// visit the instance
-		lead_to_instance(visitor, mc, ctx, ptr_to_inst);
+		lead_to_instance(visitor, mc, path, ptr_to_inst);
 		// go through all of the class' attributes
 		for_each<typename MetaClass::all_attributes>(
 			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
-		visitor.get().leave_type(mc, ctx);
+		visitor.get().leave_type(
+			mc, 
+			meta_path::make_node_context(
+				path,
+				mc
+			)
+		);
 	}
 };
 

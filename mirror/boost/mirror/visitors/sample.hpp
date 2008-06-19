@@ -148,8 +148,15 @@ public:
 			MetaAttribute::position::value <<
 			"' name='" <<
 			MetaAttribute::base_name() <<
+			"' static='" <<
+			(MetaAttribute::traits::is_static::value?"true":"false") <<
 			"'>" << 
 			endl;
+bcout << 
+	"---" << meta_path::size<meta_path::self<Context> >::value << "---" << 
+	endl << 
+	"---" << meta_path::size<meta_path::ancestors<Context> >::value << "---" << 
+	endl;
 	}
 
 	template <class MetaAttribute, class Context>
