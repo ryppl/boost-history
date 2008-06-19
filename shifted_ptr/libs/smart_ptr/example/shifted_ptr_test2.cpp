@@ -7,6 +7,7 @@
 */
 
 #include <boost/shifted_ptr.hpp>
+#include <boost/shifted_allocator.hpp>
 
 #include <vector>
 #include <iostream>
@@ -64,7 +65,7 @@ struct vector {
     ~vector() { --count; }
     vector(const vector& other) : elements(other.elements) { ++count; }
     std::vector<shifted_ptr<vector> > elements;
-    //std::vector<shifted_ptr<vector>, shifted_allocator<vector> > elements; //! FIXME
+    //std::vector<shifted_ptr<vector>, shifted_allocator< shifted_ptr<vector> > > elements; //! FIXME
 };
 
 struct create_type {

@@ -67,17 +67,11 @@ class owned_base;
     Allocator wrapper tracking allocations.
 */
 
-class pool : public boost::pool<>
+struct pool : boost::pool<>
 {
     typedef std::list< std::pair<char *, char *>, fast_pool_allocator< std::pair<char *, char *> > > lpp;
 
-#ifndef BOOST_SH_DISABLE_THREADS
-    thread_specific_ptr<lpp> alloc_, constr_;
-#else
-    std::auto_ptr<lpp> alloc_, constr_;
-#endif
 
-public:
     pool() : boost::pool<>(1)
     {
         alloc_.reset(new lpp());
@@ -99,9 +93,13 @@ public:
                 break;
 
         alloc_.get()->erase(i.base(), alloc_.get()->end());
-        //constr_.get()->splice(constr_.get()->end(), * alloc_.get(), i.base());
         
         return (owned_base *)(i->first);
+    }
+    
+    lpp & construct()
+    {
+        return * constr_.get();
     }
     
     void * allocate(std::size_t s)
@@ -123,9 +121,15 @@ public:
                 break;
         
         alloc_.get()->erase(i.base(), alloc_.get()->end());
-        //constr_.get()->splice(constr_.get()->end(), * alloc_.get(), i.base());
         free(p, s);
     }
+
+private:
+#ifndef BOOST_SH_DISABLE_THREADS
+    thread_specific_ptr<lpp> alloc_, constr_;
+#else
+    std::auto_ptr<lpp> alloc_, constr_;
+#endif
 };
 
 
@@ -142,15 +146,16 @@ class owned_base : public sp_counted_base
 
 	intrusive_stack ptrs_;
 	intrusive_list inits_;
-	
-public:
-    intrusive_list::node set_tag_;
-    intrusive_list::node init_tag_;
-
+    
+protected:
     owned_base()
     {
         inits_.push_back(& init_tag_); 
     }
+
+public:
+    intrusive_list::node set_tag_;
+    intrusive_list::node init_tag_;
 
     intrusive_stack * ptrs() 						{ return & ptrs_; }
     intrusive_list * inits()						{ return & inits_; }
@@ -173,11 +178,8 @@ pool owned_base::pool_;
 #define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n
 
 #define CONSTRUCT_OWNED(z, n, text)																			    \
-	template <BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                        \
-		text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0))                                                              \
-        {                                                                                                       \
-            new (element()) data_type(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0));                                   \
-        }																										
+    template <BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                        \
+        text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0)) : e_(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)) {}
 
 /**
 	Object wrapper.
@@ -188,28 +190,20 @@ template <typename T>
     {
         typedef T data_type;
 
-        union
-        {
-            long a_;
-            char p_[sizeof(data_type)];
-        };
+        data_type e_; // need alignas<long>
         
     public:
         class roofof;
         friend class roofof;
 
-		shifted() 
-        {
-            new (element()) data_type();
-        }
-        
+		shifted() : e_() {}
+
         BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, shifted)
 
-
-        data_type * element() 				{ return static_cast<data_type *>(static_cast<void *>(& p_[0])); }
+        data_type * element() 				{ return & e_; }
 
         virtual ~shifted()					{ dispose(); }
-        virtual void dispose() 				{ dispose(element(), is_array<data_type>()); }
+        virtual void dispose() 				{ /*dispose(element(), is_array<data_type>());*/ }
 
         virtual void * get_deleter( std::type_info const & ti ) { return 0; } // dummy
 
@@ -219,7 +213,7 @@ template <typename T>
             shifted<data_type> * p_;
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::p_), p)) {}
+            roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::e_), p)) {}
             
             operator shifted<data_type> * () const { return p_; }
         };
@@ -233,33 +227,6 @@ template <typename T>
         {
             pool_.deallocate(p, sizeof(shifted));
         }
-
-    private:
-        template <typename U>
-            static void dispose_array(U * p, const false_type &)
-            {
-                typedef typename remove_extent<U>::type element_type;
-                
-                for (element_type * i = * p; i != * p + sizeof(data_type) / sizeof(element_type); i ++)
-                    dispose(i, is_array<element_type>());
-            }
-
-        template <typename U>
-            static void dispose_array(U * p, const true_type &)
-            {
-            }
-
-        template <typename U>
-            static void dispose(U * p, const false_type &)
-            {
-                p->~U();
-            }
-        
-        template <typename U>
-            static void dispose(U * p, const true_type &)
-            {
-                dispose_array(p, has_trivial_destructor<data_type>());
-            }
     };
 
 
@@ -294,87 +261,6 @@ template <>
             operator shifted<data_type> * () const { return p_; }
         };
     };
-
-
-/**
-    STL compliant allocator.
-*/
-
-//! FIXME
-template <typename T>
-    class shifted_allocator
-    {
-    public:
-        typedef size_t      size_type;
-        typedef ptrdiff_t   difference_type;
-        typedef T *         pointer;
-        typedef const T *   const_pointer;
-        typedef T &         reference;
-        typedef const T &   const_reference;
-        typedef T           value_type;
-
-        template <typename U>
-            struct rebind
-            { 
-                typedef shifted_allocator<U> other; 
-            };
-
-        shifted_allocator() throw()                                 {}
-        shifted_allocator(const shifted_allocator &) throw()        {}
-        template <typename U>
-            shifted_allocator(const shifted_allocator<U> &) throw() {}
-
-        ~shifted_allocator() throw()                                {}
-        pointer address(reference x) const                          { return & x; }
-        const_pointer address(const_reference x) const              { return & x; }
-
-        pointer allocate(size_type s, const void * = 0)
-        { 
-            void * q = shifted<T>::operator new(s * sizeof(T));
-            
-            // only T's constructor will be called so take care of the rest
-            return static_cast<shifted<T> *>(new (q) owned_base)->element(); 
-        }
-
-        void deallocate(pointer p, size_type)
-        { 
-            owned_base * q = shifted<T>::roofof(p);
-            
-            // T's destructor already called so let's handle ~owned_base()
-            q->owned_base::~owned_base();
-            
-            shifted<T>::operator delete(q); 
-        }
-
-        //! FIXME
-        size_type max_size() const throw() 
-        { 
-            return size_t(-1) / sizeof(T); 
-        }
-
-        void construct(pointer p, const T & x) 
-        { 
-            ::new (p) T(x); 
-        }
-
-        void destroy(pointer p) 
-        { 
-            p->~T(); 
-        }
-    };
-
-template <typename T>
-    inline bool operator == (const shifted_allocator<T> &, const shifted_allocator<T> &)
-    { 
-        return true; 
-    }
-
-template <typename T>
-    inline bool operator != (const shifted_allocator<T> &, const shifted_allocator<T> &)
-    { 
-        return false; 
-    }
-
 
 } // namespace sh
 

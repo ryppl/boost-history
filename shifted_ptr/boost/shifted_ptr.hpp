@@ -163,6 +163,19 @@ template <typename T>
     public:
         typedef T element_type;
 
+/*
+        //! FIXME
+        typedef iterator_category;
+        typedef value_type;
+        typedef difference_type;
+        typedef reference;
+        typedef pointer;
+        typedef reference;
+        typedef pointer;
+        typedef reference;
+*/
+        typedef size_t                  size_type;
+        typedef ptrdiff_t               difference_type;
 
         shifted_ptr() : ps_(0)
         {
@@ -278,12 +291,17 @@ template <typename T>
         void init(owned_base * p)
         {
             for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
+            //for (pool::lpp::iterator i = owned_base::pool_.construct().begin(); i != owned_base::pool_.construct().end(); i ++)
             {
+                //owned_base * q = reinterpret_cast<owned_base *>(i->first);
+
                 ps_->elements()->push_back(i->set_tag());
                 
-                for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs()->begin(), n; n = m, ++ n, m != i->ptrs()->end(); m = n)
+                for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = p->ptrs()->begin(), n; n = m, ++ n, m != p->ptrs()->end(); m = n)
                     m->ps_ = ps_;
             }
+            
+            owned_base::pool_.construct().clear();
         }
     };
 
@@ -294,9 +312,6 @@ template <typename T>
 
 using detail::sh::shifted_ptr;
 using detail::sh::shifted;
-using detail::sh::shifted_allocator;
-using detail::sh::operator ==;
-using detail::sh::operator !=;
 
 } // namespace boost
 
