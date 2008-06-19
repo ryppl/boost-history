@@ -437,7 +437,7 @@ namespace detail {
 			};
 
 			template <int I, class Inherited>
-			struct result_of_get_attrib_traits
+			struct result_of_get_traits
 			{
 				// get the right meta-class
 				typedef typename mpl::eval_if<
@@ -463,7 +463,7 @@ namespace detail {
 				// the traits of the i-th attribute
 				typedef typename detail::type type;
 
-			}; // struct result_of_get_attrib_traits
+			}; // struct result_of_get_traits
 
 		}; // struct detail
 		
@@ -564,7 +564,7 @@ namespace detail {
 		/** The attribute traits getter
 		 */
 		template <int I>
-		static typename detail::result_of_get_attrib_traits<
+		static typename detail:: template result_of_get_traits<
 			I,
 			typename result_of_is_inherited<I>::type
 		>::type get_traits(mpl::int_<I>);
