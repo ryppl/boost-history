@@ -13,8 +13,6 @@
 
 namespace boost {
 namespace mirror {
-namespace detail {
-
 
 /** Meta class - specializes the meta_type for classes
  */
@@ -29,7 +27,6 @@ struct meta_class_destructor
 };
 
 
-} // namespace detail
 } // namespace mirror
 } // namespace boost
 

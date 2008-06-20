@@ -195,5 +195,14 @@
 			- Tested with gcc 4.3.0 on SuSE
 			- Tested with intel 10.1 on SuSE
 		</revision>
+		<revision id="20080620" major="0" minor="1" micro="30" author="m_ch">
+			- Minor update of class traversals
+			- Fixed some bugs in the meta-path related templates
+			- Added a new meta-path axis (parent)
+			- The interface of the visitors has been updated
+			- Added a new sample visitor showing what meta-path
+			  expressions can currently do
+			- Tested with MSVC++ 2008 EE On Vista
+		</revision>
 	</revisions>
 </library>

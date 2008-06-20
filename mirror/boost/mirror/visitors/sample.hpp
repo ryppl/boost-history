@@ -20,10 +20,6 @@
 // container size
 #include <boost/mirror/algorithm/size.hpp>
 //
-// meta-path related stuff
-#include <boost/mirror/meta_path/self.hpp>
-#include <boost/mirror/meta_path/ancestors.hpp>
-#include <boost/mirror/meta_path/size.hpp>
 
 //
 #include <boost/type_traits/is_fundamental.hpp>
@@ -72,10 +68,33 @@ public:
 		bcout << "</type>" << endl;
 	}
 
-	template <class MetaClass, class Context>
-	inline void enter_base_classes(MetaClass, Context){ }
-	template <class MetaClass, class Context>
-	inline void leave_base_classes(MetaClass, Context){ }
+	template <class MetaClass, class BaseClasses, class Context>
+	inline void enter_base_classes(MetaClass, BaseClasses, Context)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		if(mirror::size<MetaClass::base_classes>::value > 0)
+		{
+			print_indentation();
+			++indent;
+			bcout << 
+				"<base_classes>" << 
+			endl;
+		}
+	}
+	
+	template <class MetaClass, class BaseClasses, class Context>
+	inline void leave_base_classes(MetaClass, BaseClasses, Context)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		if(mirror::size<MetaClass::base_classes>::value > 0)
+		{
+			--indent;
+			print_indentation();
+			bcout << "</base_classes>" << endl;
+		}
+	}
 
 
 	// enter a base class

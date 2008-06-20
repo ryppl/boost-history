@@ -20,7 +20,6 @@
 
 namespace boost {
 namespace mirror {
-namespace detail {
 
 	/** This is basically the same as the "attributes" structure
 	 *  but allows to work with all member attributes including
@@ -666,7 +665,7 @@ namespace detail {
 		typedef typename detail_traits::type traits;
 
 	};
-} // namespace detail
+
 } // namespace mirror
 } // namespace boost
 

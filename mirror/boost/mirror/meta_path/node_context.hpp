@@ -45,9 +45,12 @@ make_node_context(FullPath, MetaObject)
 template <class NodeContext>
 struct node_set
 {
+	typedef typename NodeContext::paths_and_nodes
+		paths_and_nodes;
+
 	typedef typename mpl::transform_view<
 		typename NodeContext::paths_and_nodes,
-		mpl::first< mpl::_ >
+		mpl::second< mpl::_1 >
 	>::type nodes;
 };
 

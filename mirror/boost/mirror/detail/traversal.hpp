@@ -201,6 +201,7 @@ namespace detail {
 			{
 				visitor.enter_base_classes(
 					MetaClass(), 
+					typename MetaClass::base_classes(),
 					meta_path::make_node_context(
 						ClassNodePath(),
 						typename MetaClass::base_classes()
@@ -212,6 +213,7 @@ namespace detail {
 			{
 				visitor.leave_base_classes(
 					MetaClass(), 
+					typename MetaClass::base_classes(),
 					meta_path::make_node_context(
 						ClassNodePath(),
 						typename MetaClass::base_classes()

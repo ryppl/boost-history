@@ -22,7 +22,11 @@
 #include <boost/mirror/meta_types/boost_tuple.hpp>
 #include <boost/mirror/meta_classes/boost_tuple.hpp>
 
+#include <boost/mirror/meta_path/ancestors.hpp>
+#include <boost/mirror/meta_path/size.hpp>
+
 #include <boost/mirror/visitors/sample.hpp>
+#include <boost/mirror/visitors/meta_path_sample.hpp>
 #include <boost/mirror/traversal.hpp>
 
 /** First declare some namespaces and classes
@@ -185,6 +189,10 @@ int main(void)
 	deep_traversal_of<meta_H>::accept(sample_visitor<true>(), &h);
 	bcout << "--------------------------------------------" << endl;
 	flat_traversal_of<meta_H>::accept(sample_visitor<true>(), &h);
+	bcout << "--------------------------------------------" << endl;
+	deep_traversal_of<meta_H>::accept(meta_path_sample_visitor());
+	bcout << "--------------------------------------------" << endl;
+	flat_traversal_of<meta_H>::accept(meta_path_sample_visitor());
 	bcout << "--------------------------------------------" << endl;
 	//
 	//

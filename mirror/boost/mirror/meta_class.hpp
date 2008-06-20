@@ -73,12 +73,12 @@ struct meta_class : public meta_type<Class>
 
 	/** Same as attributes but containing also the inherited attributes
 	 */
-	typedef detail::meta_class_all_attributes<Class, VariantTag >
+	typedef meta_class_all_attributes<Class, VariantTag >
 		all_attributes;
 
 	/** Meta data concerning the destructor of the reflected class
 	 */
-	typedef detail::meta_class_destructor<Class, VariantTag>
+	typedef meta_class_destructor<Class, VariantTag>
 		destructor;
 };
 

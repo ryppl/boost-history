@@ -52,7 +52,7 @@ public:
 	struct NAME##_outline_holder \
 	{ \
 		struct outline : public mirror::detail::meta_attribute_outline< \
-			mirror::detail::meta_class_attribute< \
+			mirror::meta_class_attribute< \
 				Class, \
 				variant_tag, \
 				meta_class_attributes<Class, variant_tag>, \
@@ -62,7 +62,7 @@ public:
 		> \
 		{\
 			typedef mirror::detail::meta_attribute_outline< \
-				mirror::detail::meta_class_attribute< \
+				mirror::meta_class_attribute< \
 					Class, \
 					variant_tag, \
 					meta_class_attributes<Class, variant_tag>, \
