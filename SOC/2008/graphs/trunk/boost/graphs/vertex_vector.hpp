@@ -5,6 +5,9 @@
 #include <vector>
 #include <algorithm>
 
+#include "vertex_descriptor.hpp"
+#include "vertex_iterator.hpp"
+
 // Forward declarations
 template <typename V, typename A> struct vertex_vector_impl;
 
@@ -22,7 +25,7 @@ template <template <typename> class Alloc>
 struct basic_vertex_vector
 {
     typedef unused key_type;
-    typedef std::size_t descriptor_type;
+    typedef basic_vertex_descriptor<std::size_t> descriptor_type;
 
     // The store metafunction generates the type used to store vertices in
     // either a directed or undirected graph. This metafunction takes the
@@ -58,7 +61,7 @@ class vertex_vector_impl
 {
     typedef std::vector<Vertex, Allocator> vertex_store;
 public:
-    typedef std::size_t vertex_descriptor;
+    typedef basic_vertex_descriptor<std::size_t> vertex_descriptor;
 
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
@@ -100,10 +103,10 @@ public:
     /** @name Vertex Accessors */
     //@{
     vertex_type& vertex(vertex_descriptor v)
-    { return _verts[v]; }
+    { return _verts[v.get()]; }
 
     vertex_type const& vertex(vertex_descriptor v) const
-    { return _verts[v]; }
+    { return _verts[v.get()]; }
     //@{
 
     /** @name Property Accessors */

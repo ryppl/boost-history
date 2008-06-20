@@ -4,6 +4,9 @@
 
 #include <map>
 
+#include "vertex_descriptor.hpp"
+#include "vertex_iterator.hpp"
+
 // Forward declarations
 template <typename, typename, typename, template <typename> class> class vertex_map_elem;
 template <typename, typename, typename, typename> class vertex_map_impl;
@@ -32,7 +35,7 @@ template <
 struct basic_vertex_map
 {
     typedef Key key_type;
-    typedef void* descriptor_type;
+    typedef basic_vertex_descriptor<void*> descriptor_type;
 
     template <typename Vertex>
     struct store
@@ -97,7 +100,7 @@ class vertex_map_impl
 {
     typedef std::map<Key, Vertex, Compare, Allocator> vertex_store;
 public:
-    typedef void* vertex_descriptor;
+    typedef basic_vertex_descriptor<void*> vertex_descriptor;
 
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
@@ -140,10 +143,10 @@ public:
     /** @name Vertex Accessors */
     //@{
     vertex_type& vertex(vertex_descriptor v)
-    { return *static_cast<vertex_type*>(v); }
+    { return *static_cast<vertex_type*>(v.get()); }
 
     vertex_type const& vertex(vertex_descriptor v) const
-    { return *static_cast<vertex_type*>(v); }
+    { return *static_cast<vertex_type*>(v.get()); }
     //@}
 
     /** @name Property Accessors */

@@ -4,10 +4,7 @@
 
 #include "none.hpp"
 
-#include "descriptor.hpp"
-
 #include "undirected_vertex.hpp"
-#include "vertex_iterator.hpp"
 #include "vertex_vector.hpp"
 #include "vertex_list.hpp"
 #include "vertex_set.hpp"
@@ -147,13 +144,41 @@ public:
     vertex_key const& key(vertex_descriptor) const;
     //@{
 
-    /** @name Edge Set
+    /** @name Add Edge
+     * Add an edge, connecting two vertices, to the graph. There are a number of
+     * variations of this function, depending on the type of vertex store and
+     * whether or not the edges are labeled. Convenience functions are provided
+     * for graphs with UniqueVertices. Graphs with LabeledEdges can be added
+     * with edge properties. Convenience functions are equivalent to the
+     * expression add_edge(find_vertex(x), find_vertex(y), p) with x and y
+     * eithe vertex proeprties or vertex keys and p optional edge properties.
+     *
+     * ExtendableEdgeSet        add_edge(vertex_descriptor, vertex_descriptor)
+     *   && LabeledEdges        add_edge(vertex_descriptor, vertex_descriptor, edge_properties)
+     *
+     * LabeledUniqueVertices    add_edge(vertex_properties, vertex_properties)
+     *   && LabeledEdges        add_edge(vertex_properties, vertex_properties, edge_properties)
+     *
+     * MappedUniqueVertices     add_edge(vertex_key, vertex_key)
+     *   & LabeledEdges         add_edge(vertex_key, vertex_key, edge_properties)
+     */
+    //@{
+    // Unlabeled edge adders.
+    edge_descriptor add_edge(vertex_descriptor, vertex_descriptor);
+    edge_descriptor add_edge(vertex_properties const&, vertex_properties const&);
+    edge_descriptor add_edge(vertex_key const&, vertex_key const&);
+
+    // Labeled edge adders.
+    edge_descriptor add_edge(vertex_descriptor, vertex_descriptor, edge_properties const&);
+    edge_descriptor add_edge(vertex_properties const&, vertex_properties const&, edge_properties const&);
+    edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_properties const&);
+    //@}
+
+    /** @name Remove Edge(s)
      * These functions operate on the edges of the graph. This functions
      * include the ability to add and remove edges.
      */
     //@{
-    edge_descriptor add_edge(vertex_descriptor, vertex_descriptor);
-    edge_descriptor add_edge(vertex_descriptor, vertex_descriptor, edge_properties const&);
     void remove_edge(edge_descriptor);
     void remove_edges(vertex_descriptor, vertex_descriptor);
     //@}
@@ -433,6 +458,56 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
 }
 
 /**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given properties. The edge is either unlabeled or has default properties.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
+                                        vertex_properties const& v)
+{
+    return add_edge(u, v, edge_properties());
+}
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given properties and has the given edge properties.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
+                                        vertex_properties const& v,
+                                        edge_properties const& ep)
+{
+    return add_edge(find_vertex(u), find_vertex(v), ep);
+}
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given keys. The edge is either unlabeled or has default properties.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
+                                        vertex_key const& v)
+{
+    return add_edge(u, v, edge_properties());
+}
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given keys and has the given edge properties.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
+                                        vertex_key const& v,
+                                        edge_properties const& ep)
+{
+    return add_edge(find_vertex(u), find_vertex(v), ep);
+}
+
+/**
  * Remove only the given edge from graph. This disconnects both vertices in
  * the edge and removes the property from the graph.
  *
@@ -625,8 +700,6 @@ undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
 }
 
 #undef BOOST_GRAPH_UG_PARAMS
-
-#include "traits.hpp"
 
 #endif
 

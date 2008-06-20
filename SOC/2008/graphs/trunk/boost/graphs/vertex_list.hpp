@@ -4,7 +4,8 @@
 
 #include <list>
 
-#include "descriptor.hpp"
+#include "vertex_descriptor.hpp"
+#include "vertex_iterator.hpp"
 
 // Forward declarations
 template <typename V, template <typename> class A> class vertex_list_elem;
@@ -22,7 +23,7 @@ template <template <typename> class Allocator>
 struct basic_vertex_list
 {
     typedef unused key_type;
-    typedef void* descriptor_type;
+    typedef basic_vertex_descriptor<void*> descriptor_type;
 
     template <typename Vertex>
     struct store
@@ -59,15 +60,17 @@ public:
 };
 
 /**
+ * The implementation of the vertex list.
  *
- * FIXME: Track the size of the list, so that num_vertices() is constant.
+ * @param Vertex The type of stored vertex.
+ * @param Alloc The allocator for stored vertices.
  */
-template <typename Vertex, typename Allocator>
+template <typename Vertex, typename Alloc>
 class vertex_list_impl
 {
-    typedef std::list<Vertex, Allocator> vertex_store;
+    typedef std::list<Vertex, Alloc> vertex_store;
 public:
-    typedef void* vertex_descriptor;
+    typedef basic_vertex_descriptor<void*> vertex_descriptor;
 
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
@@ -107,10 +110,10 @@ public:
     /** @name Vertex Accessors */
     //@{
     vertex_type& vertex(vertex_descriptor v)
-    { return *static_cast<vertex_type*>(v); }
+    { return *static_cast<vertex_type*>(v.get()); }
 
     vertex_type const& vertex(vertex_descriptor v) const
-    { return *static_cast<vertex_type*>(v); }
+    { return *static_cast<vertex_type*>(v.get()); }
     //@}
 
     /** @name Vertex Properties */
@@ -194,7 +197,7 @@ void
 vertex_list_impl<V,A>::remove(vertex_descriptor v)
 {
     --_size;
-    vertex_type* vp = static_cast<vertex_type*>(v);
+    vertex_type* vp = static_cast<vertex_type*>(v.get());
     _verts.erase(vp->iter);
 }
 

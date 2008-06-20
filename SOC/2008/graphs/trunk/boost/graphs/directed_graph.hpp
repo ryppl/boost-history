@@ -15,16 +15,20 @@
 // graph, you can roll your own. This is analagous to the list/slist data
 // structures in the std library.
 
+// Note that directed graphs maintain an independent edge count since the actual
+// count would basically require a search.
+
 #include "none.hpp"
 
-#include "descriptor.hpp"
-
 #include "directed_vertex.hpp"
-#include "vertex_iterator.hpp"
 #include "vertex_vector.hpp"
+#include "vertex_list.hpp"
+#include "vertex_set.hpp"
+#include "vertex_map.hpp"
 
 #include "directed_edge.hpp"
 #include "edge_vector.hpp"
+#include "edge_list.hpp"
 
 #include "adjacency_iterator.hpp"
 
@@ -74,6 +78,9 @@ public:
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
+
+    // This just makes sense.
+    typedef std::size_t edges_size_type;
 
     // FIXME: This is a bit hacky, but without constrained members, we need a key
     // type to enable mapped vertices.
@@ -152,10 +159,25 @@ public:
      */
     //@{
     vertex_key const& key(vertex_descriptor) const;
-    //@{
+    //@}
 
     /** @name Add Edge
-     * Add an edge, connecting two vertices, to the graph.
+     * Add an edge, connecting two vertices, to the graph. There are a number of
+     * variations of this function, depending on the type of vertex store and
+     * whether or not the edges are labeled. Convenience functions are provided
+     * for graphs with UniqueVertices. Graphs with LabeledEdges can be added
+     * with edge properties. Convenience functions are equivalent to the
+     * expression add_edge(find_vertex(x), find_vertex(y), p) with x and y
+     * eithe vertex proeprties or vertex keys and p optional edge properties.
+     *
+     * ExtendableEdgeSet        add_edge(vertex_descriptor, vertex_descriptor)
+     *   && LabeledEdges        add_edge(vertex_descriptor, vertex_descriptor, edge_properties)
+     *
+     * LabeledUniqueVertices    add_edge(vertex_properties, vertex_properties)
+     *   && LabeledEdges        add_edge(vertex_properties, vertex_properties, edge_properties)
+     *
+     * MappedUniqueVertices     add_edge(vertex_key, vertex_key)
+     *   & LabeledEdges         add_edge(vertex_key, vertex_key, edge_properties)
      */
     //@{
     edge_descriptor add_edge(vertex_descriptor, vertex_descriptor);
@@ -165,12 +187,14 @@ public:
     edge_descriptor add_edge(vertex_descriptor, vertex_descriptor, edge_properties const&);
     edge_descriptor add_edge(vertex_properties const&, vertex_properties const&, edge_properties const&);
     edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_properties const&);
-    //@{
+    //@}
 
-    /** @name Degree
+    /** @name Size and Degree
      * Return the in/out or cumulative degree of the given vertex.
      */
     //@{
+    vertices_size_type num_vertices() const;
+    edges_size_type num_edges() const;
     out_edges_size_type out_degree(vertex_descriptor v) const;
     in_edges_size_type in_degree(vertex_descriptor v) const;
     incident_edges_size_type degree(vertex_descriptor v) const;
@@ -183,10 +207,11 @@ public:
     //@{
     vertex_properties& operator[](vertex_descriptor);
     edge_properties& operator[](edge_descriptor);
-    //@{
+    //@}
 
 private:
-    vertex_store _verts;
+    vertex_store        _verts;
+    edges_size_type     _edges;
 };
 
 #define BOOST_GRAPH_DG_PARAMS \
@@ -195,6 +220,7 @@ private:
 template <BOOST_GRAPH_DG_PARAMS>
 directed_graph<VP,EP,VS,ES>::directed_graph()
     : _verts()
+    , _edges(0)
 { }
 
 /**
@@ -367,14 +393,19 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         // The addition is allowed... Was there already an edge there? If not,
         // connect u to v (and vice-versa) with the given properties. Otherwise,
         // just return the existing edge.
+        edge_descriptor e;
         if(ins.first == src.end_out()) {
             out_descriptor o = src.connect_to(v, ep);
             tgt.connect_from(u, o);
-            return edge_descriptor(u, o);
+            e = edge_descriptor(u, o);
         }
         else {
-            return edge_descriptor(u, *ins.first);
+            e = edge_descriptor(u, *ins.first);
         }
+
+        // Remember that we're allocating the edge.
+        ++_edges;
+        return e;
     }
     else {
         // Can't add the edge? This is a flat refusal (as in a loop).
@@ -382,6 +413,77 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
 
     return edge_descriptor();
 }
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given properties. The edge is either unlabeled or has default properties.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
+directed_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
+                                        vertex_properties const& v)
+{
+    return add_edge(u, v, edge_properties());
+}
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given properties and has the given edge properties.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
+directed_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
+                                        vertex_properties const& v,
+                                        edge_properties const& ep)
+{
+    return add_edge(find_vertex(u), find_vertex(v), ep);
+}
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given keys. The edge is either unlabeled or has default properties.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
+directed_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
+                                        vertex_key const& v)
+{
+    return add_edge(u, v, edge_properties());
+}
+
+/**
+ * Add an edge to the graph that connects the two vertices identified by the
+ * given keys and has the given edge properties.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
+directed_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
+                                        vertex_key const& v,
+                                        edge_properties const& ep)
+{
+    return add_edge(find_vertex(u), find_vertex(v), ep);
+}
+
+/**
+ * Return the number of vertices in the graph.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::vertices_size_type
+directed_graph<VP,EP,VS,ES>::num_vertices() const
+{
+    return _verts.size();
+}
+
+/**
+ * Return the number of edges in the graph.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edges_size_type
+directed_graph<VP,EP,VS,ES>::num_edges() const
+{
+    return _edges;
+}
+
 
 /**
  * Return the out degree of the given vertex.
@@ -433,5 +535,7 @@ directed_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
 {
     return e.properties();
 }
+
+#undef BOOST_GRAPH_DG_PARAMS
 
 #endif

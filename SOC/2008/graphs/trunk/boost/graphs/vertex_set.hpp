@@ -4,6 +4,9 @@
 
 #include <set>
 
+#include "vertex_descriptor.hpp"
+#include "vertex_iterator.hpp"
+
 // Forward declarations
 template <typename, template <typename> class, template <typename> class> class vertex_set_elem;
 template <typename, typename> class vertex_set_compare;
@@ -28,7 +31,7 @@ template <template <typename> class Compare, template <typename> class Alloc>
 struct basic_vertex_set
 {
     typedef unused key_type;
-    typedef void* descriptor_type;
+    typedef basic_vertex_descriptor<void*> descriptor_type;
 
     template <typename Vertex>
     struct store
@@ -119,7 +122,7 @@ class vertex_set_impl
 {
     typedef std::set<Vertex, Compare, Allocator> vertex_store;
 public:
-    typedef void* vertex_descriptor;
+    typedef basic_vertex_descriptor<void*> vertex_descriptor;
 
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
@@ -159,10 +162,10 @@ public:
     /** @name Vertex Accessors */
     //@{
     vertex_type& vertex(vertex_descriptor v)
-    { return *static_cast<vertex_type*>(v); }
+    { return *static_cast<vertex_type*>(v.get()); }
 
     vertex_type const& vertex(vertex_descriptor v) const
-    { return *static_cast<vertex_type*>(v); }
+    { return *static_cast<vertex_type*>(v.get()); }
     //@}
 
     /** @name Property Accessors */
