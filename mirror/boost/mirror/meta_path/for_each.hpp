@@ -27,7 +27,7 @@ template <
 void for_each(Functor f)
 {
 	mpl::for_each<
-		typename NodeSet::paths_and_nodes,
+		typename NodeSet::paths_and_nodes
 	>(f);
 }
 
@@ -56,7 +56,7 @@ template <
 void for_each(boost::reference_wrapper<Functor> f_ref)
 {
 	mpl::for_each<
-		typename NodeSet::paths_and_nodes,
+		typename NodeSet::paths_and_nodes
 	>(f_ref);
 }
 
