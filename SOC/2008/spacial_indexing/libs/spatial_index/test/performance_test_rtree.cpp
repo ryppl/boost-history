@@ -84,8 +84,8 @@ int test_main(int, char* [])
   std::vector< geometry::point_xy<double> > points = read_data();
 
   // -- wait to check memory
-//   std::cerr << "check memory --> After Reading Data." << std::endl;
-//   sleep(5);
+  //   std::cerr << "check memory --> After Reading Data." << std::endl;
+  //   sleep(5);
   // -- wait to check memory
 
   // start time
@@ -117,8 +117,8 @@ int test_main(int, char* [])
       std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
 
       // -- wait to check memory
-//       std::cerr << "check memory --> After Building Index." << std::endl;
-//       sleep(5);
+      //       std::cerr << "check memory --> After Building Index." << std::endl;
+      //       sleep(5);
       // -- wait to check memory
 
       // search
@@ -152,11 +152,20 @@ int test_main(int, char* [])
 
 
       std::cerr << " --> removal tests" << std::endl;
+      for(unsigned int j=0; j < find_count/1000; j++) {
+ 	q->remove(geometry::box<geometry::point_xy<double> >(search_positions[j], search_positions[j]));
+// 	std::cerr << "Elements: " << q->elements() << std::endl;
+      }      
+      std::cerr << std::endl;
 
-      
+      std::cerr << " --> requery test" << std::endl;
+      start = time(NULL);
+      for(unsigned int j=0; j < find_count/1000; j++) {
+ 	unsigned int i = q->find(search_positions[j]);
+// 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
+	BOOST_CHECK_EQUAL(i, 0u);
+      }
+      std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 
       return 0;
 }
-
-
-

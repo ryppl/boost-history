@@ -48,7 +48,7 @@ namespace spatial_index {
 	l->remove(k);
 
 	if(l->elements() < m_) {
-	  std::cerr << "Few elements in Node." << std::endl;
+// 	  std::cerr << "Few elements in Node." << std::endl;
 
 	  q_leaves = l->get_leaves();
 
@@ -71,7 +71,7 @@ namespace spatial_index {
 
 
 	for(typename std::vector<std::pair<geometry::box<Point>, Value> >::const_iterator it = s.begin(); it != s.end(); ++it) {
-	    std::cerr << "Inserting " << it->second << std::endl;
+// 	    std::cerr << "Inserting " << it->second << std::endl;
 	    insert(it->first, it->second);
 	}
 
@@ -81,7 +81,7 @@ namespace spatial_index {
 	  root_->set_root();
 	}
 
-	std::cerr << "Reinserting leaves " << q_leaves.size() << std::endl;
+// 	std::cerr << "Reinserting leaves " << q_leaves.size() << std::endl;
 
 	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = q_leaves.begin(); it != q_leaves.end(); ++it) {
 	  insert(it->first, it->second);
@@ -203,7 +203,7 @@ namespace spatial_index {
 
     void condense_tree(const boost::shared_ptr<rtree_node<Point,Value> > &l, typename rtree_node<Point,Value>::node_map &q_nodes)
     {
-      std::cerr << "Condensing tree." << std::endl;
+//       std::cerr << "Condensing tree." << std::endl;
 
       if(l->is_root()) {
 	// if it's the root we are done
@@ -219,10 +219,10 @@ namespace spatial_index {
 	  return;
 	}
 
-	std::cerr << "condense_node: underfull node (" << parent.get() << ")" << std::endl;
+// 	std::cerr << "condense_node: underfull node (" << parent.get() << ")" << std::endl;
 
 	typename rtree_node<Point,Value>::node_map this_nodes = parent->get_nodes();
-	std::cerr << "Storing nodes (" << this_nodes.size() << ")" << std::endl;
+// 	std::cerr << "Storing nodes (" << this_nodes.size() << ")" << std::endl;
 	for(typename rtree_node<Point,Value>::node_map::const_iterator it = this_nodes.begin(); it != this_nodes.end(); ++it) {
 	  q_nodes.push_back(*it);
 	}

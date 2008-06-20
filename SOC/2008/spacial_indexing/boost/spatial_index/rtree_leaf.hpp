@@ -106,13 +106,11 @@ namespace spatial_index {
 
       for(typename leaves_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	if(it->first.min() == k.min() && it->first.max() == k.max()) {
-	  std::cerr << "Erasing node." << std::endl;
+// 	  std::cerr << "Erasing node." << std::endl;
 	  nodes_.erase(it);
 	  return;
 	}
       }
-      std::cerr << "remove: node not found" << std::endl;
-      print();
       std::cerr << "remove: node not found" << std::endl;
     }
 

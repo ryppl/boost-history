@@ -16,5 +16,6 @@ run simple_test.cpp ;
 run simple_test_rtree.cpp ;
 run custom_point_test.cpp ;
 run random_test.cpp ;
+run random_test_rtree.cpp ;
 run performance_test.cpp ;
 run performance_test_rtree.cpp ;
