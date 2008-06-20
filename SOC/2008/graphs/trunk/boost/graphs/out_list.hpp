@@ -36,6 +36,7 @@ public:
 
     inline out_list()
         : _edges()
+        , _size(0)
     { }
 
     std::pair<const_iterator, bool> allow(vertex_descriptor v) const;
@@ -55,11 +56,12 @@ public:
 
     /** Get the number of outgoing edges. */
     inline size_type size() const
-    { return _edges.size(); }
+    { return _size; }
     //@{
 
 private:
-    store_type _edges;
+    store_type  _edges;
+    size_type   _size;
 };
 
 /**
@@ -81,6 +83,7 @@ template <typename E, typename A>
 typename out_list<E,A>::out_descriptor
 out_list<E,A>::add(out_pair e)
 {
+    ++_size;
     _edges.push_back(e);
     return _edges.back();
 }
@@ -112,6 +115,7 @@ template <typename E, typename A>
 void
 out_list<E,A>::remove(out_pair e)
 {
+    --_size;
     _edges.erase(find(e));
 }
 

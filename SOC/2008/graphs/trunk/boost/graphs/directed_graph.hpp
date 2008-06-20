@@ -29,6 +29,7 @@
 #include "directed_edge.hpp"
 #include "edge_vector.hpp"
 #include "edge_list.hpp"
+#include "edge_set.hpp"
 
 #include "adjacency_iterator.hpp"
 

@@ -33,6 +33,7 @@ struct basic_out_descriptor
     inline basic_out_descriptor(OutPair const& o)
         : _d(&const_cast<OutPair&>(o))
     { }
+
     //@{
 
     OutPair& pair() const
