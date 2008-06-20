@@ -60,8 +60,8 @@ private:
 	
 	char* m_begin;
 	char* m_end;
-	DestroyNode* m_destroyChain;
 	AllocT m_alloc;
+	DestroyNode* m_destroyChain;
 
 private:
 	const region_alloc& operator=(const region_alloc&);
