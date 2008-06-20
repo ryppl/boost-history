@@ -38,12 +38,25 @@ public:
         : _edges()
     { }
 
-    std::pair<const_iterator, bool> allow(vertex_descriptor v) const;
-    out_descriptor add(out_pair);
+    /** Allow the addition? */
+    std::pair<const_iterator, bool> allow(vertex_descriptor v) const
+    { return std::make_pair(_edges.end(), true); }
 
-    vertex_descriptor vertex(out_descriptor) const;
+    /**
+     * Add the edge to the vector.
+     * @complexity O(1)
+     */
+    out_descriptor add(out_pair e)
+    {
+        _edges.push_back(e);
+        return _edges.back();
+    }
 
-    /** @name Iterators and Size */
+    /** Get the number of outgoing edges. */
+    inline size_type size() const
+    { return _edges.size(); }
+
+    /** @name Iterators */
     //@{
     inline const_iterator begin() const
     { return _edges.begin(); }
@@ -51,48 +64,10 @@ public:
     inline const_iterator end() const
     { return _edges.end(); }
 
-    /** Get the number of outgoing edges. */
-    inline size_type size() const
-    { return _edges.size(); }
     //@{
 
 private:
     store_type _edges;
 };
-
-/**
- * Out vectors always allow the insertion of new edges, unless configured by
- * policy to do otherwise.
- */
-template <typename E, typename A>
-std::pair<typename out_vector<E,A>::const_iterator, bool>
-out_vector<E,A>::allow(vertex_descriptor v) const
-{
-    return std::make_pair(_edges.end(), true);
-}
-
-/**
- * Add the incident edge, returning the property descriptor of the added
- * incidence pair.
- */
-template <typename E, typename A>
-typename out_vector<E,A>::out_descriptor
-out_vector<E,A>::add(out_pair e)
-{
-    _edges.push_back(e);
-    return _edges.back();
-}
-
-/**
- * Return the target vertex of the given edge property descriptor. Because each
- * property descriptor references a unique edge, we can easily access the
- * corresponding target vertex.
- */
-template <typename E, typename A>
-typename out_vector<E,A>::vertex_descriptor
-out_vector<E,A>::vertex(out_descriptor p) const
-{
-    return p.target();
-}
 
 #endif

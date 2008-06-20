@@ -27,7 +27,9 @@ public:
         : _edges()
     { }
 
-    void add(in_pair);
+    /** Add the edge to the vector. */
+    void add(in_pair e)
+    { _edges.push_back(e); }
 
     /** Get the number of incoming edges (in degree). */
     size_type size() const
@@ -36,15 +38,5 @@ public:
 private:
     store_type _edges;
 };
-
-/**
- * Add the given pair to the edge set.
- */
-template <typename E, typename A>
-void
-in_vector<E,A>::add(in_pair e)
-{
-    _edges.push_back(e);
-}
 
 #endif

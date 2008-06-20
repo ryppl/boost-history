@@ -5,6 +5,7 @@
 #include <list>
 
 #include "out_descriptor.hpp"
+#include "select.hpp"
 
 /**
  * The out list implements list-based, out-edge storage for directed graphs.
@@ -39,12 +40,48 @@ public:
         , _size(0)
     { }
 
-    std::pair<const_iterator, bool> allow(vertex_descriptor v) const;
-    out_descriptor add(out_pair);
-    iterator find(out_pair);
-    const_iterator find(out_pair) const;
-    void remove(out_pair);
-    void clear();
+    /** Allow an edge insertion? */
+    std::pair<const_iterator, bool> allow(vertex_descriptor v) const
+    { return std::make_pair(_edges.end(), true); }
+
+    /** Add the edge to the list. */
+    out_descriptor add(out_pair e)
+    {
+        ++_size;
+        _edges.push_back(e);
+        return _edges.back();
+    }
+
+    /** Find the edge with the given vertex. */
+    iterator find(vertex_descriptor v)
+    {
+        iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->first == v) return i;
+        }
+        return end;
+    }
+
+    /** Find the edge with the given vertex. */
+    const_iterator find(vertex_descriptor v) const
+    {
+        const_iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->first == v) return i;
+        }
+        return end;
+    }
+
+    /** Remove the edge with the given vertex. */
+    void remove(vertex_descriptor v)
+    {
+        --_size;
+        _edges.erase(find(v));
+    }
+
+    /** Remove all edges. */
+    void clear()
+    { _edges.clear(); }
 
     /** @name Iterators and Size */
     //@{
@@ -63,70 +100,5 @@ private:
     store_type  _edges;
     size_type   _size;
 };
-
-/**
- * Out lists always allow the insertion of new edges, unless configured by
- * policy to do otherwise.
- */
-template <typename E, typename A>
-std::pair<typename out_list<E,A>::const_iterator, bool>
-out_list<E,A>::allow(vertex_descriptor v) const
-{
-    return std::make_pair(_edges.end(), true);
-}
-
-/**
- * Add the incident edge, returning the property descriptor of the added
- * incidence pair.
- */
-template <typename E, typename A>
-typename out_list<E,A>::out_descriptor
-out_list<E,A>::add(out_pair e)
-{
-    ++_size;
-    _edges.push_back(e);
-    return _edges.back();
-}
-
-/**
- * Find the requested incidence pair in the list, returning an iterator to it.
- */
-template <typename E, typename A>
-typename out_list<E,A>::iterator
-out_list<E,A>::find(out_pair e)
-{
-     return std::find(_edges.begin(), _edges.end(), e);
-}
-
-/**
- * Find the requested incidence pair in the list, returning an iterator to it.
- */
-template <typename E, typename A>
-typename out_list<E,A>::const_iterator
-out_list<E,A>::find(out_pair e) const
-{
-    return std::find(_edges.begin(), _edges.end(), e);
-}
-
-/**
- * Remove the given incidence pair from the out list.
- */
-template <typename E, typename A>
-void
-out_list<E,A>::remove(out_pair e)
-{
-    --_size;
-    _edges.erase(find(e));
-}
-
-/**
- * Remove all edges from the out list.
- */
-template <typename E, typename A>
-void
-out_list<E,A>::clear()
-{
-    _edges.clear();
-}
 
 #endif

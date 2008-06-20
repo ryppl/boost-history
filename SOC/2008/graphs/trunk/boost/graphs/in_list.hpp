@@ -20,6 +20,7 @@ public:
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type edge_descriptor;
 
+    typedef typename store_type::iterator iterator;
     typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
@@ -27,7 +28,48 @@ public:
         : _edges()
     { }
 
-    void add(in_pair);
+    /**
+     * Add the edge to list.
+     * @complexity O(1)
+     */
+    void add(in_pair e)
+    { _edges.push_back(e); }
+
+    /**
+     * Find the edge with the given iterator.
+     * @complexity O(deg(u))
+     */
+    iterator find(vertex_descriptor v)
+    {
+        iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->first == v) return i;
+        }
+        return end;
+    }
+
+    /**
+     * Find the edge with the given iterator.
+     * @complexity O(deg(u))
+     */
+    const_iterator find(vertex_descriptor v) const
+    {
+        const_iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->first == v) return i;
+        }
+        return end;
+    }
+
+    /**
+     * Remove the edge with the given vertex.
+     * @complexity O(deg(u))
+     */
+    void remove(vertex_descriptor v)
+    { _edges.erase(find(v)); }
+
+    void clear()
+    { _edges.clear(); }
 
     /** Get the number of incoming edges (in degree). */
     size_type size() const
@@ -36,15 +78,5 @@ public:
 private:
     store_type _edges;
 };
-
-/**
- * Add the given pair to the edge set.
- */
-template <typename E, typename A>
-void
-in_list<E,A>::add(in_pair e)
-{
-    _edges.push_back(e);
-}
 
 #endif

@@ -46,8 +46,11 @@ public:
 
     std::pair<out_iterator, bool> allow(vertex_descriptor) const;
 
-    out_descriptor connect_to(vertex_descriptor, edge_properties const&);
-    void connect_from(vertex_descriptor, out_descriptor);
+    out_descriptor connect_target(vertex_descriptor, edge_properties const&);
+    void connect_source(vertex_descriptor, out_descriptor);
+
+    void disconnect_target(vertex_descriptor);
+    void disconnect_source(vertex_descriptor);
 
     /** @name Property Accessors */
     //@{
@@ -129,7 +132,7 @@ directed_vertex<V,O,I>::allow(vertex_descriptor v) const
  */
 template <typename V, typename O, typename I>
 typename directed_vertex<V,O,I>::out_descriptor
-directed_vertex<V,O,I>::connect_to(vertex_descriptor v, edge_properties const& ep)
+directed_vertex<V,O,I>::connect_target(vertex_descriptor v, edge_properties const& ep)
 {
     return _out.add(std::make_pair(v, ep));
 }
@@ -142,9 +145,29 @@ directed_vertex<V,O,I>::connect_to(vertex_descriptor v, edge_properties const& e
  */
 template <typename V, typename O, typename I>
 void
-directed_vertex<V,O,I>::connect_from(vertex_descriptor v, out_descriptor o)
+directed_vertex<V,O,I>::connect_source(vertex_descriptor v, out_descriptor o)
 {
     return _in.add(std::make_pair(v, o));
+}
+
+/**
+ * Disconnect this vertex from its target, removing the outgoing edge.
+ */
+template <typename V, typename O, typename I>
+void
+directed_vertex<V,O,I>::disconnect_target(vertex_descriptor v)
+{
+    _out.remove(v);
+}
+
+/**
+ * Disconnect this vertex from its source, removing the incoming edge.
+ */
+template <typename V, typename O, typename I>
+void
+directed_vertex<V,O,I>::disconnect_source(vertex_descriptor v)
+{
+    _in.remove(v);
 }
 
 #endif

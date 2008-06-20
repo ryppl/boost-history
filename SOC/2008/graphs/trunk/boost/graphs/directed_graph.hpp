@@ -190,6 +190,13 @@ public:
     edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_properties const&);
     //@}
 
+    /** @name Remove Edge
+     * Remove the edge from the graph.
+     */
+    //@{
+    void remove_edge(edge_descriptor e);
+    //@}
+
     /** @name Size and Degree
      * Return the in/out or cumulative degree of the given vertex.
      */
@@ -396,8 +403,8 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         // just return the existing edge.
         edge_descriptor e;
         if(ins.first == src.end_out()) {
-            out_descriptor o = src.connect_to(v, ep);
-            tgt.connect_from(u, o);
+            out_descriptor o = src.connect_target(v, ep);
+            tgt.connect_source(u, o);
             e = edge_descriptor(u, o);
         }
         else {
@@ -434,8 +441,8 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_descriptor
 directed_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
-                                        vertex_properties const& v,
-                                        edge_properties const& ep)
+                                      vertex_properties const& v,
+                                      edge_properties const& ep)
 {
     return add_edge(find_vertex(u), find_vertex(v), ep);
 }
@@ -447,7 +454,7 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_descriptor
 directed_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
-                                        vertex_key const& v)
+                                      vertex_key const& v)
 {
     return add_edge(u, v, edge_properties());
 }
@@ -459,11 +466,28 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_descriptor
 directed_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
-                                        vertex_key const& v,
-                                        edge_properties const& ep)
+                                      vertex_key const& v,
+                                      edge_properties const& ep)
 {
     return add_edge(find_vertex(u), find_vertex(v), ep);
 }
+
+/**
+ * Remove the edge connecting the two vertices. This removes only the given
+ * edge. Other edges connecting the two vertices remain.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
+{
+    vertex_type& src = _verts.vertex(e.source());
+    vertex_type& tgt = _verts.vertex(e.target());
+
+    // Remove the connections... That's it.
+    src.disconnect_target(e.target());
+    tgt.disconnect_source(e.source());
+}
+
 
 /**
  * Return the number of vertices in the graph.

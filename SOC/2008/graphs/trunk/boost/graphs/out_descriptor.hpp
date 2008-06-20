@@ -37,7 +37,7 @@ struct basic_out_descriptor
     //@{
 
     OutPair& pair() const
-    { return reinterpret_cast<OutPair*>(_d); }
+    { return *reinterpret_cast<OutPair*>(_d); }
 
     vertex_descriptor target() const
     { return pair().first; }
