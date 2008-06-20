@@ -4,8 +4,48 @@
 #include<string>
 #include<fstream>
 #include<algorithm>
+
 using namespace boost::dsearch;
 using namespace boost::minimal_test;
+
+template<class T>
+struct select_iterator{
+	typedef typename T::iterator type;
+	typedef typename T::reverse_iterator rtype;
+};
+template<class T>
+struct select_iterator<const T>{
+	typedef typename T::const_iterator type;
+	typedef typename T::const_reverse_iterator rtype;
+};
+
+template<class T>
+void iterator_test(T &pat)
+{
+	typename select_iterator<T>::type it;
+	typename select_iterator<T>::rtype rit;
+	
+	//std::cout<<"into iterator_test"<<std::endl;
+	
+	for ( it=pat.begin(), rit=pat.rend(); rit!=pat.rbegin() && it!=pat.end(); ++it )
+	{
+		BOOST_CHECK( (*--rit).first==(*it).first);
+		//std::cout<<(*it).first<<"=="<<(*rit).first<<std::endl;
+	}
+	BOOST_CHECK ( rit==pat.rbegin() );
+	BOOST_CHECK( it==pat.end() );
+	
+	//std::cout<<"now reverse"<<std::endl;
+	for ( it=pat.end(),rit=pat.rbegin(); it!=pat.begin() && rit!=pat.rend();rit++)
+	{
+		BOOST_CHECK( (*rit).first==(*--it).first) ;
+		//std::cout<<(*it).first<<std::endl;
+	}
+	
+	//std::cout<<"out of iterator_test"<<std::endl;
+	return;
+}
+
 template<class T>
 void print_pat(const T &pat)
 {
@@ -81,7 +121,7 @@ void insert_test_1()
 }
 
 template<class T>
-void insert_test_2()
+T insert_test_2()
 {
 	T pat;
 	typename T::iterator it;
@@ -166,6 +206,9 @@ void insert_test_2()
 	BOOST_CHECK( pat.exists("wicked") );
 	BOOST_CHECK( pat.exists("we") );
 	
+	iterator_test(pat);
+	iterator_test<const T>(pat);
+	
 	
 	 // 4<<h 6<< hell 10<< hello 8<< bad 2<< wicked 12<< we 14
 
@@ -183,6 +226,7 @@ void insert_test_2()
 	}
 	std::cout<<pat.size()<<std::endl;
 	BOOST_REQUIRE(pat.size() == pos );
+	return pat;
 }
 
 template<class T>
@@ -292,15 +336,6 @@ void erase_test()
 }
 
 template<class T>
-void iterator_test()
-{
-	T pat;
-	std::cout<<"here"<<std::endl;
-	assert(pat.begin()==pat.end());
-	return;
-}
-
-template<class T>
 void insert_test_3(char *file)
 {
 	T pat;
@@ -344,12 +379,50 @@ std::cerr<<"finished inserting"<<std::endl;
 }
 
 template<class T>
+void upper_bound_test()
+{
+	T pat;
+	BOOST_CHECK ( pat.upper_bound("") == pat.end() );
+	
+	pat["hello"]=1;
+	BOOST_CHECK ( pat.size() == 1 );
+	BOOST_CHECK(pat.upper_bound("hellj")==pat.find("hello"));
+	BOOST_CHECK(pat.upper_bound("help")==pat.end());
+	BOOST_CHECK(pat.upper_bound("hello")==pat.find("hello"));
+	
+	//const char * key[]={ "","bad", "h","hell","hello","we","wicked"};
+	//int 		  data[]={  4,   2 ,   6,    10,     8,   14,    12  };
+
+	pat=insert_test_2<T>();
+	BOOST_CHECK(pat.upper_bound("")==pat.find(""));
+	BOOST_CHECK(pat.upper_bound("a")==pat.find("bad"));
+	BOOST_CHECK(pat.upper_bound("c")==pat.find("h"));
+	BOOST_CHECK(pat.upper_bound("happy")==pat.find("hell"));
+	BOOST_CHECK(pat.upper_bound("hell")==pat.find("hell"));
+	BOOST_CHECK(pat.upper_bound("hellas")==pat.find("hello"));
+	BOOST_CHECK(pat.upper_bound("iota")==pat.find("we"));
+	BOOST_CHECK(pat.upper_bound("wa")==pat.find("we"));
+	BOOST_CHECK(pat.upper_bound("we")==pat.find("we"));
+	BOOST_CHECK(pat.upper_bound("week")==pat.find("wicked"));
+	BOOST_CHECK(pat.upper_bound("week")==pat.find("wicked"));
+	BOOST_CHECK(pat.upper_bound("wicked")==pat.find("wicked"));
+	BOOST_CHECK(pat.upper_bound("wickeda")==pat.end());
+	BOOST_CHECK(pat.upper_bound("wickf")==pat.end());
+	BOOST_CHECK(pat.upper_bound("z")==pat.end());
+}
+
+template<class T>
 void copy_test()
 {
 	T pat1;
 	pat1["hello"]=1;
-	pat1["hell"]=1;
-	T pat2=T(pat1);
+	pat1["hell"]=2;
+	pat1[""]=3;
+	pat1["w"]=3;
+	pat1["wow"]=3;
+	T pat2(pat1);
+	BOOST_CHECK(pat1==pat2);
+	
 }
 
 int test_main(int argc,char **argv)
@@ -361,6 +434,7 @@ int test_main(int argc,char **argv)
 	insert_test_2<pat_type>();
 	erase_test<pat_type>();
 	copy_test<pat_type>();
+	upper_bound_test<pat_type>();
 #endif
 	if ( argc > 1 )
 		insert_test_3<pat_type>(argv[1]);
