@@ -32,14 +32,14 @@ public:
     typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
-    typedef basic_out_descriptor<out_pair> out_descriptor;
+    typedef basic_out_descriptor<const_iterator> out_descriptor;
 
     inline out_vector()
         : _edges()
     { }
 
     /** Allow the addition? */
-    std::pair<const_iterator, bool> allow(vertex_descriptor v) const
+    std::pair<out_descriptor, bool> allow(vertex_descriptor v)
     { return std::make_pair(_edges.end(), true); }
 
     /**
@@ -49,7 +49,7 @@ public:
     out_descriptor add(out_pair e)
     {
         _edges.push_back(e);
-        return _edges.back();
+        return out_descriptor(boost::prior(_edges.end()));
     }
 
     /** Get the number of outgoing edges. */

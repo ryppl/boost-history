@@ -38,6 +38,10 @@ public:
     inline vertex_descriptor target() const
     { return _out.target(); }
 
+    /** Return the out edge descriptor. */
+    inline out_descriptor out_edge() const
+    { return _out; }
+
     /** @name Property Accessors
      * Return the properties associated with the edge.
      */

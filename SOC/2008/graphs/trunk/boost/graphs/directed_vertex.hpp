@@ -44,12 +44,12 @@ public:
     //@}
 
 
-    std::pair<out_iterator, bool> allow(vertex_descriptor) const;
+    std::pair<out_descriptor, bool> allow(vertex_descriptor);
 
     out_descriptor connect_target(vertex_descriptor, edge_properties const&);
     void connect_source(vertex_descriptor, out_descriptor);
 
-    void disconnect_target(vertex_descriptor);
+    void disconnect_target(out_descriptor);
     void disconnect_source(vertex_descriptor);
 
     /** @name Property Accessors */
@@ -120,8 +120,8 @@ private:
  * be added anyways.
  */
 template <typename V, typename O, typename I>
-std::pair<typename directed_vertex<V,O,I>::out_iterator, bool>
-directed_vertex<V,O,I>::allow(vertex_descriptor v) const
+std::pair<typename directed_vertex<V,O,I>::out_descriptor, bool>
+directed_vertex<V,O,I>::allow(vertex_descriptor v)
 {
     return _out.allow(v);
 }
@@ -155,9 +155,9 @@ directed_vertex<V,O,I>::connect_source(vertex_descriptor v, out_descriptor o)
  */
 template <typename V, typename O, typename I>
 void
-directed_vertex<V,O,I>::disconnect_target(vertex_descriptor v)
+directed_vertex<V,O,I>::disconnect_target(out_descriptor d)
 {
-    _out.remove(v);
+    _out.remove(d);
 }
 
 /**

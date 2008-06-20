@@ -3,52 +3,45 @@
 #define OUT_DESCRIPTOR_HPP
 
 /**
- * The out descriptor wraps an opaque reference to an out edge pair and
- * provides some convenience functions for translating between the elements
- * of the referenced pair and their "descriptors".
+ * The out descriptor wraps an iterator into the out vector. This is primarily
+ * provided to help decouple the directed edge from the underlying reference
+ * to the out edge list.
  *
- * @param OutPair The pair of vertex descriptor and edge property being
+ * @param OutIter The pair of vertex descriptor and edge property being
  * described.
  */
-template <typename OutPair>
+template <typename OutIter>
 struct basic_out_descriptor
 {
-    typedef typename OutPair::first_type vertex_descriptor;
-    typedef typename OutPair::second_type edge_properties;
+    typedef typename OutIter::value_type out_pair;
+    typedef typename out_pair::first_type vertex_descriptor;
+    typedef typename out_pair::second_type edge_properties;
 
     /** @name Constructors */
     //@{
     inline basic_out_descriptor()
-        : _d(0)
+        : iter()
     { }
 
     inline basic_out_descriptor(basic_out_descriptor const& x)
-        : _d(x._d)
+        : iter(x.iter)
     { }
 
-    inline basic_out_descriptor(OutPair& o)
-        : _d(&o)
+    inline basic_out_descriptor(OutIter const& iter)
+        : iter(iter)
     { }
+    //@}
 
-    inline basic_out_descriptor(OutPair const& o)
-        : _d(&const_cast<OutPair&>(o))
-    { }
+    inline vertex_descriptor target() const
+    { return iter->first; }
 
-    //@{
+    inline edge_properties& properties()
+    { return iter->second; }
 
-    OutPair& pair() const
-    { return *reinterpret_cast<OutPair*>(_d); }
+    inline edge_properties const& properties() const
+    { return iter->second; }
 
-    vertex_descriptor target() const
-    { return pair().first; }
-
-    edge_properties& properties()
-    { return pair().second; }
-
-    edge_properties const& properties() const
-    { return pair().second; }
-
-    mutable void* _d;
+    OutIter iter;
 };
 
 #endif

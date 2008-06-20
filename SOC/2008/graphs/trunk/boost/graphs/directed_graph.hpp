@@ -396,19 +396,21 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
     vertex_type &tgt = _verts.vertex(v);
 
     // Do we add the edge or not?
-    std::pair<typename vertex_type::out_iterator, bool> ins = src.allow(v);
+    std::pair<out_descriptor, bool> ins = src.allow(v);
     if(ins.second) {
         // The addition is allowed... Was there already an edge there? If not,
         // connect u to v (and vice-versa) with the given properties. Otherwise,
         // just return the existing edge.
         edge_descriptor e;
-        if(ins.first == src.end_out()) {
+        // Yuck. Is there no better way to this (i.e., provide some kind of
+        // switch for validity?).
+        if(ins.first.iter == src.end_out()) {
             out_descriptor o = src.connect_target(v, ep);
             tgt.connect_source(u, o);
             e = edge_descriptor(u, o);
         }
         else {
-            e = edge_descriptor(u, *ins.first);
+            e = edge_descriptor(u, ins.first);
         }
 
         // Remember that we're allocating the edge.
@@ -429,7 +431,7 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_descriptor
 directed_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
-                                        vertex_properties const& v)
+                                      vertex_properties const& v)
 {
     return add_edge(u, v, edge_properties());
 }
@@ -484,7 +486,7 @@ directed_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
     vertex_type& tgt = _verts.vertex(e.target());
 
     // Remove the connections... That's it.
-    src.disconnect_target(e.target());
+    src.disconnect_target(e.out_edge());
     tgt.disconnect_source(e.source());
 }
 
