@@ -115,6 +115,10 @@ namespace spatial_index {
     {
       boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(e));
 
+//       std::cerr << "Leaf: " << std::endl;
+//       l->print();
+//       std::cerr << std::endl;
+
       if(l->elements() >= M_) {
 //  	std::cerr << "Node full. Split." << std::endl;
 
@@ -128,22 +132,22 @@ namespace spatial_index {
 //  	std::cerr << std::endl;
 //  	std::cerr << std::endl;
 //  	std::cerr << std::endl;
-//   	std::cerr << "Node splited." << std::endl;
+//    	std::cerr << "Node splited." << std::endl;
 
-//   	std::cerr << "ORIG" << std::endl;
-//   	l->print();
+//    	std::cerr << "ORIG" << std::endl;
+//    	l->print();
 	
-//   	std::cerr << "N1" << std::endl;
-//    	n1->print();
-//   	std::cerr << "N2" << std::endl;
-//    	n2->print();
+//    	std::cerr << "N1" << std::endl;
+//     	n1->print();
+//    	std::cerr << "N2" << std::endl;
+//     	n2->print();
 
 //  	std::cerr << "L parent." << std::endl;
 //  	l->get_parent()->print();
 
 	adjust_tree(l, n1, n2);
       } else {
-// 	std::cerr << "Insert without split" << std::endl;
+//  	std::cerr << "Insert without split" << std::endl;
 	l->insert(e, v);
 	adjust_tree(l);
       }
@@ -154,6 +158,9 @@ namespace spatial_index {
     {
       typename std::vector<Point>::iterator it_point;
       typename std::vector<Value>::iterator it_value;
+
+//       unsigned int count = 0;
+      
       it_point = points.begin();
       it_value = values.begin();
       while(it_value != values.end() && it_point != points.end()) {
@@ -162,6 +169,12 @@ namespace spatial_index {
 
 	it_point++;
 	it_value++;
+// 	count++;
+
+// 	if(count % 1000 == 0) {
+// 	  std::cerr << "Count: " << count << std::endl;
+// 	  print();
+// 	}
       }
     }
 
@@ -503,6 +516,10 @@ namespace spatial_index {
     {
       // std::cerr << "Boxes: " << boxes.size() << std::endl;
 
+      if(boxes.size() < 2) {
+	throw std::logic_error("At least two boxes needed to split");
+      }
+
       // find the lowest high
       typename std::vector< geometry::box<Point> >::const_iterator it = boxes.begin();
       double lowest_high = geometry::get<Dimension>(it->max());
@@ -520,8 +537,15 @@ namespace spatial_index {
 //       std::cerr << "Lowest High: " << lowest_high << " Index: " << lowest_high_index << std::endl;
 
       // find the highest low      
-      double highest_low = 0;
-      unsigned int highest_low_index = 0;
+      double highest_low;
+      unsigned int highest_low_index;
+      if(lowest_high_index == 0) {
+	highest_low = geometry::get<Dimension>(boxes[1].min());
+	highest_low_index = 1;
+      } else {
+	highest_low = geometry::get<Dimension>(boxes[0].min());
+	highest_low_index = 0;
+      }
       index = 0;
       for(typename std::vector< geometry::box<Point> >::const_iterator it = boxes.begin(); it != boxes.end(); ++it, index++) {
 	if(geometry::get<Dimension>(it->min()) >= highest_low && index != lowest_high_index) {
@@ -529,7 +553,7 @@ namespace spatial_index {
 	  highest_low_index = index;
 	}
       }
-//       std::cerr << "Highest Low: " << highest_low << " Index: " << highest_low_index << std::endl;
+//        std::cerr << "Highest Low: " << highest_low << " Index: " << highest_low_index << std::endl;
 
 
       // find the lowest low
