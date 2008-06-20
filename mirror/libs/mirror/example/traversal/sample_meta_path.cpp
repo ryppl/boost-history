@@ -1,5 +1,5 @@
 /**
- * \file examples/traversal/sample_visitor.cpp
+ * \file examples/traversal/sample_meta_path.cpp
  *
  * Example of class structure deep and flat traversal
  *
@@ -25,7 +25,7 @@
 #include <boost/mirror/meta_path/ancestors.hpp>
 #include <boost/mirror/meta_path/size.hpp>
 
-#include <boost/mirror/visitors/sample.hpp>
+#include <boost/mirror/visitors/meta_path_sample.hpp>
 #include <boost/mirror/traversal.hpp>
 
 /** First declare some namespaces and classes
@@ -174,39 +174,13 @@ int main(void)
 	using namespace ::Test;
 	//
 	typedef BOOST_MIRROR_REFLECT_CLASS(H) meta_H;
-	H h;
-	h.l = 1234567890;
-	h.i = 123;
-	h.d = 456.7890123;
-	h.s = 456;
-	h.f = 78.9f;
-	h.b = false;
-	h.c = '1';
-	h.w = L'2';
 	//
 	bcout << "--------------------------------------------" << endl;
-	deep_traversal_of<meta_H>::accept(sample_visitor<true>(), &h);
+	deep_traversal_of<meta_H>::accept(meta_path_sample_visitor());
 	bcout << "--------------------------------------------" << endl;
-	flat_traversal_of<meta_H>::accept(sample_visitor<true>(), &h);
+	flat_traversal_of<meta_H>::accept(meta_path_sample_visitor());
 	bcout << "--------------------------------------------" << endl;
 	//
-	//
-	typedef pair<int volatile, long const> T1; 
-	typedef pair<double * const *, float> T2; 
-	typedef pair<char const [12], wchar_t [4]> T3; 
-	typedef pair<bool, bool> T4; 
-	typedef pair<T1, T2> T5; 
-	typedef pair<T3, T4> T6; 
-	typedef pair<T5, T6> T7; 
-	typedef tuple<T1, T2, T3, T4, T5, T6, T7> T;
-	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
-	//
-	//
-	bcout << "--------------------------------------------" << endl;
-	deep_traversal_of<meta_T>::accept(sample_visitor<false>());
-	bcout << "--------------------------------------------" << endl;
-	flat_traversal_of<meta_T>::accept(sample_visitor<false>());
-	bcout << "--------------------------------------------" << endl;
 	//
 	return 0;
 }

@@ -73,7 +73,7 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		if(mirror::size<MetaClass::base_classes>::value > 0)
+		if(mirror::size<BaseClasses>::value > 0)
 		{
 			print_indentation();
 			++indent;
@@ -88,7 +88,7 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		if(mirror::size<MetaClass::base_classes>::value > 0)
+		if(mirror::size<BaseClasses>::value > 0)
 		{
 			--indent;
 			print_indentation();

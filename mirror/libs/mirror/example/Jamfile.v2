@@ -32,7 +32,8 @@ exe algo_begin_end     : algorithms/begin_end.cpp ;
 #
 # traversal by visitors
 #
-exe tvrsl_sample_visitor    : traversal/sample_visitor.cpp ;
+exe tvrsl_sample_visitor       : traversal/sample_visitor.cpp ;
+exe tvrsl_meta_path_visitor    : traversal/sample_meta_path.cpp ;
 #
 # cooperation with Boost.Serialization
 #
