@@ -11,31 +11,39 @@ class patricia_iterator
 :public iterator_facade< patricia_iterator<Value_type,Node_type, Alloc>, 
 Value_type, bidirectional_traversal_tag >
 {
+	template<class K,class M,class K_t,class A > friend class patricia;
 	protected:
 	struct enabler {};
 	friend class boost::iterator_core_access;
 	Node_type *cur;
 	Node_type *next;
 	
-	void increment()
+	virtual void increment()
 	{
-		if (cur == 0 ) return;
-		while ( cur && ( cur->right==next || cur->right==0) )
+		if (cur)
 		{
-			next=cur;
-			cur=cur->par;
+			while ( cur && ( cur->right==next || cur->right==0) )
+			{
+				next=cur;
+				cur=cur->par;
+			}
+			if ( cur == 0) return; //reached end()
+			next=cur->right; //cur->right!=0
 		}
-		if ( cur == 0) return; //reached end()
-		next=cur->right; //cur->right!=0
+		else
+		{
+			cur=next;
+			next=(cur->left)?cur->left:cur->right;
+		}
+
 		while ( next && next->index > cur->index )
 		{
 			cur=next;
-			next=cur->left;
-			if ( next == 0 ) next=cur->right;
+			next=cur->left?cur->left:cur->right;
 		}
 	}
 
-	void decrement()
+	virtual void decrement()
 	{
 		if(cur)
 		{
@@ -45,7 +53,11 @@ Value_type, bidirectional_traversal_tag >
 				cur=cur->par;
 			}
 			if(cur==0)
+			{
+				//assert(false);
+				//std::cout<<"Reached before begin"<<std::endl;
 				return;
+			}
 			next=cur->left;
 		}
 		else
@@ -57,8 +69,7 @@ Value_type, bidirectional_traversal_tag >
 		while ( next && next->index > cur->index )
 		{
 			cur=next;
-			next=cur->right;
-			if ( next == 0 ) next=cur->left;
+			next=cur->right?cur->right:next=cur->left;
 		}
 	}
 	
@@ -79,6 +90,30 @@ Value_type, bidirectional_traversal_tag >
 			return true;
 		//std::cout<<"In equal"<<next->value.first << "!=" << other.next->value.first<<std::endl;
 		return false;
+	}
+
+	private:
+	void to_right_most()
+	{
+		assert(cur);
+		while(next->par==cur)
+		{
+			cur=next;
+			next=cur->right?cur->right:cur->left;
+		}
+	}
+	
+	private:
+	void to_left_most()
+	{
+		assert(cur);
+		while(next->par==cur)
+		{
+			cur=next;
+			next=cur->left?cur->left:cur->right;
+			//std::cout<<"To left most"<<cur->value.first<<"<-"<<next->value.first<<std::endl;
+		}
+		std::cout<<"To left most"<<cur->value.first<<"<-"<<next->value.first<<std::endl;
 	}
 
 	public:
@@ -131,6 +166,7 @@ template<class Value_type, class Node_type, class Alloc >
 class patricia_reverse_iterator:
 public patricia_iterator<Value_type, Node_type, Alloc>
 {
+	friend class patricia_iterator<Value_type, Node_type, Alloc>;
 	typedef patricia_iterator<Value_type, Node_type, Alloc> forward_type;
 	private:
 	struct enabler {};
@@ -144,6 +180,7 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 		forward_type::decrement();
 	}
 	
+
 	template<class V,class N,class A>
 	bool equal(patricia_reverse_iterator<V,N,A> const &other,
 	typename enable_if< is_convertible<V*,Value_type*>, 
@@ -152,6 +189,7 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 	{
 		if ( forward_type::cur == other.cur && forward_type::next == other.next )
 			return true;
+		
 		return false;
 	}
 	
@@ -159,12 +197,14 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 	{
 		return forward_type::dereference();
 	}
+
 	public:
 	patricia_reverse_iterator(): forward_type()
 	{
 	}
+
 	patricia_reverse_iterator(Node_type *found,Node_type*prev)
-	: forward_type(found,prev)
+	:forward_type(found,prev)
 	{
 	}
 	
@@ -174,9 +214,10 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 		forward_type::next=root;
 		if(start)
 		{
-			decrement();
+			forward_type::decrement(); //rbegin()=end()-1
 		}
 	}
+
 	template<class V,class N,class A>
 	patricia_reverse_iterator ( patricia_reverse_iterator<V,N,A> const& other,
 				typename enable_if< is_convertible<V*,Value_type*>, 
