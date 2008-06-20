@@ -203,6 +203,10 @@
 			- Added a new sample visitor showing what meta-path
 			  expressions can currently do
 			- Tested with MSVC++ 2008 EE On Vista
+			- Tested with gcc 4.2.1 on FreeBSD
+			- Tested with gcc 4.2.1 on SuSE
+			- Tested with gcc 4.3.0 on SuSE
+			- Tested with intel 10.1 on SuSE
 		</revision>
 	</revisions>
 </library>
