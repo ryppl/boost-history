@@ -22,8 +22,7 @@ namespace dsearch{
 template<class Key,class Mapped,class Key_traits,class Alloc=std::allocator<char> >
 class patricia{
 	private:
-	template<class V_t, class N_t, class A>
-	friend class patricia_iterator;
+
 	typedef patricia<Key,Mapped,Key_traits,Alloc> self;
 	typedef typename Key_traits::const_iterator key_iterator;
 	typedef typename Key_traits::element_type key_element_type;
@@ -53,21 +52,25 @@ class patricia{
 		patricia_node(): par(0),  index(0), left(0), right(0)
 		{
 		}
+
 		patricia_node(const key_type& key_,const std::size_t &index_,patricia_node *left_
 		,patricia_node *right_,patricia_node *par_) 
 		:par(par_),value(make_pair(key_,0)),index(index_),left(left_),right(right_)
 		{
 		}
+
 		patricia_node(const patricia_node &other)
 		:par(0),value(other.value),index(other.index),left(0),right(0)
 		{
 		}
 	};
+
 	typedef typename Alloc::template rebind<patricia_node>::other node_allocator_type;
 	node_allocator_type node_allocator;
 	patricia_node *root;
 
 	public:
+	
 	typedef patricia_iterator<value_type, patricia_node, Alloc> iterator;
 	typedef patricia_iterator<const value_type, const patricia_node, Alloc> const_iterator;
 	typedef patricia_reverse_iterator<value_type, patricia_node, Alloc> reverse_iterator;
@@ -91,6 +94,12 @@ class patricia{
 		#endif
 	}
 
+	self operator = (const self& other) 
+	{
+		this->clear();
+		copy_patricia(other.root);
+		return *this;
+	}
 	void insert(const value_type &v)
 	{
 		this->operator [](v.first)=v.second;
@@ -165,6 +174,20 @@ class patricia{
 	const_iterator find(const key_type &k) const
 	{
 		return const_cast<patricia *>(this)->find(k);
+	}
+	
+	iterator upper_bound(const key_type &k)
+	{
+		#ifndef FORWARD
+			return upper_bound(k,iterator_cat());
+		#else
+			return upper_bound(k,0);
+		#endif
+	}
+	
+	const_iterator upper_bound(const key_type &k) const
+	{
+		return const_cast<patricia *>(this)->upper_bound(k);
 	}
 
 	void erase(const key_type &k)
@@ -265,73 +288,31 @@ class patricia{
 	}
 
 	private:
-	//function for Random Access Iterator
-	inline data_type &insert_new_node(const key_type &key,rand_tag)
+	/*
+	 * gets node pair b/w which a key is to inserted 
+	 * also returns a pair of index and bit value of the key at that index
+	 */
+	inline std::pair< std::pair<patricia_node*,patricia_node*>,
+	std::pair<std::size_t,int> >
+	 get_insert_pair(const key_type &key,rand_tag)
 	{
 		key_iterator it,end_it;
-		patricia_node *cur=root,*next=root,*temp_node,*old_root=0;
+		patricia_node *cur=root,*next=root;
 		std::size_t pos=0;
-		
-		//std::cout<<"in random access"<<std::endl;
-		
+		std::pair<patricia_node*,patricia_node*> node_pair;
 		std::pair<std::size_t,int> common;
-
-		//std::cout<<"\nInserting \""<<key<<"\""<<std::endl;
+		const std::size_t key_size=Key_traits::size(key);
 		
 		it=Key_traits::begin(key);
 		end_it=Key_traits::end(key);
-
-		const std::size_t key_size=Key_traits::size(key);
-	
-		//do some jugglery to ensure that inserting "" first as root wont cause any problems
-		//move root to the right position while inserting the second
-		//that will take care of the assert(next) in find 
-		old_root=0;
-		if(root!=0 && root->left==root)
-		{
-			if(it==end_it) return root->value.second; //if one adds "" twice
-			old_root=root;
-			root=0;
-		}
-
-		if(root==0)
-		{
-			root=node_allocator.allocate(1);
-			if(it!=end_it)
-			{
-				new(root) patricia_node( key, 0, old_root, root, 0 );
-				if(old_root) 
-				{
-					std::cout<<"assigning OLD ROOT"<<std::endl;
-					old_root->par=root;
-				}
-			}
-			else
-				new(root) patricia_node( key, 0, root, 0, 0 );
-
-			return root->value.second;
-		}
 		
-		if(it==end_it)  //"" inserted
-		{
-			if(root->left!=0) 
-				next=root->left;
-			else
-			{
-				root->left = node_allocator.allocate(1);
-				new(root->left) patricia_node(key,0,root->left,0,root);
-				return root->left->value.second;
-			}
-		}
 
-		next=find_node(root,key,iterator_cat(),key_size);
+		node_pair=find_node_prev(root,key,iterator_cat(),key_size);
 
+		next=node_pair.first;
 		common=get_common_bits(key,next->value.first );
 		if ( common.second==2 ) 
-		{
-			std::cout<<"The key \""<<key<<"\" already exists"<<std::endl;
-			return next->value.second;
-		}
+			return  std::make_pair(node_pair, common);
 
 		next=cur=root;
 		while (next->index < common.first) {
@@ -342,86 +323,24 @@ class patricia{
 			cur->right: cur->left;
 			if(cur->index >= next->index) break;
 		}
-		temp_node=node_allocator.allocate(1);
 		
-		if(cur->left==next) cur->left=temp_node;
-		else
-		if(cur->right==next) 
-			cur->right=temp_node;
-		else
-			assert(false);
-
-		assert(common.second!=2);
-		
-		if(common.second) //temp_node should point to inself at 1 ie right
-			new (temp_node) patricia_node(key,common.first,next,temp_node,cur);
-		else
-			new (temp_node) patricia_node(key,common.first,temp_node,next,cur);
-
-		assert(root->par==0);
-		if(cur->index < next->index) next->par=temp_node;
-			
-		assert(root->par==0);
-		return temp_node->value.second;
+		return std::make_pair(std::make_pair(next,cur), common);
 	}
 
 	template<class T>
-	inline data_type &insert_new_node(const key_type&key,T)
+	inline std::pair< std::pair<patricia_node*,patricia_node*>,
+	std::pair<std::size_t,int> >
+	get_insert_pair (const key_type &key,T)
 	{
 		key_iterator it,end_it;
-			key_element_type temp_element;
-		patricia_node *cur=root,*next=root,*temp_node,*old_root=0;
+		key_element_type temp_element;
+		patricia_node *cur=root,*next=root;
 		std::size_t pos=0;
-		
-		//std::cout<<"in random access"<<std::endl;
-		
 		std::pair<std::size_t,int> common;
-
-		//std::cout<<"\nInserting \""<<key<<"\""<<std::endl;
 		
 		it=Key_traits::begin(key);
 		end_it=Key_traits::end(key);
-	
-		//do some jugglery to ensure that inserting "" first as root wont cause any problems
-		//move root to the right position while inserting the second
-		//that will take care of the assert(next) in find 
-		old_root=0;
-		if(root!=0 && root->left==root)
-		{
-			if(it==end_it) return root->value.second; //if one adds "" twice
-			old_root=root;
-			root=0;
-		}
-
-		if(root==0)
-		{
-			root=node_allocator.allocate(1);
-			if(it!=end_it)
-			{
-				new(root) patricia_node( key, 0, old_root, root, 0 );
-				if(old_root) 
-				{
-					std::cout<<"assigning OLD ROOT"<<std::endl;
-					old_root->par=root;
-				}
-			}
-			else
-				new(root) patricia_node( key, 0, root, 0, 0 );
-			return root->value.second;
-		}
 		
-		if(it==end_it)  //"" inserted
-		{
-			if(root->left!=0) 
-				next=root->left;
-			else
-			{
-				root->left = node_allocator.allocate(1);
-				new(root->left) patricia_node(key,0,root->left,0,root);
-				return root->left->value.second;
-			}
-		}
-
 		next=find_node(root,key,T());
 		
 		//find the largerst prefix matching the key and the found key
@@ -430,10 +349,7 @@ class patricia{
 		
 		//key already exists
 		if(common.second==2) 
-		{
-			std::cout<<"The key \""<<key<<"\" already exists"<<std::endl;
-			return next->value.second;
-		}
+			return std::make_pair(std::make_pair(next,next),common);
 
 		//assert(common.first);wrong assert
 
@@ -465,7 +381,79 @@ class patricia{
 			}
 			cur=next;
 		}
+		return std::make_pair(std::make_pair(next,cur),common);
+	}
 
+	/*
+	 * function for Random Access Iterator
+	 */
+	template<class T>
+	inline data_type &insert_new_node(const key_type &key,T)
+	{
+		key_iterator it,end_it;
+		patricia_node *cur=root,*next=root,*temp_node,*old_root=0;
+		std::pair< std::pair<patricia_node*,patricia_node*>,
+	std::pair<std::size_t,int> > insert_pair;
+		
+		//std::cout<<"in random access"<<std::endl;
+		
+		std::pair<std::size_t,int> common;
+
+		//std::cout<<"\nInserting \""<<key<<"\""<<std::endl;
+		
+		it=Key_traits::begin(key);
+		end_it=Key_traits::end(key);
+
+		//do some jugglery to ensure that inserting "" first as root wont cause any problems
+		//move root to the right position while inserting the second
+		//that will take care of the assert(next) in find 
+		old_root=0;
+		if(root!=0 && root->left==root)
+		{
+			if(it==end_it) return root->value.second; //if one adds "" twice
+			old_root=root;
+			root=0;
+		}
+
+		if(root==0)
+		{
+			root=node_allocator.allocate(1);
+			if(it!=end_it)
+			{
+				new(root) patricia_node( key, 0, old_root, root, 0 );
+				if(old_root) 
+				{
+					std::cout<<"assigning OLD ROOT"<<std::endl;
+					old_root->par=root;
+				}
+			}
+			else
+				new(root) patricia_node( key, 0, root, 0, 0 );
+
+			return root->value.second;
+		}
+		
+		if(it==end_it)  //"" inserted
+		{
+			if(root->left==0) 
+			{
+				root->left = node_allocator.allocate(1);
+				new(root->left) patricia_node(key,0,root->left,0,root);
+			}
+			return root->left->value.second;
+		}
+
+		insert_pair=get_insert_pair(key,T());
+		
+		common=insert_pair.second;
+		next=insert_pair.first.first;
+		cur=insert_pair.first.second;
+		if(common.second==2)
+		{
+			std::cout<<"The key \""<<key<<"\" already exists"<<std::endl;
+			return next->value.second;
+		}
+		
 		temp_node=node_allocator.allocate(1);
 		
 		if(cur->left==next) cur->left=temp_node;
@@ -475,8 +463,6 @@ class patricia{
 		else
 			assert(false);
 
-		assert(common.second!=2);
-		
 		if(common.second) //temp_node should point to inself at 1 ie right
 			new (temp_node) patricia_node(key,common.first,next,temp_node,cur);
 		else
@@ -494,7 +480,8 @@ class patricia{
 		return n==0? 1 : ( ( element&(1<<(bit_width - n )) )  !=0 );
 	}
 
-	/* returns inclusive of end bit after each pos and the not(un) common bit in k1;
+	/* 
+	 * returns inclusive of end bit after each pos and the not(un) common bit in k1;
 	 * returns not common bit as two if both keys are equal.
 	 */
 	inline std::pair<std::size_t,int> get_common_bits(const key_type &k1,const key_type &k2) const 
@@ -597,7 +584,6 @@ class patricia{
 		}
 		return ret_it;
 	}*/
-
 	patricia_node* find_node(const patricia_node *cur, const key_type &key,rand_tag,std::size_t key_size=0)
 	{
 		patricia_node  *next=0;
@@ -606,26 +592,31 @@ class patricia{
 		std::size_t pos=0;
 		if(key_size==0)
 			key_size=key.size();
-
-		if(root==0) return 0;
 		
-		while ( pos < (cur->index)/(bit_width+1) && it!=end_it ) {
+		if ( root==0 ) return 0;
+		
+		while ( pos < (cur->index)/(bit_width+1) && it!=end_it ) 
+		{
 			++pos;
 			++it;
 		}
-		while (true ) {
+
+		while (true )
+		{
 			pos= cur->index / (bit_width + 1);
 			if ( pos >= key_size ) break;
+			std::cout<<"getting "<<cur->index<<"th bit of "<<key<<std::endl;
 			next=get_nth_bit ( Key_traits::get_element(it + pos), cur->index % (bit_width + 1) )? 
 			cur->right: cur->left;
-			//std::cout<<"In find: cur="<<cur->value.first
-			//<<" going to next \""<<next->value.first<<"\""<<std::endl;
 			if(next==0) return 0;
+			std::cout<<"In find of "<<key<<": cur="<<cur->value.first
+			<<" going to next \""<<next->value.first<<"\""<<std::endl;
 			if(cur->index >= next->index) break;
 			cur=next;
 		}
 
-		if(pos == key_size ) { 
+		if (pos == key_size )
+		{
 			next=cur->left; 
 		}
 
@@ -668,7 +659,7 @@ class patricia{
 
 	template<class T>
 	std::pair<patricia_node*,patricia_node*>
-	find_node_prev(patricia_node *root, const key_type &key, T ,std::size_t)
+	find_node_prev(patricia_node *root, const key_type &key, T ,std::size_t=std::size_t())
 	{
 		patricia_node *cur=root,*next;
 		std::size_t pos=0;
@@ -713,7 +704,8 @@ class patricia{
 		return std::make_pair(next,cur);
 	}
 
-	/* The node pointed to by found. where prev is the found 
+	/*
+	 * The node pointed to by found. where prev is the found 
 	 * has a uplink from prev.
 	 * Used by erase(key) and erase(iterator);
 	 */
@@ -816,7 +808,9 @@ class patricia{
 		node_allocator.deallocate(found,1);
 	}
 
-	//used by erase(key);
+	/*
+	 * used by erase(key);
+	 */
 	void inline copy_node_ptr(patricia_node* to, patricia_node* found)
 	{
 		if(found->par!=0) {
@@ -840,6 +834,85 @@ class patricia{
 		if ( found->right && found->right->par==found ) found->right->par=to;
 
 		to->index=found->index;
+	}
+
+	template<class T>
+	iterator lower_bound(const key_type &key,T)
+	{
+		typedef std::pair<patricia_node*,patricia_node*> node_pair_type;
+		typedef std::pair<std::size_t, int> common_type;
+		
+		std::pair<node_pair_type,common_type> node_pair;
+		common_type common;
+		patricia_node* next,cur;
+		iterator it;
+		
+		
+		if(root==0) return end();
+		
+		if(root->right==0)
+		{
+			 //is there is any lower bound it has to be ""
+			 return begin();
+		}
+		
+		node_pair=get_insert_pair(key,T());
+		next=node_pair.first.first;
+		cur =node_pair.first.second;
+		common=node_pair.second;
+		
+		if(common.second==2)  //key aleardy exists
+			return iterator(next,cur);
+		
+		if(common.second==0)
+			return --iterator(next,cur);
+		
+		assert(common.second==1);
+		
+		it=iterator(next,cur);
+		it.to_right_most();
+		return it;
+	}
+
+	template<class T>
+	inline iterator upper_bound(const key_type &key,T)
+	{
+		typedef std::pair<patricia_node*,patricia_node*> node_pair_type;
+		typedef std::pair<std::size_t, int> common_type;
+		
+		std::pair<node_pair_type,common_type> node_pair;
+		common_type common;
+		patricia_node* next,* cur;
+		iterator it;
+		
+		if ( root==0 ) return end();
+
+		if ( root->right==0 )
+		{
+			if(Key_traits::begin(key)!=Key_traits::end(key) )
+				 return end();
+			else
+				return begin();
+		}
+
+		node_pair=get_insert_pair(key,T());
+		next=node_pair.first.first;
+		cur =node_pair.first.second;
+		common=node_pair.second;
+		std::cout<<"Upper Bound:SECOND: "<<common.second<<std::endl;
+		switch ( common.second )
+		{
+		  case 2://key aleardy exists
+			return iterator(next,cur);
+		  case 1:
+			return ++iterator(next,cur);
+		  case 0:
+			it=iterator(next,cur);
+			std::cout<<next->value.first<<"<-"<<cur->value.first<<std::endl;
+			it.to_left_most();
+			return it;
+		}
+		assert(false);
 	}
 
 	//used by copy_patricia
@@ -924,9 +997,11 @@ class patricia{
 			}
 		}
 	}
-
 };
 
+/*
+ * TODO: implement O(n) time algo for this
+ */
 template<class Key,class Mapped,class Key_traits,class Alloc >
 bool operator == (const patricia<Key,Mapped,Key_traits,Alloc> & p1, 
 	const patricia<Key,Mapped,Key_traits,Alloc>& p2)
