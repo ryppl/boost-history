@@ -41,7 +41,7 @@ main
 )
 try
 {
-    using boost::coding::md5_result;
+    using boost::coding::md5_digest;
     using std::cout;
 
     typedef std::istream_iterator<unsigned char>  byte_read_iterator;
@@ -53,7 +53,7 @@ try
     checksummer.bytes = std::for_each( byte_read_iterator(std::cin),
      byte_read_iterator(), checksummer.bytes );
 
-    md5_result const  fingerprint = checksummer();
+    md5_digest const  fingerprint = checksummer();
 
     // Use the results based on the program's mode
     switch ( argc )
@@ -68,10 +68,7 @@ try
         // argument
         try
         {
-            md5_result const  expected = boost::lexical_cast<md5_result>(
-             argv[1] );
-
-            if ( fingerprint == expected )
+            if ( fingerprint == boost::lexical_cast<md5_digest>(argv[ 1 ]) )
             {
                 cout << "The checksums matched (as '" << fingerprint << "')." <<
                  endl;
