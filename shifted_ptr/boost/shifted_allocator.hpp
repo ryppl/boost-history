@@ -40,8 +40,8 @@ template <typename T>
     public:
         typedef size_t                  size_type;
         typedef ptrdiff_t               difference_type;
-        typedef shifted_ptr<T>          pointer;
-        typedef const shifted_ptr<T>    const_pointer;
+        typedef shifted<T> *            pointer;
+        typedef const shifted<T> *      const_pointer;
         typedef shifted<T> &            reference;
         typedef const shifted<T> &      const_reference;
         typedef shifted<T>              value_type;
@@ -102,6 +102,5 @@ template <typename T>
 
 
 } // namespace boost
-
 
 #endif  // #ifndef BOOST_SHIFTED_ALLOCATOR_HPP_INCLUDED

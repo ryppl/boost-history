@@ -112,6 +112,16 @@ template <typename T>
 			}
 			return po_;
 		}
+        
+        bool operator == (shifted_ptr_base<element_type> const & p) const
+        {
+            return po_ == p.po_;
+        }
+
+        bool operator != (shifted_ptr_base<element_type> const & p) const
+        {
+            return po_ != p.po_;
+        }
 
 		void reset(element_type * p = 0)
 		{
@@ -215,6 +225,16 @@ template <typename T, size_t N>
 			}
 			return po_;
 		}
+        
+        bool operator == (shifted_ptr_base<element_type> const & p) const
+        {
+            return po_ == p.po_;
+        }
+
+        bool operator != (shifted_ptr_base<element_type> const & p) const
+        {
+            return po_ != p.po_;
+        }
 
 		void reset(element_type * p = 0)
 		{
@@ -307,6 +327,16 @@ template <>
 			}
 			return po_;
 		}
+        
+        bool operator == (shifted_ptr_base<element_type> const & p) const
+        {
+            return po_ == p.po_;
+        }
+
+        bool operator != (shifted_ptr_base<element_type> const & p) const
+        {
+            return po_ != p.po_;
+        }
 
 		void reset(element_type * p = 0)
 		{
