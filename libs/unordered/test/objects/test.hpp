@@ -12,7 +12,7 @@
 #include <iostream>
 #include "../helpers/fwd.hpp"
 #include "../helpers/count.hpp"
-#include "./memory.hpp"
+#include "../helpers/memory.hpp"
 #include <map>
 
 namespace test
