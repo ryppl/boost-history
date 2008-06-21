@@ -90,6 +90,30 @@ void hseqr(int n){
     cout << "'New' original matrix:\n" << origG << endl;
     cout << "==================================" << endl;
 
+    ublas::matrix<complex<double>, ublas::column_major> cVL(cZ);
+    ublas::matrix<complex<double>, ublas::column_major> cVR(cZ);
+    boost::numeric::bindings::traits::detail::array<complex<double> > work(3*n);
+    lapack::trevc('B','B',G,cVL,cVR,work);
+
+    cout << "\n==================================" << endl;
+    cout << "Testing left & right eigenvectors..." << endl;
+    Hessenberg(G);
+    cout << "Many 'zeros':" << endl;
+    for ( int i=0; i<n; ++i){
+        cout << (ublas::prod( G, column(cVR, i) ) - values(i) * column(cVR, i)) << endl;
+        cout << (ublas::prod( ublas::herm(G), column(cVL, i) ) - conj( values(i) ) * column(cVL, i)) << endl;
+    }
+    cout << "==================================" << endl;
+
+    cout << "\n==================================" << endl;
+    cout << "Verifying diagonal matrix..." << endl;
+    ublas::matrix<complex<double>, ublas::column_major> cG(n,n,0);
+    Hessenberg(G);
+    G = ublas::prod( G, cVR );
+    G = ublas::prod( ublas::herm(cVL), G );
+    cout << "'diagonal' matrix:\n" << G << endl;
+    cout << "==================================" << endl;
+
 }
 
 
