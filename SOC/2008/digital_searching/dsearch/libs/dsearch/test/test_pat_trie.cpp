@@ -395,6 +395,7 @@ void upper_bound_test()
 
 	pat=insert_test_2<T>();
 	BOOST_CHECK(pat.upper_bound("")==pat.find(""));
+	BOOST_CHECK(pat.begin()==pat.find(""));
 	BOOST_CHECK(pat.upper_bound("a")==pat.find("bad"));
 	BOOST_CHECK(pat.upper_bound("c")==pat.find("h"));
 	BOOST_CHECK(pat.upper_bound("happy")==pat.find("hell"));
@@ -404,11 +405,52 @@ void upper_bound_test()
 	BOOST_CHECK(pat.upper_bound("wa")==pat.find("we"));
 	BOOST_CHECK(pat.upper_bound("we")==pat.find("we"));
 	BOOST_CHECK(pat.upper_bound("week")==pat.find("wicked"));
-	BOOST_CHECK(pat.upper_bound("week")==pat.find("wicked"));
 	BOOST_CHECK(pat.upper_bound("wicked")==pat.find("wicked"));
 	BOOST_CHECK(pat.upper_bound("wickeda")==pat.end());
 	BOOST_CHECK(pat.upper_bound("wickf")==pat.end());
 	BOOST_CHECK(pat.upper_bound("z")==pat.end());
+	pat.erase("");
+	BOOST_CHECK (pat.upper_bound("a")==pat.find("bad"));
+	BOOST_CHECK (pat.upper_bound("")==pat.find("bad"));
+}
+
+template<class T>
+void lower_bound_test()
+{
+	T pat;
+	BOOST_CHECK ( pat.lower_bound("") == pat.end() );
+	pat["hello"]=10;
+	BOOST_CHECK(pat.lower_bound("hellj")==pat.end());
+	BOOST_CHECK(pat.lower_bound("help")==pat.find("hello"));
+	BOOST_CHECK(pat.lower_bound("hello")==pat.find("hello"));
+	
+	BOOST_CHECK(pat.lower_bound("hellj")==pat.end());
+	BOOST_CHECK(pat.lower_bound("help")==pat.find("hello"));
+	BOOST_CHECK(pat.lower_bound("hello")==pat.find("hello"));
+	BOOST_CHECK(pat.lower_bound("")==pat.end());
+
+	//const char * key[]={ "","bad", "h","hell","hello","we","wicked"};
+	//int 		  data[]={  4,   2 ,   6,    10,     8,   14,    12  };
+
+	pat=insert_test_2<T>();
+	BOOST_CHECK(pat.lower_bound("")==pat.find(""));
+	BOOST_CHECK(pat.begin()==pat.find(""));
+	BOOST_CHECK(pat.lower_bound("a")==pat.find(""));
+	BOOST_CHECK(pat.lower_bound("c")==pat.find("bad"));
+	BOOST_CHECK(pat.lower_bound("happy")==pat.find("h"));
+	BOOST_CHECK(pat.lower_bound("hell")==pat.find("hell"));
+	BOOST_CHECK(pat.lower_bound("hellas")==pat.find("hell"));
+	BOOST_CHECK(pat.lower_bound("iota")==pat.find("hello"));
+	BOOST_CHECK(pat.lower_bound("wa")==pat.find("hello"));
+	BOOST_CHECK(pat.lower_bound("we")==pat.find("we"));
+	BOOST_CHECK(pat.lower_bound("week")==pat.find("we"));
+	BOOST_CHECK(pat.lower_bound("wicked")==pat.find("wicked"));
+	BOOST_CHECK(pat.lower_bound("wickeda")==pat.find("wicked"));
+	BOOST_CHECK(pat.lower_bound("wickf")==pat.find("wicked"));
+	BOOST_CHECK(pat.lower_bound("z")==pat.find("wicked"));
+	pat.erase("");
+	BOOST_CHECK (pat.lower_bound("a")==pat.end());
+	BOOST_CHECK (pat.lower_bound("")==pat.end());
 }
 
 template<class T>
@@ -435,6 +477,7 @@ int test_main(int argc,char **argv)
 	erase_test<pat_type>();
 	copy_test<pat_type>();
 	upper_bound_test<pat_type>();
+	lower_bound_test<pat_type>();
 #endif
 	if ( argc > 1 )
 		insert_test_3<pat_type>(argv[1]);
