@@ -17,6 +17,7 @@
 #include <boost/numeric/bindings/traits/matrix_traits.hpp>
 #include <boost/numeric/bindings/traits/type_traits.hpp>
 #include <boost/numeric/bindings/lapack/lapack.h>
+#include <boost/numeric/bindings/lapack/workspace.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
