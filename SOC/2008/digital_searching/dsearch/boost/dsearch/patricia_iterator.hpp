@@ -213,16 +213,14 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 		forward_type::cur=0;
 		forward_type::next=root;
 		if(start)
-		{
 			forward_type::decrement(); //rbegin()=end()-1
-		}
 	}
 
 	template<class V,class N,class A>
 	patricia_reverse_iterator ( patricia_reverse_iterator<V,N,A> const& other,
 				typename enable_if< is_convertible<V*,Value_type*>, 
 				enabler >::type = enabler()
-		    		) 
+		    		)
 	: forward_type(other.next,other.cur)
 	{
 	}
