@@ -100,6 +100,7 @@ class patricia{
 		copy_patricia(other.root);
 		return *this;
 	}
+
 	void insert(const value_type &v)
 	{
 		this->operator [](v.first)=v.second;
@@ -188,6 +189,15 @@ class patricia{
 	const_iterator upper_bound(const key_type &k) const
 	{
 		return const_cast<patricia *>(this)->upper_bound(k);
+	}
+	
+	iterator lower_bound(const key_type &k) 
+	{
+		#ifndef FORWARD
+			return lower_bound(k,iterator_cat());
+		#else
+			return lower_bound(k,0);
+		#endif
 	}
 
 	void erase(const key_type &k)
@@ -295,17 +305,13 @@ class patricia{
 	inline std::pair< std::pair<patricia_node*,patricia_node*>,
 	std::pair<std::size_t,int> >
 	 get_insert_pair(const key_type &key,rand_tag)
-	{
-		key_iterator it,end_it;
+	{	
 		patricia_node *cur=root,*next=root;
 		std::size_t pos=0;
 		std::pair<patricia_node*,patricia_node*> node_pair;
 		std::pair<std::size_t,int> common;
 		const std::size_t key_size=Key_traits::size(key);
-		
-		it=Key_traits::begin(key);
-		end_it=Key_traits::end(key);
-		
+		key_iterator it=Key_traits::begin(key);
 
 		node_pair=find_node_prev(root,key,iterator_cat(),key_size);
 
@@ -336,20 +342,22 @@ class patricia{
 		key_element_type temp_element;
 		patricia_node *cur=root,*next=root;
 		std::size_t pos=0;
+		std::pair<patricia_node*,patricia_node*> node_pair;
 		std::pair<std::size_t,int> common;
 		
 		it=Key_traits::begin(key);
 		end_it=Key_traits::end(key);
 		
-		next=find_node(root,key,T());
-		
+		node_pair=find_node_prev(root,key,T());
+		next=node_pair.first;
+		cur =node_pair.second;
 		//find the largerst prefix matching the key and the found key
 		//std::cout<<"After find"<<std::endl;
 		common=get_common_bits(key,next->value.first);
 		
 		//key already exists
 		if(common.second==2) 
-			return std::make_pair(std::make_pair(next,next),common);
+			return std::make_pair(std::make_pair(next,cur),common);
 
 		//assert(common.first);wrong assert
 
@@ -484,7 +492,7 @@ class patricia{
 	 * returns inclusive of end bit after each pos and the not(un) common bit in k1;
 	 * returns not common bit as two if both keys are equal.
 	 */
-	inline std::pair<std::size_t,int> get_common_bits(const key_type &k1,const key_type &k2) const 
+	inline std::pair<std::size_t,int> get_common_bits(const key_type &k1,const key_type &k2) const
 	{
 		key_iterator k1_it,k2_it,k1_end,k2_end;
 		//std::cout<<"comparing "<<k1<<" and "<<k2<<std::endl;
@@ -512,17 +520,19 @@ class patricia{
 
 		if(unequal)
 		{
+			std::size_t bit_pos=0;
 			t1=Key_traits::get_element(k1_it);
 			t2=Key_traits::get_element(k2_it);
+			key_element_type x=key_element_type(-1)-1;
 			//TODO:optimize this part!!!
-			key_element_type x= (key_element_type(1)<<(bit_width-1));
-			while((t1 & x)==( t2 & x))//possibly make this ( t1 &  x) != ( t1 &  x )
+			//key_element_type x= (key_element_type(1)<<(bit_width-1));
+			while((t1 & x)!=( t2 & x))//possibly make this ( t1 &  x) != ( t1 &  x )
 			{
-				x>>=1;
-				++pos;
+				x<<=1;
+				++bit_pos;
 			}
-			uncommon_bit= ((t1 & x)!=0);
-			++pos;
+			uncommon_bit= ( (t1 & (key_element_type(1)<<bit_pos)) !=0);	
+			pos+=bit_width-bit_pos;
 		}
 		else
 			uncommon_bit=(k1_it==k1_end)?((k2_it==k2_end)?2:0):1;
@@ -531,7 +541,7 @@ class patricia{
 	}
 
 	template<class T>
-	patricia_node* find_node(const patricia_node* cur,const key_type &key,T)
+	inline patricia_node* find_node(const patricia_node* cur,const key_type &key,T)
 	{
 		patricia_node *next;
 		std::size_t pos=0;
@@ -573,18 +583,7 @@ class patricia{
 		return next;
 	}
 
-	/*key_iterator move_iterator(const key_iterator it,const iterator end_it,const std::size_t &cur_pos,const std::size_t &dest_pos)
-	{
-		std::size_t i=dest_pos-cur_pos;
-		key_iterator ret_it=it;
-		while(i){
-			if ( ret_it==end_it ) return end_it;
-			++ret_it;
-			--i;
-		}
-		return ret_it;
-	}*/
-	patricia_node* find_node(const patricia_node *cur, const key_type &key,rand_tag,std::size_t key_size=0)
+	inline patricia_node* find_node(const patricia_node *cur, const key_type &key,rand_tag,std::size_t key_size=0)
 	{
 		patricia_node  *next=0;
 		key_iterator it, end_it;
@@ -623,7 +622,7 @@ class patricia{
 		return next;
 	}
 
-	std::pair<patricia_node*,patricia_node*>
+	inline std::pair<patricia_node*,patricia_node*>
 	find_node_prev(patricia_node *root, const key_type &key, rand_tag,std::size_t key_size=0)
 	{
 		patricia_node  *cur,*next=0;
@@ -653,13 +652,13 @@ class patricia{
 		if(pos == key_size ) { 
 			next=cur->left; 
 		}
-		if(key_size==0) cur=next;
+		
 		return std::make_pair<patricia_node*,patricia_node*>(next,cur);
 	}
 
 	template<class T>
-	std::pair<patricia_node*,patricia_node*>
-	find_node_prev(patricia_node *root, const key_type &key, T ,std::size_t=std::size_t())
+	inline std::pair<patricia_node*,patricia_node*>
+	find_node_prev(patricia_node *root, const key_type &key, T ,std::size_t=std::size_t()) const
 	{
 		patricia_node *cur=root,*next;
 		std::size_t pos=0;
@@ -837,18 +836,24 @@ class patricia{
 	}
 
 	template<class T>
-	iterator lower_bound(const key_type &key,T)
+	inline iterator lower_bound(const key_type &key,T)
 	{
 		typedef std::pair<patricia_node*,patricia_node*> node_pair_type;
 		typedef std::pair<std::size_t, int> common_type;
 		
 		std::pair<node_pair_type,common_type> node_pair;
 		common_type common;
-		patricia_node* next,cur;
+		patricia_node* next,*cur;
 		iterator it;
 		
 		
 		if(root==0) return end();
+		if ( Key_traits::begin(key)==Key_traits::end(key) )
+		{
+			if(root->left==0) return end();
+			else
+				return begin();
+		}
 		
 		if(root->right==0)
 		{
@@ -861,17 +866,18 @@ class patricia{
 		cur =node_pair.first.second;
 		common=node_pair.second;
 		
-		if(common.second==2)  //key aleardy exists
-			return iterator(next,cur);
-		
-		if(common.second==0)
-			return --iterator(next,cur);
-		
-		assert(common.second==1);
-		
-		it=iterator(next,cur);
-		it.to_right_most();
-		return it;
+		switch(common.second)
+		{
+			case 2:
+				return iterator(next,cur);
+			case 0:
+				return --iterator(next,cur);
+			case 1:
+				it=iterator(next,cur);
+				it.to_right_most();
+				return it;
+		}
+		assert(false);
 	}
 
 	template<class T>
@@ -886,6 +892,8 @@ class patricia{
 		iterator it;
 		
 		if ( root==0 ) return end();
+		if ( Key_traits::begin(key)==Key_traits::end(key) )
+			return begin();
 
 		if ( root->right==0 )
 		{
@@ -915,6 +923,63 @@ class patricia{
 		assert(false);
 	}
 
+	
+	std::size_t get_mask_bits(const key_element_type &mask)
+	{
+		std::size_t no;
+		key_element_type m=mask;
+		no=m&1;
+		while(m>>=1) no++;
+		return no;
+	}
+	
+	template<class T>
+	std::pair<iterator,iterator> prefix_range(const key_type &key,T)
+	{
+		std::size_t pos=0;
+		std::pair<patricia_node*,patricia_node*> node_pair;
+		std::pair<std::size_t,int> common;
+		const std::size_t key_size=Key_traits::size(key);
+		patricia_node *cur=root,*next=root;
+		std::size_t bit_mask;
+		key_iterator it=Key_traits::begin(key);
+
+
+		if(root==0) return std::make_pair(end(),end());
+		
+		if(Key_traits::begin(key)==Key_traits::end(key))
+			return std::make_pair(begin(),end());
+		if(root->right==0) return;
+
+		node_pair=find_node_prev(root,key,iterator_cat(),key_size);
+
+		next=node_pair.first;
+		common=get_common_bits(key,next->value.first );
+		if ( common.second==2 ) 
+		{
+			//not_handled			
+		}
+		if ( common.second!=0 || common.first % ( bit_width +  1 ) != 0)
+			return std::make_pair(end(),end());
+		
+
+		next=cur=root;
+		while (next->index < common.first) {
+			cur=next;
+			pos= cur->index / (bit_width + 1);
+			//if ( pos >= key_size ) break;
+			next=get_nth_bit ( Key_traits::get_element(it + pos), cur->index % (bit_width + 1) )? 
+			cur->right: cur->left;
+			if(cur->index >= next->index) break;
+		}
+		
+		iterator right=iterator(next,cur);
+		iterator left =iterator(next,cur);
+		left.to_left_most();
+		right.to_right_most();
+		return std::make_pair(left,right);
+	}
+	
 	//used by copy_patricia
 	patricia_node *copy_patricia_find_par(patricia_node* const &this_cur,
 	const patricia_node* const &other_cur,const patricia_node * const &par)
@@ -997,6 +1062,7 @@ class patricia{
 			}
 		}
 	}
+
 };
 
 /*
