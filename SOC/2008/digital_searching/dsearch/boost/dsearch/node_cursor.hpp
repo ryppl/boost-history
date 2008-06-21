@@ -36,9 +36,8 @@ namespace dsearch {
 
 
 	public:
-	trie_cursor()//	:only_root(0),cur(0),top(0) (gave warnings!?!)
+	trie_cursor():only_root(0),top(0),cur(0)
 	{
-		only_root=0;cur=0;top=0;
 	}
 
 	template<class K,class M,class N>
@@ -184,4 +183,3 @@ namespace dsearch {
 }
 
 #endif //BOOST_DSEARCH_NODE_CURSOR_HPP
-
