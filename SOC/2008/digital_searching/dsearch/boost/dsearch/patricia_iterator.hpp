@@ -88,6 +88,8 @@ Value_type, bidirectional_traversal_tag >
 		
 		if ( cur == other.cur && next == other.next )
 			return true;
+		//std::cout<<"In equal cur:"<<cur<< "!=" << other.cur<<std::endl;
+		//std::cout<<"In equal next:"<<next<< "!=" << other.next<<std::endl;
 		//std::cout<<"In equal"<<next->value.first << "!=" << other.next->value.first<<std::endl;
 		return false;
 	}
