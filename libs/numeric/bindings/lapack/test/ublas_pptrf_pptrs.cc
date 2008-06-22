@@ -72,15 +72,23 @@ int main() {
 
   int ierr = lapack::pptrf (sal);  
   if (!ierr) {
+    symml_t isal (sal);
     lapack::pptrs (sal, bl); 
     print_m (bl, "xl"); 
+    cout << endl; 
+    lapack::pptri (isal);
+    print_m (isal, "isal");
   }
   cout << endl; 
 
   ierr = lapack::pptrf (sau);  
   if (!ierr) {
+    symmu_t isau (sau);
     lapack::pptrs (sau, bu); 
     print_m (bu, "xu"); 
+    cout << endl; 
+    lapack::pptri (isau);
+    print_m (isau, "isau");
   }
   cout << endl; 
 
@@ -126,8 +134,12 @@ int main() {
   
   ierr = lapack::pptrf (hal); 
   if (ierr == 0) {
+    herml_t ihal (hal);
     lapack::pptrs (hal, cbl2); 
     print_m (cbl2, "cxl"); 
+    cout << endl; 
+    lapack::pptri (ihal);
+    print_m (ihal, "ihal");
   }
   else 
     cout << "matrix is not positive definite: ierr = " 
@@ -136,8 +148,12 @@ int main() {
 
   ierr = lapack::pptrf (hau); 
   if (ierr == 0) {
+    hermu_t ihau (hau);
     ierr = lapack::pptrs (hau, cbu2); 
     print_m (cbu2, "cxu"); 
+    cout << endl; 
+    lapack::pptri (ihau);
+    print_m (ihau, "ihau");
   }
   else 
     cout << "matrix is not positive definite: ierr = " 
