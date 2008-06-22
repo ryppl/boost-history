@@ -134,6 +134,13 @@ extern "C" {
                       dcomplex_t const* ap, 
                       dcomplex_t* b, int const* ldb, int* info);
 
+  void LAPACK_SPPTRI (char const* uplo, int const* n, float* ap, int* info);
+  void LAPACK_DPPTRI (char const* uplo, int const* n, double* ap, int* info);
+  void LAPACK_CPPTRI (char const* uplo, int const* n, 
+                      fcomplex_t* ap, int* info);
+  void LAPACK_ZPPTRI (char const* uplo, int const* n, 
+                      dcomplex_t* ap, int* info);
+
 
   /* symmetric/Hermitian indefinite and complex symmetric */
 
