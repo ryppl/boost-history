@@ -12,6 +12,7 @@ import testing ;
 
 alias bindings-lapack-tests :
     [ run lapack.cpp ]
+    [ run hseqr.cpp ]
 
     [ run ublas_gees.cpp ]
     [ run ublas_geqrf.cpp ]
