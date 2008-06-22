@@ -55,6 +55,12 @@ void print_pat(const T &pat)
 		std::cout<<(*it).first<<" "<<(*it).second<<std::endl;
 	}
 }
+template<class T>
+void print_pat(const T &beg,const T &end)
+{
+	for(T it=beg;it!=end;it++)
+		std::cout<<(*it).first<<" "<<(*it).second<<std::endl;
+}
 
 template<class T>
 void insert_test_1()
@@ -453,6 +459,63 @@ void lower_bound_test()
 	BOOST_CHECK (pat.lower_bound("")==pat.end());
 }
 
+#define PREFIX_CHECK(pat,key,key1,key2) {\
+		std::cout<<"PREFIX_CHECK"<<std::endl;\
+		iterator it_begin=pat.find(key1);\
+		iterator it_end=++pat.find(key2);\
+		std::pair<iterator,iterator> it_pair=pat.prefix_range(key);\
+		for(iterator it=it_begin;it!=it_end;++it,++it_pair.first)\
+		{\
+			std::cout<<"PREFIX CHECK"<<(*it_pair.first).first<<" "<<(*it_pair.first).second<<std::endl;\
+			std::cout<<"PREFIX CHECK"<<(*it).first<<" "<<(*it).second<<std::endl;\
+			BOOST_CHECK(it==it_pair.first);\
+		}\
+		BOOST_CHECK(it_pair.first==it_pair.second);\
+		std::cout<<( (it_pair.first!=it_pair.second)?(*it_pair.second).first+" NOT EQUAL":"EQUAL")<<std::endl;\
+		std::cout<<"PREFIX_CHECK END"<<std::endl;\
+	}
+
+template<class T>
+void prefix_range_test()
+{
+	typedef typename T::iterator iterator;
+	std::pair<iterator,iterator> it_pair;
+	T pat;
+	pat[""]=9;
+	pat["hello"]=10;
+
+	it_pair=pat.prefix_range("");
+	BOOST_CHECK(it_pair.first!=pat.end());
+	print_pat(it_pair.first,it_pair.second);
+	
+	it_pair=pat.prefix_range("h");
+	BOOST_CHECK(it_pair.first!=pat.end());
+	print_pat(it_pair.first,it_pair.second);
+	
+	it_pair=pat.prefix_range("hello");
+	BOOST_CHECK(it_pair.first!=pat.end());
+	print_pat(it_pair.first,it_pair.second);
+	
+	pat=insert_test_2<T>();
+	//const char * key[]={ "","bad", "h","hell","hello","we","wicked"};
+	//int 		  data[]={  4,   2 ,   6,    10,     8,   14,    12  };
+	PREFIX_CHECK(pat,"","","wicked");
+	BOOST_CHECK(pat.begin()==pat.find(""));
+	PREFIX_CHECK(pat,"h","h","hello");
+	PREFIX_CHECK(pat,"hell","hell","hello");
+	PREFIX_CHECK(pat,"b","bad","bad");
+	PREFIX_CHECK(pat,"we","we","we");
+	PREFIX_CHECK(pat,"w","we","wicked");
+	PREFIX_CHECK(pat,"wic","wicked","wicked");
+	PREFIX_CHECK(pat,"wicked","wicked","wicked");
+
+	PREFIX_CHECK(pat,"be","NOTFOUND","wicked");
+	PREFIX_CHECK(pat,"a","NOTFOUND","wicked");
+	BOOST_CHECK(pat.find("NOTFOUND")==++pat.find("wicked"));
+
+	BOOST_CHECK(pat.find("NOTFOUND")==pat.end());
+}
+
 template<class T>
 void copy_test()
 {
@@ -478,6 +541,7 @@ int test_main(int argc,char **argv)
 	copy_test<pat_type>();
 	upper_bound_test<pat_type>();
 	lower_bound_test<pat_type>();
+	//prefix_range_test<pat_type>();
 #endif
 	if ( argc > 1 )
 		insert_test_3<pat_type>(argv[1]);
