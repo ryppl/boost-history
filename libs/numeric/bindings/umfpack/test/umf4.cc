@@ -187,10 +187,10 @@ double resid (M const& m, V const& x, V const& b, V& r) {
       bnorm = b [i];
       break;
     }
+#endif 
     absb = fabs (b [i]);
     bnorm = max (bnorm, absb);
   }
-#endif 
   if (bnorm == 0)
     bnorm = 1;
   return (rnorm / bnorm);
