@@ -67,7 +67,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     BOOST_STATIC_CONSTANT (std::size_t, index_base = IB);
 
     static index_pointer index1_storage (matrix_type& cm) {
-      assert (cm.filled1() == layout_type::size1 (cm.size1(), cm.size2()) + 1);
+      //assert (cm.filled1() == layout_type::size1 (cm.size1(), cm.size2()) + 1);
       return vector_traits<idx_array_t>::storage (cm.index1_data()); 
     }
     static index_pointer index2_storage (matrix_type& cm) {
