@@ -268,7 +268,9 @@ int main (int argc, char **argv) {
   int r, c;
   for (int i = 0; i < nz; ++i) {
     f >> r >> c;
-    f >> A (r, c); 
+    double val;
+    f >> val;
+    A (r, c) = val;
   }
   Control[UMFPACK_PRL] = (nz > 20) ? 4 : 5; 
   cout << "matrix A: "; 

@@ -23,6 +23,10 @@ BLAS_LIB  ?= blas ;
 LAPACK_PATH ?= /usr/lib ;
 LAPACK_LIB  ?= lapack ;
 
+UMFPACK_INCLUDE = /usr/local/lib/UMFPACK/include ;
+UFCONFIG_INCLUDE = /usr/local/lib/UFCONFIG ;
+AMD_INCLUDE = /usr/local/lib/AMD/include ;
+
 lib fortran_lib : : <name>g2c ;
 
 lib amos_lib : fortran_lib : <name>$(AMOS_LIB) <search>$(AMOS_PATH) ;
@@ -36,3 +40,7 @@ lib lapack_atlas_lib : fortran_lib : <name>$(LAPACK_ATLAS_LIB) <search>$(ATLAS_P
 
 lib blas_lib   : fortran_lib : <name>$(BLAS_LIB)   <search>$(BLAS_PATH) ;
 lib lapack_lib : fortran_lib : <name>$(LAPACK_LIB) <search>$(LAPACK_PATH) <use>blas_lib : : <library>blas_lib ;
+
+lib umfpack_lib : : : :  <include>$(UMFPACK_INCLUDE)
+                         <include>$(UFCONFIG_INCLUDE)
+                         <include>$(AMD_INCLUDE) ;

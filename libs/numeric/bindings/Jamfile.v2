@@ -11,3 +11,4 @@ build-project amos/test ;
 build-project atlas ;
 build-project blas/test ;
 build-project lapack/test ;
+build-project umfpack/test ;
