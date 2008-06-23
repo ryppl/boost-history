@@ -18,10 +18,10 @@ class in_list
 public:
     typedef Edge in_pair;
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type edge_descriptor;
-
+private:
+    typedef typename Edge::second_type out_edge_place;
+public:
     typedef typename store_type::iterator iterator;
-    typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
     in_list()
@@ -32,14 +32,17 @@ public:
      * Add the edge to list.
      * @complexity O(1)
      */
-    void add(in_pair e)
-    { _edges.push_back(e); }
+    iterator add(vertex_descriptor v)
+    {
+        _edges.push_back(make_pair(v, out_edge_place()));
+        return boost::prior(_edges.end());
+    }
 
     /**
      * Find the edge with the given iterator.
      * @complexity O(deg(u))
      */
-    iterator find(vertex_descriptor v)
+    iterator find(vertex_descriptor v) const
     {
         iterator i = _edges.begin(), end = _edges.end();
         for( ; i != end; ++i) {
@@ -48,25 +51,9 @@ public:
         return end;
     }
 
-    /**
-     * Find the edge with the given iterator.
-     * @complexity O(deg(u))
-     */
-    const_iterator find(vertex_descriptor v) const
-    {
-        const_iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
-    }
-
-    /**
-     * Remove the edge with the given vertex.
-     * @complexity O(deg(u))
-     */
-    void remove(vertex_descriptor v)
-    { _edges.erase(find(v)); }
+    /** Remove the edge referenced by the given iterator. */
+    void remove(iterator i)
+    { _edges.erase(i); }
 
     void clear()
     { _edges.clear(); }
@@ -76,7 +63,7 @@ public:
     { return _edges.size(); }
 
 private:
-    store_type _edges;
+    mutable store_type _edges;
 };
 
 #endif

@@ -72,8 +72,10 @@ public:
     typedef typename EdgeStore::template out_store<vertex_descriptor, edge_properties>::type out_edge_store;
     typedef typename EdgeStore::template in_store<vertex_descriptor>::type in_edge_store;
 
-    // We can now generate the edge descriptor.
-    typedef directed_edge<typename out_edge_store::out_tuple> edge_descriptor;
+    // We can now generate the edge descriptor. The type of this can be entirely
+    // distilled from the iterator into the out edge set - it has it all. Note
+    // that this includes a placeholder for the in edge too.
+    typedef directed_edge<typename out_edge_store::iterator> edge_descriptor;
 
     // Generate the vertex type over the vertex properties, and in/out stores.
     // We can also pull size
@@ -414,33 +416,19 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
     // Do we add the edge or not?
     std::pair<out_iterator, bool> ins = src.allow(v);
     if(ins.second) {
-        // The addition is allowed... Was there already an edge there? If not,
-        // connect u to v (and vice-versa) with the given properties. Otherwise,
-        // just return the existing edge.
-        edge_descriptor e;
-
         // If the returned iterator is past the end, then we have to create and
         // connect the edge.
         if(ins.first == src.end_out()) {
+            ++_edges;
+
             // Insert the edge stubs, getting iterators to each stub.
             out_iterator i = src.connect_target(v, ep);
             in_iterator j = tgt.connect_source(u);
-
-            // Biconnect the stubs. This relies heavily on the fact that these
-            // placeholders aren't squashing the underlying memory.
-            out_tuple& x = const_cast<out_tuple&>(*i);
-            in_pair& y = const_cast<in_pair&>(*j);
-            boost::get<2>(x).put(i);
-            y.second.put(j);
-            e = edge_descriptor(u, &*i);
+            return vertex_type::bind_connection(i, j);
         }
         else {
-            e = edge_descriptor(u, &*ins.first);
+            return edge_descriptor(u, ins.first);
         }
-
-        // Increment the edge count.
-        ++_edges;
-        return e;
     }
     else {
         // Can't add the edge? This is a flat refusal (as in a loop).
@@ -507,14 +495,13 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
+    // Removing the edge involves the removal of both parts from the two
+    // connected vertices.
     vertex_type& src = _verts.vertex(e.source());
     vertex_type& tgt = _verts.vertex(e.target());
-
-    // Remove the connections... That's it.
-    src.disconnect_target(e.out_edge());
-    tgt.disconnect_source(e.source());
+    src.disconnect_target(e);
+    tgt.disconnect_source(e);
 }
-
 
 /**
  * Return the number of vertices in the graph.

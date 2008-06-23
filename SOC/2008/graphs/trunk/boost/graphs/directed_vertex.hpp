@@ -2,6 +2,10 @@
 #ifndef DIRECTED_VERTEX_HPP
 #define DIRECTED_VERTEX_HPP
 
+#include <list>
+#include "placeholder.hpp"
+#include "directed_edge.hpp"
+
 /**
  * A directed vertex provides storage for both outgoing edges and in edges.
  * Each of these stores are parameterizable, although they should generally
@@ -18,13 +22,15 @@ public:
 
     typedef typename OutStore::edge_properties edge_properties;
 
-    typedef typename out_store::const_iterator out_iterator;
+    typedef typename out_store::iterator out_iterator;
     typedef typename out_store::size_type out_size_type;
 
-    typedef typename in_store::const_iterator in_iterator;
+    typedef typename in_store::iterator in_iterator;
     typedef typename in_store::size_type in_size_type;
 
     typedef out_size_type incident_size_type;
+
+    typedef directed_edge<out_iterator> edge_descriptor;
 
 
     /** @name Constructors */
@@ -42,14 +48,14 @@ public:
     { }
     //@}
 
-
     std::pair<out_iterator, bool> allow(vertex_descriptor) const;
 
     out_iterator connect_target(vertex_descriptor, edge_properties const&);
     in_iterator connect_source(vertex_descriptor);
+    static edge_descriptor bind_connection(out_iterator, in_iterator);
 
-    // void disconnect_target(out_descriptor);
-    // void disconnect_source(vertex_descriptor);
+    void disconnect_target(edge_descriptor);
+    void disconnect_source(edge_descriptor);
 
     /** @name Property Accessors */
     //@{
@@ -133,7 +139,7 @@ template <typename V, typename O, typename I>
 typename directed_vertex<V,O,I>::out_iterator
 directed_vertex<V,O,I>::connect_target(vertex_descriptor v, edge_properties const& ep)
 {
-    return _out.add(std::make_pair(v, ep));
+    return _out.add(v, ep);
 }
 
 /**
@@ -149,15 +155,23 @@ directed_vertex<V,O,I>::connect_source(vertex_descriptor v)
     return _in.add(v);
 }
 
-#if 0
+template <typename V, typename O, typename I>
+typename directed_vertex<V,O,I>::edge_descriptor
+directed_vertex<V,O,I>::bind_connection(out_iterator i, in_iterator j)
+{
+    boost::get<2>(*i).put(j);
+    j->second.put(i);
+    return edge_descriptor(j->first, i);
+}
+
 /**
  * Disconnect this vertex from its target, removing the outgoing edge.
  */
 template <typename V, typename O, typename I>
 void
-directed_vertex<V,O,I>::disconnect_target(out_descriptor d)
+directed_vertex<V,O,I>::disconnect_target(edge_descriptor e)
 {
-    _out.remove(d);
+    _out.remove(e.out_edge());
 }
 
 /**
@@ -165,10 +179,10 @@ directed_vertex<V,O,I>::disconnect_target(out_descriptor d)
  */
 template <typename V, typename O, typename I>
 void
-directed_vertex<V,O,I>::disconnect_source(vertex_descriptor v)
+directed_vertex<V,O,I>::disconnect_source(edge_descriptor e)
 {
-    _in.remove(v);
+    // placeholder<sizeof(std::list<int>::iterator)> x = boost::get<2>(*e.out_edge());
+    _in.remove(boost::get<2>(*e.out_edge()).template get<in_iterator>());
 }
-#endif
 
 #endif

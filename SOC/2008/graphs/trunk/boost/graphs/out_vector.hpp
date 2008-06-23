@@ -6,9 +6,6 @@
 
 #include <boost/tuple/tuple.hpp>
 
-#include "placeholder.hpp"
-#include "out_descriptor.hpp"
-
 /**
  * The in/out vector implements vector-based, edge storage for directed graphs.
  * Each out edge is capable of referencing its corresponding in edge in another
@@ -30,7 +27,6 @@ private:
 public:
     typedef std::pair<vertex_descriptor, edge_properties> out_pair;
     typedef typename store_type::iterator iterator;
-    typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
     inline out_vector()
@@ -41,16 +37,16 @@ public:
      * Allow the edge addition? Unless policy dictates otherwise, always allow
      * the addition of the edge.
      */
-    std::pair<const_iterator, bool> allow(vertex_descriptor v) const
+    std::pair<iterator, bool> allow(vertex_descriptor v) const
     { return std::make_pair(_edges.end(), true); }
 
     /**
      * Add the edge to the vector.
      * @complexity O(1)
      */
-    const_iterator add(out_pair e)
+    iterator add(vertex_descriptor v, edge_properties const& ep)
     {
-        _edges.push_back(out_tuple(e.first, e.second, in_edge_place()));
+        _edges.push_back(out_tuple(v, ep, in_edge_place()));
         return boost::prior(_edges.end());
     }
 
@@ -60,15 +56,15 @@ public:
 
     /** @name Iterators */
     //@{
-    inline const_iterator begin() const
+    inline iterator begin() const
     { return _edges.begin(); }
 
-    inline const_iterator end() const
+    inline iterator end() const
     { return _edges.end(); }
     //@}
 
 private:
-    store_type _edges;
+    mutable store_type _edges;
 };
 
 #endif

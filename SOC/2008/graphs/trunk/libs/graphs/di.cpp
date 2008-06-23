@@ -231,21 +231,21 @@ void vec_vec()
     typedef directed_graph<City, Road, vertex_vector, edge_vector> Graph;
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
-    // test_add_multi_edges<Graph>();
+    test_add_multi_edges<Graph>();
     // test_incidence_iterator<Graph>();
     // test_adjacency_iterator<Graph>();
 }
 
 void list_list()
 {
-    /*
     cout << "---- list/list ----" << endl;
     typedef directed_graph<City, Road, vertex_list, edge_list> Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
+    /*
     // test_disconnect_vertex<Graph>();
     // test_implicit_disconnect_vertex<Graph>();
-    test_add_multi_edges<Graph>();
+    // test_add_multi_edges<Graph>();
     // test_remove_multi_edges<Graph>();
     // test_incidence_iterator<Graph>();
     // test_adjacency_iterator<Graph>();

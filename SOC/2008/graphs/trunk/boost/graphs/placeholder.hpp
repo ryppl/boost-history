@@ -22,6 +22,10 @@ struct placeholder
         : mem()
     { std::fill(mem, mem + N, 0); }
 
+    inline placeholder(placeholder const& x)
+        : mem()
+    { copy(x.mem, x.mem + N, mem); }
+
     template <typename T>
     inline placeholder(const T& x)
         : mem()

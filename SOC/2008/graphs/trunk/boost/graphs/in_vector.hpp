@@ -22,7 +22,6 @@ private:
     typedef typename Edge::second_type out_edge_place;
 public:
     typedef typename store_type::iterator iterator;
-    typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
     in_vector()
@@ -33,7 +32,7 @@ public:
      * Add the edge to the vector, returning an iterator to the added element.
      * @complexity O(1)
      */
-    const_iterator add(vertex_descriptor e)
+    iterator add(vertex_descriptor e)
     {
         _edges.push_back(std::make_pair(e, out_edge_place()));
         return boost::prior(_edges.end());
