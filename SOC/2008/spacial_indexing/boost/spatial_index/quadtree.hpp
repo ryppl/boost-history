@@ -19,11 +19,11 @@ template<typename Point, typename Value>
 class quadtree : public spatial_index<Point, Value>
 {
 private:
-	quadtree_node<Point,Value> root;
-	unsigned int element_count;
+  quadtree_node<Point,Value> root;
+  unsigned int element_count;
 
-	// number of points in each node
-	unsigned int node_size_;
+  // number of points in each node
+  unsigned int node_size_;
 
 public:
   quadtree(const geometry::box<Point> &r)
@@ -33,14 +33,15 @@ public:
   /// TODO: implement
   virtual void remove(const Point &k)
   {
-    std::cerr << "Not implemented yet." << std::endl;
+    root.remove(k);
+    element_count--;
   }
 
   /// remove data with key 'k'
   /// TODO: implement
   virtual void remove(const geometry::box<Point> &k)
   {
-    std::cerr << "Not implemented yet." << std::endl;
+    std::cerr << "Boxes not implemented in quadtrees." << std::endl;
   }
 
 	  
@@ -94,17 +95,17 @@ public:
     return root.find(k);
   }
 
- 	virtual std::deque<Value> find(const geometry::box<Point> &r)
-	{
-		std::deque<Value> result;
-		root.find(result, r);
-		return result;
-	}
+  virtual std::deque<Value> find(const geometry::box<Point> &r)
+  {
+    std::deque<Value> result;
+    root.find(result, r);
+    return result;
+  }
 
 
-	virtual unsigned int elements(void) { return element_count; }
+  virtual unsigned int elements(void) { return element_count; }
 	
-	virtual ~quadtree() {}
+  virtual ~quadtree() {}
 };
 
 

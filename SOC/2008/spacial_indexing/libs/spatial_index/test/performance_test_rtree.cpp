@@ -165,7 +165,7 @@ int test_main(int, char* [])
 // 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
 	BOOST_CHECK_EQUAL(i, 0u);
       }
-      std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
+      std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
 
       return 0;
 }

@@ -39,6 +39,12 @@ namespace spatial_index {
     }
 
     /// remove the element with key 'k'
+    virtual void remove(const Point &k)
+    {
+      this->remove(geometry::box<Point>(k, k));
+    }
+
+    /// remove the element with key 'k'
     virtual void remove(const geometry::box<Point> &k)
     {
       try {

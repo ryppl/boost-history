@@ -78,6 +78,15 @@ public:
     // "min_x: " << min_x << " min_y: " << min_y << " max_x: " << max_x << " max_y " << max_y << std::endl;
   }
 
+  void remove(const Point &k)
+  {
+      typename std::map<Point, Value>::iterator it = m_.find(k);
+      if(it != m_.end()) {
+	m_.erase(it);
+	return;
+      }
+      recursive_remove(k);
+  }
 
   void insert(const Point &k, const Value &v)
   {
@@ -140,10 +149,11 @@ public:
 	// std::cerr << "Not Inside" << std::endl;
 	return;
       }
+
       // std::cerr << "Inside" << std::endl;
 
       for(typename std::map<Point,Value>::const_iterator it = m_.begin(); it != m_.end(); ++it) {
-	std::cerr << "Checking: (" << geometry::get<0>(it->first) << "," << geometry::get<1>(it->first) << ")" << std::endl;
+// 	std::cerr << "Checking: (" << geometry::get<0>(it->first) << "," << geometry::get<1>(it->first) << ")" << std::endl;
 	if(geometry::get<0>(it->first) >= geometry::get<0>(r.min()) && geometry::get<0>(it->first) <= geometry::get<0>(r.max()) && 
 	   geometry::get<1>(it->first) >= geometry::get<1>(r.min()) && geometry::get<1>(it->first) <= geometry::get<1>(r.max())) {
 	  result.push_back(it->second);
@@ -170,55 +180,101 @@ public:
 
   Value find(const Point &k)
   {
-    if(m_.size() == 0) {
-      return Value();
-    } else {
-      // std::cerr << "compare: " << k_.first << " with " << k.first;
-      // std::cerr << " " << k_.second << " with " << k.second << std::endl;
       typename std::map<Point, Value>::const_iterator it = m_.find(k);
       if(it != m_.end()) {
-	// std::cerr << "ok" << std::endl;
 	return it->second;
       }
+      return recursive_search(k);
+  }
 
 
-      // IMP: maybe this could be done only one time at node creation
-      geometry::box<Point> ne_box, sw_box, se_box, nw_box;
-      divide_quadrants(ne_box, sw_box, se_box, nw_box);
+  Value recursive_search(const Point &k)
+  {
+    // IMP: maybe this could be done only one time at node creation
+    // but it will consume more memory...
 
-      // TODO: replace with algorithm
-      if(geometry::within(k, ne_box)) {
-	if(ne_ != boost::shared_ptr<quadtree_node>()) {
-	  return ne_->find(k);
-	} else {
-	  return Value();
-	}
+    geometry::box<Point> ne_box, sw_box, se_box, nw_box;
+    divide_quadrants(ne_box, sw_box, se_box, nw_box);
+
+    if(geometry::within(k, ne_box)) {
+      if(ne_ != boost::shared_ptr<quadtree_node>()) {
+	return ne_->find(k);
+      } else {
+	return Value();
       }
-      if(geometry::within(k, se_box)) {
-	if(se_ != boost::shared_ptr<quadtree_node>()) {
-	  return se_->find(k);
-	} else {
-	  return Value();
-	}
+    }
+    if(geometry::within(k, se_box)) {
+      if(se_ != boost::shared_ptr<quadtree_node>()) {
+	return se_->find(k);
+      } else {
+	return Value();
       }
-      if(geometry::within(k, nw_box)) {
-	if(nw_ != boost::shared_ptr<quadtree_node>()) {
-	  return nw_->find(k);
-	} else {
-	  return Value();
-	}
+    }
+    if(geometry::within(k, nw_box)) {
+      if(nw_ != boost::shared_ptr<quadtree_node>()) {
+	return nw_->find(k);
+      } else {
+	return Value();
       }
-      if(geometry::within(k, sw_box)) {
-	if(sw_ != boost::shared_ptr<quadtree_node>()) {
-	  return sw_->find(k);
-	} else {
-	  return Value();
-	}
+    }
+    if(geometry::within(k, sw_box)) {
+      if(sw_ != boost::shared_ptr<quadtree_node>()) {
+	return sw_->find(k);
+      } else {
+	return Value();
       }
     }
     // never reached
     return Value();
   }
+
+  void recursive_remove(const Point &k)
+  {
+//     std::cerr << "Recursive_remove" << std::endl;
+
+//     std::cerr << "Checking: (" << geometry::get<0>(k) << "," << geometry::get<1>(k) << ")" << std::endl;
+//     std::cerr << "in : (" << geometry::get<0>(bounding_rectangle_.min()) << "," << geometry::get<1>(bounding_rectangle_.min()) << ") x ";
+//     std::cerr << "(" << geometry::get<0>(bounding_rectangle_.max()) << "," << geometry::get<1>(bounding_rectangle_.max()) << ")" << std::endl;
+
+    // IMP: maybe this could be done only one time at node creation
+    // but it will consume more memory...
+    geometry::box<Point> ne_box, sw_box, se_box, nw_box;
+    divide_quadrants(ne_box, sw_box, se_box, nw_box);
+
+    if(geometry::within(k, ne_box)) {
+      if(ne_ != boost::shared_ptr<quadtree_node>()) {
+	ne_->remove(k);
+	return;
+      } else {
+	throw std::logic_error("Not found");
+      }
+    }
+    if(geometry::within(k, se_box)) {
+      if(se_ != boost::shared_ptr<quadtree_node>()) {
+	se_->remove(k);
+	return;
+      } else {
+	throw std::logic_error("Not found");
+      }
+    }
+    if(geometry::within(k, nw_box)) {
+      if(nw_ != boost::shared_ptr<quadtree_node>()) {
+	nw_->remove(k);
+	return;
+      } else {
+	throw std::logic_error("Not found");
+      }
+    }
+    if(geometry::within(k, sw_box)) {
+      if(sw_ != boost::shared_ptr<quadtree_node>()) {
+	sw_->remove(k);
+	return;
+      } else {
+	throw std::logic_error("Not found");
+      }
+    }
+  }
+
 
 };
 
