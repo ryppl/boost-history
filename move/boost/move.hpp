@@ -117,7 +117,10 @@ struct move_from
 */
 template <typename T>
 struct is_movable : boost::mpl::and_<
-                        boost::is_convertible<move_from<T>, T>,
+                        boost::mpl::or_<
+                            boost::is_convertible<T, move_from<T> >,
+                            boost::is_convertible<move_from<T>, T>
+                        >,
                         move_detail::has_move_assign<T>,
                         boost::mpl::not_<boost::is_convertible<move_detail::test_can_convert_anything, T> >
                     > { };

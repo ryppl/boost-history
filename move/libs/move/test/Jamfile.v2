@@ -11,6 +11,7 @@ project boost/move ;
 test-suite "move-suite" :
     [ run main.cpp ]
     [ run move.cpp ]
+    [ run noncopyable.cpp ]
     [ run move_test.cpp ]
     [ run no_sfinae_test.cpp ]
 ;
