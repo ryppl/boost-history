@@ -18,6 +18,18 @@
 // Note that directed graphs maintain an independent edge count since the actual
 // count would basically require a search.
 
+// Apparently directed graphs can be challenging - especially when you're
+// talking about in and out edges. Let's start with the basics - out edges. Each
+// out edge of a vertex references a target vertex descriptor and the properties
+// of that edge. However, there is an additional in edge that needs to be
+// accounted for (in another vertex no less). We could augment each out edge
+// with an iterator to its corresponding in edge.
+//
+// Each in edge is similarly defined. Minimally, this could contain only the
+// source vertex and a reference to the properties that define that edge. In
+// order to provide quick access to it "other half", it needs a reference to
+// the out edge (which could be implemented as an iterator of some kind).
+
 #include "none.hpp"
 
 #include "directed_vertex.hpp"
@@ -58,11 +70,10 @@ public:
     // edge stores for the graph. Get the out edge descriptor type from the out
     // store.
     typedef typename EdgeStore::template out_store<vertex_descriptor, edge_properties>::type out_edge_store;
-    typedef typename out_edge_store::out_descriptor out_descriptor;
-    typedef typename EdgeStore::template in_store<vertex_descriptor, out_descriptor>::type in_edge_store;
+    typedef typename EdgeStore::template in_store<vertex_descriptor>::type in_edge_store;
 
     // We can now generate the edge descriptor.
-    typedef directed_edge<vertex_descriptor, out_descriptor> edge_descriptor;
+    typedef directed_edge<typename out_edge_store::out_tuple> edge_descriptor;
 
     // Generate the vertex type over the vertex properties, and in/out stores.
     // We can also pull size
@@ -392,28 +403,42 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                       vertex_descriptor v,
                                       edge_properties const& ep)
 {
+    typedef typename out_edge_store::out_tuple out_tuple;
+    typedef typename in_edge_store::in_pair in_pair;
+    typedef typename vertex_type::out_iterator out_iterator;
+    typedef typename vertex_type::in_iterator in_iterator;
+
     vertex_type &src = _verts.vertex(u);
     vertex_type &tgt = _verts.vertex(v);
 
     // Do we add the edge or not?
-    std::pair<out_descriptor, bool> ins = src.allow(v);
+    std::pair<out_iterator, bool> ins = src.allow(v);
     if(ins.second) {
         // The addition is allowed... Was there already an edge there? If not,
         // connect u to v (and vice-versa) with the given properties. Otherwise,
         // just return the existing edge.
         edge_descriptor e;
-        // Yuck. Is there no better way to this (i.e., provide some kind of
-        // switch for validity?).
-        if(ins.first.iter == src.end_out()) {
-            out_descriptor o = src.connect_target(v, ep);
-            tgt.connect_source(u, o);
-            e = edge_descriptor(u, o);
+
+        // If the returned iterator is past the end, then we have to create and
+        // connect the edge.
+        if(ins.first == src.end_out()) {
+            // Insert the edge stubs, getting iterators to each stub.
+            out_iterator i = src.connect_target(v, ep);
+            in_iterator j = tgt.connect_source(u);
+
+            // Biconnect the stubs. This relies heavily on the fact that these
+            // placeholders aren't squashing the underlying memory.
+            out_tuple& x = const_cast<out_tuple&>(*i);
+            in_pair& y = const_cast<in_pair&>(*j);
+            boost::get<2>(x).put(i);
+            y.second.put(j);
+            e = edge_descriptor(u, &*i);
         }
         else {
-            e = edge_descriptor(u, ins.first);
+            e = edge_descriptor(u, &*ins.first);
         }
 
-        // Remember that we're allocating the edge.
+        // Increment the edge count.
         ++_edges;
         return e;
     }

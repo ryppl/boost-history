@@ -4,20 +4,17 @@
 
 #include <vector>
 
+#include <boost/tuple/tuple.hpp>
+
+#include "placeholder.hpp"
 #include "out_descriptor.hpp"
 
 /**
- * The out vector implements vector-based, out-edge storage for directed graphs.
- * out-edges are uniquely identified by their target vertex and property
- * descriptor. As an out-edge store, this type stores an edge property with the
- * target vertex descriptor. Vector-based stores support fast inserts, slow
- * finds, and do not allow remove operations.
+ * The in/out vector implements vector-based, edge storage for directed graphs.
+ * Each out edge is capable of referencing its corresponding in edge in another
+ * vertex and vice-versa.
  *
- * The edge is required to be a pair containing a vertex descriptor and a edge
- * property (not descriptor). This type defines the out_descriptor - an opaque
- * reference to a target/property pair.
- *
- * @param Edge A pair describing a vertex descriptor and the edge properties.
+ * @param Edge A tuple describing the out edge type.
  * @param Alloc The allocator for edge pairs.
  */
 template <typename Edge, typename Alloc>
@@ -25,31 +22,36 @@ class out_vector
 {
     typedef std::vector<Edge, Alloc> store_type;
 public:
-    typedef Edge out_pair;
-    typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type edge_properties;
-
+    typedef Edge out_tuple;
+    typedef typename boost::tuples::element<0, Edge>::type vertex_descriptor;
+    typedef typename boost::tuples::element<1, Edge>::type edge_properties;
+private:
+    typedef typename boost::tuples::element<2, Edge>::type in_edge_place;
+public:
+    typedef std::pair<vertex_descriptor, edge_properties> out_pair;
+    typedef typename store_type::iterator iterator;
     typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
-
-    typedef basic_out_descriptor<const_iterator> out_descriptor;
 
     inline out_vector()
         : _edges()
     { }
 
-    /** Allow the addition? */
-    std::pair<out_descriptor, bool> allow(vertex_descriptor v)
+    /**
+     * Allow the edge addition? Unless policy dictates otherwise, always allow
+     * the addition of the edge.
+     */
+    std::pair<const_iterator, bool> allow(vertex_descriptor v) const
     { return std::make_pair(_edges.end(), true); }
 
     /**
      * Add the edge to the vector.
      * @complexity O(1)
      */
-    out_descriptor add(out_pair e)
+    const_iterator add(out_pair e)
     {
-        _edges.push_back(e);
-        return out_descriptor(boost::prior(_edges.end()));
+        _edges.push_back(out_tuple(e.first, e.second, in_edge_place()));
+        return boost::prior(_edges.end());
     }
 
     /** Get the number of outgoing edges. */
@@ -63,8 +65,7 @@ public:
 
     inline const_iterator end() const
     { return _edges.end(); }
-
-    //@{
+    //@}
 
 private:
     store_type _edges;

@@ -18,8 +18,10 @@ class in_vector
 public:
     typedef Edge in_pair;
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type edge_descriptor;
-
+private:
+    typedef typename Edge::second_type out_edge_place;
+public:
+    typedef typename store_type::iterator iterator;
     typedef typename store_type::const_iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
@@ -27,9 +29,15 @@ public:
         : _edges()
     { }
 
-    /** Add the edge to the vector. */
-    void add(in_pair e)
-    { _edges.push_back(e); }
+    /**
+     * Add the edge to the vector, returning an iterator to the added element.
+     * @complexity O(1)
+     */
+    const_iterator add(vertex_descriptor e)
+    {
+        _edges.push_back(std::make_pair(e, out_edge_place()));
+        return boost::prior(_edges.end());
+    }
 
     /** Get the number of incoming edges (in degree). */
     size_type size() const

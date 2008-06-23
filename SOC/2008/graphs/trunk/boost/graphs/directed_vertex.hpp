@@ -17,7 +17,6 @@ public:
     typedef typename out_store::vertex_descriptor vertex_descriptor;
 
     typedef typename OutStore::edge_properties edge_properties;
-    typedef typename OutStore::out_descriptor out_descriptor;
 
     typedef typename out_store::const_iterator out_iterator;
     typedef typename out_store::size_type out_size_type;
@@ -44,13 +43,13 @@ public:
     //@}
 
 
-    std::pair<out_descriptor, bool> allow(vertex_descriptor);
+    std::pair<out_iterator, bool> allow(vertex_descriptor) const;
 
-    out_descriptor connect_target(vertex_descriptor, edge_properties const&);
-    void connect_source(vertex_descriptor, out_descriptor);
+    out_iterator connect_target(vertex_descriptor, edge_properties const&);
+    in_iterator connect_source(vertex_descriptor);
 
-    void disconnect_target(out_descriptor);
-    void disconnect_source(vertex_descriptor);
+    // void disconnect_target(out_descriptor);
+    // void disconnect_source(vertex_descriptor);
 
     /** @name Property Accessors */
     //@{
@@ -120,8 +119,8 @@ private:
  * be added anyways.
  */
 template <typename V, typename O, typename I>
-std::pair<typename directed_vertex<V,O,I>::out_descriptor, bool>
-directed_vertex<V,O,I>::allow(vertex_descriptor v)
+std::pair<typename directed_vertex<V,O,I>::out_iterator, bool>
+directed_vertex<V,O,I>::allow(vertex_descriptor v) const
 {
     return _out.allow(v);
 }
@@ -131,7 +130,7 @@ directed_vertex<V,O,I>::allow(vertex_descriptor v)
  * edge descriptor for the new edge.
  */
 template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::out_descriptor
+typename directed_vertex<V,O,I>::out_iterator
 directed_vertex<V,O,I>::connect_target(vertex_descriptor v, edge_properties const& ep)
 {
     return _out.add(std::make_pair(v, ep));
@@ -144,12 +143,13 @@ directed_vertex<V,O,I>::connect_target(vertex_descriptor v, edge_properties cons
  * don't actually have a descriptor for this vertex.
  */
 template <typename V, typename O, typename I>
-void
-directed_vertex<V,O,I>::connect_source(vertex_descriptor v, out_descriptor o)
+typename directed_vertex<V,O,I>::in_iterator
+directed_vertex<V,O,I>::connect_source(vertex_descriptor v)
 {
-    return _in.add(std::make_pair(v, o));
+    return _in.add(v);
 }
 
+#if 0
 /**
  * Disconnect this vertex from its target, removing the outgoing edge.
  */
@@ -169,5 +169,6 @@ directed_vertex<V,O,I>::disconnect_source(vertex_descriptor v)
 {
     _in.remove(v);
 }
+#endif
 
 #endif

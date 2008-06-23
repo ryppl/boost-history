@@ -2,6 +2,9 @@
 #ifndef EDGE_VECTOR_HPP
 #define EDGE_VECTOR_HPP
 
+#include <boost/tuple/tuple.hpp>
+
+#include "placeholder.hpp"
 #include "property_vector.hpp"
 #include "incidence_vector.hpp"
 #include "out_vector.hpp"
@@ -61,20 +64,29 @@ struct basic_edge_vector
     template <typename VertexDesc, typename Props>
     struct out_store
     {
-        typedef std::pair<VertexDesc, Props> out_pair;
-        typedef FirstAlloc<out_pair> out_allocator;
-        typedef out_vector<out_pair, out_allocator> type;
+        // Define a dummy type that eventually be used to store iterators to
+        // in edge iterators. The actual out edge type is a tuple of target
+        // vertex, edge properties, and in edge iterator (placeheld). The in
+        // edge type is the source vertex and the out edge iterator (placeheld).
+        typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
+        typedef boost::tuple<VertexDesc, Props, dummy_type> edge;
+        typedef FirstAlloc<edge> allocator;
+        typedef out_vector<edge, allocator> type;
     };
 
     // The in store metafunction generates the type of vector used to store
     // incoming edges of directed graph. In edges are represented by the
     // referencing vertex and an out edge descriptor.
-    template <typename VertexDesc, typename OutDesc>
+    template <typename VertexDesc>
     struct in_store
     {
-        typedef std::pair<VertexDesc, OutDesc> in_pair;
-        typedef SecondAlloc<in_pair> in_allocator;
-        typedef in_vector<in_pair, in_allocator> type;
+        // Define a dummy type that will ultimately act as a placeholder for
+        // an iterator into the out edge vector. Use that to define the in edge
+        // pair.
+        typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
+        typedef std::pair<VertexDesc, dummy_type> edge;
+        typedef SecondAlloc<edge> allocator;
+        typedef in_vector<edge, allocator> type;
     };
 };
 
