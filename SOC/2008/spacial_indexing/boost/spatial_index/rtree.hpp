@@ -111,9 +111,9 @@ namespace spatial_index {
       }
     }
 
-    virtual unsigned int elements(void) { return element_count_; }
+    virtual unsigned int elements(void) const { return element_count_; }
 
-    virtual void print(void) const
+    virtual void print(void)
     {
       std::cerr << "===================================" << std::endl;
       std::cerr << " Min/Max: " << m_ << " / " << M_ << std::endl;

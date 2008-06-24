@@ -46,10 +46,10 @@ public:
   virtual std::deque<Value> find(const geometry::box<Point> &r) = 0;
 
   /// element count in the index
-  virtual unsigned int elements(void) = 0;
+  virtual unsigned int elements(void) const = 0;
 
   /// debug print
-  virtual void print(void) const = 0;
+  virtual void print(void)  = 0;
 	      
   /// destructor
   virtual ~spatial_index(void) {}

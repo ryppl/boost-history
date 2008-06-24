@@ -151,22 +151,34 @@ int test_main(int, char* [])
       std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 
 
-      std::cerr << " --> removal tests" << std::endl;
-      for(unsigned int j=0; j < find_count/1000; j++) {
-	std::cerr << "Removal: " << j << std::endl;
- 	q->remove(search_positions[j]);
-// 	std::cerr << "Elements: " << q->elements() << std::endl;
-      }      
-      std::cerr << std::endl;
+       std::cerr << " --> removal tests" << std::endl;
+       for(unsigned int j=0; j < find_count/1000; j++) {
+ 	std::cerr << "Removal: " << j << std::endl;
+  	q->remove(search_positions[j]);
+ // 	std::cerr << "Elements: " << q->elements() << std::endl;
+       }      
+       std::cerr << std::endl;
 
-      std::cerr << " --> requery test" << std::endl;
-      start = time(NULL);
-      for(unsigned int j=0; j < find_count/1000; j++) {
- 	unsigned int i = q->find(search_positions[j]);
-// 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
-	BOOST_CHECK_EQUAL(i, 0u);
-      }
-      std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
+       std::cerr << " --> requery test" << std::endl;
+       start = time(NULL);
+       for(unsigned int j=0; j < find_count/1000; j++) {
+  	unsigned int i = q->find(search_positions[j]);
+ // 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
+ 	BOOST_CHECK_EQUAL(i, 0u);
+       }
+       std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
+
+//       std::cerr << " --> complete removal tests" << std::endl;
+//       unsigned int total = q->elements();
+//       for(unsigned int j=0; j < total; j++) {
+// 	unsigned int e = q->elements();
+//  	q->remove(points[total-j-1]);
+// 	BOOST_CHECK_EQUAL(e, q->elements()+1);
+// 	// std::cerr << "Elements: " << e << std::endl;
+//       }  
+//       q->print();
+//       std::cerr << "Elements: " << q->elements() << std::endl;
+      // std::cerr << std::endl;
 
       return 0;
 }

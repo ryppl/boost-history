@@ -30,15 +30,14 @@ public:
     : root(r, 1), element_count(0), node_size_(1)  {}
 
   /// remove the element with key 'k'
-  /// TODO: implement
   virtual void remove(const Point &k)
   {
     root.remove(k);
+    // root.clean();
     element_count--;
   }
 
   /// remove data with key 'k'
-  /// TODO: implement
   virtual void remove(const geometry::box<Point> &k)
   {
     std::cerr << "Boxes not implemented in quadtrees." << std::endl;
@@ -51,9 +50,12 @@ public:
     root.insert(k, v);
   }
 
-  virtual void print(void) const
+  virtual void print(void) 
   {
-    std::cerr << "Not implemented." << std::endl;
+    std::cerr << "=================================" << std::endl;
+    std::cerr << "Elements: " << elements() << std::endl;
+    root.print();
+    std::cerr << "=================================" << std::endl;
   }
 
   /// insert data with envelope 'e' with key 'k'
@@ -102,8 +104,12 @@ public:
     return result;
   }
 
+  void clean(void)
+  {
+    root.clean();
+  }
 
-  virtual unsigned int elements(void) { return element_count; }
+  virtual unsigned int elements(void) const  { return element_count; }
 	
   virtual ~quadtree() {}
 };

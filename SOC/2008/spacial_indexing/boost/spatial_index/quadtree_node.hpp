@@ -78,14 +78,51 @@ public:
     // "min_x: " << min_x << " min_y: " << min_y << " max_x: " << max_x << " max_y " << max_y << std::endl;
   }
 
-  void remove(const Point &k)
+
+  void clean(void)
   {
-      typename std::map<Point, Value>::iterator it = m_.find(k);
-      if(it != m_.end()) {
-	m_.erase(it);
-	return;
+    if(nw_ != boost::shared_ptr<quadtree_node>()) {
+      if(nw_->empty_leaf()) {
+	nw_ = boost::shared_ptr<quadtree_node>();
+      } else {
+	nw_->clean();
       }
-      recursive_remove(k);
+    }
+
+    if(sw_ != boost::shared_ptr<quadtree_node>()) {
+      if(sw_->empty_leaf()) {
+	sw_ = boost::shared_ptr<quadtree_node>();
+      } else {
+	sw_->clean();
+      }
+    }
+
+    if(se_ != boost::shared_ptr<quadtree_node>()) {
+      if(se_->empty_leaf()) {
+	se_ = boost::shared_ptr<quadtree_node>();
+      } else {
+	se_->clean();
+      }
+    }
+
+    if(ne_ != boost::shared_ptr<quadtree_node>()) {
+      if(ne_->empty_leaf()) {
+	ne_ = boost::shared_ptr<quadtree_node>();
+      } else {
+	ne_->clean();
+      }
+    }
+
+  }
+
+  bool empty_leaf(void) const
+  {
+    return (m_.size() == 0) && 
+      (ne_ == boost::shared_ptr<quadtree_node>()) && 
+      (se_ == boost::shared_ptr<quadtree_node>()) && 
+      (nw_ == boost::shared_ptr<quadtree_node>()) && 
+      (sw_ == boost::shared_ptr<quadtree_node>())
+      ;
   }
 
   void insert(const Point &k, const Value &v)
@@ -228,6 +265,16 @@ public:
     return Value();
   }
 
+  void remove(const Point &k)
+  {
+    typename std::map<Point, Value>::iterator it = m_.find(k);
+    if(it != m_.end()) {
+      m_.erase(it);
+      return;
+    }
+    recursive_remove(k);
+  }
+
   void recursive_remove(const Point &k)
   {
 //     std::cerr << "Recursive_remove" << std::endl;
@@ -241,9 +288,13 @@ public:
     geometry::box<Point> ne_box, sw_box, se_box, nw_box;
     divide_quadrants(ne_box, sw_box, se_box, nw_box);
 
+
     if(geometry::within(k, ne_box)) {
       if(ne_ != boost::shared_ptr<quadtree_node>()) {
 	ne_->remove(k);
+	if(ne_->empty_leaf()) {
+	  ne_ = boost::shared_ptr<quadtree_node>();
+	}
 	return;
       } else {
 	throw std::logic_error("Not found");
@@ -252,6 +303,9 @@ public:
     if(geometry::within(k, se_box)) {
       if(se_ != boost::shared_ptr<quadtree_node>()) {
 	se_->remove(k);
+	if(se_->empty_leaf()) {
+	  se_ = boost::shared_ptr<quadtree_node>();
+	}
 	return;
       } else {
 	throw std::logic_error("Not found");
@@ -260,6 +314,9 @@ public:
     if(geometry::within(k, nw_box)) {
       if(nw_ != boost::shared_ptr<quadtree_node>()) {
 	nw_->remove(k);
+	if(nw_->empty_leaf()) {
+	  nw_ = boost::shared_ptr<quadtree_node>();
+	}
 	return;
       } else {
 	throw std::logic_error("Not found");
@@ -268,6 +325,9 @@ public:
     if(geometry::within(k, sw_box)) {
       if(sw_ != boost::shared_ptr<quadtree_node>()) {
 	sw_->remove(k);
+	if(sw_->empty_leaf()) {
+	  sw_ = boost::shared_ptr<quadtree_node>();
+	}
 	return;
       } else {
 	throw std::logic_error("Not found");
@@ -275,6 +335,41 @@ public:
     }
   }
 
+
+  void print(void) const
+  {
+    std::cerr << "--------------------------------------" << std::endl;
+    std::cerr << " [ ";
+    for(typename std::map<Point,Value>::const_iterator it = m_.begin(); it != m_.end(); ++it) {
+      std::cerr << it->second << " ";
+    }
+    std::cerr << " ] " << std::endl;;
+
+    if(sw_.get() != 0) {
+      sw_->print();
+    } else {
+      std::cerr << "SW not defined" << std::endl;
+    }
+
+    if(nw_.get() != 0) {
+      nw_->print();
+    } else {
+      std::cerr << "NW not defined" << std::endl;
+    }
+
+    if(se_.get() != 0) {
+      se_->print();
+    } else {
+      std::cerr << "SE not defined" << std::endl;
+    }
+
+    if(ne_.get() != 0) {
+      ne_->print();
+    } else {
+      std::cerr << "NE not defined" << std::endl;
+    }
+    std::cerr << "--------------------------------------" << std::endl;
+  }
 
 };
 
