@@ -43,6 +43,17 @@ public:
     void add(incidence_pair p)
     { _edges.push_back(p); }
 
+    /** Find the edge with the given vertex. */
+    inline iterator find(vertex_descriptor v) const
+    {
+        // TODO How do I write this with std::find?
+        iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->first == v) return i;
+        }
+        return end;
+    }
+
     inline size_type size() const
     { return _edges.size(); }
 

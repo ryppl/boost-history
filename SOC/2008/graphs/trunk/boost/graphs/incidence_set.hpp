@@ -58,7 +58,14 @@ public:
      * @complexity O(lg(deg(v)))
      */
     inline iterator find(incidence_pair p) const
-    { return _edges.find(p.first); }
+    { return find(p.first); }
+
+    /**
+     * Find the incidence pair.
+     * @complexity O(lg(deg(v)))
+     */
+    inline iterator find(vertex_descriptor v) const
+    { return _edges.find(v); }
 
     /**
      * Remove the incidence pair from the set.

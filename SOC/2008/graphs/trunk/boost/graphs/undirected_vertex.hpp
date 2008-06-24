@@ -44,6 +44,10 @@ public:
     inline void disconnect(vertex_descriptor, property_descriptor);
     inline iterator disconnect(iterator);
 
+    /** Find return an iterator the edge end with the given vertex. */
+    inline iterator find(vertex_descriptor v) const
+    { return _edges.find(v); }
+
 
     /** @name Property Accessors */
     //@{

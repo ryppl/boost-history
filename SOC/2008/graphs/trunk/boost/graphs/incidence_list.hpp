@@ -57,6 +57,17 @@ public:
     inline iterator find(incidence_pair p) const
     { return std::find(_edges.begin(), _edges.end(), p); }
 
+    /** Find the edge with the given vertex. */
+    inline iterator find(vertex_descriptor v) const
+    {
+        // TODO How do I write this with std::find?
+        iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->first == v) return i;
+        }
+        return end;
+    }
+
     /**
      * Remove the given incidence pair in this vertex.
      * @complexity O(deg(v))

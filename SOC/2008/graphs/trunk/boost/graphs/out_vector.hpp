@@ -50,6 +50,17 @@ public:
         return boost::prior(_edges.end());
     }
 
+    /** Find the edge with the given vertex. */
+    iterator find(vertex_descriptor v) const
+    {
+        // TODO How do I write this with std::find?
+        iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->template get<0>() == v) return i;
+        }
+        return end;
+    }
+
     /** Get the number of outgoing edges. */
     inline size_type size() const
     { return _edges.size(); }

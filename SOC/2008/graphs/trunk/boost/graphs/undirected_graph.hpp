@@ -156,6 +156,16 @@ public:
     edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_properties const&);
     //@}
 
+    /** @name Test Edge
+     * Determine if the edge, given by two vertices exists. This function a few
+     * convenience overloads that depend on the type of vertex store.
+     */
+    //@{
+    std::pair<edge_descriptor, bool> edge(vertex_descriptor, vertex_descriptor) const;
+    std::pair<edge_descriptor, bool> edge(vertex_properties const&, vertex_properties const&) const;
+    std::pair<edge_descriptor, bool> edge(vertex_key const&, vertex_key const&) const;
+    //@}
+
     /** @name Remove Edge(s)
      * Remove one or more edges from the graph. The function taking a single
      * edge descriptor removes exactly that edge. The fucntion(s) taking
@@ -434,23 +444,52 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
 }
 
 /**
- * Add an edge to the graph that connects the two vertices identified by the
- * given keys and has the given edge properties.
+ * Determine if any edge exists connecting the vertices u and v. Return a
+ * pair containing the edge descriptor (if it exists) and a bool determing
+ * whether or not the edge did exist.
  */
 template <BOOST_GRAPH_UG_PARAMS>
-typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
-undirected_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
-                                        vertex_key const& v,
-                                        edge_properties const& ep)
+std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) const
 {
-    return add_edge(find_vertex(u), find_vertex(v), ep);
+    vertex_type& src = _verts.vertex(u);
+    typename vertex_type::iterator i = src.find(v);
+    return i == src.end() ?
+        std::make_pair(edge_descriptor(u, v, i->second), true) :
+        std::make_pair(edge_descriptor(), false);
+}
+
+/**
+ * Determine if any edge exists connecting the vertices identified by the given
+ * properties. Return a pair containing the edge descriptor (if it exists) and
+ * a bool determining whether or not the edge did exist. This is equivalent to
+ * edge(find_vertex(u), find_vertex(v)).
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
+                                    vertex_properties const& v)
+{
+    return edge(find_vertex(u), find_vertex(v));
+}
+
+/**
+ * Determine if any edge exists connecting the vertices identified by the given
+ * keys. Return a pair containing the edge descriptor (if it exists) and a bool
+ * determining whether or not the edge did exist. This is equivalent to the
+ * expression edge(find_vertex(u), find_vertex(v)).
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
+                                    vertex_properties const& v)
+{
+    return edge(find_vertex(u), find_vertex(v));
 }
 
 /**
  * Remove only the given edge from graph. This disconnects both vertices in
  * the edge and removes the property from the graph.
- *
- * @requires HasRemove<edge_store>
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void
