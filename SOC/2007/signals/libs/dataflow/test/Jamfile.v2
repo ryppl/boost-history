@@ -24,3 +24,4 @@ run test_component.cpp ;
 build-project signals ;
 build-project blueprint ;
 build-project utility ;
+build-project managed ;
