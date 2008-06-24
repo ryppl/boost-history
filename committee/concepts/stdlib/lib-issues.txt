@@ -1,0 +1,358 @@
+
+N2625 Issues cont.
+============
+
+In general
+  - Is only requiring Swappable<Iter::reference> and not MoveConstructible, MoveAssignable precluding
+useful/efficient algorithm implementations?
+
+- Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
+  strict weak ordering. E.g. sort. (Key of LessThanComparable)
+
+- stable_partition, stable_sort, partial_sort requirements not sufficient for efficient implementation. See reference to extra memory.
+     Possible need to retain second line of removed requirements.
+
+- Check for need of NoThrowDestructible
+
+
+25.2.10/3 
+  - s/InIter::value_type/InIter::reference/
+
+25.2.11 
+  - Do rotate requirements provide enough latitude to allow todays optimizations based on iterator categories.
+  - Is requiring Swappable overconstraining the implementation? I.e. there are algorithms that do not require a swap function.
+
+25.2.11
+  - Should we s/InIter::value_type/InIter::reference/ for rotate_copy.
+
+25.2.12
+  - random_shuffle third overload not finished.
+
+25.2.12/4
+  - Why was the specification for rand's semantics removed. I.e. returns random number in the range (0,n]
+
+25.2.13
+  - Typo stable_partion declaration  s/Predicate<auto Iter::reference>/Predicate<auto, Iter::reference>/
+
+25.3.1.1
+ - s/Iter::value_type/Iter::reference/g
+
+25.3.1.2
+ - s/Iter::value_type/Iter::reference/g
+
+25.3.1.3
+ - s/Iter::value_type/Iter::reference/g
+
+25.3.1.4
+
+First overload
+
+ - s/Iter::value_type/Iter::reference/g
+ - Do we need HasLess 1 & 2 ? gcc does not have 2
+ - partial_sort_copy single parameter HasLess requirement to be replaced with LessThanComparable concept.
+ - Add Requirements clause:
+     *in < *res == RAIter::reference(*in) < *res
+     *res < *in == *res < RAIter::reference(*in) 
+
+- operator semantic requirements stated in text
+
+Second overload
+
+ - s/Iter::value_type/Iter::reference/g
+ - Do we need Predicate 1 & 2 ?
+ - partial_sort_copy two parameter Predicate requirement to be replaced with StrictWeakOrdering concept.
+ - Add Requirements clause:
+     comp(*in, *res) == comp(RAIter::reference(*in), *res)
+     comp(*res, *in) == comp(*res, RAIter::reference(*in)) 
+
+- operator semantic requirements stated in text
+
+===================================================================
+2008/06/11
+
+In general
+
+- s/Iter::value_type/Iter::reference/g clear up value reference issue. Proxy iterators and such
+
+- Do we always need semantic concepts in the function declaration.
+
+- Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
+  strict weak ordering. E.g. sort. (Key of LessThanComparable)
+
+- Whereever we find MutableIter it's probably wrong.
+
+- Make sure Predicate takes value_type const&. See InputIterator value_type convertability requirements. Same is true for every use of value_type in concepts. Note that LessThanComparable already adds it.
+
+- Do we want to bundle MoveConstructible MoveAssingable Swappable. Howard prefers not to.  
+
+25.3.1.5
+
+ 
+25.3.3.3
+
+- Decided that not an issues of operator semantic requirements stated in text as reqs are restricted to a specific set of values not the types in general.
+
+25.3.4
+
+- merge Predicate wants to go to StrictWeakOrdering even though three type. Look at SameType requirement. Look for this going forward.
+
+25.3.6.1
+25.3.6.3
+
+- Working draft does not require Swappable why do we require this? Alan reports Bill + Pete do say it's a defect in the standard.
+
+25.3.6.5
+
+First is_heap_until is missing LessThanComparable requirement
+
+25.3.7
+
+max/min/minmax
+
+- Make Predicate > StrictWeakOrdering move T -> T const&
+
+- We do not know how to handle one of the the variadic versions.
+
+- Consider defect in 03 that min_element max_element don't strictly need StrictWeakOrdering though requirement is made.
+
+25.3.9
+
+No need to make these Exchangable
+
+=============================
+
+N2621
+
+N = All Notes should be remarks probably or even better no qualifier. 
+
+  > 06/12 Pete says keep it the way it is.
+
+Y = 20.1.1/9 Add Note that explains deviation from core language ("or a reference type").
+
+N = 20.1.1 Do we need to add UnionLikeClass?
+
+  > Not needed because no constrained template could make use of it
+
+Y = 20.1.1/28 s/describess/describes/
+
+N = 20.1.1/36 [temp.req] is dangling in N2606 (Possibly [temp.type])
+
+  > temp.req is in the core concepts paper
+
+N = 20.1.1/37 DerivedFrom and is_base_of have different parameter orders
+ 
+  > DerivedFrom has the right order. Thats how its written in C++ declarations.
+
+Y = 20.1.2/1 Remove note (this is a leftover from HasLess)
+
+Y = 20.1.2/1.5 concept LessThanComparable needs to refine HasLess<T, T>
+
+Y = 20.1.2/1.5 add \n after conditional in axioms
+Y = 20.1.2/1.5 Last axiom can be simplified (according to Peter G.)
+
+  > Checked, can't be simplified. Matched original STL spec.
+
+Y = 20.1.2 Move after 20.1.10 Operator concepts
+  > Moved 20.1.10 up front
+
+Y = 20.1.2/2.5 HasEqualTo<T, T>
+Y = 20.1.2/2.5 add \n after conditional in axioms
+
+Y = 20.1.3
+  Y = - Rename Destructible -> HasDestructor
+  Y = - Remove paragraph 2
+  N = - Replace 20.1.3/1 Replace with "Describes types that have a publically accessible non deleted destructor." 
+    > Could not apply all because listed types are destructible yet have no destructor
+  
+
+Y = - Do we need a semantic Destructible? Check with container requirements. Do we need to call it NoThrowDestructible.
+
+Y = - TriviallyDestructible refines NoThrowDestructible 
+
+Y = 20.1.4
+  Y = - Remove base concept Destructible from HasConstructor
+
+Y = 20.1.5/5.5 - Make MoveAssignable refine HasAssign<T, T&&>
+
+Y = 20.1.5/7.5 - Make CopyAsignable also derive from HasAssignment<T, T const&>
+
+Y = 20.1.5/10.5 
+  Y = - Refine HasSwap<T, T>
+  Y = - Remove body
+
+Y = 20.1.5/11.5 Add note it's inherited. See 20.1.5/1.5
+
+Y = 20.1.10/21.5 Remove
+Y = 20.1.10/22 Remove
+
+Y = 20.1.10/22.5 Replace
+  auto concept HasAssign<typename T, typename U>
+  {
+    typename result_type;
+    result_type T::operator=(U);
+  }
+
+Y = - Fix references to HasCopy/HasMoveAssign
+
+=================================
+2006/06/12
+
+Y = - Check placement of const
+
+
+Y = 20.1.6/0.5
+  Y= - Add nothrow versions in ingenious ways. Doug and Howard will take care of this.
+  Y = - Check whether to unbundle placement new
+
+Y = 20.1.7/0.5 - Add base of NoThrowDestructible<T>
+
+Y = 20.1.10 
+  Y = - Remove all the defaults from the two type concepts in Operator concepts. See issue 40 on the concepts issues list
+  Y = - Requiring const on operators can we provide binary compatible mode that relaxes that for old non const correct code.
+    > Was discussed in lib. Found binary compatible solution to the problem
+
+Y = 20.1.10/18.5 
+  Y = - Rename HasDereference
+  Y = - Rename reference result_type
+  Y = - Replace result_type operator*(const T&)
+
+Y =20.1.10/19.5
+  Y = - Rename HasAddressOf
+  Y = - Rename reference result_type
+
+Y = 20.1.10/20.5 - See Issue 15 in concepts issue list. 
+
+Y = -Ask Howard about HasAssign vs. HasAssignment to be consistent with.
+
+Y = - Strip reference and cv qualifier on U in signature for Has???Assign concepts.
+
+Y = 20.1.10/31 - LaTex issue operator symbol
+
+Y = - Add concepts HasGreater HasGreaterEqual HasLessEqual
+Y = - Add all the missing operators.
+
+N = - Add concepts Incrementable Decrementable
+  > Intended implementation technique is not viable. Don't know a good way to do it.
+
+Y = 20.1.11
+  Y = - Replace refinement of LessThanComparable with HasLess HasGreater HasGreaterEqual HasLessEqual
+  Y = - replace remaining assoc funtions with refinement HasPlusAssign and friends
+  Y = - Add uintmax_t signature to ArithmeticLike
+
+Y = - Make IntgralLike refine LessThanComparable heads up the the math group
+
+Y = 20.1.12
+  Y = - Make args const&
+  N = - Remove par 2.
+    > We can't remove this because only the seed function takes const arguments. At instantiation time
+       a non const overload could be selected. 
+
+Y = TriviallyDefaultConstructible is declared in Synopsis but not defined later.
+
+=============================================================
+
+
+N2624
+
+- Revisit the issue of MutableXXIterator. Is it needed? Is it overconstrained?
+
+- check whether changes affect synopsis.
+
+- check whether we can use Incrementable, Decrementable
+
+24.1/3
+
+- Replace nine iterator concepts -> several iter concepts
+- Remove swappable iterators (Do this everywhere)
+
+24.1.2
+
+- Replace
+
+concept OutputIterator<typename X, typename Value> : SemiRegular<X> {
+  MoveConstructible reference;
+  requires HasAssign<reference, Value> && MoveAssignable<Value>;
+
+  MoveConstructible postincrement_result;
+  requires Dereferenceable<postincrement_result> &&
+                Convertible<postincrement_result, const X&> &&
+                HasAssign<Dereferenceable<postincrement_result>::reference, Value>;
+
+
+
+- Replace
+
+concept BasicOutputIterator<typename X> : SemiRegular<X> {
+  typename ObjectType value_type = typename X::value_type;
+  MoveConstructible reference = typename X::reference;
+  
+  requires HasAssign<reference, value_type&&>;
+
+  MoveConstructible postincrement_result;
+  requires Dereferenceable<postincrement_result> &&
+                HasAssign<Dereferenceable<postincrement_result>::reference, value_type&&> &&
+                Convertible<postincrement_result, const X&>;
+
+
+- Consider removing duplication between BasicOIter and OIter by using refinement
+
+- Replace 
+
+template<BasicOutputIterator X, typename MoveAssignable Value>
+requires HasAssign<X::reference, Value>
+concept_map OutputIterator<X, Value> {
+  typedef X::reference                    reference;
+  typedef X::postincrement_result postincrement_result;
+}
+
+24.1.3
+
+- Remove axiom &a == &++a and replace with normative text.
+
+- Add SameType<ForwardIterator<X>::postincrement_result, BasicOutputIterator<X>::postincrement_result> to MutableForwardIterator requirements
+
+- Typo in comment "do not need do not need".
+
+24.1.4
+
+- Convertible<Dereferenceable<postdecrement_result>::reference, value_type> -> Convertible<Dereferenceable<postdecrement_result>::reference, value_type&>
+
+- Remove axiom &a == &--a and replace with normative text.
+
+24.1.5
+
+-  [random.access.iterators], concept RandomAccessIterator:
+The member description of
+
+X& operator+=(X& r, difference_type m);
+
+should replace m, by n, otherwise the following effects clause doesn't make
+sense.
+
+- Add defaults for operator+/- in terms of operator+=/-=
+- Add default impl for operator[] 
+
+24.1.5/10 
+
+- strip std:: from std::ptrdif_t
+
+24.1.6
+
+- Remove in total
+
+
+D.10/6
+
+- Clarify. List specializations that are required. 
+
+D.10.4/3
+
+- template<Integral T> void f(T); -> template<IntegralLike T> void f(T);
+
+D.10.4/4-11
+
+- Add predicate that paragraph 3 must hold.
+
+
+
+

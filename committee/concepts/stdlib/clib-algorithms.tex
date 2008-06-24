@@ -3,8 +3,7 @@
 \usepackage{pdfsync}
 \input{macros}
 
-%%--------------------------------------------------
-%% PDF
+%%--------------------------------------------------%% PDF
 
 \usepackage[pdftex,
             pdftitle={Concepts for the C++0x Standard Library: Algorithms},
@@ -143,14 +142,14 @@ namespace std {
   template<InputIterator Iter, class T>
     requires HasEqualTo<Iter::reference, T>
     Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
-  template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
+  template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
     Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2>
     requires HasEqualTo<Iter1::reference, Iter2::reference>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2, 
-           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+           Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                    Pred @\farg{pred}@);
@@ -160,7 +159,7 @@ namespace std {
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<InputIterator Iter1, ForwardIterator Iter2,
-           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+           Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                         Pred @\farg{pred}@);
@@ -168,13 +167,13 @@ namespace std {
   template<ForwardIterator Iter>
     requires EqualityComparable<Iter::reference>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
+  template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter, class T>
     requires HasEqualTo<Iter::reference, T>
     @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
-  template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
+  template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
     Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
@@ -182,7 +181,7 @@ namespace std {
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                 Iter2 @\farg{first2}@);
   template<InputIterator Iter1, InputIterator Iter2,
-           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+           Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                 Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
@@ -191,7 +190,7 @@ namespace std {
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@);
   template<InputIterator Iter1, InputIterator Iter2,
-           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+           Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
@@ -200,7 +199,7 @@ namespace std {
     Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2,
-           Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+           Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
     Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
@@ -209,7 +208,7 @@ namespace std {
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@);
   template<ForwardIterator Iter, class T,
-           Predicate<auto, Iter::reference, T> Pred>
+           Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, T> Pred>
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@, Pred @\farg{pred}@);
 
@@ -265,8 +264,10 @@ namespace std {
   template<MutableForwardIterator Iter, class T>
     requires HasEqualTo<Iter::reference, T> && HasCopyAssign<Iter::reference, T>
     void replace(Iter @\farg{first}@, Iter @\farg{last}@,
-                 const T& @\farg{old_value}@, const T& @\farg{new_value}@);
-  @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::reference> Pred, class T>
+                 const T& @\farg{old_value}@, const T&
+                 @\farg{new_value}@);
+% revisit (mmarcus): still a mutable iterator?
+  @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
     requires HasCopyAssign<Iter::reference, T>
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
@@ -276,7 +277,7 @@ namespace std {
                          OutIter @\farg{result}@,
                          const T& @\farg{old_value}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
-           Predicate<auto, InIter::reference> Pred, class T>
+           Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred, class T>
     requires HasCopyAssign<OutIter::reference, T>
     OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                             OutIter @\farg{result}@,
@@ -301,7 +302,7 @@ namespace std {
     requires MoveAssignable<Iter::reference> && HasEqualTo<Iter::reference, T>
     Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
                 const T& @\farg{value}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::reference> Pred>
+  template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
     requires MoveAssignable<Iter::reference>
     Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
                    Pred @\farg{pred}@);
@@ -310,14 +311,14 @@ namespace std {
     OutIter remove_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, const T& @\farg{value}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
-           Predicate<auto, InIter::reference> Pred>
+           Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred>
     OutIter remove_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                            OutIter @\farg{result}@, Pred @\farg{pred}@);
 
   template<ForwardIterator Iter>
     requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
+  template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
     requires MoveAssignable<Iter::reference>
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
                 Pred @\farg{pred}@);
@@ -345,25 +346,25 @@ namespace std {
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
   template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter,
-           Predicate<auto, InIter::reference, InIter::reference> Pred>
+           Predicate<auto, InIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
   template<InputIterator InIter, MutableForwardIterator OutIter,
-           Predicate<auto, OutIter::reference, InIter::reference> Pred>
+           Predicate<auto, OutIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
     requires HasCopyAssign<OutIter::reference, InIter::reference> &&
              !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
 
   template<BidirectionalIterator Iter>
-    requires SwappableIterator<Iter>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
   template<BidirectionalIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter>
     OutIter reverse_copy(InIter @\farg{first}@,
                          InIter @\farg{last}@, OutIter @\farg{result}@);
 
   template<ForwardIterator Iter>
-    requires SwappableIterator<Iter>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
                 Iter @\farg{last}@);
   template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
@@ -371,11 +372,11 @@ namespace std {
                         InIter @\farg{last}@, OutIter @\farg{result}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@);
   template<RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
-    requires SwappableIterator<Iter> && Convertible<Rand::result_type, Iter::difference_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && Convertible<Rand::result_type, Iter::difference_type>
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
                         Rand& @\farg{rand}@);
@@ -385,51 +386,51 @@ namespace std {
                         UniformRandomNumberGenerator& @\farg{rand}@);
 
   @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
-  template<BidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
-    @\color{addclr}@requires SwappableIterator<Iter>
+  template<BidirectionalIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
+    @\color{addclr}@requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
-  template<BidirectionalIterator Iter, Predicate<auto Iter::reference> Pred>
-    requires SwappableIterator<Iter>
+  template<BidirectionalIterator Iter, Predicate<auto Iter::@\changedCCC{reference}{value_type}@> Pred>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   @\textcolor{black}{// \ref{alg.sorting}, sorting and related operations:}@
   @\textcolor{black}{// \ref{alg.sort}, sorting:}@
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> &&
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
              LessThanComparable<Iter::value_type> 
     void sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+            @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void sort(Iter @\farg{first}@, Iter @\farg{last}@,
               Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> &&
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
              LessThanComparable<Iter::value_type> 
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> && 
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && 
              LessThanComparable<Iter::value_type>
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+    @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@,
                       Compare @\farg{comp}@);
   template<InputIterator InIter, RandomAccessIterator RAIter>
     requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
-             SwappableIterator<RAIter> &&
+             @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
              HasLess<InIter::value_type, RAIter::value_type> &&
              HasLess<RAIter::value_type, InIter::value_type> &&
              HasLess<RAIter::value_type>
@@ -437,10 +438,10 @@ namespace std {
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
   template<InputIterator InIter, RandomAccessIterator RAIter, class Compare>
     requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
-             SwappableIterator<RAIter> &&
+             @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
              Predicate<Compare, InIter::value_type, RAIter::value_type> &&
              Predicate<Compare, RAIter::value_type, InIter::value_type> &&
-             Predicate<Compare, RAIter::value_type>
+             @\changedCCC{Predicate}{StrictWeakOrder}@<Compare, RAIter::value_type>}
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
                              Compare @\farg{comp}@);
@@ -448,22 +449,25 @@ namespace std {
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
     bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
     Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
                          Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> &&
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
              LessThanComparable<Iter::value_type>
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@);
-  template<SwappableIterator<Iter>
+%% Revisit (mmarcus): not sure how to handle formatting for multiline replace here
+  template<@\changedCCC{SwappableIterator<Iter>}{RandomAccessIterator Iter, 
+           StrictWeakOrder<auto, Iter::value_type> Compare>
+    requires Swappable<Iter::reference>}@
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@,  Compare @\farg{comp}@);
 
@@ -472,7 +476,7 @@ namespace std {
     requires HasLess<Iter::reference, T>
     Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@);
-  @\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::reference, T> Compare>
+  @\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, T> Compare>
     Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 
@@ -480,7 +484,7 @@ namespace std {
     requires HasLess<T, Iter::reference>
     Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@);
-  template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::reference> Compare>
+  template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::@\changedCCC{reference}{value_type}@> Compare>
     Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 
@@ -491,8 +495,8 @@ namespace std {
       equal_range(Iter @\farg{first}@,
                   Iter @\farg{last}@, const T& @\farg{value}@);
   template<ForwardIterator Iter, class T, class Compare>
-    requires Predicate<Compare, T, Iter::reference> &&
-             Predicate<Compare, Iter::reference, T>
+    requires Predicate<Compare, T, Iter::@\changedCCC{reference}{value_type}@> &&
+             Predicate<Compare, Iter::@\changedCCC{reference}{value_type}@, T>
     pair<Iter, Iter>
       equal_range(Iter @\farg{first}@,
                   Iter @\farg{last}@, const T& @\farg{value}@,
@@ -504,8 +508,8 @@ namespace std {
     bool binary_search(ForwardIterator @\farg{first}@, ForwardIterator @\farg{last}@,
                        const T& @\farg{value}@);
   template<ForwardIterator Iter, class T, class Compare>
-    requires Predicate<Compare, T, Iter::reference> &&
-             Predicate<Compare, Iter::reference, T>
+    requires Predicate<Compare, T, Iter::@\changedCCC{reference}{value_type}@> &&
+             Predicate<Compare, Iter::@\changedCCC{reference}{value_type}@, T>
     bool binary_search(Iter @\farg{first}@, Iter @\farg{last}@,
                        const T& @\farg{value}@, Compare @\farg{comp}@);
 
@@ -513,27 +517,27 @@ namespace std {
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter>
     requires SameType<InIter1::value_type, InIter2::value_type> &&
-             HasLess<InIter1::value_type>
+             @\changedCCC{HasLess}{LessThanComparable}@<InIter1::value_type>
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@);
   @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@, Compare @\farg{comp}@);
 
   template<BidirectionalIterator Iter>
-    requires SwappableIterator<Iter> &&
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
              LessThanComparable<Iter::value_type>
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@, Compare @\farg{comp}@);
@@ -544,7 +548,7 @@ namespace std {
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<InputIterator Iter1, InputIterator Iter2, 
-           Predicate<auto, Iter1::value_type, Iter2::value_type> Compare>
+           @\changedCCC{Predicate<auto, Iter1::value_type, Iter2::value_type>}{StrictWeakOrder<auto, Iter1::value_type>}@ Compare>
     requires SameType<Iter1::value_type, Iter2::value_type>
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
@@ -559,7 +563,7 @@ namespace std {
                       OutIter @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -574,7 +578,7 @@ namespace std {
                              OutIter @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                              InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -589,7 +593,7 @@ namespace std {
                            @\textcolor{addclr}{OutIter}@ @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -604,7 +608,7 @@ namespace std {
                                      OutIter @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -612,57 +616,58 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.heap.operations}, heap operations:}@
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> &&
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
              LessThanComparable<Iter::value_type>
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> && LessThanComparable<Iter::value_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                   Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> &&
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
              LessThanComparable<Iter::value_type>
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires SwappableIterator<Iter> && LessThanComparable<Iter::value_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
     requires LessThanComparable<Iter::value_type>
     bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<RandomAccessIterator Iter>
+    @\addedCC{requires LessThanComparable<Iter::value_type>}@
     Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@,
                        Compare @\farg{comp}@);
 
   @\textcolor{black}{// \ref{alg.min.max}, minimum and maximum:}@
   template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
-  template<class T, Predicate<auto, T, T> Compare>
+  template<class T, @\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare>
     requires !SameType<T, Compare>
     const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
   @\removedConcepts{template<LessThanComparable T> const T\& min(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
@@ -673,7 +678,7 @@ namespace std {
     @\textcolor{black}{const T\& min(const T\& \mbox{\farg{a}}, const U\& \mbox{\farg{b}}, const Args\&... \mbox{\farg{args}});}@
 
   template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
-  template<class T, Predicate<auto, T, T> Compare>
+  template<class T, @\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare>
     requires !SameType<T, Compare>
     const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
   @\removedConcepts{template<LessThanComparable T> const T\& max(const T\& \mbox{\farg{a}}, const T\& \mbox{\farg{b}}, const T\& \mbox{\farg{c}});}@
@@ -684,7 +689,7 @@ namespace std {
     @\textcolor{black}{const T\& max(const T\& \mbox{\farg{a}}, const U\& \mbox{\farg{b}}, const Args\&... \mbox{\farg{args}});}@
 
   template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
-  template<class T, Predicate<auto, T, T> Compare>
+  template<class T, @\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare>
     requires !SameType<T, Compare>
     pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
   @\removedConcepts{template<LessThanComparable T>}@
@@ -698,14 +703,14 @@ namespace std {
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::reference>
     Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::reference>
     Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
@@ -713,7 +718,7 @@ namespace std {
     requires LessThanComparable<Iter::value_type>
     pair<Iter, Iter>
       @\textcolor{addclr}{}@minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
     pair<Iter, Iter>
       minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 
@@ -724,28 +729,28 @@ namespace std {
                                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
   @\textcolor{addclr}{template}@<InputIterator Iter1, InputIterator Iter2, class Compare>
-    requires Predicate<Compare, Iter1::reference, Iter2::reference> &&
-             Predicate<Compare, Iter2::reference, Iter1::reference>
+    requires Predicate<Compare, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> &&
+             Predicate<Compare, Iter2::@\changedCCC{reference}{value_type}@, Iter1::@\changedCCC{reference}{value_type}@>
     bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                                  Compare @\farg{comp}@);
 
   @\textcolor{black}{// \ref{alg.permutation.generators}, permutations:}@
   template<BidirectionalIterator Iter>
-    requires SwappableIterator<Iter>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
              @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
     bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
-           Predicate<auto, Iter::reference, Iter::reference> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     @\textcolor{addclr}{}@bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<BidirectionalIterator Iter>
-    requires SwappableIterator<Iter>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
              @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
-           Predicate<auto, Iter::reference, Iter::reference> Compare>
-    requires SwappableIterator<Iter>
+           @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 }
 \end{codeblock}
@@ -981,7 +986,7 @@ times.
   requires HasEqualTo<Iter::reference, T>
   Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
-template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
+template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
   Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1014,7 +1019,7 @@ template<ForwardIterator Iter1, ForwardIterator Iter2>
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<ForwardIterator Iter1, ForwardIterator Iter2, 
-         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+         Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
   Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
@@ -1058,7 +1063,7 @@ template<InputIterator Iter1, ForwardIterator Iter2>
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, ForwardIterator Iter2,
-         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+         Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
   Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                       Pred @\farg{pred}@);
@@ -1098,7 +1103,7 @@ template<ForwardIterator Iter>
   requires @\changedCCC{HasEqualTo}{EqualityComparable}@<Iter::reference>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
+template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1138,7 +1143,7 @@ template<InputIterator Iter, class T>
   requires HasEqualTo<Iter::reference, T>
   @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
-template<InputIterator Iter, Predicate<auto, Iter::reference> Pred>
+template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
   Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1169,7 +1174,7 @@ template<InputIterator Iter1, InputIterator Iter2>
                               Iter2 @\farg{first2}@);
 
 template<InputIterator Iter1, InputIterator Iter2,
-         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+         Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
   pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                               Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1217,7 +1222,7 @@ template<InputIterator Iter1, InputIterator Iter2>
              Iter2 @\farg{first2}@);
 
 template<InputIterator Iter1, InputIterator Iter2,
-         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+         Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
   bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
              Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1251,7 +1256,7 @@ template<ForwardIterator Iter1, ForwardIterator Iter2>
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<ForwardIterator Iter1, ForwardIterator Iter2,
-         Predicate<auto, Iter1::reference, Iter2::reference> Pred>
+         Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
   @\textcolor{addclr}{Iter1}@ search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                Pred @\farg{pred}@);
@@ -1290,7 +1295,7 @@ applications of the corresponding predicate.
                 const T& @\farg{value}@);
 
 template<ForwardIterator Iter, class T,
-         Predicate<auto, Iter::reference, T> Pred>
+         Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, T> Pred>
   Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                 const T& @\farg{value}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1673,7 +1678,8 @@ template<MutableForwardIterator Iter, class T>
   void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
-@\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::reference> Pred, class T>
+% revisit (mmarcus): Still want Mutable iterators?
+@\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
   requires HasCopyAssign<Iter::reference, T>
   void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                   Pred @\farg{pred}@, const T& @\farg{new_value}@);
@@ -1712,7 +1718,7 @@ template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_t
                        const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
 template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
-         Predicate<auto, InIter::reference> Pred, class T>
+         Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred, class T>
   requires HasCopyAssign<OutIter::reference, T>
   OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@,
@@ -1856,7 +1862,7 @@ template<ForwardIterator Iter, class T>
   Iter remove(Iter @\farg{first}@, Iter @\farg{last}@,
               const T& @\farg{value}@);
 
-template<ForwardIterator Iter, Predicate<auto, Iter::reference> Pred>
+template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
   requires MoveAssignable<Iter::reference>
   Iter remove_if(Iter @\farg{first}@, Iter @\farg{last}@,
                  @\textcolor{addclr}{}@Pred @\farg{pred}@);
@@ -1899,7 +1905,7 @@ template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_t
                       OutIter @\farg{result}@, const T& @\farg{value}@);
 
 template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
-         Predicate<auto, InIter::reference> Pred>
+         Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred>
   OutIter remove_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1946,7 +1952,7 @@ template<ForwardIterator Iter>
   requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
   Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Pred>
+template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
   requires MoveAssignable<Iter::reference>
   Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
               Pred @\farg{pred}@);
@@ -2011,12 +2017,12 @@ template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
                       @\textcolor{addclr}{OutIter}@ @\farg{result}@, Pred @\farg{pred}@);
 
 template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter,
-         Predicate<auto, InIter::reference, InIter::reference> Pred>
+         Predicate<auto, InIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
 
 template<InputIterator InIter, MutableForwardIterator OutIter,
-         Predicate<auto, OutIter::reference, InIter::reference> Pred>
+         Predicate<auto, OutIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
   requires HasCopyAssign<OutIter::reference, InIter::reference> &&
            !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -2077,7 +2083,7 @@ applications of the corresponding predicate.
 \index{reverse@\tcode{reverse}}%
 \color{addclr}\begin{itemdecl}
 template<BidirectionalIterator Iter>
-  requires SwappableIterator<Iter>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void reverse(Iter @\farg{first}@, Iter @\farg{last}@);
 \end{itemdecl}\color{black}
 
@@ -2147,7 +2153,7 @@ assignments.
 \index{rotate@\tcode{rotate}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter>
-  requires SwappableIterator<Iter>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
               Iter @\farg{last}@);
 \end{itemdecl}\color{black}
@@ -2226,12 +2232,12 @@ assignments.
 \index{random_shuffle@\tcode{random_shuffle}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
-  requires SwappableIterator<Iter> && Convertible<Rand::result_type, Iter::difference_type>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && Convertible<Rand::result_type, Iter::difference_type>
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@,
                       Rand&& @\farg{rand}@);
@@ -2291,8 +2297,8 @@ iterator_traits<RandomAccessIterator>:: difference_type}.
 
 \index{partition@\tcode{partition}}%
 \color{addclr}\begin{itemdecl}
-@\textcolor{addclr}{}@template<BidirectionalIterator Iter, Predicate<auto, Iter::reference> Pred>
-  @\color{addclr}@requires SwappableIterator<Iter>
+@\textcolor{addclr}{}@template<BidirectionalIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
+  @\color{addclr}@requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2340,8 +2346,8 @@ applications of the predicate are done.
 
 \index{stable_partition@\tcode{stable_partition}}%
 \color{addclr}\begin{itemdecl}
-template<BidirectionalIterator Iter, Predicate<auto Iter::reference> Pred>
-  requires SwappableIterator<Iter>
+template<BidirectionalIterator Iter, Predicate<auto Iter::@\changedCCC{reference}{value_type}@> Pred>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2397,12 +2403,12 @@ applications of the predicate.
 \index{sort@\tcode{sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type> 
   void sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void sort(Iter @\farg{first}@, Iter @\farg{last}@,
             Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2440,12 +2446,12 @@ If the worst case behavior is important
 \index{stable_sort@\tcode{stable_sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type> 
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2482,14 +2488,14 @@ Stable.
 \index{partial_sort@\tcode{partial_sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type>
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@,
@@ -2532,19 +2538,19 @@ comparisons.
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, RandomAccessIterator RAIter>
   requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
-           SwappableIterator<RAIter> &&
+           @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
            HasLess<InIter::value_type, RAIter::value_type> &&
            HasLess<RAIter::value_type, InIter::value_type> &&
-           HasLess<RAIter::value_type>
+           @\changedCCC{HasLess}{LessThanComparable}@<RAIter::value_type>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
 
 template<InputIterator InIter, RandomAccessIterator RAIter, class Compare>
   requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
-           SwappableIterator<RAIter> &&
+           @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
            Predicate<Compare, InIter::value_type, RAIter::value_type> &&
            Predicate<Compare, RAIter::value_type, InIter::value_type> &&
-           Predicate<Compare, RAIter::value_type>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<Compare, RAIter::value_type>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
                            Compare @\farg{comp}@);
@@ -2599,7 +2605,7 @@ template<ForwardIterator Iter>
 \index{is_sorted@\tcode{is_sorted}}%
 \color{addclr}
 \begin{itemdecl}
-template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}
@@ -2616,7 +2622,7 @@ template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_typ
 template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
   Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@);
-template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
                        Compare @\farg{comp}@);
 \end{itemdecl}
@@ -2638,14 +2644,14 @@ range \mbox{\range{first}{i}} is sorted.}
 \index{nth_element@\tcode{nth_element}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type>
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
-         Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+         @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@,  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2707,7 +2713,7 @@ template<ForwardIterator Iter, class T>
   Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@);
 
-@\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::reference, T> Compare>
+@\textcolor{addclr}{template}@<ForwardIterator Iter, class T, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, T> Compare>
   Iter lower_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2755,7 +2761,7 @@ template<ForwardIterator Iter, class T>
   Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@);
 
-template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::reference> Compare>
+template<ForwardIterator Iter, class T, Predicate<auto, T, Iter::@\changedCCC{reference}{value_type}@> Compare>
   Iter upper_bound(Iter @\farg{first}@, Iter @\farg{last}@,
                    const T& @\farg{value}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2806,8 +2812,8 @@ template<ForwardIterator Iter, class T>
                 Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<ForwardIterator Iter, class T, class Compare>
-  requires Predicate<Compare, T, Iter::reference> &&
-           Predicate<Compare, Iter::reference, T>
+  requires Predicate<Compare, T, Iter::@\changedCCC{reference}{value_type}@> &&
+           Predicate<Compare, Iter::@\changedCCC{reference}{value_type}@, T>
   pair<Iter, Iter>
     equal_range(Iter @\farg{first}@,
                 Iter @\farg{last}@, const T& @\farg{value}@,
@@ -2871,8 +2877,8 @@ template<ForwardIterator Iter, class T>
                      const T& @\farg{value}@);
 
 template<ForwardIterator Iter, class T, class Compare>
-  requires Predicate<Compare, T, Iter::reference> &&
-           Predicate<Compare, Iter::reference, T>
+  requires Predicate<Compare, T, Iter::@\changedCCC{reference}{value_type}@> &&
+           Predicate<Compare, Iter::@\changedCCC{reference}{value_type}@, T>
   bool binary_search(Iter @\farg{first}@, Iter @\farg{last}@,
                      const T& @\farg{value}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2935,9 +2941,11 @@ comparisons.
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                 OutIter @\farg{result}@);
 
+% revisit (mmarcus): not sure if changedCCC after texcolor is right
+% way to go here
 @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         @\textcolor{addclr}{}@Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+         @\textcolor{addclr}{}@@\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -2989,15 +2997,15 @@ Stable.
 \index{inplace_merge@\tcode{inplace_merge}}%
 \color{addclr}\begin{itemdecl}
 template<BidirectionalIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type>
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
                      Iter @\farg{last}@);
 
 template<BidirectionalIterator Iter, 
-         Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+         @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
                      Iter @\farg{last}@, Compare @\farg{comp}@);
@@ -3077,7 +3085,7 @@ template<InputIterator Iter1, InputIterator Iter2>
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, InputIterator Iter2, 
-         Predicate<auto, Iter1::value_type, Iter2::value_type> Compare>
+         @\changedCCC{Predicate<auto, Iter1::value_type, Iter2::value_type>}{StrictWeakOrder<auto, Iter1::value_type>}@ Compare>
   requires SameType<Iter1::value_type, Iter2::value_type>
   bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
@@ -3117,7 +3125,7 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+         @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3166,7 +3174,9 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+         @\changedCCC{Predicate<auto, InIter1::value_type,
+           InIter2::value_type>}{StrictWeakOrder<auto, 
+           InIter1::value_type>}@ Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3214,7 +3224,9 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+         @\changedCCC{Predicate<auto, InIter1::value_type,
+           InIter2::value_type>}{StrictWeakOrder<auto,
+           InIter1::value_type>}@ Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                          @\textcolor{addclr}{}@InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3275,7 +3287,9 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         Predicate<auto, InIter1::value_type, InIter2::value_type> Compare>
+         @\changedCCC{Predicate<auto, InIter1::value_type,
+           InIter2::value_type>}{StrictWeakOrder<auto,
+           InIter1::value_type>}@ Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3357,12 +3371,12 @@ turns a heap into a sorted sequence.
 \index{push_heap@\tcode{push_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type>
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3398,11 +3412,11 @@ comparisons.
 \index{pop_heap@\tcode{pop_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> && LessThanComparable<Iter::value_type>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                 Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3442,12 +3456,12 @@ comparisons.
 \index{make_heap@\tcode{make_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
            LessThanComparable<Iter::value_type>
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3477,11 +3491,11 @@ comparisons.
 \index{sort_heap@\tcode{sort_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires SwappableIterator<Iter> && LessThanComparable<Iter::value_type>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
-  requires SwappableIterator<Iter>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3526,7 +3540,7 @@ template<RandomAccessIterator Iter>
 
 \color{addclr}
 \begin{itemdecl}
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   bool is_heap(Iter first, Iter last, Compare comp);
 \end{itemdecl}
 \color{black}
@@ -3540,7 +3554,7 @@ template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::valu
 \begin{itemdecl}
 template<RandomAccessIterator Iter>
   Iter is_heap_until(Iter first, Iter last);
-template<RandomAccessIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   Iter is_heap_until(Iter first, Iter last,
                      Compare comp);
 \end{itemdecl}
@@ -3562,7 +3576,7 @@ range \mbox{\range{first}{i}} is a heap.}
 \index{min@\tcode{min}}%
 \color{addclr}\begin{itemdecl}
 template<LessThanComparable T> const T& min(const T& @\farg{a}@, const T& @\farg{b}@);
-template<class T, Predicate<auto, T, T> Compare>
+template<class T, @\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare>
   requires !SameType<T, Compare>
   const T& min(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3643,7 +3657,7 @@ the first element in the ordering. Returns \farg{a} if
 \index{max@\tcode{max}}%
 \color{addclr}\begin{itemdecl}
 template<LessThanComparable T> const T& max(const T& @\farg{a}@, const T& @\farg{b}@);
-template<class T, Predicate<auto, T, T> Compare>
+template<class T, @\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare>
   @\addedConcepts{requires !SameType<T, Compare>}@
   const T& max(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3719,7 +3733,7 @@ the last element in the ordering. Returns \farg{a} if
 \color{addclr}
 \begin{itemdecl}
 template<LessThanComparable T> pair<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@);
-template<class T, Predicate<auto, T, T> Compare>
+template<class T, @\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare>
   @\addedConcepts{requires !SameType<T, Compare>}@
   @\textcolor{addclr}{pair}@<const T&, const T&> minmax(const T& @\farg{a}@, const T& @\farg{b}@, Compare @\farg{comp}@);
 \end{itemdecl}
@@ -3831,7 +3845,7 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::reference>
   Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3869,7 +3883,7 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::reference>
   Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
+template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3908,7 +3922,7 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
   pair<Iter, Iter>
     minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
-template<ForwardIterator Iter, Predicate<auto, Iter::value_type, Iter::value_type> Compare>
+template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
   pair<Iter, Iter>
     minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}
@@ -3941,8 +3955,8 @@ template<InputIterator Iter1, InputIterator Iter2>
                                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, InputIterator Iter2, class Compare>
-  requires Predicate<Compare, Iter1::reference, Iter2::reference> &&
-           Predicate<Compare, Iter2::reference, Iter1::reference>
+  requires Predicate<Compare, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> &&
+           Predicate<Compare, Iter2::@\changedCCC{reference}{value_type}@, Iter1::@\changedCCC{reference}{value_type}@>
   bool lexicographical_compare(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                                @\textcolor{addclr}{}@Compare @\farg{comp}@);
@@ -3992,12 +4006,12 @@ return @\farg{first1}@ == @\farg{last1}@ && @\farg{first2}@ != @\farg{last2}@;
 \index{next_permutation@\tcode{next_permutation}}%
 \color{addclr}\begin{itemdecl}
 template<BidirectionalIterator Iter>
-  requires SwappableIterator<Iter>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
            @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
   bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<BidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
-  requires SwappableIterator<Iter>
+template<BidirectionalIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   @\textcolor{addclr}{bool}@ next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -4032,12 +4046,12 @@ swaps.
 \index{prev_permutation@\tcode{prev_permutation}}%
 \color{addclr}\begin{itemdecl}
 template<BidirectionalIterator Iter>
-  requires SwappableIterator<Iter>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
            @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<BidirectionalIterator Iter, Predicate<auto, Iter::reference, Iter::reference> Compare>
-  requires SwappableIterator<Iter>
+template<BidirectionalIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
