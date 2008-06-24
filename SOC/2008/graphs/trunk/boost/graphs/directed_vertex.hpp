@@ -28,7 +28,7 @@ public:
 
     typedef out_size_type incident_size_type;
 
-    typedef directed_edge<out_iterator> edge_descriptor;
+    typedef directed_edge<out_iterator, in_iterator> edge_descriptor;
 
     /** @name Constructors */
     //@{
@@ -51,9 +51,11 @@ public:
     in_iterator connect_source(vertex_descriptor);
     static edge_descriptor bind_connection(out_iterator, in_iterator);
 
-    out_size_type disconnect(directed_vertex&, vertex_descriptor);
     void disconnect_target(edge_descriptor);
     void disconnect_source(edge_descriptor);
+
+    out_iterator disconnect_target(out_iterator);
+    in_iterator disconnect_source(in_iterator);
 
     /** @name Property Accessors */
     //@{
@@ -180,34 +182,6 @@ directed_vertex<V,O,I>::bind_connection(out_iterator i, in_iterator j)
 }
 
 /**
- * Disconnect all edges that connect this vertex to the target, returning the
- * number of edges actually removed.
- */
-template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::out_size_type
-directed_vertex<V,O,I>::disconnect(directed_vertex& vert, vertex_descriptor d)
-{
-    out_size_type ret = 0;
-    out_iterator i = _out.begin(), end = _out.end();
-    for( ; i != end; ) {
-        vertex_descriptor t = i->template get<0>();
-
-        // If the target vertex is one that we want to remove, remove it from
-        // the out list of this vertex. Also, brute-force remove it from the
-        // in list of other vertex.
-        if(t == d) {
-            vert._in.remove(i->template get<2>().template get<in_iterator>());
-            i = _out.remove(i);
-            ++ret;
-       }
-       else {
-            ++i;
-       }
-    }
-    return ret;
-}
-
-/**
  * Disconnect this vertex from its target, removing the outgoing edge.
  */
 template <typename V, typename O, typename I>
@@ -228,6 +202,20 @@ directed_vertex<V,O,I>::disconnect_source(edge_descriptor e)
     out_iterator o = e.out_edge();
     in_iterator i = o->template get<2>().template get<in_iterator>();
     _in.remove(i);
+}
+
+template <typename V, typename O, typename I>
+typename directed_vertex<V,O,I>::out_iterator
+directed_vertex<V,O,I>::disconnect_target(out_iterator i)
+{
+    return _out.remove(i);
+}
+
+template <typename V, typename O, typename I>
+typename directed_vertex<V,O,I>::in_iterator
+directed_vertex<V,O,I>::disconnect_source(in_iterator i)
+{
+    return _in.remove(i);
 }
 
 #endif

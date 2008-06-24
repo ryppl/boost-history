@@ -7,10 +7,10 @@
  * dereferenced will return an edge descriptor. The properties of the iterator
  * are taken from the underlying store.
  */
-template <typename Iter>
+template <typename Edge>
 class basic_out_iterator
 {
-    typedef Iter base_iterator;
+    typedef typename Edge::out_iterator base_iterator;
 public:
     typedef typename base_iterator::value_type out_tuple;
     typedef typename boost::tuples::element<0, out_tuple>::type vertex_descriptor;
@@ -20,8 +20,9 @@ public:
     // Clearly, we're going to be constraining members using some concept stuff
     // when it becomes available.
     typedef typename base_iterator::iterator_category iterator_category;
+    typedef typename base_iterator::difference_type difference_type;
 
-    typedef directed_edge<base_iterator> value_type;
+    typedef Edge value_type;
     typedef value_type reference;
     typedef value_type pointer;
 

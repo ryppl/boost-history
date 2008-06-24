@@ -364,8 +364,6 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                         vertex_descriptor v,
                                         edge_properties const& ep)
 {
-    typedef typename incidence_store::const_iterator inc_iterator;
-
     // To add the edge or not... We need to consult the virtual edge set
     // to determine whether or not this edge already exists. For multigraph
     // stores, this should always return false. The protocol is: ask the source
@@ -375,7 +373,7 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
-    std::pair<inc_iterator, bool> ins = src.allow(v);
+    std::pair<typename vertex_type::iterator, bool> ins = src.allow(v);
     if(ins.second) {
         // If the returned iterator is past the end, then we need to add this
         // edge. Otherwise, we can simply return an edge over the existing
@@ -467,11 +465,10 @@ undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
-    // Disconnect the incidence ends and then remove the property from
-    // the global property store.
-    src.disconnect(v, p);
+    // Disconnect the incidence ends and then remove the property from the
+    // global property store.
     tgt.disconnect(u, p);
-
+    src.disconnect(v, p);
     _props.remove(p);
 }
 
@@ -536,34 +533,27 @@ void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
                                             vertex_descriptor v)
 {
-    std::vector<property_descriptor> del;
-
-    // First pass: Find all edges connecting u and v, remove the global property
-    // record and cache the descriptor for later.
-    incident_edge_range rng = incident_edges(v);
-    for(incident_edge_iterator i = rng.first; i != rng.second; ++i) {
-        edge_descriptor e = *i;
-
-        // If the edge connects these two vertices, remove the edge property.
-        if(e.connects(u, v)) {
-            property_descriptor p = e.properties();
-            del.push_back(p);
-            _props.remove(p);
-        }
-    }
-
-    // Second pass: Remove the local endpoints of each edge with the given
-    // properties. The propdescs might be invalid, but they aren't being used
-    // to reference actual properties here.
-    // TODO: This isn't particularly efficient since each disconnect() is a
-    // local search on the vertex of O(deg(x)).
+    // Canonicalize the ordering of vertices first and the get the vertices.
+    reorder(u, v);
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
-    typename std::vector<property_descriptor>::iterator i = del.begin(), end = del.end();
-    for( ; i != end; ++i) {
-        property_descriptor p = *i;
-        src.disconnect(v, p);
-        tgt.disconnect(u, p);
+
+    // Iterate over the incident edges of the source vertex.
+    typename vertex_type::iterator i = src.begin(), end = src.end();
+    for( ; i != end; ) {
+        vertex_descriptor o = i->first;
+        property_descriptor p = i->second;
+        // If this is the opposite end of the edge, then we need to remove this
+        // from a) the incidence store of the opposite vertex and b) the global
+        // edge property.
+        if(i->first == v) {
+            tgt.disconnect(u, p);
+            _props.remove(p);
+            i = src.disconnect(i);
+        }
+        else {
+            ++i;
+        }
     }
 }
 

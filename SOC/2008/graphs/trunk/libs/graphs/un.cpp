@@ -87,6 +87,7 @@ void test_add_remove_edges()
     BOOST_ASSERT(g.num_edges() == 3);
 
     g.remove_edge(E.front());
+    BOOST_ASSERT(g.num_edges() == 2);
     BOOST_ASSERT(g.degree(V[1]) == 1);
     E.pop_front();
 

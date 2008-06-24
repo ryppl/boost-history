@@ -28,7 +28,7 @@ public:
     typedef typename incidence_store::vertex_descriptor vertex_descriptor;
     typedef typename incidence_store::property_descriptor property_descriptor;
 
-    typedef typename incidence_store::const_iterator iterator;
+    typedef typename incidence_store::iterator iterator;
     typedef typename incidence_store::size_type size_type;
 
     inline undirected_vertex();
@@ -42,17 +42,26 @@ public:
     inline std::pair<iterator, bool> allow(vertex_descriptor) const;
     inline void connect(vertex_descriptor, property_descriptor);
     inline void disconnect(vertex_descriptor, property_descriptor);
-    template <typename Eraser> inline void disconnect(vertex_descriptor, Eraser);
-
-    inline vertex_properties& properties();
-    inline vertex_properties const& properties() const;
+    inline iterator disconnect(iterator);
 
 
+    /** @name Property Accessors */
+    //@{
+    inline vertex_properties& properties()
+    { return _props; }
+
+    inline vertex_properties const& properties() const
+    { return _props; }
+    //@}
+
+    /** @name Iterators */
+    //@{
     inline iterator begin() const
     { return _edges.begin(); }
 
     inline iterator end() const
     { return _edges.end(); }
+    //@}
 
     inline void clear()
     { _edges.clear(); }
@@ -122,31 +131,10 @@ undirected_vertex<VP,IS>::disconnect(vertex_descriptor v, property_descriptor p)
 }
 
 template <typename VP, typename IS>
-template <typename Eraser>
-void
-undirected_vertex<VP,IS>::disconnect(vertex_descriptor v, Eraser erase)
+typename undirected_vertex<VP,IS>::iterator
+undirected_vertex<VP,IS>::disconnect(iterator i)
 {
-    _edges.remove(v, erase);
-}
-
-/**
- * Return the properties associated with this vertex (if any).
- */
-template <typename VP, typename IS>
-typename undirected_vertex<VP,IS>::vertex_properties&
-undirected_vertex<VP,IS>::properties()
-{
-    return _props;
-}
-
-/**
- * Return the properties associated with this vertex (if any).
- */
-template <typename VP, typename IS>
-typename undirected_vertex<VP,IS>::vertex_properties const&
-undirected_vertex<VP,IS>::properties() const
-{
-    return _props;
+    return _edges.remove(i);
 }
 
 #endif

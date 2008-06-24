@@ -44,10 +44,10 @@ public:
      * Remove the edge referenced by the given iterator.
      * @complexity O(1)
      */
-    void remove(iterator i)
+    iterator remove(iterator i)
     {
         --_size;
-        _edges.erase(i);
+        return _edges.erase(i);
     }
 
     /**

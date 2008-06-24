@@ -9,11 +9,11 @@
  * of the out edge iterator since in edges contain placeheld references to
  * out edges.
  */
-template <typename InIter, typename OutIter>
+template <typename Edge>
 class basic_in_iterator
 {
-    typedef InIter base_iterator;
-    typedef OutIter out_iterator;
+    typedef typename Edge::in_iterator base_iterator;
+    typedef typename Edge::out_iterator out_iterator;
     typedef typename out_iterator::value_type out_tuple;
 public:
     typedef typename boost::tuples::element<0, out_tuple>::type vertex_descriptor;
@@ -23,8 +23,9 @@ public:
     // Clearly, we're going to be constraining members using some concept stuff
     // when it becomes available.
     typedef typename base_iterator::iterator_category iterator_category;
+    typedef typename base_iterator::difference_type difference_type;
 
-    typedef directed_edge<out_iterator> value_type;
+    typedef Edge value_type;
     typedef value_type reference;
     typedef value_type pointer;
 

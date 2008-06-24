@@ -13,11 +13,12 @@
  * @param VertexDesc A vertex descriptor
  * @param OutDesc An out edge descriptor.
  */
-template <typename OutIter>
+template <typename OutIter, typename InIter>
 class directed_edge
 {
 public:
     typedef OutIter out_iterator;
+    typedef InIter in_iterator;
     typedef typename OutIter::value_type out_tuple;
     typedef typename boost::tuples::element<0, out_tuple>::type vertex_descriptor;
     typedef typename boost::tuples::element<1, out_tuple>::type edge_properties;
@@ -46,6 +47,9 @@ public:
     /** Return the iterator to the out edge. */
     inline OutIter out_edge() const
     { return _out; }
+
+    inline InIter in_edge() const
+    { return _out->template get<2>().template get<InIter>(); }
 
     /** @name Property Accessors
      * Return the properties associated with the edge.
@@ -77,8 +81,8 @@ private:
     OutIter             _out;
 };
 
-template <typename OI>
-std::ostream& operator<<(std::ostream& os, const directed_edge<OI>& e)
+template <typename O, typename I>
+std::ostream& operator<<(std::ostream& os, const directed_edge<O,I>& e)
 { return os << "(" << e.source() << " " << e.target() << ")"; }
 
 #endif

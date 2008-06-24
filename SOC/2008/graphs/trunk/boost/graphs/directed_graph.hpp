@@ -75,10 +75,8 @@ public:
     typedef typename EdgeStore::template out_store<vertex_descriptor, edge_properties>::type out_edge_store;
     typedef typename EdgeStore::template in_store<vertex_descriptor>::type in_edge_store;
 
-    // We can now generate the edge descriptor. The type of this can be entirely
-    // distilled from the iterator into the out edge set - it has it all. Note
-    // that this includes a placeholder for the in edge too.
-    typedef directed_edge<typename out_edge_store::iterator> edge_descriptor;
+    // We can now generate the edge descriptor.
+    typedef directed_edge<typename out_edge_store::iterator, typename in_edge_store::iterator> edge_descriptor;
 
     // Generate the vertex type over the vertex properties, and in/out stores.
     // We can also pull size
@@ -96,10 +94,12 @@ public:
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
 
-    // Additional iterator types.
-    typedef basic_out_iterator<typename vertex_type::out_iterator> out_edge_iterator;
+    // Additional iterator types. I'm cheating here and using the edge
+    // descriptor to piggyback type information to these iterators. It kinda
+    // works.
+    typedef basic_out_iterator<edge_descriptor> out_edge_iterator;
     typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
-    typedef basic_in_iterator<typename vertex_type::in_iterator, typename vertex_type::out_iterator> in_edge_iterator;
+    typedef basic_in_iterator<edge_descriptor> in_edge_iterator;
     typedef std::pair<in_edge_iterator, in_edge_iterator> in_edge_range;
 
     // This just makes sense.
@@ -641,9 +641,25 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u, vertex_descriptor v)
 {
-    // Iterate over the out edges of u and, for each target v, remove the in
-    // edge (v, u) and the out edge (u, v).
-    _edges -= _verts.vertex(u).disconnect(_verts.vertex(v), v);
+    vertex_type& src = _verts.vertex(u);
+    vertex_type& tgt = _verts.vertex(v);
+
+    // Iterate over the out edges of the source, removing them.
+    out_edge_range rng = out_edges(u);
+    for(out_edge_iterator i = rng.first ; i != rng.second; ) {
+        // If the target vertex is one that we want to remove, remove it from
+        // the out list of this vertex. Also, brute-force remove it from the
+        // in list of other vertex.
+        edge_descriptor e = *i;
+        if(v == e.target()) {
+            tgt.disconnect_source(e.in_edge());
+            i = out_edge_iterator(u, src.disconnect_target(e.out_edge()));
+            --_edges;
+       }
+       else {
+            ++i;
+       }
+    }
 }
 
 template <BOOST_GRAPH_DG_PARAMS>
@@ -811,7 +827,7 @@ directed_graph<VP,EP,VS,ES>::end_in_edges(vertex_descriptor v) const
 }
 
 /**
- * Return awn iterator range over the in edges of the given vertex.
+ * Return an iterator range over the in edges of the given vertex.
  */
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::in_edge_range
