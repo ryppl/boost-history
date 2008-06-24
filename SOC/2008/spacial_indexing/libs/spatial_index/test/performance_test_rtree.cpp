@@ -50,8 +50,7 @@ std::vector< geometry::point_xy<double> > read_data(void)
     data >> x;
     data >> y;
 
-  if(geometry::within(geometry::point_xy<double>(x,y), query_box)) {
-      //  std::cerr << "Rect: (" << x << "," << y << ")" << std::endl;
+    if(geometry::within(geometry::point_xy<double>(x,y), query_box)) {
       rect_count++;
     }
     v.insert(geometry::point_xy<double>(x,y));
@@ -109,12 +108,16 @@ int test_main(int, char* [])
       // load data
       std::cerr << " --> bulk insert" << std::endl;
       std::vector<unsigned int>::iterator b, e;
-//       b = ids.begin();
-//       e = ids.end();
+      // b = ids.begin();
+      // e = ids.end();
 
       start = time(NULL);
       q->bulk_insert(ids, points);
       std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
+
+//       std::cerr << "Elements: " << q->elements() << std::endl;
+
+//       q->print();
 
       // -- wait to check memory
       //       std::cerr << "check memory --> After Building Index." << std::endl;
@@ -136,6 +139,9 @@ int test_main(int, char* [])
       std::deque<unsigned int> d = q->find(query_box);
       std::cerr << " --> find rectangle" << std::endl;
       BOOST_CHECK_EQUAL(rect_count, d.size());
+//       for(std::deque<unsigned int>::const_iterator it = d.begin(); it != d.end(); ++it) {
+// 	std::cerr << "r: " << *it << std::endl;
+//       }
       std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
 
       start = time(NULL);
@@ -154,7 +160,7 @@ int test_main(int, char* [])
       std::cerr << " --> removal tests" << std::endl;
       for(unsigned int j=0; j < find_count/1000; j++) {
  	q->remove(geometry::box<geometry::point_xy<double> >(search_positions[j], search_positions[j]));
-// 	std::cerr << "Elements: " << q->elements() << std::endl;
+	// std::cerr << "Elements: " << q->elements() << std::endl;
       }      
       std::cerr << std::endl;
 
@@ -162,10 +168,22 @@ int test_main(int, char* [])
       start = time(NULL);
       for(unsigned int j=0; j < find_count/1000; j++) {
  	unsigned int i = q->find(search_positions[j]);
-// 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
+	// std::cerr << "Prev. Value: " << search_data[j] << std::endl;
 	BOOST_CHECK_EQUAL(i, 0u);
       }
       std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
+
+//       std::cerr << " --> complete removal tests" << std::endl;
+//       unsigned int total = q->elements();
+//       for(unsigned int j=0; j < total; j++) {
+// // 	unsigned int e = q->elements();
+//  	q->remove(geometry::box<geometry::point_xy<double> >(points[j], points[j]));
+// // 	q->print();
+// // 	BOOST_CHECK_EQUAL(e, q->elements()+1);
+// //   	std::cerr << "Elements: " << e << std::endl;
+//       }      
+//       std::cerr << std::endl;
+//       q->print();
 
       return 0;
 }

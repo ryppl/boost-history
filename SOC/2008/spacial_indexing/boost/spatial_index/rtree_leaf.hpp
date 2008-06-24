@@ -48,7 +48,7 @@ namespace spatial_index {
     virtual geometry::box<Point> compute_box(void) const
     {
       if(nodes_.empty()) {
-	throw std::logic_error("Compute box in an empty node.");
+	return geometry::box<Point>();
       }
       
       typename leaves_map::const_iterator it = nodes_.begin();

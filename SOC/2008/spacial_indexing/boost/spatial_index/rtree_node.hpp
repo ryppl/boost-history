@@ -77,7 +77,17 @@ namespace spatial_index {
 
     void find_leaves(const geometry::box<Point> &e, typename std::vector<boost::shared_ptr<rtree_node<Point,Value> > > &result) const
     {
+//       std::cerr << "find_leaves\n";
+
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
+
+	// 	std::cerr << "e: ( " << geometry::get<0>(e.min()) << " , " << geometry::get<1>(e.min()) << " ) x " ;
+	// 	std::cerr << "( " << geometry::get<0>(e.max()) << " , " << geometry::get<1>(e.max()) << " )" ;
+
+
+	// 	std::cerr << "it: ( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
+	// 	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
+
 	if(overlaps(it->first, e)) {
 	  if(it->second->is_leaf()) {
 	    result.push_back(it->second);
@@ -92,9 +102,9 @@ namespace spatial_index {
     /// compute bounding box for this leaf
     virtual geometry::box<Point> compute_box(void) const
     {
-      if(nodes_.empty()) {
-	throw std::logic_error("Compute box in an empty node.");
-      }
+       if(nodes_.empty()) {
+	 return geometry::box<Point>();
+       }
       
       typename node_map::const_iterator it = nodes_.begin();
       geometry::box<Point> r = it->first;
