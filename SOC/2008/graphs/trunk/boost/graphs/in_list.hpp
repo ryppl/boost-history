@@ -26,6 +26,7 @@ public:
 
     in_list()
         : _edges()
+        , _size(0)
     { }
 
     /**
@@ -34,8 +35,16 @@ public:
      */
     iterator add(vertex_descriptor v)
     {
+        ++_size;
         _edges.push_back(make_pair(v, out_edge_place()));
         return boost::prior(_edges.end());
+    }
+
+    /** Remove the edge referenced by the given iterator. */
+    void remove(iterator i)
+    {
+        --_size;
+        _edges.erase(i);
     }
 
     /**
@@ -51,19 +60,29 @@ public:
         return end;
     }
 
-    /** Remove the edge referenced by the given iterator. */
-    void remove(iterator i)
-    { _edges.erase(i); }
-
+    /** Remove all incoming edges from the list, resetting the size to 0. */
     void clear()
-    { _edges.clear(); }
+    {
+        _size = 0;
+        _edges.clear();
+    }
 
     /** Get the number of incoming edges (in degree). */
     size_type size() const
-    { return _edges.size(); }
+    { return _size; }
+
+    /** @name Iterators */
+    //@{
+    iterator begin() const
+    { return _edges.begin(); }
+
+    iterator end() const
+    { return _edges.end(); }
+    //@}
 
 private:
-    mutable store_type _edges;
+    mutable store_type  _edges;
+    size_type           _size;
 };
 
 #endif

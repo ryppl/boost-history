@@ -43,6 +43,9 @@
 #include "edge_list.hpp"
 #include "edge_set.hpp"
 
+#include "out_iterator.hpp"
+#include "in_iterator.hpp"
+
 #include "adjacency_iterator.hpp"
 
 template <
@@ -92,6 +95,12 @@ public:
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
+
+    // Additional iterator types.
+    typedef basic_out_iterator<typename vertex_type::out_iterator> out_edge_iterator;
+    typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
+    typedef basic_in_iterator<typename vertex_type::in_iterator, typename vertex_type::out_iterator> in_edge_iterator;
+    typedef std::pair<in_edge_iterator, in_edge_iterator> in_edge_range;
 
     // This just makes sense.
     typedef std::size_t edges_size_type;
@@ -145,9 +154,6 @@ public:
      * MappedUniqueVertices     disconnect_vertex(vertex_key)
      */
     //@{
-    void disconnect_vertex(vertex_descriptor);
-    void disconnect_vertex(vertex_properties const&);
-    void disconnect_vertex(vertex_key const&);
     //@}
 
     /** @name Remove Vertex
@@ -203,11 +209,43 @@ public:
     edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_properties const&);
     //@}
 
-    /** @name Remove Edge
-     * Remove the edge from the graph.
+    /** @name Test Edge
+     * Determine if the edge, given by two vertices exists. This function a few
+     * convenience overloads that depend on the type of vertex store.
+     */
+    //@{
+    std::pair<edge_descriptor, bool> edge(vertex_descriptor, vertex_descriptor);
+    std::pair<edge_descriptor, bool> edge(vertex_properties const&, vertex_properties const&);
+    std::pair<edge_descriptor, bool> edge(vertex_key const&, vertex_key const&);
+    //@}
+
+    /** @name Remove Edge(s)
+     * Remove one or more edges from the graph. The function taking a single
+     * edge descriptor removes exactly that edge. The fucntion(s) taking
+     * a single vertex descriptor remove all edges incident to (both in and
+     * out edges) that vertex. The function(s) taking two vertices remove all
+     * edges connecting the two vertices. The so-called half-remove functions
+     * remove only the outgoing and incoming edges from the given vertex.
      */
     //@{
     void remove_edge(edge_descriptor e);
+
+    void remove_edges(vertex_descriptor);
+    void remove_edges(vertex_properties const&);
+    void remove_edges(vertex_key const&);
+
+    void remove_out_edges(vertex_descriptor);
+    void remove_out_edges(vertex_properties const&);
+    void remove_out_edges(vertex_key const&);
+
+    void remove_in_edges(vertex_descriptor);
+    void remove_in_edges(vertex_properties const&);
+    void remove_in_edges(vertex_key const&);
+
+    void remove_edges(vertex_descriptor, vertex_descriptor);
+    void remove_edges(vertex_properties const&, vertex_properties const&);
+    void remove_edges(vertex_key const&, vertex_key const&);
+
     //@}
 
     /** @name Size and Degree
@@ -220,7 +258,21 @@ public:
     in_edges_size_type in_degree(vertex_descriptor v) const;
     incident_edges_size_type degree(vertex_descriptor v) const;
     //@}
+    //
 
+    /** @name Out Edge Iterator */
+    //@{
+    out_edge_iterator begin_out_edges(vertex_descriptor) const;
+    out_edge_iterator end_out_edges(vertex_descriptor) const;
+    out_edge_range out_edges(vertex_descriptor) const;
+    //@}
+
+    /** @name In Edge Iterator */
+    //@{
+    in_edge_iterator begin_in_edges(vertex_descriptor) const;
+    in_edge_iterator end_in_edges(vertex_descriptor) const;
+    in_edge_range in_edges(vertex_descriptor) const;
+    //@}
 
     /** @name Property Accessors
      * Access the properties of the given vertex or edge.
@@ -305,38 +357,6 @@ directed_graph<VP,EP,VS,ES>::find_vertex(vertex_key const& k) const
 }
 
 /**
- * Disconnect the vertex from the graph. This removes all edges incident (both
- * incoming and outgoing) to the vertex, but will not remove the vertex itself.
- */
-template <BOOST_GRAPH_DG_PARAMS>
-void
-directed_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
-{
-    // TODO: Implement me!
-}
-
-/**
- * Disconnect the vertex having the given properties from the graph.
- */
-template <BOOST_GRAPH_DG_PARAMS>
-void
-directed_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_properties const& vp)
-{
-    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
-    disconnect_vertex(find_vertex(vp));
-}
-
-/**
- * Disconnect the vertex having the given key from the graph.
- */
-template <BOOST_GRAPH_DG_PARAMS>
-void
-directed_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_key const& k)
-{
-    disconnect_vertex(find_vertex(k));
-}
-
-/**
  * Remove the vertex from the graph. This will disconnect the vertex from the
  * graph prior to remove.
  */
@@ -344,7 +364,7 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_vertex(vertex_descriptor v)
 {
-    disconnect_vertex(v);
+    remove_edges(v);
     _verts.remove(v);
 }
 
@@ -356,7 +376,7 @@ void
 directed_graph<VP,EP,VS,ES>::remove_vertex(vertex_properties const& vp)
 {
     BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
-    disconnect_vertex(vp);
+    remove_edges(vp);
     _verts.remove(vp);
 }
 
@@ -367,7 +387,7 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_vertex(vertex_key const& k)
 {
-    disconnect_vertex(k);
+    remove_edges(k);
     _verts.remove(k);
 }
 
@@ -405,8 +425,6 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                       vertex_descriptor v,
                                       edge_properties const& ep)
 {
-    typedef typename out_edge_store::out_tuple out_tuple;
-    typedef typename in_edge_store::in_pair in_pair;
     typedef typename vertex_type::out_iterator out_iterator;
     typedef typename vertex_type::in_iterator in_iterator;
 
@@ -424,7 +442,8 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
             // Insert the edge stubs, getting iterators to each stub.
             out_iterator i = src.connect_target(v, ep);
             in_iterator j = tgt.connect_source(u);
-            return vertex_type::bind_connection(i, j);
+            edge_descriptor e = vertex_type::bind_connection(i, j);
+            return e;
         }
         else {
             return edge_descriptor(u, ins.first);
@@ -504,6 +523,189 @@ directed_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 }
 
 /**
+ * Remove all edges incident to this vertex. This will remove all edges in
+ * which the given vertex appears as either a source or target, effectively
+ * disconnecting the vertex from the graph. This is equivalent to calling
+ * remove_out_edges(v) and removing_in_edges(v).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
+{
+    remove_out_edges(v);
+    remove_in_edges(v);
+}
+
+/**
+ * Remove all edges incident to the vertex identified by the given properties.
+ * This is equivalent to remove_edges(find_vertex(vp));
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edges(vertex_properties const& vp)
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    remove_edges(find_vertex(vp));
+}
+
+/**
+ * Remove all edges incident to the vertex identified by the given key. This is
+ * equivalent to remove_edges(find_vertex(k)).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edges(vertex_key const& k)
+{
+    remove_edges(find_vertex(k));
+}
+
+/**
+ * Remove all out edges of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_out_edges(vertex_descriptor v)
+{
+    // Basically, just iterate over the out edges of v and remove all of the
+    // incoming parts of each out edge. Don't forget to drop the edge count.
+    out_edge_range out = out_edges(v);
+    for( ; out.first != out.second; ++out.first) {
+        edge_descriptor e = *out.first;
+        vertex_type& tgt = _verts.vertex(e.target());
+        tgt.disconnect_source(e);
+        --_edges;
+    }
+
+    // Clear the out edges.
+    _verts.vertex(v).clear_out();
+}
+
+/**
+ * Remove all out edges of the vertex identified by the given properties. This
+ * is equivalent to remove_out_edges(find_vertex(vp));
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_out_edges(vertex_properties const& vp)
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    remove_out_edges(find_vertex(vp));
+}
+
+/**
+ * Remove all out edges incident to the vertex identified by the given key. This
+ * is equivalent to remove_out_edges(find_vertex(k)).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_out_edges(vertex_key const& k)
+{
+    remove_out_edges(find_vertex(k));
+}
+
+/**
+ * Remove all in edges of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_in_edges(vertex_descriptor v)
+{
+    // we have to disconnect the source of the opposite edge. Don't forget to
+    // drop the edge count.
+    in_edge_range in = in_edges(v);
+    for( ; in.first != in.second; ++in.first) {
+        edge_descriptor e = *in.first;
+        vertex_type& src = _verts.vertex(e.source());
+        src.disconnect_target(e);
+        --_edges;
+    }
+
+    // Clear out the vertices lists.
+    _verts.vertex(v).clear_in();
+}
+
+/**
+ * Remove all in edges of the vertex identified by the given properties. This
+ * is equivalent to remove_in_edges(find_vertex(vp));
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_in_edges(vertex_properties const& vp)
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    remove_in_edges(find_vertex(vp));
+}
+
+/**
+ * Remove all out edges incident to the vertex identified by the given key. This
+ * is equivalent to remove_in_edges(find_vertex(k)).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_in_edges(vertex_key const& k)
+{
+    remove_in_edges(find_vertex(k));
+}
+
+/**
+ * Remove all edges connecting the vertex u to v. This function only removes
+ * the edges with u as a source and v as a target.
+ *
+ * To remove all edges interconnecting u and v, first call remove_edges(u, v)
+ * followed by remove_edges(v, u).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u, vertex_descriptor v)
+{
+}
+
+/**
+ * Test to see if the given edge exists. Return a pair containing the edge
+ * descriptor (if it exists), and a boolean value indicating whether it actually
+ * exists or not.
+ *
+ * @todo Consider making descriptors "self-invalidating".
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+std::pair<typename directed_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+directed_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v)
+{
+    vertex_type& src = _verts.vertex(u);
+    typename vertex_type::out_iterator i = src.find_out(v);
+    return i != src.end_out() ?
+        std::make_pair(edge_descriptor(u, i), true) :
+        std::make_pair(edge_descriptor(), false);
+}
+
+/**
+ * Test to see if at least one edge connects the two vertices identified by
+ * the given properties. Return a pair containing a descriptor to the first such
+ * edge (if it exists), and a boolean value indicating whether it actually
+ * exists or not. This is equivalent to edge(find_vertex(u), find_vertex(v)).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+std::pair<typename directed_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+directed_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
+                                  vertex_properties const& v)
+{
+    return edge(find_vertex(u), find_vertex(v));
+}
+/**
+ * Test to see if at least one edge connects the two vertices identified by
+ * the given key. Return a pair containing a descriptor to the first such
+ * edge (if it exists), and a boolean value indicating whether it actually
+ * exists or not. This is equivalent to edge(find_vertex(u), find_vertex(v)).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+std::pair<typename directed_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+directed_graph<VP,EP,VS,ES>::edge(vertex_key const& u,
+                                  vertex_key const& v)
+{
+    return edge(find_vertex(u), find_vertex(v));
+}
+
+/**
  * Return the number of vertices in the graph.
  */
 template <BOOST_GRAPH_DG_PARAMS>
@@ -553,6 +755,66 @@ typename directed_graph<VP,EP,VS,ES>::incident_edges_size_type
 directed_graph<VP,EP,VS,ES>::degree(vertex_descriptor v) const
 {
     return _verts.vertex(v).degree();
+}
+
+/**
+ * Return an iterator to the first out edge of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::out_edge_iterator
+directed_graph<VP,EP,VS,ES>::begin_out_edges(vertex_descriptor v) const
+{
+    return out_edge_iterator(v, _verts.vertex(v).begin_out());
+}
+
+/**
+ * Return an iterator past the end of then out edges of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::out_edge_iterator
+directed_graph<VP,EP,VS,ES>::end_out_edges(vertex_descriptor v) const
+{
+    return out_edge_iterator(v, _verts.vertex(v).end_out());
+}
+
+/**
+ * Return awn iterator range over the out edges of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::out_edge_range
+directed_graph<VP,EP,VS,ES>::out_edges(vertex_descriptor v) const
+{
+    return std::make_pair(begin_out_edges(v), end_out_edges(v));
+}
+
+/**
+ * Return an iterator to the first in edge of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::in_edge_iterator
+directed_graph<VP,EP,VS,ES>::begin_in_edges(vertex_descriptor v) const
+{
+    return in_edge_iterator(v, _verts.vertex(v).begin_in());
+}
+
+/**
+ * Return an iterator past the end of then in edges of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::in_edge_iterator
+directed_graph<VP,EP,VS,ES>::end_in_edges(vertex_descriptor v) const
+{
+    return in_edge_iterator(v, _verts.vertex(v).end_in());
+}
+
+/**
+ * Return awn iterator range over the in edges of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::in_edge_range
+directed_graph<VP,EP,VS,ES>::in_edges(vertex_descriptor v) const
+{
+    return std::make_pair(begin_in_edges(v), end_in_edges(v));
 }
 
 /**

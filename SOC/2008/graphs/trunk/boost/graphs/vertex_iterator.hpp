@@ -365,5 +365,4 @@ mapped_vertex_iterator<S>::operator!=(mapped_vertex_iterator const& x) const
     return iter != x.iter;
 }
 
-
 #endif

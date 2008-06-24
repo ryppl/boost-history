@@ -114,14 +114,33 @@ void test_disconnect_vertex()
     g.add_edge(V[0], V[1]);
     g.add_edge(V[1], V[2]);
     g.add_edge(V[2], V[0]);
+
+    // Ensure that the graph is set up correctly.
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.num_edges() == 3);
+    BOOST_ASSERT(g.out_degree(V[0]) == 1);
+    BOOST_ASSERT(g.out_degree(V[1]) == 1);
+    BOOST_ASSERT(g.out_degree(V[2]) == 1);
+    BOOST_ASSERT(g.in_degree(V[0]) == 1);
+    BOOST_ASSERT(g.in_degree(V[1]) == 1);
+    BOOST_ASSERT(g.in_degree(V[2]) == 1);
+    BOOST_ASSERT(g.edge(V[0], V[1]).second);
+    BOOST_ASSERT(g.edge(V[2], V[0]).second);
 
-    g.disconnect_vertex(V[1]);
+    // Disconnect the vertex
+    g.remove_edges(V[0]);
+
+    // Assert that the graph structure is correct after cutting v0 out of the
+    // graph. The only remaining edge should be (v1, v2)
     BOOST_ASSERT(g.num_vertices() == 3);
-    BOOST_ASSERT(g.degree(V[1]) == 0);
-    BOOST_ASSERT(g.degree(V[0]) == 1);
-    BOOST_ASSERT(g.degree(V[2]) == 1);
+    BOOST_ASSERT(g.num_edges() == 1);
+    BOOST_ASSERT(g.out_degree(V[0]) == 0);
+    BOOST_ASSERT(g.out_degree(V[1]) == 1);
+    BOOST_ASSERT(g.out_degree(V[2]) == 0);
+
+    BOOST_ASSERT(g.in_degree(V[0]) == 0);
+    BOOST_ASSERT(g.in_degree(V[1]) == 0);
+    BOOST_ASSERT(g.in_degree(V[2]) == 1);
 }
 
 // This is a little different than above. We remove a vertex from the triangle,
@@ -242,8 +261,8 @@ void list_list()
     typedef directed_graph<City, Road, vertex_list, edge_list> Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
+    test_disconnect_vertex<Graph>();
     /*
-    // test_disconnect_vertex<Graph>();
     // test_implicit_disconnect_vertex<Graph>();
     // test_add_multi_edges<Graph>();
     // test_remove_multi_edges<Graph>();

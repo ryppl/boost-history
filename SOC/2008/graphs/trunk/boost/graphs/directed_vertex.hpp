@@ -2,8 +2,6 @@
 #ifndef DIRECTED_VERTEX_HPP
 #define DIRECTED_VERTEX_HPP
 
-#include <list>
-#include "placeholder.hpp"
 #include "directed_edge.hpp"
 
 /**
@@ -31,7 +29,6 @@ public:
     typedef out_size_type incident_size_type;
 
     typedef directed_edge<out_iterator> edge_descriptor;
-
 
     /** @name Constructors */
     //@{
@@ -74,6 +71,12 @@ public:
 
     inline out_iterator end_out() const
     { return _out.end(); }
+
+    inline out_iterator find_out(vertex_descriptor v) const
+    { return _out.find(v); }
+
+    inline void clear_out()
+    { _out.clear(); }
     //@}
 
     /** @name In Edges */
@@ -83,6 +86,12 @@ public:
 
     inline in_iterator end_in() const
     { return _in.end(); }
+
+    inline in_iterator find_in(vertex_descriptor v) const
+    { return _in.find(v); }
+
+    inline void clear_in()
+    { return _in.clear(); }
     //@}
 
 
@@ -155,6 +164,11 @@ directed_vertex<V,O,I>::connect_source(vertex_descriptor v)
     return _in.add(v);
 }
 
+/**
+ * Having added the edge stubs, bind them together and return a descriptor over
+ * the edge. This is a static method because it doesn't pertain to single
+ * object.
+ */
 template <typename V, typename O, typename I>
 typename directed_vertex<V,O,I>::edge_descriptor
 directed_vertex<V,O,I>::bind_connection(out_iterator i, in_iterator j)
@@ -181,8 +195,10 @@ template <typename V, typename O, typename I>
 void
 directed_vertex<V,O,I>::disconnect_source(edge_descriptor e)
 {
-    // placeholder<sizeof(std::list<int>::iterator)> x = boost::get<2>(*e.out_edge());
-    _in.remove(boost::get<2>(*e.out_edge()).template get<in_iterator>());
+    // Get the input iterator from the edge.
+    out_iterator o = e.out_edge();
+    in_iterator i = o->template get<2>().template get<in_iterator>();
+    _in.remove(i);
 }
 
 #endif

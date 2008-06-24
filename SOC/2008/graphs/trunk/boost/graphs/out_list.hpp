@@ -29,7 +29,6 @@ private:
     typedef typename boost::tuples::element<1, Edge>::type in_edge_place;
 public:
     typedef typename store_type::iterator iterator;
-    typedef typename store_type::iterator const_iterator;
     typedef typename store_type::size_type size_type;
 
     inline out_list()
@@ -38,37 +37,15 @@ public:
     { }
 
     /** Allow an edge insertion? */
-    std::pair<const_iterator, bool> allow(vertex_descriptor v) const
+    std::pair<iterator, bool> allow(vertex_descriptor v) const
     { return std::make_pair(_edges.end(), true); }
 
     /** Add the edge to the list. */
-    const_iterator add(vertex_descriptor v, edge_properties const& ep)
+    iterator add(vertex_descriptor v, edge_properties const& ep)
     {
         ++_size;
         _edges.push_back(out_tuple(v, ep, in_edge_place()));
         return boost::prior(_edges.end());
-    }
-
-    /** Find the edge with the given vertex. */
-    iterator find(vertex_descriptor v)
-    {
-        // TODO How do I write this with std::find?
-        iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
-    }
-
-    /** Find the edge with the given vertex. */
-    const_iterator find(vertex_descriptor v) const
-    {
-        // TODO How do I write this with std::find?
-        const_iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
     }
 
     /**
@@ -81,26 +58,40 @@ public:
         _edges.erase(i);
     }
 
-    /** Remove all edges. */
+    /** Find the edge with the given vertex. */
+    iterator find(vertex_descriptor v) const
+    {
+        // TODO How do I write this with std::find?
+        iterator i = _edges.begin(), end = _edges.end();
+        for( ; i != end; ++i) {
+            if(i->template get<0>() == v) return i;
+        }
+        return end;
+    }
+
+    /** Remove all incoming edges from the list, resetting the size to 0. */
     void clear()
-    { _edges.clear(); }
+    {
+        _size = 0;
+        _edges.clear();
+    }
 
     /** @name Iterators and Size */
     //@{
-    inline const_iterator begin() const
+    inline iterator begin() const
     { return _edges.begin(); }
 
-    inline const_iterator end() const
+    inline iterator end() const
     { return _edges.end(); }
+    //@}
 
     /** Get the number of outgoing edges. */
     inline size_type size() const
     { return _size; }
-    //@{
 
 private:
     mutable store_type  _edges;
-    size_type   _size;
+    size_type           _size;
 };
 
 #endif

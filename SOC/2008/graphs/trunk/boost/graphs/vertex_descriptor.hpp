@@ -1,6 +1,8 @@
 
-#ifndef DESCRIPTOR_HPP
-#define DESCRIPTOR_HPP
+#ifndef VERTEX_DESCRIPTOR_HPP
+#define VERTEX_DESCRIPTOR_HPP
+
+#include <iosfwd>
 
 // Important notes about descriptors
 //
@@ -30,52 +32,81 @@
 // us to differentiate descriptors based on these types rather than their
 // simple descriptor types.
 
+namespace detail
+{
+    inline std::size_t invalid_value(std::size_t)
+    { return std::size_t(-1); }
+
+    void* invalid_value(void*)
+    { return 0; }
+}
+
+/**
+ * The basic vertex descriptor is a wrapper around an opaque reference to a
+ * vertex. This class is provided to get around overload problems for functions
+ * taking properties or keys when the types of those objects are the same as
+ * the underlying descriptor.
+ */
 template <typename D>
 class basic_vertex_descriptor
 {
 public:
     inline basic_vertex_descriptor()
-        : desc()
+        : _d(detail::invalid_value(D()))
     { }
 
-    inline basic_vertex_descriptor(D d)
-        : desc(d)
+    inline basic_vertex_descriptor(basic_vertex_descriptor const& x)
+        : _d(x._d)
+    { }
+
+    inline basic_vertex_descriptor(D const& d)
+        : _d(d)
     { }
 
     // Assignment copy.
     inline basic_vertex_descriptor& operator=(basic_vertex_descriptor const& d)
     {
-        desc = d.desc;
+        _d = d._d;
         return *this;
     }
 
     // value-type assignment.
     inline basic_vertex_descriptor& operator=(D d)
     {
-        desc = d;
+        _d = d;
         return *this;
     }
 
-    // Just to make the access a little prettier.
+    /** Get the underlying descriptor value. */
     inline D get() const
-    { return desc; }
+    { return _d; }
 
-    // Provides an implicit cast to bool. Returns true if the basic_vertex_descriptor
-    // is not the same as its default value.
+    /** Returns true if the descriptor is valid. */
     inline bool is_valid() const
-    { return desc != basic_vertex_descriptor().desc; }
+    { return _d != detail::invalid_value(D()); }
 
-    inline bool operator<(basic_vertex_descriptor const& d) const
-    { return desc < d.desc; }
-
-    inline bool operator==(basic_vertex_descriptor const& d) const
-    { return desc == d.desc; }
-
-    inline bool operator!=(basic_vertex_descriptor const& d) const
-    { return desc != d.desc; }
-
-    D desc;
+private:
+    D _d;
 };
+
+template <typename D>
+bool
+operator<(basic_vertex_descriptor<D> const& a, basic_vertex_descriptor<D> const& b)
+{ return a.get() < b.get(); }
+
+template <typename D>
+inline bool
+operator==(basic_vertex_descriptor<D> const& a, basic_vertex_descriptor<D> const& b)
+{ return a.get() == b.get(); }
+
+template <typename D>
+inline bool
+operator!=(basic_vertex_descriptor<D> const& a, basic_vertex_descriptor<D> const& b)
+{ return a.get() != b.get(); }
+
+template <typename D>
+std::ostream& operator<<(std::ostream& os, const basic_vertex_descriptor<D>& v)
+{ return os << v.get(); }
 
 #endif
 

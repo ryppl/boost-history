@@ -2,6 +2,8 @@
 #ifndef DIRECTED_EDGE_HPP
 #define DIRECTED_EDGE_HPP
 
+#include <iosfwd>
+
 #include <boost/tuple/tuple.hpp>
 
 /**
@@ -39,7 +41,7 @@ public:
 
     /** Return the target of the edge. */
     inline vertex_descriptor target() const
-    { return boost::get<0>(*_out); }
+    { return _out->template get<0>(); }
 
     /** Return the iterator to the out edge. */
     inline OutIter out_edge() const
@@ -50,16 +52,18 @@ public:
      */
     //@{
     inline edge_properties& properties()
-    { return boost::get<1>(*_out); }
+    { return _out->template get<1>(); }
 
     inline edge_properties const& properties() const
-    { return boost::get<1>(*_out); }
+    { return _out->template get<1>(); }
     //@}
 
-    /** @name Operators */
+    /** @name Operators
+     * @todo Consider externalizing these.
+     */
     //@{
     inline bool operator==(directed_edge const& x)
-    { return _src == x._src && _out = x._out; }
+    { return _src == x._src && _out == x._out; }
 
     inline bool operator!=(directed_edge const& x)
     { return !operator==(x); }
@@ -73,5 +77,8 @@ private:
     OutIter             _out;
 };
 
+template <typename OI>
+std::ostream& operator<<(std::ostream& os, const directed_edge<OI>& e)
+{ return os << "(" << e.source() << " " << e.target() << ")"; }
 
 #endif
