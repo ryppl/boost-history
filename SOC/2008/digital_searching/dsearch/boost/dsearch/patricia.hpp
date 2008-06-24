@@ -63,6 +63,10 @@ class patricia{
 		:par(0),value(other.value),index(other.index),left(0),right(0)
 		{
 		}
+		bool operator =(const patricia_node &other)
+		{
+			assert(false);
+		}
 	};
 
 	typedef typename Alloc::template rebind<patricia_node>::other node_allocator_type;
@@ -76,7 +80,7 @@ class patricia{
 	typedef patricia_reverse_iterator<value_type, patricia_node, Alloc> reverse_iterator;
 	typedef patricia_reverse_iterator<const value_type, const patricia_node, Alloc> const_reverse_iterator;
 
-	patricia(): root(0)
+	patricia(): node_allocator(node_allocator_type()),root(0)
 	{
 	}
 
@@ -103,7 +107,12 @@ class patricia{
 
 	void insert(const value_type &v)
 	{
-		this->operator [](v.first)=v.second;
+		#ifndef FORWARD
+			insert_new_node(v.first,iterator_cat())=v.second;
+		#else
+			insert_new_node(v.first,0)=v.second;
+		#endif
+		//this->operator [](v.first)=v.second;
 	}
 
 	iterator begin()
@@ -635,19 +644,17 @@ class patricia{
 	}
 
 	inline std::pair<patricia_node*,patricia_node*>
-	find_node_prev(patricia_node *root, const key_type &key, rand_tag,std::size_t key_size=0) const
+	find_node_prev(patricia_node *cur, const key_type &key, rand_tag,std::size_t key_size=0) const
 	{
-		patricia_node  *cur,*next=0;
+		patricia_node  *next=0;
 		key_iterator it, end_it;
 		it=Key_traits::begin(key);
 		std::size_t pos=0;
 		if(key_size==0)
 			key_size=key.size();
 
-		if(root==0) return std::make_pair<patricia_node*,patricia_node*>(0,0);
-		
-		cur=root;
-		
+		if(cur==0) return std::make_pair<patricia_node*,patricia_node*>(0,0);
+				
 		while (true ) {
 			pos= cur->index / (bit_width + 1);
 			if ( pos >= key_size ) break;
@@ -670,9 +677,9 @@ class patricia{
 
 	template<class T>
 	inline std::pair<patricia_node*,patricia_node*>
-	find_node_prev(patricia_node *root, const key_type &key, T ,std::size_t=std::size_t()) const
+	find_node_prev(patricia_node *cur, const key_type &key, T ,std::size_t=std::size_t()) const
 	{
-		patricia_node *cur=root,*next;
+		patricia_node *next;
 		std::size_t pos=0;
 		key_iterator it,end_it;
 		key_element_type temp_element;
@@ -680,9 +687,14 @@ class patricia{
 		it=Key_traits::begin(key);
 		end_it=Key_traits::end(key);
 
-		if(root==0) return std::make_pair(root,root);
+		if(cur==0) return std::make_pair(cur,cur);
 		if(it==end_it)
-			return std::make_pair(root->left,root);
+		{
+			if ( cur==root  || cur==root->left )
+				return std::make_pair(root->left,root);
+			else
+				return std::make_pair(static_cast<patricia_node*>(0),static_cast<patricia_node*>(0));
+		}
 		while ( pos < (cur->index)/(bit_width+1) && it!=end_it ) {
 			++pos;
 			++it;
