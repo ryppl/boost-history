@@ -18,6 +18,7 @@ extension.option irrlicht opengl : enable disable ;
 extension.option irrlicht opengles : disable enable ;
 extension.option irrlicht software : enable disable ;
 extension.option irrlicht burnings-video : beautiful fast ultra-fast disable ;
+extension.option irrlicht nvperfhud : disable enable ;
 extension.option irrlicht x11 : enable disable ;
 extension.option irrlicht x11-vidmode : enable disable ;
 extension.option irrlicht x11-randr : disable enable ;
@@ -120,6 +121,8 @@ rule init ( version ? : location : options * )
         [ conditional <irrlicht-burnigs-video>ultra-fast :
             <>"#undef BURNINGVIDEO_RENDERER_BEAUTIFUL"
             <>"#define BURNINGVIDEO_RENDERER_ULTRA_FAST" ]
+        
+        <irrlicht-nvperfhud>enable:<>"#define _IRR_USE_NVIDIA_PERFHUD_"
         
         <irrlicht-x11>disable:<>"#undef _IRR_COMPILE_WITH_X11_"
         <irrlicht-vidmode>disable:<>"#undef _IRR_LINUX_X11_VIDMODE_"
