@@ -231,7 +231,7 @@ namespace boost { namespace numeric { namespace bindings {
 	  {
 	    assert(i+1 < n);
 	    assert(wr[i+1] == wr[i]);
-	    assert(wi[i+1] == -wi[i+1]);
+	    assert(wi[i+1] == -wi[i]);
 
 	    w[i+1] = std::complex<value_type>(wr[i+1], wi[i+1]);
 	    for (int j = 0; j < n; j++)
