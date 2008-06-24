@@ -14,3 +14,4 @@ project
     ;
 
 run geos_test.cpp ;
+run geos_test_rtree.cpp ;
