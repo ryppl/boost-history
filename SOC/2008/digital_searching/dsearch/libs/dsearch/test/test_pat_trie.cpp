@@ -313,7 +313,6 @@ void erase_test()
 	BOOST_CHECK( pat.exists("wheat") );
 	BOOST_CHECK( pat.exists("what") );
 	//print_pat(pat);
-
 	
 	pat.erase("wheat");
 	BOOST_CHECK( pat.exists("weather") );
@@ -541,7 +540,7 @@ int test_main(int argc,char **argv)
 	copy_test<pat_type>();
 	upper_bound_test<pat_type>();
 	lower_bound_test<pat_type>();
-	//prefix_range_test<pat_type>();
+	prefix_range_test<pat_type>();
 #endif
 	if ( argc > 1 )
 		insert_test_3<pat_type>(argv[1]);
