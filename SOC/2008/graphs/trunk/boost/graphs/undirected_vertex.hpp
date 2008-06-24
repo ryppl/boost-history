@@ -41,7 +41,6 @@ public:
      */
     inline std::pair<iterator, bool> allow(vertex_descriptor) const;
     inline void connect(vertex_descriptor, property_descriptor);
-    inline void disconnect();
     inline void disconnect(vertex_descriptor, property_descriptor);
     template <typename Eraser> inline void disconnect(vertex_descriptor, Eraser);
 
@@ -54,6 +53,9 @@ public:
 
     inline iterator end() const
     { return _edges.end(); }
+
+    inline void clear()
+    { _edges.clear(); }
 
     inline size_type degree() const
     { return _edges.size(); }
@@ -107,17 +109,6 @@ void
 undirected_vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
 {
     _edges.add(make_pair(v, p));
-}
-
-/**
- * Disconect all edges from this vertex. This does not remove the connection
- * from adjacent vertices to this vertex.
- */
-template <typename VP, typename IS>
-void
-undirected_vertex<VP,IS>::disconnect()
-{
-    _edges.clear();
 }
 
 /**

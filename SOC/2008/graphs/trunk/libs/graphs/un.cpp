@@ -110,7 +110,7 @@ void test_disconnect_vertex()
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.num_edges() == 3);
 
-    g.disconnect_vertex(V[1]);
+    g.remove_edges(V[1]);
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.degree(V[1]) == 0);
     BOOST_ASSERT(g.degree(V[0]) == 1);

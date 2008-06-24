@@ -139,21 +139,14 @@ public:
     //@{
     vertex_descriptor find_vertex(vertex_properties const&) const;
     vertex_descriptor find_vertex(vertex_key const&) const;
-    //@{
+    //@}
 
-    /** @name Disconnect Vertex
-     * Disconnect a vertex from the graph by removing all of its incident edges.
-     * These functions only exist for graphs with ReducibleEdgeSets. Functions
-     * that take properties or keys are provided for convenience, but have
-     * additional dependencies and cost. These additonal functions are
-     * equivalent to disconnect_vertex(find_vertex(x)) where x is either a
-     * vertex_properties or vertex_key.
-     *
-     * ReducibleEdgeSet         disconnect_vertex(vertex_descriptor)
-     * LabeledUniqueVertices    disconnect_vertex(vertex_properties)
-     * MappedUniqueVertices     disconnect_vertex(vertex_key)
+    /** @name Vertex Key
+     * Return the key for the given vertex. This is only provided for graphs
+     * with MappedVertices (can be multimapped).
      */
     //@{
+    vertex_key const& key(vertex_descriptor) const;
     //@}
 
     /** @name Remove Vertex
@@ -171,14 +164,6 @@ public:
     void remove_vertex(vertex_descriptor);
     void remove_vertex(vertex_properties const&);
     void remove_vertex(vertex_key const&);
-    //@}
-
-    /** @name Vertex Key
-     * Return the key for the given vertex. This is only provided for graphs
-     * with MappedVertices (can be multimapped).
-     */
-    //@{
-    vertex_key const& key(vertex_descriptor) const;
     //@}
 
     /** @name Add Edge
@@ -245,7 +230,6 @@ public:
     void remove_edges(vertex_descriptor, vertex_descriptor);
     void remove_edges(vertex_properties const&, vertex_properties const&);
     void remove_edges(vertex_key const&, vertex_key const&);
-
     //@}
 
     /** @name Size and Degree
@@ -258,7 +242,6 @@ public:
     in_edges_size_type in_degree(vertex_descriptor v) const;
     incident_edges_size_type degree(vertex_descriptor v) const;
     //@}
-    //
 
     /** @name Out Edge Iterator */
     //@{
@@ -658,7 +641,27 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u, vertex_descriptor v)
 {
+    // Iterate over the out edges of u and, for each target v, remove the in
+    // edge (v, u) and the out edge (u, v).
+    _edges -= _verts.vertex(u).disconnect(_verts.vertex(v), v);
 }
+
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edges(vertex_properties const& u,
+                                          vertex_properties const& v)
+{
+    remove_vertices(find_vertex(u), find_vertex(v));
+}
+
+template <BOOST_GRAPH_DG_PARAMS>
+void
+directed_graph<VP,EP,VS,ES>::remove_edges(vertex_key const& u,
+                                          vertex_key const& v)
+{
+    remove_vertices(find_vertex(u), find_vertex(v));
+}
+
 
 /**
  * Test to see if the given edge exists. Return a pair containing the edge

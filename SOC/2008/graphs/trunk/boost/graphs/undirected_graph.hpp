@@ -99,24 +99,14 @@ public:
     //@{
     vertex_descriptor find_vertex(vertex_properties const&) const;
     vertex_descriptor find_vertex(vertex_key const&) const;
-    //@{
+    //@}
 
-    /** @name Disconnect Vertex
-     * Disconnect a vertex from the graph by removing all of its incident edges.
-     * These functions only exist for graphs with ReducibleEdgeSets. Functions
-     * that take properties or keys are provided for convenience, but have
-     * additional dependencies and cost. These additonal functions are
-     * equivalent to disconnect_vertex(find_vertex(x)) where x is either a
-     * vertex_properties or vertex_key.
-     *
-     * ReducibleEdgeSet         disconnect_vertex(vertex_descriptor)
-     * LabeledUniqueVertices    disconnect_vertex(vertex_properties)
-     * MappedUniqueVertices     disconnect_vertex(vertex_key)
+    /** @name Vertex Key
+     * Return the key for the given vertex. This is only provided for graphs
+     * with MappedVertices (can be multimapped).
      */
     //@{
-    void disconnect_vertex(vertex_descriptor);
-    void disconnect_vertex(vertex_properties const&);
-    void disconnect_vertex(vertex_key const&);
+    vertex_key const& key(vertex_descriptor) const;
     //@}
 
     /** @name Remove Vertex
@@ -135,14 +125,6 @@ public:
     void remove_vertex(vertex_properties const&);
     void remove_vertex(vertex_key const&);
     //@}
-
-    /** @name Vertex Key
-     * Return the key for the given vertex. This is only provided for graphs
-     * with MappedVertices (can be multimapped).
-     */
-    //@{
-    vertex_key const& key(vertex_descriptor) const;
-    //@{
 
     /** @name Add Edge
      * Add an edge, connecting two vertices, to the graph. There are a number of
@@ -175,12 +157,22 @@ public:
     //@}
 
     /** @name Remove Edge(s)
-     * These functions operate on the edges of the graph. This functions
-     * include the ability to add and remove edges.
+     * Remove one or more edges from the graph. The function taking a single
+     * edge descriptor removes exactly that edge. The fucntion(s) taking
+     * a single vertex descriptor remove all edges incident to that vertex. The
+     * function(s) taking two vertices remove all edges connecting the two
+     * vertices.
      */
     //@{
     void remove_edge(edge_descriptor);
+
+    void remove_edges(vertex_descriptor);
+    void remove_edges(vertex_properties const&);
+    void remove_edges(vertex_key const&);
+
     void remove_edges(vertex_descriptor, vertex_descriptor);
+    void remove_edges(vertex_properties const&, vertex_properties const&);
+    void remove_edges(vertex_key const&, vertex_key const&);
     //@}
 
     /** @name Vertex Iteration
@@ -216,7 +208,7 @@ public:
     adjacent_vertex_range adjacent_vertices(vertex_descriptor) const;
 
     incident_edges_size_type degree(vertex_descriptor) const;
-    //@{
+    //@}
 
     /** @name Property Accessors
      * Access the properties of the given vertex or edge.
@@ -224,7 +216,7 @@ public:
     //@{
     vertex_properties& operator[](vertex_descriptor);
     edge_properties& operator[](edge_descriptor);
-    //@{
+    //@}
 
 private:
     property_store _props;
@@ -306,57 +298,6 @@ undirected_graph<VP,EP,VS,ES>::find_vertex(vertex_key const& k) const
 }
 
 /**
- * Disconnect the vertex from the graph. This removes all edges incident to
- * the vertex, but will not remove the vertex itself.
- */
-template <BOOST_GRAPH_UG_PARAMS>
-void
-undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_descriptor v)
-{
-    // Disconnecting a vertex is not quite so simple as clearing the incidence
-    // set since we have to remove all the edge properties and remove the
-    // opposite edges from other vertices.
-    // TODO: Can we specialize this at all?
-
-    // Start by disconnecting all of the incident edges from adjacent vertices.
-    incident_edge_range rng = incident_edges(v);
-    for( ; rng.first != rng.second; ++rng.first) {
-        edge_descriptor e = *rng.first;
-        vertex_type& opp = _verts.vertex(e.opposite(v));
-        opp.disconnect(v, e.properties());
-
-        // Remove all the properties too. Does this make sense here?
-        _props.remove(e.properties());
-    }
-
-    // Clear the incident edge set of the vertex. We don't do this in the
-    // previous loop because we'll probably end up invalidating our own
-    // iterators.
-    _verts.vertex(v).disconnect();
-}
-
-/**
- * Disconnect the vertex having the given properties from the graph.
- */
-template <BOOST_GRAPH_UG_PARAMS>
-void
-undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_properties const& vp)
-{
-    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
-    disconnect_vertex(find_vertex(vp));
-}
-
-/**
- * Disconnect the vertex having the given key from the graph.
- */
-template <BOOST_GRAPH_UG_PARAMS>
-void
-undirected_graph<VP,EP,VS,ES>::disconnect_vertex(vertex_key const& k)
-{
-    disconnect_vertex(find_vertex(k));
-}
-
-/**
  * Remove the vertex from the graph. This will disconnect the vertex from the
  * graph prior to remove.
  */
@@ -364,7 +305,7 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_descriptor v)
 {
-    disconnect_vertex(v);
+    remove_edges(v);
     _verts.remove(v);
 }
 
@@ -376,7 +317,7 @@ void
 undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_properties const& vp)
 {
     BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
-    disconnect_vertex(vp);
+    remove_edges(vp);
     _verts.remove(vp);
 }
 
@@ -387,7 +328,7 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_key const& k)
 {
-    disconnect_vertex(k);
+    remove_edges(k);
     _verts.remove(k);
 }
 
@@ -535,27 +476,119 @@ undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 }
 
 /**
- * This removes all distinct edges connecting the vertices u and v.
+ * Remove all edges incident to the given vertex, effectively disconnecting
+ * it from the graph.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
+{
+    // Disconnecting a vertex is not quite so simple as clearing the incidence
+    // set since we have to remove all the edge properties and remove the
+    // opposite edges from other vertices.
+    // TODO: Can we specialize this at all?
+
+    vertex_type& src = _verts.vertex(v);
+
+    // Start by disconnecting all of the incident edges from adjacent vertices.
+    incident_edge_range rng = incident_edges(v);
+    for( ; rng.first != rng.second; ++rng.first) {
+        edge_descriptor e = *rng.first;
+        vertex_type& opp = _verts.vertex(e.opposite(v));
+        opp.disconnect(v, e.properties());
+
+        // Remove all the properties too. Does this make sense here?
+        _props.remove(e.properties());
+    }
+
+    // Clear the incident edge set of the vertex. We don't do this in the
+    // previous loop because we'll probably end up invalidating our own
+    // iterators.
+    src.clear();
+}
+
+/**
+ * Disconnect the vertex having the given properties from the graph.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_properties const& vp)
+{
+    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    remove_edges(find_vertex(vp));
+}
+
+/**
+ * Disconnect the vertex having the given key from the graph.
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_key const& k)
+{
+    remove_edges(find_vertex(k));
+}
+
+/**
+ * Remove all edges connecting the vertices u and v.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
                                             vertex_descriptor v)
 {
+    std::vector<property_descriptor> del;
+
+    // First pass: Find all edges connecting u and v, remove the global property
+    // record and cache the descriptor for later.
+    incident_edge_range rng = incident_edges(v);
+    for(incident_edge_iterator i = rng.first; i != rng.second; ++i) {
+        edge_descriptor e = *i;
+
+        // If the edge connects these two vertices, remove the edge property.
+        if(e.connects(u, v)) {
+            property_descriptor p = e.properties();
+            del.push_back(p);
+            _props.remove(p);
+        }
+    }
+
+    // Second pass: Remove the local endpoints of each edge with the given
+    // properties. The propdescs might be invalid, but they aren't being used
+    // to reference actual properties here.
+    // TODO: This isn't particularly efficient since each disconnect() is a
+    // local search on the vertex of O(deg(x)).
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
+    typename std::vector<property_descriptor>::iterator i = del.begin(), end = del.end();
+    for( ; i != end; ++i) {
+        property_descriptor p = *i;
+        src.disconnect(v, p);
+        tgt.disconnect(u, p);
+    }
+}
 
-    // The implementation of this function is... not pretty because of the
-    // number of efficient ways to do this for both lists, sets and maps.
-    // Remember that we have to remove the same basic edge structures from
-    // both source and target, but only need to remove the global properties
-    // once.
-    //
-    // Disconnect v from the src, removing global properties. Then disconnect
-    // u from tgt, but don't actually do anything with the properties (they're
-    // already gone!).
-    src.disconnect(v, property_eraser<property_store>(_props));
-    tgt.disconnect(u, noop_eraser());
+/**
+ * Remove all edges connecting the vertices identified by the given properties.
+ * This is equivalent to remove_edges(find_vertex(u), find_vertex(v)).
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_properties const& u,
+                                            vertex_properties const& v)
+{
+    return remove_edges(find_vertex(u), find_vertex(v));
+}
+
+/**
+ * Remove all edges connecting the vertices identified by the given keys. This
+ * is equivalent to remove_edges(find_vertex(u), find_vertex(v)).
+ */
+template <BOOST_GRAPH_UG_PARAMS>
+void
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_key const& u,
+                                            vertex_key const& v)
+{
+    return remove_edges(find_vertex(u), find_vertex(v));
 }
 
 /**

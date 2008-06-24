@@ -134,4 +134,16 @@ make_unordered_pair(T const& f, T const& s)
     return x;
 }
 
+/**
+ * A swap-like sort function that will "unorder" two objects.
+ */
+template <typename T>
+void
+reorder(T& a, T& b)
+{
+    unordered_pair<T> p(a, b);
+    a = p.first();
+    b = p.second();
+}
+
 #endif

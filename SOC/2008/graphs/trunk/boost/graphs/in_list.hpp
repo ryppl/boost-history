@@ -40,7 +40,10 @@ public:
         return boost::prior(_edges.end());
     }
 
-    /** Remove the edge referenced by the given iterator. */
+    /**
+     * Remove the edge referenced by the given iterator.
+     * @complexity O(1)
+     */
     void remove(iterator i)
     {
         --_size;

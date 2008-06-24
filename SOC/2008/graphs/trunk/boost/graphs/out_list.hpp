@@ -49,14 +49,16 @@ public:
     }
 
     /**
-     * Remove the edge with the given vertex.
+     * Remove the edge with the given vertex. Return the next iterator in
+     * the sequence.
      * @complexity O(1)
      */
-    void remove(iterator i)
+    iterator remove(iterator i)
     {
         --_size;
-        _edges.erase(i);
+        return _edges.erase(i);
     }
+
 
     /** Find the edge with the given vertex. */
     iterator find(vertex_descriptor v) const

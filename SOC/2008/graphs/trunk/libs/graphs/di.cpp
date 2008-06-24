@@ -141,6 +141,12 @@ void test_disconnect_vertex()
     BOOST_ASSERT(g.in_degree(V[0]) == 0);
     BOOST_ASSERT(g.in_degree(V[1]) == 0);
     BOOST_ASSERT(g.in_degree(V[2]) == 1);
+
+    // This isn't really part of this test. See the multi-edge removals.
+    g.remove_edges(V[1], V[2]);
+    BOOST_ASSERT(g.num_edges() == 0);
+    BOOST_ASSERT(g.out_degree(V[1]) == 0);
+    BOOST_ASSERT(g.in_degree(V[2]) == 0);
 }
 
 // This is a little different than above. We remove a vertex from the triangle,
