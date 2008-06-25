@@ -5,3 +5,4 @@ exe set : set.cpp : <include>../../ <include>/usr/local/include ;
 exe map : map.cpp : <include>../../ <include>/usr/local/include ;
 exe test : test.cpp : <include>../../ <include>/usr/local/include ;
 exe props : props.cpp : <include>../../ <include>/usr/local/include ;
+exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;

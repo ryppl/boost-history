@@ -99,6 +99,8 @@ public:
     // Additional iterator types. I'm cheating here and using the edge
     // descriptor to piggyback type information to these iterators. It kinda
     // works.
+    typedef directed_edge_iterator<this_type> edge_iterator;
+    typedef std::pair<edge_iterator, edge_iterator> edge_range;
     typedef basic_out_iterator<edge_descriptor> out_edge_iterator;
     typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
     typedef basic_in_iterator<edge_descriptor> in_edge_iterator;
@@ -245,15 +247,20 @@ public:
     incident_edges_size_type degree(vertex_descriptor v) const;
     //@}
 
-    /** @name Out Edge Iterator */
+    /** @name Iterators */
     //@{
+    vertex_iterator begin_vertices() const;
+    vertex_iterator end_vertices() const;
+    vertex_range vertices() const;
+
+    edge_iterator begin_edges() const;
+    edge_iterator end_edges() const;
+    edge_range edges() const;
+
     out_edge_iterator begin_out_edges(vertex_descriptor) const;
     out_edge_iterator end_out_edges(vertex_descriptor) const;
     out_edge_range out_edges(vertex_descriptor) const;
-    //@}
 
-    /** @name In Edge Iterator */
-    //@{
     in_edge_iterator begin_in_edges(vertex_descriptor) const;
     in_edge_iterator end_in_edges(vertex_descriptor) const;
     in_edge_range in_edges(vertex_descriptor) const;
@@ -778,15 +785,56 @@ directed_graph<VP,EP,VS,ES>::degree(vertex_descriptor v) const
     return _verts.vertex(v).degree();
 }
 
-/**
- * Return an iterator to the first out edge of the given vertex.
- */
+/** Return an iterator to the first vertex. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::vertex_iterator
+directed_graph<VP,EP,VS,ES>::begin_vertices() const
+{ return _verts.begin_vertices(); }
+
+/** Return an iterator past the end of the vertices. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::vertex_iterator
+directed_graph<VP,EP,VS,ES>::end_vertices() const
+{ return _verts.end_vertices(); }
+
+/** Return an iterator range over the vertices in the graph. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::vertex_range
+directed_graph<VP,EP,VS,ES>::vertices() const
+{ return _verts.vertices(); }
+
+/** Return an iterator to the first edge. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_iterator
+directed_graph<VP,EP,VS,ES>::begin_edges() const
+{
+    // Gotta handle the case where the graph is empty.
+    vertex_iterator i = begin_vertices();
+    if(i != end_vertices()) {
+        return edge_iterator(*this, i, begin_out_edges(*i));
+    }
+    else {
+        return edge_iterator(*this, i);
+    }
+}
+
+/** Return an iterator past the end of the edges. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_iterator
+directed_graph<VP,EP,VS,ES>::end_edges() const
+{ return edge_iterator(*this, end_vertices()); }
+
+/** Return an iterator range over the edges in the graph. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_range
+directed_graph<VP,EP,VS,ES>::edges() const
+{ return std::make_pair(begin_edges(), end_edges()); }
+
+/** Return an iterator to the first out edge of the given vertex. */
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::out_edge_iterator
 directed_graph<VP,EP,VS,ES>::begin_out_edges(vertex_descriptor v) const
-{
-    return out_edge_iterator(v, _verts.vertex(v).begin_out());
-}
+{ return out_edge_iterator(v, _verts.vertex(v).begin_out()); }
 
 /**
  * Return an iterator past the end of then out edges of the given vertex.
