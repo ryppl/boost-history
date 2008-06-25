@@ -45,8 +45,13 @@ struct edge_vector
     template <typename EdgeProps>
     struct property_store
     {
-        typedef SecondAlloc<EdgeProps> property_allocator;
-        typedef property_vector<EdgeProps, property_allocator > type;
+        // Define a dummy type that will eventually container iterators into
+        // an incidence container. Use this as part of the triple for each
+        // edge store - the properties and "out-facing" iterators.
+        typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
+        typedef triple<EdgeProps, dummy_type, dummy_type> property;
+        typedef SecondAlloc<property> allocator;
+        typedef property_vector<property, allocator> type;
     };
 
     // The incidence store metafunction generates the type of vector used to

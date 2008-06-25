@@ -50,8 +50,8 @@ public:
      * Add the incidence pair to the vertex.
      * @complexity O(lg(deg(v)))
      */
-    inline void add(incidence_pair p)
-    { _edges.insert(p); }
+    inline iterator add(incidence_pair p)
+    { return _edges.insert(p).first; }
 
     /**
      * Find the incidence pair.

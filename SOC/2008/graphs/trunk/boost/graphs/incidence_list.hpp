@@ -43,10 +43,10 @@ public:
      * Add a vertex to the list.
      * @complexity O(1)
      */
-    inline void add(incidence_pair p)
+    inline iterator add(incidence_pair p)
     {
         ++_size;
-        _edges.push_back(p);
+        return _edges.insert(_edges.end(), p);
     }
 
     /**

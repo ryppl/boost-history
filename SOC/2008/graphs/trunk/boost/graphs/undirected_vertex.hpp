@@ -40,7 +40,7 @@ public:
      * connection is allowed and/or already existing.
      */
     inline std::pair<iterator, bool> allow(vertex_descriptor) const;
-    inline void connect(vertex_descriptor, property_descriptor);
+    inline iterator connect(vertex_descriptor, property_descriptor);
     inline void disconnect(vertex_descriptor, property_descriptor);
     inline iterator disconnect(iterator);
 
@@ -118,10 +118,10 @@ undirected_vertex<VP,IS>::allow(vertex_descriptor v) const
  * Connect this vertex to the vertex v with edge properties p.
  */
 template <typename VP, typename IS>
-void
+typename undirected_vertex<VP,IS>::iterator
 undirected_vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
 {
-    _edges.add(make_pair(v, p));
+    return _edges.add(make_pair(v, p));
 }
 
 /**

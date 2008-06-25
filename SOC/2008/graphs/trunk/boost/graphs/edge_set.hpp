@@ -2,6 +2,9 @@
 #ifndef EDGE_SET_HPP
 #define EDGE_SET_HPP
 
+#include "triple.hpp"
+#include "placeholder.hpp"
+
 #include "property_list.hpp"
 #include "incidence_set.hpp"
 #include "out_set.hpp"
@@ -27,8 +30,10 @@ struct edge_set
     template <typename EdgeProps>
     struct property_store
     {
-        typedef SecondAlloc<EdgeProps> allocator;
-        typedef property_list<EdgeProps, allocator> type;
+        typedef placeholder<sizeof(std::list<int>::iterator)> dummy_type;
+        typedef triple<EdgeProps, dummy_type, dummy_type> property;
+        typedef SecondAlloc<property> allocator;
+        typedef property_list<property, allocator> type;
     };
 
     // The incidence store metafunction generates the per-vertex stores for

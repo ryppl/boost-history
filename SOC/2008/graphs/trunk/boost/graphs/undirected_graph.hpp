@@ -55,6 +55,8 @@ public:
     // of the vertex.
     typedef undirected_vertex<vertex_properties, incidence_store> vertex_type;
     typedef typename vertex_type::size_type incident_edges_size_type;
+    typedef undirected_edge_iterator<this_type> edge_iterator;
+    typedef std::pair<edge_iterator, edge_iterator> edge_range;
     typedef incidence_iterator<typename vertex_type::iterator> incident_edge_iterator;
     typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
 
@@ -70,7 +72,6 @@ public:
     // FIXME: This is a bit hacky, but without constrained members, we need a key
     // type to enable mapped vertices.
     typedef typename VertexStore::key_type vertex_key;
-
 
     // Constructors
     undirected_graph();
@@ -187,30 +188,23 @@ public:
     void remove_edges(vertex_key const&, vertex_key const&);
     //@}
 
-    /** @name Vertex Iteration
-     * These functions allow iteration over the vertex set.
-     */
+    /** @name Size and Degree */
+    //@{
+    vertices_size_type num_vertices() const;
+    edges_size_type num_edges() const;
+    incident_edges_size_type degree(vertex_descriptor) const;
+    //@}
+
+    /** @name Iterators */
     //@{
     vertex_range vertices() const;
     vertex_iterator begin_vertices() const;
     vertex_iterator end_vertices() const;
-    vertices_size_type num_vertices() const;
-    //@}
 
-    /** @name Edge Iteration
-     * These function allow iteration over the edge set.
-     */
-    //@{
-    // edge_range edges() const;
-    // edge_iterator begin_edges() const;
-    // edge_iterator end_edges() const;
-    edges_size_type num_edges() const;
-    //@}
+    edge_range edges() const;
+    edge_iterator begin_edges() const;
+    edge_iterator end_edges() const;
 
-    /** @name Incident Edge Iteration
-     * These functions allow iteration over the incident edges of a vertex.
-     */
-    //@{
     incident_edge_iterator begin_incident_edges(vertex_descriptor) const;
     incident_edge_iterator end_incident_edges(vertex_descriptor) const;
     incident_edge_range incident_edges(vertex_descriptor) const;
@@ -218,8 +212,6 @@ public:
     adjacent_vertex_iterator begin_adjacent_vertices(vertex_descriptor) const;
     adjacent_vertex_iterator end_adjacent_vertices(vertex_descriptor) const;
     adjacent_vertex_range adjacent_vertices(vertex_descriptor) const;
-
-    incident_edges_size_type degree(vertex_descriptor) const;
     //@}
 
     /** @name Property Accessors
@@ -230,11 +222,8 @@ public:
     edge_properties& operator[](edge_descriptor);
     //@}
 
-private:
     property_store _props;
     vertex_store _verts;
-
-    std::size_t _edges;
 };
 
 #define BOOST_GRAPH_UG_PARAMS \
@@ -382,6 +371,7 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
     // if it can be connected to the target. If so, connect them. If they're
     // connected, return the existing edge. If they can't be connected, return
     // a null descriptor.
+    reorder(u, v);
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
@@ -392,8 +382,9 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         // iterator.
         if(ins.first == src.end()) {
             property_descriptor p = _props.add(ep);
-            src.connect(v, p);
-            tgt.connect(u, p);
+            typename vertex_type::iterator i = src.connect(v, p);
+            typename vertex_type::iterator j = tgt.connect(u, p);
+            _props.bind(p, i, j);
             return edge_descriptor(u, v, p);
         }
         else {
@@ -651,6 +642,24 @@ undirected_graph<VP,EP,VS,ES>::end_vertices() const
 {
     return _verts.end_vertices();
 }
+
+/** Return an iterator to the first edge. */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_iterator
+undirected_graph<VP,EP,VS,ES>::begin_edges() const
+{ return _props.begin(); }
+
+/** Return an iterator past the end of the edges. */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_iterator
+undirected_graph<VP,EP,VS,ES>::end_edges() const
+{ return _props.end(); }
+
+/** Return an iterator range over the edges in the graph. */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_range
+undirected_graph<VP,EP,VS,ES>::edges() const
+{ return std::make_pair(begin_edges(), end_edges()); }
 
 /**
  * Return the number of iterators in this graph.

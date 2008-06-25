@@ -29,8 +29,10 @@ struct edge_list
     template <typename EdgeProps>
     struct property_store
     {
-        typedef SecondAlloc<EdgeProps> allocator;
-        typedef property_list<EdgeProps, allocator> type;
+        typedef placeholder<sizeof(typename std::list<int>::iterator)> dummy_type;
+        typedef triple<EdgeProps, dummy_type, dummy_type> property;
+        typedef SecondAlloc<property> allocator;
+        typedef property_list<property, allocator> type;
     };
 
     // The incidence store metafunction generates the per-vertex storage type

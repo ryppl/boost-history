@@ -22,57 +22,54 @@ class property_list
 {
     typedef std::list<Props, Alloc> store_type;
 public:
+    typedef Props properties_triple;
+    typedef typename Props::first_type edge_properties;
+private:
+    typedef typename Props::second_type first_iterator;
+    typedef typename Props::third_type second_iterator;
+public:
+    typedef typename store_type::const_iterator iterator;
     typedef typename store_type::size_type size_type;
-
-    typedef Props property_type;
     typedef proplist_descriptor<typename store_type::iterator> property_descriptor;
 
-    inline property_list();
+    inline property_list()
+        : _props()
+        , _size(0)
+    { }
 
     // Add properties
     inline property_descriptor add();
-    inline property_descriptor add(property_type const&);
+    inline property_descriptor add(edge_properties const&);
 
     // Remove properties
     inline void remove(property_descriptor);
 
     // Property access.
-    inline property_type& properties(property_descriptor);
+    inline edge_properties& properties(property_descriptor d)
+    { return d.iter->first; }
+
+    /** Bind iterators into the incidence lists into the global property. */
+    template <typename Iter>
+    void bind(property_descriptor d, Iter src, Iter tgt)
+    {
+        d.iter->second.put(src);
+        d.iter->third.put(tgt);
+    }
 
     /** Return the number of properties. */
     inline size_type size() const
     { return _size; }
 
+    inline iterator begin() const
+    { return _props.begin(); }
+
+    inline iterator end() const
+    { return _props.end(); }
+
 private:
     store_type  _props;
     size_type   _size;
 };
-
-// TODO: This eventually needs to be specialized for empty edges. Basically, if
-// you don't want edges, then we can just hand out integers that for each
-// edge - probably.
-#if 0
-
-/**
- * Partially specialize the property list for the case where the user does
- * not want properties. This will completely remove the property list from
- * the graph, instead creating a simple index enumerator.
- */
-template <typename Alloc>
-class property_list<none, Alloc>
-{
-public:
-    typedef std::size_t property_descriptor;
-};
-
-#endif
-
-
-template <typename P, typename A>
-property_list<P,A>::property_list()
-    : _props()
-    , _size(0)
-{ }
 
 /**
  * Add an empty or default property to the list.
@@ -81,8 +78,7 @@ template <typename P, typename A>
 typename property_list<P,A>::property_descriptor
 property_list<P,A>::add()
 {
-    ++_size;
-    return add(property_type());
+    return add(edge_properties());
 }
 
 /**
@@ -90,10 +86,11 @@ property_list<P,A>::add()
  */
 template <typename P, typename A>
 typename property_list<P,A>::property_descriptor
-property_list<P,A>::add(property_type const& p)
+property_list<P,A>::add(edge_properties const& p)
 {
     ++_size;
-    return _props.insert(_props.end(), p);
+    return _props.insert(_props.end(),
+                          make_triple(p, first_iterator(), second_iterator()));
 }
 
 /**
@@ -108,16 +105,6 @@ property_list<P,A>::remove(property_descriptor p)
 {
     --_size;
     _props.erase(p.iter);
-}
-
-/**
- * Return the properties corresponding to the given descriptor.
- */
-template <typename P, typename A>
-typename property_list<P,A>::property_type&
-property_list<P,A>::properties(property_descriptor p)
-{
-    return *p.iter;
 }
 
 /**

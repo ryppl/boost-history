@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include <boost/next_prior.hpp>
+
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
  * this stores pairs containing an adjacent vertex descriptor and a property
@@ -40,8 +42,11 @@ public:
     { return make_pair(_edges.end(), true); }
 
     /** Add the incidence pair to the vector. */
-    void add(incidence_pair p)
-    { _edges.push_back(p); }
+    iterator add(incidence_pair p)
+    {
+        _edges.push_back(p);
+        return boost::prior(_edges.end());
+    }
 
     /** Find the edge with the given vertex. */
     inline iterator find(vertex_descriptor v) const
