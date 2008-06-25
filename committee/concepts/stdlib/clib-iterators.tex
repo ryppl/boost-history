@@ -216,7 +216,7 @@ function template
 that takes iterators
 works as well with regular pointers.
 This International Standard defines
-\changedConcepts{five categories of iterators}{nine iterator concepts}, according to the operations
+\changedCCC{nine iterator concepts}{several iterator concepts}, according to the operations
 defined on them:
 \techterm{input iterators},
 \techterm{output iterators},
@@ -574,14 +574,26 @@ may permit output of many different value types.
 
 \color{addclr}
 \begin{itemdecl}
-concept OutputIterator<typename X, typename Value> : CopyConstructible<X> {
-  typename reference;
-  requires HasCopyAssign<reference, Value> && CopyAssignable<Value>;
+@\removedCC{concept OutputIterator<typename X, typename Value> :
+  CopyConstructible<X> \{}@
+@\removedCC{  typename reference;}@
+@\removedCC{  requires HasCopyAssign<reference, Value> \&\& CopyAssignable<Value>;}@
 
-  typename postincrement_result;
-  requires Dereferenceable<postincrement_result> &&
-           Convertible<postincrement_result, const X&> &&
-           HasCopyAssign<Dereferenceable<postincrement_result>::reference, Value>;
+@\removedCC{  typename postincrement_result;}@
+@\removedCC{  requires Dereferenceable<postincrement_result> \&\&}@
+@\removedCC{           Convertible<postincrement_result, const X\&> \&\&}@
+@\removedCC{ HasCopyAssign<Dereferenceable<postincrement_result>::reference,
+  Value>;}@
+
+@\addedCC{concept OutputIterator<typename X, typename Value> : SemiRegular<X> \{}@
+@\addedCC{  MoveConstructible reference;}@
+@\addedCC{  requires HasAssign<reference, Value> \&\& MoveAssignable<Value>;}@
+
+@\addedCC{  MoveConstructible postincrement_result;}@
+@\addedCC{  requires Dereferenceable<postincrement_result> \&\&}@
+@\addedCC{                Convertible<postincrement_result, const X\&> \&\&}@
+@\addedCC{                HasAssign<Dereferenceable<postincrement_result>::reference, Value>;}@
+
 
   reference operator*(X&);
   X& operator++(X&);
@@ -620,16 +632,27 @@ hierarchy.
 
 \color{addclr}
 \begin{itemdecl}
-concept BasicOutputIterator<typename X> : CopyConstructible<X> {
-  ObjectType value_type = typename X::value_type;
-  MoveConstructible reference = typename X::reference; 
+@\removedCC{concept BasicOutputIterator<typename X> : CopyConstructible<X> \{}@
+@\removedCC{  ObjectType value_type = typename X::value_type;}@
+@\removedCC{  MoveConstructible reference = typename X::reference; }@
 
-  requires HasCopyAssign<reference, value_type> && CopyAssignable<value_type>;
+@\removedCC{  requires HasCopyAssign<reference, value_type> \&\& CopyAssignable<value_type>;}@
 
-  typename postincrement_result;
-  requires Dereferenceable<postincrement_result> &&
-           HasCopyAssign<Dereferenceable<postincrement_result>::reference, value_type> &&
-           Convertible<postincrement_result, const X&>;
+@\removedCC{  typename postincrement_result;}@
+@\removedCC{  requires Dereferenceable<postincrement_result> \&\&}@
+@\removedCC{           HasCopyAssign<Dereferenceable<postincrement_result>::reference, value_type> \&\&}@
+@\removedCC{           Convertible<postincrement_result, const X\&>;}@
+
+@\addedCC{concept BasicOutputIterator<typename X> : SemiRegular<X> \{}@
+@\addedCC{  typename ObjectType value_type = typename X::value_type;}@
+@\addedCC{  MoveConstructible reference = typename X::reference;}@
+  
+@\addedCC{  requires HasAssign<reference, value_type\&\&>;}@
+
+@\addedCC{  MoveConstructible postincrement_result;}@
+@\addedCC{  requires Dereferenceable<postincrement_result> \&\&}@
+@\addedCC{                HasAssign<Dereferenceable<postincrement_result>::reference, value_type\&\&> \&\&}@
+@\addedCC{                Convertible<postincrement_result, const X\&>;}@
 
   @\textcolor{addclr}{}@reference operator*(X&);
   X& operator++(X&);
@@ -671,8 +694,8 @@ value types copy-assignable to its
 
 \color{addclr}
 \begin{itemdecl}
-template<BasicOutputIterator X, CopyAssignable Value>
-requires CopyAssignable<X::reference, Value>
+template<BasicOutputIterator X, @\changedCCC{CopyAssignable}{MoveAssignable}@ Value>
+requires @\changedCCC{CopyAssignable}{HasAssign}@<X::reference, Value>
 concept_map OutputIterator<X, Value> {
   typedef X::reference                reference;
   typedef X::postincrement_result     postincrement_result;
@@ -715,7 +738,7 @@ concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIter
 \editorial{The \tcode{ForwardIterator} concept here provides weaker
   requirements on the \tcode{reference} and \tcode{pointer} types than
   the associated requirements table in C++03, because these types do
-  not need do not need to be true references or pointers to
+  not need \removedCC{do not need} to be true references or pointers to
   \tcode{value_type}. This change weakens the concept, meaning that
   C++03 iterators (which meet the stronger requirements) still meet
   these requirements, but algorithms that relied on these stricter
@@ -924,7 +947,7 @@ concept map
 @\textcolor{addclr}{}@namespace std {
   template<ObjectType T> concept_map MutableRandomAccessIterator<T*> {
     typedef T value_type;
-    typedef std::ptrdiff_t difference_type;
+    typedef @\removedCC{std::}@ptrdiff_t difference_type;
     typedef T& reference;
     typedef T* pointer;
   }
@@ -937,7 +960,7 @@ and pointers to const are random access iterators
 namespace std {
   template<ObjectType T> concept_map RandomAccessIterator<const T*> {
     typedef T value_type;
-    typedef std::ptrdiff_t difference_type;
+    typedef @\removedCC{std::}@ptrdiff_t difference_type;
     typedef const T& reference;
     typedef const T* pointer;
   }
@@ -1209,7 +1232,7 @@ concept map for \tcode{InputIterator} does not match because
 \tcode{iterator_traits<int>} fails to provide the required nested
 types. 
 \begin{codeblock}
-@\color{addclr}@template<Integral T> void f(T);
+@\color{addclr}@template<@\changedCCC{Integral}{IntegralLike}@ T> void f(T);
 template<InputIterator T> void f(T);
 
 void g(int x) {
