@@ -109,11 +109,11 @@ In general
  
 25.3.3.3
 
-- Decided that not an issues of operator semantic requirements stated in text as reqs are restricted to a specific set of values not the types in general.
+N - Decided that not an issues of operator semantic requirements stated in text as reqs are restricted to a specific set of values not the types in general.
 
 25.3.4
 
-- merge Predicate wants to go to StrictWeakOrdering even though three type. Look at SameType requirement. Look for this going forward.
+Y - merge Predicate wants to go to StrictWeakOrdering even though three type. Look at SameType requirement. Look for this going forward.
 
 25.3.6.1
 25.3.6.3
@@ -122,13 +122,13 @@ In general
 
 25.3.6.5
 
-First is_heap_until is missing LessThanComparable requirement
+Y - First is_heap_until is missing LessThanComparable requirement
 
 25.3.7
 
 max/min/minmax
 
-- Make Predicate > StrictWeakOrdering move T -> T const&
+Y - Make Predicate > StrictWeakOrdering move T -> T const&
 
 - We do not know how to handle one of the the variadic versions.
 
