@@ -48,7 +48,7 @@
 \begin{center}
 \huge
 Iterator Concepts for the C++0x Standard Library\\
-(Revision 2)
+(Revision 3)
 \vspace{0.5in}
 
 \normalsize
@@ -57,8 +57,8 @@ Douglas Gregor, Jeremy Siek and Andrew Lumsdaine \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2624=08-0134 \vspace{-6pt}
-\par\noindent Revises document number: N2570=08-0080 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2624=08-0134 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -145,7 +145,7 @@ namespace std {
   concept OutputIterator<typename X, typename Value> @\textit{see below}@;
   concept BasicOutputIterator<typename X> @\textit{see below}@;
 
-  template<BasicOutputIterator X, @\changedCC{typename}{CopyAssignable}@ Value>
+  template<BasicOutputIterator X, CopyAssignable Value>
     requires HasCopyAssign<X::reference, Value>
     concept_map OutputIterator<X, Value> @\textit{see below}@;
 
@@ -403,22 +403,22 @@ requirements of the }\addedConcepts{\tt InputIterator}\addedConcepts{ concept.}
 \color{addclr}
 \begin{codeblock}
 concept InputIterator<typename X> : Semiregular<X>, EqualityComparable<X> {
-  @\changedCC{typename}{ObjectType}@ value_type = typename X::value_type;
+  ObjectType value_type = typename X::value_type;
   MoveConstructible reference = typename X::reference; 
   MoveConstructible pointer = typename X::pointer;
 
-  SignedIntegral@\addedCC{Like}@ difference_type = typename X::difference_type;
+  SignedIntegralLike difference_type = typename X::difference_type;
 
-  requires @\addedCC{IntegralType<difference_type>}@
-        && Convertible<reference, value_type @\addedCC{const \&}@>;
+  requires IntegralType<difference_type>
+        && Convertible<reference, const value_type &>;
         @\textcolor{addclr}{}@&& Convertible<pointer, const value_type*>;
 
   MoveConstructible postincrement_result;
   requires Dereferenceable<postincrement_result> &&
            @\textcolor{addclr}{}@Convertible<Dereferenceable<postincrement_result>::reference, value_type>;
 
-  reference operator*(X @\addedCC{const\&}@);
-  pointer operator->(X @\addedCC{const\&}@);
+  reference operator*(const X&);
+  pointer operator->(const X&);
   X& operator++(X&);
   postincrement_result operator++(X&, int);
 }
@@ -476,7 +476,7 @@ class.
 
 \color{addclr}
 \begin{itemdecl}
-reference operator*(X @\addedCC{const\&}@ @\farg{a}@);
+reference operator*(const X& @\farg{a}@);
 \end{itemdecl}
 
 \pnum
@@ -495,7 +495,7 @@ If \tcode{b} is a value of type \tcode{X}, \tcode{a == b} and
 then \tcode{*a} is equivalent to \tcode{*b}.
 
 \begin{itemdecl}
-pointer operator->(X @\addedCC{const\&}@ a);
+pointer operator->(const X& a);
 \end{itemdecl}
 
 \pnum
@@ -504,7 +504,7 @@ pointer operator->(X @\addedCC{const\&}@ a);
   the iterator
 
 \begin{itemdecl}
-@\addedCC{bool operator==(X const\& a, X const\& b); // inherited from EqualityComparable<X>}@
+bool operator==(const X& a, const X& b); // inherited from EqualityComparable<X>
 \end{itemdecl}
 
 \pnum
@@ -532,7 +532,7 @@ postincrement_result operator++(X& r, int);
 
 \pnum
 \effects\
-\addedCC{equivalent to \mbox{\tcode{\{ T tmp = *r; ++r; return tmp; \}}}.}
+equivalent to \mbox{\tcode{\{ T tmp = *r; ++r; return tmp; \}}}.
 
 \end{paras}
 
@@ -576,7 +576,7 @@ may permit output of many different value types.
 \begin{itemdecl}
 concept OutputIterator<typename X, typename Value> : CopyConstructible<X> {
   typename reference;
-  requires HasCopyAssign<reference, Value> \@addedCC{\&\& CopyAssignable<Value>}@;
+  requires HasCopyAssign<reference, Value> && CopyAssignable<Value>;
 
   typename postincrement_result;
   requires Dereferenceable<postincrement_result> &&
@@ -621,10 +621,10 @@ hierarchy.
 \color{addclr}
 \begin{itemdecl}
 concept BasicOutputIterator<typename X> : CopyConstructible<X> {
-  @\changedCC{typename}{ObjectType}@ value_type = typename X::value_type;
+  ObjectType value_type = typename X::value_type;
   MoveConstructible reference = typename X::reference; 
 
-  requires HasCopyAssign<reference, value_type> @\addedCC{\&\& CopyAssignable<value_type>}@;
+  requires HasCopyAssign<reference, value_type> && CopyAssignable<value_type>;
 
   typename postincrement_result;
   requires Dereferenceable<postincrement_result> &&
@@ -671,7 +671,7 @@ value types copy-assignable to its
 
 \color{addclr}
 \begin{itemdecl}
-template<BasicOutputIterator X, @\changedCC{typename}{CopyAssignable}@ Value>
+template<BasicOutputIterator X, CopyAssignable Value>
 requires CopyAssignable<X::reference, Value>
 concept_map OutputIterator<X, Value> {
   typedef X::reference                reference;
@@ -698,11 +698,11 @@ MutableForwardIterator concepts.}
 concept ForwardIterator<typename X> : InputIterator<X>, Regular<X> {
   requires Convertible<postincrement_result, const X&>;
 
-  @\addedCC{axiom MultiPass(X a, X b) \{}@
-    @\addedCC{if (a == b) *a == *b;}@
-    @\addedCC{if (a == b) ++a == ++b;}@
-    @\addedCC{\&a == \&++a;}@
-  @\addedCC{\}}@
+  axiom MultiPass(X a, X b) {
+    if (a == b) *a == *b;
+    if (a == b) ++a == ++b;
+    &a == &++a;
+  }
 }
 
 concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIterator<X> { 
@@ -726,26 +726,12 @@ concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIter
   random access iterator concepts.}
 
 \begin{itemdecl}
-@\addedCC{X::X(); // inherited from Regular<X>}@
+X::X(); // inherited from Regular<X>
 \end{itemdecl}
 
 \begin{itemdescr}
-  \pnum \addedCC{\mbox{\reallynote} the constructed object might have
+  \pnum \addedConcepts{\mbox{\reallynote} the constructed object might have
     a singular value.}
-\end{itemdescr}
-
-\begin{itemdecl}
-@\removedCC{reference operator*(X\&);}@
-@\removedCC{reference operator*(X const\&);}@
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\removedCC{\mbox{\requires} If two iterators \mbox{\tcode{a}} and
-  \mbox{\tcode{b}} of the same type are both dereferenceable, then
-  \mbox{\tcode{a == b}} if and only if \mbox{\tcode{*a}} and
-  \mbox{\tcode{*b}} are the same object.}
-
 \end{itemdescr}
 
 \textcolor{black}{}\pnum
@@ -786,11 +772,11 @@ concept BidirectionalIterator<typename X> : ForwardIterator<X> {
   X& operator--(X&);
   postdecrement_result operator--(X&, int);
 
-  @\addedCC{axiom BackwardTraversal(X a, X b) \{}@
+  axiom BackwardTraversal(X a, X b) {
     --(++a) == a;
     if (--a == --b) a == b;
     &a == &--a;
-  @\addedCC{\}}@
+  }
 }
 
 concept MutableBidirectionalIterator<typename X> 
@@ -846,13 +832,13 @@ the following expressions are valid as shown in Table~99.}
 \begin{itemdecl}
 concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanComparable<X> {
   X& operator+=(X&, difference_type);
-  X  operator+ (X @\addedCC{const\&}@, difference_type);
-  X  operator+ (difference_type, X@\addedCC{const\&}@);
+  X  operator+ (const X&, difference_type);
+  X  operator+ (difference_type, const X&);
   X& operator-=(X&, difference_type);
-  X  operator- (X @\addedCC{const\&}@, difference_type);
+  X  operator- (const X&, difference_type);
 
-  difference_type operator-(X @\addedCC{const\&}@, X @\addedCC{const\&}@);
-  reference operator[](X @\addedCC{const\&}@, difference_type);
+  difference_type operator-(const X&, const X&);
+  reference operator[](const X&, difference_type);
 }
 
 concept MutableRandomAccessIterator<typename X>
@@ -878,8 +864,8 @@ equivalent to
 \end{codeblock}
 
 \begin{itemdecl}
-X operator+(X @\addedCC{const\&}@ a, difference_type n);
-X operator+(difference_type n, X @\addedCC{const\&}@ a);
+X operator+(const X& a, difference_type n);
+X operator+(difference_type n, const X& a);
 \end{itemdecl}
 
 \pnum
@@ -903,7 +889,7 @@ return tmp += n; }
 \tcode{r += -n}
 
 \begin{itemdecl}
-X operator-(X @\addedCC{const\&}@ a, difference_type n);
+X operator-(const X& a, difference_type n);
 \end{itemdecl}
 
 \pnum
@@ -915,7 +901,7 @@ equivalent to
 \end{codeblock}
 
 \begin{itemdecl}
-difference_type operator-(X @\addedCC{const\&}@ a, X @\addedCC{const\&}@ b);
+difference_type operator-(const X& a, const X& b);
 \end{itemdecl}
 
 \pnum
@@ -999,12 +985,12 @@ concept.}
 \color{addclr}
 \begin{itemdecl}
 auto concept SwappableIterator<typename X> {
-  void iter_swap(X @\addedCC{const\&}@, X @\addedCC{const\&}@);
+  void iter_swap(const X&, const X&);
 }
 \end{itemdecl}
 
 \begin{itemdecl}
-void iter_swap(X @\addedCC{const\&}@ a, X  @\addedCC{const\&}@ b);
+void iter_swap(const X& a, const X& b);
 \end{itemdecl}
 \color{black}
 
