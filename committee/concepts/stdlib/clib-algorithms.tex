@@ -167,7 +167,8 @@ namespace std {
   template<ForwardIterator Iter>
     requires EqualityComparable<Iter::reference>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
+  template<ForwardIterator Iter, 
+           Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter, class T>
@@ -271,7 +272,8 @@ namespace std {
     requires HasCopyAssign<Iter::reference, T>
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
-  template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, class T>
+  template<InputIterator InIter, 
+           OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, class T>
     requires HasCopyAssign<OutIter::reference, T> && HasEqualTo<InIter::reference, T>
     OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@,
@@ -318,7 +320,8 @@ namespace std {
   template<ForwardIterator Iter>
     requires MoveAssignable<Iter::reference> && EqualityComparable<Iter::reference>
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
+  template<ForwardIterator Iter, 
+           Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
     requires MoveAssignable<Iter::reference>
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
                 Pred @\farg{pred}@);
@@ -376,7 +379,8 @@ namespace std {
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@);
   template<RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
-    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && Convertible<Rand::result_type, Iter::difference_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
+          && Convertible<Rand::result_type, Iter::difference_type>
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
                         Rand& @\farg{rand}@);
@@ -400,7 +404,7 @@ namespace std {
              LessThanComparable<Iter::value_type> 
     void sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-            @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void sort(Iter @\farg{first}@, Iter @\farg{last}@,
               Compare @\farg{comp}@);
@@ -410,7 +414,7 @@ namespace std {
              LessThanComparable<Iter::value_type> 
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
@@ -422,7 +426,7 @@ namespace std {
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-    @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
@@ -449,13 +453,15 @@ namespace std {
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
     bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  template<ForwardIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
     Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  template<ForwardIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
                          Compare @\farg{comp}@);
 
@@ -464,10 +470,11 @@ namespace std {
              LessThanComparable<Iter::value_type>
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@);
-%% Revisit (mmarcus): not sure how to handle formatting for multiline replace here
-  template<@\changedCCC{SwappableIterator<Iter>}{RandomAccessIterator Iter, 
-           StrictWeakOrder<auto, Iter::value_type> Compare>
-    requires Swappable<Iter::reference>}@
+  template<@\changedCCC{SwappableIterator<Iter>}{RandomAccessIterator Iter}@, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
+    requires @\removedCCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+             @\removedCCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+             @\addedCC{Swappable<Iter::reference>}@
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@,  Compare @\farg{comp}@);
 
@@ -523,7 +530,7 @@ namespace std {
                   OutIter @\farg{result}@);
   @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -536,7 +543,7 @@ namespace std {
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
@@ -548,7 +555,7 @@ namespace std {
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<InputIterator Iter1, InputIterator Iter2, 
-           @\changedCCC{Predicate<auto, Iter1::value_type, Iter2::value_type>}{StrictWeakOrder<auto, Iter1::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter1::value_type@\removedCCC{, Iter2::value_type}@> Compare>
     requires SameType<Iter1::value_type, Iter2::value_type>
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
@@ -563,7 +570,7 @@ namespace std {
                       OutIter @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -578,7 +585,7 @@ namespace std {
                              OutIter @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                              InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -593,7 +600,7 @@ namespace std {
                            @\textcolor{addclr}{OutIter}@ @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -608,7 +615,7 @@ namespace std {
                                      OutIter @\farg{result}@);
   template<InputIterator InIter1, InputIterator InIter2,
            OutputIterator<auto, InIter1::value_type> OutIter, 
-           @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
     requires SameType<InIter1::value_type, InIter2::value_type>
     OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -620,35 +627,37 @@ namespace std {
              LessThanComparable<Iter::value_type>
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
+          && LessThanComparable<Iter::value_type>
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                   Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
-             LessThanComparable<Iter::value_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
+          && LessThanComparable<Iter::value_type>
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
+    requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ 
+          && LessThanComparable<Iter::value_type>
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
@@ -656,12 +665,14 @@ namespace std {
   template<RandomAccessIterator Iter>
     requires LessThanComparable<Iter::value_type>
     bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  template<RandomAccessIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<RandomAccessIterator Iter>
     @\addedCC{requires LessThanComparable<Iter::value_type>}@
     Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  template<RandomAccessIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@,
                        Compare @\farg{comp}@);
 
@@ -703,22 +714,25 @@ namespace std {
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::reference>
     Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  template<ForwardIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
     Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::reference>
     Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+  template<ForwardIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
     Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<ForwardIterator Iter>
     requires LessThanComparable<Iter::value_type>
     pair<Iter, Iter>
-      @\textcolor{addclr}{}@minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
-  template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+      minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
+  template<ForwardIterator Iter, 
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     pair<Iter, Iter>
       minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 
@@ -741,7 +755,7 @@ namespace std {
              @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
     bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     @\textcolor{addclr}{}@bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
   template<BidirectionalIterator Iter>
@@ -749,7 +763,7 @@ namespace std {
              @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
-           @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 }
@@ -1103,7 +1117,8 @@ template<ForwardIterator Iter>
   requires @\changedCCC{HasEqualTo}{EqualityComparable}@<Iter::reference>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
+template<ForwardIterator Iter, 
+         Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -2237,7 +2252,8 @@ template<RandomAccessIterator Iter>
                       Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
-  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && Convertible<Rand::result_type, Iter::difference_type>
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
+        && Convertible<Rand::result_type, Iter::difference_type>
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@,
                       Rand&& @\farg{rand}@);
@@ -2407,7 +2423,8 @@ template<RandomAccessIterator Iter>
            LessThanComparable<Iter::value_type> 
   void sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void sort(Iter @\farg{first}@, Iter @\farg{last}@,
             Compare @\farg{comp}@);
@@ -2450,7 +2467,8 @@ template<RandomAccessIterator Iter>
            LessThanComparable<Iter::value_type> 
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
@@ -2488,13 +2506,13 @@ Stable.
 \index{partial_sort@\tcode{partial_sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ &&
+  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && 
            LessThanComparable<Iter::value_type>
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@);
-
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
@@ -2605,7 +2623,8 @@ template<ForwardIterator Iter>
 \index{is_sorted@\tcode{is_sorted}}%
 \color{addclr}
 \begin{itemdecl}
-template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<ForwardIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
 \end{itemdecl}
@@ -2622,7 +2641,8 @@ template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, It
 template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
   Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@);
-template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<ForwardIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
                        Compare @\farg{comp}@);
 \end{itemdecl}
@@ -2649,9 +2669,11 @@ template<RandomAccessIterator Iter>
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, 
-         @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
+template<@\changedCCC{SwappableIterator<Iter>}{RandomAccessIterator Iter}@, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
+  requires @\removedCCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
+           @\removedCCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
+           @\addedCC{Swappable<Iter::reference>}@
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@,  Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -2941,11 +2963,9 @@ comparisons.
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                 OutIter @\farg{result}@);
 
-% revisit (mmarcus): not sure if changedCCC after texcolor is right
-% way to go here
 @\textcolor{addclr}{template}@<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         @\textcolor{addclr}{}@@\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3004,7 +3024,7 @@ template<BidirectionalIterator Iter>
                      Iter @\farg{last}@);
 
 template<BidirectionalIterator Iter, 
-         @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
@@ -3085,7 +3105,7 @@ template<InputIterator Iter1, InputIterator Iter2>
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, InputIterator Iter2, 
-         @\changedCCC{Predicate<auto, Iter1::value_type, Iter2::value_type>}{StrictWeakOrder<auto, Iter1::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter1::value_type@\removedCCC{, Iter2::value_type}@> Compare>
   requires SameType<Iter1::value_type, Iter2::value_type>
   bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
@@ -3125,7 +3145,7 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         @\changedCCC{Predicate<auto, InIter1::value_type, InIter2::value_type>}{StrictWeakOrder<auto, InIter1::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3174,9 +3194,7 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         @\changedCCC{Predicate<auto, InIter1::value_type,
-           InIter2::value_type>}{StrictWeakOrder<auto, 
-           InIter1::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3224,12 +3242,10 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         @\changedCCC{Predicate<auto, InIter1::value_type,
-           InIter2::value_type>}{StrictWeakOrder<auto,
-           InIter1::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
-                         @\textcolor{addclr}{}@InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
+                         InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                          OutIter @\farg{result}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
@@ -3287,9 +3303,7 @@ template<InputIterator InIter1, InputIterator InIter2,
 
 template<InputIterator InIter1, InputIterator InIter2,
          OutputIterator<auto, InIter1::value_type> OutIter, 
-         @\changedCCC{Predicate<auto, InIter1::value_type,
-           InIter2::value_type>}{StrictWeakOrder<auto,
-           InIter1::value_type>}@ Compare>
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, InIter1::value_type@\removedCCC{, InIter2::value_type}@> Compare>
   requires SameType<InIter1::value_type, InIter2::value_type>
   OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
@@ -3375,7 +3389,8 @@ template<RandomAccessIterator Iter>
            LessThanComparable<Iter::value_type>
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
@@ -3415,7 +3430,8 @@ template<RandomAccessIterator Iter>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                 Compare @\farg{comp}@);
@@ -3460,7 +3476,8 @@ template<RandomAccessIterator Iter>
            LessThanComparable<Iter::value_type>
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
@@ -3494,7 +3511,8 @@ template<RandomAccessIterator Iter>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@ && LessThanComparable<Iter::value_type>
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
@@ -3540,8 +3558,9 @@ template<RandomAccessIterator Iter>
 
 \color{addclr}
 \begin{itemdecl}
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
-  bool is_heap(Iter first, Iter last, Compare comp);
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
+  bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}
 \color{black}
 
@@ -3554,9 +3573,10 @@ template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_typ
 \begin{itemdecl}
 template<RandomAccessIterator Iter>
   Iter is_heap_until(Iter first, Iter last);
-template<RandomAccessIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
-  Iter is_heap_until(Iter first, Iter last,
-                     Compare comp);
+template<RandomAccessIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
+  Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@,
+                     Compare @\farg{comp}@);
 \end{itemdecl}
 \color{black}
 
@@ -3845,7 +3865,8 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::reference>
   Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<ForwardIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
   Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3883,7 +3904,8 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::reference>
   Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<ForwardIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
   Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
@@ -3922,7 +3944,8 @@ template<ForwardIterator Iter>
   requires LessThanComparable<Iter::value_type>
   pair<Iter, Iter>
     minmax_element(Iter @\farg{first}@, Iter @\farg{last}@);
-template<ForwardIterator Iter, @\changedCCC{Predicate<auto, Iter::value_type, Iter::value_type>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<ForwardIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   pair<Iter, Iter>
     minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}
@@ -4010,9 +4033,10 @@ template<BidirectionalIterator Iter>
            @\textcolor{addclr}{LessThanComparable}@<Iter::reference>
   bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<BidirectionalIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<BidirectionalIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
-  @\textcolor{addclr}{bool}@ next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
+  @\textcolor{addclr}{}@bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
 
 \begin{itemdescr}
@@ -4050,7 +4074,8 @@ template<BidirectionalIterator Iter>
            @\textcolor{addclr}{}@LessThanComparable<Iter::reference>
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@);
 
-template<BidirectionalIterator Iter, @\changedCCC{Predicate<auto, Iter::reference, Iter::reference>}{StrictWeakOrder<auto, Iter::value_type>}@ Compare>
+template<BidirectionalIterator Iter, 
+         @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::@\changedCCC{reference}{value_type}@@\removedCCC{, Iter::reference}@> Compare>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@);
 \end{itemdecl}\color{black}
