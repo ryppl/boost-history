@@ -1,3 +1,22 @@
+Explanation:
+
+This was the third (and final) version of Thomas's list from SA.
+
+I believe the legend is:
+ unmarked lines have status "open"
+ lines beginning with a "Y" have been applied to the tex sources
+ lines marked with an "N" are determined to be non-defects
+
+Maybe we could mark changes that need to be applied but have not yet
+with a lower case 'y'.
+
+I will annotate lines as they are applied to the tex sources, and
+commit this file together with associated changes as single
+transactions.
+
+Doug
+
+
 
 N2625 Issues cont.
 ============
@@ -6,7 +25,7 @@ In general
   - Is only requiring Swappable<Iter::reference> and not MoveConstructible, MoveAssignable precluding
 useful/efficient algorithm implementations?
 
-- Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
+Y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
   strict weak ordering. E.g. sort. (Key of LessThanComparable)
 
 - stable_partition, stable_sort, partial_sort requirements not sufficient for efficient implementation. See reference to extra memory.
@@ -16,7 +35,7 @@ useful/efficient algorithm implementations?
 
 
 25.2.10/3 
-  - s/InIter::value_type/InIter::reference/
+Y  - s/InIter::value_type/InIter::reference/
 
 25.2.11 
   - Do rotate requirements provide enough latitude to allow todays optimizations based on iterator categories.
@@ -32,7 +51,7 @@ useful/efficient algorithm implementations?
   - Why was the specification for rand's semantics removed. I.e. returns random number in the range (0,n]
 
 25.2.13
-  - Typo stable_partion declaration  s/Predicate<auto Iter::reference>/Predicate<auto, Iter::reference>/
+Y  - Typo stable_partion declaration  s/Predicate<auto Iter::reference>/Predicate<auto, Iter::reference>/
 
 25.3.1.1
  - s/Iter::value_type/Iter::reference/g

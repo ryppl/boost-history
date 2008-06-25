@@ -389,7 +389,7 @@ namespace std {
   template<BidirectionalIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
     @\color{addclr}@requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
-  template<BidirectionalIterator Iter, Predicate<auto Iter::@\changedCCC{reference}{value_type}@> Pred>
+  template<BidirectionalIterator Iter, Predicate<auto@\addedCC{,}@ Iter::@\changedCCC{reference}{value_type}@> Pred>
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
@@ -2346,7 +2346,7 @@ applications of the predicate are done.
 
 \index{stable_partition@\tcode{stable_partition}}%
 \color{addclr}\begin{itemdecl}
-template<BidirectionalIterator Iter, Predicate<auto Iter::@\changedCCC{reference}{value_type}@> Pred>
+template<BidirectionalIterator Iter, Predicate<auto@\addedCC{,}@ Iter::@\changedCCC{reference}{value_type}@> Pred>
   requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
   Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
