@@ -22,54 +22,58 @@ N2625 Issues cont.
 ============
 
 In general
-  - Is only requiring Swappable<Iter::reference> and not MoveConstructible, MoveAssignable precluding
+y  - Is only requiring Swappable<Iter::reference> and not MoveConstructible, MoveAssignable precluding
 useful/efficient algorithm implementations?
 
 Y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
   strict weak ordering. E.g. sort. (Key of LessThanComparable)
 
-- stable_partition, stable_sort, partial_sort requirements not sufficient for efficient implementation. See reference to extra memory.
+y - stable_partition, stable_sort, partial_sort requirements not sufficient for efficient implementation. See reference to extra memory.
      Possible need to retain second line of removed requirements.
 
-- Check for need of NoThrowDestructible
+y - Check for need of NoThrowDestructible
 
 
 25.2.10/3 
 Y  - s/InIter::value_type/InIter::reference/
 
 25.2.11 
-  - Do rotate requirements provide enough latitude to allow todays optimizations based on iterator categories.
-  - Is requiring Swappable overconstraining the implementation? I.e. there are algorithms that do not require a swap function.
+y  - Do rotate requirements provide enough latitude to allow todays optimizations based on iterator categories.
+N  - Is requiring Swappable overconstraining the implementation? I.e. there are algorithms that do not require a swap function.
+     (Doug's reply: we agreed on the -lib reflector to have MoveConstructible+MoveAssignable+Swappable requirements for most algorithms, to give implementors more lattitude.)
 
 25.2.11
-  - Should we s/InIter::value_type/InIter::reference/ for rotate_copy.
+y  - Should we s/InIter::value_type/InIter::reference/ for rotate_copy.
 
 25.2.12
-  - random_shuffle third overload not finished.
+y  - random_shuffle third overload not finished.
+    (Doug's reply: we need concepts for the new random numbers library before we can add concept requirements here).
 
 25.2.12/4
-  - Why was the specification for rand's semantics removed. I.e. returns random number in the range (0,n]
+y  - Why was the specification for rand's semantics removed. I.e. returns random number in the range (0,n]
 
 25.2.13
 Y  - Typo stable_partion declaration  s/Predicate<auto Iter::reference>/Predicate<auto, Iter::reference>/
 
 25.3.1.1
- - s/Iter::value_type/Iter::reference/g
+N - s/Iter::value_type/Iter::reference/g
 
 25.3.1.2
- - s/Iter::value_type/Iter::reference/g
+N - s/Iter::value_type/Iter::reference/g
 
 25.3.1.3
- - s/Iter::value_type/Iter::reference/g
+N - s/Iter::value_type/Iter::reference/g
 
 25.3.1.4
 
 First overload
 
- - s/Iter::value_type/Iter::reference/g
+y - s/Iter::value_type/Iter::reference/g
+    (Doug: this only applies to the HasCopyAssign, which will actually be a HasAssign)
  - Do we need HasLess 1 & 2 ? gcc does not have 2
- - partial_sort_copy single parameter HasLess requirement to be replaced with LessThanComparable concept.
- - Add Requirements clause:
+    (Doug: I'm undecided; do implementors need this freedom? In reality, we might just want to force the value_types to be the same. This routine is insane without that requirement.)
+N - partial_sort_copy single parameter HasLess requirement to be replaced with LessThanComparable concept.
+N - Add Requirements clause:
      *in < *res == RAIter::reference(*in) < *res
      *res < *in == *res < RAIter::reference(*in) 
 
@@ -77,30 +81,33 @@ First overload
 
 Second overload
 
- - s/Iter::value_type/Iter::reference/g
+y - s/Iter::value_type/Iter::reference/g
+   (Doug: again, only for the HasCopyAssign)
  - Do we need Predicate 1 & 2 ?
- - partial_sort_copy two parameter Predicate requirement to be replaced with StrictWeakOrdering concept.
- - Add Requirements clause:
+   (Doug: only if implementors need this freedom.)
+Y - partial_sort_copy two parameter Predicate requirement to be replaced with StrictWeakOrdering concept.
+N - Add Requirements clause:
      comp(*in, *res) == comp(RAIter::reference(*in), *res)
      comp(*res, *in) == comp(*res, RAIter::reference(*in)) 
 
 - operator semantic requirements stated in text
-
+  (Doug: not sure what this means. Do we still need to say something?)
 ===================================================================
 2008/06/11
 
 In general
 
-- s/Iter::value_type/Iter::reference/g clear up value reference issue. Proxy iterators and such
+y - s/Iter::value_type/Iter::reference/g clear up value reference issue. Proxy iterators and such
 
-- Do we always need semantic concepts in the function declaration.
+y - Do we always need semantic concepts in the function declaration.
+  (Doug: Where the semantics make sense, yes)
 
-- Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
+y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
   strict weak ordering. E.g. sort. (Key of LessThanComparable)
 
-- Whereever we find MutableIter it's probably wrong.
+y - Whereever we find MutableIter it's probably wrong.
 
-- Make sure Predicate takes value_type const&. See InputIterator value_type convertability requirements. Same is true for every use of value_type in concepts. Note that LessThanComparable already adds it.
+Y - Make sure Predicate takes value_type const&. See InputIterator value_type convertability requirements. Same is true for every use of value_type in concepts. Note that LessThanComparable already adds it.
 
 - Do we want to bundle MoveConstructible MoveAssingable Swappable. Howard prefers not to.  
 
@@ -141,6 +148,7 @@ No need to make these Exchangable
 =============================
 
 N2621
+(Doug: Note that we're not touching this one now that the LWG has approved it)
 
 N = All Notes should be remarks probably or even better no qualifier. 
 
@@ -273,16 +281,16 @@ Y = TriviallyDefaultConstructible is declared in Synopsis but not defined later.
 
 N2624
 
-- Revisit the issue of MutableXXIterator. Is it needed? Is it overconstrained?
+y - Revisit the issue of MutableXXIterator. Is it needed? Is it overconstrained?
 
-- check whether changes affect synopsis.
+y - check whether changes affect synopsis.
 
-- check whether we can use Incrementable, Decrementable
+y - check whether we can use Incrementable, Decrementable
 
 24.1/3
 
 Y - Replace nine iterator concepts -> several iter concepts
-- Remove swappable iterators (Do this everywhere)
+y - Remove swappable iterators (Do this everywhere)
 
 24.1.2
 
@@ -313,7 +321,8 @@ concept BasicOutputIterator<typename X> : SemiRegular<X> {
                 Convertible<postincrement_result, const X&>;
 
 
-- Consider removing duplication between BasicOIter and OIter by using refinement
+y - Consider removing duplication between BasicOIter and OIter by using refinement
+  (Doug: We've failed before when trying to do this, but maybe it's still possible)
 
 Y - Replace 
 
@@ -326,21 +335,22 @@ concept_map OutputIterator<X, Value> {
 
 24.1.3
 
-- Remove axiom &a == &++a and replace with normative text.
+y - Remove axiom &a == &++a and replace with normative text.
 
-- Add SameType<ForwardIterator<X>::postincrement_result, BasicOutputIterator<X>::postincrement_result> to MutableForwardIterator requirements
+y - Add SameType<ForwardIterator<X>::postincrement_result, BasicOutputIterator<X>::postincrement_result> to MutableForwardIterator requirements
 
 Y - Typo in comment "do not need do not need".
 
 24.1.4
 
-- Convertible<Dereferenceable<postdecrement_result>::reference, value_type> -> Convertible<Dereferenceable<postdecrement_result>::reference, value_type&>
+y - Convertible<Dereferenceable<postdecrement_result>::reference, value_type> -> Convertible<Dereferenceable<postdecrement_result>::reference, value_type&>
+  (Doug: that should be convertible to a const value_type&, shouldn't it? Check 03)
 
-- Remove axiom &a == &--a and replace with normative text.
+y - Remove axiom &a == &--a and replace with normative text.
 
 24.1.5
 
--  [random.access.iterators], concept RandomAccessIterator:
+y -  [random.access.iterators], concept RandomAccessIterator:
 The member description of
 
 X& operator+=(X& r, difference_type m);
@@ -348,8 +358,8 @@ X& operator+=(X& r, difference_type m);
 should replace m, by n, otherwise the following effects clause doesn't make
 sense.
 
-- Add defaults for operator+/- in terms of operator+=/-=
-- Add default impl for operator[] 
+y - Add defaults for operator+/- in terms of operator+=/-=
+y - Add default impl for operator[] 
 
 24.1.5/10 
 
@@ -357,12 +367,12 @@ Y - strip std:: from std::ptrdif_t
 
 24.1.6
 
-- Remove in total
+y - Remove in total
 
 
 D.10/6
 
-- Clarify. List specializations that are required. 
+y - Clarify. List specializations that are required. 
 
 D.10.4/3
 
@@ -370,7 +380,7 @@ Y - template<Integral T> void f(T); -> template<IntegralLike T> void f(T);
 
 D.10.4/4-11
 
-- Add predicate that paragraph 3 must hold.
+y - Add predicate that paragraph 3 must hold.
 
 
 
