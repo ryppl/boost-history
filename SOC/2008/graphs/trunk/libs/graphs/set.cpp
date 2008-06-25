@@ -84,7 +84,7 @@ int main()
     g.add_vertex("Jan");
     cout << g[g.find_vertex("Jan")] << endl;
 
-    typedef undirected_graph<none, int, vertex_list, edge_list> Tmp;
+    typedef undirected_graph<none, int, vertex_list<>, edge_list<> > Tmp;
     Tmp f;
     f.remove_vertex(0);
 }

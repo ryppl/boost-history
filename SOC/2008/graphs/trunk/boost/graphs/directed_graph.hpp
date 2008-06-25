@@ -59,6 +59,8 @@ class directed_graph
 public:
     typedef VertexProps vertex_properties;
     typedef EdgeProps edge_properties;
+    typedef VertexStore vertex_store_selector;
+    typedef EdgeStore edge_store_selector;
 
     // In order to create the vertex store, we have to create the vertex type.
     // In order to create the vertex type we need to create the edge store

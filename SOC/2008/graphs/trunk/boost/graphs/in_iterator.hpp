@@ -16,8 +16,8 @@ class basic_in_iterator
     typedef typename Edge::out_iterator out_iterator;
     typedef typename out_iterator::value_type out_tuple;
 public:
-    typedef typename boost::tuples::element<0, out_tuple>::type vertex_descriptor;
-    typedef typename boost::tuples::element<1, out_tuple>::type edge_properties;
+    typedef typename out_tuple::first_type vertex_descriptor;
+    typedef typename out_tuple::second_type edge_properties;
 
     // This is a little misleading. This iterator can be either bidi or random.
     // Clearly, we're going to be constraining members using some concept stuff

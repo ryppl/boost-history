@@ -28,6 +28,8 @@ class undirected_graph
 public:
     typedef VertexProps vertex_properties;
     typedef EdgeProps edge_properties;
+    typedef VertexStore vertex_store_selector;
+    typedef EdgeStore edge_store_selector;
 
     // Generate the property store type first. We can do this first because
     // it's basically independant of everything else, but contributes to almost
@@ -468,7 +470,7 @@ undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) co
 template <BOOST_GRAPH_UG_PARAMS>
 std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
 undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
-                                    vertex_properties const& v)
+                                    vertex_properties const& v) const
 {
     return edge(find_vertex(u), find_vertex(v));
 }
@@ -481,8 +483,8 @@ undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
  */
 template <BOOST_GRAPH_UG_PARAMS>
 std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
-undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
-                                    vertex_properties const& v)
+undirected_graph<VP,EP,VS,ES>::edge(vertex_key const& u,
+                                    vertex_key const& v) const
 {
     return edge(find_vertex(u), find_vertex(v));
 }

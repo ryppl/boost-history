@@ -4,8 +4,6 @@
 
 #include <vector>
 
-#include <boost/tuple/tuple.hpp>
-
 /**
  * The in/out vector implements vector-based, edge storage for directed graphs.
  * Each out edge is capable of referencing its corresponding in edge in another
@@ -20,10 +18,10 @@ class out_vector
     typedef std::vector<Edge, Alloc> store_type;
 public:
     typedef Edge out_tuple;
-    typedef typename boost::tuples::element<0, Edge>::type vertex_descriptor;
-    typedef typename boost::tuples::element<1, Edge>::type edge_properties;
+    typedef typename Edge::first_type vertex_descriptor;
+    typedef typename Edge::second_type edge_properties;
 private:
-    typedef typename boost::tuples::element<2, Edge>::type in_edge_place;
+    typedef typename Edge::third_type in_edge_place;
 public:
     typedef std::pair<vertex_descriptor, edge_properties> out_pair;
     typedef typename store_type::iterator iterator;
@@ -56,7 +54,7 @@ public:
         // TODO How do I write this with std::find?
         iterator i = _edges.begin(), end = _edges.end();
         for( ; i != end; ++i) {
-            if(i->template get<0>() == v) return i;
+            if(i->first == v) return i;
         }
         return end;
     }

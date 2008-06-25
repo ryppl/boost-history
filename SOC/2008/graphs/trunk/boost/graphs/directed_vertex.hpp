@@ -176,7 +176,7 @@ template <typename V, typename O, typename I>
 typename directed_vertex<V,O,I>::edge_descriptor
 directed_vertex<V,O,I>::bind_connection(out_iterator i, in_iterator j)
 {
-    i->template get<2>().put(j);
+    i->third.put(j);
     j->second.put(i);
     return edge_descriptor(j->first, i);
 }
@@ -200,7 +200,7 @@ directed_vertex<V,O,I>::disconnect_source(edge_descriptor e)
 {
     // Get the input iterator from the edge.
     out_iterator o = e.out_edge();
-    in_iterator i = o->template get<2>().template get<in_iterator>();
+    in_iterator i = o->third.template get<in_iterator>();
     _in.remove(i);
 }
 

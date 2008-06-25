@@ -17,10 +17,10 @@
  * @param SecondAlloc - An allocator template for either global properties or in edges.
  */
 template <
-    template <typename> class Compare,
-    template <typename> class FirstAlloc,
-    template <typename> class SecondAlloc>
-struct basic_edge_set
+    template <typename> class Compare = std::less,
+    template <typename> class FirstAlloc = std::allocator,
+    template <typename> class SecondAlloc = std::allocator>
+struct edge_set
 {
     // The property store metafunnction generates the global store type
     // for undirected graphs.
@@ -65,14 +65,6 @@ struct basic_edge_set
         typedef in_set<in_pair, compare, allocator> type;
     };
 };
-
-/**
- * The most common edge set uses standard allocators and allows parameterization
- * of the comparison function. The comparison function must operate on vertex
- * descriptors.
- */
-template <template <typename> class Compare = std::less>
-struct edge_set : basic_edge_set<Compare, std::allocator, std::allocator> { };
 
 #endif
 

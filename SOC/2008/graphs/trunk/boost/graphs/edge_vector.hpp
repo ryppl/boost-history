@@ -2,9 +2,9 @@
 #ifndef EDGE_VECTOR_HPP
 #define EDGE_VECTOR_HPP
 
-#include <boost/tuple/tuple.hpp>
-
+#include "triple.hpp"
 #include "placeholder.hpp"
+
 #include "property_vector.hpp"
 #include "incidence_vector.hpp"
 #include "out_vector.hpp"
@@ -36,9 +36,9 @@
  * out- and in-edge stores respectively.
  */
 template <
-    template <typename> class FirstAlloc,
-    template <typename> class SecondAlloc>
-struct basic_edge_vector
+    template <typename> class FirstAlloc = std::allocator,
+    template <typename> class SecondAlloc = std::allocator>
+struct edge_vector
 {
     // The property store metafunction generates the type of vector used to
     // store global properties for undirected graphs.
@@ -69,7 +69,7 @@ struct basic_edge_vector
         // vertex, edge properties, and in edge iterator (placeheld). The in
         // edge type is the source vertex and the out edge iterator (placeheld).
         typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
-        typedef boost::tuple<VertexDesc, Props, dummy_type> edge;
+        typedef triple<VertexDesc, Props, dummy_type> edge;
         typedef FirstAlloc<edge> allocator;
         typedef out_vector<edge, allocator> type;
     };
@@ -90,11 +90,4 @@ struct basic_edge_vector
     };
 };
 
-/**
- * The default edge vector is a basic edge vector that uses the standard
- * allocators for both the first and second allocators.
- */
-struct edge_vector : basic_edge_vector<std::allocator, std::allocator> { };
-
 #endif
-

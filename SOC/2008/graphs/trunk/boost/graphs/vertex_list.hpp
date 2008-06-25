@@ -19,8 +19,8 @@ template <typename V, typename A> class vertex_list_impl;
  * iterator and then re-casting the buffered data as an iterator whenever we
  * need it. That's a bit hacky, but it gets rid of redundant storage.
  */
-template <template <typename> class Allocator>
-struct basic_vertex_list
+template <template <typename> class Allocator = std::allocator>
+struct vertex_list
 {
     typedef unused key_type;
     typedef basic_vertex_descriptor<void*> descriptor_type;
@@ -33,11 +33,6 @@ struct basic_vertex_list
         typedef vertex_list_impl<stored_vertex, allocator_type > type;
     };
 };
-
-/**
- * The default vertex list uses the standard allocator.
- */
-struct vertex_list : basic_vertex_list<std::allocator> { };
 
 /**
  * Pad the vertex type with an iterator back into the list. See above for a

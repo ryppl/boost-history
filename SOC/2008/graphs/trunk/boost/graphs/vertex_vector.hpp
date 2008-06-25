@@ -21,8 +21,8 @@ template <typename V, typename A> struct vertex_vector_impl;
  *
  * @param Alloc A unary template class that will allocate stored vertices.
  */
-template <template <typename> class Alloc>
-struct basic_vertex_vector
+template <template <typename> class Alloc = std::allocator>
+struct vertex_vector
 {
     typedef unused key_type;
     typedef basic_vertex_descriptor<std::size_t> descriptor_type;
@@ -38,12 +38,6 @@ struct basic_vertex_vector
         typedef vertex_vector_impl<stored_vertex, allocator> type;
     };
 };
-
-/**
- * The default vertex vector uses the standard allocator.
- */
-struct vertex_vector : basic_vertex_vector<std::allocator> { };
-
 
 /**
  * The vertex_vector template implements veretex storage for adjacency lists
@@ -91,10 +85,10 @@ public:
     /** @name Vertex Iterators */
     //@{
     vertex_iterator begin_vertices() const
-    { return _verts.begin(); }
+    { return vertex_iterator(_verts, _verts.begin()); }
 
     vertex_iterator end_vertices() const
-    { return _verts.end(); }
+    { return vertex_iterator(_verts, _verts.end()); }
 
     vertex_range vertices() const
     { return std::make_pair(begin_vertices(), end_vertices()); }

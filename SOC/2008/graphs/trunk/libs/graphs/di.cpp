@@ -253,7 +253,7 @@ int main()
 void vec_vec()
 {
     cout << "---- vec/vec ----" << endl;
-    typedef directed_graph<City, Road, vertex_vector, edge_vector> Graph;
+    typedef directed_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
     test_add_multi_edges<Graph>();
@@ -264,7 +264,7 @@ void vec_vec()
 void list_list()
 {
     cout << "---- list/list ----" << endl;
-    typedef directed_graph<City, Road, vertex_list, edge_list> Graph;
+    typedef directed_graph<City, Road, vertex_list<>, edge_list<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
     test_disconnect_vertex<Graph>();

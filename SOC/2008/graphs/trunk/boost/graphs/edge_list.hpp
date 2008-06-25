@@ -2,6 +2,9 @@
 #ifndef EDGE_LIST_HPP
 #define EDGE_LIST_HPP
 
+#include "triple.hpp"
+#include "placeholder.hpp"
+
 #include "property_list.hpp"
 #include "incidence_list.hpp"
 #include "out_list.hpp"
@@ -17,9 +20,9 @@
  * types for adjacency lists.
  */
 template <
-    template <typename> class FirstAlloc,
-    template <typename> class SecondAlloc>
-struct basic_edge_list
+    template <typename> class FirstAlloc = std::allocator,
+    template <typename> class SecondAlloc = std::allocator>
+struct edge_list
 {
     // The property store metafunction generates the underlying global store
     // type for edge properties in undirected graphs.
@@ -50,7 +53,7 @@ struct basic_edge_list
         // vertex, edge properties, and in edge iterator (placeheld). The in
         // edge type is the source vertex and the out edge iterator (placeheld).
         typedef placeholder<sizeof(typename std::list<int>::iterator)> dummy_type;
-        typedef boost::tuple<VertexDesc, Props, dummy_type> edge;
+        typedef triple<VertexDesc, Props, dummy_type> edge;
         typedef FirstAlloc<edge> allocator;
         typedef out_list<edge, allocator> type;
     };
@@ -71,7 +74,4 @@ struct basic_edge_list
     };
 };
 
-struct edge_list : basic_edge_list<std::allocator, std::allocator> { };
-
 #endif
-

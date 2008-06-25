@@ -222,7 +222,7 @@ int main()
 void vec_vec()
 {
     cout << "---- vec/vec ----" << endl;
-    typedef undirected_graph<City, Road, vertex_vector, edge_vector> Graph;
+    typedef undirected_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
     test_add_multi_edges<Graph>();
@@ -233,7 +233,7 @@ void vec_vec()
 void list_list()
 {
     cout << "---- list/list ----" << endl;
-    typedef undirected_graph<City, Road, vertex_list, edge_list> Graph;
+    typedef undirected_graph<City, Road, vertex_list<>, edge_list<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
     test_disconnect_vertex<Graph>();

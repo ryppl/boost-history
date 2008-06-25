@@ -5,7 +5,6 @@
 #include <list>
 
 #include <boost/next_prior.hpp>
-#include <boost/tuple/tuple.hpp>
 
 /**
  * The out list implements list-based, out-edge storage for directed graphs.
@@ -23,10 +22,10 @@ class out_list
     typedef std::list<Edge, Alloc> store_type;
 public:
     typedef Edge out_tuple;
-    typedef typename boost::tuples::element<0, Edge>::type vertex_descriptor;
-    typedef typename boost::tuples::element<1, Edge>::type edge_properties;
+    typedef typename Edge::first_type vertex_descriptor;
+    typedef typename Edge::second_type edge_properties;
 private:
-    typedef typename boost::tuples::element<1, Edge>::type in_edge_place;
+    typedef typename Edge::third_type in_edge_place;
 public:
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
@@ -66,7 +65,7 @@ public:
         // TODO How do I write this with std::find?
         iterator i = _edges.begin(), end = _edges.end();
         for( ; i != end; ++i) {
-            if(i->template get<0>() == v) return i;
+            if(i->first == v) return i;
         }
         return end;
     }

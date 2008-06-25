@@ -4,6 +4,8 @@
 
 #include <iosfwd>
 
+#include <boost/functional/hash.hpp>
+
 // Important notes about descriptors
 //
 // A descriptor is basically an opaque reference to an object. It's kind of
@@ -107,6 +109,11 @@ operator!=(basic_vertex_descriptor<D> const& a, basic_vertex_descriptor<D> const
 template <typename D>
 std::ostream& operator<<(std::ostream& os, const basic_vertex_descriptor<D>& v)
 { return os << v.get(); }
+
+template <typename D>
+std::size_t hash_value(basic_vertex_descriptor<D> const& x)
+{ return boost::hash_value(x.get()); }
+
 
 #endif
 

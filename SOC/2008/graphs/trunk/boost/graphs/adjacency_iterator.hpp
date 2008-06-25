@@ -55,14 +55,10 @@ public:
     }
 
     inline bool operator==(adjacency_iterator const& x) const
-    {
-        return _iter == x._iter;
-    }
+    { return _iter == x._iter; }
 
     inline bool operator!=(adjacency_iterator const& x) const
-    {
-        return _iter != x._iter;
-    }
+    { return _iter != x._iter; }
 
     reference operator*() const
     {

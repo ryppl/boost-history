@@ -13,8 +13,8 @@ class basic_out_iterator
     typedef typename Edge::out_iterator base_iterator;
 public:
     typedef typename base_iterator::value_type out_tuple;
-    typedef typename boost::tuples::element<0, out_tuple>::type vertex_descriptor;
-    typedef typename boost::tuples::element<1, out_tuple>::type edge_properties;
+    typedef typename out_tuple::first_type vertex_descriptor;
+    typedef typename out_tuple::second_type edge_properties;
 
     // This is a little misleading. This iterator can be either bidi or random.
     // Clearly, we're going to be constraining members using some concept stuff
@@ -62,7 +62,7 @@ public:
 
     // Iterators are equivalent if they reference the same edge.
     inline bool operator==(basic_out_iterator const& x) const
-    { return **this == *x; }
+    { return operator*() == *x; }
 
     inline bool operator!=(basic_out_iterator const& x) const
     { return !this->operator==(x); }
