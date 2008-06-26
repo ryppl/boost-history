@@ -228,8 +228,8 @@ namespace std {
   template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
     OutIter copy(InIter @\farg{first}@, InIter @\farg{last}@,
                  OutIter @\farg{result}@);
-  template<BidirectionalIterator InIter, MutableBidirectionalIterator OutIter>
-    requires HasCopyAssign<OutIter::reference, InIter::reference>
+  template<BidirectionalIterator InIter, @\removedCCC{Mutable}@BidirectionalIterator OutIter>
+    requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference>
     OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@);
 
@@ -238,26 +238,28 @@ namespace std {
     OutIter move(InIter @\farg{first}@, InIter @\farg{last}@,
                  OutIter @\farg{result}@);
   template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
-    requires HasMoveAssign<OutIter::reference, InIter::value_type>
+    requires Has@\removedCCC{Move}@Assign<OutIter::reference, InIter::value_type@\addedCC{\&\&}@>
     OutIter move_backward(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@);
 
   @\textcolor{black}{// \ref{alg.swap}, swap:}@
   template<class T> 
-    requires MoveAssignable<T> && MoveConstructible<T>
+    requires MoveAssignable<T> && MoveConstructible<T> @\addedCC{\&\& HasDestructor<T>}@
     void swap(T& @\farg{a}@, T& @\farg{b}@);
-  template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
-    requires SameType<Iter1::value_type, Iter2::value_type> && 
-             SameType<Iter1::value_type&, Iter1::reference> && 
-             SameType<Iter2::value_type&, Iter2::reference> && 
-             Swappable<Iter1::value_type>
+  template<@\removedCCC{Mutable}@ForwardIterator Iter1, @\removedCCC{Mutable}@ForwardIterator Iter2>
+    requires @\addedCC{HasSwap<Iter1::reference, Iter2::reference>}@
+             @\removedCCC{SameType<Iter1::value_type, Iter2::value_type> \&\&}@
+             @\removedCCC{SameType<Iter1::value_type\&, Iter1::reference> \&\&}@
+             @\removedCCC{SameType<Iter2::value_type\&, Iter2::reference> \&\&}@
+             @\removedCCC{Swappable<Iter1::value_type>}@
     Iter2 swap_ranges(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@);
-  template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
-    requires SameType<Iter1::value_type, Iter2::value_type> && 
-             SameType<Iter1::value_type&, Iter1::reference> && 
-             SameType<Iter2::value_type&, Iter2::reference> && 
-             Swappable<Iter1::value_type>
+  template<@\removedCCC{Mutable}@ForwardIterator Iter1, @\removedCCC{Mutable}@ForwardIterator Iter2>
+    requires @\addedCC{HasSwap<Iter1::reference, Iter2::reference>}@
+             @\removedCCC{SameType<Iter1::value_type, Iter2::value_type> \&\&}@
+             @\removedCCC{SameType<Iter1::value_type\&, Iter1::reference> \&\&}@
+             @\removedCCC{SameType<Iter2::value_type\&, Iter2::reference> \&\&}@
+             @\removedCCC{Swappable<Iter1::value_type>}@
     void iter_swap(Iter1 @\farg{a}@, Iter2 @\farg{b}@);
 
   template<InputIterator InIter, class OutIter,
@@ -1419,8 +1421,8 @@ assignments.
 
 \index{copy_backward@\tcode{copy_backward}}%
 \color{addclr}\begin{itemdecl}
-template<BidirectionalIterator InIter, MutableBidirectionalIterator OutIter>
-  requires HasCopyAssign<OutIter::reference, InIter::reference>
+template<BidirectionalIterator InIter, @\removedCCC{Mutable}@BidirectionalIterator OutIter>
+  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference>
   OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
 \end{itemdecl}\color{black}
@@ -1473,6 +1475,9 @@ assignments.
 \end{itemdecl}
 \color{black}
 
+% DPG FIXME: think about the use of value_type here, and how it
+% interacts with proxy iterators.
+
 \begin{itemdescr}
 \pnum
 \addedD{\mbox{\effects}
@@ -1505,7 +1510,7 @@ move assignments.}
 \color{addclr}
 \begin{itemdecl}
 template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
-  requires HasMoveAssign<OutIter::reference, InIter::value_type>
+  requires Has@\removedCCC{Move}@Assign<OutIter::reference, InIter::value_type@\addedCC{\&\&}@>
   OutIter move_backward(InIter first, InIter last,
                         OutIter result);
 \end{itemdecl}
@@ -1554,7 +1559,7 @@ assignments.}
 \color{addclr}
 \begin{itemdecl}
 template<class T> 
-  requires MoveAssignable<T> && MoveConstructible<T>
+  requires MoveAssignable<T> && MoveConstructible<T> @\addedCC{\&\& HasDestructor<T>}@
   void swap(T& @\farg{a}@, T& @\farg{b}@);
 \end{itemdecl}
 \color{black}
@@ -1577,11 +1582,12 @@ Exchanges values stored in two locations.
 \index{swap_ranges@\tcode{swap_ranges}}%
 \color{addclr}
 \begin{itemdecl}
-template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
-  requires SameType<Iter1::value_type, Iter2::value_type> && 
-           SameType<Iter1::value_type&, Iter1::reference> && 
-           SameType<Iter2::value_type&, Iter2::reference> && 
-           Swappable<Iter1::value_type>
+template<@\removedCCC{Mutable}@ForwardIterator Iter1, @\removedCCC{Mutable}@ForwardIterator Iter2>
+  requires @\addedCC{HasSwap<Iter1::reference, Iter2::reference>}@
+           @\removedCCC{SameType<Iter1::value_type, Iter2::value_type> \&\&}@
+           @\removedCCC{SameType<Iter1::value_type\&, Iter1::reference> \&\&}@
+           @\removedCCC{SameType<Iter2::value_type\&, Iter2::reference> \&\&}@
+           @\removedCCC{Swappable<Iter1::value_type>}@
   Iter2 swap_ranges(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                     Iter2 @\farg{first2}@);
 \end{itemdecl}
@@ -1619,12 +1625,13 @@ swaps.
 \index{iter_swap@\tcode{iter_swap}}%
 \color{addclr}
 \begin{itemdecl}
-template<MutableForwardIterator Iter1, MutableForwardIterator Iter2>
-  requires SameType<Iter1::reference, Iter2::reference> && 
-           SameType<Iter1::value_type&, Iter1::reference> && 
-           SameType<Iter2::value_type&, Iter2::reference> && 
-           Swappable<Iter1::value_type>
-  @\addedConcepts{void}@ iter_swap(Iter1 @\farg{a}@, Iter2 @\farg{b}@);
+template<@\removedCCC{Mutable}@ForwardIterator Iter1, @\removedCCC{Mutable}@ForwardIterator Iter2>
+  requires @\addedCC{HasSwap<Iter1::reference, Iter2::reference>}@
+           @\removedCCC{SameType<Iter1::value_type, Iter2::value_type> \&\&}@
+           @\removedCCC{SameType<Iter1::value_type\&, Iter1::reference> \&\&}@
+           @\removedCCC{SameType<Iter2::value_type\&, Iter2::reference> \&\&}@
+           @\removedCCC{Swappable<Iter1::value_type>}@
+  void iter_swap(Iter1 @\farg{a}@, Iter2 @\farg{b}@);
 \end{itemdecl}
 \color{black}
 

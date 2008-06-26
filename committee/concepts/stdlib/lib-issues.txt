@@ -92,6 +92,11 @@ N - Add Requirements clause:
 
 - operator semantic requirements stated in text
   (Doug: not sure what this means. Do we still need to say something?)
+
+
+- Merge et al: SameType requirement is wrong! Switch to heterogeneous
+  HasLess.
+
 ===================================================================
 2008/06/11
 
