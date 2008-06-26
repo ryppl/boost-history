@@ -65,7 +65,7 @@ namespace detail {
 		struct append_sibling
 		{
 			template <
-				class PathsAndNodes,
+				class InnerPathsAndNodes,
 				class SiblingOrSelf
 			>
 			struct apply
@@ -81,9 +81,9 @@ namespace detail {
 						>::type,
 						typename mpl::not_<IncludeSelf>::type
 					>::type,
-					PathsAndNodes,
+					InnerPathsAndNodes,
 					typename mpl::push_back<
-						PathsAndNodes,
+						InnerPathsAndNodes,
 						mpl::pair<
 							path,
 							SiblingOrSelf
