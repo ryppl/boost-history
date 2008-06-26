@@ -574,26 +574,14 @@ may permit output of many different value types.
 
 \color{addclr}
 \begin{itemdecl}
-@\removedCC{concept OutputIterator<typename X, typename Value> :
-  CopyConstructible<X> \{}@
-@\removedCC{  typename reference;}@
-@\removedCC{  requires HasCopyAssign<reference, Value> \&\& CopyAssignable<Value>;}@
+concept OutputIterator<typename X, typename Value> : @\changedCCC{CopyConstructible<X>}{Semiregular<X>}@ {
+  @\changedCCC{typename}{MoveConstructible}@ reference;
+  requires Has@\removedCCC{Copy}@Assign<reference, Value>@\removedCCC{\&\& CopyAssignable<Value>;}@
 
-@\removedCC{  typename postincrement_result;}@
-@\removedCC{  requires Dereferenceable<postincrement_result> \&\&}@
-@\removedCC{           Convertible<postincrement_result, const X\&> \&\&}@
-@\removedCC{ HasCopyAssign<Dereferenceable<postincrement_result>::reference,
-  Value>;}@
-
-@\addedCC{concept OutputIterator<typename X, typename Value> : SemiRegular<X> \{}@
-@\addedCC{  MoveConstructible reference;}@
-@\addedCC{  requires HasAssign<reference, Value> \&\& MoveAssignable<Value>;}@
-
-@\addedCC{  MoveConstructible postincrement_result;}@
-@\addedCC{  requires Dereferenceable<postincrement_result> \&\&}@
-@\addedCC{                Convertible<postincrement_result, const X\&> \&\&}@
-@\addedCC{                HasAssign<Dereferenceable<postincrement_result>::reference, Value>;}@
-
+  @\changedCCC{typename}{MoveConstructible}@ postincrement_result;
+  requires Dereferenceable<postincrement_result>
+        && Convertible<postincrement_result, const X&>
+        && Has@\removedCCC{Copy}@Assign<Dereferenceable<postincrement_result>::reference, Value>;
 
   reference operator*(X&);
   X& operator++(X&);
@@ -632,27 +620,16 @@ hierarchy.
 
 \color{addclr}
 \begin{itemdecl}
-@\removedCC{concept BasicOutputIterator<typename X> : CopyConstructible<X> \{}@
-@\removedCC{  ObjectType value_type = typename X::value_type;}@
-@\removedCC{  MoveConstructible reference = typename X::reference; }@
+concept BasicOutputIterator<typename X> : @\changedCCC{CopyConstructible<X>}{Semiregular<X>}@ {
+  ObjectType value_type = typename X::value_type;
+  MoveConstructible reference = typename X::reference;
 
-@\removedCC{  requires HasCopyAssign<reference, value_type> \&\& CopyAssignable<value_type>;}@
+  requires Has@\removedCCC{Copy}@Assign<reference, value_type@\addedCC{\&\&}@>@\removedCCC{\&\& CopyAssignable<value_type>;}@
 
-@\removedCC{  typename postincrement_result;}@
-@\removedCC{  requires Dereferenceable<postincrement_result> \&\&}@
-@\removedCC{           HasCopyAssign<Dereferenceable<postincrement_result>::reference, value_type> \&\&}@
-@\removedCC{           Convertible<postincrement_result, const X\&>;}@
-
-@\addedCC{concept BasicOutputIterator<typename X> : SemiRegular<X> \{}@
-@\addedCC{  typename ObjectType value_type = typename X::value_type;}@
-@\addedCC{  MoveConstructible reference = typename X::reference;}@
-  
-@\addedCC{  requires HasAssign<reference, value_type\&\&>;}@
-
-@\addedCC{  MoveConstructible postincrement_result;}@
-@\addedCC{  requires Dereferenceable<postincrement_result> \&\&}@
-@\addedCC{                HasAssign<Dereferenceable<postincrement_result>::reference, value_type\&\&> \&\&}@
-@\addedCC{                Convertible<postincrement_result, const X\&>;}@
+  @\changedCCC{typename}{MoveConstructible}@ postincrement_result;
+  requires Dereferenceable<postincrement_result>
+        && Has@\removedCCC{Copy}@Assign<Dereferenceable<postincrement_result>::reference, value_type@\addedCC{\&\&}@>
+        && Convertible<postincrement_result, const X&>;
 
   @\textcolor{addclr}{}@reference operator*(X&);
   X& operator++(X&);
@@ -694,7 +671,7 @@ value types copy-assignable to its
 
 \color{addclr}
 \begin{itemdecl}
-template<BasicOutputIterator X, @\changedCCC{CopyAssignable}{MoveAssignable}@ Value>
+template<BasicOutputIterator X, @\changedCCC{CopyAssignable}{typename}@ Value>
 requires @\changedCCC{CopyAssignable}{HasAssign}@<X::reference, Value>
 concept_map OutputIterator<X, Value> {
   typedef X::reference                reference;
