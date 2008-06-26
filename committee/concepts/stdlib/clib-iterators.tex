@@ -574,7 +574,9 @@ may permit output of many different value types.
 
 \color{addclr}
 \begin{itemdecl}
-concept OutputIterator<typename X, typename Value> : @\changedCCC{CopyConstructible<X>}{Semiregular<X>}@ {
+concept OutputIterator<typename X, typename Value> @\removedCCC{: CopyConstructible<X>}@ {
+  @\addedCC{requires Semiregular<X>;}@
+
   @\changedCCC{typename}{MoveConstructible}@ reference;
   requires Has@\removedCCC{Copy}@Assign<reference, Value>@\removedCCC{\&\& CopyAssignable<Value>;}@
 
@@ -850,7 +852,7 @@ concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanCom
   X  operator- (const X& x, difference_type n) @\addedCC{\{ X tmp(x); x -= n; return x; \}}@
 
   difference_type operator-(const X&, const X&);
-  reference operator[](const X&, difference_type);
+  reference operator[](const X& x, difference_type n) @\addedCC{\{ return *(x + n); \}}@
 }
 
 concept MutableRandomAccessIterator<typename X>
