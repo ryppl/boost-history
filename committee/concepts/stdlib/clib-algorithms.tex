@@ -138,78 +138,88 @@ as summarized in Table~\ref{tab:algorithms.summary}.
 namespace std {
   @\textcolor{black}{// \ref{alg.nonmodifying}, non-modifying sequence operations:}@
   template<InputIterator Iter, Callable<auto, Iter::reference> Function>
+    @\addedCC{requires CopyConstructible<Function>}@
     Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
   template<InputIterator Iter, class T>
-    requires HasEqualTo<Iter::reference, T>
+    requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T>
     Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
   template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2>
-    requires HasEqualTo<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2, 
            Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                    Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                    Pred @\farg{pred}@);
 
   template<InputIterator Iter1, ForwardIterator Iter2>
-    requires HasEqualTo<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<InputIterator Iter1, ForwardIterator Iter2,
            Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                         Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                         Pred @\farg{pred}@);
 
   template<ForwardIterator Iter>
-    requires EqualityComparable<Iter::reference>
+    requires EqualityComparable<Iter::@\changedCCC{reference}{value_type}@>
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
   template<ForwardIterator Iter, 
            Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter, class T>
-    requires HasEqualTo<Iter::reference, T>
+    requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T>
     @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
   template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
-    requires HasEqualTo<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                 Iter2 @\farg{first2}@);
   template<InputIterator Iter1, InputIterator Iter2,
            Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                                 Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
   template<InputIterator Iter1, InputIterator Iter2>
-    requires HasEqualTo<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@);
   template<InputIterator Iter1, InputIterator Iter2,
            Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 
   template<ForwardIterator Iter1, ForwardIterator Iter2>
-    requires HasEqualTo<Iter1::reference, Iter2::reference>
+    requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
     Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2,
            Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
   template<ForwardIterator Iter, class T>
-    requires HasEqualTo<Iter::reference, T>
+    requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T>
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@);
   template<ForwardIterator Iter, class T,
            Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, T> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                   const T& @\farg{value}@, Pred @\farg{pred}@);
 
@@ -961,6 +971,7 @@ is the same as of
 \color{addclr}
 \begin{itemdecl}
 template<InputIterator Iter, Callable<auto, Iter::reference> Function>
+  @\addedCC{requires CopyConstructible<Function>}@
   Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
 \end{itemdecl}
 \color{black}
@@ -997,10 +1008,11 @@ times.
 \index{find_if@\tcode{find_if}}%
 \color{addclr}\begin{itemdecl}
 @\textcolor{addclr}{template}@<InputIterator Iter, class T>
-  requires HasEqualTo<Iter::reference, T>
+  requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T>
   Iter find(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1028,12 +1040,13 @@ applications of the corresponding predicate.
 \index{find_end@\tcode{find_end}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter1, ForwardIterator Iter2>
-  requires HasEqualTo<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
   Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<ForwardIterator Iter1, ForwardIterator Iter2, 
          Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                  Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                  Pred @\farg{pred}@);
@@ -1072,12 +1085,13 @@ applications of the corresponding predicate.
 \index{find_first_of@\tcode{find_first_of}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, ForwardIterator Iter2>
-  requires HasEqualTo<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
   Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<InputIterator Iter1, ForwardIterator Iter2,
          Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   Iter1 find_first_of(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                       Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                       Pred @\farg{pred}@);
@@ -1114,11 +1128,12 @@ applications of the corresponding predicate.
 \index{adjacent_find@\tcode{adjacent_find}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter>
-  requires @\changedCCC{HasEqualTo}{EqualityComparable}@<Iter::reference>
+  requires @\changedCCC{HasEqualTo}{EqualityComparable}@<Iter::@\changedCCC{reference}{value_type}@>
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<ForwardIterator Iter, 
          Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, Iter::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1155,10 +1170,11 @@ return value.
 \index{count_if@\tcode{count_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter, class T>
-  requires HasEqualTo<Iter::reference, T>
+  requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T>
   @\color{addclr}@Iter::difference_type count(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<InputIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   Iter::difference_type count_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
@@ -1184,12 +1200,13 @@ applications of the corresponding predicate.
 \index{mismatch@\tcode{mismatch}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, InputIterator Iter2>
-  requires HasEqualTo<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
   pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                               Iter2 @\farg{first2}@);
 
 template<InputIterator Iter1, InputIterator Iter2,
          Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   pair<Iter1, Iter2> mismatch(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                               Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1232,12 +1249,13 @@ applications of the corresponding predicate.
 \index{equal@\tcode{equal}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator Iter1, InputIterator Iter2>
-  requires HasEqualTo<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
   bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
              Iter2 @\farg{first2}@);
 
 template<InputIterator Iter1, InputIterator Iter2,
          Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   bool equal(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
              Iter2 @\farg{first2}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -1266,12 +1284,13 @@ applications of the corresponding predicate.
 \index{search@\tcode{search}}%
 \color{addclr}\begin{itemdecl}
 template<ForwardIterator Iter1, ForwardIterator Iter2>
-  requires HasEqualTo<Iter1::reference, Iter2::reference>
+  requires HasEqualTo<Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@>
   Iter1 search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
 template<ForwardIterator Iter1, ForwardIterator Iter2,
          Predicate<auto, Iter1::@\changedCCC{reference}{value_type}@, Iter2::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   @\textcolor{addclr}{Iter1}@ search(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                Pred @\farg{pred}@);
@@ -1305,12 +1324,13 @@ applications of the corresponding predicate.
 
 \color{addclr}\begin{itemdecl}
 @\textcolor{addclr}{template}@<ForwardIterator Iter, class T>
-  requires HasEqualTo<Iter::reference, T>
+  requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T>
   Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                 const T& @\farg{value}@);
 
 template<ForwardIterator Iter, class T,
          Predicate<auto, Iter::@\changedCCC{reference}{value_type}@, T> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   Iter search_n(Iter @\farg{first}@, Iter @\farg{last}@, Iter::difference_type @\farg{count}@,
                 const T& @\farg{value}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
