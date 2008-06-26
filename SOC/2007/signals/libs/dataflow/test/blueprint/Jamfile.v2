@@ -5,7 +5,7 @@
 
 import testing ;
 
-project dataflow/test/signals
+project dataflow/test/blueprint
     : requirements 
       <include>../../../..
       <library>/boost/signals//boost_signals/<link>static
@@ -14,3 +14,4 @@ project dataflow/test/signals
 
 run test_port.cpp ;
 run test_component.cpp ;
+run test_dynamic_port.cpp ;

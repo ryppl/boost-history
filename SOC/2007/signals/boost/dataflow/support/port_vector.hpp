@@ -7,6 +7,7 @@
 #define BOOST_DATAFLOW_SUPPORT_PORT_VECTOR_HPP
 
 #include <boost/dataflow/support/traits.hpp>
+#include <boost/utility/result_of.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/static_assert.hpp>
 

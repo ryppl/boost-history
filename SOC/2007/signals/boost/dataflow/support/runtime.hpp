@@ -58,6 +58,9 @@ namespace boost { namespace dataflow { namespace runtime {  \
         }                                                   \
     };                                                      \
 } } }
+
+DATAFLOW_RUNTIME_PROPERTY(default_tag, const char *, "default_tag")
+DATAFLOW_RUNTIME_PROPERTY(default_tag, int, 0)
     
 DATAFLOW_RUNTIME_PROPERTY(ports::producer, const char *, "producer")
 DATAFLOW_RUNTIME_PROPERTY(ports::producer, int, 0)

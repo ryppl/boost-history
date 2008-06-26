@@ -215,7 +215,7 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Port Traits]
-        [`traits_of<M, PC, P>::type`]
+        [`traits_of<P, T>::type`]
         [`PT`]
         [
             The [ComplementedPortTraits] of the port.
@@ -276,6 +276,72 @@ sub-[Port] in `KP` keyed by the [PortTraits] of `P`.
 * [VectorPortTraits]
 
 [endsect][/keyed_port]
+
+[section:dynamicport DynamicPort, DynamicPortTraits]
+
+A DynamicPort `P` is a [Port] that has a number of subports, where
+the number is determined at run-time.
+
+[heading DynamicPort Refines]
+* [Port]
+
+[heading DynamicPortTraits Refines]
+* [PortTraits]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`P`] [A [DynamicPort] type, for [Tag] `T`.]]
+    [[`PT`] [[DynamicPortTraits] of `P` for `T`.]]
+    [[`p`] [An object of type `P`.]]
+    [[`n`] [An object convertible to `size_t`.]]    
+]
+
+[heading DynamicPort Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`traits_of<P, T>::type`]
+        [`PT`]
+        [
+            The [DynamicPortTraits] of the port.
+        ]
+    ]
+    [
+        [Number of Subports]
+        [`get_dynamic_port_size<T>(p)`]
+        [`size_t`]
+        [
+            Returns the number of subports accessible through `p`.
+        ]
+    ]
+    [
+        [Subport]
+        [`get_subport<T>(p, n)`]
+        [`result_of::get_subport<P,T>::type`]
+        [
+            Returns the `n`-th subport accessible through `p`.
+        ]
+    ]
+]
+
+[heading DynamicPortTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Subport type]
+        [`PT::subport_type`]
+        [Any [Port] type]
+        [
+            The type of subport accessible through objects of type `P`.
+        ]
+    ]
+]
+
+[endsect]
 
  
 

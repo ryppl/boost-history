@@ -137,6 +137,7 @@
 		089C098C0E0B11FF00397123 /* test_network.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_network.cpp; sourceTree = "<group>"; };
 		089CDA940D832AD200731C70 /* tutorial.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tutorial.qbk; sourceTree = "<group>"; };
 		089CDAA90D8333CC00731C70 /* unary_operation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = unary_operation.hpp; sourceTree = "<group>"; };
+		089E78C20E132E220008C0BB /* dynamic_multi_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_multi_port.hpp; sourceTree = "<group>"; };
 		08A0B20C0D21C4A90054AD32 /* cppgui_example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = cppgui_example.cpp; sourceTree = "<group>"; };
 		08A0B20D0D21C4A90054AD32 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08A0B2AC0D21D88F0054AD32 /* blueprint_bank.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = blueprint_bank.cpp; sourceTree = "<group>"; };
@@ -147,6 +148,8 @@
 		08A0B43D0D21EDDE0054AD32 /* blueprint_component.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = blueprint_component.hpp; sourceTree = "<group>"; };
 		08A0B5710D220CCF0054AD32 /* introduction.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = introduction.qbk; sourceTree = "<group>"; };
 		08A0E54C0D7A7674009B11DD /* quick_start_examples.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quick_start_examples.cpp; sourceTree = "<group>"; };
+		08A364C10E129DC7001E6002 /* test_dynamic_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_dynamic_port.cpp; sourceTree = "<group>"; };
+		08A82B550E11EBF500AAB117 /* dynamic_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_port.hpp; sourceTree = "<group>"; };
 		08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_has_call_operator.cpp; sourceTree = "<group>"; };
 		08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = has_call_operator.hpp; sourceTree = "<group>"; };
 		08B234E40DC92C3A002A7FFE /* fusion_filter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fusion_filter.hpp; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 		08BD9B090CEB9E3D0069AFE2 /* port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port.hpp; sourceTree = "<group>"; };
 		08C3EEA20C625AE30074AB9E /* simple_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simple_example.cpp; sourceTree = "<group>"; };
 		08C675970C13A03E00D85379 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
+		08C8FA0F0E130E9B00FE64F3 /* dynamic_port_t.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_port_t.hpp; sourceTree = "<group>"; };
+		08C8FA140E13112D00FE64F3 /* test_dynamic_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_dynamic_port.cpp; sourceTree = "<group>"; };
 		08C9D7DA0D83C5EB00354FF8 /* bind_mem_fn_overload.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = bind_mem_fn_overload.hpp; sourceTree = "<group>"; };
 		08D2C7330D1DDE5C008388D7 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08D2C7390D1DDEB8008388D7 /* fltk_gui_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fltk_gui_example.cpp; sourceTree = "<group>"; };
@@ -458,6 +463,8 @@
 				08F2D4D10D0B106F0054E4A2 /* test_vector_port.cpp */,
 				08F1AAA40D0B69D200D3812E /* test_entity.cpp */,
 				0815AEC90D0B814E007ED135 /* test_complemented_port.cpp */,
+				08A364C10E129DC7001E6002 /* test_dynamic_port.cpp */,
+				089E78C20E132E220008C0BB /* dynamic_multi_port.hpp */,
 			);
 			name = test;
 			path = ../../test;
@@ -582,6 +589,7 @@
 				08F2D4A60D0B0C640054E4A2 /* fusion_port_vector.hpp */,
 				08F322740D0A0445007C1658 /* vector_port.hpp */,
 				08F2A83A0D0C634200AED0BC /* fusion_vector_port.hpp */,
+				08A82B550E11EBF500AAB117 /* dynamic_port.hpp */,
 			);
 			path = support;
 			sourceTree = "<group>";
@@ -674,6 +682,7 @@
 				08F346EC0D0CFE9700A037A3 /* vector_port_t.hpp */,
 				08F244EA0D1B682D00EC9B03 /* keyed_port_t.hpp */,
 				08622E2E0D1EE4A70068A238 /* component_bank.hpp */,
+				08C8FA0F0E130E9B00FE64F3 /* dynamic_port_t.hpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";
@@ -763,6 +772,7 @@
 				08F5FF070D07082200FDBAEE /* Jamfile.v2 */,
 				08F5FF130D070A1400FDBAEE /* test_port.cpp */,
 				08F49BFE0D08AD9400D0CF0E /* test_component.cpp */,
+				08C8FA140E13112D00FE64F3 /* test_dynamic_port.cpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";

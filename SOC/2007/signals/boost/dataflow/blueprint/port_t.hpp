@@ -152,5 +152,6 @@ private:
 
 #include <boost/dataflow/blueprint/vector_port_t.hpp>
 #include <boost/dataflow/blueprint/keyed_port_t.hpp>
+#include <boost/dataflow/blueprint/dynamic_port_t.hpp>
 
 #endif // BOOST_DATAFLOW_BLUEPRINT_GET_PORT_HPP

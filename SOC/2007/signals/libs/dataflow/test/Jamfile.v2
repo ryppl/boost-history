@@ -19,6 +19,7 @@ run test_binary_op.cpp ;
 run test_complemented_port.cpp ;
 run test_keyed_port.cpp ;
 run test_vector_port.cpp ;
+run test_dynamic_port.cpp ;
 run test_component.cpp ;
 
 build-project signals ;

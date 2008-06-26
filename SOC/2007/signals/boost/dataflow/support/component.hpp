@@ -7,6 +7,7 @@
 #define BOOST_DATAFLOW_SUPPORT_COMPONENT_HPP
 
 #include <boost/dataflow/utility/enable_if_type.hpp>
+#include <boost/dataflow/support/port/default_port_provider.hpp>
 #include <boost/dataflow/support/port_vector.hpp>
 
 #include <boost/mpl/and.hpp>

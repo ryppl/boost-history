@@ -30,6 +30,8 @@
 [template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
 [template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
 [template KeyedPortTraits[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPortTraitr]]]
+[template DynamicPort[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPort]]]
+[template DynamicPortTraits[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPortTraits]]]
 
 [template ProxyPortTraits[] [link dataflow.support.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
 [template ProxyPort[] [link dataflow.support.concepts.port_related.proxyport [^ProxyPort]]]
