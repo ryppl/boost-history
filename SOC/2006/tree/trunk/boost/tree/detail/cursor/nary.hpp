@@ -159,22 +159,22 @@ class nary_tree_cursor
     }
     
 	// Container specific
-	bool const empty_() const
+	bool empty_() const
 	{
 		return m_node->operator[](m_pos)->empty();
 	}
 	
-	size_type size_()
+	size_type size_() const
 	{
 		return m_node->size();
 	}
 	
-	size_type max_size_()
+	size_type max_size_() const
 	{
 		return m_node->max_size();
 	}
 	
-	size_type const par() const
+	size_type par() const
 	{
 		return m_pos;
 	}

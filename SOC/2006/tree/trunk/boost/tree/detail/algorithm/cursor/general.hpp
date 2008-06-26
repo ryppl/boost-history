@@ -20,6 +20,9 @@ namespace tree {
 
 // These algorithms are actually mostly preorder, as it's most efficient, but I
 // think it doesn't make much sense having in- and postorder versions of them. 
+// The only reason I can think of is that there might be some cases
+// where it's likely to find a mismatch or whatever faster in in- or postorder
+// than in preorder -- but for things like size() or count(), this doesn't really matter.
 
 // What about the subtree shapes?
 /**

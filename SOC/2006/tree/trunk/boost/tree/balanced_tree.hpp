@@ -43,10 +43,10 @@ struct empty_class { };
 template <class Val, class Meta, class Meta2 = empty_class>
 struct augmented_type {
 	typedef Val value_type;
-	//typedef Meta metadata_type;
-	struct metadata_type : public Meta, public Meta2 {
-		metadata_type() : Meta(), Meta2() {}
-	};
+	typedef Meta metadata_type;
+//	struct metadata_type : public Meta, public Meta2 {
+//		metadata_type() : Meta(), Meta2() {}
+//	};
 	
 	value_type data;
 	metadata_type meta;

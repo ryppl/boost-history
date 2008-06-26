@@ -18,17 +18,20 @@
 template <class Tree>
 void create_test_data_tree(Tree& ret)
 {
-	typename Tree::cursor cur = ret.insert(ret.root(), 8);
-	cur = ret.insert(cur, 3);
-	ret.insert(cur, 1);
-	cur = ret.insert(++cur, 6);
-	ret.insert(cur, 4);
-	ret.insert(++cur, 7);	
-	cur = ret.insert(ret.root().end(), 10);
-	cur = ret.insert(ret.root().end().end(), 14);	
-	cur = ret.insert(cur, 13);
-	cur = ret.insert(cur, 11);
-	cur = ret.insert(++cur, 12);
+	// For augmented trees. (Why is this necessary? Nothing here is explicit!)
+	typedef typename Tree::value_type value_type; 
+	
+	typename Tree::cursor cur = ret.insert(ret.root(), value_type(8));
+	cur = ret.insert(cur, value_type(3));
+	ret.insert(cur, value_type(1));
+	cur = ret.insert(++cur, value_type(6));
+	ret.insert(cur, value_type(4));
+	ret.insert(++cur, value_type(7));
+	cur = ret.insert(ret.root().end(), value_type(10));
+	cur = ret.insert(ret.root().end().end(), value_type(14));
+	cur = ret.insert(cur, value_type(13));
+	cur = ret.insert(cur, value_type(11));
+	cur = ret.insert(++cur, value_type(12));
 }
 
 template <class Tree>

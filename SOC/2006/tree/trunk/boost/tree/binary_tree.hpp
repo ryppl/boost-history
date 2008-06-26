@@ -250,7 +250,7 @@ class binary_tree {
     template <class InputCursor>
 	cursor insert(cursor pos, InputCursor subtree)
 	{
-		subtree = subtree.begin();
+		subtree.to_begin();
 		insert(pos, *subtree);
 		if (!subtree.empty())
 			insert(pos.begin(), subtree);
