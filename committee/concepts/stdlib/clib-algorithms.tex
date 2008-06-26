@@ -275,37 +275,39 @@ namespace std {
                       BinaryOp @\farg{binary_op}@);
 
   template<MutableForwardIterator Iter, class T>
-    requires HasEqualTo<Iter::reference, T> && HasCopyAssign<Iter::reference, T>
+    requires HasEqualTo<Iter::reference, T> &&
+    Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
     void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                  const T& @\farg{old_value}@, const T&
                  @\farg{new_value}@);
 % revisit (mmarcus): still a mutable iterator?
   @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
-    requires HasCopyAssign<Iter::reference, T>
+    requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, 
            OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, class T>
-    requires HasCopyAssign<OutIter::reference, T> && HasEqualTo<InIter::reference, T>
+    requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@> && 
+    HasEqualTo<InIter::reference, T>
     OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@,
                          const T& @\farg{old_value}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
            Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred, class T>
-    requires HasCopyAssign<OutIter::reference, T>
+    requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>
     OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                             OutIter @\farg{result}@,
                             Pred @\farg{pred}@, const T& @\farg{new_value}@);
 
   template<MutableForwardIterator Iter, class T>
-    requires HasCopyAssign<Iter::reference, T>
+    requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
     void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
   template<class Iter, IntegralLike Size, class T>
     requires OutputIterator<Iter, T>
     void fill_n(Iter @\farg{first}@, Size @\farg{n}@, const T& @\farg{value}@);
 
   template<MutableForwardIterator Iter, Callable Generator>
-    requires HasCopyAssign<Iter::reference, Generator::result_type>
+    requires Has@\removedCCC{Copy}@Assign<Iter::reference, Generator::result_type>
     void generate(Iter @\farg{first}@, Iter @\farg{last}@,
                   Generator @\farg{gen}@);
   template<class Iter, IntegralLike Size, Callable Generator>
@@ -350,7 +352,7 @@ namespace std {
                         OutIter @\farg{result}@);
   template<InputIterator InIter, MutableForwardIterator OutIter>
     requires HasEqualTo<OutIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
-             HasCopyAssign<OutIter::reference, InIter::reference> &&
+             Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
              !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
@@ -366,7 +368,7 @@ namespace std {
                         OutIter @\farg{result}@);
   template<InputIterator InIter, MutableForwardIterator OutIter,
            Predicate<auto, OutIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
-    requires HasCopyAssign<OutIter::reference, InIter::reference> &&
+    requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
              !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
@@ -382,7 +384,7 @@ namespace std {
     requires @\changedCCC{SwappableIterator<Iter>}{Swappable<Iter::reference>}@
     void rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
                 Iter @\farg{last}@);
-  template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+  template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter>
     OutIter rotate_copy(InIter @\farg{first}@, InIter @\farg{middle}@,
                         InIter @\farg{last}@, OutIter @\farg{result}@);
 
@@ -445,7 +447,7 @@ namespace std {
                       Iter @\farg{last}@,
                       Compare @\farg{comp}@);
   template<InputIterator InIter, RandomAccessIterator RAIter>
-    requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
+    requires Has@\removedCCC{Copy}@Assign<RAIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
              @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
              HasLess<InIter::value_type, RAIter::value_type> &&
              HasLess<RAIter::value_type, InIter::value_type> &&
@@ -453,7 +455,7 @@ namespace std {
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
   template<InputIterator InIter, RandomAccessIterator RAIter, class Compare>
-    requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
+    requires Has@\removedCCC{Copy}@Assign<RAIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
              @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
              Predicate<Compare, InIter::value_type, RAIter::value_type> &&
              Predicate<Compare, RAIter::value_type, InIter::value_type> &&
@@ -1421,6 +1423,7 @@ assignments.
 
 \index{copy_backward@\tcode{copy_backward}}%
 \color{addclr}\begin{itemdecl}
+
 template<BidirectionalIterator InIter, @\removedCCC{Mutable}@BidirectionalIterator OutIter>
   requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference>
   OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -1510,6 +1513,7 @@ move assignments.}
 \color{addclr}
 \begin{itemdecl}
 template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
+
   requires Has@\removedCCC{Move}@Assign<OutIter::reference, InIter::value_type@\addedCC{\&\&}@>
   OutIter move_backward(InIter first, InIter last,
                         OutIter result);
@@ -1715,13 +1719,14 @@ in case of binary transform.
 \index{replace_if@\tcode{replace_if}}%
 \color{addclr}\begin{itemdecl}
 template<MutableForwardIterator Iter, class T>
-  requires HasEqualTo<Iter::reference, T> && HasCopyAssign<Iter::reference, T>
+  requires HasEqualTo<Iter::reference, T> && 
+    Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
   void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
 % revisit (mmarcus): Still want Mutable iterators?
 @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
-  requires HasCopyAssign<Iter::reference, T>
+  requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
   void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                   Pred @\farg{pred}@, const T& @\farg{new_value}@);
 \end{itemdecl}\color{black}
@@ -1753,14 +1758,14 @@ applications of the corresponding predicate.
 \index{replace_copy_if@\tcode{replace_copy_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, class T>
-  requires HasCopyAssign<OutIter::reference, T> && HasEqualTo<InIter::reference, T>
+  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>  && HasEqualTo<InIter::reference, T>
   OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                        OutIter @\farg{result}@,
                        const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
 template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
          Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred, class T>
-  requires HasCopyAssign<OutIter::reference, T>
+  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>
   OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@,
                           Pred @\farg{pred}@, const T& @\farg{new_value}@);
@@ -1817,7 +1822,7 @@ applications of the corresponding predicate.
 \index{fill_n@\tcode{fill_n}}%
 \color{addclr}\begin{itemdecl}
 template<MutableForwardIterator Iter, class T>
-  requires HasCopyAssign<Iter::reference, T>
+  requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
   void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<class Iter, IntegralLike Size, class T>
@@ -1856,7 +1861,7 @@ Exactly
 \index{generate_n@\tcode{generate_n}}%
 \color{addclr}\begin{itemdecl}
 template<MutableForwardIterator Iter, Callable Generator>
-  requires HasCopyAssign<Iter::reference, Generator::result_type>
+  requires Has@\removedCCC{Copy}@Assign<Iter::reference, Generator::result_type>
   void generate(Iter @\farg{first}@, Iter @\farg{last}@,
                 Generator @\farg{gen}@);
 
@@ -2045,7 +2050,7 @@ template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value
 
 @\textcolor{addclr}{template}@<InputIterator InIter, MutableForwardIterator OutIter>
   requires HasEqualTo<OutIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
-           HasCopyAssign<OutIter::reference, InIter::reference> &&
+           Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
            !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
@@ -2064,7 +2069,7 @@ template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value
 
 template<InputIterator InIter, MutableForwardIterator OutIter,
          Predicate<auto, OutIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
-  requires HasCopyAssign<OutIter::reference, InIter::reference> &&
+  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
            !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@, Pred @\farg{pred}@);
@@ -2072,7 +2077,7 @@ template<InputIterator InIter, MutableForwardIterator OutIter,
 \color{black}
 
 \editorial{We assume (and require!) the proposed resolution to DR 538,
-  which adds the \tcode{HasCopyAssign} requirement.}
+  which adds the \tcode{Has\removedCCC{Copy}Assign} requirement.}
 
 \editorial{Note that we have split the two signatures of
   \tcode{unique_copy} into six signatures, to cover the actual
@@ -2231,7 +2236,7 @@ swaps.
 
 \index{rotate_copy@\tcode{rotate_copy}}%
 \color{addclr}\begin{itemdecl}
-template<ForwardIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
+template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter>
   OutIter rotate_copy(InIter @\farg{first}@, InIter @\farg{middle}@,
                       InIter @\farg{last}@, OutIter @\farg{result}@);
 \end{itemdecl}\color{black}
@@ -2581,7 +2586,7 @@ comparisons.
 \index{partial_sort_copy@\tcode{partial_sort_copy}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, RandomAccessIterator RAIter>
-  requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
+  requires Has@\removedCCC{Copy}@Assign<RAIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
            @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
            HasLess<InIter::value_type, RAIter::value_type> &&
            HasLess<RAIter::value_type, InIter::value_type> &&
@@ -2590,7 +2595,7 @@ template<InputIterator InIter, RandomAccessIterator RAIter>
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
 
 template<InputIterator InIter, RandomAccessIterator RAIter, class Compare>
-  requires HasCopyAssign<RAIter::reference, InIter::value_type> &&
+  requires Has@\removedCCC{Copy}@Assign<RAIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
            @\changedCCC{SwappableIterator<RAIter>}{Swappable<RAIter::reference>}@ &&
            Predicate<Compare, InIter::value_type, RAIter::value_type> &&
            Predicate<Compare, RAIter::value_type, InIter::value_type> &&
