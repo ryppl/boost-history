@@ -208,5 +208,15 @@
 			- Tested with gcc 4.3.0 on SuSE
 			- Tested with intel 10.1 on SuSE
 		</revision>
+		<revision id="20080626" major="0" minor="1" micro="31" author="m_ch">
+			- Added accumulate algorithm working on meta-object-sequences
+			- Added a new meta-path axes (ancestors_and_self, siblings, siblings_and_self)
+			- Updated the meta_path_sample.hpp to show the new things
+			- Tested with MSVC++ 2008 EE On Vista
+			- Tested with gcc 4.2.1 on FreeBSD
+			- Tested with gcc 4.2.1 on SuSE
+			- Tested with gcc 4.3.0 on SuSE
+			- Tested with intel 10.1 on SuSE
+		</revision>
 	</revisions>
 </library>

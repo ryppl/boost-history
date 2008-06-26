@@ -26,7 +26,7 @@ namespace meta_path {
 
 namespace detail {
 
-	template <class NodeContext>
+	template <class NodeContext, class IncludeSelf>
 	struct ancestors_base
 	{
 	private:
@@ -95,6 +95,15 @@ namespace detail {
 					>,
 					if_empty,
 					if_not_empty
+				>::type ancestor_paths_and_nodes;
+
+				typedef typename mpl::if_<
+					IncludeSelf,
+					typename mpl::push_back<
+						ancestor_paths_and_nodes,
+						Pair
+					>::type,
+					ancestor_paths_and_nodes
 				>::type type;
 			};
 		};
@@ -113,7 +122,9 @@ namespace detail {
  *  given node context
  */
 template <class NodeContext>
-struct ancestors : node_set<detail::ancestors_base<NodeContext> >
+struct ancestors : node_set<
+	detail::ancestors_base<NodeContext, mpl::false_> 
+>
 {
 	typedef ancestors<NodeContext> type;
 };

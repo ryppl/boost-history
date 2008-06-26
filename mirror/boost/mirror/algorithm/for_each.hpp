@@ -89,7 +89,6 @@ static inline Functor for_each(
 		typename mirror::end<MetaObjectSequence>::type
 	> ::perform(ref(fn), ref(transf));
 }
-
 template <
 	class IteratorBegin,
 	class IteratorEnd,

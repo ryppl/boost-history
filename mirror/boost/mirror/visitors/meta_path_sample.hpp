@@ -27,6 +27,9 @@
 #include <boost/mirror/meta_path/self.hpp>
 #include <boost/mirror/meta_path/parent.hpp>
 #include <boost/mirror/meta_path/ancestors.hpp>
+#include <boost/mirror/meta_path/ancestors_and_self.hpp>
+#include <boost/mirror/meta_path/siblings.hpp>
+#include <boost/mirror/meta_path/siblings_and_self.hpp>
 #include <boost/mirror/meta_path/size.hpp>
 
 //
@@ -118,7 +121,13 @@ namespace detail {
 			InheritanceSpec
 		> mi) const
 		{
-			bcout << "|base_class|";
+			typedef typename meta_inheritance<
+				Position,
+				BaseClass,
+				AccessSpec, 
+				InheritanceSpec
+			>::meta_base_class mbc;
+			bcout << "|base_class '" << mbc::base_name() << "'|";
 			print_indent();
 		}
 	
@@ -223,6 +232,9 @@ private:
 		print_node_set<meta_path::self>("self", mo, ctx);
 		print_node_set<meta_path::parent>("parent", mo, ctx);
 		print_node_set<meta_path::ancestors>("ancestors", mo, ctx);
+		print_node_set<meta_path::ancestors_and_self>("ancestors_and_self", mo, ctx);
+		print_node_set<meta_path::siblings>("siblings", mo, ctx);
+		print_node_set<meta_path::siblings_and_self>("siblings_and_self", mo, ctx);
 	}
 
 };
