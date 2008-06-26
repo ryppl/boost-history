@@ -11,9 +11,9 @@ project libs/numeric/bindings/umfpack/test : requirements
 import testing ;
 
 alias bindings-umfpack-tests :
-    [ compile umf4.cc ]
-    [ compile umfpack_di_demo.cc ]
-    [ compile umfpack_simple.cc ]
-    [ compile umfpack_zi_demo.cc ]
+    [ link umf4.cc ]
+    [ link umfpack_di_demo.cc ]
+    [ run umfpack_simple.cc ]
+    [ link umfpack_zi_demo.cc ]
 ;
 

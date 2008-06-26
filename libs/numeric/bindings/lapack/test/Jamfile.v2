@@ -14,6 +14,7 @@ alias bindings-lapack-tests :
     [ run lapack.cpp ]
     [ run hseqr.cpp ]
 
+    [ run ublas_geev.cpp ]
     [ run ublas_gees.cpp ]
     [ run ublas_geqrf.cpp ]
     [ run ublas_hbev.cpp ]
