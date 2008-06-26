@@ -163,8 +163,8 @@ namespace std {
   template<ObjectType T> concept_map MutableRandomAccessIterator<T*> @\textit{see below}@;
   template<ObjectType T> concept_map RandomAccessIterator<const T*> @\textit{see below}@;
 
-  // \ref{swappable.iterators}, swappable iterators:
-  concept SwappableIterator<typename X> @\textit{see below}@;
+  @\removedCCC{// \mbox{\ref{swappable.iterators}}, swappable iterators:}@
+  @\removedCCC{concept SwappableIterator<typename X> \mbox{\textit{see below}};}@
 }
 \end{codeblock}
 \color{black}
@@ -222,9 +222,9 @@ defined on them:
 \techterm{output iterators},
 \techterm{forward iterators}, \addedConcepts{mutable forward iterators},
 \techterm{bidirectional iterators}, \addedConcepts{mutable bidirectional iterators},
-\techterm{random access iterators}, \removedConcepts{and}
+\techterm{random access iterators}, and
 \addedConcepts{mutable random access iterators},
-\addedConcepts{and swappable iterators,}
+\removedCCC{and swappable iterators,}
 as shown in Table~\ref{tab:iterators.relations}.
 
 \begin{floattable}{Relations among iterator \changedConcepts{categories}{concepts}}{tab:iterators.relations}
@@ -415,7 +415,7 @@ concept InputIterator<typename X> : Semiregular<X>, EqualityComparable<X> {
 
   MoveConstructible postincrement_result;
   requires Dereferenceable<postincrement_result> &&
-           @\textcolor{addclr}{}@Convertible<Dereferenceable<postincrement_result>::reference, value_type>;
+           @\textcolor{addclr}{}@Convertible<Dereferenceable<postincrement_result>::reference, @\addedCC{const}@ value_type@\addedCC{\&}@>;
 
   reference operator*(const X&);
   pointer operator->(const X&);
@@ -724,13 +724,15 @@ concept ForwardIterator<typename X> : InputIterator<X>, Regular<X> {
   axiom MultiPass(X a, X b) {
     if (a == b) *a == *b;
     if (a == b) ++a == ++b;
-    &a == &++a;
+    @\removedCCC{\&a == \&++a;}@
   }
 }
 
 concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIterator<X> { 
-  requires SameType<ForwardIterator<X>::value_type, BasicOutputIterator<X>::value_type> &&
-           SameType<ForwardIterator<X>::reference, BasicOutputIterator<X>::reference>;
+  requires SameType<ForwardIterator<X>::value_type, BasicOutputIterator<X>::value_type> 
+        && SameType<ForwardIterator<X>::reference, BasicOutputIterator<X>::reference>
+        @\addedCC{\&\& SameType<ForwardIterator<X>::postincrement_result,}@
+                    @\addedCC{BasicOutputIterator<X>::postincrement_result>}@;
 }
 \end{itemdecl}
 \color{black}
@@ -738,7 +740,7 @@ concept MutableForwardIterator<typename X> : ForwardIterator<X>, BasicOutputIter
 \editorial{The \tcode{ForwardIterator} concept here provides weaker
   requirements on the \tcode{reference} and \tcode{pointer} types than
   the associated requirements table in C++03, because these types do
-  not need \removedCC{do not need} to be true references or pointers to
+  not need to be true references or pointers to
   \tcode{value_type}. This change weakens the concept, meaning that
   C++03 iterators (which meet the stronger requirements) still meet
   these requirements, but algorithms that relied on these stricter
@@ -769,6 +771,15 @@ and the removal of the restrictions on the number of the assignments through the
 allows the use of multi-pass one-directional algorithms with forward iterators.
 \exitnote\ 
 
+\begin{itemdecl}
+@\addedCC{X\& operator++(X\& r); // inherited from InputIterator<X>}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\postcondition} \mbox{\tcode{\&r == \&++r}}.}
+\end{itemdescr}
+
 \rSec2[bidirectional.iterators]{Bidirectional iterators}
 
 \pnum
@@ -789,7 +800,7 @@ BidirectionalIterator or MutableBidirectionalIterator concept.}
 concept BidirectionalIterator<typename X> : ForwardIterator<X> {
   MoveConstructible postdecrement_result;
   requires Dereferenceable<postdecrement_result> &&
-           Convertible<Dereferenceable<postdecrement_result>::reference, value_type> &&
+           Convertible<Dereferenceable<postdecrement_result>::reference, @\addedCC{const}@ value_type@\addedCC{\&}@> &&
            Convertible<postdecrement_result, const X&>;
 
   X& operator--(X&);
@@ -798,7 +809,7 @@ concept BidirectionalIterator<typename X> : ForwardIterator<X> {
   axiom BackwardTraversal(X a, X b) {
     --(++a) == a;
     if (--a == --b) a == b;
-    &a == &--a;
+    @\removedCCC{\&a == \&--a;}@
   }
 }
 
@@ -824,6 +835,7 @@ there exists \tcode{s}\ such that \tcode{r == ++s}.
 \pnum
 \postcondition\
 \tcode{r}\ is dereferenceable.
+\addedCC{\mbox{\tcode{\&r == \&{-}{-}r}}.}
 
 \begin{itemdecl}
 postdecrement_result operator--(X& r, int);
@@ -855,10 +867,10 @@ the following expressions are valid as shown in Table~99.}
 \begin{itemdecl}
 concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanComparable<X> {
   X& operator+=(X&, difference_type);
-  X  operator+ (const X&, difference_type);
-  X  operator+ (difference_type, const X&);
+  X  operator+ (const X& x, difference_type n) @\addedCC{\{ X tmp(x); x += n; return x; \}}@
+  X  operator+ (difference_type n, const X& x) @\addedCC{\{ X tmp(x); x += n; return x; \}}@
   X& operator-=(X&, difference_type);
-  X  operator- (const X&, difference_type);
+  X  operator- (const X& x, difference_type n) @\addedCC{\{ X tmp(x); x -= n; return x; \}}@
 
   difference_type operator-(const X&, const X&);
   reference operator[](const X&, difference_type);
@@ -873,7 +885,7 @@ concept MutableRandomAccessIterator<typename X>
 
 \color{addclr}
 \begin{itemdecl}
-X& operator+=(X& r, difference_type m);
+X& operator+=(X& r, difference_type n);
 \end{itemdecl}
 
 \pnum
@@ -995,31 +1007,6 @@ an implementation may define
 \end{codeblock}
 \textcolor{addclr}{\exitnote}
 \color{black}
-
-\editorial{Add the following new section}
-
-\rSec2[swappable.iterators]{Swappable iterators}
-\pnum
-\addedConcepts{A class or built-in type \mbox{\tcode{X}} satisfies the
-requirements of a swappable iterator if it meets the syntactic and
-semantic requirements of the \mbox{\tcode{SwappableIterator}}
-concept.}
-
-\color{addclr}
-\begin{itemdecl}
-auto concept SwappableIterator<typename X> {
-  void iter_swap(const X&, const X&);
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-void iter_swap(const X& a, const X& b);
-\end{itemdecl}
-\color{black}
-
-\pnum
-\addedConcepts{Swaps the elements referenced by iterators \mbox{\tcode{a}}
-  and \mbox{\tcode{b}}.}
 
 \appendix
 \setcounter{chapter}{3}
