@@ -274,39 +274,40 @@ namespace std {
                       InIter2 @\farg{first2}@, OutIter @\farg{result}@,
                       BinaryOp @\farg{binary_op}@);
 
-  template<MutableForwardIterator Iter, class T>
-    requires HasEqualTo<Iter::reference, T> &&
-    Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
+  template<@\removedCCC{Mutable}@ForwardIterator Iter, class T>
+    requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T> 
+          && Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
     void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                  const T& @\farg{old_value}@, const T&
                  @\farg{new_value}@);
-% revisit (mmarcus): still a mutable iterator?
-  @\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
+  template<@\removedCCC{Mutable}@ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
     requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
+          @\addedCC{\&\& CopyConstructible<Pred>}@
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, 
            OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, class T>
-    requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@> && 
-    HasEqualTo<InIter::reference, T>
+    requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@> 
+          && HasEqualTo<InIter::@\changedCCC{reference}{value_type}@, T>
     OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                          OutIter @\farg{result}@,
                          const T& @\farg{old_value}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
            Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred, class T>
     requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>
+          @\addedCC{\&\& CopyConstructible<Pred>}@
     OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                             OutIter @\farg{result}@,
                             Pred @\farg{pred}@, const T& @\farg{new_value}@);
 
-  template<MutableForwardIterator Iter, class T>
+  template<@\removedCCC{Mutable}@ForwardIterator Iter, class T>
     requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
     void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
   template<class Iter, IntegralLike Size, class T>
-    requires OutputIterator<Iter, T>
+    requires OutputIterator<Iter, @\addedCC{const}@ T@\addedCC{\&}@>
     void fill_n(Iter @\farg{first}@, Size @\farg{n}@, const T& @\farg{value}@);
 
-  template<MutableForwardIterator Iter, Callable Generator>
+  template<@\removedCCC{Mutable}@ForwardIterator Iter, Callable Generator>
     requires Has@\removedCCC{Copy}@Assign<Iter::reference, Generator::result_type>
     void generate(Iter @\farg{first}@, Iter @\farg{last}@,
                   Generator @\farg{gen}@);
@@ -1670,6 +1671,13 @@ template<InputIterator InIter1, InputIterator InIter2,
                     BinaryOp @\farg{binary_op}@);
 \end{itemdecl}\color{black}
 
+\editorial{There is some question here about whether the
+  \tcode{Callable} arguments should be \tcode{reference}s or
+  \tcode{const value_type\&}s. The text says that the function object
+  shall not modify elements (which implies \tcode{const
+    value_type\&}), but existing practice is uses
+  \tcode{reference}. We leave this as \tcode{reference} for now.}
+
 \begin{itemdescr}
 \pnum
 \effects\ 
@@ -1718,15 +1726,15 @@ in case of binary transform.
 \index{replace@\tcode{replace}}%
 \index{replace_if@\tcode{replace_if}}%
 \color{addclr}\begin{itemdecl}
-template<MutableForwardIterator Iter, class T>
-  requires HasEqualTo<Iter::reference, T> && 
-    Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
+template<@\removedCCC{Mutable}@ForwardIterator Iter, class T>
+  requires HasEqualTo<Iter::@\changedCCC{reference}{value_type}@, T> 
+        && Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
   void replace(Iter @\farg{first}@, Iter @\farg{last}@,
                const T& @\farg{old_value}@, const T& @\farg{new_value}@);
 
-% revisit (mmarcus): Still want Mutable iterators?
-@\textcolor{addclr}{template}@<MutableForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
+template<@\removedCCC{Mutable}@ForwardIterator Iter, Predicate<auto, Iter::@\changedCCC{reference}{value_type}@> Pred, class T>
   requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
+        @\addedCC{\&\& CopyConstructible<Pred>}@
   void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                   Pred @\farg{pred}@, const T& @\farg{new_value}@);
 \end{itemdecl}\color{black}
@@ -1758,7 +1766,8 @@ applications of the corresponding predicate.
 \index{replace_copy_if@\tcode{replace_copy_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, class T>
-  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>  && HasEqualTo<InIter::reference, T>
+  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>  
+        && HasEqualTo<InIter::@\changedCCC{reference}{value_type}@, T>
   OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                        OutIter @\farg{result}@,
                        const T& @\farg{old_value}@, const T& @\farg{new_value}@);
@@ -1766,6 +1775,7 @@ template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_t
 template<InputIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter, 
          Predicate<auto, InIter::@\changedCCC{reference}{value_type}@> Pred, class T>
   requires Has@\removedCCC{Copy}@Assign<OutIter::reference, @\changedCCC{T}{const T\&}@>
+        @\addedCC{\&\& CopyConstructible<Pred>}@
   OutIter replace_copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@,
                           Pred @\farg{pred}@, const T& @\farg{new_value}@);
@@ -1821,12 +1831,12 @@ applications of the corresponding predicate.
 \index{fill@\tcode{fill}}%
 \index{fill_n@\tcode{fill_n}}%
 \color{addclr}\begin{itemdecl}
-template<MutableForwardIterator Iter, class T>
+template<@\removedCCC{Mutable}@ForwardIterator Iter, class T>
   requires Has@\removedCCC{Copy}@Assign<Iter::reference, @\changedCCC{T}{const T\&}@>
   void fill(Iter @\farg{first}@, Iter @\farg{last}@, const T& @\farg{value}@);
 
 template<class Iter, IntegralLike Size, class T>
-  requires OutputIterator<Iter, T>
+  requires OutputIterator<Iter, @\addedCC{const}@ T@\addedCC{\&}@>
   void fill_n(Iter @\farg{first}@, Size @\farg{n}@, const T& @\farg{value}@);
 \end{itemdecl}\color{black}
 
@@ -1860,7 +1870,7 @@ Exactly
 \index{generate@\tcode{generate}}%
 \index{generate_n@\tcode{generate_n}}%
 \color{addclr}\begin{itemdecl}
-template<MutableForwardIterator Iter, Callable Generator>
+template<@\removedCCC{Mutable}@ForwardIterator Iter, Callable Generator>
   requires Has@\removedCCC{Copy}@Assign<Iter::reference, Generator::result_type>
   void generate(Iter @\farg{first}@, Iter @\farg{last}@,
                 Generator @\farg{gen}@);
