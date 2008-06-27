@@ -238,18 +238,18 @@ auto concept Container<typename C> {
            && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
   bool      @\changedCCC{C::empty() const;}{empty(const C\&)}@
-  size_type @\changedCCC{C::size() const;}{size(const C\&)}@
+  @\removedCCC{size_type C::size() const;}@
 
   iterator       @\changedCCC{C::begin();}{begin(C\&);}@
   const_iterator @\changedCCC{C::begin() const;}{begin(const C\&);}@
   iterator       @\changedCCC{C::end();}{end(C\&);}@
-  const_iterator @\changedCCC{C::end() const;}{begin(const C\&);}@
+  const_iterator @\changedCCC{C::end() const;}{end(const C\&);}@
 
-  @\changedCCC{void C::swap(C\&\&)}{requires Swappable<C>}@;
+  @\removedCCC{void C::swap(C\&\&)}@
 
   axiom ContainerSize(C c) {
     @\changedCCC{(C.begin() == C.end()) == C.empty();}{(begin(c) == end(c)) == empty(c);}@
-    @\changedCCC{(C.begin() != C.end()) == (C.size() > 0);}{(begin(c) != end(c)) == (size(c) > 0);}@
+    @\removedCCC{(C.begin() != C.end()) == (C.size() > 0);}@
   }
 }
 
@@ -261,14 +261,13 @@ auto concept Container<typename C> {
   iteration through a sequence of elements stored in the container.}
 
 \pnum
-\addedConcepts{\mbox{\requires} for a (possibly
-% revisit(mmarcus): can't get macros to nest
-%  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{@\changedCCC{C}{c}@}},
-%  \removedCCC{\mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
-%  \addedCC{\mbox{\tcode{[begin(c), end(c))}} is a valid range.}
-}
-\end{itemdescr}
+\addedConcepts{\mbox{\requires} for a (possibly 
+  \mbox{\tcode{const}}-qualified) container }\changedCCC{\mbox{\tcode{C}},}{\mbox{\tcode{c}},}
+  \removedCCC{\mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
+  \addedConcepts{\mbox{\tcode{[begin(c), end(c))}} is a valid range.} 
 
+\end{itemdescr}
+ 
 
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
@@ -283,18 +282,14 @@ auto concept MemberContainer<typename C> {
            && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
   bool      C::empty() const;
-  size_type C::size() const;
 
   iterator       C::begin();
   const_iterator C::begin() const;
   iterator       C::end();
   const_iterator C::end() const;
 
-  void C::swap(C&&);
-
-  axiom ContainerSize(C c) {
+  axiom ContainerEmpty(C c) {
     (c.begin() == c.end()) == c.empty();
-    (c.begin() != c.end()) == (c.size() > 0);
   }
 }
 \end{itemdecl}
@@ -307,8 +302,8 @@ auto concept MemberContainer<typename C> {
 
 \pnum
 \addedConcepts{\mbox{\requires} for a (possibly
-  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{C}},
-  \mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
+  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{c}},
+  \mbox{\tcode{[c.begin(), c.end())}} is a valid range.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -323,12 +318,31 @@ concept_map Container<C> {
   typedef C::const_iterator  const_iterator;
 
   bool           empty(const C& c) { return c.empty(); }
-  size_type      size(const C& c)  { return c.size(); }
 
   iterator       begin(C& c)       { return c.begin(); }
-  const_iterato  begin(const C& c) { return c.begin(); }
+  const_iterator begin(const C& c) { return c.begin(); }
   iterator       end(C& c)         { return c.end(); }
   const_iterator end(const C& c)   { return c.end(); }
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+template <typename E, size_t N>
+concept_map Container<E[N]> {
+  typedef E                  value_type;
+  typedef E&                 reference;
+  typedef const E&           const_reference;
+  typedef size_t             size_type;
+
+  typedef E*                 iterator;
+  typedef const E*           const_iterator;
+
+  bool           empty(const E(&c)[N]) { return N==0; }
+
+  iterator       begin(E(&c)[N])       { return &c[0]; }
+  const_iterator begin(const E(&c)[N]) { return &c[0]; }
+  iterator       end(E(&c)[N])         { return &c[N]; }
+  const_iterator end(const E(&c)[N])   { return &c[N]; }
 }
 \end{itemdecl}
 
