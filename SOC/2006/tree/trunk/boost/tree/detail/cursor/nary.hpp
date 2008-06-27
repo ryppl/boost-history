@@ -13,7 +13,7 @@
 #define BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 
 
-#include <boost/tree/cursor_helpers.hpp>
+#include <boost/tree/cursor_facade.hpp>
 #include <boost/tree/detail/node/nary.hpp>
 
 #include <boost/mpl/eval_if.hpp>

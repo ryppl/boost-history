@@ -14,7 +14,7 @@
 
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/cursor_helpers.hpp>
+#include <boost/tree/cursor_facade.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

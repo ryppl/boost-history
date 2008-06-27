@@ -16,18 +16,11 @@
 #ifndef BOOST_TREE_DETAIL_CURSOR_FOREST_HPP
 #define BOOST_TREE_DETAIL_CURSOR_FOREST_HPP
 
-//#include <boost/tree/detail/cursor/nary.hpp>
-
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/cursor_helpers.hpp>
+#include <boost/tree/cursor_adaptor.hpp>
 
-//#include <boost/type_traits/integral_constant.hpp>
-//
-//#include <boost/type_traits/is_convertible.hpp>
-//#include <boost/utility/enable_if.hpp>
-//
-#include <boost/iterator/iterator_adaptor.hpp>
-
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <iterator>
 #include <utility>
@@ -38,76 +31,6 @@ namespace detail {
 
 using boost::tree::cursor_core_access;
 using boost::iterator_core_access;
-
-//template <class Cursor>
-//class forest_cursor;
-//
-//template<class Cursor>
-//class const_forest_cursor
-// : public cursor_adaptor<const_forest_cursor<Cursor>
-//      , Cursor const
-//      , boost::use_default
-//      , bidirectional_traversal_tag
-//      , forward_traversal_tag
-//    > {
-// private:
-//    struct enabler {};
-//
-// public:
-// 	//TODO: Tidy up typedefs
-//
-//	typedef Cursor base_cursor;
-//	
-// 	typedef forest_cursor<Cursor> cursor;
-// 	typedef const_forest_cursor<Cursor> const_cursor;
-//
-//	typedef typename cursor_size<base_cursor>::type size_type;
-//
-//	typedef bidirectional_traversal_tag cursor_category;
-//	
-//	typedef typename Cursor::metadata_type metadata_type;
-//	
-//	// Container-specific:
-//	typedef cursor iterator;  // For (range) concepts' sake, mainly
-//	typedef const_cursor const_iterator;
-//	
-// 	// Common iterator facade stuff
-//    const_forest_cursor()
-//     : const_forest_cursor::cursor_adaptor_() {}
-//
-//    explicit const_forest_cursor(base_cursor p)
-//     : const_forest_cursor::cursor_adaptor_(p) {}
-//      
-//    template <class OtherCursor>
-//    const_forest_cursor(
-//        const_forest_cursor<OtherCursor> const& other
-//      , typename boost::enable_if<
-//            boost::is_convertible<OtherCursor*, 
-//           	typename Cursor::base_pointer>  // is that correct?
-//          , enabler
-//        >::type = enabler()
-//    )
-//      : const_forest_cursor::cursor_adaptor_(other.base()) {}
-//
-//	operator base_cursor()
-//	{
-//		return this->base();
-//	}	
-// private:
-//	
-//    friend class boost::iterator_core_access;
-//       
-//    void increment()
-//    {
-//		 (++this->base_reference()).to_begin();
-//    }
-//    
-//    void decrement()
-//    {
-//		--this->base_reference().to_parent();
-//    }
-//
-//};
 
 template <class Cursor> 
 class forest_cursor

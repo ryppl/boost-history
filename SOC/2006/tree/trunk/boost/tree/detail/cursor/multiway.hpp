@@ -12,15 +12,10 @@
 #include <boost/tree/detail/cursor/nary.hpp>
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/cursor_helpers.hpp>
+#include <boost/tree/cursor_adaptor.hpp>
 
-//#include <boost/type_traits/integral_constant.hpp>
-//
-//#include <boost/type_traits/is_convertible.hpp>
-//#include <boost/utility/enable_if.hpp>
-//
-//#include <boost/iterator/iterator_adaptor.hpp>
-
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <iterator>
 #include <utility>
