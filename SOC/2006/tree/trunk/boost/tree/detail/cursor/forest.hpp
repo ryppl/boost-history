@@ -34,16 +34,16 @@ using boost::iterator_core_access;
 
 template <class Cursor> 
 class forest_cursor
- : public cursor_adaptor<forest_cursor<Cursor>
+: public cursor_adaptor<forest_cursor<Cursor>
       , Cursor
       , boost::use_default
       , bidirectional_traversal_tag
       , forward_traversal_tag
     > {
- private:
+private:
     struct enabler {};
 
- public:
+public:
  	//TODO: Tidy up typedefs
 
 	typedef Cursor base_cursor;
@@ -82,22 +82,30 @@ class forest_cursor
 		return this->base();
 	}
 	
- private:
+private:
 	
     friend class cursor_core_access;
     friend class iterator_core_access;
-       
-    void increment()
+
+//	bool empty_() const
+//	{ 
+//	}
+
+	void increment()
     {
-		 (++this->base_reference()).to_begin();
+		 if (!(++this->base_reference()).empty())
+		 	this->base_reference().to_begin();
     }
     
     void decrement()
     {
-		--this->base_reference().to_parent();
+    	if (!this->base_reference().parity())
+			this->base_reference().to_parent();
+    	--this->base_reference();
     }
 	
 	// Range stuff.
+	
 	// left() remains unchanged, so no need to re-implement it.
 
 	void right()
@@ -109,9 +117,8 @@ class forest_cursor
 	
 	void up()
 	{
-		if (!this->base_reference().parity()) {
+		if (!this->base_reference().parity())
 			this->base_reference().to_parent();
-		}
 	}
 };
 

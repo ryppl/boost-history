@@ -42,7 +42,7 @@ void test_forest_tree()
 
 	c = mytree.insert(c, 4);	
 	BOOST_CHECK(*c == 4);
-	BOOST_CHECK(c == mytree.root().begin()); // Do we want this?
+	BOOST_CHECK(c == mytree.root().begin());
 	
 	cur = tree_type::base_cursor(c);
 //	BOOST_CHECK(cur == mytree.h.root().begin());
@@ -73,7 +73,7 @@ void test_forest_tree()
 	tree_type forest;
 	//create_test_data_tree(forest);
 	c = forest.insert(forest.root(), 8);
-	BOOST_CHECK(c == forest.root().begin()); // Do we want this?
+	BOOST_CHECK(c == forest.root().begin());
 	BOOST_CHECK(*c == 8);
 	c = forest.insert(c, 3);
 	BOOST_CHECK(*c == 3);
@@ -105,8 +105,8 @@ void test_natural_correspondence()
 	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
-	//boost::tree::preorder::copy(ft.root(), oc_test_list);
-	//test::preorder::traversal(test_list.begin(), test_list.end());
+//	boost::tree::preorder::copy(ft.root(), oc_test_list);
+//	test::preorder::traversal(test_list.begin(), test_list.end());
 	
 	test_list.clear();
 	//boost::tree::postorder::copy(ft.root(), oc_test_list);
