@@ -1,0 +1,38 @@
+
+The decoup "library" is simply an attempt to see if it's possible
+to completely decouple the layout of objects from their types and
+then "re-imbue" them with their interfaces at a later stage. The
+reason for doing so is to basically lay out the structure of a
+number of interdependent types (like those in the graph library).
+
+There are two parts of this problem to think about. The first, sometimes
+referred to as "mutually dependent types" is actually fairly trivial to resolve.
+Basically, we have two types that depend on eachother, with one generally being
+a pointer or a reference. If these types are not templates, you have to be
+careful about the ordering of functions that actually "realize" the depenency
+so that the types are completed before the realization. An interesting solution
+is to move the types into templates, which defers the realization until the
+templates are instantiated - pretty cool.
+
+The second, and much harder part of this problems is the definition of mutually
+dependend incomplete types (which usually involves a trio of types). Consider
+
+template <typename VertexDescriptor>
+struct vertex
+{
+    IncidenceStore<vertex_descriptor> edges;
+}
+
+typedef VertexStore<vertex<...> > vertex_store;
+typedef Descriptor<vertex_store> vertex_descriptor;
+
+Seems inocuous enough... The problem here is that the vertex store needs a
+complete vertex type in order to generate the store, and that generates the
+vertex decriptor. Unfortunately, we're too late because the vertex needs the
+descriptor type.
+
+Normally, if any of the types involved here are concrete (i.e., known), then
+the problem can generally be unwrapped. However, if all types are paramterized,
+then the solution isn't quite as easy. Basically, we have to rely on the fact
+that these containers are all fixed sizes regardless of the whatever they might
+store.

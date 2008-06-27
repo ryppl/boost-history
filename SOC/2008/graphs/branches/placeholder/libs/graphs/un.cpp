@@ -5,6 +5,7 @@
 #include <boost/assert.hpp>
 #include <boost/utility.hpp>
 #include <boost/graphs/undirected_graph.hpp>
+#include <boost/graphs/traits.hpp>
 
 #include "demangle.hpp"
 
@@ -86,6 +87,7 @@ void test_add_remove_edges()
     BOOST_ASSERT(g.num_edges() == 3);
 
     g.remove_edge(E.front());
+    BOOST_ASSERT(g.num_edges() == 2);
     BOOST_ASSERT(g.degree(V[1]) == 1);
     E.pop_front();
 
@@ -109,7 +111,7 @@ void test_disconnect_vertex()
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.num_edges() == 3);
 
-    g.disconnect_vertex(V[1]);
+    g.remove_edges(V[1]);
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.degree(V[1]) == 0);
     BOOST_ASSERT(g.degree(V[0]) == 1);
@@ -151,7 +153,7 @@ void test_add_multi_edges()
     g.add_edge(v, u);
 
     BOOST_ASSERT(g.num_vertices() == 2);
-    if(is_simple_graph(g)) {
+    if(allows_parallel_edges(g)) {
         BOOST_ASSERT(g.num_edges() == 1);
     }
     else {
@@ -184,10 +186,13 @@ void test_incidence_iterator()
     g.add_edge(v, u, 2);
     g.add_edge(u, v, 3);
     g.add_edge(v, u, 4);
+    cout << "done building" << endl;
 
     typename Graph::incident_edge_range x = g.incident_edges(v);
-    for( ; x.first != x.second; ++x.first) {
-        // cout << "test: " << g[*x.first] << endl;
+
+    typename Graph::incident_edge_iterator i = x.first;
+    for(typename Graph::incident_edge_iterator i = x.first; i != x.second; ++i) {
+        cout << *i << endl;
     }
 }
 
@@ -220,22 +225,19 @@ int main()
 void vec_vec()
 {
     cout << "---- vec/vec ----" << endl;
-    typedef undirected_graph<City, Road, vertex_vector, edge_vector> Graph;
-    test_add_vertices<Graph>();
-    test_add_edges<Graph>();
-    test_add_multi_edges<Graph>();
+    typedef undirected_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
+    // test_add_vertices<Graph>();
+    // test_add_edges<Graph>();
+    // test_add_multi_edges<Graph>();
     test_incidence_iterator<Graph>();
-    test_adjacency_iterator<Graph>();
-
-    Graph g;
-    g.add_vertex();
-    Graph::edge_iterator i(&g);
+    // test_adjacency_iterator<Graph>();
 }
 
 void list_list()
 {
+    /*
     cout << "---- list/list ----" << endl;
-    typedef undirected_graph<City, Road, vertex_list, edge_list> Graph;
+    typedef undirected_graph<City, Road, vertex_list<>, edge_list<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
     test_disconnect_vertex<Graph>();
@@ -244,11 +246,13 @@ void list_list()
     test_remove_multi_edges<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
+    */
 }
 
 
 void set_set()
 {
+    /*
     cout << "---- set/set ----" << endl;
     typedef undirected_graph<City, Road, vertex_set<>, edge_set<> > Graph;
     test_add_remove_vertices<Graph>();
@@ -259,5 +263,6 @@ void set_set()
     test_remove_multi_edges<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
+    */
 }
 
