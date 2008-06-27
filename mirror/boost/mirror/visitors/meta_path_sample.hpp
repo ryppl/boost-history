@@ -30,6 +30,8 @@
 #include <boost/mirror/meta_path/ancestors_and_self.hpp>
 #include <boost/mirror/meta_path/siblings.hpp>
 #include <boost/mirror/meta_path/siblings_and_self.hpp>
+#include <boost/mirror/meta_path/prior.hpp>
+#include <boost/mirror/meta_path/next.hpp>
 #include <boost/mirror/meta_path/size.hpp>
 
 //
@@ -235,6 +237,8 @@ private:
 		print_node_set<meta_path::ancestors_and_self>("ancestors_and_self", mo, ctx);
 		print_node_set<meta_path::siblings>("siblings", mo, ctx);
 		print_node_set<meta_path::siblings_and_self>("siblings_and_self", mo, ctx);
+		print_node_set<meta_path::prior>("prior", mo, ctx);
+		print_node_set<meta_path::next>("next", mo, ctx);
 	}
 
 };

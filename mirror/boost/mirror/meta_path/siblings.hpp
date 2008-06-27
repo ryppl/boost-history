@@ -18,7 +18,6 @@
 #include <boost/mpl/back.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/empty.hpp>
@@ -60,7 +59,7 @@ namespace detail {
 
 		typedef typename mpl::back<
 			path
-		>::type meta_attribs;
+		>::type meta_object_sequence;
 
 		struct append_sibling
 		{
@@ -96,7 +95,7 @@ namespace detail {
 
 
 		typedef typename mirror::accumulate<
-			meta_attribs,
+			meta_object_sequence,
 			PathsAndNodes,
 			append_sibling 
 		>::type type;

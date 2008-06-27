@@ -16,8 +16,9 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/comparison.hpp>
 
 
 
@@ -29,7 +30,7 @@ namespace mirror {
 template <class Iterator>
 struct deref
 {
-	typedef typename Iterator::pointed_to
+	typedef typename Iterator::template get_pointed_to<void>::type
 		type;
 };
 
@@ -154,19 +155,26 @@ namespace detail {
 	>
 	struct meta_object_iterator_base_templ
 	{
+
 		typedef Position position;
+		typedef BeginPos begin_position;
+		typedef EndPos end_position;
+
 		typedef Direction direction;
 
-		// the type meta_class_attribute
-		// that this iterator points to
-		typedef typename Selector::template apply<
-			ReflectedType, 
-			VariantTag,
-			MetaObjectSequence,
-			Position,
-			UnaryPredicate
-		>::type pointed_to;
-
+		template <typename Dummy>
+		struct get_pointed_to
+		{
+			// the type meta_class_attribute
+			// that this iterator points to
+			typedef typename Selector::template apply<
+				ReflectedType, 
+				VariantTag,
+				MetaObjectSequence,
+				Position,
+				UnaryPredicate
+			>::type type;
+		};
 
 		// the current iterator getter
 		struct get_this_iterator

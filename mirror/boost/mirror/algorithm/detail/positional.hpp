@@ -100,6 +100,18 @@ namespace detail {
 	: position_getter_impl_1<MetaObjectSequence, void, Implementation>
 	{ };
 
+	/** Declaration of the default explicit_position_getter_impl
+	 *  helper template.
+	 */
+	template <
+		class MetaObjectSequence, 
+		class Position,
+		template <class, class, class, class> class Implementation
+	>
+	struct explicit_position_getter_impl
+	: position_getter_impl_1<MetaObjectSequence, Position, Implementation>
+	{ };
+
 
 
 } // namespace detail

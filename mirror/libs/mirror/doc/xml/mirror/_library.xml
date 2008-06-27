@@ -218,5 +218,16 @@
 			- Tested with gcc 4.3.0 on SuSE
 			- Tested with intel 10.1 on SuSE
 		</revision>
+		<revision id="20080627" major="0" minor="1" micro="32" author="m_ch">
+			- Added point_to meta-function
+			- Added is_valid iterator meta-function
+			- Added a new meta-path axes (prior and next)
+			- Updated the meta_path_sample.hpp to show the new things
+			- Tested with MSVC++ 2008 EE On Vista
+			- Tested with gcc 4.2.1 on FreeBSD
+			- Tested with gcc 4.2.1 on SuSE
+			- Tested with gcc 4.3.0 on SuSE
+			- Tested with intel 10.1 on SuSE
+		</revision>
 	</revisions>
 </library>
