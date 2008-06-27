@@ -139,7 +139,7 @@ vertex_vector_impl<V,A>::add()
  * Add a vertex to the store with the given properties. Adding a vertex does
  * not invalidate any other descriptors.
  *
- * @complexity O(~1)
+ * @complexity O(1)
  */
 template <typename V, typename A>
 typename vertex_vector_impl<V,A>::vertex_descriptor

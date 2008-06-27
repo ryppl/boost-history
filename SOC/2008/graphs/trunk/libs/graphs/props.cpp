@@ -34,8 +34,17 @@ void make_square(Graph& g)
 template <typename Graph>
 void test_ext_vertex_props(Graph& g)
 {
-    exterior_vertex_property<Graph, double> vp(g, 5.0);
-    cout << demangle<typename exterior_vertex_property<Graph, double>::base_type>() << endl;
+    typedef exterior_vertex_property<Graph, double> VertexWeight;
+    typedef exterior_edge_property<Graph, double> EdgeWeight;
+
+    VertexWeight vp(g, 5.0);
+    EdgeWeight ep(g, 1.0);
+
+    cout << "vertex using: " << demangle<typename VertexWeight::base_type>() << endl;
+    cout << "edge using: " << demangle<typename EdgeWeight::base_type>() << endl;
+
+    cout << ep[*g.begin_edges()] << endl;
+    cout << ep.data.size() << endl;
 }
 
 int main()
@@ -59,5 +68,5 @@ void un_list_list()
     typedef undirected_graph<int, int, vertex_list<>, edge_list<> > Graph;
     Graph g;
     make_square(g);
-    test_ext_vertex_props(g);
+    // test_ext_vertex_props(g);
 }

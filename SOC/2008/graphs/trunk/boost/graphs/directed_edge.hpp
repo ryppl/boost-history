@@ -36,6 +36,15 @@ public:
     { }
     //@}
 
+   /**
+     * Return a value that uniquely describes the edge. This is basically going
+     * to be the address of the property. Note that directed graphs can't use
+     * indexed exterior edge properties because there's no method for maintaining
+     * a global edge index.
+     */
+    inline edge_properties* get() const
+    { return &properties(); }
+
     /** Return the source of the edge. */
     inline vertex_descriptor source() const
     { return _src; }

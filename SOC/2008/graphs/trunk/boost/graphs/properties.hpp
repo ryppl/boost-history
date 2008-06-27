@@ -1,6 +1,6 @@
 
-#ifndef BOOST_GRAPHS_PROPERTIES_HPP
-#define BOOST_GRAPHS_PROPERTIES_HPP
+#ifndef PROPERTIES_HPP
+#define PROPERTIES_HPP
 
 #include <vector>
 #include <tr1/unordered_map>
@@ -8,47 +8,80 @@
 #include <boost/type_traits.hpp>
 #include <boost/mpl/if.hpp>
 
-#include <boost/graphs/property_map/simple_properties.hpp>
-#include <boost/graphs/property_map/bundled_properties.hpp>
-#include <boost/graphs/property_map/hashed_properties.hpp>
-#include <boost/graphs/property_map/indexed_properties.hpp>
+#include "vertex_vector.hpp"
+#include "edge_vector.hpp"
 
-namespace boost {
-namespace graphs {
-
-/**
- * Default color types for this library.
- */
-enum color {
-    white_color,
-    gray_color,
-    black_color,
-    red_color,
-    green_color,
-    blue_color
-};
-
-/**
- * A traits class for colors. Specialize this if, for some reason, you ever
- * plan to specialize the notion of colors - which may be possible.
- *
- * @todo Obviously, this will be conceptized. See below.
- */
-template <typename Color>
-struct color_traits
-{
-    static color white()   { return white_color; }
-    static color gray()    { return gray_color; }
-    static color black()   { return black_color; }
-    static color red()     { return red_color; }
-    static color green()   { return green_color; }
-    static color blue()    { return blue_color; }
-};
+#include "property_map/hashed_properties.hpp"
+#include "property_map/indexed_properties.hpp"
 
 // All the fun of exterior properties... We need a mechanism that determines
 // the underlying mapping type of exterior properties. For vector-based stores
 // we can simply map each vertex to its corresponding element in another vector.
 // For non-vector-based stores, it's easier to use a hash of the descriptor.
+
+// We need a metafunction to determine whether or not a vertex set allows
+// indexed or hashed exterior properties. By default, we should assume that
+// we're using hash tables (they're more flexible).
+
+template <typename VertexStore>
+struct use_hashing
+{ BOOST_STATIC_CONSTANT(bool, value = true); };
+
+// Specialize over the basic vertex vector and edge vector.
+template <template <typename> class Alloc>
+struct use_hashing< vertex_vector<Alloc> >
+{ BOOST_STATIC_CONSTANT(bool, value = false); };
+
+template <template <typename> class Alloc>
+struct use_hashing< edge_vector<Alloc> >
+{ BOOST_STATIC_CONSTANT(bool, value = false); };
+
+// Select the type of container based on the underlying store selector
+template <typename Selector, typename Descriptor, typename Property>
+struct choose_container
+{
+    typedef typename boost::mpl::if_<
+            use_hashing<Selector>,
+            hashed_property_container<Descriptor, Property>,
+            indexed_property_container<Descriptor, Property>
+        >::type type;
+};
+
+template <typename Graph, typename Property>
+struct exterior_vertex_property
+    : choose_container<
+            typename Graph::vertex_store_selector, typename Graph::vertex_descriptor, Property
+        >::type
+{
+    typedef typename choose_container<
+            typename Graph::vertex_store_selector, typename Graph::vertex_descriptor, Property
+        >::type base_type;
+
+    exterior_vertex_property(Graph const& g)
+        : base_type(g.num_vertices())
+    { }
+
+    exterior_vertex_property(Graph const& g, Property const& p)
+        : base_type(g.begin_vertices(), g.end_vertices(), p)
+    { }
+};
+
+template <typename Graph, typename Property>
+struct exterior_edge_property
+    : hashed_property_container<typename Graph::edge_descriptor, Property>
+{
+    typedef hashed_property_container<typename Graph::edge_descriptor, Property> base_type;
+
+    exterior_edge_property(const Graph& g)
+        : base_type(g.num_edges())
+    { }
+
+    exterior_edge_property(Graph const& g, Property const& p)
+        : base_type(g.begin_edges(), g.end_edges(), p)
+    { }
+};
+
+#if 0
 
 // For now, these tags are used to actually decide the underlying implementation
 // of the property map.
@@ -59,9 +92,9 @@ template <typename Tag, typename Iterator, typename Property>
 struct exterior_property
 {
     typedef typename mpl::if_<
-            is_same<Tag, hashed_property_map_tag>,          // predicate
-            hashed_property_container<Iterator, Property>,  // on true
-            indexed_property_container<Iterator, Property>  // on false
+            is_same<Tag, hashed_property_map_tag>,
+            hashed_property_container<Iterator, Property>,
+            indexed_property_container<Iterator, Property>
         >::type container_type;
 
     typedef typename mpl::if_<
@@ -140,7 +173,6 @@ struct interior_edge_property<Graph, Property Bundle::*>
         > map_type;
 };
 
-} /* namespace graphs */
-} /* namespace boost */
+#endif
 
 #endif

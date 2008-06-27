@@ -365,12 +365,10 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                         vertex_descriptor v,
                                         edge_properties const& ep)
 {
-    // To add the edge or not... We need to consult the virtual edge set
-    // to determine whether or not this edge already exists. For multigraph
-    // stores, this should always return false. The protocol is: ask the source
-    // if it can be connected to the target. If so, connect them. If they're
-    // connected, return the existing edge. If they can't be connected, return
-    // a null descriptor.
+    // To add the edge or not... The protocol is: ask the source if it can be
+    // connected to the target. If so, connect them. If they're connected,
+    // return the existing edge. If they can't be connected, return a null
+    // descriptor.
     reorder(u, v);
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
@@ -382,9 +380,12 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         // iterator.
         if(ins.first == src.end()) {
             property_descriptor p = _props.add(ep);
-            typename vertex_type::iterator i = src.connect(v, p);
-            typename vertex_type::iterator j = tgt.connect(u, p);
-            _props.bind(p, i, j);
+            src.connect(v, p);
+            tgt.connect(u, p);
+
+            // Bind the iterators back into the property store and return an
+            // edge descriptor.
+            _props.bind(p, u, v);
             return edge_descriptor(u, v, p);
         }
         else {
@@ -445,9 +446,10 @@ template <BOOST_GRAPH_UG_PARAMS>
 std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
 undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) const
 {
-    vertex_type& src = _verts.vertex(u);
+    reorder(u, v);
+    vertex_type const& src = _verts.vertex(u);
     typename vertex_type::iterator i = src.find(v);
-    return i == src.end() ?
+    return i != src.end() ?
         std::make_pair(edge_descriptor(u, v, i->second), true) :
         std::make_pair(edge_descriptor(), false);
 }
@@ -647,13 +649,13 @@ undirected_graph<VP,EP,VS,ES>::end_vertices() const
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_iterator
 undirected_graph<VP,EP,VS,ES>::begin_edges() const
-{ return _props.begin(); }
+{ return edge_iterator(_props, _props.begin()); }
 
 /** Return an iterator past the end of the edges. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_iterator
 undirected_graph<VP,EP,VS,ES>::end_edges() const
-{ return _props.end(); }
+{ return edge_iterator(_props, _props.end()); }
 
 /** Return an iterator range over the edges in the graph. */
 template <BOOST_GRAPH_UG_PARAMS>

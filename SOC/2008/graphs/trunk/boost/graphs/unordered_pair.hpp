@@ -4,6 +4,8 @@
 
 #include <functional>
 
+#include <boost/functional/hash.hpp>
+
 /**
  * The unordered pair template provides a homogenously typed 2-element
  * whose values are unordered. By unordered, we simply mean that two pairs
@@ -102,25 +104,45 @@ unordered_pair<T,C>::order()
 
 // Convenience functions and Operators
 
-/**
- * Provide a lexicographical ordering for the elements in the pair. This
- * is taken from the ordering of std::pair.
- */
 template <typename T, typename C>
-bool
-operator<(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
-{
-    C c;
-    return c(a.first(), b.first()) ||
-           (!c(b.first(), a.first()) &&
-             c(a.second(), b.second()));
-}
+inline bool
+operator==(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+{ return a.first() == b.first() && a.second() == b.second(); }
 
 template <typename T, typename C>
-bool
-operator==(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+inline bool
+operator!=(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+{ return !(a == b); }
+
+template <typename T, typename C>
+inline bool
+operator<(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+{ return std::make_pair(a.first(), a.second()) < std::make_pair(b.first(), b.second()); }
+
+template <typename T, typename C>
+inline bool
+operator>(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+{ return b < a; }
+
+template <typename T, typename C>
+inline bool
+operator<=(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+{ return !(b < a); }
+
+template <typename T, typename C>
+inline bool
+operator>=(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
+{ return !(a < b); }
+
+/** Compute the hash value of the unordered pair. */
+template <typename T, typename C>
+inline std::size_t
+hash_value(unordered_pair<T,C> const& x)
 {
-    return a.first() == b.first() && a.second() == b.second();
+    std::size_t seed = 0;
+    boost::hash_combine(seed, x.first());
+    boost::hash_combine(seed, x.second());
+    return seed;
 }
 
 /**
@@ -129,10 +151,7 @@ operator==(unordered_pair<T,C> const& a, unordered_pair<T,C> const& b)
 template <typename T>
 unordered_pair<T>
 make_unordered_pair(T const& f, T const& s)
-{
-    unordered_pair<T> x(f, s);
-    return x;
-}
+{ return unordered_pair<T>(f, s); }
 
 /**
  * A swap-like sort function that will "unorder" two objects.

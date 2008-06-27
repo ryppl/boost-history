@@ -4,6 +4,7 @@
 #include <boost/graphs/directed_graph.hpp>
 #include <boost/graphs/undirected_graph.hpp>
 
+#include "demangle.hpp"
 #include "square.hpp"
 
 using namespace std;
@@ -18,12 +19,14 @@ void undirected();
 int main()
 {
     directed();
+    undirected();
 
     return 0;
 }
 
 void directed()
 {
+    cout << "--- directed (vec/vec) ---" << endl;
     typedef directed_graph<int, int, vvec, evec> Graph;
     Graph g;
     make_square(g);
@@ -36,6 +39,7 @@ void directed()
 
 void undirected()
 {
+    cout << "--- undirected (vec/vec) ---" << endl;
     typedef undirected_graph<int, int, vvec, evec> Graph;
     Graph g;
     make_square(g);

@@ -20,20 +20,33 @@ public:
     typedef PropDesc property_descriptor;
     typedef unordered_pair<vertex_descriptor> edge_pair;
 
-    inline undirected_edge();
-    inline undirected_edge(vertex_descriptor u, vertex_descriptor v, property_descriptor p);
+    inline undirected_edge()
+        : ends(), prop()
+    { }
+
+    inline undirected_edge(vertex_descriptor u, vertex_descriptor v, property_descriptor p)
+        : ends(u, v), prop(p)
+    { }
+
+    /**
+     * Return the underlying value of the property that uniquely describes the
+     * edge. This is primarily used to support mapping applications for exterior
+     * edge properties.
+     */
+    inline typename property_descriptor::value_type get() const
+    { return prop.get(); }
 
     inline property_descriptor properties() const
-    { return _prop; }
+    { return prop; }
 
     inline edge_pair const& edge() const
-    { return _edge; }
+    { return ends; }
 
     inline vertex_descriptor first() const
-    { return _edge.first(); }
+    { return ends.first(); }
 
     inline vertex_descriptor second() const
-    { return _edge.second(); }
+    { return ends.second(); }
 
     /** Return true if the edge connects the two vertices. */
     inline bool connects(vertex_descriptor u, vertex_descriptor v) const
@@ -45,53 +58,38 @@ public:
     inline vertex_descriptor opposite(vertex_descriptor v)
     { return v == first() ? second() : first(); }
 
-    inline bool operator==(undirected_edge const& x);
-    inline bool operator!=(undirected_edge const& x);
-    inline bool operator<(undirected_edge const& x);
-
-private:
-    edge_pair _edge;
-    PropDesc _prop;
+    edge_pair               ends;
+    property_descriptor     prop;
 };
 
-template <typename VD, typename PD>
-undirected_edge<VD,PD>::undirected_edge()
-    : _edge()
-    , _prop()
-{ }
+template <typename V, typename P>
+inline bool
+operator==(undirected_edge<V,P> const& a, undirected_edge<V,P> const& b)
+{ return a.ends == b.ends && a.prop == b.prop; }
 
-template <typename VD, typename PD>
-undirected_edge<VD,PD>::undirected_edge(vertex_descriptor u,
-                                        vertex_descriptor v,
-                                        property_descriptor p)
-    : _edge(u, v)
-    , _prop(p)
-{ }
+template <typename V, typename P>
+inline bool
+operator!=(undirected_edge<V,P> const& a, undirected_edge<V,P> const& b)
+{ return !(a == b); }
 
-template <typename VD, typename PD>
-bool
-undirected_edge<VD,PD>::operator==(undirected_edge const& x)
-{
-    return _edge == x._edge && _prop == x._prop;
-}
+template <typename V, typename P>
+inline bool
+operator<(undirected_edge<V,P> const& a, undirected_edge<V,P> const& b)
+{ return std::make_pair(a.ends, a.prop) < std::make_pair(b.ends < b.props); }
 
-template <typename VD, typename PD>
-bool
-undirected_edge<VD,PD>::operator!=(undirected_edge const& x)
-{
-    return !(*this->operator==(x));
-}
-
-template <typename VD, typename PD>
-bool
-undirected_edge<VD,PD>::operator<(undirected_edge const& x)
-{
-    return _edge < x._edge || (!(x._edge < _edge) && _prop < x._prop);
-}
-
-template <typename VD, typename PD>
-std::ostream& operator<<(std::ostream& os, undirected_edge<VD,PD> const& e)
+template <typename V, typename P>
+std::ostream& operator<<(std::ostream& os, undirected_edge<V,P> const& e)
 { return os << "{" << e.first() << " " << e.second() << "}"; }
+
+template <typename V, typename P>
+inline std::size_t
+hash_value(undirected_edge<V,P> const& e)
+{
+    std::size_t seed;
+    boost::hash_combine(seed, e.ends);
+    boost::hash_combine(seed, e.prop);
+    return seed;
+}
 
 /**
  * The undirected edge iterator simply wraps the iterator over the global edge
@@ -102,8 +100,11 @@ struct undirected_edge_iterator
 {
     typedef typename Graph::property_store store_type;
     typedef typename Graph::vertex_type vertex_type;
+    typedef typename Graph::property_descriptor property_descriptor;
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+
+    // This is an iterator directly into the global property store.
     typedef typename store_type::iterator prop_iterator;
-    typedef typename vertex_type::iterator edge_iterator;
 
     typedef std::forward_iterator_tag iterator_category;
     typedef std::size_t size_type;
@@ -112,8 +113,8 @@ struct undirected_edge_iterator
     typedef value_type reference;
     typedef value_type pointer;
 
-    undirected_edge_iterator(prop_iterator i)
-        : iter(i)
+    undirected_edge_iterator(store_type const& store, prop_iterator i)
+        : store(&store), iter(i)
     { }
 
     inline undirected_edge_iterator& operator++()
@@ -121,12 +122,14 @@ struct undirected_edge_iterator
 
     inline reference operator*() const
     {
-        edge_iterator p = iter->second.template get<edge_iterator>();
-        edge_iterator q = iter->third.template get<edge_iterator>();
-        return reference(p->first, q->first, iter->first);
+        // Grab the vertex descrip
+        vertex_descriptor u = iter->second.template get<vertex_descriptor>();
+        vertex_descriptor v = iter->third.template get<vertex_descriptor>();
+        return reference(u, v, store->describe(iter));
     }
 
-    prop_iterator iter;
+    store_type const*   store;
+    prop_iterator       iter;
 };
 
 template <typename Graph>

@@ -110,10 +110,10 @@ template <typename D>
 std::ostream& operator<<(std::ostream& os, const basic_vertex_descriptor<D>& v)
 { return os << v.get(); }
 
+/** Compute the hash value of the descriptor. */
 template <typename D>
 std::size_t hash_value(basic_vertex_descriptor<D> const& x)
 { return boost::hash_value(x.get()); }
-
 
 #endif
 
