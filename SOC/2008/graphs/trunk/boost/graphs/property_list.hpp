@@ -4,8 +4,8 @@
 
 #include <list>
 
-// Forward descriptor
-template <typename Iter> class proplist_descriptor;
+#include "triple.hpp"
+#include "descriptor.hpp"
 
 /**
  * The property list implements global list of properties for node-based edge
@@ -28,13 +28,12 @@ private:
     typedef typename Props::second_type first_iterator;
     typedef typename Props::third_type second_iterator;
 public:
-    typedef typename store_type::iterator iterator;
+    typedef typename store_type::const_iterator iterator;
     typedef typename store_type::size_type size_type;
-    typedef proplist_descriptor<typename store_type::iterator> property_descriptor;
+    typedef descriptor<store_type> property_descriptor;
 
     inline property_list()
-        : _props()
-        , _size(0)
+        : _props(), _size(0)
     { }
 
     // Add properties
@@ -52,13 +51,9 @@ public:
     template <typename Iter>
     void bind(property_descriptor d, Iter src, Iter tgt)
     {
-        d.iter->second.put(src);
-        d.iter->third.put(tgt);
+        d.value().second.put(src);
+        d.value().third.put(tgt);
     }
-
-    /** Convert an iterator to a descriptor. */
-    inline property_descriptor describe(iterator i) const
-    { return i; }
 
     /** Return the number of properties. */
     inline size_type size() const
@@ -71,8 +66,8 @@ public:
     { return _props.end(); }
 
 private:
-    mutable store_type  _props;
-    size_type           _size;
+    store_type  _props;
+    size_type   _size;
 };
 
 /**
@@ -93,7 +88,8 @@ typename property_list<P,A>::property_descriptor
 property_list<P,A>::add(edge_properties const& p)
 {
     ++_size;
-    return _props.insert(_props.end(), make_triple(p, first_iterator(), second_iterator()));
+    _props.push_back(make_triple(p, first_iterator(), second_iterator()));
+    return property_descriptor(_props, boost::prior(_props.end()));
 }
 
 /**
@@ -120,8 +116,6 @@ property_list<P,A>::remove(property_descriptor p)
 template <typename Iter>
 struct proplist_descriptor
 {
-    typedef typename Iter::pointer value_type;
-
     inline proplist_descriptor()
         : iter()
     { }
@@ -130,30 +124,41 @@ struct proplist_descriptor
         : iter(iter)
     { }
 
-    inline value_type get() const
-    { return &*iter; }
+    inline bool operator==(proplist_descriptor const& x) const
+    { return iter == x.iter; }
+
+    inline bool operator<(proplist_descriptor const& x) const
+    { return &*iter < &*x.iter; }
 
     Iter iter;
 };
 
-template <typename I>
-inline bool
-operator==(proplist_descriptor<I> const& a, proplist_descriptor<I> const& b)
-{ return a.iter == b.iter; }
 
-template <typename I>
-inline bool
-operator<(proplist_descriptor<I> const& a, proplist_descriptor<I> const& b)
-{ return a.get() < b.get(); }
+// This helper type is used to erase global edge properties during edge removal
+// of undirected graphs.
+template <typename PropList>
+struct property_eraser
+{
+    property_eraser(PropList& props)
+        : props(props)
+    { }
 
-/**
- * Hashing a property descriptor returns the hash value over the address of
- * the property object pointed at by the descriptor inside the iterator.
- */
-template <typename Iter>
-inline std::size_t
-hash_value(proplist_descriptor<Iter> const& x)
-{ return boost::hash_value(x.get()); }
+    template <typename PropDesc>
+    void operator()(PropDesc p)
+    { props.remove(p); }
+
+    PropList& props;
+};
+
+// The noop eraser does nothing.
+struct noop_eraser
+{
+    noop_eraser() { }
+
+    template <typename PropDesc>
+    void operator()(PropDesc)
+    { }
+};
 
 
 #endif

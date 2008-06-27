@@ -33,7 +33,7 @@ public:
      * edge. This is primarily used to support mapping applications for exterior
      * edge properties.
      */
-    inline typename property_descriptor::value_type get() const
+    inline typename property_descriptor::index_type get() const
     { return prop.get(); }
 
     inline property_descriptor properties() const
