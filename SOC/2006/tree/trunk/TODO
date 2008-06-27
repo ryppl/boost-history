@@ -14,6 +14,8 @@
 [section TODO]
 
 General:
+* Do we want/need an O(1) inorder_begin() for binary_tree? 
+  Does Gnu's rb_tree (used in std::map) have one?
 * Is it really a good idea to use InCursor::size_type for size(Cursor)?
   For a binary_cursor, a boolean size_type would be enough - but
   not for a subtree algorithm like this one. Maybe we need two different size_types for
@@ -78,6 +80,12 @@ General:
 * Start an RFC: what subtree algorithms should there be? In particular, of which of
   the STL's linear algorithms should there be a hierarchical version?
 
+Ask on the mailing list:
+
+* [iterator] Can we get rid of the need to declare iterator_core_access a friend (as we're already 
+  doing so with cursor_core_access, this should be enough).
+* [property_map]: any need for an extract_property_map?
+
 Proposal:
 
 * Change complexity requirements for *order end() to constant? We're using root(), and
@@ -131,5 +139,6 @@ Further applications:
 
 * Implement associative containers and priority_queue specialization using searcher
 * Implement (binary) heap
+* Is it possible to implement BGL's traversal algorithms using tree semantics?
 
 [endsect]

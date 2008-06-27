@@ -51,6 +51,28 @@ void validate_test_data_tree(Tree const& ret)
 	BOOST_CHECK(*ret.root().end().end().begin().begin().end().begin() == 12);	//Leaf
 }
 
+template <class Tree>
+void validate_corresponding_forest_tree(Tree const& t)
+{
+	typename Tree::const_cursor c = t.root().begin();
+	BOOST_CHECK(*c == 8);
+	BOOST_CHECK(*c.to_begin() == 3);
+	BOOST_CHECK(*c.to_begin() == 1);
+	c.to_parent();
+	BOOST_CHECK(*++c == 6);
+	BOOST_CHECK(*c.to_begin() == 4);
+	c.to_parent();
+	BOOST_CHECK(*++c == 7);
+	c = t.root().begin();
+	BOOST_CHECK(*++c == 10);
+	BOOST_CHECK(*++c == 14);
+	//BOOST_CHECK(++c == t.root().end());
+	//--c;
+	BOOST_CHECK(*c.to_begin() == 13);
+	BOOST_CHECK(*c.to_begin() == 11);
+	BOOST_CHECK(*++c == 12);
+}
+
 namespace test {
 
 namespace preorder {

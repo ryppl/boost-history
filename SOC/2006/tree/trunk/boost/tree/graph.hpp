@@ -31,6 +31,7 @@ using boost::tree::cursor_horizontal_traversal;
 
 namespace tree {
 
+// TODO: For ascendant cursors, we don't really need a pair<Cursor, Cursor>
 template <class Cursor>
 class out_edge_iterator
  : public iterator_facade<out_edge_iterator<Cursor>
@@ -92,6 +93,9 @@ private:
 } // namespace tree
 
 using boost::tree::binary_tree;
+
+// Unsure how we can avoid redundancies here, as this should be pretty much the same for 
+// all kinds of trees.
 
 template <class Tp, class Alloc>
 struct graph_traits< binary_tree<Tp, Alloc> > {

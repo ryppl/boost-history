@@ -206,7 +206,21 @@ class cursor_adaptor
 	friend class cursor_core_access;
 	typedef iterator_adaptor<Derived, Base, Value, HorizontalTraversal, Reference,
   							Difference> iterator_adaptor_;
- public:
+  							
+private:
+	// Curiously Recurring Template interface.
+
+	Derived& derived()
+	{
+	    return *static_cast<Derived*>(this);
+	}
+	
+	Derived const& derived() const
+	{
+	    return *static_cast<Derived const*>(this);
+	}
+
+public:
     cursor_adaptor() : iterator_adaptor_()
     { }
     
@@ -224,29 +238,30 @@ class cursor_adaptor
     typedef cursor_adaptor cursor_adaptor_;
 
  public:
- 	bool const empty_() const
+ 	bool const empty() const
 	{
-		return iterator_adaptor_::base().empty();
+		return this->base().empty();
 	}
 	
-	size_type const size_() const
+	size_type const size() const
 	{
-		return iterator_adaptor_::base().size();
+		return this->base().size();
 	}
 	
-	size_type const max_size_() const
+	size_type const max_size() const
 	{
-		return iterator_adaptor_::base().max_size();
+		return this->base().max_size();
 	}
 
-	size_type const par() const
+	size_type const parity() const
 	{
-		return iterator_adaptor_::base().parity();
+		return this->base().parity();
 	}
 
 	Derived& to_begin()
 	{
-		return Derived(this->base_reference().to_begin());
+		this->base_reference().to_begin();
+		return this->derived();
 	}
 	
 	Derived begin()
@@ -256,7 +271,8 @@ class cursor_adaptor
 
 	Derived& to_end()
 	{
-		return Derived(this->base_reference().to_end());
+		this->base_reference().to_end();
+		return this->derived();
 	}
 
 	Derived end()
@@ -266,7 +282,8 @@ class cursor_adaptor
 	
 	Derived& to_parent()
 	{
-		return Derived(this->base_reference().to_parent());
+		this->base_reference().to_parent();
+		return this->derived();
 	}
 	
 	Derived parent()
