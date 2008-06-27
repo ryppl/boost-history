@@ -175,12 +175,7 @@ class forest_cursor
     }
 	
 	// Range stuff.
-	// left() remains unchanged.
-	
-//	void left()
-//	{
-//		this->base_reference().to_begin(); 
-//	}
+	// left() remains unchanged, so no need to re-implement it.
 
 	void right()
 	{
