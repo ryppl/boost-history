@@ -406,7 +406,7 @@ Howard's list (not yet annotated):
 
     * Have a preference for free functions in all concepts.
 
-    * Discard member swap, not needed.
+Y - Discard member swap, not needed.
 
     * Add MemberSwappable? so that container swap free functions compile. Change container swap functions to require MemberSwappable?.
 

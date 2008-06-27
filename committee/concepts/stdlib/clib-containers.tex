@@ -233,6 +233,52 @@ auto concept Container<typename C> {
 
   ForwardIterator iterator;
   ForwardIterator const_iterator;
+
+  requires SameType<ForwardIterator<iterator>::value_type, value_type> 
+           && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
+
+  bool      @\changedCCC{C::empty() const;}{empty(const C\&)}@
+  size_type @\changedCCC{C::size() const;}{size(const C\&)}@
+
+  iterator       @\changedCCC{C::begin();}{begin(C\&);}@
+  const_iterator @\changedCCC{C::begin() const;}{begin(const C\&);}@
+  iterator       @\changedCCC{C::end();}{end(C\&);}@
+  const_iterator @\changedCCC{C::end() const;}{begin(const C\&);}@
+
+  @\changedCCC{void C::swap(C\&\&)}{requires Swappable<C>}@;
+
+  axiom ContainerSize(C c) {
+    @\changedCCC{(C.begin() == C.end()) == C.empty();}{(begin(c) == end(c)) == empty(c);}@
+    @\changedCCC{(C.begin() != C.end()) == (C.size() > 0);}{(begin(c) != end(c)) == (size(c) > 0);}@
+  }
+}
+
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, which provides
+  iteration through a sequence of elements stored in the container.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for a (possibly
+% revisit(mmarcus): can't get macros to nest
+%  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{@\changedCCC{C}{c}@}},
+%  \removedCCC{\mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
+%  \addedCC{\mbox{\tcode{[begin(c), end(c))}} is a valid range.}
+}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+auto concept MemberContainer<typename C> {
+  ObjectType           value_type      = typename C::value_type;
+  typename             reference       = typename C::reference;
+  typename             const_reference = typename C::const_reference;
+  UnsignedIntegralLike size_type       = typename C::size_type;
+
+  ForwardIterator iterator;
+  ForwardIterator const_iterator;
   requires SameType<ForwardIterator<iterator>::value_type, value_type> 
            && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
@@ -247,15 +293,16 @@ auto concept Container<typename C> {
   void C::swap(C&&);
 
   axiom ContainerSize(C c) {
-    (C.begin() == C.end()) == C.empty();
-    (C.begin() != C.end()) == (C.size() > 0);
+    (c.begin() == c.end()) == c.empty();
+    (c.begin() != c.end()) == (c.size() > 0);
   }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, which provides
+\addedConcepts{\mbox{\reallynote} describes a container in terms of
+  member functions, which provides
   iteration through a sequence of elements stored in the container.}
 
 \pnum
@@ -263,6 +310,27 @@ auto concept Container<typename C> {
   \mbox{\tcode{const}}-qualified) container \mbox{\tcode{C}},
   \mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
 \end{itemdescr}
+
+\begin{itemdecl}
+template <MemberContainer C>
+concept_map Container<C> {
+  typedef C::value_type      value_type;
+  typedef C::reference       reference;
+  typedef C::const_reference const_reference;
+  typedef C::size_type       size_type;
+
+  typedef C::iterator        iterator;
+  typedef C::const_iterator  const_iterator;
+
+  bool           empty(const C& c) { return c.empty(); }
+  size_type      size(const C& c)  { return c.size(); }
+
+  iterator       begin(C& c)       { return c.begin(); }
+  const_iterato  begin(const C& c) { return c.begin(); }
+  iterator       end(C& c)         { return c.end(); }
+  const_iterator end(const C& c)   { return c.end(); }
+}
+\end{itemdecl}
 
 \begin{itemdecl}
 auto concept SequenceContainer<typename C> : Container<C> {
