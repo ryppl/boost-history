@@ -43,8 +43,9 @@ public:
     property_descriptor add();
     property_descriptor add(edge_properties const&);
 
+    /** Return the properties referenced by the given descriptor. */
     inline edge_properties& properties(property_descriptor d)
-    { return d->first; }
+    { return d.value().first; }
 
     /** Bind descriptors into the incidence lists into the global property. */
     template <typename VertexDesc>

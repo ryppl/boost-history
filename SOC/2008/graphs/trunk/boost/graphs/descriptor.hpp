@@ -38,8 +38,6 @@
 // Comparisons are also based on this unique identifier. Comparing two 
 // descriptors is not the same as comparing the objects that they describe.
 
-// TODO: What's the validity of a descriptor? One that isn't iniitialized?
-
 // Include implementations and their specializations.
 #include "descriptor/common.hpp"
 #include "descriptor/vector.hpp"

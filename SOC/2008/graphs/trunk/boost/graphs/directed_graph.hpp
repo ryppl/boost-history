@@ -507,11 +507,12 @@ void
 directed_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
     // Removing the edge involves the removal of both parts from the two
-    // connected vertices.
+    // connected vertices. We have to disconnect the source first because that
+    // will /not/ erase the edge's iterator.
     vertex_type& src = _verts.vertex(e.source());
     vertex_type& tgt = _verts.vertex(e.target());
-    src.disconnect_target(e);
     tgt.disconnect_source(e);
+    src.disconnect_target(e);
 }
 
 /**

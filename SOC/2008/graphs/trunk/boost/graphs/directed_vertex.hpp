@@ -2,6 +2,7 @@
 #ifndef DIRECTED_VERTEX_HPP
 #define DIRECTED_VERTEX_HPP
 
+#include "placeholder.hpp"
 #include "directed_edge.hpp"
 
 /**

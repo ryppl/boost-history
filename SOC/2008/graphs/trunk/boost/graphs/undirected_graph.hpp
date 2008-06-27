@@ -3,6 +3,8 @@
 #define UNDIRECTED_GRAPH_HPP
 
 #include "none.hpp"
+#include "descriptor.hpp"
+#include "placeholder.hpp"
 
 #include "undirected_vertex.hpp"
 #include "vertex_vector.hpp"
@@ -33,8 +35,10 @@ public:
 
     // Generate the property store type first. We can do this first because
     // it's basically independant of everything else, but contributes to almost
-    // everything in the class by virtue of the property descriptor.
+    // everything in the class by virtue of the property descriptor. Use this
+    // to generate the property descriptor...
     typedef typename EdgeStore::template property_store<edge_properties>::type property_store;
+    typedef typename property_store::property_descriptor property_descriptor;
     typedef typename property_store::size_type edges_size_type;
 
     // Generate a bunch of descriptors. The vertex descriptor is fairly
@@ -42,7 +46,6 @@ public:
     // everything. The property descriptor depends entirely upon the property
     // store and the edge descriptor is actually fairly complicated.
     typedef typename VertexStore::descriptor_type vertex_descriptor;
-    typedef typename property_store::property_descriptor property_descriptor;
     typedef undirected_edge<vertex_descriptor, property_descriptor> edge_descriptor;
 
     // Generate the incidence list. The incidence list for a single vertex
@@ -69,6 +72,7 @@ public:
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
+
     // FIXME: This is a bit hacky, but without constrained members, we need a key
     // type to enable mapped vertices.
     typedef typename VertexStore::key_type vertex_key;
@@ -683,35 +687,23 @@ undirected_graph<VP,EP,VS,ES>::num_edges() const
     return _props.size();
 }
 
-/**
- * Return an iterator to the first incident edge of the given vertex.
- */
+/** Return an iterator to the first incident edge of the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::incident_edge_iterator
 undirected_graph<VP,EP,VS,ES>::begin_incident_edges(vertex_descriptor v) const
-{
-    return incident_edge_iterator(v, _verts.vertex(v).begin());
-}
+{ return incident_edge_iterator(v, _verts.vertex(v).begin()); }
 
-/**
- * Return an iterator past the end of the incident edges of the given vertex.
- */
+/** Return an iterator past the end of the incident edges of the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::incident_edge_iterator
 undirected_graph<VP,EP,VS,ES>::end_incident_edges(vertex_descriptor v) const
-{
-    return incident_edge_iterator(v, _verts.vertex(v).end());
-}
+{ return incident_edge_iterator(v, _verts.vertex(v).end()); }
 
-/**
- * Return an iterator range over the incident edges of the given vertex.
- */
+/** Return an iterator range over the incident edges of the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::incident_edge_range
 undirected_graph<VP,EP,VS,ES>::incident_edges(vertex_descriptor v) const
-{
-    return make_pair(begin_incident_edges(v), end_incident_edges(v));
-}
+{ return make_pair(begin_incident_edges(v), end_incident_edges(v)); }
 
 /**
  * Return an iterator to the first adjacent vertex of the the given vertex.

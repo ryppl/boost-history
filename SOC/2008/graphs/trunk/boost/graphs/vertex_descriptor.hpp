@@ -6,34 +6,6 @@
 
 #include <boost/functional/hash.hpp>
 
-// Important notes about descriptors
-//
-// A descriptor is basically an opaque reference to an object. It's kind of
-// like an iterator that can't be moved or dereferenced. It's kind of like a
-// flyweight, but you can't implicitly cast it as the shared object. In short,
-// you can't use descriptors without their graph. In general, we'd like the
-// descriptor types to be as trivial as possible. One of the most important
-// facts about descriptors is that, by themselves, they have absolutely no
-// semantics. They cannot be used (in general) be used to access the vertices
-// or edges that they represent.
-//
-// The most important thing to understand about descriptors is that they attempt
-// to model the most "consistent" reference into a storage mechanism. By the
-// term "consistent", we mean a means of accessing elements that allow us to
-// actually build a graph without invalidating memory or iterators. For example,
-// we can't use pointers as descriptors into vectors since vectors occasionally
-// reallocate all their memory (oops), but indices work just fine.
-//
-// Descriptors must be completely independent of the actual type of vertices
-// and edges. Two problems arise if we don't do this. First, we end up with
-// weird cyclic type dependencies that can probably be unrolled using some
-// funky lazy template evaluation, but that's generally beyond me. Second,
-// this would
-
-// Build trivial wrappers around the underlying descriptor types. This allows
-// us to differentiate descriptors based on these types rather than their
-// simple descriptor types.
-
 namespace detail
 {
     inline std::size_t invalid_value(std::size_t)
@@ -84,7 +56,7 @@ public:
     { return _d; }
 
     /** Returns true if the descriptor is valid. */
-    inline bool is_valid() const
+    inline bool valid() const
     { return _d != detail::invalid_value(D()); }
 
 private:

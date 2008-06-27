@@ -53,7 +53,7 @@ public:
      * iterator. This is the vertex for which the iterator was originally
      * created.
      */
-    vertex_descriptor source() const
+    inline vertex_descriptor source() const
     { return _base; }
 
     /**
@@ -61,22 +61,37 @@ public:
      * edge indicated by the iterator. This is mostly provided for use by
      * the adjacency iterator.
      */
-    vertex_descriptor opposite() const
+    inline vertex_descriptor opposite() const
     { return _iter->first; }
+
+    /**
+     * Return true if the iterator is "valid" (not default constructed). The
+     * shortcut is to simply test the vertex descriptor.
+     */
+    inline bool valid() const
+    { return _base != vertex_descriptor(); }
 
     inline incidence_iterator& operator++()
     { ++_iter; return *this; }
 
+    inline incidence_iterator operator++(int)
+    { incidence_iterator tmp(*this); ++_iter; return tmp; }
+
     inline incidence_iterator& operator--()
     { --_iter; return *this; }
 
-    // Iterators are equivalent if they reference the same edge.
+    inline incidence_iterator operator--(int)
+    { incidence_iterator tmp(*this); --_iter; return tmp; }
+
+    // Incidence iterators are equivalent if they have the same source and are
+    // reference the same incident edge.
     inline bool operator==(incidence_iterator const& x) const
-    { return operator*() == *x; }
+    { return (_base == x._base) && (_iter == x._iter); }
 
     inline bool operator!=(incidence_iterator const& x) const
     { return !this->operator==(x); }
 
+    // This can access invalid memory if the iterator is at the end.
     inline reference operator*() const
     { return reference(_base, _iter->first, _iter->second); }
 
