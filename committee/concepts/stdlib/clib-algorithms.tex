@@ -290,7 +290,7 @@ namespace std {
     void replace_if(Iter @\farg{first}@, Iter @\farg{last}@,
                     Pred @\farg{pred}@, const T& @\farg{new_value}@);
   template<InputIterator InIter, typename OutIter, class T>
-    requires OutputIterator<_OutIter, InIter::@\changedCCC{value_type}{reference}@>
+    requires OutputIterator<OutIter, InIter::@\changedCCC{value_type}{reference}@>
           && @\changedCCC{HasCopyAssign}{OutputIterator}@<Iter@\removedCCC{::reference}@, @\changedCCC{T}{const T\&}@> 
           && HasEqualTo<InIter::@\changedCCC{reference}{value_type}@, T>
     OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -351,37 +351,47 @@ namespace std {
           @\addedCC{\&\& CopyConstructible<Pred>}@
     Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
                 Pred @\farg{pred}@);
-  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-    requires EqualityComparable<InIter::value_type> && CopyAssignable<InIter::value_type> && 
-             @\textcolor{addclr}{CopyConstructible}@<InIter::value_type> && !ForwardIterator<InIter> && 
-             !MutableForwardIterator<OutIter>
-    OutIter
-      unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
-                  OutIter @\farg{result}@);
+  template<InputIterator InIter, @\changedCCC{OutputIterator<auto, InIter::value_type>}{typename}@ OutIter>
+    requires @\addedCC{OutputIterator<OutIter, InIter::reference>}@
+          @\addedCC{\&\& OutputIterator<OutIter, const InIter::value_type\&>}@
+          @\addedCC{\&\&}@ EqualityComparable<InIter::value_type> 
+          && CopyAssignable<InIter::value_type>
+          && CopyConstructible<InIter::value_type> 
+          && !ForwardIterator<InIter> 
+          && !@\removedCCC{Mutable}@ForwardIterator<OutIter>
+    OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                        OutIter @\farg{result}@);
   template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter>
-    requires EqualityComparable<InIter::reference>
+    requires EqualityComparable<InIter::@\changedCCC{reference}{value_type}@>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
-  template<InputIterator InIter, MutableForwardIterator OutIter>
-    requires HasEqualTo<OutIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
-             Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
-             !ForwardIterator<InIter>
+  template<InputIterator InIter, @\removedCCC{Mutable}@ForwardIterator OutIter>
+    requires @\changedCCC{HasCopyAssign}{OutputIterator}@<OutIter@\removedCCC{::reference}@, InIter::reference> 
+          && HasEqualTo<OutIter::@\changedCCC{reference}{value_type}@, InIter::value_type>
+          && !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
-  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
+  template<InputIterator InIter, @\changedCCC{OutputIterator<auto, InIter::value_type>}{typename}@ OutIter,
            Predicate<auto, InIter::value_type, InIter::value_type> Pred>
-    requires CopyAssignable<InIter::value_type> && CopyConstructible<InIter::value_type> &&
-             !ForwardIterator<InIter> && !MutableForwardIterator<OutIter>
+    requires @\addedCC{OutputIterator<OutIter, InIter::reference>}@
+          @\addedCC{\&\& OutputIterator<OutIter, const InIter::value_type\&>}@
+          @\addedCC{\&\&}@ CopyAssignable<InIter::value_type> 
+          && CopyConstructible<InIter::value_type> 
+          @\addedCC{\&\& CopyConstructible<Pred>}@
+          && !ForwardIterator<InIter> 
+          && !@\removedCCC{Mutable}@ForwardIterator<OutIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
   template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter,
            Predicate<auto, InIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
+    @\addedCC{requires CopyConstructible<Pred>}@
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@);
-  template<InputIterator InIter, MutableForwardIterator OutIter,
+  template<InputIterator InIter, @\removedCCC{Mutable}@ForwardIterator OutIter,
            Predicate<auto, OutIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
-    requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
-             !ForwardIterator<InIter>
+    requires @\changedCCC{HasCopyAssign}{OutputIterator}@<OutIter@\removedCCC{::reference}@, InIter::reference> 
+          @\addedCC{\&\& CopyConstructible<Pred>}@
+          && !ForwardIterator<InIter>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                         OutIter @\farg{result}@, Pred @\farg{pred}@);
 
@@ -1845,7 +1855,7 @@ applications of the corresponding predicate.
 \index{replace_copy_if@\tcode{replace_copy_if}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, typename OutIter, class T>
-  requires OutputIterator<_OutIter, InIter::@\changedCCC{value_type}{reference}@>
+  requires OutputIterator<OutIter, InIter::@\changedCCC{value_type}{reference}@>
         && @\changedCCC{HasCopyAssign}{OutputIterator}@<Iter@\removedCCC{::reference}@, @\changedCCC{T}{const T\&}@> 
         && HasEqualTo<InIter::@\changedCCC{reference}{value_type}@, T>
   OutIter replace_copy(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -2132,42 +2142,52 @@ applications of the corresponding predicate.
 \index{unique_copy@\tcode{unique_copy}}%
 \color{addclr}
 \begin{itemdecl}
-template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-  requires EqualityComparable<InIter::value_type> && CopyAssignable<InIter::value_type> && 
-           CopyConstructible<InIter::value_type> && !ForwardIterator<InIter> && 
-           !MutableForwardIterator<OutIter>
-  @\textcolor{addclr}{OutIter}@
-    unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
-                OutIter @\farg{result}@);
+template<InputIterator InIter, @\changedCCC{OutputIterator<auto, InIter::value_type>}{typename}@ OutIter>
+  requires @\addedCC{OutputIterator<OutIter, InIter::reference>}@
+        @\addedCC{\&\& OutputIterator<OutIter, const InIter::value_type\&>}@
+        @\addedCC{\&\&}@ EqualityComparable<InIter::value_type> 
+        && CopyAssignable<InIter::value_type>
+        && CopyConstructible<InIter::value_type> 
+        && !ForwardIterator<InIter> 
+        && !@\removedCCC{Mutable}@ForwardIterator<OutIter>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@);
 
 template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter>
-  requires EqualityComparable<InIter::reference>
+  requires EqualityComparable<InIter::@\changedCCC{reference}{value_type}@>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
 
-@\textcolor{addclr}{template}@<InputIterator InIter, MutableForwardIterator OutIter>
-  requires HasEqualTo<OutIter::reference, InIter::@\changedCCC{value_type}{reference}@> &&
-           Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
-           !ForwardIterator<InIter>
+template<InputIterator InIter, @\removedCCC{Mutable}@ForwardIterator OutIter>
+  requires @\changedCCC{HasCopyAssign}{OutputIterator}@<OutIter@\removedCCC{::reference}@, InIter::reference> 
+        && HasEqualTo<OutIter::@\changedCCC{reference}{value_type}@, InIter::value_type>
+        && !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
 
-template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter,
+template<InputIterator InIter, @\changedCCC{OutputIterator<auto, InIter::value_type>}{typename}@ OutIter,
          Predicate<auto, InIter::value_type, InIter::value_type> Pred>
-  requires CopyAssignable<InIter::value_type> && CopyConstructible<InIter::value_type> &&
-           !ForwardIterator<InIter> && !MutableForwardIterator<OutIter>
+  requires @\addedCC{OutputIterator<OutIter, InIter::reference>}@
+        @\addedCC{\&\& OutputIterator<OutIter, const InIter::value_type\&>}@
+        @\addedCC{\&\&}@ CopyAssignable<InIter::value_type> 
+        && CopyConstructible<InIter::value_type> 
+        @\addedCC{\&\& CopyConstructible<Pred>}@
+        && !ForwardIterator<InIter> 
+        && !@\removedCCC{Mutable}@ForwardIterator<OutIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
-                      @\textcolor{addclr}{OutIter}@ @\farg{result}@, Pred @\farg{pred}@);
+                      OutIter @\farg{result}@, Pred @\farg{pred}@);
 
 template<ForwardIterator InIter, OutputIterator<auto, InIter::@\changedCCC{value_type}{reference}@> OutIter,
          Predicate<auto, InIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
+  @\addedCC{requires CopyConstructible<Pred>}@
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@);
 
-template<InputIterator InIter, MutableForwardIterator OutIter,
+template<InputIterator InIter, @\removedCCC{Mutable}@ForwardIterator OutIter,
          Predicate<auto, OutIter::@\changedCCC{reference}{value_type}@, InIter::@\changedCCC{reference}{value_type}@> Pred>
-  requires Has@\removedCCC{Copy}@Assign<OutIter::reference, InIter::reference> &&
-           !ForwardIterator<InIter>
+  requires @\changedCCC{HasCopyAssign}{OutputIterator}@<OutIter@\removedCCC{::reference}@, InIter::reference> 
+        @\addedCC{\&\& CopyConstructible<Pred>}@
+        && !ForwardIterator<InIter>
   OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                       OutIter @\farg{result}@, Pred @\farg{pred}@);
 \end{itemdecl}
