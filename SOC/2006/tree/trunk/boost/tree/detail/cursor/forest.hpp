@@ -88,7 +88,10 @@ private:
     friend class iterator_core_access;
 
 //	bool empty_() const
-//	{ 
+//	{
+//		if (this->base().parity())
+//			return true;
+//		return this->base().empty();
 //	}
 
 	void increment()
@@ -99,7 +102,7 @@ private:
     
     void decrement()
     {
-    	if (!this->base_reference().parity())
+    	if (!this->base().parity())
 			this->base_reference().to_parent();
     	--this->base_reference();
     }
@@ -117,7 +120,7 @@ private:
 	
 	void up()
 	{
-		if (!this->base_reference().parity())
+		if (!this->base().parity())
 			this->base_reference().to_parent();
 	}
 };

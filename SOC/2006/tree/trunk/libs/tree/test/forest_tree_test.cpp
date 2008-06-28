@@ -23,52 +23,20 @@ void test_forest_tree()
 	tree_type mytree;
 	
 	tree_type::cursor c = mytree.root();
-	tree_type::base_cursor cur = tree_type::base_cursor(c);
-	BOOST_CHECK(!cur.parity());
-	cur = cur.parent();
-	BOOST_CHECK(cur.parity());
-	
 	c = mytree.insert(c, 6);	
 	BOOST_CHECK(*c == 6);
-	//cur = tree_type::base_cursor(c);
-	//BOOST_CHECK(*cur == 6);
-	
-//	BOOST_CHECK(cur == mytree.h.root().begin());
-	
+
 	c = mytree.insert(c, 5);	
 	BOOST_CHECK(*c == 5);
-	//cur = tree_type::base_cursor(c);
-//	BOOST_CHECK(cur == mytree.h.root().begin());
 
 	c = mytree.insert(c, 4);	
 	BOOST_CHECK(*c == 4);
 	BOOST_CHECK(c == mytree.root().begin());
-	
-	cur = tree_type::base_cursor(c);
-//	BOOST_CHECK(cur == mytree.h.root().begin());
-
-//	++cur;
-//	cur = cur.begin();	
-//	BOOST_CHECK(*cur == 5);
-//	cur = cur.parent();
-//	--cur;
 
 	++c;
 	BOOST_CHECK(*c == 5);
 	++c;
 	BOOST_CHECK(*c == 6);
-//	--c;
-//	BOOST_CHECK(*c == 5);
-//	--c;
-//	BOOST_CHECK(*c == 4);
-	
-	
-//	cur = tree_type::base_cursor(c);
-//	BOOST_CHECK(*cur == 4);
-//	//cur = cur.parent().parent().parent().begin();
-//	BOOST_CHECK(*cur == 4);
-	
-	//BOOST_CHECK(*++c == 5);
 	
 	tree_type forest;
 	//create_test_data_tree(forest);
@@ -105,8 +73,55 @@ void test_natural_correspondence()
 	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
-//	boost::tree::preorder::copy(ft.root(), oc_test_list);
-//	test::preorder::traversal(test_list.begin(), test_list.end());
+//  Preliminary checks, delete as soon as issues are resolved
+
+//	forest_tree_type::cursor s = ft.root();
+//	forest_tree_type::cursor r = s.end();
+//	*t.to_begin() = *s.to_begin();
+//		BOOST_CHECK(!s.empty());
+//		if (!s.empty()) {
+//			r = s.end();
+//			*t.to_begin() = *s.to_begin();
+//		}
+//		
+//		BOOST_CHECK(!s.empty());
+//		if (!s.empty()) {
+//			r = s.end();
+//			*t.to_begin() = *s.to_begin();
+//		}
+//	
+//	BOOST_CHECK(s.empty());
+//	++t;
+//	
+//	BOOST_CHECK(s != r);
+//	BOOST_CHECK(s++ != r);
+//	BOOST_CHECK(s == r);
+//	
+//	BOOST_CHECK(s.empty());
+//	++t;
+
+	//BOOST_CHECK(s++ == r);
+		
+//	do {
+//		if (!s.empty())
+//			*t = *s;
+//			//copy(s, t);
+//		++t;
+//	} while (s++ != r);
+	
+	
+	boost::tree::preorder::copy(ft.root(), oc_test_list);
+	//test::preorder::traversal(test_list.begin(), test_list.end());
+	
+	BOOST_CHECK(test_list.size() == 6);
+	
+	std::list<int>::const_iterator lci = test_list.begin();
+	BOOST_CHECK(*lci == 8);
+	BOOST_CHECK(*++lci == 3);
+	BOOST_CHECK(*++lci == 1);
+//	BOOST_CHECK(*++lci != 4); // wrong!
+//	BOOST_CHECK(*++lci != 13 ); // wrong!
+//	BOOST_CHECK(*++lci != 11); // wrong!
 	
 	test_list.clear();
 	//boost::tree::postorder::copy(ft.root(), oc_test_list);

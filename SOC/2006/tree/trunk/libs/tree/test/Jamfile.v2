@@ -20,6 +20,7 @@ project :
 test-suite tree :
 	[ run range_helpers_test.cpp ]
 	[ run binary_tree_test.cpp ]
+	[ run binary_tree_search_test.cpp ]
 #	[ run key_search_binary_tree_test.cpp ]	
 #	[ run rank_search_binary_tree_test.cpp ]	
 	[ run cursor_algorithm_test.cpp ]

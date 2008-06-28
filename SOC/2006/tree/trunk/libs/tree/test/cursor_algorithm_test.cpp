@@ -4,12 +4,6 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-//TODO: Make this a test suite.
-//		Add iterator traversal tests - check if proper overloads (if present)
-//		are used.
-
-// TODO: get timings. that makes that no testcase anymore, right?
-//does boost have timers? what does the austern et al one look like?
 
 #include <boost/tree/binary_tree.hpp>
 
@@ -65,6 +59,6 @@ int test_main(int, char* [])
 	test::preorder::algorithms (test_tree.root(), test_tree2.root());
 	test::inorder::algorithms  (test_tree.root(), test_tree2.root());
 	test::postorder::algorithms(test_tree.root(), test_tree2.root());
-			
+
 	return 0;
 }

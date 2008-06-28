@@ -58,11 +58,16 @@ void validate_corresponding_forest_tree(Tree const& t)
 	BOOST_CHECK(*c == 8);
 	BOOST_CHECK(*c.to_begin() == 3);
 	BOOST_CHECK(*c.to_begin() == 1);
+	BOOST_CHECK(c.empty());
+	BOOST_CHECK(++c == t.root().begin().begin().end());
+	--c;
 	c.to_parent();
 	BOOST_CHECK(*++c == 6);
 	BOOST_CHECK(*c.to_begin() == 4);
 	c.to_parent();
 	BOOST_CHECK(*++c == 7);
+	BOOST_CHECK(++c == t.root().begin().end());
+	
 	c = t.root().begin();
 	BOOST_CHECK(*++c == 10);
 	BOOST_CHECK(*++c == 14);

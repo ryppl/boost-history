@@ -197,7 +197,11 @@ OutCursor copy (InCursor s, OutCursor t)
 		if (!s.empty())
 			copy(s, t);
 		++t;
-	} while (s++ != r);
+		++s;
+	} while (s != r);
+
+	if (!r.empty())
+		copy(r, t);
 
 	return t;
 }

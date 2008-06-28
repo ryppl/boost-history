@@ -14,6 +14,7 @@
 [section TODO]
 
 General:
+
 * Do we want/need an O(1) inorder_begin() for binary_tree? 
   Does Gnu's rb_tree (used in std::map) have one?
 * Is it really a good idea to use InCursor::size_type for size(Cursor)?

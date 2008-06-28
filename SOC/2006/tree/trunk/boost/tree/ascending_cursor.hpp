@@ -161,7 +161,7 @@ class ascending_cursor
 		m_s.push(m_s.top().end());
 	}
 
-	// DescendingCursor stuff
+	// This is what actually makes it an AscendingCursor
 	void up()
 	{
 		m_s.pop();
