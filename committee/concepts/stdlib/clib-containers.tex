@@ -347,7 +347,34 @@ concept_map Container<E[N]> {
 \end{itemdecl}
 
 \begin{itemdecl}
-auto concept SequenceContainer<typename C> : Container<C> {
+concept SequenceContainer<typename C> : Container<C> {
+  reference       @\changedCCC{C::front()}{front(C\&)}@; 
+  const_reference @\changedCCC{C::front() const}{front(const C\&)}@;
+  reference       @\changedCCC{C::back()}{back(C\&)}@;
+  const_reference @\changedCCC{C::back() const}{back(const C\&)}@;
+
+  axiom AccessFront(C c) {
+    @\removedCCC{if (c.begin() != c.end()) c.front() == *c.begin();}@
+    @\addedCC{if (begin(c) != end(c)) front(c) == *begin(c);}@
+  }  
+
+  axiom AccessBack(C c) {
+    @\removedCCC{if (c.begin() != c.end()) c.back() == *(--c.end());}@
+    @\addedCC{if (begin(c) != end(c)) back(c) == *(-{}-end(c));}@
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a sequence container,
+  which stores its elements in the order in which they were added.} 
+\end{itemdescr}
+
+
+\begin{itemdecl}
+auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
   reference       C::front();
   const_reference C::front() const;
   reference       C::back();
@@ -358,16 +385,33 @@ auto concept SequenceContainer<typename C> : Container<C> {
   }  
 
   axiom AccessBack(C c) {
-    if (c.begin() != c.end()) c.back() == *(--c.end());
+    if (c.begin() != c.end()) c.back() == *(-{}-c.end());
   }
 }
 \end{itemdecl}
 
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a sequence container,
-  which stores its elements in the order in which they were added.} 
-\end{itemdescr}
+\begin{itemdecl}
+template <MemberSequenceContainer C> 
+concept_map SequenceContainer<C> {
+  typedef typename C::reference reference;
+  typedef typename C::const_reference const_reference;
+  typedef typename C::iterator iterator;
+  typedef typename C::const_iterator const_iterator;
+
+  reference front(C& c)             { return c.front(); }
+  const_reference front(const C& c) { return c.front(); }
+  reference back(C& c)              { return c.back(); }
+  const_reference back(const C& c)  { return c.back(); }
+  
+  bool empty(const C& c)            { return Container<C>::empty(c); }
+  iterator begin(C& c)              { return Container<C>::begin(c); }
+  const_iterator begin(const C& c)  { return Container<C>::begin(c); }
+  iterator end(C& c)                { return Container<C>::end(c); }
+  const_iterator end(const C& c)    { return Container<C>::end(c);
+}			
+
+\end{itemdecl}
+
 
 \begin{itemdecl}
 auto concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
