@@ -573,6 +573,8 @@ namespace std {
              @\addedCC{OutputIterator<OutIter, InIter1::reference>}@
           && @\addedCC{OutputIterator<OutIter, InIter2::reference>}@
           && HasLess<@\addedCC{InIter2::value_type, }@InIter1::value_type>
+          @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@);
@@ -583,6 +585,8 @@ namespace std {
              @\addedCC{OutputIterator<OutIter, InIter1::reference>}@
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
     OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                   InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                   OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -606,6 +610,8 @@ namespace std {
     requires @\removedCCC{SameType<Iter1::value_type, Iter2::value_type> \&\& LessThanComparable<Iter1::value_type>}@
              @\addedCC{HasLess<Iter1::value_type, Iter2::value_type>}@
           @\addedCC{\&\& HasLess<Iter2::value_type, Iter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<Iter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<Iter2::value_type>}@
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
   template<InputIterator Iter1, InputIterator Iter2, 
@@ -613,6 +619,8 @@ namespace std {
     requires @\removedCCC{SameType<Iter1::value_type, Iter2::value_type>}@
              @\addedCC{Predicate<Compare, Iter1::value_type, Iter2::value_type>}@
           @\addedCC{\&\& Predicate<Compare, Iter2::value_type, Iter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, Iter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, Iter2::value_type>}@
     bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                   Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                   Compare @\farg{comp}@);
@@ -625,6 +633,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
           @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
     OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                       OutIter @\farg{result}@);
@@ -636,6 +646,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
           @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
     OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                       InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                       OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -648,6 +660,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
           @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
     OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                              InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                              OutIter @\farg{result}@);
@@ -659,6 +673,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
           @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
     OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                              InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                              OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -671,6 +687,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
           @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
     OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            OutIter @\farg{result}@);
@@ -682,6 +700,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
           @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
     OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -694,6 +714,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
           @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+          @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
     OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                      OutIter @\farg{result}@);
@@ -705,6 +727,8 @@ namespace std {
           @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
           @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
           @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+          @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
     OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                      InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                      OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3119,6 +3143,8 @@ template<InputIterator InIter1, InputIterator InIter2,
            @\addedCC{OutputIterator<OutIter, InIter1::reference>}@
         && @\addedCC{OutputIterator<OutIter, InIter2::reference>}@
         && HasLess<@\addedCC{InIter2::value_type, }@InIter1::value_type>
+        @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
   OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                 OutIter @\farg{result}@);
@@ -3130,6 +3156,8 @@ template<InputIterator InIter1, InputIterator InIter2,
            @\addedCC{OutputIterator<OutIter, InIter1::reference>}@
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
   OutIter merge(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                 InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                 OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3267,6 +3295,8 @@ template<InputIterator Iter1, InputIterator Iter2>
   requires @\removedCCC{SameType<Iter1::value_type, Iter2::value_type> \&\& LessThanComparable<Iter1::value_type>}@
            @\addedCC{HasLess<Iter1::value_type, Iter2::value_type>}@
         @\addedCC{\&\& HasLess<Iter2::value_type, Iter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<Iter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<Iter2::value_type>}@
   bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@);
 
@@ -3275,6 +3305,8 @@ template<InputIterator Iter1, InputIterator Iter2,
   requires @\removedCCC{SameType<Iter1::value_type, Iter2::value_type>}@
            @\addedCC{Predicate<Compare, Iter1::value_type, Iter2::value_type>}@
         @\addedCC{\&\& Predicate<Compare, Iter2::value_type, Iter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, Iter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, Iter2::value_type>}@
   bool includes(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
                 Iter2 @\farg{first2}@, Iter2 @\farg{last2}@,
                 Compare @\farg{comp}@);
@@ -3311,6 +3343,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
         @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
   OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                     OutIter @\farg{result}@);
@@ -3323,6 +3357,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
         @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
   OutIter set_union(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                     InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                     OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3368,6 +3404,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
         @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
   OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            OutIter @\farg{result}@);
@@ -3380,6 +3418,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
         @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
   OutIter set_intersection(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                            InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                            OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3424,6 +3464,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
         @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
   OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                          InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                          OutIter @\farg{result}@);
@@ -3436,6 +3478,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
         @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
   OutIter set_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                          InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                          OutIter @\farg{result}@, Compare @\farg{comp}@);
@@ -3493,6 +3537,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& HasLess<InIter2::value_type, InIter1::value_type>}@
         @\addedCC{\&\& HasLess<InIter1::value_type, InIter2::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter1::value_type>}@
+        @\addedCC{\&\& LessThanComparable<InIter2::value_type>}@
   OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                    OutIter @\farg{result}@);
@@ -3505,6 +3551,8 @@ template<InputIterator InIter1, InputIterator InIter2,
         @\addedCC{\&\& OutputIterator<OutIter, InIter2::reference>}@
         @\addedCC{\&\& Predicate<Compare, InIter1::value_type, InIter2::value_type>}@
         @\addedCC{\&\& Predicate<Compare, InIter2::value_type, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter1::value_type>}@
+        @\addedCC{\&\& StrictWeakOrder<Compare, InIter2::value_type>}@
   OutIter set_symmetric_difference(InIter1 @\farg{first1}@, InIter1 @\farg{last1}@,
                                    InIter2 @\farg{first2}@, InIter2 @\farg{last2}@,
                                    OutIter @\farg{result}@, Compare @\farg{comp}@);
