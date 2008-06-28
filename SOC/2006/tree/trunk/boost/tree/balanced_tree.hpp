@@ -263,6 +263,68 @@ class balanced_tree {
 	 	return const_iterator(boost::tree::inorder::lower_bound(h.croot(), k,
 		 	bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
 	 }
+
+	/**
+	 * @brief		Finds the last position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using <
+	 * 				(less than) for comparisons.
+	 * @param k		The search term
+	 * @return		An iterator pointing to the first element greater than 
+	 *				@a k, or end() if no element in the @balanced_tree is
+	 * 				greater than @a k.
+	 */
+	 iterator upper_bound(value_type const& k)
+	 {
+	 	return upper_bound(k, std::less<value_type>());
+	 }
+
+	/**
+	 * @brief		Finds the last position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using <
+	 * 				(less than) for comparisons.
+	 * @param k		The search term
+	 * @return		A const_iterator pointing to the first element greater than 
+	 *				@a k, or end() if no element in the @balanced_tree is
+	 * 				greater than @a k.
+	 */
+	 const_iterator upper_bound(value_type const& k) const
+	 {
+	 	return upper_bound(k, std::less<value_type>());
+	 }
+
+	/**
+	 * @brief		Finds the last position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using cmp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @param cmp	The comparison functor
+	 * @return		An iterator pointing to the first element greater than 
+	 *				@a k, or end() if no element in the @balanced_tree is
+	 * 				greater than @a k.
+	 */
+	 template <class Cmp>
+	 iterator upper_bound(value_type const& k, Cmp cmp)
+	 {
+	 	return iterator(boost::tree::inorder::upper_bound(h.root(), k, 
+	 		bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
+	 }
+
+	/**
+	 * @brief		Finds the last position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using cmp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @param cmp	The comparison functor
+	 * @return		A const_iterator pointing to the first element greater than 
+	 *				@a k, or end() if no element in the @balanced_tree is
+	 * 				greater than @a k.
+	 */
+	 template <class Cmp>
+	 const_iterator upper_bound(value_type const& k, Cmp cmp) const
+	 {
+	 	return const_iterator(boost::tree::inorder::upper_bound(h.croot(), k,
+		 	bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
+	 }
 	 	 
 	/**
 	 * @brief  Add data to the front of the %balanced_tree.
@@ -332,9 +394,12 @@ class balanced_tree {
 	iterator insert(iterator pos, value_type const& val)
 	{
 		//TODO: we might need to go down in the hierarchy first
-		// That means some redundant work if pos was yielded by lower_bound,
+		// That means some redundant work if pos was yielded by upper_bound,
 		// so maybe saving two cursors in the iterator would make sense
 		// (one for deref, one for insert)
+		
+		// Then again... that's too much of a fuss. Maybe we should just
+		// build a searcher that does all that.
 		
 		cursor c = pos.base().base();
 		while (!c.empty())

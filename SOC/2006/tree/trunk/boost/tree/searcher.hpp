@@ -188,6 +188,34 @@ public:
 	 {
 	 	return c.lower_bound(k, bind<bool>(comp, bind(ext(), _1), _2));
 	 }
+
+	/**
+	 * @brief		Finds the last position in the searcher in which @a val 
+	 * 				could be inserted without changing the ordering, using comp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @return		An iterator pointing to the first element greater than 
+	 *				@a k, or end() if no element in the searcher is greater than 
+	 * 				@a k.
+	 */
+	 iterator upper_bound(key_type const& k)
+	 {
+	 	return c.upper_bound(k, bind<bool>(comp, bind(ext(), _1), _2));
+	 }
+
+	/**
+	 * @brief		Finds the last position in the searcher in which @a val 
+	 * 				could be inserted without changing the ordering, using comp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @return		A const_iterator pointing to the first element greater than 
+	 *				@a k, or end() if no element in the searcher is greater than 
+	 * 				@a k.
+	 */
+	 const_iterator upper_bound(key_type const& k) const
+	 {
+	 	return c.upper_bound(k, bind<bool>(comp, bind(ext(), _1), _2));
+	 }
 	 
  	/**
 	 * @brief		Attempts to insert @a val into the %searcher

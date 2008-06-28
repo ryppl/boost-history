@@ -263,6 +263,51 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 	return y;
 }
 
+/**
+ * @brief		Finds the last position in a multiway subtree in which @a val 
+ * 				could be inserted without changing the ordering, using < (less
+ * 				than) for comparisons.
+ * @param x		The subtree's root
+ * @param val	The search term
+ * @return		A multiway cursor pointing to the first element greater than 
+ *				@a val, or @x if no element in the subtree is greater than 
+ * 				@a val.
+ */
+template <class MultiwayCursor, class T>
+MultiwayCursor upper_bound(MultiwayCursor x, T const& val)
+{
+	MultiwayCursor y = x;
+	while (!x.empty()) {
+		x = std::upper_bound(x.begin(), x.end(), val);
+		if (x.parity() == 0)
+			y = x;
+	}
+	return y;
+}
+
+/**
+ * @brief		Finds the last position in a multiway subtree in which @a val 
+ * 				could be inserted without changing the ordering, using @a cmp 
+ * 				for comparisons.
+ * @param x		The subtree's root
+ * @param val	The search term
+ * @param cmp	The comparison functor
+ * @return		A multiway cursor pointing to the first element greater than 
+ *				@a val, or @x if no element in the subtree is greater than
+ * 				@a val.
+ */
+template <class MultiwayCursor, class T, class Cmp>
+MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
+{
+	MultiwayCursor y = x;
+	while (!x.empty()) {
+		x = std::upper_bound(x.begin(), x.end(), val, cmp);
+		if (x.parity() == 0)
+			y = x;
+	}
+	return y;
+}
+
 } // namespace inorder
 
 } // namespace tree
