@@ -237,7 +237,7 @@ auto concept Container<typename C> {
   requires SameType<ForwardIterator<iterator>::value_type, value_type> 
            && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
-  bool      @\changedCCC{C::empty() const;}{empty(const C\&)}@
+  bool           @\changedCCC{C::empty() const;}{empty(const C\&)}@
   @\removedCCC{size_type C::size() const;}@
 
   iterator       @\changedCCC{C::begin();}{begin(C\&);}@
@@ -247,7 +247,7 @@ auto concept Container<typename C> {
 
   @\removedCCC{void C::swap(C\&\&)}@
 
-  axiom ContainerSize(C c) {
+  axiom Container@\changedCCC{Size}{Empty}@(C c) {
     @\changedCCC{(C.begin() == C.end()) == C.empty();}{(begin(c) == end(c)) == empty(c);}@
     @\removedCCC{(C.begin() != C.end()) == (C.size() > 0);}@
   }
@@ -288,7 +288,7 @@ auto concept MemberContainer<typename C> {
   iterator       C::end();
   const_iterator C::end() const;
 
-  axiom ContainerEmpty(C c) {
+  axiom MemberContainerEmpty(C c) {
     (c.begin() == c.end()) == c.empty();
   }
 }
@@ -296,7 +296,7 @@ auto concept MemberContainer<typename C> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container in terms of
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of
   member functions, which provides
   iteration through a sequence of elements stored in the container.}
 
@@ -360,7 +360,7 @@ concept SequenceContainer<typename C> : Container<C> {
 
   axiom AccessBack(C c) {
     @\removedCCC{if (c.begin() != c.end()) c.back() == *(--c.end());}@
-    @\addedCC{if (begin(c) != end(c)) back(c) == *(-{}-end(c));}@
+    @\addedCC{if (begin(c) != end(c)) back(c) == *(--end(c));}@
   }
 }
 \end{itemdecl}
@@ -380,12 +380,12 @@ auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
   reference       C::back();
   const_reference C::back() const;
 
-  axiom AccessFront(C c) {
+  axiom MemberAccessFront(C c) {
     if (c.begin() != c.end()) c.front() == *c.begin();
   }  
 
-  axiom AccessBack(C c) {
-    if (c.begin() != c.end()) c.back() == *(-{}-c.end());
+  axiom MemberAccessBack(C c) {
+    if (c.begin() != c.end()) c.back() == *(--c.end());
   }
 }
 \end{itemdecl}
@@ -393,36 +393,35 @@ auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
 \begin{itemdecl}
 template <MemberSequenceContainer C> 
 concept_map SequenceContainer<C> {
-  typedef typename C::reference reference;
-  typedef typename C::const_reference const_reference;
-  typedef typename C::iterator iterator;
-  typedef typename C::const_iterator const_iterator;
-
-  reference front(C& c)             { return c.front(); }
-  const_reference front(const C& c) { return c.front(); }
-  reference back(C& c)              { return c.back(); }
-  const_reference back(const C& c)  { return c.back(); }
-  
-  bool empty(const C& c)            { return Container<C>::empty(c); }
-  iterator begin(C& c)              { return Container<C>::begin(c); }
-  const_iterator begin(const C& c)  { return Container<C>::begin(c); }
-  iterator end(C& c)                { return Container<C>::end(c); }
-  const_iterator end(const C& c)    { return Container<C>::end(c);
+  Container<C>::reference front(C& c)             { return c.front(); }
+  Container<C>::const_reference front(const C& c) { return c.front(); }
+  Container<C>::reference back(C& c)              { return c.back(); }
+  Container<C>::const_reference back(const C& c)  { return c.back(); }
 }			
 
 \end{itemdecl}
 
+\begin{itemdecl}
+template <typename E, size_t N>
+concept_map SequenceContainer<E[N]> {
+  Container<E[N]>::reference front(E(&c)[N])             { return c[0]; }
+  Container<E[N]>::const_reference front(const E(&c)[N]) { return c[0]; }
+  Container<E[N]>::reference back(E(&c)[N])              { return c[N-1]; }
+  Container<E[N]>::const_reference back(const E(&c)[N])  { return c[N-1]; }
+}
+\end{itemdecl}
 
 \begin{itemdecl}
-auto concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
-  void C::push_front(const value_type&);
-  void C::pop_front();
+concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
+  void @\removedCCC{C::}@push_front(@\addedCC{C\&, }@const value_type&);
+  void @\removedCCC{C::}@pop_front(@\addedCC{C\&}@);
 
   axiom FrontInsertion(C c, value_type x) {
-    c == (c.push_front(x), c.pop_front());
+    c == (@\removedCCC{c.}@push_front(@\addedCC{c, }@,x), @\removedCCC{c.}@pop_front(@\addedCC{c}@));
   }
 }
 \end{itemdecl}
+
 
 \begin{itemdescr}
 \pnum
@@ -432,15 +431,44 @@ auto concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
-  void C::push_back(const value_type&);
-  void C::pop_back();
+auto concept MemberFrontInsertionSequence<typename C> : MemberSequenceContainer<C> {
+  void C::push_front(const value_type&);
+  void C::pop_front();
 
-  axiom BackInsertion(C c, value_type x) {
-    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back());
+  axiom MemberFrontInsertion(C c, value_type x) {
+    c == (c.push_front(x), c.pop_front());
   }
 }
 \end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of
+  member functions, that can be
+  modified by adding or removing elements from the front of the
+  sequence.}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <MemberFrontInsertionSequence C> 
+concept_map FrontInsertionSequence<C> {
+  void push_front(C& c, const Container<C>::value_type &v)   { c.front(v); }
+  void pop_front(C& c)                                       { c.pop_front(); }
+}			
+\end{itemdecl}
+
+\begin{itemdecl}
+concept BackInsertionSequence<typename C> : SequenceContainer<C> {
+  void @\removedCCC{C::}@push_back(@\addedCC{C\&, }@const value_type&);
+  void @\removedCCC{C::}@pop_back(@\addedCC{C\&}@);
+
+  axiom BackInsertion(C c, value_type x) {
+    @\textcolor{addclr}{}@c == (@\removedCCC{c.}@push_back(@\addedCC{c, }@x), @\removedCCC{c.}@pop_back(@\addedCC{c}@));
+  }
+}
+\end{itemdecl}
+
 
 \begin{itemdescr}
 \pnum
@@ -449,9 +477,38 @@ auto concept BackInsertionSequence<typename C> : SequenceContainer<C> {
   sequence.}
 \end{itemdescr}
 
+
 \begin{itemdecl}
-auto concept InsertionSequence<typename C> : SequenceContainer<C> {
-  iterator C::insert(iterator, const value_type&);
+auto concept MemberBackInsertionSequence<typename C> : MemberSequenceContainer<C> {
+  void C::push_back(const value_type&);
+  void C::pop_back();
+
+  axiom MemberBackInsertion(C c, value_type x) {
+    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back());
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+  modified by adding or removing elements from the back of the
+  sequence.}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+template <MemberBackInsertionSequence C> 
+concept_map BackInsertionSequence<C> {
+  void push_back(C& c, const Container<C>::value_type &v)    { c.back(v); }
+  void pop_back(C& c)                                        { c.pop_back(); }
+}			
+\end{itemdecl}
+
+\begin{itemdecl}
+concept InsertionSequence<typename C> : SequenceContainer<C> {
+  iterator @\removedCCC{C::}@insert(@\addedCC{C\&, const_}@iterator, const value_type&);
 }
 \end{itemdecl}
 
@@ -460,6 +517,28 @@ auto concept InsertionSequence<typename C> : SequenceContainer<C> {
 \addedConcepts{\mbox{\reallynote} describes a container that can be
   modified by inserting elements at any position within the sequence.}
 \end{itemdescr}
+
+\begin{itemdecl}
+auto concept MemberInsertionSequence<typename C> : MemberSequenceContainer<C> {
+  iterator C::insert(const_iterator, const value_type&);
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+template <MemberInsertionSequence C> 
+concept_map InsertionSequence<C> {
+  iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
+  { return c.insert(i, v); }
+}			
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+  modified by inserting elements at any position within the sequence.}
+\end{itemdescr}
+
+
 
 \color{black}
 
@@ -597,7 +676,7 @@ namespace std {
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
     @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
-            @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@
+            @\addedConcepts{ \&\& SameType<T, Cont::value_type>}\addedCC{Swappable<Cont>}@
     class queue;
   template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator==(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
@@ -621,7 +700,8 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\& MutableRandomAccessIterator<Cont::iterator>}@
-             @\addedConcepts{\&\& SwappableIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
+             @\addedConcepts{\&\& Swappable}@@\removedCCC{Iterator}@@\addedConcepts{<Cont::iterator}@@\addedCC{::reference}@@\addedConcepts{> \&\& CopyConstructible<Compare>}@
+             @\addedCC{Swappable<Cont>}@
   class priority_queue;
   template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@@\addedConcepts{, Swappable Compare}@>
     void swap(priority_queue<T,Alloc@\removedConcepts{ator}@>& x, priority_queue<T,Alloc@\removedConcepts{ator}@>& y);
@@ -635,10 +715,10 @@ namespace std {
 \synopsis{Header \tcode{<stack>}\ synopsis}%
 \index{stack@\tcode{<stack>}}
 
-\begin{codeblock}
+\begin{codeblock} 
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
-    @\addedConcepts{requires SameType<Cont::value_type, T>}@
+    @\addedConcepts{requires SameType<Cont::value_type, T>}@ @\addedCC{Swappable<Cont>}@
     class stack;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
@@ -2674,16 +2754,16 @@ namespace std {
     @\addedConcepts{requires MoveAssignable<Cont>}@ queue& operator=(queue&& q)
                                         { c = std::move(q.c); return *this; }
 
-    bool              empty() const     { return c.empty(); }
-    size_type         size()  const     { return c.size(); }
-    reference         front()           { return c.front(); }
-    const_reference   front() const     { return c.front(); }
-    reference         back()            { return c.back(); }
-    const_reference   back() const      { return c.back(); }
-    void push(const value_type& x)      { c.push_back(x); }
-    void push(value_type&& x)           { c.push_back(std::move(x)); }
-    void pop()                          { c.pop_front(); }
-    void swap(queue&& q)                { c.swap(q.c); }
+    bool              empty() const     { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
+    size_type         size()  const     { return @\removedCCC{c.}@size(@\addedCC{c}@); }
+    reference         front()           { return @\removedCCC{c.}@front(@\addedCC{c}@); }
+    const_reference   front() const     { return @\removedCCC{c.}@front(@\addedCC{c}@); }
+    reference         back()            { return @\removedCCC{c.}@back(@\addedCC{c}@); }
+    const_reference   back() const      { return @\removedCCC{c.}@back(@\addedCC{c}@); }
+    void push(const value_type& x)      { @\removedCCC{c.}@push_back(@\addedCC{c, }@x); }
+    void push(value_type&& x)           { @\removedCCC{c.}@push_back(@\addedCC{c, }@std::move(x)); }
+    void pop()                          { @\removedCCC{c.}@pop_front(@\addedCC{c}@); }
+    void swap(queue&& q)                { @\removedCCC{c.}@swap(@\addedCC{c}@, q.c); }
   };
 
   template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
@@ -2846,8 +2926,8 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
        @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\& MutableRandomAccessIterator<Cont::iterator>}@
-           @\addedConcepts{\&\& SwappableIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
-  class priority_queue {
+           @\addedConcepts{\&\& Swappable}@@\removedCCC{Iterator}@@\addedConcepts{<Cont::iterator}@@\addedCC{::reference}@@\addedConcepts{> \&\& CopyConstructible<Compare>}@
+  class priority_queue { 
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
     typedef typename Cont@\removedConcepts{ainer}@::reference             reference;
@@ -2888,9 +2968,9 @@ namespace std {
       @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
       priority_queue(priority_queue&&, const Alloc&);
 
-    bool      empty() const       { return c.empty(); }
-    size_type size()  const       { return c.size(); }
-    const_reference   top() const { return c.front(); }
+    bool      empty() const       { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
+    size_type size()  const       { return @\removedCCC{c.}@size(@\addedCC{c}@); }
+    const_reference   top() const { return @\removedCCC{c.}@front(@\addedCC{c}@); }
     void push(const value_type& x);
     void push(value_type&& x);
     void pop();
@@ -2942,7 +3022,7 @@ Initializes
 \tcode{c}\ with
 \tcode{y} (copy constructing or move constructing as appropriate);
 calls
-\tcode{make_heap(c.begin(), c.end(), comp)}.
+\tcode{make_heap(@\removedCCC{c.}@c.begin(@\addedCC{c}@), @\removedCCC{c.}@c.end(@\addedCC{c}@), comp)}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -2969,9 +3049,9 @@ Initializes
 \tcode{c} with
 \tcode{y} (copy constructing or move constructing as appropriate);
 calls
-\tcode{c.insert(c.end(), first, last)};
+\tcode{c.insert(@\removedCCC{c.}@end(@\addedCC{c}@), first, last)};
 and finally calls
-\tcode{make_heap(c.begin(), c.end(), comp)}.
+\tcode{make_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp)}.
 \end{itemdescr}
 
 \rSec4[priqueue.members]{\tcode{priority_queue}\ members}
@@ -2985,8 +3065,8 @@ void push(const value_type& x);
 \pnum
 \effects\ 
 \begin{codeblock}
-c.push_back(x);
-push_heap(c.begin(), c.end(), comp);
+@\removedCCC{c.}@push_back(@\addedCC{c, }@x);
+push_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp);
 \end{codeblock}
 \end{itemdescr}
 
@@ -2999,8 +3079,8 @@ void push(value_type&& x);
 \pnum
 \effects
 \begin{codeblock}
-c.push_back(std::move(x));
-push_heap(c.begin(), c.end(), comp);
+@\removedCCC{c.}@push_back(@\addedCC{c, }@std::move(x));
+push_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp);
 \end{codeblock}
 \end{itemdescr}
 
@@ -3014,8 +3094,8 @@ void pop();
 \pnum
 \effects\ 
 \begin{codeblock}
-pop_heap(c.begin(), c.end(), comp);
-c.pop_back();
+pop_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp);
+@\removedCCC{c.}@pop_back(@\addedCC{c}@);
 \end{codeblock}
 \end{itemdescr}
 
@@ -3089,14 +3169,14 @@ namespace std {
       @\addedConcepts{HasConstructor<Cont, Cont\&\&, Alloc>}@
       stack(stack&&, const Alloc&);
 
-    bool      empty() const             { return c.empty(); }
-    size_type size()  const             { return c.size(); }
-    reference         top()             { return c.back(); }
-    const_reference   top() const       { return c.back(); }
-    void push(const value_type& x)      { c.push_back(x); }
-    void push(value_type&& x)           { c.push_back(std::move(x)); }
-    void pop()                          { c.pop_back(); }
-    void swap(stack&& s)                { c.swap(s.c); }
+    bool      empty() const             { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
+    size_type size()  const             { return @\removedCCC{c.}@size(@\addedCC{c}@); }
+    reference         top()             { return @\removedCCC{c.}@back(@\addedCC{c}@); }
+    const_reference   top() const       { return @\removedCCC{c.}@back(@\addedCC{c}@); }
+    void push(const value_type& x)      { @\removedCCC{c.}@push_back(@\addedCC{c, }@x); }
+    void push(value_type&& x)           { @\removedCCC{c.}@push_back(@\addedCC{c, }@std::move(x)); }
+    void pop()                          { @\removedCCC{c.}@pop_back(@\addedCC{c}@); }
+    void swap(stack&& s)                { @\removedCCC{c.}@swap(@\addedCC{c, }@s.c); }
   };
 
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
