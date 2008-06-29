@@ -1531,11 +1531,11 @@ namespace std {
       void unique(BinaryPredicate binary_pred); 
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
-    template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
+    template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
       void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, Compare comp);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void sort(); 
-    template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp); 
+    template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp); 
 
     void reverse(); 
   }; 
@@ -1892,7 +1892,7 @@ template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
 
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
-template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
+template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
   void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, Compare comp)
 \end{itemdecl}
 
@@ -1911,7 +1911,7 @@ template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare
 
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp);
+template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2011,24 +2011,26 @@ namespace std {
 
     // \ref{list.cons} construct/copy/destroy:
     explicit list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires DefaultConstructible<T>}@ explicit list(size_type n);
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit list(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       list(size_type @\farg{n}@, const T& @\farg{value}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       list(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ list(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
-    list(list&& x);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ list(list&& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ list(const list&, const Alloc@\removedConcepts{ator}@&);
-    list(list&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ list(list&&, const Alloc@\removedConcepts{ator}@&);
    ~list();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
       list<T,Alloc@\removedConcepts{ator}@>& operator=(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
-    list<T,Alloc@\removedConcepts{ator}@>& operator=(list<T,Alloc@\removedConcepts{ator}@>&& x);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+      list<T,Alloc@\removedConcepts{ator}@>& operator=(list<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
       void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
 
@@ -2051,7 +2053,7 @@ namespace std {
     bool      empty() const;
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires DefaultConstructible<T>}@ void resize(size_type sz);
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, const T& c);
 
     // element access:
@@ -2103,11 +2105,12 @@ namespace std {
       void unique(BinaryPredicate @\farg{binary_pred}@);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@);
-    template <@\changedConcepts{class}{BinaryPredicate<auto, T, T>}@ Compare> 
+    template <@\removedConcepts{class}\removedCCC{BinaryPredicate<auto, T, T>}\addedCC{StrictWeakOrder<auto, T>}@ Compare> 
       void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@, Compare @\farg{comp}@);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-    template <@\changedConcepts{class}{BinaryPredicate<auto, T, T>}@ Compare> void sort(Compare @\farg{comp}@);
+    template <@\removedCC{class}\removedCCC{BinaryPredicate<auto, T, T>}\addedCC{StrictWeakOrder<auto, T>}@ Compare> 
+      void sort(Compare @\farg{comp}@);
 
     void reverse();
   };
@@ -2156,7 +2159,7 @@ Constant.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T>}@ explicit list(size_type n);
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit list(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2223,6 +2226,7 @@ Linear in
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -2240,7 +2244,7 @@ insert(begin(), n, t);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@
   void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -2254,7 +2258,7 @@ Replaces the contents of the list with \farg{n}\ copies of \farg{t}.
 
 \index{resize@\tcode{resize}!\tcode{list}}%
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T>}@ void resize(size_type sz);
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2586,15 +2590,16 @@ otherwise no applications of the predicate.
 \index{merge@\tcode{merge}!\tcode{list}}%
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@);
-template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@, Compare @\farg{comp}@);
+template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
+  void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@, Compare @\farg{comp}@);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \requires\ 
-\farg{comp}\ shall define a strict weak ordering
-(\ref{alg.sorting}), and both the list and the argument list shall be
-sorted according to this ordering.
+\removedCC{\mbox{\farg{comp}} shall define a strict weak ordering
+(\mbox{\ref{alg.sorting}}), and} both the list and the argument list shall be
+sorted according to \changedCC{this ordering}{\mbox{\tcode{operator<}} or \mbox{\tcode{comp}}}.
 
 \pnum
 \effects\ 
@@ -2648,19 +2653,19 @@ Linear time.
 \index{sort@\tcode{sort}!\tcode{list}}%
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-template <@\changedConcepts{class}{BinaryPredicate<auto, T, T>}@ Compare> void sort(Compare @\farg{comp}@);
+template <@\removedCC{class}\changedCCC{BinaryPredicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare @\farg{comp}@);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\requires\ 
-\tcode{operator<}\
+\removedCC{\mbox{\requires}
+\mbox{\tcode{operator<}}
 (for the first
 version)
 or
-\farg{comp}\ 
+\mbox{\farg{comp}}
 (for the second version)
-shall define a strict weak ordering (\ref{alg.sorting}).
+shall define a strict weak ordering (\mbox{\ref{alg.sorting}}).}
 
 \pnum
 \effects\ 
