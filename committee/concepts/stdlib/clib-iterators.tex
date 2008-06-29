@@ -248,7 +248,7 @@ as shown in Table~\ref{tab:iterators.relations}.
 \textbf{Random Access}                  &       $\rightarrow$ \textbf{Bidirectional}    &
 $\rightarrow$ \textbf{Forward}  &       $\rightarrow$ \textbf{Input}  & \addedCC{\mbox{$\rightarrow$} \mbox{\textbf{Iterator}}}                   \\ 
  &  &  & \addedCC{\mbox{$\uparrow$}} & \addedCC{\mbox{$\uparrow$}} \\
-   &        &     & \addedCC{\mbox{\textbf{Movable}}} &  \textbf{Output}                   \\
+   &        &     & \addedCC{\mbox{\textbf{Movable}}} &   \addedCC{\mbox{$\rightarrow$}} \textbf{Output}                   \\
 \end{floattable}
 
 \pnum
@@ -527,7 +527,7 @@ does not imply
 \tcode{++a == ++b}.
 (Equality does not guarantee the substitution property or referential transparency.)
 Algorithms on input iterators should never attempt to pass through the same iterator twice.
-They should be
+\resetcolor{}They should be
 \techterm{single pass}\ 
 algorithms.
 \removedConcepts{Value type T is not required to be an Assignable type (23.1).}\
@@ -542,51 +542,55 @@ reference operator*(@\removedCCC{const}@ X&@\addedCC{\&}@ @\farg{a}@); @\addedCC
 \end{itemdecl}
 
 \pnum
-\requires\ 
-\tcode{\farg{a}}\
-is dereferenceable.
+\addedConcepts{\mbox{\requires}
+\mbox{\tcode{\farg{a}}}
+is dereferenceable.}
 
 \pnum
-\returns\ 
-the value referenced by the iterator
+\addedConcepts{\mbox{\returns}
+the value referenced by the iterator}
 
 \pnum
-\notes\
-If \tcode{b} is a value of type \tcode{X}, \tcode{a == b} and
-\tcode{(a, b)} is in the domain of \tcode{==} 
-then \tcode{*a} is equivalent to \tcode{*b}.
+\addedConcepts{\mbox{\notes}
+If \mbox{\tcode{b}} is a value of type \mbox{\tcode{X}},
+\mbox{\tcode{a == b}} and 
+\mbox{\tcode{(a, b)}} is in the domain of \mbox{\tcode{==}}
+then \mbox{\tcode{*a}} is equivalent to \mbox{\tcode{*b}}.}
 
 \begin{itemdecl}
 pointer operator->(const X& a);
 \end{itemdecl}
 
 \pnum
-\returns\
+\addedConcepts{\mbox{\returns}
  a pointer to the value referenced by
-  the iterator
+  the iterator}
 
 \begin{itemdecl}
 bool operator==(const X& a, const X& b); // inherited from EqualityComparable<X>
 \end{itemdecl}
 
 \pnum
-If two iterators \tcode{a}\ and \tcode{b}\ of the same type are equal, then either \tcode{a}\ and \tcode{b}\ 
+\addedConcepts{If two iterators \mbox{\tcode{a}} and \mbox{\tcode{b}}
+  of the same type are equal, then either \mbox{\tcode{a}} and
+  \mbox{\tcode{b}} 
 are both dereferenceable
-or else neither is dereferenceable.
+or else neither is dereferenceable.}
 
 \begin{itemdecl}
 X& operator++(X& r);
 \end{itemdecl}
 
 \pnum
-\precondition\ 
-\tcode{r} is dereferenceable
+\addedConcepts{\mbox{\precondition}
+\mbox{\tcode{r}} is dereferenceable}
 
 \pnum
-\postcondition\
-\tcode{r} is dereferenceable or \tcode{r} is past-the-end. Any copies
-of the previous value of \tcode{r} are no longer required either to be
-dereferenceable or in the domain of \tcode{==}.
+\addedConcepts{\mbox{\postcondition}
+\mbox{\tcode{r}} is dereferenceable or \mbox{\tcode{r}} is
+past-the-end. Any copies 
+of the previous value of \mbox{\tcode{r}} are no longer required either to be
+dereferenceable or in the domain of \mbox{\tcode{==}}.}
 \end{paras}
 
 \rSec2[output.iterators]{Output iterators}
@@ -658,8 +662,8 @@ X& operator++(X& r); @\addedCC{// from Iterator<X>}@
 \end{itemdecl}
 
 \pnum
-\postcondition\
-\tcode{\&\farg{r} == \&++\farg{r}}
+\addedConcepts{\mbox{\postcondition}
+\mbox{\tcode{\&\farg{r} == \&++\farg{r}}}}
 
 \pnum
 \removedCCC{The \mbox{\tcode{BasicOutputIterator}} concept describes an output iterator
@@ -785,12 +789,12 @@ X& operator--(X& r);
 \end{itemdecl}
 
 \pnum
-\precondition\
-there exists \tcode{s}\ such that \tcode{r == ++s}.
+\addedConcepts{\mbox{\precondition}
+there exists \mbox{\tcode{s}} such that \mbox{\tcode{r == ++s}}.}
 
 \pnum
-\postcondition\
-\tcode{r}\ is dereferenceable.
+\addedConcepts{\mbox{\postcondition}
+\mbox{\tcode{r}} is dereferenceable.}
 \addedCC{\mbox{\tcode{\&r == \&{-}{-}r}}.}
 
 \begin{itemdecl}
@@ -798,8 +802,8 @@ postdecrement_result operator--(X& r, int);
 \end{itemdecl}
 
 \pnum
-\effects\
-equivalent to 
+\addedConcepts{\mbox{\effects}
+equivalent to}
 \begin{codeblock}
 { X tmp = r;
 --r;
@@ -843,8 +847,8 @@ X& operator+=(X& r, difference_type n);
 \end{itemdecl}
 
 \pnum
-\effects\
-equivalent to
+\addedConcepts{\mbox{\effects}
+equivalent to}
 \begin{codeblock}
 { difference_type m = n;
   if (m >= 0) while (m--) ++r;
@@ -858,32 +862,32 @@ X operator+(difference_type n, const X& a);
 \end{itemdecl}
 
 \pnum
-\effects\
-equivalent to
+\addedConcepts{\mbox{\effects}
+equivalent to}
 \begin{codeblock}
 { X tmp = a;
 return tmp += n; }
 \end{codeblock}
 
 \pnum
-\postcondition\
-\tcode{a + n == n + a}
+\addedConcepts{\mbox{\postcondition}
+\mbox{\tcode{a + n == n + a}}}
 
 \begin{itemdecl}
 @\textcolor{addclr}{X}@& operator-=(X& r, difference_type n);
 \end{itemdecl}
 
 \pnum
-\returns\
-\tcode{r += -n}
+\addedConcepts{\mbox{\returns}
+\mbox{\tcode{r += -n}}}
 
 \begin{itemdecl}
 X operator-(const X& a, difference_type n);
 \end{itemdecl}
 
 \pnum
-\effects\
-equivalent to
+\addedConcepts{\mbox{\effects}
+equivalent to}
 \begin{codeblock}
 { X tmp = a;
   return tmp -= n; }
@@ -894,20 +898,22 @@ difference_type operator-(const X& a, const X& b);
 \end{itemdecl}
 
 \pnum
-\precondition\
-there exists a value \tcode{n}\ of \tcode{difference_type} such that \tcode{a + n == b}.
+\addedConcepts{\mbox{\precondition}
+there exists a value \mbox{\tcode{n}} of \mbox{\tcode{difference_type}}
+  such that \mbox{\tcode{a + n == b}}.}
 
 \pnum
-\effects\
-\tcode{b == a + (b - a)}
+\addedConcepts{\mbox{\effects}
+\mbox{\tcode{b == a + (b - a)}}}
 
 \pnum
-\returns\
-\tcode{(a < b) ? distance(a,b) : -distance(b,a)}
+\addedConcepts{\mbox{\returns}
+\mbox{\tcode{(a < b) ? distance(a,b) : -distance(b,a)}}}
 
 \pnum
-Pointers are mutable random access iterators with the following
-concept map
+\addedConcepts{Pointers are} \removedCCC{mutable}
+\addedConcepts{random access iterators with the following
+concept map}
 
 \begin{codeblock}
 namespace std {
@@ -920,7 +926,7 @@ namespace std {
 }
 \end{codeblock}
 
-and pointers to const are random access iterators
+\addedConcepts{and pointers to const are random access iterators}
 
 \begin{codeblock}
 namespace std {
@@ -934,14 +940,14 @@ namespace std {
 \end{codeblock}
 
 \pnum
-\enternote\ 
+\addedConcepts{\mbox{\enternote}
 If there is an additional pointer type
-\tcode{\,\xname{far}}\
+\mbox{\tcode{\,\xname{far}}}
 such that the difference of two
-\tcode{\,\xname{far}}\
+\mbox{\tcode{\,\xname{far}}}
 is of type
-\tcode{long},
-an implementation may define
+\mbox{\tcode{long}},
+an implementation may define}
 
 \color{addclr}
 \begin{codeblock}
@@ -1066,33 +1072,53 @@ respectively. \removedConcepts{In the case of an output iterator, the types}
 
 \setcounter{Paras}{5}
 \pnum
-\addedConcepts{\mbox{\tcode{iterator_traits}}
-is specialized for any type
-\mbox{\tcode{Iterator}}
-for which there is a concept map for any of the iterator concepts
-(\mbox{\ref{iterator.concepts}}) and \mbox{\tcode{Iterator}} meets the requirements
-stated in the corresponding requirements table of ISO/IEC 14882:2003.
-\mbox{\enternote} these specializations
-  permit forward compatibility of iterators, allowing those iterators
-  that provide only concept maps to be used through
-  \mbox{\tcode{iterator_traits}}. They can be implemented via class template
-  partial specializations such as the following.}
-\color{addclr}
+\addedCC{For each iterator category, a partial specializations of the
+  \mbox{\tcode{iterator_traits}} class template provide appropriate
+  type definitions for programs that use the deprecated iterator
+  traits mechanism. These partial specializations provide backward
+  compatibility for unconstrained templates using iterators as
+  specified by the corresponding requirements tables of ISO/IEC
+  14882:2003.}
+\color{ccadd}
 \begin{codeblock}
-template<InputIterator Iterator> struct iterator_traits<Iterator> {
-  typedef Iterator::difference_type            difference_type;
-  typedef Iterator::value_type                 value_type;
-  typedef Iterator::pointer                    pointer;
-  typedef Iterator::reference                  reference;
+template<Iterator Iter> struct iterator_traits<Iter> {
+  typedef void                             difference_type;
+  typedef void                             value_type;
+  typedef void                             pointer;
+  typedef void                             reference;
+  typedef output_iterator_tag              iterator_category;
+};
+
+template<InputIterator Iter> struct iterator_traits<Iter> {
+  typedef Iter::difference_type            difference_type;
+  typedef Iter::value_type                 value_type;
+  typedef Iter::pointer                    pointer;
+  typedef Iter::reference                  reference;
   typedef input_iterator_tag                   iterator_category;
 };
 
-template<ForwardIterator Iterator> struct iterator_traits<Iterator> {
-  typedef Iterator::difference_type            difference_type;
-  typedef Iterator::value_type                 value_type;
-  typedef Iterator::pointer                    pointer;
-  typedef Iterator::reference                  reference;
+template<ForwardIterator Iter> struct iterator_traits<Iter> {
+  typedef Iter::difference_type            difference_type;
+  typedef Iter::value_type                 value_type;
+  typedef Iter::pointer                    pointer;
+  typedef Iter::reference                  reference;
   typedef forward_iterator_tag                 iterator_category;
+};
+
+template<BidirectionalIterator Iter> struct iterator_traits<Iter> {
+  typedef Iter::difference_type            difference_type;
+  typedef Iter::value_type                 value_type;
+  typedef Iter::pointer                    pointer;
+  typedef Iter::reference                  reference;
+  typedef bidirectional_iterator_tag       iterator_category;
+};
+
+template<RandomAccessIterator Iter> struct iterator_traits<Iter> {
+  typedef Iter::difference_type            difference_type;
+  typedef Iter::value_type                 value_type;
+  typedef Iter::pointer                    pointer;
+  typedef Iter::reference                  reference;
+  typedef random_access_iterator_tag       iterator_category;
 };
 \end{codeblock} 
 \exitnote\
@@ -1177,38 +1203,41 @@ namespace std {
 \rSec2[iterator.backward]{Iterator backward compatibility}
 
 \pnum
-The library provides concept maps that allow iterators specified with
-\tcode{iterator_traits}
-to interoperate with algorithms that require iterator concepts. 
+\addedConcepts{The library provides concept maps that allow iterators
+  specified with \mbox{\tcode{iterator_traits}}
+to interoperate with algorithms that require iterator concepts. }
 
 \pnum
-The
+\addedConcepts{The
 associated types 
-\tcode{difference_type},
-\tcode{value_type},
-\tcode{pointer}
+\mbox{\tcode{difference_type}},
+\mbox{\tcode{value_type}},
+\mbox{\tcode{pointer}}
 and
-\tcode{reference}
+\mbox{\tcode{reference}}
 are given the same values as their counterparts in 
-\tcode{iterator_traits}.
+\mbox{\tcode{iterator_traits}}.}
 
 \pnum
 \color{addclr}
-These concept maps shall only be defined when the 
-\tcode{iterator_traits}
+\changedCCC{These concept maps shall only be defined when}{When}
+\addedConcepts{ the 
+\mbox{\tcode{iterator_traits}}
 specialization contains the nested types 
-\tcode{difference_type},
-\tcode{value_type},
-\tcode{pointer},
-\tcode{reference}
+\mbox{\tcode{difference_type}},
+\mbox{\tcode{value_type}},
+\mbox{\tcode{pointer}},
+\mbox{\tcode{reference}}
 and
-\tcode{iterator_category}.
+\mbox{\tcode{iterator_category}}}\addedCC{, the
+\mbox{\tcode{iterator_traits}} specialization is considered to be \mbox{\techterm{valid}}}\addedConcepts{.}
 
-\enterexample\ 
-The following example is well-formed. The backward-compatbility
-concept map for \tcode{InputIterator} does not match because
-\tcode{iterator_traits<int>} fails to provide the required nested
-types. 
+\addedConcepts{\enterexample}
+\addedConcepts{The following example is well-formed. The backward-compatbility
+concept map for \mbox{\tcode{InputIterator}} does not match because
+\mbox{\tcode{iterator_traits<int>}}}
+\changedCCC{fails to provide the required nested
+types}{is not valid}\addedConcepts{.}
 \begin{codeblock}
 @\color{addclr}@template<@\changedCCC{Integral}{IntegralLike}@ T> void f(T);
 template<InputIterator T> void f(T);
@@ -1217,44 +1246,57 @@ void g(int x) {
   f(x); // okay
 }
 \end{codeblock}
-\exitexample\ 
+\addedConcepts{\exitexample}
 
 \pnum
-The library shall provide a concept map
-\tcode{InputIterator}
-for any type \tcode{Iterator} with
-\\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
-\tcode{input_iterator_tag}.
+\addedConcepts{The library shall provide a concept map
+\mbox{\tcode{Iterator<Iter>}}
+for any type \mbox{\tcode{Iter}} with}
+\addedCC{a valid \mbox{\tcode{iterator_traits<Iter>}}, an}
+\mbox{\tcode{iterator_traits<Iter>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to 
+\mbox{\tcode{output_iterator_tag}}\addedCC{, and that meets the
+  syntactic requirements of the \mbox{\tcode{Iterator}}
+  concept}\addedConcepts{.} 
 
 \pnum
-The library shall provide a concept map
-\tcode{OutputIterator}
-for any type \tcode{Iterator} with
-\\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
-\tcode{output_iterator_tag}. \enternote\ the \tcode{reference} type of
-the \tcode{OutputIterator} must be deduced, because
-\tcode{iterator_traits} specifies that it will be \tcode{void}. \exitnote\
-
-\textcolor{addclr}{\pnum}
-The library shall provide a concept map
-\tcode{ForwardIterator}
-for any type \tcode{Iterator} with
-\\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
-\tcode{forward_iterator_tag}.
-
-\textcolor{addclr}{\pnum}
-The library shall provide a concept map
-\tcode{BidirectionalIterator}
-for any type \tcode{Iterator} with
-\\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
-\tcode{bidirectional_iterator_tag}.
+\addedConcepts{The library shall provide a concept map
+\mbox{\tcode{InputIterator<Iter>}}
+for any type \mbox{\tcode{Iter}} with}
+\addedCC{a valid \mbox{\tcode{iterator_traits<Iter>}}, an}
+\addedConcepts{\mbox{\tcode{iterator_traits<Iter>::it\-er\-a\-tor_ca\-te\-go\-ry}} convertible to
+\mbox{\tcode{input_iterator_tag}}}\addedCC{, and that meets the
+syntactic requirements of the \mbox{\tcode{InputIterator}} concept}\addedConcepts{.}
 
 \pnum
-The library shall provide a concept map
-\tcode{RandomAccessIterator}
-for any type \tcode{Iterator} with
-\\\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry} convertible to
-\tcode{random_access_iterator_tag}.
+\addedConcepts{The library shall provide a concept map
+\mbox{\tcode{ForwardIterator<Iter>}}
+for any type \mbox{\tcode{Iter}} with} \addedCC{a valid}
+\\\addedCC{\mbox{\tcode{iterator_traits<Iter>}}, an}
+\addedConcepts{\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to}
+\\\addedConcepts{\mbox{\tcode{forward_iterator_tag}}}\addedCC{, and that meets the
+syntactic requirements of the \mbox{\tcode{ForwardIterator}} concept}\addedConcepts{.}
+
+\pnum
+\addedConcepts{The library shall provide a concept map
+\mbox{\tcode{BidirectionalIterator<Iter>}}
+for any type \mbox{\tcode{Iter}} with} \addedCC{a valid}
+\\\addedCC{\mbox{\tcode{iterator_traits<Iter>}}, an}
+\addedConcepts{\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to}
+\\\addedConcepts{\mbox{\tcode{bidirectional_iterator_tag}}}\addedCC{, and that meets the
+syntactic requirements of the \mbox{\tcode{BidirectionalIterator}} concept}\addedConcepts{.}
+
+\pnum
+\addedConcepts{The library shall provide a concept map
+\mbox{\tcode{RandomAccessIterator<Iter>}}
+for any type \mbox{\tcode{Iter}} with} \addedCC{a valid}
+\\\addedCC{\mbox{\tcode{iterator_traits<Iter>}}, an}
+\addedConcepts{\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to}
+\\\addedConcepts{\mbox{\tcode{random_access_iterator_tag}}}\addedCC{, and that meets the
+syntactic requirements of the \mbox{\tcode{RandomAccessIterator}} concept}\addedConcepts{.}
 
 \section*{Acknowledgments}
 Thanks to Beman Dawes for alerting us to omissions from the iterator

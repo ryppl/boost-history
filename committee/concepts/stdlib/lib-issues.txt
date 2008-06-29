@@ -288,11 +288,11 @@ Y = TriviallyDefaultConstructible is declared in Synopsis but not defined later.
 
 N2624
 
-y - Revisit the issue of MutableXXIterator. Is it needed? Is it overconstrained?
+Y - Revisit the issue of MutableXXIterator. Is it needed? Is it overconstrained?
 
-y - check whether changes affect synopsis.
+Y - check whether changes affect synopsis.
 
-y - check whether we can use Incrementable, Decrementable
+N - check whether we can use Incrementable, Decrementable
 
 24.1/3
 
@@ -379,7 +379,7 @@ Y - Remove in total
 
 D.10/6
 
-y - Clarify. List specializations that are required. 
+Y - Clarify. List specializations that are required. 
 
 D.10.4/3
 
@@ -394,27 +394,30 @@ y - Add predicate that paragraph 3 must hold.
 Howard's list (not yet annotated):
 
 
-    *  23.1 p3 strike "destruct" functions.
+y   *  23.1 p3 strike "destruct" functions.
+    (IIRC, this is a Pablo thing; we need to check with him)
 
     * 23.1.1 Present rationale for constraining container to ForwardIterator? as opposed to input/output iterators.
 
-    * Make Container and SequenceContainer? work with c-arrays (free function for begin/end).
+Y    * Make Container and SequenceContainer? work with c-arrays (free function for begin/end).
 
-    * Have a preference for free functions in all concepts.
+Y    * Have a preference for free functions in all concepts.
 
 Y - Discard member swap, not needed.
 
-    * Add MemberSwappable? so that container swap free functions compile. Change container swap functions to require MemberSwappable?.
+N    * Add MemberSwappable? so that container swap free functions compile. Change container swap functions to require MemberSwappable?.
+     (Remove swap)
 
-    * Review constructors which take default arguments. Default argument no longer implies DefaultConstructible?.
+y   * Review constructors which take default arguments. Default argument no longer implies DefaultConstructible?.
 
-    * Adaptors should require NothrowDestructible? (related issues worthy of exploration).
+y   * Adaptors should require NothrowDestructible? (related issues worthy of exploration).
 
-    * Implementations of stack members will change to free functions.
+y   * Implementations of stack members will change to free functions.
 
-    * Create new FrontEmplaceSequence? / BackEmplaceSequence? concepts (and member form adaptors for emplace_front/emplace_back).
+y   * Create new FrontEmplaceSequence? / BackEmplaceSequence? concepts (and member form adaptors for emplace_front/emplace_back).
+    (This is supposed to be because we have emplace overloads in the adaptors?)
 
-    * SequenceContainer? second axiom requires bidirectional iterator.
+y   * SequenceContainer? second axiom requires bidirectional iterator.
 
     * In second axiom in SequenceContainer? --c.end() won't compile when iterator is pointer.
 
