@@ -150,7 +150,7 @@ Objects stored in these components shall be constructed using
 %
 \addedConcepts{A container may directly call constructors and
   destructors for its stored objects, without calling the
-  \mbox{\tcode{construct_element}} or \mbox{\tcode{destruct}}
+  \mbox{\tcode{construct_element}} or \mbox{\tcode{destroy}}
   functions, if the allocator models the
   \mbox{\tcode{MinimalAllocator}} concept.}
 %
@@ -552,7 +552,7 @@ Headers \tcode{<array>}, \tcode{<deque>}, \tcode{<forward_list>}, \tcode{<list>}
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, size_t N > 
-    @\addedConcepts{requires Destructible<T>}@
+    @\addedConcepts{requires NothrowDestructible<T>}@
     struct array;
   template <@\changedConcepts{class}{EqualityComparable}@ T, size_t N>
     bool operator==(const array<T,N>& x, const array<T,N>& y);
@@ -592,7 +592,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
-    @\addedConcepts{requires Destructible<T>}@
+    @\addedConcepts{requires NothrowDestructible<T>}@
     class deque;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator==(const deque<T,Alloc@\removedConcepts{ator}@>& x, const deque<T,Alloc@\removedConcepts{ator}@>& y);
@@ -621,7 +621,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
-    @\addedConcepts{requires Destructible<T>}@
+    @\addedConcepts{requires NothrowDestructible<T>}@
     class forward_list; 
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@> 
     bool operator==(const forward_list<T,Alloc@\removedConcepts{ator}@>& x, const forward_list<T,Alloc@\removedConcepts{ator}@>& y); 
@@ -646,7 +646,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
-    @\addedConcepts{requires Destructible<T>}@
+    @\addedConcepts{requires NothrowDestructible<T>}@
     class list;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator==(const list<T,Alloc@\removedConcepts{ator}@>& x, const list<T,Alloc@\removedConcepts{ator}@>& y);
@@ -747,7 +747,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
-    @\addedConcepts{requires Destructible<T>}@
+    @\addedConcepts{requires NothrowDestructible<T>}@
     class vector;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator==(const vector<T,Alloc@\removedConcepts{ator}@>& x,const vector<T,Alloc@\removedConcepts{ator}@>& y);
@@ -814,7 +814,7 @@ or for operations where there is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, size_t N >
-  @\addedConcepts{requires Destructible<T>}@
+  @\addedConcepts{requires NothrowDestructible<T>}@
   struct array {
     //  types:
     typedef T &                                   reference;
@@ -1030,7 +1030,7 @@ or for operations where there is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
-  @\addedConcepts{requires Destructible<T>}@
+  @\addedConcepts{requires NothrowDestructible<T>}@
   class deque {
   public:
     // types:
@@ -1067,7 +1067,7 @@ namespace std {
       deque<T,Alloc@\removedConcepts{ator}@>& operator=(@\removedCC{const}@ deque<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-          @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@ 
       void assign(size_type n, const T& t);
@@ -1184,7 +1184,7 @@ Constant.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T>}@ explicit deque(size_type n);
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit deque(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1246,6 +1246,7 @@ using the specified allocator.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -1259,7 +1260,7 @@ insert(begin(), first, last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@
 void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -1276,7 +1277,7 @@ insert(begin(), n, t);
 
 \index{resize@\tcode{resize}!\tcode{deque}}%
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T> \&\& MoveAssignable<T>}@ 
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>} \removedCCC{\&\& MoveAssignable<T>}@
   void resize(size_type sz);
 \end{itemdecl}
 
@@ -1294,7 +1295,7 @@ sequence.
 
 \index{resize@\tcode{resize}!\tcode{deque}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ 
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \removedCCC{\&\& MoveAssignable<T>}@ 
   void resize(size_type sz, const T& c);
 \end{itemdecl}
 
@@ -1425,7 +1426,7 @@ A \tcode{forward_list} satisfies all of the requirements of a container (table~\
 \begin{codeblock}
 namespace std { 
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
-  @\addedConcepts{requires Destructible<T>}@
+  @\addedConcepts{requires NothrowDestructible<T>}@
   class forward_list { 
   public: 
     // types: 
@@ -1442,7 +1443,8 @@ namespace std {
 
     // \ref{forwardlist.cons} construct/copy/destroy: 
     explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
-    @\addedConcepts{requires DefaultConstructible<T>}@ explicit forward_list(size_type n);
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ 
+      explicit forward_list(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       forward_list(size_type n, const T& value, 
                    const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
@@ -1452,15 +1454,18 @@ namespace std {
                    const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       forward_list(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
-    forward_list(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ forward_list(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
     ~forward_list(); 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
       forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
-    forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+      forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
-    @\addedConcepts{ConstructibleAsElement<Alloc, T, const T\&>}@ void assign(size_type n, const T& t); 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+      void assign(size_type n, const T& t); 
     allocator_type get_allocator() const; 
 
     // \ref{forwardlist.iter} iterators:
@@ -1507,7 +1512,7 @@ namespace std {
     iterator erase_after(const_iterator position, iterator last); 
     void swap(forward_list<T,Alloc@\removedConcepts{ator}@>&&);
 
-    @\addedConcepts{requires DefaultConstructible<T>}@ void resize(size_type sz);
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, value_type c);
     void clear(); 
 
@@ -1526,11 +1531,11 @@ namespace std {
       void unique(BinaryPredicate binary_pred); 
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
-    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> 
+    template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
       void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, Compare comp);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void sort(); 
-    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> void sort(Compare comp); 
+    template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp); 
 
     void reverse(); 
   }; 
@@ -1574,7 +1579,8 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T>}@ explicit forward_list(size_type n);
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ 
+  explicit forward_list(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1622,6 +1628,7 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
 \end{itemdecl}
 
@@ -1631,7 +1638,8 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{ConstructibleAsElement<Alloc, T, const T\&>}@ void assign(size_type n, const T\& t);
+@\addedConcepts{ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@ 
+  void assign(size_type n, const T\& t);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1780,7 +1788,7 @@ iterator erase_after(const_iterator position, iterator last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T>}@ void resize(size_type sz);
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
 @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, value_type c);
 \end{itemdecl}
 
@@ -1884,13 +1892,15 @@ template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
 
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
-template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> 
+template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
   void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, Compare comp)
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\requires \tcode{comp} defines a strict weak ordering~(\ref{alg.sorting}), and \tcode{*this} and \tcode{x} are both sorted according to this ordering.
+\requires 
+\removedCC{\mbox{\tcode{comp}} defines a strict weak ordering~(\mbox{\ref{alg.sorting}}), and} \tcode{*this} and \tcode{x} are both sorted according to 
+\changedCC{this ordering}{the strict weak ordering defined by \mbox{\tcode{operator<}} or \mbox{\tcode{comp}}}.
 
 \pnum
 \effects Merges \tcode{x} into \tcode{*this}. This operation shall be stable: for equivalent elements in the two lists, the elements from \tcode{*this} shall always precede the elements from \tcode{x}. \tcode{x} is empty after the merge. If an exception is thrown other than by a comparison there are no effects.
@@ -1901,12 +1911,12 @@ template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare>
 
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-template <@\changedConcepts{class}{Predicate<auto, T, T>}@ Compare> void sort(Compare comp);
+template <@\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\requires \tcode{operator<} (for the version with no arguments) or \tcode{comp} (for the version with a comparison argument) defines a strict weak ordering~(\ref{alg.sorting}).
+\removedCC{\mbox{\requires} \mbox{\tcode{operator<}} (for the version with no arguments) or \mbox{\tcode{comp}} (for the version with a comparison argument) defines a strict weak ordering~(\mbox{\ref{alg.sorting}}).}
 
 \pnum
 \effects Sorts the list according to the \tcode{operator<} or the \tcode{comp} function object. This operation shall be stable: the relative order of the equivalent elements is preserved. If an exception is thrown the order of the elements in \tcode{*this} is unspecified.
@@ -1982,7 +1992,7 @@ or for operations where there is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
-  @\addedConcepts{requires Destructible<T>}@
+  @\addedConcepts{requires NothrowDestructible<T>}@
   class list {
   public:
     // types:
@@ -3355,7 +3365,7 @@ A \tcode{vector}\ satisfies all of the requirements of a container and of a reve
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
-  @\addedConcepts{requires Destructible<T>}@
+  @\addedConcepts{requires NothrowDestructible<T>}@
   class vector {
   public:
     // types:
@@ -3999,7 +4009,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
-    @\addedConcepts{requires Destructible<Key> \&\& Destructible<T> \&\& CopyConstructible<Compare>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
     class map;
@@ -4034,7 +4044,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
-    @\addedConcepts{requires Destructible<Key> \&\& Destructible<T> \&\& CopyConstructible<Compare>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
     class multimap;
@@ -4075,7 +4085,7 @@ namespace std {
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
-    @\addedConcepts{requires Destructible<Key> \&\& CopyConstructible<Compare>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
     class set;
@@ -4109,7 +4119,7 @@ namespace std {
 
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
-    @\addedConcepts{requires Destructible<Key> \&\& CopyConstructible<Compare>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
     class multiset;
@@ -4190,7 +4200,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
-  @\addedConcepts{requires Destructible<Key> \&\& Destructible<T> \&\& CopyConstructible<Compare>}@
+  @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
   class map {
@@ -4637,7 +4647,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
-    @\addedConcepts{requires Destructible<Key> \&\& Destructible<T> \&\& CopyConstructible<Compare>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
   class multimap {
@@ -4987,7 +4997,7 @@ and for operations where there is additional semantic information.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
-  @\addedConcepts{requires Destructible<Key> \&\& CopyConstructible<Compare>}@
+  @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
   class set {
@@ -5253,7 +5263,7 @@ and for operations where there is additional semantic information.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
-  @\addedConcepts{requires Destructible<Key> \&\& CopyConstructible<Compare>}@
+  @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, Compare\&\&>}@
   class multiset {
