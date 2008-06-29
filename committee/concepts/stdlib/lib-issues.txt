@@ -404,6 +404,7 @@ Y    * Make Container and SequenceContainer? work with c-arrays (free function f
 Y    * Have a preference for free functions in all concepts.
 
 Y - Discard member swap, not needed.
+    (Mat: we also discarded size)
 
 N    * Add MemberSwappable? so that container swap free functions compile. Change container swap functions to require MemberSwappable?.
      (Remove swap)
@@ -413,6 +414,9 @@ y   * Review constructors which take default arguments. Default argument no long
 y   * Adaptors should require NothrowDestructible? (related issues worthy of exploration).
 
 y   * Implementations of stack members will change to free functions.
+    (Mat: done except for 1) need concept for size() 2) should effects
+    be concept qualified? 3) swappable size on Cont or on member
+    functions. Same questions for queue family. 4) not tested or reviewed
 
 y   * Create new FrontEmplaceSequence? / BackEmplaceSequence? concepts (and member form adaptors for emplace_front/emplace_back).
     (This is supposed to be because we have emplace overloads in the adaptors?)
@@ -435,4 +439,10 @@ y   * SequenceContainer? second axiom requires bidirectional iterator.
 
     * Concepts issue 34 came up
 
-    * Missing MoveAssignable? requirement on vector::emplace(const_iterator, Args&&...)
+    * Missing MoveAssignable? requirement on
+      vector::emplace(const_iterator, Args&&...)
+
+Other issues (from Mat)
+
+   * Where is back_inserter etc.?
+
