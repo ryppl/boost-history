@@ -32,14 +32,14 @@ Y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it whe
 y - stable_partition, stable_sort, partial_sort requirements not sufficient for efficient implementation. See reference to extra memory.
      Possible need to retain second line of removed requirements.
 
-y - Check for need of NoThrowDestructible
+Y - Check for need of NoThrowDestructible
 
 
 25.2.10/3 
 Y  - s/InIter::value_type/InIter::reference/
 
 25.2.11 
-y  - Do rotate requirements provide enough latitude to allow todays optimizations based on iterator categories.
+N  - Do rotate requirements provide enough latitude to allow todays optimizations based on iterator categories.
 N  - Is requiring Swappable overconstraining the implementation? I.e. there are algorithms that do not require a swap function.
      (Doug's reply: we agreed on the -lib reflector to have MoveConstructible+MoveAssignable+Swappable requirements for most algorithms, to give implementors more lattitude.)
 
@@ -51,7 +51,7 @@ y  - random_shuffle third overload not finished.
     (Doug's reply: we need concepts for the new random numbers library before we can add concept requirements here).
 
 25.2.12/4
-y  - Why was the specification for rand's semantics removed. I.e. returns random number in the range (0,n]
+Y  - Why was the specification for rand's semantics removed. I.e. returns random number in the range (0,n]
 
 25.2.13
 Y  - Typo stable_partion declaration  s/Predicate<auto Iter::reference>/Predicate<auto, Iter::reference>/
@@ -71,11 +71,7 @@ First overload
 
 Y - s/Iter::value_type/Iter::reference/g
     (Doug: this only applies to the HasCopyAssign, which will actually be a HasAssign)
- - Do we need HasLess 1 & 2 ? gcc does not have 2
-    (Doug: I'm undecided; do implementors need this freedom? In
-    reality, we might just want to force the value_types to be the
-    same. This routine is insane without that requirement.)
-    (Mat: in that case, is it worth rasing the bar to LessThanComparable?)
+N - Do we need HasLess 1 & 2 ? gcc does not have 2
 N - partial_sort_copy single parameter HasLess requirement to be replaced with LessThanComparable concept.
 N - Add Requirements clause:
      *in < *res == RAIter::reference(*in) < *res
@@ -99,7 +95,7 @@ N - Add Requirements clause:
   (Doug: not sure what this means. Do we still need to say something?)
 
 
-- Merge et al: SameType requirement is wrong! Switch to heterogeneous
+Y - Merge et al: SameType requirement is wrong! Switch to heterogeneous
   HasLess.
 
 ===================================================================
@@ -107,19 +103,19 @@ N - Add Requirements clause:
 
 In general
 
-y - s/Iter::value_type/Iter::reference/g clear up value reference issue. Proxy iterators and such
+Y - s/Iter::value_type/Iter::reference/g clear up value reference issue. Proxy iterators and such
 
-y - Do we always need semantic concepts in the function declaration.
+Y - Do we always need semantic concepts in the function declaration.
   (Doug: Where the semantics make sense, yes)
 
-y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
+Y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it where Compare needs to provide
   strict weak ordering. E.g. sort. (Key of LessThanComparable)
 
-y - Whereever we find MutableIter it's probably wrong.
+Y - Whereever we find MutableIter it's probably wrong.
 
 Y - Make sure Predicate takes value_type const&. See InputIterator value_type convertability requirements. Same is true for every use of value_type in concepts. Note that LessThanComparable already adds it.
 
-- Do we want to bundle MoveConstructible MoveAssingable Swappable. Howard prefers not to.  
+Y - Do we want to bundle MoveConstructible MoveAssingable Swappable. Howard prefers not to.  
 
 25.3.1.5
 
@@ -135,7 +131,7 @@ Y - merge Predicate wants to go to StrictWeakOrdering even though three type. Lo
 25.3.6.1
 25.3.6.3
 
-- Working draft does not require Swappable why do we require this? Alan reports Bill + Pete do say it's a defect in the standard.
+Y - Working draft does not require Swappable why do we require this? Alan reports Bill + Pete do say it's a defect in the standard.
 
 25.3.6.5
 
