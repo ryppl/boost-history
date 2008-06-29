@@ -80,11 +80,182 @@ strike-through when possible}. Non-editorial
 changes from the previous wording are \addedCC{highlighted in green}. 
 
 \editorial{Purely editorial comments will be written in a separate,
-  shaded box.}
+  shaded box. These comments are not intended to be included in the
+  working paper.}
+
+\paragraph*{About the new iterator concept taxonomy}
+At the Library Working Group's request, we sought to determine whether
+we could eliminate the mutable iterator concepts from the iterator
+taxonomy. The observation made in Sophia-Antipolis was that the
+mutable iterator concepts were used very rarely, and in those places
+where they were used, we were able to discern simpler
+requirements. As a result of this investigation, we have eliminated
+the mutable iterator concepts and designed an improved iterator
+taxonomy that better describes the various kinds of iterators usable
+with the C++0x standard library.
+
+The fundamental problem with the mutable iterator concepts is that
+they were initially ill-defined within C++98/03, mentioned only
+casually as iterators for which one could write a value to the result
+of dereferencing an iterator. This requirement was taken to mean a
+\tcode{CopyAssignable} requirement (which works reasonably well for
+C++98/03 forward iterators and above), but that fails in two important
+ways for C++0x:
+
+\begin{itemize}
+\item We can now construct sequences with types that are
+  move-assignable but not copy-assignable. If we merely change the
+  mutable iterator requirement to \tcode{MoveAssignable}, our
+  definition of mutable iterator has changed from C++98/03. Besides,
+  even this is incorrect: one can mutate values that aren't even
+  move-assignable, e.g., by swapping values or acting on lvalues.
+
+\item As part of improving the iterator concepts, we have intended to
+  better support proxy iterators (like the infamous
+  \tcode{vector<bool>} iterator, although there exist many more
+  important examples of such iterators) throughout the C++0x standard
+  library. The simple notion of a copy-assignable value type does not
+  match with a proxy reference that supports writing.
+\end{itemize}
+
+Thus, the most important realization is that there are multiple forms
+of mutability used within the C++0x standard library, and that these
+mutations involve both the value type of the iterator (e.g., the type
+actually stored in the container the iterator references) and the
+reference type of the iterator (which may be an lvalue reference,
+rvalue reference, or a proxy class). The new iterator taxonomy
+captures these forms of mutability through two iterator concepts:
+\tcode{OutputIterator} and \tcode{MovableIterator}.
+
+The \tcode{OutputIterator} concept (\ref{output.iterators}) is a
+faithful representation of a C++98/03 output iterator. Output
+iterators are an odd kind of iterator, because it does not make sense
+to say that a type \tcode{X} is an output iterator. Rather, one must
+say that \tcode{X} is an output iterator \textit{for a value type
+  \tcode{T}}. Moreover, a given type \tcode{X} can be an output
+iterator for a whole family of types, e.g., all types that can be
+printed, and can permit specific parameter-passing conventions. For
+example, \tcode{X} could support writing only rvalues of type
+\tcode{T}, or both lvalues and rvalues of type \tcode{T}. Thus, the
+\tcode{OutputIterator} concept is a two-parameter concept, one
+parameter for \tcode{X} and another for \tcode{T} (called
+\tcode{Value}). This is not new; however, the updated iterator
+taxonomy encodes the parameter-passing convention into the
+\tcode{Value} template parameter, so that the user of the output
+iterator can distinguish between writing lvalues and writing
+rvalues. For example, the \tcode{copy} algorithm provides the
+\tcode{reference} type of the input iterator as the output type of the
+output iterator:
+
+\begin{codeblock}
+template<InputIterator InIter, 
+         OutputIterator<auto, InIter::reference> OutIter>
+  inline OutIter
+  copy(InIter first, InIter last, OutIter result)
+  {
+    for (; first != last; ++result, ++first)
+      *result = *first;
+    return result;
+  }
+\end{codeblock}
+  
+With this scheme, a typical input iterator that returns an lvalue
+reference will pass that lvalue reference on to the output iterator
+(as in C++98/03). More interesting, however, is when the input
+iterator is actually a \tcode{move_iterator}, whose reference type is
+an rvalue reference. In this case, we're writing rvalue-references to
+the output iterator, and therefore moving values from the input to the
+output sequence. The use of the \tcode{reference} type as the output
+type for the output iterator also copes with the transfer of values
+via proxies.
+
+We have already noted that a single type \tcode{X} can be an output
+iterator for multiple, different value types. However, further study
+of the standard library algorithms illustrates that a type parameter
+might meet the \tcode{OutputIterator} requirements in multiple ways
+\textit{within a single algorithm}. For example, in the
+\tcode{replace_copy} algorithm the \tcode{OutIter} parameter acts as
+an output iterator for both the input iterator's reference type
+(allowing moves rather than copies) and the type of the replacement
+value:
+
+\begin{codeblock}
+template<InputIterator InIter, typename OutIter, typename _Tp>
+  requires OutputIterator<OutIter, InIter::reference>
+        && OutputIterator<OutIter, const _Tp&>
+        && HasEqualTo<InIter::value_type, _Tp>
+  OutIter
+  replace_copy(InIter first, InIter last,
+               OutIter result,
+               const _Tp& old_value, const _Tp& new_value)
+  {
+    for ( ; first != last; ++first, ++result)
+      if (*first == old_value)
+        *result = new_value;
+      else
+        *result = *first;
+    return result;
+  }
+\end{codeblock}
+
+
+This formulation of \tcode{replace_copy} uncovered an interesting
+issue. Since both of the \tcode{OutputIterator} requirements have
+different argument types, each contains dereference
+(\tcode{operator*}) and increment (\tcode{operator+})
+operators. Through concept maps, it is conceivable (however unlikely)
+that these operators could be different for one requirement than the
+other, and therefore each use of \tcode{*} or \tcode{++} that applies
+to an instance of the \tcode{OutIter} type within \tcode{replace_copy}
+returns an ambiguity. The ambiguity is a result of incomplete concept
+analysis, and was solved by refactoring the requirements of
+\tcode{OutputIterator} into two concepts: \tcode{Iterator<X>}, which
+provides the syntax of \tcode{operator*} and \tcode{operator++} (and
+is also refined by the \tcode{InputIterator<X>} concept), and the
+\tcode{OutputIterator<X, Value>} concept, which adds assignability
+requirements from \tcode{Value} to the reference type of the output
+iterator. Thus, the requirements on \tcode{replace_copy} now say that
+there is only one \tcode{operator*}, but the reference type that it
+returns can be used in multiple, different ways. Moreover, we now have
+an actual root to our iterator hierarchy, the \tcode{Iterator<X>}
+concept, which provides only increment and dereference---the basics of
+moving through a sequence of values---but does not provide any read or
+write capabilities.
+
+The \tcode{MovableIterator} concept (\ref{movable.iterators}) is a new
+kind of iterator that captures the requirements needed to shuffle
+values within a sequence using moves and
+swaps. \tcode{MovableIterator} allows one to
+move-construct or move-assign from an element in the sequence into a
+variable of the iterator's value type. This permits, for example, the
+pivot element in a quicksort to be extracted from the sequence and
+placed into a variable. Additionally, values can be move-assigned from a
+variable of the iterator's value type (e.g., moving the pivot back
+from the temporary into the sorted sequence at the right time). This
+concept is the proxy-aware conceptualization of the
+Swappable+MoveConstructible+MoveAssignable set of concepts from the
+reflector discussion starting with c++std-lib-21212. The
+\tcode{MovableIterator} concept is used sparingly, in those cases
+where the sequence cannot be efficiently reordered within simple swap
+operations. 
+
+Changes to the iterator taxonomy should not be taken lightly; even the
+apparently simple iterators in C++98/03 turned out to be surprisingly
+complicated, and have resulted in numerous defect reports and several
+attempts at revisions. C++0x iterators are decidedly more complex, due
+to the introduction of rvalue references and the desire to provide
+support for proxy iterators throughout the standard library. To verify
+the iterator concepts presented in this document, we have fully
+implemented these concepts in ConceptGCC, applied them to nearly every
+algorithm in the standard library, and tested the result against the
+full libstdc++ test suite to ensure backward compatibility with
+existing iterators. Indeed, many of the observations that drove this
+refactoring came from implementation experience: the \tcode{operator*}
+ambiguity, for example, was initially detected by ConceptGCC. 
 
 \paragraph*{Changes from N2624}
 \begin{itemize}
-\item Removed the \tcode{Mutable} iterator concepts, because they no
+\item Removed the \tcode{Mutable} iterator concepts, which no
   longer make sense, because the C++0x standard library has several
   different forms of mutability for different classes of algorithms.
 \item Removed the \tcode{BasicOutputIterator} concept, because it is
@@ -93,6 +264,7 @@ changes from the previous wording are \addedCC{highlighted in green}.
   longer used in algorithms. Instead, we use \tcode{HasSwap} or the
   new \tcode{MovableIterator} concept.
 \end{itemize}
+
 
 \end{titlepage}
 
@@ -1300,7 +1472,9 @@ syntactic requirements of the \mbox{\tcode{RandomAccessIterator}} concept}\added
 
 \section*{Acknowledgments}
 Thanks to Beman Dawes for alerting us to omissions from the iterator
-concepts and Daniel Kr\"ugler for many helpful comments.
+concepts and Daniel Kr\"ugler for many helpful comments. Both Mat
+Marcus and Jaakko J\"arvi were particularly helpful in the design of
+the new iterator taxonomy.
 
 \bibliographystyle{plain}
 \bibliography{../local}
