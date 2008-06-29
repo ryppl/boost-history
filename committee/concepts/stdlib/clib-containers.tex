@@ -417,7 +417,7 @@ concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
   void @\removedCCC{C::}@pop_front(@\addedCC{C\&}@);
 
   axiom FrontInsertion(C c, value_type x) {
-    c == (@\removedCCC{c.}@push_front(@\addedCC{c, }@,x), @\removedCCC{c.}@pop_front(@\addedCC{c}@));
+    c == (@\removedCCC{c.}@push_front(@\addedCC{c, }@x), @\removedCCC{c.}@pop_front(@\addedCC{c}@));
   }
 }
 \end{itemdecl}
@@ -527,7 +527,7 @@ auto concept MemberInsertionSequence<typename C> : MemberSequenceContainer<C> {
 \begin{itemdecl}
 template <MemberInsertionSequence C> 
 concept_map InsertionSequence<C> {
-  iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
+  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
   { return c.insert(i, v); }
 }			
 \end{itemdecl}
