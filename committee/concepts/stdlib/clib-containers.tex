@@ -2722,9 +2722,25 @@ can be used.
 
 \begin{codeblock}
 namespace std {
+
+  @\addedCC{concept HasSize<typename T> \{}@
+    @\addedCC{typename size_type;}@
+    @ \addedCC{size_type size(const T\&);}@
+  @\addedCC{\}}@
+  @\addedCC{}@
+  @\addedCC{auto concept HasMemberSize<typename T> \{}@
+    @\addedCC{typename size_type = T::size_type;}@
+    @\addedCC{size_type T::size() const;}@
+  @\addedCC{\}  }@
+  @\addedCC{}@
+  @\addedCC{template <HasMemberSize C>}@
+  @\addedCC{concept_map HasSize<C> \{}@
+    @\addedCC{C::size_type size(const C\& c) \{ return c.size(); \} }@
+  @\addedCC{\}}@
+
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
-          @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@
+          @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@@\addedCC{ \&\& HasSize<Cont> \&\& Swappable<Cont>}@
   class queue {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -2926,7 +2942,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
        @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\& MutableRandomAccessIterator<Cont::iterator>}@
-           @\addedConcepts{\&\& Swappable}@@\removedCCC{Iterator}@@\addedConcepts{<Cont::iterator}@@\addedCC{::reference}@@\addedConcepts{> \&\& CopyConstructible<Compare>}@
+           @\addedConcepts{\&\& Swappable}@@\removedCCC{Iterator}@@\addedConcepts{<Cont::iterator}@@\addedCC{::reference}@@\addedConcepts{> \&\& CopyConstructible<Compare>}@@\addedCC{ \&\& HasSize<Cont> \&\& Swappable<Cont>}@
   class priority_queue { 
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3142,7 +3158,7 @@ can be used.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> >
-  @\addedConcepts{requires SameType<Cont::value_type, T>}@
+  @\addedConcepts{requires SameType<Cont::value_type, T>}@@\addedCC{ \&\& HasSize<Cont> \&\& Swappable<Cont>}@
   class stack {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;

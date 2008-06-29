@@ -414,7 +414,7 @@ y   * Review constructors which take default arguments. Default argument no long
 y   * Adaptors should require NothrowDestructible? (related issues worthy of exploration).
 
 y   * Implementations of stack members will change to free functions.
-    (Mat: done except for 1) need concept for size() 2) should effects
+    (Mat: done except for 1) added concept for size()--wrong place? 2) should effects
     be concept qualified? 3) swappable size on Cont or on member
     functions. Same questions for queue family. 4) not tested or reviewed
 
