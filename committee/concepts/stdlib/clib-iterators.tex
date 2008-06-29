@@ -268,6 +268,8 @@ ambiguity, for example, was initially detected by ConceptGCC.
 
 \end{titlepage}
 
+\section*{Proposed Wording}
+
 %% --------------------------------------------------
 %% Headers and footers
 \pagestyle{fancy}
@@ -285,6 +287,46 @@ ambiguity, for example, was initially detected by ConceptGCC.
 
 \renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\setcounter{chapter}{20}
+\rSec1[utility.concepts]{Concepts}
+\editorial{Add to the header \tcode{<concepts>} synopsis at the end of
+the [concept.operator] section} 
+\begin{codeblock}
+auto concept HasComma<typename T, typename U> @\textit{see below}@ ;
+@\addedCC{auto concept HasStdMove<typename T> \mbox{\textit{see below}} ;}
+\end{codeblock}
+
+\setcounter{section}{7}
+\rSec2[concept.operator]{Operator concepts}
+\editorial{Add to the end of [concept.operator]}
+\setcounter{Paras}{42}
+\color{ccadd}
+\begin{itemdecl}
+auto concept HasStdMove<typename T> {
+  typename result_type = typename remove_reference<T>::type&&;
+  result_type std_move(T&& x) { return x; }
+}
+\end{itemdecl}
+\color{black}
+
+\editorial{The \tcode{HasStdMove} concept is required to handle a
+  pecularity with the \tcode{std::move} operation, whose result type
+  is move a simple constructed by like \tcode{T\&\&} but a
+  type metafunction involving \tcode{remove_reference}. Type
+  metafunctions are at odds with concepts, because the former requires
+  precise type information to compute a result (at template instantiation time)
+  while the latter seeks to tie down details without precise types (at
+  template definition time); thus, to accurately characterize the
+  behavior of \tcode{std::move}, we encapsulate its return type in an
+  associated type \tcode{result_type}, so that we can describe
+  requirements on that return type.}
+
+\begin{itemdescr}
+\pnum
+\addedCC{\mbox{\reallynote} describes the \mbox{\tcode{std::move}}
+  operation and encapsulates its result in an associated type.}
+\end{itemdescr}
 
 \setcounter{chapter}{23}
 \rSec0[iterators]{Iterators library}
@@ -1151,14 +1193,14 @@ an implementation may define}
 auto concept MovableIterator<typename X> {
   requires InputIterator<X>
         && NothrowDestructible<InputIterator<X>::value_type>
-        && Movable<InputIterator<X>::value_type>
-        && Movable<InputIterator<X>::reference>
-        && OutputIterator<X, Movable<InputIterator<X>::value_type>::result_type>
-        && OutputIterator<X, Movable<InputIterator<X>::reference>::result_type>
+        && HasStdMove<InputIterator<X>::value_type>
+        && HasStdMove<InputIterator<X>::reference>
+        && OutputIterator<X, HasStdMove<InputIterator<X>::value_type>::result_type>
+        && OutputIterator<X, HasStdMove<InputIterator<X>::reference>::result_type>
         && HasConstructor<InputIterator<X>::value_type, 
-                          Movable<InputIterator<X>::reference>::result_type>
+                          HasStdMove<InputIterator<X>::reference>::result_type>
         && HasAssign<InputIterator<X>::value_type, 
-                     Movable<InputIterator<X>::reference>::result_type>
+                     HasStdMove<InputIterator<X>::reference>::result_type>
         && HasSwap<InputIterator<X>::reference, InputIterator<X>::reference>;
 }
 \end{codeblock}
@@ -1253,6 +1295,12 @@ respectively. \removedConcepts{In the case of an output iterator, the types}
   14882:2003.}
 \color{ccadd}
 \begin{codeblock}
+concept IsReference<typename T> { } // exposition only
+template<typename T> concept_map IsReference<T&> { }
+
+concept IsPointer<typename T> { } // exposition only
+template<typename T> concept_map IsPointer<T*> { }
+
 template<Iterator Iter> struct iterator_traits<Iter> {
   typedef void                             difference_type;
   typedef void                             value_type;
@@ -1269,29 +1317,35 @@ template<InputIterator Iter> struct iterator_traits<Iter> {
   typedef input_iterator_tag                   iterator_category;
 };
 
-template<ForwardIterator Iter> struct iterator_traits<Iter> {
-  typedef Iter::difference_type            difference_type;
-  typedef Iter::value_type                 value_type;
-  typedef Iter::pointer                    pointer;
-  typedef Iter::reference                  reference;
-  typedef forward_iterator_tag                 iterator_category;
-};
+template<ForwardIterator Iter> 
+  requires IsReference<Iter::reference> && IsPointer<Iter::pointer>
+  struct iterator_traits<Iter> {
+    typedef Iter::difference_type            difference_type;
+    typedef Iter::value_type                 value_type;
+    typedef Iter::pointer                    pointer;
+    typedef Iter::reference                  reference;
+    typedef forward_iterator_tag                 iterator_category;
+  };
 
-template<BidirectionalIterator Iter> struct iterator_traits<Iter> {
-  typedef Iter::difference_type            difference_type;
-  typedef Iter::value_type                 value_type;
-  typedef Iter::pointer                    pointer;
-  typedef Iter::reference                  reference;
-  typedef bidirectional_iterator_tag       iterator_category;
-};
+template<BidirectionalIterator Iter> 
+  requires IsReference<Iter::reference> && IsPointer<Iter::pointer>
+  struct iterator_traits<Iter> {
+    typedef Iter::difference_type            difference_type;
+    typedef Iter::value_type                 value_type;
+    typedef Iter::pointer                    pointer;
+    typedef Iter::reference                  reference;
+    typedef bidirectional_iterator_tag       iterator_category;
+  };
 
-template<RandomAccessIterator Iter> struct iterator_traits<Iter> {
-  typedef Iter::difference_type            difference_type;
-  typedef Iter::value_type                 value_type;
-  typedef Iter::pointer                    pointer;
-  typedef Iter::reference                  reference;
-  typedef random_access_iterator_tag       iterator_category;
-};
+template<RandomAccessIterator Iter> 
+  requires IsReference<Iter::reference> && IsPointer<Iter::pointer>
+  struct iterator_traits<Iter> {
+    typedef Iter::difference_type            difference_type;
+    typedef Iter::value_type                 value_type;
+    typedef Iter::pointer                    pointer;
+    typedef Iter::reference                  reference;
+    typedef random_access_iterator_tag       iterator_category;
+  };
 \end{codeblock} 
 \exitnote\
 \color{black}

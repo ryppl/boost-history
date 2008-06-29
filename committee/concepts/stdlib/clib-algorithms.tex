@@ -246,14 +246,14 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.move}, move:}@
   template<InputIterator InIter, @\changedCCC{OutputIterator<auto, InIter::value_type\&\&>}{typename}@ OutIter>
-    @\addedCC{requires Movable<InIter::reference>}@
-          @\addedCC{\&\& OutputIterator<OutIter, Movable<InIter::reference>::result_type>}@
+    @\addedCC{requires HasStdMove<InIter::reference>}@
+          @\addedCC{\&\& OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>}@
     OutIter move(InIter @\farg{first}@, InIter @\farg{last}@,
                  OutIter @\farg{result}@);
   template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
     requires @\removedCCC{HasMoveAssign<OutIter::reference, InIter::value_type>}@
-             @\addedCC{Movable<InIter::reference>}@
-          @\addedCC{\&\& OutputIterator<OutIter, Movable<InIter::reference>::result_type>}@
+             @\addedCC{HasStdMove<InIter::reference>}@
+          @\addedCC{\&\& OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>}@
     OutIter move_backward(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@);
 
@@ -1600,15 +1600,12 @@ assignments.
 \color{addclr}
 \begin{itemdecl}
 template<InputIterator InIter, @\changedCCC{OutputIterator<auto, InIter::value_type\&\&>}{typename}@ OutIter>
-  @\addedCC{requires Movable<InIter::reference>}@
-        @\addedCC{\&\& OutputIterator<OutIter, Movable<InIter::reference>::result_type>}@
+  @\addedCC{requires HasStdMove<InIter::reference>}@
+        @\addedCC{\&\& OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>}@
   OutIter move(InIter first, InIter last,
                OutIter result);
 \end{itemdecl}
 \color{black}
-
-% DPG FIXME: think about the use of value_type here, and how it
-% interacts with proxy iterators.
 
 \begin{itemdescr}
 \pnum
@@ -1619,7 +1616,7 @@ starting from \mbox{\farg{first}} and proceeding to \mbox{\farg{last}}.
 For each non-negative integer
 \mbox{\tcode{n < (\farg{last}-\farg{first})}},
 performs
-\mbox{\tcode{*(\farg{result}\ + n)}} \mbox{\tcode{= std::move(*(\farg{first}\ + n))}}.}
+\mbox{\tcode{*(\farg{result}\ + n)}} \mbox{\tcode{=}}} \changedCCC{\mbox{\tcode{std::move}}}{\mbox{\tcode{std_move}}}\addedD{\mbox{\tcode{(*(\farg{first}\ + n))}}.}
 
 \pnum
 \addedD{\mbox{\returns}
@@ -1643,8 +1640,8 @@ move assignments.}
 \begin{itemdecl}
 template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
   requires @\removedCCC{HasMoveAssign<OutIter::reference, InIter::value_type>}@
-           @\addedCC{Movable<InIter::reference>}@
-        @\addedCC{\&\& OutputIterator<OutIter, Movable<InIter::reference>::result_type>}@
+           @\addedCC{HasStdMove<InIter::reference>}@
+        @\addedCC{\&\& OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>}@
   OutIter move_backward(InIter first, InIter last,
                         OutIter result);
 \end{itemdecl}
@@ -1669,7 +1666,7 @@ the range
 \addedD{For each positive integer
 \mbox{\tcode{n <= (\farg{last}\ - \farg{first})}},
 performs
-\mbox{\tcode{*(\farg{result}\ - n) = std::move(*(\farg{last}\ - n))}}.}
+\mbox{\tcode{*(\farg{result}\ - n) =}}} \changedCCC{\mbox{\tcode{std::move}}}{\mbox{\tcode{std_move}}}\addedD{\mbox{\tcode{(*(\farg{last}\ - n))}}.}
 
 \pnum
 \addedD{\mbox{\requires}
