@@ -51,16 +51,17 @@
 \huge
 Concepts for the C++0x Standard Library: Containers\\
 (Revision 2)
-
-\vspace{0.5in}
-
-\normalsize
-Douglas Gregor, Indiana University $\langle$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$\rangle$ \\
-Pablo Halpern,  Bloomberg, L.P. $\langle$\href{mailto:phalpern@halpernwightsoftware.com}{phalpern@halpernwightsoftware.com}$\rangle$
-
 \end{center}
 
-\vspace{1in}
+\normalsize
+
+\vspace{0.5in}
+\par\noindent Authors: 
+\begin{tabular}[t]{l}
+Douglas Gregor, Indiana University \\
+Mat Marcus, Adobe Systems, Inc.\\
+Pablo Halpern,  Bloomberg, L.P.
+\end{tabular}\vspace{-6pt}
 \par\noindent Document number: D2694=08-0204\vspace{-6pt}
 \par\noindent Revises document number: N2623=08-0133\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
@@ -3354,7 +3355,7 @@ to improve efficiency.
 The elements of a vector are stored contiguously, meaning that if
 \tcode{v}\
 is a
-\tcode{vector<T, Alloc@\removedConcepts{ator}@>}\
+\tcode{vector<T, Alloc\removedConcepts{ator}>}\
 where
 \tcode{T}\
 is some type other than
@@ -3389,26 +3390,30 @@ namespace std {
 
     // \ref{vector.cons} construct/copy/destroy:
     explicit vector(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires DefaultConstructible<T>}@ 
+    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ 
       explicit vector(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       vector(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@ @\addedCC{\&\& MoveConstructible<T>}@
+            @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
       vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector<T,Alloc@\removedConcepts{ator}@>& x);
-    vector(vector&&);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ vector(vector&&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector&, const Alloc@\removedConcepts{ator}@&);
-    vector(vector&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ vector(vector&&, const Alloc@\removedConcepts{ator}@&);
    ~vector();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
       vector<T,Alloc@\removedConcepts{ator}@>& operator=(const vector<T,Alloc@\removedConcepts{ator}@>& x);
-    vector<T,Alloc@\removedConcepts{ator}@>& operator=(vector<T,Alloc@\removedConcepts{ator}@>&& x);
+    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+      vector<T,Alloc@\removedConcepts{ator}@>& operator=(vector<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+            @\addedCC{\&\& MoveConstructible<T>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
       void assign(size_type n, const T& u);
     allocator_type get_allocator() const;
 
@@ -3430,12 +3435,14 @@ namespace std {
     // \ref{vector.capacity} capacity:
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+    @\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+             @\addedCC{ConstructibleAsElement<Alloc, T> \&\& MoveConstructible<T>}@
       void resize(size_type sz);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, const T& c);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& MoveConstructible<T>}@
+      void resize(size_type sz, const T& c);
     size_type capacity() const;
     bool      empty() const;
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ void reserve(size_type n);
+    @\addedConcepts{requires} \changedCCC{ConstructibleAsElement<Alloc, T, T\&\&>}{MoveConstructible<T>}@ void reserve(size_type n);
 
     // element access:
     reference       operator[](size_type n);
@@ -3453,22 +3460,24 @@ namespace std {
 
     // \ref{vector.modifiers} modifiers:
     template <class... Args> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+            @\addedCC{\&\& MoveConstructible<T>}@
       void push_back(Args&&... args);
     void pop_back();
 
     template <class... Args> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+            @\addedCC{\&\& MoveAssignable<T> \&\& MoveConstructible<T>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@ 
       iterator insert(const_iterator position, const T& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
       void insert(const_iterator position, T&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@ 
       void insert(const_iterator position, size_type n, const T& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
         @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+              @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>} \addedConcepts{\&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
         void insert(const_iterator position,
                     @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
     @\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator position);
@@ -3524,7 +3533,7 @@ specified allocator.
 
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T>}@ explicit vector(size_type n);
+@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit vector(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3561,7 +3570,8 @@ copies of \tcode{value}, using the specified allocator.
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>} \addedCC{\&\& MoveConstructible<T>}@ 
+        @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
   vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -3596,6 +3606,8 @@ reallocations if they are just input iterators.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+        @\addedCC{\&\& MoveConstructible<T>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -3609,7 +3621,7 @@ insert(begin(), first, last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
   void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -3638,7 +3650,7 @@ without requiring reallocation.
 
 \index{reserve@\tcode{reserve}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ void reserve(size_type n);
+@\addedConcepts{requires} \changedCCC{ConstructibleAsElement<Alloc, T, T\&\&>}{MoveConstructible<T>}@ void reserve(size_type n);
 \end{itemdecl}
 
 \pnum
@@ -3713,7 +3725,9 @@ Constant time.
 
 \index{resize@\tcode{resize}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ void resize(size_type sz);
+@\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ 
+         @\addedCC{ConstructibleAsElement<Alloc, T> \&\& MoveConstructible<T>}@
+  void resize(size_type sz);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3724,13 +3738,14 @@ appends \tcode{sz - size()} default constructed elements to the
 sequence.
 
 \pnum
-\requires \tcode{T} shall be
-\tcode{DefaultConstructible}.
+\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be
+\mbox{\tcode{DefaultConstructible}}.}
 \end{itemdescr}
 
 \index{resize@\tcode{resize}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, const T& c);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& MoveConstructible<T>}@
+  void resize(size_type sz, const T& c);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3776,23 +3791,25 @@ Nothing.
 
 \index{insert@\tcode{insert}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
   iterator insert(const_iterator position, const T& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
   iterator insert(const_iterator position, T&& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
   void insert(const_iterator position, size_type n, const T& x);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-          @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+          @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>} \addedConcepts{\&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
     void insert(const_iterator position,
                 @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
 template <class... Args> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+        @\addedCC{\&\& MoveConstructible<T>}@
   void push_back(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+        @\addedCC{\&\& MoveAssignable<T> \&\& MoveConstructible<T>}@
   iterator emplace(const_iterator position, Args&&... args);
 \end{itemdecl}
 
