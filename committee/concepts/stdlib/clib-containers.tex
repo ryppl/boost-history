@@ -34,6 +34,8 @@
 \setlength{\evensidemargin}{0pt}
 \setlength{\textwidth}{6.6in}
 
+\newcommand{\resetcolor}{\textcolor{addclr}{}}
+
 %%--------------------------------------------------
 %% Handle special hyphenation rules
 \hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
@@ -139,7 +141,12 @@ Table~\ref{tab:containers.summary}:
   container's value type for the same operation. Those container
   concepts that are actually needed (e.g., for the container
   adaptors~\ref{container.adaptors}) are specified in the new
-  section~\ref{container.concepts}.}
+  section~\ref{container.concepts}. We have, however, removed many
+  informal ``requires'' clauses from the container requirements
+  tables, because they have never been complete and the same
+  information is available more formally in the real requires clauses
+  of the containers themselves (which appropriately account for the
+  variation between containers).}
 
 \setcounter{Paras}{2}
 \pnum
@@ -181,6 +188,239 @@ allocator argument to \tcode{T}'s constructor. \exitnote
 \editorial{Remove Table 88: \mbox{\tcode{ConstructibleAsElement<A, T,
       Args>}} requirements}
 
+\setcounter{Paras}{4}
+\pnum
+In Tables~\ref{tab:containers.container.requirements} and
+\ref{tab:containers.reversible.requirements}, \tcode{X}\
+denotes a container class containing objects of type
+\tcode{T}, \tcode{a}\ and \tcode{b}
+denote values of type \tcode{X}, \tcode{u}\
+denotes an identifier, \tcode{r}\ denotes
+an lvalue or a const rvalue of type \tcode{X}, and \tcode{rv}
+denotes a non-const rvalue of type \tcode{X}.
+
+\setcounter{table}{88}
+
+\begin{libreqtab5}
+{Container requirements}
+{tab:containers.container.requirements}
+\\ \topline
+\lhdr{expression}       &   \chdr{return type}  &   \chdr{operational}  &
+\chdr{assertion/note}   &   \rhdr{complexity}   \\
+    &   &   \chdr{semantics}    &   \chdr{pre/post-condition}   &       \\ \capsep
+\endfirsthead
+\topline
+\lhdr{expression}       &   \chdr{return type}  &   \chdr{operational}  &
+\chdr{assertion/note}   &   \rhdr{complexity}   \\
+    &   &   \chdr{semantics}    &   \chdr{pre/post-condition}   &       \\ \capsep
+\endhead
+
+\tcode{X::value_type}       &
+ \tcode{T}                  &
+                            &
+                            &
+ compile time               \\ \rowsep
+
+\tcode{X::reference}        &
+ lvalue of \tcode{T}        &
+                            &
+                            &
+ compile time               \\ \rowsep
+
+\tcode{X::const_reference} &
+ const lvalue of \tcode{T}  &
+                            &
+                            &
+ compile time               \\ \rowsep
+
+\tcode{X::iterator}         &
+ iterator type whose value type is \tcode{T} &
+                            &
+ any iterator category except output iterator.
+ convertible to \tcode{X::const_iterator}. &
+ compile time               \\ \rowsep
+
+\tcode{X::const_iterator}  &   
+ constant iterator type whose value type is \tcode{T} &
+                            &
+ any iterator category except output iterator &
+ compile time               \\ \rowsep
+
+\tcode{X::dif\-ference_type}   &
+ signed integral type           &
+                                &
+ is identical to the difference type of \tcode{X::iterator}\ and \tcode{X::const_iterator} &
+ compile time               \\ \rowsep
+
+\tcode{X::size_type}       &
+ unsigned integral type     &
+                            &
+ \tcode{size_type} can represent any non-negative value of \tcode{difference_type} &
+ compile time                \\ \rowsep
+
+\tcode{X u;}                &
+                            &
+                            &
+ post: \tcode{u.size() == 0}&
+ constant                   \\ \rowsep
+
+\tcode{X();}                &
+                            &
+                            &
+ \tcode{X().size() == 0}    &
+ constant                   \\ \rowsep
+
+\tcode{X(a);}               &
+                            &
+                            &
+\removedCCC{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{CopyConstructible}}.} post: \tcode{a == X(a)}.         &
+ linear                     \\ \rowsep
+
+\tcode{X u(a);}             &
+                            &
+                            &
+\removedCCC{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{CopyConstructible}}.}       &
+ linear                     \\
+\tcode{X u = a;}            &
+                            &
+                            &
+ post: \tcode{u == a}       &
+                            \\ \rowsep
+
+\tcode{X u(rv);} &
+                            &
+                            &
+	\removedCCC{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{MoveConstructible}}.}													&
+(Note B)           \\
+\tcode{X u = rv;} &
+                            &
+                            &
+ post: \tcode{u} shall be equal to the value that \tcode{rv} had before this construction   
+                            &
+                            \\ \rowsep
+
+\tcode{a = rv;} &
+\tcode{X\&} &
+All existing elements of \tcode{a} are either move assigned or destroyed                  &
+\tcode{a} shall be equal to the value that \tcode{rv}
+had before this construction   &
+ (Note C)           \\ \rowsep
+\tcode{(\&a)->$\sim$X();}   &
+ \tcode{void}               &
+                            &
+ note: the destructor is applied to every element of \tcode{a}; all the memory is deallocated. &
+ linear                     \\ \rowsep
+
+\tcode{a.begin();}          &
+ \tcode{iterator}; \tcode{const_iterator}\ for constant \tcode{a} &
+                            &
+                            &
+ constant                   \\ \rowsep
+
+\tcode{a.end();}            &
+ \tcode{iterator}; \tcode{const_iterator}\ for constant \tcode{a} &
+                            &
+                            &
+ constant                   \\ \rowsep
+
+\tcode{a.cbegin();}         &
+ \tcode{const_iterator}     &
+ \tcode{const_cast<X const\&>(a).begin();} &
+                            &
+ constant                   \\ \rowsep
+
+\tcode{a.cend();}         &
+ \tcode{const_iterator}     &
+ \tcode{const_cast<X const\&>(a).end();} &
+                            &
+ constant                   \\ \rowsep
+
+\tcode{a == b}                  &
+ convertible to \tcode{bool}    &
+                                &
+ \tcode{==}\ is an equivalence relation.
+ \tcode{a.size() == b.size()}
+ \tcode{\&\& equal(a.begin(),}
+ \tcode{a.end(), b.begin())}     &
+ linear                         \\ \rowsep
+
+\tcode{a != b}                      &
+ convertible to \tcode{bool}        &
+                                    &
+ Equivalent to: \tcode{!(a == b)}   &
+ linear                             \\ \rowsep
+
+\tcode{a.swap(b)};          &
+ \tcode{void}               &
+                            &
+ \tcode{swap(a,b)}          &
+ (Note A)                   \\ \rowsep
+
+\tcode{r = a}               &
+ \tcode{X\&}                &
+                            &
+ post: \tcode{r == a}.      &
+ linear                     \\ \rowsep
+
+\tcode{a.size()}                &
+ \tcode{size_type}             &
+ \tcode{a.end() $-$ a.begin()}  &
+                                &
+ (Note A)                       \\ \rowsep
+
+\tcode{a.max_size()}        &
+ \tcode{size_type}         &
+ \tcode{size()}\ of the largest possible container &
+                            &
+ (Note A)                   \\ \rowsep
+
+\tcode{a.empty()}               &
+ convertible to \tcode{bool}    &
+ \tcode{a.size() == 0}          &
+                                &
+constant                        \\ \rowsep
+
+\resetcolor{}\tcode{a < b}                   &
+ convertible to \tcode{bool}    &
+ \tcode{lexico\-graphical_compare( a.begin(), a.end(), b.begin(), b.end())} &
+ pre: \tcode{<}\ is defined for values of \tcode{T}. \tcode{<} is a total ordering relationship.    &
+ linear                     \\ \rowsep
+
+\tcode{a > b}                   &
+ convertible to \tcode{bool}    &
+ \tcode{b < a}                  &
+                                &
+ linear                         \\ \rowsep
+
+\tcode{a <= b}                  &
+ convertible to \tcode{bool}    &
+ \tcode{!(a > b)}               &
+                                &
+ linear                         \\ \rowsep
+
+\tcode{a >= b}                  &
+ convertible to \tcode{bool}    &
+ \tcode{!(a < b)}               &
+                                &
+ linear                         \\
+\end{libreqtab5}
+
+Notes: the algorithms
+\tcode{swap()},
+\tcode{equal()}\
+and
+\tcode{lexicographical_compare()}\
+are defined in clause~\ref{algorithms}.
+Those entries marked ``(Note A)'' should have constant complexity.
+Those entries marked ``(Note B)'' have constant complexity unless
+\changedCCC{\mbox{\tcode{allocator_propagate_never<X::allocator_type>::value}}
+  is \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateNever<X::allocator_type>}} is satisfied}, in which case they have linear complexity. Those
+  entries marked ``(Note C)'' have constant complexity if
+  \tcode{a.get_allocator() == rv.get_allocator()} or if either
+  \changedCCC{\mbox{\tcode{allocator_propagate_on_move_assignment<X::allocator_type>::value}}
+  is \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateOnMoveAssignment<X::allocator>}} is satisfied} or \changedCCC{\mbox{\tcode{allocator_propagate_on_copy_assignment<X::allocator_type>::value}} is
+  \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateOnCopyAssignment<X::allocator>}} is satisfied} and linear complexity otherwise.
+
 \setcounter{Paras}{8}
 \pnum
 Copy and move constructors for all container types defined in this
@@ -204,6 +444,325 @@ within the implementation of the corresponding container operation. In
 all container types defined in this clause, the member
 \tcode{get_allocator()} returns a copy of the \tcode{Allocator} object
 used to construct the container, or to replace the allocator. 
+
+\rSec2[sequence.reqmts]{Sequence containers}
+\setcounter{Paras}{3}
+\pnum
+The complexities of the expressions are sequence dependent.
+
+\setcounter{table}{91}
+
+\begin{libreqtab3}
+{Sequence container requirements (in addition to container)}
+{tab:containers.sequence.requirements}
+\\ \topline
+\lhdr{expression}       &   \chdr{return type}  &   \rhdr{assertion/note}       \\
+                        &                       &   \rhdr{pre/post-condition}   \\ \capsep
+\endfirsthead
+\hline
+\lhdr{expression}       &   \chdr{return type}  &   \rhdr{assertion/note}       \\
+                        &                       &   \rhdr{pre/post-condition}   \\ \capsep
+\endhead
+\tcode{X(n, t)}\br
+\tcode{X a(n, t)}   &
+                &
+ \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}\br
+ post: \tcode{size() == n}\br
+ Constructs a sequence container with \tcode{n}\ copies of \tcode{t}  \\ \rowsep
+\tcode{X(i, j)}\br
+\tcode{X a(i, j)}   &
+                    &
+\mbox{\requires} \removedCC{If the iterator's dereference operation returns an
+ lvalue or a const rvalue, \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
+ Each iterator in the range \range{i}{j} shall be dereferenced exactly once.\br
+ post: \tcode{size() == distance}\ between \tcode{i}\ and \tcode{j}\br
+ Constructs a sequence container equal to the range \tcode{[i, j)}    \\ \rowsep
+
+\tcode{a.emplace(p, args);}  &
+ \tcode{iterator}            &
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}.}
+ Inserts an object of type \tcode{T} constructed with
+ \tcode{std::forward<Args>(args)...}.   \\ \rowsep
+
+\tcode{a.insert(p,t)}   &
+ \tcode{iterator}       &
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}
+ and \mbox{\tcode{T}} shall be \mbox{\tcode{CopyAssignable}}.}\br
+ Inserts a copy of \tcode{t}\ before \tcode{p}. \\ \rowsep
+
+\tcode{a.insert(p,rv)}   &
+ \tcode{iterator}       &
+\removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, T\&\&>}} and \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
+ Inserts a copy of \tcode{rv} before \tcode{p}. \\ \rowsep
+
+\tcode{a.insert(p,n,t)}     &
+ \tcode{void}               &
+ \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
+ and \mbox{\tcode{CopyAssignable}}.}\br
+ Inserts \tcode{n}\ copies of \tcode{t}\ before \tcode{p}. \\ \rowsep
+
+\tcode{a.insert(p,i,j)}    &
+ \tcode{void}           &
+\mbox{\requires}  \removedCC{If the iterator's dereference operation returns an
+ lvalue or a const rvalue, \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
+ Each iterator in the range \range{i}{j} shall be dereferenced exactly once.\br
+ pre: \tcode{i}\ and \tcode{j}\ are not iterators into \tcode{a}.\br
+ Inserts copies of elements in \tcode{[i, j)} before \tcode{p}  \\ \rowsep
+
+\tcode{a.erase(q)}  &
+ \tcode{iterator}   &
+ \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
+ Erases the element pointed to by \tcode{q} \\ \rowsep
+
+\tcode{a.erase(q1,q2)}  &
+ \tcode{iterator}   &
+ \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
+ Erases the elements in the range \tcode{[q1, q2)}.  \\ \rowsep
+
+\tcode{a.clear()}   &
+ \tcode{void}       &
+ \tcode{erase(begin(), end())}\br
+ post: \tcode{size() == 0}      \\ \rowsep
+
+\tcode{a.assign(i,j)}   &
+ \tcode{void}           &
+ \requires \removedCC{If the iterator's dereference operation returns an
+ lvalue or a const rvalue, \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
+ and \mbox{\tcode{CopyAssignable}}.}
+ Each iterator in the range \range{i}{j} shall be dereferenced exactly once.\br
+ pre: \tcode{i}, \tcode{j}\ are not iterators into \tcode{a}.\br
+ Replaces elements in \tcode{a}\ with a copy of \tcode{[i, j)}. \\ \rowsep
+
+\tcode{a.assign(n,t)}   &
+ \tcode{void}           &
+ \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
+ and \mbox{\tcode{CopyAssignable}}.}\br
+ pre: \tcode{t}\ is not a reference into \tcode{a}.\br
+ Replaces elements in \tcode{a}\ with \tcode{n}\ copies of \tcode{t}.   \\
+\end{libreqtab3}
+
+\setcounter{Paras}{11}
+
+\pnum
+Table~\ref{tab:containers.sequence.optional} lists operations
+that are provided for some types of
+sequence containers but not others.
+An implementation shall provide
+these operations for all container types shown in the ``container''
+column, and shall implement them so as to take amortized constant
+time.
+
+\begin{libreqtab4a}
+{Optional sequence container operations}
+{tab:containers.sequence.optional}
+\\ \topline
+\lhdr{expression}       &   \chdr{return type}  &   \chdr{assertion/note}       &   \rhdr{container}    \\
+                        &                       &   \chdr{pre/post-condition}   &                       \\ \capsep
+\endfirsthead
+\hline
+\lhdr{expression}       &   \chdr{return type}  &   \chdr{assertion/note}       &   \rhdr{container}    \\
+                        &                       &   \chdr{pre/post-condition}   &                       \\ \capsep
+\endhead
+
+\tcode{a.front()}       &
+ \tcode{reference; const_reference}\ for constant \tcode{a}    &
+ \tcode{*a.begin()}     &
+ \tcode{vector}, \tcode{list}, \tcode{deque}, \tcode{basic_string}\\ \rowsep
+
+\tcode{a.back()}        &
+ \tcode{reference; const_reference}\ for constant \tcode{a}    &
+ \tcode{\{ iterator tmp = a.end();}\br
+ \tcode{    \dcr tmp;}\br
+ \tcode{    return *tmp; \}}    &
+ \tcode{vector}, \tcode{list}, \tcode{deque}, \tcode{basic_string}\\ \rowsep
+
+\tcode{a.push_-} \tcode{front(args)}      &
+ \tcode{void}                &
+ \tcode{a.emplace(a.begin(),} \tcode{std::forward<Args>(args)...)}
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}}    &
+ \tcode{list}, \tcode{deque}  \\ \rowsep
+
+\tcode{a.push_-} \tcode{back(args)}      &
+ \tcode{void}                &
+ \tcode{a.emplace(a.end(),} \tcode{std::forward<Args>(args)...)}
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}}    &
+ \tcode{list}, \tcode{deque}, \tcode{vector}  \\ \rowsep
+
+\tcode{a.pop_front()}      &
+ \tcode{void}               &
+ \tcode{a.erase(a.begin())} &
+ \tcode{list}, \tcode{deque}    \\ \rowsep
+
+\tcode{a.pop_back()}       &
+ \tcode{void}               &
+ \tcode{\{ iterator tmp = a.end();}\br
+ \tcode{    \dcr tmp;}\br
+ \tcode{    a.erase(tmp); \}}   &
+ \tcode{vector}, \tcode{list}, \tcode{deque}, \tcode{basic_string}\\ \rowsep
+
+\tcode{a[n]}                &
+ \tcode{reference; const_reference}\ for constant \tcode{a}    &
+ \tcode{*(a.begin() + n)}   &
+ \tcode{vector}, \tcode{deque}, \tcode{basic_string}, \tcode{match_results}\\ \rowsep
+
+\tcode{a.at(n)}             &
+ \tcode{reference; const_reference}\ for constant \tcode{a}    &
+ \tcode{*(a.begin() + n)}   &
+ \tcode{vector}, \tcode{deque}      \\
+
+\end{libreqtab4a}
+
+\rSec2[associative.reqmts]{Associative containers}
+\setcounter{Paras}{6}
+
+\pnum
+In Table~\ref{tab:containers.associative.requirements},
+\tcode{X}\ denotes an associative container class,
+\tcode{a}\ denotes a value of \tcode{X},
+\tcode{a_uniq}\ denotes a value of \tcode{X}\
+when \tcode{X}\ supports unique keys,
+\tcode{a_eq}\ denotes a value of \tcode{X}\
+when \tcode{X}\ supports multiple keys,
+\tcode{u} denotes an identifier, \tcode{r} denotes an lvalue or a const rvalue of type \tcode{X}, \tcode{rv} denotes a non-const rvalue of type \tcode{X},
+\tcode{i}\ and \tcode{j}\
+satisfy input iterator requirements and refer to elements
+implicitly convertible to
+\tcode{value_type}, \range{i}{j}\
+denotes a valid range,
+\tcode{p}\ denotes a valid const iterator to \tcode{a},
+\tcode{q}\ denotes a valid dereferenceable const iterator to \tcode{a},
+\tcode{[q1, q2)}\ denotes a valid range of const iterators in \tcode{a},
+\tcode{t}\ denotes a value of \tcode{X::value_type},
+\tcode{k} denotes a value of \tcode{X::key_type}\
+and \tcode{c}\ denotes a value of type \tcode{X::key_compare}.
+\tcode{A} denotes the storage allocator used by \tcode{X}, if any, or \tcode{std::allocator<X::value_type>} otherwise, and \tcode{m} denotes an allocator of a type convertible to \tcode{A}.
+
+\begin{libreqtab4b}
+{Associative container requirements (in addition to container)}
+{tab:containers.associative.requirements}
+\\ \topline
+\lhdr{expression}       &   \chdr{return type}  &   \chdr{assertion/note}       &   \rhdr{complexity}   \\
+                        &                       &   \chdr{pre/post-condition}   &                       \\ \capsep
+\endfirsthead
+\hline
+\lhdr{expression}       &   \chdr{return type}  &   \chdr{assertion/note}       &   \rhdr{complexity}   \\
+                        &                       &   \chdr{pre/post-condition}   &                       \\ \capsep
+\endhead
+
+\tcode{X::key_type}    &
+ \tcode{Key}            &
+ \removedCC{\mbox{\tcode{Key}} is \mbox{\tcode{CopyConstructible}} and \mbox{\tcode{CopyAssignable}}}  &
+  compile time \\ \rowsep
+
+\tcode{X::key_compare} &   \tcode{Compare} &   defaults to 
+ \tcode{less<key_type>} &   compile time   \\ \rowsep
+
+\tcode{X::value_compare}           &
+ a binary predicate type           &
+ is the same as \tcode{key_compare}\ for \tcode{set}\ and
+ \tcode{multiset}; is an ordering relation on pairs induced by the
+ first component (\textit{i.e.} \tcode{Key}) for \tcode{map}\ and \tcode{multimap}. &
+ compile time                       \\ \rowsep
+
+\tcode{X(c)}\br
+\tcode{X a(c);}                         &
+                                        &
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ Constructs an empty container.\br
+ Uses a copy of \tcode{c} as a comparison object.  &
+ constant                               \\ \rowsep
+
+\tcode{X()}\br\tcode{X a;}                      &
+                                                &
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ Constructs an empty container.\br
+ Uses \tcode{Compare()} as a comparison object  &
+ constant                                       \\ \rowsep
+
+\tcode{X(i,j,c)}\br
+\tcode{X~a(i,j,c);}     &
+                        &
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ Constructs an empty container and inserts elements from the
+ range \tcode{[i, j)}\ into it; uses \tcode{c}\ as a comparison object. &
+ $N \log N$ in general ($N$ is the distance from \tcode{i}\ to \tcode{j});
+ linear if \tcode{[i, j)}\ is sorted with \tcode{value_comp()} \\ \rowsep
+
+\tcode{X(i,j)} \tcode{X~a(i,j);}    &
+                                    &
+ \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ Same as above, but uses \tcode{Compare()}\ as a comparison object  &
+ same as above                      \\ \rowsep
+
+\end{libreqtab4b}
+
+\rSec2[unord.req]{Unordered associative containers}
+\setcounter{Paras}{8}
+\setcounter{table}{95}
+\pnum
+\index{unordered associative containers}%
+\index{unordered associative containers!requirements}%
+\index{requirements!Unordered Associative Container}%
+\index{unordered associative containers!unique keys}%
+\index{unordered associative containers!equivalent keys}%
+\index{requirements!Container}%
+In table~\ref{tab:HashRequirements}: 
+\tcode{X} is an unordered associative container class, \tcode{a} is an
+object of type \tcode{X}, \tcode{b} is a possibly const object of
+type \tcode{X}, \tcode{a_uniq} is an object of type \tcode{X}
+when \tcode{X} supports unique keys, \tcode{a_eq} is an object of
+type \tcode{X} when \tcode{X} supports equivalent keys, \tcode{i}
+and \tcode{j} are input iterators that refer
+to \tcode{value_type}, \tcode{[i, j)} is a valid range,
+\tcode{p} and \tcode{q2} are valid const iterators to \tcode{a},
+\tcode{q} and \tcode{q1} are valid dereferenceable const iterators to \tcode{a},
+\tcode{[q1, q2)} is a valid range in \tcode{a},
+\tcode{t} is a value of
+type \tcode{X::value_type}, \tcode{k} is a value of
+type \tcode{key_type}, \tcode{hf} is a possibly const value of
+type \tcode{hasher}, \tcode{eq} is a possibly const value of
+type \tcode{key_equal}, \tcode{n} is a value of
+type \tcode{size_type}, and \tcode{z} is a value of
+type \tcode{float}. 
+
+\begin{libreqtab4d}
+  {Unordered associative container requirements (in addition to container)}
+  {tab:HashRequirements}
+\\ \topline
+\lhdr{expression} & \chdr{return type}
+& \chdr{assertion/note pre/post-condition}
+& \rhdr{complexity} \\ \capsep
+\endfirsthead
+\hline
+\lhdr{expression} & \chdr{return type} & \chdr{assertion/note pre/post-condition} & \rhdr{complexity} \\ \capsep
+\endhead
+%%
+\tcode{X::key_type}
+&   \tcode{Key}
+&   \removedCC{\mbox{\tcode{Key}} shall be \mbox{\tcode{CopyAssignable}} and \mbox{\tcode{CopyConstructible}}}
+    \index{unordered associative containers!key_type@\tcode{key_type}}%
+    \index{key_type@\tcode{key_type}!unordered associative containers}%
+&   compile time
+\\ \rowsep
+%
+\tcode{X::hasher}
+&   \tcode{Hash}
+&   \removedCC{\mbox{\tcode{Hash}} shall be a unary function object type such that the expression 
+    \mbox{\tcode{hf(k)}} has type \mbox{\tcode{std::size_t}}.}
+    \index{unordered associative containers!hasher@\tcode{hasher}}%
+    \index{hasher@\tcode{hasher}!unordered associative containers}%
+&   compile time
+\\ \rowsep
+%
+\tcode{X::key_equal}
+&   \tcode{Pred}
+&   \removedCC{\mbox{\tcode{Pred}} shall be a binary predicate that takes two arguments
+    of type \mbox{\tcode{Key}}.}  \tcode{Pred} is an equivalence relation.%
+    \index{unordered associative containers!key_equal@\tcode{key_equal}}%
+    \index{key_equal@\tcode{key_equal}!unordered associative containers}%
+&   compile time
+\\ \rowsep
+\end{libreqtab4d}
 
 \editorial{Add the following new section [container.concepts]}
 \color{addclr}
