@@ -43,6 +43,8 @@ General:
 * _Possibly_ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
   detail/cursor/ (same for iterator).
 * Make *order iterators work with empty subtrees; same for cursor algorithms.
+  (Not necessarily! If that means a check for empty(), it's better to leave it to
+  the user!)
 * Get rid of checks for/assignments to root in pre/post/inorder algorithms,
   as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
   In order to work for subtrees, it's probable that we need at least an int to store
@@ -52,10 +54,13 @@ General:
   -> This is going to be done by the RootTracker object, which I personally hate,
   but I don't see much of a choice for iterative traversal of subtrees other than that
   (and haven't found any on the Web, either).
-* Deprecate shoot()? It's main use was for inorder::end(), which is now root().
-  Would (binary tree) lower_bound() be possible without shoot()? What would it have to be 
-  like? What would be the implications for balanced_trees? (Especially the lower_bound 
-  for search vs insert purposes problem.)
+  Our options, in more detail:
+  * Saving a copy of root, obviously. (Only comparison, no later calculation of depth involved)
+  * Iterators based on ascending cursor shouldn't check for size==1, but for size==root_size,
+    where root_size is the size of the stack with all cursors up to the root cursor 
+    are pushed. (Comparison, no calculation)
+  * Some color map approach? (Cf BGL, Knuth?)
+* Investigate the lower_bound for search vs insert purposes problem.
 * Take care of inorder::begin() for binary_tree<int>.  
 * Keep in mind it's not necessarily a good thing to have *order::end() be the last element's
   right child. For inorder and postorder, it seems like the subtree root is a better choice.

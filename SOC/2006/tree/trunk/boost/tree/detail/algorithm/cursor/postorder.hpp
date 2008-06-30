@@ -6,7 +6,7 @@
 
 /**
  * @file postorder.hpp
- * Non-modifying hierarchy postorder range algorithms
+ * Subtree postorder traversal algorithms
  */
 
 // TODO: concept checks.
@@ -14,7 +14,6 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
 
-#include <boost/tree/detail/iterator/postorder.hpp>
 
 namespace boost {
 namespace tree {

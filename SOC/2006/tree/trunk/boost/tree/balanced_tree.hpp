@@ -401,6 +401,9 @@ class balanced_tree {
 		// Then again... that's too much of a fuss. Maybe we should just
 		// build a searcher that does all that.
 		
+		// Do balancers have to work for non-leaf newly inserted elements?
+		// If yes, we could just insert at pos.
+		
 		cursor c = pos.base().base();
 		while (!c.empty())
 			c = c.end();

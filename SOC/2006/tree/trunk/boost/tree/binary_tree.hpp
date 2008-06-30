@@ -15,7 +15,7 @@
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/detail/algorithm/cursor/general.hpp>
-#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
+#include <boost/tree/detail/algorithm/iterator/inorder.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>

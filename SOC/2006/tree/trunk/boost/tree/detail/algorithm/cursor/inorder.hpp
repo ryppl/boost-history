@@ -6,7 +6,7 @@
 
 /**
  * @file inorder.hpp
- * Non-modifying hierarchy inorder range algorithms
+ * Subtree intorder traversal and search algorithms
  */
 
 // TODO: concept checks.
@@ -14,7 +14,6 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 
-#include <boost/tree/detail/iterator/inorder.hpp>
 
 namespace boost {
 namespace tree {
@@ -307,6 +306,10 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
 	}
 	return y;
 }
+
+// Implement equal_range? Maybe not, if it'd only return a pair 
+// consisting of cursors calculated by calling lower_bound and upper_bound.
+// This might be a bit more subtle for non-binary multiway trees. 
 
 } // namespace inorder
 

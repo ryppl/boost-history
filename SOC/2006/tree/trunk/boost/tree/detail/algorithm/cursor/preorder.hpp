@@ -6,7 +6,7 @@
 
 /**
  * @file preorder.hpp
- * Non-modifying hierarchy preorder range algorithms
+ * Subtree preorder traversal algorithms
  */
 
 // TODO: concept checks.
@@ -14,7 +14,6 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 
-#include <boost/tree/detail/iterator/preorder.hpp>
 
 namespace boost {
 namespace tree {
