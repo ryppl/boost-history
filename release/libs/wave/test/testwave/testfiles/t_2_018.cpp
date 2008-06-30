@@ -7,14 +7,16 @@
     LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 
-// Test error reporting during redefinition of 'defined'
+// Check if regression reported by ticket #1752 has been fixed
 
-//E t_9_007.cpp(13): warning: this predefined name may not be redefined: defined
-#define defined 1 // undefined in C++ (16.8/3), error in C99 (6.10.8/4)
-
-#if defined  // error
-<error>
+//R #line 17 "t_2_018.cpp"
+//R "__FILE__ is defined"
+#ifndef __FILE__
+"No __FILE__"
+#else
+"__FILE__ is defined"
 #endif
 
-//H 10: t_9_007.cpp(13): #define
-//H 18: boost::wave::macro_handling_exception
+//H 10: t_2_018.cpp(14): #ifndef
+//H 11: t_2_018.cpp(14): #ifndef __FILE__: 1
+//H 10: t_2_018.cpp(18): #endif
