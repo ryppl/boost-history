@@ -404,7 +404,6 @@ Y    * Make Container and SequenceContainer? work with c-arrays (free function f
 Y    * Have a preference for free functions in all concepts.
 
 Y - Discard member swap, not needed.
-    (Mat: we also discarded size)
 
 N    * Add MemberSwappable? so that container swap free functions compile. Change container swap functions to require MemberSwappable?.
      (Remove swap)
@@ -413,10 +412,7 @@ y   * Review constructors which take default arguments. Default argument no long
 
 y   * Adaptors should require NothrowDestructible? (related issues worthy of exploration).
 
-y   * Implementations of stack members will change to free functions.
-    (Mat: done except for 1) added concept for size()--wrong place? 2) should effects
-    be concept qualified? 3) swappable size on Cont or on member
-    functions. Same questions for queue family. 4) not tested or reviewed
+Y   * Implementations of stack members will change to free functions.
 
 y   * Create new FrontEmplaceSequence? / BackEmplaceSequence? concepts (and member form adaptors for emplace_front/emplace_back).
     (This is supposed to be because we have emplace overloads in the adaptors?)
@@ -425,7 +421,7 @@ y   * SequenceContainer? second axiom requires bidirectional iterator.
 
     * In second axiom in SequenceContainer? --c.end() won't compile when iterator is pointer.
 
-    * In FrontInsertionSequence? axiom add ", c".
+Y    * In FrontInsertionSequence? axiom add ", c".
 
     * General issue using FrontInsertionSequence? as example: push_front(const value_type&) should be push_front(value_type) to support move only value_types. This supports queue push_front of move only types. Or use two signatures: push_front(const value_type&) and push_front(value_type&&). The axiom may accidently require value_type to be CopyConstructible? depending on how the signatures are resolved. Need to watch out for that.
 
@@ -442,7 +438,3 @@ y   * SequenceContainer? second axiom requires bidirectional iterator.
     * Missing MoveAssignable? requirement on
       vector::emplace(const_iterator, Args&&...)
 
-Other issues (from Mat)
-
-   * Where is back_inserter etc.?
-   * Still some mutables left in Container

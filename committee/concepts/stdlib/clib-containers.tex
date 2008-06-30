@@ -775,14 +775,36 @@ type \tcode{float}.
 \synopsis{Header \tcode{<container_concepts>} synopsis}
 \begin{codeblock}
 namespace std {
-  auto concept Container<typename C> @\textit{see below}@
-  auto concept SequenceContainer<typename C> @\textit{see below}@
-  auto concept FrontInsertionSequence<typename C> @\textit{see below}@
-  auto concept BackInsertionSequence<typename C> @\textit{see below}@
-  auto concept InsertionSequence<typename C> @\textit{see below}@
+  concept Container<typename C> @\textit{see below}@
+  concept SequenceContainer<typename C> @\textit{see below}@
+  concept FrontInsertionSequence<typename C> @\textit{see below}@
+  concept BackInsertionSequence<typename C> @\textit{see below}@
+  concept InsertionSequence<typename C> @\textit{see below}@
+  @\addedCC{concept MemberContainer<typename C>} \textit{see below}@
+  @\addedCC{concept MemberSequenceContainer<typename C>} \textit{see below}@
+  @\addedCC{concept MemberFrontInsertionSequence<typename C>} \textit{see below}@
+  @\addedCC{concept MemberBackInsertionSequence<typename C>} \textit{see below}@
+  @\addedCC{concept MemberInsertionSequence<typename C>} \textit{see below}@
+  @\addedCC{template <MemberContainer C>              concept_map Container<C>} \textit{see below}@
+  @\addedCC{template <MemberSequenceContainer C>      concept_map SequenceContainer<C>} \textit{see below}@
+  @\addedCC{template <MemberFrontInsertionSequence C> concept_map FrontInsertionSequence<C>} \textit{see below}@
+  @\addedCC{template <MemberBackInsertionSequence C>  concept_map BackInsertionSequence<C>} \textit{see below}@
+  @\addedCC{template <MemberInsertionSequence C>      concept_map InsertionSequence<C>} \textit{see below}@
+  @\addedCC{template <typename E, size_t N>           concept_map Container<E[N]>} \textit{see below}@
+  @\addedCC{template <typename E, size_t N>           concept_map Container<const E[N]>} \textit{see below}@
+  @\addedCC{template <typename E, size_t N>           concept_map SequenceContainer<E[N]>} \textit{see below}@
+  @\addedCC{template <typename E, size_t N>           concept_map SequenceContainer<const E[N]>} \textit{see below}@
 }
 \end{codeblock}
 
+\rSec3[container.concepts.free]{Free function container concepts}
+
+\pnum
+\addedCC{This section contains the container concepts that are used by
+  other parts of the library. These concepts are written in terms of
+  free functions. For backward compatibility, member function versions and 
+concept maps adapting member to free syntax follow in
+(\mbox{\ref{container.concepts.member}}) and (\mbox{\ref{concept.concepts.maps}}).}
 
 \begin{itemdecl}
 auto concept Container<typename C> {
@@ -809,7 +831,7 @@ auto concept Container<typename C> {
 
   axiom ContainerSize(C c) {
     @\changedCCC{(C.begin() == C.end()) == C.empty();}{(begin(c) == end(c)) == empty(c);}@
-    @\changedCCC{(C.begin() != C.end()) == (C.size() > 0);}{(begin(c) != end(c)) == size(c);}@
+    @\changedCCC{(C.begin() != C.end()) == (C.size() > 0);}{(begin(c) != end(c)) == (size(c) > 0);}@
   }
 }
 
@@ -827,7 +849,94 @@ auto concept Container<typename C> {
   \addedConcepts{\mbox{\tcode{[begin(c), end(c))}} is a valid range.} 
 
 \end{itemdescr}
- 
+
+\begin{itemdecl}
+concept SequenceContainer<typename C> : Container<C> {
+  reference       @\changedCCC{C::front()}{front(C\&)}@; 
+  const_reference @\changedCCC{C::front() const}{front(const C\&)}@;
+  reference       @\changedCCC{C::back()}{back(C\&)}@;
+  const_reference @\changedCCC{C::back() const}{back(const C\&)}@;
+
+  axiom AccessFront(C c) {
+    @\removedCCC{if (c.begin() != c.end()) c.front() == *c.begin();}@
+    @\addedCC{if (begin(c) != end(c)) front(c) == *begin(c);}@
+  }  
+
+  axiom AccessBack(C c) {
+    @\removedCCC{if (c.begin() != c.end()) c.back() == *(--c.end());}@
+    @\addedCC{if (begin(c) != end(c)) back(c) == *(--end(c));}@
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a sequence container,
+  which stores its elements in the order in which they were added.} 
+\end{itemdescr}
+
+
+\begin{itemdecl}
+concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
+  void @\removedCCC{C::}@push_front(@\addedCC{C\&, }@const value_type&);
+  void @\removedCCC{C::}@pop_front(@\addedCC{C\&}@);
+
+  axiom FrontInsertion(C c, value_type x) {
+    c == (@\removedCCC{c.}@push_front(@\addedCC{c, }@x), @\removedCCC{c.}@pop_front(@\addedCC{c}@)@\addedCC{, c}@);
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding or removing elements from the front of the
+  sequence.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept BackInsertionSequence<typename C> : SequenceContainer<C> {
+  void @\removedCCC{C::}@push_back(@\addedCC{C\&, }@const value_type&);
+  void @\removedCCC{C::}@pop_back(@\addedCC{C\&}@);
+
+  axiom BackInsertion(C c, value_type x) {
+    @\textcolor{addclr}{}@c == (@\removedCCC{c.}@push_back(@\addedCC{c, }@x), @\removedCCC{c.}@pop_back(@\addedCC{c})@@\addedCC{, c}@);
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding or removing elements from the back of the
+  sequence.}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+concept InsertionSequence<typename C> : SequenceContainer<C> {
+  iterator @\removedCCC{C::}@insert(@\addedCC{C\&, const_}@iterator, const value_type&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by inserting elements at any position within the sequence.}
+\end{itemdescr}
+
+\rSec3[container.concepts.member]{Backward compatibility container concepts} 
+
+\pnum 
+\addedCC{This section contains backward compatibility concepts,
+  written using member function syntax, corresponding to the container
+  concepts in (\mbox{\ref{container.concepts.free}}). Concept maps
+  that automatically adapt these member function concepts to the free
+  function concept syntax follow in
+  (\mbox{\ref{concept.concepts.maps}}).}
 
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
@@ -861,12 +970,109 @@ auto concept MemberContainer<typename C> {
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of
   member functions, which provides
   iteration through a sequence of elements stored in the container.}
-
 \pnum
 \addedConcepts{\mbox{\requires} for a (possibly
   \mbox{\tcode{const}}-qualified) container \mbox{\tcode{c}},
   \mbox{\tcode{[c.begin(), c.end())}} is a valid range.}
 \end{itemdescr}
+
+\begin{itemdecl}
+auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
+  reference       C::front();
+  const_reference C::front() const;
+  reference       C::back();
+  const_reference C::back() const;
+
+  axiom MemberAccessFront(C c) {
+    if (c.begin() != c.end()) c.front() == *c.begin();
+  }  
+
+  axiom MemberAccessBack(C c) {
+    if (c.begin() != c.end()) c.back() == *(--c.end());
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} describes a sequence container, in
+  terms of member functions, which stores its elements in the order in
+  which they were added.}
+\end{itemdescr}
+
+
+
+\begin{itemdecl}
+auto concept MemberFrontInsertionSequence<typename C> : MemberSequenceContainer<C> {
+  void C::push_front(const value_type&);
+  void C::pop_front();
+
+  axiom MemberFrontInsertion(C c, value_type x) {
+    c == (c.push_front(x), c.pop_front()@\addedCC{, c}@);
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of
+  member functions, that can be
+  modified by adding or removing elements from the front of the
+  sequence.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept MemberBackInsertionSequence<typename C> : MemberSequenceContainer<C> {
+  void C::push_back(const value_type&);
+  void C::pop_back();
+
+  axiom MemberBackInsertion(C c, value_type x) {
+    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back()@\addedCC{, c}@);
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+  modified by adding or removing elements from the back of the
+  sequence.}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+auto concept MemberInsertionSequence<typename C> : MemberSequenceContainer<C> {
+  iterator C::insert(const_iterator, const value_type&);
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+template <MemberInsertionSequence C> 
+concept_map InsertionSequence<C> {
+  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
+  { return c.insert(i, v); }
+}			
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+  modified by inserting elements at any position within the sequence.}
+\end{itemdescr}
+
+\rSec3[container.concepts.maps]{Container concept maps}
+
+\pnum
+\addedCC{This section contains concept maps that automatically adapt
+  classes with the appropriate member functions, as specified in
+  (\mbox{\ref{container.concepts.member}}), to meet the free function
+  container concept syntax in (\mbox{\ref{concept.concepts.free}}). It
+  also contains maps adapting built-in arrays to model the appropriate
+  container concepts. }
+
 
 \begin{itemdecl}
 template <MemberContainer C>
@@ -928,67 +1134,23 @@ concept_map Container<const E[N]> {
 }
 \end{itemdecl}
 
-\begin{itemdecl}
-concept SequenceContainer<typename C> : Container<C> {
-  reference       @\changedCCC{C::front()}{front(C\&)}@; 
-  const_reference @\changedCCC{C::front() const}{front(const C\&)}@;
-  reference       @\changedCCC{C::back()}{back(C\&)}@;
-  const_reference @\changedCCC{C::back() const}{back(const C\&)}@;
-
-  axiom AccessFront(C c) {
-    @\removedCCC{if (c.begin() != c.end()) c.front() == *c.begin();}@
-    @\addedCC{if (begin(c) != end(c)) front(c) == *begin(c);}@
-  }  
-
-  axiom AccessBack(C c) {
-    @\removedCCC{if (c.begin() != c.end()) c.back() == *(--c.end());}@
-    @\addedCC{if (begin(c) != end(c)) back(c) == *(--end(c));}@
-  }
-}
-\end{itemdecl}
-
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a sequence container,
-  which stores its elements in the order in which they were added.} 
-\end{itemdescr}
-
-
-\begin{itemdecl}
-auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
-  reference       C::front();
-  const_reference C::front() const;
-  reference       C::back();
-  const_reference C::back() const;
-
-  axiom MemberAccessFront(C c) {
-    if (c.begin() != c.end()) c.front() == *c.begin();
-  }  
-
-  axiom MemberAccessBack(C c) {
-    if (c.begin() != c.end()) c.back() == *(--c.end());
-  }
-}
-\end{itemdecl}
 
 \begin{itemdecl}
 template <MemberSequenceContainer C> 
 concept_map SequenceContainer<C> {
-  Container<C>::reference front(C& c)             { return c.front(); }
+  Container<C>::reference       front(C& c)       { return c.front(); }
   Container<C>::const_reference front(const C& c) { return c.front(); }
-  Container<C>::reference back(C& c)              { return c.back(); }
+  Container<C>::reference       back(C& c)        { return c.back(); }
   Container<C>::const_reference back(const C& c)  { return c.back(); }
 }			
-
 \end{itemdecl}
 
 \begin{itemdecl}
 template <typename E, size_t N>
 concept_map SequenceContainer<E[N]> {
-  Container<E[N]>::reference front(E(&c)[N])             { return c[0]; }
+  Container<E[N]>::reference       front(E(&c)[N])       { return c[0]; }
   Container<E[N]>::const_reference front(const E(&c)[N]) { return c[0]; }
-  Container<E[N]>::reference back(E(&c)[N])              { return c[N-1]; }
+  Container<E[N]>::reference       back(E(&c)[N])        { return c[N-1]; }
   Container<E[N]>::const_reference back(const E(&c)[N])  { return c[N-1]; }
 }
 \end{itemdecl}
@@ -1002,90 +1164,12 @@ concept_map SequenceContainer<const E[N]> {
 \end{itemdecl}
 
 \begin{itemdecl}
-concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
-  void @\removedCCC{C::}@push_front(@\addedCC{C\&, }@const value_type&);
-  void @\removedCCC{C::}@pop_front(@\addedCC{C\&}@);
-
-  axiom FrontInsertion(C c, value_type x) {
-    c == (@\removedCCC{c.}@push_front(@\addedCC{c, }@x), @\removedCCC{c.}@pop_front(@\addedCC{c}@));
-  }
-}
-\end{itemdecl}
-
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by adding or removing elements from the front of the
-  sequence.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept MemberFrontInsertionSequence<typename C> : MemberSequenceContainer<C> {
-  void C::push_front(const value_type&);
-  void C::pop_front();
-
-  axiom MemberFrontInsertion(C c, value_type x) {
-    c == (c.push_front(x), c.pop_front());
-  }
-}
-\end{itemdecl}
-
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of
-  member functions, that can be
-  modified by adding or removing elements from the front of the
-  sequence.}
-\end{itemdescr}
-
-\begin{itemdecl}
 template <MemberFrontInsertionSequence C> 
 concept_map FrontInsertionSequence<C> {
   void push_front(C& c, const Container<C>::value_type &v)   { c.front(v); }
   void pop_front(C& c)                                       { c.pop_front(); }
 }			
 \end{itemdecl}
-
-\begin{itemdecl}
-concept BackInsertionSequence<typename C> : SequenceContainer<C> {
-  void @\removedCCC{C::}@push_back(@\addedCC{C\&, }@const value_type&);
-  void @\removedCCC{C::}@pop_back(@\addedCC{C\&}@);
-
-  axiom BackInsertion(C c, value_type x) {
-    @\textcolor{addclr}{}@c == (@\removedCCC{c.}@push_back(@\addedCC{c, }@x), @\removedCCC{c.}@pop_back(@\addedCC{c}@));
-  }
-}
-\end{itemdecl}
-
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by adding or removing elements from the back of the
-  sequence.}
-\end{itemdescr}
-
-
-\begin{itemdecl}
-auto concept MemberBackInsertionSequence<typename C> : MemberSequenceContainer<C> {
-  void C::push_back(const value_type&);
-  void C::pop_back();
-
-  axiom MemberBackInsertion(C c, value_type x) {
-    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back());
-  }
-}
-\end{itemdecl}
-
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
-  modified by adding or removing elements from the back of the
-  sequence.}
-\end{itemdescr}
 
 
 \begin{itemdecl}
@@ -1095,40 +1179,6 @@ concept_map BackInsertionSequence<C> {
   void pop_back(C& c)                                        { c.pop_back(); }
 }			
 \end{itemdecl}
-
-\begin{itemdecl}
-concept InsertionSequence<typename C> : SequenceContainer<C> {
-  iterator @\removedCCC{C::}@insert(@\addedCC{C\&, const_}@iterator, const value_type&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by inserting elements at any position within the sequence.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept MemberInsertionSequence<typename C> : MemberSequenceContainer<C> {
-  iterator C::insert(const_iterator, const value_type&);
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-template <MemberInsertionSequence C> 
-concept_map InsertionSequence<C> {
-  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
-  { return c.insert(i, v); }
-}			
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
-  modified by inserting elements at any position within the sequence.}
-\end{itemdescr}
-
-
 
 \color{black}
 
