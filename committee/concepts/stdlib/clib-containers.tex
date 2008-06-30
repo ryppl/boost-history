@@ -4299,8 +4299,12 @@ namespace std {
     size_type max_size() const;
 
     // \ref{map.access} element access:
-    @\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<Key>}@ T& operator[](const key_type& x);
-    @\addedConcepts{requires DefaultConstructible<T> \&\& MoveConstructible<Key>}@ T& operator[](key_type&& x);
+    @\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
+             @\addedCC{ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
+      T& operator[](const key_type& x);
+    @\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
+             @\addedCC{ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
+      T& operator[](key_type&& x);
     T&       at(const key_type& x);
     const T& at(const key_type& x) const;
 
@@ -4445,7 +4449,9 @@ is \farg{last} - \farg{first}.
 
 \index{operator[]@\tcode{operator[]}!map@\tcode{map}}%
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<Key>}@ T& operator[](const key_type& x);
+@\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
+         @\addedCC{ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
+  T& operator[](const key_type& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -4474,7 +4480,9 @@ logarithmic.
 
 \index{operator[]@\tcode{operator[]}!map@\tcode{map}}%
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T> \&\& MoveConstructible<Key>}@ T& operator[](key_type&& x);
+@\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
+         @\addedCC{ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
+  T& operator[](key_type&& x);
 \end{itemdecl}
 
 \begin{itemdescr}
