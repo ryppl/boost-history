@@ -64,7 +64,7 @@ Douglas Gregor, Indiana University \\
 Mat Marcus, Adobe Systems, Inc.\\
 Pablo Halpern,  Bloomberg, L.P.
 \end{tabular}\vspace{-6pt}
-\par\noindent Document number: D2694=08-0204\vspace{-6pt}
+\par\noindent Document number: N2694=08-0204\vspace{-6pt}
 \par\noindent Revises document number: N2623=08-0133\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
@@ -775,16 +775,21 @@ type \tcode{float}.
 \synopsis{Header \tcode{<container_concepts>} synopsis}
 \begin{codeblock}
 namespace std {
+  @\addedCC{// \mbox{\ref{container.concepts.free}}, container concepts}@
   concept Container<typename C> @\textit{see below}@
   concept SequenceContainer<typename C> @\textit{see below}@
   concept FrontInsertionSequence<typename C> @\textit{see below}@
   concept BackInsertionSequence<typename C> @\textit{see below}@
   concept InsertionSequence<typename C> @\textit{see below}@
+
+  @\addedCC{// \mbox{\ref{container.concepts.member}}, member container concepts}@
   @\addedCC{concept MemberContainer<typename C>} \textit{see below}@
   @\addedCC{concept MemberSequenceContainer<typename C>} \textit{see below}@
   @\addedCC{concept MemberFrontInsertionSequence<typename C>} \textit{see below}@
   @\addedCC{concept MemberBackInsertionSequence<typename C>} \textit{see below}@
   @\addedCC{concept MemberInsertionSequence<typename C>} \textit{see below}@
+
+  @\addedCC{// \mbox{\ref{container.concepts.maps}}, container concept maps}@
   @\addedCC{template <MemberContainer C>              concept_map Container<C>} \textit{see below}@
   @\addedCC{template <MemberSequenceContainer C>      concept_map SequenceContainer<C>} \textit{see below}@
   @\addedCC{template <MemberFrontInsertionSequence C> concept_map FrontInsertionSequence<C>} \textit{see below}@
@@ -804,7 +809,7 @@ namespace std {
   other parts of the library. These concepts are written in terms of
   free functions. For backward compatibility, member function versions and 
 concept maps adapting member to free syntax follow in
-(\mbox{\ref{container.concepts.member}}) and (\mbox{\ref{concept.concepts.maps}}).}
+(\mbox{\ref{container.concepts.member}}) and (\mbox{\ref{container.concepts.maps}}).}
 
 \begin{itemdecl}
 auto concept Container<typename C> {
@@ -928,16 +933,17 @@ concept InsertionSequence<typename C> : SequenceContainer<C> {
   modified by inserting elements at any position within the sequence.}
 \end{itemdescr}
 
-\rSec3[container.concepts.member]{Backward compatibility container concepts} 
+\rSec3[container.concepts.member]{Member container concepts} 
 
 \pnum 
 \addedCC{This section contains backward compatibility concepts,
   written using member function syntax, corresponding to the container
-  concepts in (\mbox{\ref{container.concepts.free}}). Concept maps
+  concepts (\mbox{\ref{container.concepts.free}}). Concept maps
   that automatically adapt these member function concepts to the free
-  function concept syntax follow in
-  (\mbox{\ref{concept.concepts.maps}}).}
+  function concept syntax follow 
+  (\mbox{\ref{container.concepts.maps}}).}
 
+\color{ccadd}
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
   ObjectType           value_type      = typename C::value_type;
@@ -967,11 +973,11 @@ auto concept MemberContainer<typename C> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of
+\addedCC{\mbox{\reallynote} describes a container, in terms of
   member functions, which provides
   iteration through a sequence of elements stored in the container.}
 \pnum
-\addedConcepts{\mbox{\requires} for a (possibly
+\addedCC{\mbox{\requires} for a (possibly
   \mbox{\tcode{const}}-qualified) container \mbox{\tcode{c}},
   \mbox{\tcode{[c.begin(), c.end())}} is a valid range.}
 \end{itemdescr}
@@ -996,7 +1002,7 @@ auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\reallynote} describes a sequence container, in
+\addedCC{\mbox{\reallynote} describes a sequence container, in
   terms of member functions, which stores its elements in the order in
   which they were added.}
 \end{itemdescr}
@@ -1017,7 +1023,7 @@ auto concept MemberFrontInsertionSequence<typename C> : MemberSequenceContainer<
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of
+\addedCC{\mbox{\reallynote} describes a container, in terms of
   member functions, that can be
   modified by adding or removing elements from the front of the
   sequence.}
@@ -1037,7 +1043,7 @@ auto concept MemberBackInsertionSequence<typename C> : MemberSequenceContainer<C
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+\addedCC{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by adding or removing elements from the back of the
   sequence.}
 \end{itemdescr}
@@ -1059,7 +1065,7 @@ concept_map InsertionSequence<C> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+\addedCC{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by inserting elements at any position within the sequence.}
 \end{itemdescr}
 
@@ -1069,7 +1075,7 @@ concept_map InsertionSequence<C> {
 \addedCC{This section contains concept maps that automatically adapt
   classes with the appropriate member functions, as specified in
   (\mbox{\ref{container.concepts.member}}), to meet the free function
-  container concept syntax in (\mbox{\ref{concept.concepts.free}}). It
+  container concept syntax in (\mbox{\ref{container.concepts.free}}). It
   also contains maps adapting built-in arrays to model the appropriate
   container concepts. }
 
@@ -1094,6 +1100,13 @@ concept_map Container<C> {
   const_iterator end(const C& c)   { return c.end(); }
 }
 \end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+  member function syntax for each of its operations, to the
+  \mbox{\tcode{Container}} concept.}
+\end{itemdescr}
 
 \begin{itemdecl}
 template <typename E, size_t N>
@@ -1134,16 +1147,29 @@ concept_map Container<const E[N]> {
 }
 \end{itemdecl}
 
+\begin{itemdescr}
+\pnum 
+\addedCC{\mbox{\reallynote} Adapts built-in arrays to the 
+  \mbox{\tcode{Container}} concept.}
+\end{itemdescr}
+
 
 \begin{itemdecl}
 template <MemberSequenceContainer C> 
 concept_map SequenceContainer<C> {
   Container<C>::reference       front(C& c)       { return c.front(); }
   Container<C>::const_reference front(const C& c) { return c.front(); }
-  Container<C>::reference       back(C& c)        { return c.back(); }
+  @\resetcolor{}@Container<C>::reference       back(C& c)        { return c.back(); }
   Container<C>::const_reference back(const C& c)  { return c.back(); }
 }			
 \end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+  member function syntax for each of its operations, to the}
+\\\addedCC{\mbox{\tcode{SequenceContainer}} concept.}
+\end{itemdescr}
 
 \begin{itemdecl}
 template <typename E, size_t N>
@@ -1163,6 +1189,12 @@ concept_map SequenceContainer<const E[N]> {
 }
 \end{itemdecl}
 
+\begin{itemdescr}
+\pnum 
+\addedCC{\mbox{\reallynote} Adapts built-in arrays to the 
+  \mbox{\tcode{SequenceContainer}} concept.}
+\end{itemdescr}
+
 \begin{itemdecl}
 template <MemberFrontInsertionSequence C> 
 concept_map FrontInsertionSequence<C> {
@@ -1171,6 +1203,12 @@ concept_map FrontInsertionSequence<C> {
 }			
 \end{itemdecl}
 
+\begin{itemdescr}
+\pnum 
+\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+  member function syntax for each of its operations, to the}
+  \\\addedCC{\mbox{\tcode{FrontSequenceContainer}} concept.}
+\end{itemdescr}
 
 \begin{itemdecl}
 template <MemberBackInsertionSequence C> 
@@ -1179,6 +1217,13 @@ concept_map BackInsertionSequence<C> {
   void pop_back(C& c)                                        { c.pop_back(); }
 }			
 \end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+  member function syntax for each of its operations, to the}
+  \\\addedCC{\mbox{\tcode{BackSequenceContainer}} concept.}
+\end{itemdescr}
 
 \color{black}
 
@@ -1338,7 +1383,7 @@ namespace std {
     void swap(queue<T,@\changedCCC{Allocator}{ Cont}@>& x, queue<T,@\changedCCC{Allocator}{ Cont}@>&& y);
 
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
-        @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
+        @\removedCC{{class}}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
              @\addedConcepts{\&\& }\changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
   class priority_queue;
@@ -1832,7 +1877,7 @@ Constant.
 \tcode{n} default constructed elements.
 
 \pnum
-@\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}@
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}
 
 \pnum
 \complexity Linear in \farg{n}.
@@ -1853,7 +1898,7 @@ with \farg{n} copies of \farg{value},
 using the specified allocator.
 
 \pnum
-@\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}@
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
 
 \pnum
 \complexity\ 
@@ -3377,8 +3422,8 @@ can be used.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
-  @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>
-           \&\& SameType<T, Cont::value_type>}@
+  @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
+           @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
   class queue {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3549,7 +3594,7 @@ template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable
 
 \begin{itemdescr}
 \pnum
-\effects \tcode{@\changedCCC{x.swap(y)}{swap(x, y)}@}.
+\effects \tcode{x.swap(y)}.
 \end{itemdescr}
 
 \rSec3[priority.queue]{Class template \tcode{priority_queue}}
@@ -3580,7 +3625,7 @@ object defines a strict weak ordering (\ref{alg.sorting}).
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
-       @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
+       @\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
            @\addedConcepts{\&\&} \changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
   class priority_queue { 
@@ -3668,8 +3713,8 @@ explicit priority_queue(const Compare& x = Compare(), Cont@\removedConcepts{aine
 
 \begin{itemdescr}
 \pnum
-\requires\ 
-\farg{x}\ shall define a strict weak ordering (\ref{alg.sorting}).
+\removedCC{\mbox{\requires}
+\mbox{\farg{x}} shall define a strict weak ordering (\mbox{\ref{alg.sorting}}).}
 
 \pnum
 \effects\ 
@@ -3679,7 +3724,7 @@ Initializes
 \tcode{c}\ with
 \tcode{y} (copy constructing or move constructing as appropriate);
 calls
-\tcode{make_heap(@\removedCCC{c.}@c.begin(@\addedCC{c}@), @\removedCCC{c.}@c.end(@\addedCC{c}@), comp)}.
+\tcode{make_heap(\removedCCC{c.}c.begin(\addedCC{c}), \removedCCC{c.}c.end(\addedCC{c}), comp)}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -3695,8 +3740,8 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 
 \begin{itemdescr}
 \pnum
-\requires\ 
-\farg{x}\ shall define a strict weak ordering (\ref{alg.sorting}).
+\removedCC{\mbox{\requires}
+\mbox{\farg{x}} shall define a strict weak ordering (\mbox{\ref{alg.sorting}}).}
 
 \pnum
 \effects\ 
@@ -3706,9 +3751,9 @@ Initializes
 \tcode{c} with
 \tcode{y} (copy constructing or move constructing as appropriate);
 calls
-\tcode{c.insert(@\removedCCC{c.}@end(@\addedCC{c}@), first, last)};
+\tcode{c.insert(\removedCCC{c.}end(\addedCC{c}), first, last)};
 and finally calls
-\tcode{make_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp)}.
+\tcode{make_heap(\removedCCC{c.}begin(\addedCC{c}), \removedCCC{c.}end(\addedCC{c}), comp)}.
 \end{itemdescr}
 
 \rSec4[priqueue.members]{\tcode{priority_queue}\ members}
@@ -3769,7 +3814,7 @@ template <class T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@
 
 \begin{itemdescr}
 \pnum
-\effects \tcode{@\changedCCC{x.swap(y)}{swap(x, y)}@}.
+\effects \tcode{x.swap(y)}.
 \end{itemdescr}
 
 \rSec3[stack]{Class template \tcode{stack}}
@@ -3963,7 +4008,7 @@ template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable
 
 \begin{itemdescr}
 \pnum
-\effects \tcode{@\changedCCC{x.swap(y)}{swap(x, y)}@}.
+\effects \tcode{x.swap(y)}.
 \end{itemdescr}
 
 
@@ -4314,7 +4359,7 @@ if
 \footnote{
 \tcode{reserve()}\
 uses
-\tcode{Alloc@\removedConcepts{ator}@::allocate()}\
+\tcode{Alloc\removedConcepts{ator}::allocate()}\
 which may throw an appropriate exception.
 }
 
@@ -5835,7 +5880,7 @@ and inserts elements from the range
 \range{\farg{first}}{\farg{last}}.
 
 \pnum
-@\removedConcepts{\mbox{\requires} If the iterator's dereference operator returns an lvalue or a
+\removedConcepts{\mbox{\requires} If the iterator's dereference operator returns an lvalue or a
 non-const rvalue, then \mbox{\tcode{Key}} shall be
 \mbox{\tcode{CopyConstructible}}.}
 

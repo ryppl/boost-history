@@ -41,25 +41,23 @@ DVIPS		= dvips
 
 .tex.pdf:
 	@$(PDFLATEX) $*
-
-
-#	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
-#	then $(PDFLATEX) $* ; else :; fi
-#	@ if ( grep 'Writing index file' $*.log > /dev/null ); \
-#	then makeindex $* ; $(PDFLATEX) $* ; fi
-#	@-if ( grep 'LaTeX Warning: Citation' $*.log > /dev/null ); then \
-#	  bibtex $* ; \
-#	  $(PDFLATEX) $* ; \
-#	fi
-#	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
-#	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
-#	then $(PDFLATEX) $* ; else :; fi
-#	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
-#	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
-#	then $(PDFLATEX) $* ; else :; fi
-#	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
-#	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
-#	then $(PDFLATEX) $* ; else :; fi
+	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
+	then $(PDFLATEX) $* ; else :; fi
+	@ if ( grep 'Writing index file' $*.log > /dev/null ); \
+	then makeindex $* ; $(PDFLATEX) $* ; fi
+	@-if ( grep 'LaTeX Warning: Citation' $*.log > /dev/null ); then \
+	  bibtex $* ; \
+	  $(PDFLATEX) $* ; \
+	fi
+	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
+	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
+	then $(PDFLATEX) $* ; else :; fi
+	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
+	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
+	then $(PDFLATEX) $* ; else :; fi
+	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null || \
+	      grep 'LaTeX Warning: Citation' $*.log > /dev/null); \
+	then $(PDFLATEX) $* ; else :; fi
 
 
 #
