@@ -90,7 +90,7 @@ Andrew Lumsdaine, Indiana University
   \tcode{includes}, \tcode{set_union}, \tcode{set_intersection},
   \tcode{set_difference}, and \tcode{set_symmetric_difference}, to
   match C++03 requirements.
-\item Introduce the use of the \tcode{MovableIterator} concept, for
+\item Introduce the use of the \tcode{ShuffleIterator} concept, for
   algorithms that require the ability to move elements between the
   sequence and a variable of the iterator \tcode{value_type} (e.g.,
   \tcode{sort}).
@@ -450,43 +450,43 @@ namespace std {
           @\addedCC{\&\& CopyConstructible<Pred>}@
     Iter partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
   template<BidirectionalIterator Iter, Predicate<auto@\addedCC{,}@ Iter::@\changedCCC{reference}{value_type}@> Pred>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Pred>}@
     Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   @\textcolor{black}{// \ref{alg.sorting}, sorting and related operations:}@
   @\textcolor{black}{// \ref{alg.sort}, sorting:}@
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           && LessThanComparable<Iter::value_type> 
     void sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
             @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void sort(Iter @\farg{first}@, Iter @\farg{last}@,
               Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           && LessThanComparable<Iter::value_type> 
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                      Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           && LessThanComparable<Iter::value_type>
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
                       Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void partial_sort(Iter @\farg{first}@,
                       Iter @\farg{middle}@,
@@ -528,7 +528,7 @@ namespace std {
                          Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           && LessThanComparable<Iter::value_type>
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@);
@@ -536,7 +536,7 @@ namespace std {
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
     requires @\removedCCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
              @\removedCCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
-             @\addedCC{MovableIterator<Iter>}@
+             @\addedCC{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                      Iter @\farg{last}@,  Compare @\farg{comp}@);
@@ -611,14 +611,14 @@ namespace std {
                   OutIter @\farg{result}@, Compare @\farg{comp}@);
 
   template<BidirectionalIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ 
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ 
           && LessThanComparable<Iter::value_type>
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
                        Iter @\farg{last}@);
   template<BidirectionalIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void inplace_merge(Iter @\farg{first}@,
                        Iter @\farg{middle}@,
@@ -754,45 +754,45 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.heap.operations}, heap operations:}@
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ 
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ 
           && LessThanComparable<Iter::value_type>
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           && LessThanComparable<Iter::value_type>
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                   Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           && LessThanComparable<Iter::value_type>
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
 
   template<RandomAccessIterator Iter>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ 
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ 
           && LessThanComparable<Iter::value_type>
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
   template<RandomAccessIterator Iter, 
            @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-    requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+    requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
           @\addedCC{\&\& CopyConstructible<Compare>}@
     void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
@@ -2556,7 +2556,7 @@ applications of the predicate are done.
 \index{stable_partition@\tcode{stable_partition}}%
 \color{addclr}\begin{itemdecl}
 template<BidirectionalIterator Iter, Predicate<auto@\addedCC{,}@ Iter::@\changedCCC{reference}{value_type}@> Pred>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Pred>}@
   Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
@@ -2613,13 +2613,13 @@ applications of the predicate.
 \index{sort@\tcode{sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         && LessThanComparable<Iter::value_type> 
   void sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
           @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void sort(Iter @\farg{first}@, Iter @\farg{last}@,
             Compare @\farg{comp}@);
@@ -2658,13 +2658,13 @@ If the worst case behavior is important
 \index{stable_sort@\tcode{stable_sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ 
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ 
         && LessThanComparable<Iter::value_type> 
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
                    Compare @\farg{comp}@);
@@ -2702,14 +2702,14 @@ Stable.
 \index{partial_sort@\tcode{partial_sort}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         && LessThanComparable<Iter::value_type>
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
                     Iter @\farg{last}@);
 template<RandomAccessIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void partial_sort(Iter @\farg{first}@,
                     Iter @\farg{middle}@,
@@ -2863,7 +2863,7 @@ range \mbox{\range{first}{i}} is sorted.}
 \index{nth_element@\tcode{nth_element}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         && LessThanComparable<Iter::value_type>
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@);
@@ -2872,7 +2872,7 @@ template<@\changedCCC{SwappableIterator<Iter>}{RandomAccessIterator Iter}@,
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
   requires @\removedCCC{SameType<Iter::value_type\&, Iter::reference> \&\& Swappable<Iter::value_type> \&\&}@
            @\removedCCC{MoveConstructible<Iter::value_type> \&\& MoveAssignable<Iter::value_type>}@
-           @\addedCC{MovableIterator<Iter>}@
+           @\addedCC{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
                    Iter @\farg{last}@,  Compare @\farg{comp}@);
@@ -3228,7 +3228,7 @@ Stable.
 \index{inplace_merge@\tcode{inplace_merge}}%
 \color{addclr}\begin{itemdecl}
 template<BidirectionalIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ 
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ 
         && LessThanComparable<Iter::value_type>
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
@@ -3236,7 +3236,7 @@ template<BidirectionalIterator Iter>
 
 template<BidirectionalIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void inplace_merge(Iter @\farg{first}@,
                      Iter @\farg{middle}@,
@@ -3653,13 +3653,13 @@ turns a heap into a sorted sequence.
 \index{push_heap@\tcode{push_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ 
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ 
         && LessThanComparable<Iter::value_type>
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
@@ -3696,12 +3696,12 @@ comparisons.
 \index{pop_heap@\tcode{pop_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ && LessThanComparable<Iter::value_type>
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ && LessThanComparable<Iter::value_type>
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                 Compare @\farg{comp}@);
@@ -3742,13 +3742,13 @@ comparisons.
 \index{make_heap@\tcode{make_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ &&
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ &&
            LessThanComparable<Iter::value_type>
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);
@@ -3779,12 +3779,12 @@ comparisons.
 \index{sort_heap@\tcode{sort_heap}}%
 \color{addclr}\begin{itemdecl}
 template<RandomAccessIterator Iter>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@ && LessThanComparable<Iter::value_type>
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@ && LessThanComparable<Iter::value_type>
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@);
 
 template<RandomAccessIterator Iter, 
          @\changedCCC{Predicate}{StrictWeakOrder}@<auto, Iter::value_type@\removedCCC{, Iter::value_type}@> Compare>
-  requires @\changedCCC{SwappableIterator<Iter>}{MovableIterator<Iter>}@
+  requires @\changedCCC{SwappableIterator<Iter>}{ShuffleIterator<Iter>}@
         @\addedCC{\&\& CopyConstructible<Compare>}@
   void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
                  Compare @\farg{comp}@);

@@ -1260,7 +1260,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
-             @\addedConcepts{\&\& }\changedCCC{Swappable}{Movable}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
+             @\addedConcepts{\&\& }\changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
              @\addedCC{Swappable<Cont>}@
   class priority_queue;
   template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@@\addedConcepts{, Swappable Compare}@>
@@ -3517,7 +3517,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
        @\changedConcepts{class}{Predicate<auto, T, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
-           @\addedConcepts{\&\&} \changedCCC{Swappable}{Movable}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@@\addedCC{ \&\& HasSize<Cont> \&\& Swappable<Cont>}@
+           @\addedConcepts{\&\&} \changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@@\addedCC{ \&\& HasSize<Cont> \&\& Swappable<Cont>}@
   class priority_queue { 
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;

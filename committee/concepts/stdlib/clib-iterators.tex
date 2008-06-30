@@ -125,7 +125,7 @@ actually stored in the container the iterator references) and the
 reference type of the iterator (which may be an lvalue reference,
 rvalue reference, or a proxy class). The new iterator taxonomy
 captures these forms of mutability through two iterator concepts:
-\tcode{OutputIterator} and \tcode{MovableIterator}.
+\tcode{OutputIterator} and \tcode{ShuffleIterator}.
 
 The \tcode{OutputIterator} concept (\ref{output.iterators}) is a
 faithful representation of a C++98/03 output iterator. Output
@@ -222,10 +222,10 @@ concept, which provides only increment and dereference---the basics of
 moving through a sequence of values---but does not provide any read or
 write capabilities.
 
-The \tcode{MovableIterator} concept (\ref{movable.iterators}) is a new
+The \tcode{ShuffleIterator} concept (\ref{shuffle.iterators}) is a new
 kind of iterator that captures the requirements needed to shuffle
 values within a sequence using moves and
-swaps. \tcode{MovableIterator} allows one to
+swaps. \tcode{ShuffleIterator} allows one to
 move-construct or move-assign from an element in the sequence into a
 variable of the iterator's value type. This permits, for example, the
 pivot element in a quicksort to be extracted from the sequence and
@@ -235,7 +235,7 @@ from the temporary into the sorted sequence at the right time). This
 concept is the proxy-aware conceptualization of the
 Swappable+MoveConstructible+MoveAssignable set of concepts from the
 reflector discussion starting with c++std-lib-21212. The
-\tcode{MovableIterator} concept is used sparingly, in those cases
+\tcode{ShuffleIterator} concept is used sparingly, in those cases
 where the sequence cannot be efficiently reordered within simple swap
 operations. 
 
@@ -262,7 +262,7 @@ ambiguity, for example, was initially detected by ConceptGCC.
   no longer needed as a base for the mutable iterator concepts.
 \item Removed the \tcode{SwappableIterator} concept, which is no
   longer used in algorithms. Instead, we use \tcode{HasSwap} or the
-  new \tcode{MovableIterator} concept.
+  new \tcode{ShuffleIterator} concept.
 \end{itemize}
 
 
@@ -391,8 +391,8 @@ namespace std {
   @\removedCCC{// \mbox{\ref{swappable.iterators}}, swappable iterators:}@
   @\removedCCC{concept SwappableIterator<typename X> \mbox{\textit{see below}};}@
 
-  @\addedCC{// \mbox{\ref{movable.iterators}}, movable iterators:}@
-  @\addedCC{auto concept MovableIterator<typename X> \mbox{\textit{see below}};}@
+  @\addedCC{// \mbox{\ref{shuffle.iterators}}, shuffle iterators:}@
+  @\addedCC{auto concept ShuffleIterator<typename X> \mbox{\textit{see below}};}@
 }
 \end{codeblock}
 \color{black}
@@ -453,7 +453,7 @@ defined on them:
 \techterm{forward iterators}, 
 \techterm{bidirectional iterators}, 
 \techterm{random access iterators}, and
-\addedCC{movable iterators},
+\addedCC{shuffle iterators},
 as shown in Table~\ref{tab:iterators.relations}.
 
 \begin{floattable}{Relations among iterator \changedConcepts{categories}{concepts}}{tab:iterators.relations}
@@ -462,7 +462,7 @@ as shown in Table~\ref{tab:iterators.relations}.
 \textbf{Random Access}                  &       $\rightarrow$ \textbf{Bidirectional}    &
 $\rightarrow$ \textbf{Forward}  &       $\rightarrow$ \textbf{Input}  & \addedCC{\mbox{$\rightarrow$} \mbox{\textbf{Iterator}}}                   \\ 
  &  &  & \addedCC{\mbox{$\uparrow$}} & \addedCC{\mbox{$\uparrow$}} \\
-   &        &     & \addedCC{\mbox{\textbf{Movable}}} &   \addedCC{\mbox{$\rightarrow$}} \textbf{Output}                   \\
+   &        &     & \addedCC{\mbox{\textbf{Shuffle}}} &   \addedCC{\mbox{$\rightarrow$}} \textbf{Output}                   \\
 \end{floattable}
 
 \pnum
@@ -1182,15 +1182,15 @@ an implementation may define}
 \textcolor{addclr}{\exitnote}
 \color{black}
 
-\rSec2[movable.iterators]{Movable iterators}
+\rSec2[shuffle.iterators]{Shuffle iterators}
 \pnum
 \addedCC{A class or built-in type \mbox{\tcode{X}} satisfies the
-  requirements of a movable iterator if it meets the syntactic and
-  semantic requirements of the \mbox{\tcode{MovableIterator}} concept.}
+  requirements of a shuffle iterator if it meets the syntactic and
+  semantic requirements of the \mbox{\tcode{ShuffleIterator}} concept.}
 
 \color{ccadd}
 \begin{codeblock}
-auto concept MovableIterator<typename X> {
+auto concept ShuffleIterator<typename X> {
   requires InputIterator<X>
         && NothrowDestructible<InputIterator<X>::value_type>
         && HasStdMove<InputIterator<X>::value_type>
@@ -1207,16 +1207,16 @@ auto concept MovableIterator<typename X> {
 \color{black}
 
 \pnum
-\addedCC{A movable iterator is a form of input and output iterator
+\addedCC{A shuffle iterator is a form of input and output iterator
   that allows values to be moved into or out of a sequence, along with
-  permitting efficient swapping of values within the sequence. Movable
+  permitting efficient swapping of values within the sequence. Shuffle
   iterators are typically used in algorithms that need to rearrange
   the elements within a sequence in a way that cannot be performed
   efficiently with swaps alone.}
 
 \pnum
 \addedCC{\enternote\ Any iterator that meets the additional requirements
-  specified by \mbox{\tcode{MovableIterator}} is considered a movable
+  specified by \mbox{\tcode{ShuffleIterator}} is considered a shuffle
   iterator. \exitnote}
 
 \appendix
