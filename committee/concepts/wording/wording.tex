@@ -611,14 +611,30 @@ or a class, enumeration, or dependent type, the program is ill-formed.
 \addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a name prefixed by
 a \mbox{\techterm{nested-name-specifier}} that nominates a template type
 parameter \mbox{\tcode{T}} is looked up}
-\addedCC{(\mbox{\ref{temp.req.sat}})} \addedConcepts{in}
-\changedCC{each concept named by a}{the concept map
-archetype corresponding to each}
-\addedConcepts{concept requirement (\mbox{\ref{temp.req}}) in the template requirements
+\removedCCC{(\mbox{\ref{temp.req.sat}}) in
+the concept map archetype corresponding to each
+concept requirement (\mbox{\ref{temp.req}}) in the template requirements
 whose template argument list contains \mbox{\tcode{T}}. That name
 shall refer to one or more associated types (names of associated
 functions are ignored) that are all equivalent (\mbox{\ref{temp.type}}).
-\mbox{\enterexample}}
+}
+\addedCC{as follows:
+for each template requirement 
+    \mbox{\tcode{C<$args$>}}
+whose template argument list
+references T, the name is looked up as if the
+\mbox{\techterm{nested-name-specifier}} referenced
+\mbox{\tcode{C<$args$>}} instead of T (\mbox{\ref{concept.qual}}), except
+that only the names of associated types are visible during this lookup.
+If an associated type of at least one requirement is found, then each name
+found shall refer to the same type.  Otherwise, if the reference to the
+name occurs within a constrained context, the name is looked up within the
+scope of the archetype associated with T (and no special restriction on
+name visibility is in effect for this lookup). \mbox{\enternote}\
+Otherwise, the name is a member of an unknown specialization
+\mbox{\ref{temp.dep.type}} \mbox{\exitnote}\ 
+}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> {
   typename assoc_type;
@@ -630,11 +646,11 @@ template<typename T, typename U> requires C<T> && C<U>
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
-\addedConcepts{If qualified name lookup for associated types does not
+\removedCCC{If qualified name lookup for associated types does not
 find any associated type names, qualified name lookup
 (\mbox{\ref{basic.lookup.qual}}) can still find the name within the
 archetype (\mbox{\ref{temp.archetype}}) of \mbox{\tcode{T}}}
-\addedConcepts{when the name lookup is performed in a constrained context
+\removedCCC{when the name lookup is performed in a constrained context
   (\mbox{\ref{temp.constrained}}).}
 
 \color{black}
@@ -650,19 +666,53 @@ archetype (\mbox{\ref{temp.archetype}}) of \mbox{\tcode{T}}}
 \mbox{\techterm{nested-name-specifier}}\ 
 of a
 \mbox{\techterm{qualified-id}}\ 
-nominates a concept map (not a concept),
+nominates a concept
+}\changedCC{map (not a concept)}{instance}\addedConcepts{,
 the name specified after the
 \mbox{\techterm{nested-name-specifier}}\ 
-is looked up in the scope of the concept map (\mbox{\ref{basic.scope.concept}}) or
-any of the concept maps for concept instances
+is looked up }
+\removedCCC{in the scope of the concept map
+(\mbox{\ref{basic.scope.concept}}) or any of the concept maps for concept
+instances
 its concept instance refines
 (\mbox{\ref{concept.member.lookup}}).}
-\addedConcepts{Concept map lookup (\mbox{\ref{temp.req.sat}}) determines
-  which concept map the \mbox{\techterm{nested-name-specifier}} refers to.}
-\addedConcepts{The name shall represent one or
+\removedCCC{Concept map lookup (\mbox{\ref{temp.req.sat}}) determines
+  which concept map the \mbox{\techterm{nested-name-specifier}} refers
+  to.}
+\removedCCC{The name shall represent one or
   more members of that 
-  concept map or the concept maps corresponding to the concept refinements.
-  \mbox{\enternote} Outside of a constrained context, this means
+  concept map or the concept maps corresponding to the concept refinements.}
+\addedCC{ as follows:}
+\begin{itemize}
+\additemCC{
+If the template argument list of the concept instance references a
+template parameter or associated type of a requirement, and if the name,
+when looked up within the scope of the concept of the concept instance,
+unambiguously refers to an associated type or class template, the result
+of name lookup is the associated type or class template as a member of the
+requirement.
+    \mbox{\enternote}\ this implies that, given two distinct type parameters
+    T and U, C<T>::type and C<U>::type are distinct types (though they may
+    refer to the same archetype).  Also, the mere lookup of 'type' within C<T>
+    and C<U> does not require the creation of a concept map archetype for
+    C<T> or C<U>.
+    \mbox{\exitnote}\ }
+\additemCC{
+Otherwise, concept map lookup (\mbox{\ref{temp.req.sat}}) first determines
+which concept map is referred to by the nested-name-specifier.  Then
+concept member lookup (\mbox{\ref{concept.member.lookup}}) is used to find
+the name within the scope of the concept map.  The name shall represent
+one or more members of that concept map or the concept maps corresponding
+to the concept refinements.
+    \mbox{\enternote}\ 
+    this lookup requires a concept map definition, so if the template
+    argument list of the concept instance references a template parameter
+    or associated type of a requirement, a concept map archetype
+    definition is required.
+    \mbox{\exitnote}\ 
+}
+\end{itemize}
+\addedConcepts{ \mbox{\enternote} Outside of a constrained context, this means
       that one or more
       requirement members (\mbox{\ref{concept.map}}) will be found, and since
       those names are synonyms for sets of other names, the result of
@@ -2699,7 +2749,7 @@ the last argument in the template argument list.
 \pnum \addedConcepts{The template requirements 
   of a primary class template are implied
   (\mbox{\ref{temp.req.impl}}) in its class template partial
-  specializations.  \mbox{\enterexample} } \color{addclr}
+  specializations}\addedCC{ that are constrained templates}\addedConcepts{.  \mbox{\enterexample} } \color{addclr}
 \begin{codeblock}
 concept LessThanComparable<typename T> { /* ... */ }
 concept Hashable<typename T> { /* ... */ }
@@ -3107,7 +3157,9 @@ void g(dynarray<int>& x1, dynarray<bool>& x2) {
 \pnum
 \addedConcepts{A concept map template shall be declared before the first use of a
 concept map that would make use of the concept map template
-as the result of an implicit or explicit instantiation
+as the result of an}
+\removedCCC{ implicit or explicit}
+\addedConcepts{ instantiation
 in every translation unit in which such a use occurs; no diagnostic is
 required.}
 
@@ -3265,7 +3317,10 @@ concept instance, the concept map is implicitly instantiated when the concept
 map is referenced in a context that requires the concept map
 definition, either to satisfy a concept requirement
 (\mbox{\ref{temp.req}}) 
-or when name lookup finds a concept map member.}
+or when }\changedCCC{name lookup finds a concept map member.}{the
+\mbox{\techterm{nested-name-specifier}} of a
+\mbox{\techterm{qualified-id}} references a concept instance
+(\mbox{\ref{concept.qual}}).}
 
 \rSec2[temp.expl.spec]{Explicit specialization}
 
@@ -3294,6 +3349,13 @@ template<> void f<int>(int); // ill-formed: no concept map satisfies the require
 \setcounter{subsection}{1}
 \rSec2[temp.deduct]{Template argument deduction}
 \setcounter{Paras}{1}
+\pnum
+\addedCC{
+If the reference to the template occurs within a constrained context
+(\mbox{\ref{temp.constrained}}) and the template is an unconstrained
+template, type deduction fails.
+}
+
 \pnum
 When an explicit template argument list is specified, the template
 arguments must be compatible with the template parameter list and must
@@ -3460,10 +3522,28 @@ int i0 = f<int>(0); // okay: calls \#2
 \end{itemize}
 
 \item
-\addedConcepts{If the specified template arguments do not satisfy the
+\removedCCC{If the specified template arguments do not satisfy the
   requirements of the template (\mbox{\ref{temp.req}}), type deduction
   fails.}
 \end{itemize}
+
+\setcounter{Paras}{5}
+\pnum
+When
+\changedCCC{
+    all template arguments have}{
+        each template argument has}
+ been \addedCC{explicitly specified,} deduced or obtained from default
+template arguments,
+\changedCCC{all uses of template parameters in non-deduced
+contexts are}{
+    each use of a template parameter in the
+    function type and in each template requirement is
+}replaced with the corresponding \removedCCC{deduced or default}
+argument value\removedCCC{s}. If the substitution results in an invalid
+type, as described above, type deduction fails.
+\addedCC{If a substituted requirement cannot be satisfied
+(\mbox{\ref{temp.req.sat}}), type deduction fails.}
 
 \noindent\editorial{Add the following new sections to 14 [temp]:}
 
@@ -3973,10 +4053,13 @@ scope of this International Standard.
 \pnum
 \addedConcepts{Concept maps describe how a set of template arguments satisfy the
 requirements stated in the body of a concept definition
-(\mbox{\ref{concept.def}}). Whenever a constrained template specialization
+(\mbox{\ref{concept.def}}). }
+\changedCCC{Whenever a constrained template specialization
 (\mbox{\ref{temp.constrained}}) is named, there shall be a concept map that 
 satisfies each concept requirement in the
-template requirements (\mbox{\ref{temp.req.sat}}).}
+template requirements (\mbox{\ref{temp.req.sat}}).}{For template argument
+deduction (\mbox{\ref{temp.deduct.type}}) against a constrained template to succeed,
+each of the template's requirements shall be satisfied (\mbox{\ref{temp.req.set}}).}
 %
 \addedConcepts{The concept map is inserted into the scope in
 which the concept map or concept map template (\mbox{\ref{temp.concept.map}})
