@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="30" status="New">
+<issue num="30" status="WP">
 <title>Should Predicates be on <tt>Iter::value_type</tt> or <tt>Iter::reference</tt>?</title>
 <section><sref ref="[algorithms]"/></section>
 <submitter>Christopher Jefferson</submitter>
@@ -14,7 +14,8 @@
 </discussion>
 
 <resolution>
-  <p>
-  </p>
+  <p>Predicates operator on the value types, because predicates aren't
+  supposed to change the actual value. This change has been made
+  throughout the concepts proposals.</p>
 </resolution>
 </issue>

@@ -3,7 +3,7 @@
             active_docno="Dxxxx=xx-xxxx"
             defect_docno="Dxxxx=xx-xxxx"
             closed_docno="Dxxxx=xx-xxxx"
-            date="2007-03-03"
+            date="2007-06-30"
 >
 
 <intros>
@@ -105,7 +105,7 @@
 <revision_history>
 
 <revision tag="C4">
-Companion to the concepts proposals in the post-Antipolis mailing. (XX June 2008)
+Companion to the concepts proposals in the post-Antipolis mailing. (30 June 2008)
 </revision>
 
 <revision tag="C3">

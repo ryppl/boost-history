@@ -3,8 +3,8 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="36" status="Open">
-<title><code>HasCopyAssign</code> should be named <code>HasAssignment</code></title>
+<issue num="36" status="WP">
+<title><code>HasCopyAssign</code> should be named <code>HasAssign</code></title>
 <section><sref ref="[concept.operator]"/></section>
 <submitter>Howard Hinnant</submitter>
 <date>29 May 2008</date>

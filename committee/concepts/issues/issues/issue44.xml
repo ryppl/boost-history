@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="44" status="New">
+<issue num="44" status="WP">
   <title><code>unique_copy</code> requirements don't account for move semantics</title>
 <section><sref ref="[alg.unique]"/></section>
 <submitter>LWG</submitter>
@@ -16,6 +16,8 @@
 </discussion>
 
 <resolution>
-  <p><i>Note</i>: Howard Hinnant to provide improved requirements.</p>
+  <p><code>unique_copy</code> requirements have been updated to cope
+  with move semantics.</p>
 </resolution>
+
 </issue>

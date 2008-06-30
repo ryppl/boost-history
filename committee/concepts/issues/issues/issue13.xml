@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="13" status="New">
+<issue num="13" status="WP">
 <title>Naming consistency in [concept.operator]</title>
 <section><sref ref="[concept.operator]"/></section>
 <submitter>LWG</submitter>

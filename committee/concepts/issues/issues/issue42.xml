@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="42" status="New">
+<issue num="42" status="NAD">
 <title><code>HasCopyAssign</code> should be named <code>HasCopyAssignment</code></title>
 <section><sref ref="[concept.operator]"/></section>
 <submitter>LWG</submitter>
@@ -16,4 +16,11 @@
   should be named <code>HasMoveAssignment</code>.
   </p>
 </discussion>
+
+<resolution>
+  <p>The LWG decided to keep the shorter name, particularly because
+  names like <code>HasModulusAssignment</code> were getting far too
+  long.</p>
+</resolution>
+
 </issue>

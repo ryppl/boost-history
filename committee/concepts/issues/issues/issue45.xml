@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="45" status="New">
+<issue num="45" status="WP">
   <title><code>move</code> and <code>move_backward</code> rely too heavily on the iterator's <code>value_type</code></title>
 <section><sref ref="[alg.move]"/></section>
 <submitter>LWG</submitter>
@@ -17,6 +17,7 @@
 </discussion>
 
 <resolution>
-  <p><i>Note</i>: Howard Hinnant will provide improved concept requirements.</p>
+  <p>The latest proposal contains requirements that properly support
+  proxy iterators.</p>
 </resolution>
 </issue>

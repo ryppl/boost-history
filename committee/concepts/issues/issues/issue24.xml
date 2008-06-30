@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="24" status="New">
+<issue num="24" status="NAD">
 <title>Convertible and CopyConstructible have different argument orders</title>
 <section><sref ref="[concept.convertible]"/></section>
 <submitter>LWG</submitter>
@@ -15,5 +15,13 @@
   the name and/or argument order of <tt>Convertible</tt> to make it
     clearer which argument goes where.</p>
 </discussion>
+
+<resolution>
+  <p>The argument order of <code>Convertible</code> matches that of
+  the <code>is_convertible</code> type trait, and also fits with the
+  common rewrite of a prefix operator as an infix operator,
+  e.g., <code>Convertible&lt;T, U&gt;</code> means <code>T</code>
+    convertible to <code>U</code>. LWG decided not to make this change.</p>
+</resolution>
 
 </issue>

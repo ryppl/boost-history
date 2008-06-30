@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="29" status="New">
+<issue num="29" status="WP">
 <title>Concepts on mutating algorithms are confusing</title>
 <section><sref ref="[algorithms]"/></section>
 <submitter>Christopher Jefferson</submitter>
@@ -33,5 +33,9 @@
   </pre>
   
   <p> with <tt>SwappableIterator&lt;RAIter&gt;</tt> in both copies if <tt>partial_sort_copy</tt></p>
+
+  <p>Updated: the post-Sophia mailing contains changes to address this
+  issue using <code>HasSwap</code>, <code>OutputIterator</code>, and
+  the new <code>MovableIterator</code>.</p>
 </resolution>
 </issue>

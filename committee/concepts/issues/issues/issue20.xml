@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="20" status="New">
+<issue num="20" status="NAD">
 <title>InputIterator default constructibility</title>
 <section><sref ref="[iterator.concepts]"/></section>
 <submitter>LWG</submitter>
@@ -29,5 +29,11 @@
   regularity, and on the occasions that we want "regular and default
   constructible" we should say so explicitly.</p>
 </discussion>
+
+<resolution>
+  <p>Adding the default-constructibility requirements breaks some
+  existing input iterators and does not simplify much algorithm
+  code.</p>
+</resolution>
 
 </issue>

@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="35" status="Open">
+<issue num="35" status="WP">
   <title><code>Swappable</code> should be usable with proxy iterator references</title>
 <section><sref ref="[concept.copymove]"/></section>
 <submitter>LWG</submitter>

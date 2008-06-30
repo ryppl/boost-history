@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="43" status="New">
+<issue num="43" status="WP">
   <title>Using <code>Swappable</code> for all swapping</title>
 <section><sref ref="[algorithms]"/></section>
 <submitter>LWG</submitter>
@@ -21,10 +21,6 @@
 </discussion>
 
 <resolution>
-  <p><code>iter_swap</code> should have a concept requirement <code>HasSwap&lt;Iter1::reference, Iter2::reference&gt;</code></p>
-
-  <p><code>reverse</code> should have a concept requirement <code>HasSwap&lt;Iter::reference&gt;</code></p>
-
-  <p><i>Note</i>: proposed resolution in progress...</p>
+  <p><code>HasSwap</code> is now used throughout.</p>
 </resolution>
 </issue>

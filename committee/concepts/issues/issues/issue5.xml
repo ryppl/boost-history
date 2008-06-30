@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="5" status="Open">
+<issue num="5" status="WP">
 <title>Inconsistent naming between concepts and type traits</title>
 <section><sref ref="[utility.concepts]"/></section>
 <submitter>LWG</submitter>

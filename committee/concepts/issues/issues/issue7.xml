@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="7" status="Open">
+<issue num="7" status="NAD">
   <title>Meaning of "equivalent" in <tt>MoveAssignable</tt></title>
   <section><sref ref="[concept.copymove]"/></section>
   <submitter>LWG</submitter>

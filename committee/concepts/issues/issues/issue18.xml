@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="18" status="New">
+<issue num="18" status="WP">
 <title>Consistent naming for concepts headers</title>
 <section><sref ref="[iterator.concepts]"/></section>
 <submitter>LWG</submitter>
@@ -20,5 +20,11 @@
   established so that random number concepts, iterator concepts, and
   other concepts all are coherent.</p>
 </discussion>
+
+<resolution>
+  <p>Use the header <code>&lt;foo_concepts&gt;</code> for the concepts
+  relating to a particular part of the library (iterators, containers,
+  etc).</p>
+</resolution>
 
 </issue>

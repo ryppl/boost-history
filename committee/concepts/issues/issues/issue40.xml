@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="40" status="New">
+<issue num="40" status="WP">
 <title>HasXXX concepts should not default second parameter when there is an XXXable concept</title>
 <section><sref ref="[utility.concepts]"/></section>
 <submitter>LWG</submitter>

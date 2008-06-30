@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="39" status="New">
+<issue num="39" status="WP">
 <title>Some uses of the MutableXXXIterator concepts are unnecessary</title>
 <section><sref ref="[algorithms]"/></section>
 <submitter>LWG</submitter>
@@ -31,5 +31,9 @@ template&lt;MutableForwardIterator Iter, class T&gt;
 
   <p><code>swap_ranges</code> has the same issue.</p>
 </discussion>
+
+<resolution>
+  <p>All of the MutableXXXIterator concepts have now been removed.</p>
+</resolution>
 
 </issue>

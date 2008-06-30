@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="23" status="Open">
+<issue num="23" status="WP">
 <title>Output iterators without value types</title>
 <section><sref ref="[output.iterators]"/></section>
 <submitter>LWG</submitter>
@@ -40,5 +40,10 @@
   compatibility significantly, and is therefore probably not
   feasible.</p>
 </discussion>
+
+<resolution>
+  <p><code>BasicOutputIterator</code> has been removed with the latest
+  refactoring of the iterator taxonomy.</p>
+</resolution>
 
 </issue>

@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="11" status="New">
+<issue num="11" status="NAD">
 <title>Semiregular concept is strange</title>
 <section><sref ref="[concept.regular]"/></section>
 <submitter>LWG</submitter>
