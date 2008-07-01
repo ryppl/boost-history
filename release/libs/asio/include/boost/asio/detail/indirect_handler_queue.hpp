@@ -21,6 +21,11 @@
 #include <boost/asio/detail/handler_invoke_helpers.hpp>
 #include <boost/asio/detail/noncopyable.hpp>
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1310)
+extern "C" void _ReadWriteBarrier();
+# pragma intrinsic(_ReadWriteBarrier)
+#endif // defined(_MSC_VER) && (_MSC_VER >= 1310)
+
 namespace boost {
 namespace asio {
 namespace detail {
@@ -195,6 +200,7 @@ public:
     next_version_ += 2;
     n->handler_ = h;
     n->next_ = 0;
+    memory_barrier();
     back_->next_ = n;
     back_ = n;
   }
@@ -240,11 +246,33 @@ private:
       this_type* h(static_cast<this_type*>(base));
       typedef handler_alloc_traits<Handler, this_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(h->handler_, h);
+
+      // A sub-object of the handler may be the true owner of the memory
+      // associated with the handler. Consequently, a local copy of the handler
+      // is required to ensure that any owning sub-object remains valid until
+      // after we have deallocated the memory here.
+      Handler handler(h->handler_);
+      (void)handler;
+
+      // Free the memory associated with the handler.
+      ptr.reset();
     }
 
   private:
     Handler handler_;
   };
+
+  // Helper function to create a memory barrier.
+  static void memory_barrier()
+  {
+#if defined(_GLIBCXX_WRITE_MEM_BARRIER)
+    _GLIBCXX_WRITE_MEM_BARRIER;
+#elif defined(_MSC_VER) && (_MSC_VER >= 1310)
+    _ReadWriteBarrier();
+#else
+# error memory barrier required
+#endif
+  }
 
   // The front of the queue.
   node* front_;
