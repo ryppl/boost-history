@@ -21,7 +21,7 @@
 #endif
 
 #ifndef BOOST_MEMORY_STL_QUEUE_HPP
-#include "stl/queue.hpp" // NS_BOOST_MEMORY::priority_queue
+#include "stl/queue.hpp" // NS_BOOST_MEMORY::ext_priority_queue
 #endif
 
 #if !defined(_VECTOR_) && !defined(_VECTOR)
@@ -167,7 +167,7 @@ private:
 		}
 	};
 	typedef std::vector<FreeMemHeader*> Container;
-	typedef NS_BOOST_MEMORY::priority_queue<FreeMemHeader*, Container, Pred> PriorityQ;
+	typedef NS_BOOST_MEMORY::ext_priority_queue<FreeMemHeader*, Container, Pred> PriorityQ;
 	
 	char* m_begin;
 	char* m_end;

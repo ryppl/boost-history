@@ -22,7 +22,7 @@ Product		Dll bin/linuxd/32/boost-memory
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		LDebug
 LibDir		
-Libraries	pthread	
+Libraries	pthread
 
 [Source]
 src/*.cpp

@@ -37,7 +37,7 @@ NS_BOOST_MEMORY_BEGIN
 template <class Type, 
           class Sequence = std::vector<Type>,
           class Pred = std::less<Type> >
-class priority_queue
+class ext_priority_queue
 {
 public:
   typedef typename Sequence::value_type      value_type;
@@ -52,24 +52,24 @@ protected:
   Pred m_pred;
 
 public:
-  priority_queue() {}
-  explicit priority_queue(const Pred& x) :  m_coll(), m_pred(x) {}
-  priority_queue(const Pred& x, const Sequence& s) 
+  ext_priority_queue() {}
+  explicit ext_priority_queue(const Pred& x) :  m_coll(), m_pred(x) {}
+  ext_priority_queue(const Pred& x, const Sequence& s) 
     : m_coll(s), m_pred(x) 
     { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
   template <class InputIterator>
-  priority_queue(InputIterator first, InputIterator last) 
+  ext_priority_queue(InputIterator first, InputIterator last) 
     : m_coll(first, last) { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
   template <class InputIterator>
-  priority_queue(InputIterator first, 
+  ext_priority_queue(InputIterator first, 
                  InputIterator last, const Pred& x)
     : m_coll(first, last), m_pred(x) 
     { std::make_heap(m_coll.begin(), m_coll.end(), m_pred); }
 
   template <class InputIterator>
-  priority_queue(InputIterator first, InputIterator last,
+  ext_priority_queue(InputIterator first, InputIterator last,
                  const Pred& x, const Sequence& s)
   : m_coll(s), m_pred(x)
   {
@@ -91,7 +91,7 @@ public:
   void clear() {
 	m_coll.clear();
   }
-  void swap(priority_queue& o) {
+  void swap(ext_priority_queue& o) {
 	m_coll.swap(o.m_coll);
 	std::swap(m_pred, o.m_pred);
   }
