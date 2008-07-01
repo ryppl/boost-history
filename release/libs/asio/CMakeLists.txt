@@ -1,5 +1,7 @@
 boost_library_project(
-  Lambda
+  Any
   TESTDIRS test
-  HEADERS lambda
-  )
+  HEADERS any.hpp
+)
+
+

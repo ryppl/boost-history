@@ -1,6 +1,4 @@
 boost_library_project(
-  Units
-  HEADERS units
+  Fusion
+  HEADERS fusion
   )
-
-
