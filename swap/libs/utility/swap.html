@@ -22,7 +22,7 @@
     <!-- Rationale -->
     <h2>Rationale</h2>
     <p>
-      The generic <tt>std::swap</tt> function requires that the elements to be swapped are assignable and copy constructable. It is ususally implemented using one copy constuction and two assignments. This is often both unneccessarily restrictive and unneccessarily slow. In addition, specialized swap functions are often able to provide the no-throw exception guarentee where the generic swap implementation provides only the basic guarantee.</p>
+      The generic <tt>std::swap</tt> function requires that the elements to be swapped are assignable and copy constructible. It is usually implemented using one copy construction and two assignments. This is often both unnecessarily restrictive and unnecessarily slow. In addition, specialized swap functions are often able to provide the no-throw exception guarantee where the generic swap implementation provides only the basic guarantee.</p>
     <p>
       The alternative to using argument dependent lookup in this situation is to provide a template specialization of std::swap for every type that requires a specialized swap. Although this is legal C++, no boost libraries use this method, whereas many boost libraries provide specialized swap functions in their own namespaces.
     </p>
@@ -36,7 +36,7 @@
     <p>Either:</p>
     <ul>      
       <li>T must be assignable.</li>
-      <li>T must be copy constructable.</li>
+      <li>T must be copy constructible.</li>
     </ul>
     <p>Or:</p>
     <ul>
@@ -67,14 +67,14 @@
       <li>
         <em>Niels Dekker</em> - for adding support for built-in arrays
       </li>
-      <li>        
+      <li>
         <em><a href="mailto:Joseph.Gauterin@googlemail.com">Joseph Gauterin</a></em> - for the initial idea, final implementation, tests, and documentation.
       </li>
     </ul>
 
     <!-- Copyright info -->    
     <hr/>
-    <p>Revised: 29 June 2008</p>
+    <p>Revised: 2 July 2008</p>
     <p>
       Copyright 2007 Joseph Gauterin. Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
       (See accompanying file <a href="../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.)
