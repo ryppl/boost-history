@@ -1,4 +1,4 @@
-# Copyright (c) 2007 Joseph Gauterin
+# Copyright (c) 2007, 2008 Joseph Gauterin
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
@@ -20,6 +20,7 @@ test-suite swap
     [ run specialized_in_global.cpp ../../../test/build//boost_test_exec_monitor/<link>static ]
     [ run specialized_in_other.cpp ../../../test/build//boost_test_exec_monitor/<link>static  ]
     [ run specialized_in_std.cpp ../../../test/build//boost_test_exec_monitor/<link>static    ]
+    [ run swap_arrays.cpp ../../../test/build//boost_test_exec_monitor/<link>static    ]
     ;
     
 

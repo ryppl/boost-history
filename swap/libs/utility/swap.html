@@ -26,6 +26,10 @@
     <p>
       The alternative to using argument dependent lookup in this situation is to provide a template specialization of std::swap for every type that requires a specialized swap. Although this is legal C++, no boost libraries use this method, whereas many boost libraries provide specialized swap functions in their own namespaces.
     </p>
+    <p>
+      <tt>boost::swap</tt> also supports swapping built-in arrays. Note that <tt>std::swap</tt> doesn't yet do so, but a request to add an overload of <tt>std::swap</tt> for built-in arrays has been well received by the Library Working Group of the C++ Standards Committee: <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#809">LWG issue 809. std::swap should be overloaded for array types</a>
+      <tt>boost::swap</tt> is no-throw for arrays whose element type has a no-throw swap. However, if the swap function of the element type provides the strong guarantee, then <tt>boost::swap</tt> only provides the basic guarantee, for arrays of size > 1.
+    </p>
     
     <!-- Requirements -->
     <h2>Requirements</h2>
@@ -42,6 +46,10 @@
     <ul>
       <li>A template specialization of std::swap exists for T</li>
     </ul>
+    <p>Or:</p>
+    <ul>
+      <li>T is a built-in array of swappable elements</li>
+    </ul>
 
     
     <!-- Portability -->
@@ -56,6 +64,9 @@
       <li>
         <em>Steven Wanatabe</em> - for the idea to use a barrier namespaces, enabling the function to have the name '<tt>swap</tt>' without introducing ambiguity or infinite recursion.
       </li>
+      <li>
+        <em>Niels Dekker</em> - for adding support for built-in arrays
+      </li>
       <li>        
         <em><a href="mailto:Joseph.Gauterin@googlemail.com">Joseph Gauterin</a></em> - for the initial idea, final implementation, tests, and documentation.
       </li>
@@ -63,7 +74,7 @@
 
     <!-- Copyright info -->    
     <hr/>
-    <p>Revised: 3rd October 2007</p>
+    <p>Revised: 29 June 2008</p>
     <p>
       Copyright 2007 Joseph Gauterin. Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
       (See accompanying file <a href="../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.)
