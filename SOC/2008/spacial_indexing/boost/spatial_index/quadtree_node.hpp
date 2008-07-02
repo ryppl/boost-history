@@ -341,7 +341,7 @@ public:
     std::cerr << "--------------------------------------" << std::endl;
     std::cerr << " [ ";
     for(typename std::map<Point,Value>::const_iterator it = m_.begin(); it != m_.end(); ++it) {
-      std::cerr << it->second << " ";
+//       std::cerr << it->second << " ";
     }
     std::cerr << " ] " << std::endl;;
 

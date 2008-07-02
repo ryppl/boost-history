@@ -24,9 +24,9 @@ namespace spatial_index {
     typedef std::vector< std::pair< geometry::box<Point>, Value > > leaves_map;
 
   public:
-    rtree_leaf(void) : level_(0) {}
+    rtree_leaf(void) {}
     rtree_leaf(const boost::shared_ptr< rtree_node<Point,Value> > &parent)
-      : rtree_node<Point,Value>(parent, 0), level_(0) {}
+      : rtree_node<Point,Value>(parent, 0) {}
 
     /// query method
     virtual void  find(const geometry::box<Point> &e, std::deque<Value> &r, const bool exact_match)
@@ -90,10 +90,6 @@ namespace spatial_index {
       nodes_.push_back(std::make_pair(b, v));
     }
 
-    virtual void empty_nodes(void) {
-      nodes_.clear();
-    }
-
     virtual Value get_value(const unsigned int i) const { return nodes_[i].second; }
 
     /// box projector for leaf
@@ -111,7 +107,7 @@ namespace spatial_index {
 	  return;
 	}
       }
-      std::cerr << "remove: node not found" << std::endl;
+      throw std::logic_error("Node not found."); 
     }
 
 
@@ -141,9 +137,6 @@ namespace spatial_index {
     }
 
   private:
-
-    // level of this node
-    unsigned int level_;
 
     leaves_map nodes_;
   };
