@@ -38,7 +38,7 @@ namespace fusion_graph {
 // this should all be abstracted better (another level is planned), but here's a start
 template<typename InputGraph>
 struct make_fusion_graph {
-    struct type { //?
+    struct type { 
         template<typename VertexTag> struct vertex_impl;
         template<typename EdgeTag>
         struct edge_impl {
