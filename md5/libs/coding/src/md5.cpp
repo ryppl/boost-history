@@ -319,80 +319,80 @@ md5_computer::generate_hashing_table()
 
 // Hash an entire block into the running checksum, using RFC 1321, section 3.4
 void
-md5_computer::update_hash()
+md5_computer::update_hash( bool const *queue_b, bool const *queue_e )
 {
     using std::size_t;
 
     // Convert the queued bit block to a word block
-    std::valarray<self_type::iword_type>  x( self_type::words_per_block ),
-                                          xx( x );  // setup for later
+    std::valarray<iword_type>  words( words_per_block ), scratch( queue_e -
+     queue_b );
 
-    for ( size_t  i = 0u ; i < self_type::words_per_block ; ++i )
+    BOOST_ASSERT( scratch.size() == bits_per_block );
+    std::copy( queue_b, queue_e, &scratch[0] );
+    for ( size_t  i = 0u ; i < words_per_block ; ++i )
     {
         // Use the default inner-product; since "unbuffered_" has "bool"
         // elements, which convert to 0 or 1, multiplication acts as AND; since
         // "order_in_word" has distinct single-bit values, addition acts as OR
-        x[ i ] = std::inner_product( order_in_word.begin(), order_in_word.end(),
-         this->unbuffered_.begin() + (i * md5_digest::bits_per_word),
-         self_type::iword_type(0u) );
+        words[ i ] = std::inner_product( order_in_word.begin(),
+         order_in_word.end(), &scratch[ i * md5_digest::bits_per_word ],
+         iword_type(0u) );
     }
 
     // Set up rounds
-    self_type::ibuffer_type  buffer = this->buffer_;
+    ibuffer_type  buffer = this->buffer_;
+
+    scratch.resize( words.size() );  // repurposed!
 
     // Round 1
     {
-        md5_special_op<md5_f, self_type::iword_type, md5_digest::bits_per_word>
-          ff;
+        md5_special_op<md5_f, iword_type, md5_digest::bits_per_word>  ff;
 
-        xx = x[ skipped_indices(self_type::words_per_block, 0, 1) ];
-        for ( size_t  i = 0u ; i < self_type::words_per_block ; ++i )
+        scratch = words[ skipped_indices(words_per_block, 0, 1) ];
+        for ( size_t  i = 0u ; i < words_per_block ; ++i )
         {
             ff( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], xx[i],
-             md5_s[0][i % 4u], self_type::hashing_table[i] );
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[0][i % 4u], hashing_table[i] );
         }
     }
 
     // Round 2
     {
-        md5_special_op<md5_g, self_type::iword_type, md5_digest::bits_per_word>
-          gg;
+        md5_special_op<md5_g, iword_type, md5_digest::bits_per_word>  gg;
 
-        xx = x[ skipped_indices(self_type::words_per_block, 1, 5) ];
-        for ( size_t  i = 0u ; i < self_type::words_per_block ; ++i )
+        scratch = words[ skipped_indices(words_per_block, 1, 5) ];
+        for ( size_t  i = 0u ; i < words_per_block ; ++i )
         {
             gg( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], xx[i],
-             md5_s[1][i % 4u], self_type::hashing_table[16 + i] );
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[1][i % 4u], hashing_table[16 + i] );
         }
     }
 
     // Round 3
     {
-        md5_special_op<md5_h, self_type::iword_type, md5_digest::bits_per_word>
-          hh;
+        md5_special_op<md5_h, iword_type, md5_digest::bits_per_word>  hh;
 
-        xx = x[ skipped_indices(self_type::words_per_block, 5, 3) ];
-        for ( size_t  i = 0u ; i < self_type::words_per_block ; ++i )
+        scratch = words[ skipped_indices(words_per_block, 5, 3) ];
+        for ( size_t  i = 0u ; i < words_per_block ; ++i )
         {
             hh( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], xx[i],
-             md5_s[2][i % 4u], self_type::hashing_table[32 + i] );
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[2][i % 4u], hashing_table[32 + i] );
         }
     }
 
     // Round 4
     {
-        md5_special_op<md5_i, self_type::iword_type, md5_digest::bits_per_word>
-          ii;
+        md5_special_op<md5_i, iword_type, md5_digest::bits_per_word>  ii;
 
-        xx = x[ skipped_indices(self_type::words_per_block, 0, 7) ];
-        for ( size_t  i = 0u ; i < self_type::words_per_block ; ++i )
+        scratch = words[ skipped_indices(words_per_block, 0, 7) ];
+        for ( size_t  i = 0u ; i < words_per_block ; ++i )
         {
             ii( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], xx[i],
-             md5_s[3][i % 4u], self_type::hashing_table[48 + i] );
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[3][i % 4u], hashing_table[48 + i] );
         }
     }
 

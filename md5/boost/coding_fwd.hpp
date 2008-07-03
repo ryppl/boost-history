@@ -16,6 +16,8 @@
 #ifndef BOOST_CODING_FWD_HPP
 #define BOOST_CODING_FWD_HPP
 
+#include <cstddef>  // for std::size_t
+
 
 namespace boost
 {
@@ -27,6 +29,19 @@ namespace boost
  */
 namespace coding
 {
+
+
+//  From <boost/coding/operations.hpp>  --------------------------------------//
+
+template < class Derived, typename SizeType = std::size_t >
+class byte_processing_base;
+
+template < class Derived, typename SizeType = std::size_t >
+class bit_processing_b_base;
+
+template < class Derived, typename LengthType, LengthType QueueLength, typename
+ SizeType = std::size_t >
+class queued_bit_processing_base;
 
 
 //  From <boost/coding/md5.hpp>  ---------------------------------------------//

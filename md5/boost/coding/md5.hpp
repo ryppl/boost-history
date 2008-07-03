@@ -21,22 +21,19 @@
 
 #include <boost/array.hpp>                 // for boost::array
 #include <boost/assert.hpp>                // for BOOST_ASSERT
-#include <boost/cstdint.hpp>               // for boost::uint_least8_t
-#include <boost/foreach.hpp>               // for BOOST_FOREACH
+#include <boost/coding/operations.hpp>     // for b:c:queued_bit_processing_base
 #include <boost/integer.hpp>               // for boost::uint_t
 #include <boost/serialization/access.hpp>  // for boost::serialization::access
 #include <boost/static_assert.hpp>         // for BOOST_STATIC_ASSERT
 #include <boost/typeof/typeof.hpp>         // for BOOST_AUTO
 
-#include <algorithm>  // for std::equal, swap, copy
+#include <algorithm>  // for std::equal, swap
 #include <climits>    // for CHAR_BIT
-#include <cstddef>    // for std::size_t, NULL
-#include <cstring>    // for std::strlen
-#include <ios>        // for std::ios
+#include <cstddef>    // for std::size_t
+#include <ios>        // for std::ios_base
 #include <istream>    // for std::basic_istream
 #include <locale>     // for std::use_facet, ctype
 #include <ostream>    // for std::basic_ostream
-#include <utility>    // for std::make_pair
 
 
 namespace boost
@@ -108,109 +105,43 @@ public:
 
     \see  boost::coding::md5_digest
     \see  boost::coding::compute_md5(void const*,std::size_t)
+
+    \todo  Replace "uint_fast64_t" with "uint_t<significant_bits_per_length>::
+           fast", where "significant_bits_per_length" is 64.  (Need to tweak
+           Boost.Integer to support 64-bit types.)  Also need to make a
+           convienent constant for the "16" in the base class declaration.
+           (It's the number of words per block, from RFC 1321, section 3.4.)
+    \todo  The implementation base class was originally inherited privately, but
+           the core member functions would give access errors when needed.  The
+           solution, for now, was either make \e all the base classes (direct
+           and indirect) friends of this class, or change the inheritance to
+           either public or protected.  I haven't figured out why yet, or how to
+           switch back to private inheritance without needing to add friendship.
+           (Furthermore, I couldn't use \c base_type to establish friendship;
+           i.e., both "friend base_type" and "friend class base_type" didn't
+           work.  I don't know why either.)
  */
 class md5_computer
+    : protected queued_bit_processing_base<md5_computer, uint_fast64_t, 16u *
+       md5_digest::bits_per_word>
 {
-    /** \brief  A class for submitting bit-oriented data for a MD5 message
-                digest in a function-object interface.
+    typedef queued_bit_processing_base<md5_computer, uint_fast64_t, 16u *
+     md5_digest::bits_per_word>  base_type;
 
-        This class represents objects that are proxy views to their owning MD5
-        computing object.  The proxy interface appears as a function object that
-        takes a \c bool value, which passes it on to the owning computer for
-        processing.  It should be suitable STL-like algorithms that use such a
-        function object.  It supports assignment to work with \c std::for_each
-        and other algorithms that can return a post-use function object.
+    friend  void base_type::process_bit( bool );  // needs "update_hash" access
 
-        \see  boost::coding::md5_computer
-        \see  #byte_applicator
-        \see  #bits
+    // Implementation constants, followed by sanity checks
+    static  std::size_t const  words_per_block = base_type::queue_length /
+     md5_digest::bits_per_word;
 
-        \todo  The current store-by-reference semantics for the owning computer
-               means that said owner is always changed during an application of
-               \c *this.  Maybe write-back to the owner should only be explicit
-               with the assignment operator.
-     */
-    class bit_applicator
-    {
-        friend class md5_computer;
-        md5_computer  *parent_;
-        explicit  bit_applicator( md5_computer &p )  : parent_( &p )  {};
-    public:
-        //! Application
-        void              operator ()( bool v );
-        //! Copy-assignment
-        bit_applicator &  operator  =( bit_applicator const &c );
-
-    };  // bit_applicator
-
-    /** \brief  A class for submitting byte-oriented data for a MD5 message
-                digest in a function-object interface.
-
-        This class represents objects that are proxy views to their owning MD5
-        computing object.  The proxy interface appears as a function object that
-        takes an <code>unsigned char</code> value, which passes it on to the
-        owning computer for processing.  It should be suitable STL-like
-        algorithms that use such a function object.  It supports assignment to
-        work with \c std::for_each and other algorithms that can return a
-        post-use function object.
-
-        \see  boost::coding::md5_computer
-        \see  #bit_applicator
-        \see  #bytes
-
-        \todo  The current store-by-reference semantics for the owning computer
-               means that said owner is always changed during an application of
-               \c *this.  Maybe write-back to the owner should only be explicit
-               with the assignment operator.
-     */
-    class byte_applicator
-    {
-        friend class md5_computer;
-        md5_computer  *parent_;
-        explicit  byte_applicator( md5_computer &p )  : parent_( &p )  {};
-    public:
-        //! Application
-        void               operator ()( unsigned char v );
-        //! Copy-assignment
-        byte_applicator &  operator  =( byte_applicator const &c );
-
-    };  // byte_applicator
-
-    // Implementation constants
-    static  std::size_t const  words_per_block = 16u;  // RFC 1321, section 3.4
+    BOOST_STATIC_ASSERT( (base_type::queue_length % md5_digest::bits_per_word)
+     == 0u );
+    BOOST_STATIC_ASSERT( words_per_block == 16u );  // RFC 1321, section 3.4
 
 public:
     // Special application interface
-    /** \brief  Proxy for bit-oriented application interface
-
-        Accesses an interface where <code>*this</code> can be used as a function
-        object take can take a single \c bool value as input.  It cannot be
-        reseated from <code>*this</code>, but assignment to it will copy the
-        other's owner's state to <code>*this</code>, enabling algorithms that
-        return updated function objects to work.
-
-        \attention  Since #bit_applicator stores a non-constant reference to its
-                    owner, the owner will be change through any application
-                    through \c bits, even if \c bits is passed by value.
-
-        \see  #bit_applicator
-     */
-    bit_applicator   bits;
-    /** \brief  Proxy for byte-oriented application interface
-
-        Accesses an interface where <code>*this</code> can be used as a function
-        object take can take a single <code>unsigned char</code> value as input.
-        It cannot be reseated from <code>*this</code>, but assignment to it will
-        copy the other's owner's state to <code>*this</code>, enabling
-        algorithms that return updated function objects to work.
-
-        \attention  Since #byte_applicator stores a non-constant reference to
-                    its owner, the owner will be change through any application
-                    through \c bytes, even if \c bytes is passed by value.
-
-        \see  #byte_applicator
-     */
-    byte_applicator  bytes;
+    using base_type::bits;
+    using base_type::bytes;
 
     // Constants
     /** \brief  Number of bits for length quantities
@@ -229,8 +160,7 @@ public:
         (The input processing member functions trigger a hash right after a bit
         fills the queue.)
      */
-    static  std::size_t const  bits_per_block = words_per_block *
-     md5_digest::bits_per_word;
+    static  std::size_t const  bits_per_block = base_type::queue_length;
 
     /** \brief  Hashing sine table
 
@@ -254,7 +184,7 @@ public:
         Represents the type used for sizing parameters and returns.  It should
         be an unsigned integer.
      */
-    typedef std::size_t  size_type;
+    typedef base_type::size_type  size_type;
 
     /** \brief  Type of MD message lengths
 
@@ -291,36 +221,23 @@ public:
     // Inspectors
     //! Returns the count of bits read so far
     length_type  bits_read() const;
-    //! Returns the count of bits not hashed into the buffer yet
-    length_type  bits_unbuffered() const;
     //! Returns the checksum buffer of hashed bits
     buffer_type  last_buffer() const;
 
-    //! Copies out the unhashed bits
-    template < typename OutputIterator >
-     OutputIterator  copy_unbuffered( OutputIterator o ) const;//@}
+    using base_type::bits_unbuffered;
+    using base_type::copy_unbuffered;
 
     /*! \name Bit-stream reading */ //@{
     // Input processing
-    //! Enters one bit for hashing
-    void  process_bit( bool bit );
-    //! Enters part of a byte for hashing
-    void  process_bits( unsigned char bits, size_type bit_count );
-    //! Enters several bits, all of the same value, for hashing
-    void  process_bit_copies( bool value, size_type bit_count );
+    using base_type::process_bit;
+    using base_type::process_bits;
+    using base_type::process_bit_copies;
+    using base_type::process_byte;
+    using base_type::process_byte_copies;
+    using base_type::process_block;
+    using base_type::process_bytes;
+    using base_type::process_octet;
 
-    //! Enters a whole byte for hashing
-    void  process_byte( unsigned char byte );
-    //! Enters several bytes, all of the same value, for hashing
-    void  process_byte_copies( unsigned char value, size_type byte_count );
-
-    //! Enters a range of bytes in memory for hashing
-    void  process_block( void const *bytes_begin, void const *bytes_end );
-    //! Enters a byte buffer in memory for hashing
-    void  process_bytes( void const *buffer, size_type byte_count );
-
-    //! Enters an octet for hashing
-    void  process_octet( uint_least8_t octet );
     //! Enters a word for hashing
     void  process_word( md5_digest::word_type word );
     //! Enters a double-word for hashing
@@ -358,7 +275,7 @@ public:
 
         \return  The computed hashing sine table
 
-        \relates  #hashing_table
+        \see  #hashing_table
      */
     static  array<md5_digest::word_type, 64>  generate_hashing_table();
 
@@ -379,22 +296,16 @@ private:
        // may have to do save/load split; support XML archives
 
     // Implementation functions
-    void  update_hash();
+    void  update_hash( bool const *queue_b, bool const *queue_e );
 
     // Implementation types
     typedef md5_computer  self_type;
 
-    typedef uint_fast64_t  ilength_type;
-      // replace w/ uint_t<significant_bits_per_length>::fast
     typedef uint_t<md5_digest::bits_per_word>::fast  iword_type;
     typedef array<iword_type, md5_digest::words_per_digest>  ibuffer_type;
 
-    typedef array<bool, bits_per_block>  block_type;
-
     // (Computation) member data
-    ilength_type  length_;
     ibuffer_type  buffer_;
-    block_type    unbuffered_;
 
     static  ibuffer_type const  initial_buffer_;
 
@@ -621,73 +532,6 @@ operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
 }
 
 
-//  MD5 computation special applicator operator definitions  -----------------//
-
-/** Calls <code><var>o</var>.process_bit( <var>v</var> )</code>, where
-    \p o is the owning \c md5_computer of <code>*this</code>.
-
-    \param v  The bit to process.
-
-    \see  boost::coding::md5_computer::process_bit(bool)
- */
-inline
-void
-md5_computer::bit_applicator::operator ()( bool v )
-{
-    this->parent_->process_bit( v );
-}
-
-/** Calls <code>this-&gt;<var>p</var> = <var>c.p</var></code>, where
-    \p p holds the owning \c md5_computer of a particular proxy.
-
-    \return  <code>*this</code>
-
-    \see  boost::coding::md5_computer::operator=(md5_computer const&)
- */
-inline
-md5_computer::bit_applicator &
-md5_computer::bit_applicator::operator  =
-(
-    md5_computer::bit_applicator const &  c
-)
-{
-    *this->parent_ = *c.parent_;
-    return *this;
-}
-
-/** Calls <code><var>o</var>.process_byte( <var>v</var> )</code>, where
-    \p o is the owning \c md5_computer of <code>*this</code>.
-
-    \param v  The byte to process.
-
-    \see  boost::coding::md5_computer::process_byte(unsigned char)
- */
-inline
-void
-md5_computer::byte_applicator::operator ()( unsigned char v )
-{
-    this->parent_->process_byte( v );
-}
-
-/** Calls <code>this-&gt;<var>p</var> = <var>c.p</var></code>, where
-    \p p holds the owning \c md5_computer of a particular proxy.
-
-    \return  <code>*this</code>
-
-    \see  boost::coding::md5_computer::operator=(md5_computer const&)
- */
-inline
-md5_computer::byte_applicator &
-md5_computer::byte_applicator::operator  =
-(
-    md5_computer::byte_applicator const &  c
-)
-{
-    *this->parent_ = *c.parent_;
-    return *this;
-}
-
-
 //  MD5 message-digest computation constructor definitions  ------------------//
 
 /** Constructs a \c md5_computer set to initial conditions.  That is, with the
@@ -702,8 +546,8 @@ md5_computer::byte_applicator::operator  =
  */
 inline
 md5_computer::md5_computer()
-    : bits( *this ), bytes( *this )
-    , length_(), buffer_( self_type::initial_buffer_ ), unbuffered_()
+    : base_type()
+    , buffer_( self_type::initial_buffer_ )
 {
     BOOST_ASSERT( this->test_invariant() );
 }
@@ -724,8 +568,8 @@ md5_computer::md5_computer()
  */
 inline
 md5_computer::md5_computer( md5_computer const &c )
-    : bits( *this ), bytes( *this )
-    , length_( c.length_ ), buffer_( c.buffer_ ), unbuffered_( c.unbuffered_ )
+    : base_type( c )
+    , buffer_( c.buffer_ )
 {
     BOOST_ASSERT( this->test_invariant() );
 }
@@ -743,24 +587,9 @@ inline
 md5_computer::length_type
 md5_computer::bits_read() const
 {
-    return this->length_;
-}
-
-/** Returns the number of bits that have not been hashed.  Hashing occurs only
-    after every \c #bits_per_block bit entries, so this member function can
-    confirm queued stragglers. (The identities of hashed bits are not
-    retrievable.)
-
-    \return  How many bits are queued to be hashed.
-
-    \see  #bits_read()
-    \see  #bits_per_block
- */
-inline
-md5_computer::length_type
-md5_computer::bits_unbuffered() const
-{
-    return this->length_ % self_type::bits_per_block;
+    // Don't count any wrap-around past 2**64
+    // (Use mask value once Boost.Integer is upped to 64-bit support)
+    return this->base_type::bits_read() & 0xFFFFFFFFFFFFFFFFull;
 }
 
 /** Returns the checksum of all the bits that have been hashed so far.  Hashing
@@ -781,35 +610,6 @@ md5_computer::last_buffer() const
     return r;
 }
 
-/** Copies the last submitted bits that have not yet hashed into the running
-    checksum, starting from the oldest submission.  Use \c #bits_unbuffered()
-    for advance notice of how many iterations are done.  (Always less than
-    \c #bits_per_block elements are copied.)
-
-    \pre  At least \c #bits_unbuffered() more elements are free to be created
-          and/or assigned through \p o
-
-    \tparam OutputIterator  The type of the iterator submitted.  It should match
-                            the requirements of either an output or a forward
-                            (or above) mutable iterator over something that can
-                            receive \c bool values via dereferenced assignment.
-
-    \param o  The iterator starting the destination range.
-
-    \return  \p o after copying.
-
-    \see  #bits_unbuffered()
-    \see  #bits_per_block
- */
-template < typename OutputIterator >
-inline
-OutputIterator
-md5_computer::copy_unbuffered( OutputIterator o ) const
-{
-    return std::copy( this->unbuffered_.begin(), this->unbuffered_.begin() +
-     this->bits_unbuffered(), o );
-}
-
 
 //  MD5 message-digest computation assignment member function definitions  ---//
 
@@ -826,10 +626,7 @@ inline
 void
 md5_computer::reset()
 {
-    // The "bits" and "bytes" members don't/can't reset.  The "unbuffered_"
-    // member doesn't need it either since "length_" reset will cause existing
-    // elements of "unbuffered_" to be ignored.
-    this->length_ = 0u;
+    this->base_type::reset();
     this->buffer_ = self_type::initial_buffer_;
 
     BOOST_ASSERT( this->test_invariant() );
@@ -856,12 +653,8 @@ inline
 void
 md5_computer::assign( md5_computer const &c )
 {
-    // Don't/can't reseat the function object proxies; only the elements of
-    // "unbuffered_" that will remain significant need to be copied.
-    this->length_ = c.length_;
+    this->base_type::assign( c );
     this->buffer_ = c.buffer_;
-    std::copy( c.unbuffered_.begin(), c.unbuffered_.begin() +
-     c.bits_unbuffered(), this->unbuffered_.begin() );
 
     BOOST_ASSERT( this->test_invariant() );
 }
@@ -882,9 +675,8 @@ md5_computer::swap( md5_computer &other )
     using std::swap;
 
     // Swap the computation members (don't reseat the function object proxies)
-    swap( this->length_, other.length_ );
+    this->base_type::swap( other );
     swap( this->buffer_, other.buffer_ );
-    swap( this->unbuffered_, other.unbuffered_ );
 
     BOOST_ASSERT( this->test_invariant() );
     BOOST_ASSERT( other.test_invariant() );
@@ -892,308 +684,6 @@ md5_computer::swap( md5_computer &other )
 
 
 //  MD5 message-digest computation bit-input member function definitions  ----//
-
-/** Submits a single bit for computation.  The bit is queued; if this bit fills
-    the queue, the queue's bits are hashed and the queue is emptied.
-
-    \param bit  The bit value to be submitted.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() + 1</code>
-    \post  <code>#bits_unbuffered() == bits_read() % #bits_per_block ? 0 :
-           <var>old_this</var>.bits_unbuffered() + 1</code> 
-    \post  <code>#last_buffer() == bits_read() % bits_per_block ?
-           <var>new_value</var> : <var>old_this</var>.last_buffer()</code>  (The
-           new value is computed with the algorithm described in RFC 1321,
-           section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) == 1</code>
-           (assuming that \p o2 is, at least, a forward iterator)
- */
-inline
-void
-md5_computer::process_bit( bool bit )
-{
-    this->unbuffered_[ this->bits_unbuffered() ] = bit;
-    if ( 0u == (++this->length_ % self_type::bits_per_block) )
-        this->update_hash();
-    BOOST_ASSERT( this->test_invariant() );
-}
-
-/** Submits part of a byte for computation.  Bits are submitted starting from
-    the highest-order bit to the lowest.
-
-    \pre  <code>0 &lt; <var>bit_count</var> &lt;= CHAR_BIT</code>
-
-    \param bits       The byte from which the values are submitted.
-    \param bit_count  The number of bits to submit, starting from the
-                      2<sup><var>bit_count</var> - 1</sup> place down to the
-                      ones-place.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() +
-           <var>bit_count</var></code>
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           <var>bit_count</var>) % bits_per_block</code> 
-    \post  <code>#last_buffer() == <var>old_this</var>.bits_unbuffered() +
-           <var>bit_count</var> &gt;= bits_per_block ? <var>new_value</var> :
-           <var>old_this</var>.last_buffer()</code>  (The new value is computed
-           with the algorithm described in RFC 1321, section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() +
-           <var>bit_count</var> &lt; bits_per_block,</code> then
-           <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) ==
-           <var>bit_count</var></code> (assuming that \p o2 is, at least, a
-           forward iterator), otherwise the range \p o3 to
-           <code>copy_unbuffered(<var>o3</var>)</code> contains the
-           <code><var>old_this</var>.bits_unbuffered() + <var>bit_count</var> -
-           bits_per_block</code> lowest-order bits of \p bits
-
-    \see  #process_bit(bool)
- */
-inline
-void
-md5_computer::process_bits
-(
-    unsigned char            bits,
-    md5_computer::size_type  bit_count
-)
-{
-    BOOST_ASSERT( (0u < bit_count) && (bit_count <= CHAR_BIT) );
-    for ( unsigned char  m = 0x01u << (bit_count - 1u) ; bit_count-- ; m >>= 1 )
-        this->process_bit( bits & m );
-}
-
-/** Submits multiple copies of a single bit value for computation.
-
-    \param value      The bit value to be submitted.
-    \param bit_count  The number of bits to submit.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() +
-           <var>bit_count</var></code>
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           <var>bit_count</var>) % bits_per_block</code> 
-    \post  <code>#last_buffer() == (<var>old_this</var>.bits_unbuffered() +
-           <var>bit_count</var> &gt;= bits_per_block) ? <var>new_value</var> :
-           <var>old_this</var>.last_buffer()</code>  (The new value is computed
-           with the algorithm described in RFC 1321, section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() +
-           <var>bit_count</var> &lt; bits_per_block,</code> then
-           <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) ==
-           <var>bit_count</var></code> (assuming that \p o2 is, at least, a
-           forward iterator), otherwise the range \p o3 to
-           <code>copy_unbuffered(<var>o3</var>)</code> contains
-           <code>(<var>old_this</var>.bits_unbuffered() + <var>bit_count</var>)
-           % bits_per_block</code> copies of \p value
-
-    \see  #process_bit(bool)
- */
-inline
-void
-md5_computer::process_bit_copies
-(
-    bool                     value,
-    md5_computer::size_type  bit_count
-)
-{
-    while ( bit_count-- )
-        this->process_bit( value );
-}
-
-/** Submits a byte for computation.  The bits are submitted starting from the
-    highest-order bit to the lowest.
-
-    \param byte  The byte value to be submitted.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() +
-           CHAR_BIT</code>
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           CHAR_BIT) % bits_per_block</code> 
-    \post  <code>#last_buffer() == (<var>old_this</var>.bits_unbuffered() +
-           CHAR_BIT &gt;= bits_per_block) ? <var>new_value</var> :
-           <var>old_this</var>.last_buffer()</code>  (The new value is computed
-           with the algorithm described in RFC 1321, section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() + CHAR_BIT
-           &lt; bits_per_block,</code> then <code>copy_unbuffered(<var>o2</var>)
-           - <var>old_this</var>.copy_unbuffered(<var>o2</var>) ==
-           CHAR_BIT</code> (assuming that \p o2 is, at least, a forward
-           iterator), otherwise the range \p o3 to
-           <code>copy_unbuffered(<var>o3</var>)</code> contains the
-           <code><var>old_this</var>.bits_unbuffered() + CHAR_BIT -
-           bits_per_block</code> lowest-order bits of \p byte
-
-    \see  #process_bits(unsigned char,#size_type)
- */
-inline
-void
-md5_computer::process_byte( unsigned char byte )
-{
-    this->process_bits( byte, CHAR_BIT );
-}
-
-/** Submits multiple copies of a single byte value for computation.
-
-    \param value       The byte value to be submitted.
-    \param byte_count  The number of bytes to submit.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() +
-           <var>byte_count</var> * CHAR_BIT</code>
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           <var>byte_count</var> * CHAR_BIT) % bits_per_block</code> 
-    \post  <code>#last_buffer() == (<var>old_this</var>.bits_unbuffered() +
-           <var>byte_count</var> * CHAR_BIT &gt;= bits_per_block) ?
-           <var>new_value</var> : <var>old_this</var>.last_buffer()</code>  (The
-           new value is computed with the algorithm described in RFC 1321,
-           section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() +
-           <var>byte_count</var> * CHAR_BIT &lt; bits_per_block,</code> then
-           <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) ==
-           <var>bit_count</var> * CHAR_BIT</code> (assuming that \p o2 is, at
-           least, a forward iterator), otherwise the range \p o3 to
-           <code>copy_unbuffered(<var>o3</var>)</code> contains
-           <code>(<var>old_this</var>.bits_unbuffered() + <var>byte_count</var>
-           * CHAR_BIT) % bits_per_block</code> bits from copies of \p value
-
-    \see  #process_byte(unsigned char)
- */
-inline
-void
-md5_computer::process_byte_copies
-(
-    unsigned char            value,
-    md5_computer::size_type  byte_count
-)
-{
-    while ( byte_count-- )
-        this->process_byte( value );
-}
-
-/** Submits bytes, delimited by a pointer range, for computation.
-
-    \pre  If \p bytes_begin is not \c NULL, then \p bytes_end has to be
-          reachable from \p bytes_begin via forward iterations of their
-          equivalent <code>unsigned char const *</code> values, otherwise
-          \p bytes_end has to be \c NULL too
-
-    \param bytes_begin  The start of the byte range to be submitted.
-    \param bytes_end    One-past-the-end of the byte range in \p bytes_begin.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() +
-           <var>L</var> * CHAR_BIT</code>, where \p L is number of bytes in the
-           range from \p bytes_begin to just before \p bytes_end
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           <var>L</var> * CHAR_BIT) % bits_per_block</code> 
-    \post  <code>#last_buffer() == (<var>old_this</var>.bits_unbuffered() +
-           <var>L</var> * CHAR_BIT &gt;= bits_per_block) ? <var>new_value</var>
-           : <var>old_this</var>.last_buffer()</code>  (The new value is
-           computed with the algorithm described in RFC 1321, section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() +
-           <var>L</var> * CHAR_BIT &lt; bits_per_block,</code> then
-           <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) ==
-           <var>L</var> * CHAR_BIT</code> (assuming that \p o2 is, at least, a
-           forward iterator), otherwise the range \p o3 to
-           <code>copy_unbuffered(<var>o3</var>)</code> contains
-           <code>(<var>old_this</var>.bits_unbuffered() + <var>L</var> *
-           CHAR_BIT) % bits_per_block</code> trailing bits from the byte range
-
-    \see  #process_byte(unsigned char)
- */
-inline
-void
-md5_computer::process_block( void const *bytes_begin, void const *bytes_end )
-{
-    BOOST_ASSERT( (bytes_begin == NULL) == (bytes_end == NULL) );
-    BOOST_FOREACH( unsigned char b, std::make_pair(static_cast<unsigned char
-     const *>( bytes_begin ), static_cast<unsigned char const *>( bytes_end )) )
-        this->process_byte( b );
-}
-
-/** Submits bytes, bounded by a pointer and length, for computation.
-
-    \pre  If \p buffer is \c NULL, then \p byte_count must be zero
-
-    \param buffer      The start of the byte range to be submitted.
-    \param byte_count  Number of (leading) bytes to use from the range.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() +
-           <var>byte_count</var> * CHAR_BIT</code>
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           <var>byte_count</var> * CHAR_BIT) % bits_per_block</code> 
-    \post  <code>#last_buffer() == (<var>old_this</var>.bits_unbuffered() +
-           <var>byte_count</var> * CHAR_BIT &gt;= bits_per_block) ?
-           <var>new_value</var> : <var>old_this</var>.last_buffer()</code>  (The
-           new value is computed with the algorithm described in RFC 1321,
-           section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() +
-           <var>byte_count</var> * CHAR_BIT &lt; bits_per_block,</code> then
-           <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) ==
-           <var>byte_count</var> * CHAR_BIT</code> (assuming that \p o2 is, at
-           least, a forward iterator), otherwise the range \p o3 to
-           <code>copy_unbuffered(<var>o3</var>)</code> contains
-           <code>(<var>old_this</var>.bits_unbuffered() + <var>byte_count</var>
-           * CHAR_BIT) % bits_per_block</code> trailing bits from the buffer
-
-    \see  #process_block(void const*,void const*)
- */
-inline
-void
-md5_computer::process_bytes
-(
-    void const *             buffer,
-    md5_computer::size_type  byte_count
-)
-{
-    BOOST_ASSERT( buffer || !byte_count );
-    this->process_block( buffer, static_cast<unsigned char const *>(buffer) +
-     byte_count );
-}
-
-/** Submits an octet for computation.  The bits are submitted starting from the
-    highest-order bit to the lowest.
-
-    \param octet  The octet value to be submitted.
-
-    \post  <code>#bits_read() == <var>old_this</var>.bits_read() + 8</code>
-    \post  <code>#bits_unbuffered() == (<var>old_this</var>.bits_unbuffered() +
-           8) % bits_per_block</code> 
-    \post  <code>#last_buffer() == (<var>old_this</var>.bits_unbuffered() + 8
-           &gt;= bits_per_block) ? <var>new_value</var> :
-           <var>old_this</var>.last_buffer()</code>  (The new value is computed
-           with the algorithm described in RFC 1321, section 3.4.)
-    \post  If <code>bits_read() % bits_per_block == 0</code>, then
-           <code>#copy_unbuffered(<var>o1</var>)</code> leaves \p o1 unused,
-           otherwise if <code><var>old_this</var>.bits_unbuffered() + 8 &lt;
-           bits_per_block,</code> then <code>copy_unbuffered(<var>o2</var>) -
-           <var>old_this</var>.copy_unbuffered(<var>o2</var>) == 8</code>
-           (assuming that \p o2 is, at least, a forward iterator), otherwise the
-           range \p o3 to <code>copy_unbuffered(<var>o3</var>)</code> contains
-           the <code><var>old_this</var>.bits_unbuffered() + 8 -
-           bits_per_block</code> lowest-order bits of \p octet
-
-    \see  #process_bits(unsigned char,#size_type)
- */
-inline
-void
-md5_computer::process_octet( uint_least8_t octet )
-{
-    this->process_bits( octet, 8u );
-}
 
 /** Submits 32-bit MD-word for computation.  The word is submitted an octet at a
     time, from the lowest-order octet to the highest.
@@ -1311,9 +801,7 @@ md5_computer::operator ==( md5_computer const &c ) const
     // Don't compare the function object proxies since they don't carry
     // significant state.  (Furthermore, they can't change once initalized and
     // don't have any comparison operators.)
-    return ( this->length_ == c.length_ ) && ( this->buffer_ == c.buffer_ ) &&
-     std::equal( this->unbuffered_.begin(), this->unbuffered_.begin() +
-     this->bits_unbuffered(), c.unbuffered_.begin() );
+    return ( this->buffer_ == c.buffer_ ) && this->base_type::operator ==( c );
 }
 
 /** Compares MD5 message computers for non-equivalence.  Such computers are
