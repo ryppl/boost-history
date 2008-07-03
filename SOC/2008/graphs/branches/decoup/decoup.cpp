@@ -56,5 +56,7 @@ int main()
     vertex_type& v = verts.back().get<vertex_type>();
     cout << v.props << endl;
 
+    
+
     return 0;
 }
