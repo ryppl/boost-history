@@ -22,21 +22,26 @@
     <!-- Rationale -->
     <h2>Rationale</h2>
     <p>
-      The generic <tt>std::swap</tt> function requires that the elements to be swapped are assignable and copy constructible. It is usually implemented using one copy construction and two assignments. This is often both unnecessarily restrictive and unnecessarily slow. In addition, specialized swap functions are often able to provide the no-throw exception guarantee where the generic swap implementation provides only the basic guarantee.</p>
+      The generic <tt>std::swap</tt> function requires that the elements to be swapped are assignable and copy constructible. It is usually implemented using one copy construction and two assignments - this is often both unnecessarily restrictive and unnecessarily slow. In addition, where the generic swap implementation provides only the basic guarantee, specialized swap functions are often able to provide the no-throw exception guarantee (and it is considered best practice to do so where possible<sup><a href="#ref1">1</a></sup>).</p>
     <p>
-      The alternative to using argument dependent lookup in this situation is to provide a template specialization of std::swap for every type that requires a specialized swap. Although this is legal C++, no boost libraries use this method, whereas many boost libraries provide specialized swap functions in their own namespaces.
+      The alternative to using argument dependent lookup in this situation is to provide a template specialization of std::swap for every type that requires a specialized swap. Although this is legal C++, no Boost libraries use this method, whereas many Boost libraries provide specialized swap functions in their own namespaces.
     </p>
     <p>
-      <tt>boost::swap</tt> also supports swapping built-in arrays. Note that <tt>std::swap</tt> doesn't yet do so, but a request to add an overload of <tt>std::swap</tt> for built-in arrays has been well received by the Library Working Group of the C++ Standards Committee: <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#809">LWG issue 809. std::swap should be overloaded for array types</a>
-      <tt>boost::swap</tt> is no-throw for arrays whose element type has a no-throw swap. However, if the swap function of the element type provides the strong guarantee, then <tt>boost::swap</tt> only provides the basic guarantee, for arrays of size > 1.
+      <tt>boost::swap</tt> also supports swapping built-in arrays. Note that <tt>std::swap</tt> doesn't yet do so, but a request to add an overload of <tt>std::swap</tt> for built-in arrays has been well-received by the Library Working Group of the C++ Standards Committee<sup><a href="#ref2">2</a></sup>.      
+    </p>
+    
+    <!-- Exception Safety -->
+    <h2>Exception Safety</h2>
+    <p>
+      <tt>boost::swap</tt> provides the same exception guarantee as the underlying swap function used, with one exception; for an array of type <tt>T[n]</tt>, where <tt>n > 1</tt> and the underlying swap function for <tt>T</tt> provides the strong exception guarantee, <tt>boost::swap</tt> provides only the basic exception guarantee.
     </p>
     
     <!-- Requirements -->
     <h2>Requirements</h2>
     <p>Either:</p>
     <ul>      
-      <li>T must be assignable.</li>
-      <li>T must be copy constructible.</li>
+      <li>T must be assignable</li>
+      <li>T must be copy constructible</li>
     </ul>
     <p>Or:</p>
     <ul>
@@ -55,22 +60,27 @@
     <!-- Portability -->
     <h2>Portability</h2>
     <p>
-      Several older compilers do not support argument dependent lookup - on these compilers <tt>boost::swap</tt> will call <tt>std::swap</tt>, ignoring any specialized swap functions that could be found as a result of argument dependent lookup.
+      Several older compilers do not support argument dependent lookup – on these compilers <tt>boost::swap</tt> will call <tt>std::swap</tt>, ignoring any specialized swap functions that could be found as a result of argument dependent lookup.
     </p>
     
     <!-- Credits -->
     <h2>Credits</h2>
     <ul>
       <li>
-        <em>Steven Wanatabe</em> - for the idea to use a barrier namespaces, enabling the function to have the name '<tt>swap</tt>' without introducing ambiguity or infinite recursion.
+        <em>Niels Dekker</em> - for implementing and documenting support for built-in arrays
       </li>
       <li>
-        <em>Niels Dekker</em> - for adding support for built-in arrays
+        <em><a href="mailto:Joseph.Gauterin@googlemail.com">Joseph Gauterin</a></em> - for the initial idea, implementation, tests, and documentation
       </li>
       <li>
-        <em><a href="mailto:Joseph.Gauterin@googlemail.com">Joseph Gauterin</a></em> - for the initial idea, final implementation, tests, and documentation.
-      </li>
+        <em>Steven Wanatabe</em> - for the idea to use a barrier namespace, enabling the function to have the name '<tt>swap</tt>' without introducing ambiguity or infinite recursion
+      </li>      
     </ul>
+
+    <!-- References -->
+    <hr/>
+    <p><sup><a id="ref1"/>[1]</sup>Scott Meyers, Effective C++ Third Edition, Item 25: "Consider support for a non-throwing swap"</p>
+    <p><sup><a id="ref2"/>[2]</sup><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#809">LWG issue 809 (std::swap should be overloaded for array types)</a></p>
 
     <!-- Copyright info -->    
     <hr/>
