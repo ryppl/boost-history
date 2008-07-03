@@ -201,7 +201,7 @@ directed_vertex<V,O,I>::disconnect_source(edge_descriptor e)
 {
     // Get the input iterator from the edge.
     out_iterator o = e.out_edge();
-    in_iterator i = o->third.template get<in_iterator>();
+    in_iterator i = (*o).third.template get<in_iterator>();
     _in.remove(i);
 }
 

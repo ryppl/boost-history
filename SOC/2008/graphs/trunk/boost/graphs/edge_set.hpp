@@ -30,7 +30,7 @@ struct edge_set
     template <typename EdgeProps>
     struct property_store
     {
-        typedef placeholder<sizeof(std::list<int>::iterator)> dummy_type;
+        typedef typename hold<std::list<int>::iterator>::type dummy_type;
         typedef triple<EdgeProps, dummy_type, dummy_type> property;
         typedef SecondAlloc<property> allocator;
         typedef property_list<property, allocator> type;
@@ -52,22 +52,31 @@ struct edge_set
     template <typename VertexDesc, typename Props>
     struct out_store
     {
-        typedef std::pair<VertexDesc, Props> out_pair;
+        // Define a dummy type that eventually be used to store iterators to
+        // in edge iterators. The actual out edge type is a tuple of target
+        // vertex, edge properties, and in edge iterator (placeheld). The in
+        // edge type is the source vertex and the out edge iterator (placeheld).
+        typedef typename hold<std::set<int>::iterator>::type dummy_type;
+        typedef triple<VertexDesc, Props, dummy_type> edge;
         typedef Compare<VertexDesc> compare;
-        typedef FirstAlloc<out_pair> allocator;
-        typedef out_set<out_pair, compare, allocator> type;
+        typedef FirstAlloc<edge> allocator;
+        typedef out_set<edge, compare, allocator> type;
     };
 
     // The in store metafunction generates the type of list used to store
     // incoming edges of directed graph. In edges are represented by the
     // referencing vertex and an out edge descriptor.
-    template <typename VertexDesc, typename OutDesc>
+    template <typename VertexDesc>
     struct in_store
     {
-        typedef std::pair<VertexDesc, OutDesc> in_pair;
+        // Define a dummy type that will ultimately act as a placeholder for
+        // an iterator into the out edge vector. Use that to define the in edge
+        // pair.
+        typedef typename hold<typename std::set<int>::iterator>::type dummy_type;
+        typedef std::pair<VertexDesc, dummy_type> edge;
         typedef Compare<VertexDesc> compare;
-        typedef SecondAlloc<in_pair> allocator;
-        typedef in_set<in_pair, compare, allocator> type;
+        typedef SecondAlloc<edge> allocator;
+        typedef in_set<edge, compare, allocator> type;
     };
 };
 

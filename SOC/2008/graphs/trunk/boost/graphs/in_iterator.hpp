@@ -63,9 +63,8 @@ public:
     inline basic_in_iterator& operator--()
     { --_iter; return *this; }
 
-    // Iterators are equivalent if they reference the same edge.
     inline bool operator==(basic_in_iterator const& x) const
-    { return **this == *x; }
+    { return (_base == x._base) && (_iter == x._iter); }
 
     inline bool operator!=(basic_in_iterator const& x) const
     { return !this->operator==(x); }

@@ -42,13 +42,20 @@ struct placeholder
 
     /** Get the value of the placeholder and return it as an object of type T. */
     template <typename T>
-    inline T get() const
+    inline T& get() const
     {
         BOOST_STATIC_ASSERT(sizeof(T) == N);
         return *reinterpret_cast<T*>(mem);
     }
 
     mutable char mem[N];
+};
+
+/** A metafunction to make declaring placeholders a little easier. */
+template <typename T>
+struct hold
+{
+    typedef placeholder<sizeof(T)> type;
 };
 
 #endif

@@ -51,7 +51,8 @@ public:
     }
 
     /**
-     * Find the edge with the given iterator.
+     * Find the edge with the given iterator. Is this function ever actually
+     * called? I have no idea...
      * @complexity O(deg(u))
      */
     iterator find(vertex_descriptor v) const

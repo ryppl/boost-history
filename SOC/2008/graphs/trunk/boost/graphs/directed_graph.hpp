@@ -81,7 +81,6 @@ public:
     typedef directed_edge<typename out_edge_store::iterator, typename in_edge_store::iterator> edge_descriptor;
 
     // Generate the vertex type over the vertex properties, and in/out stores.
-    // We can also pull size
     // NOTE: Omitting the in-edge store allows us to create half-directed
     // graphs.
     typedef directed_vertex<vertex_properties, out_edge_store, in_edge_store> vertex_type;
@@ -525,8 +524,8 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
 {
-    remove_out_edges(v);
     remove_in_edges(v);
+    remove_out_edges(v);
 }
 
 /**

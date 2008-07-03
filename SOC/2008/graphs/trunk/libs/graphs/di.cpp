@@ -204,7 +204,9 @@ void test_remove_multi_edges()
     g.add_edge(v, u);
 
     g.remove_edges(u, v);
-    BOOST_ASSERT(g.num_edges() == 0);
+    BOOST_ASSERT(g.num_edges() == 2);
+    BOOST_ASSERT(g.out_degree(v) == 2);
+    BOOST_ASSERT(g.in_degree(u) == 2);
 }
 
 template <typename Graph>
@@ -268,27 +270,25 @@ void list_list()
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
     test_disconnect_vertex<Graph>();
-    /*
-    // test_implicit_disconnect_vertex<Graph>();
-    // test_add_multi_edges<Graph>();
-    // test_remove_multi_edges<Graph>();
+    test_implicit_disconnect_vertex<Graph>();
+    test_add_multi_edges<Graph>();
+    test_remove_multi_edges<Graph>();
     // test_incidence_iterator<Graph>();
     // test_adjacency_iterator<Graph>();
-    */
 }
 
 
 void set_set()
 {
-    /*
     cout << "---- set/set ----" << endl;
     typedef directed_graph<City, Road, vertex_set<>, edge_set<> > Graph;
     test_add_remove_vertices<Graph>();
-    // test_add_remove_edges<Graph>();
-    // test_disconnect_vertex<Graph>();
-    // test_implicit_disconnect_vertex<Graph>();
+    test_add_remove_edges<Graph>();
+    /*
+    test_disconnect_vertex<Graph>();
+    test_implicit_disconnect_vertex<Graph>();
     test_add_multi_edges<Graph>();
-    // test_remove_multi_edges<Graph>();
+    test_remove_multi_edges<Graph>();
     // test_incidence_iterator<Graph>();
     // test_adjacency_iterator<Graph>();
     */

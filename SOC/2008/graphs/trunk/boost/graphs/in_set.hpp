@@ -4,6 +4,8 @@
 
 #include <map>
 
+#include "mapped_iterator.hpp"
+
 /**
  * The in-edge set references incoming edges from other vertices. Each edge
  * can be uniquely identified by its source vertex and property descriptor.
@@ -17,12 +19,15 @@ class in_set
 public:
     typedef Edge in_pair;
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type out_descriptor;
 private:
-    typedef std::map<vertex_descriptor, out_descriptor, Compare, Alloc> store_type;
+    typedef typename Edge::second_type out_edge_place;
+    typedef std::map<
+            vertex_descriptor,
+            std::pair<vertex_descriptor const, out_edge_place>,
+            Compare, Alloc
+        > store_type;
 public:
-    typedef typename store_type::iterator iterator;
-    typedef typename store_type::const_iterator const_iterator;
+    typedef mapped_iterator<typename store_type::iterator> iterator;
     typedef typename store_type::size_type size_type;
 
     in_set()
@@ -33,20 +38,29 @@ public:
      * Add the edge to the set.
      * @complexity O(deg(u))
      */
-    void add(in_pair e)
-    { _edges.insert(e); }
+    iterator add(vertex_descriptor v)
+    {
+        return _edges.insert(std::make_pair(v,
+                                std::make_pair(v, out_edge_place()))
+                            ).first;
+    }
 
     /** Find the edge with the given vertex. */
     iterator find(vertex_descriptor v)
     { return _edges.find(v); }
 
-    /** Find the edge with the given vertex. */
-    const_iterator find(vertex_descriptor v) const
+    /**
+     * Find the edge with the given vertex. Is this function ever called?
+     */
+    iterator find(vertex_descriptor v) const
     { return _edges.find(v); }
 
-    /** Remove the edge with the given descriptor. */
-    void remove(vertex_descriptor v)
-    { _edges.erase(find(v)); }
+    /**
+     * Remove the edge with the given descriptor.
+     * @complexity O(log(in-deg(v)))
+     */
+    void remove(iterator i)
+    { _edges.erase(i.iter); }
 
     /** Remove all edges. */
     void clear()
@@ -56,8 +70,17 @@ public:
     size_type size() const
     { return _edges.size(); }
 
+    /** @name Iterators */
+    //@{
+    inline iterator begin() const
+    { return _edges.begin(); }
+
+    inline iterator end() const
+    { return _edges.end(); }
+    //@}
+
 private:
-    store_type _edges;
+   mutable  store_type _edges;
 };
 
 #endif

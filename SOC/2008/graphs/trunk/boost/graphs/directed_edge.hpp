@@ -27,7 +27,7 @@ public:
     //@{
     inline directed_edge()
         : _src()
-        , _out(0)
+        , _out()
     { }
 
     inline directed_edge(vertex_descriptor v, OutIter o)
@@ -58,17 +58,17 @@ public:
     { return _out; }
 
     inline InIter in_edge() const
-    { return _out->third.template get<InIter>(); }
+    { return (*_out).third.template get<InIter>(); }
 
     /** @name Property Accessors
      * Return the properties associated with the edge.
      */
     //@{
     inline edge_properties& properties()
-    { return _out->second; }
+    { return (*_out).second; }
 
     inline edge_properties const& properties() const
-    { return _out->second; }
+    { return (*_out).second; }
     //@}
 
 private:

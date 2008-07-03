@@ -48,7 +48,7 @@ struct edge_vector
         // Define a dummy type that will eventually container iterators into
         // an incidence container. Use this as part of the triple for each
         // edge store - the properties and "out-facing" iterators.
-        typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
+        typedef typename hold<typename std::vector<int>::iterator>::type dummy_type;
         typedef triple<EdgeProps, dummy_type, dummy_type> property;
         typedef SecondAlloc<property> allocator;
         typedef property_vector<property, allocator> type;
@@ -73,7 +73,7 @@ struct edge_vector
         // in edge iterators. The actual out edge type is a tuple of target
         // vertex, edge properties, and in edge iterator (placeheld). The in
         // edge type is the source vertex and the out edge iterator (placeheld).
-        typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
+        typedef typename hold<typename std::vector<int>::iterator>::type dummy_type;
         typedef triple<VertexDesc, Props, dummy_type> edge;
         typedef FirstAlloc<edge> allocator;
         typedef out_vector<edge, allocator> type;
@@ -88,7 +88,7 @@ struct edge_vector
         // Define a dummy type that will ultimately act as a placeholder for
         // an iterator into the out edge vector. Use that to define the in edge
         // pair.
-        typedef placeholder<sizeof(typename std::vector<int>::iterator)> dummy_type;
+        typedef typename hold<typename std::vector<int>::iterator>::type dummy_type;
         typedef std::pair<VertexDesc, dummy_type> edge;
         typedef SecondAlloc<edge> allocator;
         typedef in_vector<edge, allocator> type;
