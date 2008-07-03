@@ -9,6 +9,7 @@
 #include <boost/shifted_ptr.hpp>
 #include <boost/shifted_allocator.hpp>
 
+#include <list>
 #include <vector>
 #include <iostream>
 
@@ -64,8 +65,8 @@ struct vector {
     vector() { ++count; }
     ~vector() { --count; }
     vector(const vector& other) : elements(other.elements) { ++count; }
-    //std::vector<shifted_ptr<vector> > elements;
-    std::vector<shifted_ptr<vector>, shifted_allocator< shifted_ptr<vector> > > elements; //! FIXME
+    std::vector<shifted_ptr<vector> > elements;
+    //std::list<shifted_ptr<vector>, shifted_allocator< shifted_ptr<vector> > > elements; //! FIXME
 };
 
 struct create_type {
@@ -88,13 +89,6 @@ int main() {
 	}
     std::cout << count << std::endl;
     
-    count = 0;
-    {
-        shifted_ptr<vector> v = new shifted<vector>();
-        v->elements.push_back(v);
-    }
-    std::cout << count << std::endl;
-
     count = 0;
     {
         shifted_ptr<vector> v = new shifted<vector>();
