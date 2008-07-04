@@ -7,103 +7,147 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_NAMESPACE_HPP
-#define BOOST_MIRROR_META_NAMESPACE_HPP
+#ifndef BOOST_MIRROR_META_NAMESPACE
+#define BOOST_MIRROR_META_NAMESPACE
 
-// for various typelists
+// preprocessor related things
+#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/reverse.hpp>
+#include <boost/preprocessor/seq/pop_back.hpp>
+#include <boost/preprocessor/seq/seq.hpp>
+
+// template meta programming
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/plus.hpp>
 #include <boost/mpl/vector.hpp>
-// common mpl algoritgms
 #include <boost/mpl/push_back.hpp>
-//
-// for bulk declarations
-#include <boost/preprocessor.hpp>
 
-// mirror uses switchable character type
-#include <boost/char_type_switch/string.hpp>
-// forward declarations
-#include <boost/mirror/meta_data_fwd.hpp>
-// implementation helpers
+// forward declarations and common mirror defs
 #include <boost/mirror/common_defs.hpp>
+#include <boost/mirror/meta_data_fwd.hpp>
+
+// char-type related 
+#include <boost/char_type_switch/string.hpp>
+// full name builder
+#include <boost/mirror/detail/full_name_builder.hpp>
+
 
 namespace boost {
 namespace mirror {
 
-/** defines an alias (_) for the meta-namespace for the global scope
+/** Meta data about namespaces
  */
-namespace namespaces { struct _{ }; }
-
-/** meta-namespace for the global scope 
- */
-template<> struct meta_namespace< namespaces::_ >
+template <class NamespacePlaceholder>
+struct meta_namespace
+: detail::full_name_builder< 
+	meta_namespace<typename NamespacePlaceholder::parent_placeholder>,
+	NamespacePlaceholder
+>
 {
-	typedef void parent;
-	typedef mpl::vector0<> scope;
+	// the parent meta_namespace
+	typedef meta_namespace<
+		typename NamespacePlaceholder::parent_placeholder
+	> scope;
 
-	static const bchar* base_name(void) {return BOOST_STR_LIT("");}
-	BOOST_STATIC_CONSTANT(int, base_name_length = 0);
+	//
+	typedef typename ::boost::mpl::push_back<
+		typename scope::ancestors,
+		scope
+	>::type ancestors;
+};
 
-	static const bchar* full_name(void) {return BOOST_STR_LIT("");}
-	BOOST_STATIC_CONSTANT(int, full_name_length = 0);
+/** The declaration of the namespace placeholder for the 
+ *  global scope
+ */
+namespace namespace_ {
+	struct _ 
+	{
+		// the base name of the namespace
+		inline static const bchar* base_name(void){return BOOST_STR_LIT("");}
+
+		// length of the basename:number of characters w/o the terminating '\0'
+		typedef ::boost::mpl::int_<0>::type base_name_length;
+
+		// the base name of the namespace
+		inline static const bchar* full_name(void){return base_name();}
+
+		// the length of the full name without the terminating null
+		typedef base_name_length full_name_length;
+	};
+
+	// this is necessary for MIRORRED_NAMESPACE() to work with
+	// the global scope
+	namespace __ {
+		typedef struct namespace_::_ _;
+	} // namespace __ 
+} // namespace namespace_
+
+// meta_namespace specialization for the global scope
+template < >
+struct meta_namespace< namespace_ :: _ > : namespace_ :: _ 
+{ 
+	typedef mpl::vector0<> ancestors;
 };
 
 
-/** Helper macro for registering new general namespaces (top level or nested)
+// helper macro expanded multiple times during the namespace registration
+#define BOOST_MIRROR_REG_NAMESPACE_PROLOGUE_HELPER(R, DATA, NAMESPACE_NAME) \
+	namespace NAMESPACE_NAME {
+
+// helper macro expanded multiple times during the namespace registration
+#define BOOST_MIRROR_REG_NAMESPACE_EPILOGUE_HELPER(R, DATA, NAMESPACE_NAME) \
+	} // namespace NAMESPACE_NAME
+
+// helper macro expanded multiple times during the namespace registration
+#define BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER(R, DATA, NAMESPACE_NAME) \
+	:: NAMESPACE_NAME 
+
+
+/** Macro that does the registering of a namespace.
+ *  The argument must be a BOOST_PP sequence containing the
+ *  names of the parent namspaces and the registered namespace.
+ *  
+ *  The sequence needed to register namespace ::test is (test)
+ *  To register ::test::foo::bar::baz use (test)(foo)(bar)(baz)
  */
-#define BOOST_MIRROR_REG_NAMESPACE_HELPER(PARENT_NS_ALIAS, NAMESPACE_NAME) \
-{                                                                                         \
-	typedef meta_namespace< namespaces :: PARENT_NS_ALIAS > parent;                                                        \
-	typedef mpl::push_back<parent::scope, parent>::type scope;    \
-	BOOST_STATIC_CONSTANT(\
-		int, \
-		base_name_length = \
-		BOOST_STR_LIT_LENGTH(#NAMESPACE_NAME)\
-	); \
-	static const bchar* base_name(void) {return BOOST_STR_LIT(#NAMESPACE_NAME);}           \
-	BOOST_STATIC_CONSTANT(\
-		int, \
-		full_name_length = \
-		parent::full_name_length + 2 + \
-		base_name_length \
-	); \
-	static const bchar* full_name(void)\
-	{\
-		static bchar the_full_name[full_name_length] = \
-			BOOST_STR_LIT(""); \
-		if(!the_full_name[0])  \
+#define BOOST_MIRROR_REG_NAMESPACE(NAME_SEQUENCE) \
+	namespace namespace_ { \
+	BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_NAMESPACE_PROLOGUE_HELPER, _, NAME_SEQUENCE) \
+		struct _ \
 		{ \
-			bchar * pos = the_full_name; \
-			bstrncpy(pos, parent::full_name(), parent::full_name_length);\
-			pos += parent::full_name_length; \
-			bstrncpy(pos, BOOST_STR_LIT("::"), 2);\
-			pos += 2; \
-			bstrncpy(pos, base_name(), base_name_length);\
-		} \
-		return the_full_name; \
-	}           \
-};                                                                                        
+			typedef namespace_ \
+			BOOST_PP_SEQ_FOR_EACH( \
+				BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
+				_, \
+				BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
+			) :: _ parent_placeholder; \
+			static const bchar* base_name(void) \
+			{ \
+				return BOOST_CTS_STRINGIZE( \
+					BOOST_PP_SEQ_HEAD( \
+						BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
+					) \
+				); \
+			} \
+			typedef ::boost::mpl::int_< \
+				BOOST_STR_LIT_LENGTH( \
+					BOOST_CTS_STRINGIZE( \
+						BOOST_PP_SEQ_HEAD( \
+							BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
+						) \
+					) \
+				) \
+			>::type base_name_length; \
+		}; \
+	BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_NAMESPACE_EPILOGUE_HELPER, _, NAME_SEQUENCE) \
+	}
 
 
-/** Macro for registering new general namespaces (top level or nested)
+/** Register some of the common namespaces
  */
-#define BOOST_MIRROR_REG_NAMESPACE(PARENT_NS_ALIAS, NAMESPACE_NAME) \
-	namespace namespaces {struct PARENT_NS_ALIAS##_##NAMESPACE_NAME { }; }\
-	template<> struct meta_namespace< namespaces :: PARENT_NS_ALIAS##_##NAMESPACE_NAME >      \
-	BOOST_MIRROR_REG_NAMESPACE_HELPER(PARENT_NS_ALIAS, NAMESPACE_NAME)
-
-/** Macro for registering of top-level namespaces
- */
-#define BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(NAMESPACE_NAME)    \
-	namespace namespaces {struct _##NAMESPACE_NAME { }; }\
-	template<> struct meta_namespace< namespaces :: _##NAMESPACE_NAME >      \
-	BOOST_MIRROR_REG_NAMESPACE_HELPER(_, NAMESPACE_NAME)
-
-// Registration of the ::std namespace 
-BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(std)
-// Registration of the ::boost namespace 
-BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(boost)
-// Registration of the ::boost::mirror namespace 
-BOOST_MIRROR_REG_NAMESPACE(_boost, mirror)
-
+BOOST_MIRROR_REG_NAMESPACE((std))
+BOOST_MIRROR_REG_NAMESPACE((boost))
+BOOST_MIRROR_REG_NAMESPACE((boost)(mirror))
 
 } // namespace mirror
 } // namespace boost

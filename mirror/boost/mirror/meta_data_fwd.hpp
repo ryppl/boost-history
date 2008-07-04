@@ -15,14 +15,17 @@ namespace mirror {
 
 /** Meta-namespace forward template declaration
  */
-template<class NamespaceAlias> 
+template<class NamespacePlaceholder> 
 struct meta_namespace;
 
 /** Macro that expands into the meta_namespace for the 
- *  namespace with the given alias.
+ *  passed namespace.
  */
-#define BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) \
-	::boost::mirror::meta_namespace<namespaces::NAMESPACE_ALIAS>
+#define BOOST_MIRRORED_NAMESPACE(FULL_NAMESPACE_NAME) \
+	mirror::meta_namespace< namespace_ ## FULL_NAMESPACE_NAME ## ::_ >
+
+#define BOOST_MIRRORED_GLOBAL_SCOPE() \
+	mirror::meta_namespace< namespace_ ## ::_ >
 
 
 

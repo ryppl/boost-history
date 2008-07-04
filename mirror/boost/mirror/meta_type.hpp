@@ -10,13 +10,8 @@
 #ifndef BOOST_MIRROR_META_TYPE_HPP
 #define BOOST_MIRROR_META_TYPE_HPP
 
-// meta namespaces (includes boost/char_type_switch/string.hpp)
+// meta namespaces
 #include <boost/mirror/meta_namespace.hpp>
-// forward declarations
-#include <boost/mirror/meta_data_fwd.hpp>
-// for declarations of meta-types for groups of types
-#include <boost/preprocessor.hpp>
-//
 //
 #include <boost/mirror/detail/const_type_name.hpp>
 #include <boost/mirror/detail/volatile_type_name.hpp>
@@ -29,6 +24,53 @@
 namespace boost {
 namespace mirror {
 
+namespace detail {
+	template <typename Type>
+	struct defined_type_info;
+} // namespace detail
+
+
+/** Meta-data describing types 
+ */
+template <typename Type>
+struct meta_type 
+: public detail::full_name_builder<
+	typename defined_type_info<Type>::scope,
+	defined_type_info<Type>
+>{ };
+
+/** Macro for declaration of meta-types
+ */
+#define BOOST_MIRROR_REG_TYPE(NAMESPACE, BASE_NAME) \
+	namespace detail { \
+	template <> struct defined_type_info< NAMESPACE::BASE_NAME > \
+	{ \
+		typedef BOOST_MIRRORED_NAMESPACE(NAMESPACE) scope; \
+		typedef NAMESPACE::BASE_NAME reflected_type; \
+		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);} \
+		typedef typename ::boost::mpl::int_< \
+			BOOST_STR_LIT_LENGTH(#BASE_NAME) \
+		>::type base_name_length; \
+	}; \
+	} // namespace detail
+
+/** Macro for declaration of meta-types
+ */
+#define BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME) \
+	namespace detail { \
+	template <> struct defined_type_info< BASE_NAME > \
+	{ \
+		typedef BOOST_MIRRORED_GLOBAL_SCOPE() scope; \
+		typedef BASE_NAME reflected_type; \
+		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);} \
+		typedef typename ::boost::mpl::int_< \
+			BOOST_STR_LIT_LENGTH(#BASE_NAME) \
+		>::type base_name_length; \
+	}; \
+	} // namespace detail
+
+
+#ifdef NEVER_COMPILE_THIS
 
 namespace detail {
 
@@ -75,21 +117,6 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 	}
 
 
-/** Macro for declaration of meta-types
- */
-#define BOOST_MIRROR_REG_TYPE(NAMESPACE_ALIAS, NAMESPACE, BASE_NAME)     \
-	template <> struct meta_type< NAMESPACE::BASE_NAME >              \
-	{                                                                 \
-		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
-		typedef NAMESPACE::BASE_NAME reflected_type;                                  \
-		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
-		BOOST_STATIC_CONSTANT( \
-			int, \
-			base_name_length = \
-			BOOST_STR_LIT_LENGTH(#BASE_NAME)\
-		); \
-		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
-	};
 
 /** Macro for declaration of meta-types for typedefined types
  */
@@ -145,6 +172,7 @@ struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
 		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
 	};
 
+#endif // NEVER_COMPILE_THIS
 
 /** Helper macro used for batch registering of the meta-types for
  *  the C++ native types
@@ -179,12 +207,12 @@ BOOST_PP_LIST_FOR_EACH(BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE, _, BOOST_MIRROR_NA
 
 /** Register std string and wstring
  */
-BOOST_MIRROR_REG_TYPE(_std, ::std, string)
-BOOST_MIRROR_REG_TYPE(_std, ::std, wstring)
+BOOST_MIRROR_REG_TYPE(::std, string)
+BOOST_MIRROR_REG_TYPE(::std, wstring)
 /** Now register the bchar and bstring too
  */
-BOOST_MIRROR_REG_TYPEDEFD(_boost, ::boost, bchar)
-BOOST_MIRROR_REG_TYPEDEFD(_boost, ::boost, bstring)
+BOOST_MIRROR_REG_TYPEDEFD(::boost, bchar)
+BOOST_MIRROR_REG_TYPEDEFD(::boost, bstring)
 
 
 /** Meta-types for pointers

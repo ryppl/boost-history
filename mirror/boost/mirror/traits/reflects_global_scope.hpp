@@ -21,12 +21,14 @@ namespace mirror {
 /** Reflects-global-scope trait template for other meta-namespaces
  */
 template <class MetaNamespace>
-struct reflects_global_scope : public false_type{ };
+struct reflects_global_scope
+: public false_type{ };
 
 /** Reflects-global-scope trait specialization for global scope meta_namespace
  */
 template <>
-struct reflects_global_scope<BOOST_MIRROR_REFLECT_NAMESPACE(_)> : public true_type{ };
+struct reflects_global_scope< BOOST_MIRRORED_GLOBAL_SCOPE() >
+: public true_type{ };
 
 
 } // namespace mirror

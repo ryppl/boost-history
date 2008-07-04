@@ -10,6 +10,7 @@
 #ifndef BOOST_CHAR_WIDTH_SWITCH_STRING
 #define BOOST_CHAR_WIDTH_SWITCH_STRING
 
+
 #include <boost/char_type_switch/choice.hpp>
 #include <boost/config.hpp>
 // Needed for ::std::string / ::std::wstring
@@ -22,6 +23,9 @@ namespace boost {
 
 
 #ifdef BOOST_USE_WIDE_CHARS
+
+#include <boost/preprocessor/wstringize.hpp>
+
 	// If wide characters were chosen
 	//
 	// define character type
@@ -30,7 +34,12 @@ namespace boost {
 	typedef ::std::wstring bstring;
 	// define macro for string literal type selection
 #	define BOOST_STR_LIT(STR) L##STR
+	// stringization
+#	define BOOST_CTS_STRINGIZE(TO_TEXT) BOOST_PP_WSTRINGIZE(TO_TEXT)
 #else // NOT BOOST_USE_WIDE_CHARS
+
+#include <boost/preprocessor/stringize.hpp>
+
 	// if narrow characters were chosen
 	//
 	// define character type
@@ -39,9 +48,11 @@ namespace boost {
 	typedef ::std::string bstring;
 	// define macro for string literal type selection
 #	define BOOST_STR_LIT(STR) STR
+	// stringization
+#	define BOOST_CTS_STRINGIZE(TO_TEXT) BOOST_PP_STRINGIZE(TO_TEXT)
 #endif // NOT BOOST_USE_WIDE_CHARS
 
-// define macro expanding into a compile time const lenght
+// define macro expanding into a compile time const length
 // of the given string literal
 #define BOOST_STR_LIT_LENGTH(STR) ((sizeof(STR)/sizeof(char))-1)
 

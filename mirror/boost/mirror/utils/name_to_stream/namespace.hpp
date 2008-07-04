@@ -22,7 +22,7 @@ namespace mirror {
 /** Specialization of name_to_stream_helper for the global scope meta-namespace
  */
 template <> 
-struct name_to_stream_helper< BOOST_MIRROR_REFLECT_NAMESPACE(_) >
+struct name_to_stream_helper< BOOST_MIRRORED_GLOBAL_SCOPE() >
 {
 	template <class OutStream>
 	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
@@ -33,14 +33,14 @@ struct name_to_stream_helper< BOOST_MIRROR_REFLECT_NAMESPACE(_) >
 
 /** Specialization of name_to_stream_helper for the top level namespaces
  */
-template <class NamespaceAlias> 
-struct name_to_stream_helper<meta_namespace<NamespaceAlias> >
+template <class NamespacePlaceholder> 
+struct name_to_stream_helper<meta_namespace<NamespacePlaceholder> >
 {
-	typedef meta_namespace<NamespaceAlias> meta_ns;
+	typedef meta_namespace<NamespacePlaceholder> meta_ns;
 	template <class OutStream>
 	static OutStream& put(OutStream& s, bool ldng_dbl_cln)
 	{
-		typedef typename meta_ns::parent parent_ns;
+		typedef typename meta_ns::scope parent_ns;
 		// let the printer print out the  base name of the parent namespace
 		name_to_stream<parent_ns>::put(s, ldng_dbl_cln);
 		// if the parent is not the global scope

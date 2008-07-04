@@ -229,5 +229,20 @@
 			- Tested with gcc 4.3.0 on SuSE
 			- Tested with intel 10.1 on SuSE
 		</revision>
+		<revision id="20080704" major="0" minor="2" micro="0" author="m_ch">
+			- New branch
+			- Several features implemented by the means of the preprocessor were rewritten using templates
+			- Fully qualified name composing has been rewritten using standard C++ strings
+			- Complete rewrite of namespace registering and reflection
+			- The macro MIRROR_REG_NAMESPACE(NAME_SEQ) can now be used for registering both top-level and nested namespaces
+			  Both registering and reflection have been fairly simplified
+			- Replaced the MIRROR_REFLECT_NAMESPACE with MIRRORED_NAMESPACE macro that takes the full namespace name instead
+			  of a namespace alias MIRROR_REFLECT_NAMESPACE(_boost_mirror) is now MIRRORED_NAMESPACE(::boost::mirror).
+			- Added MIRRORED_GLOBAL_SCOPE() to reflect global scope namespace which is equivalent but preffered to
+			  MIRRORED_NAMESPACE(::__)
+			- Complete rewrite of type registering and reflection
+
+			- Tested with MSVC++ 2008 EE On Vista
+		</revision>
 	</revisions>
 </library>
