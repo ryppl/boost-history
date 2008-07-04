@@ -1,2 +1,7 @@
 
-exe decoup : decoup.cpp : <include>../../trunk ;
+# NOTE... only compiles with experimental compiler (oops).
+
+using gcc : 4.4 : g++-4.4 : <cxxflags>-std=c++0x ;
+
+exe des : des.cpp : <include>../../trunk : <toolset>gcc-4.4 ;
+exe blob : blob.cpp : <include>../../trunk : <toolset>gcc-4.4 ;
