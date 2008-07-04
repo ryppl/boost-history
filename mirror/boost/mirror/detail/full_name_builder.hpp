@@ -16,6 +16,8 @@
 // template meta programming
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/plus.hpp>
+#include <boost/mpl/identity.hpp>
+
 
 // forward declarations and common mirror defs
 #include <boost/mirror/common_defs.hpp>
@@ -27,6 +29,8 @@
 namespace boost {
 namespace mirror {
 
+namespace namespace_ {struct _;}
+
 namespace detail {
 	
 	/** Helper template that builds the fully qualified names
@@ -36,28 +40,51 @@ namespace detail {
 	struct full_name_builder : public BaseMetaObject
 	{
 	private:
-		// initializes the full names 
-		inline static bstring init_full_name(void)
+		template <typename AnyScope, class AnyMO>
+		inline static void append_separator(
+			bstring& _str, 
+			mpl::identity<AnyScope>,
+			mpl::identity<AnyMO>
+		)
 		{
-			bstring res(Scope::full_name());
-			res.append(bstring(BOOST_STR_LIT("::")));
-			res.append(bstring(BaseMetaObject::base_name()));
+			static const bstring separator(BOOST_STR_LIT("::"));
+			_str.append(separator);
+		}
+
+		// don't prepend '::' to types on global scope
+		template <typename Type>
+		inline static void append_separator(
+			bstring& _str, 
+			mpl::identity<meta_namespace<namespace_::_> >,
+			mpl::identity<detail::registered_type_info<Type> >
+		)
+		{ }
+
+
+		// initializes the full names 
+		inline static bstring init_name(void)
+		{
+			bstring res(Scope::get_name(mpl::true_()));
+			append_separator(
+				res, 
+				mpl::identity<Scope>(),
+				mpl::identity<BaseMetaObject>()
+			);
+			res.append(BaseMetaObject::get_name(mpl::false_()));
 			return res;
 		}
 	public:
-		// full name getter
-		inline static const bchar* full_name(void)
+		// base name getter
+		inline static const bstring& get_name(mpl::false_ _base)
 		{
-			static bstring s_full_name(init_full_name());
-			return s_full_name.c_str();
+			return BaseMetaObject::get_name(_base);
 		}
-	
-		// the full name length
-		typedef typename ::boost::mpl::plus<
-			typename Scope::full_name_length,
-			typename ::boost::mpl::int_<2>::type,
-			typename BaseMetaObject::base_name_length
-		>::type full_name_length;
+		// full name getter
+		inline static const bstring& get_name(mpl::true_)
+		{
+			static bstring s_name(init_name());
+			return s_name;
+		}
 	};
 	
 	

@@ -10,200 +10,129 @@
 #ifndef BOOST_MIRROR_META_TYPE_HPP
 #define BOOST_MIRROR_META_TYPE_HPP
 
+#include <boost/preprocessor/list/for_each.hpp>
+
 // meta namespaces
 #include <boost/mirror/meta_namespace.hpp>
 //
-#include <boost/mirror/detail/const_type_name.hpp>
-#include <boost/mirror/detail/volatile_type_name.hpp>
-#include <boost/mirror/detail/cv_type_name.hpp>
-
-#include <boost/mirror/detail/pointer_type_name.hpp>
-#include <boost/mirror/detail/reference_type_name.hpp>
-#include <boost/mirror/detail/array_type_name.hpp>
+// type name decorations
+#include <boost/mirror/detail/decorated_type_name.hpp>
 
 namespace boost {
 namespace mirror {
-
-namespace detail {
-	template <typename Type>
-	struct defined_type_info;
-} // namespace detail
-
 
 /** Meta-data describing types 
  */
 template <typename Type>
 struct meta_type 
 : public detail::full_name_builder<
-	typename defined_type_info<Type>::scope,
-	defined_type_info<Type>
->{ };
+	typename detail::registered_type_info<Type>::scope,
+	detail::registered_type_info<Type>
+>
+{
+	inline static const bstring& base_name(void)
+	{
+		return get_name(mpl::false_());
+	}
 
-/** Macro for declaration of meta-types
+	inline static const bstring& full_name(void)
+	{
+		return get_name(mpl::true_());
+	}
+
+	typedef detail::registered_type_info<Type> base_info;
+	typedef typename base_info::scope scope;
+	typedef typename base_info::reflected_type reflected_type;
+};
+
+/** Helper macro used to declare base-name getting functions
+ *  and base-name length static constants
  */
-#define BOOST_MIRROR_REG_TYPE(NAMESPACE, BASE_NAME) \
-	namespace detail { \
-	template <> struct defined_type_info< NAMESPACE::BASE_NAME > \
+#define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPE_NAME) \
+	static const bstring& get_name(mpl::false_) \
 	{ \
-		typedef BOOST_MIRRORED_NAMESPACE(NAMESPACE) scope; \
-		typedef NAMESPACE::BASE_NAME reflected_type; \
-		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);} \
-		typedef typename ::boost::mpl::int_< \
-			BOOST_STR_LIT_LENGTH(#BASE_NAME) \
-		>::type base_name_length; \
-	}; \
-	} // namespace detail
+		static bstring s_name(BOOST_STR_LIT(#TYPE_NAME)); \
+		return s_name; \
+	} 
 
-/** Macro for declaration of meta-types
+/** Macro for registering global-scope types
  */
-#define BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME) \
+#define BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(BASE_NAME) \
 	namespace detail { \
-	template <> struct defined_type_info< BASE_NAME > \
+	template <> struct registered_type_info< BASE_NAME > \
 	{ \
 		typedef BOOST_MIRRORED_GLOBAL_SCOPE() scope; \
 		typedef BASE_NAME reflected_type; \
-		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);} \
-		typedef typename ::boost::mpl::int_< \
-			BOOST_STR_LIT_LENGTH(#BASE_NAME) \
-		>::type base_name_length; \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
 	}; \
 	} // namespace detail
 
-
-#ifdef NEVER_COMPILE_THIS
-
-namespace detail {
-
-template <class TypeIdentifier, typename Type>
-struct typedefd_type_selector { };
-
-} // namespace detail
-
-/** Macro that expands into a typedefined type selector
+/** Macro for registering types nested in namespaces
  */
-#define BOOST_MIRROR_TYPEDEFD_SELECTOR(IDENTIFIER, BASE_TYPE)\
-	::boost::mirror::detail::typedefd_type_selector< ::boost::mirror::typedefs::IDENTIFIER, BASE_TYPE >
+#define BOOST_MIRROR_REG_TYPE(NAMESPACE, BASE_NAME) \
+	namespace detail { \
+	template <> struct registered_type_info< NAMESPACE::BASE_NAME > \
+	{ \
+		typedef BOOST_MIRRORED_NAMESPACE(NAMESPACE) scope; \
+		typedef NAMESPACE::BASE_NAME reflected_type; \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
+	}; \
+	} // namespace detail
 
-template <class TypeIdentifier, typename Type>
-struct meta_type< ::boost::mirror::detail::typedefd_type_selector<
-	TypeIdentifier, Type
-> > : meta_type<Type>{ };
-
-/** Helper macro that declared the full_name-related stuff
+/** Macro that expands into a typedef-ined type selectos
  */
-#define BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
-	BOOST_STATIC_CONSTANT(\
-		int, \
-		full_name_length = \
-		scope::full_name_length + 2 + \
-		base_name_length \
-	); \
-	static const bchar* full_name(void)\
-	{\
-		static bchar the_full_name[full_name_length] = \
-			BOOST_STR_LIT(""); \
-		if(!the_full_name[0])  \
-		{ \
-			bchar * pos = the_full_name; \
-			bstrncpy(pos, scope::full_name(), scope::full_name_length);\
-			pos += scope::full_name_length; \
-			bstrncpy(pos, BOOST_STR_LIT("::"), 2);\
-			pos += 2; \
-			bstrncpy(pos, base_name(), base_name_length);\
-			pos += base_name_length; \
-			*pos = BOOST_STR_LIT('\0'); \
-		} \
-		return the_full_name; \
-	}
+#define BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR(NAMESPACE, TYPEDEFD_NAME) \
+	::boost::mirror::typedef_::TYPEDEFD_NAME < \
+		BOOST_MIRRORED_NAMESPACE( NAMESPACE ) \
+	> \
 
-
-
-/** Macro for declaration of meta-types for typedefined types
+/** Macro for registering typedef-ined types in namespaces
  */
-#define BOOST_MIRROR_REG_TYPEDEFD(NAMESPACE_ALIAS, NAMESPACE, TYPEDEFD_NAME)     \
-	namespace typedefs { struct NAMESPACE_ALIAS##_##TYPEDEFD_NAME { }; }\
-	template <> struct meta_type< BOOST_MIRROR_TYPEDEFD_SELECTOR(\
-		NAMESPACE_ALIAS##_##TYPEDEFD_NAME, \
-		NAMESPACE::TYPEDEFD_NAME \
-	) >              \
-	{                                                                 \
-		typedef BOOST_MIRROR_REFLECT_NAMESPACE(NAMESPACE_ALIAS) scope;                        \
-		typedef NAMESPACE::TYPEDEFD_NAME reflected_type;                                  \
-		static const bchar* base_name(void) {return BOOST_STR_LIT(#TYPEDEFD_NAME);}\
-		BOOST_STATIC_CONSTANT( \
-			int, \
-			base_name_length = \
-			BOOST_STR_LIT_LENGTH(#TYPEDEFD_NAME)\
-		); \
-		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
-	};
-
-/** Declaration of meta types for types in the global scope
- */
-#define BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME)   \
-	template <> struct meta_type< BASE_NAME >              \
-	{                                                                 \
-		typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) scope;                        \
-		typedef BASE_NAME reflected_type;                                  \
-		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
-		BOOST_STATIC_CONSTANT( \
-			int, \
-			base_name_length = \
-			BOOST_STR_LIT_LENGTH( #BASE_NAME ) \
-		); \
-		static const bchar* full_name(void) {return base_name();}\
-		BOOST_STATIC_CONSTANT(int, full_name_length = base_name_length); \
-	};
+#define BOOST_MIRROR_REG_TYPEDEF(NAMESPACE, TYPEDEFD_NAME) \
+	namespace typedef_ { \
+		template <class MetaNamespace> struct TYPEDEFD_NAME; \
+		template <> struct TYPEDEFD_NAME< \
+			BOOST_MIRRORED_NAMESPACE( NAMESPACE ) \
+		> { }; \
+	} /* namespace typedef_ */ \
+	namespace detail { \
+	template <> struct registered_type_info< \
+		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR(NAMESPACE, TYPEDEFD_NAME) \
+	> \
+	{ \
+		typedef BOOST_MIRRORED_NAMESPACE(NAMESPACE) scope; \
+		typedef NAMESPACE::TYPEDEFD_NAME reflected_type; \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPEDEFD_NAME) \
+	}; \
+	} // namespace detail
 
 /** Declaration of meta types for types in declared inside
  *  of a class.
  */
-#define BOOST_MIRROR_REG_TYPE_EMBEDDED(WRAPPER, BASE_NAME)   \
-	template <> struct meta_type< WRAPPER::BASE_NAME >              \
-	{                                                                 \
-		typedef meta_class< WRAPPER > scope;                        \
-		typedef WRAPPER::BASE_NAME reflected_type;                                  \
-		static const bchar* base_name(void) {return BOOST_STR_LIT(#BASE_NAME);}\
-		BOOST_STATIC_CONSTANT( \
-			int, \
-			base_name_length = \
-			BOOST_STR_LIT_LENGTH(#BASE_NAME)\
-		); \
-		BOOST_MIRROR_TMP_DECLARE_META_TYPE_FULL_NAME() \
+#define BOOST_MIRROR_REG_TYPE_EMBEDDED(WRAPPER, BASE_NAME) \
+	template <> struct meta_type< WRAPPER::BASE_NAME > \
+	{ \
+		typedef meta_type< WRAPPER > scope; \
+		typedef WRAPPER::BASE_NAME reflected_type; \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
 	};
 
-#endif // NEVER_COMPILE_THIS
-
-/** Helper macro used for batch registering of the meta-types for
- *  the C++ native types
+/** Register C++ native types
  */
-#define BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE(I, _, BASE_NAME)\
-	BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME)
-
-#define BOOST_MIRROR_NATIVE_TYPES \
-	BOOST_PP_TUPLE_TO_LIST( \
-		15, \
-		( \
-			void, \
-			bool, \
-			char, signed char, unsigned char, wchar_t, \
-			unsigned short int, short, \
-			int, unsigned int, \
-			long, unsigned long int, \
-			float, \
-			double, long double \
-		) \
-	)
-
-/** Declare the meta types for the native C++ types
- */
-BOOST_PP_LIST_FOR_EACH(BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE, _, BOOST_MIRROR_NATIVE_TYPES)
-
-/** We're done with registering of the meta types for native 
- *  types now so we don't need this anymore
- */
-#undef BOOST_MIRROR_REG_ITH_META_TYPE_NATIVE
-
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(void)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(bool)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(char)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned char)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(signed char)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(wchar_t)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(short int)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned short int)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(int)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned int)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(long int)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned long int)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(float)
+BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(double)
 
 /** Register std string and wstring
  */
@@ -211,64 +140,116 @@ BOOST_MIRROR_REG_TYPE(::std, string)
 BOOST_MIRROR_REG_TYPE(::std, wstring)
 /** Now register the bchar and bstring too
  */
-BOOST_MIRROR_REG_TYPEDEFD(::boost, bchar)
-BOOST_MIRROR_REG_TYPEDEFD(::boost, bstring)
-
+BOOST_MIRROR_REG_TYPEDEF(::boost, bchar)
+BOOST_MIRROR_REG_TYPEDEF(::boost, bstring)
 
 /** Meta-types for pointers
  */
 template <class PointeeType>
-struct meta_type<PointeeType*> : detail::static_pointer_type_name<
-	meta_type<PointeeType>
+struct meta_type<PointeeType*> : detail::decorated_type_name<
+	meta_type<PointeeType>,
+	detail::type_name_decorator<PointeeType*>
 >
 {
 	typedef typename meta_type<PointeeType>::scope scope;
 	typedef PointeeType* reflected_type; 
 };
 
+
+
 /** Meta-types for arrays
  */
 template <class ElementType, size_t Size>
-struct meta_type<const ElementType[Size]> : detail::static_array_type_name<
-	meta_type<const ElementType>, Size
+struct meta_type<ElementType[Size]> : detail::decorated_type_name<
+	meta_type<ElementType>,
+	detail::type_name_decorator<ElementType[Size]>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
 	typedef ElementType reflected_type[Size];
+};
+
+
+template <class ElementType, size_t Size>
+struct meta_type<const ElementType[Size]> : detail::decorated_type_name<
+	meta_type<const ElementType>,
+	detail::type_name_decorator<ElementType[Size]>
+>
+{
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef const ElementType reflected_type[Size];
 };
 
 template <class ElementType, size_t Size>
-struct meta_type<ElementType[Size]> : detail::static_array_type_name<
-	meta_type<ElementType>, Size
+struct meta_type<volatile ElementType[Size]> : detail::decorated_type_name<
+	meta_type<volatile ElementType>,
+	detail::type_name_decorator<ElementType[Size]>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType reflected_type[Size];
+	typedef volatile ElementType reflected_type[Size];
 };
 
-template <class ElementType>
-struct meta_type<const ElementType[]> : detail::static_array_type_name<
-	meta_type<const ElementType>, -1
+template <class ElementType, size_t Size>
+struct meta_type<const volatile ElementType[Size]>
+: detail::decorated_type_name<
+	meta_type<const volatile ElementType>,
+	detail::type_name_decorator<ElementType[Size]>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType const reflected_type[];
+	typedef const volatile ElementType reflected_type[Size];
 };
 
 template <class ElementType>
-struct meta_type<ElementType[]> : detail::static_array_type_name<
-	meta_type<ElementType>, -1
+struct meta_type<ElementType[]> : detail::decorated_type_name<
+	meta_type<ElementType>,
+	detail::type_name_decorator<ElementType[]>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
 	typedef ElementType reflected_type[];
 };
 
+template <class ElementType>
+struct meta_type<const ElementType []> : detail::decorated_type_name<
+	meta_type<const ElementType>,
+	detail::type_name_decorator<ElementType []>
+>
+{
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType const reflected_type [];
+};
+
+template <class ElementType>
+struct meta_type<volatile ElementType []> : detail::decorated_type_name<
+	meta_type<volatile ElementType>,
+	detail::type_name_decorator<ElementType []>
+>
+{
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType volatile reflected_type [];
+};
+
+template <class ElementType>
+struct meta_type<const volatile ElementType []> 
+: detail::decorated_type_name<
+	meta_type<const volatile ElementType>,
+	detail::type_name_decorator<ElementType []>
+>
+{
+	typedef typename meta_type<ElementType>::scope scope;
+	typedef ElementType const volatile reflected_type [];
+};
+
+
+
 /** Meta-types for references
  */
 template <class ReferredToType>
-struct meta_type<ReferredToType&> : detail::static_reference_type_name<
-	meta_type<ReferredToType>
+struct meta_type<ReferredToType&> : detail::decorated_type_name<
+	meta_type<ReferredToType>,
+	detail::type_name_decorator<ReferredToType&>
 >
 {
 	typedef typename meta_type<ReferredToType>::scope scope;
@@ -278,8 +259,9 @@ struct meta_type<ReferredToType&> : detail::static_reference_type_name<
 /** Meta-types for const types
  */
 template <class NonConstType>
-struct meta_type<const NonConstType> : detail::static_const_type_name<
-	meta_type<NonConstType>
+struct meta_type<const NonConstType> : detail::decorated_type_name<
+	meta_type<NonConstType>,
+	detail::type_name_decorator<const NonConstType>
 >
 {
 	typedef typename meta_type<NonConstType>::scope scope;
@@ -289,8 +271,9 @@ struct meta_type<const NonConstType> : detail::static_const_type_name<
 /** Meta-types for volatile types
  */
 template <class NonVolatileType>
-struct meta_type<volatile NonVolatileType> : detail::static_volatile_type_name<
-	meta_type<NonVolatileType>
+struct meta_type<volatile NonVolatileType> : detail::decorated_type_name<
+	meta_type<NonVolatileType>,
+	detail::type_name_decorator<volatile NonVolatileType>
 >
 {
 	typedef typename meta_type<NonVolatileType>::scope scope;
@@ -300,14 +283,14 @@ struct meta_type<volatile NonVolatileType> : detail::static_volatile_type_name<
 /** Meta-types for const volatile types
  */
 template <class NonCVType>
-struct meta_type<const volatile NonCVType> : detail::static_cv_type_name<
-	meta_type<NonCVType>
+struct meta_type<const volatile NonCVType> : detail::decorated_type_name<
+	meta_type<NonCVType>,
+	detail::type_name_decorator<const volatile NonCVType>
 >
 {
 	typedef typename meta_type<NonCVType>::scope scope;
 	typedef const volatile NonCVType reflected_type; 
 };
-
 
 } // namespace mirror
 } // namespace boost

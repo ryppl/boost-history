@@ -53,7 +53,7 @@ BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo)
 BOOST_MIRROR_REG_TYPE(::test::feature::detail, bar)
 // register a typedef'd class this allows to distinguish it from
 // the 'source' type in some situations
-BOOST_MIRROR_REG_TYPEDEFD(::test::feature::detail, foobar)
+BOOST_MIRROR_REG_TYPEDEF(::test::feature::detail, foobar)
 
 } // namespace mirror
 } // namespace boost
@@ -77,6 +77,7 @@ int main(void)
 	//
 	// put the full name of the type to the output stream
 	//
+	bcout << "|00| " << name_to_stream< BOOST_MIRRORED_TYPE(int) >() << endl;
 	bcout << "|01| " << name_to_stream< BOOST_MIRRORED_TYPE(foo) >() << endl;
 	bcout << "|02| " << name_to_stream< BOOST_MIRRORED_TYPE(bar) >() << endl;
 	//
@@ -86,6 +87,7 @@ int main(void)
 	// leading "::" too.
 	bcout << "|03| " << name_to_stream< meta_foo >(true) << endl;
 	bcout << "|04| " << name_to_stream< meta_bar >(true) << endl;
+
 	//
 	// this works too...
 	bcout << "|05| " << name_to_stream< BOOST_MIRRORED_TYPE(foo*) >() << endl;
@@ -109,6 +111,7 @@ int main(void)
 	// ... and maybe more conveniently
 	bcout << "|18| " << name_to_stream< BOOST_MIRRORED_TYPEOF(1.0/2.0) >() << endl;
 	//
+
 	// sometimes it is useful to distinguish between a typedef'd type
 	// and the 'source' type.
 	//
@@ -116,25 +119,27 @@ int main(void)
 	// on compilation configuration
 	typedef BOOST_MIRRORED_TYPE(bchar) meta_bchar;
 	// this reflects a meta-type that allows to query the typedef'd name
-	typedef BOOST_MIRRORED_TYPEDEFD(_boost, bchar) meta_bchar_td;
+	typedef BOOST_MIRRORED_TYPEDEF(::boost, bchar) meta_bchar_td;
 	// this reflects the meta-type for the typedef type foobar
-	typedef BOOST_MIRRORED_TYPEDEFD(_test_feature_detail, foobar) meta_foobar_td;
+	typedef BOOST_MIRRORED_TYPEDEF(::test::feature::detail, foobar) meta_foobar_td;
+
 	//
 	bcout << "|19| " << name_to_stream< meta_bchar     >() << endl;
 	bcout << "|20| " << name_to_stream< meta_bchar_td  >() << endl;
 	bcout << "|21| " << name_to_stream< meta_foobar_td >() << endl;
 	//
-	// unfortunately BOOST_MIRRORED_TYPEDEFD(...) works only if
+	// unfortunately BOOST_MIRRORED_TYPEDEF(...) works only if
 	// the typedefined name is explicitly given 
 	// still it can be useful in certin situations.
 	// However, the next line for example would fail to compile
-	//typedef BOOST_MIRRORED_TYPEDEFD(_boost, BOOST_TYPEOF(L'x')) meta_bchar_td;
+	//typedef BOOST_MIRRORED_TYPEDEF(_boost, BOOST_TYPEOF(L'x')) meta_bchar_td;
 	//
 	// check whether the type is defined on the global scope
 	if(!reflects_global_scope<meta_bchar_td::scope>::value)
 		bcout << "|22| " << "bchar NOT defined on global scope" << endl;
 	if(!reflects_global_scope<meta_foo::scope>::value)
 		bcout << "|23| " << "foo NOT defined on global scope" << endl;
+	//
 	// use with typeof
 	if(reflects_global_scope< BOOST_MIRRORED_TYPEOF(1+2) ::scope>::value)
 		bcout << "|24| " << "type of (1+2) defined on global scope" << endl;
@@ -144,11 +149,27 @@ int main(void)
 	//
 	bcout << "|26| " << BOOST_MIRRORED_TYPE(bool) ::full_name() << endl;
 	bcout << "|27| " << BOOST_MIRRORED_TYPE(bchar) ::full_name() << endl;
-	bcout << "|28| " << BOOST_MIRRORED_TYPEDEFD(_boost, bchar) ::full_name() << endl;
-	bcout << "|29| " << BOOST_MIRRORED_TYPEDEFD(_boost, bstring) ::full_name() << endl;
+	bcout << "|28| " << BOOST_MIRRORED_TYPEDEF(::boost, bchar) ::full_name() << endl;
+	bcout << "|29| " << BOOST_MIRRORED_TYPEDEF(::boost, bstring) ::full_name() << endl;
+
+	bcout << "|30| " << BOOST_MIRRORED_TYPE(int const * ) ::full_name() << endl;
+
 	bcout << "|30| " << BOOST_MIRRORED_TYPE(int const * const volatile) ::full_name() << endl;
-	bcout << "|31| " << BOOST_MIRRORED_TYPE(int volatile * const * volatile) ::full_name() << endl;
+	bcout << "|31| " << BOOST_MIRRORED_TYPE(int volatile * const * volatile * const *) ::full_name() << endl;
 	bcout << "|32| " << BOOST_MIRRORED_TYPE(int const * const [321]) ::full_name() << endl;
+	bcout << "|33| " << BOOST_MIRRORED_TYPE(int * volatile * const [][123]) ::full_name() << endl;
+	bcout << "|34| " << BOOST_MIRRORED_TYPE(bar [123][456][789]) ::full_name() << endl;
+	//
+	bcout << "|35| " << BOOST_MIRRORED_TYPE(foo*) ::full_name() << endl;
+	bcout << "|36| " << BOOST_MIRRORED_TYPE(bar&) ::full_name() << endl;
+	bcout << "|37| " << BOOST_MIRRORED_TYPE(foo***) ::full_name() << endl;
+	bcout << "|38| " << BOOST_MIRRORED_TYPE(bar**&) ::full_name() << endl;
+	bcout << "|39| " << BOOST_MIRRORED_TYPE(const foo**) ::full_name() << endl;
+	bcout << "|40| " << BOOST_MIRRORED_TYPE(volatile bar*&) ::full_name() << endl;
+	//
+	bcout << "|41| " << BOOST_MIRRORED_TYPE(const volatile foo) ::full_name() << endl;
+	bcout << "|42| " << BOOST_MIRRORED_TYPE(const volatile bar*) ::full_name() << endl;
+	//
 	//
 	return 0;
 }

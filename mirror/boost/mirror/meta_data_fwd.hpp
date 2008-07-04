@@ -22,11 +22,31 @@ struct meta_namespace;
  *  passed namespace.
  */
 #define BOOST_MIRRORED_NAMESPACE(FULL_NAMESPACE_NAME) \
-	mirror::meta_namespace< namespace_ ## FULL_NAMESPACE_NAME ## ::_ >
+	::boost::mirror::meta_namespace< \
+		::boost::mirror::namespace_  \
+		FULL_NAMESPACE_NAME ## \
+		_boost_mirror_helper \
+		::_ \
+	>
+// namespace_ :: _boost_mirror_helper :: _
+// namespace_ ::test_boost_mirror_helper :: _
+// namespace_ ::test::foo_boost_mirror_helper :: _
+// namespace_ ::test::foo::bar_boost_mirror_helper :: _
 
 #define BOOST_MIRRORED_GLOBAL_SCOPE() \
-	mirror::meta_namespace< namespace_ ## ::_ >
+	::boost::mirror::meta_namespace< \
+		::boost::mirror::namespace_ ## ::_ \
+	>
 
+namespace detail {
+
+	/** Forward declaration of the template class 
+	 *  containing registered type information
+	 */
+	template <typename Type>
+	struct registered_type_info;
+
+} // namespace detail
 
 
 /** Meta-type forward template declaration
@@ -38,24 +58,23 @@ struct meta_type;
 /** Macro that expands into the meta_type for the 
  *  given type or class.
  */
-#define BOOST_MIRROR_REFLECT_TYPE(TYPE) \
+#define BOOST_MIRRORED_TYPE(TYPE) \
 	::boost::mirror::meta_type<TYPE>
 
 /** Macro that expands into the meta_type for the 
  *  given typedefined type.
  */
-#define BOOST_MIRROR_REFLECT_TYPEDEFD(NAMESPACE_ALIAS, TYPEDEFD) \
-	::boost::mirror::meta_type< BOOST_MIRROR_TYPEDEFD_SELECTOR(\
-		NAMESPACE_ALIAS##_##TYPEDEFD, \
-		TYPEDEFD\
-	) >
+#define BOOST_MIRRORED_TYPEDEF(NAMESPACE, TYPEDEF) \
+	::boost::mirror::meta_type< \
+		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR(NAMESPACE, TYPEDEF) \
+	>
 
 /** Macro that expands into the meta_type for the 
  *  type of the given expression.
  *  To get this going <boost/typeof/typeof.hpp>
  *  has to be included.
  */
-#define BOOST_MIRROR_REFLECT_TYPEOF(EXPRESSION) \
+#define BOOST_MIRRORED_TYPEOF(EXPRESSION) \
 	::boost::mirror::meta_type<BOOST_TYPEOF(EXPRESSION)>
 
 

@@ -238,9 +238,17 @@
 			  Both registering and reflection have been fairly simplified
 			- Replaced the MIRROR_REFLECT_NAMESPACE with MIRRORED_NAMESPACE macro that takes the full namespace name instead
 			  of a namespace alias MIRROR_REFLECT_NAMESPACE(_boost_mirror) is now MIRRORED_NAMESPACE(::boost::mirror).
-			- Added MIRRORED_GLOBAL_SCOPE() to reflect global scope namespace which is equivalent but preffered to
-			  MIRRORED_NAMESPACE(::__)
+			- Added MIRRORED_GLOBAL_SCOPE() to reflect global scope namespace which is equivalent to
+			  MIRRORED_NAMESPACE(::)
 			- Complete rewrite of type registering and reflection
+
+			- Changed the return value of base_name and full_name getters from const bchar* to bstring / const bstring&amp;
+			- Replaced BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(TYPE) with BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(TYPE) macro
+
+			- Added get_name(mpl::bool_&lt;FullName&gt;) function that gets the base name with mpl::false_ and full name with mpl::true_
+			- Removed the old non-trivial type name meta_types
+			- Added new meta_type name decorator
+			  
 
 			- Tested with MSVC++ 2008 EE On Vista
 		</revision>
