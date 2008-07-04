@@ -12,12 +12,17 @@ struct node_descriptor
 {
     typedef Blob descriptor_type;
 
-    node_descriptor()
+    inline node_descriptor()
         : value()
     { }
 
-    node_descriptor(descriptor_type const& x)
+    inline node_descriptor(descriptor_type const& x)
         : value(x)
+    { }
+
+    template <typename Container>
+    inline node_descriptor(Container&, typename Container::iterator i)
+        : value(i)
     { }
 
     inline bool is_null()
@@ -36,14 +41,22 @@ struct node_descriptor
     //@{
     inline bool operator<(node_descriptor const& x)
     { return value < x.value; }
+
+    inline bool operator>(node_descriptor const& x)
+    { return value > x.value; }
+
+    inline bool operator<=(node_descriptor const& x)
+    { return value <= x.value; }
+
+    inline bool operator>=(node_descriptor const& x)
+    { return value >= x.value; }
     //@}
+
+    template <typename Container>
+    inline typename Container::iterator get(Container& c) const
+    { return value.get<typename Container::iterator>(); }
 
     descriptor_type value;
 };
-
-template <typename Container>
-inline bool
-is_null(node_descriptor<Container> const d)
-{ return d.value == typename node_descriptor<Container>::descriptor_type(); }
 
 #endif

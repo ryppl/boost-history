@@ -12,7 +12,6 @@
 #include "descriptor/node.hpp"
 #include "descriptor/index.hpp"
 
-
 // Descriptors Take 2 (or 3 or 4).
 //
 // Note that we can't build descriptors on template names alone becaue we can't
@@ -82,16 +81,31 @@ struct extended_container_traits
     typedef typename Container::descriptor_stability descriptor_stability;
 };
 
+
+template <typename Container>
+inline typename extended_container_traits<Container>::descriptor_type
+make_descriptor(Container& c, typename Container::iterator i)
+{ return typename extended_container_traits<Container>::descriptor_type(c, i); }
+
+template <typename Container>
+inline typename Container::iterator
+make_iterator(Container& c, typename extended_container_traits<Container>::descriptor_type d)
+{ return d.get(c); }
+
 /** Return the descriptor stability tag for the given container. */
 template <typename Container>
 inline typename extended_container_traits<Container>::descriptor_stability
 descriptor_stability(Container const&)
 { return typename extended_container_traits<Container>::descriptor_stability(); }
 
+
 // Pull specializations and metafunctions.
 #include "descriptor/functions.hpp"
 #include "descriptor/vector.hpp"
 #include "descriptor/list.hpp"
 #include "descriptor/set.hpp"
+#include "descriptor/multiset.hpp"
+#include "descriptor/map.hpp"
+#include "descriptor/multimap.hpp"
 
 #endif

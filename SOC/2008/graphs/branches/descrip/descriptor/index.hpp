@@ -21,6 +21,11 @@ struct index_descriptor
         : value(d)
     { }
 
+    template <typename Container>
+    inline index_descriptor(Container& c, typename Container::iterator i)
+        : value(std::distance(c.begin(), i))
+    { }
+
     inline bool is_null() const
     { return value == descriptor_type(-1); }
 
@@ -47,6 +52,10 @@ struct index_descriptor
     inline bool operator>=(index_descriptor const& x)
     { return value >= x.value; }
     //@}
+
+    template <typename Container>
+    inline typename Container::iterator get(Container& c) const
+    { return std::next(c.begin(), value); }
 
     descriptor_type value;
 };

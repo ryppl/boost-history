@@ -1,10 +1,24 @@
-//  (C) Copyright Jeremy Siek 2004 
+//  (C) Copyright 2004 Jeremy Siek 
+//  (C) Copyright 2008 Andrew Sutton
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef CONTAINER_HPP
 #define CONTAINER_HPP
+
+// Forward declarations of stdandard types. Jeremy's right! There does need
+// to be an <stlfwd> header since there's no guarantee that these are the
+// correct signatures for these types.
+namespace std
+{
+    template <typename, typename> class vector;
+    template <typename, typename> class list;
+    template <typename, typename, typename> class set;
+    template <typename, typename, typename> class multiset;
+    template <typename, typename, typename, typename> class map;
+    template <typename, typename, typename, typename> class multimap;
+}
 
 // TODO: This probably all goes away with concepts. Seeing as how concepts
 // aren't in C++ just yet, we'll still do things this way.
@@ -62,51 +76,17 @@ iterator_stability(Container const&)
 #include "container/vector.hpp"
 #include "container/list.hpp"
 #include "container/set.hpp"
+#include "container/map.hpp"
+#include "container/multiset.hpp"
+#include "container/multimap.hpp"
 
 // Use this as a compile-time assertion that X is stable
 // inline void require_stable(stable_tag) { }
 
 #if 0
-
-  // std::multiset
-  struct multiset_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public simple_associative_container_tag,
-    virtual public multiple_associative_container_tag 
-    { };
-
-  template <class Key, class Cmp, class Alloc> 
-  multiset_tag container_category(const std::multiset<Key,Cmp,Alloc>&)
-  { return multiset_tag(); }
-
-  template <class Key, class Cmp, class Alloc> 
-  stable_tag iterator_stability(const std::multiset<Key,Cmp,Alloc>&)
-  { return stable_tag(); }
-
-#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-  template <class Key, class Cmp, class Alloc> 
-  struct container_traits< std::multiset<Key,Cmp,Alloc> > {
-    typedef multiset_tag category;
-    typedef stable_tag iterator_stability;
-  };
-#endif
-
   // deque
 
   // std::map
-  struct map_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public pair_associative_container_tag,
-    virtual public unique_associative_container_tag 
-    { };
-
-#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-  template <class Key, class T, class Cmp, class Alloc> 
-  struct container_traits< std::map<Key,T,Cmp,Alloc> > {
-    typedef map_tag category;
-    typedef stable_tag iterator_stability;
-  };
-#endif
 
   template <class Key, class T, class Cmp, class Alloc> 
   map_tag container_category(const std::map<Key,T,Cmp,Alloc>&)
@@ -117,19 +97,6 @@ iterator_stability(Container const&)
   { return stable_tag(); }
 
   // std::multimap
-  struct multimap_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public pair_associative_container_tag,
-    virtual public multiple_associative_container_tag 
-    { };
-
-#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-  template <class Key, class T, class Cmp, class Alloc> 
-  struct container_traits< std::multimap<Key,T,Cmp,Alloc> > {
-    typedef multimap_tag category;
-    typedef stable_tag iterator_stability;
-  };
-#endif
 
   template <class Key, class T, class Cmp, class Alloc> 
   multimap_tag container_category(const std::multimap<Key,T,Cmp,Alloc>&)

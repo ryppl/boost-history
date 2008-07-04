@@ -19,7 +19,6 @@ struct has_insert_mutator
         >::value;
 };
 
-
 /**
  * Returns true if the container supports remove operations that do not
  * invalidate outstanding descriptors.
