@@ -1,5 +1,0 @@
-
-#ifndef CONTAINER_MULTIMAP_HPP
-#define CONTAINER_MULTIMAP_HPP
-
-#endif

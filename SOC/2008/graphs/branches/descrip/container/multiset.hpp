@@ -1,5 +1,0 @@
-
-#ifndef CONTAINER_MULTISET_HPP
-#define CONTAINER_MULTISET_HPP
-
-#endif

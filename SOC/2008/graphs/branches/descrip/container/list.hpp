@@ -1,5 +1,0 @@
-
-#ifndef CONTAINER_LIST_HPP
-#define CONTAINER_LIST_HPP
-
-#endif
