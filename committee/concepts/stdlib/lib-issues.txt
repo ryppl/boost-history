@@ -438,3 +438,6 @@ Y    * In FrontInsertionSequence? axiom add ", c".
     * Missing MoveAssignable? requirement on
       vector::emplace(const_iterator, Args&&...)
 
+    * Missing concept: EquivalenceRelation"
+
+    * Check for places where we need to use EquivalenceRelation for the predicate form when the simple form uses EqualityComparable
