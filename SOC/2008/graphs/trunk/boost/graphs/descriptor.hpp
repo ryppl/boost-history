@@ -50,7 +50,7 @@ struct descriptor
     descriptor()
         : descriptor_impl<Container>()
     { }
-    
+
     /** Create a descriptor over the given iterator. */
     descriptor(Container& c, typename Container::iterator i)
         : descriptor_impl<Container>(c, i)

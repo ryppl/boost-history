@@ -7,3 +7,5 @@ exe test : test.cpp : <include>../../ <include>/usr/local/include ;
 exe props : props.cpp : <include>../../ <include>/usr/local/include ;
 exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;
 exe desc : desc.cpp : <include>../../ <include>/usr/local/include ;
+
+exe place : place.cpp : <include>../../ <include>/usr/local/include ;

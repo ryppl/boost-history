@@ -32,14 +32,14 @@ struct descriptor_impl
     
     inline index_type index() const
     { return &*iter; }
-    
+
     inline value_type& value()
     { return *iter; }
-    
+
     void reset()
     {
-        cont = 0; 
-        iter = iterator(); 
+        cont = 0;
+        iter = iterator();
     }
     
     inline bool operator==(descriptor_impl const& x) const
@@ -56,10 +56,10 @@ struct descriptor_impl
     
     inline bool operator<=(descriptor_impl const& x) const
     { return !x.operator<(*this); }
-    
+
     inline bool operator>=(descriptor_impl const& x) const
     { return !operator<(x); }
-    
+
     container_type* cont;
     iterator        iter;
 };

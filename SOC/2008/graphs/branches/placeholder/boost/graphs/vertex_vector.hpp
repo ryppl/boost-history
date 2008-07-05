@@ -5,6 +5,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "placeholder.hpp"
+#include "descriptor.hpp"
 #include "vertex_descriptor.hpp"
 #include "vertex_iterator.hpp"
 
@@ -26,6 +28,12 @@ struct vertex_vector
 {
     typedef unused key_type;
     typedef basic_vertex_descriptor<std::size_t> descriptor_type;
+
+    // Generate some dummy information that we can use to generate fake
+    // decriptors and other types. These types will be the same size as the
+    // real descriptor and store tyes later.
+    typedef std::vector<int, Alloc<int> > dummy_vector;
+    typedef descriptor<dummy_vector> dummy_descriptor;
 
     // The store metafunction generates the type used to store vertices in
     // either a directed or undirected graph. This metafunction takes the

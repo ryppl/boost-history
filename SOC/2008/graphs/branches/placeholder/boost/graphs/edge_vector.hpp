@@ -59,6 +59,8 @@ struct edge_vector
     template <typename VertexDesc, typename PropDesc>
     struct incidence_store
     {
+        // Generate a dummy incidence vector that we can use to compose a
+        // placeholder for the vertex type. Note that the property descriptor
         typedef std::pair<VertexDesc, PropDesc> incidence_pair;
         typedef FirstAlloc<incidence_pair> incidence_allocator;
         typedef incidence_vector<incidence_pair, incidence_allocator> type;

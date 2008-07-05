@@ -51,4 +51,9 @@ struct placeholder
     mutable char mem[N];
 };
 
+/** A useful metafunction for generating placeholder types. */
+template <typename T>
+struct typeholder
+{ typedef placeholder<sizeof(T)> type; }
+
 #endif

@@ -19,11 +19,25 @@
 
 #include "adjacency_iterator.hpp"
 
-template <
-    typename VertexProps,
-    typename EdgeProps,
-    typename VertexStore,
-    typename EdgeStore>
+template <typename VertexProps, typename EdgeProps, typename VertexStore, typename EdgeStore>
+struct undirected_types
+{
+    // Generate a dummy vertex descriptor.
+    typedef typename VertexStore::dummy_descriptor dummy_vertex_descriptor;
+
+    // Always start with the property store because its basically independant
+    // of the other parts of the graph (except for its descriptor slots).
+    typedef typename EdgeStore::template property_store<EdgeProps>::type property_store;
+    typedef typename property_store::property_descriptor property_descriptor;
+    typedef typename property_store::size_type edges_size_type;
+
+    // Use the dummy vertex and property descriptors to generate the incidence
+    // list for the vertex.
+    typedef typename EdgeStore::template incidence_store<dummy_vertex_descriptor, property_descriptor>::type incidence_store;
+
+};
+
+template <typename VertexProps, typename EdgeProps, typename VertexStore, typename EdgeStore>
 class undirected_graph
 {
     typedef undirected_graph<VertexProps, EdgeProps, VertexStore, EdgeStore> this_type;
@@ -32,6 +46,7 @@ public:
     typedef EdgeProps edge_properties;
     typedef VertexStore vertex_store_selector;
     typedef EdgeStore edge_store_selector;
+
 
     // Generate the property store type first. We can do this first because
     // it's basically independant of everything else, but contributes to almost

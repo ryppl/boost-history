@@ -186,13 +186,11 @@ void test_incidence_iterator()
     g.add_edge(v, u, 2);
     g.add_edge(u, v, 3);
     g.add_edge(v, u, 4);
-    cout << "done building" << endl;
 
     typename Graph::incident_edge_range x = g.incident_edges(v);
-
     typename Graph::incident_edge_iterator i = x.first;
     for(typename Graph::incident_edge_iterator i = x.first; i != x.second; ++i) {
-        cout << *i << endl;
+        // cout << *i << endl;
     }
 }
 
