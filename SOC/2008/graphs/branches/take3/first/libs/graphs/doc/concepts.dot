@@ -1,0 +1,118 @@
+
+digraph G {
+    rankdir = BT;
+    node [shape = box];
+
+    GraphBase;
+    VertexListGraph;
+
+    /** For graphs with vertex properties. */
+    VertexPropertyGraph;
+    SortableVertexPropertyGraph;
+    HashableVertexPropertyGraph;
+
+    /** For graphs with vertex keys. */
+    VertexKeyGraph;
+    SortableVertexKeyGraph;
+    HashableVertexKeyGraph;
+
+    /** Basic types of vertex sets */
+    SequentialVertexGraph;
+    SimpleAssociativeVertexGraph;
+    PairAssociativeVertexGraph;
+
+    /** Vertex sets */
+    VertexSetGraph;
+    SortedVertexSetGraph;
+    HashedVertexSetGraph;
+
+    /** Vertex maps */
+    VertexMapGraph;
+    SortedVertexMapGraph;
+    HashedVertexMapGraph;
+
+    /** Vertex multisets */
+    /*
+    VertexMultisetGraph;
+    SortedVertexMultisetGraph;
+    HashedVertexMultisetGraph;
+    */
+
+    /** Vertex multimaps */
+    /*
+    VertexMultimapGraph;
+    SortedVertexMultimapGraph;
+    HashedVertexMultimapGraph;
+    */
+
+    /** Extendability */
+    ExtendableVertexGraph;
+    ExtendableSequentialVertexGraph;
+    ExtendableSequentialVertexPropertyGraph;
+    ExtendableSimpleAssociativeVertexGraph;
+    ExtendablePairAssociativeVertexGraph;
+
+    /** Reducibility */
+    ReducibleVertexGraph;
+    ReducibleSimpleAssociativeVertexGraph;
+    ReduciblePairAssociativeVertexGraph;
+
+    // Edges
+    VertexListGraph -> GraphBase;
+    VertexPropertyGraph -> GraphBase;
+    VertexKeyGraph -> GraphBase;
+
+    SortableVertexPropertyGraph -> VertexPropertyGraph;
+    HashableVertexPropertyGraph -> VertexPropertyGraph;
+    SortableVertexKeyGraph -> VertexKeyGraph;
+    HashableVertexKeyGraph -> VertexKeyGraph;
+
+    SequentialVertexGraph -> GraphBase;
+    SimpleAssociativeVertexGraph -> VertexPropertyGraph;
+    PairAssociativeVertexGraph -> VertexKeyGraph;
+
+    VertexSetGraph -> SimpleAssociativeVertexGraph;
+    SortedVertexSetGraph -> SortableVertexPropertyGraph;
+    SortedVertexSetGraph -> VertexSetGraph;
+    HashedVertexSetGraph -> HashableVertexPropertyGraph;
+    HashedVertexSetGraph -> VertexSetGraph;
+
+    VertexMapGraph -> PairAssociativeVertexGraph;
+    SortedVertexMapGraph -> SortableVertexKeyGraph;
+    SortedVertexMapGraph -> VertexMapGraph;
+    HashedVertexMapGraph -> HashableVertexKeyGraph;
+    HashedVertexMapGraph -> VertexMapGraph;
+
+    /*
+    VertexMultisetGraph -> VertexListGraph;
+    VertexMultisetGraph -> SimpleAssociativeVertexGraph;
+    SortedVertexMultisetGraph -> SortableVertexPropertyGraph;
+    SortedVertexMultisetGraph -> VertexMultisetGraph;
+    HashedVertexMultisetGraph -> HashableVertexPropertyGraph;
+    HashedVertexMultisetGraph -> VertexMultisetGraph;
+
+    VertexMultimapGraph -> VertexListGraph;
+    VertexMultimapGraph -> PairAssociativeVertexGraph;
+    SortedVertexMultimapGraph -> SortableVertexKeyGraph;
+    SortedVertexMultimapGraph -> VertexMultimapGraph;
+    HashedVertexMultimapGraph -> HashableVertexKeyGraph;
+    HashedVertexMultimapGraph -> VertexMultimapGraph;
+    */
+
+    ExtendableSequentialVertexGraph -> ExtendableVertexGraph;
+    ExtendableSequentialVertexGraph -> SequentialVertexGraph;
+    ExtendableSequentialVertexPropertyGraph -> ExtendableVertexGraph;
+    ExtendableSequentialVertexPropertyGraph -> SequentialVertexGraph;
+    ExtendableSequentialVertexPropertyGraph -> VertexPropertyGraph;
+    ExtendableSimpleAssociativeVertexGraph -> ExtendableVertexGraph;
+    ExtendableSimpleAssociativeVertexGraph -> SimpleAssociativeVertexGraph;
+    ExtendablePairAssociativeVertexGraph -> ExtendableVertexGraph;
+    ExtendablePairAssociativeVertexGraph -> PairAssociativeVertexGraph;
+
+    ReducibleVertexGraph -> GraphBase;
+    ReducibleSimpleAssociativeVertexGraph -> ReducibleVertexGraph;
+    ReducibleSimpleAssociativeVertexGraph -> SimpleAssociativeVertexGraph;
+    ReduciblePairAssociativeVertexGraph -> ReducibleVertexGraph;
+    ReduciblePairAssociativeVertexGraph -> PairAssociativeVertexGraph;
+
+}
