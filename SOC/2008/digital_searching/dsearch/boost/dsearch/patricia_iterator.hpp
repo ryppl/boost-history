@@ -20,7 +20,7 @@ Value_type, bidirectional_traversal_tag >
 {
 	template<class K,class M,class K_t,class A > friend class patricia;
 	protected:
-	///empty struct used for conversion from const_iterator to iterator
+	///empty struct used for avoiding conversion from const_iterator to iterator
 	struct enabler {};
 	friend class boost::iterator_core_access;
 	///Pointer to prev node . usually cur->left or cur->right ==next

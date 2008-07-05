@@ -325,7 +325,7 @@ class trie
 	 */ 
 	std::pair<const_iterator,const_iterator> prefix_range(const key_type &key) const
 	{
-		return const_cast<type *>(this)->prefix_range(key); 
+		return const_cast<type *>(this)->prefix_range(key);
 		//return prefix_range<const_iterator,const_cursor,const type*>(this,key);
 	}
 
@@ -336,13 +336,15 @@ class trie
 	 */ 	
 	std::pair<iterator,iterator> prefix_range(const key_type &key)
 	{
-		prefix_range<iterator,cursor,type*>(this,key);
+		return prefix_range<iterator,cursor,type*>(this,key);
+#if 0
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 				end_it=Key_traits::end(key);
 		iterator ret_it,right;
 		cursor cur,next;
 		cur=root();
 		ret_it.push(cur);
+		//* find where the leaf is.
 		while(it!=end_it)
 		{
 			if(cur.empty()) return std::make_pair(end(),end());
@@ -353,39 +355,59 @@ class trie
 			ret_it.push(cur);
 			it++;
 		}
+		
 		right=ret_it;
+		//* and left most from the leaf.
 		ret_it.to_left_most();
+		//* move right most from the leaf.
 		right.to_right_most();
+		//* since we want right range not to be closed we increment right
+		//* before returning.
 		return std::make_pair(ret_it,++right);
+#endif
+
 	}
 
 	///clears the trie. 
 	void clear()
 	{
 		typedef typename node_type::iterator node_it;
+		//* store the node and node iterator in a stack.
 		std::stack< std::pair<node_type*,node_it> > node_stack; 
 		int size=1;
+		
+		//* push root and its begin()
 		node_stack.push(std::make_pair(node_root,node_root->begin()));
 		while(1)
-		{		
+		{
+			//* if the iterator has reached the end we will need to pop
+			//* and goto to the next sub tree.
 			if(node_stack.top().first->end()==node_stack.top().second)
 			{
+				//* if size of 1 we have done every thing :)
 				if(size==1) break;
 				node_allocator.destroy(node_stack.top().first);
 				node_allocator.deallocate(node_stack.top().first,1);
+				//* pop the current sub tree.
 				node_stack.pop();
 				size--;
+				//* move to the next subtree.
 				node_stack.top().second++;
 				continue;
 			}
+			//* arrange for a new node.
 			node_stack.push( std::make_pair(*(node_stack.top().second)
 			,(*(node_stack.top().second))->begin()) );
 			size++;
 		}
 		node_stack.pop();
+		//* we have not yet deallocated root.
+		//* clean up root.
 		node_allocator.destroy(node_root);
 		node_allocator.deallocate(node_root,1);
 		node_root=node_allocator.allocate(1);
+		
+		//* and allocate a new one.
 		new(node_root) node_type();
 	}
 	
@@ -397,25 +419,30 @@ class trie
 	void erase(const iterator &it)
 	{
 		iterator iter=it;
-		node_type *n_t;
 		cursor cur_it;
 		typename node_type::iterator node_it;
+		
+		//* check whether the iterator points to a leaf node
 		if ( iter.top().begin()==iter.top().end() )
 		{
+			//* iter.size() refers to size of the iterator's stack.
+			//* since there is no parent for the root node it does not 
+			//* have a corresponding iterator.
 			if(iter.size()!=1)
 				node_it=iter.top().get_iterator();
-			node_allocator.destroy( n_t = iter.top().get_node() );
+			
+			node_allocator.destroy( iter.top().get_node() );
 			node_allocator.deallocate( iter.top().get_node() , 1 );
 			iter.pop();
 		}
 		else
 		{
+			//*if it does not point to a leaf node just erase the data and return
 			iter.top().get_node()->erase_value();
 			return;
 		}
 
-		if ( iter.empty() )
-		if( iter.empty() ) //deallocated the root node so reallocate it.
+		if ( iter.empty() )//*deallocated the root node so reallocate it.
 		{
 			node_root=node_allocator.allocate(1);
 			new(node_root) node_type();
@@ -423,22 +450,28 @@ class trie
 		}
 			
 		cur_it=iter.top().begin();
+		//*if (++cur_it)==iter.top().end() then its only child has been erased.
 		while( (++cur_it)==iter.top().end() )
 		{
+			//* iter.size() refers to size of the iterator's stack.
+			//* since there is no parent for the root node it does not 
+			//* have a corresponding iterator.
 			if(iter.size()!=1)
 				node_it=iter.top().get_iterator();
-			node_allocator.destroy ( n_t = iter.top().get_node() );
+			//* deallocate the node.
+			node_allocator.destroy ( iter.top().get_node() );
 			node_allocator.deallocate ( iter.top().get_node() , 1 );
 			iter.pop();
 			
-			if( iter.empty() ) //deallocated the root node so reallocate it.
+			//* deallocated the root node so reallocate it.
+			if( iter.empty() ) 
 			{
 				node_root=node_allocator.allocate(1);
 				new(node_root) node_type();
 				return;
 			}
 
-
+			//* if a particular node has value then break then and there.
 			if(iter.top().has_value())
 				break;
 			cur_it=iter.top().begin();
@@ -574,7 +607,9 @@ class trie
 	{
 		int num=0;
 		iterator it,end_it=this->end();
+		//* just iterate and find out no of elements.
 		for(it=this->begin();it!=end_it;it++,num++);
+		
 		return num;
 	}
 	
@@ -587,30 +622,35 @@ class trie
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 			end_it=Key_traits::end(key);
-		node_type *cur=node_root,*next;
+		node_type *cur=node_root, *next;
 		typename node_type::iterator fit;
-		int i=0;
-		while(it!=end_it)
+		
+		//*go as far as one can.
+		while ( it!=end_it )
 		{
-			fit=cur->find(*it);
-			if(fit==cur->end())
+			//*find the current char in the node.
+			fit=cur->find( *it );
+			//*if not found go out of the loop.
+			if ( fit == cur->end() )
 				break;
+			//*change cur to pointer of the new node.
 			cur=*fit;
 			it++;
-			assert(i!=10);
+
 		}
-		i=0;
+		
+		//*allocate nodes untill the end of the string.
 		while(it!=end_it)
 		{
-			i++;
 			next=node_allocator.allocate(1);
 			//std::cout<<"Allocating:"<<*it<<std::endl;
 			new(next) node_type();
+			//*insert the char in to new node along with pointer to next node.
 			cur->insert(*it,next);
 			cur=next;
-			assert(i!=10);
 			it++;
 		}
+		//*return the pointer to the leaf node.
 		return cur;
 	}
 
@@ -620,23 +660,26 @@ class trie
 	 \param key is the key whose existance in the trie us supposed to be
 	 determined
 	 */
-	bool exist(const key_type &key) const //make this iterator instead of bool;
+	bool exist(const key_type &key) const
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 					end_it=Key_traits::end(key);
 		typename node_type::iterator fit;
 		node_type *cur=node_root;
+		
+		//* for each element in the key find the corresponding node pointer
+		//* and move the the node.
 		while(!(it==end_it))
 		{
 			fit=cur->find(*it);
-			if(fit == cur->end() ) return false;
+			if ( fit == cur->end() ) return false;
 			cur=*fit;
 			it++;
 		}
+		//* if the "leaf" has the a value return true.
 		if(cur->has_value())
-		{
 			return true;
-		}
+		//* else
 		return false;
 	}
 	///copy the trie preserving the internal structure of the node
@@ -647,15 +690,22 @@ class trie
 	{
 		node_type *prev,*temp_node;
 		typedef typename node_type::iterator node_iterator;
+		//* stack to maintain the list of iterators for the other root.
 		std::stack<node_iterator> st;
+		//* stack to maintain the list of iterators.
 		std::stack<node_iterator> this_st;
+		//* maintain iterators for other root.
 		node_iterator cur_it=other_root->begin();
 
+		//* allocate the root node
 		node_root=node_allocator.allocate(1);
 		node_allocator.construct(node_root,*other_root);
 		
+		//* if the other root is empty return
 		if ( other_root->end() == other_root->begin() )
 			return;
+			
+		//* push root on to the stack
 		this_st.push(node_root->begin());
 
 		while(true)
@@ -668,20 +718,34 @@ class trie
 			if( cur_it == prev->end() )
 			{
 				if(st.empty())  return;
+				
+				//* change cur_it
 				cur_it=++st.top();
+				//* pop to change top.
 				st.pop();
+				
+				//* do the same (nearly) to other stack too.
 				this_st.pop();
 				++this_st.top();
 				continue;
 			}
 
+			//* assign new node.
 			temp_node=node_allocator.allocate(1);
+
+			//* call the copy constructor of the new node.
+			//* this helps in preserving the internal node structure.
 			node_allocator.construct( temp_node , **cur_it );
+			
+			//* put the pointer of new node on the parent outward edge
 			*(this_st.top())=temp_node;
 
+			//* push the begin of new node on to the stack.
 			this_st.push(temp_node->begin());
+			
+			//* push the cur_it on to the stack and move move one to new it.
 			st.push(cur_it);
-
+			
 			cur_it=(*cur_it)->begin();
 		}
 	}
@@ -698,19 +762,27 @@ class trie
 	{
 		typename Key_traits::const_iterator it=Key_traits::begin(key),
 				end_it=Key_traits::end(key);
+				
+		//* iterator is a stack of cursors
 		It_type ret_it;
 		Cur_type cur,next;
 		cur=this_ptr->root();
+		//* goto the leaf of the key.
 		while(!(it==end_it))
 		{
+			//* push the current iterator on to the stack.
 			ret_it.push(cur);
+			//* find the particular charecter in the node.
 			next=cur.find(*it);
+			//* if not found return null.
 			if ( next == cur.end() ) 
 				return this_ptr->end();
 			cur=next;
 			it++;
 		}
+		
 		ret_it.push(cur);
+		//* if leaf has value return ret_it.
 		if(cur.has_value())
 		{
 			return ret_it;
@@ -727,6 +799,8 @@ class trie
 	{
 		typename node_type::iterator it=node->begin(),eit=node->end();
 		typename node_type::iterator ret_it=eit;
+		
+		//* linear iteration to find where the lower bound is.
 		while(it!=eit)
 		{
 			if( node->get_element(it) > ele)
@@ -755,13 +829,18 @@ class trie
 		cur=r;
 		ret_it.push(cur);
 		//std::cout<<"CONST UPPER BOUND"<<std::endl;
+		
+		//go as far as possible with the key.
 		while(it!=end_it)
 		{
 			if(cur.empty())
 			{
+				//* if the cur is empty then prefix of the key is there in the trie
+				//* so goto the iterator adjacent to prefix
 				ret_it++;
 				return ret_it;
 			}
+			//* the usual find procedure.
 			next=cur.find(*it);
 			if ( next == cur.end() )
 			{
@@ -773,15 +852,28 @@ class trie
 			ret_it.push(cur);
 			it++;				
 		}
+		
+		//* if the entire key is not found
 		if( not_found )
 		{
+			//* if find the lower bound in the last node we could atmost reach.
 			next=Cur_type(cur.get_node(),lower_bound(cur.get_node(),*it));
 			//next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
 			
 			if(next==ret_it.top().end())
+			{
+				//* if there is no lower bound we position the cursor at begin.
 				next=Cur_type ( cur.get_node(), cur.get_node()->begin());
+			}
 			else
+			{
+				//* if else we just need increment the cursor.
+				//* because the upper bound is adjacent to the lower bound.
 				next++;
+			}
+			
+			//* next++ could have positoned the cursor at the end.
+			//* so pop untill next++ does not position at the end.
 			while(next==ret_it.top().end())
 			{
 				//std::cout<<"popping "<<std::endl;
@@ -793,7 +885,9 @@ class trie
 			}
 			ret_it.push(next);
 		}
-		ret_it.to_left_most(); //if ret_it.top().hash_value() then this does nothing
+		//* move the iterator to the left most from the current position.
+		//* if ret_it.top().has_value() then this does nothing
+		ret_it.to_left_most(); 
 		return ret_it;
 	}
 
@@ -816,11 +910,13 @@ class trie
 		cur=r;
 		ret_it.push(cur);
 		//std::cout<<"LOWER BOUND"<<std::endl;
+		//* try to find the key in the trie
 		while(it!=end_it)
 		{
 			if(cur.empty())
 				break;
 			//std::cout<<"finding "<<*it<<std::endl;
+			//* find the next cursor
 			next=cur.find(*it);
 			if ( next == cur.end() )
 			{
@@ -833,13 +929,20 @@ class trie
 			it++;
 		}
 
+		//* if the entire key is not found 
 		if(not_found)
 		{
+			//* then find the lower bound of the element which is not found the node.
+			//* then make  cursor out of it.
 			next=Cur_type(cur.get_node(),lower_bound(cur.get_node(),*it));
 			//next=Cur_type(cur.get_node(),const_cast<node_type *>(cur.get_node())->lower_bound(*it));
+			
+			//* if lower bound is found we have no problems :).
 			if(next!=cur.end()) 
 			{
 				ret_it.push(next);
+				//* move the right most in the subtree.
+				//* ie the greatest element/
 				ret_it.to_right_most();
 				return ret_it;
 			}
@@ -847,6 +950,7 @@ class trie
 
 		do
 		{
+			//* else pop until --next!= end() or next has value
 			next=ret_it.top();
 			ret_it.pop();
 			if(next.has_value())
@@ -863,9 +967,11 @@ class trie
 
 		next--;
 		ret_it.push(next);
+		//* move to highest key in the subtree.
 		ret_it.to_right_most();
 		return ret_it;
 	}
+	
 
 	///find the prefix_range of the key
 	/**
@@ -883,23 +989,26 @@ class trie
 		Cur_type cur,next;
 		cur=this_ptr->root();
 		ret_it.push(cur);
+		//* as usual try to find the prefix in the trie.
 		while(it!=end_it)
 		{
 			if(cur.empty()) return std::make_pair(this_ptr->end(),this_ptr->end());
 			next=cur.find(*it);
+			
+			//* if not found return end() pairs
 			if(cur.end()==next)
 				return std::make_pair(this_ptr->end(),this_ptr->end());
-			//std::cout<<"LOOK AT ME:"<<*it<<std::endl;
+			
 			cur=next;
 			ret_it.push(cur);
 			it++;
 		}
 		right=ret_it;
-		//std::cout<<"To LEFT MOST"<<std::endl;
+		//* if prefix is found move to left most and right most.
 		ret_it.to_left_most();
 		//std::cout<<"To RIGHT MOST"<<std::endl;
 		right.to_right_most();
-	        //std::cout<<"pair range "<<*right<<std::endl;
+	       //std::cout<<"pair range "<<*right<<std::endl;
 		return std::make_pair(ret_it,++right);
 	}
 

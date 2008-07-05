@@ -22,7 +22,7 @@
 namespace boost{
 namespace dsearch{
 
-/// The pactrica class
+/// The patricia class
 /** \ingroup group_nothing
     \param Key key currently accepts a string only.
     \param Mapped can be any datatype which is supposed to be indexed using string
