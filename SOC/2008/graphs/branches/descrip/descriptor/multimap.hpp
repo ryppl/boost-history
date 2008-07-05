@@ -1,6 +1,0 @@
-
-#ifndef DESCRIPTOR_MULTIMAP_HPP
-#define DESCRIPTOR_MULTIMAP_HPP
-
-
-#endif

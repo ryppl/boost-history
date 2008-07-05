@@ -1,6 +1,0 @@
-
-#ifndef DESCRIPTOR_VECTOR_HPP
-#define DESCRIPTOR_VECTOR_HPP
-
-
-#endif

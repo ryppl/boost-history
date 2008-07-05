@@ -1,6 +1,0 @@
-
-#ifndef DESCRIPTOR_LIST_HPP
-#define DESCRIPTOR_LIST_HPP
-
-
-#endif

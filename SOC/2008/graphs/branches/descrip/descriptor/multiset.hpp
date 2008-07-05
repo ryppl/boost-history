@@ -1,7 +1,0 @@
-
-#ifndef DESCRIPTOR_MULTISET_HPP
-#define DESCRIPTOR_MULTISET_HPP
-
-
-
-#endif
