@@ -12,23 +12,11 @@ using namespace std;
 
 namespace dispatch
 {
-    template <typename Container, typename Value>
-    void insert(Container& c, Value const& x, back_insertion_sequence_tag)
-    { c.push_back(x); }
-
-    template <typename Container, typename Value>
-    void insert(Container& c, Value const& x, simple_associative_container_tag)
-    { c.insert(x); }
-
+    // A little help for mapped values.
     template <typename Container, typename Value>
     void insert(Container& c, Value const& x, pair_associative_container_tag)
     { c.insert(make_pair(x, x)); }
 }
-
-// A little tag dispatch for the soul. So pretty.
-template <typename Container, typename Value>
-void insert(Container& c, Value const& x)
-{ dispatch::insert(c, x, container_category(c)); }
 
 template <typename T, typename U>
 ostream& operator<<(ostream& os, pair<T, U> const& x)

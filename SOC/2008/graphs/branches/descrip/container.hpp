@@ -7,6 +7,8 @@
 #ifndef CONTAINER_HPP
 #define CONTAINER_HPP
 
+#include <boost/type_traits.hpp>
+
 // Forward declarations of stdandard types. Jeremy's right! There does need
 // to be an <stlfwd> header since there's no guarantee that these are the
 // correct signatures for these types.
@@ -59,6 +61,8 @@ struct container_traits
     typedef typename Container::iterator_stability iterator_stability;
 };
 
+// Trait accessors
+
 /** Return the container category tag of the given container. */
 template <typename Container>
 inline typename container_traits<Container>::category
@@ -71,75 +75,150 @@ inline typename container_traits<Container>::iterator_stability
 iterator_stability(Container const&)
 { return typename container_traits<Container>::iterator_stability(); }
 
-// Pull specializtions and metafunctions.
-#include "container/functions.hpp"
-#include "container/vector.hpp"
-#include "container/list.hpp"
-#include "container/set.hpp"
-#include "container/map.hpp"
-#include "container/multiset.hpp"
-#include "container/multimap.hpp"
+// Metafunctions
 
-// Use this as a compile-time assertion that X is stable
-// inline void require_stable(stable_tag) { }
+/**
+ * Evaluates to true if the container contains unique elements.
+ */
+template <typename Container>
+struct contains_unique_elements
+{
+    static bool const value =
+        boost::is_convertible<
+            typename container_traits<Container>::category,
+            unique_associative_container_tag
+        >::value;
+};
+
+/**
+ * Evaluates to true if the container's elements are mapped to a key. This is
+ * only true for pair associative containers, not sets (which are a little
+ * different).
+ */
+template <typename Container>
+struct contains_mapped_elements
+{
+    static bool const value =
+        boost::is_convertible<
+            typename container_traits<Container>::category,
+            pair_associative_container_tag
+        >::value;
+};
+
+// Specializations
+
+// Vector
+struct vector_tag :
+    virtual public random_access_container_tag,
+    virtual public back_insertion_sequence_tag
+{ };
+
+template <class T, class Alloc>
+struct container_traits<std::vector<T,Alloc>>
+{
+    typedef vector_tag category;
+    typedef unstable_iterator_tag iterator_stability;
+};
+
+// List
+struct list_tag :
+    virtual public reversible_container_tag,
+    virtual public back_insertion_sequence_tag,
+    virtual public front_insertion_sequence_tag
+{ };
+
+template <class T, class Alloc>
+struct container_traits<std::list<T,Alloc>>
+{
+    typedef list_tag category;
+    typedef stable_iterator_tag iterator_stability;
+};
+
+// TODO: Dequeue
+
+// Set
+struct set_tag :
+    virtual public sorted_associative_container_tag,
+    virtual public simple_associative_container_tag,
+    virtual public unique_associative_container_tag
+{ };
+
+
+template <class Key, class Cmp, class Alloc>
+struct container_traits<std::set<Key,Cmp,Alloc>>
+{
+    typedef set_tag category;
+    typedef stable_iterator_tag iterator_stability;
+};
+
+// Multiset
+struct multiset_tag :
+    virtual public sorted_associative_container_tag,
+    virtual public simple_associative_container_tag,
+    virtual public multiple_associative_container_tag
+{ };
+
+template <class T, class Compare, class Alloc>
+struct container_traits<std::multiset<T, Compare, Alloc>>
+{
+    typedef multiset_tag category;
+    typedef stable_iterator_tag iterator_stability;
+};
+
+// Map
+struct map_tag :
+    virtual public sorted_associative_container_tag,
+    virtual public pair_associative_container_tag,
+    virtual public unique_associative_container_tag
+{ };
+
+template <class Key, class T, class Compare, class Alloc>
+struct container_traits<std::map<Key, T, Compare, Alloc>>
+{
+    typedef map_tag category;
+    typedef stable_iterator_tag iterator_stability;
+};
+
+// Multimap
+struct multimap_tag :
+    virtual public sorted_associative_container_tag,
+    virtual public pair_associative_container_tag,
+    virtual public multiple_associative_container_tag
+{ };
+
+template <class Key, class T, class Compare, class Alloc>
+struct container_traits<std::multimap<Key, T, Compare, Alloc>>
+{
+    typedef multimap_tag category;
+    typedef stable_iterator_tag iterator_stability;
+};
+
+// TODO: Unordered Set
+// TODO: Unordered Multiset
+// TODO: Unordered Map
+// TODO: Unordered Multimap
+
+// Generic insert/remove functions
+
+namespace dispatch
+{
+    template <typename Container, typename Value>
+    inline typename Container::iterator
+    insert(Container& c, Value const& x, back_insertion_sequence_tag)
+    { return c.insert(c.end(), x); }
+
+    template <typename Container, typename Value>
+    inline typename Container::iterator
+    insert(Container& c, Value const& x, simple_associative_container_tag)
+    { return c.insert(x).first; }
+}
+
+template <typename Container, typename T>
+inline typename Container::iterator
+insert(Container& c, T const& x)
+{ return dispatch(c, x, container_category(c)); }
 
 #if 0
-  // deque
-
-  // std::map
-
-  template <class Key, class T, class Cmp, class Alloc> 
-  map_tag container_category(const std::map<Key,T,Cmp,Alloc>&)
-  { return map_tag(); }
-
-  template <class Key, class T, class Cmp, class Alloc> 
-  stable_tag iterator_stability(const std::map<Key,T,Cmp,Alloc>&)
-  { return stable_tag(); }
-
-  // std::multimap
-
-  template <class Key, class T, class Cmp, class Alloc> 
-  multimap_tag container_category(const std::multimap<Key,T,Cmp,Alloc>&)
-  { return multimap_tag(); }
-
-  template <class Key, class T, class Cmp, class Alloc> 
-  stable_tag iterator_stability(const std::multimap<Key,T,Cmp,Alloc>&)
-  { return stable_tag(); }
-
-
- // hash_set, hash_map
-
-#ifndef BOOST_NO_HASH
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-  template <class Key, class Eq, class Hash, class Alloc> 
-  struct container_traits< BOOST_STD_EXTENSION_NAMESPACE::hash_set<Key,Eq,Hash,Alloc> > {
-    typedef set_tag category;
-    typedef stable_tag iterator_stability; // is this right?
-  };
-  template <class Key, class T, class Eq, class Hash, class Alloc>
-  struct container_traits< BOOST_STD_EXTENSION_NAMESPACE::hash_map<Key,T,Eq,Hash,Alloc> > {
-    typedef map_tag category;
-    typedef stable_tag iterator_stability; // is this right?
-  };
-#endif
-  template <class Key, class Eq, class Hash, class Alloc>
-  set_tag container_category(const BOOST_STD_EXTENSION_NAMESPACE::hash_set<Key,Eq,Hash,Alloc>&)
-  { return set_tag(); }
-
-  template <class Key, class T, class Eq, class Hash, class Alloc>
-  map_tag container_category(const BOOST_STD_EXTENSION_NAMESPACE::hash_map<Key,T,Eq,Hash,Alloc>&)
-  { return map_tag(); }
-
-  template <class Key, class Eq, class Hash, class Alloc>
-  stable_tag iterator_stability(const BOOST_STD_EXTENSION_NAMESPACE::hash_set<Key,Eq,Hash,Alloc>&)
-  { return stable_tag(); }
-
-  template <class Key, class T, class Eq, class Hash, class Alloc>
-  stable_tag iterator_stability(const BOOST_STD_EXTENSION_NAMESPACE::hash_map<Key,T,Eq,Hash,Alloc>&)
-  { return stable_tag(); }
-#endif
-
-
 
   //===========================================================================
   // Generalized Container Functions

@@ -4,32 +4,4 @@
 
 #include <boost/type_traits.hpp>
 
-/**
- * Evaluates to true if the container contains unique elements.
- */
-template <typename Container>
-struct contains_unique_elements
-{
-    static bool const value =
-        boost::is_convertible<
-            typename container_traits<Container>::category,
-            unique_associative_container_tag
-        >::value;
-};
-
-/**
- * Evaluates to true if the container's elements are mapped to a key. This is
- * only true for pair associative containers, not sets (which are a little
- * different).
- */
-template <typename Container>
-struct contains_mapped_elements
-{
-    static bool const value =
-        boost::is_convertible<
-            typename container_traits<Container>::category,
-            pair_associative_container_tag
-        >::value;
-};
-
 #endif
