@@ -5,7 +5,7 @@
 #include <set>
 #include <map>
 
-#include "descriptor.hpp"
+#include "descriptors.hpp"
 #include "demangle.hpp"
 
 using namespace std;

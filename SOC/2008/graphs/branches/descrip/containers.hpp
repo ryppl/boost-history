@@ -226,6 +226,23 @@ namespace dispatch
     inline typename Container::iterator
     insert(Container& c, Value const& x, multiple_associative_container_tag)
     { return c.insert(x); }
+
+
+    template <typename Container>
+    inline typename Container::iterator
+    erase(Container& c, typename Container::iterator i, sequence_tag)
+    { return c.erase(i); }
+
+    template <typename Container>
+    inline typename Container::iterator
+    erase(Container& c, typename Container::iterator i, associative_container_tag)
+    {
+        // A little weird, but preserves the semantics of the sequence erase,
+        // although this doesn't actually mean anything.
+        typename Container::iterator j = ++i;
+        c.erase(i);
+        return j;
+    }
 }
 
 template <typename Container, typename T>
@@ -233,7 +250,10 @@ inline typename Container::iterator
 insert(Container& c, T const& x)
 { return dispatch::insert(c, x, container_category(c)); }
 
-template <typename 
+template <typename Container, typename T>
+inline typename C::iterator
+erase(Contaienr& c, typename Container::iterator i)
+{ return dispatch::erase(c, i, container_category(c)); }
 
 #if 0
 
