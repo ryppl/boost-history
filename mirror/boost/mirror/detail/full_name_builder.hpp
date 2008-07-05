@@ -87,7 +87,8 @@ namespace detail {
 		inline static const bstring& build_name(
 			mpl::bool_<FullName> full_or_base,
 			bstring& left,
-			bstring& right
+			bstring& right,
+			bstring& ex
 		)
 		{
 			return get_name(full_or_base);

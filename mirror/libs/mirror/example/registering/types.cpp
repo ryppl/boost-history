@@ -180,7 +180,9 @@ int main(void)
 	bcout << "|44| " << BOOST_MIRRORED_TYPE(const volatile ::baz*) ::full_name() << endl;
 	bcout << "|44| " << BOOST_MIRRORED_TYPEDEF(::, foobar) ::full_name() << endl;
 	//
-	bcout << "|45| " << BOOST_MIRRORED_TYPE(::bar[][1][2][3][4][5][6][7][8][9]) ::full_name() << endl;
+	typedef ::bar * const * t45 [][1][2][3][4][5][6][7][8][9];
+	bcout << typeid(t45).name() << endl;
+	bcout << "|45| " << BOOST_MIRRORED_TYPE(t45) ::full_name() << endl;
 	//
 	return 0;
 }

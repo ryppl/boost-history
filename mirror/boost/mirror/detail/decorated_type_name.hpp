@@ -28,9 +28,11 @@ private:
 	{
 		bstring left;
 		bstring right;
-		bstring temp(build_name(full_or_base, left, right));
+		bstring ex(BOOST_STR_LIT(" "));
+		bstring temp(build_name(full_or_base, left, right, ex));
 		left.append(temp);
 		left.append(right);
+		left.append(ex);
 		return left;
 	}
 
@@ -40,14 +42,16 @@ public:
 	inline static bstring build_name(
 		mpl::bool_<FullName> full_or_base,
 		bstring& left, 
-		bstring& right
+		bstring& right,
+		bstring& ex
 	)
 	{
-		Decorator D(left, right);
+		Decorator D(left, right, ex);
 		return MetaType::build_name(
 			full_or_base,
 			left,
-			right
+			right,
+			ex
 		);
 	}
 
@@ -95,7 +99,7 @@ template <typename T>
 struct type_name_decorator<T*>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right)
+	inline type_name_decorator(bstring&, bstring& _right, bstring&)
 	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" *"))
 	{ }
 };
@@ -106,7 +110,7 @@ template <typename T>
 struct type_name_decorator<T&>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right)
+	inline type_name_decorator(bstring&, bstring& _right, bstring&)
 	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" &"))
 	{ }
 };
@@ -116,7 +120,7 @@ template <typename T>
 struct type_name_decorator<const T>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right)
+	inline type_name_decorator(bstring&, bstring& _right, bstring&)
 	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" const"))
 	{ }
 };
@@ -126,7 +130,7 @@ template <typename T>
 struct type_name_decorator<volatile T>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right)
+	inline type_name_decorator(bstring&, bstring& _right, bstring&)
 	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" volatile"))
 	{ }
 };
@@ -136,7 +140,7 @@ template <typename T>
 struct type_name_decorator<const volatile T>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _r)
+	inline type_name_decorator(bstring&, bstring& _r, bstring&)
 	: type_name_right_postfix_decorator(_r, BOOST_STR_LIT(" const volatile"))
 	{ }
 };
@@ -145,9 +149,9 @@ struct type_name_decorator<const volatile T>
 template <typename T>
 struct type_name_decorator< T[] >
 {
-	inline type_name_decorator(bstring&, bstring& _right)
+	inline type_name_decorator(bstring&, bstring&, bstring& _ex)
 	{
-		_right.append(BOOST_STR_LIT(" []"));
+		_ex.append(BOOST_STR_LIT("[]"));
 	}
 };
 
@@ -162,7 +166,7 @@ private:
 		typedef typename detail::static_int_to_str<Size>
 			size_string;
 		// init with '['
-		bstring res(BOOST_STR_LIT(" ["));
+		bstring res(BOOST_STR_LIT("["));
 		// 
 		// setup a buffer for the number
 		const size_t max_size = size_string::length::value+1;
@@ -176,10 +180,10 @@ private:
 		return res;
 	}
 public:
-	inline type_name_decorator(bstring&, bstring& _right)
+	inline type_name_decorator(bstring&, bstring&, bstring& _ex)
 	{
 		static bstring s_postfix(init_postfix());
-		_right.append(s_postfix);
+		_ex.append(s_postfix);
 	}
 };
 
