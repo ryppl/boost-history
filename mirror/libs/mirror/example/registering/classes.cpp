@@ -118,20 +118,20 @@ namespace mirror {
 
 /** Register the namespaces
  */
-BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(test)
-BOOST_MIRROR_REG_NAMESPACE(_test, feature)
-BOOST_MIRROR_REG_NAMESPACE(_test_feature, detail)
-BOOST_MIRROR_REG_NAMESPACE(_test, stuff)
-BOOST_MIRROR_REG_NAMESPACE(_test_stuff, detail)
+BOOST_MIRROR_REG_NAMESPACE((test))
+BOOST_MIRROR_REG_NAMESPACE((test)(feature))
+BOOST_MIRROR_REG_NAMESPACE((test)(feature)(detail))
+BOOST_MIRROR_REG_NAMESPACE((test)(stuff))
+BOOST_MIRROR_REG_NAMESPACE((test)(stuff)(detail))
 //
 /** Register the types
  */
-BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo_base)
-BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo_base2)
-BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo_base3)
-BOOST_MIRROR_REG_TYPE(_test_feature_detail, ::test::feature::detail, foo)
-BOOST_MIRROR_REG_TYPE(_test_stuff_detail,   ::test::stuff::detail, bar_base)
-BOOST_MIRROR_REG_TYPE(_test_stuff_detail,   ::test::stuff::detail, bar)
+BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo_base)
+BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo_base2)
+BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo_base3)
+BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo)
+BOOST_MIRROR_REG_TYPE(::test::stuff::detail, bar_base)
+BOOST_MIRROR_REG_TYPE(::test::stuff::detail, bar)
 // register the embedded type that is declared inside of the bar class
 BOOST_MIRROR_REG_TYPE_EMBEDDED(::test::stuff::detail::bar, bar_part)
 
@@ -175,7 +175,8 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 	// this is an attrib that has no getter but has a setter function
 	// Also note that macros with the _TD suffix allow to register 
 	// attributes with typedef'd types
-	BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_TD(4, _boost, ::boost, bstring, a_string, set_string)
+	//BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_TD(4, _boost, ::boost, bstring, a_string, set_string)
+	BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_ONLY(4, ::boost::bstring, a_string, set_string)
 	//
 	// and the last one is accessed by the means of a pair of getter/setter functions
 	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER(5, bool, a_bool, get_bool, set_bool)
@@ -304,7 +305,7 @@ struct pretty_printer
 		{
 			using namespace ::std;
 			s << endl << " - " << 
-				name_to_stream< BOOST_MIRROR_REFLECT_TYPE(typename MetaAttribute::type) >() <<
+				name_to_stream< BOOST_MIRRORED_TYPE(typename MetaAttribute::type) >() <<
 				"        " <<
 				ma.base_name();
 		}
@@ -363,35 +364,35 @@ int main(void)
 	// use the pretty printer to print out  into about the given types
 	//
 	// pointer to native type
-	bcout << "|01| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_TYPE(double*)>() << endl;
+	bcout << "|01| " << endl << pretty_printer<BOOST_MIRRORED_TYPE(double*)>() << endl;
 	// a class defined in a namespace
-	bcout << "|02| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_CLASS(foo)>() << endl;
-	bcout << "|03| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_CLASS(bar)>() << endl;
+	bcout << "|02| " << endl << pretty_printer<BOOST_MIRRORED_CLASS(foo)>() << endl;
+	bcout << "|03| " << endl << pretty_printer<BOOST_MIRRORED_CLASS(bar)>() << endl;
 	// an embedded class 
-	bcout << "|04| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_CLASS(bar::bar_part)>() << endl;
+	bcout << "|04| " << endl << pretty_printer<BOOST_MIRRORED_CLASS(bar::bar_part)>() << endl;
 	// typedef'd type
-	bcout << "|05| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bchar)>() << endl;
+	bcout << "|05| " << endl << pretty_printer<BOOST_MIRRORED_TYPEDEF(::boost, bchar)>() << endl;
 	// type of an expression
-	bcout << "|06| " << endl << pretty_printer<BOOST_MIRROR_REFLECT_TYPEOF("foo")>() << endl;
+	bcout << "|06| " << endl << pretty_printer<BOOST_MIRRORED_TYPEOF("foo")>() << endl;
 	//
 	// full typenames
-	//bcout << "|07| " << BOOST_MIRROR_REFLECT_TYPEOF("foo") ::full_name() << endl;
+	//bcout << "|07| " << BOOST_MIRRORED_TYPEOF("foo") ::full_name() << endl;
 	//
 	bar_base x = {123, 456L};
 	bar_base y = {234, 567L};
 	//
 	// the meta-attributes can be used to examine 
 	// values of the members too
-	assert(BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x))::attributes::get(x, mpl::int_<0>()) == x.an_int);
-	assert(BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x))::attributes::get(x, mpl::int_<1>()) == x.a_long);
+	assert(BOOST_MIRRORED_CLASS(BOOST_TYPEOF(x))::attributes::get(x, mpl::int_<0>()) == x.an_int);
+	assert(BOOST_MIRRORED_CLASS(BOOST_TYPEOF(x))::attributes::get(x, mpl::int_<1>()) == x.a_long);
 	// and also to set them
-	BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x))::attributes::set(
+	BOOST_MIRRORED_CLASS(BOOST_TYPEOF(x))::attributes::set(
 		x, mpl::int_<0>(),
-		BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(y))::attributes::get(y, mpl::int_<0>())
+		BOOST_MIRRORED_CLASS(BOOST_TYPEOF(y))::attributes::get(y, mpl::int_<0>())
 	);
-	BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x))::attributes::set(
+	BOOST_MIRRORED_CLASS(BOOST_TYPEOF(x))::attributes::set(
 		x, mpl::int_<1>(),
-		BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(y))::attributes::get(y, mpl::int_<1>())
+		BOOST_MIRRORED_CLASS(BOOST_TYPEOF(y))::attributes::get(y, mpl::int_<1>())
 	);
 	//
 	assert(x.an_int == y.an_int);

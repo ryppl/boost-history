@@ -35,7 +35,7 @@ template <
 	typedef InheritanceSpec inheritance_specifier;
 	typedef AccessSpec access_specifier;
 	typedef BaseClass base_class;
-	typedef BOOST_MIRROR_REFLECT_CLASS(BaseClass) meta_base_class;
+	typedef BOOST_MIRRORED_CLASS(BaseClass) meta_base_class;
 };
 
 /** This template stores the inheritance type and access specifier

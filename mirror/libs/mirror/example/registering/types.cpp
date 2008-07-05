@@ -68,6 +68,11 @@ BOOST_MIRROR_REG_TYPEDEF_GS(foobar)
 } // namespace mirror
 } // namespace boost
 
+namespace test {
+
+	int zero(void){return 0;}
+
+}
 
 int main(void)
 {
@@ -180,9 +185,13 @@ int main(void)
 	bcout << "|44| " << BOOST_MIRRORED_TYPE(const volatile ::baz*) ::full_name() << endl;
 	bcout << "|44| " << BOOST_MIRRORED_TYPEDEF(::, foobar) ::full_name() << endl;
 	//
-	typedef ::bar * const * t45 [][1][2][3][4][5][6][7][8][9];
-	bcout << typeid(t45).name() << endl;
-	bcout << "|45| " << BOOST_MIRRORED_TYPE(t45) ::full_name() << endl;
+	typedef ::bar * const * T45 [][1][2][3][4][5][6][7][8][9];
+	bcout << "|45| " << BOOST_MIRRORED_TYPE(T45) ::full_name() << endl;
+	//
+	bcout << "|46| " << BOOST_MIRRORED_TYPEOF(&test::zero) ::full_name() << endl;
+	//
+	typedef const foo * volatile (*T47)(const ::bar&, volatile ::baz*, T45);
+	bcout << "|47| " << BOOST_MIRRORED_TYPE(T47) ::full_name() << endl;
 	//
 	return 0;
 }

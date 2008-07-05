@@ -229,7 +229,7 @@
 			- Tested with gcc 4.3.0 on SuSE
 			- Tested with intel 10.1 on SuSE
 		</revision>
-		<revision id="20080704" major="0" minor="2" micro="0" author="m_ch">
+		<revision id="20080705" major="0" minor="2" micro="0" author="m_ch">
 			- New branch
 			- Several features implemented by the means of the preprocessor were rewritten using templates
 			- Fully qualified name composing has been rewritten using standard C++ strings
@@ -254,6 +254,9 @@
 			- Added BOOST_MIRROR_REG_TYPE_GS as shorthand for BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE
 			- Added BOOST_MIRROR_REG_TYPEEF_GS and for BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE for registering global scope typedefs
 			- Added BOOST_MIRROR_REG_TYPE_EMBEDDED and for BOOST_MIRROR_REG_TYPE_EMB for registering embedded types
+
+			- Split meta-types for non-trivial types into separate files
+			- Added support for function typenames 
 
 			- Tested with MSVC++ 2008 EE On Vista
 		</revision>

@@ -20,9 +20,9 @@ namespace mirror {
 namespace detail {
 
 template <class MetaType, class Decorator>
-struct decorated_type_name
+struct decorated_type_name_base
 {
-private:
+protected:
 	template <bool FullName>
 	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
 	{
@@ -35,7 +35,6 @@ private:
 		left.append(ex);
 		return left;
 	}
-
 
 public:
 	template <bool FullName>
@@ -55,6 +54,13 @@ public:
 		);
 	}
 
+
+};
+
+template <class Base>
+struct decorated_type_name_finisher : public Base
+{
+public:
 	template <bool FullName>
 	static const bstring& get_name(mpl::bool_<FullName> full_or_base)
 	{
@@ -71,8 +77,13 @@ public:
 	{
 		return get_name(mpl::true_());
 	}
-
 };
+
+template <class MetaType, class Decorator>
+struct decorated_type_name
+: decorated_type_name_finisher<
+	decorated_type_name_base<MetaType, Decorator>
+> { };
 
 // no-op decorator
 template <typename T>

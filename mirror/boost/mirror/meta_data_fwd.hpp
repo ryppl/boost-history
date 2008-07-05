@@ -101,13 +101,13 @@ struct meta_class;
 /** Macro that expands into the meta_class for the 
  *  given type or class.
  */
-#define BOOST_MIRROR_REFLECT_CLASS(CLASS) \
+#define BOOST_MIRRORED_CLASS(CLASS) \
 	::boost::mirror::meta_class<CLASS>
 
 /** Macro that expands into the meta_class for the 
  *  given type or class.
  */
-#define BOOST_MIRROR_REFLECT_CLASS_VT(CLASS, VARIANT_TAG) \
+#define BOOST_MIRRORED_CLASS_VT(CLASS, VARIANT_TAG) \
 	::boost::mirror::meta_class<\
 		CLASS, \
 		VARIANT_TAG\
