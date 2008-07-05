@@ -15,9 +15,6 @@
 #include <boost/mirror/meta_type.hpp>
 //
 #include <boost/mirror/traits/reflects_global_scope.hpp>
-// utility that allows to put the name of the type to a given stream
-#include <boost/mirror/utils/name_to_stream/type.hpp>
-//
 //
 #include <boost/typeof/typeof.hpp>
 
@@ -34,6 +31,10 @@ typedef double foobar;
 } // namespace detail
 } // namespace feature
 } // namespace test
+
+struct bar { };
+struct baz { };
+typedef double foobar;
 
 
 namespace boost { 
@@ -54,6 +55,15 @@ BOOST_MIRROR_REG_TYPE(::test::feature::detail, bar)
 // register a typedef'd class this allows to distinguish it from
 // the 'source' type in some situations
 BOOST_MIRROR_REG_TYPEDEF(::test::feature::detail, foobar)
+//
+// register type on the global scope
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(bar)
+// shorter version
+BOOST_MIRROR_REG_TYPE_GS(baz)
+//
+// typedef on the global scope
+// equivalent to BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE(foobar) 
+BOOST_MIRROR_REG_TYPEDEF_GS(foobar)
 
 } // namespace mirror
 } // namespace boost
@@ -77,39 +87,37 @@ int main(void)
 	//
 	// put the full name of the type to the output stream
 	//
-	bcout << "|00| " << name_to_stream< BOOST_MIRRORED_TYPE(int) >() << endl;
-	bcout << "|01| " << name_to_stream< BOOST_MIRRORED_TYPE(foo) >() << endl;
-	bcout << "|02| " << name_to_stream< BOOST_MIRRORED_TYPE(bar) >() << endl;
+	//
+	bcout << "|00| " << BOOST_MIRRORED_TYPE(int) ::full_name() << endl;
+	bcout << "|01| " << BOOST_MIRRORED_TYPE(foo) ::full_name() << endl;
+	bcout << "|02| " << BOOST_MIRRORED_TYPE(bar) ::full_name() << endl;
 	//
 	// Do the same thing with the typedef'd type
-	// actually, nearly the same .. the true argument given to the 
-	// constructor makes the name_to_stream<> template, output the 
-	// leading "::" too.
-	bcout << "|03| " << name_to_stream< meta_foo >(true) << endl;
-	bcout << "|04| " << name_to_stream< meta_bar >(true) << endl;
+	bcout << "|03| " << meta_foo ::full_name() << endl;
+	bcout << "|04| " << meta_bar ::full_name() << endl;
 
 	//
 	// this works too...
-	bcout << "|05| " << name_to_stream< BOOST_MIRRORED_TYPE(foo*) >() << endl;
-	bcout << "|06| " << name_to_stream< BOOST_MIRRORED_TYPE(bar&) >() << endl;
-	bcout << "|07| " << name_to_stream< BOOST_MIRRORED_TYPE(foo***) >() << endl;
-	bcout << "|08| " << name_to_stream< BOOST_MIRRORED_TYPE(bar**&) >() << endl;
-	bcout << "|09| " << name_to_stream< BOOST_MIRRORED_TYPE(const foo**) >() << endl;
-	bcout << "|10| " << name_to_stream< BOOST_MIRRORED_TYPE(volatile bar*&) >() << endl;
+	bcout << "|05| " << BOOST_MIRRORED_TYPE(foo*)::full_name() << endl;
+	bcout << "|06| " << BOOST_MIRRORED_TYPE(bar&)::full_name() << endl;
+	bcout << "|07| " << BOOST_MIRRORED_TYPE(foo***)::full_name() << endl;
+	bcout << "|08| " << BOOST_MIRRORED_TYPE(bar**&) ::full_name() << endl;
+	bcout << "|09| " << BOOST_MIRRORED_TYPE(const foo**)::full_name() << endl;
+	bcout << "|10| " << BOOST_MIRRORED_TYPE(volatile bar*&)::full_name() << endl;
 	//
-	bcout << "|11| " << name_to_stream< BOOST_MIRRORED_TYPE(const volatile foo) >() << endl;
-	bcout << "|12| " << name_to_stream< BOOST_MIRRORED_TYPE(const volatile bar*) >() << endl;
+	bcout << "|11| " << BOOST_MIRRORED_TYPE(const volatile foo)::full_name() << endl;
+	bcout << "|12| " << BOOST_MIRRORED_TYPE(const volatile bar*)::full_name() << endl;
 	//
 	// native c++ types are registered by default
-	bcout << "|13| " << name_to_stream< BOOST_MIRRORED_TYPE(volatile short int) >() << endl;
-	bcout << "|14| " << name_to_stream< BOOST_MIRRORED_TYPE(const char*) >() << endl;
-	bcout << "|15| " << name_to_stream< BOOST_MIRRORED_TYPE(wchar_t*) >() << endl;
-	bcout << "|16| " << name_to_stream< BOOST_MIRRORED_TYPE(bool) >() << endl;
+	bcout << "|13| " << BOOST_MIRRORED_TYPE(volatile short int)::full_name() << endl;
+	bcout << "|14| " << BOOST_MIRRORED_TYPE(const char*)::full_name() << endl;
+	bcout << "|15| " << BOOST_MIRRORED_TYPE(wchar_t*)::full_name() << endl;
+	bcout << "|16| " << BOOST_MIRRORED_TYPE(bool)::full_name() << endl;
 	//
 	// use with Boost.Typeof
-	bcout << "|17| " << name_to_stream< BOOST_MIRRORED_TYPE(BOOST_TYPEOF(1+1)) >() << endl;
+	bcout << "|17| " << BOOST_MIRRORED_TYPE(BOOST_TYPEOF(1+1))::full_name() << endl;
 	// ... and maybe more conveniently
-	bcout << "|18| " << name_to_stream< BOOST_MIRRORED_TYPEOF(1.0/2.0) >() << endl;
+	bcout << "|18| " << BOOST_MIRRORED_TYPEOF(1.0/2.0)::full_name() << endl;
 	//
 
 	// sometimes it is useful to distinguish between a typedef'd type
@@ -124,9 +132,9 @@ int main(void)
 	typedef BOOST_MIRRORED_TYPEDEF(::test::feature::detail, foobar) meta_foobar_td;
 
 	//
-	bcout << "|19| " << name_to_stream< meta_bchar     >() << endl;
-	bcout << "|20| " << name_to_stream< meta_bchar_td  >() << endl;
-	bcout << "|21| " << name_to_stream< meta_foobar_td >() << endl;
+	bcout << "|19| " << meta_bchar     ::full_name() << endl;
+	bcout << "|20| " << meta_bchar_td  ::full_name() << endl;
+	bcout << "|21| " << meta_foobar_td ::full_name() << endl;
 	//
 	// unfortunately BOOST_MIRRORED_TYPEDEF(...) works only if
 	// the typedefined name is explicitly given 
@@ -152,8 +160,6 @@ int main(void)
 	bcout << "|28| " << BOOST_MIRRORED_TYPEDEF(::boost, bchar) ::full_name() << endl;
 	bcout << "|29| " << BOOST_MIRRORED_TYPEDEF(::boost, bstring) ::full_name() << endl;
 
-	bcout << "|30| " << BOOST_MIRRORED_TYPE(int const * ) ::full_name() << endl;
-
 	bcout << "|30| " << BOOST_MIRRORED_TYPE(int const * const volatile) ::full_name() << endl;
 	bcout << "|31| " << BOOST_MIRRORED_TYPE(int volatile * const * volatile * const *) ::full_name() << endl;
 	bcout << "|32| " << BOOST_MIRRORED_TYPE(int const * const [321]) ::full_name() << endl;
@@ -167,9 +173,14 @@ int main(void)
 	bcout << "|39| " << BOOST_MIRRORED_TYPE(const foo**) ::full_name() << endl;
 	bcout << "|40| " << BOOST_MIRRORED_TYPE(volatile bar*&) ::full_name() << endl;
 	//
-	bcout << "|41| " << BOOST_MIRRORED_TYPE(const volatile foo) ::full_name() << endl;
+	bcout << "|41| " << BOOST_MIRRORED_TYPE(const volatile foo&) ::full_name() << endl;
 	bcout << "|42| " << BOOST_MIRRORED_TYPE(const volatile bar*) ::full_name() << endl;
 	//
+	bcout << "|43| " << BOOST_MIRRORED_TYPE(const volatile ::bar&) ::full_name() << endl;
+	bcout << "|44| " << BOOST_MIRRORED_TYPE(const volatile ::baz*) ::full_name() << endl;
+	bcout << "|44| " << BOOST_MIRRORED_TYPEDEF(::, foobar) ::full_name() << endl;
+	//
+	bcout << "|45| " << BOOST_MIRRORED_TYPE(::bar[][1][2][3][4][5][6][7][8][9]) ::full_name() << endl;
 	//
 	return 0;
 }

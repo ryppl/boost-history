@@ -40,6 +40,17 @@ namespace detail {
 	struct full_name_builder : public BaseMetaObject
 	{
 	private:
+
+		// don't prepend '::' to types on global scope
+		template <typename Type>
+		inline static void append_separator(
+			bstring& _str, 
+			mpl::identity<meta_namespace<namespace_::_> >,
+			mpl::identity<detail::registered_type_info<Type> >
+		)
+		{ }
+
+		// append separator to anything else
 		template <typename AnyScope, class AnyMO>
 		inline static void append_separator(
 			bstring& _str, 
@@ -51,20 +62,11 @@ namespace detail {
 			_str.append(separator);
 		}
 
-		// don't prepend '::' to types on global scope
-		template <typename Type>
-		inline static void append_separator(
-			bstring& _str, 
-			mpl::identity<meta_namespace<namespace_::_> >,
-			mpl::identity<detail::registered_type_info<Type> >
-		)
-		{ }
-
 
 		// initializes the full names 
-		inline static bstring init_name(void)
+		inline static bstring init_name(mpl::true_ _full)
 		{
-			bstring res(Scope::get_name(mpl::true_()));
+			bstring res(Scope::get_name(_full));
 			append_separator(
 				res, 
 				mpl::identity<Scope>(),
@@ -73,16 +75,32 @@ namespace detail {
 			res.append(BaseMetaObject::get_name(mpl::false_()));
 			return res;
 		}
-	public:
-		// base name getter
-		inline static const bstring& get_name(mpl::false_ _base)
+
+		// initializes the base names 
+		inline static const bstring& init_name(mpl::false_ _base)
 		{
 			return BaseMetaObject::get_name(_base);
 		}
-		// full name getter
-		inline static const bstring& get_name(mpl::true_)
+	public:
+		// base of full name getter
+		template <bool FullName>
+		inline static const bstring& build_name(
+			mpl::bool_<FullName> full_or_base,
+			bstring& left,
+			bstring& right
+		)
 		{
-			static bstring s_name(init_name());
+			return get_name(full_or_base);
+		}
+
+
+		// base of full name getter
+		template <bool FullName>
+		inline static const bstring& get_name(
+			mpl::bool_<FullName> full_or_base
+		)
+		{
+			static bstring s_name(init_name(full_or_base));
 			return s_name;
 		}
 	};

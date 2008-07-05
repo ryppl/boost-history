@@ -57,7 +57,7 @@ struct meta_type
 
 /** Macro for registering global-scope types
  */
-#define BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(BASE_NAME) \
+#define BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME) \
 	namespace detail { \
 	template <> struct registered_type_info< BASE_NAME > \
 	{ \
@@ -66,6 +66,12 @@ struct meta_type
 		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
 	}; \
 	} // namespace detail
+
+/** 'Shorthand' for BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE macro 
+ */
+#define BOOST_MIRROR_REG_TYPE_GS(BASE_NAME) \
+	BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(BASE_NAME)
+
 
 /** Macro for registering types nested in namespaces
  */
@@ -85,6 +91,30 @@ struct meta_type
 	::boost::mirror::typedef_::TYPEDEFD_NAME < \
 		BOOST_MIRRORED_NAMESPACE( NAMESPACE ) \
 	> \
+
+/** Macro for registering typedef-ined types in the global scope
+ */
+#define BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE(TYPEDEFD_NAME) \
+	namespace typedef_ { \
+		template <class MetaNamespace> struct TYPEDEFD_NAME; \
+		template <> struct TYPEDEFD_NAME< \
+			BOOST_MIRRORED_GLOBAL_SCOPE() \
+		> { }; \
+	} /* namespace typedef_ */ \
+	namespace detail { \
+	template <> struct registered_type_info< \
+		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR( :: , TYPEDEFD_NAME) \
+	> \
+	{ \
+		typedef BOOST_MIRRORED_GLOBAL_SCOPE() scope; \
+		typedef ::TYPEDEFD_NAME reflected_type; \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPEDEFD_NAME) \
+	}; \
+	} // namespace detail
+
+#define BOOST_MIRROR_REG_TYPEDEF_GS(TYPEDEFD_NAME) \
+	BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE(TYPEDEFD_NAME) 
+
 
 /** Macro for registering typedef-ined types in namespaces
  */
@@ -117,22 +147,26 @@ struct meta_type
 		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
 	};
 
+#define BOOST_MIRROR_REG_TYPE_EMB(WRAPPER, BASE_NAME) \
+	BOOST_MIRROR_REG_TYPE_EMBEDDED(WRAPPER, BASE_NAME)
+
+
 /** Register C++ native types
  */
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(void)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(bool)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(char)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned char)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(signed char)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(wchar_t)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(short int)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned short int)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(int)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned int)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(long int)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(unsigned long int)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(float)
-BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(double)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(void)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(bool)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(char)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(unsigned char)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(signed char)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(wchar_t)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(short int)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(unsigned short int)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(int)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(unsigned int)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(long int)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(unsigned long int)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(float)
+BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(double)
 
 /** Register std string and wstring
  */

@@ -243,12 +243,17 @@
 			- Complete rewrite of type registering and reflection
 
 			- Changed the return value of base_name and full_name getters from const bchar* to bstring / const bstring&amp;
-			- Replaced BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(TYPE) with BOOST_MIRROR_REG_GLOBAL_SCOPE_TYPE(TYPE) macro
 
 			- Added get_name(mpl::bool_&lt;FullName&gt;) function that gets the base name with mpl::false_ and full name with mpl::true_
 			- Removed the old non-trivial type name meta_types
-			- Added new meta_type name decorator
-			  
+			- Added new meta_type name decorators
+
+			- Fixed multi-dimensional array type name building
+			- Added build_name(...) member function to the meta_type template
+			- Updated the registering/types.cpp example
+			- Added BOOST_MIRROR_REG_TYPE_GS as shorthand for BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE
+			- Added BOOST_MIRROR_REG_TYPEEF_GS and for BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE for registering global scope typedefs
+			- Added BOOST_MIRROR_REG_TYPE_EMBEDDED and for BOOST_MIRROR_REG_TYPE_EMB for registering embedded types
 
 			- Tested with MSVC++ 2008 EE On Vista
 		</revision>

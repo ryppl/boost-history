@@ -1,120 +1,188 @@
 /**
- * \file boost/mirror/detail/nontrivial_type_name.hpp
- * Helpers for composing a nontrivial typenames
+ * \file boost/mirror/detail/decorated_type_name.hpp
+ *
+ * Helpers for composing nontrivial typenames
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_DETAIL_NONTRIVIAL_TYPE_NAME_HPP
-#define BOOST_MIRROR_META_DETAIL_NONTRIVIAL_TYPE_NAME_HPP
+#ifndef BOOST_MIRROR_META_DETAIL_DECORATED_TYPE_NAME_HPP
+#define BOOST_MIRROR_META_DETAIL_DECORATED_TYPE_NAME_HPP
 
-#ifndef BOOST_MIRROR_USE_STATIC_NAME_STRINGS
-#	include <memory> // ::std::auto ptr
-#endif
+#include <boost/mpl/plus.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mirror/detail/static_int_to_str.hpp>
+
 namespace boost {
 namespace mirror {
 namespace detail {
 
-template <class MetaType, bool BaseOrFull>
-struct nontrivial_type_base_or_full_name;
-
-/** Base name 
- */
-template <class MetaType>
-struct nontrivial_type_base_or_full_name<MetaType, true>
-{
-	BOOST_STATIC_CONSTANT(
-		int,
-		name_length =
-		MetaType::base_name_length
-	);
-	inline static const bchar* name(void)
-	{
-		return MetaType::base_name();
-	}
-};
-
-/** Full name 
- */
-template <class MetaType>
-struct nontrivial_type_base_or_full_name<MetaType, false>
-{
-	BOOST_STATIC_CONSTANT(
-		int,
-		name_length =
-		MetaType::full_name_length
-	);
-	inline static const bchar* name(void)
-	{
-		return MetaType::full_name();
-	}
-};
-
-template <class MetaType, typename MetaData, template <class, typename, bool> class Implementation>
-struct static_nontrivial_type_name
-: Implementation<MetaType, MetaData, true>
-, Implementation<MetaType, MetaData, false>
+template <class MetaType, class Decorator>
+struct decorated_type_name
 {
 private:
-	typedef Implementation<MetaType, MetaData, true>  implementation_base_name;
-	typedef Implementation<MetaType, MetaData, false> implementation_full_name;
-
-	inline static bchar* new_string(const size_t size)
+	template <bool FullName>
+	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
 	{
-		assert(size != 0);
-		bchar* result = new bchar[size];
-		result[0] = 0;
-		return result;
+		bstring left;
+		bstring right;
+		bstring temp(build_name(full_or_base, left, right));
+		left.append(temp);
+		left.append(right);
+		return left;
 	}
 
-	inline static bool name_not_initialized(const bchar* str)
-	{
-		return !str[0];
-	}
 
-	template <bool FormatBaseName>
-	static const bchar* get_name(mpl::bool_<FormatBaseName>)
-	{
-		typedef Implementation<MetaType, MetaData, FormatBaseName>
-			impl;
-		const int name_len(impl::name_length);
-#ifndef BOOST_MIRROR_USE_DYNAMIC_NAME_STRINGS
-		//static bchar the_name[name_len + 1] = {BOOST_STR_LIT("")};
-		// TODO: the previews line won't compile since
-		// name_len is not an integral constant.
-		// Thus we need to find some better workaround 
-		// because this one will cause memory leaks.
-		static bchar* the_name = new_string(name_len+1);
-#else
-		static ::std::auto_ptr<bchar> the_name_holder(new_string(name_len+1));
-		bchar* the_name = the_name_holder.get();
-#endif
-		if(name_not_initialized(the_name)) 
-			impl::init_name(the_name);
-		return the_name;
-	}
 public:
-	BOOST_STATIC_CONSTANT(
-		int,
-		base_name_length =
-		implementation_base_name::name_length
-	);
-	BOOST_STATIC_CONSTANT(
-		int,
-		full_name_length =
-		implementation_full_name::name_length
-	);
-	static const bchar* base_name(void)
+	template <bool FullName>
+	inline static bstring build_name(
+		mpl::bool_<FullName> full_or_base,
+		bstring& left, 
+		bstring& right
+	)
 	{
-		return get_name(mpl::bool_<true>());
+		Decorator D(left, right);
+		return MetaType::build_name(
+			full_or_base,
+			left,
+			right
+		);
 	}
-	static const bchar* full_name(void)
+
+	template <bool FullName>
+	static const bstring& get_name(mpl::bool_<FullName> full_or_base)
 	{
-		return get_name(mpl::bool_<false>());
+		static bstring s_name(init_name(full_or_base));
+		return s_name;
+	}
+
+	inline static const bstring& base_name(void)
+	{
+		return get_name(mpl::false_());
+	}
+
+	inline static const bstring& full_name(void)
+	{
+		return get_name(mpl::true_());
+	}
+
+};
+
+// no-op decorator
+template <typename T>
+struct type_name_decorator
+{
+	inline type_name_decorator(bstring&, bstring&);
+};
+
+struct type_name_right_postfix_decorator
+{
+	inline type_name_right_postfix_decorator(bstring& _r, const bchar* _pfx)
+	: right(_r), postfix(_pfx) { }
+
+	inline ~type_name_right_postfix_decorator(void)
+	{
+		right.append(bstring(postfix));
+	}
+	bstring& right;
+	const bchar* postfix;
+};
+
+// pointer decorator
+template <typename T>
+struct type_name_decorator<T*>
+: type_name_right_postfix_decorator
+{
+	inline type_name_decorator(bstring&, bstring& _right)
+	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" *"))
+	{ }
+};
+
+
+// reference decorator
+template <typename T>
+struct type_name_decorator<T&>
+: type_name_right_postfix_decorator
+{
+	inline type_name_decorator(bstring&, bstring& _right)
+	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" &"))
+	{ }
+};
+
+// const type decorator
+template <typename T>
+struct type_name_decorator<const T>
+: type_name_right_postfix_decorator
+{
+	inline type_name_decorator(bstring&, bstring& _right)
+	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" const"))
+	{ }
+};
+
+// volatile type decorator
+template <typename T>
+struct type_name_decorator<volatile T>
+: type_name_right_postfix_decorator
+{
+	inline type_name_decorator(bstring&, bstring& _right)
+	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" volatile"))
+	{ }
+};
+
+// const volatile type decorator
+template <typename T>
+struct type_name_decorator<const volatile T>
+: type_name_right_postfix_decorator
+{
+	inline type_name_decorator(bstring&, bstring& _r)
+	: type_name_right_postfix_decorator(_r, BOOST_STR_LIT(" const volatile"))
+	{ }
+};
+
+// array decorator
+template <typename T>
+struct type_name_decorator< T[] >
+{
+	inline type_name_decorator(bstring&, bstring& _right)
+	{
+		_right.append(BOOST_STR_LIT(" []"));
 	}
 };
+
+
+// array decorator
+template <typename T, size_t Size>
+struct type_name_decorator< T[ Size ] >
+{
+private:
+	inline static bstring init_postfix(void)
+	{
+		typedef typename detail::static_int_to_str<Size>
+			size_string;
+		// init with '['
+		bstring res(BOOST_STR_LIT(" ["));
+		// 
+		// setup a buffer for the number
+		const size_t max_size = size_string::length::value+1;
+		bchar buffer[max_size];
+		// put it into the buffer
+		size_string::convert(buffer, max_size);
+		// append the buffer
+		res.append(bstring(buffer));
+		// append ']'
+		res.append(bstring(BOOST_STR_LIT("]")));
+		return res;
+	}
+public:
+	inline type_name_decorator(bstring&, bstring& _right)
+	{
+		static bstring s_postfix(init_postfix());
+		_right.append(s_postfix);
+	}
+};
+
 
 } // namespace detail
 } // namespace mirror
