@@ -3,14 +3,14 @@
 #define DESCRIPTORS_HPP
 
 // Pull the container traits.
-#include "containerss.hpp"
+#include "containers.hpp"
 
 // Some descriptors are built on blobs.
 #include "blob.hpp"
 
 // Descriptor implementations.
-#include "descriptor/node_descriptor.hpp"
-#include "descriptor/index_descriptor.hpp"
+#include "descriptors/node_descriptor.hpp"
+#include "descriptors/index_descriptor.hpp"
 
 // Descriptors Take 2 (or 3 or 4).
 //
@@ -87,9 +87,9 @@ struct descriptor_traits
  * be at least as long as the iterator, generally longer.
  */
 template <typename Container>
-inline typename extended_container_traits<Container>::descriptor_type
+inline typename descriptor_traits<Container>::descriptor_type
 make_descriptor(Container& c, typename Container::iterator i)
-{ return typename extended_container_traits<Container>::descriptor_type(c, i); }
+{ return typename descriptor_traits<Container>::descriptor_type(c, i); }
 
 /**
  * Given a container and a valid descriptor, return an iterator pointing to the
@@ -98,15 +98,15 @@ make_descriptor(Container& c, typename Container::iterator i)
  */
 template <typename Container>
 inline typename Container::iterator
-make_iterator(Container& c, typename extended_container_traits<Container>::descriptor_type d)
+make_iterator(Container& c, typename descriptor_traits<Container>::descriptor_type d)
 { return d.get(c); }
 
 
 /** Return the descriptor stability tag for the given container. */
 template <typename Container>
-inline typename extended_container_traits<Container>::descriptor_stability
+inline typename descriptor_traits<Container>::descriptor_stability
 descriptor_stability(Container const&)
-{ return typename extended_container_traits<Container>::descriptor_stability(); }
+{ return typename descriptor_traits<Container>::descriptor_stability(); }
 
 // Metafunctions
 
@@ -120,7 +120,7 @@ struct has_insert_mutator
     // True if not convertible to unstable_insert_tag.
     static bool const value =
         !boost::is_convertible<
-            typename extended_container_traits<Container>::descriptor_stability,
+            typename descriptor_traits<Container>::descriptor_stability,
             unstable_insert_tag
         >::value;
 };
@@ -135,7 +135,7 @@ struct has_remove_mutator
     // True if not convertible to unstable_remove_tag.
     static bool const value =
         !boost::is_convertible<
-            typename extended_container_traits<Container>::descriptor_stability,
+            typename descriptor_traits<Container>::descriptor_stability,
             unstable_remove_tag
         >::value;
 };
@@ -146,7 +146,7 @@ struct has_remove_mutator
 template <typename T, typename Alloc>
 struct descriptor_traits<std::vector<T, Alloc>>
 {
-    typedef index_descriptor<std::vector<T, Alloc>> descriptor_type;
+    typedef index_descriptor<typename std::vector<T, Alloc>::size_type> descriptor_type;
     typedef unstable_remove_tag descriptor_stability;
 };
 
@@ -154,7 +154,7 @@ struct descriptor_traits<std::vector<T, Alloc>>
 template <typename T, typename Alloc>
 struct descriptor_traits<std::list<T, Alloc>>
 {
-    typedef blob<sizeof(typename std::list<T, Alloc>::iterator)> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
@@ -162,33 +162,33 @@ struct descriptor_traits<std::list<T, Alloc>>
 
 // Set
 template <typename T, typename Compare, typename Alloc>
-struct extended_container_traits<std::set<T, Compare, Alloc>>
+struct descriptor_traits<std::set<T, Compare, Alloc>>
 {
-    typedef blob<sizeof(typename std::set<T, Compare, Alloc>::iterator)> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::set<T, Compare, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
 // Multiset
 template <typename T, typename Compare, typename Alloc>
-struct extended_container_traits<std::multiset<T, Compare, Alloc>>
+struct descriptor_traits<std::multiset<T, Compare, Alloc>>
 {
-    typedef typename blob<sizeof(typename std::multiset<T, Compare, Alloc>::iterator)> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::multiset<T, Compare, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
 // Map
 template <typename K, typename T, typename Compare, typename Alloc>
-struct extended_container_traits<std::map<K, T, Compare, Alloc>>
+struct descriptor_traits<std::map<K, T, Compare, Alloc>>
 {
-    typedef blob<sizeof(typename std::map<T, K, Compare, Alloc>::iterator)> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::map<T, K, Compare, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
 // Multimap
 template <typename K, typename T, typename Compare, typename Alloc>
-struct extended_container_traits<std::multimap<K, T, Compare, Alloc>>
+struct descriptor_traits<std::multimap<K, T, Compare, Alloc>>
 {
-    typedef blob<sizeof(typename std::multimap<T, K, Compare, Alloc>::iterator)> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::multimap<T, K, Compare, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 

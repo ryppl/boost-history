@@ -1,4 +1,4 @@
-(C) Copyright 2004 Jeremy Siek
+// (C) Copyright 2004 Jeremy Siek
 //  (C) Copyright 2008 Andrew Sutton
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -237,8 +237,6 @@ namespace dispatch
     inline typename Container::iterator
     erase(Container& c, typename Container::iterator i, associative_container_tag)
     {
-        // A little weird, but preserves the semantics of the sequence erase,
-        // although this doesn't actually mean anything.
         typename Container::iterator j = ++i;
         c.erase(i);
         return j;
@@ -251,8 +249,8 @@ insert(Container& c, T const& x)
 { return dispatch::insert(c, x, container_category(c)); }
 
 template <typename Container, typename T>
-inline typename C::iterator
-erase(Contaienr& c, typename Container::iterator i)
+inline typename Container::iterator
+erase(Container& c, typename Container::iterator i)
 { return dispatch::erase(c, i, container_category(c)); }
 
 #if 0

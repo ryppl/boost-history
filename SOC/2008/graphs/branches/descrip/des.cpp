@@ -39,8 +39,8 @@ void test()
 {
     typedef typename container_traits<Container>::category Category;
     typedef typename container_traits<Container>::iterator_stability IteratorStability;
-    typedef typename extended_container_traits<Container>::descriptor_type Descriptor;
-    typedef typename extended_container_traits<Container>::descriptor_stability DescriptorStability;
+    typedef typename descriptor_traits<Container>::descriptor_type Descriptor;
+    typedef typename descriptor_traits<Container>::descriptor_stability DescriptorStability;
 
     cout << "--- " << demangle<Container>() << " ---" << endl;
     cout << "category: " << demangle<Category>() << endl;
