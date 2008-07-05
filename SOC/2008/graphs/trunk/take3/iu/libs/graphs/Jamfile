@@ -1,0 +1,2 @@
+
+exe un : un.cpp : <include>../../ <include>/usr/local/include ;
