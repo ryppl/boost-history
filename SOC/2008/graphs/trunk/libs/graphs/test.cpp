@@ -3,42 +3,69 @@
 #include <string>
 #include <list>
 
-#include <boost/next_prior.hpp>
-#include <boost/graphs/placeholder.hpp>
+#include <boost/none.hpp>
+#include <boost/graphs/vertex_vector.hpp>
+#include <boost/graphs/vertex_list.hpp>
+
+#include "demangle.hpp"
 
 using namespace std;
 using namespace boost;
 
+struct no_remove_tag { };
+struct has_remove_tag { };
+
+// A fake vertex type.
 struct Vertex
 {
-    Vertex(string n, int w)
-        : name(n), weight(w)
+    typedef int vertex_properties;
+
+    Vertex(int x)
+        : value(x)
     { }
 
-    string name;
-    int weight;
+    int& properties()
+    { return value; }
+
+    int const& properties() const
+    { return value; }
+
+    int value;
 };
 
-inline ostream& operator<<(ostream& os, Vertex const& v)
-{ return os << v.name << " " << v.weight; }
+
+template <typename Store>
+void test_remove(Store& verts, stable_descriptor_tag)
+{
+    verts.remove(3);
+    cout << "size after remove: " << verts.size() << endl;
+}
+
+template <typename VertexSet>
+void test_remove(VertexSet& vs, unstable_remove_tag)
+{ /* Noop for unstable removes */ }
+
+template <typename VertexSet>
+void test()
+{
+    typedef typename VertexSet::template store<Vertex>::type Store;
+    typedef typename VertexSet::descriptor_type Descriptor;
+
+    cout << "--- " << demangle<VertexSet>() << " ---" << endl;
+
+    Store verts;
+    Descriptor d1 = verts.add(3);
+
+    cout << "value of added props: " << verts.vertex(d1).value << endl;
+    cout << "value of found props: " << verts.vertex(verts.find(3)).value << endl;
+
+    test_remove(verts, typename descriptor_traits<typename Store::store_type>::descriptor_stability());
+}
 
 int main()
 {
-    typedef list<Vertex> List;
-    typedef List::iterator Iterator;
-
-    typedef list<int>::iterator Dummy;
-    typedef placeholder<sizeof(Dummy)> Reference;
-
-    List verts;
-    verts.push_back(Vertex("a", 1));
-    verts.push_back(Vertex("b", 2));
-
-    Reference x(verts.begin());
-    Reference y(prior(verts.end()));
-
-    cout << *x.get<Iterator>() << endl;
-    cout << *y.get<Iterator>() << endl;
+    test<vertex_vector<>>();
+    test<vertex_list<>>();
 
     return 0;
 }

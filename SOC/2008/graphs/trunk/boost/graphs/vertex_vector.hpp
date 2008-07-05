@@ -5,7 +5,9 @@
 #include <vector>
 #include <algorithm>
 
-#include "vertex_descriptor.hpp"
+#include <boost/descriptors.hpp>
+#include <boost/graphs/utility.hpp>
+
 #include "vertex_iterator.hpp"
 
 // Forward declarations
@@ -25,7 +27,9 @@ template <template <typename> class Alloc = std::allocator>
 struct vertex_vector
 {
     typedef unused key_type;
-    typedef basic_vertex_descriptor<std::size_t> descriptor_type;
+
+    typedef std::vector<int, Alloc<int>> dummy;
+    typedef typename descriptor_traits<dummy>::descriptor_type descriptor_type;
 
     // The store metafunction generates the type used to store vertices in
     // either a directed or undirected graph. This metafunction takes the
@@ -33,9 +37,7 @@ struct vertex_vector
     template <typename Vertex>
     struct store
     {
-        typedef Vertex stored_vertex;
-        typedef Alloc<stored_vertex> allocator;
-        typedef vertex_vector_impl<stored_vertex, allocator> type;
+        typedef vertex_vector_impl<Vertex, Alloc<Vertex>> type;
     };
 };
 
@@ -53,34 +55,54 @@ struct vertex_vector
 template <typename Vertex, typename Allocator>
 class vertex_vector_impl
 {
-    typedef std::vector<Vertex, Allocator> vertex_store;
 public:
-    typedef basic_vertex_descriptor<std::size_t> vertex_descriptor;
+    typedef std::vector<Vertex, Allocator> store_type;
+    typedef typename store_type::size_type size_type;
+    typedef typename store_type::iterator iterator;
+    typedef typename store_type::const_iterator const_iterator;
 
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;
-    typedef typename vertex_store::size_type size_type;
-    typedef typename vertex_store::iterator iterator;
-    typedef typename vertex_store::const_iterator const_iterator;
 
-    typedef indexed_vertex_iterator<vertex_store> vertex_iterator;
+    typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
+
+    typedef indexed_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
-    vertex_vector_impl();
+    inline vertex_vector_impl()
+        : _verts()
+    { }
 
-    /** @name Add Vertex */
+    /** @name Add Vertex
+     * Add a vertex to the store with the given properties (or none). Return
+     * a descriptor to the vertex that was added to the vector.
+     */
     //@{
-    vertex_descriptor add();
-    vertex_descriptor add(vertex_properties const&);
+    inline vertex_descriptor add()
+    { return add(vertex_properties()); }
+
+    inline vertex_descriptor add(vertex_properties const& vp)
+    {
+        return make_descriptor(_verts, insert(_verts, vertex_type(vp)));
+    }
     //@}
 
-    /** Return the vertex with the given properties */
-    vertex_descriptor find(vertex_properties const&) const;
+    /**
+     * Return a descriptor to the vertex with the given properties. If you
+     * end up calling this function, you're probably using the wrong graph
+     * type.
+     */
+    vertex_descriptor find(vertex_properties const& vp) const
+    {
+        iterator i = std::find_if(_verts.begin(), _verts.end(), find_properties(vp));
+        return make_descriptor(_verts, i);
+    }
 
     /** Rerturn the number of vertices in the vector. */
     size_type size() const
     { return _verts.size(); }
+
 
     /** @name Vertex Iterators */
     //@{
@@ -94,14 +116,15 @@ public:
     { return std::make_pair(begin_vertices(), end_vertices()); }
     //@}
 
+
     /** @name Vertex Accessors */
     //@{
     vertex_type& vertex(vertex_descriptor v)
-    { return _verts[v.get()]; }
+    { return *make_iterator(_verts, v); }
 
     vertex_type const& vertex(vertex_descriptor v) const
-    { return _verts[v.get()]; }
-    //@{
+    { return *make_iterator(_verts, v); }
+    //@}
 
     /** @name Property Accessors */
     //@{
@@ -110,57 +133,10 @@ public:
 
     vertex_properties const& properties(vertex_descriptor v) const
     { return vertex(v).properties(); }
-    //@{
+    //@}
 
 private:
-    vertex_store _verts;
+    mutable store_type _verts;
 };
-
-template <typename V, typename A>
-vertex_vector_impl<V,A>::vertex_vector_impl()
-    : _verts()
-{ }
-
-/**
- * Add a vertex to the store with no or default properties, returning the
- * the descriptor to the added vertex. Adding a vertex does not invalidate
- * any vertices or edges.
- *
- * @complexity O(~1)
- */
-template <typename V, typename A>
-typename vertex_vector_impl<V,A>::vertex_descriptor
-vertex_vector_impl<V,A>::add()
-{
-    return add(vertex_properties());
-}
-
-/**
- * Add a vertex to the store with the given properties. Adding a vertex does
- * not invalidate any other descriptors.
- *
- * @complexity O(1)
- */
-template <typename V, typename A>
-typename vertex_vector_impl<V,A>::vertex_descriptor
-vertex_vector_impl<V,A>::add(vertex_properties const& vp)
-{
-    // Just push the vertex to the back and return its index.
-    _verts.push_back(vertex_type(vp));
-    return _verts.size() - 1;
-}
-
-/**
- * Find the vertex with the given properties.
- *
- * @complexity O(V)
- */
-template <typename V, typename A>
-typename vertex_vector_impl<V,A>::vertex_descriptor
-vertex_vector_impl<V,A>::find(vertex_properties const& vp) const
-{
-    return std::distance(_verts.begin(),
-                         std::find(_verts.begin(), _verts.end(), vp));
-}
 
 #endif

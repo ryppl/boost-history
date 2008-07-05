@@ -212,22 +212,34 @@ struct container_traits<std::multimap<Key, T, Compare, Alloc>>
 
 namespace dispatch
 {
-    template <typename Container, typename Value>
+    // Insert implementations
+    template <typename Container, typename T>
     inline typename Container::iterator
-    insert(Container& c, Value const& x, sequence_tag)
+    insert(Container& c, T const& x, sequence_tag)
     { return c.insert(c.end(), x); }
 
-    template <typename Container, typename Value>
+    template <typename Container, typename T>
     inline typename Container::iterator
-    insert(Container& c, Value const& x, unique_associative_container_tag)
+    insert(Container& c, T const& x, unique_associative_container_tag)
     { return c.insert(x).first; }
 
-    template <typename Container, typename Value>
+    template <typename Container, typename T>
     inline typename Container::iterator
-    insert(Container& c, Value const& x, multiple_associative_container_tag)
+    insert(Container& c, T const& x, multiple_associative_container_tag)
     { return c.insert(x); }
 
+    // Find (non-const) implementations
+    template <typename Container, typename T>
+    inline typename Container::iterator
+    find(Container& c, T const& x, sequence_tag)
+    { return std::find(c.begin(), c.end(), x); }
 
+    template <typename Container, typename T>
+    inline typename Container::iterator
+    find(Container& c, T const& x, associative_container_tag)
+    { return c.find(x); }
+
+    // Erase implementations
     template <typename Container>
     inline typename Container::iterator
     erase(Container& c, typename Container::iterator i, sequence_tag)
@@ -250,7 +262,13 @@ insert(Container& c, T const& x)
 
 template <typename Container, typename T>
 inline typename Container::iterator
+find(Container& c, T const& x)
+{ return dispatch::find(c, x, container_category(c)); }
+
+template <typename Container>
+inline typename Container::iterator
 erase(Container& c, typename Container::iterator i)
 { return dispatch::erase(c, i, container_category(c)); }
+
 
 #endif

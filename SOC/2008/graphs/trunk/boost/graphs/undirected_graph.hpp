@@ -2,7 +2,7 @@
 #ifndef UNDIRECTED_GRAPH_HPP
 #define UNDIRECTED_GRAPH_HPP
 
-#include "none.hpp"
+#include <boost/none.hpp>
 
 #include "undirected_vertex.hpp"
 #include "vertex_vector.hpp"
