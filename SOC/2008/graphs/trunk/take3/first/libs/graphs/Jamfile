@@ -1,6 +1,0 @@
-
-exe ordered_pair : ordered_pair.cpp : <include>../../ ;
-exe unordered_pair : unordered_pair.cpp : <include>../../ ;
-exe adjacency_list : adjacency_list.cpp : <include>../../ <include>/usr/local/include ;
-exe bfs : bfs.cpp : <include>../../ <include>/usr/local/include ;
-exe incidence : incidence.cpp : <include>../../ <include>/usr/local/include ;

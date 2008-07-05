@@ -1,2 +1,0 @@
-
-exe decoup : decoup.cpp : <include>../../trunk ;
