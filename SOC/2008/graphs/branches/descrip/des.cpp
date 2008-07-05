@@ -12,11 +12,23 @@ using namespace std;
 
 namespace dispatch
 {
-    // A little help for mapped values.
-    template <typename Container, typename Value>
-    void insert(Container& c, Value const& x, pair_associative_container_tag)
+    template <typename Container, typename T>
+    void insert_value(Container& c, T const& x, back_insertion_sequence_tag)
+    { c.push_back(x); }
+
+    template <typename Container, typename T>
+    void insert_value(Container& c, T const& x, simple_associative_container_tag)
+    { c.insert(x); }
+
+    template <typename Container, typename T>
+    void insert_value(Container& c, T const& x, pair_associative_container_tag)
     { c.insert(make_pair(x, x)); }
 }
+
+template <typename Container, typename T>
+void insert_value(Container& c, T const& x)
+{ dispatch::insert_value(c, x, container_category(c)); }
+
 
 template <typename T, typename U>
 ostream& operator<<(ostream& os, pair<T, U> const& x)
@@ -41,9 +53,9 @@ void test()
     cout << "mapped elements: " << contains_mapped_elements<Container>::value << endl;
 
     Container c;
-    insert(c, 0.0);
-    insert(c, 6.28);
-    insert(c, 3.14);
+    insert_value(c, 0.0);
+    insert_value(c, 6.28);
+    insert_value(c, 3.14);
 
     Descriptor d1 = make_descriptor(c, c.begin());
     Descriptor d2 = make_descriptor(c, next(c.begin(), 1));

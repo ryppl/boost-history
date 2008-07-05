@@ -29,18 +29,28 @@ namespace std
 // These define the basic concepts of STL containers. Note the use of
 // virtual inheritance because there are lots of inheritance diamonds.
 struct container_tag { };
-struct forward_container_tag : virtual public container_tag { };
-struct reversible_container_tag : virtual public forward_container_tag { };
-struct random_access_container_tag : virtual public reversible_container_tag { };
-struct sequence_tag : virtual public forward_container_tag { };
-struct associative_container_tag : virtual public forward_container_tag { };
-struct sorted_associative_container_tag : virtual public associative_container_tag , virtual public reversible_container_tag { };
-struct front_insertion_sequence_tag : virtual public sequence_tag { };
-struct back_insertion_sequence_tag : virtual public sequence_tag { };
-struct unique_associative_container_tag  : virtual public associative_container_tag { };
-struct multiple_associative_container_tag  : virtual public associative_container_tag { };
-struct simple_associative_container_tag : virtual public associative_container_tag { };
-struct pair_associative_container_tag : virtual public associative_container_tag { };
+struct forward_container_tag : virtual container_tag { };
+struct reversible_container_tag : virtual forward_container_tag { };
+struct random_access_container_tag : virtual reversible_container_tag { };
+
+// Sequential containers
+struct sequence_tag : virtual forward_container_tag { };
+struct front_insertion_sequence_tag : virtual sequence_tag { };
+struct back_insertion_sequence_tag : virtual sequence_tag { };
+
+// Associative containers
+struct associative_container_tag : virtual forward_container_tag { };
+struct sorted_associative_container_tag : virtual associative_container_tag, virtual reversible_container_tag { };
+struct unique_associative_container_tag : virtual associative_container_tag { };
+struct multiple_associative_container_tag : virtual associative_container_tag { };
+struct simple_associative_container_tag : virtual associative_container_tag { };
+struct pair_associative_container_tag : virtual associative_container_tag { };
+
+// These aren't real concepts, just combinations of others.
+struct set_container_tag : virtual simple_associative_container_tag, virtual unique_associative_container_tag { };
+struct map_container_tag : virtual pair_associative_container_tag, virtual unique_associative_container_tag { };
+struct multiset_container_tag : virtual simple_associative_container_tag, virtual multiple_associative_container_tag { };
+struct multimap_container_tag : virtual pair_associative_container_tag, virtual multiple_associative_container_tag { };
 
 // Iterator Stability Tags
 // These tags determine the "stability" of iterators. Do mutating operations
@@ -109,8 +119,8 @@ struct contains_mapped_elements
 
 // Vector
 struct vector_tag :
-    virtual public random_access_container_tag,
-    virtual public back_insertion_sequence_tag
+    virtual random_access_container_tag,
+    virtual back_insertion_sequence_tag
 { };
 
 template <class T, class Alloc>
@@ -122,9 +132,9 @@ struct container_traits<std::vector<T,Alloc>>
 
 // List
 struct list_tag :
-    virtual public reversible_container_tag,
-    virtual public back_insertion_sequence_tag,
-    virtual public front_insertion_sequence_tag
+    virtual reversible_container_tag,
+    virtual back_insertion_sequence_tag,
+    virtual front_insertion_sequence_tag
 { };
 
 template <class T, class Alloc>
@@ -138,9 +148,9 @@ struct container_traits<std::list<T,Alloc>>
 
 // Set
 struct set_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public simple_associative_container_tag,
-    virtual public unique_associative_container_tag
+    virtual sorted_associative_container_tag,
+    virtual simple_associative_container_tag,
+    virtual unique_associative_container_tag
 { };
 
 
@@ -153,9 +163,9 @@ struct container_traits<std::set<Key,Cmp,Alloc>>
 
 // Multiset
 struct multiset_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public simple_associative_container_tag,
-    virtual public multiple_associative_container_tag
+    virtual sorted_associative_container_tag,
+    virtual simple_associative_container_tag,
+    virtual multiple_associative_container_tag
 { };
 
 template <class T, class Compare, class Alloc>
@@ -167,9 +177,9 @@ struct container_traits<std::multiset<T, Compare, Alloc>>
 
 // Map
 struct map_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public pair_associative_container_tag,
-    virtual public unique_associative_container_tag
+    virtual sorted_associative_container_tag,
+    virtual pair_associative_container_tag,
+    virtual unique_associative_container_tag
 { };
 
 template <class Key, class T, class Compare, class Alloc>
@@ -181,9 +191,9 @@ struct container_traits<std::map<Key, T, Compare, Alloc>>
 
 // Multimap
 struct multimap_tag :
-    virtual public sorted_associative_container_tag,
-    virtual public pair_associative_container_tag,
-    virtual public multiple_associative_container_tag
+    virtual sorted_associative_container_tag,
+    virtual pair_associative_container_tag,
+    virtual multiple_associative_container_tag
 { };
 
 template <class Key, class T, class Compare, class Alloc>
@@ -209,14 +219,19 @@ namespace dispatch
 
     template <typename Container, typename Value>
     inline typename Container::iterator
-    insert(Container& c, Value const& x, simple_associative_container_tag)
+    insert(Container& c, Value const& x, unique_associative_container_tag)
     { return c.insert(x).first; }
+
+    template <typename Container, typename Value>
+    inline typename Container::iterator
+    insert(Container& c, Value const& x, multiple_associative_container_tag)
+    { return c.insert(x); }
 }
 
 template <typename Container, typename T>
 inline typename Container::iterator
 insert(Container& c, T const& x)
-{ return dispatch(c, x, container_category(c)); }
+{ return dispatch::insert(c, x, container_category(c)); }
 
 #if 0
 

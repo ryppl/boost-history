@@ -9,8 +9,8 @@
 #include "blob.hpp"
 
 // Descriptor implementations.
-#include "descriptor/node.hpp"
-#include "descriptor/index.hpp"
+#include "descriptor/node_descriptor.hpp"
+#include "descriptor/index_descriptor.hpp"
 
 // Descriptors Take 2 (or 3 or 4).
 //
