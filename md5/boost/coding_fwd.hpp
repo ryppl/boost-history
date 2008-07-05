@@ -31,6 +31,18 @@ namespace coding
 {
 
 
+//  From <boost/coding/coding_shell.hpp>  ------------------------------------//
+
+template < class ByteProcessor, typename SizeType = std::size_t >
+class byte_coding_shell;
+
+template < class BitProcessor, bool BigEndian >
+class bit_to_byte_processor;
+
+template < class BitProcessor, bool BigEndian, typename SizeType = std::size_t >
+class bit_coding_shell;
+
+
 //  From <boost/coding/operations.hpp>  --------------------------------------//
 
 template < class Derived, typename SizeType = std::size_t >
@@ -48,6 +60,9 @@ class queued_bit_processing_base;
 
 class md5_digest;
 
+class md5_computerX;
+
+class md5_context;
 class md5_computer;
 
 // Also has a free function

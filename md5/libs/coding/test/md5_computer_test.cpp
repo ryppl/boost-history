@@ -480,11 +480,14 @@ BOOST_AUTO_TEST_CASE( md5_computer_bit_input_test )
         c2.bits( b );
     BOOST_CHECK( c1 == c2 );
 
-    // Use with algorithms, note that it works by reference!
+    // Use with algorithms, note that it NO LONGER works by reference!
     md5_computer  c3, c4;
 
     BOOST_CHECK( c3 == c4 );
     for_each( value_bits.begin(), value_bits.end(), c3.bits );
+    BOOST_CHECK( c3 == c4 );
+    BOOST_CHECK( c3 != c2 );
+    c3.bits = for_each( value_bits.begin(), value_bits.end(), c3.bits );
     BOOST_CHECK( c3 != c4 );
     BOOST_CHECK( c3 == c2 );
 
@@ -492,11 +495,15 @@ BOOST_AUTO_TEST_CASE( md5_computer_bit_input_test )
     c4.bits = c3.bits;
     BOOST_CHECK( c4 == c3 );
 
-    // Just a formality
+    // NO LONGER just a formality
     c4.reset();
     BOOST_CHECK( c4 != c3 );
     c4.bits = for_each( value_bits.begin(), value_bits.end(), c4.bits );
     BOOST_CHECK( c4 == c3 );
+
+    // TODO: temporary bit-applicator objects call "operator new" in their copy
+    // constructor.  We need to cause this allocation to fail so that can be
+    // tested!  (Maybe a custom "operator new" is needed?)
 }
 
 // Byte-wise function-object computation test
@@ -513,11 +520,14 @@ BOOST_AUTO_TEST_CASE( md5_computer_byte_input_test )
         c2.bytes( b );
     BOOST_CHECK( c1 == c2 );
 
-    // Use with algorithms, note that it works by reference!
+    // Use with algorithms, note that it NO LONGER works by reference!
     md5_computer  c3, c4;
 
     BOOST_CHECK( c3 == c4 );
     for_each( values.begin(), values.end(), c3.bytes );
+    BOOST_CHECK( c3 == c4 );
+    BOOST_CHECK( c3 != c2 );
+    c3.bytes = for_each( values.begin(), values.end(), c3.bytes );
     BOOST_CHECK( c3 != c4 );
     BOOST_CHECK( c3 == c2 );
 
@@ -525,7 +535,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_byte_input_test )
     c4.bytes = c3.bytes;
     BOOST_CHECK( c4 == c3 );
 
-    // Just a formality
+    // NO LONGER just a formality
     c4.reset();
     BOOST_CHECK( c4 != c3 );
     c4.bytes = for_each( values.begin(), values.end(), c4.bytes );

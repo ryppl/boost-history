@@ -173,8 +173,8 @@ skipped_indices( std::size_t total_size, std::size_t first_index, std::size_t
 // The exact amount of bits needed to be in the queue so an appendage of the
 // length will exactly fill the queue.
 std::size_t const  padding_remainder =
- boost::coding::md5_computer::bits_per_block -
- boost::coding::md5_computer::significant_bits_per_length;
+ boost::coding::md5_computerX::bits_per_block -
+ boost::coding::md5_computerX::significant_bits_per_length;
 
 }  // unnamed namespace
 
@@ -216,12 +216,12 @@ std::size_t const  md5_constants::characters_per_digest;
 
 //  MD5 message-digest computer class-static member definitions  -------------//
 
-std::size_t const  md5_computer::words_per_block;
+std::size_t const  md5_computerX::words_per_block;
 
-int const          md5_computer::significant_bits_per_length;
-std::size_t const  md5_computer::bits_per_block;
+int const          md5_computerX::significant_bits_per_length;
+std::size_t const  md5_computerX::bits_per_block;
 
-array<md5_digest::word_type, 64> const  md5_computer::hashing_table = { {
+array<md5_digest::word_type, 64> const  md5_computerX::hashing_table = { {
     0xD76AA478ul,
     0xE8C7B756ul,
     0x242070DBul,
@@ -291,7 +291,7 @@ array<md5_digest::word_type, 64> const  md5_computer::hashing_table = { {
 // Initial values of the MD buffer, taken from RFC 1321, section 3.3.  (Note
 // that the RFC lists each number low-order byte first, while numbers need to be
 // written high-order byte first in C++.)
-md5_computer::ibuffer_type const  md5_computer::initial_buffer_ = {
+md5_computerX::ibuffer_type const  md5_computerX::initial_buffer_ = {
  {0x67452301ul, 0xEFCDAB89ul, 0x98BADCFEul, 0x10325476ul} };
 
 
@@ -299,7 +299,7 @@ md5_computer::ibuffer_type const  md5_computer::initial_buffer_ = {
 
 // Generated copy of "hashing_table"; see header for notes
 array<md5_digest::word_type, 64>
-md5_computer::generate_hashing_table()
+md5_computerX::generate_hashing_table()
 {
     array<md5_digest::word_type, 64>  r;
 
@@ -319,7 +319,7 @@ md5_computer::generate_hashing_table()
 
 // Hash an entire block into the running checksum, using RFC 1321, section 3.4
 void
-md5_computer::update_hash( bool const *queue_b, bool const *queue_e )
+md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 {
     using std::size_t;
 
@@ -409,8 +409,8 @@ md5_computer::update_hash( bool const *queue_b, bool const *queue_e )
 //  MD5 message-digest computation digest-output member function definition  -//
 
 // Check-sum computation; see header for notes
-md5_computer::value_type
-md5_computer::checksum() const
+md5_computerX::value_type
+md5_computerX::checksum() const
 {
     // As explained in RFC 1321, section 3, the final check-sum is the state of
     // the hash after padding and the original length are appended to the
@@ -437,6 +437,11 @@ md5_computer::checksum() const
     std::copy( rb.begin(), rb.end(), r.hash );
     return r;
 }
+
+int const  md5_computer::significant_bits_per_length;
+std::size_t const  md5_computer::bits_per_block;
+array<md5_digest::word_type, 64> const  md5_computer::hashing_table =
+ md5_computerX::hashing_table;
 
 
 }  // namespace coding

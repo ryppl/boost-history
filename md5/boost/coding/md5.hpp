@@ -21,6 +21,7 @@
 
 #include <boost/array.hpp>                 // for boost::array
 #include <boost/assert.hpp>                // for BOOST_ASSERT
+#include <boost/coding/coding_shell.hpp>   // for b:c:bit_coding_shell
 #include <boost/coding/operations.hpp>     // for b:c:queued_bit_processing_base
 #include <boost/integer.hpp>               // for boost::uint_t
 #include <boost/serialization/access.hpp>  // for boost::serialization::access
@@ -57,7 +58,7 @@ namespace coding
     purposes, but not ordering.  Persistence is supported through the standard
     text stream I/O system.
 
-    \see  boost::coding::md5_computer
+    \see  boost::coding::md5_computerX
     \see  boost::coding::compute_md5(void const*,std::size_t)
  */
 class md5_digest
@@ -121,11 +122,11 @@ public:
            i.e., both "friend base_type" and "friend class base_type" didn't
            work.  I don't know why either.)
  */
-class md5_computer
-    : protected queued_bit_processing_base<md5_computer, uint_fast64_t, 16u *
+class md5_computerX
+    : protected queued_bit_processing_base<md5_computerX, uint_fast64_t, 16u *
        md5_digest::bits_per_word>
 {
-    typedef queued_bit_processing_base<md5_computer, uint_fast64_t, 16u *
+    typedef queued_bit_processing_base<md5_computerX, uint_fast64_t, 16u *
      md5_digest::bits_per_word>  base_type;
 
     friend  void base_type::process_bit( bool );  // needs "update_hash" access
@@ -203,19 +204,19 @@ public:
 
     // Lifetime management (use automatic destructor)
     //! Default construction
-    md5_computer();
+    md5_computerX();
     //! Copy construction
-    md5_computer( md5_computer const &c );
+    md5_computerX( md5_computerX const &c );
 
     /*! \name Assignment */ //@{
     // Assignment
     //! Sets state back to initial conditions
     void  reset();
     //! Changes the current state to a copy of another object's
-    void  assign( md5_computer const &c );
+    void  assign( md5_computerX const &c );
 
     //! Exchanges state with another object
-    void  swap( md5_computer &other );//@}
+    void  swap( md5_computerX &other );//@}
 
     /*! \name Inspection */ //@{
     // Inspectors
@@ -225,7 +226,7 @@ public:
     buffer_type  last_buffer() const;
 
     using base_type::bits_unbuffered;
-    using base_type::copy_unbuffered;
+    using base_type::copy_unbuffered;//@}
 
     /*! \name Bit-stream reading */ //@{
     // Input processing
@@ -256,12 +257,12 @@ public:
     /*! \name Operators */ //@{
     // Operators
     //! Copy-assignment
-    md5_computer &  operator =( md5_computer const &c );
+    md5_computerX &  operator =( md5_computerX const &c );
 
     //! Equals
-    bool  operator ==( md5_computer const &c ) const;
+    bool  operator ==( md5_computerX const &c ) const;
     //! Not-equals
-    bool  operator !=( md5_computer const &c ) const;
+    bool  operator !=( md5_computerX const &c ) const;
 
     //! Application
     value_type  operator ()() const;//@}
@@ -299,7 +300,7 @@ private:
     void  update_hash( bool const *queue_b, bool const *queue_e );
 
     // Implementation types
-    typedef md5_computer  self_type;
+    typedef md5_computerX  self_type;
 
     typedef uint_t<md5_digest::bits_per_word>::fast  iword_type;
     typedef array<iword_type, md5_digest::words_per_digest>  ibuffer_type;
@@ -308,6 +309,87 @@ private:
     ibuffer_type  buffer_;
 
     static  ibuffer_type const  initial_buffer_;
+
+};  // md5_computerX
+
+class md5_context
+{
+    friend class md5_computer;
+
+public:
+    typedef md5_computerX::value_type  value_type;
+
+    void  operator ()( bool bit )  { this->worker.process_bit(bit); }
+    bool  operator ==( md5_context const &o ) const
+      { return this->worker == o.worker; }
+    bool  operator !=( md5_context const &o ) const
+      { return !this->operator ==( o ); }
+    value_type  operator ()() const  { return this->worker.checksum(); }
+
+private:
+    md5_computerX  worker;
+
+};  // md5_context
+
+class md5_computer
+    : public bit_coding_shell<md5_context, true>
+{
+    typedef bit_coding_shell<md5_context, true>  base_type;
+    typedef md5_computer                         self_type;
+
+public:
+    // Constants
+    static  int const            significant_bits_per_length =
+     md5_computerX::significant_bits_per_length;
+    static  std::size_t const    bits_per_block = md5_computerX::bits_per_block;
+    static  array<md5_digest::word_type, 64> const  hashing_table;
+
+    // Types
+    typedef uint_least64_t  length_type;
+    typedef array<md5_digest::word_type, md5_digest::words_per_digest>
+      buffer_type;
+
+    // Assignment
+    //! Sets state back to initial conditions
+    void  reset()  { *this = self_type(); }
+    //! Changes the current state to a copy of another object's
+    void  assign( self_type const &c )  { *this = c; }
+
+    //! Exchanges state with another object
+    void  swap( self_type &other )  { std::swap( *this, other ); }
+
+    // Inspectors
+    //! Returns the count of bits read so far
+    length_type  bits_read() const
+      { return this->context().worker.bits_read(); }
+    //! Returns the checksum buffer of hashed bits
+    buffer_type  last_buffer() const
+      { return this->context().worker.last_buffer(); }
+    //! Returns the count of the queued bits
+    length_type  bits_unbuffered() const
+      { return this->context().worker.bits_unbuffered(); }
+    //! Copies out the queued bits
+    template < typename OutputIterator >
+    OutputIterator  copy_unbuffered( OutputIterator o ) const
+      { return this->context().worker.copy_unbuffered( o ); }
+
+    // Input processing
+    //! Enters a word for hashing
+    void  process_word( md5_digest::word_type word )
+      { this->context().worker.process_word( word ); }
+    //! Enters a double-word for hashing
+    void  process_double_word( length_type dword )
+      { this->context().worker.process_double_word( dword ); }
+
+    // Operators
+    bool  operator ==( self_type const &o ) const
+      { return this->base_type::operator ==( o ); }
+    bool  operator !=( self_type const &o ) const
+      { return !this->operator ==( o ); }
+
+    // Extras
+    static  array<md5_digest::word_type, 64>  generate_hashing_table()
+      { return md5_computerX::generate_hashing_table(); }
 
 };  // md5_computer
 
@@ -534,7 +616,7 @@ operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
 
 //  MD5 message-digest computation constructor definitions  ------------------//
 
-/** Constructs a \c md5_computer set to initial conditions.  That is, with the
+/** Constructs a \c md5_computerX set to initial conditions.  That is, with the
     buffer initialized as in RFC 1321, section 3.3, and no bits counted as read
     or currently left to be hashed.
 
@@ -545,14 +627,14 @@ operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
     \post  \c #bits and \c #bytes point to \c *this
  */
 inline
-md5_computer::md5_computer()
+md5_computerX::md5_computerX()
     : base_type()
     , buffer_( self_type::initial_buffer_ )
 {
     BOOST_ASSERT( this->test_invariant() );
 }
 
-/** Constructs a \c md5_computer to the same computation state as <var>c</var>.
+/** Constructs a \c md5_computerX to the same computation state as <var>c</var>.
 
     \param c  The original object to be copied.
 
@@ -567,7 +649,7 @@ md5_computer::md5_computer()
     \post  \c #bits and \c #bytes point to \c *this
  */
 inline
-md5_computer::md5_computer( md5_computer const &c )
+md5_computerX::md5_computerX( md5_computerX const &c )
     : base_type( c )
     , buffer_( c.buffer_ )
 {
@@ -584,8 +666,8 @@ md5_computer::md5_computer( md5_computer const &c )
     \return  How many bits have been submitted, hashed and queued.
  */
 inline
-md5_computer::length_type
-md5_computer::bits_read() const
+md5_computerX::length_type
+md5_computerX::bits_read() const
 {
     // Don't count any wrap-around past 2**64
     // (Use mask value once Boost.Integer is upped to 64-bit support)
@@ -599,8 +681,8 @@ md5_computer::bits_read() const
     \return  The current state of the MD buffer, not counting any unhashed bits.
  */
 inline
-md5_computer::buffer_type
-md5_computer::last_buffer() const
+md5_computerX::buffer_type
+md5_computerX::last_buffer() const
 {
     // boost::array has no constructors (since it's POD), that means that if
     // buffer_type and ibuffer_type differ, we need to convert via assignment.
@@ -620,11 +702,11 @@ md5_computer::last_buffer() const
            0x10325476 }</code>
     \post  <code>#copy_unbuffered(<var>o</var>)</code> leaves \p o unused
 
-    \see  #md5_computer()
+    \see  #md5_computerX()
  */
 inline
 void
-md5_computer::reset()
+md5_computerX::reset()
 {
     this->base_type::reset();
     this->buffer_ = self_type::initial_buffer_;
@@ -647,11 +729,11 @@ md5_computer::reset()
            ) == true</code>
     \post  \c #bits and \c #bytes \e still point to \c *this
 
-    \see  #md5_computer(md5_computer const&)
+    \see  #md5_computerX(md5_computerX const&)
  */
 inline
 void
-md5_computer::assign( md5_computer const &c )
+md5_computerX::assign( md5_computerX const &c )
 {
     this->base_type::assign( c );
     this->buffer_ = c.buffer_;
@@ -669,7 +751,7 @@ md5_computer::assign( md5_computer const &c )
  */
 inline
 void
-md5_computer::swap( md5_computer &other )
+md5_computerX::swap( md5_computerX &other )
 {
     // Use the appropriate swap via Koeing look-up
     using std::swap;
@@ -711,7 +793,7 @@ md5_computer::swap( md5_computer &other )
  */
 inline
 void
-md5_computer::process_word( md5_digest::word_type word )
+md5_computerX::process_word( md5_digest::word_type word )
 {
     this->process_octet( word & 0xFFul );
     this->process_octet( (word >> 8) & 0xFFul );
@@ -745,7 +827,7 @@ md5_computer::process_word( md5_digest::word_type word )
  */
 inline
 void
-md5_computer::process_double_word( md5_computer::length_type dword )
+md5_computerX::process_double_word( md5_computerX::length_type dword )
 {
     this->process_word( dword & 0xFFFFFFFFull );
     this->process_word( (dword >> 32) & 0xFFFFFFFFull );
@@ -771,11 +853,11 @@ md5_computer::process_double_word( md5_computer::length_type dword )
            ) == true</code>
     \post  \c #bits and \c #bytes \e still point to \c *this
 
-    \see  #assign(md5_computer const&)
+    \see  #assign(md5_computerX const&)
  */
 inline
-md5_computer &
-md5_computer::operator =( md5_computer const &c )
+md5_computerX &
+md5_computerX::operator =( md5_computerX const &c )
 {
     this->assign( c );
     return *this;
@@ -796,7 +878,7 @@ md5_computer::operator =( md5_computer const &c )
  */
 inline
 bool
-md5_computer::operator ==( md5_computer const &c ) const
+md5_computerX::operator ==( md5_computerX const &c ) const
 {
     // Don't compare the function object proxies since they don't carry
     // significant state.  (Furthermore, they can't change once initalized and
@@ -813,11 +895,11 @@ md5_computer::operator ==( md5_computer const &c ) const
     \retval true   \c *this and \p c are not equivalent.
     \retval false  \c *this and \p c are equivalent.
 
-    \see  #operator==(md5_computer const&)const
+    \see  #operator==(md5_computerX const&)const
  */
 inline
 bool
-md5_computer::operator !=( md5_computer const &c ) const
+md5_computerX::operator !=( md5_computerX const &c ) const
 {
     return !this->operator ==( c );
 }
@@ -830,8 +912,8 @@ md5_computer::operator !=( md5_computer const &c ) const
     \see  #checksum()const
  */
 inline
-md5_computer::value_type
-md5_computer::operator ()() const
+md5_computerX::value_type
+md5_computerX::operator ()() const
 {
     return this->checksum();
 }
