@@ -15,6 +15,7 @@
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/cursor_facade.hpp>
+#include <boost/tree/detail/iterator/ascending.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -28,6 +29,14 @@ namespace boost {
 namespace tree {
 
 template <class DescendingCursor> 
+class ascending_cursor;
+
+template <class Cursor>
+typename ascending::iterator< ascending_cursor<Cursor> >::difference_type
+distance(ascending::iterator< ascending_cursor<Cursor> > iter1
+	   , ascending::iterator< ascending_cursor<Cursor> > iter2);
+
+template <class DescendingCursor> 
 class ascending_cursor
  : public cursor_facade<ascending_cursor<DescendingCursor>
       , typename cursor_value<DescendingCursor>::type
@@ -36,7 +45,7 @@ class ascending_cursor
     > {
  private:
     struct enabler {};
-
+	typedef ascending_cursor<DescendingCursor> self_type;
  public:
   	typedef typename DescendingCursor::value_type value_type;
 
@@ -96,6 +105,12 @@ class ascending_cursor
 
  	friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
+    
+//    friend 
+//    	typename ascending::iterator<self_type>::difference_type 
+//    	boost::tree::distance<>(
+//    		boost::tree::ascending::iterator<self_type> 
+//	      , boost::tree::ascending::iterator<self_type>);
     
  	std::stack<DescendingCursor> m_s; // pimpl?
  	
@@ -178,6 +193,16 @@ template <class Cursor>
 inline ascending_cursor<Cursor> make_ascending_cursor(Cursor c)
 {
 	return ascending_cursor<Cursor>(c);
+}
+
+/// Specialization
+template <class Cursor>
+typename ascending::iterator< ascending_cursor<Cursor> >::difference_type
+distance(ascending::iterator< ascending_cursor<Cursor> > iter1
+	   , ascending::iterator< ascending_cursor<Cursor> > iter2)
+{
+	return ascending_cursor<Cursor>(iter2).m_s.size() 
+		 - ascending_cursor<Cursor>(iter1).m_s.size();
 }
 
 } // namespace tree
