@@ -128,6 +128,7 @@ void wait4y() {
     cout << "Continue (y/n) -> "; 
     cin >> yes; 
     if (yes == 'y') break;
+    if (yes == 'n') exit (0);
   }
 } 
 
@@ -247,13 +248,20 @@ int main (int argc, char **argv) {
       // no aggressive absorption 
       Control [UMFPACK_AGGRESSIVE] = 0;
   }
+  bool call_wait4y = true;
+  string ifs_name; 
+  if (argc > 2) {
+    call_wait4y = false;
+    ifs_name = argv [2];
+  }
 
   umf::report_control (Control);
 
   // open the matrix file 
-  cout << "input file -> ";
-  string ifs_name; 
-  cin >> ifs_name; 
+  if (ifs_name.empty()) {
+    cout << "input file -> ";
+    cin >> ifs_name; 
+  }
   ifstream f (ifs_name.c_str()); 
   if (!f) {
     cout << "unable to open file" << endl; 
@@ -276,7 +284,7 @@ int main (int argc, char **argv) {
   cout << "matrix A: "; 
   umf::report_matrix (A, Control);
 
-  wait4y(); 
+  if (call_wait4y) wait4y(); 
 
   // symbolic factorization 
   umf::info_type<> Info; 
@@ -293,7 +301,7 @@ int main (int argc, char **argv) {
   }
   umf::report_symbolic (Symbolic, Control);
 
-  wait4y(); 
+  if (call_wait4y) wait4y(); 
 
   // numeric factorization 
   umf::numeric_type<> Numeric; 
@@ -309,7 +317,7 @@ int main (int argc, char **argv) {
   }
   umf::report_numeric (Numeric, Control);
 
-  wait4y(); 
+  if (call_wait4y) wait4y(); 
 
   // solve Ax=b 
   if (nrow == ncol && status == UMFPACK_OK) {
