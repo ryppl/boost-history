@@ -3,8 +3,6 @@
 #define UNDIRECTED_GRAPH_HPP
 
 #include "none.hpp"
-#include "descriptor.hpp"
-#include "placeholder.hpp"
 
 #include "undirected_vertex.hpp"
 #include "vertex_vector.hpp"

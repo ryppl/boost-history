@@ -1,8 +1,8 @@
 // (C) Copyright 2004 Jeremy Siek
-//  (C) Copyright 2008 Andrew Sutton
-//  Distributed under the Boost Software License, Version 1.0. (See
-//  accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+// (C) Copyright 2008 Andrew Sutton
+//
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at // http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef CONTAINERS_HPP
 #define CONTAINERS_HPP
@@ -252,120 +252,5 @@ template <typename Container, typename T>
 inline typename Container::iterator
 erase(Container& c, typename Container::iterator i)
 { return dispatch::erase(c, i, container_category(c)); }
-
-#if 0
-
-  //===========================================================================
-  // Generalized Container Functions
-
-
-  // Erase
-  template <class Sequence, class T>
-  void erase_dispatch(Sequence& c, const T& x, 
-                      sequence_tag)
-  {
-    c.erase(std::remove(c.begin(), c.end(), x), c.end());
-  }
-
-  template <class AssociativeContainer, class T>
-  void erase_dispatch(AssociativeContainer& c, const T& x, 
-                      associative_container_tag)
-  {
-    c.erase(x);
-  }
-  template <class Container, class T>
-  void erase(Container& c, const T& x)
-  {
-    erase_dispatch(c, x, container_category(c));
-  }
-
-  // Erase If
-  template <class Sequence, class Predicate, class IteratorStability>
-  void erase_if_dispatch(Sequence& c, Predicate p,
-                         sequence_tag, IteratorStability)
-  {
-#if 0
-    c.erase(std::remove_if(c.begin(), c.end(), p), c.end());
-#else
-    if (! c.empty())
-      c.erase(std::remove_if(c.begin(), c.end(), p), c.end());
-#endif
-  }
-  template <class AssociativeContainer, class Predicate>
-  void erase_if_dispatch(AssociativeContainer& c, Predicate p,
-                         associative_container_tag, stable_tag)
-  {
-    typename AssociativeContainer::iterator i, next;
-    for (i = next = c.begin(); next != c.end(); i = next) {
-      ++next;
-      if (p(*i))
-        c.erase(i);
-    }
-  }
-  template <class AssociativeContainer, class Predicate>
-  void erase_if_dispatch(AssociativeContainer& c, Predicate p,
-                         associative_container_tag, unstable_tag)
-  {
-    // This method is really slow, so hopefully we won't have any
-    // associative containers with unstable iterators!
-    // Is there a better way to do this?
-    typename AssociativeContainer::iterator i;
-    typename AssociativeContainer::size_type n = c.size();
-    while (n--)
-      for (i = c.begin(); i != c.end(); ++i)
-        if (p(*i)) {
-          c.erase(i);
-          break;
-        }
-  }
-  template <class Container, class Predicate>
-  void erase_if(Container& c, Predicate p)
-  {
-    erase_if_dispatch(c, p, container_category(c), iterator_stability(c));
-  }
-
-  // Push
-  template <class Container, class T>
-  std::pair<typename Container::iterator, bool>
-  push_dispatch(Container& c, const T& v, back_insertion_sequence_tag)
-  {
-    c.push_back(v);
-    return std::make_pair(boost::prior(c.end()), true);
-  }
-
-  template <class Container, class T>
-  std::pair<typename Container::iterator, bool>
-  push_dispatch(Container& c, const T& v, front_insertion_sequence_tag)
-  {
-    c.push_front(v);
-    return std::make_pair(c.begin(), true);
-  }
-
-  template <class AssociativeContainer, class T>
-  std::pair<typename AssociativeContainer::iterator, bool>
-  push_dispatch(AssociativeContainer& c, const T& v, 
-                unique_associative_container_tag)
-  {
-    return c.insert(v);
-  }
-
-  template <class AssociativeContainer, class T>
-  std::pair<typename AssociativeContainer::iterator, bool>
-  push_dispatch(AssociativeContainer& c, const T& v,
-                multiple_associative_container_tag)
-  {
-    return std::make_pair(c.insert(v), true);
-  }
-
-  template <class Container, class T>
-  std::pair<typename Container::iterator,bool>
-  push(Container& c, const T& v)
-  {
-    return push_dispatch(c, v, container_category(c));
-  }
-
-}} // namespace boost::graph_detail
-
-#endif
 
 #endif
