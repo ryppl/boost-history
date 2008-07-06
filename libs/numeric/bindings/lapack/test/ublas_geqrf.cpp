@@ -10,6 +10,7 @@
 
 #include <boost/numeric/bindings/lapack/geqrf.hpp>
 #include <boost/numeric/bindings/lapack/ormqr.hpp>
+#include <boost/numeric/bindings/lapack/orgqr.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/ublas/triangular.hpp>
@@ -77,6 +78,7 @@ int do_memory_type(int n, W workspace) {
 
    randomize( a );
    matrix_type a2( a );
+   matrix_type a3( a );
 
    // Compute QR factorization.
    lapack::geqrf( a, tau, workspace ) ;
@@ -87,6 +89,13 @@ int do_memory_type(int n, W workspace) {
    // The upper triangular parts of a and a2 must be equal.
    if (norm_frobenius( upper_part( a - a2 ) )
             > std::numeric_limits<real_type>::epsilon() * 10.0 * norm_frobenius( upper_part( a ) ) ) return 255 ;
+
+   // Generate orthogonal matrix
+   lapack::orgqr( a, tau, workspace );
+
+   // The result of lapack::ormqr and the equivalent matrix product must be equal.
+   if (norm_frobenius( a2 - prod(herm(a), a3) )
+            > std::numeric_limits<real_type>::epsilon() * 10.0 * norm_frobenius( a2 ) ) return 255 ;
 
    return 0 ;
 } // do_value_type()
