@@ -18,6 +18,8 @@
 
 #include <boost/tree/cursor_facade.hpp>
 
+#include <boost/iterator/iterator_adaptor.hpp>
+
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -139,17 +141,50 @@ class cursor_adaptor
 							, Difference
 							, Size>::size_type>
 {
+protected:
+    typedef cursor_adaptor<Derived, Base, Value, HorizontalTraversalOrCategory,
+    					   VerticalTraversalOrCategory, Reference, Difference,
+    					   Size> cursor_adaptor_;
+	
+	typedef eval_use_default<Derived
+						   , Base
+						   , Value
+						   , HorizontalTraversalOrCategory
+						   , VerticalTraversalOrCategory
+						   , Reference
+						   , Difference
+						   , Size> super_t;
+	
+	Base const& base_reference() const
+	{ return m_cursor; }
+	
+	Base& base_reference()
+	{ return m_cursor; }
+	
+private:
+	Base m_cursor;
+	
 	friend class iterator_core_access;
 	friend class cursor_core_access;
+	
 	typedef cursor_facade<Derived
-						, Value
-						, HorizontalTraversalOrCategory
-						, VerticalTraversalOrCategory
-						, Reference
-						, Difference
-						, Size> cursor_facade_;
+						, typename super_t::value_type
+						, typename super_t::iterator_category
+						, typename super_t::vertical_traversal
+						, typename super_t::reference
+						, typename super_t::difference_type
+						, typename super_t::size_type> cursor_facade_;
 
- public:
+public:
+ 	typedef Base base_type;
+ 	
+ 	typedef typename cursor_facade_::iterator_category iterator_category;
+
+    typedef typename cursor_facade_::horizontal_traversal horizontal_traversal;
+    typedef typename cursor_facade_::vertical_traversal cursor_category;
+    
+	typedef typename cursor_facade_::size_type size_type;
+ 
     cursor_adaptor() {}
     
     explicit cursor_adaptor(Base const& cur) : m_cursor(cur)
@@ -158,36 +193,6 @@ class cursor_adaptor
     Base const& base() const
     { return m_cursor; }
     
-	typedef typename cursor_facade_::iterator_category iterator_category;
-
-    typedef typename cursor_facade_::horizontal_traversal horizontal_traversal;
-    typedef typename cursor_facade_::vertical_traversal cursor_category;
-    
-    typedef Size size_type;
-    typedef Base base_type;
-     
- protected:
-    typedef cursor_adaptor<Derived, Base, Value, HorizontalTraversalOrCategory,
-    					   VerticalTraversalOrCategory, Reference, Difference,
-    					   Size> cursor_adaptor_;
-	
-	typedef eval_use_default<Derived
-							, Base
-							, Value
-							, HorizontalTraversalOrCategory
-							, VerticalTraversalOrCategory
-							, Reference
-							, Difference
-							, Size> super_t;
-	
-	Base const& base_reference() const
-	{ return m_cursor; }
-	
-	Base& base_reference()
-	{ return m_cursor; }
-	
- public:
- 
  	typename super_t::reference dereference() const
  	{
  		return *m_cursor;
@@ -253,9 +258,6 @@ class cursor_adaptor
 	{
 		m_cursor.to_parent();
 	}
-	
-private:
-	Base m_cursor;
 };
 
 

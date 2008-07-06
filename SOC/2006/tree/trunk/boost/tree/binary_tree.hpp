@@ -557,26 +557,6 @@ inline void swap(binary_tree<T, Alloc>& x, binary_tree<T, Alloc>& y)
 	x.swap(y);
 }
 
-template <class Cursor>
-class binary_tree_root_tracker {
- 
- public:
-	binary_tree_root_tracker() {}
-	binary_tree_root_tracker& operator++()
-	{
-		return *this;
-	}
-	binary_tree_root_tracker& operator--()
-	{
-		return *this;
-	}
-	
-	bool is_root(Cursor c)
-	{
-		return (!c.parity() && (c != c.parent().begin()));
-	} 
-};
-
 /**
  *  @brief  Binary tree equality comparison.
  *  @param  x  A %binary_tree.

@@ -17,6 +17,7 @@
 #include <boost/tree/algorithm.hpp>
 
 #include <boost/tree/ascending_cursor.hpp>
+#include <boost/tree/root_tracking_cursor.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -83,12 +84,19 @@ void comparisons_using_ac(binary_tree<int>::cursor c) {
 	return;
 }
 
+void comparisons_using_rtc(binary_tree<int>::cursor c) {
+	comparisons(make_root_tracking_cursor(c));
+	return;
+}
+
 /** 
  * Check all iterator traversals by comparing them to a recursive cursor
  * algorithm output. Do that at different stages of the tree while adding
  * elements to it, so different tree shapes are checked to be catered for
  * by the iterator algorithms.
- * Do all that also using iterators wrapped around "explicit stack"-based cursors
+ * 
+ * Afterwards, do all that using iterators wrapped around
+ * "explicit stack"-based cursors also.
  */ 
 void compare_cursor_to_iterator_traversal() {
 	binary_tree<int> test_tree2;
@@ -97,51 +105,60 @@ void compare_cursor_to_iterator_traversal() {
 	binary_tree<int>::cursor c = test_tree2.insert(test_tree2.root(), 8);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 
 	c = test_tree2.insert(c, 3);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
-	
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
+		
 	test_tree2.insert(c, 1);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
-		
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	
 	c = test_tree2.insert(++c, 6);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	test_tree2.insert(c, 4);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
-		
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	
 	test_tree2.insert(++c, 7);	
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	c = test_tree2.insert(test_tree2.root().end(), 10);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	c = test_tree2.insert(test_tree2.root().end().end(), 14);	
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	c = test_tree2.insert(c, 13);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	c = test_tree2.insert(c, 11);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	c = test_tree2.insert(++c, 12);
 	comparisons(test_tree2.root());
 	comparisons(make_ascending_cursor(test_tree2.root()));
-
-	// FIXME: This requires subtree cursors to know their root.
-	//underefed_for_each(test_tree2.root(), comparisons<binary_tree<int>::cursor>);
+	comparisons(make_root_tracking_cursor(test_tree2.root()));
 	
 	underefed_for_each(test_tree2.root(), comparisons_using_ac);
+	underefed_for_each(test_tree2.root(), comparisons_using_rtc);
 }
 
 int test_main(int, char* [])

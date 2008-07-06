@@ -98,28 +98,6 @@ class nary_tree_cursor
  	base_pointer m_node;
  	size_type m_pos;
 
-	class root_tracker { 
-	 public:
-		root_tracker() : depth(0) {}
-		root_tracker& operator++()
-		{
-			++depth;
-			return *this;
-		}
-		
-		root_tracker& operator--()
-		{
-			--depth;
-			return *this;
-		}
-		
-		bool is_root(cursor)
-		{
-			return !depth;
-		} 
-	 private:
-		int depth;
-	};
  private: 
 
  	friend class iterator_core_access;
