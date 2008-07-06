@@ -329,14 +329,14 @@ NS_BOOST_MEMORY_END
 
 #else
 
-#define BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)			\
+#define BOOST_MEMORY_UNMANAGED_NEW_(alloc, Type)			\
 	::new((alloc).unmanaged_alloc(BOOST_MEMORY_NEW_ARG(Type))) Type
 
 #define BOOST_MEMORY_GET_MANAGED_(alloc, Type)			\
 	NS_BOOST_MEMORY::_get_managed(alloc, NS_BOOST_MEMORY::destructor_traits<Type>::destruct)
 
 #define BOOST_MEMORY_NEW(alloc, Type)					\
-	BOOST_MEMORY_GET_MANAGED_(alloc, Type) ->* BOOST_MEMORY_UNMANAGED_NEW(alloc, Type)
+	BOOST_MEMORY_GET_MANAGED_(alloc, Type) ->* BOOST_MEMORY_UNMANAGED_NEW_(alloc, Type)
 
 #endif
 
