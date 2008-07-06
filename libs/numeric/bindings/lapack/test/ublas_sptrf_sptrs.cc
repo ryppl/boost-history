@@ -44,15 +44,20 @@ void init_symm2 (M& m) {
       m (i, j) = m (j, i) = 1 + j - i; 
 }
 
-int main() {
+int main (int argc, char **argv) {
+  size_t n = 0;
+  if (argc > 1) {
+    n = atoi(argv [1]);
+  }
 
   cout << endl; 
 
   cout << "real symmetric\n" << endl; 
 
-  size_t n;
-  cout << "n -> ";
-  cin >> n;
+  if (n <= 0) {
+    cout << "n -> ";
+    cin >> n;
+  }
   if (n < 5) n = 5; 
   cout << "min n = 5" << endl << endl; 
   size_t nrhs = 2; 

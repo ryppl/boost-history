@@ -25,13 +25,18 @@ typedef ublas::matrix<double, ublas::column_major> m_t;
 typedef ublas::matrix<cmpx, ublas::column_major> cm_t;
 
 
-int main() {
+int main (int argc, char **argv) {
+  size_t n = 0;
+  if (argc > 1) {
+    n = atoi(argv [1]);
+  }
 
   cout << endl; 
 
-  size_t n;
-  cout << "n -> ";
-  cin >> n; 
+  if (n <= 0) {
+    cout << "n -> ";
+    cin >> n; 
+  }
   if (n < 5) {
     n = 5;
     cout << "min n = 5" << endl; 

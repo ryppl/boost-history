@@ -40,15 +40,15 @@ alias bindings-lapack-tests :
     [ run ublas_hpsv.cc ]
     [ run ublas_posv.cc ]
     [ run ublas_ppsv.cc ]
-    [ link ublas_spsv.cc ]
-    [ link ublas_sysv.cc ]
+    [ run ublas_spsv.cc : 20 ]
+    [ run ublas_sysv.cc : 20 ]
 
-    [ link ublas_getrf_getrs.cc ]
+    [ run ublas_getrf_getrs.cc : 20 ]
     [ run ublas_hetrf_hetrs.cc ]
     [ run ublas_hptrf_hptrs.cc ]
     [ run ublas_potrf_potrs.cc ]
     [ run ublas_pptrf_pptrs.cc ]
-    [ link ublas_sptrf_sptrs.cc ]
-    [ link ublas_sytrf_sytrs.cc ]
+    [ run ublas_sptrf_sptrs.cc : 20 ]
+    [ run ublas_sytrf_sytrs.cc : 20 ]
 ;
 
