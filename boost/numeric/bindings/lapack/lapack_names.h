@@ -223,6 +223,11 @@
 #define LAPACK_CUNMQR FORTRAN_ID( cunmqr )
 #define LAPACK_ZUNMQR FORTRAN_ID( zunmqr )
 
+#define LAPACK_SORGQR FORTRAN_ID( sorgqr )
+#define LAPACK_DORGQR FORTRAN_ID( dorgqr )
+#define LAPACK_CUNGQR FORTRAN_ID( cungqr )
+#define LAPACK_ZUNGQR FORTRAN_ID( zungqr )
+
 #define LAPACK_SSYTRD FORTRAN_ID( ssytrd )
 #define LAPACK_DSYTRD FORTRAN_ID( dsytrd )
 

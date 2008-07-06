@@ -586,6 +586,19 @@ extern "C" {
                       dcomplex_t* c, const int* ldc, dcomplex_t* work,
                       const int* lwork, int* info );
 
+  void LAPACK_SORGQR( const int* m, const int* n, const int* k,
+                      float* a, const int* lda, float* tau,
+                      float* work, const int* lwork, const int* info);
+  void LAPACK_DORGQR( const int* m, const int* n, const int* k,
+                      double* a, const int* lda, double* tau,
+                      double* work, const int* lwork, const int* info);
+  void LAPACK_CUNGQR( const int* m, const int* n, const int* k,
+                      fcomplex_t* a, const int* lda, fcomplex_t* tau,
+                      fcomplex_t* work, const int* lwork, const int* info);
+  void LAPACK_ZUNGQR( const int* m, const int* n, const int* k,
+                      dcomplex_t* a, const int* lda, dcomplex_t* tau,
+                      dcomplex_t* work, const int* lwork, const int* info);
+
 
 
   /********************************************************************/
