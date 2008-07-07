@@ -38,28 +38,58 @@ struct meta_class_attributes
 	typedef mpl::vector<> type_list;
 };
 
+/** Possible class attribute storage specifiers 
+ */
+namespace attrib_storage_specifiers {
+	// static class attribute 
+	struct static_ { };
+	// mutable class attribute
+	struct mutable_ { };
+	// regular class attribure
+	struct __ { };
+}
+
 /** Additional attribute traits 
  */
-template <bool IsStatic>
-struct meta_class_attribute_traits
+template <class Specifiers>
+struct meta_class_attribute_traits;
+
+/** Specialization for non-static, non-mutable members
+ */
+template <>
+struct meta_class_attribute_traits<attrib_storage_specifiers::__>
 {
-	typedef mpl::bool_<IsStatic> is_static;
+	typedef mpl::false_ is_static;
+	typedef mpl::false_ is_mutable;
 };
 
-/** This macro declares the meta-attribute traits getter
- *  function.
- *  There is a special implementation of this in meta-class
- *  for boost::tuple
+/** Specialization for static member attribs
  */
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_TRAITS_GETTER(NUMBER, IS_STATIC) \
-	static meta_class_attribute_traits<IS_STATIC> \
-	get_traits(mpl::int_<NUMBER>); \
+template <>
+struct meta_class_attribute_traits<attrib_storage_specifiers::static_>
+{
+	typedef mpl::true_ is_static;
+	typedef mpl::false_ is_mutable;
+};
+
+/** Specialization for mutable member attribs
+ */
+template <>
+struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
+{
+	typedef mpl::false_ is_static;
+	typedef mpl::true_ is_mutable;
+};
+
 
 /** This macro starts the declaration of member attributes
  *  of the given class
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(THE_CLASS) \
-	template <> struct meta_class_attributes< THE_CLASS , detail::default_meta_class_variant> \
+	template <> struct meta_class_attributes< \
+		THE_CLASS , \
+		detail::default_meta_class_variant \
+	> \
 	{ \
 		typedef THE_CLASS Class; \
 		typedef detail::default_meta_class_variant variant_tag; \
@@ -68,7 +98,10 @@ struct meta_class_attribute_traits
 /** This macro starts the declaration of member attributes
  *  of the given template
  */
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(THE_TEMPLATE, TEMPL_ARG_COUNT) \
+#define BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN( \
+	THE_TEMPLATE, \
+	TEMPL_ARG_COUNT \
+) \
 	template < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, typename T) >  \
 	struct meta_class_attributes< \
 		THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) >, \
@@ -81,127 +114,227 @@ struct meta_class_attribute_traits
 		typedef typename mpl::vector<> 
 
 
-/** This is a helper for the BOOST_MIRROR_CLASS_ATTRIB*
- *  macros. 
- *  It declares all common things that need to be declared 
- *  before the specific stuff.
+/** This macro finishes the declaration of attributes
+ *  of the given class
  */
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, NAME) \
-	_partial_list_##NUMBER;\
-	static const bchar* base_name(mpl::int_<NUMBER>){return BOOST_STR_LIT(#NAME);}\
+#define BOOST_MIRROR_REG_CLASS_ATTRIBS_END \
+		type_list; \
+		struct size : public mpl::size<type_list>{ };\
+	};
 
-/** This is a helper for the BOOST_MIRROR_CLASS_ATTRIB*
- *  macros. 
- *  It declares all common things that need to be declared 
- *  after the specific stuff.
+/** This macro finishes the declaration of attributes
+ *  of the given template
  */
-#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, IS_STATIC, TYPENAME_KW) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_TRAITS_GETTER(NUMBER, IS_STATIC) \
-	typedef TYPENAME_KW mpl::push_back<_partial_list_##NUMBER, TYPE>::type  
+#define BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_END \
+	BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, IS_STATIC) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, IS_STATIC, BOOST_PP_EMPTY())
-
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, IS_STATIC) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, IS_STATIC, typename)
-
-
-/** This is a helper for the BOOST_MIRROR_CLASS_ATTRIB*_TD
- *  macros. 
- *  It declares all common things that need to be declared 
- *  after the specific stuff.
+/** Helper macro expanding into a prologue of a meta-attribute
+ *  declaration
  */
-#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, IS_STATIC, TYPENAME_KW) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_TRAITS_GETTER(NUMBER, IS_STATIC) \
-	typedef TYPENAME_KW mpl::push_back<\
-		_partial_list_##NUMBER, \
-		BOOST_MIRROR_TYPEDEFD_SELECTOR(TYPE_NS_ALIAS##_##TYPE, TYPE_NAMESPACE::TYPE)\
-	>::type  
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
+	SPECIFIERS, \
+	NAME \
+) \
+	_partial_list_##NAME; \
+	typedef mpl::int_< mpl::size< _partial_list_##NAME >::value > \
+		_position_of_##NAME; \
+	static const bchar* base_name( \
+		_position_of_##NAME \
+	){return BOOST_STR_LIT(#NAME);} \
+	static meta_class_attribute_traits< \
+		::boost::mirror::attrib_storage_specifiers:: SPECIFIERS##_ \
+	> get_traits(_position_of_##NAME); 
 
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, IS_STATIC) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, IS_STATIC, BOOST_PP_EMPTY())
-
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, IS_STATIC) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, IS_STATIC, typename)
-
-/** Helper macro for implementing simple attrib value getting and
- *  querying scheme
+/** Helper macro expanding into an epilogue of a meta-attribute
+ *  declaration
  */
-#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME, TYPENAME_KW) \
-	static TYPENAME_KW call_traits<TYPE>::param_type get(const Class& instance, mpl::int_<NUMBER>)\
-	{\
-		return instance.NAME;\
-	}\
-	template <typename DestType>\
-	static DestType& query(const Class& instance, mpl::int_<NUMBER>, DestType& dest)\
-	{\
-		dest = DestType(instance.NAME);\
-		return dest;\
-	} 
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
+	TYPE, \
+	NAME, \
+	TYPENAME_KW \
+) typedef TYPENAME_KW mpl::push_back<_partial_list_##NAME, TYPE>::type 
 
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME)\
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME, BOOST_PP_EMPTY())
-	
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME)\
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME, typename)
-	
-
-/** Helper macro for implementing no-op query meta-class function
+/** Helper macro expanding into the declaraion of getter
+ *  function of the meta-attribute
  */
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE) \
-	static void get(const Class& instance, mpl::int_<NUMBER>){ }\
-	template <typename DestType>\
-	static void query(const Class& instance, mpl::int_<NUMBER>, DestType& dest){ }
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GETTER( \
+	TYPE, \
+	NAME, \
+	GETTER_BODY, \
+	TYPENAME_KW \
+)	inline static TYPENAME_KW call_traits<TYPE>::param_type get( \
+		const Class& instance, \
+		_position_of_##NAME \
+	) GETTER_BODY 
 
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_NO_GETTER(NUMBER, TYPE) \
-
-
-/** Helper macros 
+/** Helper macro expanding into the declaration of query
+ *  function of the meta-attribute
  */
-#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME, TYPENAME_KW) \
-	static void set(Class& instance, mpl::int_<NUMBER>, TYPENAME_KW call_traits<TYPE>::param_type val)\
-	{\
-		instance.NAME = val;\
-	} \
-	static void set(const Class& instance, mpl::int_<NUMBER>, TYPENAME_KW call_traits<TYPE>::param_type val)\
-	{\
-	}
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_QUERY( \
+	TYPE, \
+	NAME, \
+	QUERY_BODY, \
+	TYPENAME_KW \
+)	template <typename DestType> \
+	inline static DestType& query( \
+		const Class& instance, \
+		_position_of_##NAME, \
+		DestType& dest \
+	) QUERY_BODY 
 
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME, BOOST_PP_EMPTY())
-
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME, typename)
-
-
-/** Helper macro for implementing no-op set meta-class function
+ /** Helper macro expanding into the declaraion of setter
+ *  function of the meta-attribute
  */
-#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE, TYPENAME_KW) \
-	static void set(Class& instance, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val){ }\
-	static void set(const Class& instance, mpl::int_<NUMBER>, call_traits<TYPE>::param_type val){ }
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_SETTER( \
+	TYPE, \
+	NAME, \
+	SETTER_BODY, \
+	TYPENAME_KW \
+)	inline static void set( \
+		Class& instance, \
+		_position_of_##NAME, \
+		TYPENAME_KW call_traits<TYPE>::param_type value \
+	) SETTER_BODY \
+	inline static void set( \
+		const Class& instance, \
+		_position_of_##NAME, \
+		TYPENAME_KW call_traits<TYPE>::param_type value \
+	) { } 
 
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE, BOOST_PP_EMPTY())
-
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_ATTRIB_DECL_NO_SETTER(NUMBER, TYPE, typename)
-
-/** This macro declares the meta-data for a single class' attribute
+/** General macro for registering meta data about class' or template's 
+ *  member attribute
  */
-#define BOOST_MIRROR_REG_CLASS_ATTRIB(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, false) 
 
-/** This macro declares the meta-data for a single templates attribute
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	GETTER_BODY, \
+	QUERY_BODY, \
+	SETTER_BODY, \
+	TYPENAME_KW \
+) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
+		SPECIFIERS, \
+		NAME \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GETTER( \
+		TYPE, \
+		NAME, \
+		GETTER_BODY, \
+		TYPENAME_KW \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_QUERY( \
+		TYPE, \
+		NAME, \
+		QUERY_BODY, \
+		TYPENAME_KW \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_SETTER( \
+		TYPE, \
+		NAME, \
+		SETTER_BODY, \
+		TYPENAME_KW \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
+		TYPE, \
+		NAME, \
+		TYPENAME_KW \
+	) \
+
+
+/** General macro used for registering meta-data about 
+ *  a class' member attribute
  */
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, false) 
+#define BOOST_MIRROR_REG_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	GETTER_BODY, \
+	QUERY_BODY, \
+	SETTER_BODY \
+) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
+		SPECIFIERS, \
+		TYPE, \
+		NAME, \
+		GETTER_BODY, \
+		QUERY_BODY, \
+		SETTER_BODY, \
+		BOOST_PP_EMPTY() \
+	)
+
+/** General macro used for registering meta-data about 
+ *  a template's member attribute
+ */
+#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	GETTER_BODY, \
+	QUERY_BODY, \
+	SETTER_BODY \
+) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
+		SPECIFIERS, \
+		TYPE, \
+		NAME, \
+		GETTER_BODY, \
+		QUERY_BODY, \
+		SETTER_BODY, \
+		typename \
+	)
+
+/** Macro used for registering meta-data about class' or template's 
+ *  attribute that can be accessed from the outside directly without
+ *  getter / setter functions
+ */
+#define BOOST_MIRROR_REG_SIMPLE_TEMPLATE_OR_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	TYPENAME_KW \
+) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
+		SPECIFIERS, TYPE, NAME, \
+		{return instance.NAME;}, \
+		{dest = DestType(instance.NAME); return dest;}, \
+		{instance.NAME = value;}, \
+		TYPENAME_KW \
+	)
+
+
+/** Macro used for registering meta-data about class' attribute
+ *  that can be accessed from the outside directly without
+ *  getter / setter functions
+ */
+#define BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME \
+) BOOST_MIRROR_REG_SIMPLE_TEMPLATE_OR_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	BOOST_PP_EMPTY() \
+)
+
+/** Macro used for registering meta-data about template's attribute
+ *  that can be accessed from the outside directly without
+ *  getter / setter functions
+ */
+#define BOOST_MIRROR_REG_SIMPLE_TEMPLATE_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME \
+) BOOST_MIRROR_REG_SIMPLE_TEMPLATE_OR_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	typename \
+)
+
+
+#ifdef NEVER_COMPILE_THIS
+
 
 /** This macro declares the meta-data for a single class' attribute outline
  */
@@ -237,20 +370,7 @@ struct meta_class_attribute_traits
 	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
 	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, false) 
 
-/** This macro finishes the declaration of attributes
- *  of the given class
- */
-#define BOOST_MIRROR_REG_CLASS_ATTRIBS_END \
-		type_list; \
-		struct size : public mpl::size<type_list>{ };\
-	};
-
-/** This macro finishes the declaration of attributes
- *  of the given template
- */
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_END \
-	BOOST_MIRROR_REG_CLASS_ATTRIBS_END
-
+#endif // NEVER_COMPILE_THIS
 
 } // namespace mirror
 } // namespace boost

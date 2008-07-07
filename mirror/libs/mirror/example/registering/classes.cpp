@@ -153,33 +153,54 @@ BOOST_MIRROR_REG_SINGLE_BASE_CLASS(
 	public, ::test::stuff::detail::bar_base
 )
 
+
 /** Class attributes
  */
 // register the attributes of bar_base
 BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar_base)	
-	BOOST_MIRROR_REG_CLASS_ATTRIB(0, int, an_int)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(1, long, a_long)
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, int, an_int)
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, long, a_long)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 // register the attributes of bar, this is little more tricky
 BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)	
 	// these two are simple
-	BOOST_MIRROR_REG_CLASS_ATTRIB(0, float, a_float)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(1, double, a_double)
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, float, a_float)
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, double, a_double)
 	//
 	// this 'virtual' attribute has only a getter (cannot be set)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_ONLY(2, int, a_ro_val, get_ro_val)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		_, int, a_ro_val, 
+		{return instance.get_ro_val();},
+		{dest = DestType(instance.get_ro_val()); return dest;},
+		{ }
+	)
 	// this 'virtual' attribute has only a setter (cannot be queried)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_ONLY(3, int, a_wo_val, set_wo_val)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		_, int, a_wo_val, 
+		{return 0;},
+		{return dest;},
+		{instance.set_wo_val(value);}
+	)
 	//
 	// this is an attrib that has no getter but has a setter function
 	// Also note that macros with the _TD suffix allow to register 
 	// attributes with typedef'd types
 	//BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_TD(4, _boost, ::boost, bstring, a_string, set_string)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_ONLY(4, ::boost::bstring, a_string, set_string)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		_, ::boost::bstring, a_string, 
+		{return instance.a_string;},
+		{dest = DestType(instance.a_string); return dest;},
+		{instance.set_string(value);}
+	)
 	//
 	// and the last one is accessed by the means of a pair of getter/setter functions
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER(5, bool, a_bool, get_bool, set_bool)
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		_, bool, a_bool, 
+		{return const_cast<Class&>(instance).get_bool();},
+		{dest = DestType(const_cast<Class&>(instance).get_bool()); return dest;},
+		{instance.set_bool(value);}
+	)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 /** This is a pretty printer template that prints

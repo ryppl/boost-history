@@ -12,8 +12,6 @@
 
 // macros for declaration of simple meta attributes
 #include <boost/mirror/detail/meta_attribs_base.hpp>
-// macros for declaration of meta attributes accessed through getters/setters
-#include <boost/mirror/detail/meta_attribs_getset.hpp>
 //
 #include <boost/typeof/typeof.hpp>
 #include <boost/mpl/eval_if.hpp>
