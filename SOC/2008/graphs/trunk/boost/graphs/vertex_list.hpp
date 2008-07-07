@@ -10,7 +10,7 @@
 #include "vertex_iterator.hpp"
 
 // Forward declarations
-template <typename, typename> class vertex_list_impl;
+template <typename, typename> class vertices_list;
 
 /**
  * This metafunction defines the basic elements of a vertex list.
@@ -26,7 +26,7 @@ struct vertex_list
     template <typename Vertex>
     struct store
     {
-        typedef vertex_list_impl<Vertex, Alloc<Vertex>> type;
+        typedef vertices_list<Vertex, Alloc<Vertex>> type;
     };
 };
 
@@ -37,7 +37,7 @@ struct vertex_list
  * @param Alloc The allocator for stored vertices.
  */
 template <typename Vertex, typename Alloc>
-class vertex_list_impl
+class vertices_list
 {
 public:
     typedef std::list<Vertex, Alloc> store_type;
@@ -54,7 +54,7 @@ public:
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
-    inline vertex_list_impl()
+    inline vertices_list()
         : _verts(), _size(0)
     { }
 

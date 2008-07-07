@@ -12,7 +12,7 @@
 #include "vertex_iterator.hpp"
 
 // Forward declarations
-template <typename, typename> struct vertex_vector_impl;
+template <typename, typename> struct vertices_vector;
 
 /**
  * The vertex vector stores vertices in a vector, allowing for fast inserts
@@ -38,7 +38,7 @@ struct vertex_vector
     template <typename Vertex>
     struct store
     {
-        typedef vertex_vector_impl<Vertex, Alloc<Vertex>> type;
+        typedef vertices_vector<Vertex, Alloc<Vertex>> type;
     };
 };
 
@@ -54,7 +54,7 @@ struct vertex_vector
  * store type does not provide remove operations.
  */
 template <typename Vertex, typename Allocator>
-class vertex_vector_impl
+class vertices_vector
 {
 public:
     typedef std::vector<Vertex, Allocator> store_type;
@@ -71,7 +71,7 @@ public:
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors
-    inline vertex_vector_impl()
+    inline vertices_vector()
         : _verts()
     { }
 

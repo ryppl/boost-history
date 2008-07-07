@@ -50,7 +50,7 @@
 // strategies. Of course, these policies can be reduced to a single template
 // using inheritance and/or template aliases.
 
-// Operator Stability Tags
+// Mutator Stability Tags
 // These tags define the stability of container's descriptors under insert and
 // remove operations. Note that unstable operations should not be used in
 // relational data structures (like graphs) since these operations will
@@ -61,7 +61,7 @@
 // Note that it is certainly possible for a container to be unstable for both
 // insertions and removals. These data structures are generally constructed over
 // a known set of objects and are generally immutable afterwards.
-struct stable_descriptor_tag { };
+struct stable_mutators_tag { };
 struct unstable_insert_tag { };
 struct unstable_remove_tag { };
 struct unstable_mutators_tag : unstable_insert_tag, unstable_remove_tag { };
@@ -78,7 +78,7 @@ template <typename Container>
 struct descriptor_traits
 {
     typedef typename Container::descriptor_type descriptor_type;
-    typedef typename Container::descriptor_stability descriptor_stability;
+    typedef typename Container::mutator_stability mutator_stability;
 };
 
 /**
@@ -112,9 +112,9 @@ make_iterator(Container& c, typename descriptor_traits<Container>::descriptor_ty
 
 /** Return the descriptor stability tag for the given container. */
 template <typename Container>
-inline typename descriptor_traits<Container>::descriptor_stability
-descriptor_stability(Container const&)
-{ return typename descriptor_traits<Container>::descriptor_stability(); }
+inline typename descriptor_traits<Container>::mutator_stability
+mutator_stability(Container const&)
+{ return typename descriptor_traits<Container>::mutator_stability(); }
 
 // Metafunctions
 
@@ -163,7 +163,7 @@ template <typename T, typename Alloc>
 struct descriptor_traits<std::list<T, Alloc>>
 {
     typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>> descriptor_type;
-    typedef stable_descriptor_tag descriptor_stability;
+    typedef stable_mutators_tag descriptor_stability;
 };
 
 // TODO: Dequeue
@@ -173,7 +173,7 @@ template <typename T, typename Comp, typename Alloc>
 struct descriptor_traits<std::set<T, Comp, Alloc>>
 {
     typedef node_descriptor<blob<sizeof(typename std::set<T, Comp, Alloc>::iterator)>> descriptor_type;
-    typedef stable_descriptor_tag descriptor_stability;
+    typedef stable_mutators_tag descriptor_stability;
 };
 
 // Multiset
@@ -181,7 +181,7 @@ template <typename T, typename Comp, typename Alloc>
 struct descriptor_traits<std::multiset<T, Comp, Alloc>>
 {
     typedef node_descriptor<blob<sizeof(typename std::multiset<T, Comp, Alloc>::iterator)>> descriptor_type;
-    typedef stable_descriptor_tag descriptor_stability;
+    typedef stable_mutators_tag descriptor_stability;
 };
 
 // Map
@@ -189,7 +189,7 @@ template <typename Key, typename T, typename Comp, typename Alloc>
 struct descriptor_traits<std::map<Key, T, Comp, Alloc>>
 {
     typedef node_descriptor<blob<sizeof(typename std::map<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
-    typedef stable_descriptor_tag descriptor_stability;
+    typedef stable_mutators_tag descriptor_stability;
 };
 
 // Multimap
@@ -197,7 +197,7 @@ template <typename Key, typename T, typename Comp, typename Alloc>
 struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>>
 {
     typedef node_descriptor<blob<sizeof(typename std::multimap<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
-    typedef stable_descriptor_tag descriptor_stability;
+    typedef stable_mutators_tag descriptor_stability;
 };
 
 // TODO: Unordered Set

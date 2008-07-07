@@ -6,36 +6,10 @@
 #include <boost/graphs/incidence_set.hpp>
 
 #include "typestr.hpp"
+#include "incidence_traits.hpp"
 
 using namespace std;
 using namespace boost;
-
-struct incidence_vector_tag : unstable_remove_tag { };
-struct incidence_list_tag : stable_descriptor_tag { };
-struct incidence_set_tag : stable_descriptor_tag { };
-
-template <typename IncStore>
-struct incidence_traits
-{ typedef typename IncStore::category category; };
-
-template <typename IncStore>
-typename incidence_traits<IncStore>::category
-incidence_category(IncStore const&)
-{ return typename incidence_traits<IncStore>::category(); }
-
-template <typename Edge, typename Alloc>
-struct incidence_traits<incidence_vector<Edge, Alloc>>
-{ typedef incidence_vector_tag category; };
-
-template <typename Edge, typename Alloc>
-struct incidence_traits<incidence_list<Edge, Alloc>>
-{ typedef incidence_list_tag category; };
-
-template <typename Edge, typename Comp, typename Alloc>
-struct incidence_traits<incidence_set<Edge, Comp, Alloc>>
-{ typedef incidence_set_tag category; };
-
-
 
 typedef index_descriptor<size_t> VertexDesc;
 typedef index_descriptor<size_t> PropDesc;
@@ -43,14 +17,14 @@ typedef std::pair<VertexDesc, PropDesc> Edge;
 typedef allocator<Edge> Alloc;
 typedef std::less<VertexDesc> Compare;
 
-
-
 template <typename IncStore>
-void test_remove(IncStore& incs, stable_descriptor_tag)
+void test_remove(IncStore& incs, stable_mutators_tag)
 {
     // Kind of strange, but we can actually construct some types of descriptors
     // withou an iterator.
+    size_t n = incs.size();
     incs.remove(incs.find(VertexDesc(0)));
+    BOOST_ASSERT(incs.size() == n - 1);
     cout << "  * num incs after removing " << incs.size() << endl;
 }
 

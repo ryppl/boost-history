@@ -9,7 +9,7 @@
 #include "vertex_iterator.hpp"
 
 // Forward declarations
-template <typename, typename, typename, typename> class vertex_map_impl;
+template <typename, typename, typename, typename> class vertices_map;
 
 /**
  * This metafunction defines the implementation requirements of a mapping of
@@ -42,7 +42,7 @@ struct vertex_map
     template <typename Vertex>
     struct store
     {
-        typedef vertex_map_impl<
+        typedef vertices_map<
             Vertex, Key, Compare<Key>, Alloc<std::pair<Key, Vertex>>
         > type;
     };
@@ -58,7 +58,7 @@ struct vertex_map
  * @param Alloc The allocator for Key/Vertex pairs.
  */
 template <typename Vertex, typename Key, typename Compare, typename Allocator>
-class vertex_map_impl
+class vertices_map
 {
 public:
     typedef std::map<Key, Vertex, Compare, Allocator> store_type;
@@ -76,7 +76,7 @@ public:
     typedef simple_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
-    inline vertex_map_impl()
+    inline vertices_map()
         : _verts()
     { }
 

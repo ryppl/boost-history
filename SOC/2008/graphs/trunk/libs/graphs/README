@@ -1,0 +1,46 @@
+
+Notes...
+
+
+Q: What's up with the extra descriptors in the property store?
+With undirected graphs, the global property store (which stores the edge
+properties for each distinct edge) blocks out storage for two descriptors (this
+is actually done by the edge_* store templates). These two descriptors are used
+to index the endpoints of the edge. Without this, the construction of the edge
+descriptor is non-constant (i.e., probably linear in G) when being built
+directly from the edge store. This solution arises from the implementation of
+edge iterators for undirected graphs, which simply iterate over the property
+store, creating edges.
+
+The property stores do not actually store edges - because the extra descriptors
+are (basically) iterators into the incidence stores of referenced vertices. The
+property store does not have access to the underlying stores so it can't really
+access the iterators, but the graph and edge iterators will have access to them.
+
+The decision to store extra information and inflate the size of the graph is
+a design decision. There are probably ways to build this data structure without
+the additional size cost at the expense of more complex edge iterators, or to
+provide an implementation without edge iterators (which would be just fine with
+me). There is nothing to stop programmers from building these alternative
+implementations - they're good projects.
+
+
+Q: Why are the property list and vector different types when their
+implementations are nearly identical.
+The property list has to associate its size with the container since `st::list`s
+have a linear size operation. Since the property store does not allow arbitrary
+inserts and removes (just one at a time), we can effectively track the size to
+provide a constant size function.
+
+
+Q: Why are all the containers `mutable`?
+Because the descriptor library does not translate between const and non-`const`
+iterators. This stems from the fact that you can't cast out the `const` aspect
+of an iterator.
+
+
+Q: Is there an easy way to get a template from a template instance? For example,
+I have `std::list<int>`, can I get `std::list`?
+Probably for specific instances of templates, but probably not generically...
+But then again. Who knows?
+

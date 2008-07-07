@@ -7,12 +7,13 @@
 #include <boost/graphs/vertex_map.hpp>
 
 #include "typestr.hpp"
+#include "vertices_traits.hpp"
 
 using namespace std;
 using namespace boost;
 
-struct no_remove_tag { };
-struct has_remove_tag { };
+struct unlabled_vertex_tag { };
+struct labeled_vertex_tag { };
 
 // A fake vertex type.
 struct Vertex
@@ -32,59 +33,48 @@ struct Vertex
     int value;
 };
 
-template <typename Store>
-void populate(Store& verts, sequence_tag)
+template <typename Verts>
+void populate(Verts& verts, simple_vertex_store_tag)
 {
     for(int i = 0; i < 5; ++i) {
         verts.add(i);
     }
 }
-
-template <typename Store>
-void populate(Store& verts, simple_associative_container_tag)
-{
-    for(int i = 0; i < 5; ++i) {
-        verts.add(i);
-    }
-}
-
-template <typename Store>
-void populate(Store& verts, pair_associative_container_tag)
+template <typename Verts>
+void populate(Verts& verts, mapped_vertex_store_tag)
 {
     for(int i = 0; i < 5; ++i) {
         verts.add(i, 2 * i);
     }
 }
 
-template <typename Store>
-void test_remove(Store& verts, stable_descriptor_tag)
+template <typename Verts>
+void test_remove(Verts& verts, stable_mutators_tag)
 {
     verts.remove(3);
     cout << "num verts after remove: " << verts.size() << endl;
 }
 
-template <typename VertexSet>
-void test_remove(VertexSet& vs, unstable_remove_tag)
+template <typename Verts>
+void test_remove(Verts& vs, unstable_remove_tag)
 { /* Noop for unstable removes */ }
 
-template <typename VertexSet>
+template <typename Verts>
 void test()
 {
-    typedef typename VertexSet::template store<Vertex>::type Store;
-    typedef typename VertexSet::descriptor_type Descriptor;
-    typedef typename Store::store_type StoreImpl;
-
-    cout << "--- " << typestr<VertexSet>() << " ---" << endl;
+    typedef typename Verts::template store<Vertex>::type Store;
+    typedef typename Verts::descriptor_type Descriptor;
 
     Store verts;
+    cout << "--- " << typestr(verts) << " ---" << endl;
 
-    populate(verts, typename container_traits<StoreImpl>::category());
+    populate(verts, vertices_category(verts));
     cout << "num verts after building: " << verts.size() << endl;
 
     Descriptor d = verts.find(3);
     cout << "value of vertex properties: " << verts.properties(d) << endl;
 
-    test_remove(verts, typename descriptor_traits<StoreImpl>::descriptor_stability());
+    test_remove(verts, vertices_category(verts));
 }
 
 int main()

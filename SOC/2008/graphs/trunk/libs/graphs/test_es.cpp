@@ -25,7 +25,6 @@ undirected()
     // properties.
     typedef typename EdgeStore::template property_store<EdgeProps, IncDesc>::type PropStore;
     typedef typename EdgeStore::template incidence_store<EdgeProps, IncDesc>::type IncStore;
-
     cout << "  * " << typestr<PropStore>() << endl;
     cout << "  * " << typestr<IncStore>() << endl;
 }

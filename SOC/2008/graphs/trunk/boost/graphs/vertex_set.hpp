@@ -11,7 +11,7 @@
 #include "vertex_iterator.hpp"
 
 // Forward declarations
-template <typename, typename, typename> class vertex_set_impl;
+template <typename, typename, typename> class vertices_set;
 
 /**
  * This metafunction defines the implementation requirements of a set of
@@ -42,7 +42,7 @@ struct vertex_set
     template <typename Vertex>
     struct store
     {
-        typedef vertex_set_impl<
+        typedef vertices_set<
                 Vertex,
                 property_comparator<Compare<typename Vertex::vertex_properties>>,
                 Alloc<Vertex>
@@ -60,7 +60,7 @@ struct vertex_set
  * @param Allocator The allocator for stored vertices.
  */
 template <typename Vertex, typename Compare, typename Allocator>
-class vertex_set_impl
+class vertices_set
 {
 public:
     typedef std::set<Vertex, Compare, Allocator> store_type;
@@ -76,7 +76,7 @@ public:
     typedef simple_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
-    inline vertex_set_impl()
+    inline vertices_set()
         : _verts()
     { }
 
