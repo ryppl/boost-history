@@ -39,7 +39,7 @@ template <
   , class Difference          			= use_default
   , class Size                			= use_default
 >
-class eval_use_default
+class cursor_adaptor_base
 : private iterator_adaptor<Derived 
   						, Base
   						, Value
@@ -54,7 +54,7 @@ class eval_use_default
 						, Difference>
 {
 private:
-	eval_use_default() {} // This class is used for typedefs only.
+	cursor_adaptor_base() {} // This class is used for typedefs only.
 	
 	typedef typename iterator_adaptor<Derived, Base, Value
 								, HorizontalTraversalOrCategory, Reference
@@ -77,6 +77,14 @@ public:
 	  , boost::tree::cursor_size<Base>
 	  , mpl::identity<Size>
 	>::type size_type;
+	
+	typedef cursor_facade<Derived
+						, value_type
+						, iterator_category
+						, vertical_traversal
+						, reference
+						, difference_type
+						, size_type> type;
 };
 
 template <
@@ -90,63 +98,21 @@ template <
   , class Size                			= use_default
 >
 class cursor_adaptor 
-: public cursor_facade<
-	Derived 
-  , typename eval_use_default<Derived
-  							, Base
-  							, Value
+: public cursor_adaptor_base< Derived
+							, Base
+							, Value
 							, HorizontalTraversalOrCategory
 							, VerticalTraversalOrCategory
 							, Reference
 							, Difference
-							, Size>::value_type
-  , typename eval_use_default<Derived
-  							, Base
-  							, Value
-							, HorizontalTraversalOrCategory
-							, VerticalTraversalOrCategory
-							, Reference
-							, Difference
-							, Size>::iterator_category
-  , typename eval_use_default<Derived
-  							, Base
-  							, Value
-							, HorizontalTraversalOrCategory
-							, VerticalTraversalOrCategory
-							, Reference
-							, Difference
-							, Size>::vertical_traversal
-  , typename eval_use_default<Derived
-  							, Base
-  							, Value
-							, HorizontalTraversalOrCategory
-							, VerticalTraversalOrCategory
-							, Reference
-							, Difference
-							, Size>::reference
-  , typename eval_use_default<Derived
-  							, Base
-  							, Value
-							, HorizontalTraversalOrCategory
-							, VerticalTraversalOrCategory
-							, Reference
-							, Difference
-							, Size>::difference_type
-  , typename eval_use_default<Derived
-  							, Base
-  							, Value
-							, HorizontalTraversalOrCategory
-							, VerticalTraversalOrCategory
-							, Reference
-							, Difference
-							, Size>::size_type>
+							, Size >::type
 {
 protected:
     typedef cursor_adaptor<Derived, Base, Value, HorizontalTraversalOrCategory,
     					   VerticalTraversalOrCategory, Reference, Difference,
     					   Size> cursor_adaptor_;
 	
-	typedef eval_use_default<Derived
+	typedef cursor_adaptor_base<Derived
 						   , Base
 						   , Value
 						   , HorizontalTraversalOrCategory
