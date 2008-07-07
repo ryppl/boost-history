@@ -70,6 +70,17 @@ struct meta_type;
 	>
 
 /** Macro that expands into the meta_type for the 
+ *  given type typedefined on the global scope.
+ */
+#define BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE(TYPEDEF) \
+	::boost::mirror::meta_type< \
+		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GS(NAMESPACE, TYPEDEF) \
+	>
+
+#define BOOST_MIRRORED_TYPEDEF_GS(TYPEDEF) \
+	BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE(TYPEDEF) 
+
+/** Macro that expands into the meta_type for the 
  *  type of the given expression.
  *  To get this going <boost/typeof/typeof.hpp>
  *  has to be included.

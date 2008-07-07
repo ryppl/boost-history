@@ -183,7 +183,7 @@ int main(void)
 	//
 	bcout << "|43| " << BOOST_MIRRORED_TYPE(const volatile ::bar&) ::full_name() << endl;
 	bcout << "|44| " << BOOST_MIRRORED_TYPE(const volatile ::baz*) ::full_name() << endl;
-	bcout << "|44| " << BOOST_MIRRORED_TYPEDEF(::, foobar) ::full_name() << endl;
+	bcout << "|44| " << BOOST_MIRRORED_TYPEDEF_GS(foobar) ::full_name() << endl;
 	//
 	// multi-dimensional arrays
 	typedef ::bar * const * T45 [][1][2][3][4][5][6][7][8][9];

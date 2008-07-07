@@ -95,13 +95,13 @@ int main(void)
 	//
 	// the name_to_stream<meta_object> class allows to put the full name
 	// (including the scope) into a stream
-	bcout << "|07| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::) >() << endl;
+	bcout << "|07| " <<name_to_stream< BOOST_MIRRORED_GLOBAL_SCOPE() >() << endl;
 	bcout << "|08| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::test) >() << endl;
 	bcout << "|09| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::test::stuff) >() << endl;
 	bcout << "|10| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) >() << endl;
 	// in this case the :: is prepended to the full name
 	// thus test::stuff -> ::test::stuff
-	bcout << "|11| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::) >(true) << endl;
+	bcout << "|11| " <<name_to_stream< BOOST_MIRRORED_GLOBAL_SCOPE() >(true) << endl;
 	bcout << "|12| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::test) >(true) << endl;
 	bcout << "|13| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::test::stuff) >(true) << endl;
 	bcout << "|14| " <<name_to_stream< BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) >(true) << endl;
@@ -114,7 +114,7 @@ int main(void)
 	//
 	// printing out the full namespace names directly without the name_to_stream
 	// printer template
-	bcout << "|18| " << BOOST_MIRRORED_NAMESPACE(::) ::full_name() << endl;
+	bcout << "|18| " << BOOST_MIRRORED_GLOBAL_SCOPE() ::full_name() << endl;
 	bcout << "|19| " << BOOST_MIRRORED_NAMESPACE(::std) ::full_name() << endl;
 	bcout << "|20| " << BOOST_MIRRORED_NAMESPACE(::boost) ::full_name() << endl;
 	bcout << "|21| " << BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::full_name() << endl;
