@@ -96,27 +96,65 @@ protected:
 	template <bool FullName>
 	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
 	{
+		bstring left;
+		bstring right;
+		bstring ex;
+		bstring arg;
+		bstring temp(build_name(full_or_base, left, right, ex, arg));
+		left.append(temp);
+		left.append(right);
+		left.append(ex);
+		left.append(arg);
+		return left;
+	}
+public:
+	template <bool FullName>
+	inline static bstring build_name(
+		mpl::bool_<FullName> full_or_base,
+		bstring& left, 
+		bstring& right,
+		bstring& ex,
+		bstring& arg
+	)
+	{
 		static bstring space(BOOST_STR_LIT(" "));
 		static bstring l_par(BOOST_STR_LIT("("));
 		static bstring r_par(BOOST_STR_LIT(")"));
-		static bstring aster(BOOST_STR_LIT("*"));
-		//
+	//
 		// the return value type
 		typedef BOOST_MIRRORED_TYPE(RetValType) meta_RV;
-		bstring res(meta_RV::get_name(full_or_base));
 		//
+		bstring rv_left;
+		bstring rv_right;
+		bstring rv_ex;
+		bstring rv_arg;
+		bstring rv_t(meta_RV::build_name(
+			full_or_base,
+			rv_left,
+			rv_right,
+			rv_ex,
+			rv_arg
+		));
+		//
+		// return value 
+		left.append(rv_left);
+		left.append(rv_t);
+		left.append(rv_right);
+		left.append(rv_ex);
+		// open pars.
+		left.append(space);
+		left.append(l_par);
 		// the calling convention
-		res.append(space);
-		res.append(l_par);
-		res.append(CallingConvention::name());
-		res.append(aster);
-		res.append(r_par);
+		left.append(CallingConvention::name());
+		arg.append(r_par);
 		//
 		// argument list
-		res.append(l_par);
-		append_args(((ArgTypeList*)0), res, full_or_base);
-		res.append(r_par);
-		return res;
+		arg.append(l_par);
+		append_args(((ArgTypeList*)0), arg, full_or_base);
+		arg.append(r_par);
+		// the rest of the ret val type
+		arg.append(rv_arg);
+		return bstring();
 	}
 };
 

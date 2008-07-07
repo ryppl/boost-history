@@ -88,7 +88,8 @@ namespace detail {
 			mpl::bool_<FullName> full_or_base,
 			bstring& left,
 			bstring& right,
-			bstring& ex
+			bstring& ex,
+			bstring& arg
 		)
 		{
 			return get_name(full_or_base);

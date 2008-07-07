@@ -256,7 +256,12 @@
 			- Added BOOST_MIRROR_REG_TYPE_EMBEDDED and for BOOST_MIRROR_REG_TYPE_EMB for registering embedded types
 
 			- Split meta-types for non-trivial types into separate files
-			- Added support for function typenames 
+			- Added support for pointer to function typenames 
+
+			- Added support for function types
+			- Added support for pointers to function pointers 
+			- Added support for functions returning pointers to functions
+			- Added support for references to functions
 
 			- Tested with MSVC++ 2008 EE On Vista
 		</revision>

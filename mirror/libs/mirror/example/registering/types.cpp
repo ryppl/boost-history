@@ -185,13 +185,34 @@ int main(void)
 	bcout << "|44| " << BOOST_MIRRORED_TYPE(const volatile ::baz*) ::full_name() << endl;
 	bcout << "|44| " << BOOST_MIRRORED_TYPEDEF(::, foobar) ::full_name() << endl;
 	//
+	// multi-dimensional arrays
 	typedef ::bar * const * T45 [][1][2][3][4][5][6][7][8][9];
 	bcout << "|45| " << BOOST_MIRRORED_TYPE(T45) ::full_name() << endl;
-	//
+	// 
+	// function pointers
 	bcout << "|46| " << BOOST_MIRRORED_TYPEOF(&test::zero) ::full_name() << endl;
-	//
+	// more function pointers
 	typedef const foo * volatile (*T47)(const ::bar&, volatile ::baz*, T45);
 	bcout << "|47| " << BOOST_MIRRORED_TYPE(T47) ::full_name() << endl;
+	//
+	// arrays of function pointers
+	typedef T47 const * T48[2][3];
+	bcout << "|48| " << BOOST_MIRRORED_TYPE(T48) ::full_name() << endl;
+	//
+	// pointer to functions returning pointers to functions
+	typedef int(*A49)(double);
+	typedef A49 const * (*B49)(char);
+	typedef B49 volatile * (*C49)(wchar_t);
+	typedef C49 T49;
+	bcout << "|49| " << BOOST_MIRRORED_TYPE(T49) ::full_name() << endl;
+	//
+	// function returning pointer to functions
+	typedef C49 const * volatile * (T50)(short);
+	bcout << "|50| " << BOOST_MIRRORED_TYPE(T50) ::full_name() << endl;
+	//
+	// reference to function returning pointer to functions
+	typedef T50& T51;
+	bcout << "|51| " << BOOST_MIRRORED_TYPE(T51) ::full_name() << endl;
 	//
 	return 0;
 }
