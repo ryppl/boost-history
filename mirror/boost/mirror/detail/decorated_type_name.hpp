@@ -22,22 +22,6 @@ namespace detail {
 template <class MetaType, class Decorator>
 struct decorated_type_name_base
 {
-protected:
-	template <bool FullName>
-	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
-	{
-		bstring left;
-		bstring right;
-		bstring ex;
-		bstring arg;
-		bstring temp(build_name(full_or_base, left, right, ex, arg));
-		left.append(temp);
-		left.append(right);
-		left.append(ex);
-		left.append(arg);
-		return left;
-	}
-
 public:
 	template <bool FullName>
 	inline static bstring build_name(
@@ -64,6 +48,21 @@ public:
 template <class Base>
 struct decorated_type_name_finisher : public Base
 {
+protected:
+	template <bool FullName>
+	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
+	{
+		bstring left;
+		bstring right;
+		bstring ex;
+		bstring arg;
+		bstring temp(build_name(full_or_base, left, right, ex, arg));
+		left.append(temp);
+		left.append(right);
+		left.append(ex);
+		left.append(arg);
+		return left;
+	}
 public:
 	template <bool FullName>
 	static const bstring& get_name(mpl::bool_<FullName> full_or_base)

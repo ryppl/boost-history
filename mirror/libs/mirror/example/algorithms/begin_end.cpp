@@ -65,7 +65,7 @@ int main(void)
 	//
 	typedef tuple<bool, unsigned char, char, wchar_t, short, int, long, float, double> T;
 	//
-	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
+	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
 	//
 	BOOST_STATIC_ASSERT((iterator_not_equal<

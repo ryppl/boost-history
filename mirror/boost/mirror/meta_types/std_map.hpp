@@ -12,6 +12,7 @@
 
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/detail/template_name.hpp>
+#include <boost/mirror/meta_types/std_less.hpp>
 #include <map> 
 
 namespace boost {
@@ -22,12 +23,7 @@ namespace detail {
 template <typename K, typename T, class Comp, class Allocator> 
 struct meta_type_std_map
 {
-
-	static const bchar* base_name(void){return BOOST_STR_LIT("map");}
-	BOOST_STATIC_CONSTANT(int, base_name_length = 3);
-
-	static const bchar* full_name(void){return BOOST_STR_LIT("::std::map");}
-	BOOST_STATIC_CONSTANT(int, full_name_length = 10);
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("map")
 };
 
 } // namespace detail
@@ -36,11 +32,11 @@ struct meta_type_std_map
 template <typename K, typename T, class Comp, class Allocator> 
 struct meta_type< ::std::map<K, T, Comp, Allocator> > 
 : detail::static_template_name<
+	BOOST_MIRRORED_NAMESPACE(::std),
 	detail::meta_type_std_map<K, T, Comp, Allocator> , 
-	mpl::vector2<K, T> // TODO add Comp too
+	mpl::vector3<K, T, Comp> 
 >
 {
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;
 	typedef ::std::map<K, T, Comp, Allocator> reflected_type;
 };
 

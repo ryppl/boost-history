@@ -18,153 +18,59 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/remove_if.hpp>
 
-#include <boost/mirror/detail/nontrivial_type_name.hpp>
+#include <boost/mirror/detail/decorated_type_name.hpp>
+#include <boost/mirror/detail/argument_type_list.hpp>
 
 namespace boost {
 namespace mirror {
 namespace detail {
 
-/** The length is calculated assuming that the string is
- *  going to be formatted like this:
- *  template_name|< |T1|, |T2|, |...|Tn| > (without the 
- *  delimiting '|'s.
+template <class Scope, class BaseMetaObject, class TplArgTypeList>
+struct static_template_name_base  : argument_type_list_builder
+{
+private:
+	typedef full_name_builder<
+		Scope,
+		BaseMetaObject
+	> base_meta_template;
+
+
+public:
+	template <bool FullName>
+	inline static bstring build_name(
+		mpl::bool_<FullName> full_or_base,
+		bstring& left, 
+		bstring& right,
+		bstring& ex,
+		bstring& arg
+	)
+	{
+		static bstring comma(BOOST_STR_LIT(", "));
+		static bstring l_angle(BOOST_STR_LIT("< "));
+		static bstring r_angle(BOOST_STR_LIT(" >"));
+		//
+		// get the template name
+		bstring res(base_meta_template::get_name(full_or_base));
+		// argument list
+		res.append(l_angle);
+		append_args(((TplArgTypeList*)0), res, full_or_base);
+		res.append(r_angle);
+		//
+		return res;
+	}
+
+};
+
+/** 
  */
-template <class TypeList, bool BaseName>
-struct static_template_name_length
+template <class Scope, class BaseMetaObject, class TplArgTypeList>
+struct static_template_name
+: decorated_type_name_finisher<
+	static_template_name_base<Scope, BaseMetaObject, TplArgTypeList>
+>
 {
-	template <typename Type>
-	struct get_type_name_length_type
-	{
-		typedef BOOST_MIRROR_REFLECT_TYPE(Type) MetaType;
-	
-		typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
-			name_info;
-
-		typedef typename mpl::int_<
-			name_info::name_length
-		> type;
-	};
-
-	typedef typename mpl::accumulate<
-		TypeList,
-		mpl::int_<2>,
-		mpl::plus<
-			mpl::_1,
-			mpl::plus<
-				get_type_name_length_type<mpl::_2>,
-				mpl::int_<2>
-			>
-		>
-	>::type type;
+	typedef Scope scope;
 };
-
-/** Specializations of this template
- */
-
-template <typename Type>
-struct is_typelist_null_type : ::boost::false_type { };
-
-template <class FullTypeList>
-struct template_with_null_args_type_list
-{
-	/** A TypeList that contains all types from full_type_list
-	 *  except those that are typelist_null_types
-	 */
-	typedef typename mpl::remove_if<
-		FullTypeList,
-		is_typelist_null_type<mpl::_1>
-	>::type type;
-};
-
-template <class MetaType, class FullTypeList, bool BaseName>
-struct static_template_name_base
-{
-protected:
-	typedef typename template_with_null_args_type_list<
-		FullTypeList
-	>::type TypeList;
-
-	/** The 'position' of the last type in the template
-	 *  type list.
-	 */
-	typedef typename mpl::int_<
-		mpl::size< TypeList	>::value - 1
-	> last_type_pos;
-
-	template <int I>
-	static bchar* do_append_type_name(bchar* cur_pos, mpl::int_<I>)
-	{
-		typedef typename mpl::at<TypeList, mpl::int_<I> >::type type;
-		typedef BOOST_MIRROR_REFLECT_TYPE(type) MetaType;
-		typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
-			local_name_info;
-		bstrcpy(cur_pos, local_name_info::name());
-		cur_pos += local_name_info::name_length;
-		return cur_pos;
-	}
-
-	static bchar* append_type_name(bchar* cur_pos, mpl::int_<0> type_pos)
-	{
-		return do_append_type_name(cur_pos, type_pos);
-	}
-
-	template <int I>
-	static bchar* append_type_name(bchar* cur_pos, mpl::int_<I> type_pos)
-	{
-		cur_pos = append_type_name(cur_pos, mpl::int_<I - 1>());
-		bstrcpy(cur_pos, BOOST_STR_LIT(", "));
-		cur_pos += 2;
-		return do_append_type_name(cur_pos, type_pos);
-	}
-
-	typedef nontrivial_type_base_or_full_name<MetaType, BaseName>
-		name_info;
-
-	typedef typename static_template_name_length<TypeList, BaseName>::type
-		template_param_list_length_type;
-
-	BOOST_STATIC_CONSTANT(
-		size_t, 
-		difference = 
-		template_param_list_length_type::value
-	);
-
-	BOOST_STATIC_CONSTANT(
-		size_t,
-		name_length = 
-		name_info::name_length + difference
-	);
-
-	static void init_name(bchar* the_name)
-	{
-		bchar* cur_pos = the_name;
-		//
-		// copy the name of the template
-		bstrcpy(cur_pos, name_info::name());
-		cur_pos += name_info::name_length;
-		//
-		// append the leading "< "
-		assert(cur_pos+2 < (the_name + name_length));
-		bstrcpy(cur_pos, BOOST_STR_LIT("< "));
-		cur_pos += 2;
-		//
-		// append the typenames
-		cur_pos = append_type_name(cur_pos, last_type_pos());
-		//
-		// append the final " >"
-		bstrcpy(cur_pos, BOOST_STR_LIT(" >"));
-		cur_pos += 2;
-		//
-		// finalize the string
-		assert(cur_pos == (the_name + name_length));
-		*cur_pos = BOOST_STR_LIT('\0');
-	}
-};
-
-template <class MetaType, class TypeList>
-struct static_template_name : static_nontrivial_type_name<
-	MetaType, TypeList, static_template_name_base
->{ };
 
 
 } // namespace detail

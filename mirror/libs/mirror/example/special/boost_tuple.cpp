@@ -70,9 +70,12 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
-	// hold on to yer butts ;)
-	typedef tuple<int, double, const string*> T1;
-	typedef tuple<const bool, volatile float, void * const, char> T2;
+	typedef int (*A)(double);
+	typedef A (*B)(string);
+	typedef B (C)(char, wchar_t);
+	typedef A D[2][3];
+	typedef tuple<int, double, const string *> T1;
+	typedef tuple<const A, volatile B, C&, D> T2;
 	typedef pair<T1, T2> T3;
 	typedef tuple<void*, const wstring& , const string&> T4;
 	typedef tuple<char, wchar_t, short int const> T5;
@@ -80,21 +83,17 @@ int main(void)
 	typedef vector<tuple<T1, T2, T3, T4, T5, T6> > T7;
 	typedef set<map<list<T1>, T7> > T;
 	//
-	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
+	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
 	//
-	bcout << "The type name length = " << meta_T::base_name_length << " characters" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The type name is: "<< meta_T::base_name() << endl;
-	bcout << "---------------------------------------------------" << endl;
-	bcout << "The full type name length = " << meta_T::full_name_length << " characters" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The full type name is: "<< meta_T::full_name() << endl;
 	bcout << "---------------------------------------------------" << endl;
 	//
 	T1 t1(12, 34.56, 0);
-	typedef BOOST_MIRROR_REFLECT_CLASS(T1) meta_T1;
-	bcout << "The full type name length = " << meta_T1::full_name_length << " characters" << endl;
+	typedef BOOST_MIRRORED_CLASS(T1) meta_T1;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The full type name is: "<< meta_T1::full_name() << endl;
 	bcout << "---------------------------------------------------" << endl;
@@ -116,7 +115,7 @@ int main(void)
 	//
 	//
 	tuple<int, int, int, int, int, int, int, int, int, int> x(0,1,2,3,4,5,6,7,8,9);
-	typedef BOOST_MIRROR_REFLECT_CLASS(BOOST_TYPEOF(x)) meta_X;
+	typedef BOOST_MIRRORED_CLASS(BOOST_TYPEOF(x)) meta_X;
 	attrib_value_printer<meta_X::reflected_type> p(x);
 	//
 	bcout << "The type name is: "<< meta_X::base_name() << endl;

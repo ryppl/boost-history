@@ -43,15 +43,19 @@ struct meta_type
 	typedef typename base_info::reflected_type reflected_type;
 };
 
+#define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPE_NAME_STRING) \
+	static const bstring& get_name(mpl::false_) \
+	{ \
+		static bstring s_name(BOOST_STR_LIT(TYPE_NAME_STRING)); \
+		return s_name; \
+	} 
+
+
 /** Helper macro used to declare base-name getting functions
  *  and base-name length static constants
  */
 #define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPE_NAME) \
-	static const bstring& get_name(mpl::false_) \
-	{ \
-		static bstring s_name(BOOST_STR_LIT(#TYPE_NAME)); \
-		return s_name; \
-	} 
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(#TYPE_NAME)
 
 /** Macro for registering global-scope types
  */

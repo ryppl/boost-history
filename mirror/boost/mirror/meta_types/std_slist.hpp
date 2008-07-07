@@ -22,12 +22,7 @@ namespace detail {
 template <typename T, class Allocator> 
 struct meta_type_std_slist
 {
-
-	static const bchar* base_name(void){return BOOST_STR_LIT("slist");}
-	BOOST_STATIC_CONSTANT(int, base_name_length = 5);
-
-	static const bchar* full_name(void){return BOOST_STR_LIT("::std::slist");}
-	BOOST_STATIC_CONSTANT(int, full_name_length = 12);
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("slist")
 };
 
 } // namespace detail
@@ -36,14 +31,13 @@ struct meta_type_std_slist
 template <typename T, class Allocator> 
 struct meta_type< ::std::slist<T, Allocator> > 
 : detail::static_template_name<
+	BOOST_MIRRORED_NAMESPACE(::std),
 	detail::meta_type_std_slist<T, Allocator> , 
 	mpl::vector1<T>
 >
 {
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
 	typedef ::std::slist<T, Allocator> reflected_type;
 };
-
 
 } // namespace mirror
 } // namespace boost

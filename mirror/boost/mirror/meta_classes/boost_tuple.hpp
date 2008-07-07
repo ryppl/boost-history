@@ -24,8 +24,9 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	// the full list tuple template arguments
 	// which is the list of types of it's member attributes
 	typedef typename mpl::vector10< BOOST_PP_ENUM_PARAMS(10, T) > all_template_params;
+	//
 	// the list of member attributes without the null types
-	typedef typename detail::template_with_null_args_type_list<
+	typedef typename detail::template_args_type_list_wo_nulls<
 		all_template_params
 	>::type template_params;
 	//

@@ -19,94 +19,21 @@
 //
 #include <boost/mirror/meta_data_fwd.hpp>
 #include <boost/mirror/detail/decorated_type_name.hpp>
+#include <boost/mirror/detail/argument_type_list.hpp>
 
 namespace boost {
 namespace mirror {
 namespace detail {
 
+/** Function type name builder 
+ */
 template <
 	typename RetValType, 
 	typename CallingConvention, 
 	typename ArgTypeList
 >
-struct function_type_name_base
+struct function_type_name_base : argument_type_list_builder
 {
-private:
-	template <class FullOrBase>
-	class append_arg_typename
-	{
-	public:
-		template <typename T>
-		inline void operator()(::boost::mpl::identity<T>)
-		{
-			static bstring comma(BOOST_STR_LIT(", "));
-			list.append(BOOST_MIRRORED_TYPE(T)::get_name(FullOrBase()));
-			list.append(comma);
-		}
-
-		inline append_arg_typename(bstring& _list)
-		: list(_list)
-		{ }
-	private:
-		bstring& list;
-	};
-
-	template <typename T>
-	struct to_identity
-	{
-		typedef mpl::identity<T> type;
-	};
-
-	template <typename TypeList, class FullOrBase>
-	inline static void append_args(
-		TypeList*, 
-		bstring& str, 
-		FullOrBase full_or_base
-	)
-	{
-		// append type names and a comma for all
-		// arguments bar the last
-		//
-		// transform the typelist
-		typedef typename mpl::transform<
-			typename mpl::pop_back<
-				ArgTypeList
-			>::type,
-			to_identity<mpl::_>
-		>:: type args_wo_last;
-		// 
-		// call the functor
-		::boost::mpl::for_each<
-			args_wo_last
-		>(append_arg_typename<FullOrBase>(str));
-		//
-		// append the last argument
-		typedef mpl::back<TypeList>::type last_arg_type;
-		str.append(BOOST_MIRRORED_TYPE(last_arg_type)::get_name(full_or_base));
-	}
-
-	// overload for empty argument list
-	template <class FullOrBase>
-	inline static void append_args(mpl::vector<>*, bstring& str, FullOrBase)
-	{
-		str.append(bstring(BOOST_STR_LIT("void")));
-	}
-
-protected:
-	template <bool FullName>
-	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
-	{
-		bstring left;
-		bstring right;
-		bstring ex;
-		bstring arg;
-		bstring temp(build_name(full_or_base, left, right, ex, arg));
-		left.append(temp);
-		left.append(right);
-		left.append(ex);
-		left.append(arg);
-		return left;
-	}
 public:
 	template <bool FullName>
 	inline static bstring build_name(

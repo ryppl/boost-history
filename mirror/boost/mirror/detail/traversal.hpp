@@ -121,7 +121,7 @@ namespace detail {
 				//
 				// traverse the attribute
 				TraversalType<
-					BOOST_MIRROR_REFLECT_CLASS(attrib_type),
+					BOOST_MIRRORED_CLASS(attrib_type),
 					typename mpl::push_back<
 						AttribsNodePath, 
 						MetaAttribute
@@ -158,7 +158,7 @@ namespace detail {
 				// traverse the attributes
 				typedef typename MetaAttribute::type attrib_type;
 				TraversalType<
-					BOOST_MIRROR_REFLECT_CLASS(attrib_type),
+					BOOST_MIRRORED_CLASS(attrib_type),
 					typename mpl::push_back<
 						AttribsNodePath, 
 						MetaAttribute

@@ -15,7 +15,7 @@
 namespace boost {
 namespace mirror {
 
-BOOST_MIRROR_REG_NAMESPACE(_boost, tuples)
+BOOST_MIRROR_REG_NAMESPACE((boost)(tuples))
 
 } // namespace mirror
 } // namespace boost

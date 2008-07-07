@@ -23,12 +23,7 @@ namespace detail {
 template <typename FirstType, typename SecondType> 
 struct meta_type_std_pair 
 {
-
-	static const bchar* base_name(void){return BOOST_STR_LIT("pair");}
-	BOOST_STATIC_CONSTANT(int, base_name_length = 4);
-
-	static const bchar* full_name(void){return BOOST_STR_LIT("::std::pair");}
-	BOOST_STATIC_CONSTANT(int, full_name_length = 11);
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("pair")
 };
 
 } // namespace detail
@@ -37,11 +32,11 @@ struct meta_type_std_pair
 template <typename FirstType, typename SecondType> 
 struct meta_type< ::std::pair<FirstType, SecondType> > 
 : detail::static_template_name<
+	BOOST_MIRRORED_NAMESPACE(::std),
 	detail::meta_type_std_pair<FirstType, SecondType> , 
 	mpl::vector2<FirstType, SecondType>
 >
 {
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;                        
 	typedef ::std::pair<FirstType, SecondType> reflected_type;
 };
 

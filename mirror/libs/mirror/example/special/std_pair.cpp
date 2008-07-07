@@ -33,13 +33,10 @@ int main(void)
 	typedef pair<T2, T1 volatile> T4;
 	typedef pair<T3 const * volatile *, const T4&> T;
 	//
-	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
+	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
-	bcout << "The type name length = " << meta_T::base_name_length << " characters" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The type name is: "<< meta_T::base_name() << endl;
-	bcout << "---------------------------------------------------" << endl;
-	bcout << "The full type name length = " << meta_T::full_name_length << " characters" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The full type name is: "<< meta_T::full_name() << endl;
 	bcout << "---------------------------------------------------" << endl;

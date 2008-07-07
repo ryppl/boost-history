@@ -81,18 +81,18 @@ namespace mirror {
 
 /** Register the Test namespace
  */
-BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(Test)
+BOOST_MIRROR_REG_NAMESPACE((Test))
 
 /** Register the types and classes
  */
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, A)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, B)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, C)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, D)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, E)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, F)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, G)
-BOOST_MIRROR_REG_TYPE(_Test, ::Test, H)
+BOOST_MIRROR_REG_TYPE(::Test, A)
+BOOST_MIRROR_REG_TYPE(::Test, B)
+BOOST_MIRROR_REG_TYPE(::Test, C)
+BOOST_MIRROR_REG_TYPE(::Test, D)
+BOOST_MIRROR_REG_TYPE(::Test, E)
+BOOST_MIRROR_REG_TYPE(::Test, F)
+BOOST_MIRROR_REG_TYPE(::Test, G)
+BOOST_MIRROR_REG_TYPE(::Test, H)
 
 
 BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::Test::B)
@@ -173,7 +173,7 @@ int main(void)
 	//
 	using namespace ::Test;
 	//
-	typedef BOOST_MIRROR_REFLECT_CLASS(H) meta_H;
+	typedef BOOST_MIRRORED_CLASS(H) meta_H;
 	H h;
 	h.l = 1234567890;
 	h.i = 123;
@@ -199,7 +199,7 @@ int main(void)
 	typedef pair<T3, T4> T6; 
 	typedef pair<T5, T6> T7; 
 	typedef tuple<T1, T2, T3, T4, T5, T6, T7> T;
-	typedef BOOST_MIRROR_REFLECT_CLASS(T) meta_T;
+	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
 	//
 	bcout << "--------------------------------------------" << endl;

@@ -12,6 +12,7 @@
 
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/detail/template_name.hpp>
+#include <boost/mirror/meta_types/std_less.hpp>
 #include <set> 
 
 namespace boost {
@@ -22,12 +23,7 @@ namespace detail {
 template <typename K, class Comp, class Allocator> 
 struct meta_type_std_set
 {
-
-	static const bchar* base_name(void){return BOOST_STR_LIT("set");}
-	BOOST_STATIC_CONSTANT(int, base_name_length = 3);
-
-	static const bchar* full_name(void){return BOOST_STR_LIT("::std::set");}
-	BOOST_STATIC_CONSTANT(int, full_name_length = 10);
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("set")
 };
 
 } // namespace detail
@@ -36,11 +32,11 @@ struct meta_type_std_set
 template <typename K, class Comp, class Allocator> 
 struct meta_type< ::std::set<K, Comp, Allocator> > 
 : detail::static_template_name<
+	BOOST_MIRRORED_NAMESPACE(::std),
 	detail::meta_type_std_set<K, Comp, Allocator> , 
-	mpl::vector1<K> // TODO add Comp too
+	mpl::vector2<K, Comp>
 >
 {
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_std) scope;
 	typedef ::std::set<K, Comp, Allocator> reflected_type;
 };
 

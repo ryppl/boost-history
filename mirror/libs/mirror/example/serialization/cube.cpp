@@ -163,13 +163,13 @@ namespace mirror {
 
 /** Register the Graphics namespace
  */
-BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(Graphics)
+BOOST_MIRROR_REG_NAMESPACE((Graphics))
 
 /** Register the types and classes
  */
-BOOST_MIRROR_REG_TYPE(_Graphics, ::Graphics, Coords)
-BOOST_MIRROR_REG_TYPE(_Graphics, ::Graphics, Vector)
-BOOST_MIRROR_REG_TYPE(_Graphics, ::Graphics, Cube)
+BOOST_MIRROR_REG_TYPE(::Graphics, Coords)
+BOOST_MIRROR_REG_TYPE(::Graphics, Vector)
+BOOST_MIRROR_REG_TYPE(::Graphics, Cube)
 
 
 BOOST_MIRROR_REG_SINGLE_BASE_CLASS(
@@ -309,7 +309,7 @@ struct single_attrib_loader<MetaClass, mpl::int_<0> >
 template<class Archive, class Class>
 void do_load(Archive & ar, Class & c)
 {
-	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+	typedef BOOST_MIRRORED_CLASS(Class) meta_Class;
 	typedef mpl::int_<meta_Class::all_attributes::size::value - 1> last;
 	single_attrib_loader<meta_Class, last>(ar, c);
 }
@@ -373,7 +373,7 @@ struct single_attrib_saver<MetaClass, mpl::int_<0> >
 template<class Archive, class Class>
 void do_save(Archive & ar, Class & c)
 {
-	typedef BOOST_MIRROR_REFLECT_CLASS(Class) meta_Class;
+	typedef BOOST_MIRRORED_CLASS(Class) meta_Class;
 	typedef mpl::int_<meta_Class::all_attributes::size::value - 1> last;
 	single_attrib_saver<meta_Class, last>(ar, c);
 }

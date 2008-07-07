@@ -262,6 +262,9 @@
 			- Added support for pointers to function pointers 
 			- Added support for functions returning pointers to functions
 			- Added support for references to functions
+			- Fixed template name builders
+			- Added meta_type for ::std::less
+			- Template class names for std::map and ::std::set are now build also with the comparator argument
 
 			- Tested with MSVC++ 2008 EE On Vista
 		</revision>
