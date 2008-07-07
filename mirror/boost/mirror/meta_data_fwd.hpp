@@ -24,8 +24,7 @@ struct meta_namespace;
 #define BOOST_MIRRORED_NAMESPACE(FULL_NAMESPACE_NAME) \
 	::boost::mirror::meta_namespace< \
 		::boost::mirror::namespace_  \
-		FULL_NAMESPACE_NAME ## \
-		_boost_mirror_helper \
+		FULL_NAMESPACE_NAME  \
 		::_ \
 	>
 // namespace_ :: _boost_mirror_helper :: _
@@ -74,8 +73,7 @@ struct meta_type;
  */
 #define BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE(TYPEDEF) \
 	::boost::mirror::meta_type< \
-		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GLOBAL_SCOPE( \
-			NAMESPACE, \
+		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GS( \
 			TYPEDEF \
 		) \
 	>

@@ -103,8 +103,6 @@ namespace namespace_ {
 
 	};
 
-	namespace _boost_mirror_helper = ::boost::mirror::namespace_;
-
 } // namespace namespace_
 
 // meta_namespace specialization for the global scope
@@ -149,8 +147,6 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
  *    static const bchar* get_name(mpl::false_)(return "baz";} // -5-
  *  };
  *  } // namespace baz
- *  namespace baz_boost_mirror_helper = // -7-
- *    ::boost::mirror::namespace_::test::foo::bar::baz; // -8-
  *  } // namespace bar
  *  } // namespace foo
  *  } // namespace test
@@ -182,18 +178,6 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 			} /* -5- */ \
 		}; \
 		} \
-		namespace BOOST_PP_CAT( \
-			BOOST_PP_SEQ_HEAD( \
-				BOOST_PP_SEQ_REVERSE( NAME_SEQUENCE ) \
-			), \
-			_boost_mirror_helper \
-		) = /* -7- */  \
-			::boost::mirror::namespace_ \
-			BOOST_PP_SEQ_FOR_EACH( \
-				BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
-				_, \
-				NAME_SEQUENCE \
-			) ; /* -8- */ \
 		BOOST_PP_SEQ_FOR_EACH( \
 			BOOST_MIRROR_REG_NAMESPACE_EPILOGUE_HELPER, \
 			_, \
