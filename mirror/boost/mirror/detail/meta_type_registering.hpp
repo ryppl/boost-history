@@ -28,14 +28,19 @@ struct meta_type
 	detail::registered_type_info<Type>
 >
 {
+	typedef detail::full_name_builder<
+        	typename detail::registered_type_info<Type>::scope,
+        	detail::registered_type_info<Type>
+	> base_class;
+
 	inline static const bstring& base_name(void)
 	{
-		return get_name(mpl::false_());
+		return base_class::get_name(mpl::false_());
 	}
 
 	inline static const bstring& full_name(void)
 	{
-		return get_name(mpl::true_());
+		return base_class::get_name(mpl::true_());
 	}
 
 	typedef detail::registered_type_info<Type> base_info;
@@ -92,7 +97,14 @@ struct meta_type
 #define BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR(NAMESPACE, TYPEDEFD_NAME) \
 	::boost::mirror::typedef_::TYPEDEFD_NAME < \
 		BOOST_MIRRORED_NAMESPACE( NAMESPACE ) \
-	> \
+	> 
+
+/** Macro that expands into a typedef-ined type selector
+ */
+#define BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GS(TYPEDEFD_NAME) \
+	::boost::mirror::typedef_::TYPEDEFD_NAME < \
+		BOOST_MIRRORED_GLOBAL_SCOPE() \
+	> 
 
 /** Macro for registering typedef-ined types in the global scope
  */
@@ -105,7 +117,7 @@ struct meta_type
 	} /* namespace typedef_ */ \
 	namespace detail { \
 	template <> struct registered_type_info< \
-		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR( :: , TYPEDEFD_NAME) \
+		BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GS(TYPEDEFD_NAME) \
 	> \
 	{ \
 		typedef BOOST_MIRRORED_GLOBAL_SCOPE() scope; \

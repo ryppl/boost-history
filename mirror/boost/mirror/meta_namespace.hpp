@@ -44,14 +44,19 @@ struct meta_namespace
 	NamespacePlaceholder
 >
 {
+	typedef  detail::full_name_builder<
+        	meta_namespace<typename NamespacePlaceholder::parent_placeholder>,
+        	NamespacePlaceholder
+	> base_class;
+
 	inline static const bstring& base_name(void)
 	{
-		return get_name(mpl::false_());
+		return base_class::get_name(mpl::false_());
 	}
 
 	inline static const bstring& full_name(void)
 	{
-		return get_name(mpl::true_());
+		return base_class::get_name(mpl::true_());
 	}
 
 

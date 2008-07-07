@@ -36,7 +36,7 @@ struct template_args_type_list_wo_nulls
 {
 	typedef typename ::boost::mpl::remove_if<
 			ArgTypeList,
-			is_typelist_null_type<::boost::mpl::_>
+			is_typelist_null_type< ::boost::mpl::_ >
 	>::type type;
 };
 
@@ -96,7 +96,7 @@ private:
 		>(append_arg_typename<FullOrBase>(str));
 		//
 		// append the last argument
-		typedef mpl::back<ArgTypeList>::type last_arg_type;
+		typedef typename mpl::back<ArgTypeList>::type last_arg_type;
 		str.append(BOOST_MIRRORED_TYPE(last_arg_type)::get_name(full_or_base));
 	}
 

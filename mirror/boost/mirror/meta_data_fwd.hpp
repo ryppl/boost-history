@@ -35,7 +35,7 @@ struct meta_namespace;
 
 #define BOOST_MIRRORED_GLOBAL_SCOPE() \
 	::boost::mirror::meta_namespace< \
-		::boost::mirror::namespace_ ## ::_ \
+		::boost::mirror::namespace_ ::_ \
 	>
 
 namespace detail {
