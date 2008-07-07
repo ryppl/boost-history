@@ -6,27 +6,17 @@
 //  See http://www.boost.org/libs/test for the library home page.
 
 // Boost.Test
-#define BOOST_TEST_MODULE Unit_test_example_09
+#define BOOST_TEST_MODULE Unit_test_example_08
 #include <boost/test/unit_test.hpp>
 
-// STL
-#include <iostream>
-
 //____________________________________________________________________________//
 
-struct MyConfig { 
-    MyConfig() { std::cout << "global setup part1\n"; } 
-    ~MyConfig() { std::cout << "global teardown part1\n"; } 
-};
-
-// structure MyConfig is used as a global fixture - it's invoked pre and post any testing is performed
-BOOST_GLOBAL_FIXTURE( MyConfig )
-
-//____________________________________________________________________________//
+// this way we could specify a number of expected failures in automatically registered test case
+BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES( my_test1, 1 )
 
 BOOST_AUTO_TEST_CASE( my_test1 )
 {
-    BOOST_CHECK( true );
+    BOOST_CHECK( 2 == 1 );
 }
 
 //____________________________________________________________________________//

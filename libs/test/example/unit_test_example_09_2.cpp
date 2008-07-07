@@ -6,7 +6,7 @@
 //  See http://www.boost.org/libs/test for the library home page.
 
 // Boost.Test
-#define BOOST_TEST_MODULE Unit_test_example_09
+// only one file should define BOOST_TEST_MAIN/BOOST_TEST_MODULE
 #include <boost/test/unit_test.hpp>
 
 // STL
@@ -14,17 +14,17 @@
 
 //____________________________________________________________________________//
 
-struct MyConfig { 
-    MyConfig() { std::cout << "global setup part1\n"; } 
-    ~MyConfig() { std::cout << "global teardown part1\n"; } 
+struct MyConfig2 { 
+    MyConfig2() { std::cout << "global setup part2\n"; } 
+    ~MyConfig2() { std::cout << "global teardown part2\n"; } 
 };
 
-// structure MyConfig is used as a global fixture - it's invoked pre and post any testing is performed
-BOOST_GLOBAL_FIXTURE( MyConfig )
+// structure MyConfig2 is used as a global fixture. You could have any number of global fxtures
+BOOST_GLOBAL_FIXTURE( MyConfig2 )
 
 //____________________________________________________________________________//
 
-BOOST_AUTO_TEST_CASE( my_test1 )
+BOOST_AUTO_TEST_CASE( my_test2 )
 {
     BOOST_CHECK( true );
 }
