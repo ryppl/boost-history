@@ -25,8 +25,13 @@ struct node_descriptor
         : value(i)
     { }
 
-    inline bool is_null()
+    /** Return true if the descriptor is null. */
+    inline bool is_null() const
     { return value == descriptor_type(); }
+
+    /** Cast to bool tests to see if the descritpor is null. */
+    inline operator bool() const
+    { return !is_null(); }
 
     /** @name Equality Comparable */
     //@{

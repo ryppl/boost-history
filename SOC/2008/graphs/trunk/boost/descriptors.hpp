@@ -84,22 +84,30 @@ struct descriptor_traits
 /**
  * Given a container and a valid iterator into the container, return a
  * descriptor to the object being pointed at. The descriptor is guaranteed to
- * be at least as long as the iterator, generally longer.
+ * be at least as long as the iterator, generally longer. If the given iterator
+ * is past the end of the container, then the returned descriptor is null.
  */
 template <typename Container>
 inline typename descriptor_traits<Container>::descriptor_type
 make_descriptor(Container& c, typename Container::iterator i)
-{ return typename descriptor_traits<Container>::descriptor_type(c, i); }
+{
+    typedef typename descriptor_traits<Container>::descriptor_type result_type;
+    return i != c.end() ? result_type(c, i) : result_type();
+}
 
 /**
  * Given a container and a valid descriptor, return an iterator pointing to the
  * described object. The iterator will be valid as long as the descriptor has
- * not been invalidated (e.g., removing an item from a vector).
+ * not been invalidated (e.g., removing an item from a vector). If the given
+ * descriptor is null, then the returned iterator is past the end of the
+ * container.
  */
 template <typename Container>
 inline typename Container::iterator
 make_iterator(Container& c, typename descriptor_traits<Container>::descriptor_type d)
-{ return d.get(c); }
+{
+    return d ? d.get(c) : c.end();
+}
 
 
 /** Return the descriptor stability tag for the given container. */

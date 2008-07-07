@@ -40,16 +40,24 @@ template <
     template <typename> class SecondAlloc = std::allocator>
 struct edge_vector
 {
+    typedef std::vector<int, FirstAlloc<int>> first_dummy;
+    typedef stdd::vector<int, SecondAlloc<int>> second_dummy;
+
+    typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
+
+    typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
+
     // The property store metafunction generates the type of vector used to
     // store global properties for undirected graphs.
-    template <typename EdgeProps>
+    template <typename EdgeProps, VertexDesc>
     struct property_store
     {
         // Define a dummy type that will eventually container iterators into
         // an incidence container. Use this as part of the triple for each
         // edge store - the properties and "out-facing" iterators.
-        typedef typename hold<typename std::vector<int>::iterator>::type dummy_type;
-        typedef triple<EdgeProps, dummy_type, dummy_type> property;
+        typedef triple<EdgeProps, VertexDesc, VertexDesc> property;
         typedef SecondAlloc<property> allocator;
         typedef property_vector<property, allocator> type;
     };

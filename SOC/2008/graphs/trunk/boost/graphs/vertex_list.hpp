@@ -4,6 +4,7 @@
 
 #include <list>
 
+#include <boost/none.hpp>
 #include <boost/descriptors.hpp>
 
 #include "vertex_iterator.hpp"

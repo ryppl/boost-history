@@ -26,8 +26,14 @@ struct index_descriptor
         : value(std::distance(c.begin(), i))
     { }
 
+    /** Return true if the descriptor is null. */
     inline bool is_null() const
     { return value == descriptor_type(-1); }
+
+    /** Cast to bool tests to see if the descritpor is null. */
+    inline operator bool() const
+    { return !is_null(); }
+
 
     /** @name Equality Comparable */
     //@{

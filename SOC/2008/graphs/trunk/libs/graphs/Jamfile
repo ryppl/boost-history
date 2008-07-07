@@ -16,4 +16,5 @@ project graphs
 # exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;
 # exe desc : desc.cpp : <include>../../ <include>/usr/local/include ;
 
-exe test : test.cpp : <include>../../ ;
+exe test_verts : test_verts.cpp : <include>../../ ;
+exe test_props : test_props.cpp : <include>../../ ;

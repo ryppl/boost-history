@@ -85,7 +85,7 @@ struct blob
     { return std::memcmp(mem, x.mem, N) >= 0; }
     //@}
 
-    mutable char mem[N];
+    mutable unsigned char mem[N];
 };
 
 template <unsigned int N>

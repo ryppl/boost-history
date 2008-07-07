@@ -4,6 +4,7 @@
 
 #include <set>
 
+#include <boost/none.hpp>
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
 

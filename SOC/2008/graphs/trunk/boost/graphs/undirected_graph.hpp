@@ -31,6 +31,10 @@ public:
     typedef VertexStore vertex_store_selector;
     typedef EdgeStore edge_store_selector;
 
+    typedef VertexStore::descriptor_type vertex_descriptor;
+
+    typedef typename EdgeStore::EdgeStore::template property_store<edge_properties, vertex_descriptor>::type property_store;
+
     // Generate the property store type first. We can do this first because
     // it's basically independant of everything else, but contributes to almost
     // everything in the class by virtue of the property descriptor. Use this
@@ -43,7 +47,7 @@ public:
     // straightforward since, like the property store, its independant of almost
     // everything. The property descriptor depends entirely upon the property
     // store and the edge descriptor is actually fairly complicated.
-    typedef typename VertexStore::descriptor_type vertex_descriptor;
+    // typedef typename VertexStore::descriptor_type vertex_descriptor;
     typedef undirected_edge<vertex_descriptor, property_descriptor> edge_descriptor;
 
     // Generate the incidence list. The incidence list for a single vertex

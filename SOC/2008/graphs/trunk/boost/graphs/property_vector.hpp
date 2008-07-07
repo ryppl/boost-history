@@ -3,61 +3,64 @@
 #define PROPERTY_VECTOR_HPP
 
 #include <vector>
+#include <algorithm>
 
-#include "triple.hpp"
-#include "descriptor.hpp"
-
-// NOTE: Property stores hold two additional values. Right now, they contain
-// vertex descriptors, but would ideally by "iterators" into the incidence store
-// to make remove operations involing recipricol edge stubs more efficient.
-//
-// This really highlights the need for something like a "stable" iterator that
-// isn't invalidated by little things like complete reallocations and copies.
-// The problem can be stated as: how do you describe a never-invalidating
-// iterator into arbitrary containers and, can we map this onto iterators.
+#include <boost/descriptors.hpp>
+#include <boost/graphs/utility.hpp>
 
 /**
  * The property vector implements a vector-based global property store for
  * vector-based edge storage. Assuming, of course, that there are actually edge
- * properties...
+ * properties.
  */
-template <typename Props, typename Alloc>
+template <typename Edge, typename Alloc>
 class property_vector
 {
-    typedef std::vector<Props, Alloc> store_type;
 public:
-    typedef Props properties_triple;
-    typedef typename Props::first_type edge_properties;
-private:
-    typedef typename Props::second_type first_iterator;
-    typedef typename Props::third_type second_iterator;
-public:
+    typedef std::vector<Edge, Alloc> store_type;
+
+    typedef Edge edge_type;
+    typedef typename Edge::first_type edge_properties;
+    typedef typename Edge::second_type edge_pair;
+
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
-    typedef descriptor<store_type> property_descriptor;
 
+    typedef typename descriptor_traits<store_type>::descriptor_type property_descriptor;
+
+    // Constructor
     inline property_vector()
         : _props()
     { }
 
-    property_descriptor add();
-    property_descriptor add(edge_properties const&);
+    /** @name Add Property
+     * Add a property tot the global set, leaving the incidence descriptors
+     * empty for the time being.
+     */
+    //@{
+    property_descriptor add()
+    { return add(edge_properties()); }
+
+    property_descriptor add(edge_properties const& ep)
+    {
+        iterator i = _props.insert(_props.end(), make_pair(ep, edge_pair()));
+        return make_descriptor(_props, i);
+    }
+    //@}
+
+    /**
+     * Find the edge with the given properties. This function is guaranteed to
+     * run in O(E) time.
+     */
+    property_descriptor find(edge_properties const& ep) const
+    {
+        iterator i = std::find_if(_props.begin(), _props.end(), find_stored_edge(ep));
+        return make_descriptor(_props, i);
+    }
 
     /** Return the properties referenced by the given descriptor. */
     inline edge_properties& properties(property_descriptor d)
     { return d.value().first; }
-
-    /** Bind descriptors into the incidence lists into the global property. */
-    template <typename VertexDesc>
-    void bind(property_descriptor d, VertexDesc src, VertexDesc tgt)
-    {
-        d.value().second.put(src);
-        d.value().third.put(tgt);
-    }
-
-    /** Convert an iterator to a descriptor. */
-    inline property_descriptor describe(iterator i) const
-    { return property_descriptor(_props, i); }
 
     /** Return the number of properties in the store. */
     inline size_type size() const
@@ -75,22 +78,6 @@ public:
 private:
     mutable store_type _props;
 };
-
-
-template <typename P, typename A>
-typename property_vector<P,A>::property_descriptor
-property_vector<P,A>::add()
-{
-    return add(edge_properties());
-}
-
-template <typename P, typename A>
-typename property_vector<P,A>::property_descriptor
-property_vector<P,A>::add(edge_properties const& p)
-{
-    _props.push_back(make_triple(p, first_iterator(), second_iterator()));
-    return property_descriptor(_props, boost::prior(_props.end()));
-}
 
 #endif
 
