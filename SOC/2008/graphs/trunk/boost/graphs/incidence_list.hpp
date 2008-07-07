@@ -19,11 +19,10 @@ template <typename Edge, typename Alloc>
 class incidence_list
 {
 public:
-    typedef std::list<Edge, Alloc> store_type;
-
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type property_descriptor;
 
+    typedef std::list<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
@@ -33,14 +32,6 @@ public:
     incidence_list()
         : _edges(), _size(0)
     { }
-
-    /**
-     * Incidence lists always allow the addition of edges, assuming that no policy
-     * conflicts exist. The first element of the return is the end() of the list.
-     * @complexity O(1)
-     */
-    inline std::pair<incidence_descriptor, bool> allow(vertex_descriptor) const
-    { return make_pair(make_descriptor(_edges, _edges.end()), true); }
 
     /**
      * Add a vertex to the list.
@@ -83,6 +74,10 @@ public:
     /** Return the number of edges in this store. */
     inline size_type size() const
     { return _size; }
+
+    /** Return true if this is empty. */
+    inline bool empty() const
+    { return _edges.empty(); }
 
     /** @name Iterators */
     //@{

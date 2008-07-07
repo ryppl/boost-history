@@ -74,4 +74,8 @@ std::size_t hash_value(index_descriptor<Index> const& x)
     return hash_value(x.value);
 }
 
+template <typename Index>
+std::ostream& operator<<(std::ostream& os, index_descriptor<Index> const& x)
+{ return os << x.value; }
+
 #endif

@@ -4,8 +4,8 @@
 
 #include "property_vector.hpp"
 #include "incidence_vector.hpp"
-#include "out_vector.hpp"
-#include "in_vector.hpp"
+// #include "out_vector.hpp"
+// #include "in_vector.hpp"
 
 // What's in an edge vector? Basically, an edge vector has to specify
 // the type of property storage and the type of incidence storage. What
@@ -47,26 +47,25 @@ struct edge_vector
 
     // The property store metafunction generates the type of vector used to
     // store global properties for undirected graphs.
-    template <typename EdgeProps, typename IncDesc>
+    template <typename EdgeProps, typename VertexDesc>
     struct property_store
     {
-        typedef std::pair<EdgeProps, std::pair<IncDesc, IncDesc>> edge;
+        typedef std::pair<EdgeProps, std::pair<VertexDesc, VertexDesc>> edge;
         typedef SecondAlloc<edge> allocator;
         typedef property_vector<edge, allocator> type;
     };
 
     // The incidence store metafunction generates the type of vector used to
     // store edges incident to the an undirected vertex.
-    template <typename VertexDesc, typename PropDesc>
+    template <typename VertexDesc>
     struct incidence_store
     {
-        typedef std::pair<VertexDesc, PropDesc> incidence_pair;
+        typedef std::pair<VertexDesc, property_descriptor> incidence_pair;
         typedef FirstAlloc<incidence_pair> incidence_allocator;
         typedef incidence_vector<incidence_pair, incidence_allocator> type;
     };
 
-
-    // Descritor types for directed graphs
+    // Descriptor types for directed graphs
     typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
     typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
 

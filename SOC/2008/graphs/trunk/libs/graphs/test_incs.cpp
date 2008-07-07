@@ -17,6 +17,20 @@ typedef std::pair<VertexDesc, PropDesc> Edge;
 typedef allocator<Edge> Alloc;
 typedef std::less<VertexDesc> Compare;
 
+template <typename IncStore, typename Vertex, typename Property>
+void add(IncStore& incs, Vertex v, Property p, associative_container_tag)
+{
+    typename IncStore::incidence_descriptor i = incs.add(v);
+    incs.bind(i, p);
+}
+
+template <typename IncStore, typename Vertex, typename Property>
+void add(IncStore& incs, Vertex v, Property p, sequence_tag)
+{
+    incs.add(v, p);
+}
+
+
 template <typename IncStore>
 void test_remove(IncStore& incs, stable_mutators_tag)
 {

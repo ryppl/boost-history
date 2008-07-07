@@ -2,9 +2,9 @@
 #ifndef INCIDENCE_TRAITS_HPP
 #define INCIDENCE_TRAITS_HPP
 
-struct incidence_vector_tag : unstable_remove_tag { };
-struct incidence_list_tag : stable_mutators_tag { };
-struct incidence_set_tag : stable_mutators_tag { };
+struct incidence_vector_tag : sequence_tag, unstable_remove_tag { };
+struct incidence_list_tag : sequence_tag, stable_mutators_tag { };
+struct incidence_set_tag : associative_container_tag, stable_mutators_tag { };
 
 template <typename IncStore>
 struct incidence_traits

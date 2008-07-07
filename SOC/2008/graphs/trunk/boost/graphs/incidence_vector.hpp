@@ -20,11 +20,10 @@ template <typename Edge, typename Alloc>
 class incidence_vector
 {
 public:
-    typedef std::vector<Edge, Alloc> store_type;
-
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type property_descriptor;
 
+    typedef std::vector<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
@@ -34,15 +33,6 @@ public:
     inline incidence_vector()
         : _edges()
     { }
-
-    /**
-     * Incidence vectors always allow the addition of edges, assuming that no
-     * policy conflicts exist. The first element of the return is the end() of
-     * the vector.
-     * @complexity O(1)
-     */
-    std::pair<incidence_descriptor, bool> allow(vertex_descriptor) const
-    { return make_pair(incidence_descriptor(), true); }
 
     /** Add the incidence pair to the vector. */
     incidence_descriptor add(vertex_descriptor v, property_descriptor p)
@@ -61,6 +51,10 @@ public:
     /** Return the number of edges in this store. */
     inline size_type size() const
     { return _edges.size(); }
+
+    /** Return true if this is empty. */
+    inline bool empty() const
+    { return _edges.empty(); }
 
     /** @name Iterators */
     //@{

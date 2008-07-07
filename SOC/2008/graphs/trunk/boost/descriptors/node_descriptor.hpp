@@ -1,6 +1,8 @@
 
-#ifndef VECTOR_DESCRIPTOR_HPP
-#define VECTOR_DESCRIPTOR_HPP
+#ifndef NODE_DESCRIPTOR_HPP
+#define NODE_DESCRIPTOR_HPP
+
+#include <boost/functional/hash.hpp>
 
 /**
  * The node descriptor contains an iterator into the target container. The
@@ -63,5 +65,17 @@ struct node_descriptor
 
     descriptor_type value;
 };
+
+// A hash function for indexed descriptors.
+template <typename Blob>
+std::size_t hash_value(node_descriptor<Blob> const& x)
+{
+    using boost::hash_value;
+    return hash_value(x.value);
+}
+
+template <typename Blob>
+std::ostream& operator<<(std::ostream& os, node_descriptor<Blob> const& d)
+{ return os << hash_value(d); }
 
 #endif

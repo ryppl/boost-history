@@ -75,17 +75,20 @@ public:
     inline edge_properties& properties(property_descriptor d)
     { return make_iterator(_props, d)->first; }
 
-    /** Bind iterators into the incidence lists into the global property. */
-    template <typename Iter>
-    void bind(property_descriptor d, Iter src, Iter tgt)
-    {
-        d.value().second.put(src);
-        d.value().third.put(tgt);
-    }
+    /**
+     * Bind vertex descriptors into the incidence lists into the global
+     * property. This is the last step of edge creation for undirected graphs.
+     */
+    void bind(property_descriptor d, edge_pair const& p)
+    { make_iterator(_props, d)->second = p; }
 
     /** Return the number of properties. */
     inline size_type size() const
     { return _size; }
+
+    /** Return true if this is empty. */
+    inline bool empty() const
+    { return _props.empty(); }
 
     /** @name Iterators */
     //@{

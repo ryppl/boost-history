@@ -105,7 +105,6 @@ public:
     size_type size() const
     { return _verts.size(); }
 
-
     /** @name Vertex Iterators */
     //@{
     vertex_iterator begin_vertices() const

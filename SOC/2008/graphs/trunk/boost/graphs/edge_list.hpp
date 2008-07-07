@@ -2,13 +2,10 @@
 #ifndef EDGE_LIST_HPP
 #define EDGE_LIST_HPP
 
-#include "triple.hpp"
-#include "placeholder.hpp"
-
 #include "property_list.hpp"
 #include "incidence_list.hpp"
-#include "out_list.hpp"
-#include "in_list.hpp"
+// #include "out_list.hpp"
+// #include "in_list.hpp"
 
 // The edge list does two things. First, it indicates that edges will
 // be stored in an incidence list (as opposed to a vector or set).
@@ -24,27 +21,40 @@ template <
     template <typename> class SecondAlloc = std::allocator>
 struct edge_list
 {
+    // A couple of dummy vectors used to build descriptors.
+    typedef std::list<int, FirstAlloc<int>> first_dummy;
+    typedef std::list<int, SecondAlloc<int>> second_dummy;
+
+    // Descriptor types for undirected graphs.
+    typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
+
     // The property store metafunction generates the underlying global store
     // type for edge properties in undirected graphs.
-    template <typename EdgeProps>
+    template <typename EdgeProps, typename VertexDesc>
     struct property_store
     {
-        typedef placeholder<sizeof(typename std::list<int>::iterator)> dummy_type;
-        typedef triple<EdgeProps, dummy_type, dummy_type> property;
-        typedef SecondAlloc<property> allocator;
-        typedef property_list<property, allocator> type;
+        typedef std::pair<EdgeProps, std::pair<VertexDesc, VertexDesc>> edge;
+        typedef SecondAlloc<edge> allocator;
+        typedef property_list<edge, allocator> type;
     };
 
     // The incidence store metafunction generates the per-vertex storage type
     // for undirected vertices.
-    template <typename VertexDesc, typename PropDesc>
+    template <typename VertexDesc>
     struct incidence_store
     {
-        typedef std::pair<VertexDesc, PropDesc> incidence_pair;
+        typedef std::pair<VertexDesc, property_descriptor> incidence_pair;
         typedef FirstAlloc<incidence_pair> allocator;
         typedef incidence_list<incidence_pair, allocator > type;
     };
 
+    // Descriptor types for directed graphs
+    typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
+
+
+    /*
     // The out store metafunction generates the type of list used to store
     // out edges of a vertex in a directed graph.
     template <typename VertexDesc, typename Props>
@@ -74,6 +84,7 @@ struct edge_list
         typedef SecondAlloc<edge> allocator;
         typedef in_list<edge, allocator> type;
     };
+    */
 };
 
 #endif

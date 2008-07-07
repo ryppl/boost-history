@@ -30,7 +30,6 @@ public:
     // aspect of the key at times, but changing that value would be absolutely
     // catastrophic.
     typedef std::map<vertex_descriptor, property_descriptor, Compare, Alloc> store_type;
-
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
@@ -41,25 +40,29 @@ public:
         : _edges()
     { }
 
-    /**
-     * Deteremine whether or not the edge exists or is even allowed to be added.
-     * This returns a pair containing an iterator indicating the position of the
-     * edge if it already exists and a bool value indicating whether or not the
-     * addition would even be allowed by policy.
-     * @complexity O(lg(dd))
-     */
-    inline std::pair<incidence_descriptor, bool> allow(vertex_descriptor v) const
-    { return make_pair(make_descriptor(_edges, _edges.find(v)), true); }
-
-    /**
-     * Add the incidence pair to the vertex.
+    /** @name Add Incident Edge.
+     * Try adding the incident edge to the vertex. The first version is used in
+     * a two-step edge addition where the property descriptor is bound in the
+     * second phase of the insertion.
      * @complexity O(lg(d))
      */
+    //@{
+    inline incidence_descriptor add(vertex_descriptor v)
+    { return add(v, property_descriptor()); }
+
     inline incidence_descriptor add(vertex_descriptor v, property_descriptor p)
     {
         std::pair<iterator, bool> i = _edges.insert(make_pair(v, p));
-        return make_descriptor(_edges, i.first);
+        return i.second ? make_descriptor(_edges, i.first) : incidence_descriptor();
     }
+    //@}
+
+    /**
+     * Bind the given property descriptor to this vertex. This is useful when
+     * the incidence pair is added before property is allocated.
+     */
+    inline void bind(incidence_descriptor d, property_descriptor p)
+    { make_iterator(_edges, d)->second = p; }
 
     /**
      * Find the incident edge whose opposite end is v.
@@ -82,6 +85,13 @@ public:
     /** Return the number of edges incident to this vertex. */
     inline size_type size() const
     { return _edges.size(); }
+
+    /** Return true if this is empty. */
+    inline bool empty() const
+    { return _edges.empty(); }
+
+    inline bool valid(incidence_descriptor d)
+    { return make_iterator(_edges, d) != _edges.end(); }
 
     /** @name Iterators */
     //@{

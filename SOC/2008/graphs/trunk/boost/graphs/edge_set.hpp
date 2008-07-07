@@ -2,13 +2,13 @@
 #ifndef EDGE_SET_HPP
 #define EDGE_SET_HPP
 
-#include "triple.hpp"
-#include "placeholder.hpp"
+#include <list>
+#include <map>
 
 #include "property_list.hpp"
 #include "incidence_set.hpp"
-#include "out_set.hpp"
-#include "in_set.hpp"
+// #include "out_set.hpp"
+// #include "in_set.hpp"
 
 /**
  * The edge set metafunction defines the basic facets of set-based edge
@@ -25,28 +25,45 @@ template <
     template <typename> class SecondAlloc = std::allocator>
 struct edge_set
 {
-    // The property store metafunnction generates the global store type
-    // for undirected graphs.
-    template <typename EdgeProps>
+    // A couple of dummy vectors used to build descriptors. This looks really
+    // weird since we're expecting a set type somewhere around here. However,
+    // there isn't actually a real "set" used in these stores. The property
+    // store only needs to be a list, and the incidence/in/out stores are
+    // actually all maps (vertex to something).
+    typedef std::map<int, int, Compare<int>, FirstAlloc<int>> first_dummy;
+    typedef std::list<int, SecondAlloc<int>> second_dummy;
+
+    // Descriptor types for undirected graphs.
+    typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
+
+    // The property store metafunnction generates the global store type for
+    // undirected graphs. The property list only needs to be a list, not a set.
+    template <typename EdgeProps, typename VertexDesc>
     struct property_store
     {
-        typedef typename hold<std::list<int>::iterator>::type dummy_type;
-        typedef triple<EdgeProps, dummy_type, dummy_type> property;
-        typedef SecondAlloc<property> allocator;
-        typedef property_list<property, allocator> type;
+        typedef std::pair<EdgeProps, std::pair<VertexDesc, VertexDesc>> edge;
+        typedef SecondAlloc<edge> allocator;
+        typedef property_list<edge, allocator> type;
     };
 
     // The incidence store metafunction generates the per-vertex stores for
     // incident edges.
-    template <typename VertexDesc, typename PropDesc>
+    template <typename VertexDesc>
     struct incidence_store
     {
-        typedef std::pair<VertexDesc, PropDesc> value;
+        typedef std::pair<VertexDesc, property_descriptor> value;
         typedef Compare<VertexDesc> compare;
         typedef FirstAlloc<value> allocator;
         typedef incidence_set<value, compare, allocator> type;
     };
 
+    // Descriptor types for directed graphs
+    typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
+
+
+    /*
     // The out store metafunction generates the type of set used to store out
     // edges of a vertex in a directed graph.
     template <typename VertexDesc, typename Props>
@@ -78,6 +95,7 @@ struct edge_set
         typedef SecondAlloc<edge> allocator;
         typedef in_set<edge, compare, allocator> type;
     };
+    */
 };
 
 #endif

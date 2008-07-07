@@ -2,6 +2,9 @@
 #ifndef UTILITY_HPP
 #define UTILITY_HPP
 
+#include <boost/descriptors.hpp>
+
+
 /**
  * @internal
  * A forwarding comparator for proeprties objects that forwards the comparison
