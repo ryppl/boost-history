@@ -9,8 +9,7 @@
 #include "vertex_iterator.hpp"
 
 // Forward declarations
-template <typename V, template <typename> class A> class vertex_list_elem;
-template <typename V, typename A> class vertex_list_impl;
+template <typename, typename> class vertex_list_impl;
 
 /**
  * This metafunction defines the basic elements of a vertex list.
@@ -88,7 +87,7 @@ public:
     //@{
     inline void remove(vertex_descriptor v)
     {
-        _verts.erase(make_iterator(_verts, v));
+        erase(_verts, make_iterator(_verts, v));
         --_size;
     }
 

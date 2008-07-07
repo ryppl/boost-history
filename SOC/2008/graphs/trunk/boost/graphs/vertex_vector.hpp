@@ -11,7 +11,7 @@
 #include "vertex_iterator.hpp"
 
 // Forward declarations
-template <typename V, typename A> struct vertex_vector_impl;
+template <typename, typename> struct vertex_vector_impl;
 
 /**
  * The vertex vector stores vertices in a vector, allowing for fast inserts
@@ -84,7 +84,8 @@ public:
 
     inline vertex_descriptor add(vertex_properties const& vp)
     {
-        return make_descriptor(_verts, insert(_verts, vertex_type(vp)));
+        iterator i = insert(_verts, vertex_type(vp));
+        return make_descriptor(_verts, i);
     }
     //@}
 

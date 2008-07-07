@@ -238,21 +238,6 @@ namespace dispatch
     inline typename Container::iterator
     find(Container& c, T const& x, associative_container_tag)
     { return c.find(x); }
-
-    // Erase implementations
-    template <typename Container>
-    inline typename Container::iterator
-    erase(Container& c, typename Container::iterator i, sequence_tag)
-    { return c.erase(i); }
-
-    template <typename Container>
-    inline typename Container::iterator
-    erase(Container& c, typename Container::iterator i, associative_container_tag)
-    {
-        typename Container::iterator j = ++i;
-        c.erase(i);
-        return j;
-    }
 }
 
 template <typename Container, typename T>
@@ -266,9 +251,9 @@ find(Container& c, T const& x)
 { return dispatch::find(c, x, container_category(c)); }
 
 template <typename Container>
-inline typename Container::iterator
+void
 erase(Container& c, typename Container::iterator i)
-{ return dispatch::erase(c, i, container_category(c)); }
+{ c.erase(i); }
 
 
 #endif

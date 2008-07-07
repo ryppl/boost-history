@@ -161,34 +161,34 @@ struct descriptor_traits<std::list<T, Alloc>>
 // TODO: Dequeue
 
 // Set
-template <typename T, typename Compare, typename Alloc>
-struct descriptor_traits<std::set<T, Compare, Alloc>>
+template <typename T, typename Comp, typename Alloc>
+struct descriptor_traits<std::set<T, Comp, Alloc>>
 {
-    typedef node_descriptor<blob<sizeof(typename std::set<T, Compare, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::set<T, Comp, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
 // Multiset
-template <typename T, typename Compare, typename Alloc>
-struct descriptor_traits<std::multiset<T, Compare, Alloc>>
+template <typename T, typename Comp, typename Alloc>
+struct descriptor_traits<std::multiset<T, Comp, Alloc>>
 {
-    typedef node_descriptor<blob<sizeof(typename std::multiset<T, Compare, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::multiset<T, Comp, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
 // Map
-template <typename K, typename T, typename Compare, typename Alloc>
-struct descriptor_traits<std::map<K, T, Compare, Alloc>>
+template <typename Key, typename T, typename Comp, typename Alloc>
+struct descriptor_traits<std::map<Key, T, Comp, Alloc>>
 {
-    typedef node_descriptor<blob<sizeof(typename std::map<T, K, Compare, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::map<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
 // Multimap
-template <typename K, typename T, typename Compare, typename Alloc>
-struct descriptor_traits<std::multimap<K, T, Compare, Alloc>>
+template <typename Key, typename T, typename Comp, typename Alloc>
+struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>>
 {
-    typedef node_descriptor<blob<sizeof(typename std::multimap<T, K, Compare, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<blob<sizeof(typename std::multimap<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
     typedef stable_descriptor_tag descriptor_stability;
 };
 
