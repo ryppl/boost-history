@@ -5,6 +5,8 @@
 #include <list>
 #include <algorithm>
 
+#include <boost/graphs/utility.hpp>
+
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
  * this stores pairs containing an adjacent vertex descriptor and a property
@@ -13,22 +15,23 @@
  *
  * This type allows constant time insertions, and linear search and remove.
  */
-template <typename IncEdge, typename Alloc>
+template <typename Edge, typename Alloc>
 class incidence_list
 {
-    typedef std::list<IncEdge, Alloc> store_type;
 public:
-    typedef IncEdge incidence_pair;
-    typedef typename IncEdge::first_type vertex_descriptor;
-    typedef typename IncEdge::second_type property_descriptor;
+    typedef std::list<Edge, Alloc> store_type;
+
+    typedef typename Edge::first_type vertex_descriptor;
+    typedef typename Edge::second_type property_descriptor;
 
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
+    typedef typename descriptor_traits<store_type>::descriptor_type incidence_descriptor;
+
     // Constructors
     incidence_list()
-        : _edges()
-        , _size(0)
+        : _edges(), _size(0)
     { }
 
     /**
@@ -36,53 +39,38 @@ public:
      * conflicts exist. The first element of the return is the end() of the list.
      * @complexity O(1)
      */
-    inline std::pair<iterator, bool> allow(vertex_descriptor) const
-    { return make_pair(_edges.end(), true); }
+    inline std::pair<incidence_descriptor, bool> allow(vertex_descriptor) const
+    { return make_pair(make_descriptor(_edges, _edges.end()), true); }
 
     /**
      * Add a vertex to the list.
      * @complexity O(1)
      */
-    inline iterator add(incidence_pair p)
+    inline incidence_descriptor add(vertex_descriptor v, property_descriptor p)
     {
         ++_size;
-        return _edges.insert(_edges.end(), p);
+        iterator i = _edges.insert(_edges.end(), make_pair(v, p));
+        return make_descriptor(_edges, i);
     }
 
     /**
      * Find the given incidence pair in the vertex.
-     * @todo Do we need this function?
      * @complexity O(1)
      */
-    inline iterator find(incidence_pair p) const
-    { return std::find(_edges.begin(), _edges.end(), p); }
-
-    /** Find the edge with the given vertex. */
-    inline iterator find(vertex_descriptor v) const
+    inline incidence_descriptor find(vertex_descriptor v) const
     {
-        // TODO How do I write this with std::find?
-        iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
+        iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
+        return make_descriptor(_edges, i);
     }
 
     /**
      * Remove the given incidence pair in this vertex.
      * @complexity O(deg(v))
      */
-    inline void remove(incidence_pair p)
-    { remove(find(p)); }
-
-    /**
-     * Remove the iterator.
-     * @complexity O(1)
-     */
-    inline iterator remove(iterator i)
+    inline void remove(incidence_descriptor d)
     {
+        _edges.erase(make_iterator(_edges, d));
         --_size;
-        return _edges.erase(i);
     }
 
     /** Remove all edges from the vertex. */
@@ -92,14 +80,18 @@ public:
         _edges.clear();
     }
 
+    /** Return the number of edges in this store. */
     inline size_type size() const
     { return _size; }
 
+    /** @name Iterators */
+    //@{
     inline iterator begin() const
     { return _edges.begin(); }
 
     inline iterator end() const
     { return _edges.end(); }
+    //@}
 
 private:
     mutable store_type  _edges;

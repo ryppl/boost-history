@@ -46,16 +46,16 @@ struct index_descriptor
 
     /** @name Less Than Comparable */
     //@{
-    inline bool operator<(index_descriptor const& x)
+    inline bool operator<(index_descriptor const& x) const
     { return value < x.value; }
 
-    inline bool operator>(index_descriptor const& x)
+    inline bool operator>(index_descriptor const& x) const
     { return value > x.value; }
 
-    inline bool operator<=(index_descriptor const& x)
+    inline bool operator<=(index_descriptor const& x) const
     { return value <= x.value; }
 
-    inline bool operator>=(index_descriptor const& x)
+    inline bool operator>=(index_descriptor const& x) const
     { return value >= x.value; }
     //@}
 

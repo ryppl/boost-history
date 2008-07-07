@@ -3,8 +3,9 @@
 #define INCIDENCE_VECTOR
 
 #include <vector>
+#include <algorithm>
 
-#include <boost/next_prior.hpp>
+#include <boost/descriptors.hpp>
 
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
@@ -18,14 +19,16 @@
 template <typename Edge, typename Alloc>
 class incidence_vector
 {
-    typedef std::vector<Edge, Alloc> store_type;
 public:
-    typedef Edge incidence_pair;
+    typedef std::vector<Edge, Alloc> store_type;
+
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type property_descriptor;
 
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
+
+    typedef typename descriptor_traits<store_type>::descriptor_type incidence_descriptor;
 
     // Constructors
     inline incidence_vector()
@@ -38,27 +41,24 @@ public:
      * the vector.
      * @complexity O(1)
      */
-    std::pair<iterator, bool> allow(vertex_descriptor) const
-    { return make_pair(_edges.end(), true); }
+    std::pair<incidence_descriptor, bool> allow(vertex_descriptor) const
+    { return make_pair(incidence_descriptor(), true); }
 
     /** Add the incidence pair to the vector. */
-    iterator add(incidence_pair p)
+    incidence_descriptor add(vertex_descriptor v, property_descriptor p)
     {
-        _edges.push_back(p);
-        return boost::prior(_edges.end());
+        iterator i = _edges.insert(_edges.end(), std::make_pair(v, p));
+        return make_descriptor(_edges, i);
     }
 
     /** Find the edge with the given vertex. */
-    inline iterator find(vertex_descriptor v) const
+    inline incidence_descriptor find(vertex_descriptor v) const
     {
-        // TODO How do I write this with std::find?
-        iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
+        iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
+        return make_descriptor(_edges, i);
     }
 
+    /** Return the number of edges in this store. */
     inline size_type size() const
     { return _edges.size(); }
 

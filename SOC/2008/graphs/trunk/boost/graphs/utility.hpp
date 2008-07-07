@@ -54,29 +54,30 @@ find_properties(Properties const& props)
 
 /**
  * @internal
- * A functor that returns true when we can find a an edge with the given
- * properties.
- * @param Properties The type of properties being compared.
- * @todo This goes away with lambda expression (in property_*::find).
+ * A functor that returns true when the first value of a pair (or other tuple
+ * with a named first element) matches that of the constructed value.
+ * @param First The type of the first element.
+ * @todo This goes away with lambda expression (in property_*::find and
+ * incidence_*::find).
  */
-template <typename Properties>
-struct stored_edge_finder
+template <typename First>
+struct first_finder
 {
-    inline stored_edge_finder(Properties const& p)
-        : props(p)
+    inline first_finder(First const& x)
+        : value(x)
     { }
 
-    template <typename Edge>
-    inline bool operator()(Edge const& e) const
-    { return e.first == props; }
+    template <typename Object>
+    inline bool operator()(Object const& o) const
+    { return o.first == value; }
 
-    Properties const& props;
+    First const& value;
 };
 
-template <typename Properties>
-inline stored_edge_finder<Properties>
-find_stored_edge(Properties const& props)
-{ return stored_edge_finder<Properties>(props); }
+template <typename First>
+inline first_finder<First>
+find_first(First const& props)
+{ return first_finder<First>(props); }
 
 
 #endif

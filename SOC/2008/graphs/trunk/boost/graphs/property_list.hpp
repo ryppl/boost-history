@@ -60,7 +60,7 @@ public:
      */
     inline property_descriptor find(edge_properties const& ep) const
     {
-        iterator i = std::find_if(_props.begin(), _props.end(), find_stored_edge(ep));
+        iterator i = std::find_if(_props.begin(), _props.end(), find_first(ep));
         return make_descriptor(_props, i);
     }
 

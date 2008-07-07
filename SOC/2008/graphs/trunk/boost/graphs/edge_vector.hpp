@@ -2,9 +2,6 @@
 #ifndef EDGE_VECTOR_HPP
 #define EDGE_VECTOR_HPP
 
-#include "triple.hpp"
-#include "placeholder.hpp"
-
 #include "property_vector.hpp"
 #include "incidence_vector.hpp"
 #include "out_vector.hpp"
@@ -40,26 +37,22 @@ template <
     template <typename> class SecondAlloc = std::allocator>
 struct edge_vector
 {
+    // A couple of dummy vectors used to build descriptors.
     typedef std::vector<int, FirstAlloc<int>> first_dummy;
-    typedef stdd::vector<int, SecondAlloc<int>> second_dummy;
+    typedef std::vector<int, SecondAlloc<int>> second_dummy;
 
+    // Descriptor types for undirected graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
     typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
 
-    typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
-    typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
-
     // The property store metafunction generates the type of vector used to
     // store global properties for undirected graphs.
-    template <typename EdgeProps, VertexDesc>
+    template <typename EdgeProps, typename IncDesc>
     struct property_store
     {
-        // Define a dummy type that will eventually container iterators into
-        // an incidence container. Use this as part of the triple for each
-        // edge store - the properties and "out-facing" iterators.
-        typedef triple<EdgeProps, VertexDesc, VertexDesc> property;
-        typedef SecondAlloc<property> allocator;
-        typedef property_vector<property, allocator> type;
+        typedef std::pair<EdgeProps, std::pair<IncDesc, IncDesc>> edge;
+        typedef SecondAlloc<edge> allocator;
+        typedef property_vector<edge, allocator> type;
     };
 
     // The incidence store metafunction generates the type of vector used to
@@ -72,8 +65,15 @@ struct edge_vector
         typedef incidence_vector<incidence_pair, incidence_allocator> type;
     };
 
+
+    // Descritor types for directed graphs
+    typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
+
+
     // The out store metafunction generates the type of vector used to store
     // out edges of a vertex in a directed graph.
+    /*
     template <typename VertexDesc, typename Props>
     struct out_store
     {
@@ -101,6 +101,7 @@ struct edge_vector
         typedef SecondAlloc<edge> allocator;
         typedef in_vector<edge, allocator> type;
     };
+    */
 };
 
 #endif

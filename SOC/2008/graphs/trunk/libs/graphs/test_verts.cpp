@@ -6,7 +6,7 @@
 #include <boost/graphs/vertex_set.hpp>
 #include <boost/graphs/vertex_map.hpp>
 
-#include "demangle.hpp"
+#include "typestr.hpp"
 
 using namespace std;
 using namespace boost;
@@ -74,7 +74,7 @@ void test()
     typedef typename VertexSet::descriptor_type Descriptor;
     typedef typename Store::store_type StoreImpl;
 
-    cout << "--- " << demangle<VertexSet>() << " ---" << endl;
+    cout << "--- " << typestr<VertexSet>() << " ---" << endl;
 
     Store verts;
 

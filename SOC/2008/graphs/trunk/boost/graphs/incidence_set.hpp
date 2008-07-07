@@ -4,7 +4,7 @@
 
 #include <map>
 
-#include <boost/next_prior.hpp>
+#include <boost/descriptors.hpp>
 
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
@@ -14,22 +14,27 @@
  *
  * This type allows logarithmic time insertions, searches, and removals.
  */
-template <typename IncEdge, typename Compare, typename Alloc>
+template <typename Edge, typename Compare, typename Alloc>
 class incidence_set
 {
 public:
-    typedef IncEdge incidence_pair;
-    typedef typename IncEdge::first_type vertex_descriptor;
-    typedef typename IncEdge::second_type property_descriptor;
-private:
+    typedef typename Edge::first_type vertex_descriptor;
+    typedef typename Edge::second_type property_descriptor;
+
     // Actually, the incident set, as it fundamentally implements a simple
     // graph is based on a map keyed on the adjacenct vertex and mapped to the
     // edge properties that describe it. We're basically undwinding and
     // rebuilding the edge pair for this map.
+    // NOTE: This can impose some difficulties since the vertex (key type) will
+    // be made const in this map. That means we may have to cast out the const
+    // aspect of the key at times, but changing that value would be absolutely
+    // catastrophic.
     typedef std::map<vertex_descriptor, property_descriptor, Compare, Alloc> store_type;
-public:
+
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
+
+    typedef typename descriptor_traits<store_type>::descriptor_type incidence_descriptor;
 
     // Constructors
     inline incidence_set()
@@ -41,63 +46,51 @@ public:
      * This returns a pair containing an iterator indicating the position of the
      * edge if it already exists and a bool value indicating whether or not the
      * addition would even be allowed by policy.
-     * @complexity O(lg(deg(v)))
+     * @complexity O(lg(dd))
      */
-    inline std::pair<iterator, bool> allow(vertex_descriptor v) const
-    { return make_pair(_edges.find(v), true); }
+    inline std::pair<incidence_descriptor, bool> allow(vertex_descriptor v) const
+    { return make_pair(make_descriptor(_edges, _edges.find(v)), true); }
 
     /**
      * Add the incidence pair to the vertex.
-     * @complexity O(lg(deg(v)))
+     * @complexity O(lg(d))
      */
-    inline iterator add(incidence_pair p)
-    { return _edges.insert(p).first; }
-
-    /**
-     * Find the incidence pair.
-     * @complexity O(lg(deg(v)))
-     */
-    inline iterator find(incidence_pair p) const
-    { return find(p.first); }
-
-    /**
-     * Find the incidence pair.
-     * @complexity O(lg(deg(v)))
-     */
-    inline iterator find(vertex_descriptor v) const
-    { return _edges.find(v); }
-
-    /**
-     * Remove the incidence pair from the set.
-     * @complexity O(lg(deg(v)))
-     */
-    inline void remove(incidence_pair p)
-    { _edges.erase(find(p)); }
-
-    /**
-     * Remove the iterator to the given incidence pair, returning an iterator
-     * to the next object in the sequence.
-     * @complexity O(lg(deg(v)))
-     */
-    inline iterator remove(iterator x)
+    inline incidence_descriptor add(vertex_descriptor v, property_descriptor p)
     {
-        iterator ret = boost::next(x);
-        _edges.erase(x);
-        return ret;
+        std::pair<iterator, bool> i = _edges.insert(make_pair(v, p));
+        return make_descriptor(_edges, i.first);
     }
 
-    // Remove edges.
+    /**
+     * Find the incident edge whose opposite end is v.
+     * @complexity O(lg(d))
+     */
+    inline incidence_descriptor find(vertex_descriptor v) const
+    { return make_descriptor(_edges, _edges.find(v)); }
+
+    /**
+     * Remove the edge whose opposite end is v.
+     * @complexity O(lg(d))
+     */
+    inline void remove(incidence_descriptor d)
+    { _edges.erase(make_iterator(_edges, d)); }
+
+    /** Remove all edges incident to this vertex. */
     inline void clear()
     { _edges.clear(); }
 
+    /** Return the number of edges incident to this vertex. */
     inline size_type size() const
     { return _edges.size(); }
 
+    /** @name Iterators */
+    //@{
     inline iterator begin() const
     { return _edges.begin(); }
 
     inline iterator end() const
     { return _edges.end(); }
+    //@}
 
 private:
     mutable store_type _edges;
