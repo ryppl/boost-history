@@ -660,7 +660,7 @@ namespace mirror {
 
 		/** The meta-type of the attribute
 		 */
-		typedef meta_type< meta_type_selector > meta_type;
+		typedef ::boost::mirror::meta_type< meta_type_selector > meta_type;
 	};
 
 } // namespace mirror
