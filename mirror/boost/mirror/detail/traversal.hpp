@@ -109,9 +109,6 @@ namespace detail {
 					)
 				);
 				// 
-				// get the type of the attribute
-				typedef typename MetaAttribute::type attrib_type;
-				//
 				// the poiner has to be valid
 				assert(ptr_to_inst != 0);
 				// 
@@ -119,9 +116,11 @@ namespace detail {
 				typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
 				instance_type instance(ma.get(*ptr_to_inst));
 				//
+				typedef typename MetaAttribute::type 
+					attrib_type_selector;
 				// traverse the attribute
 				TraversalType<
-					BOOST_MIRRORED_CLASS(attrib_type),
+					BOOST_MIRRORED_CLASS(attrib_type_selector),
 					typename mpl::push_back<
 						AttribsNodePath, 
 						MetaAttribute
@@ -156,9 +155,10 @@ namespace detail {
 				);
 				//
 				// traverse the attributes
-				typedef typename MetaAttribute::type attrib_type;
+				typedef typename MetaAttribute::type 
+					attrib_type_selector;
 				TraversalType<
-					BOOST_MIRRORED_CLASS(attrib_type),
+					BOOST_MIRRORED_CLASS(attrib_type_selector),
 					typename mpl::push_back<
 						AttribsNodePath, 
 						MetaAttribute

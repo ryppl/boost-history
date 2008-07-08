@@ -656,11 +656,8 @@ namespace mirror {
 		typedef typename detail_traits::type traits;
 		
 		typedef typename traits::meta_type_selector
-			meta_type_selector;
+			type_selector;
 
-		/** The meta-type of the attribute
-		 */
-		typedef ::boost::mirror::meta_type< meta_type_selector > meta_type;
 	};
 
 } // namespace mirror

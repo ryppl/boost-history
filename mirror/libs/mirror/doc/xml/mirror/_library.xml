@@ -272,7 +272,7 @@
 			- Tested with gcc 4.2.1 on FreeBSD
 			- Tested with gcc 4.2.1 on SuSE
 			- Tested with gcc 4.3.0 on SuSE
-			- Tested with intel 10.1 on SuSE
+			- Tested with intel 10.1 on SuSE (fails with some examples)
 		</revision>
 	</revisions>
 </library>
