@@ -1,7 +1,12 @@
+//
+//	Spatial Index - QuadTree
+//
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+//
 
 
 #ifndef BOOST_SPATIAL_INDEX_QUADTREE_HPP
@@ -33,7 +38,6 @@ public:
   virtual void remove(const Point &k)
   {
     root.remove(k);
-    // root.clean();
     element_count--;
   }
 
@@ -61,7 +65,7 @@ public:
   /// insert data with envelope 'e' with key 'k'
   virtual void insert(const geometry::box<Point> &e, const Value &v)
   {
-    std::cerr << "Box insertion not implemented." << std::endl;
+    throw std::logic_error("Box insertion not implemented.");
   }
 
 
@@ -102,11 +106,6 @@ public:
     std::deque<Value> result;
     root.find(result, r);
     return result;
-  }
-
-  void clean(void)
-  {
-    root.clean();
   }
 
   virtual unsigned int elements(void) const  { return element_count; }

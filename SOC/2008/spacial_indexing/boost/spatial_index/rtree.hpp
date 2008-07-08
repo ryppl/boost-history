@@ -1,7 +1,12 @@
+//
+//	Spatial Index - rTree
+//
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+//
 
 
 #ifndef BOOST_SPATIAL_INDEX_RTREE_HPP
@@ -36,7 +41,7 @@ namespace spatial_index {
     }
 
 
-    /// remove the element with key 'k'
+    /// remove elements inside the box 'k'
     virtual void remove(const geometry::box<Point> &k)
     {
       try {
@@ -184,7 +189,7 @@ namespace spatial_index {
 
 
   private:
-    /// cached number of elements
+    /// number of elements
     unsigned int element_count_;
 
     /// minimum number of elements per node
@@ -291,8 +296,6 @@ namespace spatial_index {
 		    boost::shared_ptr<rtree_node<Point, Value> > &n1,
 		    boost::shared_ptr<rtree_node<Point, Value> > &n2) const
     {
-      // TODO: unify
-
       unsigned int seed1, seed2;
       std::vector< geometry::box<Point> > boxes = n->get_boxes();
 
@@ -304,11 +307,18 @@ namespace spatial_index {
       if(n->is_leaf()) {
  	n1->add_value(boxes[seed1], n->get_value(seed1));
 	n2->add_value(boxes[seed2], n->get_value(seed2));
+      } else {
+ 	n1->add_node(boxes[seed1], n->get_node(seed1));
+	n2->add_node(boxes[seed2], n->get_node(seed2));
+      }
 
-	unsigned int index = 0;
+      unsigned int index = 0;
+
+      if(n->is_leaf()) {
 	typename rtree_leaf<Point,Value>::leaves_map nodes = n->get_leaves();
 	unsigned int remaining = nodes.size()-2;
 	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
+
 	  if(index != seed1 && index != seed2) {
 	    if(n1->elements() + remaining == m_) {
 	      n1->add_value(it->first, it->second);
@@ -362,13 +372,10 @@ namespace spatial_index {
 	  }
 	}
       } else {
- 	n1->add_node(boxes[seed1], n->get_node(seed1));
-	n2->add_node(boxes[seed2], n->get_node(seed2));
-
-	unsigned int index = 0;
 	typename rtree_node<Point,Value>::node_map nodes = n->get_nodes();
 	unsigned int remaining = nodes.size()-2;
 	for(typename rtree_node<Point,Value>::node_map::const_iterator it = nodes.begin(); it != nodes.end(); ++it, index++) {
+
 	  if(index != seed1 && index != seed2) {
 
 	    if(n1->elements() + remaining == m_) {

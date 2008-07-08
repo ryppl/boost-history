@@ -72,7 +72,6 @@ namespace spatial_index {
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
       nodes_.push_back(std::make_pair(e, v));
-//       std::cerr << "Node size: " << nodes_.size() << std::endl;
     }
 
     virtual std::vector< std::pair< geometry::box<Point>, Value > > get_leaves(void) const
@@ -102,7 +101,6 @@ namespace spatial_index {
 
       for(typename leaves_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	if(it->first.min() == k.min() && it->first.max() == k.max()) {
-// 	  std::cerr << "Erasing node." << std::endl;
 	  nodes_.erase(it);
 	  return;
 	}
@@ -137,7 +135,6 @@ namespace spatial_index {
     }
 
   private:
-
     leaves_map nodes_;
   };
 

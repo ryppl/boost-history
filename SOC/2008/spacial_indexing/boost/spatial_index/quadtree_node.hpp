@@ -1,7 +1,12 @@
+//
+//	Spatial Index - QuadTree Node
+//
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+//
 
 
 #ifndef BOOST_SPATIAL_INDEX_QUADTREE_NODE_HPP
@@ -74,46 +79,8 @@ public:
   quadtree_node(const geometry::box<Point> &r, const unsigned int node_size) 
     : bounding_rectangle_(r), node_size_(node_size)
   {
-    // std::cerr << "Creating quadtree_node with " << 
-    // "min_x: " << min_x << " min_y: " << min_y << " max_x: " << max_x << " max_y " << max_y << std::endl;
   }
 
-
-  void clean(void)
-  {
-    if(nw_ != boost::shared_ptr<quadtree_node>()) {
-      if(nw_->empty_leaf()) {
-	nw_ = boost::shared_ptr<quadtree_node>();
-      } else {
-	nw_->clean();
-      }
-    }
-
-    if(sw_ != boost::shared_ptr<quadtree_node>()) {
-      if(sw_->empty_leaf()) {
-	sw_ = boost::shared_ptr<quadtree_node>();
-      } else {
-	sw_->clean();
-      }
-    }
-
-    if(se_ != boost::shared_ptr<quadtree_node>()) {
-      if(se_->empty_leaf()) {
-	se_ = boost::shared_ptr<quadtree_node>();
-      } else {
-	se_->clean();
-      }
-    }
-
-    if(ne_ != boost::shared_ptr<quadtree_node>()) {
-      if(ne_->empty_leaf()) {
-	ne_ = boost::shared_ptr<quadtree_node>();
-      } else {
-	ne_->clean();
-      }
-    }
-
-  }
 
   bool empty_leaf(void) const
   {
@@ -128,15 +95,8 @@ public:
   void insert(const Point &k, const Value &v)
   {
     if(m_.size() < node_size_) {
-//       std::cerr << "Empty quadtree_node --> inserting (" << v << ")" << std::endl;
       m_[k] = v;
     } else {
-      // std::cerr << "Quadtree_Node division: ";
-      // // quadtree_node division
-      // std::cerr << " (" << k.first << ", " << k.second << ")" ;
-      // std::cerr << " in (" << min_x_ << ", " << min_y_ << ")"; 
-      // std::cerr << " x (" << max_x_ << ", " << max_y_ << ")" << std::endl; 
-
       // IMP: maybe this could be done only one time at node creation
       geometry::box<Point> ne_box, sw_box, se_box, nw_box;
       divide_quadrants(ne_box, sw_box, se_box, nw_box);
@@ -176,21 +136,15 @@ public:
   void find(std::deque<Value> &result, const geometry::box<Point> &r)
   {
     if(m_.size() != 0) {
-      // std::cerr << "Node: X1:" << min_x_ << " X2:" << max_x_ << " Y1:" << min_y_ << " Y2: " << max_y_ << std::endl;
-      // std::cerr << "Query: X1:" << x1 << " X2:" << x2 << " Y1:" << y1 << " Y2: " << y2 << std::endl;
 
       if(geometry::get<0>(r.min()) > geometry::get<0>(bounding_rectangle_.max())
 	 || geometry::get<0>(r.max()) < geometry::get<0>(bounding_rectangle_.min())
 	 || geometry::get<1>(r.min()) > geometry::get<1>(bounding_rectangle_.max())
 	 || geometry::get<1>(r.max()) < geometry::get<1>(bounding_rectangle_.min())) {
-	// std::cerr << "Not Inside" << std::endl;
 	return;
       }
 
-      // std::cerr << "Inside" << std::endl;
-
       for(typename std::map<Point,Value>::const_iterator it = m_.begin(); it != m_.end(); ++it) {
-// 	std::cerr << "Checking: (" << geometry::get<0>(it->first) << "," << geometry::get<1>(it->first) << ")" << std::endl;
 	if(geometry::get<0>(it->first) >= geometry::get<0>(r.min()) && geometry::get<0>(it->first) <= geometry::get<0>(r.max()) && 
 	   geometry::get<1>(it->first) >= geometry::get<1>(r.min()) && geometry::get<1>(it->first) <= geometry::get<1>(r.max())) {
 	  result.push_back(it->second);
@@ -209,8 +163,6 @@ public:
       if(sw_ != boost::shared_ptr<quadtree_node>()) {
 	sw_->find(result, r);
       }
-
-      // std::cerr << std::endl;
     }
   }
 
@@ -265,6 +217,7 @@ public:
     return Value();
   }
 
+
   void remove(const Point &k)
   {
     typename std::map<Point, Value>::iterator it = m_.find(k);
@@ -275,14 +228,9 @@ public:
     recursive_remove(k);
   }
 
+
   void recursive_remove(const Point &k)
   {
-//     std::cerr << "Recursive_remove" << std::endl;
-
-//     std::cerr << "Checking: (" << geometry::get<0>(k) << "," << geometry::get<1>(k) << ")" << std::endl;
-//     std::cerr << "in : (" << geometry::get<0>(bounding_rectangle_.min()) << "," << geometry::get<1>(bounding_rectangle_.min()) << ") x ";
-//     std::cerr << "(" << geometry::get<0>(bounding_rectangle_.max()) << "," << geometry::get<1>(bounding_rectangle_.max()) << ")" << std::endl;
-
     // IMP: maybe this could be done only one time at node creation
     // but it will consume more memory...
     geometry::box<Point> ne_box, sw_box, se_box, nw_box;

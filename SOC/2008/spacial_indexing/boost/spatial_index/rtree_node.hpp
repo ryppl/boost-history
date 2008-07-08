@@ -25,13 +25,14 @@ namespace spatial_index {
   {
   public:
     /// type for the node map
-    typedef std::vector< std::pair<geometry::box<Point>, boost::shared_ptr<rtree_node<Point, Value> > > > node_map;
+    typedef std::vector< std::pair<geometry::box<Point>, 
+				   boost::shared_ptr<rtree_node<Point, Value> > > > node_map;
 
   public:
     /// default constructor (needed for the containers)
     rtree_node(void) {}
 
-    /// normal constructor
+    /// standard constructor
     rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level) 
       : parent_(parent), level_(level) {}
 
@@ -69,19 +70,10 @@ namespace spatial_index {
       }
     }
 
-    void find_leaves(const geometry::box<Point> &e, typename std::vector<boost::shared_ptr<rtree_node<Point,Value> > > &result) const
+    void find_leaves(const geometry::box<Point> &e, 
+		     typename std::vector<boost::shared_ptr<rtree_node<Point,Value> > > &result) const
     {
-//       std::cerr << "find_leaves\n";
-
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
-
-	// 	std::cerr << "e: ( " << geometry::get<0>(e.min()) << " , " << geometry::get<1>(e.min()) << " ) x " ;
-	// 	std::cerr << "( " << geometry::get<0>(e.max()) << " , " << geometry::get<1>(e.max()) << " )" ;
-
-
-	// 	std::cerr << "it: ( " << geometry::get<0>(it->first.min()) << " , " << geometry::get<1>(it->first.min()) << " ) x " ;
-	// 	std::cerr << "( " << geometry::get<0>(it->first.max()) << " , " << geometry::get<1>(it->first.max()) << " )" ;
-
 	if(overlaps(it->first, e)) {
 	  if(it->second->is_leaf()) {
 	    result.push_back(it->second);
@@ -91,7 +83,6 @@ namespace spatial_index {
 	}
       }
     }
-
 
     /// compute bounding box for this leaf
     virtual geometry::box<Point> compute_box(void) const
@@ -112,7 +103,7 @@ namespace spatial_index {
     /// insert a value (not allowed for a node)
     virtual void insert(const geometry::box<Point> &e, const Value &v) 
     {
-      std::cerr << "Insert in node!" << std::endl;
+      throw std::logic_error("Insert in node!");
     }
 
     /// get the envelopes of a node
@@ -131,26 +122,16 @@ namespace spatial_index {
       unsigned int index = 0;
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
 	if(it->second.get() == n.get()) {
-//  	  std::cerr << "---------------------------------------->" << std::endl;
-//   	  std::cerr << "Node found!" << std::endl;
-//  	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().min()) << " , " <<geometry::get<1>(n->compute_box().min()) << std::endl;
-//  	  std::cerr << "Box: " << geometry::get<0>(n->compute_box().max()) << " , " <<geometry::get<1>(n->compute_box().max()) << std::endl;
-	  if(it->second->get_parent().get() != n->get_parent().get()) {
-	    std::cerr << "ERR" << std::endl;
-	  }
 	  nodes_[index] = std::make_pair(n->compute_box(), n);
-//  	  std::cerr << "---------------------------------------->" << std::endl;
 	  return;
 	}
       }
-//       std::cerr << "adjust_node: node not found." << std::endl;
     }
 
     virtual void remove(const geometry::box<Point> &k)
     {
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	if(it->first.min() == k.min() && it->first.max() == k.max()) {
-// 	  std::cerr << "Erasing node." << std::endl;
 	  nodes_.erase(it);
 	  return;
 	}
@@ -158,22 +139,23 @@ namespace spatial_index {
     }
 
     /// replace the node in the nodes_ vector and recompute the box
-    void replace_node(const boost::shared_ptr<rtree_node<Point, Value> > &l, boost::shared_ptr<rtree_node<Point, Value> > &new_l)
+    void replace_node(const boost::shared_ptr<rtree_node<Point, Value> > &l, 
+		      boost::shared_ptr<rtree_node<Point, Value> > &new_l)
     {
       unsigned int index = 0;
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it, index++) {
 	if(it->second.get() == l.get()) {
-// 	  std::cerr << "Node found!" << std::endl;
 	  nodes_[index] = std::make_pair(new_l->compute_box(), new_l);
 	  new_l->update_parent(new_l);
 	  return;
 	}
       }
-      std::cerr << "replace_node: node not found." << std::endl;
+      throw std::logic_error("Node not found.");
     }
 
     /// add a node
-    virtual void add_node(const geometry::box<Point> &b, const boost::shared_ptr<rtree_node<Point, Value> > &n)
+    virtual void add_node(const geometry::box<Point> &b, 
+			  const boost::shared_ptr<rtree_node<Point, Value> > &n)
     {
       nodes_.push_back(std::make_pair(b, n));
       n->update_parent(n);
@@ -202,6 +184,7 @@ namespace spatial_index {
       double min_diff_area;
       boost::shared_ptr<rtree_node<Point,Value> > chosen_node;
 
+      // check for the least enlargement
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 
 	double diff_area = compute_union_area(e, it->first) - geometry::area(it->first);
@@ -230,7 +213,6 @@ namespace spatial_index {
 
 	}
       }
-//       std::cerr << "We have a node." << std::endl;
       return chosen_node;
     }
 
@@ -244,7 +226,7 @@ namespace spatial_index {
       return parent_;
     }
 
-    // update the parent of all the childs
+    /// update the parent of all the childs
     void update_parent(const boost::shared_ptr<rtree_node<Point,Value> > &p)
     {
       for(typename node_map::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
@@ -252,7 +234,7 @@ namespace spatial_index {
       }
     }
 
-    // setter for parent
+    /// set parent
     void set_parent(const boost::shared_ptr<rtree_node<Point,Value> > &p) 
     {
        parent_ = p;
@@ -275,7 +257,6 @@ namespace spatial_index {
       throw std::logic_error("Node not found");
     }
 
-
     /// value projector for the nodes
     node_map get_nodes(void) const { return nodes_; }
 
@@ -288,8 +269,11 @@ namespace spatial_index {
       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
 	typename std::vector< std::pair< geometry::box<Point>, Value > > this_leaves = it->second->get_leaves();
 
-	for(typename std::vector<std::pair<geometry::box<Point>, Value> >::iterator it_leaf = this_leaves.begin(); it_leaf != this_leaves.end(); ++it_leaf) {
+	for(typename std::vector<std::pair<geometry::box<Point>, Value> >::iterator it_leaf = this_leaves.begin(); 
+	    it_leaf != this_leaves.end(); ++it_leaf) {
+
 	  l.push_back(*it_leaf);
+
 	}
 
       }
@@ -325,21 +309,10 @@ namespace spatial_index {
       }
     }
 
-//     boost::shared_ptr<rtree_node<Point, Value> > get_node(const geometry::box<Point> &e) const
-//     {
-//       for(typename node_map::const_iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
-// 	if(it->first.max() == e.max() && it->first.min() == e.min()) {
-// 	  return it->second;
-// 	}
-//       }
-
-//     }
-
     /// destructor (virtual because we have virtual functions)
     virtual ~rtree_node(void) {}
 
   private:
-
 
     // parent node
     boost::shared_ptr< rtree_node<Point, Value> > parent_;
@@ -352,10 +325,7 @@ namespace spatial_index {
 
   };
 
-
-
 } // namespace spatial_index
 } // namespace boost
 
 #endif // BOOST_SPATIAL_INDEX_RTREE_NODE_HPP
-
