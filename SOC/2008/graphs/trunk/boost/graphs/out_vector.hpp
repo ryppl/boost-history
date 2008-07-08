@@ -3,6 +3,10 @@
 #define OUT_VECTOR_HPP
 
 #include <vector>
+#include <algorithm>
+
+#include <boost/triple.hpp>
+#include <boost/descriptors.hpp>
 
 /**
  * The in/out vector implements vector-based, edge storage for directed graphs.
@@ -15,18 +19,18 @@
 template <typename Edge, typename Alloc>
 class out_vector
 {
-    typedef std::vector<Edge, Alloc> store_type;
 public:
-    typedef Edge out_tuple;
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type edge_properties;
-private:
-    typedef typename Edge::third_type in_edge_place;
-public:
-    typedef std::pair<vertex_descriptor, edge_properties> out_pair;
+    typedef typename Edge::third_type in_descriptor;
+    
+    typedef std::vector<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
+    typedef typename descriptor_traits<store_type>::descriptor_type out_descriptor;
+
+    // Constructor
     inline out_vector()
         : _edges()
     { }
@@ -42,26 +46,26 @@ public:
      * Add the edge to the vector.
      * @complexity O(1)
      */
-    iterator add(vertex_descriptor v, edge_properties const& ep)
+    out_descriptor add(vertex_descriptor v, edge_properties const& ep)
     {
-        _edges.push_back(out_tuple(v, ep, in_edge_place()));
-        return boost::prior(_edges.end());
+        iterator i = _edges.insert(_edges.end(), make_triple(v, ep, in_descriptor()));
+        return make_descriptor(_edges, i);
     }
 
     /** Find the edge with the given vertex. */
-    iterator find(vertex_descriptor v) const
+    out_descriptor find(vertex_descriptor v) const
     {
-        // TODO How do I write this with std::find?
-        iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
+        iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
+        return make_descriptor(_edges, i);
     }
 
     /** Get the number of outgoing edges. */
     inline size_type size() const
     { return _edges.size(); }
+
+    /** Return true if there are no out edges. */
+    inline bool empty() const
+    { return _edges.empty(); }
 
     /** @name Iterators */
     //@{

@@ -6,20 +6,19 @@
 #include <typeinfo>
 #include <cxxabi.h>
 
-inline std::string
-demangle(std::string const& name)
+template <typename T>
+std::string
+typestr()
 {
     std::size_t n = 2048;
     char buf[2048];
-    abi::__cxa_demangle(name.c_str(), buf, &n, 0);
-    return std::string(buf, ::strnlen(buf, n));
+    abi::__cxa_demangle(typeid(T).name(), buf, &n, 0);
+    return std::string(buf, ::strlen(buf));
 }
 
 template <typename T>
 inline std::string
-demangle()
-{
-    return demangle(typeid(T).name());
-}
+typestr(T const&)
+{ return typestr<T>(); }
 
 #endif
