@@ -94,8 +94,8 @@ namespace Graphics {
 			float_type _z = 0.0
 		)
 			: Coords(_x, _y, _z){ }
-		float_type length_squared(void){return x*x + y*y + z*z;}
-		float_type length(void){return sqrt(length_squared());}
+		float_type length_squared(void) const {return x*x + y*y + z*z;}
+		float_type length(void) const {return sqrt(length_squared());}
 		//
 		friend bool operator == (const Vector& a, const Vector& b) 
 		{
@@ -181,68 +181,72 @@ BOOST_MIRROR_REG_SINGLE_BASE_CLASS(
  */
 // register the attributes of Coords
 BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Graphics::Coords)	
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER(
-		0, ::Graphics::Coords::float_type, 
-		x, get_x, set_x
+	BOOST_MIRROR_REG_CLASS_ATTRIB_GET_SET(
+		_, ::Graphics::Coords::float_type, x,
+		get_x(), set_x(value)
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER(
-		1, ::Graphics::Coords::float_type, 
-		y, get_y, set_y
+	BOOST_MIRROR_REG_CLASS_ATTRIB_GET_SET(
+		_, ::Graphics::Coords::float_type, y,
+		get_y(), set_y(value)
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER(
-		2, ::Graphics::Coords::float_type, 
-		z, get_z, set_z
+	BOOST_MIRROR_REG_CLASS_ATTRIB_GET_SET(
+		_, ::Graphics::Coords::float_type, z,
+		get_z(), set_z(value)
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_SETTER(
-		3, ::Graphics::Coords::float_type, 
-		w, get_w, set_w
+	BOOST_MIRROR_REG_CLASS_ATTRIB_GET_SET(
+		_, ::Graphics::Coords::float_type, w,
+		get_w(), set_w(value)
 	)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 // register the attributes of Vector
 BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Graphics::Vector)	
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_ONLY(
-		0, ::Graphics::Vector::float_type, 
-		length_squared, length_squared
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		_, ::Graphics::Vector::float_type, length_squared, 
+		{return instance.length_squared();},
+		{dest = DestType(instance.length_squared()); return dest;},
+		{ } // no setting
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB_GETTER_ONLY(
-		1, ::Graphics::Vector::float_type, 
-		length, length
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		_, ::Graphics::Vector::float_type, length, 
+		{return instance.length();},
+		{dest = DestType(instance.length()); return dest;},
+		{ } // no setting
 	)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 // register the attributes of Cube
 BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::Graphics::Cube)	
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		0, ::Graphics::Vector, 
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector, 
 		lbb
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		1, ::Graphics::Vector, 
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector, 
 		lbf
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		2, ::Graphics::Vector,
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector,
 		ltb
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		3, ::Graphics::Vector,
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector,
 		ltf
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		4, ::Graphics::Vector,
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector,
 		rbb
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		5, ::Graphics::Vector,
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector,
 		rbf
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		6, ::Graphics::Vector,
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector,
 		rtb
 	)
-	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		7, ::Graphics::Vector,
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(
+		_, ::Graphics::Vector,
 		rtf
 	)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END

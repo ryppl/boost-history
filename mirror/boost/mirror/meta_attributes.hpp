@@ -602,7 +602,7 @@ namespace mirror {
 		// in this instance
 		typedef MetaAttributes meta_attributes;
 
-		// the position of the meta-attribute in the instance
+		// the position of the meta-attribute 
 		typedef AttribPos position;
 
 		// the type of the attribute
@@ -611,17 +611,10 @@ namespace mirror {
 			position
 		>::type type;
 
-
 		// base name getter
 		inline static const bchar* base_name(void)
 		{
 			return meta_attributes::base_name(position());
-		}
-
-		// full name getter
-		inline static const bchar* full_name(void)
-		{
-			return meta_attributes::full_name(position());
 		}
 
 		typedef typename meta_class::reflected_type reflected_class;
@@ -662,6 +655,11 @@ namespace mirror {
 		)
 		typedef typename detail_traits::type traits;
 
+		/** The meta-type of the attribute
+		 */
+		typedef meta_type<
+			typename traits::meta_type_selector
+		> meta_type;
 	};
 
 } // namespace mirror

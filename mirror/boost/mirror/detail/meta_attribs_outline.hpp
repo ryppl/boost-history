@@ -47,7 +47,7 @@ public:
 	}
 };
 
-#define BOOST_MIRROR_DECLARE_ATTRIB_OUTLINE(NUMBER, TYPE, NAME) \
+#define BOOST_MIRROR_DECLARE_ATTRIB_OUTLINE(TYPE, NAME) \
 	template <template <class> class Model> \
 	struct NAME##_outline_holder \
 	{ \
@@ -56,7 +56,7 @@ public:
 				Class, \
 				variant_tag, \
 				meta_class_attributes<Class, variant_tag>, \
-				mpl::int_<NUMBER> \
+				position_of_##NAME \
 			>, \
 			Model \
 		> \
@@ -66,7 +66,7 @@ public:
 					Class, \
 					variant_tag, \
 					meta_class_attributes<Class, variant_tag>, \
-					mpl::int_<NUMBER> \
+					position_of_##NAME \
 				>, \
 				Model \
 			> base; \
@@ -81,7 +81,7 @@ public:
 		: NAME(classModel){ } \
 	}; \
 	template <template <class> class Model> \
-	static NAME##_outline_holder<Model> get_outline_holder(Model<void>*, mpl::int_<NUMBER>);
+	static NAME##_outline_holder<Model> get_outline_holder(Model<void>*, position_of_##NAME);
 
 
 } // namespace detail

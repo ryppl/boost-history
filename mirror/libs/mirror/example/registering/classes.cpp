@@ -105,7 +105,16 @@ public:
 		char a_char;
 		bool a_bool;
 	};
+	//
+	// a static member attribute
+	static const short a_short;
+
+	// a mutable member attribute
+	mutable long a_long;
 };
+
+const short bar::a_short = 123;
+
 
 } // namespace detail
 } // namespace stuff
@@ -153,7 +162,6 @@ BOOST_MIRROR_REG_SINGLE_BASE_CLASS(
 	public, ::test::stuff::detail::bar_base
 )
 
-
 /** Class attributes
  */
 // register the attributes of bar_base
@@ -188,7 +196,7 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 	// attributes with typedef'd types
 	//BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_TD(4, _boost, ::boost, bstring, a_string, set_string)
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		_, ::boost::bstring, a_string, 
+		_, BOOST_MIRROR_TYPEDEF(::boost, bstring), a_string, 
 		{return instance.a_string;},
 		{dest = DestType(instance.a_string); return dest;},
 		{instance.set_string(value);}
@@ -212,7 +220,7 @@ struct pretty_printer
 {
 	typedef MetaObject meta_object;
 	//
-	// prints some info about the meta-object t
+	// prints some info about the meta-object 
 	// to the given stream
 	template <class OutStream>
 	OutStream& print(OutStream& s) const
@@ -326,7 +334,9 @@ struct pretty_printer
 		{
 			using namespace ::std;
 			s << endl << " - " << 
-				name_to_stream< BOOST_MIRRORED_TYPE(typename MetaAttribute::type) >() <<
+				name_to_stream< 
+					typename MetaAttribute::meta_type
+				>() <<
 				"        " <<
 				ma.base_name();
 		}

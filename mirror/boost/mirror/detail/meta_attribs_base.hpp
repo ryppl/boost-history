@@ -49,36 +49,50 @@ namespace attrib_storage_specifiers {
 	struct __ { };
 }
 
-/** Additional attribute traits 
+/** Additional attribute traits containing information
+ *  about storage class specifiers and some information 
+ *  about the type of the attribute
  */
-template <class Specifiers>
+template <class Specifiers, class TypeOrTypedefSelector>
 struct meta_class_attribute_traits;
 
 /** Specialization for non-static, non-mutable members
  */
-template <>
-struct meta_class_attribute_traits<attrib_storage_specifiers::__>
+template <class TypeOrTypedefSelector>
+struct meta_class_attribute_traits<
+	attrib_storage_specifiers::__,
+	TypeOrTypedefSelector
+>
 {
 	typedef mpl::false_ is_static;
 	typedef mpl::false_ is_mutable;
+	typedef TypeOrTypedefSelector meta_type_selector;
 };
 
 /** Specialization for static member attribs
  */
-template <>
-struct meta_class_attribute_traits<attrib_storage_specifiers::static_>
+template <class TypeOrTypedefSelector>
+struct meta_class_attribute_traits<
+	attrib_storage_specifiers::static_,
+	TypeOrTypedefSelector
+>
 {
 	typedef mpl::true_ is_static;
 	typedef mpl::false_ is_mutable;
+	typedef TypeOrTypedefSelector meta_type_selector;
 };
 
 /** Specialization for mutable member attribs
  */
-template <>
-struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
+template <class TypeOrTypedefSelector>
+struct meta_class_attribute_traits<
+	attrib_storage_specifiers::mutable_,
+	TypeOrTypedefSelector
+>
 {
 	typedef mpl::false_ is_static;
 	typedef mpl::true_ is_mutable;
+	typedef TypeOrTypedefSelector meta_type_selector;
 };
 
 
@@ -132,54 +146,65 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
 /** Helper macro expanding into a prologue of a meta-attribute
  *  declaration
  */
-#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_BASE_PROLOGUE( \
 	SPECIFIERS, \
+	TYPE_SELECTOR, \
 	NAME \
 ) \
-	_partial_list_##NAME; \
-	typedef mpl::int_< mpl::size< _partial_list_##NAME >::value > \
-		_position_of_##NAME; \
+	partial_list_##NAME; \
+	typedef mpl::int_< mpl::size< partial_list_##NAME >::value > \
+		position_of_##NAME; \
 	static const bchar* base_name( \
-		_position_of_##NAME \
+		position_of_##NAME \
 	){return BOOST_STR_LIT(#NAME);} \
 	static meta_class_attribute_traits< \
-		::boost::mirror::attrib_storage_specifiers:: SPECIFIERS##_ \
-	> get_traits(_position_of_##NAME); 
+		::boost::mirror::attrib_storage_specifiers:: SPECIFIERS##_, \
+		TYPE_SELECTOR \
+	> get_traits(position_of_##NAME); 
 
 /** Helper macro expanding into an epilogue of a meta-attribute
  *  declaration
  */
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	TYPENAME_KW \
-) typedef TYPENAME_KW mpl::push_back<_partial_list_##NAME, TYPE>::type 
+) typedef TYPENAME_KW mpl::push_back< \
+	partial_list_##NAME, \
+	typename ::boost::mirror::typedef_::extract_type< \
+		TYPE_SELECTOR \
+	>::type \
+>::type 
 
 /** Helper macro expanding into the declaraion of getter
  *  function of the meta-attribute
  */
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GETTER( \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	GETTER_BODY, \
 	TYPENAME_KW \
-)	inline static TYPENAME_KW call_traits<TYPE>::param_type get( \
+)	inline static TYPENAME_KW call_traits< \
+		typename ::boost::mirror::typedef_::extract_type< \
+			TYPE_SELECTOR \
+		>::type \
+	>::param_type get( \
 		const Class& instance, \
-		_position_of_##NAME \
-	) GETTER_BODY 
+		position_of_##NAME position \
+	) GETTER_BODY
 
 /** Helper macro expanding into the declaration of query
  *  function of the meta-attribute
  */
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_QUERY( \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	QUERY_BODY, \
 	TYPENAME_KW \
 )	template <typename DestType> \
 	inline static DestType& query( \
 		const Class& instance, \
-		_position_of_##NAME, \
+		position_of_##NAME, \
 		DestType& dest \
 	) QUERY_BODY 
 
@@ -187,20 +212,62 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
  *  function of the meta-attribute
  */
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_SETTER( \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	SETTER_BODY, \
 	TYPENAME_KW \
 )	inline static void set( \
 		Class& instance, \
-		_position_of_##NAME, \
-		TYPENAME_KW call_traits<TYPE>::param_type value \
+		position_of_##NAME, \
+		TYPENAME_KW call_traits< \
+			typename ::boost::mirror::typedef_::extract_type< \
+				TYPE_SELECTOR \
+			>::type \
+		>::param_type value \
 	) SETTER_BODY \
 	inline static void set( \
 		const Class& instance, \
-		_position_of_##NAME, \
-		TYPENAME_KW call_traits<TYPE>::param_type value \
+		position_of_##NAME, \
+		TYPENAME_KW call_traits< \
+			typename ::boost::mirror::typedef_::extract_type< \
+				TYPE_SELECTOR \
+			>::type \
+		>::param_type value \
 	) { } 
+
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
+	SPECIFIERS, \
+	TYPE_SELECTOR, \
+	NAME, \
+	GETTER_BODY, \
+	QUERY_BODY, \
+	SETTER_BODY, \
+	TYPENAME_KW \
+) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_BASE_PROLOGUE( \
+		SPECIFIERS, \
+		TYPE_SELECTOR, \
+		NAME \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GETTER( \
+		TYPE_SELECTOR, \
+		NAME, \
+		GETTER_BODY, \
+		TYPENAME_KW \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_QUERY( \
+		TYPE_SELECTOR, \
+		NAME, \
+		QUERY_BODY, \
+		TYPENAME_KW \
+	) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_SETTER( \
+		TYPE_SELECTOR, \
+		NAME, \
+		SETTER_BODY, \
+		TYPENAME_KW \
+	) \
+
 
 /** General macro for registering meta data about class' or template's 
  *  member attribute
@@ -208,7 +275,7 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
 
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
 	SPECIFIERS, \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	GETTER_BODY, \
 	QUERY_BODY, \
@@ -217,28 +284,15 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
 ) \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
 		SPECIFIERS, \
-		NAME \
-	) \
-	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GETTER( \
-		TYPE, \
+		TYPE_SELECTOR, \
 		NAME, \
 		GETTER_BODY, \
-		TYPENAME_KW \
-	) \
-	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_QUERY( \
-		TYPE, \
-		NAME, \
 		QUERY_BODY, \
-		TYPENAME_KW \
-	) \
-	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_SETTER( \
-		TYPE, \
-		NAME, \
 		SETTER_BODY, \
 		TYPENAME_KW \
 	) \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
-		TYPE, \
+		TYPE_SELECTOR, \
 		NAME, \
 		TYPENAME_KW \
 	) \
@@ -249,14 +303,14 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIB( \
 	SPECIFIERS, \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	GETTER_BODY, \
 	QUERY_BODY, \
 	SETTER_BODY \
 ) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
 		SPECIFIERS, \
-		TYPE, \
+		TYPE_SELECTOR, \
 		NAME, \
 		GETTER_BODY, \
 		QUERY_BODY, \
@@ -269,14 +323,14 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
  */
 #define BOOST_MIRROR_REG_TEMPLATE_ATTRIB( \
 	SPECIFIERS, \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	GETTER_BODY, \
 	QUERY_BODY, \
 	SETTER_BODY \
 ) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
 		SPECIFIERS, \
-		TYPE, \
+		TYPE_SELECTOR, \
 		NAME, \
 		GETTER_BODY, \
 		QUERY_BODY, \
@@ -290,11 +344,11 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
  */
 #define BOOST_MIRROR_REG_SIMPLE_TEMPLATE_OR_CLASS_ATTRIB( \
 	SPECIFIERS, \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	TYPENAME_KW \
 ) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
-		SPECIFIERS, TYPE, NAME, \
+		SPECIFIERS, TYPE_SELECTOR, NAME, \
 		{return instance.NAME;}, \
 		{dest = DestType(instance.NAME); return dest;}, \
 		{instance.NAME = value;}, \
@@ -308,11 +362,11 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
  */
 #define BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB( \
 	SPECIFIERS, \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME \
 ) BOOST_MIRROR_REG_SIMPLE_TEMPLATE_OR_CLASS_ATTRIB( \
 	SPECIFIERS, \
-	TYPE, \
+	TYPE_SELECTOR, \
 	NAME, \
 	BOOST_PP_EMPTY() \
 )
@@ -332,8 +386,112 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
 	typename \
 )
 
+/** Macro used for registering meta-data about class' or template's 
+ *  attribute that can be accessed from the outside by calling
+ *  the getter function as specified by GETTER_CALL and setter
+ *  function as specified by SETTER_CALL.
+ */
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GET_SET( \
+	SPECIFIERS, \
+	TYPE_SELECTOR, \
+	NAME, \
+	GETTER_CALL, \
+	SETTER_CALL, \
+	TYPENAME_KW \
+) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
+		SPECIFIERS, TYPE_SELECTOR, NAME, \
+		{return instance.GETTER_CALL;}, \
+		{dest = DestType(instance.GETTER_CALL); return dest;}, \
+		{instance.SETTER_CALL;}, \
+		TYPENAME_KW \
+	)
+
+
+/** Macro used for registering meta-data about class' attribute
+ *  that can be accessed from the outside by calling
+ *  the getter function as specified by GETTER_CALL and setter
+ *  function as specified by SETTER_CALL.
+ */
+#define BOOST_MIRROR_REG_CLASS_ATTRIB_GET_SET( \
+	SPECIFIERS, \
+	TYPE_SELECTOR, \
+	NAME, \
+	GETTER_CALL, \
+	SETTER_CALL \
+) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GET_SET( \
+	SPECIFIERS, \
+	TYPE_SELECTOR, \
+	NAME, \
+	GETTER_CALL, \
+	SETTER_CALL, \
+	BOOST_PP_EMPTY() \
+)
+
+/** Macro used for registering meta-data about template's attribute
+ *  that can be accessed from the outside by calling
+ *  the getter function as specified by GETTER_CALL and setter
+ *  function as specified by SETTER_CALL.
+ */
+#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_GET_SET( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	GETTER_CALL, \
+	SETTER_CALL \
+) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GET_SET( \
+	SPECIFIERS, \
+	TYPE, \
+	NAME, \
+	GETTER_CALL, \
+	SETTER_CALL, \
+	typename \
+)
+
+#define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_WITH_OUTLINE( \
+	SPECIFIERS, \
+	TYPE_SELECTOR, \
+	NAME, \
+	GETTER_BODY, \
+	QUERY_BODY, \
+	SETTER_BODY, \
+	TYPENAME_KW \
+) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
+		SPECIFIERS, \
+		TYPE_SELECTOR, \
+		NAME, \
+		GETTER_BODY, \
+		QUERY_BODY, \
+		SETTER_BODY, \
+		TYPENAME_KW \
+	) \
+	BOOST_MIRROR_DECLARE_ATTRIB_OUTLINE(TYPE, NAME) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
+		TYPE_SELECTOR, \
+		NAME, \
+		TYPENAME_KW \
+	) \
+
+
+#define BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB_OUTLINE( \
+	SPECIFIERS, \
+	TYPE_SELECTOR, \
+	NAME \
+) \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_WITH_OUTLINE( \
+		SPECIFIERS, \
+		TYPE_SELECTOR, \
+		NAME, \
+		{return instance.NAME;}, \
+		{dest = DestType(instance.NAME); return dest;}, \
+		{instance.NAME = value;}, \
+		BOOST_PP_EMPTY() \
+	)
+
 
 #ifdef NEVER_COMPILE_THIS
+
+
 
 
 /** This macro declares the meta-data for a single class' attribute outline
@@ -342,7 +500,6 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
 	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE, NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE, NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE, NAME) \
-	BOOST_MIRROR_DECLARE_ATTRIB_OUTLINE(NUMBER, TYPE, NAME) \
 	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, false) 
 
 /** This macro declares the meta-data for a single templates attribute
@@ -354,21 +511,6 @@ struct meta_class_attribute_traits<attrib_storage_specifiers::mutable_>
 	BOOST_MIRROR_DECLARE_ATTRIB_OUTLINE(NUMBER, TYPE, NAME) \
 	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_EPILOGUE(NUMBER, TYPE, NAME, false) 
 
-/** This macro declares the meta-data for a single class' typedefd attribute
- */
-#define BOOST_MIRROR_REG_CLASS_ATTRIB_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, false) 
-
-/** This macro declares the meta-data for a single templates typedefd attribute
- */
-#define BOOST_MIRROR_REG_TEMPLATE_ATTRIB_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME) \
-	BOOST_MIRROR_REG_CLASS_ATTRIB_PROLOGUE(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
-	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_GET(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
-	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_DECL_SIMPLE_SET(NUMBER, TYPE_NAMESPACE::TYPE, NAME) \
-	BOOST_MIRROR_REG_TEMPLATE_ATTRIB_EPILOGUE_TD(NUMBER, TYPE_NS_ALIAS, TYPE_NAMESPACE, TYPE, NAME, false) 
 
 #endif // NEVER_COMPILE_THIS
 
