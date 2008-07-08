@@ -60,7 +60,6 @@ public:
     typedef std::vector<Vertex, Allocator> store_type;
     typedef typename store_type::size_type size_type;
     typedef typename store_type::iterator iterator;
-    typedef typename store_type::const_iterator const_iterator;
 
     typedef Vertex vertex_type;
     typedef typename Vertex::vertex_properties vertex_properties;

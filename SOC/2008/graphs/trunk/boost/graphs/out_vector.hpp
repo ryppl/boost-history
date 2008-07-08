@@ -23,7 +23,7 @@ public:
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type edge_properties;
     typedef typename Edge::third_type in_descriptor;
-    
+
     typedef std::vector<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;

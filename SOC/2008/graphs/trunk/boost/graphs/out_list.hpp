@@ -3,8 +3,11 @@
 #define OUT_LIST_HPP
 
 #include <list>
+#include <algorithm>
 
-#include <boost/next_prior.hpp>
+#include <boost/triple.hpp>
+#include <boost/descriptors.hpp>
+#include <boost/graphs/utility.hpp>
 
 /**
  * The out list implements list-based, out-edge storage for directed graphs.
@@ -19,32 +22,30 @@
 template <typename Edge, typename Alloc>
 class out_list
 {
-    typedef std::list<Edge, Alloc> store_type;
 public:
-    typedef Edge out_tuple;
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type edge_properties;
-private:
-    typedef typename Edge::third_type in_edge_place;
-public:
+    typedef typename Edge::third_type in_descriptor;
+
+    typedef std::list<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
+    typedef typename descriptor_traits<store_type>::descriptor_type out_descriptor;
+
     inline out_list()
-        : _edges()
-        , _size(0)
+        : _edges(), _size(0)
     { }
 
-    /** Allow an edge insertion? */
-    std::pair<iterator, bool> allow(vertex_descriptor v) const
-    { return std::make_pair(_edges.end(), true); }
-
-    /** Add the edge to the list. */
-    iterator add(vertex_descriptor v, edge_properties const& ep)
+    /**
+     * Add the edge to the list.
+     * @complexity O(1)
+     */
+    out_descriptor add(vertex_descriptor v, edge_properties const& ep)
     {
         ++_size;
-        _edges.push_back(out_tuple(v, ep, in_edge_place()));
-        return boost::prior(_edges.end());
+        iterator i = _edges.insert(_edges.end(), make_triple(v, ep, in_descriptor()));
+        return make_descriptor(_edges, i);
     }
 
     /**
@@ -52,22 +53,20 @@ public:
      * the sequence.
      * @complexity O(1)
      */
-    iterator remove(iterator i)
+    iterator remove(out_descriptor d)
     {
         --_size;
-        return _edges.erase(i);
+        return _edges.erase(make_iterator(_edges, d));
     }
 
-
-    /** Find the edge with the given vertex. */
-    iterator find(vertex_descriptor v) const
+    /**
+     * Find the edge with the given vertex.
+     * @complexity O(d)
+     */
+    out_descriptor find(vertex_descriptor v) const
     {
-        // TODO How do I write this with std::find?
-        iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
+        iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
+        return make_descriptor(_edges, i);
     }
 
     /** Remove all incoming edges from the list, resetting the size to 0. */
@@ -77,6 +76,15 @@ public:
         _edges.clear();
     }
 
+    /** Get the number of outgoing edges. */
+    inline size_type size() const
+    { return _size; }
+
+    /** Returns true if there are not out edges. */
+    inline bool empty() const
+    { return _edges.empty(); }
+
+
     /** @name Iterators and Size */
     //@{
     inline iterator begin() const
@@ -85,10 +93,6 @@ public:
     inline iterator end() const
     { return _edges.end(); }
     //@}
-
-    /** Get the number of outgoing edges. */
-    inline size_type size() const
-    { return _size; }
 
 private:
     mutable store_type  _edges;

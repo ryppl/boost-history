@@ -2,28 +2,13 @@
 #include <iostream>
 
 #include <boost/graphs/out_vector.hpp>
-
+#include <boost/graphs/out_list.hpp>
+#include <boost/graphs/out_set.hpp>
 #include "typestr.hpp"
+#include "out_edge_traits.hpp"
 
 using namespace std;
 using namespace boost;
-
-struct out_vector_tag : sequence_tag, unstable_remove_tag { };
-struct out_list_tag : sequence_tag, stable_mutators_tag { };
-struct out_set_tag : associative_container_tag, stable_mutators_tag { };
-
-template <typename Outs>
-struct out_edge_traits
-{ typedef typename Outs::category cateogry; };
-
-template <typename Outs>
-typename out_edge_traits<Outs>::category
-out_edge_category(Outs const&)
-{ return typename out_edge_traits<Outs>::category(); }
-
-template <typename Edge, typename Alloc>
-struct out_edge_traits<out_vector<Edge, Alloc>>
-{ typedef out_vector_tag category; };
 
 
 typedef index_descriptor<size_t> VertexDesc;
@@ -31,6 +16,20 @@ typedef index_descriptor<size_t> InDesc;
 typedef int EdgeProps;
 typedef triple<VertexDesc, EdgeProps, InDesc> OutEdge;
 typedef allocator<OutEdge> Alloc;
+typedef less<VertexDesc> Compare;
+
+template <typename Outs>
+void test_remove(Outs& outs, stable_mutators_tag)
+{
+    size_t n = outs.size();
+    outs.remove(outs.find(3));
+    BOOST_ASSERT(outs.size() == n - 1);
+    cout << "  * size after remove: " << outs.size() << endl;
+}
+
+template <typename Outs>
+void test_remove(Outs& outs, unstable_remove_tag)
+{ /* Don't do anything. */ }
 
 template <typename Outs>
 void test()
@@ -38,15 +37,22 @@ void test()
     Outs outs;
     cout << "--- " << typestr(out_edge_category(outs)) << " ---" <<  endl;
 
+    // Add some vertices.
     BOOST_ASSERT(outs.empty());
     for(int i = 0; i < 5; ++i) {
         outs.add(VertexDesc(i), i * i);
     }
     BOOST_ASSERT(outs.size() == 5);
+    cout << "  * size after building: " << outs.size() << endl;
+
+    test_remove(outs, out_edge_category(outs));
 }
 
 int main()
 {
     test<out_vector<OutEdge, Alloc>>();
+    test<out_list<OutEdge, Alloc>>();
+    test<out_set<OutEdge, Compare, Alloc>>();
+
     return 0;
 }

@@ -29,8 +29,8 @@ void add_edge(Props& props, Incs& incs, Vertex v, Edge const& ep, associative_co
 
     Vertex u = VertexDesc(0);
 
-    // This is a little different protocol.. First, try to insert the edge
-    // into the incidence list, but lave the property slot "empty".
+    // This is a little different protocol. First, try to insert the edge into
+    // the incidence list, but lave the property slot "empty".
     IncDesc i = incs.add(v);
     if(incs.valid(i)) {
         PropDesc p = props.add(ep);
