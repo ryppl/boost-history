@@ -5,24 +5,19 @@
 #include <iterator>
 
 /**
- * The adjacency iterator is an abstraction over incidence iterators (provided
- * by the incidence store). The adjacency iterator actually provides the same
- * functionality as the incidence iterator, but simply provides access to the
- * other vertices rather than the edges.
- *
- * @todo Depending on the underlying incidence iterator provided by the graph,
- * we could actually possibly make this a random access iterator rather than
- * just a bidirectional iterator. For now, we force it to be a bidi iterator.
+ * The adjacency iterator is an abstraction over incidence iterators. The
+ * adjacency iterator actually provides the same functionality as the incidence
+ * iterator, but simply provides access to the other vertices rather than the
+ * edges.
  */
 template <typename Iterator>
 class adjacency_iterator
 {
     typedef Iterator iterator;
     typedef typename Iterator::vertex_descriptor vertex_descriptor;
-public:
 
-    typedef std::bidirectional_iterator_tag iterator_category;
-    typedef std::size_t difference_type;
+    typedef typename iterator::iterator_category iterator_category;
+    typedef typename iterator::difference_type difference_type;
     typedef vertex_descriptor value_type;
     typedef vertex_descriptor reference;
     typedef vertex_descriptor pointer;
@@ -37,22 +32,13 @@ public:
     { }
 
     inline adjacency_iterator& operator=(adjacency_iterator const& x)
-    {
-        _iter = x._iter;
-        return *this;
-    }
+    { _iter = x._iter; return *this; }
 
     inline adjacency_iterator& operator++()
-    {
-        ++_iter;
-        return *this;
-    }
+    { ++_iter; return *this; }
 
     inline adjacency_iterator& operator--()
-    {
-        --_iter;
-        return *this;
-    }
+    { --_iter; return *this; }
 
     inline bool operator==(adjacency_iterator const& x) const
     { return _iter == x._iter; }

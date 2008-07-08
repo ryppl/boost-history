@@ -7,9 +7,9 @@
 
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
-#include <boost/graphs/utility.hpp>
 
-#include "vertex_iterator.hpp"
+#include <boost/graphs/utility.hpp>
+#include <boost/graphs/vertex_iterator.hpp>
 
 // Forward declarations
 template <typename, typename> struct vertices_vector;
@@ -30,7 +30,7 @@ struct vertex_vector
     typedef unused key_type;
 
     typedef std::vector<int, Alloc<int>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type descriptor_type;
+    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
 
     // The store metafunction generates the type used to store vertices in
     // either a directed or undirected graph. This metafunction takes the
@@ -38,7 +38,8 @@ struct vertex_vector
     template <typename Vertex>
     struct store
     {
-        typedef vertices_vector<Vertex, Alloc<Vertex>> type;
+        typedef Alloc<Vertex> allocator;
+        typedef vertices_vector<Vertex, allocator> type;
     };
 };
 
@@ -66,7 +67,7 @@ public:
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
-    typedef indexed_vertex_iterator<store_type> vertex_iterator;
+    typedef basic_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors

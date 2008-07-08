@@ -7,7 +7,7 @@
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
 
-#include "vertex_iterator.hpp"
+#include <boost/graphs/vertex_iterator.hpp>
 
 // Forward declarations
 template <typename, typename> class vertices_list;
@@ -21,7 +21,7 @@ struct vertex_list
     typedef unused key_type;
 
     typedef std::list<int, Alloc<int>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type descriptor_type;
+    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
 
     template <typename Vertex>
     struct store
@@ -50,7 +50,7 @@ public:
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
-    typedef simple_vertex_iterator<store_type> vertex_iterator;
+    typedef basic_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     // Constructors

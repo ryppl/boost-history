@@ -35,24 +35,24 @@ public:
      * Try to add the given vertex to the result set.
      * @complexity O(lg(d))
      */
-    inline in_descriptor add(vertex_descriptor v)
+    insertion_result<in_descriptor> add(vertex_descriptor v, out_descriptor o)
     {
-        std::pair<iterator, bool> i = _edges.insert(std::make_pair(v, out_descriptor()));
-        return i.second ? make_descriptor(_edges, i.first) : in_descriptor();
+        std::pair<iterator, bool> i = _edges.insert(std::make_pair(v, o));
+        return make_result(_edges, i);
     }
 
     /**
      * Find the edge whose source originates at the given vertex descriptor.
      * @complexity O(lg(d))
      */
-    inline in_descriptor find(vertex_descriptor v) const
+    in_descriptor find(vertex_descriptor v) const
     { return make_descriptor(_edges, _edges.find(v)); }
 
     /**
      * Remove the edge with the given descriptor.
      * @complexity O(lg(d))
      */
-    inline void remove(in_descriptor d)
+    void remove(in_descriptor d)
     { _edges.erase(make_iterator(_edges, d)); }
 
     /** Remove all edges. */

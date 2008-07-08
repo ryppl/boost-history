@@ -71,7 +71,7 @@ public:
         --_size;
     }
 
-    // Property access.
+    /** Return the properties referenced by the given descriptor. */
     inline edge_properties& properties(property_descriptor d)
     { return make_iterator(_props, d)->first; }
 

@@ -6,9 +6,9 @@
 
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
-#include <boost/graphs/utility.hpp>
 
-#include "vertex_iterator.hpp"
+#include <boost/graphs/utility.hpp>
+#include <boost/graphs/vertex_iterator.hpp>
 
 // Forward declarations
 template <typename, typename, typename> class vertices_set;
@@ -36,17 +36,15 @@ struct vertex_set
     typedef unused key_type;
 
     typedef std::set<int, Compare<int>, Alloc<int>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type descriptor_type;
+    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
 
     // This metafunction generates the underlying vertex store implementation.
     template <typename Vertex>
     struct store
     {
-        typedef vertices_set<
-                Vertex,
-                property_comparator<Compare<typename Vertex::vertex_properties>>,
-                Alloc<Vertex>
-            > type;
+        typedef Alloc<Vertex> allocator;
+        typedef property_comparator<Compare<typename Vertex::vertex_properties>> compare;
+        typedef vertices_set<Vertex, compare, allocator> type;
     };
 };
 
@@ -73,7 +71,7 @@ public:
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
-    typedef simple_vertex_iterator<store_type> vertex_iterator;
+    typedef basic_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     inline vertices_set()

@@ -22,12 +22,13 @@
 template <typename VertexProps, typename IncStore>
 class undirected_vertex
 {
-    typedef IncStore incidence_store;
 public:
     typedef VertexProps vertex_properties;
+
+    typedef IncStore incidence_store;
+    typedef typename incidence_store::incidence_descriptor incidence_descriptor;
     typedef typename incidence_store::vertex_descriptor vertex_descriptor;
     typedef typename incidence_store::property_descriptor property_descriptor;
-
     typedef typename incidence_store::iterator iterator;
     typedef typename incidence_store::size_type size_type;
 
@@ -39,14 +40,27 @@ public:
      * vertex. The allow() function determines whether or not the edge
      * connection is allowed and/or already existing.
      */
-    inline std::pair<iterator, bool> allow(vertex_descriptor) const;
-    inline iterator connect(vertex_descriptor, property_descriptor);
-    inline void disconnect(vertex_descriptor, property_descriptor);
-    inline iterator disconnect(iterator);
+    //@{
+    inline insertion_result<incidence_descriptor> connect(vertex_descriptor v)
+    { return _edges.add(v); }
+
+    inline void bind(incidence_descriptor i, property_descriptor p)
+    { _edges.bind(i, p); }
+
+    inline void disconnect(vertex_descriptor, property_descriptor)
+    { }
+
+    inline void disconnect(incidence_descriptor)
+    { }
+    //@}
 
     /** Find return an iterator the edge end with the given vertex. */
     inline iterator find(vertex_descriptor v) const
     { return _edges.find(v); }
+
+    /** Return the properties of the given incident edge. */
+    inline property_descriptor edge_properties(incidence_descriptor i) const
+    { return _edges.properties(i); }
 
 
     /** @name Property Accessors */
@@ -56,6 +70,7 @@ public:
 
     inline vertex_properties const& properties() const
     { return _props; }
+
     //@}
 
     /** @name Iterators */
@@ -99,46 +114,5 @@ undirected_vertex<VP,IS>::undirected_vertex(vertex_properties const& vp)
     , _edges()
 { }
 
-/**
- * Deteremine whether or not the edge exists or is even allowed to be added.
- * This returns a pair containing an iterator indicating the position of the
- * edge if it already exists and a bool value indicating whether or not the
- * addition would even be allowed by policy.
- *
- * @complexity O(lg(d))
- */
-template <typename VP, typename IS>
-std::pair<typename undirected_vertex<VP,IS>::iterator, bool>
-undirected_vertex<VP,IS>::allow(vertex_descriptor v) const
-{
-    return _edges.allow(v);
-}
-
-/**
- * Connect this vertex to the vertex v with edge properties p.
- */
-template <typename VP, typename IS>
-typename undirected_vertex<VP,IS>::iterator
-undirected_vertex<VP,IS>::connect(vertex_descriptor v, property_descriptor p)
-{
-    return _edges.add(make_pair(v, p));
-}
-
-/**
- * Disconnect the incidedent edge given by the vertex v with edge properties p.
- */
-template <typename VP, typename IS>
-void
-undirected_vertex<VP,IS>::disconnect(vertex_descriptor v, property_descriptor p)
-{
-    _edges.remove(make_pair(v, p));
-}
-
-template <typename VP, typename IS>
-typename undirected_vertex<VP,IS>::iterator
-undirected_vertex<VP,IS>::disconnect(iterator i)
-{
-    return _edges.remove(i);
-}
 
 #endif

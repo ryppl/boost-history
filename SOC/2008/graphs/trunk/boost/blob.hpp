@@ -94,7 +94,7 @@ hash_value(blob<N> const& x)
 {
     using boost::hash_value;
     std::size_t seed = 0;
-    for(int i = 0; i < N; ++i) {
+    for(unsigned int i = 0; i < N; ++i) {
         boost::hash_combine(seed, x.mem[i]);
     }
     return seed;

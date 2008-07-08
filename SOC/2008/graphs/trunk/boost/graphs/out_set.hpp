@@ -33,7 +33,7 @@ public:
     typedef typename Edge::third_type in_descriptor;
 
     // Reconstruct the edge triple into a key/value type thing for the map.
-    typedef std::map< vertex_descriptor, std::pair<edge_properties, in_descriptor>, Compare, Alloc> store_type;
+    typedef std::map<vertex_descriptor, std::pair<edge_properties, in_descriptor>, Compare, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
@@ -44,19 +44,14 @@ public:
         : _edges()
     { }
 
-    /** Allow the edge insertion? */
-    std::pair<iterator, bool> allow(vertex_descriptor v) const
-    { return std::make_pair(_edges.find(v), true); }
-
     /**
-     * Try to add the given edge to the set. If the edge already exists, return
-     * a null descriptor.
+     * Try to add the given edge to the set.
      * @complexity O(log(deg(v)))
      */
-    out_descriptor add(vertex_descriptor v, edge_properties const& ep)
+    insertion_result<out_descriptor> add(vertex_descriptor v, edge_properties const& ep)
     {
         std::pair<iterator, bool> i = _edges.insert(std::make_pair(v, std::make_pair(ep, in_descriptor())));
-        return i.second ? make_descriptor(_edges, i.first) : out_descriptor();
+        return make_result(_edges, i);
     }
 
     /**
@@ -93,6 +88,15 @@ public:
     inline iterator end() const
     { return iterator(); }
     //@}
+
+    /** Bind the edge to the corresponding in edge descriptor. */
+    inline void bind(out_descriptor o, in_descriptor i)
+    { make_iterator(_edges, o)->second.second = i; }
+
+    /** Return the properties stored with this edge. */
+    inline edge_properties const& properties(out_descriptor o) const
+    { return make_iterator(_edges, o)->second.first; }
+
 
 private:
     mutable store_type _edges;

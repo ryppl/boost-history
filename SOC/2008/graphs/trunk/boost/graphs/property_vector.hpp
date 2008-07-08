@@ -67,7 +67,7 @@ public:
 
     /** Return the properties referenced by the given descriptor. */
     inline edge_properties& properties(property_descriptor d)
-    { return d.value().first; }
+    { return make_iterator(_props, d)->first; }
 
     /** Return the number of properties in the store. */
     inline size_type size() const

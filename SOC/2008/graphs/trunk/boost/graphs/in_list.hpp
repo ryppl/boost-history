@@ -37,18 +37,18 @@ public:
      * Add the edge to list.
      * @complexity O(1)
      */
-    inline in_descriptor add(vertex_descriptor v)
+    insertion_result<in_descriptor> add(vertex_descriptor v, out_descriptor o)
     {
         ++_size;
-        iterator i = _edges.insert(_edges.end(), std::make_pair(v, out_descriptor()));
-        return make_descriptor(_edges, i);
+        iterator i = _edges.insert(_edges.end(), std::make_pair(v, o));
+        return make_result(make_descriptor(_edges, i));
     }
 
     /**
      * Find the edge whose source originates at the given vertex descriptor.
      * @complexity O(d)
      */
-    inline in_descriptor find(vertex_descriptor v) const
+    in_descriptor find(vertex_descriptor v) const
     {
         iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
         return make_descriptor(_edges, i);
@@ -58,7 +58,7 @@ public:
      * Remove the edge referenced by the given iterator.
      * @complexity O(1)
      */
-    inline void remove(in_descriptor d)
+    void remove(in_descriptor d)
     {
         _edges.erase(make_iterator(_edges, d));
         --_size;

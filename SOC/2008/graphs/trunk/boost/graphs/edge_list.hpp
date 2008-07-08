@@ -2,10 +2,16 @@
 #ifndef EDGE_LIST_HPP
 #define EDGE_LIST_HPP
 
-#include "property_list.hpp"
-#include "incidence_list.hpp"
-// #include "out_list.hpp"
-// #include "in_list.hpp"
+#include <list>
+
+#include <boost/triple.hpp>
+#include <boost/descriptors.hpp>
+
+// Forward declarations
+template <typename, typename> class property_list;
+template <typename, typename> class incidence_list;
+template <typename, typename> class out_list;
+template <typename, typename> class in_list;
 
 // The edge list does two things. First, it indicates that edges will
 // be stored in an incidence list (as opposed to a vector or set).
@@ -49,23 +55,18 @@ struct edge_list
         typedef incidence_list<incidence_pair, allocator > type;
     };
 
+
+
     // Descriptor types for directed graphs
     typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
     typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
 
-
-    /*
     // The out store metafunction generates the type of list used to store
     // out edges of a vertex in a directed graph.
-    template <typename VertexDesc, typename Props>
+    template <typename VertexDesc, typename EdgeProps>
     struct out_store
     {
-        // Define a dummy type that eventually be used to store iterators to
-        // in edge iterators. The actual out edge type is a tuple of target
-        // vertex, edge properties, and in edge iterator (placeheld). The in
-        // edge type is the source vertex and the out edge iterator (placeheld).
-        typedef placeholder<sizeof(typename std::list<int>::iterator)> dummy_type;
-        typedef triple<VertexDesc, Props, dummy_type> edge;
+        typedef triple<VertexDesc, EdgeProps, in_descriptor> edge;
         typedef FirstAlloc<edge> allocator;
         typedef out_list<edge, allocator> type;
     };
@@ -76,15 +77,10 @@ struct edge_list
     template <typename VertexDesc>
     struct in_store
     {
-        // Define a dummy type that will ultimately act as a placeholder for
-        // an iterator into the out edge vector. Use that to define the in edge
-        // pair.
-        typedef placeholder<sizeof(typename std::list<int>::iterator)> dummy_type;
-        typedef std::pair<VertexDesc, dummy_type> edge;
+        typedef std::pair<VertexDesc, out_descriptor> edge;
         typedef SecondAlloc<edge> allocator;
         typedef in_list<edge, allocator> type;
     };
-    */
 };
 
 #endif

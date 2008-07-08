@@ -63,7 +63,7 @@ template <typename Verts>
 void test()
 {
     typedef typename Verts::template store<Vertex>::type Store;
-    typedef typename Verts::descriptor_type Descriptor;
+    typedef typename Verts::vertex_descriptor Descriptor;
 
     Store verts;
     cout << "--- " << typestr(verts) << " ---" << endl;

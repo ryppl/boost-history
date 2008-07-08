@@ -5,10 +5,14 @@
 #include <list>
 #include <map>
 
-#include "property_list.hpp"
-#include "incidence_set.hpp"
-// #include "out_set.hpp"
-// #include "in_set.hpp"
+#include <boost/triple.hpp>
+#include <boost/descriptors.hpp>
+
+// Forward declarations
+template <typename, typename> class property_list;
+template <typename, typename, typename> class incidence_set;
+template <typename, typename, typename> class out_set;
+template <typename, typename, typename> class in_set;
 
 /**
  * The edge set metafunction defines the basic facets of set-based edge
@@ -25,17 +29,18 @@ template <
     template <typename> class SecondAlloc = std::allocator>
 struct edge_set
 {
-    // A couple of dummy vectors used to build descriptors. This looks really
+    // Several dummy containers used to build descriptors. This looks really
     // weird since we're expecting a set type somewhere around here. However,
     // there isn't actually a real "set" used in these stores. The property
     // store only needs to be a list, and the incidence/in/out stores are
     // actually all maps (vertex to something).
     typedef std::map<int, int, Compare<int>, FirstAlloc<int>> first_dummy;
-    typedef std::list<int, SecondAlloc<int>> second_dummy;
+    typedef std::map<int, int, Compare<int>, SecondAlloc<int>> second_dummy;
+    typedef std::list<int, SecondAlloc<int>> prop_dummy;
 
     // Descriptor types for undirected graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
-    typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
+    typedef typename descriptor_traits<prop_dummy>::descriptor_type property_descriptor;
 
     // The property store metafunnction generates the global store type for
     // undirected graphs. The property list only needs to be a list, not a set.
@@ -58,23 +63,18 @@ struct edge_set
         typedef incidence_set<value, compare, allocator> type;
     };
 
+
+
     // Descriptor types for directed graphs
     typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
     typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
 
-
-    /*
     // The out store metafunction generates the type of set used to store out
     // edges of a vertex in a directed graph.
-    template <typename VertexDesc, typename Props>
+    template <typename VertexDesc, typename EdgeProps>
     struct out_store
     {
-        // Define a dummy type that eventually be used to store iterators to
-        // in edge iterators. The actual out edge type is a tuple of target
-        // vertex, edge properties, and in edge iterator (placeheld). The in
-        // edge type is the source vertex and the out edge iterator (placeheld).
-        typedef typename hold<std::set<int>::iterator>::type dummy_type;
-        typedef triple<VertexDesc, Props, dummy_type> edge;
+        typedef triple<VertexDesc, EdgeProps, in_descriptor> edge;
         typedef Compare<VertexDesc> compare;
         typedef FirstAlloc<edge> allocator;
         typedef out_set<edge, compare, allocator> type;
@@ -86,16 +86,11 @@ struct edge_set
     template <typename VertexDesc>
     struct in_store
     {
-        // Define a dummy type that will ultimately act as a placeholder for
-        // an iterator into the out edge vector. Use that to define the in edge
-        // pair.
-        typedef typename hold<typename std::set<int>::iterator>::type dummy_type;
-        typedef std::pair<VertexDesc, dummy_type> edge;
+        typedef std::pair<VertexDesc, out_descriptor> edge;
         typedef Compare<VertexDesc> compare;
         typedef SecondAlloc<edge> allocator;
         typedef in_set<edge, compare, allocator> type;
     };
-    */
 };
 
 #endif

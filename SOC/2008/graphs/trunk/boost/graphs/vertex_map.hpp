@@ -6,7 +6,7 @@
 
 #include <boost/descriptors.hpp>
 
-#include "vertex_iterator.hpp"
+#include <boost/graphs/vertex_iterator.hpp>
 
 // Forward declarations
 template <typename, typename, typename, typename> class vertices_map;
@@ -37,14 +37,14 @@ struct vertex_map
     typedef Key key_type;
 
     typedef std::map<Key, int, Compare<Key>, Alloc<std::pair<Key, int>>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type descriptor_type;
+    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
 
     template <typename Vertex>
     struct store
     {
-        typedef vertices_map<
-            Vertex, Key, Compare<Key>, Alloc<std::pair<Key, Vertex>>
-        > type;
+        typedef Alloc<std::pair<Key, Vertex>> allocator;
+        typedef Compare<Key> compare;
+        typedef vertices_map<Vertex, Key, compare, allocator> type;
     };
 };
 
@@ -73,7 +73,7 @@ public:
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
-    typedef simple_vertex_iterator<store_type> vertex_iterator;
+    typedef basic_vertex_iterator<store_type> vertex_iterator;
     typedef std::pair<vertex_iterator, vertex_iterator> vertex_range;
 
     inline vertices_map()

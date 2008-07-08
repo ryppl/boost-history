@@ -37,10 +37,10 @@ public:
      * Add the edge to the vector, returning an iterator to the added element.
      * @complexity O(1)
      */
-    inline in_descriptor add(vertex_descriptor e)
+    insertion_result<in_descriptor> add(vertex_descriptor v, out_descriptor o)
     {
-        iterator i = _edges.insert(_edges.end(), std::make_pair(e, out_descriptor()));
-        return make_descriptor(_edges, i);
+        iterator i = _edges.insert(_edges.end(), std::make_pair(v, o));
+        return make_result(make_descriptor(_edges, i));
     }
 
     /**

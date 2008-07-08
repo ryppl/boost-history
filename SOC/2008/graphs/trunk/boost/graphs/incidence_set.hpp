@@ -47,39 +47,32 @@ public:
      * @complexity O(lg(d))
      */
     //@{
-    inline incidence_descriptor add(vertex_descriptor v)
+    inline insertion_result<incidence_descriptor> add(vertex_descriptor v)
     { return add(v, property_descriptor()); }
 
-    inline incidence_descriptor add(vertex_descriptor v, property_descriptor p)
+    insertion_result<incidence_descriptor> add(vertex_descriptor v, property_descriptor p)
     {
         std::pair<iterator, bool> i = _edges.insert(make_pair(v, p));
-        return i.second ? make_descriptor(_edges, i.first) : incidence_descriptor();
+        return make_result(_edges, i);
     }
     //@}
-
-    /**
-     * Bind the given property descriptor to this vertex. This is useful when
-     * the incidence pair is added before property is allocated.
-     */
-    inline void bind(incidence_descriptor d, property_descriptor p)
-    { make_iterator(_edges, d)->second = p; }
 
     /**
      * Find the incident edge whose opposite end is v.
      * @complexity O(lg(d))
      */
-    inline incidence_descriptor find(vertex_descriptor v) const
+    incidence_descriptor find(vertex_descriptor v) const
     { return make_descriptor(_edges, _edges.find(v)); }
 
     /**
      * Remove the edge whose opposite end is v.
      * @complexity O(lg(d))
      */
-    inline void remove(incidence_descriptor d)
+    void remove(incidence_descriptor d)
     { _edges.erase(make_iterator(_edges, d)); }
 
     /** Remove all edges incident to this vertex. */
-    inline void clear()
+    void clear()
     { _edges.clear(); }
 
     /** Return the number of edges incident to this vertex. */
@@ -101,6 +94,21 @@ public:
     inline iterator end() const
     { return _edges.end(); }
     //@}
+
+    /** @name Property Access
+     * These functions provide a descriptor-based interface to the property
+     * descriptors contained within the edge record. Binding binds the property
+     * to an edge stub, and the properties function returns the bound property
+     * descriptor.
+     */
+    //@{
+    inline void bind(incidence_descriptor d, property_descriptor p)
+    { make_iterator(_edges, d)->second = p; }
+
+    inline property_descriptor properties(incidence_descriptor d) const
+    { return make_iterator(_edges, d)->second; }
+    //@}
+
 
 private:
     mutable store_type _edges;

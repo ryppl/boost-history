@@ -33,22 +33,28 @@ public:
         : _edges(), _size(0)
     { }
 
-    /**
-     * Add a vertex to the list.
+    /** @name Add Vertex
+     * Add a vertex to the list. The first version adds a stub that must be
+     * bound to a property descriptor in the second phase.
      * @complexity O(1)
      */
-    inline incidence_descriptor add(vertex_descriptor v, property_descriptor p)
+    //@{
+    inline insertion_result<incidence_descriptor> add(vertex_descriptor v)
+    { return add(v, property_descriptor()); }
+
+    insertion_result<incidence_descriptor> add(vertex_descriptor v, property_descriptor p)
     {
         ++_size;
         iterator i = _edges.insert(_edges.end(), make_pair(v, p));
-        return make_descriptor(_edges, i);
+        return make_result(make_descriptor(_edges, i));
     }
+    //@}
 
     /**
      * Find the given incidence pair in the vertex.
      * @complexity O(1)
      */
-    inline incidence_descriptor find(vertex_descriptor v) const
+    incidence_descriptor find(vertex_descriptor v) const
     {
         iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
         return make_descriptor(_edges, i);
@@ -58,14 +64,14 @@ public:
      * Remove the given incidence pair in this vertex.
      * @complexity O(deg(v))
      */
-    inline void remove(incidence_descriptor d)
+    void remove(incidence_descriptor d)
     {
         _edges.erase(make_iterator(_edges, d));
         --_size;
     }
 
     /** Remove all edges from the vertex. */
-    inline void clear()
+    void clear()
     {
         _size = 0;
         _edges.clear();
@@ -86,6 +92,20 @@ public:
 
     inline iterator end() const
     { return _edges.end(); }
+    //@}
+
+    /** @name Property Access
+     * These functions provide a descriptor-based interface to the property
+     * descriptors contained within the edge record. Binding binds the property
+     * to an edge stub, and the properties function returns the bound property
+     * descriptor.
+     */
+    //@{
+    inline void bind(incidence_descriptor d, property_descriptor p)
+    { make_iterator(_edges, d)->second = p; }
+
+    inline property_descriptor properties(incidence_descriptor d) const
+    { return make_iterator(_edges, d)->second; }
     //@}
 
 private:

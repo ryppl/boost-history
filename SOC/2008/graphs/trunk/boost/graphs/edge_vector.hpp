@@ -2,10 +2,14 @@
 #ifndef EDGE_VECTOR_HPP
 #define EDGE_VECTOR_HPP
 
-#include "property_vector.hpp"
-#include "incidence_vector.hpp"
-// #include "out_vector.hpp"
-// #include "in_vector.hpp"
+#include <boost/triple.hpp>
+#include <boost/descriptors.hpp>
+
+// Forward declarations
+template <typename, typename> class property_vector;
+template <typename, typename> class incidence_vector;
+template <typename, typename> class out_vector;
+template <typename, typename> class in_vector;
 
 // What's in an edge vector? Basically, an edge vector has to specify
 // the type of property storage and the type of incidence storage. What
@@ -65,23 +69,18 @@ struct edge_vector
         typedef incidence_vector<incidence_pair, incidence_allocator> type;
     };
 
-    // Descriptor types for directed graphs
+
+
+    // Descriptor types for directed graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
     typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
 
-
     // The out store metafunction generates the type of vector used to store
     // out edges of a vertex in a directed graph.
-    /*
-    template <typename VertexDesc, typename Props>
+    template <typename VertexDesc, typename EdgeProps>
     struct out_store
     {
-        // Define a dummy type that eventually be used to store iterators to
-        // in edge iterators. The actual out edge type is a tuple of target
-        // vertex, edge properties, and in edge iterator (placeheld). The in
-        // edge type is the source vertex and the out edge iterator (placeheld).
-        typedef typename hold<typename std::vector<int>::iterator>::type dummy_type;
-        typedef triple<VertexDesc, Props, dummy_type> edge;
+        typedef triple<VertexDesc, EdgeProps, in_descriptor> edge;
         typedef FirstAlloc<edge> allocator;
         typedef out_vector<edge, allocator> type;
     };
@@ -92,15 +91,10 @@ struct edge_vector
     template <typename VertexDesc>
     struct in_store
     {
-        // Define a dummy type that will ultimately act as a placeholder for
-        // an iterator into the out edge vector. Use that to define the in edge
-        // pair.
-        typedef typename hold<typename std::vector<int>::iterator>::type dummy_type;
-        typedef std::pair<VertexDesc, dummy_type> edge;
+        typedef std::pair<VertexDesc, out_descriptor> edge;
         typedef SecondAlloc<edge> allocator;
         typedef in_vector<edge, allocator> type;
     };
-    */
 };
 
 #endif

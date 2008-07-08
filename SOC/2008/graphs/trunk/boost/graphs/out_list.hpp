@@ -41,11 +41,11 @@ public:
      * Add the edge to the list.
      * @complexity O(1)
      */
-    out_descriptor add(vertex_descriptor v, edge_properties const& ep)
+    insertion_result<out_descriptor> add(vertex_descriptor v, edge_properties const& ep)
     {
         ++_size;
         iterator i = _edges.insert(_edges.end(), make_triple(v, ep, in_descriptor()));
-        return make_descriptor(_edges, i);
+        return make_result(make_descriptor(_edges, i));
     }
 
     /**
@@ -93,6 +93,14 @@ public:
     inline iterator end() const
     { return _edges.end(); }
     //@}
+
+    /** Bind the edge to the corresponding in edge descriptor. */
+    inline void bind(out_descriptor o, in_descriptor i)
+    { make_iterator(_edges, o)->third = i; }
+
+    /** Return the properties stored with this edge. */
+    inline edge_properties const& properties(out_descriptor o) const
+    { return make_iterator(_edges, o)->second; }
 
 private:
     mutable store_type  _edges;

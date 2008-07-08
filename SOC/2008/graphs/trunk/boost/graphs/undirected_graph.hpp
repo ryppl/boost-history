@@ -2,20 +2,11 @@
 #ifndef UNDIRECTED_GRAPH_HPP
 #define UNDIRECTED_GRAPH_HPP
 
+#include <boost/assert.hpp>
 #include <boost/none.hpp>
 
-#include "undirected_vertex.hpp"
-#include "vertex_vector.hpp"
-#include "vertex_list.hpp"
-#include "vertex_set.hpp"
-#include "vertex_map.hpp"
-
-#include "undirected_edge.hpp"
-#include "edge_vector.hpp"
-#include "edge_list.hpp"
-#include "edge_set.hpp"
-
-#include "adjacency_iterator.hpp"
+#include <boost/graphs/undirected_types.hpp>
+#include <boost/graphs/adjacency_iterator.hpp>
 
 template <
     typename VertexProps,
@@ -24,6 +15,7 @@ template <
     typename EdgeStore>
 class undirected_graph
 {
+    typedef undirected_types<VertexProps, EdgeProps, VertexStore, EdgeStore> types;
     typedef undirected_graph<VertexProps, EdgeProps, VertexStore, EdgeStore> this_type;
 public:
     typedef VertexProps vertex_properties;
@@ -31,53 +23,33 @@ public:
     typedef VertexStore vertex_store_selector;
     typedef EdgeStore edge_store_selector;
 
-    typedef VertexStore::descriptor_type vertex_descriptor;
+    // Underlying stores
+    typedef typename types::property_store property_store;
+    typedef typename types::vertex_store vertex_store;
+    typedef typename types::vertex_key vertex_key;
+    typedef typename types::vertex_type vertex_type;
 
-    typedef typename EdgeStore::EdgeStore::template property_store<edge_properties, vertex_descriptor>::type property_store;
+    // Vertex/Property/Edge descriptors
+    typedef typename types::vertex_descriptor vertex_descriptor;
+    typedef typename types::edge_descriptor edge_descriptor;
+    typedef typename types::property_descriptor property_descriptor;
+    typedef typename types::incidence_descriptor incidence_descriptor;
 
-    // Generate the property store type first. We can do this first because
-    // it's basically independant of everything else, but contributes to almost
-    // everything in the class by virtue of the property descriptor. Use this
-    // to generate the property descriptor...
-    typedef typename EdgeStore::template property_store<edge_properties>::type property_store;
-    typedef typename property_store::property_descriptor property_descriptor;
-    typedef typename property_store::size_type edges_size_type;
+    // Iterators and ranges
+    typedef typename types::vertex_iterator vertex_iterator;
+    typedef typename types::vertex_range vertex_range;
+    typedef typename types::edge_iterator edge_iterator;
+    typedef typename types::edge_range edge_range;
+    typedef typename types::incident_edge_iterator incident_edge_iterator;
+    typedef typename types::incident_edge_range incident_edge_range;
+    typedef typename types::adjacent_vertex_iterator adjacent_vertex_iterator;
+    typedef typename types::adjacent_vertex_range adjacent_vertex_range;
 
-    // Generate a bunch of descriptors. The vertex descriptor is fairly
-    // straightforward since, like the property store, its independant of almost
-    // everything. The property descriptor depends entirely upon the property
-    // store and the edge descriptor is actually fairly complicated.
-    // typedef typename VertexStore::descriptor_type vertex_descriptor;
-    typedef undirected_edge<vertex_descriptor, property_descriptor> edge_descriptor;
+    // Sizes for vertices, edges, and degree.
+    typedef typename types::vertices_size_type vertices_size_type;
+    typedef typename types::edges_size_type edges_size_type;
+    typedef typename types::incident_edges_size_type incident_edges_size_type;
 
-    // Generate the incidence list. The incidence list for a single vertex
-    // contains a pair: the opposite edge and a property descriptor.
-    typedef typename EdgeStore::template incidence_store<vertex_descriptor, property_descriptor>::type incidence_store;
-
-    // Generate the vertex type over the given properties and the incidence
-    // store. Then, turn around and use that to generate the vertex store and its
-    // related types. Incident edge iterators are abstracted over the iterators
-    // of the vertex.
-    typedef undirected_vertex<vertex_properties, incidence_store> vertex_type;
-    typedef typename vertex_type::size_type incident_edges_size_type;
-    typedef undirected_edge_iterator<this_type> edge_iterator;
-    typedef std::pair<edge_iterator, edge_iterator> edge_range;
-    typedef incidence_iterator<typename vertex_type::iterator> incident_edge_iterator;
-    typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
-
-    typedef adjacency_iterator<incident_edge_iterator> adjacent_vertex_iterator;
-    typedef std::pair<adjacent_vertex_iterator, adjacent_vertex_iterator> adjacent_vertex_range;
-
-    // The vertex store and related properties can also be built on the vertex
-    // type.
-    typedef typename VertexStore::template store<vertex_type>::type vertex_store;
-    typedef typename vertex_store::size_type vertices_size_type;
-    typedef typename vertex_store::vertex_iterator vertex_iterator;
-    typedef typename vertex_store::vertex_range vertex_range;
-
-    // FIXME: This is a bit hacky, but without constrained members, we need a key
-    // type to enable mapped vertices.
-    typedef typename VertexStore::key_type vertex_key;
 
     // Constructors
     undirected_graph();
@@ -251,7 +223,6 @@ template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
 undirected_graph<VP,EP,VS,ES>::add_vertex()
 {
-    // BOOST_STATIC_ASSERT(!LabeledUniqueVertices<this_type>);
     return _verts.add();
 }
 
@@ -371,39 +342,35 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                         vertex_descriptor v,
                                         edge_properties const& ep)
 {
-    // To add the edge or not... The protocol is: ask the source if it can be
-    // connected to the target. If so, connect them. If they're connected,
-    // return the existing edge. If they can't be connected, return a null
-    // descriptor.
+    // Get vertices for the descriptors
     reorder(u, v);
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
-    std::pair<typename vertex_type::iterator, bool> ins = src.allow(v);
-    if(ins.second) {
-        // If the returned iterator is past the end, then we need to add this
-        // edge. Otherwise, we can simply return an edge over the existing
-        // iterator.
-        if(ins.first == src.end()) {
-            property_descriptor p = _props.add(ep);
-            src.connect(v, p);
-            tgt.connect(u, p);
+    // Insert algorithm: Try to stub out the edge locally first. If it succeeds,
+    // then add the global property, and finally bind the incidence and property
+    // descitpros into their respective "slots". Note that this is actually
+    // faster than the
+    insertion_result<incidence_descriptor> first = src.connect(v);
+    if(first.succeeded()) {
+        // Stub the incident edge on the other vertex.
+        insertion_result<incidence_descriptor> second = tgt.connect(u);
+        BOOST_ASSERT(second.succeeded());
 
-            // Bind the iterators back into the property store and return an
-            // edge descriptor.
-            _props.bind(p, u, v);
-            return edge_descriptor(u, v, p);
-        }
-        else {
-            return edge_descriptor(u, v, ins.first->second);
-        }
+        // Add the property and bind everything together.
+        property_descriptor p = _props.add(ep);
+        src.bind(first.value, p);
+        tgt.bind(second.value, p);
+        _props.bind(p, make_pair(u, v));
+        return edge_descriptor(u, v, p);
+    }
+    else if(first.retained()) {
+        property_descriptor p = src.edge_properties(first.value);
+        return edge_descriptor(u, v, p);
     }
     else {
-        // Can't add the edge?
+        return edge_descriptor();
     }
-
-    // This is a null iterator
-    return edge_descriptor();
 }
 
 /**
@@ -496,6 +463,7 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
+    /*
     // Grab descriptors out of the edge.
     property_descriptor p = e.properties();
     vertex_descriptor u = e.first();
@@ -510,6 +478,7 @@ undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
     tgt.disconnect(u, p);
     src.disconnect(v, p);
     _props.remove(p);
+    */
 }
 
 /**
@@ -573,6 +542,7 @@ void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
                                             vertex_descriptor v)
 {
+    /*
     // Canonicalize the ordering of vertices first and the get the vertices.
     reorder(u, v);
     vertex_type& src = _verts.vertex(u);
@@ -595,6 +565,7 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
             ++i;
         }
     }
+    */
 }
 
 /**

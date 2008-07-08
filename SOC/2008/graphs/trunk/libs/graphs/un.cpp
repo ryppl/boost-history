@@ -1,13 +1,11 @@
 
 #include <iostream>
-#include <set>
 
 #include <boost/assert.hpp>
 #include <boost/utility.hpp>
 #include <boost/graphs/undirected_graph.hpp>
-#include <boost/graphs/traits.hpp>
 
-#include "demangle.hpp"
+#include "typestr.hpp"
 
 using namespace std;
 using namespace boost;
@@ -22,12 +20,12 @@ void set_set();
 template <typename Graph>
 void print_types(const Graph&)
 {
-    cout << demangle(typeid(typename Graph::property_descriptor).name()) << endl;
-    cout << demangle(typeid(typename Graph::vertex_descriptor).name()) << endl;
-    cout << demangle(typeid(typename Graph::edge_descriptor).name()) << endl;
-    cout << demangle(typeid(typename Graph::property_store).name()) << endl;
-    cout << demangle(typeid(typename Graph::vertex_store).name()) << endl;
-    cout << demangle(typeid(typename Graph::incidence_store).name()) << endl;
+    // cout << typestr<typename Graph::property_descriptor>() << endl;
+    cout << "  * " << typestr<typename Graph::vertex_descriptor>() << endl;
+    cout << "  * " << typestr<typename Graph::edge_descriptor>() << endl;
+    // cout << typestr<typename Graph::property_store>() << endl;
+    // cout << typestr<typename Graph::vertex_store>() << endl;
+    // cout << typestr<typename Graph::incidence_store>() << endl;
 }
 
 template <typename Graph>
@@ -224,10 +222,10 @@ void vec_vec()
 {
     cout << "---- vec/vec ----" << endl;
     typedef undirected_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
-    // test_add_vertices<Graph>();
-    // test_add_edges<Graph>();
+    test_add_vertices<Graph>();
+    test_add_edges<Graph>();
     // test_add_multi_edges<Graph>();
-    test_incidence_iterator<Graph>();
+    // test_incidence_iterator<Graph>();
     // test_adjacency_iterator<Graph>();
 }
 
