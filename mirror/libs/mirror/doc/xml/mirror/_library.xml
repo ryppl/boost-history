@@ -267,6 +267,7 @@
 			- Template class names for std::map and ::std::set are now build also with the comparator argument
 
 			- The meta-attribute declaration macros were rewritten nearly from scratch
+			- Renamed some of the base-class registering macros
 
 			- Tested with MSVC++ 2008 EE On Vista
 		</revision>

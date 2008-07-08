@@ -159,7 +159,7 @@ struct meta_base_classes
  *  and inheritance type specifier. The numbering starts from 
  *  zero, declarations must be ordered by number.
  */
-#define BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(NUMBER, A_BASE_CLASS) \
+#define BOOST_MIRROR_REG_SIMPLE_BASE_CLASS(NUMBER, A_BASE_CLASS) \
 	BOOST_PP_COMMA_IF(NUMBER) \
 	meta_inheritance<\
 		mpl::int_<NUMBER>, \
@@ -183,7 +183,7 @@ struct meta_base_classes
  *  and virtual inheritance type specifier. The numbering starts from 
  *  zero, declarations must be ordered by number.
  */
-#define BOOST_MIRROR_REG_BASE_CLASS_VIRTUAL(NUMBER, ACCESS_SPEC, A_BASE_CLASS) \
+#define BOOST_MIRROR_REG_VIRTUAL_BASE_CLASS(NUMBER, ACCESS_SPEC, A_BASE_CLASS) \
 	BOOST_PP_COMMA_IF(NUMBER) \
 	meta_inheritance<mpl::int_<NUMBER>, A_BASE_CLASS, ACCESS_SPEC##_, virtual_base_> 
 

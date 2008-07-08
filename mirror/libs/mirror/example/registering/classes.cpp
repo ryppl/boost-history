@@ -107,13 +107,13 @@ public:
 	};
 	//
 	// a static member attribute
-	static const short a_short;
+	static short a_short;
 
 	// a mutable member attribute
-	mutable long a_long;
+	mutable wchar_t a_widechar;
 };
 
-const short bar::a_short = 123;
+short bar::a_short = 123;
 
 
 } // namespace detail
@@ -149,11 +149,11 @@ BOOST_MIRROR_REG_TYPE_EMBEDDED(::test::stuff::detail::bar, bar_part)
  */
 BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::feature::detail::foo)
 	// a simple base (not virtual, nor explicitly public/protected/private)
-	BOOST_MIRROR_REG_BASE_CLASS_SIMPLE(0,  ::test::feature::detail::foo_base)
+	BOOST_MIRROR_REG_SIMPLE_BASE_CLASS(0,  ::test::feature::detail::foo_base)
 	// a public non-virtual base
 	BOOST_MIRROR_REG_BASE_CLASS(1, public, ::test::feature::detail::foo_base2)
 	// a virtual protected base
-	BOOST_MIRROR_REG_BASE_CLASS_VIRTUAL(2,  protected, ::test::feature::detail::foo_base3)
+	BOOST_MIRROR_REG_VIRTUAL_BASE_CLASS(2,  protected, ::test::feature::detail::foo_base3)
 BOOST_MIRROR_REG_BASE_CLASSES_END
 
 // since bar has only one base we can register it this way more quickly
@@ -209,6 +209,11 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 		{dest = DestType(const_cast<Class&>(instance).get_bool()); return dest;},
 		{instance.set_bool(value);}
 	)
+	//
+	// register a static member attribute
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(static, short, a_short)
+	// register a mutable member attribute
+	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(mutable, wchar_t, a_widechar)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 /** This is a pretty printer template that prints
