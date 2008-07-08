@@ -24,21 +24,19 @@ namespace spatial_index {
     /// cached number of elements
     unsigned int element_count_;
 
-    // minimum number of elements per node
+    /// minimum number of elements per node
     unsigned int m_;
-    // maximum number of elements per node
+    /// maximum number of elements per node
     unsigned int M_;
 
-    // tree root
+    /// tree root
     boost::shared_ptr< rtree_node<Point,Value> > root_;
 
   public:
-    rtree(const geometry::box<Point> &initial_box, const unsigned int &M, const unsigned int &m)
+    rtree(const unsigned int &M, const unsigned int &m)
       : element_count_(0), m_(m), M_(M), root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
     {
       root_->set_root();
-      boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(root_));
-      root_->add_leaf_node(initial_box, new_leaf);
     }
 
     /// remove the element with key 'k'
@@ -127,19 +125,14 @@ namespace spatial_index {
       this->insert(geometry::box<Point>(k,k), v);
     }
 
+
     void insert(const geometry::box<Point> &e, const Value &v)
     {
       element_count_++;
 
       boost::shared_ptr<rtree_node<Point, Value> > l(choose_leaf(e));
 
-//       std::cerr << "Leaf: " << std::endl;
-//       l->print();
-//       std::cerr << std::endl;
-
       if(l->elements() >= M_) {
-//  	std::cerr << "Node full. Split." << std::endl;
-
 	l->insert(e, v);
 	
 	// split!
@@ -147,32 +140,13 @@ namespace spatial_index {
 	boost::shared_ptr< rtree_node<Point, Value> > n2(new rtree_leaf<Point,Value>(l->get_parent()));
 
 	split_node(l, n1, n2);
-//  	std::cerr << std::endl;
-//  	std::cerr << std::endl;
-//  	std::cerr << std::endl;
-//    	std::cerr << "Node splited." << std::endl;
-
-//    	std::cerr << "ORIG" << std::endl;
-//    	l->print();
-	
-//    	std::cerr << "N1" << std::endl;
-//     	n1->print();
-//    	std::cerr << "N2" << std::endl;
-//     	n2->print();
-
-//  	std::cerr << "L parent." << std::endl;
-//  	l->get_parent()->print();
-
 	adjust_tree(l, n1, n2);
-
-
       } else {
-//  	std::cerr << "Insert without split" << std::endl;
 	l->insert(e, v);
 	adjust_tree(l);
       }
-
     }
+
 
     virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points)
     {
@@ -225,7 +199,7 @@ namespace spatial_index {
     {
 //       std::cerr << "Condensing tree." << std::endl;
 
-      if(l->is_root()) {
+      if(l.get() == root_.get()) {
 	// if it's the root we are done
 	return;
       }
@@ -234,7 +208,7 @@ namespace spatial_index {
       parent->adjust_box(l);
       
       if(parent->elements() < m_) {
-	if(parent->is_root()) {
+	if(parent.get() == root_.get()) {
 	  // if the parent is underfull and it's the root we just exit
 	  return;
 	}
@@ -257,7 +231,7 @@ namespace spatial_index {
 
     void adjust_tree(boost::shared_ptr<rtree_node<Point, Value> > &n)
     {
-      if(n->is_root()) {
+      if(n.get() == root_.get()) {
 	// we finished the adjust
 // 	std::cerr << "It's the root" << std::endl;
 	return;
@@ -273,7 +247,7 @@ namespace spatial_index {
 		     boost::shared_ptr<rtree_node<Point, Value> > &n1,
 		     boost::shared_ptr<rtree_node<Point, Value> > &n2)
     {
-      if(l->is_root()) {
+      if(l.get() == root_.get()) {
 //  	std::cerr << "Root   ---------> split."<< std::endl;
 	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1));
 	new_root->set_root();
@@ -597,12 +571,7 @@ namespace spatial_index {
 	}
       }
 
-
-
       double width = highest_high - lowest_low;
-
-      // std::cerr << "HH: " << highest_high << " LL: " << lowest_low << std::endl;
-      // std::cerr << "Width: " << width << std::endl;
 
       separation = (highest_low  - lowest_high) / width;
       first = highest_low_index;
@@ -614,11 +583,16 @@ namespace spatial_index {
     {
       boost::shared_ptr< rtree_node<Point, Value> > N = root_;
 
-//       std::cerr << "Choosing." << std::endl;
+      // if the tree is empty add an initial leaf
+      if(root_->elements() == 0) {
+	boost::shared_ptr< rtree_leaf<Point, Value> > new_leaf(new rtree_leaf<Point, Value>(root_));
+	root_->add_leaf_node(geometry::box<Point>(), new_leaf);
+
+	return new_leaf;
+      }
 
       while(!N->is_leaf()) {
 	/// traverse N's map to see which node we should select
-// 	std::cerr << "Not a leaf." << std::endl;
 	N = N->choose_node(e);
       }
       return N;

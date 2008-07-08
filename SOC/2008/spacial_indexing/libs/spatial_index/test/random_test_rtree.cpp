@@ -42,9 +42,6 @@ int test_main(int, char* [])
   std::vector<unsigned int> ids;
   std::vector<geometry::point_xy<double> > points;	
 
-  // plane
-  geometry::box<geometry::point_xy<double> > plane(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(MAX_X, MAX_Y));
-
   // number of points
   const unsigned int points_count = 500;
 
@@ -52,7 +49,7 @@ int test_main(int, char* [])
   const unsigned int find_count = 50;
   
   boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
-    q(new boost::spatial_index::rtree<geometry::point_xy<double>, unsigned int>(plane, 8, 4));
+    q(new boost::spatial_index::rtree<geometry::point_xy<double>, unsigned int>(8, 4));
 
   // generate random data
   for(unsigned int i = 0; i < points_count; i++) {

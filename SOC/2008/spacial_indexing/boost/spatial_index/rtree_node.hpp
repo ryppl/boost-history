@@ -56,9 +56,6 @@ namespace spatial_index {
     /// true if it is a leaf node
     virtual bool is_leaf(void) const { return false; }
 
-    /// true if it is the root
-    bool is_root(void) const { return root_; }
-
     /// define this node as the root
     void set_root(void) { root_ = true; }
 
@@ -200,10 +197,8 @@ namespace spatial_index {
     /// insertion algorithm choose node
     boost::shared_ptr<rtree_node<Point, Value> > choose_node(const geometry::box<Point> e)
     {
-//       std::cerr << "Choose node" << std::endl;
-
       if(nodes_.size() == 0) {
-	throw std::logic_error("Empty node trying to choose the least enlargment node.");
+	throw std::logic_error("Empty node trying to choose the least enlargement node.");
       }
       bool first = true;
       double min_area;
@@ -310,7 +305,6 @@ namespace spatial_index {
     {
       std::cerr << " --> Node --------" << std::endl;
       std::cerr << "  Address: " << this << std::endl;
-      std::cerr << "  Is Root: " << is_root() << std::endl;
       std::cerr << "  Level: " << level_ << std::endl;
       std::cerr << "  Size: " << nodes_.size() << std::endl;
       std::cerr << "  | ";

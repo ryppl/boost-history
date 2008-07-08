@@ -92,9 +92,6 @@ int test_main(int, char* [])
 
   // std::cerr << "Size: " << points.size() << std::endl;
 
-  // plane
-  geometry::box<geometry::point_xy<double> > plane(geometry::point_xy<double>(-130.0, 0.0), geometry::point_xy<double>(-60.0, 80.0));
-
   // number of points to find on the search phase
   const unsigned int find_count = 100000;
 
@@ -103,7 +100,7 @@ int test_main(int, char* [])
   }
 
   boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
-    q(new boost::spatial_index::rtree< geometry::point_xy<double>, unsigned int >(plane, 16, 8));
+    q(new boost::spatial_index::rtree< geometry::point_xy<double>, unsigned int >(16, 8));
 
       // load data
       std::cerr << " --> bulk insert" << std::endl;

@@ -14,13 +14,12 @@
 #include <vector>
 #include <string>
 
+
 int test_main(int, char* [])
 {
-	geometry::box<geometry::point_xy<double> > b(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(20.0, 20.0));
-
 	{
 	  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
-	    q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(b, 4, 2));
+	    q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(4, 2));
 
 	  std::cerr << std::endl;
 	  std::cerr << " --> bulk insert" << std::endl;
@@ -54,7 +53,7 @@ int test_main(int, char* [])
 	/// insertion tests
  
 	boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
-	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(b, 4, 2));
+	  q(new boost::spatial_index::rtree< geometry::point_xy<double> , unsigned int >(4, 2));
 
 	geometry::box<geometry::point_xy<double> > e1(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));
 	geometry::box<geometry::point_xy<double> > e2(geometry::point_xy<double>(0.0, 1.0), geometry::point_xy<double>(2.0, 2.0));
