@@ -26,6 +26,7 @@ namespace spatial_index {
 
     /// minimum number of elements per node
     unsigned int m_;
+
     /// maximum number of elements per node
     unsigned int M_;
 
@@ -34,16 +35,18 @@ namespace spatial_index {
 
   public:
     rtree(const unsigned int &M, const unsigned int &m)
-      : element_count_(0), m_(m), M_(M), root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
+      : element_count_(0), m_(m), M_(M), 
+	root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
     {
-      root_->set_root();
     }
+
 
     /// remove the element with key 'k'
     virtual void remove(const Point &k)
     {
       this->remove(geometry::box<Point>(k, k));
     }
+
 
     /// remove the element with key 'k'
     virtual void remove(const geometry::box<Point> &k)
@@ -55,12 +58,9 @@ namespace spatial_index {
 	l->remove(k);
 
 	if(l->elements() < m_ && elements() > m_) {
-//  	  std::cerr << "Few elements in Node." << std::endl;
-
 	  q_leaves = l->get_leaves();
 
 	  // we remove the leaf_node in the parent node because now it's empty
-// 	  std::cerr << "Remove the leaf from the parent\n";
 	  l->get_parent()->remove(l->get_parent()->get_box(l));
 	}
 
@@ -73,13 +73,11 @@ namespace spatial_index {
 
 	  // reinserting leaves from nodes
 	  for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator itl = leaves.begin(); itl != leaves.end(); ++itl) {
-// 	    std::cerr << "Reinserting from nodes.\n";
 	    s.push_back(*itl);
 	  }
 	}
 
 	for(typename std::vector<std::pair<geometry::box<Point>, Value> >::const_iterator it = s.begin(); it != s.end(); ++it) {
-// 	  std::cerr << "Inserting (" << elements() << ")" << it->second << std::endl;
 	  element_count_--;
 	  insert(it->first, it->second);
 	}
@@ -88,12 +86,10 @@ namespace spatial_index {
 	if(root_->elements() == 1) {
 	  if(!root_->first_element()->is_leaf()) {
 	    root_ = root_->first_element();
-	    root_->set_root();
 	  }
 	}
 
-// 	std::cerr << "Reinserting leaves " << q_leaves.size() << std::endl;
-
+	// reinserting leaves
 	for(typename rtree_leaf<Point,Value>::leaves_map::const_iterator it = q_leaves.begin(); it != q_leaves.end(); ++it) {
 	  element_count_--;
 	  insert(it->first, it->second);
@@ -103,13 +99,14 @@ namespace spatial_index {
 
       } catch(std::logic_error &e) {
 	// not found
-// 	print();
 	std::cerr << e.what() << std::endl;
 	return;
       }
     }
 
+
     virtual unsigned int elements(void) const { return element_count_; }
+
 
     virtual void print(void)
     {
@@ -250,7 +247,6 @@ namespace spatial_index {
       if(l.get() == root_.get()) {
 //  	std::cerr << "Root   ---------> split."<< std::endl;
 	boost::shared_ptr< rtree_node<Point,Value> > new_root(new rtree_node<Point,Value>(boost::shared_ptr<rtree_node<Point,Value> >(), l->get_level()+1));
-	new_root->set_root();
 	new_root->add_node(n1->compute_box(), n1);
 	new_root->add_node(n2->compute_box(), n2);
 

@@ -29,11 +29,11 @@ namespace spatial_index {
 
   public:
     /// default constructor (needed for the containers)
-    rtree_node(void) : root_(false) {}
+    rtree_node(void) {}
 
     /// normal constructor
     rtree_node(const boost::shared_ptr<rtree_node<Point, Value> > &parent, const unsigned int &level) 
-      : parent_(parent), level_(level), root_(false) {}
+      : parent_(parent), level_(level) {}
 
     /// level projector
     virtual unsigned int get_level(void) const { return level_; }
@@ -55,9 +55,6 @@ namespace spatial_index {
 
     /// true if it is a leaf node
     virtual bool is_leaf(void) const { return false; }
-
-    /// define this node as the root
-    void set_root(void) { root_ = true; }
 
     /// get a node
     boost::shared_ptr< rtree_node<Point, Value> > get_node(const unsigned int i) { return nodes_[i].second; }
@@ -349,9 +346,6 @@ namespace spatial_index {
 
     // level of this node
     unsigned int level_;
-
-    // true if it is the root
-    bool root_;
 
     /// child nodes
     node_map nodes_;
