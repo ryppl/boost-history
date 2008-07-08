@@ -3,6 +3,10 @@
 #define IN_LIST_HPP
 
 #include <list>
+#include <algorithm>
+
+#include <boost/descriptors.hpp>
+#include <boost/graphs/utility.hpp>
 
 /**
  * The in-edge list references incoming edges from other vertices. Each edge
@@ -14,73 +18,73 @@
 template <typename Edge, typename Alloc>
 class in_list
 {
-    typedef std::list<Edge, Alloc> store_type;
 public:
-    typedef Edge in_pair;
     typedef typename Edge::first_type vertex_descriptor;
-private:
-    typedef typename Edge::second_type out_edge_place;
-public:
+    typedef typename Edge::second_type out_descriptor;
+
+    typedef std::list<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
-    in_list()
-        : _edges()
-        , _size(0)
+    typedef typename descriptor_traits<store_type>::descriptor_type in_descriptor;
+
+    // Constructor
+    inline in_list()
+        : _edges(), _size(0)
     { }
 
     /**
      * Add the edge to list.
      * @complexity O(1)
      */
-    iterator add(vertex_descriptor v)
+    inline in_descriptor add(vertex_descriptor v)
     {
         ++_size;
-        _edges.push_back(make_pair(v, out_edge_place()));
-        return boost::prior(_edges.end());
+        iterator i = _edges.insert(_edges.end(), std::make_pair(v, out_descriptor()));
+        return make_descriptor(_edges, i);
+    }
+
+    /**
+     * Find the edge whose source originates at the given vertex descriptor.
+     * @complexity O(d)
+     */
+    inline in_descriptor find(vertex_descriptor v) const
+    {
+        iterator i = std::find_if(_edges.begin(), _edges.end(), find_first(v));
+        return make_descriptor(_edges, i);
     }
 
     /**
      * Remove the edge referenced by the given iterator.
      * @complexity O(1)
      */
-    iterator remove(iterator i)
+    inline void remove(in_descriptor d)
     {
+        _edges.erase(make_iterator(_edges, d));
         --_size;
-        return _edges.erase(i);
-    }
-
-    /**
-     * Find the edge with the given iterator. Is this function ever actually
-     * called? I have no idea...
-     * @complexity O(deg(u))
-     */
-    iterator find(vertex_descriptor v) const
-    {
-        iterator i = _edges.begin(), end = _edges.end();
-        for( ; i != end; ++i) {
-            if(i->first == v) return i;
-        }
-        return end;
     }
 
     /** Remove all incoming edges from the list, resetting the size to 0. */
-    void clear()
+    inline void clear()
     {
         _size = 0;
         _edges.clear();
     }
 
     /** Get the number of incoming edges (in degree). */
-    size_type size() const
+    inline size_type size() const
     { return _size; }
+
+    /** Returns true if there are no in edges. */
+    inline bool empty() const
+    { return _edges.empty(); }
 
     /** @name Iterators */
     //@{
-    iterator begin() const
+    inline iterator begin() const
     { return _edges.begin(); }
 
-    iterator end() const
+    inline iterator end() const
     { return _edges.end(); }
     //@}
 

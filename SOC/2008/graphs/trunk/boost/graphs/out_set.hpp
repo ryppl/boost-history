@@ -5,11 +5,8 @@
 #include <map>
 #include <memory>
 
-#include <boost/type_traits.hpp>
 #include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
-
-#include "mapped_iterator.hpp"
 
 /**
  * The out set implements set-based, out-edge storage for directed graphs.
@@ -36,13 +33,7 @@ public:
     typedef typename Edge::third_type in_descriptor;
 
     // Reconstruct the edge triple into a key/value type thing for the map.
-    // Unfortunately, we're storing the descriptor twice, but this does make
-    // iteration and referencing a bit easier.
-    typedef std::map<
-            vertex_descriptor,
-            triple<vertex_descriptor, edge_properties, in_descriptor>,
-            Compare, Alloc
-        > store_type;
+    typedef std::map< vertex_descriptor, std::pair<edge_properties, in_descriptor>, Compare, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
@@ -64,8 +55,7 @@ public:
      */
     out_descriptor add(vertex_descriptor v, edge_properties const& ep)
     {
-        std::pair<iterator, bool> i =
-            _edges.insert(std::make_pair(v, make_triple(v, ep, in_descriptor())));
+        std::pair<iterator, bool> i = _edges.insert(std::make_pair(v, std::make_pair(ep, in_descriptor())));
         return i.second ? make_descriptor(_edges, i.first) : out_descriptor();
     }
 

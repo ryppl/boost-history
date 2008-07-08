@@ -4,7 +4,7 @@
 
 #include <map>
 
-#include "mapped_iterator.hpp"
+#include <boost/descriptors.hpp>
 
 /**
  * The in-edge set references incoming edges from other vertices. Each edge
@@ -17,58 +17,55 @@ template <typename Edge, typename Compare, typename Alloc>
 class in_set
 {
 public:
-    typedef Edge in_pair;
     typedef typename Edge::first_type vertex_descriptor;
-private:
-    typedef typename Edge::second_type out_edge_place;
-    typedef std::map<
-            vertex_descriptor,
-            std::pair<vertex_descriptor const, out_edge_place>,
-            Compare, Alloc
-        > store_type;
-public:
-    typedef mapped_iterator<typename store_type::iterator> iterator;
+    typedef typename Edge::second_type out_descriptor;
+
+    typedef std::map<vertex_descriptor, out_descriptor, Compare, Alloc> store_type;
+    typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
-    in_set()
+    typedef typename descriptor_traits<store_type>::descriptor_type in_descriptor;
+
+    // Constructor
+    inline in_set()
         : _edges()
     { }
 
     /**
-     * Add the edge to the set.
-     * @complexity O(deg(u))
+     * Try to add the given vertex to the result set.
+     * @complexity O(lg(d))
      */
-    iterator add(vertex_descriptor v)
+    inline in_descriptor add(vertex_descriptor v)
     {
-        return _edges.insert(std::make_pair(v,
-                                std::make_pair(v, out_edge_place()))
-                            ).first;
+        std::pair<iterator, bool> i = _edges.insert(std::make_pair(v, out_descriptor()));
+        return i.second ? make_descriptor(_edges, i.first) : in_descriptor();
     }
 
-    /** Find the edge with the given vertex. */
-    iterator find(vertex_descriptor v)
-    { return _edges.find(v); }
-
     /**
-     * Find the edge with the given vertex. Is this function ever called?
+     * Find the edge whose source originates at the given vertex descriptor.
+     * @complexity O(lg(d))
      */
-    iterator find(vertex_descriptor v) const
-    { return _edges.find(v); }
+    inline in_descriptor find(vertex_descriptor v) const
+    { return make_descriptor(_edges, _edges.find(v)); }
 
     /**
      * Remove the edge with the given descriptor.
-     * @complexity O(log(in-deg(v)))
+     * @complexity O(lg(d))
      */
-    void remove(iterator i)
-    { _edges.erase(i.iter); }
+    inline void remove(in_descriptor d)
+    { _edges.erase(make_iterator(_edges, d)); }
 
     /** Remove all edges. */
-    void clear()
+    inline void clear()
     { _edges.clear(); }
 
     /** Get the number of incoming edges (in degree). */
-    size_type size() const
+    inline size_type size() const
     { return _edges.size(); }
+
+    /** Return true if there are no in edges. */
+    inline bool empty() const
+    { return _edges.empty(); }
 
     /** @name Iterators */
     //@{
@@ -80,7 +77,7 @@ public:
     //@}
 
 private:
-   mutable  store_type _edges;
+   mutable store_type _edges;
 };
 
 #endif
