@@ -171,7 +171,7 @@ struct meta_class_attribute_traits<
 	TYPENAME_KW \
 ) typedef TYPENAME_KW mpl::push_back< \
 	partial_list_##NAME, \
-	typename ::boost::mirror::typedef_::extract_type< \
+	TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
 		TYPE_SELECTOR \
 	>::type \
 >::type 
@@ -185,7 +185,7 @@ struct meta_class_attribute_traits<
 	GETTER_BODY, \
 	TYPENAME_KW \
 )	inline static TYPENAME_KW call_traits< \
-		typename ::boost::mirror::typedef_::extract_type< \
+		TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
 			TYPE_SELECTOR \
 		>::type \
 	>::param_type get( \
@@ -220,7 +220,7 @@ struct meta_class_attribute_traits<
 		Class& instance, \
 		position_of_##NAME, \
 		TYPENAME_KW call_traits< \
-			typename ::boost::mirror::typedef_::extract_type< \
+			TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
 				TYPE_SELECTOR \
 			>::type \
 		>::param_type value \
@@ -229,7 +229,7 @@ struct meta_class_attribute_traits<
 		const Class& instance, \
 		position_of_##NAME, \
 		TYPENAME_KW call_traits< \
-			typename ::boost::mirror::typedef_::extract_type< \
+			TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
 				TYPE_SELECTOR \
 			>::type \
 		>::param_type value \

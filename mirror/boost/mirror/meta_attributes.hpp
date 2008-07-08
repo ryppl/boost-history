@@ -654,12 +654,13 @@ namespace mirror {
 			meta_attributes::get_traits(position())
 		)
 		typedef typename detail_traits::type traits;
+		
+		typedef typename traits::meta_type_selector
+			meta_type_selector;
 
 		/** The meta-type of the attribute
 		 */
-		typedef meta_type<
-			typename traits::meta_type_selector
-		> meta_type;
+		typedef meta_type< meta_type_selector > meta_type;
 	};
 
 } // namespace mirror

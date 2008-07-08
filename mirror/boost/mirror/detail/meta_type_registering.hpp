@@ -98,9 +98,10 @@ struct meta_type
  */
 namespace typedef_ {
 
-	// this type is used to recognize the Typedef<Namespace, typedef_tag>
+	// this type is used to recognize the Typedef<typedef_tag<Namespace> >
 	// templates representing registered typedefs from other
-	// 'template <class, class> class' templates
+	// 'template <class> class' templates
+	template <class T>
 	struct typedef_tag { };
 
 	/** this meta-function is used to extract the type 
@@ -120,14 +121,15 @@ namespace typedef_ {
 	 *  In this case the base_type of the selector is returned
 	 */
 	template <
-		template <class, class> class TypedefSelector, 
+		template <class> class TypedefSelector, 
 		class NamespacePlaceholder
 	>
-	struct extract_type<TypedefSelector<NamespacePlaceholder, typedef_tag> >
+	struct extract_type<TypedefSelector<typedef_tag<NamespacePlaceholder> > >
 	{
 		typedef typename TypedefSelector<
-			NamespacePlaceholder, 
-			typedef_tag
+			typedef_tag<
+				NamespacePlaceholder 
+			>
 		>::base_type type;
 	};
 } // namespace typedef_
@@ -138,16 +140,18 @@ namespace typedef_ {
  */
 #define BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR(NAMESPACE, TYPEDEFD_NAME) \
 	::boost::mirror::typedef_::TYPEDEFD_NAME < \
-		BOOST_MIRRORED_NAMESPACE( NAMESPACE ), \
-		::boost::mirror::typedef_::typedef_tag \
+		::boost::mirror::typedef_::typedef_tag< \
+			BOOST_MIRRORED_NAMESPACE( NAMESPACE ) \
+		> \
 	> 
 
 /** Macro that expands into a typedef-ined type selector
  */
 #define BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GS(TYPEDEFD_NAME) \
 	::boost::mirror::typedef_::TYPEDEFD_NAME < \
-		BOOST_MIRRORED_GLOBAL_SCOPE(), \
-		::boost::mirror::typedef_::typedef_tag \
+		::boost::mirror::typedef_::typedef_tag< \
+			BOOST_MIRRORED_GLOBAL_SCOPE() \
+		> \
 	>
 
 #define BOOST_MIRROR_TYPEDEF(NAMESPACE, TYPEDEFD_NAME) \
@@ -160,10 +164,11 @@ namespace typedef_ {
  */
 #define BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE(TYPEDEFD_NAME) \
 	namespace typedef_ { \
-		template <class MetaNamespace, class Tag> struct TYPEDEFD_NAME; \
+		template <class TaggedMetaNamespace> struct TYPEDEFD_NAME; \
 		template <> struct TYPEDEFD_NAME< \
-			BOOST_MIRRORED_GLOBAL_SCOPE(), \
-			::boost::mirror::typedef_::typedef_tag \
+			::boost::mirror::typedef_::typedef_tag< \
+				BOOST_MIRRORED_GLOBAL_SCOPE() \
+			> \
 		> {typedef TYPEDEFD_NAME base_type;}; \
 	} /* namespace typedef_ */ \
 	namespace detail { \
@@ -185,10 +190,11 @@ namespace typedef_ {
  */
 #define BOOST_MIRROR_REG_TYPEDEF(NAMESPACE, TYPEDEFD_NAME) \
 	namespace typedef_ { \
-		template <class MetaNamespace, class Tag> struct TYPEDEFD_NAME; \
+		template <class TaggedMetaNamespace> struct TYPEDEFD_NAME; \
 		template <> struct TYPEDEFD_NAME< \
-			BOOST_MIRRORED_NAMESPACE( NAMESPACE ), \
-			::boost::mirror::typedef_::typedef_tag \
+			::boost::mirror::typedef_::typedef_tag< \
+				BOOST_MIRRORED_NAMESPACE( NAMESPACE ) \
+			> \
 		> {typedef NAMESPACE :: TYPEDEFD_NAME base_type;}; \
 	} /* namespace typedef_ */ \
 	namespace detail { \
