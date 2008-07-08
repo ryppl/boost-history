@@ -10,20 +10,20 @@
 
 // narrow/wide char stream
 #include <boost/char_type_switch/iostream.hpp>
-
+// namespace and type related meta data
 #include <boost/mirror/meta_namespace.hpp>
 #include <boost/mirror/meta_type.hpp>
-//
+// traits
 #include <boost/mirror/traits/reflects_global_scope.hpp>
-//
+// boost typeof
 #include <boost/typeof/typeof.hpp>
 
-
-
+// define some namespaces
 namespace test {
 namespace feature {
 namespace detail {
 
+// and inside some types 
 struct foo { };
 struct bar { };
 typedef double foobar;
@@ -32,8 +32,10 @@ typedef double foobar;
 } // namespace feature
 } // namespace test
 
+// define some types on the global scope
 struct bar { };
 struct baz { };
+// typedef on the global scope
 typedef double foobar;
 
 
@@ -52,6 +54,7 @@ BOOST_MIRROR_REG_NAMESPACE((test)(feature)(detail))
 // register the types
 BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo)
 BOOST_MIRROR_REG_TYPE(::test::feature::detail, bar)
+//
 // register a typedef'd class this allows to distinguish it from
 // the 'source' type in some situations
 BOOST_MIRROR_REG_TYPEDEF(::test::feature::detail, foobar)
@@ -69,7 +72,7 @@ BOOST_MIRROR_REG_TYPEDEF_GS(foobar)
 } // namespace boost
 
 namespace test {
-
+	// a function on pointer to which we'll reflect later
 	int zero(void){return 0;}
 
 }
@@ -91,7 +94,6 @@ int main(void)
 	typedef BOOST_MIRRORED_TYPE(bar) meta_bar;
 	//
 	// put the full name of the type to the output stream
-	//
 	//
 	bcout << "|00| " << BOOST_MIRRORED_TYPE(int) ::full_name() << endl;
 	bcout << "|01| " << BOOST_MIRRORED_TYPE(foo) ::full_name() << endl;
@@ -191,6 +193,7 @@ int main(void)
 	// 
 	// function pointers
 	bcout << "|46| " << BOOST_MIRRORED_TYPEOF(&test::zero) ::full_name() << endl;
+	//
 	// more function pointers
 	typedef const foo * volatile (*T47)(const ::bar&, volatile ::baz*, T45);
 	bcout << "|47| " << BOOST_MIRRORED_TYPE(T47) ::full_name() << endl;
