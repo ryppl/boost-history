@@ -231,10 +231,10 @@ void vec_vec()
 
 void list_list()
 {
-    /*
     cout << "---- list/list ----" << endl;
     typedef undirected_graph<City, Road, vertex_list<>, edge_list<> > Graph;
     test_add_remove_vertices<Graph>();
+    /*
     test_add_remove_edges<Graph>();
     test_disconnect_vertex<Graph>();
     test_implicit_disconnect_vertex<Graph>();
@@ -248,10 +248,10 @@ void list_list()
 
 void set_set()
 {
-    /*
     cout << "---- set/set ----" << endl;
     typedef undirected_graph<City, Road, vertex_set<>, edge_set<> > Graph;
     test_add_remove_vertices<Graph>();
+    /*
     test_add_remove_edges<Graph>();
     test_disconnect_vertex<Graph>();
     test_implicit_disconnect_vertex<Graph>();

@@ -489,6 +489,7 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
 {
+    /*
     // Disconnecting a vertex is not quite so simple as clearing the incidence
     // set since we have to remove all the edge properties and remove the
     // opposite edges from other vertices.
@@ -511,6 +512,7 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
     // previous loop because we'll probably end up invalidating our own
     // iterators.
     src.clear();
+    */
 }
 
 /**
