@@ -40,7 +40,7 @@ struct meta_type<const ElementType[Size]> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef typename const meta_type<ElementType>::reflected_type 
+	typedef const typename meta_type<ElementType>::reflected_type 
 		reflected_type[Size];
 };
 
@@ -51,7 +51,7 @@ struct meta_type<volatile ElementType[Size]> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef typename volatile meta_type<ElementType>::reflected_type 
+	typedef volatile typename meta_type<ElementType>::reflected_type 
 		reflected_type[Size];
 };
 
@@ -63,7 +63,7 @@ struct meta_type<const volatile ElementType[Size]>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef typename const volatile meta_type<ElementType>::reflected_type 
+	typedef const volatile typename meta_type<ElementType>::reflected_type 
 		reflected_type[Size];
 };
 
