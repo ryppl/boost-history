@@ -13,6 +13,7 @@
 template <typename Iterator>
 class adjacency_iterator
 {
+public:
     typedef Iterator iterator;
     typedef typename Iterator::vertex_descriptor vertex_descriptor;
 
@@ -40,11 +41,14 @@ class adjacency_iterator
     inline adjacency_iterator& operator--()
     { --_iter; return *this; }
 
+    /** @name Equality Comparable */
+    //@{
     inline bool operator==(adjacency_iterator const& x) const
     { return _iter == x._iter; }
 
     inline bool operator!=(adjacency_iterator const& x) const
     { return _iter != x._iter; }
+    //@}
 
     reference operator*() const
     {

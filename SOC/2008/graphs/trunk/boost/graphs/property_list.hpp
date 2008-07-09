@@ -17,6 +17,9 @@
  * Because this store is built over a list, but only allows the insertion and
  * removal of one element at a time, we do this to optimize calls to the size()
  * function (which is used for the number of edges).
+ *
+ * Note that the edge pair is actually a set of descriptors into the incidence
+ * lists of the vertices that reference this edge property.
  */
 template <typename Edge, typename Alloc>
 class property_list
@@ -71,17 +74,6 @@ public:
         --_size;
     }
 
-    /** Return the properties referenced by the given descriptor. */
-    inline edge_properties& properties(property_descriptor d)
-    { return make_iterator(_props, d)->first; }
-
-    /**
-     * Bind vertex descriptors into the incidence lists into the global
-     * property. This is the last step of edge creation for undirected graphs.
-     */
-    void bind(property_descriptor d, edge_pair const& p)
-    { make_iterator(_props, d)->second = p; }
-
     /** Return the number of properties. */
     inline size_type size() const
     { return _size; }
@@ -98,6 +90,21 @@ public:
     inline iterator end() const
     { return _props.end(); }
     //@}
+
+    /**
+     * Bind vertex descriptors into the incidence lists into the global
+     * property. This is the last step of edge creation for undirected graphs.
+     */
+    void bind(property_descriptor d, edge_pair const& p)
+    { make_iterator(_props, d)->second = p; }
+
+    /** Return the incidence descriptors bound to the property. */
+    edge_pair const& ends(property_descriptor d) const
+    { return make_iterator(_props, d)->second; }
+
+    /** Return the properties referenced by the given descriptor. */
+    inline edge_properties& properties(property_descriptor d)
+    { return make_iterator(_props, d)->first; }
 
 private:
     mutable store_type  _props;

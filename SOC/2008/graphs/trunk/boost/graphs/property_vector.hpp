@@ -58,17 +58,6 @@ public:
         return make_descriptor(_props, i);
     }
 
-    /**
-     * Bind vertex descriptors into the incidence lists into the global
-     * property. This is the last step of edge creation for undirected graphs.
-     */
-    void bind(property_descriptor d, edge_pair const& p)
-    { make_iterator(_props, d)->second = p; }
-
-    /** Return the properties referenced by the given descriptor. */
-    inline edge_properties& properties(property_descriptor d)
-    { return make_iterator(_props, d)->first; }
-
     /** Return the number of properties in the store. */
     inline size_type size() const
     { return _props.size(); }
@@ -85,6 +74,21 @@ public:
     inline iterator end() const
     { return _props.end(); }
     //@}
+
+    /**
+     * Bind vertex descriptors into the incidence lists into the global
+     * property. This is the last step of edge creation for undirected graphs.
+     */
+    void bind(property_descriptor d, edge_pair const& p)
+    { make_iterator(_props, d)->second = p; }
+
+    /** Return the properties referenced by the given descriptor. */
+    inline edge_properties& properties(property_descriptor d)
+    { return make_iterator(_props, d)->first; }
+
+    /** Return the ends referened by the given descriptor. */
+    inline edge_pair const& ends(property_descriptor d) const
+    { return make_iterator(_props, d)->second; }
 
 private:
     mutable store_type _props;

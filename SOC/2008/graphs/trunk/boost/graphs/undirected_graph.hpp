@@ -25,6 +25,7 @@ public:
 
     // Underlying stores
     typedef typename types::property_store property_store;
+    typedef typename types::incidence_store incidence_store;
     typedef typename types::vertex_store vertex_store;
     typedef typename types::vertex_key vertex_key;
     typedef typename types::vertex_type vertex_type;
@@ -349,11 +350,11 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
 
     // Insert algorithm: Try to stub out the edge locally first. If it succeeds,
     // then add the global property, and finally bind the incidence and property
-    // descitpros into their respective "slots". Note that this is actually
-    // faster than the
+    // descitpros into their respective "slots".
     insertion_result<incidence_descriptor> first = src.connect(v);
     if(first.succeeded()) {
-        // Stub the incident edge on the other vertex.
+        // Stub the incident edge on the other vertex. Logically speaking, if
+        // an edge (u, v) can be added, then (v,u) must not exist.
         insertion_result<incidence_descriptor> second = tgt.connect(u);
         BOOST_ASSERT(second.succeeded());
 
@@ -361,7 +362,7 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         property_descriptor p = _props.add(ep);
         src.bind(first.value, p);
         tgt.bind(second.value, p);
-        _props.bind(p, make_pair(u, v));
+        _props.bind(p, make_pair(first.value, second.value));
         return edge_descriptor(u, v, p);
     }
     else if(first.retained()) {
@@ -463,22 +464,23 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
-    /*
     // Grab descriptors out of the edge.
     property_descriptor p = e.properties();
-    vertex_descriptor u = e.first();
-    vertex_descriptor v = e.second();
+    vertex_descriptor u = e.first(), v = e.second();
+    vertex_type &src = _verts.vertex(u), &tgt = _verts.vertex(v);
 
-    // And translate to real data structres.
-    vertex_type& src = _verts.vertex(u);
-    vertex_type& tgt = _verts.vertex(v);
+    // Get incidence iterators from the property and arranging them to match
+    // their owning vertices.
+    incidence_descriptor i = _props.ends(p).first, j = _props.ends(p).second;
+    if(src.connected_vertex(i) == v) {
+        i.swap(j);
+    }
 
     // Disconnect the incidence ends and then remove the property from the
     // global property store.
-    tgt.disconnect(u, p);
-    src.disconnect(v, p);
+    src.disconnect(j);
+    tgt.disconnect(i);
     _props.remove(p);
-    */
 }
 
 /**
@@ -489,30 +491,29 @@ template <BOOST_GRAPH_UG_PARAMS>
 void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
 {
-    /*
-    // Disconnecting a vertex is not quite so simple as clearing the incidence
-    // set since we have to remove all the edge properties and remove the
-    // opposite edges from other vertices.
-    // TODO: Can we specialize this at all?
-
     vertex_type& src = _verts.vertex(v);
 
     // Start by disconnecting all of the incident edges from adjacent vertices.
     incident_edge_range rng = incident_edges(v);
-    for( ; rng.first != rng.second; ++rng.first) {
-        edge_descriptor e = *rng.first;
-        vertex_type& opp = _verts.vertex(e.opposite(v));
-        opp.disconnect(v, e.properties());
+    for(incident_edge_iterator i = rng.first ; i != rng.second; ++i) {
+        edge_descriptor e = *i;
+        vertex_type& tgt = _verts.vertex(e.opposite(v));
 
-        // Remove all the properties too. Does this make sense here?
+        // Get an incidence descriptor into the target into tgt's edge store,
+        // so we can remove the edge record and the properties of the removed
+        // edge.
+        property_descriptor p = e.properties();
+        std::pair<incidence_descriptor, incidence_descriptor> x = _props.ends(p);
+        if(src.connected_vertex(x.first) != v) {
+            x.first.swap(x.second);
+        }
+        tgt.disconnect(x.first);
         _props.remove(e.properties());
     }
 
-    // Clear the incident edge set of the vertex. We don't do this in the
-    // previous loop because we'll probably end up invalidating our own
-    // iterators.
+    // Clear the incident edge set of the vertex. We can't do this in the
+    // previous loop because it will invalidate the our iterators.
     src.clear();
-    */
 }
 
 /**
@@ -544,30 +545,40 @@ void
 undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
                                             vertex_descriptor v)
 {
-    /*
     // Canonicalize the ordering of vertices first and the get the vertices.
     reorder(u, v);
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
-    // Iterate over the incident edges of the source vertex.
-    typename vertex_type::iterator i = src.begin(), end = src.end();
-    for( ; i != end; ) {
-        vertex_descriptor o = i->first;
-        property_descriptor p = i->second;
-        // If this is the opposite end of the edge, then we need to remove this
-        // from a) the incidence store of the opposite vertex and b) the global
-        // edge property.
-        if(i->first == v) {
-            tgt.disconnect(u, p);
+    // Iterate over the incident edges of the source vertex. If we the edge
+    // (u, *i) is the same as (u, v), then we need to remove that edge. We
+    // also have to cache these iterators and remove them in a second pass.
+    std::vector<incidence_descriptor> iters;
+    incident_edge_range rng = incident_edges(u);
+    for(incident_edge_iterator i = rng.first ; i != rng.second; ++i) {
+        edge_descriptor e = *i;
+        vertex_descriptor o = e.opposite(u);
+        if(o == v) {
+            // Grab descriptors to the property and the incident edge on the
+            // target vertex and remove them,
+            property_descriptor p = e.properties();
+            pair<incidence_descriptor, incidence_descriptor> x = _props.ends(p);
+            if(src.connected_vertex(x.first) == v) {
+                x.first.swap(x.second);
+            }
+            tgt.disconnect(x.first);
             _props.remove(p);
-            i = src.disconnect(i);
-        }
-        else {
-            ++i;
+
+            // Stash the iterator for the second pass.
+            iters.push_back(x.second);
         }
     }
-    */
+
+    // Second pass: disconnect all of the incident edges from src.
+    typename std::vector<incidence_descriptor>::iterator i, end = iters.end();
+    for(i = iters.begin(); i != end; ++i) {
+        src.disconnect(*i);
+    }
 }
 
 /**

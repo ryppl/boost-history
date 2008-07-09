@@ -131,8 +131,8 @@ public:
     //@}
 
 private:
-    store_type  _verts;
-    size_type   _size;
+    mutable store_type  _verts;
+    size_type           _size;
 };
 
 

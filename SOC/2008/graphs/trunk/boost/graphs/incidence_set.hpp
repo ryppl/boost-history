@@ -95,20 +95,17 @@ public:
     { return _edges.end(); }
     //@}
 
-    /** @name Property Access
-     * These functions provide a descriptor-based interface to the property
-     * descriptors contained within the edge record. Binding binds the property
-     * to an edge stub, and the properties function returns the bound property
-     * descriptor.
-     */
-    //@{
+    /** Bind this incident edge to the given property. */
     inline void bind(incidence_descriptor d, property_descriptor p)
     { make_iterator(_edges, d)->second = p; }
 
+    /** Return the vertex connected by this edge. */
+    inline vertex_descriptor vertex(incidence_descriptor d) const
+    { return make_iterator(_edges, d)->first; }
+
+    /** Return the properties connected by this edge. */
     inline property_descriptor properties(incidence_descriptor d) const
     { return make_iterator(_edges, d)->second; }
-    //@}
-
 
 private:
     mutable store_type _edges;

@@ -36,6 +36,19 @@ public:
         : ends(e), prop(p)
     { }
 
+    /** @name Descriptor-like Functions
+     * These allow you to treat the edge descriptor like a typical descriptor.
+     * That is, it can be tested for null status (which defers to the property
+     * descriptor).
+     */
+    //@{
+    inline bool is_null() const
+    { return prop.is_null(); }
+
+    inline operator bool() const
+    { return !is_null(); }
+    //@}
+
     inline property_descriptor properties() const
     { return prop; }
 

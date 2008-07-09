@@ -32,8 +32,13 @@ public:
     typedef typename incidence_store::iterator iterator;
     typedef typename incidence_store::size_type size_type;
 
-    inline undirected_vertex();
-    inline undirected_vertex(vertex_properties const& vp);
+    inline undirected_vertex()
+        : _props(), _edges()
+    { }
+
+    inline undirected_vertex(vertex_properties const& vp)
+        : _props(vp), _edges()
+    { }
 
     /** @name Edge Connection and Disconnection
      * These functions control how edges are added to and removed from the
@@ -47,11 +52,8 @@ public:
     inline void bind(incidence_descriptor i, property_descriptor p)
     { _edges.bind(i, p); }
 
-    inline void disconnect(vertex_descriptor, property_descriptor)
-    { }
-
-    inline void disconnect(incidence_descriptor)
-    { }
+    inline void disconnect(incidence_descriptor i)
+    { _edges.remove(i); }
     //@}
 
     /** Find return an iterator the edge end with the given vertex. */
@@ -62,6 +64,9 @@ public:
     inline property_descriptor edge_properties(incidence_descriptor i) const
     { return _edges.properties(i); }
 
+    inline vertex_descriptor connected_vertex(incidence_descriptor i) const
+    { return _edges.vertex(i) ;}
+
 
     /** @name Property Accessors */
     //@{
@@ -70,7 +75,6 @@ public:
 
     inline vertex_properties const& properties() const
     { return _props; }
-
     //@}
 
     /** @name Iterators */
@@ -98,21 +102,8 @@ public:
     { return _props < x._props; }
 
 private:
-    vertex_properties _props;
-    incidence_store _edges;
+    vertex_properties   _props;
+    incidence_store     _edges;
 };
-
-template <typename VP, typename IS>
-undirected_vertex<VP,IS>::undirected_vertex()
-    : _props()
-    , _edges()
-{ }
-
-template <typename VP, typename IS>
-undirected_vertex<VP,IS>::undirected_vertex(vertex_properties const& vp)
-    : _props(vp)
-    , _edges()
-{ }
-
 
 #endif
