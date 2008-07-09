@@ -9,74 +9,57 @@
  * of the out edge iterator since in edges contain placeheld references to
  * out edges.
  */
-template <typename Edge>
+template <typename Iter, typename Edge>
 class basic_in_iterator
 {
-    typedef typename Edge::in_iterator base_iterator;
-    typedef typename Edge::out_iterator out_iterator;
-    typedef typename out_iterator::value_type out_tuple;
 public:
-    typedef typename out_tuple::first_type vertex_descriptor;
-    typedef typename out_tuple::second_type edge_properties;
+    typedef Iter iterator;
+    typedef typename Iter::value_type base_value_type;
+    typedef typename base_value_type::first_type vertex_descriptor;
+    typedef typename base_value_type::second_type out_descriptor;
 
-    // This is a little misleading. This iterator can be either bidi or random.
-    // Clearly, we're going to be constraining members using some concept stuff
-    // when it becomes available.
-    typedef typename base_iterator::iterator_category iterator_category;
-    typedef typename base_iterator::difference_type difference_type;
-
+    typedef typename iterator::iterator_category iterator_category;
+    typedef typename iterator::difference_type difference_type;
     typedef Edge value_type;
     typedef value_type reference;
     typedef value_type pointer;
 
+    /** @name Constructors */
+    //@{
     inline basic_in_iterator()
-        : _base(), _iter()
+        : tgt(), iter()
     { }
 
-    inline basic_in_iterator(basic_in_iterator const& x)
-        : _base(x._base), _iter(x._iter)
+    inline basic_in_iterator(vertex_descriptor v, iterator x)
+        : tgt(v), iter(x)
     { }
+    //@}
 
-    inline basic_in_iterator(vertex_descriptor v, base_iterator const& x)
-        : _base(v), _iter(x)
-    { }
-
-    /**
-     * Extended iterator functionality. Return the source vertex of the
-     * iterator. This is the vertex for which the iterator was originally
-     * created.
-     */
+    /** Return the source vertex of the iterated edge. */
     vertex_descriptor source() const
-    { return _base; }
+    { return iter->first; }
 
-    /**
-     * Extended iterator functionality. Return the opposite vertex of the
-     * edge indicated by the iterator. This is mostly provided for use by
-     * the adjacency iterator.
-     */
-    vertex_descriptor opposite() const
-    { return _iter->first; }
+    /** Return the target vertex of the iterated edge. */
+    vertex_descriptor target() const
+    { return tgt; }
 
     inline basic_in_iterator& operator++()
-    { ++_iter; return *this; }
+    { ++iter; return *this; }
 
     inline basic_in_iterator& operator--()
-    { --_iter; return *this; }
+    { --iter; return *this; }
 
     inline bool operator==(basic_in_iterator const& x) const
-    { return (_base == x._base) && (_iter == x._iter); }
+    { return iter == x.iter; }
 
     inline bool operator!=(basic_in_iterator const& x) const
-    { return !this->operator==(x); }
+    { return iter != x.iter; }
 
     inline reference operator*() const
-    {
-        return reference(_iter->first, _iter->second.template get<out_iterator>());
-    }
+    { return Edge(source(), target(), iter->second()); }
 
-private:
-    vertex_descriptor   _base;
-    base_iterator       _iter;
+    vertex_descriptor   tgt;
+    iterator            iter;
 };
 
 #endif

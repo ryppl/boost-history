@@ -37,27 +37,30 @@ struct node_descriptor
 
     /** @name Equality Comparable */
     //@{
-    inline bool operator==(node_descriptor const& x)
+    inline bool operator==(node_descriptor const& x) const
     { return value == x.value; }
 
-    inline bool operator!=(node_descriptor const& x)
+    inline bool operator!=(node_descriptor const& x) const
     { return value != x.value; }
     //@}
 
     /** @name Less Than Comparable */
     //@{
-    inline bool operator<(node_descriptor const& x)
+    inline bool operator<(node_descriptor const& x) const
     { return value < x.value; }
 
-    inline bool operator>(node_descriptor const& x)
+    inline bool operator>(node_descriptor const& x) const
     { return value > x.value; }
 
-    inline bool operator<=(node_descriptor const& x)
+    inline bool operator<=(node_descriptor const& x) const
     { return value <= x.value; }
 
-    inline bool operator>=(node_descriptor const& x)
+    inline bool operator>=(node_descriptor const& x) const
     { return value >= x.value; }
     //@}
+
+    inline void swap(node_descriptor& x)
+    { value.swap(x.value) ;}
 
     template <typename Container>
     inline typename Container::iterator get(Container& c) const

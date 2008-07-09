@@ -148,7 +148,7 @@ undirected()
 
     // Instantiate data structures related to the storage of edges and their
     // properties.
-    typedef typename EdgeStore::template property_store<EdgeProps, VertexDesc>::type PropStore;
+    typedef typename EdgeStore::template property_store<EdgeProps>::type PropStore;
     typedef typename EdgeStore::template incidence_store<VertexDesc>::type IncStore;
 
     PropStore props;

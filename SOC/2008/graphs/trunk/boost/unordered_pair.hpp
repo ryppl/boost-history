@@ -154,13 +154,14 @@ make_unordered_pair(T const& f, T const& s)
 { return unordered_pair<T>(f, s); }
 
 /**
- * A swap-like sort function that will "unorder" two objects.
+ * A swap-like sort function that will "unorder" two objects using the given
+ * comparator, which defaults to std::less.
  */
-template <typename T>
+template <typename T, typename Comp = std::less<T>>
 void
-reorder(T& a, T& b)
+reorder(T& a, T& b, Comp = Comp())
 {
-    unordered_pair<T> p(a, b);
+    unordered_pair<T, Comp> p(a, b);
     a = p.first();
     b = p.second();
 }

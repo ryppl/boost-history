@@ -81,8 +81,8 @@ int main()
 {
     test<vertex_vector<>>();
     test<vertex_list<>>();
-    // test<vertex_set<>>();
-    // test<vertex_map<int>>();
+    test<vertex_set<>>();
+    test<vertex_map<int>>();
 
     return 0;
 }

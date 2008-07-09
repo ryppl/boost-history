@@ -66,7 +66,7 @@ struct edge_list
     template <typename VertexDesc, typename EdgeProps>
     struct out_store
     {
-        typedef triple<VertexDesc, EdgeProps, in_descriptor> edge;
+        typedef std::pair<VertexDesc, std::pair<EdgeProps, in_descriptor>> edge;
         typedef FirstAlloc<edge> allocator;
         typedef out_list<edge, allocator> type;
     };

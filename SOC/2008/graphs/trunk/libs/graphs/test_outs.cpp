@@ -15,7 +15,7 @@ using namespace boost;
 typedef index_descriptor<size_t> VertexDesc;
 typedef index_descriptor<size_t> InDesc;
 typedef int EdgeProps;
-typedef triple<VertexDesc, EdgeProps, InDesc> OutEdge;
+typedef pair<VertexDesc, pair<EdgeProps, InDesc>> OutEdge;
 typedef allocator<OutEdge> Alloc;
 typedef less<VertexDesc> Compare;
 

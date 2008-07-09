@@ -85,6 +85,14 @@ struct blob
     { return std::memcmp(mem, x.mem, N) >= 0; }
     //@}
 
+    inline void swap(blob& x)
+    {
+        unsigned char tmp[N];
+        std::memcpy(tmp, mem, N);
+        std::memcpy(mem, x.mem, N);
+        std::memcpy(x.mem, tmp, N);
+    }
+
     mutable unsigned char mem[N];
 };
 

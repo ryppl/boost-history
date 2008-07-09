@@ -20,6 +20,8 @@ public:
     typedef PropDesc property_descriptor;
     typedef unordered_pair<vertex_descriptor> edge_pair;
 
+    /** @name Constructors */
+    //@{
     inline undirected_edge()
         : ends(), prop()
     { }
@@ -35,6 +37,7 @@ public:
     inline undirected_edge(unordered_pair<vertex_descriptor, vertex_descriptor> const& e, property_descriptor p)
         : ends(e), prop(p)
     { }
+    //@{
 
     /** @name Descriptor-like Functions
      * These allow you to treat the edge descriptor like a typical descriptor.
@@ -69,14 +72,29 @@ public:
     { return make_unordered_pair(u, v) == ends; }
 
 
+    /** @name Equality Comparable */
+    //@{
     inline bool operator==(undirected_edge const& x) const
     { return (ends == x.ends) && (prop == x.prop); }
 
     inline bool operator!=(undirected_edge const& x) const
     { return !operator==(x); }
+    //@}
 
+    /** @name Less Than Comparable */
+    //@{
     inline bool operator<(undirected_edge const& x) const
     { return std::make_pair(ends, prop) < std::make_pair(x.ends < x.prop); }
+
+    inline bool operator>(undirected_edge const& x) const
+    { return x.operator<(*this); }
+
+    inline bool operator<=(undirected_edge const& x) const
+    { return !x.operator<(*this); }
+
+    inline bool operator>=(undirected_edge const& x) const
+    { return !operator<(x); }
+    //@}
 
     edge_pair               ends;
     property_descriptor     prop;

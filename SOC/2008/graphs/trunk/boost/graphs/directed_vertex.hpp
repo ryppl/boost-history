@@ -2,9 +2,6 @@
 #ifndef DIRECTED_VERTEX_HPP
 #define DIRECTED_VERTEX_HPP
 
-#include "placeholder.hpp"
-#include "directed_edge.hpp"
-
 /**
  * A directed vertex provides storage for both outgoing edges and in edges.
  * Each of these stores are parameterizable, although they should generally
@@ -17,46 +14,43 @@ class directed_vertex
     typedef InStore in_store;
 public:
     typedef VertexProps vertex_properties;
+
     typedef typename out_store::vertex_descriptor vertex_descriptor;
-
-    typedef typename OutStore::edge_properties edge_properties;
-
+    typedef typename out_store::edge_properties edge_properties;
+    typedef typename out_store::out_descriptor out_descriptor;
     typedef typename out_store::iterator out_iterator;
     typedef typename out_store::size_type out_size_type;
 
+    typedef typename in_store::in_descriptor in_descriptor;
     typedef typename in_store::iterator in_iterator;
     typedef typename in_store::size_type in_size_type;
 
     typedef out_size_type incident_size_type;
 
-    typedef directed_edge<out_iterator, in_iterator> edge_descriptor;
-
     /** @name Constructors */
     //@{
     inline directed_vertex()
-        : _props()
-        , _out()
-        , _in()
+        : _props(), _out(), _in()
     { }
 
     inline directed_vertex(vertex_properties const& vp)
-        : _props(vp)
-        , _out()
-        , _in()
+        : _props(vp), _out(), _in()
     { }
     //@}
 
-    std::pair<out_iterator, bool> allow(vertex_descriptor) const;
+    /** @name Edge Connection and Disconnection
+     * These functions provide an interface to the in and out stores of the
+     * vertex.
+     */
+    //@{
+    insertion_result<out_descriptor> connect_target(vertex_descriptor v, edge_properties const& ep)
+    { return _out.add(v, ep); }
 
-    out_iterator connect_target(vertex_descriptor, edge_properties const&);
-    in_iterator connect_source(vertex_descriptor);
-    static edge_descriptor bind_connection(out_iterator, in_iterator);
+    insertion_result<in_descriptor> connect_source(vertex_descriptor v, out_descriptor o)
+    { return _in.add(v, o); }
 
-    void disconnect_target(edge_descriptor);
-    void disconnect_source(edge_descriptor);
-
-    out_iterator disconnect_target(out_iterator);
-    in_iterator disconnect_source(in_iterator);
+    void bind_target(out_descriptor o, in_descriptor i)
+    { _out.bind(o, i); }
 
     /** @name Property Accessors */
     //@{
@@ -130,93 +124,5 @@ private:
     in_store            _in;
 };
 
-/**
- * Determine if the connection from this vertex to the other should be allwed.
- * This depends in part upon the structure of the out out edge store and the
- * policies used to configure the graph. This function returns a pair containing
- * an iterator to an existing edge and a bool, determining if the edge should
- * be added anyways.
- */
-template <typename V, typename O, typename I>
-std::pair<typename directed_vertex<V,O,I>::out_iterator, bool>
-directed_vertex<V,O,I>::allow(vertex_descriptor v) const
-{
-    return _out.allow(v);
-}
-
-/**
- * Connect this vertex to the vertex v with the given properties. Return an out
- * edge descriptor for the new edge.
- */
-template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::out_iterator
-directed_vertex<V,O,I>::connect_target(vertex_descriptor v, edge_properties const& ep)
-{
-    return _out.add(v, ep);
-}
-
-/**
- * Add a incoming edge from the vertex v with out edge descriptor o.
- *
- * Unfortunately, we can't combine this operation with connet_to() because we
- * don't actually have a descriptor for this vertex.
- */
-template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::in_iterator
-directed_vertex<V,O,I>::connect_source(vertex_descriptor v)
-{
-    return _in.add(v);
-}
-
-/**
- * Having added the edge stubs, bind them together and return a descriptor over
- * the edge. This is a static method because it doesn't pertain to single
- * object.
- */
-template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::edge_descriptor
-directed_vertex<V,O,I>::bind_connection(out_iterator i, in_iterator j)
-{
-    i->third.put(j);
-    j->second.put(i);
-    return edge_descriptor(j->first, i);
-}
-
-/**
- * Disconnect this vertex from its target, removing the outgoing edge.
- */
-template <typename V, typename O, typename I>
-void
-directed_vertex<V,O,I>::disconnect_target(edge_descriptor e)
-{
-    _out.remove(e.out_edge());
-}
-
-/**
- * Disconnect this vertex from its source, removing the incoming edge.
- */
-template <typename V, typename O, typename I>
-void
-directed_vertex<V,O,I>::disconnect_source(edge_descriptor e)
-{
-    // Get the input iterator from the edge.
-    out_iterator o = e.out_edge();
-    in_iterator i = (*o).third.template get<in_iterator>();
-    _in.remove(i);
-}
-
-template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::out_iterator
-directed_vertex<V,O,I>::disconnect_target(out_iterator i)
-{
-    return _out.remove(i);
-}
-
-template <typename V, typename O, typename I>
-typename directed_vertex<V,O,I>::in_iterator
-directed_vertex<V,O,I>::disconnect_source(in_iterator i)
-{
-    return _in.remove(i);
-}
 
 #endif

@@ -34,8 +34,7 @@ public:
         : base(v), iter(x)
     { }
 
-
-      /**
+    /**
      * Extended iterator functionality. Return the source vertex of the
      * iterator. This is the vertex for which the iterator was originally
      * created.

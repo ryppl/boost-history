@@ -37,10 +37,10 @@ struct index_descriptor
 
     /** @name Equality Comparable */
     //@{
-    inline bool operator==(index_descriptor const& x)
+    inline bool operator==(index_descriptor const& x) const
     { return value == x.value; }
 
-    inline bool operator!=(index_descriptor const& x)
+    inline bool operator!=(index_descriptor const& x) const
     { return value != x.value; }
     //@}
 
@@ -58,6 +58,9 @@ struct index_descriptor
     inline bool operator>=(index_descriptor const& x) const
     { return value >= x.value; }
     //@}
+
+    inline void swap(index_descriptor& x)
+    { std::swap(value, x); }
 
     template <typename Container>
     inline typename Container::iterator get(Container& c) const

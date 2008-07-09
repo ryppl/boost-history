@@ -1,4 +1,3 @@
-
 Notes...
 
 
@@ -44,3 +43,14 @@ I have `std::list<int>`, can I get `std::list`?
 Probably for specific instances of templates, but probably not generically...
 But then again. Who knows?
 
+Q: Why does the out store store values as a pair of pairs? Why not a triple or
+tuple?
+Easy... So the iterators, when dereferenced will always return a pair whose
+first value is a vertex descriptor and whose second value is another pair that
+contains an edge property and an in descriptor in its first and second slots.
+This is an artifact of using maps in the out set.
+
+Q: Why does the out iterator need a pointer back to the out store?
+Because you can't translate between the wrapped iterator and a descriptor to
+the wrapped iterator without a reference to the container. If descritpors were
+self-translating, this wouldn't be a problem...

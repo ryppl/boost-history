@@ -12,7 +12,7 @@
  * The in-edge vector references incoming edges from other vertices. Each edge
  * can be uniquely identified by its source vertex and property descriptor.
  *
- * @param Edge A pair describing a vertex descriptor and out edgedescriptor.
+ * @param Edge A pair describing a vertex descriptor and out edge descriptor.
  * @param Alloc The allocator for edge pairs.
  */
 template <typename Edge, typename Alloc>

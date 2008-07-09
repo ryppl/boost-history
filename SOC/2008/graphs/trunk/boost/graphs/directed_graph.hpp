@@ -2,8 +2,6 @@
 #ifndef DIRECTED_GRAPH_HPP
 #define DIRECTED_GRAPH_HPP
 
-#include <boost/static_assert.hpp>
-
 // Notes on directed graphs... Unlike directed graphs, which are required
 // to globally store edge properties, the vertices directed graphs act as
 // the stores for nested properties. Edge properties are stored with the
@@ -30,23 +28,8 @@
 // order to provide quick access to it "other half", it needs a reference to
 // the out edge (which could be implemented as an iterator of some kind).
 
-#include "none.hpp"
-
-#include "directed_vertex.hpp"
-#include "vertex_vector.hpp"
-#include "vertex_list.hpp"
-#include "vertex_set.hpp"
-#include "vertex_map.hpp"
-
-#include "directed_edge.hpp"
-#include "edge_vector.hpp"
-#include "edge_list.hpp"
-#include "edge_set.hpp"
-
-#include "out_iterator.hpp"
-#include "in_iterator.hpp"
-
-#include "adjacency_iterator.hpp"
+#include <boost/none.hpp>
+#include <boost/graphs/directed_types.hpp>
 
 template <
     typename VertexProps,
@@ -55,6 +38,7 @@ template <
     typename EdgeStore>
 class directed_graph
 {
+    typedef directed_types<VertexProps, EdgeProps, VertexStore, EdgeStore> types;
     typedef directed_graph<VertexProps, EdgeProps, VertexStore, EdgeStore> this_type;
 public:
     typedef VertexProps vertex_properties;
@@ -62,55 +46,39 @@ public:
     typedef VertexStore vertex_store_selector;
     typedef EdgeStore edge_store_selector;
 
-    // In order to create the vertex store, we have to create the vertex type.
-    // In order to create the vertex type we need to create the edge store
-    // types. There are two types of edge store types - one that stores outgoing
-    // edges (a pair of vertex and edge property) and another that stores the
-    // descriptors of incoming vertices.
+    // Underlying stores
+    typedef typename types::out_store out_store;
+    typedef typename types::in_store in_store;
+    typedef typename types::vertex_store vertex_store;
+    typedef typename types::vertex_key vertex_key;
+    typedef typename types::vertex_type vertex_type;
 
-    // We have to generate the vertex descriptor before we can do anything else.
-    typedef typename VertexStore::descriptor_type vertex_descriptor;
+    // Vertex/Property descriptors
+    typedef typename types::vertex_descriptor vertex_descriptor;
+    typedef typename types::edge_descriptor edge_descriptor;
+    typedef typename types::out_descriptor out_descriptor;
+    typedef typename types::in_descriptor in_descriptor;
 
-    // Use the vertex descriptor and edge properties to generate the out and in
-    // edge stores for the graph. Get the out edge descriptor type from the out
-    // store.
-    typedef typename EdgeStore::template out_store<vertex_descriptor, edge_properties>::type out_edge_store;
-    typedef typename EdgeStore::template in_store<vertex_descriptor>::type in_edge_store;
+    // Iterators and ranges
+    typedef typename types::vertex_iterator vertex_iterator;
+    typedef typename types::vertex_range vertex_range;
+    typedef typename types::edge_iterator edge_iterator;
+    typedef typename types::edge_range edge_range;
+    typedef typename types::out_edge_iterator out_edge_iterator;
+    typedef typename types::out_edge_range out_edge_range;
+    typedef typename types::in_edge_iterator in_edge_iterator;
+    typedef typename types::in_edge_range in_edge_range;
+    typedef typename types::incident_edge_iterator incident_edge_iterator;
+    typedef typename types::incident_edge_range incident_edge_range;
+    typedef typename types::adjacent_vertex_iterator adjacent_vertex_iterator;
+    typedef typename types::adjacent_vertex_range adjacent_vertex_range;
 
-    // We can now generate the edge descriptor.
-    typedef directed_edge<typename out_edge_store::iterator, typename in_edge_store::iterator> edge_descriptor;
-
-    // Generate the vertex type over the vertex properties, and in/out stores.
-    // NOTE: Omitting the in-edge store allows us to create half-directed
-    // graphs.
-    typedef directed_vertex<vertex_properties, out_edge_store, in_edge_store> vertex_type;
-    typedef typename vertex_type::out_size_type out_edges_size_type;
-    typedef typename vertex_type::in_size_type in_edges_size_type;
-    typedef typename vertex_type::incident_size_type incident_edges_size_type;
-
-    // Finally, use the vertex type to generate the vertex store. This is then
-    // used to generate types iteration and size functions.
-    typedef typename VertexStore::template store<vertex_type>::type vertex_store;
-    typedef typename vertex_store::size_type vertices_size_type;
-    typedef typename vertex_store::vertex_iterator vertex_iterator;
-    typedef typename vertex_store::vertex_range vertex_range;
-
-    // Additional iterator types. I'm cheating here and using the edge
-    // descriptor to piggyback type information to these iterators. It kinda
-    // works.
-    typedef directed_edge_iterator<this_type> edge_iterator;
-    typedef std::pair<edge_iterator, edge_iterator> edge_range;
-    typedef basic_out_iterator<edge_descriptor> out_edge_iterator;
-    typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
-    typedef basic_in_iterator<edge_descriptor> in_edge_iterator;
-    typedef std::pair<in_edge_iterator, in_edge_iterator> in_edge_range;
-
-    // This just makes sense.
-    typedef std::size_t edges_size_type;
-
-    // FIXME: This is a bit hacky, but without constrained members, we need a key
-    // type to enable mapped vertices.
-    typedef typename VertexStore::key_type vertex_key;
+    // Sizes for vertices, and degree.
+    typedef typename types::vertices_size_type vertices_size_type;
+    typedef typename types::edges_size_type edges_size_type;
+    typedef typename types::out_edges_size_type out_edges_size_type;
+    typedef typename types::in_edges_size_type in_edges_size_type;
+    typedef typename types::incident_edges_size_type incident_edges_size_type;
 
 
     // Constructors

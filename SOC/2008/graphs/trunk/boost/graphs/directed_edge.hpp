@@ -11,85 +11,68 @@
  * @param VertexDesc A vertex descriptor
  * @param OutDesc An out edge descriptor.
  */
-template <typename OutIter, typename InIter>
+template <typename VertexDesc, typename OutDesc>
 class directed_edge
 {
-    template <typename O, typename I> friend bool operator==(directed_edge<O,I> const&, directed_edge<O,I> const&);
-    template <typename O, typename I> friend bool operator<(directed_edge<O,I> const&, directed_edge<O,I> const&);
 public:
-    typedef OutIter out_iterator;
-    typedef InIter in_iterator;
-    typedef typename OutIter::value_type out_tuple;
-    typedef typename out_tuple::first_type vertex_descriptor;
-    typedef typename out_tuple::second_type edge_properties;
+    typedef VertexDesc vertex_descriptor;
+    typedef OutDesc out_descriptor;
+    typedef std::pair<vertex_descriptor, vertex_descriptor> edge_pair;
 
     /** @name Constructors */
     //@{
     inline directed_edge()
-        : _src()
-        , _out()
+        : ends(), out()
     { }
 
-    inline directed_edge(vertex_descriptor v, OutIter o)
-        : _src(v)
-        , _out(o)
+    inline directed_edge(vertex_descriptor u, vertex_descriptor v, out_descriptor o)
+        : ends(u, v), out(o)
+    { }
+
+    inline directed_edge(std::pair<vertex_descriptor, vertex_descriptor> x, out_descriptor o)
+        : ends(x), out(o)
     { }
     //@}
 
-   /**
-     * Return a value that uniquely describes the edge. This is basically going
-     * to be the address of the property. Note that directed graphs can't use
-     * indexed exterior edge properties because there's no method for maintaining
-     * a global edge index.
-     */
-    inline edge_properties* get() const
-    { return &properties(); }
-
-    /** Return the source of the edge. */
+    /** Return the source vertex descriptor. */
     inline vertex_descriptor source() const
-    { return _src; }
+    { return ends.first; }
 
-    /** Return the target of the edge. */
+    /** Return the target vertex descriptor. */
     inline vertex_descriptor target() const
-    { return _out->first; }
+    { return ends.second; }
 
-    /** Return the iterator to the out edge. */
-    inline OutIter out_edge() const
-    { return _out; }
+    /** Return the descriptor to the out edge, where the property is stored. */
+    inline out_descriptor out_edge() const
+    { return out; }
 
-    inline InIter in_edge() const
-    { return (*_out).third.template get<InIter>(); }
-
-    /** @name Property Accessors
-     * Return the properties associated with the edge.
-     */
+    /** @name Equality Comparable */
     //@{
-    inline edge_properties& properties()
-    { return (*_out).second; }
+    inline bool operator==(directed_edge const& x) const
+    { return (ends == x.ends) && (out = x.out); }
 
-    inline edge_properties const& properties() const
-    { return (*_out).second; }
+    inline bool operator!=(directed_edge const& x) const
+    { return !operator==(x); }
     //@}
 
-private:
-    vertex_descriptor   _src;
-    OutIter             _out;
+    /** @name Less Than Comparable */
+    //@{
+    inline bool operator<(directed_edge const& x) const
+    { return std::make_pair(ends, out) < std::make_pair(x.ends < x.out); }
+
+    inline bool operator>(directed_edge const& x) const
+    { return x.operator<(*this); }
+
+    inline bool operator<=(directed_edge const& x) const
+    { return !x.operator<(*this); }
+
+    inline bool operator>=(directed_edge const& x) const
+    { return !operator<(x); }
+    //@}
+
+    edge_pair       ends;
+    out_descriptor  out;
 };
-
-template <typename O, typename I>
-inline bool
-operator==(directed_edge<O,I> const& x, directed_edge<O,I> const& y)
-{ return (x._src == y._src) && (x._out == y._out); }
-
-template <typename O, typename I>
-inline bool
-operator!=(directed_edge<O,I> const& x, directed_edge<O,I> const& y)
-{ return !(x == y); }
-
-template <typename O, typename I>
-inline bool
-operator<(directed_edge<O,I> const& x, directed_edge<O,I> const& y)
-{ return std::make_pair(x._src, x._out) < std::make_pair(y._src, y._out); }
 
 template <typename O, typename I>
 std::ostream& operator<<(std::ostream& os, const directed_edge<O,I>& e)
@@ -100,27 +83,28 @@ std::ostream& operator<<(std::ostream& os, const directed_edge<O,I>& e)
  * edges of a directed graph. This is essenitally done by iterating over the
  * out edges of each vertex in the order in which they were added to the graph.
  */
-template <typename Graph>
+template <typename VertexStore, typename Edge>
 struct directed_edge_iterator
 {
-    typedef typename Graph::vertex_iterator vertex_iterator;
-    typedef typename Graph::out_edge_iterator edge_iterator;
+    typedef VertexStore vertex_store;
+    typedef typename vertex_store::iterator vertex_iterator;
+    typedef typename vertex_store::vertex_type vertex_type;
+    typedef typename vertex_type::out_iterator edge_iterator;
 
     typedef std::forward_iterator_tag iterator_category;
-    typedef std::size_t difference_type;
-
-    typedef typename Graph::edge_descriptor value_type;
+    typedef typename vertex_iterator::diffeerence_type difference_type;
+    typedef Edge value_type;
     typedef value_type reference;
     typedef value_type pointer;
 
     // Used to construct the end iterator.
-    directed_edge_iterator(Graph const& g, vertex_iterator v)
-        : graph(g), vert(v), edge()
+    directed_edge_iterator(vertex_store& store)
+        : verts(&store), vert(store.end_vertices()), edge()
     { }
 
-    // Typically used to construct the begin iterator.
-    directed_edge_iterator(Graph const& g, vertex_iterator v, edge_iterator e)
-        : graph(g), vert(v), edge(e)
+    // Used to cosntruct the begin iterator.
+    directed_edge_iterator(vertex_store& store, edge_iterator e)
+        : verts(&store), vert(store.begin_vertices()), edge(e)
     { }
 
     inline directed_edge_iterator& operator++()
@@ -128,12 +112,12 @@ struct directed_edge_iterator
         // If we're not done, increment the current edge. If that increment
         // pushes the edge iterator off the vertex, move to the next vertex
         // and reset the edge iterator.
-        if(vert != graph.end_vertices()) {
+        if(vert != verts->end_vertices()) {
             ++edge;
-            if(edge == graph.end_out_edges(*vert)) {
+            if(edge == verts->vertex(*vert).end_out()) {
                 ++vert;
-                if(vert != graph.end_vertices()) {
-                    edge = graph.begin_out_edges(*vert);
+                if(vert != verts->end_vertices()) {
+                    edge = vert->vertex(*vert).begin_out();
                 }
                 else {
                     edge = edge_iterator();
@@ -143,22 +127,21 @@ struct directed_edge_iterator
         return *this;
     }
 
+    /** @name Equality Comparable */
+    //@{
+    inline bool operator==(directed_edge_iterator const& x)
+    { return edge == x.edge; }
+
+    inline bool operator!=(directed_edge_iterator const& x)
+    { return edge != x.edge; }
+    //@}
+
     inline reference operator*() const
     { return  *edge; }
 
-    Graph const& graph;
+    vertex_store* verts;
     vertex_iterator vert;
     edge_iterator edge;
 };
-
-template <typename Graph>
-inline bool
-operator==(directed_edge_iterator<Graph> const& a, directed_edge_iterator<Graph> const& b)
-{ return (a.vert == b.vert) && (a.edge == b.edge); }
-
-template <typename Graph>
-inline bool
-operator!=(directed_edge_iterator<Graph> const& a, directed_edge_iterator<Graph> const& b)
-{ return !(a == b); }
 
 #endif

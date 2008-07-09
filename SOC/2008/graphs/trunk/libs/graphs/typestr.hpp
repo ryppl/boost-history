@@ -3,6 +3,7 @@
 #define DEMANGLE_HPP
 
 #include <string>
+#include <cstring>
 #include <typeinfo>
 #include <cxxabi.h>
 

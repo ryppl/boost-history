@@ -22,8 +22,9 @@ class out_vector
 {
 public:
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type edge_properties;
-    typedef typename Edge::third_type in_descriptor;
+    typedef typename Edge::second_type edge_pair;
+    typedef typename edge_pair::first_type edge_properties;
+    typedef typename edge_pair::second_type in_descriptor;
 
     typedef std::vector<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
@@ -42,7 +43,7 @@ public:
      */
     insertion_result<out_descriptor> add(vertex_descriptor v, edge_properties const& ep)
     {
-        iterator i = _edges.insert(_edges.end(), make_triple(v, ep, in_descriptor()));
+        iterator i = _edges.insert(_edges.end(), std::make_pair(v, std::make_pair(ep, in_descriptor())));
         return make_result(make_descriptor(_edges, i));
     }
 
@@ -72,11 +73,23 @@ public:
 
     /** Bind the edge to the corresponding in edge descriptor. */
     inline void bind(out_descriptor o, in_descriptor i)
-    { make_iterator(_edges, o)->third = i; }
+    { make_iterator(_edges, o)->second.second = i; }
+
+    /** Return the target vertex of this edge. */
+    inline vertex_descriptor target(out_descriptor o) const
+    { return make_iterator(_edges, o)->first; }
 
     /** Return the properties stored with this edge. */
     inline edge_properties const& properties(out_descriptor o) const
-    { return make_iterator(_edges, o)->second; }
+    { return make_iterator(_edges, o)->second.first; }
+
+    /** Return the in edge descriptor bound to this edge. */
+    inline in_descriptor reverse(out_descriptor o) const
+    { return make_iterator(_edges, o)->second.second; }
+
+    /** Return an out descriptor for the given iterator. */
+    inline out_descriptor edge(iterator i)
+    { return make_descriptor(_edges, i); }
 
 private:
     mutable store_type _edges;

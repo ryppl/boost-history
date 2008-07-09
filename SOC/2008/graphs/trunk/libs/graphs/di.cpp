@@ -3,11 +3,9 @@
 #include <set>
 
 #include <boost/assert.hpp>
-#include <boost/utility.hpp>
 #include <boost/graphs/directed_graph.hpp>
-#include <boost/graphs/traits.hpp>
 
-#include "demangle.hpp"
+#include "typestr.hpp"
 
 using namespace std;
 using namespace boost;
@@ -22,11 +20,13 @@ void set_set();
 template <typename Graph>
 void print_types(const Graph&)
 {
+    /*
     cout << demangle(typeid(typename Graph::property_descriptor).name()) << endl;
     cout << demangle(typeid(typename Graph::vertex_descriptor).name()) << endl;
     cout << demangle(typeid(typename Graph::edge_descriptor).name()) << endl;
     cout << demangle(typeid(typename Graph::property_store).name()) << endl;
     cout << demangle(typeid(typename Graph::vertex_store).name()) << endl;
+    */
 }
 
 template <typename Graph>
@@ -255,17 +255,20 @@ int main()
 void vec_vec()
 {
     cout << "---- vec/vec ----" << endl;
+    /*
     typedef directed_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
     test_add_multi_edges<Graph>();
-    // test_incidence_iterator<Graph>();
-    // test_adjacency_iterator<Graph>();
+    test_incidence_iterator<Graph>();
+    test_adjacency_iterator<Graph>();
+    */
 }
 
 void list_list()
 {
     cout << "---- list/list ----" << endl;
+    /*
     typedef directed_graph<City, Road, vertex_list<>, edge_list<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
@@ -273,24 +276,25 @@ void list_list()
     test_implicit_disconnect_vertex<Graph>();
     test_add_multi_edges<Graph>();
     test_remove_multi_edges<Graph>();
-    // test_incidence_iterator<Graph>();
-    // test_adjacency_iterator<Graph>();
+    test_incidence_iterator<Graph>();
+    test_adjacency_iterator<Graph>();
+    */
 }
 
 
 void set_set()
 {
     cout << "---- set/set ----" << endl;
+    /*
     typedef directed_graph<City, Road, vertex_set<>, edge_set<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
-    /*
     test_disconnect_vertex<Graph>();
     test_implicit_disconnect_vertex<Graph>();
     test_add_multi_edges<Graph>();
     test_remove_multi_edges<Graph>();
-    // test_incidence_iterator<Graph>();
-    // test_adjacency_iterator<Graph>();
+    test_incidence_iterator<Graph>();
+    test_adjacency_iterator<Graph>();
     */
 }
 

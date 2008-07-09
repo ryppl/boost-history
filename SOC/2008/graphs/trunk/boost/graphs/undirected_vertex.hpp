@@ -42,8 +42,7 @@ public:
 
     /** @name Edge Connection and Disconnection
      * These functions control how edges are added to and removed from the
-     * vertex. The allow() function determines whether or not the edge
-     * connection is allowed and/or already existing.
+     * vertex.
      */
     //@{
     inline insertion_result<incidence_descriptor> connect(vertex_descriptor v)
