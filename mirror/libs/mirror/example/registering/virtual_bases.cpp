@@ -29,7 +29,6 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/utils/name_to_stream.hpp>
 #include <boost/mirror/algorithms.hpp>
 
 /** First declare some namespaces and classes

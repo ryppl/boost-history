@@ -164,8 +164,12 @@ int main(void)
 	//
 	bcout << "|26| " << BOOST_MIRRORED_TYPE(bool) ::full_name() << endl;
 	bcout << "|27| " << BOOST_MIRRORED_TYPE(bchar) ::full_name() << endl;
+	//
+	// reflection of typedefined types
 	bcout << "|28| " << BOOST_MIRRORED_TYPEDEF(::boost, bchar) ::full_name() << endl;
-	bcout << "|29| " << BOOST_MIRRORED_TYPEDEF(::boost, bstring) ::full_name() << endl;
+	// or another way how to reflect a typedefined type
+	bcout << "|29| " << BOOST_MIRRORED_TYPE(BOOST_MIRROR_TYPEDEF(::boost, bstring) const * volatile *) ::full_name() << endl;
+	//
 
 	bcout << "|30| " << BOOST_MIRRORED_TYPE(int const * const volatile) ::full_name() << endl;
 	bcout << "|31| " << BOOST_MIRRORED_TYPE(int volatile * const * volatile * const *) ::full_name() << endl;

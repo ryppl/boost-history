@@ -64,7 +64,8 @@ struct meta_type<RetVal (BOOST_PP_ENUM_PARAMS(ARG_COUNT, T))>\
 > \
 { \
 	typedef typename meta_type<void>::scope scope; \
-	typedef RetVal(reflected_type)(BOOST_PP_ENUM_PARAMS(ARG_COUNT, T)); \
+	typedef typename meta_type<RetVal>::reflected_type \
+		(reflected_type)(BOOST_PP_ENUM_PARAMS(ARG_COUNT, T)); \
 };
 
 BOOST_PP_REPEAT(16, BOOST_MIRROR_DECLARE_FREE_FUNCTION_META_TYPE, default)

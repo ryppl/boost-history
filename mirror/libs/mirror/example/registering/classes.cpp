@@ -24,7 +24,6 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/utils/name_to_stream.hpp>
 #include <boost/mirror/algorithms.hpp>
 
 #include <boost/mirror/traits/reflects_global_scope.hpp>
@@ -93,6 +92,8 @@ class bar : protected bar_base
 		::boost::bcout << a_string << ::std::endl;
 	}
 	//
+	// attribute with a type based on a typedefined type
+	const ::boost::bchar* (*a_function)(int);
 public:
 	// A little weird getter/setter pair 
 	// Note that the getter is not const
@@ -192,14 +193,19 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 	)
 	//
 	// this is an attrib that has no getter but has a setter function
-	// Also note that macros with the _TD suffix allow to register 
-	// attributes with typedef'd types
-	//BOOST_MIRROR_REG_CLASS_ATTRIB_SETTER_TD(4, _boost, ::boost, bstring, a_string, set_string)
+	// NOTE that the type of this attribute is typedef'd 
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
 		_, BOOST_MIRROR_TYPEDEF(::boost, bstring), a_string, 
 		{return instance.a_string;},
 		{dest = DestType(instance.a_string); return dest;},
 		{instance.set_string(value);}
+	)
+	// another typedefd attribute
+	BOOST_MIRROR_REG_CLASS_ATTRIB(
+		static, const BOOST_MIRROR_TYPEDEF(::boost, bchar) * (*)(int), a_function, 
+		{return instance.a_function;},
+		{dest = DestType(instance.a_function); return dest;},
+		{ } // no setter
 	)
 	//
 	// and the last one is accessed by the means of a pair of getter/setter functions
@@ -244,7 +250,7 @@ struct pretty_printer
 		else return s << "Unknown meta object";
 		//
 		// print out it's name
-		s << name_to_stream<meta_object>() << "' " << endl;
+		s << meta_object::full_name() << "' " << endl;
 		//
 		//
 		typedef typename meta_object::scope meta_scope;
@@ -256,9 +262,9 @@ struct pretty_printer
 			s << "on the global scope";
 		// if it's a class
 		else if(reflects_class<meta_scope>::value)
-			s << "inside of the '" << name_to_stream<meta_scope>() << "' class";
+			s << "inside of the '" << meta_scope::full_name() << "' class";
 		// otherwise 
-		else s << "in the '" << name_to_stream<meta_scope>() << "' namespace";
+		else s << "in the '" << meta_scope::full_name() << "' namespace";
 		s << "."  << endl;
 		//
 		// print the base classes if any
@@ -291,7 +297,7 @@ struct pretty_printer
 			// of the base class
 			using namespace ::std;
 			typedef typename MetaInheritance::meta_base_class meta_class;
-			s << endl << " - " << name_to_stream<meta_class>();
+			s << endl << " - " << meta_class::full_name();
 		}
 	};
 	//
@@ -339,9 +345,7 @@ struct pretty_printer
 		{
 			using namespace ::std;
 			s << endl << " - " << 
-				name_to_stream< 
-					BOOST_MIRRORED_TYPE(typename MetaAttribute::type_selector)
-				>() <<
+				BOOST_MIRRORED_TYPE(typename MetaAttribute::type_selector)::full_name() <<
 				"        " <<
 				ma.base_name();
 		}

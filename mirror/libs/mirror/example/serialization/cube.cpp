@@ -34,12 +34,9 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/utils/name_to_stream.hpp>
-
 
 /** First declare some namespaces and classes
  */
-
 namespace Graphics {
 
 	// coordinates

@@ -108,29 +108,13 @@ namespace typedef_ {
 	 *  from regular types and typedef type selectors
 	 * in a uniform way.
 	 * 
-	 * By default the template argument is 'returned'
 	 */
 	template <class TypeOrTypedefSelector>
 	struct extract_type
 	{
-		typedef TypeOrTypedefSelector type;
-	};
-
-	/** This is specialization for the templates in mirror::typedef_
-	 *  that represent the registered typedefined types.
-	 *  In this case the base_type of the selector is returned
-	 */
-	template <
-		template <class> class TypedefSelector, 
-		class NamespacePlaceholder
-	>
-	struct extract_type<TypedefSelector<typedef_tag<NamespacePlaceholder> > >
-	{
-		typedef typename TypedefSelector<
-			typedef_tag<
-				NamespacePlaceholder 
-			>
-		>::base_type type;
+		typedef typename ::boost::mirror::meta_type< 
+			TypeOrTypedefSelector
+		>::reflected_type type;
 	};
 } // namespace typedef_
 

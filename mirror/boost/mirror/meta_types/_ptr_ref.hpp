@@ -27,7 +27,8 @@ struct meta_type<PointeeType*> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<PointeeType>::scope scope;
-	typedef PointeeType* reflected_type; 
+	typedef typename meta_type<PointeeType>::reflected_type* 
+		reflected_type; 
 };
 
 /** Meta-types for references
@@ -39,7 +40,8 @@ struct meta_type<ReferredToType&> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ReferredToType>::scope scope;
-	typedef ReferredToType& reflected_type; 
+	typedef typename meta_type<ReferredToType>::reflected_type& 
+		reflected_type; 
 };
 
 } // namespace mirror

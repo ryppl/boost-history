@@ -116,7 +116,7 @@ namespace detail {
 				typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
 				instance_type instance(ma.get(*ptr_to_inst));
 				//
-				typedef typename MetaAttribute::type 
+				typedef typename MetaAttribute::type
 					attrib_type_selector;
 				// traverse the attribute
 				TraversalType<
@@ -155,7 +155,7 @@ namespace detail {
 				);
 				//
 				// traverse the attributes
-				typedef typename MetaAttribute::type 
+				typedef typename MetaAttribute::type
 					attrib_type_selector;
 				TraversalType<
 					BOOST_MIRRORED_CLASS(attrib_type_selector),

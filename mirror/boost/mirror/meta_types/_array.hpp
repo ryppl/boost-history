@@ -28,7 +28,8 @@ struct meta_type<ElementType[Size]> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType reflected_type[Size];
+	typedef typename meta_type<ElementType>::reflected_type 
+		reflected_type[Size];
 };
 
 
@@ -39,7 +40,8 @@ struct meta_type<const ElementType[Size]> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef const ElementType reflected_type[Size];
+	typedef typename const meta_type<ElementType>::reflected_type 
+		reflected_type[Size];
 };
 
 template <class ElementType, size_t Size>
@@ -49,7 +51,8 @@ struct meta_type<volatile ElementType[Size]> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef volatile ElementType reflected_type[Size];
+	typedef typename volatile meta_type<ElementType>::reflected_type 
+		reflected_type[Size];
 };
 
 template <class ElementType, size_t Size>
@@ -60,7 +63,8 @@ struct meta_type<const volatile ElementType[Size]>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef const volatile ElementType reflected_type[Size];
+	typedef typename const volatile meta_type<ElementType>::reflected_type 
+		reflected_type[Size];
 };
 
 template <class ElementType>
@@ -70,7 +74,8 @@ struct meta_type<ElementType[]> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType reflected_type[];
+	typedef typename meta_type<ElementType>::reflected_type 
+		reflected_type[];
 };
 
 template <class ElementType>
@@ -80,7 +85,8 @@ struct meta_type<const ElementType []> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType const reflected_type [];
+	typedef typename meta_type<ElementType>::reflected_type const 
+		reflected_type[];
 };
 
 template <class ElementType>
@@ -90,7 +96,8 @@ struct meta_type<volatile ElementType []> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType volatile reflected_type [];
+	typedef typename meta_type<ElementType>::reflected_type volatile
+		reflected_type[];
 };
 
 template <class ElementType>
@@ -101,7 +108,8 @@ struct meta_type<const volatile ElementType []>
 >
 {
 	typedef typename meta_type<ElementType>::scope scope;
-	typedef ElementType const volatile reflected_type [];
+	typedef typename meta_type<ElementType>::reflected_type const volatile
+		reflected_type[];
 };
 
 

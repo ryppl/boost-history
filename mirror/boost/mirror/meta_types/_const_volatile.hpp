@@ -27,7 +27,8 @@ struct meta_type<const NonConstType> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<NonConstType>::scope scope;
-	typedef const NonConstType reflected_type; 
+	typedef const typename meta_type<NonConstType>::reflected_type
+		reflected_type; 
 };
 
 /** Meta-types for volatile types
@@ -39,7 +40,8 @@ struct meta_type<volatile NonVolatileType> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<NonVolatileType>::scope scope;
-	typedef volatile NonVolatileType reflected_type; 
+	typedef volatile typename meta_type<NonVolatileType>::reflected_type
+		reflected_type; 
 };
 
 /** Meta-types for const volatile types
@@ -51,7 +53,8 @@ struct meta_type<const volatile NonCVType> : detail::decorated_type_name<
 >
 {
 	typedef typename meta_type<NonCVType>::scope scope;
-	typedef const volatile NonCVType reflected_type; 
+	typedef const volatile typename meta_type<NonCVType>::reflected_type
+		reflected_type; 
 };
 
 } // namespace mirror

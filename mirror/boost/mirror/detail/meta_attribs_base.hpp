@@ -149,11 +149,15 @@ struct meta_class_attribute_traits<
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_BASE_PROLOGUE( \
 	SPECIFIERS, \
 	TYPE_SELECTOR, \
-	NAME \
+	NAME, \
+	TYPENAME_KW \
 ) \
 	partial_list_##NAME; \
 	typedef mpl::int_< mpl::size< partial_list_##NAME >::value > \
 		position_of_##NAME; \
+	typedef TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
+		TYPE_SELECTOR \
+	>::type type_of_##NAME; \
 	static const bchar* base_name( \
 		position_of_##NAME \
 	){return BOOST_STR_LIT(#NAME);} \
@@ -171,9 +175,7 @@ struct meta_class_attribute_traits<
 	TYPENAME_KW \
 ) typedef TYPENAME_KW mpl::push_back< \
 	partial_list_##NAME, \
-	TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
-		TYPE_SELECTOR \
-	>::type \
+	type_of_##NAME \
 >::type 
 
 /** Helper macro expanding into the declaraion of getter
@@ -185,9 +187,7 @@ struct meta_class_attribute_traits<
 	GETTER_BODY, \
 	TYPENAME_KW \
 )	inline static TYPENAME_KW call_traits< \
-		TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
-			TYPE_SELECTOR \
-		>::type \
+		type_of_##NAME \
 	>::param_type get( \
 		const Class& instance, \
 		position_of_##NAME position \
@@ -220,18 +220,14 @@ struct meta_class_attribute_traits<
 		Class& instance, \
 		position_of_##NAME, \
 		TYPENAME_KW call_traits< \
-			TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
-				TYPE_SELECTOR \
-			>::type \
+			type_of_##NAME \
 		>::param_type value \
 	) SETTER_BODY \
 	inline static void set( \
 		const Class& instance, \
 		position_of_##NAME, \
 		TYPENAME_KW call_traits< \
-			TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
-				TYPE_SELECTOR \
-			>::type \
+			type_of_##NAME \
 		>::param_type value \
 	) { } 
 
@@ -247,7 +243,8 @@ struct meta_class_attribute_traits<
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_BASE_PROLOGUE( \
 		SPECIFIERS, \
 		TYPE_SELECTOR, \
-		NAME \
+		NAME, \
+		TYPENAME_KW \
 	) \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_GETTER( \
 		TYPE_SELECTOR, \

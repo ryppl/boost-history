@@ -37,15 +37,15 @@
 
 namespace boost {
 namespace mirror {
+namespace detail {
 
-
-/** Meta class - specializes the meta_type for classes
+/** Common base for various meta_class specializations 
  */
 template <
 	class Class, 
 	class VariantTag
 >
-struct meta_class : public meta_type<Class>
+struct meta_class_base
 {
 	/** The base classes of a class.
 	 *  The member base_classes::list is a mpl::vector of 
@@ -81,6 +81,45 @@ struct meta_class : public meta_type<Class>
 	typedef meta_class_destructor<Class, VariantTag>
 		destructor;
 };
+
+} // namespace detail
+
+/** Meta class - specializes the meta_type for classes
+ */
+template <
+	class Class, 
+	class VariantTag
+>
+struct meta_class
+: public meta_type<Class>
+, public detail::meta_class_base<Class, VariantTag>
+{ };
+
+/** Meta class - specialization for typedefined types
+ */
+template <
+	template <class> class TypedefSelector, 
+	class MetaNamespace,
+	class VariantTag
+>
+struct meta_class<
+	TypedefSelector<typedef_::typedef_tag<MetaNamespace> >,
+	VariantTag
+>
+: public meta_type<
+	TypedefSelector<typedef_::typedef_tag<MetaNamespace> >
+>
+, public detail::meta_class_base<
+	typename typedef_::extract_type<
+		TypedefSelector<
+			typedef_::typedef_tag<MetaNamespace> 
+		> 
+	>::type, 
+	VariantTag
+>
+{ };
+
+
 
 
 /** This macro should be included in the definition of every class
