@@ -93,13 +93,12 @@ int main(void)
 	typedef BOOST_MIRRORED_TYPE(foo) meta_foo;
 	typedef BOOST_MIRRORED_TYPE(bar) meta_bar;
 	//
-	// put the full name of the type to the output stream
-	//
+	// write the full name of the type to the output stream
 	bcout << "|00| " << BOOST_MIRRORED_TYPE(int) ::full_name() << endl;
 	bcout << "|01| " << BOOST_MIRRORED_TYPE(foo) ::full_name() << endl;
 	bcout << "|02| " << BOOST_MIRRORED_TYPE(bar) ::full_name() << endl;
 	//
-	// Do the same thing with the typedef'd type
+	// Do the same thing with the typedef'd meta-type
 	bcout << "|03| " << meta_foo ::full_name() << endl;
 	bcout << "|04| " << meta_bar ::full_name() << endl;
 
@@ -111,7 +110,6 @@ int main(void)
 	bcout << "|08| " << BOOST_MIRRORED_TYPE(bar**&) ::full_name() << endl;
 	bcout << "|09| " << BOOST_MIRRORED_TYPE(const foo**)::full_name() << endl;
 	bcout << "|10| " << BOOST_MIRRORED_TYPE(volatile bar*&)::full_name() << endl;
-	//
 	bcout << "|11| " << BOOST_MIRRORED_TYPE(const volatile foo)::full_name() << endl;
 	bcout << "|12| " << BOOST_MIRRORED_TYPE(const volatile bar*)::full_name() << endl;
 	//
@@ -137,8 +135,8 @@ int main(void)
 	typedef BOOST_MIRRORED_TYPEDEF(::boost, bchar) meta_bchar_td;
 	// this reflects the meta-type for the typedef type foobar
 	typedef BOOST_MIRRORED_TYPEDEF(::test::feature::detail, foobar) meta_foobar_td;
-
-	//
+	// 
+	// use the typedefined meta-types
 	bcout << "|19| " << meta_bchar     ::full_name() << endl;
 	bcout << "|20| " << meta_bchar_td  ::full_name() << endl;
 	bcout << "|21| " << meta_foobar_td ::full_name() << endl;

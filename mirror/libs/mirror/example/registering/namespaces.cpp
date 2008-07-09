@@ -62,7 +62,7 @@ int main(void)
 	// meta_namespace<> specialization for the given namespace 
 	//
 	// define an alternative name for the global scope meta-namespace
-	// BOOST_MIRRORED_NAMESPACE(::) is equivalent to this
+	// BOOST_MIRRORED_NAMESPACE_GS is equivalent to this
 	typedef BOOST_MIRRORED_GLOBAL_SCOPE() meta_ns_global_scope;
 
 	// define an alternative name for the ::test namespace meta-data

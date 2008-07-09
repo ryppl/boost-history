@@ -34,7 +34,6 @@
 
 /** First declare some namespaces and classes
  */
-
 namespace test {
 namespace feature {
 namespace detail {
@@ -59,6 +58,8 @@ struct bar_base
 	// This line allows mirror to access non-public
 	// class members
 	BOOST_MIRROR_FRIENDLY_CLASS(bar_base)
+
+	// declare some members
 	int an_int;
 	long a_long;
 };
@@ -166,7 +167,24 @@ BOOST_MIRROR_REG_SINGLE_BASE_CLASS(
 /** Class attributes
  */
 // register the attributes of bar_base
-BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar_base)	
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar_base)
+	//
+	// this is a macro for registering simple attributes without any 
+	// without getter a or a setter function
+	//
+	// the first argument is the storage class specifier.
+	// it can have these three values: 
+	// _ - for non static nor mutable member attributes
+	// static - for static attribs
+	// mutable - for mutable attribs
+	//
+	// the second argument is the type of the attribute
+	//
+	// the third argument is the name of the argument
+	//
+	// this macro can be used if the attribute is public
+	// or the class has been declared to include the 
+	// BOOST_MIRROR_FRIENDLY_CLASS(...) macro
 	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, int, an_int)
 	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, long, a_long)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
@@ -178,47 +196,99 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(_, double, a_double)
 	//
 	// this 'virtual' attribute has only a getter (cannot be set)
+	//
+	// this is a more general registering macro that allows to specify 
+	// how to get, query and set the value of an attribute
+	// 
+	// the first three arguments are the same as with 
+	// BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(...) macro
+	//
+	// The fourth argument is the body of a meta-getter function.
+	// Basically it should be wrapped in curly braces
+	// and contain a return statement returning the value of the attribute.
+	// There are several types and variables accessible in the body of
+	// the function:
+	// - Class = the type of the class to which the attribute belongs
+	// - instance = a const reference to the instance of the class
+	//              to which the attribute belongs
+	//
+	// The fifth argument is the body of a meta-query function
+	// This function should assign the value of the argument to the
+	// passed reference 
+	// Again there are several types and variables that can be referenced
+	// in the body of the function:
+	// - Class = the type of the class to which the attribute belongs
+	// - DestType = the type of the reference to which the attribute's
+	//              value is going to be assigned
+	// - instance = a const reference to the instance of the class
+	//              to which the attribute belongs
+	// - dest = a reference to a variable where the value of the attribute
+	//          should be assigned. 
+	//
+	// The sixth argument is a meta-setter function
+	// This function should assign the passed value to the attribute
+	//
+	// There are several types and variables that can be referenced
+	// in the body of the function:
+	// - Class = the type of the class to which the attribute belongs
+	// - instance = a const reference to the instance of the class
+	//              to which the attribute belongs
+	// - value = the value that should be assigned to the attribute
+	//           directly or by the means of a setter function
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
 		_, int, a_ro_val, 
 		{return instance.get_ro_val();},
-		{dest = DestType(instance.get_ro_val()); return dest;},
-		{ }
+		{dest = DestType(instance.get_ro_val());},
+		{ } // no setting
 	)
 	// this 'virtual' attribute has only a setter (cannot be queried)
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
 		_, int, a_wo_val, 
-		{return 0;},
-		{return dest;},
+		{return 0;}, // get a dummy value
+		{ },         // do not query the value
 		{instance.set_wo_val(value);}
 	)
 	//
 	// this is an attrib that has no getter but has a setter function
 	// NOTE that the type of this attribute is typedef'd 
+	//
+	// When registering attributes that have typedef-ined types 
+	// the BOOST_MIRROR_TYPEDEF(namespace, typedef'd type) 
+	// to notify mirror that the type was typedefined
+	// The typedef must be registered with mirror prior doing this
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
 		_, BOOST_MIRROR_TYPEDEF(::boost, bstring), a_string, 
 		{return instance.a_string;},
-		{dest = DestType(instance.a_string); return dest;},
+		{dest = DestType(instance.a_string);},
 		{instance.set_string(value);}
 	)
 	// another typedefd attribute
+	//
+	// The types of attributes can also be types derived from a typedef'd
+	// type. Such types are again referred to by the BOOST_MIRROR_TYPEDEF
+	// macro
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
 		static, const BOOST_MIRROR_TYPEDEF(::boost, bchar) * (*)(int), a_function, 
 		{return instance.a_function;},
-		{dest = DestType(instance.a_function); return dest;},
+		{dest = DestType(instance.a_function);},
 		{ } // no setter
 	)
 	//
-	// and the last one is accessed by the means of a pair of getter/setter functions
+	// this attribute is accessed by the means of a pair of getter/setter functions
+	//
+	// note that is the getter function is not const a const_cast is necessary
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
 		_, bool, a_bool, 
 		{return const_cast<Class&>(instance).get_bool();},
-		{dest = DestType(const_cast<Class&>(instance).get_bool()); return dest;},
+		{dest = DestType(const_cast<Class&>(instance).get_bool());},
 		{instance.set_bool(value);}
 	)
 	//
 	// register a static member attribute
+	// instead of the '_', the keyword 'static' is used 
 	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(static, short, a_short)
 	// register a mutable member attribute
+	// instead of the '_', the keyword 'mutable' is used 
 	BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB(mutable, wchar_t, a_widechar)
 BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
@@ -405,7 +475,10 @@ int main(void)
 	//
 	// pointer to native type
 	bcout << "|01| " << endl << pretty_printer<BOOST_MIRRORED_TYPE(double*)>() << endl;
+	//
 	// a class defined in a namespace
+	// classes are reflected using the BOOST_MIRRORED_CLASS(Class) macro
+	// this macro expands into a meta_class specialization
 	bcout << "|02| " << endl << pretty_printer<BOOST_MIRRORED_CLASS(foo)>() << endl;
 	bcout << "|03| " << endl << pretty_printer<BOOST_MIRRORED_CLASS(bar)>() << endl;
 	// an embedded class 

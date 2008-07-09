@@ -275,7 +275,10 @@
 			- Tested with intel 10.1 on SuSE (fails with some examples)
 		</revision>
 		<revision id="20080709" major="0" minor="2" micro="1" author="m_ch">
-			- The name_to_string utility has been removed meta_object's base_name and full_name member functions are to be used instead.
+			- Added support for types derived from a typedef-ined type
+			- The name_to_string utility has been removed meta_object's base_name and full_name member functions are to be used instead
+			- Added several comments to the examples
+			- The query-meta-functions do not need to and should not return the 'dest' reference anymore, this was rewritten to work automatically
 		</revision>
 	</revisions>
 </library>

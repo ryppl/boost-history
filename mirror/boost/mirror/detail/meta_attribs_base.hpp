@@ -206,7 +206,7 @@ struct meta_class_attribute_traits<
 		const Class& instance, \
 		position_of_##NAME, \
 		DestType& dest \
-	) QUERY_BODY 
+	) { QUERY_BODY return dest;}
 
  /** Helper macro expanding into the declaraion of setter
  *  function of the meta-attribute
@@ -347,7 +347,7 @@ struct meta_class_attribute_traits<
 ) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
 		SPECIFIERS, TYPE_SELECTOR, NAME, \
 		{return instance.NAME;}, \
-		{dest = DestType(instance.NAME); return dest;}, \
+		{dest = DestType(instance.NAME);}, \
 		{instance.NAME = value;}, \
 		TYPENAME_KW \
 	)
@@ -398,7 +398,7 @@ struct meta_class_attribute_traits<
 ) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
 		SPECIFIERS, TYPE_SELECTOR, NAME, \
 		{return instance.GETTER_CALL;}, \
-		{dest = DestType(instance.GETTER_CALL); return dest;}, \
+		{dest = DestType(instance.GETTER_CALL);}, \
 		{instance.SETTER_CALL;}, \
 		TYPENAME_KW \
 	)
@@ -480,7 +480,7 @@ struct meta_class_attribute_traits<
 		TYPE_SELECTOR, \
 		NAME, \
 		{return instance.NAME;}, \
-		{dest = DestType(instance.NAME); return dest;}, \
+		{dest = DestType(instance.NAME);}, \
 		{instance.NAME = value;}, \
 		BOOST_PP_EMPTY() \
 	)
