@@ -33,6 +33,7 @@ template <typename Graph>
 void test_add_vertices()
 {
     Graph g;
+    cout << "  * adding vertices" << endl;
     list<typename Graph::vertex_descriptor> V;
     for(int i = 0; i < 5; ++i) {
         V.push_back(g.add_vertex(i));
@@ -63,6 +64,8 @@ void test_add_edges()
     for(int i = 0; i < 3; ++i) {
         V.push_back(g.add_vertex(i));
     }
+
+    cout << "  * adding edges" << endl;
     g.add_edge(V[0], V[1]);
     g.add_edge(V[1], V[2]);
     g.add_edge(V[2], V[0]);
@@ -255,10 +258,10 @@ int main()
 void vec_vec()
 {
     cout << "---- vec/vec ----" << endl;
-    /*
     typedef directed_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
+    /*
     test_add_multi_edges<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();

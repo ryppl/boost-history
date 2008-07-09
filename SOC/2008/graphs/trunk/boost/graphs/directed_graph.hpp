@@ -68,10 +68,10 @@ public:
     typedef typename types::out_edge_range out_edge_range;
     typedef typename types::in_edge_iterator in_edge_iterator;
     typedef typename types::in_edge_range in_edge_range;
-    typedef typename types::incident_edge_iterator incident_edge_iterator;
-    typedef typename types::incident_edge_range incident_edge_range;
-    typedef typename types::adjacent_vertex_iterator adjacent_vertex_iterator;
-    typedef typename types::adjacent_vertex_range adjacent_vertex_range;
+    // typedef typename types::incident_edge_iterator incident_edge_iterator;
+    // typedef typename types::incident_edge_range incident_edge_range;
+    // typedef typename types::adjacent_vertex_iterator adjacent_vertex_iterator;
+    // typedef typename types::adjacent_vertex_range adjacent_vertex_range;
 
     // Sizes for vertices, and degree.
     typedef typename types::vertices_size_type vertices_size_type;
@@ -384,35 +384,27 @@ directed_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                       vertex_descriptor v,
                                       edge_properties const& ep)
 {
-    typedef typename vertex_type::out_iterator out_iterator;
-    typedef typename vertex_type::in_iterator in_iterator;
-
     vertex_type &src = _verts.vertex(u);
     vertex_type &tgt = _verts.vertex(v);
 
-    // Do we add the edge or not?
-    std::pair<out_iterator, bool> ins = src.allow(v);
-    if(ins.second) {
-        // If the returned iterator is past the end, then we have to create and
-        // connect the edge.
-        if(ins.first == src.end_out()) {
-            ++_edges;
+    insertion_result<out_descriptor> first = src.connect_target(v, ep);
+    if(first.succeeded()) {
+        insertion_result<in_descriptor> second = tgt.connect_source(u, first.value);
+        BOOST_ASSERT(second.succeeded());
 
-            // Insert the edge stubs, getting iterators to each stub.
-            out_iterator i = src.connect_target(v, ep);
-            in_iterator j = tgt.connect_source(u);
-            edge_descriptor e = vertex_type::bind_connection(i, j);
-            return e;
-        }
-        else {
-            return edge_descriptor(u, ins.first);
-        }
+        // Bind the out edge to the in edge and return the edge (incrementing
+        // the locally stored number of edges also).
+        src.bind_target(first.value, second.value);
+        ++_edges;
+        return edge_descriptor(u, v, first.value);
+    }
+    else if(first.retained()) {
+        // Return an edge over the existing values.
+        return edge_descriptor(u, v, first.value);
     }
     else {
-        // Can't add the edge? This is a flat refusal (as in a loop).
+        return edge_descriptor();
     }
-
-    return edge_descriptor();
 }
 
 /**

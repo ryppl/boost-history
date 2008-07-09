@@ -35,7 +35,7 @@
  * implement a directed graph.
  */
 template <typename VertexProps, typename EdgeProps, typename VertexStore, typename EdgeStore>
-class directed_types
+struct directed_types
 {
     // Start by generating all of the descriptors.
     typedef typename VertexStore::vertex_descriptor vertex_descriptor;
@@ -46,17 +46,17 @@ class directed_types
     typedef directed_edge<out_descriptor, in_descriptor> edge_descriptor;
 
     // Generate the out store and related types
-    typedef typename EdgeStore::template out_store<vertex_descriptor, EdgeProps> out_store;
+    typedef typename EdgeStore::template out_store<vertex_descriptor, EdgeProps>::type out_store;
     typedef typename out_store::size_type out_edges_size_type;
     typedef typename out_store::size_type edges_size_type;
-    typedef basic_out_iterator<out_store, edge_descriptor> out_edge_iterator;
-    typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
 
     // Generate the in store and related types
-    typedef typename EdgeStore::template in_store<vertex_descriptor> in_store;
-    typedef typename in_store::size_type in_edge_size_type;
-    typedef basic_in_iterator<typename in_store::iterator, edge_descriptor> in_edge_iterator;
-    typedef std::pair<in_edge_iterator, in_edge_iterator> in_edge_range;
+    typedef typename EdgeStore::template in_store<vertex_descriptor>::type in_store;
+    typedef typename in_store::size_type in_edges_size_type;
+
+    // Generate the incident edge size type. It should be the larger of the two,
+    // but for now it's just the out edges.
+    typedef out_edges_size_type incident_edges_size_type;
 
     // Generate the vertex, its store, and related types.
     typedef directed_vertex<VertexProps, out_store, in_store> vertex_type;
@@ -64,9 +64,13 @@ class directed_types
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
     typedef typename vertex_store::vertex_range vertex_range;
-    typedef typename vertex_store::vertex_key vertex_key;
+    typedef typename VertexStore::key_type vertex_key;
 
-    // Generate the edge iterators as far back as possible...
+    // Generate a bunch of iterators
+    typedef basic_out_iterator<out_store, edge_descriptor> out_edge_iterator;
+    typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
+    typedef basic_in_iterator<typename in_store::iterator, edge_descriptor> in_edge_iterator;
+    typedef std::pair<in_edge_iterator, in_edge_iterator> in_edge_range;
     typedef directed_edge_iterator<vertex_store, edge_descriptor> edge_iterator;
     typedef std::pair<edge_iterator, edge_iterator> edge_range;
 };

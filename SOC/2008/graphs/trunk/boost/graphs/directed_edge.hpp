@@ -34,6 +34,15 @@ public:
     { }
     //@}
 
+    /** @name Descriptor-like Functions. */
+    //@{
+    inline bool is_null() const
+    { return out.is_null(); }
+
+    inline operator bool() const
+    { return !is_null(); }
+    //@}
+
     /** Return the source vertex descriptor. */
     inline vertex_descriptor source() const
     { return ends.first; }
