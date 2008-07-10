@@ -112,14 +112,12 @@ protected:
     					   VerticalTraversalOrCategory, Reference, Difference,
     					   Size> cursor_adaptor_;
 	
-	typedef cursor_adaptor_base<Derived
-						   , Base
-						   , Value
-						   , HorizontalTraversalOrCategory
-						   , VerticalTraversalOrCategory
-						   , Reference
-						   , Difference
-						   , Size> super_t;
+	typedef typename cursor_adaptor_base<Derived, Base, Value 
+									   , HorizontalTraversalOrCategory
+									   , VerticalTraversalOrCategory
+									   , Reference
+									   , Difference
+									   , Size>::type cursor_facade_;
 	
 	Base const& base_reference() const
 	{ return m_cursor; }
@@ -132,14 +130,6 @@ private:
 	
 	friend class iterator_core_access;
 	friend class cursor_core_access;
-	
-	typedef cursor_facade<Derived
-						, typename super_t::value_type
-						, typename super_t::iterator_category
-						, typename super_t::vertical_traversal
-						, typename super_t::reference
-						, typename super_t::difference_type
-						, typename super_t::size_type> cursor_facade_;
 
 public:
  	typedef Base base_type;
@@ -159,7 +149,7 @@ public:
     Base const& base() const
     { return m_cursor; }
     
- 	typename super_t::reference dereference() const
+ 	typename cursor_facade_::reference dereference() const
  	{
  		return *m_cursor;
  	}

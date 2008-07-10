@@ -58,7 +58,7 @@ int test_main(int, char* [])
 	BOOST_CHECK(*c == 4);
 	BOOST_CHECK(*d == 7);
 	BOOST_CHECK(*c.parent() == 4);
-	BOOST_CHECK(inorder::next(inorder::next(c)) == d);
+	BOOST_CHECK(inorder::next(c, 2) == d);
 	
 	*c.to_parent() = 6;
 	validate_test_data_tree(test_tree);

@@ -62,12 +62,15 @@ inline void forward(Cursor& c)
 /**
  * @brief	Preorder successor
  * @param c	A cursor
+ * @param n	Optional parameter to indicate how many steps to move forward
  * @return	Preorder successor of @a c
  */
 template <class Cursor>
-inline Cursor next(Cursor c)
+inline Cursor next(Cursor c
+				 , typename Cursor::difference_type n = 1)
 {
-	forward(c);
+	for (; n!=0; --n)
+		forward(c);
 	return c;
 }
 
@@ -104,12 +107,15 @@ inline void back(Cursor& c)
 /**
  * @brief	Preorder predecessor
  * @param c	A cursor
+ * @param n	Optional parameter to indicate how many steps to move back
  * @return	Preorder predecessor of @a c
  */
 template <class Cursor>
-inline Cursor prior(Cursor c)
+inline Cursor prior(Cursor c
+				  , typename Cursor::difference_type n = 1)
 {
-	back(c);
+	for (; n!=0; --n)
+		back(c);
 	return c;
 }
 

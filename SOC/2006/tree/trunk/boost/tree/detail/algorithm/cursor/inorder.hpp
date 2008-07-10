@@ -44,13 +44,16 @@ inline void forward(MultiwayCursor& c)
 /**
  * @brief	Inorder successor
  * @param c	A cursor
+ * @param n	Optional parameter to indicate how many steps to move forward
  * @return	Inorder successor of @a c
  * @ingroup	traversal
  */
 template <class MultiwayCursor>
-inline MultiwayCursor next(MultiwayCursor c)
+inline MultiwayCursor next(MultiwayCursor c
+						 , typename MultiwayCursor::difference_type n = 1)
 {
-	forward(c);
+	for (; n!=0; --n)
+		forward(c);
 	return c;
 }
 
@@ -77,12 +80,15 @@ inline void back(MultiwayCursor& c)
 /**
  * @brief	Inorder predecessor
  * @param c	MultiwayCursor
+ * @param n	Optional parameter to indicate how many steps to move back
  * @return	Inorder predecessor of @a c
  */
 template <class MultiwayCursor>
-inline MultiwayCursor prior(MultiwayCursor c)
+inline MultiwayCursor prior(MultiwayCursor c
+						  , typename MultiwayCursor::difference_type n = 1)
 {
-	back(c);
+	for (; n!=0; --n)
+		back(c);
 	return c;
 }
 
