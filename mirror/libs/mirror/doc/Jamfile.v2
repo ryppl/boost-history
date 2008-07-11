@@ -9,5 +9,5 @@ project mirror/doc
 
 import boostbook : boostbook ;
 
-boostbook mirror-doc: mirror.xml ;
+boostbook mirror-doc : mirror.xml ;
 
