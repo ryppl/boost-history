@@ -330,7 +330,7 @@ struct pretty_printer
 		// if the scope is the global scope
 		if(reflects_global_scope<meta_scope>::value)
 			s << "on the global scope";
-		// if it's a class
+		// if it is a class
 		else if(reflects_class<meta_scope>::value)
 			s << "inside of the '" << meta_scope::full_name() << "' class";
 		// otherwise 
