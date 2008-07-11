@@ -23,6 +23,12 @@ provide an implementation without edge iterators (which would be just fine with
 me). There is nothing to stop programmers from building these alternative
 implementations - they're good projects.
 
+Update:
+I've expanded the number of descriptors in the property store to incldue the
+vertex descriptors for which the incidence descriptors are incident. It sucks,
+but there's just not much I can do about it since there's other way to get the
+vertices out of the property store.
+
 
 Q: Why are the property list and vector different types when their
 implementations are nearly identical.

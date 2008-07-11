@@ -43,7 +43,7 @@ struct undirected_types
     typedef typename EdgeStore::incidence_descriptor incidence_descriptor;
 
     // Generate the property store and related types.
-    typedef typename EdgeStore::template property_store<EdgeProps>::type property_store;
+    typedef typename EdgeStore::template property_store<vertex_descriptor, EdgeProps>::type property_store;
     typedef typename property_store::size_type edges_size_type;
 
     // Generate stuff related to edges

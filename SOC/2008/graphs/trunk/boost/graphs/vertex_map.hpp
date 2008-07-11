@@ -111,13 +111,19 @@ public:
     /** @name Vertex Iteration */
     //@{
     inline vertex_iterator begin_vertices() const
-    { return _verts.begin(); }
+    { return vertex_iterator(_verts, _verts.begin()); }
 
     inline vertex_iterator end_vertices() const
-    { return _verts.end(); }
+    { return vertex_iterator(_verts, _verts.end()); }
 
     vertex_range vertices() const
     { return std::make_pair(begin_vertices(), end_vertices()); }
+
+    inline iterator begin() const
+    { return _verts.begin(); }
+
+    inline iterator end() const
+    { return _verts.end(); }
     //@}
 
     /** @name Vertex and Key Accessors */

@@ -29,7 +29,10 @@ public:
 
     typedef Edge edge_type;
     typedef typename Edge::first_type edge_properties;
-    typedef typename Edge::second_type edge_pair;
+    typedef typename Edge::second_type end_pair;
+    typedef typename end_pair::first_type end_type; // same as second_type
+    typedef typename end_type::first_type vertex_descriptor;
+    typedef typename end_type::second_type incidence_descriptor;
 
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
@@ -52,7 +55,7 @@ public:
     inline property_descriptor add(edge_properties const& ep)
     {
         ++_size;
-        iterator i = _props.insert(_props.end(), make_pair(ep, edge_pair()));
+        iterator i = _props.insert(_props.end(), make_pair(ep, end_pair()));
         return make_descriptor(_props, i);
     }
     //@}
@@ -95,16 +98,37 @@ public:
      * Bind vertex descriptors into the incidence lists into the global
      * property. This is the last step of edge creation for undirected graphs.
      */
-    void bind(property_descriptor d, edge_pair const& p)
+    void bind(property_descriptor d, end_pair const& p)
     { make_iterator(_props, d)->second = p; }
 
     /** Return the incidence descriptors bound to the property. */
-    edge_pair const& ends(property_descriptor d) const
+    inline end_pair const& ends(property_descriptor d) const
     { return make_iterator(_props, d)->second; }
 
     /** Return the properties referenced by the given descriptor. */
     inline edge_properties& properties(property_descriptor d)
     { return make_iterator(_props, d)->first; }
+
+    /** Return the first vertex of the edge. */
+    inline vertex_descriptor first_vertex(property_descriptor d) const
+    { return make_iterator(_props, d)->second.first.first; }
+
+    /** Return the second vertex of the edge. */
+    inline vertex_descriptor second_vertex(property_descriptor d) const
+    { return make_iterator(_props, d)->second.second.first; }
+
+    /** Return the first incidence descriptor of the edge. */
+    inline incidence_descriptor first_edge(property_descriptor d) const
+    { return make_iterator(_props, d)->second.first.second; }
+
+    /** Return the second incidence descriptor of the edge. */
+    inline incidence_descriptor second_edge(property_descriptor d) const
+    { return make_iterator(_props, d)->second.second.second; }
+
+
+    /** Return a descriptor for the iterator. */
+    inline property_descriptor describe(iterator i) const
+    { return make_descriptor(_props, i); }
 
 private:
     mutable store_type  _props;

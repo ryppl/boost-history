@@ -37,7 +37,7 @@ public:
     inline undirected_edge(unordered_pair<vertex_descriptor, vertex_descriptor> const& e, property_descriptor p)
         : ends(e), prop(p)
     { }
-    //@{
+    //@}
 
     /** @name Descriptor-like Functions
      * These allow you to treat the edge descriptor like a typical descriptor.
@@ -122,6 +122,9 @@ template <typename Store, typename Edge>
 struct undirected_edge_iterator
 {
     typedef typename Store::iterator iterator;
+    typedef typename Store::vertex_descriptor vertex_descriptor;
+    typedef typename Store::incidence_descriptor incidence_descriptor;
+    typedef typename Store::property_descriptor property_descriptor;
 
     typedef typename iterator::iterator_category iterator_category;
     typedef typename iterator::difference_type difference_type;
@@ -131,6 +134,10 @@ struct undirected_edge_iterator
 
     undirected_edge_iterator()
         : store(0), iter()
+    { }
+
+    undirected_edge_iterator(undirected_edge_iterator const& x)
+        : store(x.store), iter(x.iter)
     { }
 
     undirected_edge_iterator(Store& store, iterator i)
@@ -143,14 +150,36 @@ struct undirected_edge_iterator
     inline undirected_edge_iterator& operator--()
     { --iter; return *this; }
 
-    inline reference operator*() const
-    { return Edge(iter->second, iter->second); }
+    inline undirected_edge_iterator operator++(int)
+    { undirected_edge_iterator x(*this); operator++(); return x; }
 
+    inline undirected_edge_iterator operator--(int)
+    { undirected_edge_iterator x(*this); operator--(); return x; }
+
+    inline undirected_edge_iterator& operator+=(difference_type n)
+    { iter += n; return *this; }
+
+    inline undirected_edge_iterator& operator-=(difference_type n)
+    { iter -= n; return *this; }
+
+    /** @name Equality Comparable */
+    //@{
     inline bool operator==(undirected_edge_iterator const& x) const
     { return iter == x.iter; }
 
     inline bool operator!=(undirected_edge_iterator const& x) const
     { return iter != x.iter; }
+    //@{
+
+    inline difference_type operator-(undirected_edge_iterator x) const
+    { return iter - x.iter; }
+
+    inline reference operator*() const
+    {
+        property_descriptor p = store->describe(iter);
+        return Edge(store->first_vertex(p), store->second_vertex(p), p);
+    }
+
 
     Store*      store;
     iterator    iter;

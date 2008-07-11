@@ -794,22 +794,13 @@ directed_graph<VP,EP,VS,ES>::vertices() const
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_iterator
 directed_graph<VP,EP,VS,ES>::begin_edges() const
-{
-    // Gotta handle the case where the graph is empty.
-    vertex_iterator i = begin_vertices();
-    if(i != end_vertices()) {
-        return edge_iterator(*this, i, begin_out_edges(*i));
-    }
-    else {
-        return edge_iterator(*this, i);
-    }
-}
+{ return edge_iterator(_verts, _verts.begin_vertices()); }
 
 /** Return an iterator past the end of the edges. */
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_iterator
 directed_graph<VP,EP,VS,ES>::end_edges() const
-{ return edge_iterator(*this, end_vertices()); }
+{ return edge_iterator(_verts, _verts.end_vertices()); }
 
 /** Return an iterator range over the edges in the graph. */
 template <BOOST_GRAPH_DG_PARAMS>

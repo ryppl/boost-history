@@ -115,6 +115,12 @@ public:
 
     vertex_range vertices() const
     { return std::make_pair(begin_vertices(), end_vertices()); }
+
+    inline typename store_type::iterator begin() const
+    { return _verts.begin(); }
+
+    inline iterator end() const
+    { return _verts.end(); }
     //@}
 
 

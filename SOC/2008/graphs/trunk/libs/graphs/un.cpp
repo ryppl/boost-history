@@ -126,6 +126,7 @@ void test_add_remove_edges()
 template <typename Graph>
 void test_disconnect_vertex()
 {
+    cout << "  * disconnecting vertex" << std::endl;
     Graph g;
     vector<typename Graph::vertex_descriptor> V;
     list<typename Graph::edge_descriptor> E;
@@ -138,7 +139,6 @@ void test_disconnect_vertex()
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.num_edges() == 3);
 
-    cout << "  * disconnecting vertex" << std::endl;
     g.remove_edges(V[1]);
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.degree(V[1]) == 0);
@@ -151,6 +151,7 @@ void test_disconnect_vertex()
 template <typename Graph>
 void test_implicit_disconnect_vertex()
 {
+    cout << "  * removing conntected vertex" << endl;
     Graph g;
     vector<typename Graph::vertex_descriptor> V;
     list<typename Graph::edge_descriptor> E;
@@ -163,7 +164,6 @@ void test_implicit_disconnect_vertex()
     BOOST_ASSERT(g.num_vertices() == 3);
     BOOST_ASSERT(g.num_edges() == 3);
 
-    cout << "  * removing conntected vertex" << endl;
     g.remove_vertex(V[1]);
     BOOST_ASSERT(g.num_vertices() == 2);
     BOOST_ASSERT(g.degree(V[0]) == 1);
@@ -173,16 +173,14 @@ void test_implicit_disconnect_vertex()
 template <typename Graph>
 void test_add_multi_edges()
 {
-    Graph g;
-
     cout << "  * adding parallel edges" << endl;
+    Graph g;
     typename Graph::vertex_descriptor u = g.add_vertex(1);
     typename Graph::vertex_descriptor v = g.add_vertex(2);
-    g.add_edge(u, v);
-    g.add_edge(v, u);
-    g.add_edge(u, v);
-    g.add_edge(v, u);
-
+    g.add_edge(u, v, 10);
+    g.add_edge(v, u, 20);
+    g.add_edge(u, v, 30);
+    g.add_edge(v, u, 40);
     BOOST_ASSERT(g.num_vertices() == 2);
 
     // If there are no parallel edges, then there should only be one edge.
@@ -197,6 +195,7 @@ void test_add_multi_edges()
 template <typename Graph>
 void test_remove_multi_edges()
 {
+    cout << "  * removing parallel edges" << endl;
     Graph g;
     typename Graph::vertex_descriptor u = g.add_vertex(1);
     typename Graph::vertex_descriptor v = g.add_vertex(2);
@@ -205,11 +204,77 @@ void test_remove_multi_edges()
     g.add_edge(u, v);
     g.add_edge(v, u);
 
-    cout << "  * removing parallel edges" << endl;
     g.remove_edges(u, v);
     BOOST_ASSERT(g.num_edges() == 0);
     BOOST_ASSERT(g.degree(u) == 0);
     BOOST_ASSERT(g.degree(v) == 0);
+}
+
+
+template <typename Graph>
+void test_edge()
+{
+    cout << "  * find edges" << endl;
+    Graph g;
+    vector<typename Graph::vertex_descriptor> V;
+    list<typename Graph::edge_descriptor> E;
+    for(int i = 0; i < 3; ++i) {
+        V.push_back(g.add_vertex(i));
+    }
+    g.add_edge(V[0], V[1]);
+    g.add_edge(V[1], V[2]);
+    BOOST_ASSERT(g.num_vertices() == 3);
+    BOOST_ASSERT(g.num_edges() == 2);
+
+    // Test for existence
+    BOOST_ASSERT(g.edge(V[0], V[1]));
+    BOOST_ASSERT(g.edge(V[1], V[0]));
+    BOOST_ASSERT(g.edge(V[1], V[2]));
+    BOOST_ASSERT(g.edge(V[2], V[1]));
+
+    // Test for inexstence
+    BOOST_ASSERT(!g.edge(V[0], V[2]));
+    BOOST_ASSERT(!g.edge(V[2], V[0]));
+}
+
+template <typename Graph>
+void test_vertex_iterator()
+{
+    Graph g;
+    vector<typename Graph::vertex_descriptor> V;
+    list<typename Graph::edge_descriptor> E;
+    for(int i = 0; i < 3; ++i) {
+        V.push_back(g.add_vertex(i));
+    }
+
+    cout << "  * testing vertex iterator" << endl;
+    typename Graph::vertex_range rng = g.vertices();
+    BOOST_ASSERT(distance(rng.first, rng.second) == 3);
+    BOOST_ASSERT(*rng.first++ == V[0]);
+    BOOST_ASSERT(*rng.first++ == V[1]);
+    BOOST_ASSERT(*rng.first++ == V[2]);
+}
+
+template <typename Graph>
+void test_edge_iterator()
+{
+    Graph g;
+    vector<typename Graph::vertex_descriptor> V;
+    vector<typename Graph::edge_descriptor> E;
+    for(int i = 0; i < 3; ++i) {
+        V.push_back(g.add_vertex(i));
+    }
+    E.push_back(g.add_edge(V[0], V[1], 10));
+    E.push_back(g.add_edge(V[1], V[2], 20));
+    E.push_back(g.add_edge(V[2], V[0], 30));
+
+    cout << "  * testing edge iterator" << endl;
+
+    typename Graph::edge_range rng = g.edges();
+    BOOST_ASSERT(distance(rng.first, rng.second) == 3);
+    BOOST_ASSERT(*rng.first++ == E[0]);
+    BOOST_ASSERT(*rng.first++ == E[1]);
+    BOOST_ASSERT(*rng.first++ == E[2]);
 }
 
 template <typename Graph>
@@ -266,6 +331,9 @@ void vec_vec()
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
     test_add_multi_edges<Graph>();
+    test_edge<Graph>();
+    test_vertex_iterator<Graph>();
+    test_edge_iterator<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
 }
@@ -280,6 +348,9 @@ void list_list()
     test_implicit_disconnect_vertex<Graph>();
     test_add_multi_edges<Graph>();
     test_remove_multi_edges<Graph>();
+    test_edge<Graph>();
+    test_vertex_iterator<Graph>();
+    test_edge_iterator<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
 }
@@ -295,6 +366,9 @@ void set_set()
     test_implicit_disconnect_vertex<Graph>();
     test_add_multi_edges<Graph>();
     test_remove_multi_edges<Graph>();
+    test_edge<Graph>();
+    test_vertex_iterator<Graph>();
+    test_edge_iterator<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
 }

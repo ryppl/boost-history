@@ -60,10 +60,10 @@ public:
     //@}
 
     /** Return the properties of the given incident edge. */
-    inline property_descriptor edge_properties(incidence_descriptor i) const
+    inline property_descriptor properties(incidence_descriptor i) const
     { return _edges.properties(i); }
 
-    inline vertex_descriptor connected_vertex(incidence_descriptor i) const
+    inline vertex_descriptor opposite(incidence_descriptor i) const
     { return _edges.vertex(i) ;}
 
 

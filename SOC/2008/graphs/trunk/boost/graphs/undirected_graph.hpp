@@ -201,8 +201,8 @@ public:
     edge_properties& operator[](edge_descriptor);
     //@}
 
-    property_store _props;
-    vertex_store _verts;
+    mutable property_store  _props;
+    mutable vertex_store    _verts;
 };
 
 #define BOOST_GRAPH_UG_PARAMS \
@@ -362,11 +362,11 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         property_descriptor p = _props.add(ep);
         src.bind(first.value, p);
         tgt.bind(second.value, p);
-        _props.bind(p, make_pair(first.value, second.value));
+        _props.bind(p,make_pair(make_pair(u, first.value), make_pair(v, second.value)));
         return edge_descriptor(u, v, p);
     }
     else if(first.retained()) {
-        property_descriptor p = src.edge_properties(first.value);
+        property_descriptor p = src.properties(first.value);
         return edge_descriptor(u, v, p);
     }
     else {
@@ -422,7 +422,7 @@ undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) co
 {
     reorder(u, v);
     vertex_type const& src = _verts.vertex(u);
-    incidence_descriptor i = src.find_vertex(v);
+    incidence_descriptor i = src.find(v);
     return i ? edge_descriptor(u, v, src.properties(i)) : edge_descriptor();
 }
 
@@ -469,8 +469,8 @@ undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 
     // Get incidence iterators from the property and arranging them to match
     // their owning vertices.
-    incidence_descriptor i = _props.ends(p).first, j = _props.ends(p).second;
-    if(src.connected_vertex(i) == v) {
+    incidence_descriptor i = _props.first_edge(p), j = _props.second_edge(p);
+    if(src.opposite(i) == v) {
         i.swap(j);
     }
 
@@ -501,8 +501,9 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
         // so we can remove the edge record and the properties of the removed
         // edge.
         property_descriptor p = e.properties();
-        std::pair<incidence_descriptor, incidence_descriptor> x = _props.ends(p);
-        if(src.connected_vertex(x.first) != v) {
+        std::pair<incidence_descriptor, incidence_descriptor> x =
+            std::make_pair(_props.first_edge(p), _props.second_edge(p));
+        if(src.opposite(x.first) != v) {
             x.first.swap(x.second);
         }
         tgt.disconnect(x.first);
@@ -560,8 +561,9 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
             // Grab descriptors to the property and the incident edge on the
             // target vertex and remove them,
             property_descriptor p = e.properties();
-            pair<incidence_descriptor, incidence_descriptor> x = _props.ends(p);
-            if(src.connected_vertex(x.first) == v) {
+            pair<incidence_descriptor, incidence_descriptor> x =
+                make_pair(_props.first_edge(p), _props.second_edge(p));
+            if(src.opposite(x.first) == v) {
                 x.first.swap(x.second);
             }
             tgt.disconnect(x.first);

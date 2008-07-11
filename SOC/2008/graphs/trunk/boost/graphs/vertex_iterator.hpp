@@ -5,7 +5,9 @@
 #include <boost/descriptors.hpp>
 
 /**
- * A simple vertex iterator for any underlying store.
+ * A simple vertex iterator for any underlying store. These iterators must
+ * cache references to the originating container because these dereference to
+ * descriptors.
  */
 template <typename Container>
 class basic_vertex_iterator
@@ -26,7 +28,7 @@ public:
     { }
 
     inline basic_vertex_iterator(Container& c, iterator x)
-        : cont(c), iter(x)
+        : cont(&c), iter(x)
     { }
 
     // Assignment and increment
@@ -42,6 +44,12 @@ public:
     inline basic_vertex_iterator& operator--()
     { --iter; return *this; }
 
+    inline basic_vertex_iterator operator++(int)
+    { basic_vertex_iterator x(*this); ++iter; return x; }
+
+    inline basic_vertex_iterator operator--(int)
+    { basic_vertex_iterator x(*this); --iter; return x; }
+
     inline basic_vertex_iterator operator+(difference_type n) const
     { return indexed_basic_vertex_iterator(cont, iter + n); }
 
@@ -51,7 +59,7 @@ public:
     inline difference_type operator-(basic_vertex_iterator const& x) const
     { return iter - x.iter; }
 
-    inline reference operator*()
+    inline reference operator*() const
     { return make_descriptor(*cont, iter); }
 
     inline bool operator==(basic_vertex_iterator const& x) const

@@ -51,10 +51,11 @@ struct edge_vector
 
     // The property store metafunction generates the type of vector used to
     // store global properties for undirected graphs.
-    template <typename EdgeProps>
+    template <typename VertexDesc, typename EdgeProps>
     struct property_store
     {
-        typedef std::pair<EdgeProps, std::pair<incidence_descriptor, incidence_descriptor>> edge;
+        typedef std::pair<VertexDesc, incidence_descriptor> end;
+        typedef std::pair<EdgeProps, std::pair<end, end>> edge;
         typedef SecondAlloc<edge> allocator;
         typedef property_vector<edge, allocator> type;
     };

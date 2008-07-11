@@ -58,7 +58,7 @@ public:
     /** @name Equality Comparable */
     //@{
     inline bool operator==(directed_edge const& x) const
-    { return (ends == x.ends) && (out = x.out); }
+    { return (ends == x.ends) && (out == x.out); }
 
     inline bool operator!=(directed_edge const& x) const
     { return !operator==(x); }
@@ -96,25 +96,53 @@ template <typename VertexStore, typename Edge>
 struct directed_edge_iterator
 {
     typedef VertexStore vertex_store;
-    typedef typename vertex_store::iterator vertex_iterator;
     typedef typename vertex_store::vertex_type vertex_type;
+    typedef typename vertex_store::vertex_iterator vertex_iterator;
+
+    typedef typename vertex_type::vertex_descriptor vertex_descriptor;
     typedef typename vertex_type::out_iterator edge_iterator;
+    typedef typename vertex_type::out_descriptor out_descriptor;
 
     typedef std::forward_iterator_tag iterator_category;
-    typedef typename vertex_iterator::diffeerence_type difference_type;
+    typedef typename vertex_iterator::difference_type difference_type;
     typedef Edge value_type;
     typedef value_type reference;
     typedef value_type pointer;
 
-    // Used to construct the end iterator.
-    directed_edge_iterator(vertex_store& store)
-        : verts(&store), vert(store.end_vertices()), edge()
+    directed_edge_iterator()
+        : verts(0), vert(), edge()
     { }
 
-    // Used to cosntruct the begin iterator.
-    directed_edge_iterator(vertex_store& store, edge_iterator e)
-        : verts(&store), vert(store.begin_vertices()), edge(e)
+    directed_edge_iterator(vertex_store& store, vertex_iterator i)
+        : verts(&store)
+        , vert(i)
+        , edge((i == store.end_vertices())
+            ? edge_iterator()               // empty out iterator
+            : vertex(*i).begin_out())       // first out iterator of v
     { }
+
+    /** Return the vertex, given the descriptor. */
+    inline vertex_type& vertex(vertex_descriptor v)
+    { return verts->vertex(v); }
+
+    /** Return the vertex, given the descriptor. */
+    inline vertex_type const& vertex(vertex_descriptor v) const
+    { return verts->vertex(v); }
+
+    /** Return the source vertex of the current edge. */
+    inline vertex_descriptor source() const
+    { return *vert; }
+
+    /** Return the target vertex of the current edge. */
+    inline vertex_descriptor target() const
+    { return edge->first; }
+
+    /**
+     * Return the current out edge by translating the current iterator to a
+     * descriptor
+     */
+    inline out_descriptor out_edge() const
+    { return vertex(*vert).out_edge(edge); }
 
     inline directed_edge_iterator& operator++()
     {
@@ -123,34 +151,35 @@ struct directed_edge_iterator
         // and reset the edge iterator.
         if(vert != verts->end_vertices()) {
             ++edge;
-            if(edge == verts->vertex(*vert).end_out()) {
+            if(edge == vertex(*vert).end_out()) {
+                // Move to the next vertex, resetting the edge iterator.
                 ++vert;
-                if(vert != verts->end_vertices()) {
-                    edge = vert->vertex(*vert).begin_out();
-                }
-                else {
-                    edge = edge_iterator();
-                }
+                edge = (vert != verts->end_vertices())
+                    ? vertex(*vert).begin_out()
+                    : edge_iterator();
             }
         }
         return *this;
     }
 
+    inline directed_edge_iterator operator++(int)
+    { directed_edge_iterator x(*this); operator++(); return x; }
+
     /** @name Equality Comparable */
     //@{
-    inline bool operator==(directed_edge_iterator const& x)
-    { return edge == x.edge; }
+    inline bool operator==(directed_edge_iterator const& x) const
+    { return (vert == x.vert) && (edge == x.edge); }
 
-    inline bool operator!=(directed_edge_iterator const& x)
-    { return edge != x.edge; }
+    inline bool operator!=(directed_edge_iterator const& x) const
+    { return !operator==(x); }
     //@}
 
     inline reference operator*() const
-    { return  *edge; }
+    { return Edge(source(), target(), out_edge()); }
 
-    vertex_store* verts;
-    vertex_iterator vert;
-    edge_iterator edge;
+    vertex_store*       verts;
+    vertex_iterator     vert;
+    edge_iterator       edge;
 };
 
 #endif

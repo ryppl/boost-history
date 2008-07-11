@@ -40,6 +40,7 @@ typedef index_descriptor<size_t> VertexDesc;
 template <typename Props, typename Incs, typename Vertex, typename Edge>
 void undirected_add_edge(Props& props, Incs& incs, Vertex v, Edge const& ep)
 {
+/*
     typedef typename Props::property_descriptor PropDesc;
     typedef typename Incs::incidence_descriptor IncDesc;
     typedef insertion_result<IncDesc> Result;
@@ -53,7 +54,7 @@ void undirected_add_edge(Props& props, Incs& incs, Vertex v, Edge const& ep)
     // Insert algorithm: Try to stub out the edge locally first. If it succeeds,
     // then add the global property, and finally bind the incidence and property
     // descitpros into their respective "slots". Note that this is actually
-    // faster than the 
+    // faster than the
     Result r = incs.add(v);
     if(r.succeeded()) {
         PropDesc p = props.add(ep);
@@ -71,6 +72,7 @@ void undirected_add_edge(Props& props, Incs& incs, Vertex v, Edge const& ep)
     else {
         cout << "  * failed " << u << "," << v << endl;
     }
+*/
 }
 
 template <typename Outs, typename Ins>
@@ -148,7 +150,7 @@ undirected()
 
     // Instantiate data structures related to the storage of edges and their
     // properties.
-    typedef typename EdgeStore::template property_store<EdgeProps>::type PropStore;
+    typedef typename EdgeStore::template property_store<VertexDesc, EdgeProps>::type PropStore;
     typedef typename EdgeStore::template incidence_store<VertexDesc>::type IncStore;
 
     PropStore props;
@@ -156,6 +158,10 @@ undirected()
 
     cout << "  * " << typestr(properties_category(props)) << endl;
     cout << "  * " << typestr(incidence_category(incs)) << endl;
+
+    cout << typestr<typename PropStore::vertex_descriptor>() << endl;
+    cout << typestr<typename PropStore::incidence_descriptor>() << endl;
+
 
     undirected_add_edges(props, incs);
 }

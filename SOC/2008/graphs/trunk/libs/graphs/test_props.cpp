@@ -13,6 +13,7 @@ using namespace boost;
 
 typedef int EdgeProperties;
 typedef descriptor_traits<std::list<int>>::descriptor_type IncDesc;
+typedef descriptor_traits<std::list<int>>::descriptor_type VertexDesc;
 
 template <typename PropSet>
 void test_remove(PropSet& props, stable_mutators_tag)
@@ -48,8 +49,9 @@ void test()
 
 int main()
 {
-    typedef pair<IncDesc, IncDesc> EdgePair;
-    typedef pair<EdgeProperties, EdgePair> StoredEdge;
+    typedef pair<VertexDesc, IncDesc> End;
+    typedef pair<End, End> EndPair;
+    typedef pair<EdgeProperties, EndPair> StoredEdge;
     typedef allocator<StoredEdge> Allocator;
 
     test<property_vector<StoredEdge, Allocator>>();

@@ -100,16 +100,25 @@ public:
     inline size_type size() const
     { return _size; }
 
-    /** @name Vertex Iterators */
+    /** @name Vertex Iterators
+     * There are two sets of iterators here: those that provide iterators that
+     * dereference as descriptors and those that dereference as vertices.
+     */
     //@{
-    vertex_iterator begin_vertices() const
+    inline vertex_iterator begin_vertices() const
+    { return vertex_iterator(_verts, _verts.begin()); }
+
+    inline vertex_iterator end_vertices() const
+    { return vertex_iterator(_verts, _verts.end()); }
+
+    inline vertex_range vertices() const
+    { return std::make_pair(begin_vertices(), end_vertices()); }
+
+    inline iterator begin() const
     { return _verts.begin(); }
 
-    vertex_iterator end_vertices() const
+    inline iterator end() const
     { return _verts.end(); }
-
-    vertex_range vertices() const
-    { return std::make_pair(begin_vertices(), end_vertices()); }
     //@}
 
     /** @name Vertex Accessors */

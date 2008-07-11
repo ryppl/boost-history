@@ -37,10 +37,11 @@ struct edge_list
 
     // The property store metafunction generates the underlying global store
     // type for edge properties in undirected graphs.
-    template <typename EdgeProps>
+    template <typename VertexDesc, typename EdgeProps>
     struct property_store
     {
-        typedef std::pair<EdgeProps, std::pair<incidence_descriptor, incidence_descriptor>> edge;
+        typedef std::pair<VertexDesc, incidence_descriptor> end;
+        typedef std::pair<EdgeProps, std::pair<end, end>> edge;
         typedef SecondAlloc<edge> allocator;
         typedef property_list<edge, allocator> type;
     };
