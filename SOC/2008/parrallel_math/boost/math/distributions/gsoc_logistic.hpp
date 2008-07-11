@@ -7,8 +7,8 @@
 #include <boost/math/distributions/detail/common_error_handling.hpp>
 #include <boost/math/distributions/complement.hpp>
 #include <boost/math/special_functions/log1p.hpp>
-#include <boost/math/special_functions/expm1.hpp>
 
+#include <cmath>
 #include <boost/math/constants/constants.hpp>
 #include <utility>
 
@@ -92,8 +92,8 @@ namespace boost { namespace math {
 	}
       
       
-      RealType power=(location-x)/scale;
-      return ( 1+expm1(power) )/ ( scale*(2+expm1(power))*(2+expm1(power) ) );
+      RealType exp_term=exp((location-x)/scale);
+      return ( exp_term )/ ( scale*(1+exp_term)*(1+exp_term ) );
       
       
     } 
@@ -127,7 +127,7 @@ namespace boost { namespace math {
 	}
       
       RealType power=(location-x)/scale;
-      return 1/( 2+expm1(power) ); 
+      return 1/( 1+exp(power) ); 
     } 
     
     template <class RealType, class Policy>
@@ -180,7 +180,7 @@ namespace boost { namespace math {
 	return result;
       
       RealType power=(x-location)/scale;
-      return 1/( 2+expm1(power) ); 
+      return 1/( 1+exp(power) ); 
       
     } 
       template <class RealType, class Policy>
