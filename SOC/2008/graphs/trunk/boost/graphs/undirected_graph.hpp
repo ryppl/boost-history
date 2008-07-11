@@ -143,9 +143,9 @@ public:
      * convenience overloads that depend on the type of vertex store.
      */
     //@{
-    std::pair<edge_descriptor, bool> edge(vertex_descriptor, vertex_descriptor) const;
-    std::pair<edge_descriptor, bool> edge(vertex_properties const&, vertex_properties const&) const;
-    std::pair<edge_descriptor, bool> edge(vertex_key const&, vertex_key const&) const;
+    edge_descriptor edge(vertex_descriptor, vertex_descriptor) const;
+    edge_descriptor edge(vertex_properties const&, vertex_properties const&) const;
+    edge_descriptor edge(vertex_key const&, vertex_key const&) const;
     //@}
 
     /** @name Remove Edge(s)
@@ -417,15 +417,13 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
  * whether or not the edge did exist.
  */
 template <BOOST_GRAPH_UG_PARAMS>
-std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
 undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) const
 {
     reorder(u, v);
     vertex_type const& src = _verts.vertex(u);
-    typename vertex_type::iterator i = src.find(v);
-    return i != src.end() ?
-        std::make_pair(edge_descriptor(u, v, i->second), true) :
-        std::make_pair(edge_descriptor(), false);
+    incidence_descriptor i = src.find_vertex(v);
+    return i ? edge_descriptor(u, v, src.properties(i)) : edge_descriptor();
 }
 
 /**
@@ -435,7 +433,7 @@ undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) co
  * edge(find_vertex(u), find_vertex(v)).
  */
 template <BOOST_GRAPH_UG_PARAMS>
-std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
 undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
                                     vertex_properties const& v) const
 {
@@ -449,7 +447,7 @@ undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
  * expression edge(find_vertex(u), find_vertex(v)).
  */
 template <BOOST_GRAPH_UG_PARAMS>
-std::pair<typename undirected_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
 undirected_graph<VP,EP,VS,ES>::edge(vertex_key const& u,
                                     vertex_key const& v) const
 {

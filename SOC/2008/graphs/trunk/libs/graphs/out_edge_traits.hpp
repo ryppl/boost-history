@@ -2,9 +2,9 @@
 #ifndef OUT_EDGE_TRAITS_HPP
 #define OUT_EDGE_TRAITS_HPP
 
-struct out_vector_tag : sequence_tag, unstable_remove_tag { };
-struct out_list_tag : sequence_tag, stable_mutators_tag { };
-struct out_set_tag : associative_container_tag, stable_mutators_tag { };
+struct out_vector_tag : vector_tag, unstable_remove_tag { };
+struct out_list_tag : list_tag, stable_mutators_tag { };
+struct out_set_tag : set_tag, stable_mutators_tag { };
 
 template <typename Outs>
 struct out_edge_traits

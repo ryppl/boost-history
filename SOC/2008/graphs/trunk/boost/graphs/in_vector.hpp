@@ -61,6 +61,27 @@ public:
     inline bool empty() const
     { return _edges.empty(); }
 
+    /** @name Iterators */
+    //@{
+    inline iterator begin() const
+    { return _edges.begin(); }
+
+    inline iterator end() const
+    { return _edges.end(); }
+    //@}
+
+    /** Return the source vertex of the in edge. */
+    inline vertex_descriptor source(in_descriptor i) const
+    { return make_iterator(_edges, i)->first; }
+
+    /** Return the reverse edge descriptor bound to the in edge. */
+    inline out_descriptor out_edge(in_descriptor i) const
+    { return make_iterator(_edges, i)->second; }
+
+    /** Return a desecriptor for an iterator into this object. */
+    inline in_descriptor in_edge(iterator i) const
+    { return make_descriptor(_edges, i); }
+
 private:
     mutable store_type _edges;
 };

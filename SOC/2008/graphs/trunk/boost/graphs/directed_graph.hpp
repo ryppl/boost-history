@@ -68,10 +68,10 @@ public:
     typedef typename types::out_edge_range out_edge_range;
     typedef typename types::in_edge_iterator in_edge_iterator;
     typedef typename types::in_edge_range in_edge_range;
-    // typedef typename types::incident_edge_iterator incident_edge_iterator;
-    // typedef typename types::incident_edge_range incident_edge_range;
-    // typedef typename types::adjacent_vertex_iterator adjacent_vertex_iterator;
-    // typedef typename types::adjacent_vertex_range adjacent_vertex_range;
+    typedef typename types::incident_edge_iterator incident_edge_iterator;
+    typedef typename types::incident_edge_range incident_edge_range;
+    typedef typename types::adjacent_vertex_iterator adjacent_vertex_iterator;
+    typedef typename types::adjacent_vertex_range adjacent_vertex_range;
 
     // Sizes for vertices, and degree.
     typedef typename types::vertices_size_type vertices_size_type;
@@ -170,9 +170,9 @@ public:
      * convenience overloads that depend on the type of vertex store.
      */
     //@{
-    std::pair<edge_descriptor, bool> edge(vertex_descriptor, vertex_descriptor);
-    std::pair<edge_descriptor, bool> edge(vertex_properties const&, vertex_properties const&);
-    std::pair<edge_descriptor, bool> edge(vertex_key const&, vertex_key const&);
+    edge_descriptor edge(vertex_descriptor, vertex_descriptor) const;
+    edge_descriptor edge(vertex_properties const&, vertex_properties const&) const;
+    edge_descriptor edge(vertex_key const&, vertex_key const&) const;
     //@}
 
     /** @name Remove Edge(s)
@@ -231,6 +231,14 @@ public:
     in_edge_iterator begin_in_edges(vertex_descriptor) const;
     in_edge_iterator end_in_edges(vertex_descriptor) const;
     in_edge_range in_edges(vertex_descriptor) const;
+
+    incident_edge_iterator begin_incident_edges(vertex_descriptor) const;
+    incident_edge_iterator end_incident_edges(vertex_descriptor) const;
+    incident_edge_range incident_edges(vertex_descriptor) const;
+
+    adjacent_vertex_iterator begin_adjacent_vertices(vertex_descriptor) const;
+    adjacent_vertex_iterator end_adjacent_vertices(vertex_descriptor) const;
+    adjacent_vertex_range adjacent_vertices(vertex_descriptor) const;
     //@}
 
     /** @name Property Accessors
@@ -242,8 +250,8 @@ public:
     //@}
 
 private:
-    vertex_store        _verts;
-    edges_size_type     _edges;
+    mutable vertex_store    _verts;
+    edges_size_type         _edges;
 };
 
 #define BOOST_GRAPH_DG_PARAMS \
@@ -465,13 +473,18 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
-    // Removing the edge involves the removal of both parts from the two
-    // connected vertices. We have to disconnect the source first because that
-    // will /not/ erase the edge's iterator.
+    // Grab the vertices in question
     vertex_type& src = _verts.vertex(e.source());
     vertex_type& tgt = _verts.vertex(e.target());
-    tgt.disconnect_source(e);
-    src.disconnect_target(e);
+
+    // Grab the in and out descriptors corresponding to the out edge and its
+    // reverse in edge.
+    out_descriptor  o = e.out_edge();
+    in_descriptor i = src.in_edge(o);
+
+    // And disconnect them.
+    src.disconnect_target(o);
+    tgt.disconnect_source(i);
 }
 
 /**
@@ -518,18 +531,24 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_out_edges(vertex_descriptor v)
 {
-    // Basically, just iterate over the out edges of v and remove all of the
-    // incoming parts of each out edge. Don't forget to drop the edge count.
-    out_edge_range out = out_edges(v);
-    for( ; out.first != out.second; ++out.first) {
-        edge_descriptor e = *out.first;
+    vertex_type& src = _verts.vertex(v);
+
+    // Iterate over the out edges of v and remove all of the incoming parts of
+    // each out edge and decrement the edge count.
+    out_edge_range rng = out_edges(v);
+    for( ; rng.first != rng.second; ++rng.first) {
+        edge_descriptor e = *rng.first;
+        out_descriptor o = e.out_edge();
+        in_descriptor i = src.in_edge(o);
+
+        // Disconnect the vertices.
         vertex_type& tgt = _verts.vertex(e.target());
-        tgt.disconnect_source(e);
-        --_edges;
+        tgt.disconnect_source(i);
     }
 
     // Clear the out edges.
-    _verts.vertex(v).clear_out();
+    _edges -= src.out_degree();
+    src.clear_out();
 }
 
 /**
@@ -562,18 +581,21 @@ template <BOOST_GRAPH_DG_PARAMS>
 void
 directed_graph<VP,EP,VS,ES>::remove_in_edges(vertex_descriptor v)
 {
-    // we have to disconnect the source of the opposite edge. Don't forget to
-    // drop the edge count.
-    in_edge_range in = in_edges(v);
-    for( ; in.first != in.second; ++in.first) {
-        edge_descriptor e = *in.first;
+    vertex_type& tgt = _verts.vertex(v);
+
+    // Remove all in edges from v, making v a source vertex (all out, no in).
+    // The edge is actually removed from the source of the in edges of this
+    // vertex.
+    in_edge_range rng = in_edges(v);
+    for( ; rng.first != rng.second; ++rng.first) {
+        edge_descriptor e = *rng.first;
         vertex_type& src = _verts.vertex(e.source());
-        src.disconnect_target(e);
-        --_edges;
+        src.disconnect_target(e.out_edge());
     }
 
     // Clear out the vertices lists.
-    _verts.vertex(v).clear_in();
+    _edges -= tgt.in_degree();
+    tgt.clear_in();
 }
 
 /**
@@ -613,21 +635,28 @@ directed_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u, vertex_descriptor
     vertex_type& src = _verts.vertex(u);
     vertex_type& tgt = _verts.vertex(v);
 
-    // Iterate over the out edges of the source, removing them.
+    // Iterate over the out edges of the source, storing out edges for
+    // subsequent removal and actually removing in edges.
+    std::vector<out_descriptor> outs;
     out_edge_range rng = out_edges(u);
-    for(out_edge_iterator i = rng.first ; i != rng.second; ) {
-        // If the target vertex is one that we want to remove, remove it from
-        // the out list of this vertex. Also, brute-force remove it from the
-        // in list of other vertex.
+    for(out_edge_iterator i = rng.first ; i != rng.second; ++i) {
+        // If the target vertex is one that we want to remove, remove the in
+        // edge from the target and stash the out edge for subsequent removal
+        // in a second pass.
         edge_descriptor e = *i;
-        if(v == e.target()) {
-            tgt.disconnect_source(e.in_edge());
-            i = out_edge_iterator(u, src.disconnect_target(e.out_edge()));
-            --_edges;
+        if(e.target() == v) {
+            out_descriptor o = e.out_edge();
+            in_descriptor i = src.in_edge(e.out_edge());
+            tgt.disconnect_source(i);
+            outs.push_back(o);
        }
-       else {
-            ++i;
-       }
+    }
+
+    // Second pass: remove all the out edge descriptors and decrement the count.
+    typename std::vector<out_descriptor>::iterator i, end = outs.end();
+    for(i = outs.begin(); i != end; ++i) {
+        src.disconnect_target(*i);
+        --_edges;
     }
 }
 
@@ -656,14 +685,12 @@ directed_graph<VP,EP,VS,ES>::remove_edges(vertex_key const& u,
  * @todo Consider making descriptors "self-invalidating".
  */
 template <BOOST_GRAPH_DG_PARAMS>
-std::pair<typename directed_graph<VP,EP,VS,ES>::edge_descriptor, bool>
-directed_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v)
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
+directed_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) const
 {
     vertex_type& src = _verts.vertex(u);
-    typename vertex_type::out_iterator i = src.find_out(v);
-    return i != src.end_out() ?
-        std::make_pair(edge_descriptor(u, i), true) :
-        std::make_pair(edge_descriptor(), false);
+    out_descriptor o = src.find_target(v);
+    return o ? edge_descriptor(u, v, o) : edge_descriptor();
 }
 
 /**
@@ -673,9 +700,9 @@ directed_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v)
  * exists or not. This is equivalent to edge(find_vertex(u), find_vertex(v)).
  */
 template <BOOST_GRAPH_DG_PARAMS>
-std::pair<typename directed_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
 directed_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
-                                  vertex_properties const& v)
+                                  vertex_properties const& v) const
 {
     return edge(find_vertex(u), find_vertex(v));
 }
@@ -686,9 +713,9 @@ directed_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
  * exists or not. This is equivalent to edge(find_vertex(u), find_vertex(v)).
  */
 template <BOOST_GRAPH_DG_PARAMS>
-std::pair<typename directed_graph<VP,EP,VS,ES>::edge_descriptor, bool>
+typename directed_graph<VP,EP,VS,ES>::edge_descriptor
 directed_graph<VP,EP,VS,ES>::edge(vertex_key const& u,
-                                  vertex_key const& v)
+                                  vertex_key const& v) const
 {
     return edge(find_vertex(u), find_vertex(v));
 }
@@ -794,7 +821,10 @@ directed_graph<VP,EP,VS,ES>::edges() const
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::out_edge_iterator
 directed_graph<VP,EP,VS,ES>::begin_out_edges(vertex_descriptor v) const
-{ return out_edge_iterator(v, _verts.vertex(v).begin_out()); }
+{
+    vertex_type& vert = _verts.vertex(v);
+    return out_edge_iterator(vert, v, vert.begin_out());
+}
 
 /**
  * Return an iterator past the end of then out edges of the given vertex.
@@ -803,7 +833,8 @@ template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::out_edge_iterator
 directed_graph<VP,EP,VS,ES>::end_out_edges(vertex_descriptor v) const
 {
-    return out_edge_iterator(v, _verts.vertex(v).end_out());
+    vertex_type& vert = _verts.vertex(v);
+    return out_edge_iterator(vert, v, vert.end_out());
 }
 
 /**
@@ -832,9 +863,7 @@ directed_graph<VP,EP,VS,ES>::begin_in_edges(vertex_descriptor v) const
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::in_edge_iterator
 directed_graph<VP,EP,VS,ES>::end_in_edges(vertex_descriptor v) const
-{
-    return in_edge_iterator(v, _verts.vertex(v).end_in());
-}
+{ return in_edge_iterator(v, _verts.vertex(v).end_in()); }
 
 /**
  * Return an iterator range over the in edges of the given vertex.
@@ -842,9 +871,58 @@ directed_graph<VP,EP,VS,ES>::end_in_edges(vertex_descriptor v) const
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::in_edge_range
 directed_graph<VP,EP,VS,ES>::in_edges(vertex_descriptor v) const
-{
-    return std::make_pair(begin_in_edges(v), end_in_edges(v));
-}
+{ return std::make_pair(begin_in_edges(v), end_in_edges(v)); }
+
+/**
+ * Return an iterator to the first incident edge of the given vertex. This is
+ * an alias for begin_out_edges(v).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::incident_edge_iterator
+directed_graph<VP,EP,VS,ES>::begin_incident_edges(vertex_descriptor v) const
+{ return begin_out_edges(v); }
+
+/**
+ * Return an iterator past the end of the incident edges of the given vertex.
+ * This is an alias for end_out_edges(v).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::incident_edge_iterator
+directed_graph<VP,EP,VS,ES>::end_incident_edges(vertex_descriptor v) const
+{ return end_out_edges(v); }
+
+/**
+ * Return an iterator range over the incident edges of the given vertex. This
+ * is an alias for out_edges(v).
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::incident_edge_range
+directed_graph<VP,EP,VS,ES>::incident_edges(vertex_descriptor v) const
+{ return out_edges(v); }
+
+/**
+ * Return an iterator to the first adjacent vertex of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::adjacent_vertex_iterator
+directed_graph<VP,EP,VS,ES>::begin_adjacent_vertices(vertex_descriptor v) const
+{ return adjacent_vertex_iterator(begin_incident_edges(v)); }
+
+/**
+ * Return an iterator past the end of the adjacent vertices of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::adjacent_vertex_iterator
+directed_graph<VP,EP,VS,ES>::end_adjacent_vertices(vertex_descriptor v) const
+{ return adjacent_vertex_iterator(end_incident_edges(v)); }
+
+/**
+ * Return an iterator range over the adjacent vertices of the given vertex.
+ */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::adjacent_vertex_range
+directed_graph<VP,EP,VS,ES>::adjacent_vertices(vertex_descriptor v) const
+{ return std::make_pair(begin_adjacent_vertices(v), end_adjacent_vertices(v)); }
 
 /**
  * Return the properties for the given vertex.
@@ -852,9 +930,7 @@ directed_graph<VP,EP,VS,ES>::in_edges(vertex_descriptor v) const
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::vertex_properties&
 directed_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v)
-{
-    return _verts.properties(v);
-}
+{ return _verts.properties(v); }
 
 /**
  * Return the properties for the given edge.
@@ -862,9 +938,7 @@ directed_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v)
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_properties&
 directed_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
-{
-    return e.properties();
-}
+{ return e.properties(); }
 
 #undef BOOST_GRAPH_DG_PARAMS
 

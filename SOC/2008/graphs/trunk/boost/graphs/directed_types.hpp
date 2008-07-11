@@ -67,12 +67,21 @@ struct directed_types
     typedef typename VertexStore::key_type vertex_key;
 
     // Generate a bunch of iterators
-    typedef basic_out_iterator<out_store, edge_descriptor> out_edge_iterator;
+    typedef basic_out_iterator<vertex_type, edge_descriptor> out_edge_iterator;
     typedef std::pair<out_edge_iterator, out_edge_iterator> out_edge_range;
     typedef basic_in_iterator<typename in_store::iterator, edge_descriptor> in_edge_iterator;
     typedef std::pair<in_edge_iterator, in_edge_iterator> in_edge_range;
     typedef directed_edge_iterator<vertex_store, edge_descriptor> edge_iterator;
     typedef std::pair<edge_iterator, edge_iterator> edge_range;
+
+    // Generate incident edge iterators as out edge iterators - not a
+    // combination of in and out edges.
+    typedef out_edge_iterator incident_edge_iterator;
+    typedef out_edge_range incident_edge_range;
+
+    // Generate adjacent vertx iterators over the incidence iterator
+    typedef adjacency_iterator<incident_edge_iterator> adjacent_vertex_iterator;
+    typedef std::pair<adjacent_vertex_iterator, adjacent_vertex_iterator> adjacent_vertex_range;
 };
 
 #endif

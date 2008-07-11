@@ -56,7 +56,7 @@ public:
     { return iter != x.iter; }
 
     inline reference operator*() const
-    { return Edge(source(), target(), iter->second()); }
+    { return Edge(source(), target(), iter->second); }
 
     vertex_descriptor   tgt;
     iterator            iter;

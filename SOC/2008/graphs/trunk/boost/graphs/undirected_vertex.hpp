@@ -53,11 +53,11 @@ public:
 
     inline void disconnect(incidence_descriptor i)
     { _edges.remove(i); }
-    //@}
 
-    /** Find return an iterator the edge end with the given vertex. */
-    inline iterator find(vertex_descriptor v) const
+    /** Find an incident edge connecting this to the given vertex. */
+    inline incidence_descriptor find(vertex_descriptor v) const
     { return _edges.find(v); }
+    //@}
 
     /** Return the properties of the given incident edge. */
     inline property_descriptor edge_properties(incidence_descriptor i) const

@@ -84,11 +84,11 @@ public:
     { return make_iterator(_edges, o)->second.first; }
 
     /** Return the in edge descriptor bound to this edge. */
-    inline in_descriptor reverse(out_descriptor o) const
+    inline in_descriptor in_edge(out_descriptor o) const
     { return make_iterator(_edges, o)->second.second; }
 
     /** Return an out descriptor for the given iterator. */
-    inline out_descriptor edge(iterator i)
+    inline out_descriptor out_edge(iterator i) const
     { return make_descriptor(_edges, i); }
 
 private:

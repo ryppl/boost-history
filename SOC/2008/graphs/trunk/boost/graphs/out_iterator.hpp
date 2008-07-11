@@ -4,14 +4,23 @@
 
 /**
  * The out edge iterator is a wrapper around out store iterators that, when
- * dereferenced will return an edge descriptor. The properties of the iterator
- * are taken from the underlying store.
+ * dereferenced will return an edge descriptor.
+ *
+ * @note This is unfortunately parameterized over the entire vertex type. Why?
+ * Basically because we can't tranlstate between the underlying iterator and
+ * its own descriptor without access to its store. Unfortunately, the store
+ * that defines the underlying iterator is buried beneath the vertex, preventing
+ * easy construction from the outer graph class. Why o' why do I not have self-
+ * transflating descriptors? It could greatly simplify some aspects of these
+ * implementations.
  */
-template <typename Store, typename Edge>
+template <typename Vertex, typename Edge>
 class basic_out_iterator
 {
-    typedef Store store_type;
-    typedef typename Store::iterator iterator;
+public:
+    // Decode some type information from the wrapped out iterator.
+    typedef Vertex vertex_type;
+    typedef typename Vertex::out_iterator iterator;
     typedef typename iterator::value_type base_value_type;
     typedef typename base_value_type::first_type vertex_descriptor;
     typedef typename base_value_type::second_type edge_pair;
@@ -28,20 +37,27 @@ class basic_out_iterator
     typedef value_type pointer;
 
     inline basic_out_iterator()
-        : src(), iter(), outs(0)
+        : vert(0), src(), iter()
     { }
 
-    inline basic_out_iterator(vertex_descriptor v, iterator x, store_type& store)
-        : src(v), iter(x), outs(&store)
+    inline basic_out_iterator(vertex_type& vert, vertex_descriptor v, iterator x)
+         : vert(&vert), src(v), iter(x)
     { }
 
     /** Return the source vertex of the iterated edge. */
-    vertex_descriptor source() const
+    inline vertex_descriptor source() const
     { return src; }
 
     /** Return the target vertex of the iterated edge. */
-    vertex_descriptor target() const
+    inline vertex_descriptor target() const
     { return iter->first; }
+
+    /**
+     * Return the "opposite" (target) vertex of the iterated edge. This is
+     * provided to work with the adjacency iterator.
+     */
+    inline vertex_descriptor opposite() const
+    { return target(); }
 
     inline basic_out_iterator& operator++()
     { ++iter; return *this; }
@@ -59,11 +75,11 @@ class basic_out_iterator
     //@}
 
     inline reference operator*() const
-    { return Edge(source(), target(), outs->edge(iter)); }
+    { return Edge(source(), target(), vert->out_edge(iter)); }
 
+    vertex_type*        vert;
     vertex_descriptor   src;
     iterator            iter;
-    store_type*         outs;
 };
 
 #endif

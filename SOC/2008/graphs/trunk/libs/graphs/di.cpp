@@ -6,6 +6,7 @@
 #include <boost/graphs/directed_graph.hpp>
 
 #include "typestr.hpp"
+#include "out_edge_traits.hpp"
 
 using namespace std;
 using namespace boost;
@@ -16,6 +17,26 @@ typedef int Road;
 void list_list();
 void vec_vec();
 void set_set();
+
+namespace dispatch
+{
+    bool allows_parallel_edges(unique_associative_container_tag)
+    { return false; }
+
+    bool allows_parallel_edges(multiple_associative_container_tag)
+    { return false; }
+
+    bool allows_parallel_edges(sequence_tag)
+    { return true; }
+}
+
+template <typename Graph>
+bool allows_parallel_edges(Graph const& g)
+{
+    typedef typename Graph::out_store Store;
+    return dispatch::allows_parallel_edges(typename out_edge_traits<Store>::category());
+}
+
 
 template <typename Graph>
 void print_types(const Graph&)
@@ -44,10 +65,13 @@ template <typename Graph>
 void test_add_remove_vertices()
 {
     Graph g;
+    cout << "  * adding vertices" << endl;
     list<typename Graph::vertex_descriptor> V;
     for(int i = 0; i < 5; ++i) {
         V.push_back(g.add_vertex(i));
     }
+
+    cout << "  * removing vertices" << endl;
     BOOST_ASSERT(g.num_vertices() == 5);
     while(!V.empty()) {
         g.remove_vertex(V.front());
@@ -85,6 +109,8 @@ void test_add_remove_edges()
     for(int i = 0; i < 3; ++i) {
         V.push_back(g.add_vertex(i));
     }
+
+    cout << "  * adding edges" << endl;
     E.push_back(g.add_edge(V[0], V[1]));
     E.push_back(g.add_edge(V[1], V[2]));
     E.push_back(g.add_edge(V[2], V[0]));
@@ -94,6 +120,7 @@ void test_add_remove_edges()
     BOOST_ASSERT(g.out_degree(V[0]) == 1);
     BOOST_ASSERT(g.in_degree(V[0]) == 1);
 
+    cout << "  * removing edges" << endl;
     g.remove_edge(E.front());
     BOOST_ASSERT(g.degree(V[1]) == 1);
     BOOST_ASSERT(g.out_degree(V[0]) == 0);
@@ -127,8 +154,8 @@ void test_disconnect_vertex()
     BOOST_ASSERT(g.in_degree(V[0]) == 1);
     BOOST_ASSERT(g.in_degree(V[1]) == 1);
     BOOST_ASSERT(g.in_degree(V[2]) == 1);
-    BOOST_ASSERT(g.edge(V[0], V[1]).second);
-    BOOST_ASSERT(g.edge(V[2], V[0]).second);
+    BOOST_ASSERT(g.edge(V[0], V[1]));
+    BOOST_ASSERT(g.edge(V[2], V[0]));
 
     // Disconnect the vertex
     g.remove_edges(V[0]);
@@ -181,6 +208,8 @@ void test_add_multi_edges()
     Graph g;
     typename Graph::vertex_descriptor u = g.add_vertex(1);
     typename Graph::vertex_descriptor v = g.add_vertex(2);
+
+    cout << "  * adding multiple edge" << endl;
     g.add_edge(u, v);
     g.add_edge(v, u);
     g.add_edge(u, v);
@@ -188,10 +217,11 @@ void test_add_multi_edges()
 
     BOOST_ASSERT(g.num_vertices() == 2);
     if(allows_parallel_edges(g)) {
-        BOOST_ASSERT(g.num_edges() == 1);
+        BOOST_ASSERT(g.num_edges() == 4);
     }
     else {
-        BOOST_ASSERT(g.num_edges() == 4);
+        // Two edges: (u,v) and (v,u)
+        BOOST_ASSERT(g.num_edges() == 2);
     }
 }
 
@@ -201,15 +231,19 @@ void test_remove_multi_edges()
     Graph g;
     typename Graph::vertex_descriptor u = g.add_vertex(1);
     typename Graph::vertex_descriptor v = g.add_vertex(2);
+
     g.add_edge(u, v);
     g.add_edge(v, u);
     g.add_edge(u, v);
     g.add_edge(v, u);
 
+    cout << "  * removing multiple edges" << endl;
     g.remove_edges(u, v);
-    BOOST_ASSERT(g.num_edges() == 2);
-    BOOST_ASSERT(g.out_degree(v) == 2);
-    BOOST_ASSERT(g.in_degree(u) == 2);
+    BOOST_ASSERT(g.out_degree(u) == 0);
+    BOOST_ASSERT(g.in_degree(v) == 0);
+    BOOST_ASSERT(g.num_edges() == allows_parallel_edges(g) ? 2 : 1);
+    BOOST_ASSERT(g.out_degree(v) == allows_parallel_edges(g) ? 2 : 1);
+    BOOST_ASSERT(g.in_degree(u) == allows_parallel_edges(g) ? 2 : 1);
 }
 
 template <typename Graph>
@@ -223,9 +257,11 @@ void test_incidence_iterator()
     g.add_edge(u, v, 3);
     g.add_edge(v, u, 4);
 
-    typename Graph::incident_edge_range x = g.incident_edges(v);
-    for( ; x.first != x.second; ++x.first) {
-        // cout << "test: " << g[*x.first] << endl;
+    typename Graph::incident_edge_range rng = g.incident_edges(u);
+    for( ; rng.first != rng.second; ++rng.first) {
+        typename Graph::edge_descriptor e = *rng.first;
+        BOOST_ASSERT(e.source() == u);
+        BOOST_ASSERT(e.target() == v);
     }
 }
 
@@ -235,14 +271,15 @@ void test_adjacency_iterator()
     Graph g;
     typename Graph::vertex_descriptor u = g.add_vertex(1);
     typename Graph::vertex_descriptor v = g.add_vertex(2);
+
     g.add_edge(u, v, 1);
     g.add_edge(v, u, 2);
     g.add_edge(u, v, 3);
     g.add_edge(v, u, 4);
 
-    typename Graph::adjacent_vertex_range x = g.adjacent_vertices(v);
-    for( ; x.first != x.second; ++x.first) {
-        // cout << "test: " << g[*x.first] << endl;
+    typename Graph::adjacent_vertex_range rng = g.adjacent_vertices(u);
+    for( ; rng.first != rng.second; ++rng.first) {
+        BOOST_ASSERT(*rng.first == v);
     }
 }
 
@@ -261,8 +298,8 @@ void vec_vec()
     typedef directed_graph<City, Road, vertex_vector<>, edge_vector<> > Graph;
     test_add_vertices<Graph>();
     test_add_edges<Graph>();
-    /*
     test_add_multi_edges<Graph>();
+    /*
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
     */
@@ -271,7 +308,6 @@ void vec_vec()
 void list_list()
 {
     cout << "---- list/list ----" << endl;
-    /*
     typedef directed_graph<City, Road, vertex_list<>, edge_list<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
@@ -279,6 +315,7 @@ void list_list()
     test_implicit_disconnect_vertex<Graph>();
     test_add_multi_edges<Graph>();
     test_remove_multi_edges<Graph>();
+    /*
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
     */
@@ -288,7 +325,6 @@ void list_list()
 void set_set()
 {
     cout << "---- set/set ----" << endl;
-    /*
     typedef directed_graph<City, Road, vertex_set<>, edge_set<> > Graph;
     test_add_remove_vertices<Graph>();
     test_add_remove_edges<Graph>();
@@ -298,6 +334,5 @@ void set_set()
     test_remove_multi_edges<Graph>();
     test_incidence_iterator<Graph>();
     test_adjacency_iterator<Graph>();
-    */
 }
 

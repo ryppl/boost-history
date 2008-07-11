@@ -40,7 +40,10 @@ public:
 
     /** @name Edge Connection and Disconnection
      * These functions provide an interface to the in and out stores of the
-     * vertex.
+     * vertex. The connection of this vertex to a target is a two-phase
+     * operation. First, the connection is made to the target and vice-versa
+     * from the source. Then, the target is bound with the in edge descriptor
+     * of the source.
      */
     //@{
     insertion_result<out_descriptor> connect_target(vertex_descriptor v, edge_properties const& ep)
@@ -52,6 +55,17 @@ public:
     void bind_target(out_descriptor o, in_descriptor i)
     { _out.bind(o, i); }
 
+    void disconnect_target(out_descriptor o)
+    { _out.remove(o); }
+
+    void disconnect_source(in_descriptor i)
+    { _in.remove(i); }
+
+    /** Find the (at least one?) out edge connected to the given vertex. */
+    out_descriptor find_target(vertex_descriptor v)
+    { return _out.find(v); }
+    //@}
+
     /** @name Property Accessors */
     //@{
     inline vertex_properties& properties()
@@ -60,6 +74,23 @@ public:
     inline vertex_properties const& properties() const
     { return _props; }
     //@}
+
+    /** Return the reverse out descriptor for the given in edge. */
+    inline out_descriptor out_edge(in_descriptor i) const
+    { return _in.out_edge(i); }
+
+    /** Return the reverse in descriptor for the given out edge. */
+    inline in_descriptor in_edge(out_descriptor o) const
+    { return _out.in_edge(o); }
+
+
+    /** Return a descriptor for the iterator into the underlying container. */
+    inline out_descriptor out_edge(out_iterator o) const
+    { return _out.out_edge(o) ;}
+
+    /** Return a descriptor for the iterator into the underlying container */
+    inline in_descriptor in_edge(in_iterator i) const
+    { return _in.in_edge(i); }
 
 
     /** @name Out Edges */
