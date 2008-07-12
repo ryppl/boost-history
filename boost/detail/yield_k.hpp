@@ -25,14 +25,27 @@
 
 #include <boost/config.hpp>
 
-#if defined( WIN32 ) || defined( _WIN32 ) || defined( __WIN32__ )
+// BOOST_SMT_PAUSE
+
+#if defined(_MSC_VER) && _MSC_VER >= 1310 && ( defined(_M_IX86) || defined(_M_X64) )
+
+extern "C" void _mm_pause();
+#pragma intrinsic( _mm_pause )
+
+#define BOOST_SMT_PAUSE _mm_pause();
+
+#elif defined(__GNUC__) && ( defined(__i386__) || defined(__x86_64__) )
+
+#define BOOST_SMT_PAUSE __asm__ __volatile__( "rep; nop" ::: "memory" );
+
+#endif
+
+//
+
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( __WIN32__ ) || defined( __CYGWIN__ )
 
 #if defined( BOOST_USE_WINDOWS_H )
 # include <windows.h>
-#endif
-
-#if defined(_MSC_VER) && _MSC_VER >= 1310
-  extern "C" void _mm_pause();
 #endif
 
 namespace boost
@@ -45,15 +58,15 @@ namespace detail
   extern "C" void __stdcall Sleep( unsigned ms );
 #endif
 
-void yield( unsigned k )
+inline void yield( unsigned k )
 {
     if( k < 4 )
     {
     }
-#if defined(_MSC_VER) && _MSC_VER >= 1310
+#if defined( BOOST_SMT_PAUSE )
     else if( k < 16 )
     {
-        _mm_pause();
+        BOOST_SMT_PAUSE
     }
 #endif
     else if( k < 32 )
@@ -81,15 +94,15 @@ namespace boost
 namespace detail
 {
 
-void yield( unsigned k )
+inline void yield( unsigned k )
 {
     if( k < 4 )
     {
     }
-#if defined( __GNUC__ ) && ( defined( __i386__ ) || defined( __x86_64__ ) )
+#if defined( BOOST_SMT_PAUSE )
     else if( k < 16 )
     {
-        __asm__ __volatile__( "rep; nop" ::: "memory" );
+        BOOST_SMT_PAUSE
     }
 #endif
     else if( k < 32 || k & 1 )
@@ -98,7 +111,11 @@ void yield( unsigned k )
     }
     else
     {
-        struct timespec rqtp = { 0 };
+        // g++ -Wextra warns on {} or {0}
+        struct timespec rqtp = { 0, 0 };
+
+        // POSIX says that timespec has tv_sec and tv_nsec
+        // But it doesn't guarantee order or placement
 
         rqtp.tv_sec = 0;
         rqtp.tv_nsec = 1000;
