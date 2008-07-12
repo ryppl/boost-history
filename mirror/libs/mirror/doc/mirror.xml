@@ -35,6 +35,7 @@
 	<title>Mirror</title>
 
 	<xi:include href="introduction.xml"/>
+	<xi:include href="tutorial.xml"/>
 
 </library>
 

@@ -110,12 +110,61 @@
 	<title>Motivation</title>
 <para>
 	Here are described some of the recurring situations where the facilities 
-	provided by <libraryname>Mirror</libraryname> could be helpful.
+	provided by <libraryname>Mirror</libraryname> are helpful.
 </para>
 
 <section id="mirror.motivation.problem.typenames">
 	<title>Problem - Querying typenames</title>
 
+	<para>
+		There are applications which need to get and then somehow process 
+		the name of a given type. One example is a logging facility where 
+		some of the messages may contain names of types. This is very helpful 
+		for example if one wants to log something in a template function and wants 
+		to distinguish between various instantiations in the logs. In this case 
+		it is very useful if the type name that goes into the log is human-readable 
+		and preferrably corresponding to the typename used in the source code. 
+	</para>
+	<para>
+		Another application might want to store its data in a format where the typenames 
+		are included (for example as attributes of an XML element) to be able to do 
+		additional checking when loading the data. In this case the type name must be unique 
+		and usually also portable. In addition if the data files are user-editable, 
+		the names of the types should be human-readable.
+	</para>
+	<para>
+		Yet another example is a generic application that does some C++ source code generation. 
+		In this case the typenames in the output need to correspond to C++ typenames.
+	</para>
+	<para>
+		The obvious choice if one needs to find out what the name of a given type is is to 
+		use the <code>typeid</code> operator and call the <code>name()</code> function 
+		on the returned reference to <code>type_info</code>. There are however several 
+		problems with is approach.
+	</para>
+	<para>
+		The notoriously known issue of <code>type_info::name()</code> is that the string 
+		returned by this function is implementaion-defined and compilers are free 
+		to return anything from an empty string, through a mangled typename to a corretly 
+		formatted typename and many of them enjoy this freedom to its full extent.
+		Thus the returned name is not guarenteed to be unique nor human readable or 
+		easily understandable, nor is it portable. 
+	</para>
+	<para>
+		One possible solution is the standardisation of the result of <code>typeid(T).name()</code>
+		or introduction of a new member function to the <code>type_info</code> structure
+		for example <code>type_info::std_name()</code>,
+		that would return human-readable, unique, portable typenames preferrably corresponding
+		to the C++ typenames.
+		Obviously, until that happens we need to stick to another solution.
+	</para>
+	<para>
+		To complicate things even more, we might want to get the base name of the type
+		without the nested-name-specifier (<code>basic_string</code> vs. 
+		<code>::std::basic_string</code>) and to get the nested-name-specifier
+		or even the individual names of the enclosing namespaces or classes 
+		separatelly. 
+	</para>
 </section>
 <section id="mirror.motivation.problem.uniformmemattaccess">
 	<title>Problem - Uniform access to member attributes of a class' instance</title>
