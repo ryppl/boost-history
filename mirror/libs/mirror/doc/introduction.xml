@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="mirror.intro">
+	<title>Introduction</title>
+
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::mirror"/>
+
+<section id="mirror.abstract">
+	<title>Abstract</title>
+
+<para>
+	The aim of the <libraryname>Mirror</libraryname> library is to provide 
+	useful meta-data at both compile-time and run-time about common 
+	C++ constructs like namespaces, types
+	(and as a important special case <code>typedef</code>-ined types, 
+	classes and their base classes and member attributes, instances, etc. and to 
+	provide uniform and generic interfaces for their introspection.
+</para>
+<para>
+	Because standard C++ provides only a very limited set of meta-information
+	the main drawback of this library is that namespace, types, classes, etc.
+	need to be registered before they can be reflected. 
+	However <libraryname>Mirror</libraryname> tries to make the process of 
+	registering simple by providing a set of user-friendly registering macros
+	and has many of the native and other common types, classes, templates and 
+	namespaces pre-registered.
+</para>
+<para>
+	<libraryname>Mirror</libraryname> is designed with the principle of stratification
+	in mind and tries to be as less intrusive as possible. New classes do not need
+	to be designed to directly support <libraryname>Mirror</libraryname>
+       	and no <libraryname>Mirror</libraryname> related code is necessary
+	in the class' definition, as far as some general guidelines are followed
+	(the exceptions to this are explained here).
+</para>
+<para>
+	Most important use-cases for the <libraryname>Mirror</libraryname> library
+	that are currently implemented include:
+</para>
+
+<itemizedlist>
+	<listitem>
+		Namespace-name inspection. Both the base and fully qualified namespace
+		names are supported.
+	</listitem>
+	<listitem>
+		Inspection of the whole scope in which a namespace is defined (global
+		scope or nested in another namespace).
+	</listitem>
+	<listitem>
+		Type-name inspection, with the support for <code>typedef</code>-ined
+		typenames and typenames of derived types like pointers, references,
+		cv-qualified types, arrays, functions and template names. Names
+		with or without nested-name-specifiers can be queried.
+	</listitem>
+	<listitem>
+		Inspection of the scope in which a type has been defined (global-scope,
+		in a namespace, inside of a class)
+	</listitem>
+
+	<listitem>
+		Unform and generic inspection of class' base classes. One can inspect 
+		traits of the base classes for example their types, whether they are inherited
+		virtually or not and the access specifier (<code>private</code>, <code>protected</code>,
+		<code>public</code>).
+	</listitem>
+	<listitem>
+		Unform and generic inspection of class' member attributes either just those defined
+		directly in the reflected class or inherited from it's base-classes. 
+		At compile-time the count of class' attributes and their types, storage class
+		specifiers (<code>static</code>, <code>mutable</code>) and some other traits
+		can be queried.
+		At run-time one can uniformly query the names and/or values (when given 
+		an instance of the reflected class) of the member attributes and 
+		sequentially execute a custom functor on every attribute of a class.
+	</listitem>
+	<listitem>
+		Traversals of a class' (or generally type's) structure with user defined visitors,
+		which are optionally working on an provided instance of the type
+		or just on it's structure without any run-time data.
+		These visitors are guided by <libraryname>Mirror</libraryname> through
+		the structure of the class and optionally provided with contextual 
+		information about the current position in the traversal.
+	</listitem>
+</itemizedlist>
+
+<para>
+	Most important planned use-cases for the <libraryname>Mirror</libraryname> library
+	include:
+</para>
+
+<itemizedlist>
+	<listitem>
+		Facility for generating customizable object factories with a uniform interface.
+	</listitem>
+	<listitem>
+		Facility for generating customizable class method dispatchers, allowing
+		to construct the arguments and call any member function on an instance 
+		of a class registered with <libraryname>Mirror</libraryname>, through
+		a uniform interface.
+	</listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="mirror.motivation">
+	<title>Motivation</title>
+<para>
+	Here are described some of the recurring situations where the facilities 
+	provided by <libraryname>Mirror</libraryname> could be helpful.
+</para>
+
+<section id="mirror.motivation.problem.typenames">
+	<title>Problem - Querying typenames</title>
+
+</section>
+<section id="mirror.motivation.problem.uniformmemattaccess">
+	<title>Problem - Uniform access to member attributes of a class' instance</title>
+
+
+</section>
+
+</section>
+
+</section>
