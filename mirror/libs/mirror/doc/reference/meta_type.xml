@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/meta_type.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="meta_type">
+			<template>
+				<template-type-parameter name="Type"/>
+			</template>
+			<purpose>
+				<para>
+				The purpose of this class template is to provide meta-data
+				about the reflected type, especially to allow to get the 
+				base and full type name, of the reflected type and to 
+				get information about the scope inside of which this type
+				has been declared.
+				</para>
+				<para>
+				Although the specializations of <code><classname>meta_type</classname></code> 
+				template can be used directly to get the meta data about a particular type, 
+				it is recomended to use the reflection macros like 
+				<code><macroname>BOOST_MIRRORED_TYPE</macroname>(TYPE)</code> or
+				<code><macroname>BOOST_MIRRORED_TYPEOF</macroname>(EXPR)</code>
+				instead, to get the proper specializations of 
+				<code><classname>meta_type</classname></code>.
+				</para>
+			</purpose>
+
+			<access name="public">
+			<typedef name="reflected_type">
+				<type>Type</type>
+				<purpose>The reflected type</purpose>
+				<description>
+					<para>The type reflected by this overload of <code><classname>meta_type</classname></code>.
+					</para>
+				</description>
+			</typedef>
+			<typedef name="scope">
+				<type><emphasis>unspecified</emphasis></type>
+				<purpose>Meta-object describing the scope where Type is defined</purpose>
+				<description>
+					<para>A meta-object describing the scope in which the reflected type
+					is defined. Depending on where the type has been defined <code>scope</code>
+					can be either a specialization of <code><classname>meta_namespace</classname></code>
+					or a specialization of <code><classname>meta_class</classname></code>.
+					</para>
+				</description>
+			</typedef>
+			<method name="base_name">
+				<type>const <classname>bstring</classname>&amp;</type>
+				<purpose>
+					<para>This static member function returns the base name of the 
+					type reflected by <code><classname>meta_type</classname></code>
+					without the nested name specifier. For example:
+					<code><classname>meta_type</classname> &lt; ::std::string &gt; :: base_name()</code>
+					returns simply <code>"string"</code>. When a full type name 
+					<emphasis role="bold">with</emphasis> nested name specifier
+					is needed use the <functionname>full_name</functionname> member function
+			       		instead.</para>
+				</purpose>
+				<notes>
+					<para>The first call to this function can be expensive 
+					for derived types like pointers, references, cv-qualified 
+					types etc. because the type name needs to be properly composed from 
+					the base type name, which may depending on the complexity of the type
+					lead to multiple string concatenations. Subsequent calls to this member function
+					for a concrete specialization of <classname>meta_type</classname>
+					are usually much faster.
+					</para>
+				</notes>
+			</method>
+			<method name="full_name">
+				<type>const <classname>bstring</classname>&amp;</type>
+				<purpose>
+					<para>This static member function returns the full name of the 
+					type reflected by <code><classname>meta_type</classname></code>
+					with the nested name specifier. For example:
+					<code><classname>meta_type</classname> &lt; ::std::string &gt; :: full_name()</code>
+					returns <code>"::std::string"</code>. When the base type name 
+					<emphasis role="bold">without</emphasis> the nested name specifier
+					is needed use the <functionname>base_name</functionname> member function
+			       		instead.</para>
+				</purpose>
+				<notes>
+					<para>The first call to this function can be expensive 
+					for derived types like pointers, references, cv-qualified 
+					types etc. because the type name needs to be properly composed from 
+					the base type name, which may depending on the complexity of the type
+					lead to multiple string concatenations. Subsequent calls to this member function
+					for a concrete specialization of <classname>meta_type</classname>
+					are usually much faster.
+					</para>
+				</notes>
+			</method>
+			<method name="get_name">
+				<template>
+					<template-nontype-parameter name="FullName">
+						<type>bool</type>
+					</template-nontype-parameter>
+				</template>
+				<type>const <classname>bstring</classname>&amp;</type>
+				<parameter name="full">
+					<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
+				</parameter>
+				<purpose>
+					<para>This static member template function returns either the base name 
+					<emphasis role="bold">without</emphasis> the nested name specifier 
+					or the full name <emphasis role="bold">with</emphasis> the 
+					nested name specifier of the type reflected by this
+					<code><classname>meta_type</classname></code>,
+					depending on the value of the template argument <code>FullName</code>.
+					For example:
+					<code><classname>meta_type</classname> &lt; ::std::string &gt; :: get_name(
+					::boost::mpl::false_())</code> is equivalent to calling the 
+					<code><functionname>base_name</functionname></code> member function and 
+					returns simply <code>"string"</code> and
+					<code><classname>meta_type</classname> &lt; ::std::string &gt; :: get_name(
+					::boost::mpl::true_())</code> is equivalent to calling the 
+					<code><functionname>full_name</functionname></code> method which 
+					returns <code>"::std::string"</code>.
+					</para>
+				</purpose>
+			</method>
+			</access>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

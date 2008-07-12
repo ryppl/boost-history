@@ -14,7 +14,7 @@
 	The aim of the <libraryname>Mirror</libraryname> library is to provide 
 	useful meta-data at both compile-time and run-time about common 
 	C++ constructs like namespaces, types
-	(and as a important special case <code>typedef</code>-ined types, 
+	(and as a important special case <code>typedef</code>-ined types), 
 	classes and their base classes and member attributes, instances, etc. and to 
 	provide uniform and generic interfaces for their introspection.
 </para>
@@ -36,7 +36,7 @@
 	(the exceptions to this are explained here).
 </para>
 <para>
-	Most important use-cases for the <libraryname>Mirror</libraryname> library
+	Most important features of the <libraryname>Mirror</libraryname> library
 	that are currently implemented include:
 </para>
 
@@ -87,8 +87,7 @@
 </itemizedlist>
 
 <para>
-	Most important planned use-cases for the <libraryname>Mirror</libraryname> library
-	include:
+	Most important <emphasis role="bold">planned</emphasis> features include:
 </para>
 
 <itemizedlist>
@@ -124,7 +123,9 @@
 		to distinguish between various instantiations in the logs. In this case 
 		it is very useful if the type name that goes into the log is human-readable 
 		and preferrably corresponding to the typename used in the source code. 
+		A rather naive implementation could look as follows:
 	</para>
+	<xi:include href="samples/typenames_naive.xml"/>
 	<para>
 		Another application might want to store its data in a format where the typenames 
 		are included (for example as attributes of an XML element) to be able to do 
@@ -139,20 +140,25 @@
 	<para>
 		The obvious choice if one needs to find out what the name of a given type is is to 
 		use the <code>typeid</code> operator and call the <code>name()</code> function 
-		on the returned reference to <code>type_info</code>. There are however several 
-		problems with is approach.
+		on the returned reference to <code>type_info</code>. The implementation of our
+		<code>get_typename&lt;T&gt;()</code> function from the previous sample code 
+		could be following:
 	</para>
+	<xi:include href="samples/typenames_naive_typeid.xml"/>
 	<para>
+		There are however, several problems with is approach.
 		The notoriously known issue of <code>type_info::name()</code> is that the string 
-		returned by this function is implementaion-defined and compilers are free 
-		to return anything from an empty string, through a mangled typename to a corretly 
+		returned by this function is implementation-defined and compilers are free 
+		to return anything from an empty string, through a mangled typename to a correctly 
 		formatted typename and many of them enjoy this freedom to its full extent.
 		Thus the returned name is not guarenteed to be unique nor human readable or 
 		easily understandable, nor is it portable. 
+		Some compilers provide functions that demangle the names returned by 
+		<code>type_info::name()</code> but again this is not very portable.
 	</para>
 	<para>
 		One possible solution is the standardisation of the result of <code>typeid(T).name()</code>
-		or introduction of a new member function to the <code>type_info</code> structure
+		or introduction of a new standard member function to the <code>type_info</code> structure
 		for example <code>type_info::std_name()</code>,
 		that would return human-readable, unique, portable typenames preferrably corresponding
 		to the C++ typenames.
@@ -164,6 +170,26 @@
 		<code>::std::basic_string</code>) and to get the nested-name-specifier
 		or even the individual names of the enclosing namespaces or classes 
 		separatelly. 
+	</para>
+	<para>
+		This is when <libraryname>Mirror</libraryname> comes in handy. One of the basic
+		facilities is the <code><classname>meta_type</classname></code> template. 
+		Among other things this template has two member functions - <code>base_name</code>
+		and <code>full_name</code> that return the base type name without the nested
+		name specifier and the full type name with the nested name specifier respectively.
+		The names returned by these functions correspond to the C++ typenames, thus
+		are human-readable, unique (if using the <code>full_name</code> member function)
+		and portable.
+	</para>
+	<para>
+		Using <code><classname>meta_type</classname></code> the <code>get_typename&lt;T&gt;()</code> 
+		function could look like this:
+	</para>
+	<xi:include href="samples/typenames_naive_mirror.xml"/>
+	<para>
+		With native C++ types and some common types from the <libraryname>STL</libraryname>
+		and from <libraryname>Boost</libraryname> the <code><classname>meta_type</classname></code>
+		works out of the box.
 	</para>
 </section>
 <section id="mirror.motivation.problem.uniformmemattaccess">

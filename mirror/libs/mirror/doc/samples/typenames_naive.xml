@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.motivation.sample.naivetypenames">
+#include &lt;iostream&gt;
+
+::std::ostream&amp; log = ::std::cerr;
+using ::std::endl;
+
+// a template function that returns the name 
+// of the passed type
+template &lt; typename T &gt;
+const char* get_typename(void);
+
+
+template &lt; typename A, typename B, typename C &gt;
+void foo(A a, B b, C c)
+{
+	log &lt;&lt; 
+		"entering foo(" &lt;&lt;
+		get_typename&lt;A&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;B&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;C&gt;() &lt;&lt;
+		")" &lt;&lt;
+	endl;
+	// process args
+	log &lt;&lt; 
+		"leaving foo(" &lt;&lt;
+		get_typename&lt;A&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;B&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;C&gt;() &lt;&lt;
+		")" &lt;&lt;
+	endl;
+}
+
+int main(void)
+{
+	foo('A', "B", 0xC);
+	foo(0xAL, ::std::string("B"), L'C');
+	return 0;
+}
+</programlisting>
+
