@@ -11,7 +11,7 @@ lib ole32 : : <name>ole32 ;
 lib shell32 : : <name>shell32 ;
 lib advapi32 : : <name>Advapi32 ;
 
-project dataflow/example/blueprint
+project dataflow/example/fltk_gui
     : requirements
       <include>../../../..
       <library>/boost/signals//boost_signals/<link>static
@@ -25,5 +25,6 @@ project dataflow/example/blueprint
       <toolset>msvc:<library>shell32
       <toolset>msvc:<library>advapi32
     ;
+
 
 exe fltk_gui_example : fltk_gui_example.cpp BlueprintWindow.cpp BlueprintBank.cpp BlueprintComponent.cpp ;

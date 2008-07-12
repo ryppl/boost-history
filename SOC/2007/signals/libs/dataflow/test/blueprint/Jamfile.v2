@@ -9,9 +9,11 @@ project dataflow/test/blueprint
     : requirements 
       <include>../../../..
       <library>/boost/signals//boost_signals/<link>static
+      <library>../../build/managed//dataflow_managed/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
 
 run test_port.cpp ;
+run test_managed_port.cpp ;
 run test_component.cpp ;
 run test_dynamic_port.cpp ;

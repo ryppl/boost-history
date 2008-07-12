@@ -7,6 +7,7 @@ build-project VTK ;
 build-project signals ;
 build-project blueprint ;
 build-project fltk_gui ;
+build-project glv_gui ;
 #build-project cppgui_gui ;
 
 project dataflow/example

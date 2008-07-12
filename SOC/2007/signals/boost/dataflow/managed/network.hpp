@@ -10,6 +10,7 @@
 #include <set>
 
 #include <boost/dataflow/managed/component.hpp>
+#include <boost/graph/adjacency_list.hpp>
 
 namespace boost { namespace dataflow { namespace managed {
 
@@ -26,7 +27,20 @@ namespace detail {
 
 class network
 {
+    struct node_t
+    {
+        component *ptr;
+    };
+    typedef boost::adjacency_list<
+        boost::vecS, boost::vecS, boost::bidirectionalS, node_t> graph_type;
+
 public:
+    void register_component(component *c)
+    {
+        graph_type::vertex_descriptor v = add_vertex(m_graph);
+        m_graph[v].ptr = c;
+        m_descriptor_map[c]=v;
+    }
     void notify_change(component &changed)
     {
         m_changed.insert(&changed);
@@ -55,10 +69,12 @@ public:
         }
     }
 private:
+    graph_type m_graph;
+    std::map<component *, graph_type::vertex_descriptor> m_descriptor_map;
     changed_type m_changed;
 };
 
-void notify_change(component &c)
+inline void notify_change(component &c)
 {
     c.network_context().notify_change(c);
 }

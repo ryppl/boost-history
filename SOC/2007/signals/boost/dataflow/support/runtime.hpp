@@ -7,6 +7,7 @@
 #define DATAFLOW_RUNTIME_HPP
 
 #include <boost/dataflow/support/tags.hpp>
+#include <boost/dataflow/utility/enable_if_type.hpp>
 
 #include <string>
 
@@ -17,6 +18,18 @@ namespace runtime
     template<typename T, typename PropertyType>
     struct property;
 } // namespace runtime
+
+template<typename T, typename Enable=void>
+struct runtime_base_class
+{
+    typedef void type;
+};
+
+template<typename T>
+struct runtime_base_class<T, typename utility::enable_if_type<typename T::runtime_base_class_type>::type>
+{
+    typedef typename T::runtime_base_class_type type;
+};
 
 class runtime_info
 {

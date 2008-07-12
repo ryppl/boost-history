@@ -26,9 +26,16 @@ public:
     virtual bool is_invocable()=0;
     virtual size_t num_ports() const=0;
     virtual port & get_port(int port_num)=0;
-    
+
     virtual std::auto_ptr<component> copy() const=0;
     virtual ~component() {};
+};
+
+template<typename Base>
+class based_component : public component
+{
+public:
+    virtual Base *get_pointer()=0;
 };
 
 namespace detail
@@ -57,12 +64,15 @@ namespace detail
 }
 
 template<typename Component, typename Tag=default_tag>
-class component_t : public component
+class component_t : public based_component<typename runtime_base_class<Component>::type>
 {
+    typedef typename runtime_base_class<Component>::type runtime_base_class_type;
 public:
     component_t() {component_t_();}
     template<typename T0>
     component_t(const T0 &t0) : c(t0) {component_t_();}
+    template<typename T0>
+    component_t(T0 &t0) : c(t0) {component_t_();}
     component_t(const component_t &rhs) : c(rhs.c)
     {   component_t_(); }
     
@@ -87,6 +97,8 @@ public:
         return std::auto_ptr<component>(new component_t<Component, Tag>(*this));
     }
     Component &get() {return c;}
+    virtual runtime_base_class_type *get_pointer()
+    {   return static_cast<runtime_base_class_type *>(&c); };
 private:
     void component_t_()
     {

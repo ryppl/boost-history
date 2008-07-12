@@ -6,8 +6,10 @@
 #ifndef BOOST_DATAFLOW_MANAGED_PORT_HPP
 #define BOOST_DATAFLOW_MANAGED_PORT_HPP
 
+#include <boost/dataflow/support/binary_operation.hpp>
+#include <boost/dataflow/support/complemented_port.hpp>
 #include <boost/dataflow/managed/component.hpp>
-#include <boost/dataflow/support/tags.hpp>
+#include <boost/dataflow/managed/support.hpp>
 #include <set>
 #include <stdexcept>
 
@@ -46,9 +48,16 @@ void disconnect(port<T, ports::producer> &producer, port<T, ports::consumer> &co
 }
 
 template<typename T>
+struct producer_port_traits
+    : public dataflow::complemented_port_traits<ports::producer, port<T, ports::consumer>, tag>
+{};
+
+template<typename T>
 class port<T, ports::producer> : public port_base
 {
 public:
+    typedef producer_port_traits<T> dataflow_traits;
+    
     port(component &component_context) : port_base(component_context)
     {
     };
@@ -70,9 +79,15 @@ private:
 };
 
 template<typename T>
+struct consumer_port_traits
+    : public dataflow::complemented_port_traits<ports::consumer, port<T, ports::producer>, tag>
+{};
+
+template<typename T>
 class port<T, ports::consumer> : public port_base
 {
 public:
+    typedef consumer_port_traits<T> dataflow_traits;
     port(component &component_context)
         : port_base(component_context), m_producer(0)
     {
@@ -94,6 +109,23 @@ private:
     friend void disconnect<T>(port<T, ports::producer> &producer, port<T, ports::consumer> &consumer);
 };
 
-} } }
+} // namespace managed
+
+namespace extension {
+
+    template<typename T>
+    struct binary_operation_impl<managed::producer_port_traits<T>, managed::consumer_port_traits<T>, operations::connect>
+    {
+        typedef void result_type;
+        
+        template<typename Producer, typename Consumer>
+        result_type operator()(Producer &producer, Consumer &consumer)
+        {
+            managed::connect(producer, consumer);
+        }
+    };
+}
+
+} }
 
 #endif // BOOST_DATAFLOW_MANAGED_PORT_HPP

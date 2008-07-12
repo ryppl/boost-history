@@ -13,8 +13,7 @@ class network;
 class component
 {
 public:
-    component(network &network_context) : m_network_context(network_context), m_topological_sort_index(0)
-    {};
+    component(network &network_context);
     virtual ~component(){}
     network &network_context()
     {   return m_network_context; }

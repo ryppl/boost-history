@@ -1,0 +1,29 @@
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+
+lib glv : : <name>glv ;
+
+project dataflow/example/glv_gui
+    : requirements
+      <include>../../../..
+      <include>glv
+      <library>glv
+      <library>/boost/signals//boost_signals/<link>static
+      <define>BOOST_ALL_NO_LIB=1
+      <toolset>darwin:<linkflags>"-framework AGL"
+      <toolset>darwin:<linkflags>"-framework GLUT"
+      <toolset>darwin:<linkflags>"-framework OpenGL"
+    ;
+
+local sources =
+    blueprint_bank
+    blueprint_window
+    blueprint_component
+    ;
+
+exe glv_example : glvgui_example.cpp $(sources).cpp ;
+exe glv_logic : glvgui_logic.cpp $(sources).cpp ;
