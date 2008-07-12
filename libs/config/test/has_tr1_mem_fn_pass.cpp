@@ -10,10 +10,10 @@
 //
 
 
-// Test file for macro BOOST_HAS_TR1_REGEX
-// This file should not compile, if it does then
-// BOOST_HAS_TR1_REGEX should be defined.
-// See file boost_has_tr1_regex.ipp for details
+// Test file for macro BOOST_HAS_TR1_MEM_FN
+// This file should compile, if it does not then
+// BOOST_HAS_TR1_MEM_FN should not be defined.
+// See file boost_has_tr1_mem_fn.ipp for details
 
 // Must not have BOOST_ASSERT_CONFIG set; it defeats
 // the objective of this file:
@@ -25,14 +25,14 @@
 #include <boost/tr1/detail/config.hpp>
 #include "test.hpp"
 
-#ifndef BOOST_HAS_TR1_REGEX
-#include "boost_has_tr1_regex.ipp"
+#ifdef BOOST_HAS_TR1_MEM_FN
+#include "boost_has_tr1_mem_fn.ipp"
 #else
-#error "this file should not compile"
+namespace boost_has_tr1_mem_fn = empty_boost;
 #endif
 
 int main( int, char *[] )
 {
-   return boost_has_tr1_regex::test();
+   return boost_has_tr1_mem_fn::test();
 }
 

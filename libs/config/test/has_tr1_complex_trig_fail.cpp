@@ -10,10 +10,10 @@
 //
 
 
-// Test file for macro BOOST_HAS_TR1_REGEX
+// Test file for macro BOOST_HAS_TR1_COMPLEX_INVERSE_TRIG
 // This file should not compile, if it does then
-// BOOST_HAS_TR1_REGEX should be defined.
-// See file boost_has_tr1_regex.ipp for details
+// BOOST_HAS_TR1_COMPLEX_INVERSE_TRIG should be defined.
+// See file boost_has_tr1_complex_trig.ipp for details
 
 // Must not have BOOST_ASSERT_CONFIG set; it defeats
 // the objective of this file:
@@ -25,14 +25,14 @@
 #include <boost/tr1/detail/config.hpp>
 #include "test.hpp"
 
-#ifndef BOOST_HAS_TR1_REGEX
-#include "boost_has_tr1_regex.ipp"
+#ifndef BOOST_HAS_TR1_COMPLEX_INVERSE_TRIG
+#include "boost_has_tr1_complex_trig.ipp"
 #else
 #error "this file should not compile"
 #endif
 
 int main( int, char *[] )
 {
-   return boost_has_tr1_regex::test();
+   return boost_has_tr1_complex_inverse_trig::test();
 }
 

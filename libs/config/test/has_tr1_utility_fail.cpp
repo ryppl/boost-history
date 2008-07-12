@@ -1,4 +1,4 @@
-//  This file was automatically generated on Sat Jul 12 12:39:32 2008
+//  This file was automatically generated on Sat Jul 12 12:39:33 2008
 //  by libs/config/tools/generate.cpp
 //  Copyright John Maddock 2002-4.
 //  Use, modification and distribution are subject to the 
@@ -10,10 +10,10 @@
 //
 
 
-// Test file for macro BOOST_HAS_TR1_REGEX
+// Test file for macro BOOST_HAS_TR1_UTILITY
 // This file should not compile, if it does then
-// BOOST_HAS_TR1_REGEX should be defined.
-// See file boost_has_tr1_regex.ipp for details
+// BOOST_HAS_TR1_UTILITY should be defined.
+// See file boost_has_tr1_utility.ipp for details
 
 // Must not have BOOST_ASSERT_CONFIG set; it defeats
 // the objective of this file:
@@ -25,14 +25,14 @@
 #include <boost/tr1/detail/config.hpp>
 #include "test.hpp"
 
-#ifndef BOOST_HAS_TR1_REGEX
-#include "boost_has_tr1_regex.ipp"
+#ifndef BOOST_HAS_TR1_UTILITY
+#include "boost_has_tr1_utility.ipp"
 #else
 #error "this file should not compile"
 #endif
 
 int main( int, char *[] )
 {
-   return boost_has_tr1_regex::test();
+   return boost_has_tr1_utility::test();
 }
 
