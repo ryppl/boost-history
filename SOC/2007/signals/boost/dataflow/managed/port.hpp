@@ -38,6 +38,7 @@ void connect(port<T, ports::producer> &producer, port<T, ports::consumer> &consu
         disconnect(consumer.connected_producer(), consumer);
     producer.m_consumers.insert(&consumer);
     consumer.m_producer = &producer;
+    producer.component_context().network_context().notify_connect(producer.component_context(), consumer.component_context());
 }
 
 template<typename T>

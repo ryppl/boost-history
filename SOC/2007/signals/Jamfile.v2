@@ -10,4 +10,11 @@ use-project boost
    
 project dataflow
    : build-dir bin.v2
+   : usage-requirements
+        <include>.
+        <include>$(BOOST_ROOT)
+    : requirements
+        <include>.
+        <include>$(BOOST_ROOT)
+        
    ;

@@ -9,8 +9,10 @@
 #include <vector>
 #include <set>
 
+#include <iostream>
 #include <boost/dataflow/managed/component.hpp>
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topological_sort.hpp>
 
 namespace boost { namespace dataflow { namespace managed {
 
@@ -37,9 +39,19 @@ class network
 public:
     void register_component(component *c)
     {
+        std::cout << this << " registering " << c << std::endl;
         graph_type::vertex_descriptor v = add_vertex(m_graph);
         m_graph[v].ptr = c;
+        std::cout << m_descriptor_map.size() << std::endl;
         m_descriptor_map[c]=v;
+        std::cout << m_descriptor_map.size() << std::endl;
+    }
+    void notify_connect(component &producer, component &consumer)
+    {
+        std::cout << this << " connecting " << &producer << " and " << &consumer << std::endl;
+        std::cout << m_descriptor_map.size() << std::endl;
+        add_edge(m_descriptor_map[&producer], m_descriptor_map[&consumer], m_graph);
+        update_topological_sort();
     }
     void notify_change(component &changed)
     {
@@ -58,6 +70,18 @@ public:
             (*it)->topological_sort_index(it - topological_sort.begin());
         for(topological_sort_type::const_iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
             m_changed.insert(*it);
+    }
+    void update_topological_sort()
+    {
+        m_changed.clear();
+        std::vector<graph_type::vertex_descriptor> topological_sort;
+        boost::topological_sort(m_graph, std::back_inserter(topological_sort));
+        std::reverse(topological_sort.begin(), topological_sort.end());
+        for(std::vector<graph_type::vertex_descriptor>::iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
+            m_graph[*it].ptr->topological_sort_index(it - topological_sort.begin());
+        for(std::vector<graph_type::vertex_descriptor>::iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
+            m_changed.insert(m_graph[*it].ptr);
+
     }
     void update()
     {

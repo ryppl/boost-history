@@ -9,6 +9,7 @@
 #include <boost/dataflow/support/fusion_component.hpp>
 #include <boost/dataflow/managed/port.hpp>
 #include <boost/dataflow/managed/component.hpp>
+#include <boost/dataflow/support/component_operation.hpp>
 #include <boost/mpl/map.hpp>
 
 namespace boost { namespace dataflow { namespace managed {
@@ -52,6 +53,24 @@ protected:
     port<InOutType, ports::producer> m_producer_port;
 };
 
-} } }
+}
+
+namespace extension {
+
+    template<typename T>
+    struct component_operation_impl<managed::component_traits<T>, operations::invoke >
+    {
+        typedef void result_type;
+        
+        template<typename Component>
+        void operator()(Component &component)
+        {
+            component.invoke();
+        }
+    };
+
+}
+
+} }
 
 #endif // BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP

@@ -13,6 +13,7 @@ project dataflow/example/glv_gui
       <include>glv
       <library>glv
       <library>/boost/signals//boost_signals/<link>static
+      <library>../../build/managed//dataflow_managed/<link>static
       <define>BOOST_ALL_NO_LIB=1
       <toolset>darwin:<linkflags>"-framework AGL"
       <toolset>darwin:<linkflags>"-framework GLUT"

@@ -26,10 +26,11 @@ int test_main(int, char* [])
     
     BOOST_CHECK_EQUAL(network.changed_components().size(), 0u);
     connect(output, input);
+    network.update();
     output.set(1);
 
     BOOST_CHECK_EQUAL(output.get(), 1);
-    BOOST_CHECK_EQUAL(input.get(), 1);    
+    BOOST_CHECK_EQUAL(input.get(), 1);
     
     BOOST_CHECK_EQUAL(network.changed_components().size(), 1u);
     BOOST_CHECK_EQUAL(*network.changed_components().begin(), &input_component);

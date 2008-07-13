@@ -107,9 +107,10 @@ int test_main(int, char* [])
     using namespace boost::assign;
     
     // provide a hard coded topological sort for now
-    std::vector<df::managed::component *> topological_sort;
-    topological_sort += &sourceA, &sourceB, &sourceC, &sourceD, &AplusB, &CplusD, &ApBtimesCpD; 
-    network.topological_sort(topological_sort);
+//    std::vector<df::managed::component *> topological_sort;
+//    topological_sort += &sourceA, &sourceB, &sourceC, &sourceD, &AplusB, &CplusD, &ApBtimesCpD; 
+//    network.topological_sort(topological_sort);
+
     
     // update will invoke all components that need to be invoked
     network.update();
