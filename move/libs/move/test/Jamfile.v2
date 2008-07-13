@@ -13,6 +13,7 @@ test-suite "move-suite" :
     [ run move.cpp ]
     [ run noncopyable.cpp ]
     [ run swappable.cpp ]
+    [ run auto_ptr.cpp ]
     [ run move_test.cpp ]
     [ run no_sfinae_test.cpp ]
     [ run has_swap_overload.cpp ]

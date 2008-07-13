@@ -171,12 +171,13 @@ struct is_boost_movable : boost::mpl::false_ { };
 /*************************************************************************************************/
 
 struct copy_tag {};
-struct move_tag {};
 struct swap_tag {};
+struct boost_move_tag {};
+struct custom_move_tag {};
 
 template <typename T, class Enable = void>
 struct move_type :
-    boost::mpl::if_<is_boost_movable<T>, move_tag,
+    boost::mpl::if_<is_boost_movable<T>, boost_move_tag,
         typename boost::mpl::if_<boost::detail::has_swap_overload<T>,
             swap_tag, copy_tag>::type > {};
 
@@ -270,7 +271,7 @@ instead of copied to its destination. See adobe/test/move/main.cpp for examples.
 
 */
 template <typename T>
-T move(T& x, typename move_type_sink<move_tag, T>::type = 0) { return T(move_from<T>(x)); }
+T move(T& x, typename move_type_sink<boost_move_tag, T>::type = 0) { return T(move_from<T>(x)); }
 
 /*************************************************************************************************/
 
@@ -422,7 +423,7 @@ inline back_move_iterator<C> back_mover(C& x) { return back_move_iterator<C>(x);
 */
 
 template <typename T> // T models Regular
-inline void move_construct(T* p, T& x, typename move_type_sink<move_tag, T>::type = 0)
+inline void move_construct(T* p, T& x, typename move_type_sink<boost_move_tag, T>::type = 0)
 {
     ::new(static_cast<void*>(p)) T(move_from<T>(x));
 }
@@ -509,6 +510,33 @@ F uninitialized_move(I f, I l, F r)
 } // namespace boost
 
 /*************************************************************************************************/
+
+// auto_ptr support
+
+// Illegal forward declare.
+
+namespace std
+{
+    template <class T> class auto_ptr;
+}
+
+namespace boost
+{
+    template <class T>
+    struct move_type<std::auto_ptr<T>, void> {
+        typedef custom_move_tag type;
+    };
+
+    template <class T>
+    std::auto_ptr<T>& move(std::auto_ptr<T>& x) {
+        return x;
+    }
+
+    template <class T>
+    inline void move_construct(std::auto_ptr<T>* p, std::auto_ptr<T>& x) {
+        ::new(static_cast<void*>(p)) std::auto_ptr<T>(x);
+    }
+}
 
 #endif
 
