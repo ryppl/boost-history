@@ -3,11 +3,14 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+lib pthread : : <name>pthread ;
+
 project dataflow/example/signals
     : requirements
       <include>../../../..
       <library>/boost/signals//boost_signals/<link>static
       <define>BOOST_ALL_NO_LIB=1
+      <toolset>gcc:<library>pthread
     ;
 
 exe intro_example : intro_example.cpp ;

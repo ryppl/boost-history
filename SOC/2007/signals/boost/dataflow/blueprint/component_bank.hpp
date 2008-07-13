@@ -82,3 +82,4 @@ public:
 } } } // namespace boost::dataflow::blueprint
 
 #endif // BOOST_DATAFLOW_BLUEPRINT_COMPONENT_BANK_HPP
+

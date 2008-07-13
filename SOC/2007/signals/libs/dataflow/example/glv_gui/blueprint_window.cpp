@@ -11,8 +11,8 @@ namespace boost { namespace dataflow { namespace glv_gui {
 
 blueprint_window::blueprint_window()
     : glv::View(glv::Rect(800, 600))
-    , m_layout(*this, glv::Direction::E, glv::Place::TL, 5, 5, 5)
     , m_dragged(NULL)
+    , m_layout(*this, glv::Direction::E, glv::Place::TL, 5, 5, 5)
 {
     this->colors().back.set(0);
     m_next_created_x = 100;

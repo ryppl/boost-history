@@ -21,16 +21,20 @@ lib OSMesa : : <name>OSMesa <search>/usr/X11R6/lib ;
 lib X11 : : <name>X11 <search>/usr/X11R6/lib ;
 lib Xt : : <name>Xt <search>/usr/X11R6/lib ;
 
+lib pthread : : <name>pthread ;
+
 project dataflow/test/VTK
     : requirements
       <include>../../../..
       <include>$(BOOST_ROOT)
       <include>/usr/local/include/vtk-5.0/
+      <include>/usr/include/vtk-5.0/
       <define>BOOST_ALL_NO_LIB=1
       <toolset>darwin:<linkflags>"-framework CoreServices"
       <toolset>darwin:<library>GL
       <toolset>darwin:<library>X11
       <toolset>darwin:<library>Xt
+	  <toolset>gcc:<library>pthread
       <library>vtkCommon
       <library>vtkRendering
       <library>vtkFiltering
