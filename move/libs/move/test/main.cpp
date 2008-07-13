@@ -48,7 +48,7 @@ void move_test()
     
     // Test is_movable<> template function
 
-    BOOST_CHECK(!boost::is_movable<std_vector_t>::value);
+    BOOST_CHECK(boost::is_movable<std_vector_t>::value);
     BOOST_CHECK(boost::is_movable<vector_t>::value);
 
     { // Test move_sink<> via push_back

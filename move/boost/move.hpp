@@ -29,6 +29,7 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/move/detail/config.hpp>
+#include <boost/move/detail/has_swap_overload.hpp>
 
 /*************************************************************************************************/
 
@@ -107,16 +108,42 @@ struct move_from
 
 /*************************************************************************************************/
 
+/*!
+\ingroup move_related
+\brief swap_from is used for move_ctors.
+*/
+
+template <typename T>
+struct swap_from
+{
+    swap_from(T& x)
+        : m(x)
+    {}
+
+    operator T() const
+    {
+        T x;
+        using std::swap;
+        swap(this->m, x);
+        return x;
+    }
+
+    T& m;
+};
+
+
+/*************************************************************************************************/
+
 #if !defined(BOOST_MOVE_NO_HAS_MOVE_ASSIGN)
 
 /*************************************************************************************************/
 
 /*!
 \ingroup move_related
-\brief The is_movable trait can be used to identify movable types.
+\brief The is_boost_movable trait can be used to identify types that are movable using this library.
 */
 template <typename T>
-struct is_movable : boost::mpl::and_<
+struct is_boost_movable : boost::mpl::and_<
                         boost::mpl::or_<
                             boost::is_convertible<T, move_from<T> >,
                             boost::is_convertible<move_from<T>, T>
@@ -133,7 +160,7 @@ struct is_movable : boost::mpl::and_<
 // unless the trait is specialized.
 
 template <typename T>
-struct is_movable : boost::mpl::false_ { };
+struct is_boost_movable : boost::mpl::false_ { };
 
 #endif
 
@@ -145,16 +172,32 @@ struct is_movable : boost::mpl::false_ { };
 
 struct copy_tag {};
 struct move_tag {};
+struct swap_tag {};
 
 template <typename T, class Enable = void>
-struct move_type {
-    typedef copy_tag type;
-};
+struct move_type :
+    boost::mpl::if_<is_boost_movable<T>, move_tag,
+        typename boost::mpl::if_<boost::detail::has_swap_overload<T>,
+            swap_tag, copy_tag>::type > {};
 
+/*************************************************************************************************/
+
+#endif
+
+/*************************************************************************************************/
+
+/*!
+\ingroup move_related
+\brief The is_movable trait can be used to identify movable types.
+*/
 template <typename T>
-struct move_type<T, typename boost::enable_if<is_movable<T> >::type> {
-    typedef move_tag type;
-};
+struct is_movable : boost::mpl::not_<boost::is_same<
+                        typename boost::move_type<T>::type, copy_tag > > {};
+
+
+/*************************************************************************************************/
+
+#if !defined(BOOST_NO_SFINAE)
 
 /*************************************************************************************************/
 
@@ -238,6 +281,15 @@ x gets copied.
 */
 template <typename T>
 T& move(T& x, typename move_type_sink<copy_tag, T>::type = 0) { return x; }
+
+/*************************************************************************************************/
+
+/*!
+\ingroup move_related
+\brief This version of move is selected when T is swappable.
+*/
+template <typename T>
+T move(T& x, typename move_type_sink<swap_tag, T>::type = 0) { return T(swap_from<T>(x)); }
 
 /*************************************************************************************************/
 
@@ -377,7 +429,6 @@ inline void move_construct(T* p, T& x, typename move_type_sink<move_tag, T>::typ
 
 /*************************************************************************************************/
 
-
 /*!
 \ingroup move_related
 \brief Placement copy construction, selected when T is_movable is false
@@ -386,6 +437,20 @@ template <typename T> // T models Regular
 inline void move_construct(T* p, const T& x, typename move_type_sink<copy_tag, T>::type = 0)
 {
     ::new(static_cast<void*>(p)) T(x);
+}
+
+/*************************************************************************************************/
+
+/*!
+\ingroup move_related
+\brief Placement copy construction, selected when T is swappable.
+*/
+template <typename T> // T models Regular
+inline void move_construct(T* p, T& x, typename move_type_sink<swap_tag, T>::type = 0)
+{
+    ::new(static_cast<void*>(p)) T();
+    using std::swap;
+    swap(*p, x);
 }
 
 /*************************************************************************************************/
