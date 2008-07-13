@@ -88,8 +88,13 @@ int main()
     Y::expect_move();
     sink(csource());
 
-    // TODO: Why do these fail?
-
+    // http://lists.boost.org/Archives/boost/2008/06/138884.php
+    //
+    // If David Abrahams recalls correctly, when binding a reference to an rvalue,
+    // that rvalue must be copyable (and may in fact be copied at the discretion of
+    // the compiler). So these two tests only compiler for copyable types.
+    //
+    // TODO: Look this up properly.
     //SAY(" ------ test 10, pass rvalue by overloaded reference ------- ");
     //Y::expect_move();
     //sink2(source());
