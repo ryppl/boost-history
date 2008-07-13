@@ -1,0 +1,22 @@
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+project dataflow/example/glv
+    : source-location src
+    : usage-requirements
+        <include>include
+        <toolset>darwin:<linkflags>"-framework AGL"
+        <toolset>darwin:<linkflags>"-framework GLUT"
+        <toolset>darwin:<linkflags>"-framework OpenGL"
+    : requirements
+        <include>include
+    ;
+
+SOURCES = glv_abstract_binding glv_color glv_core glv_draw glv_glv
+    glv_inputdevice glv_layout glv_sliders glv_textview glv_view
+    glv_binding_glut ;
+
+lib lib_glv : $(SOURCES).cpp
+    ;

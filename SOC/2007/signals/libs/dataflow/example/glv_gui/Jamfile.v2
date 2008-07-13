@@ -5,19 +5,12 @@
 
 import os ;
 
-lib glv : : <name>glv ;
-
 project dataflow/example/glv_gui
     : requirements
-      <include>../../../..
-      <include>glv
-      <library>glv
       <library>/boost/signals//boost_signals/<link>static
-      <library>../../build/managed//dataflow_managed/<link>static
+      <library>$(TOP)/libs/glv//lib_glv/<link>static
+      <library>$(TOP)/libs/dataflow/build/managed//dataflow_managed/<link>static
       <define>BOOST_ALL_NO_LIB=1
-      <toolset>darwin:<linkflags>"-framework AGL"
-      <toolset>darwin:<linkflags>"-framework GLUT"
-      <toolset>darwin:<linkflags>"-framework OpenGL"
     ;
 
 local sources =

@@ -153,6 +153,43 @@
 		08A15D250E290EA0005AE94D /* support.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = support.hpp; sourceTree = "<group>"; };
 		08A15D2B0E29108B005AE94D /* runtime_support.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = runtime_support.hpp; sourceTree = "<group>"; };
 		08A15D6F0E2914C3005AE94D /* test_managed_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_managed_port.cpp; sourceTree = "<group>"; };
+		08A2D5040E2A728A00D8FA04 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
+		08A2D5060E2A728A00D8FA04 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
+		08A2D5070E2A728A00D8FA04 /* glv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv.h; sourceTree = "<group>"; };
+		08A2D5080E2A728A00D8FA04 /* glv_abstract_binding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_abstract_binding.h; sourceTree = "<group>"; };
+		08A2D5090E2A728A00D8FA04 /* glv_behavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_behavior.h; sourceTree = "<group>"; };
+		08A2D50A0E2A728A00D8FA04 /* glv_binding_carbon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_binding_carbon.h; sourceTree = "<group>"; };
+		08A2D50B0E2A728A00D8FA04 /* glv_binding_fltk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_binding_fltk.h; sourceTree = "<group>"; };
+		08A2D50C0E2A728A00D8FA04 /* glv_binding_glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_binding_glut.h; sourceTree = "<group>"; };
+		08A2D50D0E2A728A00D8FA04 /* glv_color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_color.h; sourceTree = "<group>"; };
+		08A2D50E0E2A728A00D8FA04 /* glv_conf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_conf.h; sourceTree = "<group>"; };
+		08A2D50F0E2A728A00D8FA04 /* glv_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_core.h; sourceTree = "<group>"; };
+		08A2D5100E2A728A00D8FA04 /* glv_draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_draw.h; sourceTree = "<group>"; };
+		08A2D5110E2A728A00D8FA04 /* glv_layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_layout.h; sourceTree = "<group>"; };
+		08A2D5120E2A728A00D8FA04 /* glv_observer_pattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_observer_pattern.h; sourceTree = "<group>"; };
+		08A2D5130E2A728A00D8FA04 /* glv_rect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_rect.h; sourceTree = "<group>"; };
+		08A2D5140E2A728A00D8FA04 /* glv_sliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_sliders.h; sourceTree = "<group>"; };
+		08A2D5150E2A728A00D8FA04 /* glv_texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_texture.h; sourceTree = "<group>"; };
+		08A2D5160E2A728A00D8FA04 /* glv_textview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_textview.h; sourceTree = "<group>"; };
+		08A2D5170E2A728A00D8FA04 /* glv_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_util.h; sourceTree = "<group>"; };
+		08A2D5180E2A728A00D8FA04 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
+		08A2D51A0E2A728A00D8FA04 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
+		08A2D51C0E2A728A00D8FA04 /* FontGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontGL.cpp; sourceTree = "<group>"; };
+		08A2D51D0E2A728A00D8FA04 /* FontGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontGL.h; sourceTree = "<group>"; };
+		08A2D51E0E2A728A00D8FA04 /* glv_abstract_binding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_abstract_binding.cpp; sourceTree = "<group>"; };
+		08A2D51F0E2A728A00D8FA04 /* glv_binding_carbon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_binding_carbon.cpp; sourceTree = "<group>"; };
+		08A2D5200E2A728A00D8FA04 /* glv_binding_fltk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_binding_fltk.cpp; sourceTree = "<group>"; };
+		08A2D5210E2A728A00D8FA04 /* glv_binding_glut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_binding_glut.cpp; sourceTree = "<group>"; };
+		08A2D5220E2A728A00D8FA04 /* glv_color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_color.cpp; sourceTree = "<group>"; };
+		08A2D5230E2A728A00D8FA04 /* glv_core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_core.cpp; sourceTree = "<group>"; };
+		08A2D5240E2A728A00D8FA04 /* glv_draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_draw.cpp; sourceTree = "<group>"; };
+		08A2D5250E2A728A00D8FA04 /* glv_glv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_glv.cpp; sourceTree = "<group>"; };
+		08A2D5260E2A728A00D8FA04 /* glv_inputdevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_inputdevice.cpp; sourceTree = "<group>"; };
+		08A2D5270E2A728A00D8FA04 /* glv_layout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_layout.cpp; sourceTree = "<group>"; };
+		08A2D5280E2A728A00D8FA04 /* glv_sliders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_sliders.cpp; sourceTree = "<group>"; };
+		08A2D5290E2A728A00D8FA04 /* glv_texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_texture.cpp; sourceTree = "<group>"; };
+		08A2D52A0E2A728A00D8FA04 /* glv_textview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_textview.cpp; sourceTree = "<group>"; };
+		08A2D52B0E2A728A00D8FA04 /* glv_view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glv_view.cpp; sourceTree = "<group>"; };
 		08A364C10E129DC7001E6002 /* test_dynamic_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_dynamic_port.cpp; sourceTree = "<group>"; };
 		08A438900E295AE7009845FD /* component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component.cpp; sourceTree = "<group>"; };
 		08A439B80E295B8B009845FD /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
@@ -164,23 +201,6 @@
 		08A6B26A0E25A566005539F2 /* blueprint_window.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = blueprint_window.hpp; sourceTree = "<group>"; };
 		08A6B26B0E25A566005539F2 /* glvgui_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glvgui_example.cpp; sourceTree = "<group>"; };
 		08A6B26C0E25A566005539F2 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
-		08A6B2990E25A6A5005539F2 /* glv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv.h; sourceTree = "<group>"; };
-		08A6B29A0E25A6A5005539F2 /* glv_abstract_binding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_abstract_binding.h; sourceTree = "<group>"; };
-		08A6B29B0E25A6A5005539F2 /* glv_behavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_behavior.h; sourceTree = "<group>"; };
-		08A6B29C0E25A6A5005539F2 /* glv_binding_carbon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_binding_carbon.h; sourceTree = "<group>"; };
-		08A6B29D0E25A6A5005539F2 /* glv_binding_fltk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_binding_fltk.h; sourceTree = "<group>"; };
-		08A6B29E0E25A6A5005539F2 /* glv_binding_glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_binding_glut.h; sourceTree = "<group>"; };
-		08A6B29F0E25A6A5005539F2 /* glv_color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_color.h; sourceTree = "<group>"; };
-		08A6B2A00E25A6A5005539F2 /* glv_conf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_conf.h; sourceTree = "<group>"; };
-		08A6B2A10E25A6A5005539F2 /* glv_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_core.h; sourceTree = "<group>"; };
-		08A6B2A20E25A6A5005539F2 /* glv_draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_draw.h; sourceTree = "<group>"; };
-		08A6B2A30E25A6A5005539F2 /* glv_layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_layout.h; sourceTree = "<group>"; };
-		08A6B2A40E25A6A5005539F2 /* glv_observer_pattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_observer_pattern.h; sourceTree = "<group>"; };
-		08A6B2A50E25A6A5005539F2 /* glv_rect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_rect.h; sourceTree = "<group>"; };
-		08A6B2A60E25A6A5005539F2 /* glv_sliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_sliders.h; sourceTree = "<group>"; };
-		08A6B2A70E25A6A5005539F2 /* glv_texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_texture.h; sourceTree = "<group>"; };
-		08A6B2A80E25A6A5005539F2 /* glv_textview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_textview.h; sourceTree = "<group>"; };
-		08A6B2A90E25A6A5005539F2 /* glv_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv_util.h; sourceTree = "<group>"; };
 		08A82B550E11EBF500AAB117 /* dynamic_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_port.hpp; sourceTree = "<group>"; };
 		08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_has_call_operator.cpp; sourceTree = "<group>"; };
 		08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = has_call_operator.hpp; sourceTree = "<group>"; };
@@ -367,6 +387,7 @@
 		080DD7560C13908400EEB53D = {
 			isa = PBXGroup;
 			children = (
+				08A2D5030E2A728A00D8FA04 /* glv */,
 				08A439340E295B35009845FD /* build */,
 				0800AC390C8CAAC300994538 /* boost-build.jam */,
 				0800AC3A0C8CAAC300994538 /* Jamfile.v2 */,
@@ -483,6 +504,75 @@
 			path = cppgui_gui;
 			sourceTree = "<group>";
 		};
+		08A2D5030E2A728A00D8FA04 /* glv */ = {
+			isa = PBXGroup;
+			children = (
+				08A2D5040E2A728A00D8FA04 /* COPYRIGHT */,
+				08A2D5050E2A728A00D8FA04 /* include */,
+				08A2D5180E2A728A00D8FA04 /* Jamfile */,
+				08A2D5190E2A728A00D8FA04 /* src */,
+			);
+			name = glv;
+			path = ../../../glv;
+			sourceTree = SOURCE_ROOT;
+		};
+		08A2D5050E2A728A00D8FA04 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				08A2D5060E2A728A00D8FA04 /* COPYRIGHT */,
+				08A2D5070E2A728A00D8FA04 /* glv.h */,
+				08A2D5080E2A728A00D8FA04 /* glv_abstract_binding.h */,
+				08A2D5090E2A728A00D8FA04 /* glv_behavior.h */,
+				08A2D50A0E2A728A00D8FA04 /* glv_binding_carbon.h */,
+				08A2D50B0E2A728A00D8FA04 /* glv_binding_fltk.h */,
+				08A2D50C0E2A728A00D8FA04 /* glv_binding_glut.h */,
+				08A2D50D0E2A728A00D8FA04 /* glv_color.h */,
+				08A2D50E0E2A728A00D8FA04 /* glv_conf.h */,
+				08A2D50F0E2A728A00D8FA04 /* glv_core.h */,
+				08A2D5100E2A728A00D8FA04 /* glv_draw.h */,
+				08A2D5110E2A728A00D8FA04 /* glv_layout.h */,
+				08A2D5120E2A728A00D8FA04 /* glv_observer_pattern.h */,
+				08A2D5130E2A728A00D8FA04 /* glv_rect.h */,
+				08A2D5140E2A728A00D8FA04 /* glv_sliders.h */,
+				08A2D5150E2A728A00D8FA04 /* glv_texture.h */,
+				08A2D5160E2A728A00D8FA04 /* glv_textview.h */,
+				08A2D5170E2A728A00D8FA04 /* glv_util.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		08A2D5190E2A728A00D8FA04 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				08A2D51A0E2A728A00D8FA04 /* COPYRIGHT */,
+				08A2D51B0E2A728A00D8FA04 /* FontGL */,
+				08A2D51E0E2A728A00D8FA04 /* glv_abstract_binding.cpp */,
+				08A2D51F0E2A728A00D8FA04 /* glv_binding_carbon.cpp */,
+				08A2D5200E2A728A00D8FA04 /* glv_binding_fltk.cpp */,
+				08A2D5210E2A728A00D8FA04 /* glv_binding_glut.cpp */,
+				08A2D5220E2A728A00D8FA04 /* glv_color.cpp */,
+				08A2D5230E2A728A00D8FA04 /* glv_core.cpp */,
+				08A2D5240E2A728A00D8FA04 /* glv_draw.cpp */,
+				08A2D5250E2A728A00D8FA04 /* glv_glv.cpp */,
+				08A2D5260E2A728A00D8FA04 /* glv_inputdevice.cpp */,
+				08A2D5270E2A728A00D8FA04 /* glv_layout.cpp */,
+				08A2D5280E2A728A00D8FA04 /* glv_sliders.cpp */,
+				08A2D5290E2A728A00D8FA04 /* glv_texture.cpp */,
+				08A2D52A0E2A728A00D8FA04 /* glv_textview.cpp */,
+				08A2D52B0E2A728A00D8FA04 /* glv_view.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		08A2D51B0E2A728A00D8FA04 /* FontGL */ = {
+			isa = PBXGroup;
+			children = (
+				08A2D51C0E2A728A00D8FA04 /* FontGL.cpp */,
+				08A2D51D0E2A728A00D8FA04 /* FontGL.h */,
+			);
+			path = FontGL;
+			sourceTree = "<group>";
+		};
 		08A4388E0E295AAB009845FD /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -521,7 +611,6 @@
 			isa = PBXGroup;
 			children = (
 				08C617FB0E27E39500FC4F24 /* glvgui_logic.cpp */,
-				08A6B2980E25A6A5005539F2 /* glv */,
 				08A6B2650E25A566005539F2 /* blueprint_bank.cpp */,
 				08A6B2660E25A566005539F2 /* blueprint_bank.hpp */,
 				08A6B2670E25A566005539F2 /* blueprint_component.cpp */,
@@ -532,30 +621,6 @@
 				08A6B26C0E25A566005539F2 /* Jamfile.v2 */,
 			);
 			path = glv_gui;
-			sourceTree = "<group>";
-		};
-		08A6B2980E25A6A5005539F2 /* glv */ = {
-			isa = PBXGroup;
-			children = (
-				08A6B2990E25A6A5005539F2 /* glv.h */,
-				08A6B29A0E25A6A5005539F2 /* glv_abstract_binding.h */,
-				08A6B29B0E25A6A5005539F2 /* glv_behavior.h */,
-				08A6B29C0E25A6A5005539F2 /* glv_binding_carbon.h */,
-				08A6B29D0E25A6A5005539F2 /* glv_binding_fltk.h */,
-				08A6B29E0E25A6A5005539F2 /* glv_binding_glut.h */,
-				08A6B29F0E25A6A5005539F2 /* glv_color.h */,
-				08A6B2A00E25A6A5005539F2 /* glv_conf.h */,
-				08A6B2A10E25A6A5005539F2 /* glv_core.h */,
-				08A6B2A20E25A6A5005539F2 /* glv_draw.h */,
-				08A6B2A30E25A6A5005539F2 /* glv_layout.h */,
-				08A6B2A40E25A6A5005539F2 /* glv_observer_pattern.h */,
-				08A6B2A50E25A6A5005539F2 /* glv_rect.h */,
-				08A6B2A60E25A6A5005539F2 /* glv_sliders.h */,
-				08A6B2A70E25A6A5005539F2 /* glv_texture.h */,
-				08A6B2A80E25A6A5005539F2 /* glv_textview.h */,
-				08A6B2A90E25A6A5005539F2 /* glv_util.h */,
-			);
-			path = glv;
 			sourceTree = "<group>";
 		};
 		08C675960C13A03E00D85379 /* test */ = {
