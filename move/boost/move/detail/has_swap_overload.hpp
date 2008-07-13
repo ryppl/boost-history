@@ -9,6 +9,7 @@
 # include <boost/mpl/aux_/lambda_support.hpp>
 # include <boost/mpl/bool.hpp>
 # include <boost/detail/workaround.hpp>
+# include <boost/functional/detail/container_fwd.hpp>
 
 // Must be the last include
 # include <boost/type_traits/detail/bool_trait_def.hpp>
@@ -25,14 +26,6 @@ namespace std
   // std::vector.
   template <class T>
   char stdIsAnAssociatedNamespace(T const&, int);
-
-  // Forward declare some known types that have a fast swap.  Also
-  // illegal last I checked.
-  template <class T, class A> class vector;
-  template <class T, class A> class deque;
-  template <class T, class A> class list;
-  template <class T, class A, class C> class set;
-  template <class T, class U, class C, class A> class map;
 }
 
 namespace boost { namespace detail { 
@@ -129,6 +122,8 @@ BOOST_TT_AUX_BOOL_C_BASE(::boost::detail::has_swap_overload_::impl<T>::value)
     BOOST_MPL_AUX_LAMBDA_SUPPORT(1,has_swap_overload,(T))
 };
 
+template <class Char, class Traits, class A>
+struct has_swap_overload<std::basic_string<Char, Traits, A> > : mpl::true_{};
 
 template <class T, class A>
 struct has_swap_overload<std::vector<T,A> > : mpl::true_{};
@@ -142,8 +137,14 @@ struct has_swap_overload<std::list<T,A> > : mpl::true_{};
 template <class T, class A, class C>
 struct has_swap_overload<std::set<T,A,C> > : mpl::true_{};
 
+template <class T, class A, class C>
+struct has_swap_overload<std::multiset<T,A,C> > : mpl::true_{};
+
 template <class K, class V, class C, class A>
 struct has_swap_overload<std::map<K,V,C,A> > : mpl::true_{};
+
+template <class K, class V, class C, class A>
+struct has_swap_overload<std::multimap<K,V,C,A> > : mpl::true_{};
 
 } // namespace detail
 
