@@ -143,6 +143,40 @@ struct is_movable : boost::mpl::false_ { };
 
 /*************************************************************************************************/
 
+struct copy_tag {};
+struct move_tag {};
+
+template <typename T, class Enable = void>
+struct move_type {
+    typedef copy_tag type;
+};
+
+template <typename T>
+struct move_type<T, typename boost::enable_if<is_movable<T> >::type> {
+    typedef move_tag type;
+};
+
+/*************************************************************************************************/
+
+/*!
+\ingroup move_related
+\brief move_type_sink is used to select between overloaded operations according to
+ the value of move_type<T> and whether it is convertible to type U.
+\sa move
+*/
+
+template <typename Tag, typename T, typename U = T, typename R = void*>
+struct move_type_sink
+    : boost::enable_if<
+        boost::mpl::and_<
+            boost::move_detail::is_convertible<T, U>,
+            boost::is_same<Tag, typename boost::move_type<T>::type>
+        >,
+        R
+    > {};
+
+/*************************************************************************************************/
+
 /*!
 \ingroup move_related
 \brief copy_sink and move_sink are used to select between overloaded operations according to
@@ -193,7 +227,7 @@ instead of copied to its destination. See adobe/test/move/main.cpp for examples.
 
 */
 template <typename T>
-T move(T& x, typename move_sink<T>::type = 0) { return T(move_from<T>(x)); }
+T move(T& x, typename move_type_sink<move_tag, T>::type = 0) { return T(move_from<T>(x)); }
 
 /*************************************************************************************************/
 
@@ -203,7 +237,7 @@ T move(T& x, typename move_sink<T>::type = 0) { return T(move_from<T>(x)); }
 x gets copied.
 */
 template <typename T>
-T& move(T& x, typename copy_sink<T>::type = 0) { return x; }
+T& move(T& x, typename move_type_sink<copy_tag, T>::type = 0) { return x; }
 
 /*************************************************************************************************/
 
@@ -336,7 +370,7 @@ inline back_move_iterator<C> back_mover(C& x) { return back_move_iterator<C>(x);
 */
 
 template <typename T> // T models Regular
-inline void move_construct(T* p, T& x, typename move_sink<T>::type = 0)
+inline void move_construct(T* p, T& x, typename move_type_sink<move_tag, T>::type = 0)
 {
     ::new(static_cast<void*>(p)) T(move_from<T>(x));
 }
@@ -349,7 +383,7 @@ inline void move_construct(T* p, T& x, typename move_sink<T>::type = 0)
 \brief Placement copy construction, selected when T is_movable is false
 */
 template <typename T> // T models Regular
-inline void move_construct(T* p, const T& x, typename copy_sink<T>::type = 0)
+inline void move_construct(T* p, const T& x, typename move_type_sink<copy_tag, T>::type = 0)
 {
     ::new(static_cast<void*>(p)) T(x);
 }
