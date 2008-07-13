@@ -33,6 +33,15 @@
 
 /*************************************************************************************************/
 
+// Illegal forward declare.
+
+namespace std
+{
+    template <class T> class auto_ptr;
+}
+
+/*************************************************************************************************/
+
 namespace boost {
 
 /*************************************************************************************************/
@@ -166,10 +175,6 @@ struct is_boost_movable : boost::mpl::false_ { };
 
 /*************************************************************************************************/
 
-#if !defined(BOOST_NO_SFINAE)
-
-/*************************************************************************************************/
-
 struct copy_tag {};
 struct swap_tag {};
 struct boost_move_tag {};
@@ -181,9 +186,10 @@ struct move_type :
         typename boost::mpl::if_<boost::detail::has_swap_overload<T>,
             swap_tag, copy_tag>::type > {};
 
-/*************************************************************************************************/
-
-#endif
+template <class T>
+struct move_type<std::auto_ptr<T> > {
+    typedef custom_move_tag type;
+};
 
 /*************************************************************************************************/
 
@@ -319,6 +325,17 @@ T& move(T& x) {
 
 /*!
 \ingroup move_related
+\brief This version of move is for auto_ptrs.
+*/
+template <class T>
+std::auto_ptr<T>& move(std::auto_ptr<T>& x) {
+    return x;
+}
+
+/*************************************************************************************************/
+
+/*!
+\ingroup move_related
 \brief Iterator pair version of move. Similar to std::copy but with move semantics, 
 for movable types, otherwise with copy semantics.
 */
@@ -413,6 +430,13 @@ inline back_move_iterator<C> back_mover(C& x) { return back_move_iterator<C>(x);
 
 /*************************************************************************************************/
 
+template <class T>
+inline void move_construct(std::auto_ptr<T>* p, std::auto_ptr<T>& x) {
+    ::new(static_cast<void*>(p)) std::auto_ptr<T>(x);
+}
+
+/*************************************************************************************************/
+
 #if !defined(BOOST_NO_SFINAE)
 
 /*************************************************************************************************/
@@ -504,39 +528,13 @@ F uninitialized_move(I f, I l, F r)
     return std::uninitialized_copy(f, l, r);
 }
 
-#endif
+#endif // BOOST_NO_SFINAE
 
 /*************************************************************************************************/
+
 } // namespace boost
 
 /*************************************************************************************************/
-
-// auto_ptr support
-
-// Illegal forward declare.
-
-namespace std
-{
-    template <class T> class auto_ptr;
-}
-
-namespace boost
-{
-    template <class T>
-    struct move_type<std::auto_ptr<T>, void> {
-        typedef custom_move_tag type;
-    };
-
-    template <class T>
-    std::auto_ptr<T>& move(std::auto_ptr<T>& x) {
-        return x;
-    }
-
-    template <class T>
-    inline void move_construct(std::auto_ptr<T>* p, std::auto_ptr<T>& x) {
-        ::new(static_cast<void*>(p)) std::auto_ptr<T>(x);
-    }
-}
 
 #endif
 

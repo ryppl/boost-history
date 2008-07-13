@@ -17,6 +17,8 @@
 #include <boost/move.hpp>
 #include "./vector.hpp"
 
+#include <memory>
+
 /*************************************************************************************************/
 
 #define BOOST_CHECK_EQUAL(x, y) BOOST_CHECK(x == y)
@@ -45,6 +47,7 @@ void move_test()
     typedef test_vector<vector_t>     vector_vector_t;
     typedef std::vector<int>          std_vector_t;
     typedef test_vector<std_vector_t> vector_std_vector_t;
+    typedef test_vector<std::auto_ptr<int> > vector_auto_ptr_t;
     
     // Test is_movable<> template function
 
@@ -117,6 +120,16 @@ void move_test()
         int* addr = y[0].begin();
         boost::uninitialized_move(&y[0], &y[3], &x[0]);
         BOOST_CHECK_EQUAL(addr, x[0].begin());
+    }
+
+    { // Move auto_ptr
+        vector_auto_ptr_t x;
+        for(int i = 0; i < 100; ++i)
+            x.push_back(std::auto_ptr<int>(new int(i)));
+        BOOST_CHECK_EQUAL(100, x.size());
+        BOOST_CHECK_EQUAL(0, *x[0]);
+        BOOST_CHECK_EQUAL(10, *x[10]);
+        BOOST_CHECK_EQUAL(99, *x[99]);
     }
 }
 
