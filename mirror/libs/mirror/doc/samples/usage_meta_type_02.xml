@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_type.usage02">
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;boost/typeof/typeof.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+#include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+template &lt;class MetaType&gt;
+void print_meta_data(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// print out the base type name
+	wcout &lt;&lt; "The type name is: "&lt;&lt; MetaType::base_name() &lt;&lt; endl;
+	// 
+	if(reflects_global_scope&lt;MetaType::scope&gt;::value)
+		wcout &lt;&lt; "It's defined on the global scope" &lt;&lt; endl;
+	else wcout &lt;&lt; 
+		"It's defined in the " &lt;&lt; 
+		MetaType::scope::full_name() &lt;&lt; 
+		" namespace" &lt;&lt; endl;
+	wcout &lt;&lt; "--------------------------------------" &lt;&lt; endl;
+}
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// reflect the type of an expression
+	// and print the meta-data
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(1+2) &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(1.0+2.0) &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF("1" "+" "2") &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(string("1")+string("2")) &gt;();
+
+	// another possibility
+	print_meta_data&lt; BOOST_MIRRORED_TYPE(
+		BOOST_TYPEOF(L"1" L"+" L"2")
+	) &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPE(
+		BOOST_TYPEOF(wstring(L"1")+wstring(L"2"))
+	) &gt;();
+
+	return 0;
+}
+</programlisting>
+

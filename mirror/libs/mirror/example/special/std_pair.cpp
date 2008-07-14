@@ -27,11 +27,11 @@ int main(void)
 	using namespace ::boost::mirror;
 	//
 	//
-	typedef pair<const int*, double [321]> T1;
+	typedef pair<const int*, double [654][321]> T1;
 	typedef pair<float, const ::std::string&> T2;
 	typedef pair<T1 const volatile, T2 volatile const> T3;
 	typedef pair<T2, T1 volatile> T4;
-	typedef pair<T3 const * volatile *, const T4&> T;
+	typedef T4 (T)(const T1&, T2, volatile T3*);
 	//
 	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//

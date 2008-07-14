@@ -6,6 +6,8 @@
 
 	<para>
 	</para>
+	<xi:include href="reference/meta_namespace.xml"/>
 	<xi:include href="reference/meta_type.xml"/>
+	<xi:include href="reference/meta_class.xml"/>
 
 </library-reference>

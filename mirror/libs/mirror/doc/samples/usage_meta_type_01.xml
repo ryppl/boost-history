@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_type.usage01">
+
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+#include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// define a little more complex type
+	typedef pair&lt;const int*, double [654][321]&gt; T1;
+	typedef pair&lt;float, const ::std::string&amp;&gt; T2;
+	typedef pair&lt;T1 const volatile, T2 volatile const&gt; T3;
+	typedef pair&lt;T2, T1 volatile&gt; T4;
+	typedef T4 (T)(const T1&amp;, T2, volatile T3*);
+	
+	// reflect it using mirror
+	typedef BOOST_MIRRORED_TYPE(T) meta_T;
+
+	// print out the full type name
+	wcout &lt;&lt; "The full type name is: "&lt;&lt; meta_T::full_name() &lt;&lt; endl;
+
+	return 0;
+}
+</programlisting>
+
