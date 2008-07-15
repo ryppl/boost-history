@@ -1,0 +1,337 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Chapter 1. Mirror</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="The Mirror library documentation">
+<link rel="up" href="libraries.html" title="Part I. The Mirror library">
+<link rel="prev" href="libraries.html" title="Part I. The Mirror library">
+<link rel="next" href="mirror/tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="libraries.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="libraries.html"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="mirror/tutorial.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="mirror"></a>Chapter 1. Mirror</h2></div>
+<div><div class="author">
+<h3 class="author">
+<span class="firstname">Matú&#353;</span> <span class="surname">Chochlík</span>
+</h3>
+<code class="email">&lt;<a class="email" href="mailto:chochlik%20-at-%20gmail.com">chochlik -at- gmail.com</a>&gt;</code><code class="email">&lt;<a class="email" href="mailto:Matus.Chochlik%20-at-%20fri.uniza.sk">Matus.Chochlik -at- fri.uniza.sk</a>&gt;</code>
+</div></div>
+<div><p class="copyright">Copyright © 2008 Matú&#353; Chochlík</p></div>
+<div><div class="legalnotice">
+<a name="id670193"></a><p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="mirror.html#mirror.intro">Introduction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="mirror.html#mirror.abstract">Abstract</a></span></dt>
+<dt><span class="section"><a href="mirror.html#mirror.motivation">Motivation</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="mirror/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html">Mirror Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="mirror/reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#header.boost.mirror.meta_class.hpp">Header &lt;boost/mirror/meta_class.hpp&gt;</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>The documentation is far from being complete and does not cover every feature
+	already implemented, yet.
+	</p></td></tr>
+</table></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="mirror.intro"></a>Introduction</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mirror.html#mirror.abstract">Abstract</a></span></dt>
+<dt><span class="section"><a href="mirror.html#mirror.motivation">Motivation</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.abstract"></a>Abstract</h3></div></div></div>
+<p>
+	The aim of the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library is to provide 
+	useful meta-data at both compile-time and run-time about common 
+	C++ constructs like namespaces, types
+	(and as an important special case <code class="computeroutput">typedef</code>-ined types), 
+	classes and their base classes and member attributes, instances, etc. and to 
+	provide uniform and generic interfaces for their introspection.
+</p>
+<p>
+	Because standard C++ provides only a very limited set of meta-information
+	to build upon, the main drawback of this library is, that namespace, types, classes, etc.
+	need to be registered before they can be reflected. 
+	However <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> tries to make the process of 
+	registering simple by providing a set of user-friendly registering macros
+	and has the native and many of the other common types, classes, templates and 
+	namespaces pre-registered.
+</p>
+<p>
+	<a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> is designed with the principle of stratification
+	in mind and tries to be as less intrusive as possible. New classes do not need
+	to be designed to directly support <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a>
+       	and no <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> related code is necessary
+	in the class' definition, as far as some general guidelines are followed
+	(the exceptions to this are explained here).
+</p>
+<p>
+	Most important features of the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library
+	that are currently implemented include:
+</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+		Namespace-name inspection. Both the base and fully qualified namespace
+		names are supported.
+	</li>
+<li>
+		Inspection of the whole scope in which a namespace is defined (global
+		scope or nested in another namespace).
+	</li>
+<li>
+		Type-name querying, with the support for <code class="computeroutput">typedef</code>-ined
+		typenames and typenames of derived types like pointers, references,
+		cv-qualified types, arrays, functions and template names. Names
+		with or without nested-name-specifiers can be queried.
+	</li>
+<li>
+		Inspection of the scope in which a type has been defined (global-scope,
+		in a namespace, inside of a class)
+	</li>
+<li>
+		Unform and generic inspection of class' base classes. One can inspect 
+		traits of the base classes for example their types, whether they are inherited
+		virtually or not and the access specifier (<code class="computeroutput">private</code>, <code class="computeroutput">protected</code>,
+		<code class="computeroutput">public</code>).
+	</li>
+<li>
+		Unform and generic inspection of class' member attributes either just those defined
+		directly in the reflected class or inherited from it's base-classes. 
+		At compile-time the count of class' attributes and their types, storage class
+		specifiers (<code class="computeroutput">static</code>, <code class="computeroutput">mutable</code>) and some other traits
+		can be queried.
+		At run-time one can uniformly query the names and/or values (when given 
+		an instance of the reflected class) of the member attributes and 
+		sequentially execute a custom functor on every attribute of a class.
+	</li>
+<li>
+		Traversals of a class' (or generally type's) structure with user defined visitors,
+		which are optionally working on an provided instance of the type
+		or just on it's structure without any run-time data.
+		These visitors are guided by <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> through
+		the structure of the class and optionally provided with contextual 
+		information about the current position in the traversal.
+	</li>
+</ul></div>
+<p>
+	Most important <span class="bold"><strong>planned</strong></span> features include:
+</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+		Facility for generating customizable object factories with a uniform interface.
+	</li>
+<li>
+		Facility for generating customizable class method dispatchers, allowing
+		to construct the arguments and call any member function on an instance 
+		of a class registered with <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a>, through
+		a uniform interface.
+	</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.motivation"></a>Motivation</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mirror.html#mirror.motivation.problem.typenames">Problem - Querying typenames</a></span></dt>
+<dt><span class="section"><a href="mirror.html#mirror.motivation.problem.uniformmemattaccess">Problem - Uniform access to member attributes of a class' instance</a></span></dt>
+</dl></div>
+<p>
+	Here are described some of the recurring situations where the facilities 
+	provided by <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> are helpful.
+</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.motivation.problem.typenames"></a>Problem - Querying typenames</h4></div></div></div>
+<p>
+		There are applications which need to get and then somehow process 
+		the name of a given type. One example is a logging facility where 
+		some of the messages may contain names of types. This is very helpful 
+		for example if one wants to log something in a template function and wants 
+		to distinguish between various instantiations in the logs. In this case 
+		it is very useful if the type name that goes into the log is human-readable 
+		and preferrably corresponding to the typename used in the source code. 
+		A rather naive implementation could look as follows:
+	</p>
+<pre class="programlisting">
+#include &lt;iostream&gt;
+
+::std::ostream&amp; log = ::std::cerr;
+using ::std::endl;
+
+// a template function that returns the name 
+// of the passed type
+template &lt; typename T &gt;
+const char* get_typename(void);
+
+
+template &lt; typename A, typename B, typename C &gt;
+void foo(A a, B b, C c)
+{
+	log &lt;&lt; 
+		"entering foo(" &lt;&lt;
+		get_typename&lt;A&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;B&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;C&gt;() &lt;&lt;
+		")" &lt;&lt;
+	endl;
+	// do something useful
+	log &lt;&lt; 
+		"leaving foo(" &lt;&lt;
+		get_typename&lt;A&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;B&gt;() &lt;&lt;
+		", " &lt;&lt;
+		get_typename&lt;C&gt;() &lt;&lt;
+		")" &lt;&lt;
+	endl;
+}
+
+int main(void)
+{
+	foo('A', "B", 0xC);
+	foo(0xAL, ::std::string("B"), L'C');
+	return 0;
+}
+</pre>
+<p>
+		Another application might want to store its data in a format where the typenames 
+		are included (for example as attributes of an XML element) to be able to do 
+		additional checking when loading the data. In this case the type name must be unique 
+		and usually also portable. In addition if the data files are user-editable, 
+		the names of the types should be human-readable.
+	</p>
+<p>
+		Yet another example is a generic application that does some C++ source code generation. 
+		In this case the typenames in the output need to correspond to C++ typenames.
+	</p>
+<p>
+		Maybe the first, obvious choice if one needs to find out what the name of a given type is is to 
+		use the <code class="computeroutput">typeid</code> operator and call the <code class="computeroutput">name()</code> function 
+		on the returned reference to <code class="computeroutput">type_info</code>. The implementation of our
+		<code class="computeroutput">get_typename&lt;T&gt;()</code> function from the previous sample code 
+		could be following:
+	</p>
+<pre class="programlisting">
+#include &lt;typeinfo&gt;
+
+// a template function that returns the name 
+// of the passed type
+template &lt; typename T &gt;
+const char* get_typename(void)
+{
+	return typeid(T).name();
+}
+
+</pre>
+<p>
+		There are however, several problems with is approach.
+		The notoriously known issue of <code class="computeroutput">type_info::name()</code> is that the string 
+		returned by this function is implementation-defined and compilers are free 
+		to return anything from an empty string, through a mangled typename to a correctly 
+		formatted typename and many of them enjoy this freedom to its full extent.
+		Thus the returned name is not guarenteed to be unique nor human readable or 
+		easily understandable, nor is it portable. 
+		Some compilers provide functions that demangle the names returned by 
+		<code class="computeroutput">type_info::name()</code>, but again this is not very portable.
+	</p>
+<p>
+		One possible solution is the standardisation of the result of <code class="computeroutput">typeid(T).name()</code>
+		or introduction of a new standard member function to the <code class="computeroutput">type_info</code> structure
+		for example <code class="computeroutput">type_info::std_name()</code>,
+		that would return human-readable, unique, portable typenames preferrably corresponding
+		to the C++ typenames.
+		Obviously, until that happens we need to stick to another solution.
+	</p>
+<p>
+		To complicate things even more, we might want to get the base name of the type
+		without the nested-name-specifier (<code class="computeroutput">basic_string</code> vs. 
+		<code class="computeroutput">::std::basic_string</code>) and to get the nested-name-specifier
+		or even the individual names of the enclosing namespaces or classes 
+		separatelly. 
+	</p>
+<p>
+		This is when <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> comes in handy. One of the basic
+		facilities is the <code class="computeroutput">::boost::mirror::meta_type</code> template. 
+		Among other things this template has two member functions - <code class="computeroutput">base_name</code>
+		and <code class="computeroutput">full_name</code> that return the base type name without the nested
+		name specifier and the full type name with the nested name specifier respectively.
+		The names returned by these functions correspond to the C++ typenames, thus
+		are human-readable, unique (if using the <code class="computeroutput">full_name</code> member function)
+		and portable.
+	</p>
+<p>
+		Using <code class="computeroutput">meta_type</code> the <code class="computeroutput">get_typename&lt;T&gt;()</code> 
+		function could look like this:
+	</p>
+<pre class="programlisting">
+#include &lt;boost/mirror/meta_type.hpp&gt;
+
+template &lt; typename T &gt;
+const char* get_typename(void)
+{
+	// The BOOST_MIRRORED_TYPE macro expands into
+	// the proper specialization of meta_type
+	// reflecting the passed type
+	return BOOST_MIRRORED_TYPE(T)::full_name().c_str();
+}
+
+</pre>
+<p>
+		With native C++ types and some common types from the STL
+		and from Boost the <code class="computeroutput">meta_type</code>
+		works out of the box.
+	</p>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.motivation.problem.uniformmemattaccess"></a>Problem - Uniform access to member attributes of a class' instance</h4></div></div></div></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: July 11, 2008 at 11:11:00 +0200</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="libraries.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="libraries.html"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="mirror/tutorial.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template meta_type</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="The Mirror library documentation">
+<link rel="up" href="../../mirror/reference.html#header.boost.mirror.meta_type.hpp" title="Header &lt;boost/mirror/meta_type.hpp&gt;">
+<link rel="prev" href="meta_namespace.html" title="Class template meta_namespace">
+<link rel="next" href="meta_class.html" title="Class template meta_class">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="meta_namespace.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="meta_class.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.mirror.meta_type"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template meta_type</span></h2>
+<p>boost::mirror::meta_type &#8212; The purpose of this class template is to provide meta-data
+				about the reflected type, especially to allow to get the 
+				base and full type name of the reflected type and to 
+				get information about the scope inside of which this type
+				has been declared.
+				Although the specializations of <code class="computeroutput">meta_type</code> 
+				template can be used directly to get the meta data about a particular type, 
+				it is recomended to use the reflection macros like 
+				<code class="computeroutput">BOOST_MIRRORED_TYPE(TYPE)</code> or
+				<code class="computeroutput">BOOST_MIRRORED_TYPEOF(EXPR)</code>
+				instead, to get the proper specializations of 
+				<code class="computeroutput">meta_type</code>.
+				</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id495672-bbtypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> Type <a class="link" href="meta_type.html#boost.mirror.meta_type.reflected_type">reflected_type</a>;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_type.html#boost.mirror.meta_type.scope">scope</a>;
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id495610-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id495550-bb">full_name</a>();
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName&gt; 
+    <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id495490-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;);
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id671255"></a><h2>Description</h2>
+<p>The specializations of <code class="computeroutput">meta_type</code> can 
+				be used to get meta-information about the reflected types, some at compile-time and some at run-time.
+				The following examples show type reflection and basic 
+				<code class="computeroutput">meta_type</code> usage. Mirror works with the native C++ types
+				and some of the very common types like <code class="computeroutput">::std::string</code>, etc. out of the box.
+				Meta-types for many other types from the standard library and Boost
+			       	are also provided and can be <code class="computeroutput">#include</code>d when necessary.
+				</p>
+<div class="section" lang="en">
+<div class="titlepage"></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="meta_type.html#mirror.meta_type.reference.sample01">Example - Basic usage</a></span></dt>
+<dt><span class="section"><a href="meta_type.html#mirror.meta_type.reference.sample02">Example - Using with typeof and getting scope-related information</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.meta_type.reference.sample01"></a>Example - Basic usage</h6></div></div></div>
+<p>This sample code shows how to reflect a type and how to get its full type name.
+					Since various specializations of <code class="computeroutput">::std::pair</code> are reflected,
+					the <code class="computeroutput">meta_type</code>s for this template need to be 
+					included.
+					</p>
+<a name="mirror.reference.sample.meta_type.usage01"></a><pre class="programlisting">
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+#include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// define a little more complex type
+	typedef pair&lt;const int*, double [654][321]&gt; T1;
+	typedef pair&lt;float, const ::std::string&amp;&gt; T2;
+	typedef pair&lt;T1 const volatile, T2 volatile const&gt; T3;
+	typedef pair&lt;T2, T1 volatile&gt; T4;
+	typedef T4 (T)(const T1&amp;, T2, volatile T3*);
+	
+	// reflect it using mirror
+	typedef BOOST_MIRRORED_TYPE(T) meta_T;
+
+	// print out the full type name
+	cts::bcout() &lt;&lt; 
+		BOOST_CTS_LIT("The full type name is: ") &lt;&lt; 
+		meta_T::full_name() &lt;&lt; 
+	endl;
+
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.meta_type.reference.sample02"></a>Example - Using with typeof and getting scope-related information</h6></div></div></div>
+<p>The following example shows cooperation with the Typeof
+					library and scope-related operations.
+					</p>
+<a name="mirror.reference.sample.meta_type.usage02"></a><pre class="programlisting">
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;boost/typeof/typeof.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+#include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+template &lt;class MetaType&gt;
+void print_meta_data(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// print out the base type name
+	wcout &lt;&lt; "The type name is: "&lt;&lt; MetaType::base_name() &lt;&lt; endl;
+	// 
+	if(reflects_global_scope&lt;MetaType::scope&gt;::value)
+		wcout &lt;&lt; "It's defined on the global scope" &lt;&lt; endl;
+	else wcout &lt;&lt; 
+		"It's defined in the " &lt;&lt; 
+		MetaType::scope::full_name() &lt;&lt; 
+		" namespace" &lt;&lt; endl;
+	wcout &lt;&lt; "--------------------------------------" &lt;&lt; endl;
+}
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// reflect the type of an expression
+	// and print the meta-data
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(1+2) &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(1.0+2.0) &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF("1" "+" "2") &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(string("1")+string("2")) &gt;();
+
+	// BOOST_MIRRORED_TYPEOF is actually a shorter form of this:
+	print_meta_data&lt; BOOST_MIRRORED_TYPE(
+		BOOST_TYPEOF(L"1" L"+" L"2")
+	) &gt;();
+	print_meta_data&lt; BOOST_MIRRORED_TYPE(
+		BOOST_TYPEOF(wstring(L"1")+wstring(L"2"))
+	) &gt;();
+
+	return 0;
+}
+</pre>
+</div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id671335"></a><h3>
+<a name="id495672-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> Type <a name="boost.mirror.meta_type.reflected_type"></a>reflected_type;</p>
+<p>The type reflected by this overload of <code class="computeroutput">meta_type</code>.
+					</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_type.scope"></a>scope;</p>
+<p>A meta-object describing the scope in which the reflected type
+					is defined. Depending on where the type has been defined <code class="computeroutput">scope</code>
+					can be either a specialization of <code class="computeroutput">meta_namespace</code>
+					or a specialization of <code class="computeroutput">meta_class</code>.
+					</p>
+</li>
+</ol></div>
+</div>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id495610-bb"></a>base_name();</pre>
+<p>This static member function returns the base name of the 
+					type reflected by <code class="computeroutput">meta_type</code>
+					without the nested name specifier. For example:
+					</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_TYPE</code>(::std::string) :: base_name()
+					</pre>
+<p> or 
+					</p>
+<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: base_name()
+					</pre>
+<p>
+					returns simply <code class="computeroutput">"string"</code>. When a full type name 
+					<span class="bold"><strong>with</strong></span> the nested name specifier
+					is needed use the <code class="computeroutput">full_name</code> member function
+			       		instead.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The first call to this function can be expensive 
+					for derived types like pointers, references, cv-qualified 
+					types, arrays etc. because the type name needs to be properly composed from 
+					the base type name, which may depending on the complexity of the type
+					lead to multiple string concatenations. Subsequent calls to this member function
+					for a concrete specialization of meta_type
+					are usually much faster.
+					</p></td>
+</tr></tbody>
+</table></div>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id495550-bb"></a>full_name();</pre>
+<p>This static member function returns the full name of the 
+					type reflected by <code class="computeroutput">meta_type</code>
+					with the nested name specifier. For example:
+					</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_TYPE</code>(::std::string) :: full_name()
+					</pre>
+<p> or 
+					</p>
+<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: full_name()
+					</pre>
+<p> 
+					returns <code class="computeroutput">"::std::string"</code>. When the base type name 
+					<span class="bold"><strong>without</strong></span> the nested name specifier
+					is needed use the <code class="computeroutput">base_name</code> member function
+			       		instead.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The first call to this function can be expensive 
+					for derived types like pointers, references, cv-qualified 
+					types, arrays etc. because the type name needs to be properly composed from 
+					the base type name, which may depending on the complexity of the type
+					lead to multiple string concatenations. Subsequent calls to this member function
+					for a concrete specialization of meta_type
+					are usually much faster.
+					</p></td>
+</tr></tbody>
+</table></div>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName&gt; 
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id495490-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full);</pre>
+<p>This static member template function returns either the base name 
+					<span class="bold"><strong>without</strong></span> the nested name specifier 
+					or the full name <span class="bold"><strong>with</strong></span> the 
+					nested name specifier of the type reflected by this
+					<code class="computeroutput">meta_type</code>,
+					depending on the value of the template argument <code class="computeroutput">FullName</code>.
+					For example:
+					</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_TYPE</code>(::std::string) :: get_name(::boost::mpl::false_())</pre>
+<p> or 
+					</p>
+<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: get_name(::boost::mpl::false_())</pre>
+<p> 
+					is equivalent to calling the 
+					<code class="computeroutput">base_name</code> member function and 
+					returns simply <code class="computeroutput">"string"</code> and
+					</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_TYPE</code>(::std::string) :: get_name(::boost::mpl::true_())</pre>
+<p> or 
+					</p>
+<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: get_name( ::boost::mpl::true_())</pre>
+<p> is equivalent to calling the 
+					<code class="computeroutput">full_name</code> method which 
+					returns <code class="computeroutput">"::std::string"</code>.
+					</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="meta_namespace.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="meta_class.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
