@@ -15,10 +15,12 @@ type.change-generated-target-prefix SHARED_LIB : : lib ;
 import os ;
 
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+local BOOST_SANDBOX_ROOT = [ os.environ BOOST_SANDBOX_ROOT ] ;
 project 
     : requirements
       <include>../../../
       <include>$(BOOST_ROOT)
+      <include>$(BOOST_SANDBOX_ROOT)
       <toolset>gcc:<find-shared-library>dl
       <toolset>gcc:<linkflags>"-Wl,-rpath,'$ORIGIN'"
       <toolset>darwin:<define>DYLD_LIBRARY_PATH=./

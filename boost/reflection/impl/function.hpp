@@ -25,16 +25,16 @@ public:
     member_function_(member_function) {
   }
   ReturnValue call(instance & inst BOOST_PP_COMMA_IF(N)
-                   BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) {
+                   BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) const {
     return (*func_)(inst.val_, member_function_ BOOST_PP_COMMA_IF(N)
                     BOOST_PP_ENUM_PARAMS(N, p));
   }
   ReturnValue operator()(instance & inst BOOST_PP_COMMA_IF(N)
-                         BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) {
+                         BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) const {
     return (*func_)(inst.val_, member_function_ BOOST_PP_COMMA_IF(N)
                     BOOST_PP_ENUM_PARAMS(N, p));
   }
-  bool valid() {
+  bool valid() const {
     return member_function_ != 0 && func_ != 0;
   }
 private:

@@ -34,11 +34,11 @@ namespace extensions {
 namespace impl {
   typedef HMODULE library_handle;
   typedef FARPROC generic_function_ptr;
-  inline library_handle load_shared_library(const char * libraryName) {
-    return LoadLibraryA(libraryName);
+  inline library_handle load_shared_library(const char* library_name) {
+    return LoadLibraryA(library_name);
   }
   inline generic_function_ptr get_function(library_handle handle,
-                                           const char * function_name) {
+                                           const char* function_name) {
     return GetProcAddress(handle, function_name);
   }
   inline bool close_shared_library(library_handle handle) {
@@ -56,11 +56,11 @@ namespace extensions {
 namespace impl {
   typedef void * library_handle;
   typedef void * generic_function_ptr;
-  inline library_handle load_shared_library(const char * library_name) {
+  inline library_handle load_shared_library(const char* library_name) {
     return dlopen(library_name, RTLD_LAZY);
   }
   inline generic_function_ptr get_function(library_handle handle,
-                                           const char * function_name) {
+                                           const char* function_name) {
     return dlsym(handle, function_name);
   }
   inline bool close_shared_library(library_handle handle) {

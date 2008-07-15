@@ -43,7 +43,7 @@ public:
   using map_type::end;
   using map_type::insert;
   template <class D>
-  std::vector<generic_parameter<TypeInfo>*> get(Info info) {
+  std::vector<generic_parameter<TypeInfo>*> get(Info info) const {
     std::vector<generic_parameter<TypeInfo>*> parameters;
     std::pair<typename map_type::iterator, typename map_type::iterator> its
       = equal_range(info);

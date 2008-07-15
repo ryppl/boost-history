@@ -12,10 +12,10 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
-<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial05"></a> Tutorial 5</h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial05"></a><a href="tutorial05.html" title=" Tutorial 5"> Tutorial 5</a></h3></div></div></div>
 <p>
         In this tutorial we will describe an advanced example using the Info class.
         The basics of Info classes are explained in the specific section. We expect
@@ -42,17 +42,16 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">protocol</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">protocol</span>
 <span class="special">{</span>
  <span class="keyword">public</span><span class="special">:</span>
 
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{}</span>
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">""</span><span class="special">);</span> <span class="special">}</span>
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">""</span><span class="special">);</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{}</span>
 
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">protocol</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">protocol</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -63,47 +62,46 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="comment">// MSN protocol implementation
-</span><span class="keyword">class</span> <span class="identifier">MSN</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">protocol</span>
+<pre class="programlisting"><span class="comment">// MSN protocol implementation
+</span><span class="keyword">class</span> <span class="identifier">MSN</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">protocol</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: Logged In"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
+        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: Logged In"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
         <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: message ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">msg</span> <span class="special">&lt;&lt;</span> <span class="string">"] sent"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
+        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: message ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">msg</span> <span class="special">&lt;&lt;</span> <span class="string">"] sent"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
         <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"MSN: hello! msg received"</span><span class="special">);</span> 
+        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"MSN: hello! msg received"</span><span class="special">);</span> 
         <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: Status changed to ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">new_status</span> <span class="special">&lt;&lt;</span> <span class="string">"]"</span> 
-                    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
+        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: Status changed to ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">new_status</span> <span class="special">&lt;&lt;</span> <span class="string">"]"</span> 
+                    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
         <span class="special">}</span>
 
-        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MSN</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MSN</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
 <span class="special">};</span>
 
 <span class="comment">// Jabber protocol implementation
-</span><span class="keyword">class</span> <span class="identifier">Jabber</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">protocol</span>
+</span><span class="keyword">class</span> <span class="identifier">Jabber</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">protocol</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: Logged In"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
+        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: Logged In"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
         <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: message ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">msg</span> <span class="special">&lt;&lt;</span> <span class="string">"] sent"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
+        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: message ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">msg</span> <span class="special">&lt;&lt;</span> <span class="string">"] sent"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
         <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Jabber: hello! msg received"</span><span class="special">);</span> 
+        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Jabber: hello! msg received"</span><span class="special">);</span> 
         <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: Status changed to ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">new_status</span> <span class="special">&lt;&lt;</span> <span class="string">"]"</span> 
-                    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
+        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{</span> 
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: Status changed to ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">new_status</span> <span class="special">&lt;&lt;</span> <span class="string">"]"</span> 
+                    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
         <span class="special">}</span>
 
-        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Jabber</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Jabber</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -125,16 +123,15 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="comment">// interface for the parameters of each plugin
-</span><span class="keyword">class</span> <span class="identifier">network_parameters</span>
+<pre class="programlisting"><span class="comment">// interface for the parameters of each plugin
+</span><span class="keyword">class</span> <span class="identifier">network_parameters</span>
 <span class="special">{</span>
  <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)=</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)=</span> <span class="number">0</span><span class="special">;</span>
 
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">network_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{};</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">network_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{};</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -145,46 +142,44 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="comment">// MSN implementation
-</span><span class="keyword">class</span> <span class="identifier">MSN_network_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">network_parameters</span>
+<pre class="programlisting"><span class="comment">// MSN implementation
+</span><span class="keyword">class</span> <span class="identifier">MSN_network_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">network_parameters</span>
 <span class="special">{</span>
  <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"msn.messenger.com"</span><span class="special">;</span> <span class="special">}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"1863"</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"msn.messenger.com"</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"1863"</span><span class="special">;</span> <span class="special">}</span>
 
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"http mode set"</span>
-                                               <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"http mode set"</span>
+                                               <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
 
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MSN_network_parameters</span><span class="special">()</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MSN_network_parameters</span><span class="special">()</span> <span class="special">{}</span>
 <span class="special">};</span>
 
 
 <span class="comment">// Jabber implementation
-</span><span class="keyword">class</span> <span class="identifier">Jabber_network_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">network_parameters</span>
+</span><span class="keyword">class</span> <span class="identifier">Jabber_network_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">network_parameters</span>
 <span class="special">{</span>
  <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"jabber.org"</span><span class="special">;</span> <span class="special">}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"7063"</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"jabber.org"</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"7063"</span><span class="special">;</span> <span class="special">}</span>
 
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"http mode not supported"</span>
-                                               <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"http mode not supported"</span>
+                                               <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
 
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Jabber_network_parameters</span><span class="special">()</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Jabber_network_parameters</span><span class="special">()</span> <span class="special">{}</span>
 <span class="special">};</span>
 </pre>
 <p>
         We want to be able to compare smart pointers to <code class="computeroutput"><span class="identifier">network_parameters</span></code>:
         
 </p>
-<pre class="programlisting">
-<span class="keyword">inline</span> <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">first</span><span class="special">,</span>
-                      <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">second</span><span class="special">)</span> <span class="special">{</span>
-  <span class="keyword">int</span> <span class="identifier">comp</span> <span class="special">=</span> <span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">first</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">(),</span> <span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">());</span>
-  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">comp</span><span class="special">)</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">first</span><span class="special">-&gt;</span><span class="identifier">port</span><span class="special">(),</span> <span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">port</span><span class="special">())</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">first</span><span class="special">,</span>
+                      <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">second</span><span class="special">)</span> <span class="special">{</span>
+  <span class="keyword">int</span> <span class="identifier">comp</span> <span class="special">=</span> <span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">first</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">(),</span> <span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">());</span>
+  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">comp</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">first</span><span class="special">-&gt;</span><span class="identifier">port</span><span class="special">(),</span> <span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">port</span><span class="special">())</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">;</span>
   <span class="special">}</span>
-  <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">comp</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">comp</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -194,14 +189,13 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_plugins</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
+<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
+<span class="identifier">extension_export_plugins</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
 <span class="special">{</span>
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span> <span class="identifier">MSN</span><span class="special">,</span> <span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;</span>
-		<span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">MSN_network_parameters</span><span class="special">));</span>
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span> <span class="identifier">Jabber</span><span class="special">,</span> <span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;</span>
-		<span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">Jabber_network_parameters</span><span class="special">));</span>
+	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span> <span class="identifier">MSN</span><span class="special">,</span> <span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+		<span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">MSN_network_parameters</span><span class="special">));</span>
+	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span> <span class="identifier">Jabber</span><span class="special">,</span> <span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+		<span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">Jabber_network_parameters</span><span class="special">));</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -212,78 +206,77 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
 
   <span class="comment">//  create the factory_map object - it will hold all of the available
-</span> <span class="comment">//  constructors. Multiple factory_maps can be constructed.
-</span> <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
+</span>  <span class="comment">//  constructors. Multiple factory_maps can be constructed.
+</span>  <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
 
   <span class="comment">// load the shared library with 
-</span> <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libIMPlugins.extension"</span><span class="special">,</span> 
+</span>  <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libIMPlugins.extension"</span><span class="special">,</span> 
                       <span class="string">"extension_export_plugins"</span><span class="special">);</span>
 
   <span class="comment">//  get a reference to the list of constructors for protocols
-</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
-    <span class="identifier">factory_list</span> <span class="special">=</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+</span>   <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
+    <span class="identifier">factory_list</span> <span class="special">=</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
 
-  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the classes were not found."</span><span class="special">;</span>
-    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the classes were not found."</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
   <span class="special">}</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="special">&gt;</span>
-    <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">current_plugin</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+    <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">current_plugin</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
 
   <span class="comment">// MSN plugin
-</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="identifier">MSN_ptr</span><span class="special">(</span><span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="identifier">msn_parameters</span> <span class="special">=</span> 
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="identifier">MSN_ptr</span><span class="special">(</span><span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="identifier">msn_parameters</span> <span class="special">=</span> 
     <span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">first</span><span class="special">;</span>
   <span class="identifier">current_plugin</span><span class="special">++;</span>
 
   <span class="comment">// Jabber plugin
-</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="identifier">Jabber_ptr</span><span class="special">(</span><span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="identifier">jabber_parameters</span> <span class="special">=</span> 
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="identifier">Jabber_ptr</span><span class="special">(</span><span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="identifier">jabber_parameters</span> <span class="special">=</span> 
     <span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">first</span><span class="special">;</span>
 
   <span class="comment">// server
-</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN hostname: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">msn_parameters</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber hostname: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">jabber_parameters</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">()</span> 
-            <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN hostname: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">msn_parameters</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber hostname: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">jabber_parameters</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">()</span> 
+            <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
   <span class="comment">// http_mode: note that one of the implementations doesn't support it, 
-</span> <span class="comment">// having a base class
-</span> <span class="comment">// and different specific concrete network parameters allow us to handle this
-</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: "</span><span class="special">;</span>
+</span>  <span class="comment">// having a base class
+</span>  <span class="comment">// and different specific concrete network parameters allow us to handle this
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: "</span><span class="special">;</span>
   <span class="identifier">msn_parameters</span><span class="special">-&gt;</span><span class="identifier">set_http_mode</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: "</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: "</span><span class="special">;</span>
   <span class="identifier">jabber_parameters</span><span class="special">-&gt;</span><span class="identifier">set_http_mode</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
   
   <span class="comment">// login
-</span> <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">login</span><span class="special">(</span><span class="string">"testuser"</span><span class="special">,</span> <span class="string">"testpass"</span><span class="special">);</span>
-  <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">login</span><span class="special">(</span><span class="string">"testuser"</span><span class="special">,</span> <span class="string">"testpass"</span><span class="special">);</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</span>  <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">login</span><span class="special">(</span><span class="string">"testuser"</span><span class="special">,</span> <span class="string">"testpass"</span><span class="special">);</span>
+  <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">login</span><span class="special">(</span><span class="string">"testuser"</span><span class="special">,</span> <span class="string">"testpass"</span><span class="special">);</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         
   <span class="comment">// send message
-</span> <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">send</span><span class="special">(</span><span class="string">"hi"</span><span class="special">);</span>
+</span>  <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">send</span><span class="special">(</span><span class="string">"hi"</span><span class="special">);</span>
   <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">send</span><span class="special">(</span><span class="string">"hi"</span><span class="special">);</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         
   <span class="comment">// change status
-</span> <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">change_status</span><span class="special">(</span><span class="string">"away"</span><span class="special">);</span>
+</span>  <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">change_status</span><span class="special">(</span><span class="string">"away"</span><span class="special">);</span>
   <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">change_status</span><span class="special">(</span><span class="string">"away"</span><span class="special">);</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
   <span class="comment">// wait for message
-</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">receive</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">receive</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">receive</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">receive</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 
 </pre>
@@ -292,28 +285,27 @@
 <p>
         And we get the following output:
       </p>
-<div class="informaltable">
-<h4>
-<a name="id934158"></a>
-        </h4>
-<table class="table">
+<div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
-<tbody><tr><td><code class="literal">MSN hostname: msn.messenger.com<br> Jabber hostname:
-              jabber.org<br> <br> MSN: http mode set<br> Jabber: http mode
-              not supported<br> <br> MSN: Logged In<br> Jabber: Logged In<br>
-              <br> MSN: message [hi] sent<br> Jabber: message [hi] sent<br>
-              <br> MSN: Status changed to [away]<br> Jabber: Status changed to
-              [away]<br> <br> MSN: hello! msg received<br> Jabber: hello! msg
-              received<br> </code></td></tr></tbody>
-</table>
-</div>
+<tbody><tr><td>
+              <p>
+                <code class="literal">MSN hostname: msn.messenger.com<br> Jabber hostname: jabber.org<br>
+                <br> MSN: http mode set<br> Jabber: http mode not supported<br>
+                <br> MSN: Logged In<br> Jabber: Logged In<br> <br> MSN: message
+                [hi] sent<br> Jabber: message [hi] sent<br> <br> MSN: Status
+                changed to [away]<br> Jabber: Status changed to [away]<br> <br>
+                MSN: hello! msg received<br> Jabber: hello! msg received<br>
+                </code>
+              </p>
+              </td></tr></tbody>
+</table></div>
 <p>
         The complete code is in the <code class="literal">examples/info/im</code> directory.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

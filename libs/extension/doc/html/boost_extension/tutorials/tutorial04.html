@@ -12,10 +12,10 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
-<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial04"></a> Tutorial 4</h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial04"></a><a href="tutorial04.html" title=" Tutorial 4"> Tutorial 4</a></h3></div></div></div>
 <p>
         In this tutorial we will see different features of the library related to
         multiple loading of the same library, instance or interface.
@@ -46,24 +46,23 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world!"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world!"</span><span class="special">;}</span>
 <span class="special">};</span>
 
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
+<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
 <span class="special">};</span>
 
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
+<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -79,25 +78,24 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world! v2"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world! v2"</span><span class="special">;}</span>
 <span class="special">};</span>
 
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
+<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"| v2 hello"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"| v2 hello"</span><span class="special">;}</span>
 <span class="special">};</span>
 
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
+<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
 <span class="special">{</span>
- <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">22</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>	
+ <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">22</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>	
  <span class="comment">// int could be used as version (v2 word 2)
-</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">21</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>	
+</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">21</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>	
  <span class="comment">// int could be used as version (v2 word 1)
 </span><span class="special">}</span>
 </pre>
@@ -111,19 +109,18 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
 
 <span class="comment">// load hello world first version
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLib.extension"</span><span class="special">,</span>
+</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLib.extension"</span><span class="special">,</span>
                      <span class="string">"extension_export_word"</span><span class="special">);</span>
 
 <span class="comment">// load hello world second version
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
+</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
                      <span class="string">"extension_export_word"</span><span class="special">);</span>
 
 <span class="comment">// load hello world second version again
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
+</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
                      <span class="string">"extension_export_word"</span><span class="special">);</span>
 </pre>
 <p>
@@ -138,32 +135,28 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">for</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_word</span> <span class="special">=</span>
-    <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">current_word</span> <span class="special">!=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-    <span class="special">++</span><span class="identifier">current_word</span><span class="special">)</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">word_ptr</span><span class="special">(</span><span class="identifier">current_word</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">word_ptr</span><span class="special">-&gt;</span><span class="identifier">get_val</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">for</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_word</span> <span class="special">=</span>
+    <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">current_word</span> <span class="special">!=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+    <span class="special">++</span><span class="identifier">current_word</span><span class="special">)</span> <span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">word_ptr</span><span class="special">(</span><span class="identifier">current_word</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">());</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">word_ptr</span><span class="special">-&gt;</span><span class="identifier">get_val</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
 <span class="special">}</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <p>
       </p>
 <p>
         We get the following output:
       </p>
-<div class="informaltable">
-<h4>
-<a name="id928153"></a>
-        </h4>
-<table class="table">
+<div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
-<code class="literal">words:</code><br> <code class="literal">hello world! | v2 hello
-              world! v2 | v2 hello world! v2</code>
-</td></tr></tbody>
-</table>
-</div>
+              <p>
+                <code class="literal">words:</code><br> <code class="literal">hello world! | v2 hello
+                world! v2 | v2 hello world! v2</code>
+              </p>
+              </td></tr></tbody>
+</table></div>
 <p>
         The first "hello world" is returned by the first version of the
         library, and the second and third returned by the second version.
@@ -179,12 +172,11 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">salute</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">salute</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">salute</span><span class="special">(){}</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">say</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">""</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">salute</span><span class="special">(){}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">say</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">""</span><span class="special">;}</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -195,25 +187,24 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
 <span class="special">};</span>
 
-<span class="keyword">class</span> <span class="identifier">bye</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
+<span class="keyword">class</span> <span class="identifier">bye</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"bye!"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"bye!"</span><span class="special">;}</span>
 <span class="special">};</span>
 
 
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_salute</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
+<span class="identifier">extension_export_salute</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">bye</span><span class="special">&gt;();</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">bye</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -233,36 +224,32 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">salute_factory_list</span> <span class="special">=</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;();</span>  
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">salute_factory_list</span> <span class="special">=</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;();</span>  
 
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"salutes: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-<span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_salute</span> <span class="special">=</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"salutes: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_salute</span> <span class="special">=</span>
      <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> 
-     <span class="identifier">current_salute</span> <span class="special">!=</span> <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-     <span class="special">++</span><span class="identifier">current_salute</span><span class="special">)</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="identifier">salute_ptr</span><span class="special">(</span><span class="identifier">current_salute</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">salute_ptr</span><span class="special">-&gt;</span><span class="identifier">say</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
+     <span class="identifier">current_salute</span> <span class="special">!=</span> <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+     <span class="special">++</span><span class="identifier">current_salute</span><span class="special">)</span> <span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="identifier">salute_ptr</span><span class="special">(</span><span class="identifier">current_salute</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">salute_ptr</span><span class="special">-&gt;</span><span class="identifier">say</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
 <span class="special">}</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <p>
       </p>
 <p>
         The output is:
       </p>
-<div class="informaltable">
-<h4>
-<a name="id929257"></a>
-        </h4>
-<table class="table">
+<div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
-<code class="literal">salutes:</code> <br> <code class="literal">hello bye!</code>
-</td></tr></tbody>
-</table>
-</div>
+              <p>
+                <code class="literal">salutes:</code> <br> <code class="literal">hello bye!</code>
+              </p>
+              </td></tr></tbody>
+</table></div>
 <p>
         In conclusion, with Boost.Extension we can implement the same class in different
         libraries, the same class for different interfaces and load multiple libraries
@@ -271,7 +258,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

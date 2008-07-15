@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template factory</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../header/boost/extension/factory/hpp.html" title="Header &lt;boost/extension/factory.hpp&gt;">
+<link rel="prev" href="../../header/boost/extension/factory/hpp.html" title="Header &lt;boost/extension/factory.hpp&gt;">
+<link rel="next" href="../../header/boost/extension/factory_map/hpp.html" title="Header &lt;boost/extension/factory_map.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../header/boost/extension/factory_map/hpp.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.extensions.factory"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template factory</span></h2>
+<p>boost::extensions::factory &#8212; </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Params...&gt; 
+<span class="bold"><strong>class</strong></span> <a href="factory.html" title="Class template factory">factory</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a href="factory.html#boost.extensions.factoryconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="factory.html#id288474-bb">factory</a>();
+  <a href="factory.html#id288478-bb">factory</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  factory&amp; <a href="factory.html#id288488-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
+
+  <span class="emphasis"><em>// <a href="factory.html#id93876-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="factory.html#id93878-bb">set</a>() ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="factory.html#id89970-bb">is_valid</a>() ;
+  <span class="type">T *</span> <a href="factory.html#id288450-bb">create</a>(Params...) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id450310"></a><h2>Description</h2>
+<p>This class is a function object that returns new instances of type T, using factories that take parameters described in the variable length list Params... </p>
+<div class="refsect2" lang="en">
+<a name="id450320"></a><h3>
+<a name="boost.extensions.factoryconstruct-copy-destruct"></a><code class="computeroutput">factory</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><a name="id288474-bb"></a>factory();</pre></li>
+<li><pre class="literallayout"><a name="id288478-bb"></a>factory(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
+<li><pre class="literallayout">factory&amp; <a name="id288488-bb"></a><span class="bold"><strong>operator</strong></span>=(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id450426"></a><h3>
+<a name="id93876-bb"></a><code class="computeroutput">factory</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id93878-bb"></a>set() ;</pre>
+<p>This sets the factory function to the constructor for type D. Example: factory&lt;Base, int, int&gt; f; f.set&lt;Derived&gt;(); </p>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id89970-bb"></a>is_valid() ;</pre>
+<p>Until set is called, a factory cannot be used. This function can be used to determine if set has been called. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>True if the factory is initialized (ie, set has been called). </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">T *</span> <a name="id288450-bb"></a>create(Params...) ;</pre>
+<p>Returns an instance of T (but does NOT retain ownership of the instance). 
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>is_valid() == true. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>An instance of T. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../header/boost/extension/factory_map/hpp.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

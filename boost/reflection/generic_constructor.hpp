@@ -16,7 +16,7 @@ template <class T>
 class generic_constructor {
 public:
   virtual ~generic_constructor() {}
-  virtual T * create(void ** params) = 0;
+  virtual T * create(void ** params) const = 0;
 };
 }  // namespace reflections
 }  // namespace boost

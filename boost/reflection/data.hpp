@@ -35,10 +35,10 @@ public:
     : data_ptr_(data_ptr),
       conversion_function_(conversion_function) {
   }
-  T& operator()(instance & inst) {
+  T& operator()(instance & inst) const {
     return (*conversion_function_)(inst.val_, data_ptr_);
   }
-  bool valid() {
+  bool valid() const {
     return conversion_function_ != 0 && data_ptr_ != 0;
   }
 private:

@@ -82,14 +82,15 @@ BOOST_AUTO_TEST_CASE(map_argless)
     (m["An unloaded car!"].create(30, 1.5f),
      (Automobile*)0);
 }
-
-namespace boost { namespace extensions {
+/*
+namespace boost { namespace extensions { namespace impl {
 template <>
 Automobile * create_function<Automobile, Racecar>::create()
 {
   return new Racecar(25, 2.0f);
 }
-}} // namespace boost::extensions
+}}} // namespace boost::extensions::impl
+*/
 
 BOOST_AUTO_TEST_CASE(factory_template)
 {

@@ -12,10 +12,10 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
-<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
 <td align="center"><a href="../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_extension.factories"></a> Factories</h2></div></div></div>
+<a name="boost_extension.factories"></a><a href="factories.html" title=" Factories"> Factories</a></h2></div></div></div>
 <p>
       In normal usage, a <code class="computeroutput"><span class="identifier">factory</span></code>
       is initialized in a shared library, then returned to an application with a
@@ -35,7 +35,8 @@
       A factory has the following template options:
     </p>
 <p>
-      <code class="computeroutput"><span class="identifier">factory</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">ARGS</span><span class="special">&gt;</span></code>
+      <code class="computeroutput"><span class="identifier">factory</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span>
+      <span class="identifier">ARGS</span><span class="special">&gt;</span></code>
     </p>
 <p>
       Where <code class="computeroutput"><span class="identifier">T</span></code> is the interface that
@@ -49,8 +50,8 @@
       are:
     </p>
 <a name="boost_extension.factories.void_set_lt_d_gt___"></a><h3>
-<a name="id934421"></a>
-      void set&lt;D&gt;()
+<a name="id448963"></a>
+      <a href="factories.html#boost_extension.factories.void_set_lt_d_gt___">void set&lt;D&gt;()</a>
     </h3>
 <p>
       The <code class="computeroutput"><span class="identifier">set</span></code> function takes a template
@@ -59,8 +60,8 @@
       This function may be called multiple times, to change the factory function.
     </p>
 <a name="boost_extension.factories.bool_is_valid__"></a><h3>
-<a name="id934462"></a>
-      bool is_valid()
+<a name="id449012"></a>
+      <a href="factories.html#boost_extension.factories.bool_is_valid__">bool is_valid()</a>
     </h3>
 <p>
       If set has been called, this returns true. Otherwise, it returns false.
@@ -68,7 +69,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

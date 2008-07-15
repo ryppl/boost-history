@@ -12,10 +12,10 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
-<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial03"></a> Tutorial 3</h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial03"></a><a href="tutorial03.html" title=" Tutorial 3"> Tutorial 3</a></h3></div></div></div>
 <p>
         This tutorial shows how to register and instantiate classes that have multi-argument
         constructors (not default constructors) in Boost.Extension. In the example
@@ -46,26 +46,25 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">six_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lots_of_parameters_interface</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">six_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lots_of_parameters_interface</span>
 <span class="special">{</span>
   <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span>
-                   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> 
-                   <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">ptr_a</span><span class="special">)</span>
+    <span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span>
+                   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> 
+                   <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">ptr_a</span><span class="special">)</span>
     <span class="special">{</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Constructor called."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Parameters:"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tbool: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tunsigned int: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tchar: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">c</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tstring: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tA.i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tptr_a-&gt;i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">ptr_a</span><span class="special">-&gt;</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Constructor called."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Parameters:"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tbool: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tunsigned int: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tchar: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">c</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tstring: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tA.i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tptr_a-&gt;i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">ptr_a</span><span class="special">-&gt;</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span>
 
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -75,22 +74,21 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">A</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">A</span>
 <span class="special">{</span>
   <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">A</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{}</span>
-    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">A</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
 <span class="special">};</span>
 
 
-<span class="keyword">class</span> <span class="identifier">lots_of_parameters_interface</span>
+<span class="keyword">class</span> <span class="identifier">lots_of_parameters_interface</span>
 <span class="special">{</span>
   <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> 
-                                 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span> 
-                                 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> <span class="special">{}</span>
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> 
+                                 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span> 
+                                 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -102,13 +100,12 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
+<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
+<span class="identifier">extension_export</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> 
-         <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> 
-         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;()[</span><span class="number">6</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">six_parameters</span><span class="special">&gt;();</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> 
+         <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> 
+         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;()[</span><span class="number">6</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">six_parameters</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -117,36 +114,35 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
 <span class="special">{</span>
-  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
 
   <span class="comment">//  Create the factory_map object - it will hold all of the available
-</span> <span class="comment">//  constructors. Multiple factory_maps can be constructed.
-</span> <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
+</span>  <span class="comment">//  constructors. Multiple factory_maps can be constructed.
+</span>  <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
 
   <span class="comment">// load the shared library with 
-</span> <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libParametersLib.extension"</span><span class="special">,</span> <span class="string">"extension_export"</span><span class="special">);</span>
+</span>  <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libParametersLib.extension"</span><span class="special">,</span> <span class="string">"extension_export"</span><span class="special">);</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
-                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span>
-                        <span class="identifier">factory_list</span> <span class="special">=</span> 
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> 
-         <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
-  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">!=</span> <span class="number">1</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the class was not found."</span><span class="special">;</span>
-    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
+                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span>
+                        <span class="identifier">factory_list</span> <span class="special">=</span> 
+	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> 
+         <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span>  <span class="special">&gt;();</span>
+  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">!=</span> <span class="number">1</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the class was not found."</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
   <span class="special">}</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
-                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
-                        <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">par</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
+                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
+                        <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">par</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">&gt;</span>
-    <span class="identifier">par_ptr</span><span class="special">(</span><span class="identifier">par</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">true</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="char">'c'</span><span class="special">,</span> <span class="string">"test"</span><span class="special">,</span> <span class="identifier">A</span><span class="special">(</span><span class="number">2</span><span class="special">),</span>
-                        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">A</span><span class="special">(</span><span class="number">15</span><span class="special">))));</span>
+    <span class="identifier">par_ptr</span><span class="special">(</span><span class="identifier">par</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">true</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="char">'c'</span><span class="special">,</span> <span class="string">"test"</span><span class="special">,</span> <span class="identifier">A</span><span class="special">(</span><span class="number">2</span><span class="special">),</span>
+                        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">A</span><span class="special">(</span><span class="number">15</span><span class="special">))));</span>
 
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -177,7 +173,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

@@ -12,6 +12,15 @@
 
 #ifndef BOOST_EXTENSION_EXTENSION_HPP
 #define BOOST_EXTENSION_EXTENSION_HPP
-
+#ifdef BOOST_EXTENSION_DOXYGEN_INVOKED
+/** Macro to place in a function definition to cause it
+  * to be exported, if necessary on the given platform and
+  * with the current compiler settings. This is always required
+  * for MSVC and other compilers, but only required depending on
+  * compiler settings for GCC and other compilers.
+  */
+#define BOOST_EXTENSION_EXPORT_DECL
+#else
 #include <boost/extension/impl/decl.hpp>
-#endif
+#endif  // BOOST_EXTENSION_EXPORT_DECL
+#endif  // BOOST_EXTENSION_EXTENSION_HPP

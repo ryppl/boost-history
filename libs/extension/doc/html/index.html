@@ -5,26 +5,26 @@
 <link rel="stylesheet" href="boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="index.html" title="Chapter 1. Boost.Extension">
-<link rel="next" href="boost_extension/introduction.html" title=" Introduction">
+<link rel="next" href="boost_extension/tutorials.html" title="Tutorials">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
-<td align="center"><a href="../../index.htm">Home</a></td>
+<td align="center"><a href="../../index.html">Home</a></td>
 <td align="center"><a href="libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_extension/introduction.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_extension/tutorials.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
 <div class="chapter" lang="en">
 <div class="titlepage"><div>
 <div><h2 class="title">
 <a name="boost_extension"></a>Chapter 1. Boost.Extension</h2></div>
-<div><p class="copyright">Copyright © 2007 Jeremy Pack, Mariano G. Consoni</p></div>
+<div><p class="copyright">Copyright © 2008 Jeremy Pack, Mariano G. Consoni</p></div>
 <div><div class="legalnotice">
-<a name="id903160"></a><p>
+<a name="id435092"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -33,10 +33,10 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="boost_extension/introduction.html"> Introduction</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_extension.introduction"> Introduction</a></span></dt>
 <dt><span class="section"><a href="boost_extension/tutorials.html">Tutorials</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_extension/tutorials/tutorial01.html"> Tutorial 1</a></span></dt>
+<dt><span class="section"><a href="boost_extension/tutorials.html#boost_extension.tutorials.tutorial01"> Tutorial 1</a></span></dt>
 <dt><span class="section"><a href="boost_extension/tutorials/tutorial02.html"> Tutorial 2</a></span></dt>
 <dt><span class="section"><a href="boost_extension/tutorials/tutorial03.html"> Tutorial 3</a></span></dt>
 <dt><span class="section"><a href="boost_extension/tutorials/tutorial04.html"> Tutorial 4</a></span></dt>
@@ -44,15 +44,63 @@
 </dl></dd>
 <dt><span class="section"><a href="boost_extension/factories.html"> Factories</a></span></dt>
 <dt><span class="section"><a href="boost_extension/shared_libraries.html"> Shared Libraries</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.common.hpp">Header &lt;boost/extension/common.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/convenience/hpp.html">Header &lt;boost/extension/convenience.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/extension/hpp.html">Header &lt;boost/extension/extension.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/factory/hpp.html">Header &lt;boost/extension/factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/factory_map/hpp.html">Header &lt;boost/extension/factory_map.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/filesystem/hpp.html">Header &lt;boost/extension/filesystem.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/functor/hpp.html">Header &lt;boost/extension/functor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header/boost/extension/shared_library/hpp.html">Header &lt;boost/extension/shared_library.hpp&gt;</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="boost_extension/info.html"> Info Classes</a></span></dt>
 <dt><span class="section"><a href="boost_extension/performance_analysis.html"> Performance Analysis</a></span></dt>
+<dt><span class="section"><a href="boost_extension/faq.html"> FAQ</a></span></dt>
 <dt><span class="section"><a href="boost_extension/appendices.html"> Appendices</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_extension/appendices/appendix_a.html"> Appendix A - Windows Export and Import Declarations</a></span></dt>
-<dt><span class="section"><a href="boost_extension/appendices/appendix_b.html"> Appendix B - Optional Dependencies</a></span></dt>
-<dt><span class="section"><a href="boost_extension/appendices/appendix_c.html"> Appendix C - OS X Shared Libraries</a></span></dt>
+<dt><span class="section"><a href="boost_extension/appendices.html#boost_extension.appendices.appendix_a"> Appendix A -
+      Windows Export and Import Declarations</a></span></dt>
+<dt><span class="section"><a href="boost_extension/appendices/appendix_b.html"> Appendix B -
+      Optional Dependencies</a></span></dt>
 </dl></dd>
 </dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_extension.introduction"></a><a href="index.html#boost_extension.introduction" title=" Introduction"> Introduction</a></h2></div></div></div>
+<p>
+      The Boost.Extension library has been developed to ease the development of plugins
+      and similar extensions to software. Classes can be made available from shared
+      libraries and loaded by the application.
+    </p>
+<p>
+      Among others, the library has the following features:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Multiple and virtual inheritance are supported
+      </li>
+<li>
+        Library users do not need to use any macros (besides those required by Windows
+        for exported functions)
+      </li>
+<li>
+        Only one external function required per shared library to export classes
+      </li>
+<li>
+        RTTI is used by default, but it is possible to use user-defined type identification
+      </li>
+<li>
+        Classes do not need to be modified to be loadable
+      </li>
+</ul></div>
+<p>
+      This library is currently in development in preparation for a review for inclusion
+      in the Boost C++ Libraries. For ongoing status updates, check <a href="http://boost-extension.blogspot.com/" target="_top">C++
+      Plugins and Reflection</a>.
+    </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -60,6 +108,6 @@
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_extension/introduction.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_extension/tutorials.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
 </body>
 </html>

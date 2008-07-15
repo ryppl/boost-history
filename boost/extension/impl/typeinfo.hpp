@@ -16,8 +16,7 @@
 #include <typeinfo>
 namespace boost { namespace extensions {
 template <class TypeInfo, class ClassType>
-struct type_info_handler
-{
+struct type_info_handler {
   static TypeInfo get_class_type();
 };
 
@@ -30,7 +29,7 @@ public:
 template <class ClassType>
 struct type_info_handler<default_type_info, ClassType>
 {
-  static default_type_info get_class_type(){
+  static default_type_info get_class_type() {
     return default_type_info(typeid(ClassType));
   }
 };

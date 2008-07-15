@@ -16,7 +16,7 @@
 template <class ParamFirst BOOST_PP_COMMA_IF(N)
           BOOST_PP_ENUM_PARAMS(N, class Param)>
 instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
-                     BOOST_PP_ENUM_PARAMS(N, Param)> get_constructor() {
+                     BOOST_PP_ENUM_PARAMS(N, Param)> get_constructor() const {
   // Create a constructor_info structure to use for looking up
   // a constructor in the constructor map. Initialize it with the
   // function type requested.
@@ -26,7 +26,7 @@ instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
                             ::get_class_type());
 
   // Determine whether or not such a constructor exists.
-  typename std::map<constructor_info, impl::FunctionPtr>::iterator it =
+  typename std::map<constructor_info, impl::FunctionPtr>::const_iterator it =
     constructors_.find(ctr_info);
 
   if (it == constructors_.end()) {
@@ -45,7 +45,7 @@ instance_constructor<ParamFirst  BOOST_PP_COMMA_IF(N)
 template <class ReturnValue BOOST_PP_COMMA_IF(N)
           BOOST_PP_ENUM_PARAMS(N, class Param)>
 function<ReturnValue BOOST_PP_COMMA_IF(N)
-         BOOST_PP_ENUM_PARAMS(N, Param)> get_function(Info info) {
+         BOOST_PP_ENUM_PARAMS(N, Param)> get_function(Info info) const {
   // Construct a function_info structure to look up the function in the map.
   // has_return is set to true here because it makes no difference when doing
   // a lookup in the map.
@@ -55,7 +55,7 @@ function<ReturnValue BOOST_PP_COMMA_IF(N)
 
   // Look up the function.
   typename std::map<function_info,
-    std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> >::iterator it =
+    std::pair<impl::MemberFunctionPtr, impl::FunctionPtr> >::const_iterator it =
     functions_.find(func_info);
 
   if (it == functions_.end()) {

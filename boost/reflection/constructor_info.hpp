@@ -37,7 +37,7 @@ struct basic_constructor_info<TypeInfo> {
     : type_info_(s.type_info_) {
   }
 
-  basic_constructor_info & operator=(basic_constructor_info & s) {
+  basic_constructor_info& operator=(basic_constructor_info & s) {
     type_info_ = s.type_info_;
   }
 

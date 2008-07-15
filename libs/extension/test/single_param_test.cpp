@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(map_argless)
     (m["An unloaded car!"].create(30),
      (Automobile*)0);
 }
-
+/*
 namespace boost { namespace extensions {
 template <>
 Automobile * create_function<Automobile, Racecar>::create()
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(factory_template)
   BOOST_CHECK(f.is_valid());
   std::auto_ptr<Automobile> racecar(f.create(60));
   BOOST_CHECK_EQUAL(racecar->getSpeed(), 180);
-}
+}*/
 
 BOOST_AUTO_TEST_CASE(factory_map_single_param)
 {

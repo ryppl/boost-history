@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Function load_single_library</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../header/boost/extension/convenience/hpp.html" title="Header &lt;boost/extension/convenience.hpp&gt;">
+<link rel="prev" href="../../header/boost/extension/convenience/hpp.html" title="Header &lt;boost/extension/convenience.hpp&gt;">
+<link rel="next" href="../../header/boost/extension/extension/hpp.html" title="Header &lt;boost/extension/extension.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../header/boost/extension/convenience/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/convenience/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../header/boost/extension/extension/hpp.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.extensions.load_single_library"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Function load_single_library</span></h2>
+<p>boost::extensions::load_single_library &#8212; Load factories from the given library and function. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
+<span class="type"><span class="bold"><strong>bool</strong></span></span> load_single_library(<a href="factory_map.html" title="Type definition factory_map">factory_map</a> &amp; current_factory_map, 
+                         <span class="bold"><strong>const</strong></span> std::string &amp; library_path, 
+                         <span class="bold"><strong>const</strong></span> std::string &amp; external_function_name);</pre></div>
+<div class="refsect1" lang="en">
+<a name="id449893"></a><h2>Description</h2>
+<p>Add any exported factories from the given library with the given function name. This uses shared_library::get internally. The function must have the signature void (factory_map&amp;). For more general loading of shared libraries, use the shared_library class directly. If the function is not found, false is returned.</p>
+<p>
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">current_factory_map</code></span></td>
+<td><p>The factory map to load classes into. It is not required to be empty. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">external_function_name</code></span></td>
+<td><p>The name of an exported function in the library with the signature void (factory_map&amp;). </p></td>
+</tr>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">library_path</code></span></td>
+<td><p>The relative or absolute path to the library to load. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>True on success. </p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../header/boost/extension/convenience/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/convenience/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../header/boost/extension/extension/hpp.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

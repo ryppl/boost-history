@@ -1,0 +1,219 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class shared_library</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../header/boost/extension/shared_library/hpp.html" title="Header &lt;boost/extension/shared_library.hpp&gt;">
+<link rel="prev" href="../../header/boost/extension/shared_library/hpp.html" title="Header &lt;boost/extension/shared_library.hpp&gt;">
+<link rel="next" href="../../boost_extension/info.html" title=" Info Classes">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../header/boost/extension/shared_library/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/shared_library/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../boost_extension/info.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.extensions.shared_library"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class shared_library</span></h2>
+<p>boost::extensions::shared_library &#8212; A wrapper around OS-specific shared library functions. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
+<span class="bold"><strong>class</strong></span> <a href="shared_library.html" title="Class shared_library">shared_library</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a href="shared_library.html#boost.extensions.shared_libraryconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="shared_library.html#id288778-bb">shared_library</a>(<span class="bold"><strong>const</strong></span> std::string &amp;, <span class="bold"><strong>bool</strong></span> = false);
+  <a href="shared_library.html#id288771-bb">~shared_library</a>();
+
+  <span class="emphasis"><em>// <a href="shared_library.html#id288656-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id288658-bb">is_open</a>() ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id288677-bb">open</a>() ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id288700-bb">close</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> RetValue, <span class="bold"><strong>typename</strong></span> Params...&gt; 
+    <span class="type">FunctionPtr&lt; ReturnValue(Params...)&gt;</span> <a href="shared_library.html#id288725-bb">get</a>(<span class="bold"><strong>const</strong></span> std::string &amp;) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id451490"></a><h2>Description</h2>
+<p>This class is inherently not type-safe. Carefully check the signature of the function or type in the shared library against the template arguments of the get functions. </p>
+<p>
+</p>
+<div class="refsect2" lang="en">
+<a name="id451502"></a><h3>
+<a name="boost.extensions.shared_libraryconstruct-copy-destruct"></a><code class="computeroutput">shared_library</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id288778-bb"></a>shared_library(<span class="bold"><strong>const</strong></span> std::string &amp; location, <span class="bold"><strong>bool</strong></span> auto_close = false);</pre>
+<p>shared_library constructor 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">auto_close</code></span></td>
+<td><p>An optional parameter which defaults to false. If set to true, the destructor will close this shared library if necessary. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">location</code></span></td>
+<td><p>The relative or absolute path of the shared library. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><a name="id288771-bb"></a>~shared_library();</pre>
+<p>shared_library destructor If auto_close_ was set to true in the constructor, this closes the library if it is currently open. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id451617"></a><h3>
+<a name="id288656-bb"></a><code class="computeroutput">shared_library</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id288658-bb"></a>is_open() ;</pre>
+<p>
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>true if the shared library is currently open and referenced by this object. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id288677-bb"></a>open() ;</pre>
+<p>
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>If true is returned, the shared library is opened and get() can be called. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>true if the shared library was opened successfully. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id288700-bb"></a>close() ;</pre>
+<p>
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>is_open() == true. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>is_open() == false. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>true if the close function was successful. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> RetValue, <span class="bold"><strong>typename</strong></span> Params...&gt; 
+  <span class="type">FunctionPtr&lt; ReturnValue(Params...)&gt;</span> <a name="id288725-bb"></a>get(<span class="bold"><strong>const</strong></span> std::string &amp; name) ;</pre>
+<p>A templated function taking as template arguments the type of the return value and parameters of a function to look up in the shared library.</p>
+<p>This function must have been declared with the same parameters and return type and marked as extern "C".</p>
+<p>Depending on platform and compiler settings, it may also be necessary to prefix the function with BOOST_EXTENSION_DECL, to make it externally visible.</p>
+<p>If the function signature does not match, strange errors can occur. </p>
+<p>
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>is_open() == true. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../header/boost/extension/shared_library/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/shared_library/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../boost_extension/info.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

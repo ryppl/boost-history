@@ -36,17 +36,17 @@ public:
       delete it->second;
     }
   }
-  virtual TypeInfo type() = 0;
+  virtual TypeInfo type() const = 0;
   template <class T>
-  bool can_cast() {
+  bool can_cast() const {
     TypeInfo i = type_info_handler<TypeInfo, T>::get_class_type();
     return (converters_.find(i) != converters_.end());
   }
   template <class S>
-  S cast() {
+  S cast() const {
     S dest;
     TypeInfo i = type_info_handler<TypeInfo, S>::get_class_type();
-    typename std::map<TypeInfo, basic_converter*>::iterator it =
+    typename std::map<TypeInfo, basic_converter*>::const_iterator it =
       converters_.find(i);
     if (it != converters_.end()) {
       it->second->convert(value_, reinterpret_cast<void*>(&dest));
@@ -63,7 +63,7 @@ protected:
   }
   class basic_converter {
   public:
-    virtual void convert(void* src, void* dest) = 0;
+    virtual void convert(void* src, void* dest) const = 0;
     virtual ~basic_converter() {}
   };
   std::map<TypeInfo, basic_converter*> converters_;
@@ -77,7 +77,7 @@ public:
   template <class A, class B>
   friend class basic_parameter_map;
 
-  virtual TypeInfo type() {
+  virtual TypeInfo type() const {
     return reflections::type_info_handler<TypeInfo, T>::get_class_type();
   }
   explicit parameter(T value)
@@ -109,7 +109,7 @@ private:
   class default_converter :
     public generic_parameter<TypeInfo>::basic_converter {
   public:
-    virtual void convert(void* val, void* dest) {
+    virtual void convert(void* val, void* dest) const {
       S* s = reinterpret_cast<S*>(dest);
       *s = static_cast<S>(*reinterpret_cast<T*>(val));
     }
@@ -121,7 +121,7 @@ private:
     explicit specialized_converter(void (*convert_function)(T*, S*))
       : convert_function_(convert_function) {
     }
-    virtual void convert(void* val, void* dest) {
+    virtual void convert(void* val, void* dest) const {
       S* s = reinterpret_cast<S*>(dest);
       (*convert_function_)(reinterpret_cast<T*>(val), s);
     }

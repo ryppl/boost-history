@@ -25,33 +25,36 @@
 #include <iostream>cd
 #include <boost/function.hpp>
 
+using namespace boost::reflections;
+using namespace boost::extensions;
+
 BOOST_AUTO_TEST_CASE(shared_library_basic_test) {
-  std::map<std::string, boost::reflections::reflection> reflection_map;
-  boost::extensions::shared_library lib
+  std::map<std::string, reflection> reflection_map;
+  shared_library lib
     ("libcar_lib.extension");
   BOOST_CHECK(lib.open());
-  lib.get<void, std::map<std::string, boost::reflections::reflection>&>
+  lib.get<void, std::map<std::string, reflection>&>
     ("extension_export_car")(reflection_map);
   BOOST_CHECK_EQUAL(reflection_map.size(), size_t(2));
   // Let's create the reflection and add the methods
-  boost::reflections::reflection & first_reflection =
+  reflection & first_reflection =
     reflection_map["suv"];
-  boost::reflections::reflection & second_reflection =
+  reflection & second_reflection =
     reflection_map["compact"];
 
-  boost::reflections::instance_constructor<const char *> first_constructor =
+  instance_constructor<const char *> first_constructor =
     first_reflection.get_constructor<const char *>();
-  boost::reflections::instance first_instance = 
+  instance first_instance = 
     first_constructor("First Instance");
-  boost::reflections::function<const char *> first_function =
+  function<const char *> first_function =
     first_reflection.get_function<const char *>("get_type");
   BOOST_CHECK_EQUAL(first_function(first_instance), "It's an SUV.");
 
-  boost::reflections::instance_constructor<const char *> second_constructor =
+  instance_constructor<const char *> second_constructor =
     second_reflection.get_constructor<const char *>();
-  boost::reflections::instance second_instance = 
+  instance second_instance = 
     second_constructor("Second Instance");
-  boost::reflections::function<const char *> second_function =
+  function<const char *> second_function =
     second_reflection.get_function<const char *>("get_type");
   BOOST_CHECK_EQUAL(second_function(second_instance), "It's a compact.");
 }

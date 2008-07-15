@@ -12,12 +12,13 @@
 
 #include <string>
 
+#include <iostream>
 #include <boost/extension/factory_map.hpp>
 #include <boost/extension/shared_library.hpp>
 #include <boost/extension/convenience.hpp>
 #include <boost/reflection/reflection.hpp>
 #include <boost/reflection/reflection.hpp>
-#include <iostream>
+#include <boost/function.hpp>
 
 
 int main(void)
@@ -42,9 +43,8 @@ int main(void)
   }
   // Call an exported function to populate
   // reflection_map
-  lib.get<void, std::map<std::string, 
-    reflection> &>
-    ("extension_export_car")(reflection_map);
+  lib.get<void, std::map<std::string, reflection> &>
+              ("extension_export_car")(reflection_map);
   if (reflection_map.size() != size_t(2) ||
       reflection_map.find("suv") == reflection_map.end() ||
       reflection_map.find("compact") == reflection_map.end()) {

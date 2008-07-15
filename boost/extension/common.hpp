@@ -19,6 +19,10 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/concept_check.hpp>
+/** This determines the maximum number of parameters that a constructor
+  * or exported shared library function can have. 10 is the same default
+  * as Boost.Function.
+  */
 #ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
 #define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 10
 #endif

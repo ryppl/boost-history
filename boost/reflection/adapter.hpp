@@ -45,11 +45,28 @@ public:
   template <class D>
   std::vector<generic_parameter<TypeInfo>*> get(Info info) {
     std::vector<generic_parameter<TypeInfo>*> parameters;
-    std::pair<typename map_type::iterator, typename map_type::iterator> its
+    std::pair<typename map_type::iterator,
+              typename map_type::iterator> its
       = equal_range(info);
     for (typename map_type::iterator current = its->first;
          current != its->second; ++current) {
       generic_parameter<TypeInfo>& p = *current->second;
+      if (p.template can_cast<D>()) {
+        parameters.push_back(current->second);
+      }
+    }
+    return parameters;
+  }
+
+  template <class D>
+  std::vector<const generic_parameter<TypeInfo>*> get(Info info) const {
+    std::vector<generic_parameter<TypeInfo>*> parameters;
+    std::pair<typename map_type::const_iterator,
+              typename map_type::const_iterator> its
+      = equal_range(info);
+    for (typename map_type::const_iterator current = its->first;
+         current != its->second; ++current) {
+      const generic_parameter<TypeInfo>& p = *current->second;
       if (p.template can_cast<D>()) {
         parameters.push_back(current->second);
       }

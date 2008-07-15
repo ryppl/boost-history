@@ -95,10 +95,10 @@ typedef void ParameterInfo;
     BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
 #define BOOST_PP_FILENAME_1 <boost/reflection/impl/reflection_functions.hpp>
 #include BOOST_PP_ITERATE()
-  instance_constructor<> get_constructor() {
+  instance_constructor<> get_constructor() const {
     constructor_info t(reflections::type_info_handler<TypeInfo,
     instance (*)()>::get_class_type());
-    typename std::map<constructor_info, impl::FunctionPtr>::iterator it =
+    typename std::map<constructor_info, impl::FunctionPtr>::const_iterator it =
       constructors_.find(t);
     if (it == constructors_.end()) {
       return instance_constructor<>();
@@ -108,14 +108,14 @@ typedef void ParameterInfo;
   }
 
   template <class Data>
-  data<Data> get_data(Info info) {
+  data<Data> get_data(Info info) const {
     // Construct a data_info structure to look up the function in the map.
     data_info d(reflections::type_info_handler<TypeInfo, Data>
                             ::get_class_type(), info);
   
     // Look up the function.
     typename std::map<data_info,
-      std::pair<impl::MemberPtr, impl::FunctionPtr> >::iterator it =
+      std::pair<impl::MemberPtr, impl::FunctionPtr> >::const_iterator it =
       data_.find(d);
   
     if (it == data_.end()) {

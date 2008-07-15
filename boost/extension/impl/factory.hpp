@@ -11,7 +11,7 @@
 // No header guard - this file is intended to be included multiple times.
 
 # define N BOOST_PP_ITERATION()
-
+namespace impl {
 template <
   class T,
   class D
@@ -21,14 +21,12 @@ struct create_function<
   T,
   D
   BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param)
->
-{
-  static T * create(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p) )
-  {
+> {
+  static T * create(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p) ) {
     return new D(BOOST_PP_ENUM_PARAMS(N, p));
   }
 };
-
+}  // namespace impl
 
 
 template <class T BOOST_PP_COMMA_IF(N)  BOOST_PP_ENUM_PARAMS(N, class Param) >
@@ -37,9 +35,8 @@ class factory<T BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param) >
 public:
 
   template <class D>
-  void set()
-  {
-    this->func = &create_function<
+  void set() {
+    this->func = &impl::create_function<
         T, D BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N,Param)
       >::create;
   }
@@ -48,31 +45,25 @@ public:
 
   factory(factory<T> const& first) : func(first.func) {}
 
-  factory& operator=(factory<T> const& first)
-  {
+  factory& operator=(factory<T> const& first) {
     this->func = first->func;
     return *this;
   }
 
-  bool is_valid() { return this->func != 0; }
+  bool is_valid() const { return this->func != 0; }
 
-  T* create(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p))
-  {
-    if (this->func)
-    {
+  T* create(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) const {
+    if (this->func) {
       return this->func(BOOST_PP_ENUM_PARAMS(N, p));
     }
-    else
-    {
+    else {
       return 0;
     }
   }
 
 private:
-
   typedef T* (*func_ptr_type)(BOOST_PP_ENUM_PARAMS(N, Param));
   func_ptr_type func;
-
 };
 
 #undef N
