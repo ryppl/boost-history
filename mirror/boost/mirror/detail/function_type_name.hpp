@@ -36,26 +36,26 @@ struct function_type_name_base : argument_type_list_builder
 {
 public:
 	template <bool FullName>
-	inline static bstring build_name(
+	inline static cts::bstring build_name(
 		mpl::bool_<FullName> full_or_base,
-		bstring& left, 
-		bstring& right,
-		bstring& ex,
-		bstring& arg
+		cts::bstring& left, 
+		cts::bstring& right,
+		cts::bstring& ex,
+		cts::bstring& arg
 	)
 	{
-		static bstring space(BOOST_STR_LIT(" "));
-		static bstring l_par(BOOST_STR_LIT("("));
-		static bstring r_par(BOOST_STR_LIT(")"));
+		static cts::bstring space(BOOST_CTS_LIT(" "));
+		static cts::bstring l_par(BOOST_CTS_LIT("("));
+		static cts::bstring r_par(BOOST_CTS_LIT(")"));
 	//
 		// the return value type
 		typedef BOOST_MIRRORED_TYPE(RetValType) meta_RV;
 		//
-		bstring rv_left;
-		bstring rv_right;
-		bstring rv_ex;
-		bstring rv_arg;
-		bstring rv_t(meta_RV::build_name(
+		cts::bstring rv_left;
+		cts::bstring rv_right;
+		cts::bstring rv_ex;
+		cts::bstring rv_arg;
+		cts::bstring rv_t(meta_RV::build_name(
 			full_or_base,
 			rv_left,
 			rv_right,
@@ -81,7 +81,7 @@ public:
 		arg.append(r_par);
 		// the rest of the ret val type
 		arg.append(rv_arg);
-		return bstring();
+		return cts::bstring();
 	}
 };
 

@@ -11,7 +11,7 @@
 			<purpose>
 				<para>The purpose of this class template is to provide meta-data
 				about the reflected type, especially to allow to get the 
-				base and full type name, of the reflected type and to 
+				base and full type name of the reflected type and to 
 				get information about the scope inside of which this type
 				has been declared.
 				</para>
@@ -26,7 +26,7 @@
 			</purpose>
 			<description>
 				<para>The specializations of <code><classname>meta_type</classname></code> can 
-				be used to get meta-information about the reflected types at both compile-time and run-time.
+				be used to get meta-information about the reflected types, some at compile-time and some at run-time.
 				The following examples show type reflection and basic 
 				<code><classname>meta_type</classname></code> usage. Mirror works with the native C++ types
 				and some of the very common types like <code>::std::string</code>, etc. out of the box.
@@ -74,7 +74,7 @@
 				</description>
 			</typedef>
 			<method name="base_name">
-				<type>const <classname>bstring</classname>&amp;</type>
+				<type>const <classname>cts::bstring</classname>&amp;</type>
 				<purpose>
 					<para>This static member function returns the base name of the 
 					type reflected by <code><classname>meta_type</classname></code>
@@ -100,7 +100,7 @@
 				</notes>
 			</method>
 			<method name="full_name">
-				<type>const <classname>bstring</classname>&amp;</type>
+				<type>const <classname>cts::bstring</classname>&amp;</type>
 				<purpose>
 					<para>This static member function returns the full name of the 
 					type reflected by <code><classname>meta_type</classname></code>
@@ -131,7 +131,7 @@
 						<type>bool</type>
 					</template-nontype-parameter>
 				</template>
-				<type>const <classname>bstring</classname>&amp;</type>
+				<type>const <classname>cts::bstring</classname>&amp;</type>
 				<parameter name="full">
 					<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
 				</parameter>
@@ -143,12 +143,12 @@
 					<code><classname>meta_type</classname></code>,
 					depending on the value of the template argument <code>FullName</code>.
 					For example:
-					<programlisting><macroname>meta_type</macroname>(::std::string) :: get_name(::boost::mpl::false_())</programlisting> or 
+					<programlisting><macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string) :: get_name(::boost::mpl::false_())</programlisting> or 
 					<programlisting><classname>meta_type</classname> &lt; ::std::string &gt; :: get_name(::boost::mpl::false_())</programlisting> 
 					is equivalent to calling the 
 					<code><methodname>base_name</methodname></code> member function and 
 					returns simply <code>"string"</code> and
-					<programlisting><macroname>meta_type</macroname>(::std::string) :: get_name(::boost::mpl::true_())</programlisting> or 
+					<programlisting><macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string) :: get_name(::boost::mpl::true_())</programlisting> or 
 					<programlisting><classname>meta_type</classname> &lt; ::std::string &gt; :: get_name( ::boost::mpl::true_())</programlisting> is equivalent to calling the 
 					<code><methodname>full_name</methodname></code> method which 
 					returns <code>"::std::string"</code>.

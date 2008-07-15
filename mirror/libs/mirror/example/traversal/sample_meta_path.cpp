@@ -171,6 +171,8 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
+	cts::bostream& bcout = cts::bcout();
+	//
 	using namespace ::Test;
 	//
 	typedef BOOST_MIRRORED_CLASS(H) meta_H;

@@ -2,8 +2,7 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_type.usage01">
-
-#include &lt;iostream&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
 #include &lt;boost/mirror/meta_type.hpp&gt;
 #include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
 
@@ -24,7 +23,10 @@ int main(void)
 	typedef BOOST_MIRRORED_TYPE(T) meta_T;
 
 	// print out the full type name
-	wcout &lt;&lt; "The full type name is: "&lt;&lt; meta_T::full_name() &lt;&lt; endl;
+	cts::bcout() &lt;&lt; 
+		BOOST_CTS_LIT("The full type name is: ") &lt;&lt; 
+		meta_T::full_name() &lt;&lt; 
+	endl;
 
 	return 0;
 }

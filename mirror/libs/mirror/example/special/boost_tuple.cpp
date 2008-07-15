@@ -41,7 +41,7 @@ public:
                         using namespace ::std;
                         using namespace ::boost;
                         using namespace ::boost::mirror;
-                        bcout <<
+						cts::bcout() <<
                                 " " <<
                                 ma.base_name() <<
                                 " = " <<
@@ -54,13 +54,13 @@ private:
 
 struct str_printer
 {
-	void operator()(const ::boost::bchar* str) const
+	void operator()(const ::boost::cts::bchar* str) const
 	{
-		::boost::bcout << str << ", ";
+		::boost::cts::bcout() << str << ", ";
 	}
 	~str_printer(void)
 	{
-		::boost::bcout << ::std::endl;
+		::boost::cts::bcout() << ::std::endl;
 	}
 };
 
@@ -69,6 +69,8 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
+	//
+	cts::bostream& bcout = cts::bcout();
 	//
 	typedef int (*A)(double);
 	typedef A (*B)(string);

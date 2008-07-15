@@ -432,7 +432,7 @@ int main(void)
 	// compare them
 	assert(c1 == c2);
 	//
-	bcout << "Finished" << endl;
+	cts::bcout() << "Finished" << endl;
 	//
 	return 0;
 }

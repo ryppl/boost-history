@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE boostbook PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<boostbook xmlns:xi="http://www.w3.org/2001/XInclude"
+           last-revision="$Date: 2008-07-15 10:43:00 +0200 (Tue, 15 Jul 2008) $">
+  <title>The Mirror library documentation</title>
+
+  <preface id="about">
+    <title>About this document</title>
+
+    <para>This is the documentation to the Mirror C++ reflection library that is developed
+    with the intention to be proposed as a Boost C++ library at some point in the future.
+    </para>
+    <note><para>The documentation is far from being complete and does not cover every feature
+    already implemented, yet.
+    </para></note>
+
+  </preface>
+
+  <part id="libraries">
+    <title>The Mirror library</title>
+
+    <xi:include href="../../libs/mirror/doc/mirror.xml"/>
+  </part>
+</boostbook>

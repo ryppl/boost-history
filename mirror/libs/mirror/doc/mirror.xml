@@ -35,6 +35,10 @@
 
 	<title>Mirror</title>
 
+	<note><para>The documentation is far from being complete and does not cover every feature
+	already implemented, yet.
+	</para></note>
+
 	<xi:include href="introduction.xml"/>
 	<xi:include href="tutorial.xml"/>
 	<xi:include href="reference.xml"/>

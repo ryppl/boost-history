@@ -42,7 +42,7 @@ int main(void)
 	print_meta_data&lt; BOOST_MIRRORED_TYPEOF("1" "+" "2") &gt;();
 	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(string("1")+string("2")) &gt;();
 
-	// another possibility
+	// BOOST_MIRRORED_TYPEOF is actually a shorter form of this:
 	print_meta_data&lt; BOOST_MIRRORED_TYPE(
 		BOOST_TYPEOF(L"1" L"+" L"2")
 	) &gt;();

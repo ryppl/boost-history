@@ -59,22 +59,22 @@ private:
 		template <typename T>
 		inline void operator()(::boost::mpl::identity<T>)
 		{
-			static bstring comma(BOOST_STR_LIT(", "));
+			static cts::bstring comma(BOOST_CTS_LIT(", "));
 			list.append(BOOST_MIRRORED_TYPE(T)::get_name(FullOrBase()));
 			list.append(comma);
 		}
 
-		inline append_arg_typename(bstring& _list)
+		inline append_arg_typename(cts::bstring& _list)
 		: list(_list)
 		{ }
 	private:
-		bstring& list;
+		cts::bstring& list;
 	};
 
 	template <typename ArgTypeList, class FullOrBase, class Size>
 	static void do_append_args(
 		ArgTypeList*, 
-		bstring& str, 
+		cts::bstring& str, 
 		FullOrBase full_or_base,
 		Size
 	)
@@ -104,7 +104,7 @@ private:
 	template <typename ArgTypeList, class FullOrBase>
 	inline static void do_append_args(
 		ArgTypeList*, 
-		bstring& str, 
+		cts::bstring& str, 
 		FullOrBase,
 		mpl::int_<0>
 	)
@@ -113,7 +113,7 @@ protected:
 	template <typename ArgTypeList, class FullOrBase>
 	inline static void append_args(
 		ArgTypeList*, 
-		bstring& str, 
+		cts::bstring& str, 
 		FullOrBase full_or_base
 	)
 	{

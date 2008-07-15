@@ -25,7 +25,7 @@ void foo(A a, B b, C c)
 		get_typename&lt;C&gt;() &lt;&lt;
 		")" &lt;&lt;
 	endl;
-	// process args
+	// do something useful
 	log &lt;&lt; 
 		"leaving foo(" &lt;&lt;
 		get_typename&lt;A&gt;() &lt;&lt;

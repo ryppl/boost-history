@@ -51,7 +51,7 @@ namespace detail {
 
 		void print_indent(void) const
 		{
-			if(!simple) bcout << ::std::endl << "\t\t";
+			if(!simple) cts::bcout() << ::std::endl << "\t\t";
 		}
 
 		template <
@@ -67,7 +67,7 @@ namespace detail {
 			AttribPos
 		> mca) const
 		{
-			bcout << "|attribute '" << mca.base_name() << "'|";
+			cts::bcout() << "|attribute '" << mca.base_name() << "'|";
 			print_indent();
 		}
 	
@@ -80,7 +80,7 @@ namespace detail {
 			VariantTag
 		> mca) const
 		{
-			bcout << "|attributes|";
+			cts::bcout() << "|attributes|";
 			print_indent();
 		}
 	
@@ -93,7 +93,7 @@ namespace detail {
 			VariantTag
 		> mca) const
 		{
-			bcout << "|all_attributes|";
+			cts::bcout() << "|all_attributes|";
 			print_indent();
 		}
 	
@@ -106,7 +106,7 @@ namespace detail {
 			VariantTag
 		> mca) const
 		{
-			bcout << "|base_classes|";
+			cts::bcout() << "|base_classes|";
 			print_indent();
 		}
 	
@@ -129,14 +129,14 @@ namespace detail {
 				AccessSpec, 
 				InheritanceSpec
 			>::meta_base_class mbc;
-			bcout << "|base_class '" << mbc::base_name() << "'|";
+			cts::bcout() << "|base_class '" << mbc::base_name() << "'|";
 			print_indent();
 		}
 	
 		template <class Class>
 		void operator()(meta_class<Class> mc) const
 		{
-			bcout << "|type '" << mc.base_name() << "'|";
+			cts::bcout() << "|type '" << mc.base_name() << "'|";
 			print_indent();
 		}
 	};
@@ -213,12 +213,12 @@ private:
 	{
 		using ::std::endl;
 		//
-		bcout << "\t" << name << ": "; 
+		cts::bcout() << "\t" << name << ": "; 
 		meta_path::for_each<
 			Axis<Context>, 
 			mpl::lambda<mpl::second<mpl::_1> > 
 		>(detail::node_printer());
-		bcout << endl;
+		cts::bcout() << endl;
 	}
 
 	template <class MetaObject, class Context>
@@ -227,9 +227,9 @@ private:
 		using ::std::endl;
 		//
 		detail::node_printer p;
-		bcout << "node "; 
+		cts::bcout() << "node "; 
 		p(mo);
-		bcout << ":" << endl;
+		cts::bcout() << ":" << endl;
 		//
 		print_node_set<meta_path::self>("self", mo, ctx);
 		print_node_set<meta_path::parent>("parent", mo, ctx);

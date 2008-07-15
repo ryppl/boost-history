@@ -310,7 +310,7 @@ namespace mirror {
 		 	 *  attributes from the base classes.
 		 	 */
 			template <int I>
-			static const bchar*
+			static const cts::bchar*
 			base_name(mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
@@ -322,7 +322,7 @@ namespace mirror {
 			}
 
 			template <int I>
-			static const bchar*
+			static const cts::bchar*
 			base_name(mpl::int_<I> pos, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
@@ -505,7 +505,7 @@ namespace mirror {
 		 *  the inherited ones)
 		 */
 		template <int I>
-		static const bchar* 
+		static const cts::bchar* 
 		base_name(mpl::int_<I> pos)
 		{
 			return detail::base_name(
@@ -612,7 +612,7 @@ namespace mirror {
 		>::type type;
 
 		// base name getter
-		inline static const bchar* base_name(void)
+		inline static const cts::bchar* base_name(void)
 		{
 			return meta_attributes::base_name(position());
 		}

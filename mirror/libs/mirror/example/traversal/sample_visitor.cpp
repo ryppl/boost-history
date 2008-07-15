@@ -170,6 +170,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
+	cts::bostream &bcout = cts::bcout();
 	//
 	using namespace ::Test;
 	//

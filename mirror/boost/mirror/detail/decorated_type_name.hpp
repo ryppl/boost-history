@@ -24,12 +24,12 @@ struct decorated_type_name_base
 {
 public:
 	template <bool FullName>
-	inline static bstring build_name(
+	inline static cts::bstring build_name(
 		mpl::bool_<FullName> full_or_base,
-		bstring& left, 
-		bstring& right,
-		bstring& ex,
-		bstring& arg
+		cts::bstring& left, 
+		cts::bstring& right,
+		cts::bstring& ex,
+		cts::bstring& arg
 	)
 	{
 		Decorator D(left, right, ex, arg);
@@ -50,13 +50,15 @@ struct decorated_type_name_finisher : public Base
 {
 protected:
 	template <bool FullName>
-	inline static bstring init_name(mpl::bool_<FullName> full_or_base)
+	inline static cts::bstring init_name(
+		mpl::bool_<FullName> full_or_base
+	)
 	{
-		bstring left;
-		bstring right;
-		bstring ex;
-		bstring arg;
-		bstring temp(build_name(full_or_base, left, right, ex, arg));
+		cts::bstring left;
+		cts::bstring right;
+		cts::bstring ex;
+		cts::bstring arg;
+		cts::bstring temp(build_name(full_or_base, left, right, ex, arg));
 		left.append(temp);
 		left.append(right);
 		left.append(ex);
@@ -65,18 +67,18 @@ protected:
 	}
 public:
 	template <bool FullName>
-	static const bstring& get_name(mpl::bool_<FullName> full_or_base)
+	static const cts::bstring& get_name(mpl::bool_<FullName> full_or_base)
 	{
-		static bstring s_name(init_name(full_or_base));
+		static cts::bstring s_name(init_name(full_or_base));
 		return s_name;
 	}
 
-	inline static const bstring& base_name(void)
+	inline static const cts::bstring& base_name(void)
 	{
 		return get_name(mpl::false_());
 	}
 
-	inline static const bstring& full_name(void)
+	inline static const cts::bstring& full_name(void)
 	{
 		return get_name(mpl::true_());
 	}
@@ -94,7 +96,7 @@ struct decorated_type_name
 template <typename T>
 struct type_name_decorator
 {
-	inline type_name_decorator(bstring&, bstring&);
+	inline type_name_decorator(cts::bstring&, cts::bstring&);
 };
 
 /** Base class for decorators that append something to 'right'
@@ -102,15 +104,17 @@ struct type_name_decorator
  */
 struct type_name_right_postfix_decorator
 {
-	inline type_name_right_postfix_decorator(bstring& _r, const bchar* _pfx)
-	: right(_r), postfix(_pfx) { }
+	inline type_name_right_postfix_decorator(
+		cts::bstring& _r, 
+		const cts::bchar* _pfx
+	) : right(_r), postfix(_pfx) { }
 
 	inline ~type_name_right_postfix_decorator(void)
 	{
-		right.append(bstring(postfix));
+		right.append(cts::bstring(postfix));
 	}
-	bstring& right;
-	const bchar* postfix;
+	cts::bstring& right;
+	const cts::bchar* postfix;
 };
 
 // pointer decorator
@@ -118,8 +122,12 @@ template <typename T>
 struct type_name_decorator<T*>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right, bstring&, bstring&)
-	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" *"))
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring& _right, 
+		cts::bstring&, 
+		cts::bstring&
+	) : type_name_right_postfix_decorator(_right, BOOST_CTS_LIT(" *"))
 	{ }
 };
 
@@ -129,8 +137,12 @@ template <typename T>
 struct type_name_decorator<T&>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right, bstring&, bstring&)
-	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" &"))
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring& _right, 
+		cts::bstring&, 
+		cts::bstring&
+	) : type_name_right_postfix_decorator(_right, BOOST_CTS_LIT(" &"))
 	{ }
 };
 
@@ -139,8 +151,12 @@ template <typename T>
 struct type_name_decorator<const T>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right, bstring&, bstring&)
-	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" const"))
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring& _right, 
+		cts::bstring&, 
+		cts::bstring&
+	): type_name_right_postfix_decorator(_right, BOOST_CTS_LIT(" const"))
 	{ }
 };
 
@@ -149,8 +165,12 @@ template <typename T>
 struct type_name_decorator<volatile T>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _right, bstring&, bstring&)
-	: type_name_right_postfix_decorator(_right, BOOST_STR_LIT(" volatile"))
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring& _right, 
+		cts::bstring&, 
+		cts::bstring&
+	) : type_name_right_postfix_decorator(_right, BOOST_CTS_LIT(" volatile"))
 	{ }
 };
 
@@ -159,8 +179,12 @@ template <typename T>
 struct type_name_decorator<const volatile T>
 : type_name_right_postfix_decorator
 {
-	inline type_name_decorator(bstring&, bstring& _r, bstring&, bstring&)
-	: type_name_right_postfix_decorator(_r, BOOST_STR_LIT(" const volatile"))
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring& _r, 
+		cts::bstring&, 
+		cts::bstring&
+	) : type_name_right_postfix_decorator(_r, BOOST_CTS_LIT(" const volatile"))
 	{ }
 };
 
@@ -168,10 +192,15 @@ struct type_name_decorator<const volatile T>
 template <typename T>
 struct type_name_decorator< T[] >
 {
-	inline type_name_decorator(bstring&, bstring&, bstring& _ex, bstring&)
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring&, 
+		cts::bstring& _ex, 
+		cts::bstring&
+	)
 	{
-		if(_ex.empty()) _ex.append(BOOST_STR_LIT(" "));
-		_ex.append(BOOST_STR_LIT("[]"));
+		if(_ex.empty()) _ex.append(BOOST_CTS_LIT(" "));
+		_ex.append(BOOST_CTS_LIT("[]"));
 	}
 };
 
@@ -181,29 +210,34 @@ template <typename T, size_t Size>
 struct type_name_decorator< T[ Size ] >
 {
 private:
-	inline static bstring init_postfix(void)
+	inline static cts::bstring init_postfix(void)
 	{
 		typedef typename detail::static_int_to_str<Size>
 			size_string;
 		// init with '['
-		bstring res(BOOST_STR_LIT("["));
+		cts::bstring res(BOOST_CTS_LIT("["));
 		// 
 		// setup a buffer for the number
 		const size_t max_size = size_string::length::value+1;
-		bchar buffer[max_size];
+		cts::bchar buffer[max_size];
 		// put it into the buffer
 		size_string::convert(buffer, max_size);
 		// append the buffer
-		res.append(bstring(buffer));
+		res.append(cts::bstring(buffer));
 		// append ']'
-		res.append(bstring(BOOST_STR_LIT("]")));
+		res.append(cts::bstring(BOOST_CTS_LIT("]")));
 		return res;
 	}
 public:
-	inline type_name_decorator(bstring&, bstring&, bstring& _ex, bstring&)
+	inline type_name_decorator(
+		cts::bstring&, 
+		cts::bstring&, 
+		cts::bstring& _ex, 
+		cts::bstring&
+	)
 	{
-		static bstring s_postfix(init_postfix());
-		if(_ex.empty()) _ex.append(BOOST_STR_LIT(" "));
+		static cts::bstring s_postfix(init_postfix());
+		if(_ex.empty()) _ex.append(BOOST_CTS_LIT(" "));
 		_ex.append(s_postfix);
 	}
 };

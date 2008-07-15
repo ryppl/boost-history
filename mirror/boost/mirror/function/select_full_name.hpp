@@ -17,7 +17,7 @@ namespace mirror {
 struct select_full_name
 {
 	template <class MetaObject>
-	inline const bchar* operator()(MetaObject) const
+	inline const cts::bchar* operator()(MetaObject) const
 	{
 		return MetaObject::full_name();
 	}

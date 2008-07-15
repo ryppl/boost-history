@@ -63,6 +63,8 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
+	cts::bostream& bcout = cts::bcout();
+	//
 	typedef tuple<bool, unsigned char, char, wchar_t, short, int, long, float, double> T;
 	//
 	typedef BOOST_MIRRORED_CLASS(T) meta_T;

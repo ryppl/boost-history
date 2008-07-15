@@ -158,9 +158,9 @@ struct meta_class_attribute_traits<
 	typedef TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
 		TYPE_SELECTOR \
 	>::type type_of_##NAME; \
-	static const bchar* base_name( \
+	static const ::boost::cts::bchar* base_name( \
 		position_of_##NAME \
-	){return BOOST_STR_LIT(#NAME);} \
+	){return BOOST_CTS_LIT(#NAME);} \
 	static meta_class_attribute_traits< \
 		::boost::mirror::attrib_storage_specifiers:: SPECIFIERS##_, \
 		TYPE_SELECTOR \

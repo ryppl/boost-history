@@ -1,5 +1,5 @@
 /**
- * \file boost/char_width_switch/string.hpp
+ * \file boost/char_type_switch/string.hpp
  * Narrow/Wide character type switching for string.
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,8 +7,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_CHAR_WIDTH_SWITCH_STRING
-#define BOOST_CHAR_WIDTH_SWITCH_STRING
+#ifndef BOOST_CHAR_TYPE_SWITCH_STRING
+#define BOOST_CHAR_TYPE_SWITCH_STRING
 
 
 #include <boost/char_type_switch/choice.hpp>
@@ -20,23 +20,24 @@
 #include <cstring>
 
 namespace boost {
+namespace cts {
 
 
-#ifdef BOOST_USE_WIDE_CHARS
+#ifdef BOOST_CTS_USE_WIDE_CHARS
 
 #include <boost/preprocessor/wstringize.hpp>
 
-	// If wide characters were chosen
+	// If wide characters were picked
 	//
 	// define character type
 	typedef wchar_t bchar;
 	// define string class type
 	typedef ::std::wstring bstring;
 	// define macro for string literal type selection
-#	define BOOST_STR_LIT(STR) L##STR
+#	define BOOST_CTS_LIT(STR) L##STR
 	// stringization
 #	define BOOST_CTS_STRINGIZE(TO_TEXT) BOOST_PP_WSTRINGIZE(TO_TEXT)
-#else // NOT BOOST_USE_WIDE_CHARS
+#else // NOT BOOST_CTS_USE_WIDE_CHARS
 
 #include <boost/preprocessor/stringize.hpp>
 
@@ -47,14 +48,14 @@ namespace boost {
 	// define string class type
 	typedef ::std::string bstring;
 	// define macro for string literal type selection
-#	define BOOST_STR_LIT(STR) STR
+#	define BOOST_CTS_LIT(STR) STR
 	// stringization
 #	define BOOST_CTS_STRINGIZE(TO_TEXT) BOOST_PP_STRINGIZE(TO_TEXT)
-#endif // NOT BOOST_USE_WIDE_CHARS
+#endif // NOT BOOST_CTS_USE_WIDE_CHARS
 
 // define macro expanding into a compile time const length
 // of the given string literal
-#define BOOST_STR_LIT_LENGTH(STR) ((sizeof(STR)/sizeof(char))-1)
+#define BOOST_CTS_LIT_LENGTH(STR) ((sizeof(STR)/sizeof(::boost::bchar))-1)
 
 
 /** Wrappers of cstring functions 
@@ -74,7 +75,7 @@ namespace boost {
 
 inline size_t bstrlen(const bchar* str)
 {
-#ifdef BOOST_USE_WIDE_CHARS
+#ifdef BOOST_CTS_USE_WIDE_CHARS
 	return ::std::wcslen(str);
 #else
 	return ::std::strlen(str);
@@ -85,7 +86,7 @@ inline size_t bstrlen(const bchar* str)
 	
 inline int bstrcmp(const bchar* a, const bchar* b)
 {
-#ifdef BOOST_USE_WIDE_CHARS
+#ifdef BOOST_CTS_USE_WIDE_CHARS
 	return ::std::wcscmp(a, b);
 #else
 	return ::std::strcmp(a, b);
@@ -96,7 +97,7 @@ inline int bstrcmp(const bchar* a, const bchar* b)
  */
 inline bchar* bstrcpy(bchar* dst, const bchar* src)
 {
-#ifdef BOOST_USE_WIDE_CHARS
+#ifdef BOOST_CTS_USE_WIDE_CHARS
 	return ::std::wcscpy(dst, src);
 #else
 	return ::std::strcpy(dst, src);
@@ -107,7 +108,7 @@ inline bchar* bstrcpy(bchar* dst, const bchar* src)
  */
 inline bchar* bstrncpy(bchar* dst, const bchar* src, size_t count)
 {
-#ifdef BOOST_USE_WIDE_CHARS
+#ifdef BOOST_CTS_USE_WIDE_CHARS
 	return ::std::wcsncpy(dst, src, count);
 #else
 	return ::std::strncpy(dst, src, count);
@@ -119,7 +120,7 @@ inline bchar* bstrncpy(bchar* dst, const bchar* src, size_t count)
 #pragma warning(pop)
 #endif
 
-
+} // namespace cts
 } // namespace boost
 
 #endif //include guard

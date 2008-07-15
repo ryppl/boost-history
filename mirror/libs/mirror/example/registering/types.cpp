@@ -83,6 +83,8 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
+	cts::bostream& bcout = cts::bcout();
+	//
 	using ::test::feature::detail::foo;
 	using ::test::feature::detail::bar;
 	using ::test::feature::detail::foobar;
@@ -130,9 +132,9 @@ int main(void)
 	//
 	// this reflects bchar as char or wchar_t based 
 	// on compilation configuration
-	typedef BOOST_MIRRORED_TYPE(bchar) meta_bchar;
+	typedef BOOST_MIRRORED_TYPE(cts::bchar) meta_bchar;
 	// this reflects a meta-type that allows to query the typedef'd name
-	typedef BOOST_MIRRORED_TYPEDEF(::boost, bchar) meta_bchar_td;
+	typedef BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) meta_bchar_td;
 	// this reflects the meta-type for the typedef type foobar
 	typedef BOOST_MIRRORED_TYPEDEF(::test::feature::detail, foobar) meta_foobar_td;
 	// 
@@ -161,12 +163,12 @@ int main(void)
 		bcout << "|25| " << "type of \"foo\" defined on global scope" << endl;
 	//
 	bcout << "|26| " << BOOST_MIRRORED_TYPE(bool) ::full_name() << endl;
-	bcout << "|27| " << BOOST_MIRRORED_TYPE(bchar) ::full_name() << endl;
+	bcout << "|27| " << BOOST_MIRRORED_TYPE(cts::bchar) ::full_name() << endl;
 	//
 	// reflection of typedefined types
-	bcout << "|28| " << BOOST_MIRRORED_TYPEDEF(::boost, bchar) ::full_name() << endl;
+	bcout << "|28| " << BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) ::full_name() << endl;
 	// or another way how to reflect a typedefined type
-	bcout << "|29| " << BOOST_MIRRORED_TYPE(BOOST_MIRROR_TYPEDEF(::boost, bstring) const * volatile *) ::full_name() << endl;
+	bcout << "|29| " << BOOST_MIRRORED_TYPE(BOOST_MIRROR_TYPEDEF(::boost::cts, bstring) const * volatile *) ::full_name() << endl;
 	//
 
 	bcout << "|30| " << BOOST_MIRRORED_TYPE(int const * const volatile) ::full_name() << endl;

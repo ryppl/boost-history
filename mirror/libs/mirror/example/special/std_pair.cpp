@@ -26,6 +26,8 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
+	cts::bostream& bcout = cts::bcout();
+	//
 	//
 	typedef pair<const int*, double [654][321]> T1;
 	typedef pair<float, const ::std::string&> T2;

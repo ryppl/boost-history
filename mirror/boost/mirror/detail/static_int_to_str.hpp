@@ -37,29 +37,29 @@ struct static_int_to_str
 	//
 	//
 	template <int J>
-	static inline bchar get_digit(mpl::int_<J> pos)
+	static inline cts::bchar get_digit(mpl::int_<J> pos)
 	{
-		static const bchar zero = BOOST_STR_LIT('0');
+		static const cts::bchar zero = BOOST_CTS_LIT('0');
 		typedef typename static_pow10<
 			length::value - mpl::int_<J>::value
 		>::type K;
 		return zero + (I / K::value) % 10;
 	}
 	//
-	static inline void do_copy_to(bchar* _str, mpl::int_<0>){	}
+	static inline void do_copy_to(cts::bchar* _str, mpl::int_<0>){	}
 	//
 	template <int J>
-	static inline void do_copy_to(bchar* _str, mpl::int_<J> pos)
+	static inline void do_copy_to(cts::bchar* _str, mpl::int_<J> pos)
 	{
 		_str[J-1] = get_digit(pos);
 		do_copy_to(_str, mpl::int_<J - 1>());
 	}
 	//
-	static bchar* convert(bchar* _str, size_t _max_len)
+	static cts::bchar* convert(cts::bchar* _str, size_t _max_len)
 	{
 		assert(_max_len > size_t(length::value));
 		do_copy_to(_str, length());
-		_str[length::value] = BOOST_STR_LIT('\0');
+		_str[length::value] = BOOST_CTS_LIT('\0');
 		return _str;
 	}
 };
@@ -68,11 +68,11 @@ template <>
 struct static_int_to_str<0>
 {
 	typedef mpl::int_<1>::type length;
-	static bchar* convert(bchar* _str, size_t _max_len)
+	static cts::bchar* convert(cts::bchar* _str, size_t _max_len)
 	{
 		assert(_max_len > 1);
-		_str[0] = BOOST_STR_LIT('0');
-		_str[1] = BOOST_STR_LIT('\0');
+		_str[0] = BOOST_CTS_LIT('0');
+		_str[1] = BOOST_CTS_LIT('\0');
 		return _str;
 	}
 };
@@ -89,10 +89,10 @@ struct static_int_to_str_w_prefix
 		number_length::value
 	> length;
 	//
-	static inline void do_apply_prefix_to(bchar* _str, mpl::int_<0>){ }
+	static inline void do_apply_prefix_to(cts::bchar* _str, mpl::int_<0>){ }
 	//
 	template <int J>
-	static inline void do_apply_prefix_to(bchar* _str, mpl::int_<J> pos)
+	static inline void do_apply_prefix_to(cts::bchar* _str, mpl::int_<J> pos)
 	{
 		_str[J-1] = mpl::at<
 			prefix,
@@ -101,7 +101,7 @@ struct static_int_to_str_w_prefix
 		do_apply_prefix_to(_str, mpl::int_<J - 1>());
 	}
 	//
-	static bchar* convert(bchar* _str, size_t _max_len)
+	static cts::bchar* convert(cts::bchar* _str, size_t _max_len)
 	{
 		// check the length
 		assert(_max_len > size_t(length::value));
@@ -112,15 +112,15 @@ struct static_int_to_str_w_prefix
 		// append given int as string
 		static_int_to_str<I>::convert(_str + offs, _max_len - offs);
 		// finalize the string
-		_str[length::value] = BOOST_STR_LIT('\0');
+		_str[length::value] = BOOST_CTS_LIT('\0');
 		return _str;
 	}
 	//
 	struct holder
 	{
-		static const bchar* get(void)
+		static const cts::bchar* get(void)
 		{
-			static bchar str[length::value+1] = {0};
+			static cts::bchar str[length::value+1] = {0};
 			if(!str[0]) convert(str, length::value+1);
 			return str;
 		}

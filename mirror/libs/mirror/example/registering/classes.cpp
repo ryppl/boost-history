@@ -86,15 +86,15 @@ class bar : protected bar_base
 	// but must be stored by the setter function.
 	// Anyway, mirror supports this 
 	//
-	::boost::bstring a_string;
-	void set_string(const ::boost::bstring& a_str)
+	::boost::cts::bstring a_string;
+	void set_string(const ::boost::cts::bstring& a_str)
 	{
 		a_string = a_str; 
-		::boost::bcout << a_string << ::std::endl;
+		::boost::cts::bcout() << a_string << ::std::endl;
 	}
 	//
 	// attribute with a type based on a typedefined type
-	const ::boost::bchar* (*a_function)(int);
+	const ::boost::cts::bchar* (*a_function)(int);
 public:
 	// A little weird getter/setter pair 
 	// Note that the getter is not const
@@ -257,7 +257,7 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 	// to notify mirror that the type was typedefined
 	// The typedef must be registered with mirror prior doing this
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		_, BOOST_MIRROR_TYPEDEF(::boost, bstring), a_string, 
+		_, BOOST_MIRROR_TYPEDEF(::boost::cts, bstring), a_string, 
 		{return instance.a_string;},
 		{dest = DestType(instance.a_string);},
 		{instance.set_string(value);}
@@ -268,7 +268,7 @@ BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::stuff::detail::bar)
 	// type. Such types are again referred to by the BOOST_MIRROR_TYPEDEF
 	// macro
 	BOOST_MIRROR_REG_CLASS_ATTRIB(
-		static, const BOOST_MIRROR_TYPEDEF(::boost, bchar) * (*)(int), a_function, 
+		static, const BOOST_MIRROR_TYPEDEF(::boost::cts, bchar) * (*)(int), a_function, 
 		{return instance.a_function;},
 		{dest = DestType(instance.a_function);},
 		{ } // no setter
@@ -467,6 +467,8 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
+	cts::bostream& bcout = cts::bcout();
+	//
 	using ::test::feature::detail::foo;
 	using ::test::stuff::detail::bar;
 	using ::test::stuff::detail::bar_base;
@@ -484,7 +486,7 @@ int main(void)
 	// an embedded class 
 	bcout << "|04| " << endl << pretty_printer<BOOST_MIRRORED_CLASS(bar::bar_part)>() << endl;
 	// typedef'd type
-	bcout << "|05| " << endl << pretty_printer<BOOST_MIRRORED_TYPEDEF(::boost, bchar)>() << endl;
+	bcout << "|05| " << endl << pretty_printer<BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar)>() << endl;
 	// type of an expression
 	bcout << "|06| " << endl << pretty_printer<BOOST_MIRRORED_TYPEOF("foo")>() << endl;
 	//

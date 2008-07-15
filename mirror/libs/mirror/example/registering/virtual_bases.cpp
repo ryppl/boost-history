@@ -179,6 +179,8 @@ struct attrib_printer
 			using namespace ::std;
 			using namespace ::boost;
 			using namespace ::boost::mirror;
+			cts::bostream& bcout = cts::bcout();
+			//
 			typedef BOOST_MIRRORED_TYPE(typename MetaAttribute::type) mt;
 			bcout << 
 				"    " << 
@@ -197,6 +199,8 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
+	//
+	cts::bostream& bcout = cts::bcout();
 	//
 	using namespace ::Test;
 	//

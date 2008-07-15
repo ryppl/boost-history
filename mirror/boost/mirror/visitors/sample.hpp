@@ -43,16 +43,16 @@ public:
 		using namespace ::boost;
 		print_indentation();
 		++indent;
-		bcout << 
+		cts::bcout() << 
 			"<type name='" << 
 			MetaClass::base_name();
 		if(!reflects_global_scope<typename MetaClass::scope>::value)
 		{
-			bcout << 
+			cts::bcout() << 
 				"' scope='" <<
 				MetaClass::scope::full_name();
 		}
-		bcout << 
+		cts::bcout() << 
 			"'>" << 
 			endl;
 	}
@@ -65,7 +65,7 @@ public:
 		using namespace ::boost;
 		--indent;
 		print_indentation();
-		bcout << "</type>" << endl;
+		cts::bcout() << "</type>" << endl;
 	}
 
 	template <class MetaClass, class BaseClasses, class Context>
@@ -77,7 +77,7 @@ public:
 		{
 			print_indentation();
 			++indent;
-			bcout << 
+			cts::bcout() << 
 				"<base_classes>" << 
 			endl;
 		}
@@ -92,7 +92,7 @@ public:
 		{
 			--indent;
 			print_indentation();
-			bcout << "</base_classes>" << endl;
+			cts::bcout() << "</base_classes>" << endl;
 		}
 	}
 
@@ -105,7 +105,7 @@ public:
 		using namespace ::boost;
 		print_indentation();
 		++indent;
-		bcout << 
+		cts::bcout() << 
 			"<base_class number='" << 
 			MetaInheritance::position::value <<
 			"' is_virtual='"<<
@@ -122,7 +122,7 @@ public:
 		using namespace ::boost;
 		--indent;
 		print_indentation();
-		bcout << "</base_class>" << endl;
+		cts::bcout() << "</base_class>" << endl;
 	}
 
 
@@ -138,7 +138,7 @@ public:
 		{
 			print_indentation();
 			++indent;
-			bcout << 
+			cts::bcout() << 
 				"<attributes>" << 
 			endl;
 		}
@@ -156,7 +156,7 @@ public:
 		{
 			--indent;
 			print_indentation();
-			bcout << "</attributes>" << endl;
+			cts::bcout() << "</attributes>" << endl;
 		}
 	}
 
@@ -167,7 +167,7 @@ public:
 		using namespace ::boost;
 		print_indentation();
 		++indent;
-		bcout << 
+		cts::bcout() << 
 			"<attribute number='" << 
 			MetaAttribute::position::value <<
 			"' name='" <<
@@ -187,7 +187,7 @@ public:
 		using namespace ::boost;
 		--indent;
 		print_indentation();
-		bcout << "</attribute>" << endl;
+		cts::bcout() << "</attribute>" << endl;
 	}
 
 	template <class MetaClass, class Context, typename InstanceType>
@@ -211,7 +211,7 @@ private:
 		using namespace ::std;
 		using namespace ::boost;
 		print_indentation();
-		bcout << 
+		cts::bcout() << 
 			"<value depth='" <<
 			mpl::size<Context>::value << 
 			"'>" <<
@@ -224,7 +224,7 @@ private:
 	void print_indentation(void)
 	{
 		for(int i=0;i!=indent;++i)
-			bcout << ' ';
+			cts::bcout() << ' ';
 	}
 };
 

@@ -1,5 +1,5 @@
 /**
- * \file boost/char_width_switch/iostream.hpp
+ * \file boost/char_type_switch/iostream.hpp
  * Narrow/Wide character type switching for iostreams
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,35 +7,42 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_CHAR_WIDTH_SWITCH_IOSTREAM
-#define BOOST_CHAR_WIDTH_SWITCH_IOSTREAM
+#ifndef BOOST_CHAR_TYPE_SWITCH_IOSTREAM
+#define BOOST_CHAR_TYPE_SWITCH_IOSTREAM
 
 #include <boost/char_type_switch/choice.hpp>
 // Needed for ::std cout, cin, cerr, wcin, wcout, wcerr
 #include <iostream>
 
 namespace boost {
+namespace cts {
 
-#ifdef BOOST_USE_WIDE_CHARS
-	// If wide characters were chosen
+#ifdef BOOST_CTS_USE_WIDE_CHARS
+	// If wide characters were picked
+	typedef ::std::wistream bistream;
+	typedef ::std::wostream bostream;
 	//
 	// define input stream
-	::std::wistream& bcin   = ::std::wcin;
+	inline ::std::wistream& bcin(void){return ::std::wcin;}
 	// define output stream
-	::std::wostream& bcout  = ::std::wcout;
+	inline ::std::wostream& bcout(void){return ::std::wcout;}
 	// define error stream
-	::std::wostream& bcerr  = ::std::wcerr;
-#else // NOT BOOST_USE_WIDE_CHARS
-	// if narrow characters were chosen
+	inline ::std::wostream& bcerr(void){return ::std::wcerr;}
+#else // NOT BOOST_CTS_USE_WIDE_CHARS
+	// if narrow characters were picked
+	//
+	typedef ::std::istream bistream;
+	typedef ::std::ostream bostream;
 	//
 	// define input stream
-	::std::istream& bcin   = ::std::cin;
+	inline ::std::istream& bcin(void){return ::std::cin;}
 	// define output stream
-	::std::ostream& bcout  = ::std::cout;
+	inline ::std::ostream& bcout(void){return ::std::cout;}
 	// define error stream
-	::std::ostream& bcerr  = ::std::cerr;
-#endif // NOT BOOST_USE_WIDE_CHARS
+	inline ::std::ostream& bcerr(void){return ::std::cerr;}
+#endif // NOT BOOST_CTS_USE_WIDE_CHARS
 
+} // namespace cts
 } // namespace boost
 
 #endif //include guard

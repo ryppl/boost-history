@@ -28,9 +28,9 @@ namespace calling_convention {
 #define BOOST_MIRROR_DECLARE_CALLING_CONVENTION_HELPER(CC) \
 	struct __##CC##_ \
 	{ \
-		inline static const bstring& name(void) \
+		inline static const ::boost::cts::bstring& name(void) \
 		{ \
-			static bstring cc_name(BOOST_CTS_STRINGIZE(__##CC)); \
+			static ::boost::cts::bstring cc_name(BOOST_CTS_STRINGIZE(__##CC));\
 			return cc_name; \
 		} \
 	}; 
@@ -41,7 +41,7 @@ namespace calling_convention {
 
 	struct __default_
 	{ 
-		inline static bstring name(void){return bstring();}
+		inline static cts::bstring name(void){return cts::bstring();}
 	}; 
 
 // undefine the helper macros

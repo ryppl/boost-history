@@ -37,20 +37,20 @@ private:
 
 public:
 	template <bool FullName>
-	inline static bstring build_name(
+	inline static cts::bstring build_name(
 		mpl::bool_<FullName> full_or_base,
-		bstring& left, 
-		bstring& right,
-		bstring& ex,
-		bstring& arg
+		cts::bstring& left, 
+		cts::bstring& right,
+		cts::bstring& ex,
+		cts::bstring& arg
 	)
 	{
-		static bstring comma(BOOST_STR_LIT(", "));
-		static bstring l_angle(BOOST_STR_LIT("< "));
-		static bstring r_angle(BOOST_STR_LIT(" >"));
+		static cts::bstring comma(BOOST_CTS_LIT(", "));
+		static cts::bstring l_angle(BOOST_CTS_LIT("< "));
+		static cts::bstring r_angle(BOOST_CTS_LIT(" >"));
 		//
 		// get the template name
-		bstring res(base_meta_template::get_name(full_or_base));
+		cts::bstring res(base_meta_template::get_name(full_or_base));
 		// argument list
 		res.append(l_angle);
 		append_args(((TplArgTypeList*)0), res, full_or_base);

@@ -14,14 +14,15 @@
 // register string types
 #include <boost/mirror/meta_types/std_string.hpp>
 #include <boost/char_type_switch/string.hpp>
+#include <boost/mirror/meta_namespaces/boost_cts.hpp>
 
 namespace boost {
 namespace mirror {
 
 /** Register the bchar and bstring 
  */
-BOOST_MIRROR_REG_TYPEDEF(::boost, bchar)
-BOOST_MIRROR_REG_TYPEDEF(::boost, bstring)
+BOOST_MIRROR_REG_TYPEDEF(::boost::cts, bchar)
+BOOST_MIRROR_REG_TYPEDEF(::boost::cts, bstring)
 
 
 } // namespace mirror

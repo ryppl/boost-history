@@ -49,12 +49,12 @@ struct meta_namespace
         	NamespacePlaceholder
 	> base_class;
 
-	inline static const bstring& base_name(void)
+	inline static const cts::bstring& base_name(void)
 	{
 		return base_class::get_name(mpl::false_());
 	}
 
-	inline static const bstring& full_name(void)
+	inline static const cts::bstring& full_name(void)
 	{
 		return base_class::get_name(mpl::true_());
 	}
@@ -79,24 +79,24 @@ namespace namespace_ {
 	struct _ 
 	{
 		// the base name of the namespace
-		inline static const bstring& get_name(mpl::false_)
+		inline static const cts::bstring& get_name(mpl::false_)
 		{
-			static bstring s_name;
+			static cts::bstring s_name;
 			return s_name;
 		}
 
 		// the full name of the namespace
-		inline static const bstring& get_name(mpl::true_)
+		inline static const cts::bstring& get_name(mpl::true_)
 		{
 			return get_name(mpl::false_());
 		}
 
-		inline static const bstring& base_name(void)
+		inline static const cts::bstring& base_name(void)
 		{
 			return get_name(mpl::false_());
 		}
 	
-		inline static const bstring& full_name(void)
+		inline static const cts::bstring& full_name(void)
 		{
 			return get_name(mpl::true_());
 		}
@@ -167,9 +167,9 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 				_, \
 				BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
 			) :: _ parent_placeholder; /* -4- */ \
-			static const bstring& get_name(mpl::false_) \
+			static const ::boost::cts::bstring& get_name(mpl::false_) \
 			{ \
-				static bstring s_name(BOOST_CTS_STRINGIZE( \
+				static ::boost::cts::bstring s_name(BOOST_CTS_STRINGIZE( \
 					BOOST_PP_SEQ_HEAD( \
 						BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
 					) \

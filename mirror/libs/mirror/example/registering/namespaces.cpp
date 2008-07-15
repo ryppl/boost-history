@@ -54,6 +54,8 @@ int main(void)
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
+	cts::bostream& bcout = cts::bcout();
+	//
 	// NOTE bcout ~ cout when using narrow chars
 	//            ~ wcout when using wide chars
 	// it's typedef'd in the boost namespace

@@ -14,17 +14,17 @@
 	The aim of the <libraryname>Mirror</libraryname> library is to provide 
 	useful meta-data at both compile-time and run-time about common 
 	C++ constructs like namespaces, types
-	(and as a important special case <code>typedef</code>-ined types), 
+	(and as an important special case <code>typedef</code>-ined types), 
 	classes and their base classes and member attributes, instances, etc. and to 
 	provide uniform and generic interfaces for their introspection.
 </para>
 <para>
 	Because standard C++ provides only a very limited set of meta-information
-	the main drawback of this library is that namespace, types, classes, etc.
+	to build upon, the main drawback of this library is, that namespace, types, classes, etc.
 	need to be registered before they can be reflected. 
 	However <libraryname>Mirror</libraryname> tries to make the process of 
 	registering simple by providing a set of user-friendly registering macros
-	and has many of the native and other common types, classes, templates and 
+	and has the native and many of the other common types, classes, templates and 
 	namespaces pre-registered.
 </para>
 <para>
@@ -50,7 +50,7 @@
 		scope or nested in another namespace).
 	</listitem>
 	<listitem>
-		Type-name inspection, with the support for <code>typedef</code>-ined
+		Type-name querying, with the support for <code>typedef</code>-ined
 		typenames and typenames of derived types like pointers, references,
 		cv-qualified types, arrays, functions and template names. Names
 		with or without nested-name-specifiers can be queried.
@@ -138,7 +138,7 @@
 		In this case the typenames in the output need to correspond to C++ typenames.
 	</para>
 	<para>
-		The obvious choice if one needs to find out what the name of a given type is is to 
+		Maybe the first, obvious choice if one needs to find out what the name of a given type is is to 
 		use the <code>typeid</code> operator and call the <code>name()</code> function 
 		on the returned reference to <code>type_info</code>. The implementation of our
 		<code>get_typename&lt;T&gt;()</code> function from the previous sample code 
@@ -154,7 +154,7 @@
 		Thus the returned name is not guarenteed to be unique nor human readable or 
 		easily understandable, nor is it portable. 
 		Some compilers provide functions that demangle the names returned by 
-		<code>type_info::name()</code> but again this is not very portable.
+		<code>type_info::name()</code>, but again this is not very portable.
 	</para>
 	<para>
 		One possible solution is the standardisation of the result of <code>typeid(T).name()</code>
@@ -173,7 +173,7 @@
 	</para>
 	<para>
 		This is when <libraryname>Mirror</libraryname> comes in handy. One of the basic
-		facilities is the <code><classname>meta_type</classname></code> template. 
+		facilities is the <code><classname>::boost::mirror::meta_type</classname></code> template. 
 		Among other things this template has two member functions - <code>base_name</code>
 		and <code>full_name</code> that return the base type name without the nested
 		name specifier and the full type name with the nested name specifier respectively.

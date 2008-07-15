@@ -32,10 +32,10 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	//
 	// member attribute base name getter
 	template <int I>
-	static const bchar* base_name(mpl::int_<I>)
+	static const cts::bchar* base_name(mpl::int_<I>)
 	{
 		typedef typename boost::mirror::detail::static_int_to_str_w_prefix<
-			mpl::vector_c<bchar, BOOST_STR_LIT('_') >, I
+			mpl::vector_c<cts::bchar, BOOST_CTS_LIT('_') >, I
 		>::holder name;
 		// 
 		return name::get();
