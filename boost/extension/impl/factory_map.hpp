@@ -54,7 +54,7 @@ operator
   std::map<
     Info,
     factory<Interface BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param) >
-  >
+  >&
   ()
 {
   return get< Interface, Info

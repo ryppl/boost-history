@@ -66,7 +66,7 @@ public:
   std::map<
     Info,
     factory<Interface, Params...>
-  >
+  >&
   () {
     // EMPTY - THIS IS ONLY HERE FOR DOXYGEN.
   }
