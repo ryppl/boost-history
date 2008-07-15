@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_namespace.usage02">
+#include &lt;boost/mpl/for_each.hpp&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+class printer
+{
+public:
+	template &lt;class MetaNamespace&gt;
+	void operator()(MetaNamespace mn)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		cts::bostream&amp; bcout = cts::bcout();
+		bcout &lt;&lt; 
+			BOOST_CTS_LIT("ancestor ") &lt;&lt;
+			ctr++ &lt;&lt;
+			BOOST_CTS_LIT(": '") &lt;&lt;
+			MetaNamespace::base_name() &lt;&lt;
+			BOOST_CTS_LIT("'") &lt;&lt;
+		endl;
+	}
+
+	printer(void):ctr(0){ }
+private:
+	int ctr;
+};
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::bcout();
+	//
+	typedef BOOST_MIRRORED_NAMESPACE(::boost::mirror) meta_boost_mirror;
+	//
+	// get the full name of the parent scope of the reflected namespace
+	bcout &lt;&lt; meta_boost_mirror::scope::full_name() &lt;&lt; endl;
+	//
+	// check whether the grandparent namespace is the global scope
+	if(reflects_global_scope&lt;meta_boost_mirror::scope::scope&gt; :: value)
+		bcout &lt;&lt; BOOST_CTS_LIT("OK") &lt;&lt; endl;
+	else 
+		bcout &lt;&lt; BOOST_CTS_LIT("Error") &lt;&lt; endl;
+
+	// the ancestors typedef is an mpl vector of meta_namespaces
+	printer p;
+	mpl::for_each&lt;meta_boost_mirror::ancestors&gt;(p);
+
+	return 0;
+}
+</programlisting>
+

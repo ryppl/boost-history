@@ -61,6 +61,16 @@ struct meta_type;
 	::boost::mirror::meta_type<TYPE>
 
 /** Macro that expands into the meta_type for the 
+ *  given type or class. This is an alternate version
+ *  of the BOOST_MIRRORED_TYPE taking the namespace
+ *  and the type separatelly as two distinct args
+ *  (thus the _NS suffix). It works however only
+ *  with types defined in named namespaces.
+ */
+#define BOOST_MIRRORED_TYPE_NS(NAMESPACE, TYPE) \
+	::boost::mirror::meta_type<NAMESPACE :: TYPE>
+
+/** Macro that expands into the meta_type for the 
  *  given typedefined type.
  */
 #define BOOST_MIRRORED_TYPEDEF(NAMESPACE, TYPEDEF) \

@@ -3,8 +3,8 @@
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_type.usage02">
 
-#include &lt;iostream&gt;
 #include &lt;string&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
 #include &lt;boost/typeof/typeof.hpp&gt;
 #include &lt;boost/mirror/meta_type.hpp&gt;
 #include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
@@ -16,17 +16,30 @@ void print_meta_data(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-
+	cts::bostream&amp; bcout = cts::bcout(); 
 	// print out the base type name
-	wcout &lt;&lt; "The type name is: "&lt;&lt; MetaType::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; 
+		BOOST_CTS_LIT("The type name is: ") &lt;&lt; 
+		MetaType::base_name() &lt;&lt; 
+	endl;
 	// 
-	if(reflects_global_scope&lt;MetaType::scope&gt;::value)
-		wcout &lt;&lt; "It's defined on the global scope" &lt;&lt; endl;
-	else wcout &lt;&lt; 
-		"It's defined in the " &lt;&lt; 
-		MetaType::scope::full_name() &lt;&lt; 
-		" namespace" &lt;&lt; endl;
-	wcout &lt;&lt; "--------------------------------------" &lt;&lt; endl;
+	if(reflects_global_scope&lt;typename MetaType::scope&gt;::value)
+	{
+		bcout &lt;&lt; 
+		BOOST_CTS_LIT("It's defined on the global scope") &lt;&lt; 
+		endl;
+	}
+	else 
+	{
+		bcout &lt;&lt; 
+			BOOST_CTS_LIT("It's defined in the ") &lt;&lt; 
+			MetaType::scope::full_name() &lt;&lt; 
+			BOOST_CTS_LIT(" namespace") &lt;&lt; 
+		endl;
+		bcout &lt;&lt; 
+		BOOST_CTS_LIT("--------------------------------------") &lt;&lt; 
+		endl;
+	}
 }
 
 int main(void)

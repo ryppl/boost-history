@@ -37,6 +37,8 @@ BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(unsigned long int)
 BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(float)
 BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE(double)
 
+BOOST_MIRROR_REG_TYPEDEF(::std, size_t)
+
 } // namespace mirror
 } // namespace boost
 

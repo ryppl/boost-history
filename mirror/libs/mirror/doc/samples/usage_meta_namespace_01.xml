@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_namespace.usage01">
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::bcout();
+
+	// several namespaces are pre-registered
+	bcout &lt;&lt; BOOST_MIRRORED_GLOBAL_SCOPE() ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::std) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::base_name() &lt;&lt; endl;
+	//
+	bcout &lt;&lt; BOOST_MIRRORED_GLOBAL_SCOPE() ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::std) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::full_name() &lt;&lt; endl;
+
+	return 0;
+}
+</programlisting>
+

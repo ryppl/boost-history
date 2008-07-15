@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_namespace.ancestors01">
+using namespace ::boost;
+using namespace ::boost::mirror;
+
+BOOST_MPL_ASSERT((
+	reflects_global_scope &lt; 
+		mpl::front &lt; 
+			BOOST_MIRRORED_NAMESPACE(::std)::ancestors 
+		&gt;
+	&gt;
+));
+
+BOOST_MPL_ASSERT((
+	reflects_global_scope &lt; 
+		mpl::front &lt; 
+			BOOST_MIRRORED_NAMESPACE(::boost::mirror)::ancestors
+		&gt;
+	&gt;
+));
+
+BOOST_MPL_ASSERT((
+	is_same &lt;
+		mpl::back &lt; 
+			BOOST_MIRRORED_NAMESPACE(::boost::mirror)::ancestors 
+		&gt;,
+		BOOST_MIRRORED_NAMESPACE(::boost::mirror)::scope 
+	&gt;
+));
+</programlisting>
+

@@ -21,10 +21,39 @@
 				namespace (with the exception of the global scope) use the reflection
 				macro <code><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(FULL_NAMESPACE_NAME)</code>. To
 				get the <code><classname>meta_namespace</classname></code> specialization for
-				the global scope use the <code><macroname>BOOST_MIRRORED_NAMESPACE</macroname>()</code>
+				the global scope use the <code><macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>()</code>
 				macro.
 				</para>
 			</purpose>
+			<description>
+				<para>The specializations of <code><classname>meta_type</classname></code> can 
+				be used to get meta-information about the reflected types, some at compile-time and some at run-time.
+				The following examples show type reflection and basic 
+				<code><classname>meta_type</classname></code> usage. Mirror works with the native C++ types
+				and some of the very common types like <code>::std::string</code>, etc. out of the box.
+				Meta-types for many other types from the standard library and <libraryname>Boost</libraryname>
+			       	are also provided and can be <code>#include</code>d when necessary.
+				</para>
+				<section id="mirror.meta_namespace.reference.samples">
+				<section id="mirror.meta_namespace.reference.sample01">
+					<title>Example - Basic usage</title>
+					<para>This sample code shows how to reflect a namespace and how to get its 
+					base and full name. 
+					</para>
+					<xi:include href="../samples/usage_meta_namespace_01.xml"/>
+				</section>
+				<section id="mirror.meta_namespace.reference.sample02">
+					<title>Example - Scope and ancestors</title>
+					<para>The following example shows what can be done with the 
+					<code><classname>meta_namespace</classname></code>s <code>scope</code> and
+					<code>ancestors</code> <code>typedef</code>s. It also shows the usage
+					of the <code><classname>reflects_global_scope</classname></code> trait
+					template.
+					</para>
+					<xi:include href="../samples/usage_meta_namespace_02.xml"/>
+				</section>
+				</section>
+			</description>
 
 			<access name="public">
 			<typedef name="scope">
@@ -55,46 +84,11 @@
 					for <code><classname>meta_namespace</classname></code>s
 					reflecting any namespace with the exception of the global scope:
 					</para>
-					<programlisting>
-using namespace ::boost;
-using namespace ::boost::mirror;
-
-BOOST_MPL_ASSERT((
-	reflects_global_scope &lt; 
-		mpl::front &lt; 
-			BOOST_MIRRORED_NAMESPACE(::std)::ancestors 
-		&gt;
-	&gt;
-));
-
-BOOST_MPL_ASSERT((
-	reflects_global_scope &lt; 
-		mpl::front &lt; 
-			BOOST_MIRRORED_NAMESPACE(::boost::mirror)::ancestors
-		&gt;
-	&gt;
-));
-
-BOOST_MPL_ASSERT((
-	is_same &lt;
-		mpl::back &lt; 
-			BOOST_MIRRORED_NAMESPACE(::boost::mirror)::ancestors 
-		&gt;,
-		BOOST_MIRRORED_NAMESPACE(::boost::mirror)::scope 
-	&gt;
-));
-					</programlisting>
+					<xi:include href="../samples/meta_namespace_ancestors_01.xml"/>
 					<para>For the <code><classname>meta_namespace</classname></code>
 					reflecting the global scope the following holds true.
 					</para>
-
-					<programlisting>
-BOOST_MPL_ASSERT((
-	mpl::empty &lt;
-		BOOST_MIRRORED_GLOBAL_SCOPE()::ancestors
-	&gt;
-));
-					</programlisting>
+					<xi:include href="../samples/meta_namespace_ancestors_02.xml"/>
 					<para>To find out whether a meta-namespace reflects the global scope
 					use the <code><classname>reflects_global_scope</classname></code> template meta-function.
 					</para>

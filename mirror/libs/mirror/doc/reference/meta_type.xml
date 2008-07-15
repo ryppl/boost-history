@@ -50,6 +50,20 @@
 					</para>
 					<xi:include href="../samples/usage_meta_type_02.xml"/>
 				</section>
+				<section id="mirror.meta_type.reference.sample03">
+					<title>Example - Reflection of <code>typedef</code>-ined types</title>
+					<para>The next example shows how to reflect <code>typedef</code>-ined
+					types. This is useful when the info about the name and the scope of the <code>typedef</code>
+					is required instead of the meta-information about the "source" type.
+					However, the usage shown in this example is not very common. The full utility becomes obvious 
+					only when the <code><classname>meta_type</classname></code> is part of 
+					some other meta-structure like for example with <code>typedef</code>'d class member attributes.
+					</para>
+					<para>Mirror comes with several pre-registered <code>typedef</code>s. If user-defined
+					<code>typedef</code>s are to be reflected they need to be registered first.
+					</para>
+					<xi:include href="../samples/usage_meta_type_03.xml"/>
+				</section>
 				</section>
 			</description>
 

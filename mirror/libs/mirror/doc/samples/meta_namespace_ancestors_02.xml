@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_namespace.ancestors02">
+BOOST_MPL_ASSERT((
+	mpl::empty &lt;
+		BOOST_MIRRORED_GLOBAL_SCOPE()::ancestors
+	&gt;
+));
+
+</programlisting>
+

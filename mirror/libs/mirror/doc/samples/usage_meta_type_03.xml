@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_type.usage03">
+
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+
+template &lt;class MetaType&gt;
+void print_meta_data(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	cts::bostream&amp; bcout = cts::bcout();
+	bcout &lt;&lt; BOOST_CTS_LIT("type: '");
+	bcout &lt;&lt; MetaType::base_name();
+	bcout &lt;&lt; BOOST_CTS_LIT("'  defined in: '");
+	bcout &lt;&lt; MetaType::scope::full_name();
+	bcout &lt;&lt; BOOST_CTS_LIT("'");
+	bcout &lt;&lt; endl;
+}
+
+int main(void)
+{
+	using namespace ::boost::mirror;
+	//
+	// the first arg is the namespace the second the typedefined type
+	typedef BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) meta_bstring_td;
+	// reflection of the "source" type
+	typedef BOOST_MIRRORED_TYPE(::boost::cts::bstring) meta_bstring;
+	//
+	print_meta_data&lt; meta_bstring_td &gt;();
+	print_meta_data&lt; meta_bstring &gt;();
+	//
+	print_meta_data&lt; BOOST_MIRRORED_TYPEDEF(::std, size_t) &gt;();
+	// this is another version of the BOOST_MIRRORED_TYPE macro
+	// that gets the namespace and the type as two separate args
+	print_meta_data&lt; BOOST_MIRRORED_TYPE_NS(::std, size_t) &gt;();
+	//
+
+	return 0;
+}
+</programlisting>
+

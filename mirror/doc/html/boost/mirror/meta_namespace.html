@@ -37,7 +37,7 @@
 				namespace (with the exception of the global scope) use the reflection
 				macro <code class="computeroutput">BOOST_MIRRORED_NAMESPACE(FULL_NAMESPACE_NAME)</code>. To
 				get the <code class="computeroutput">meta_namespace</code> specialization for
-				the global scope use the <code class="computeroutput">BOOST_MIRRORED_NAMESPACE()</code>
+				the global scope use the <code class="computeroutput">BOOST_MIRRORED_GLOBAL_SCOPE()</code>
 				macro.
 				</p>
 </div>
@@ -45,19 +45,130 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> NamespacePlaceholder&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_namespace.html#id496123-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_namespace.html#id459983-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_namespace.html#boost.mirror.meta_namespace.scope">scope</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_namespace.html#boost.mirror.meta_namespace.ancestors">ancestors</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id496009-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id495967-bb">full_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id459860-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id459818-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName&gt; 
-    <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id495913-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;);
+    <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id459764-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id670751"></a><h2>Description</h2>
+<a name="id705703"></a><h2>Description</h2>
+<p>The specializations of <code class="computeroutput">meta_type</code> can 
+				be used to get meta-information about the reflected types, some at compile-time and some at run-time.
+				The following examples show type reflection and basic 
+				<code class="computeroutput">meta_type</code> usage. Mirror works with the native C++ types
+				and some of the very common types like <code class="computeroutput">::std::string</code>, etc. out of the box.
+				Meta-types for many other types from the standard library and Boost
+			       	are also provided and can be <code class="computeroutput">#include</code>d when necessary.
+				</p>
+<div class="section" lang="en">
+<div class="titlepage"></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="meta_namespace.html#mirror.meta_namespace.reference.sample01">Example - Basic usage</a></span></dt>
+<dt><span class="section"><a href="meta_namespace.html#mirror.meta_namespace.reference.sample02">Example - Scope and ancestors</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.meta_namespace.reference.sample01"></a>Example - Basic usage</h6></div></div></div>
+<p>This sample code shows how to reflect a namespace and how to get its 
+					base and full name. 
+					</p>
+<a name="mirror.reference.sample.meta_namespace.usage01"></a><pre class="programlisting">
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::bcout();
+
+	// several namespaces are pre-registered
+	bcout &lt;&lt; BOOST_MIRRORED_GLOBAL_SCOPE() ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::std) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::base_name() &lt;&lt; endl;
+	//
+	bcout &lt;&lt; BOOST_MIRRORED_GLOBAL_SCOPE() ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::std) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::full_name() &lt;&lt; endl;
+
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.meta_namespace.reference.sample02"></a>Example - Scope and ancestors</h6></div></div></div>
+<p>The following example shows what can be done with the 
+					<code class="computeroutput">meta_namespace</code>s <code class="computeroutput">scope</code> and
+					<code class="computeroutput">ancestors</code> <code class="computeroutput">typedef</code>s. It also shows the usage
+					of the <code class="computeroutput">reflects_global_scope</code> trait
+					template.
+					</p>
+<a name="mirror.reference.sample.meta_namespace.usage02"></a><pre class="programlisting">
+#include &lt;boost/mpl/for_each.hpp&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+class printer
+{
+public:
+	template &lt;class MetaNamespace&gt;
+	void operator()(MetaNamespace mn)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		cts::bostream&amp; bcout = cts::bcout();
+		bcout &lt;&lt; 
+			BOOST_CTS_LIT("ancestor ") &lt;&lt;
+			ctr++ &lt;&lt;
+			BOOST_CTS_LIT(": '") &lt;&lt;
+			MetaNamespace::base_name() &lt;&lt;
+			BOOST_CTS_LIT("'") &lt;&lt;
+		endl;
+	}
+
+	printer(void):ctr(0){ }
+private:
+	int ctr;
+};
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::bcout();
+	//
+	typedef BOOST_MIRRORED_NAMESPACE(::boost::mirror) meta_boost_mirror;
+	//
+	// get the full name of the parent scope of the reflected namespace
+	bcout &lt;&lt; meta_boost_mirror::scope::full_name() &lt;&lt; endl;
+	//
+	// check whether the grandparent namespace is the global scope
+	if(reflects_global_scope&lt;meta_boost_mirror::scope::scope&gt; :: value)
+		bcout &lt;&lt; BOOST_CTS_LIT("OK") &lt;&lt; endl;
+	else 
+		bcout &lt;&lt; BOOST_CTS_LIT("Error") &lt;&lt; endl;
+
+	// the ancestors typedef is an mpl vector of meta_namespaces
+	printer p;
+	mpl::for_each&lt;meta_boost_mirror::ancestors&gt;(p);
+
+	return 0;
+}
+</pre>
+</div>
+</div>
 <div class="refsect2" lang="en">
-<a name="id670754"></a><h3>
-<a name="id496123-bbtypes"></a><code class="computeroutput">meta_namespace</code> public types</h3>
+<a name="id705799"></a><h3>
+<a name="id459983-bbtypes"></a><code class="computeroutput">meta_namespace</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
@@ -84,7 +195,7 @@
 					for <code class="computeroutput">meta_namespace</code>s
 					reflecting any namespace with the exception of the global scope:
 					</p>
-<pre class="programlisting">
+<a name="mirror.reference.sample.meta_namespace.ancestors01"></a><pre class="programlisting">
 using namespace ::boost;
 using namespace ::boost::mirror;
 
@@ -112,24 +223,25 @@ BOOST_MPL_ASSERT((
 		BOOST_MIRRORED_NAMESPACE(::boost::mirror)::scope 
 	&gt;
 ));
-					</pre>
+</pre>
 <p>For the <code class="computeroutput">meta_namespace</code>
 					reflecting the global scope the following holds true.
 					</p>
-<pre class="programlisting">
+<a name="mirror.reference.sample.meta_namespace.ancestors02"></a><pre class="programlisting">
 BOOST_MPL_ASSERT((
 	mpl::empty &lt;
 		BOOST_MIRRORED_GLOBAL_SCOPE()::ancestors
 	&gt;
 ));
-					</pre>
+
+</pre>
 <p>To find out whether a meta-namespace reflects the global scope
 					use the <code class="computeroutput">reflects_global_scope</code> template meta-function.
 					</p>
 </li>
 </ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id496009-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id459860-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
 					namespace reflected by a <code class="computeroutput">meta_namespace</code>.
 					For example the base namespace name "returned" by the invocation of 
@@ -141,7 +253,7 @@ BOOST_MPL_ASSERT((
 					<span class="bold"><strong>with</strong></span> the nested name specifier
 					is needed use the <code class="computeroutput">full_name</code> member function
 			       		instead.</p>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id495967-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id459818-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
 					namespace reflected by a <code class="computeroutput">meta_namespace</code>
 					with the nested name specifier. For example:
@@ -167,7 +279,7 @@ BOOST_MPL_ASSERT((
 </tr></tbody>
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName&gt; 
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id495913-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full);</pre>
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id459764-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full);</pre>
 <p>This static member template function returns either the base name 
 					<span class="bold"><strong>without</strong></span> the nested name specifier 
 					or the full name <span class="bold"><strong>with</strong></span> the 
