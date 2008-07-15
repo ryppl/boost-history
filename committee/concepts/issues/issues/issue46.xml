@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="46" status="New">
+<title>Should unconstrained templates succeed at type deduction during the
+instantiation of a constrained context?</title>
+<section><sref ref="[temp.deduct]"/></section>
+<submitter>James Widman</submitter>
+<date>14 Jul 2008</date>
+
+<discussion>
+  <p>As of N2676, [temp.deduct] says:
+      <blockquote>
+          If the reference to the template occurs within a constrained
+          context (14.10) and the template is an unconstrained template,
+          type deduction fails. 
+      </blockquote>
+      However, type deduction does <b>not</b> automatically fail for an
+      unconstrained template being considered during the instantiation of
+      the same constrained context.
+
+  </p>
+  <p>
+  There are differing opinions on this issue.  One (call it the "anti-UT"
+  position) says that an unconstrained template (UT) should never be
+  selected within the instantiation of a constrained context, and that
+  only constrained templates (CT) and non-template functions should be
+  considered; the other (call it the "pro-UT" position) says a UT should
+  be selected during the instantiation of a constrained context if,
+  neglecting requirements, it's more specialized than the other templates
+  being considered for a given call (and if in other respects it would
+  succeed during overload resolution over non-template functions---as 
+  usual).
+  </p>
+
+  <p>
+  The anti-UT argument goes something like this:
+  </p>
+
+  <p>
+  "If selected, a UT amounts to a late_check region.  To an arbitrary
+  stack depth N from the point where a UT is selected within a constrained
+  context instantiation, there is the danger that some non-zero number of
+  templates in that stack will use operations that are not defined for the
+  given argument types---and of course, ugly instantiation errors will
+  result in that case.  And of course, concept maps will be dropped, which
+  means that unintended things are likely to happen whenever a concept map
+  is 'interesting' (e.g., see the 'Semigroup' example in 6.9 stmt.late).
+  </p>
+
+  <p>
+  "But worse, this can happen completely without the knowledge or consent
+  of either the template author or the user of the constrained template.
+  <code>late_check</code> at least warns both the template author and the
+  template user to tread carefully---to beware of 'interesting' concept
+  maps and to take careful note of which functions and function templates
+  will be invoked within the late-checked block and within those entities.
+  But the current implicit 'pro-UT' rule has the effect of turning each
+  expression in a constrained context into a potential late-checked
+  expression.  And the template found at instantiation time could belong
+  to a third-party library---which means that the finger of blame will
+  eventually point to the third-party vendor, who may remedy the situation
+  by recommending that her users revert to a previous version of the third
+  party library---one that does not use constrained templates.  This
+  brings us to our next problem:
+  </p>
+
+  <p>
+  "The pro-UT rule is potentially a bad thing for evolving a code base:
+  part of that migration will undoubtedly involve placing both
+  unconstrained and constrained overloads of function templates within the
+  same namespace.  That ensures that both CT's and UT's will be considered
+  for a given call during the instantiation of a constrained context.  So
+  the implicit risk of the pro-UT rule could (rightly) scare people away
+  from placing a CT in the same namespace as a UT---thus raising the
+  barrier to making a transitional version of a library.
+  </p>
+
+  <p>
+  "Likewise, 'interesting' concept maps are likely to be frowned upon in
+  many shops if they could be dropped subtly as a result of the pro-UT
+  rule.
+  </p>
+
+  <p>
+  "In short, the goal of writing more type-safe generic code will become
+  somewhat incompatible with the goal of writing transitional libraries
+  that seek to bridge the gap between the 'old world' and the 'new world':
+  you can pursue one goal or the other, but in the general case, not both."
+  </p>
+
+  <p>
+  The pro-UT argument goes something like this:
+  </p>
+  <p>
+  [To be filled in soon]
+  </p>
+
+</discussion>
+
+<resolution>
+  <p>
+  </p>
+</resolution>
+</issue>
