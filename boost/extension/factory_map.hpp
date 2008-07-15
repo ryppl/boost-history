@@ -100,4 +100,3 @@ typedef basic_factory_map<default_type_info> factory_map;
 } // namespace boost
 
 #endif  // BOOST_EXTENSION_FACTORY_MAP_HPP
-
