@@ -6,17 +6,19 @@
 #ifndef BOOST_COROUTINE_CONTINUATION_20080321
 # define BOOST_COROUTINE_CONTINUATION_20080321
 # include "detail/context_interface.hpp"
-# include "move.hpp"
+# include <boost/type_traits/is_same.hpp>
 # include <stdlib.h>
 namespace boost{ namespace coroutines{ 
 
   namespace detail {
     extern "C" void trampoline(void *) { }
+
+    struct no_argument {};
   }
 
   /// Typeless one shot continuation. 
   ///
-  /// Represents the reified state of execution of one computation at
+  /// Represents the reified state of execution of one computation as
   /// captured at a specific point. The saved state can then be resumed
   /// later. Once captured, a continuation must be fired exactly once. 
   ///
@@ -38,9 +40,14 @@ namespace boost{ namespace coroutines{
   ///
   /// - once fired a continuation will remain in the fired state
   /// unless another continuation is move-assigned to it.
-  template<typename Context>
-  class continuation_tpl : public movable<continuation_tpl<Context> > {
+  ///
+  /// @note @c continuation is copyable, but all copies will refer to the
+  /// same logical continuaiton. Once a copy is fired, all other
+  /// copies are invalidated.
+  template<typename Context, typename PType = detail::no_argument>
+  class continuation_tpl {
     typedef Context context_interface;
+    typedef PType param_type;
 
     template<typename Functor>
     struct bound {
@@ -48,8 +55,8 @@ namespace boost{ namespace coroutines{
         bound& b = *static_cast<bound*>(x);
 
         // We do not know how long b is going to be valid so we need
-        // to copy stuff out of it: first retrive just created context;
-        continuation_tpl continuation = move(b.continuation);
+        // to copy stuff out of it: first retrive the just created context;
+        continuation_tpl continuation = b.continuation;
 
         // is that what we wanted?
         BOOST_ASSERT(continuation.fired());
@@ -61,15 +68,14 @@ namespace boost{ namespace coroutines{
           Functor functor = b.functor;
           
           // ... and of the caller continuation ...
-          continuation_tpl caller = move(*continuation.m_chain);
+          continuation_tpl caller = *continuation.m_chain;
 
           BOOST_ASSERT(!caller.fired());
 
           // ... pass it to the user function... which will eventually
           // return the continuation we will have to exit to.
 
-          //move_from<continuation_tpl> mc = move(caller);
-          final = functor(move(caller));        
+          final = functor(caller);        
           
           // Functor is destroyed here
         }
@@ -105,6 +111,7 @@ namespace boost{ namespace coroutines{
     };
   public:
 
+#ifdef MOVE
     /// Move constructor.
     ///
     /// Construct a continuation from an rvalue continuation. 
@@ -117,19 +124,39 @@ namespace boost{ namespace coroutines{
       m_state = from->m_state;
       from->m_state = state::fired;
     }
+#endif
+
+    continuation_tpl(const continuation_tpl & from) {
+      BOOST_ASSERT(&from != this);
+      m_chain = from.m_chain;
+      m_ctx = from.m_ctx;
+      m_state = from.m_state;
+      //from.m_state = state::fired;
+    }
     
     /// Move assignement operator.
     ///
     /// Assign an rvalue right hand side to @c this.
     ///
     /// @post <tt>this->fired() == original_rhs.fired() && rhs.fired() == true  </tt>.
+#ifdef MOVE
     continuation_tpl&
     operator=(move_from<continuation_tpl> rhs) {
       BOOST_ASSERT(&*rhs != this);
       m_chain = rhs->m_chain;
-      m_ctx = move(rhs->m_ctx);
+      m_ctx = rhs->m_ctx;
       m_state = rhs->m_state;
-      rhs->m_state = state::fired;
+      return *this;
+    }
+#endif
+
+    continuation_tpl&
+    operator=(const continuation_tpl & rhs) {
+      BOOST_ASSERT(&rhs != this);
+      m_chain = rhs.m_chain;
+      m_ctx = rhs.m_ctx;
+      m_state = rhs.m_state;
+      //rhs.m_state = state::fired;
       return *this;
     }
 
@@ -168,7 +195,7 @@ namespace boost{ namespace coroutines{
 
       BOOST_ASSERT(current.fired());
 
-      continuation_tpl other = move(*current.m_chain);
+      continuation_tpl other = *current.m_chain;
       if (other.m_state == state::delete_this) {
         context_interface::destroy_context(other.m_ctx);
         other.m_state = state::fired;
@@ -176,13 +203,38 @@ namespace boost{ namespace coroutines{
       } else {
         BOOST_ASSERT(!other.fired());
       }
-      return move(other);
+      return other;
     }
 
     template<typename F>
     friend 
     continuation_tpl 
-    callcc1(F f, std::ptrdiff_t stack_size = context_interface::default_stack_size) {
+    callcc1(F f, param_type in, param_type& out, std::ptrdiff_t stack_size = context_interface::default_stack_size) {
+      bound<F> b = { (void*)0xDEADBEEF, f, continuation_tpl(), (void*)0xDEADBEEF };
+
+      // make a new continuation that will invoke f.
+      detail::callback_type cb = &bound<F>::callcc1_target;
+      context_interface::make_context
+        ( b.continuation.m_ctx, 
+          cb, 
+          (void*)&b,
+          (std::ptrdiff_t)stack_size);
+
+      b.continuation.m_state = state::ready;
+      b.continuation.m_chain = &b.continuation;
+
+      // then call it.
+      return b.continuation();
+
+    }
+
+
+    template<typename F>
+    friend 
+    continuation_tpl 
+    callcc1(F f,  std::ptrdiff_t stack_size = context_interface::default_stack_size) {
+      static const int i = boost::is_same<param_type, void>::value;
+      BOOST_STATIC_ASSERT((i));
       bound<F> b = { (void*)0xDEADBEEF, f, continuation_tpl(), (void*)0xDEADBEEF };
 
       // make a new continuation that will invoke f.
@@ -204,7 +256,7 @@ namespace boost{ namespace coroutines{
     /// Destructor.
     /// @pre <tt>fired() == true</tt>
     ~continuation_tpl() {
-      BOOST_ASSERT(fired());
+      //BOOST_ASSERT(fired());
     }
 
     /// Check if the continuation has been invoked.
@@ -216,9 +268,8 @@ namespace boost{ namespace coroutines{
     /// @pre this continuation must be active.
     /// <tt>fired() == true</tt>.
     continuation_tpl& caller_continuation() const {
-      //
       BOOST_ASSERT(fired());
-      // the caller is a valid coroutine or is a dead coroutine.
+      // the caller is a valid continuation or is a dead continuation.
       BOOST_ASSERT(!m_chain->fired()|| m_chain->m_chain == m_chain);
       return *m_chain;
     }
@@ -231,8 +282,8 @@ namespace boost{ namespace coroutines{
 
     continuation_tpl * m_chain;
     context_storage m_ctx;
-
     BOOST_DEDUCED_TYPENAME state::my_state m_state;
+    param_type m_p;
 
     continuation_tpl() 
       : m_chain()

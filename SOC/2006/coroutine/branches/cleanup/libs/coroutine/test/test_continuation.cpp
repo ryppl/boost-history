@@ -7,7 +7,7 @@
 #include <iostream>
 #include <boost/coroutine/detail/context_linux.hpp>
 #include <boost/coroutine/continuation.hpp>
-//#include <boost/test/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 namespace coro = boost::coroutines; 
 
@@ -19,7 +19,7 @@ continuation f(continuation x) {
   std::cerr << "**** in f (2)"<<std::endl;
   x = x();
   std::cerr << "**** in f (3)"<<std::endl;
-  return move(x);
+  return x;
 }
 
 struct g {
@@ -29,7 +29,7 @@ struct g {
       std::cerr << "**** in g ("<<i<<')'<<std::endl;
       x = x();
     }
-    return f(move(x));
+    return f(x);
   }
   int n;
 };
@@ -52,18 +52,14 @@ void test_continuation() {
   }
 }
 
-int main() {
-  test_continuation();
-  return -1;
+
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+  std::cout << "starting test" <<std::endl;
+    boost::unit_test::test_suite *test = BOOST_TEST_SUITE("continuation test");
+
+    test->add(BOOST_TEST_CASE(&test_continuation));
+
+    return test;
 }
-
-
-// boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
-// {
-//   std::cout << "starting test" <<std::endl;
-//     boost::unit_test::test_suite *test = BOOST_TEST_SUITE("continuation test");
-
-//     test->add(BOOST_TEST_CASE(&test_continuation));
-
-//     return test;
-// }

@@ -40,7 +40,7 @@ if [ os.name ] = WINDOWS
 
 project
     : requirements
-      	# <library>/boost/test//boost_unit_test_framework
+         <library>/boost/test//boost_unit_test_framework
       	<library>../build//boost_coroutine
       	<link>static
 	<define>"_WIN32_WINNT=0x0400" #$(TARGET_SPECIFIC_DEFINE)
