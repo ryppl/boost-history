@@ -13,7 +13,7 @@ import os ;
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 project
     : requirements
-      <library>$(BOOST_ROOT)libs/test/build//boost_unit_test_framework/<link>shared
+      <library>$(BOOST_ROOT)/libs/test/build//boost_unit_test_framework/<link>shared
       <include>../../../
       <include>$(BOOST_ROOT)
       <define>BOOST_TEST_NO_AUTO_LINK=1
