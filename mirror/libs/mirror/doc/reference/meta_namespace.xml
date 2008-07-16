@@ -63,7 +63,7 @@
 					</para>
 					<para>The first argument must be either <code>mpl::true_</code> for full type name
 					or <code>mpl::false_</code> for base type name and the second argument must be
-					a specialization of the <code>::std::char_traits</code> template with <code>char</code>
+					an instance of the <code>::std::char_traits</code> template with <code>char</code>
 					for <code>::std::string</code> return value type or <code>wchar_t</code> for
 					<code>::std::wstring</code> return value type.
 					</para>

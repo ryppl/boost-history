@@ -37,7 +37,7 @@
 				<section id="mirror.meta_type.reference.sample01">
 					<title>Example - Basic usage</title>
 					<para>This sample code shows how to reflect a type and how to get its full type name.
-					Since various specializations of <code>::std::pair</code> are reflected,
+					Since various instances of <code>::std::pair</code> are reflected,
 					the <code><classname>meta_type</classname></code>s for this template need to be 
 					included.
 					</para>
@@ -75,7 +75,7 @@
 					</para>
 					<para>The first argument must be either <code>mpl::true_</code> for full type name
 					or <code>mpl::false_</code> for base type name and the second argument must be
-					a specialization of the <code>::std::char_traits</code> template with <code>char</code>
+					an instance of the <code>::std::char_traits</code> template with <code>char</code>
 					for <code>::std::string</code> return value type or <code>wchar_t</code> for
 					<code>::std::wstring</code> return value type.
 					</para>
