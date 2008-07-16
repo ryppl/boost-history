@@ -16,53 +16,102 @@
 namespace boost {
 namespace spatial_index {
 
-/// spatial index interface
-template<typename Point, typename Value, typename Index>
-class spatial_index
-{
+  /// spatial index interface
+  template<typename Point, typename Value, typename Index>
+  class spatial_index
+  {
+  private:
+    /// non constructible
+    spatial_index() {}
+  };
 
-public:
 
-  /// quadtree constructor
-  spatial_index(const geometry::box<Point> &b, const unsigned int M) : i_(b, M) {}
+  /// forward declaration for quadtree
+  template<typename Point, typename Value>
+  class quadtree;
 
-  /// rtree constructor
-  spatial_index(const unsigned int m, const unsigned int M) : i_(m, M) {}
+  /// forward declaration for rtree
+  template<typename Point, typename Value>
+  class rtree;
 
-  /// insert data 'v' with key 'k'
-  void insert(const Point &k, const Value &v) { i_.insert(k, v); }
 
-  /// insert data with envelope 'e' with key 'k'
-  void insert(const geometry::box<Point> &e, const Value &v) { i_.insert(e, v); }
+  /// specialization for quadtree
+  template<typename Point, typename Value>
+  class spatial_index<Point, Value, quadtree<Point, Value> >
+  {
+  public:
+    /// quadtree constructor
+    spatial_index(const geometry::box<Point> &b, const unsigned int M) : i_(b, M) {}
 
-  /// remove data with key 'k'
-  void remove(const Point &k) { i_.remove(k); }
+    /// insert data 'v' with key 'k'
+    void insert(const Point &k, const Value &v) { i_.insert(k, v); }
 
-  /// remove data with key 'k'
-  void remove(const geometry::box<Point> &k) { i_.remove(k); }
+    /// remove data with key 'k'
+    void remove(const Point &k) { i_.remove(k); }
+
+    /// bulk insert data from values
+    void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) { i_.bulk_insert(values, points); }
+
+    /// find element with key 'k'
+    Value find(const Point &k) { return i_.find(k); }
+
+    /// find element in the defined rectangle
+    /// TODO: change container
+    std::deque<Value> find(const geometry::box<Point> &r) { return i_.find(r); }
+
+    /// element count in the index
+    unsigned int elements(void) const { return i_.elements(); }
+
+    /// debug print
+    void print(void) { i_.print(); }
+
+  private:
+    quadtree<Point, Value> i_;
+  };
+
+  /// specialization for rtree
+  template<typename Point, typename Value>
+  class spatial_index<Point, Value, rtree<Point, Value> >
+  {
+  public:
+
+    /// rtree constructor
+    spatial_index(const unsigned int m, const unsigned int M) : i_(m, M) {}
+
+    /// insert data 'v' with key 'k'
+    void insert(const Point &k, const Value &v) { i_.insert(k, v); }
+
+    /// insert data with envelope 'e' with key 'k'
+    void insert(const geometry::box<Point> &e, const Value &v) { i_.insert(e, v); }
+
+    /// remove data with key 'k'
+    void remove(const Point &k) { i_.remove(k); }
+
+    /// remove data with key 'k'
+    void remove(const geometry::box<Point> &k) { i_.remove(k); }
 	
-  /// bulk insert data from values
-  void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) { i_.bulk_insert(values, points); }
+    /// bulk insert data from values
+    void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) { i_.bulk_insert(values, points); }
 
-  /// find element with key 'k'
-  Value find(const Point &k) { return i_.find(k); }
+    /// find element with key 'k'
+    Value find(const Point &k) { return i_.find(k); }
 
-  /// find element in the defined rectangle
-  /// TODO: change container
-  std::deque<Value> find(const geometry::box<Point> &r) { return i_.find(r); }
+    /// find element in the defined rectangle
+    /// TODO: change container
+    std::deque<Value> find(const geometry::box<Point> &r) { return i_.find(r); }
 
-  /// element count in the index
-  unsigned int elements(void) const { return i_.elements(); }
+    /// element count in the index
+    unsigned int elements(void) const { return i_.elements(); }
 
-  /// debug print
-  void print(void) { i_.print(); }
+    /// debug print
+    void print(void) { i_.print(); }
 	      
-private:
-  Index i_;
-};
+  private:
+    rtree<Point, Value> i_;
+  };
+
 
 } // namespace spatial_index
 } // namespace boost
 
 #endif // BOOST_SPATIAL_INDEX_SPATIAL_INDEX_HPP
-

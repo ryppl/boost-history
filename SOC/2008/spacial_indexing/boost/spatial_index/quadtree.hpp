@@ -47,13 +47,7 @@ public:
     element_count--;
   }
 
-  /// remove data with key 'k'
-  void remove(const geometry::box<Point> &k)
-  {
-    std::cerr << "Boxes not implemented in quadtrees." << std::endl;
-  }
-
-	  
+ 
   void insert(const Point &k, const Value &v)
   {
     element_count++;
@@ -66,12 +60,6 @@ public:
     std::cerr << "Elements: " << elements() << std::endl;
     root.print();
     std::cerr << "=================================" << std::endl;
-  }
-
-  /// insert data with envelope 'e' with key 'k'
-  void insert(const geometry::box<Point> &e, const Value &v)
-  {
-    throw std::logic_error("Box insertion not implemented.");
   }
 
 
