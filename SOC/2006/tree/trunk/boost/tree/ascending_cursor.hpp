@@ -187,6 +187,7 @@ class ascending_cursor
 	}
 
 public:
+// TODO: Deprecate
 	bool is_root() const
 	{
 		return (m_s.size() == 1);
@@ -261,7 +262,7 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
 
  private: 
  
- 	std::size_t m_root_depth;
+ 	std::size_t const m_root_depth;
  	
  	friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
