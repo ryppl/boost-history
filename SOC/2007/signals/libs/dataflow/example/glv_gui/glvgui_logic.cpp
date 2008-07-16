@@ -36,17 +36,17 @@ public:
     }
     void invoke()
     {
-        if(m_consumer_port.connected())
+        if(port<0>().connected())
         {
-            value(m_consumer_port.get(), 0);
-            m_producer_port.set(m_consumer_port.get());
+            value(port<0>().get(), 0);
+            port<1>().set(port<0>().get());
         }
     }
     bool onEvent(glv::Event::t e, glv::GLV& glv)
     {
         bool response = glv::Button::onEvent(e, glv);
         std::cout <<"preval: " << value(0) << std::endl;
-        m_producer_port.set(value(0));
+        port<1>().set(value(0));
         return response;
     }
 };
@@ -65,10 +65,48 @@ public:
     }
     void invoke()
     {
-        if(m_consumer_port.connected())
+        if(port<0>().connected())
         {
-            m_producer_port.set(!m_consumer_port.get());
-            value(m_producer_port.get(), 0);
+            port<1>().set(!port<0>().get());
+            value(port<1>().get(), 0);
+        }
+    }
+};
+
+// adder has two input ports and an output port.
+// invoking adds the two inputs into the output.
+class and_operation : public fusion_component<boost::mpl::vector<bool,bool>,bool>
+{
+public:
+    typedef fusion_component<boost::mpl::vector<bool,bool>,bool> base_type;
+    
+    and_operation(df::managed::network &network)
+        : base_type(network)
+    {}
+    void invoke()
+    {
+        if(port<0>().connected())
+        {
+            port<2>().set(port<0>().get() && port<1>().get());
+        }
+    }
+};
+
+// adder has two input ports and an output port.
+// invoking adds the two inputs into the output.
+class or_operation : public fusion_component<boost::mpl::vector<bool,bool>,bool>
+{
+public:
+    typedef fusion_component<boost::mpl::vector<bool,bool>,bool> base_type;
+    
+    or_operation(df::managed::network &network)
+        : base_type(network)
+    {}
+    void invoke()
+    {
+        if(port<0>().connected())
+        {
+            port<2>().set(port<0>().get() || port<1>().get());
         }
     }
 };
@@ -96,6 +134,8 @@ public:
     {
         add_component<source>("src", boost::ref(m_network));
         add_component<not_operation>("not", boost::ref(m_network));
+        add_component<and_operation>("and", boost::ref(m_network));
+        add_component<or_operation>("or", boost::ref(m_network));
         add_component<update_network>("upd", boost::ref(m_network));
     }
 private:

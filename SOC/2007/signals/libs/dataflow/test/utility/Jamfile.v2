@@ -15,3 +15,5 @@ run test_forced_sequence.cpp ;
 run test_bind_mem_fn.cpp ;
 run test_bind_mem_fn_overload.cpp ;
 run test_has_call_operator.cpp ;
+run test_vector_same_initialization.cpp ;
+run test_lazy_sequence.cpp ;

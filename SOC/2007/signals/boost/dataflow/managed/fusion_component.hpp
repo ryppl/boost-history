@@ -6,59 +6,117 @@
 #ifndef BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP
 #define BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP
 
+#include <boost/dataflow/detail/make_ref.hpp>
 #include <boost/dataflow/support/fusion_component.hpp>
 #include <boost/dataflow/managed/port.hpp>
 #include <boost/dataflow/managed/component.hpp>
 #include <boost/dataflow/support/component_operation.hpp>
+#include <boost/dataflow/utility/forced_sequence.hpp>
+#include <boost/fusion/container/lazy_sequence.hpp>
+#include <boost/fusion/include/as_vector.hpp>
+#include <boost/fusion/include/size.hpp>
+#include <boost/fusion/include/transform.hpp>
 #include <boost/mpl/map.hpp>
+#include <boost/mpl/joint_view.hpp>
+#include <boost/mpl/vector.hpp>
 
 namespace boost { namespace dataflow { namespace managed {
 
-template<typename InOutType>
+namespace detail
+{
+    struct add_reference;
+    
+    template<typename T, typename PortCategory>
+    struct make_managed_port
+    {
+        typedef managed::port<T, PortCategory> type;
+    };
+    
+    template<typename ConsumerSignatures, typename ProducerSignatures>
+    struct make_fusion_ports
+    {
+        typedef typename fusion::result_of::as_vector<
+            mpl::joint_view<
+                typename mpl::transform<
+                    ConsumerSignatures,
+                    make_managed_port<mpl::_1, ports::consumer>
+                >::type,
+                typename mpl::transform<
+                    ProducerSignatures,
+                    make_managed_port<mpl::_1, ports::producer>
+                >::type
+            >
+        >::type type;
+    };
+
+}
+
+template<typename InTypes, typename OutTypes>
 struct component_traits
-    : public dataflow::fusion_component_traits<
-        fusion::vector<
-            managed::port<InOutType, ports::consumer> &,
-            managed::port<InOutType, ports::producer> &
-        >,
+    : public dataflow::component_traits<
+        typename detail::make_fusion_ports<InTypes, OutTypes>::type,
         mpl::map< >,
         managed::tag>
 {
+    typedef boost::fusion::transform_view<
+            typename detail::make_fusion_ports<InTypes, OutTypes>::type,
+            boost::dataflow::detail::make_ref
+        > fusion_ports;
+
     template<typename Component>
     static typename component_traits::fusion_ports get_ports(Component &component)
     {
-        return typename component_traits::fusion_ports(
-            component.consumer_port(),
-            component.producer_port());
+        return typename component_traits::fusion_ports(component.ports(), boost::dataflow::detail::make_ref());
     };
 };
 
-template<typename InOutType>
+namespace detail {
+
+    struct component_f
+    {
+        typedef component &result_type;
+        
+        component_f(component &c)
+            : m_component(c) {}
+        
+        template<typename Index>
+        result_type operator()(Index) const
+        {   return m_component; }
+        
+        mutable result_type m_component;
+    };
+
+}
+
+template<typename InTypes, typename OutTypes=InTypes>
 class fusion_component : public component
 {
 public:
-    typedef component_traits<InOutType> dataflow_traits;
+    typedef typename dataflow::utility::forced_sequence<InTypes>::type in_types_sequence;
+    typedef typename dataflow::utility::forced_sequence<OutTypes>::type out_types_sequence;
+    
+    typedef component_traits<in_types_sequence, out_types_sequence> dataflow_traits;
+    typedef typename detail::make_fusion_ports<in_types_sequence, out_types_sequence>::type ports_type;
     
     fusion_component(network &n)
         : component(n)
-        , m_consumer_port(*this)
-        , m_producer_port(*this)
+        , m_ports(boost::fusion::make_lazy_sequence(detail::component_f(*this), typename fusion::result_of::size<ports_type>::type()))
     {}
-    port<InOutType, ports::consumer> &consumer_port()
-    {   return m_consumer_port; }
-    port<InOutType, ports::producer> &producer_port()
-    {   return m_producer_port; }
+    template<int Index>
+    typename fusion::result_of::at_c<ports_type, Index>::type port()
+    {   return fusion::at_c<Index>(m_ports); }
+    ports_type &ports()
+    {   return m_ports; }
 protected:
-    port<InOutType, ports::consumer> m_consumer_port;
-    port<InOutType, ports::producer> m_producer_port;
+    ports_type m_ports;
 };
 
 }
 
 namespace extension {
 
-    template<typename T>
-    struct component_operation_impl<managed::component_traits<T>, operations::invoke >
+    template<typename InTypesSequence, typename OutTypesSequence>
+    struct component_operation_impl<managed::component_traits<InTypesSequence,OutTypesSequence>, operations::invoke >
     {
         typedef void result_type;
         

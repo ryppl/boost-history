@@ -16,8 +16,11 @@ int test_main(int, char* [])
     df::managed::network network;
     df::managed::fusion_component<bool> c(network);
     
-    BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<0>, df::managed::tag >(c)), &c.consumer_port());
-    BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<1>, df::managed::tag >(c)), &c.producer_port());
+    df::get_port<boost::mpl::int_<0>, df::managed::tag >(c);
+    c.port<0>();
+    
+    BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<0>, df::managed::tag >(c)), &c.port<0>());
+    BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<1>, df::managed::tag >(c)), &c.port<1>());
         
     return 0;
 } // int test_main(int, char* [])

@@ -19,8 +19,8 @@ int test_main(int, char* [])
     df::managed::network network;
     df::managed::fusion_component<bool> component(network);
         
-    blueprint::port_t<df::managed::port<bool, df::ports::producer> &, df::managed::tag > source(component.producer_port());
-    blueprint::port_t<df::managed::port<bool, df::ports::consumer>, df::managed::tag > sink(component.consumer_port());
+    blueprint::port_t<df::managed::port<bool, df::ports::producer> &, df::managed::tag > source(component.port<1>());
+    blueprint::port_t<df::managed::port<bool, df::ports::consumer>, df::managed::tag > sink(component.port<0>());
     
     BOOST_CHECK((df::is_complemented_port<df::managed::port<bool, df::ports::producer>, df::managed::tag>::value));
     BOOST_CHECK(source.is_complemented_port());

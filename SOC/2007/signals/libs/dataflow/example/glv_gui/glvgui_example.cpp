@@ -32,7 +32,6 @@ public:
     }
     void operator()(float x)
     {
-        std::cout <<"val: " << x << std::endl;
         value(x, 0);
         out(x);
     }
@@ -52,7 +51,6 @@ public:
     bool onEvent(glv::Event::t e, glv::GLV& glv)
     {
         bool response = glv::Slider::onEvent(e, glv);
-        std::cout <<"preval: " << value(0) << std::endl;
         out(value(0));
         return response;
     }

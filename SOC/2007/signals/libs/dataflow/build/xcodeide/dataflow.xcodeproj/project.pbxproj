@@ -140,6 +140,8 @@
 		089CDA940D832AD200731C70 /* tutorial.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tutorial.qbk; sourceTree = "<group>"; };
 		089CDAA90D8333CC00731C70 /* unary_operation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = unary_operation.hpp; sourceTree = "<group>"; };
 		089E78C20E132E220008C0BB /* dynamic_multi_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_multi_port.hpp; sourceTree = "<group>"; };
+		089F845A0E2CFAB900F6B668 /* lazy_sequence.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lazy_sequence.hpp; sourceTree = "<group>"; };
+		089F845E0E2D032E00F6B668 /* test_lazy_sequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_lazy_sequence.cpp; sourceTree = "<group>"; };
 		08A0B20C0D21C4A90054AD32 /* cppgui_example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = cppgui_example.cpp; sourceTree = "<group>"; };
 		08A0B20D0D21C4A90054AD32 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08A0B2AC0D21D88F0054AD32 /* blueprint_bank.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = blueprint_bank.cpp; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 		08D2C7330D1DDE5C008388D7 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
 		08D2C7390D1DDEB8008388D7 /* fltk_gui_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fltk_gui_example.cpp; sourceTree = "<group>"; };
 		08DC14FC0C951C4800B96B2E /* Cone.cxx */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Cone.cxx; sourceTree = "<group>"; };
+		08E180320E2C863D00F4BF04 /* test_vector_same_initialization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_vector_same_initialization.cpp; sourceTree = "<group>"; };
 		08EBA7590CFF8B6D0080E225 /* example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = example.cpp; sourceTree = "<group>"; };
 		08EF045E0CEBF1AD002ABBBC /* port_t.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port_t.hpp; sourceTree = "<group>"; };
 		08EF9B220C5D506A00D4D206 /* applicator.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = applicator.hpp; sourceTree = "<group>"; };
@@ -387,6 +390,7 @@
 		080DD7560C13908400EEB53D = {
 			isa = PBXGroup;
 			children = (
+				089B78DE0E2C2E5900D09757 /* fusion */,
 				08A2D5030E2A728A00D8FA04 /* glv */,
 				08A439340E295B35009845FD /* build */,
 				0800AC390C8CAAC300994538 /* boost-build.jam */,
@@ -435,6 +439,8 @@
 				089AE5BC0D79CE5E00AB9DA8 /* test_bind_mem_fn.cpp */,
 				08920DCE0D84514B00E148EF /* test_bind_mem_fn_overload.cpp */,
 				08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */,
+				08E180320E2C863D00F4BF04 /* test_vector_same_initialization.cpp */,
+				089F845E0E2D032E00F6B668 /* test_lazy_sequence.cpp */,
 			);
 			path = utility;
 			sourceTree = "<group>";
@@ -463,6 +469,23 @@
 				089321B30D7BB19D00F16965 /* gui_example.qbk */,
 			);
 			path = examples;
+			sourceTree = "<group>";
+		};
+		089B78DE0E2C2E5900D09757 /* fusion */ = {
+			isa = PBXGroup;
+			children = (
+				089B78DF0E2C2E5900D09757 /* container */,
+			);
+			name = fusion;
+			path = ../../../../boost/fusion;
+			sourceTree = SOURCE_ROOT;
+		};
+		089B78DF0E2C2E5900D09757 /* container */ = {
+			isa = PBXGroup;
+			children = (
+				089F845A0E2CFAB900F6B668 /* lazy_sequence.hpp */,
+			);
+			path = container;
 			sourceTree = "<group>";
 		};
 		089C08A30E0AFA5E00397123 /* managed */ = {
