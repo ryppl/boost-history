@@ -88,6 +88,7 @@ int main(void)
 	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
 	//
+	//
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The type name is: "<< meta_T::base_name() << endl;
 	bcout << "---------------------------------------------------" << endl;

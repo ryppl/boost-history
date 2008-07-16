@@ -36,24 +36,35 @@ private:
 
 
 public:
-	template <bool FullName>
-	inline static cts::bstring build_name(
+	template <bool FullName, typename CharT>
+	inline static ::std::basic_string<CharT> build_name(
 		mpl::bool_<FullName> full_or_base,
-		cts::bstring& left, 
-		cts::bstring& right,
-		cts::bstring& ex,
-		cts::bstring& arg
+		::std::basic_string<CharT>& left, 
+		::std::basic_string<CharT>& right,
+		::std::basic_string<CharT>& ex,
+		::std::basic_string<CharT>& arg
 	)
 	{
-		static cts::bstring comma(BOOST_CTS_LIT(", "));
-		static cts::bstring l_angle(BOOST_CTS_LIT("< "));
-		static cts::bstring r_angle(BOOST_CTS_LIT(" >"));
+		typedef type_name_decorator_literals<CharT> lits;
+		static ::std::basic_string<CharT> comma(lits::get(lits::comma()));
+		static ::std::basic_string<CharT> l_angle(lits::get(lits::langle()));
+		static ::std::basic_string<CharT> r_angle(lits::get(lits::rangle()));
+		//
+		::std::char_traits<CharT> cht;
 		//
 		// get the template name
-		cts::bstring res(base_meta_template::get_name(full_or_base));
+		::std::basic_string<CharT> res(base_meta_template::get_name(
+			full_or_base,
+			cht
+		));
 		// argument list
 		res.append(l_angle);
-		append_args(((TplArgTypeList*)0), res, full_or_base);
+		append_args(
+			((TplArgTypeList*)0), 
+			res, 
+			full_or_base,
+			cht
+		);
 		res.append(r_angle);
 		//
 		return res;

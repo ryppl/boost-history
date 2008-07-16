@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="char_type_switch.intro">
+	<title>Introduction</title>
+
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::cts"/>
+
+<section id="char_type_switch.abstract">
+	<title>Abstract</title>
+
+<para>
+	The <libraryname>Char Type Switch</libraryname> is a utility, which allows
+	to change the type of string characters (and most of the related things) 
+	used in the source code at compile time without breaking it, if several 
+	general guidelines are followed.
+</para>
+<para>
+	The library introduces a new character type called 
+	<code><classname>::boost::cts::bchar</classname></code> that can be 
+	defined as <code>wchar_t</code> or as <code>char</code> based on whether
+	the <code>BOOST_CTS_USE_WIDE_CHARS</code> preprocessor symobol is or is not defined.
+	Based on the real type of <code>bchar</code> other types like 
+	<code><classname>::boost::cts::bstring</classname></code>, 
+	<code><classname>::boost::cts::bistream</classname></code>, 
+	<code><classname>::boost::cts::bostream</classname></code>, etc., 
+	functions like 
+	<code><functionname>::boost::cts::bstrlen</functionname></code>, 
+	<code><functionname>::boost::cts::bstrcpy</functionname></code>, etc.
+	and macros like 
+	<code><macroname>BOOST_CTS_LIT</macroname>(STRING_LITERAL)</code> OR
+	<code><macroname>BOOST_CTS_LIT_LENGTH</macroname>(STRING_LITERAL)</code> 
+	are defined.
+</para>
+<para>
+	Most of the string operations in many applications and libraries do not logically
+	depend on the definition of the underlying character type.
+	If the types like <code>bchar</code>, <code>bstring</code>, etc. are used consistently 
+	in the source code, instead of <code>char</code>/<code>wchar_t</code> or 
+	<code>::std::string</code>/<code>::std::wstring</code>, the <libraryname>Char Type Switch</libraryname>
+	greatly simplifies the process of changing the character type used by a library
+	or an application, when it becomes obvious that this change is necessary.
+</para>
+<note><para>
+	This library is not handling conversions between various character encodings. 
+</para></note>
+
+</section>
+
+
+<section id="char_type_switch.motivation">
+<title>Motivation</title>
+<para>
+	It is not always simple, possible or wise to decide 
+	which character type to use in the an application 
+	or a library when the development process starts.
+	This decision is influenced by factors many of which are clear 
+	only much later in the development process or even just before
+	the deployment in a concrete enviroment, like the character
+	encodings to be used, the memory requirements, other libraries,
+	etc.
+</para>
+<para>
+	When developing a library, toolkit, or a framework it is even more
+	important to leave this decision to the application programmers
+	that will be using it. A library thus should support both
+	single-byte characters and wide chars. There are several ways
+	how to implement this support.
+</para>
+<para>
+	One of the ways for a library to support different character types
+	is to provide a dual interface using different identifiers for
+	string-related types, classes and functions. For example a naming 
+	convention to prepend or append a defined prefix or suffing to the
+	base identifiers. For example:
+</para>
+<programlisting>
+// return some text as a string of chars
+const char* get_some_text_narrow(SomeType an_arg);
+// return some text as a string of wchars
+const wchar_t* get_some_text_wide(SomeType an_arg);
+
+// or 
+::std::string ansi_get_some_text(SomeType an_arg);
+::std::wstring wide_get_some_text(SomeType an_arg);
+</programlisting>
+<para>
+	The problem with this approach is that it's not very generic what
+	makes it unacceptable for many applications. A better 
+	way is to pass the required character type as a (template) argument and
+	to use function overloads:
+</para>
+<programlisting>
+::std::basic_string&lt;char&gt;&amp; get_some_text(::std::char_traits&lt;char&gt;);
+::std::basic_string&lt;wchar_t&gt;&amp; get_some_text(::std::char_traits&lt;wchar_t&gt;);
+
+// or
+::std::basic_string&lt;char&gt;&amp; get_some_text(::std::basic_string&lt;char&gt;&amp; str);
+::std::basic_string&lt;wchar_t&gt;&amp; get_some_text(::std::basic_string&lt;wchar_t&gt;&amp;);
+
+</programlisting>
+<para>
+	This however, sometimes leads to long and ugly expressions and adds the requirement
+	to somehow pass the character type to the function or template. 
+	There are many applications that consistently use just one character type
+	and here the need to explicitly pass the type over and over is especially 
+	annoying.
+</para>
+<para>
+	This can be solved using <code>typedef</code>s.
+</para>
+
+<!--
+<section id="char_type_switch.motivation.problem.typenames">
+	<title>Problem - Querying typenames</title>
+
+	<para>
+	</para>
+	<xi:include href="samples/typenames_naive.xml"/>
+
+</section>
+-->
+
+</section>
+
+</section>

@@ -18,8 +18,8 @@
   </preface>
 
   <part id="libraries">
-    <title>The Mirror library</title>
-
+    <title>Libraries</title>
     <xi:include href="../../libs/mirror/doc/mirror.xml"/>
+    <xi:include href="../../libs/char_type_switch/doc/char_type_switch.xml"/>
   </part>
 </boostbook>

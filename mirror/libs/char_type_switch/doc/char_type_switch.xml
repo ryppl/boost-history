@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<library name="Char Type Switch" 
+	dirname="char_type_switch" 
+	last-revision="$Date: 2008-07-16 10:36:00 +0200 (Wed, 16 Jul 2008)  $" 
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	id="char_type_switch" 
+>
+	<libraryinfo>
+		<author>
+			<firstname>Matúš</firstname>
+			<surname>Chochlík</surname>
+			<email>chochlik -at- gmail.com</email>
+			<email>Matus.Chochlik -at- fri.uniza.sk</email>
+		</author>
+
+		<copyright>
+			<year>2008</year>
+			<holder>Matúš Chochlík</holder>
+		</copyright>
+
+		<legalnotice>
+			<para>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<filename>LICENSE_1_0.txt</filename> or copy at <ulink
+				url="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+			</para>
+		</legalnotice>
+
+		<librarypurpose>Utility that allows to switch the character type and things related to it at compile time</librarypurpose>
+		<librarycategory name="category:utilities"/>
+	</libraryinfo>
+
+	<title>Char Type Switch</title>
+
+	<xi:include href="introduction.xml"/>
+	<!--
+	<xi:include href="tutorial.xml"/>
+	<xi:include href="reference.xml"/>
+	-->
+
+</library>
+

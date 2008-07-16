@@ -35,12 +35,18 @@ struct meta_type
 
 	inline static const cts::bstring& base_name(void)
 	{
-		return base_class::get_name(mpl::false_());
+		return base_class::get_name(
+			mpl::false_(),
+			cts::bchar_traits()
+		);
 	}
 
 	inline static const cts::bstring& full_name(void)
 	{
-		return base_class::get_name(mpl::true_());
+		return base_class::get_name(
+			mpl::true_(),
+			cts::bchar_traits()
+		);
 	}
 
 	typedef detail::registered_type_info<Type> base_info;
@@ -49,9 +55,20 @@ struct meta_type
 };
 
 #define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPE_NAME_STRING) \
-	static const cts::bstring& get_name(mpl::false_) \
+	static const ::std::string& get_name( \
+		mpl::false_, \
+		::std::char_traits<char> \
+	)\
 	{ \
-		static cts::bstring s_name(BOOST_CTS_LIT(TYPE_NAME_STRING)); \
+		static ::std::string s_name(TYPE_NAME_STRING); \
+		return s_name; \
+	} \
+	static const ::std::wstring& get_name( \
+		mpl::false_, \
+		::std::char_traits<wchar_t> \
+	)\
+	{ \
+		static ::std::wstring s_name(L ## TYPE_NAME_STRING); \
 		return s_name; \
 	} 
 

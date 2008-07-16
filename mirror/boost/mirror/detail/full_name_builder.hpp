@@ -23,9 +23,6 @@
 #include <boost/mirror/common_defs.hpp>
 #include <boost/mirror/meta_data_fwd.hpp>
 
-// char-type related 
-#include <boost/char_type_switch/string.hpp>
-
 namespace boost {
 namespace mirror {
 
@@ -44,7 +41,15 @@ namespace detail {
 		// don't prepend '::' to types on global scope
 		template <typename Type>
 		inline static void append_separator(
-			cts::bstring& _str, 
+			::std::basic_string<char>& _str, 
+			mpl::identity<meta_namespace<namespace_::_> >,
+			mpl::identity<detail::registered_type_info<Type> >
+		)
+		{ }
+		// don't prepend '::' to types on global scope
+		template <typename Type>
+		inline static void append_separator(
+			::std::basic_string<wchar_t>& _str, 
 			mpl::identity<meta_namespace<namespace_::_> >,
 			mpl::identity<detail::registered_type_info<Type> >
 		)
@@ -53,56 +58,79 @@ namespace detail {
 		// append separator to anything else
 		template <typename AnyScope, class AnyMO>
 		inline static void append_separator(
-			cts::bstring& _str, 
+			::std::string& _str, 
 			mpl::identity<AnyScope>,
 			mpl::identity<AnyMO>
 		)
 		{
-			static const cts::bstring separator(BOOST_CTS_LIT("::"));
+			static const ::std::string separator("::");
+			_str.append(separator);
+		}
+
+		// append separator to anything else
+		template <typename AnyScope, class AnyMO>
+		inline static void append_separator(
+			::std::wstring& _str, 
+			mpl::identity<AnyScope>,
+			mpl::identity<AnyMO>
+		)
+		{
+			static const ::std::wstring separator(L"::");
 			_str.append(separator);
 		}
 
 
-		// initializes the full names 
-		inline static cts::bstring init_name(mpl::true_ _full)
+		// initializes the full names
+		template <typename CharT>
+		inline static ::std::basic_string<CharT> init_name(
+			mpl::true_ _full,
+			::std::char_traits<CharT> _cht
+		)
 		{
-			cts::bstring res(Scope::get_name(_full));
+			::std::basic_string<CharT> res(Scope::get_name(_full, _cht));
 			append_separator(
 				res, 
 				mpl::identity<Scope>(),
 				mpl::identity<BaseMetaObject>()
 			);
-			res.append(BaseMetaObject::get_name(mpl::false_()));
+			res.append(BaseMetaObject::get_name(mpl::false_(), _cht));
 			return res;
 		}
 
 		// initializes the base names 
-		inline static const cts::bstring& init_name(mpl::false_ _base)
+		template <typename CharT>
+		inline static const ::std::basic_string<CharT>& init_name(
+			mpl::false_ _base,
+			::std::char_traits<CharT> _cht
+		)
 		{
-			return BaseMetaObject::get_name(_base);
+			return BaseMetaObject::get_name(_base, _cht);
 		}
 	public:
 		// base of full name getter
-		template <bool FullName>
-		inline static const cts::bstring& build_name(
+		template <bool FullName, typename CharT>
+		inline static const ::std::basic_string<CharT>& build_name(
 			mpl::bool_<FullName> full_or_base,
-			cts::bstring& left,
-			cts::bstring& right,
-			cts::bstring& ex,
-			cts::bstring& arg
+			::std::basic_string<CharT>& left,
+			::std::basic_string<CharT>& right,
+			::std::basic_string<CharT>& ex,
+			::std::basic_string<CharT>& arg
 		)
 		{
-			return get_name(full_or_base);
+			return get_name(full_or_base, ::std::char_traits<CharT>());
 		}
 
 
 		// base of full name getter
-		template <bool FullName>
-		inline static const cts::bstring& get_name(
-			mpl::bool_<FullName> full_or_base
+		template <bool FullName, typename CharT>
+		inline static const ::std::basic_string<CharT>& get_name(
+			mpl::bool_<FullName> full_or_base,
+			::std::char_traits<CharT> _cht
 		)
 		{
-			static cts::bstring s_name(init_name(full_or_base));
+			static ::std::basic_string<CharT> s_name(
+				init_name(full_or_base, _cht)
+			);
 			return s_name;
 		}
 	};

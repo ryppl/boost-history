@@ -51,12 +51,18 @@ struct meta_namespace
 
 	inline static const cts::bstring& base_name(void)
 	{
-		return base_class::get_name(mpl::false_());
+		return base_class::get_name(
+			mpl::false_(),
+			cts::bchar_traits()
+		);
 	}
 
 	inline static const cts::bstring& full_name(void)
 	{
-		return base_class::get_name(mpl::true_());
+		return base_class::get_name(
+			mpl::true_(),
+			cts::bchar_traits()
+		);
 	}
 
 
@@ -79,26 +85,42 @@ namespace namespace_ {
 	struct _ 
 	{
 		// the base name of the namespace
-		inline static const cts::bstring& get_name(mpl::false_)
+		template <typename CharT>
+		inline static const ::std::basic_string<CharT>& get_name(
+			mpl::false_,
+			::std::char_traits<CharT>
+		)
 		{
-			static cts::bstring s_name;
+			// the base name of the global scope is an empty string
+			static ::std::basic_string<CharT> s_name;
 			return s_name;
 		}
 
 		// the full name of the namespace
-		inline static const cts::bstring& get_name(mpl::true_)
+		template <typename CharT>
+		inline static const ::std::basic_string<CharT>& get_name(
+			mpl::true_,
+			::std::char_traits<CharT> _cht
+		)
 		{
-			return get_name(mpl::false_());
+			// the same as the base name
+			return get_name(mpl::false_(), _cht);
 		}
 
 		inline static const cts::bstring& base_name(void)
 		{
-			return get_name(mpl::false_());
+			return get_name(
+				mpl::false_(),
+				cts::bchar_traits()
+			);
 		}
 	
 		inline static const cts::bstring& full_name(void)
 		{
-			return get_name(mpl::true_());
+			return get_name(
+				mpl::true_(),
+				cts::bchar_traits()
+			);
 		}
 
 	};
@@ -167,9 +189,24 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 				_, \
 				BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
 			) :: _ parent_placeholder; /* -4- */ \
-			static const ::boost::cts::bstring& get_name(mpl::false_) \
+			static const ::std::string& get_name( \
+				mpl::false_, \
+				::std::char_traits<char> \
+			) \
 			{ \
-				static ::boost::cts::bstring s_name(BOOST_CTS_STRINGIZE( \
+				static ::std::string s_name(BOOST_PP_STRINGIZE( \
+					BOOST_PP_SEQ_HEAD( \
+						BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
+					) \
+				)); \
+				return s_name; \
+			} \
+			static const ::std::wstring& get_name( \
+				mpl::false_, \
+				::std::char_traits<wchar_t> \
+			) \
+			{ \
+				static ::std::wstring s_name(BOOST_PP_WSTRINGIZE( \
 					BOOST_PP_SEQ_HEAD( \
 						BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
 					) \

@@ -35,33 +35,35 @@ template <
 struct function_type_name_base : argument_type_list_builder
 {
 public:
-	template <bool FullName>
-	inline static cts::bstring build_name(
+	template <bool FullName, typename CharT>
+	inline static ::std::basic_string<CharT> build_name(
 		mpl::bool_<FullName> full_or_base,
-		cts::bstring& left, 
-		cts::bstring& right,
-		cts::bstring& ex,
-		cts::bstring& arg
+		::std::basic_string<CharT>& left, 
+		::std::basic_string<CharT>& right,
+		::std::basic_string<CharT>& ex,
+		::std::basic_string<CharT>& arg
 	)
 	{
-		static cts::bstring space(BOOST_CTS_LIT(" "));
-		static cts::bstring l_par(BOOST_CTS_LIT("("));
-		static cts::bstring r_par(BOOST_CTS_LIT(")"));
+		typedef type_name_decorator_literals<CharT> lits;
+		static ::std::basic_string<CharT> space(lits::get(lits::space()));
+		static ::std::basic_string<CharT> l_par(lits::get(lits::lpar()));
+		static ::std::basic_string<CharT> r_par(lits::get(lits::rpar()));
 	//
 		// the return value type
 		typedef BOOST_MIRRORED_TYPE(RetValType) meta_RV;
 		//
-		cts::bstring rv_left;
-		cts::bstring rv_right;
-		cts::bstring rv_ex;
-		cts::bstring rv_arg;
-		cts::bstring rv_t(meta_RV::build_name(
+		::std::basic_string<CharT> rv_left;
+		::std::basic_string<CharT> rv_right;
+		::std::basic_string<CharT> rv_ex;
+		::std::basic_string<CharT> rv_arg;
+		::std::basic_string<CharT> rv_t(meta_RV::build_name(
 			full_or_base,
 			rv_left,
 			rv_right,
 			rv_ex,
 			rv_arg
 		));
+		::std::char_traits<CharT> cht;
 		//
 		// return value 
 		left.append(rv_left);
@@ -72,16 +74,22 @@ public:
 		left.append(space);
 		left.append(l_par);
 		// the calling convention
-		left.append(CallingConvention::name());
+		left.append(CallingConvention::name(cht));
 		arg.append(r_par);
 		//
 		// argument list
 		arg.append(l_par);
-		append_args(((ArgTypeList*)0), arg, full_or_base);
+		append_args(
+			((ArgTypeList*)0), 
+			arg, 
+			full_or_base, 
+			cht
+		);
 		arg.append(r_par);
 		// the rest of the ret val type
 		arg.append(rv_arg);
-		return cts::bstring();
+		// return an empty string
+		return ::std::basic_string<CharT>();
 	}
 };
 

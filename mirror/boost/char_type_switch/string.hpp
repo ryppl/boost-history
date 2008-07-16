@@ -53,6 +53,9 @@ namespace cts {
 #	define BOOST_CTS_STRINGIZE(TO_TEXT) BOOST_PP_STRINGIZE(TO_TEXT)
 #endif // NOT BOOST_CTS_USE_WIDE_CHARS
 
+// define char traits
+typedef ::std::char_traits<bchar> bchar_traits;
+
 // define macro expanding into a compile time const length
 // of the given string literal
 #define BOOST_CTS_LIT_LENGTH(STR) ((sizeof(STR)/sizeof(::boost::bchar))-1)

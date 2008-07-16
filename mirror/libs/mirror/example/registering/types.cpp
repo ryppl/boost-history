@@ -220,7 +220,7 @@ int main(void)
 	// reference to function returning pointer to functions
 	typedef T50& T51;
 	bcout << "|51| " << BOOST_MIRRORED_TYPE(T51) ::full_name() << endl;
-	bcout << "|52| " << BOOST_MIRRORED_TYPE(T51) ::get_name(mpl::false_()) << endl;
+	bcout << "|52| " << BOOST_MIRRORED_TYPE(T51) ::get_name(mpl::false_(), cts::bchar_traits()) << endl;
 	//
 	return 0;
 }

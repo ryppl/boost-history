@@ -136,10 +136,14 @@
 					<template-nontype-parameter name="FullName">
 						<type>bool</type>
 					</template-nontype-parameter>
+					<template-type-parameter name="CharT"/>
 				</template>
-				<type>const <classname>cts::bstring</classname>&amp;</type>
+				<type>const <classname>::std::basic_string&lt;CharT&gt;</classname>&amp;</type>
 				<parameter name="full">
 					<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
+				</parameter>
+				<parameter name="cht">
+					<paramtype>::std::char_traits&lt;CharT&gt;</paramtype>
 				</parameter>
 				<purpose>
 					<para>This static member template function returns either the base name 
@@ -148,15 +152,20 @@
 					nested name specifier of the namespace reflected by this
 					<code><classname>meta_namespace</classname></code>,
 					depending on the value of the template argument <code>FullName</code>.
+					Furthermore it allows to choose whether the return value type is 
+					<code>::std::string</code> or <code>::std::wstring</code> based
+					on the type of the second argument.
 					For example:
-					<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::false_())
+					<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
 					</programlisting> is equivalent to calling the 
-					<code><methodname>base_name</methodname></code> member function and 
-					returns simply <code>"mirror"</code> and calling
-					<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::true_())
+					<code><methodname>base_name</methodname></code> member function with the 
+					<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol undefined, 
+					which returns a <code>::std::string</code> holding the string <code>"mirror"</code> and calling
+					<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
 					</programlisting> is equivalent to calling the 
-					<code><methodname>full_name</methodname></code> method which 
-					returns <code>"::boost::mirror"</code>.
+					<code><methodname>full_name</methodname></code> method with the 
+					<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol defined, 
+					which returns a <code>::std::wstring</code> holding this string <code>L"::boost::mirror"</code>.
 					</para>
 				</purpose>
 			</method>

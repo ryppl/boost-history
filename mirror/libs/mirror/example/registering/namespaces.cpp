@@ -103,6 +103,14 @@ int main(void)
 	bcout << "|11| " << BOOST_MIRRORED_NAMESPACE(::test) ::full_name() << endl;
 	bcout << "|12| " << BOOST_MIRRORED_NAMESPACE(::test::stuff) ::full_name() << endl;
 	bcout << "|13| " << BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) ::full_name() << endl;
+	//
+	// a more generic interface
+	bcout << "|14| " << BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) ::get_name(
+		// the base name
+		::boost::mpl::false_(), 
+		// the character type traits could be (::std::char_traits<...>())
+		::boost::cts::bchar_traits()  
+	) << endl;
 	return 0;
 }
 

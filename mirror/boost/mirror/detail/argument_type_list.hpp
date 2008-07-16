@@ -52,30 +52,41 @@ private:
 		typedef mpl::identity<T> type;
 	};
 
-	template <class FullOrBase>
+	template <class FullOrBase, typename CharT>
 	class append_arg_typename
 	{
+	private:
+		typedef type_name_decorator_literals<CharT> lits;
 	public:
 		template <typename T>
 		inline void operator()(::boost::mpl::identity<T>)
 		{
-			static cts::bstring comma(BOOST_CTS_LIT(", "));
-			list.append(BOOST_MIRRORED_TYPE(T)::get_name(FullOrBase()));
+			static ::std::basic_string<CharT> comma(lits::get(lits::comma()));
+			list.append(BOOST_MIRRORED_TYPE(T)::get_name(
+				FullOrBase(),
+				::std::char_traits<CharT>()
+			));
 			list.append(comma);
 		}
 
-		inline append_arg_typename(cts::bstring& _list)
+		inline append_arg_typename(::std::basic_string<CharT>& _list)
 		: list(_list)
 		{ }
 	private:
-		cts::bstring& list;
+		::std::basic_string<CharT>& list;
 	};
 
-	template <typename ArgTypeList, class FullOrBase, class Size>
+	template <
+		typename ArgTypeList, 
+		class FullOrBase, 
+		typename CharT,
+		class Size
+	>
 	static void do_append_args(
 		ArgTypeList*, 
-		cts::bstring& str, 
+		::std::basic_string<CharT>& str, 
 		FullOrBase full_or_base,
+		::std::char_traits<CharT> _cht,
 		Size
 	)
 	{
@@ -93,28 +104,33 @@ private:
 		// call the functor
 		::boost::mpl::for_each<
 			args_wo_last
-		>(append_arg_typename<FullOrBase>(str));
+		>(append_arg_typename<FullOrBase, CharT>(str));
 		//
 		// append the last argument
 		typedef typename mpl::back<ArgTypeList>::type last_arg_type;
-		str.append(BOOST_MIRRORED_TYPE(last_arg_type)::get_name(full_or_base));
+		str.append(BOOST_MIRRORED_TYPE(last_arg_type)::get_name(
+			full_or_base, 
+			_cht
+		));
 	}
 
 	// overload for empty argument list
-	template <typename ArgTypeList, class FullOrBase>
+	template <typename ArgTypeList, class FullOrBase, typename CharT>
 	inline static void do_append_args(
 		ArgTypeList*, 
-		cts::bstring& str, 
+		::std::basic_string<CharT>& str, 
 		FullOrBase,
+		::std::char_traits<CharT>,
 		mpl::int_<0>
 	)
 	{ }
 protected:
-	template <typename ArgTypeList, class FullOrBase>
+	template <typename ArgTypeList, class FullOrBase, typename CharT>
 	inline static void append_args(
 		ArgTypeList*, 
-		cts::bstring& str, 
-		FullOrBase full_or_base
+		::std::basic_string<CharT>& str, 
+		FullOrBase full_or_base,
+		::std::char_traits<CharT> cht
 	)
 	{
 		// remove "null" types from the typelist
@@ -132,6 +148,7 @@ protected:
 			atlp, 
 			str, 
 			full_or_base,
+			cht,
 			size
 		);
 	}
