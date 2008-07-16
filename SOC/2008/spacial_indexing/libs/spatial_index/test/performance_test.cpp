@@ -103,84 +103,86 @@ int test_main(int, char* [])
     ids.push_back(i);
   }
 
-  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
-    q(new boost::spatial_index::quadtree< geometry::point_xy<double>, unsigned int >(plane));
+  typedef geometry::point_xy<double> point_type;
+  typedef unsigned int value_type;
 
-      // load data
-      std::cerr << " --> bulk insert" << std::endl;
-      std::vector<unsigned int>::iterator b, e;
-//       b = ids.begin();
-//       e = ids.end();
+  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::quadtree<point_type, value_type> > q(plane, 0, 1);
 
-      start = time(NULL);
-      q->bulk_insert(ids, points);
-      std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
+  // load data
+  std::cerr << " --> bulk insert" << std::endl;
+  std::vector<unsigned int>::iterator b, e;
+  // b = ids.begin();
+  // e = ids.end();
 
-      // -- wait to check memory
-//       std::cerr << "check memory --> After Building Index." << std::endl;
-//       sleep(5);
-      // -- wait to check memory
+  start = time(NULL);
+  q.bulk_insert(ids, points);
+  std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
 
-      // search
-      std::vector< geometry::point_xy<double> > search_positions;
-      std::vector<unsigned int> search_data;
-      for(unsigned int j=0; j < find_count; j++) {
-	unsigned int pos = (int) drandom(points.size());
+  // -- wait to check memory
+  // std::cerr << "check memory --> After Building Index." << std::endl;
+  // sleep(5);
+  // -- wait to check memory
 
-	search_positions.push_back(points[pos]);
-	search_data.push_back(pos);
-      }
+  // search
+  std::vector< geometry::point_xy<double> > search_positions;
+  std::vector<unsigned int> search_data;
+  for(unsigned int j=0; j < find_count; j++) {
+    unsigned int pos = (int) drandom(points.size());
 
-
-      start = time(NULL);
-      std::deque<unsigned int> d = q->find(query_box);
-      std::cerr << " --> find rectangle" << std::endl;
-      BOOST_CHECK_EQUAL(rect_count, d.size());
-      std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
-
-      start = time(NULL);
-      for(unsigned int j=0; j < find_count; j++) {
- 	unsigned int i = q->find(search_positions[j]);
-// 	std::vector<unsigned int>::iterator it = q->find(search_positions[j]);
-	//std::cout << search_data[j] 
-	//  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
-	//  << *it << std::endl;
-
-	BOOST_CHECK_EQUAL(i, search_data[j]);
-      }
-      std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
+    search_positions.push_back(points[pos]);
+    search_data.push_back(pos);
+  }
 
 
-       std::cerr << " --> removal tests" << std::endl;
-       for(unsigned int j=0; j < find_count/1000; j++) {
- 	std::cerr << "Removal: " << j << std::endl;
-  	q->remove(search_positions[j]);
- // 	std::cerr << "Elements: " << q->elements() << std::endl;
-       }      
-       std::cerr << std::endl;
+  start = time(NULL);
+  std::deque<unsigned int> d = q.find(query_box);
+  std::cerr << " --> find rectangle" << std::endl;
+  BOOST_CHECK_EQUAL(rect_count, d.size());
+  std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
 
-       std::cerr << " --> requery test" << std::endl;
-       start = time(NULL);
-       for(unsigned int j=0; j < find_count/1000; j++) {
-  	unsigned int i = q->find(search_positions[j]);
- // 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
- 	BOOST_CHECK_EQUAL(i, 0u);
-       }
-       std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
+  start = time(NULL);
+  for(unsigned int j=0; j < find_count; j++) {
+    unsigned int i = q.find(search_positions[j]);
+    // std::vector<unsigned int>::iterator it = q.find(search_positions[j]);
+    // std::cout << search_data[j] 
+    //  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
+    //  << *it << std::endl;
 
-//       std::cerr << " --> complete removal tests" << std::endl;
-//       unsigned int total = q->elements();
-//       for(unsigned int j=0; j < total; j++) {
-// 	unsigned int e = q->elements();
-//  	q->remove(points[total-j-1]);
-// 	BOOST_CHECK_EQUAL(e, q->elements()+1);
-// 	// std::cerr << "Elements: " << e << std::endl;
-//       }  
-//       q->print();
-//       std::cerr << "Elements: " << q->elements() << std::endl;
-      // std::cerr << std::endl;
+    BOOST_CHECK_EQUAL(i, search_data[j]);
+  }
+  std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
 
-      return 0;
+  
+  std::cerr << " --> removal tests" << std::endl;
+  for(unsigned int j=0; j < find_count/1000; j++) {
+    std::cerr << "Removal: " << j << std::endl;
+    q.remove(search_positions[j]);
+    // 	std::cerr << "Elements: " << q.elements() << std::endl;
+  }      
+  std::cerr << std::endl;
+
+  std::cerr << " --> requery test" << std::endl;
+  start = time(NULL);
+  for(unsigned int j=0; j < find_count/1000; j++) {
+    unsigned int i = q.find(search_positions[j]);
+    // 	std::cerr << "Prev. Value: " << search_data[j] << std::endl;
+    BOOST_CHECK_EQUAL(i, 0u);
+  }
+  std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
+
+  //       std::cerr << " --> complete removal tests" << std::endl;
+  //       unsigned int total = q.elements();
+  //       for(unsigned int j=0; j < total; j++) {
+  // 	unsigned int e = q.elements();
+  //  	q.remove(points[total-j-1]);
+  // 	BOOST_CHECK_EQUAL(e, q.elements()+1);
+  // 	// std::cerr << "Elements: " << e << std::endl;
+  //       }  
+  //       q.print();
+  //       std::cerr << "Elements: " << q.elements() << std::endl;
+  // std::cerr << std::endl;
+
+  return 0;
 }
 
 

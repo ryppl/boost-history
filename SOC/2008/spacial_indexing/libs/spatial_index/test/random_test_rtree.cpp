@@ -21,18 +21,18 @@
 
 double drandom(unsigned int upper_bound)
 {
-	double r;		/* random value in range [0,1) */
-	long int M;	/* user supplied upper boundary */
+  double r;		/* random value in range [0,1) */
+  long int M;	/* user supplied upper boundary */
 
-	struct timeval tv;
-	struct timezone tz;
-	gettimeofday(&tv, &tz);
-	srand(tv.tv_usec);
+  struct timeval tv;
+  struct timezone tz;
+  gettimeofday(&tv, &tz);
+  srand(tv.tv_usec);
 
-	M = upper_bound;		/* Choose M. Upper bound */
-	r = (   (double)rand() / ((double)(RAND_MAX)+(double)(1)) );
+  M = upper_bound;		/* Choose M. Upper bound */
+  r = (   (double)rand() / ((double)(RAND_MAX)+(double)(1)) );
 
-	return r * M;
+  return r * M;
 }
 
 
@@ -48,8 +48,11 @@ int test_main(int, char* [])
   // number of points to find on the search phase
   const unsigned int find_count = 50;
   
-  boost::shared_ptr< boost::spatial_index::spatial_index< geometry::point_xy<double> , unsigned int > > 
-    q(new boost::spatial_index::rtree<geometry::point_xy<double>, unsigned int>(8, 4));
+  typedef geometry::point_xy<double> point_type;
+  typedef unsigned int value_type;
+
+  geometry::box<point_type> plane;
+  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(plane, 8, 4);
 
   // generate random data
   for(unsigned int i = 0; i < points_count; i++) {
@@ -67,7 +70,7 @@ int test_main(int, char* [])
   // std::vector<unsigned int>::iterator b, e;
   // b = ids.begin();
   // e = ids.end();
-  q->bulk_insert(ids, points);
+  q.bulk_insert(ids, points);
 
       // search
       std::vector<geometry::point_xy<double> > search_positions;
@@ -82,7 +85,7 @@ int test_main(int, char* [])
 
       // search data and compare
       for(unsigned int j=0; j < find_count; j++) {
-	unsigned int i = q->find(search_positions[j]);
+	unsigned int i = q.find(search_positions[j]);
 	std::cout << search_data[j] 
 		  << " - found in (" << geometry::get<0>(search_positions[j]) << "," << geometry::get<1>(search_positions[j])
 		  << ") --> " << i << std::endl;

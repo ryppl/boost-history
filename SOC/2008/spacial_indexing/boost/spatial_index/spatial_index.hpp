@@ -17,42 +17,44 @@ namespace boost {
 namespace spatial_index {
 
 /// spatial index interface
-template<typename Point, typename Value>
+template<typename Point, typename Value, typename Index>
 class spatial_index
 {
 
 public:
 
+  spatial_index(const geometry::box<Point> &b, const unsigned int m, const unsigned int M) : i_(b, m, M) {}
+
   /// insert data 'v' with key 'k'
-  virtual void insert(const Point &k, const Value &v) = 0;
+  void insert(const Point &k, const Value &v) { i_.insert(k, v); }
 
   /// insert data with envelope 'e' with key 'k'
-  virtual void insert(const geometry::box<Point> &e, const Value &v) = 0;
+  void insert(const geometry::box<Point> &e, const Value &v) { i_.insert(e, v); }
 
   /// remove data with key 'k'
-  virtual void remove(const Point &k) = 0;
+  void remove(const Point &k) { i_.remove(k); }
 
   /// remove data with key 'k'
-  virtual void remove(const geometry::box<Point> &k) = 0;
+  void remove(const geometry::box<Point> &k) { i_.remove(k); }
 	
   /// bulk insert data from values
-  virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) = 0;
+  void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points) { i_.bulk_insert(values, points); }
 
   /// find element with key 'k'
-  virtual Value find(const Point &k) = 0;
+  Value find(const Point &k) { return i_.find(k); }
 
   /// find element in the defined rectangle
   /// TODO: change container
-  virtual std::deque<Value> find(const geometry::box<Point> &r) = 0;
+  std::deque<Value> find(const geometry::box<Point> &r) { return i_.find(r); }
 
   /// element count in the index
-  virtual unsigned int elements(void) const = 0;
+  unsigned int elements(void) const { return i_.elements(); }
 
   /// debug print
-  virtual void print(void)  = 0;
+  void print(void) { i_.print(); }
 	      
-  /// destructor
-  virtual ~spatial_index(void) {}
+private:
+  Index i_;
 };
 
 } // namespace spatial_index

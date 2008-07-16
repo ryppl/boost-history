@@ -23,7 +23,7 @@ namespace boost {
 namespace spatial_index {
 
   template<typename Point, typename Value>
-  class rtree : public spatial_index<Point, Value>
+  class rtree
   {
   public:
     rtree(const unsigned int &M, const unsigned int &m)
@@ -32,9 +32,15 @@ namespace spatial_index {
     {
     }
 
+    rtree(const geometry::box<Point> &b, const unsigned int &M, const unsigned int &m)
+      : element_count_(0), m_(m), M_(M), 
+	root_(new rtree_node<Point, Value>(boost::shared_ptr< rtree_node<Point,Value> >(), 1))
+    {
+    }
+
 
     /// remove the element with key 'k'
-    virtual void remove(const Point &k)
+    void remove(const Point &k)
     {
       /// it's the same than removing a box of only one point
       this->remove(geometry::box<Point>(k, k));
@@ -42,7 +48,7 @@ namespace spatial_index {
 
 
     /// remove elements inside the box 'k'
-    virtual void remove(const geometry::box<Point> &k)
+    void remove(const geometry::box<Point> &k)
     {
       try {
 	boost::shared_ptr<rtree_node<Point, Value> > l(choose_exact_leaf(k));
@@ -98,10 +104,10 @@ namespace spatial_index {
     }
 
 
-    virtual unsigned int elements(void) const { return element_count_; }
+    unsigned int elements(void) const { return element_count_; }
 
 
-    virtual void print(void)
+    void print(void)
     {
       std::cerr << "===================================" << std::endl;
       std::cerr << " Min/Max: " << m_ << " / " << M_ << std::endl;
@@ -110,7 +116,7 @@ namespace spatial_index {
       std::cerr << "===================================" << std::endl;
     }
 
-    virtual void insert(const Point &k, const Value &v)
+    void insert(const Point &k, const Value &v)
     {
       // it's the same than inserting a box of only one point
       this->insert(geometry::box<Point>(k,k), v);
@@ -140,7 +146,7 @@ namespace spatial_index {
     }
 
 
-    virtual void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points)
+    void bulk_insert(std::vector<Value> &values,  std::vector<Point> &points)
     {
       typename std::vector<Point>::iterator it_point;
       typename std::vector<Value>::iterator it_value;
@@ -164,7 +170,7 @@ namespace spatial_index {
       }
     }
 
-    virtual Value find(const Point &k)
+    Value find(const Point &k)
     {
       std::deque<Value> result;
       geometry::box<geometry::point_xy<double> > query_box(k, k);
@@ -177,15 +183,13 @@ namespace spatial_index {
     }
 
 
-    virtual std::deque<Value> find(const geometry::box<Point> &r)
+    std::deque<Value> find(const geometry::box<Point> &r)
     {
       std::deque<Value> result;
       root_->find(r, result, false);
       return result;
     }
 
-
-    virtual ~rtree() {}
 
 
   private:
