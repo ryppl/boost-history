@@ -23,7 +23,11 @@ class spatial_index
 
 public:
 
-  spatial_index(const geometry::box<Point> &b, const unsigned int m, const unsigned int M) : i_(b, m, M) {}
+  /// quadtree constructor
+  spatial_index(const geometry::box<Point> &b, const unsigned int M) : i_(b, M) {}
+
+  /// rtree constructor
+  spatial_index(const unsigned int m, const unsigned int M) : i_(m, M) {}
 
   /// insert data 'v' with key 'k'
   void insert(const Point &k, const Value &v) { i_.insert(k, v); }

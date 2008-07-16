@@ -102,9 +102,7 @@ int test_main(int, char* [])
   typedef geometry::point_xy<double> point_type;
   typedef unsigned int value_type;
 
-  geometry::box<point_type> plane;
-
-  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(plane, 16, 8);
+  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(16, 8);
 
   // load data
   std::cerr << " --> bulk insert" << std::endl;

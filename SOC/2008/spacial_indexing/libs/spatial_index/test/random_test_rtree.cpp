@@ -51,8 +51,7 @@ int test_main(int, char* [])
   typedef geometry::point_xy<double> point_type;
   typedef unsigned int value_type;
 
-  geometry::box<point_type> plane;
-  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(plane, 8, 4);
+  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(8, 4);
 
   // generate random data
   for(unsigned int i = 0; i < points_count; i++) {

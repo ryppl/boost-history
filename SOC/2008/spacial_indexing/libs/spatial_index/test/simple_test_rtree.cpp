@@ -20,10 +20,8 @@ int test_main(int, char* [])
   typedef geometry::point_xy<double> point_type;
   typedef unsigned int value_type;
 
-  geometry::box<point_type> b;
-
   {
-    boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(b, 4, 2);
+    boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(4, 2);
 
     std::cerr << std::endl;
     std::cerr << " --> bulk insert" << std::endl;
@@ -55,7 +53,7 @@ int test_main(int, char* [])
 
 
   /// insertion tests
-  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(b, 4, 2);
+  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(4, 2);
  
 
   geometry::box<geometry::point_xy<double> > e1(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));

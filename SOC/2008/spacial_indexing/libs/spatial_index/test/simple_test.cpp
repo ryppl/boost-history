@@ -38,7 +38,7 @@ int test_main(int, char* [])
 	typedef geometry::point_xy<double> point_type;
 	typedef std::vector<std::string>::iterator value_type;
 
-	boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::quadtree<point_type, value_type> > q(b, 0, 1);
+	boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::quadtree<point_type, value_type> > q(b, 1);
 
 // 	std::cerr << " --> bulk insert" << std::endl;
 // 	std::vector<std::string>::iterator b, e;
