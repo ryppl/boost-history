@@ -16,6 +16,8 @@
 #include <boost/preprocessor/seq/pop_back.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/stringize.hpp>
+#include <boost/preprocessor/wstringize.hpp>
 
 // template meta programming
 #include <boost/mpl/bool.hpp>

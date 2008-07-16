@@ -32,7 +32,9 @@ public:
 		::std::basic_string<CharT>& arg
 	)
 	{
-		typename Decorator::template get<CharT>::type D(
+		typedef typename Decorator::template get<CharT>::type 
+			decorator_type;
+		decorator_type D(
 			left, 
 			right, 
 			ex, 
@@ -114,20 +116,34 @@ struct decorated_type_name
 
 struct type_name_decorator_literal_selectors
 {
-	struct space { };
-	struct asterisk_post { };
-	struct ampersand_post { };
-	struct const_post { };
-	struct volatile_post { };
-	struct cv_post { };
-	struct lbracket { };
-	struct rbracket { };
-	struct brackets { };
-	struct lpar { };
-	struct rpar { };
-	struct comma { };
-	struct langle { };
-	struct rangle { };
+	struct space_ { };
+	static inline space_ space(void){return space_();}
+	struct asterisk_post_ { };
+	static inline asterisk_post_ asterisk_post(void){return asterisk_post_();}
+	struct ampersand_post_ { };
+	static inline ampersand_post_ ampersand_post(void){return ampersand_post_();}
+	struct const_post_ { };
+	static inline const_post_ const_post(void){return const_post_();}
+	struct volatile_post_ { };
+	static inline volatile_post_ volatile_post(void){return volatile_post_();}
+	struct cv_post_ { };
+	static inline cv_post_ cv_post(void){return cv_post_();}
+	struct lbracket_ { };
+	static inline lbracket_ lbracket(void){return lbracket_();}
+	struct rbracket_ { };
+	static inline rbracket_ rbracket(void){return rbracket_();}
+	struct brackets_ { };
+	static inline brackets_ brackets(void){return brackets_();}
+	struct lpar_ { };
+	static inline lpar_ lpar(void){return lpar_();}
+	struct rpar_ { };
+	static inline rpar_ rpar(void){return rpar_();}
+	struct comma_ { };
+	static inline comma_ comma(void){return comma_();}
+	struct langle_ { };
+	static inline langle_ langle(void){return langle_();}
+	struct rangle_ { };
+	static inline rangle_ rangle(void){return rangle_();}
 };
 
 /** Declaration of a helper template that 
@@ -143,20 +159,20 @@ struct type_name_decorator_literals<char>
 : type_name_decorator_literal_selectors
 {
 	typedef type_name_decorator_literal_selectors bc;
-	inline static const char* get(bc::space){return " ";}
-	inline static const char* get(bc::asterisk_post){return " *";}
-	inline static const char* get(bc::ampersand_post){return " &";}
-	inline static const char* get(bc::const_post){return " const";}
-	inline static const char* get(bc::volatile_post){return " volatile";}
-	inline static const char* get(bc::cv_post){return " const volatile";}
-	inline static const char* get(bc::lbracket){return "[";}
-	inline static const char* get(bc::rbracket){return "]";}
-	inline static const char* get(bc::brackets){return "[]";}
-	inline static const char* get(bc::lpar){return "(";}
-	inline static const char* get(bc::rpar){return ")";}
-	inline static const char* get(bc::comma){return ", ";}
-	inline static const char* get(bc::langle){return "< ";}
-	inline static const char* get(bc::rangle){return " >";}
+	inline static const char* get(bc::space_){return " ";}
+	inline static const char* get(bc::asterisk_post_){return " *";}
+	inline static const char* get(bc::ampersand_post_){return " &";}
+	inline static const char* get(bc::const_post_){return " const";}
+	inline static const char* get(bc::volatile_post_){return " volatile";}
+	inline static const char* get(bc::cv_post_){return " const volatile";}
+	inline static const char* get(bc::lbracket_){return "[";}
+	inline static const char* get(bc::rbracket_){return "]";}
+	inline static const char* get(bc::brackets_){return "[]";}
+	inline static const char* get(bc::lpar_){return "(";}
+	inline static const char* get(bc::rpar_){return ")";}
+	inline static const char* get(bc::comma_){return ", ";}
+	inline static const char* get(bc::langle_){return "< ";}
+	inline static const char* get(bc::rangle_){return " >";}
 };
 
 // specialization for chars
@@ -165,20 +181,20 @@ struct type_name_decorator_literals<wchar_t>
 : type_name_decorator_literal_selectors
 {
 	typedef type_name_decorator_literal_selectors bc;
-	inline static const wchar_t* get(bc::space){return L" ";}
-	inline static const wchar_t* get(bc::asterisk_post){return L" *";}
-	inline static const wchar_t* get(bc::ampersand_post){return L" &";}
-	inline static const wchar_t* get(bc::const_post){return L" const";}
-	inline static const wchar_t* get(bc::volatile_post){return L" volatile";}
-	inline static const wchar_t* get(bc::cv_post){return L" const volatile";}
-	inline static const wchar_t* get(bc::lbracket){return L"[";}
-	inline static const wchar_t* get(bc::rbracket){return L"]";}
-	inline static const wchar_t* get(bc::brackets){return L"[]";}
-	inline static const wchar_t* get(bc::lpar){return L"(";}
-	inline static const wchar_t* get(bc::rpar){return L")";}
-	inline static const wchar_t* get(bc::comma){return L", ";}
-	inline static const wchar_t* get(bc::langle){return L"< ";}
-	inline static const wchar_t* get(bc::rangle){return L" >";}
+	inline static const wchar_t* get(bc::space_){return L" ";}
+	inline static const wchar_t* get(bc::asterisk_post_){return L" *";}
+	inline static const wchar_t* get(bc::ampersand_post_){return L" &";}
+	inline static const wchar_t* get(bc::const_post_){return L" const";}
+	inline static const wchar_t* get(bc::volatile_post_){return L" volatile";}
+	inline static const wchar_t* get(bc::cv_post_){return L" const volatile";}
+	inline static const wchar_t* get(bc::lbracket_){return L"[";}
+	inline static const wchar_t* get(bc::rbracket_){return L"]";}
+	inline static const wchar_t* get(bc::brackets_){return L"[]";}
+	inline static const wchar_t* get(bc::lpar_){return L"(";}
+	inline static const wchar_t* get(bc::rpar_){return L")";}
+	inline static const wchar_t* get(bc::comma_){return L", ";}
+	inline static const wchar_t* get(bc::langle_){return L"< ";}
+	inline static const wchar_t* get(bc::rangle_){return L" >";}
 };
 
 // no-op decorator
@@ -228,35 +244,35 @@ struct type_name_right_postfix_decorator
 template <typename T>
 struct type_name_decorator<T*>
 : type_name_right_postfix_decorator<
-	type_name_decorator_literal_selectors::asterisk_post
+	type_name_decorator_literal_selectors::asterisk_post_
 > { };
 
 // reference decorator
 template <typename T>
 struct type_name_decorator<T&>
 : type_name_right_postfix_decorator<
-	type_name_decorator_literal_selectors::ampersand_post
+	type_name_decorator_literal_selectors::ampersand_post_
 > { };
 
 // const type decorator
 template <typename T>
 struct type_name_decorator<const T>
 : type_name_right_postfix_decorator<
-	type_name_decorator_literal_selectors::const_post
+	type_name_decorator_literal_selectors::const_post_
 > { };
 
 // volatile type decorator
 template <typename T>
 struct type_name_decorator<volatile T>
 : type_name_right_postfix_decorator<
-	type_name_decorator_literal_selectors::volatile_post
+	type_name_decorator_literal_selectors::volatile_post_
 > { };
 
 // const volatile type decorator
 template <typename T>
 struct type_name_decorator<const volatile T>
 : type_name_right_postfix_decorator<
-	type_name_decorator_literal_selectors::cv_post
+	type_name_decorator_literal_selectors::cv_post_
 > { };
 
 // array decorator
@@ -321,7 +337,9 @@ struct type_name_decorator< T[ Size ] >
 		{
 			static ::std::basic_string<CharT> s_postfix(init_postfix());
 			if(_ex.empty()) 
-				_ex.append(::std::basic_string<CharT>(bc::get(bc::space())));
+				_ex.append(::std::basic_string<CharT>(
+					bc::get(bc::space())
+				));
 			_ex.append(s_postfix);
 		}
 
