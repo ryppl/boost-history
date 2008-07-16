@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_type.usage04">
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+
+
+template &lt; typename CharT, typename Type &gt;
+::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
+operator &lt;&lt; (
+	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
+	::boost::mirror::meta_type&lt; Type &gt; _mt
+)
+{
+	return _s &lt;&lt;_mt.get_name(
+		::boost::mpl::true_(), 
+		::std::char_traits&lt; CharT &gt;()
+	); 
+}
+
+
+int main(void)
+{
+	using namespace ::std;
+	//
+	typedef BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) meta_T;
+	meta_T mt;
+	//
+	cout &lt;&lt; mt &lt;&lt; endl;
+	wcout &lt;&lt; mt &lt;&lt; endl;
+
+	return 0;
+}
+</programlisting>
+

@@ -64,6 +64,23 @@
 					</para>
 					<xi:include href="../samples/usage_meta_type_03.xml"/>
 				</section>
+				<section id="mirror.meta_type.reference.sample04">
+					<title>Example - Generic typename getter</title>
+					<para>The <code><methodname>base_name</methodname></code> and the 
+					<code><methodname>full_name</methodname></code> member functions
+					are convenient but not very generic. The <code><methodname>get_name</methodname></code> 
+					method allows to specify the character type of the returned string and 
+					to specify wheter a full or just the base name should be returned, based
+					on compile time arguments.
+					</para>
+					<para>The first argument must be either <code>mpl::true_</code> for full type name
+					or <code>mpl::false_</code> for base type name and the second argument must be
+					a specialization of the <code>::std::char_traits</code> template with <code>char</code>
+					for <code>::std::string</code> return value type or <code>wchar_t</code> for
+					<code>::std::wstring</code> return value type.
+					</para>
+					<xi:include href="../samples/usage_meta_type_04.xml"/>
+				</section>
 				</section>
 			</description>
 

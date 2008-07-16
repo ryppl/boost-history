@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_namespace.usage03">
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+
+
+template &lt; typename CharT, typename NsPlaceholder &gt;
+::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
+operator &lt;&lt; (
+	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
+	::boost::mirror::meta_namespace&lt; NsPlaceholder &gt; _mn
+)
+{
+	return _s &lt;&lt;_mn.get_name(
+		::boost::mpl::true_(), 
+		::std::char_traits&lt; CharT &gt;()
+	); 
+}
+
+
+int main(void)
+{
+	using namespace ::std;
+	//
+	typedef BOOST_MIRRORED_NAMESPACE(::boost::mirror) meta_Ns;
+	meta_Ns mns;
+	//
+	cout &lt;&lt; mns &lt;&lt; endl;
+	wcout &lt;&lt; mns &lt;&lt; endl;
+
+	return 0;
+}
+</programlisting>
+

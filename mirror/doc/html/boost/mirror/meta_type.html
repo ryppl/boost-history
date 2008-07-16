@@ -44,17 +44,17 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id460529-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id460402-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> Type <a class="link" href="meta_type.html#boost.mirror.meta_type.reflected_type">reflected_type</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_type.html#boost.mirror.meta_type.scope">scope</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id460468-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id460408-bb">full_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id460341-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id460281-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_type.html#id460348-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_type.html#id460216-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id698698"></a><h2>Description</h2>
+<a name="id695492"></a><h2>Description</h2>
 <p>The specializations of <code class="computeroutput">meta_type</code> can 
 				be used to get meta-information about the reflected types, some at compile-time and some at run-time.
 				The following examples show type reflection and basic 
@@ -69,6 +69,7 @@
 <dt><span class="section"><a href="meta_type.html#mirror.meta_type.reference.sample01">Example - Basic usage</a></span></dt>
 <dt><span class="section"><a href="meta_type.html#mirror.meta_type.reference.sample02">Example - Using with typeof and getting scope-related information</a></span></dt>
 <dt><span class="section"><a href="meta_type.html#mirror.meta_type.reference.sample03">Example - Reflection of <code class="computeroutput">typedef</code>-ined types</a></span></dt>
+<dt><span class="section"><a href="meta_type.html#mirror.meta_type.reference.sample04">Example - Generic typename getter</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
@@ -235,10 +236,59 @@ int main(void)
 }
 </pre>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.meta_type.reference.sample04"></a>Example - Generic typename getter</h6></div></div></div>
+<p>The <code class="computeroutput">base_name</code> and the 
+					<code class="computeroutput">full_name</code> member functions
+					are convenient but not very generic. The <code class="computeroutput">get_name</code> 
+					method allows to specify the character type of the returned string and 
+					to specify wheter a full or just the base name should be returned, based
+					on compile time arguments.
+					</p>
+<p>The first argument must be either <code class="computeroutput">mpl::true_</code> for full type name
+					or <code class="computeroutput">mpl::false_</code> for base type name and the second argument must be
+					a specialization of the <code class="computeroutput">::std::char_traits</code> template with <code class="computeroutput">char</code>
+					for <code class="computeroutput">::std::string</code> return value type or <code class="computeroutput">wchar_t</code> for
+					<code class="computeroutput">::std::wstring</code> return value type.
+					</p>
+<a name="mirror.reference.sample.meta_type.usage04"></a><pre class="programlisting">
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+
+
+template &lt; typename CharT, typename Type &gt;
+::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
+operator &lt;&lt; (
+	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
+	::boost::mirror::meta_type&lt; Type &gt; _mt
+)
+{
+	return _s &lt;&lt;_mt.get_name(
+		::boost::mpl::true_(), 
+		::std::char_traits&lt; CharT &gt;()
+	); 
+}
+
+
+int main(void)
+{
+	using namespace ::std;
+	//
+	typedef BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) meta_T;
+	meta_T mt;
+	//
+	cout &lt;&lt; mt &lt;&lt; endl;
+	wcout &lt;&lt; mt &lt;&lt; endl;
+
+	return 0;
+}
+</pre>
+</div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id698836"></a><h3>
-<a name="id460529-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
+<a name="id695701"></a><h3>
+<a name="id460402-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
@@ -257,7 +307,7 @@ int main(void)
 </li>
 </ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id460468-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id460341-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
 					type reflected by <code class="computeroutput">meta_type</code>
 					without the nested name specifier. For example:
@@ -287,7 +337,7 @@ int main(void)
 					</p></td>
 </tr></tbody>
 </table></div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id460408-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id460281-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
 					type reflected by <code class="computeroutput">meta_type</code>
 					with the nested name specifier. For example:
@@ -319,7 +369,7 @@ int main(void)
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id460348-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id460216-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 					<span class="bold"><strong>without</strong></span> the nested name specifier 
 					or the full name <span class="bold"><strong>with</strong></span> the 
