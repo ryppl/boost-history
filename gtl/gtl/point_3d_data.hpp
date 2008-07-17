@@ -8,9 +8,11 @@
 #ifndef GTL_POINT_3D_DATA_HPP
 #define GTL_POINT_3D_DATA_HPP
 namespace gtl {
+struct point_3d_concept;
 template <typename T>
 class point_3d_data {
 public:
+  typedef point_3d_concept geometry_type;
   typedef T coordinate_type;
   inline point_3d_data(){} 
   inline point_3d_data(coordinate_type x, coordinate_type y) {

@@ -9,43 +9,48 @@
 #define GTL_POLYGON_45_CONCEPT_HPP
 namespace gtl {
 
-template <typename iterator_type>
-typename point_traits<typename std::iterator_traits<iterator_type>::value_type>::coordinate_type
-polygon_point_sequence_area(iterator_type begin_range, iterator_type end_range) {
-  typedef typename std::iterator_traits<iterator_type>::value_type point_type;
-  typedef typename point_traits<point_type>::coordinate_type Unit;
-  if(begin_range == end_range) return Unit(0);
-  point_type first = *begin_range;
-  ++begin_range;
-  if(begin_range == end_range) return Unit(0); //throw bad polygon?
-  point_type previous = *begin_range;
-  ++begin_range;
-  // Initialize trapezoid base line
-  Unit y_base = point_concept::y(first);
-  // Initialize area accumulator
-
-  Unit area(0);
-  while (begin_range != end_range) {
-    Unit x1 = point_concept::x(previous);
-    Unit x2 = point_concept::x(*begin_range);
-    if(x1 != x2) {
-      // do trapezoid area accumulation
-      area += (x2 - x1) * ((point_concept::y(*begin_range) - y_base) +
-                           (point_concept::y(previous) - y_base)) / 2;
-    }
-    previous = *begin_range;
-    // go to next point
-    ++begin_range;
-  }
-  Unit x1 = point_concept::x(previous);
-  Unit x2 = point_concept::x(first);
-  area += (x2 - x1) * ((point_concept::y(first) - y_base) +
-                       (point_concept::y(previous) - y_base)) / 2;
-  return area;
-}
 
 struct polygon_45_concept : polygon_90_concept {
   inline polygon_45_concept() {}
+
+  template <typename iterator_type>
+  typename coordinate_traits<
+    typename point_traits<
+      typename std::iterator_traits<iterator_type>::value_type>::coordinate_type>::area_type
+  static point_sequence_area(iterator_type begin_range, iterator_type end_range) {
+    typedef typename std::iterator_traits<iterator_type>::value_type point_type;
+    typedef typename point_traits<point_type>::coordinate_type Unit;
+    typedef typename coordinate_traits<Unit>::area_type area_type;
+    if(begin_range == end_range) return area_type(0);
+    point_type first = *begin_range;
+    point_type previous = first;
+    ++begin_range;
+    // Initialize trapezoid base line
+    area_type y_base = (area_type)point_concept::y(first);
+    // Initialize area accumulator
+
+    area_type area(0);
+    while (begin_range != end_range) {
+      area_type x1 = (area_type)point_concept::x(previous);
+      area_type x2 = (area_type)point_concept::x(*begin_range);
+      if(x1 != x2) {
+        // do trapezoid area accumulation
+        area += (x2 - x1) * (((area_type)point_concept::y(*begin_range) - y_base) +
+                             ((area_type)point_concept::y(previous) - y_base)) / 2;
+      }
+      previous = *begin_range;
+      // go to next point
+      ++begin_range;
+    }
+    //wrap around to evaluate the edge between first and last if not closed
+    if(first != previous) {
+      area_type x1 = (area_type)point_concept::x(previous);
+      area_type x2 = (area_type)point_concept::x(first);
+      area += (x2 - x1) * (((area_type)point_concept::y(first) - y_base) +
+                           ((area_type)point_concept::y(previous) - y_base)) / 2;
+    }
+    return area;
+  }
 
   template <typename polygon_type_1, typename polygon_type_2>
   static polygon_type_1& assign(polygon_type_1& lvalue, const polygon_type_2& rvalue) {
@@ -60,7 +65,7 @@ struct polygon_45_concept : polygon_90_concept {
     if(wd != unknown_winding) {
       return wd == clockwise_winding ? CLOCKWISE: COUNTERCLOCKWISE;
     }
-    return polygon_point_sequence_area(begin(polygon), end(polygon)) < 0 ? COUNTERCLOCKWISE : CLOCKWISE;
+    return point_sequence_area(begin(polygon), end(polygon)) < 0 ? COUNTERCLOCKWISE : CLOCKWISE;
   }
 
   template <typename polygon_type>
@@ -93,29 +98,29 @@ struct polygon_45_concept : polygon_90_concept {
   }
 
   template <typename polygon_type>
-  static typename registration<polygon_type>::center_type
+  static typename center_type<polygon_type>::type
   center(const polygon_type& polygon) {
     return rectangle_concept::center(bounding_box(polygon));
   }
 
   template <typename polygon_type>
-  static typename polygon_traits<polygon_type>::coordinate_type 
+  static typename coordinate_traits<typename polygon_traits<polygon_type>::coordinate_type>::area_type
   area(const polygon_type& polygon) {
     //rewrite for non-manhattan
     typename polygon_traits<polygon_type>::coordinate_type result = 
-      polygon_point_sequence_area(begin(polygon), end(polygon));
+      point_sequence_area(begin(polygon), end(polygon));
     if(result < 0) result *= -1;
     return result;
   }
 
   /// get the perimeter of the polygon
   template <typename polygon_type>
-  static typename polygon_traits<polygon_type>::coordinate_type
+  static typename distance_type<polygon_type>::type 
   perimeter(const polygon_type& polygon) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
     typedef typename std::iterator_traits<iterator>::value_type point_type;
-    coordinate_type return_value = 0;
+    typename distance_type<polygon_type>::type return_value = 0;
     point_type previous_point, first_point;
     iterator itr = begin(polygon);
     iterator itr_end = end(polygon);

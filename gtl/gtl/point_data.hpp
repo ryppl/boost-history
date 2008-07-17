@@ -8,9 +8,13 @@
 #ifndef GTLPOINT_DATA_HPP
 #define GTLPOINT_DATA_HPP
 namespace gtl {
+
+struct point_concept;
+
 template <typename T>
 class point_data {
 public:
+  typedef point_concept geometry_type;
   typedef T coordinate_type;
   inline point_data(){} 
   inline point_data(coordinate_type x, coordinate_type y) {
@@ -27,6 +31,10 @@ public:
   }
   inline bool operator!=(const point_data& that) const {
     return !((*this) == that);
+  }
+  inline bool operator<(const point_data& that) const {
+    return coords_[0] < that.coords_[0] ||
+      (coords_[0] == that.coords_[0] && coords_[1] < that.coords_[1]);
   }
   inline coordinate_type get(orientation_2d orient) const {
     return coords_[orient.to_int()]; 

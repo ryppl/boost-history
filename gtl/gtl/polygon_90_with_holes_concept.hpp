@@ -52,14 +52,15 @@ public:
   }
 
   template <typename polygon_with_holes_type>
-  static typename polygon_with_holes_traits<polygon_with_holes_type>::coordinate_type 
+  static typename area_type<polygon_with_holes_type>::type
   area(const polygon_with_holes_type& polygon) {
-    typename polygon_traits<polygon_with_holes_type>::coordinate_type retval = polygon_90_concept::area(polygon);
+    typename area_type<polygon_with_holes_type>::type retval = polygon_90_concept::area(polygon);
     typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type b, e;
     e = end_holes(polygon);
     for(b = begin_holes(polygon); b != e; ++b) {
       retval -= polygon_90_concept::area(*b);
     }
+    return retval;
   }
 
   /// check if point is inside polygon 
@@ -78,14 +79,15 @@ public:
 
   /// get the perimeter of the polygon
   template <typename polygon_with_holes_type>
-  static typename polygon_traits<polygon_with_holes_type>::coordinate_type
+  static typename difference_type<polygon_with_holes_type>::type
   perimeter(const polygon_with_holes_type& polygon) {
-    typename polygon_traits<polygon_with_holes_type>::coordinate_type retval = polygon_90_concept::perimeter(polygon);
+    typename difference_type<polygon_with_holes_type>::type retval = polygon_90_concept::perimeter(polygon);
     typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type b, e;
     e = end_holes(polygon);
     for(b = begin_holes(polygon); b != e; ++b) {
       retval -= polygon_90_concept::perimeter(*b);
     }
+    return retval;
   }
 
   //   //awaiting re-implementation of iterator_edges and edge concept

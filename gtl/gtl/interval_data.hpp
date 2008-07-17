@@ -8,9 +8,11 @@
 #ifndef GTL_INTERVAL_DATA_HPP
 #define GTL_INTERVAL_DATA_HPP
 namespace gtl {
+struct interval_concept;
 template <typename T>
 class interval_data {
 public:
+  typedef interval_concept geometry_type;
   typedef T coordinate_type;
   inline interval_data(){} 
   inline interval_data(coordinate_type low, coordinate_type high) {

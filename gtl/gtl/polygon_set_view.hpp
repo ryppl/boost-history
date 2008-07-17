@@ -8,6 +8,9 @@
 #ifndef GTL_POLYGON_SET_VIEW_HPP
 #define GTL_POLYGON_SET_VIEW_HPP
 namespace gtl {
+  struct operator_provides_storage {};
+  struct operator_requires_copy {};
+
 
 template <typename value_type, typename arg_type>
 inline void insert_into_view_arg(value_type& dest, const arg_type& arg, orientation_2d orient) {
@@ -35,7 +38,7 @@ class polygon_set_view {
 public:
   typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
   typedef std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > > value_type;
-  typedef typename value_type::iterator iterator_type;
+  typedef typename value_type::const_iterator iterator_type;
   typedef polygon_set_view operator_arg_type;
   typedef operator_provides_storage operator_storage_tag;
 private:
@@ -63,6 +66,9 @@ public:
     return output_;
   }
 
+  iterator_type begin() const { return value().begin(); }
+  iterator_type end() const { return value().begin(); }
+
   orientation_2d orient() const { return orient_; }
   bool dirty() const { return false; } //result of a boolean is clean
   bool sorted() const { return true; } //result of a boolean is sorted
@@ -80,7 +86,7 @@ class polygon_set_view<ltype, rtype, op_type, operator_provides_storage, operato
 public:
   typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
   typedef std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > > value_type;
-  typedef typename value_type::iterator iterator_type;
+  typedef typename value_type::const_iterator iterator_type;
   typedef polygon_set_view operator_arg_type;
   typedef operator_provides_storage operator_storage_tag;
 private:
@@ -123,6 +129,8 @@ public:
     return output_;
   }
 
+  iterator_type begin() const { return value().begin(); }
+  iterator_type end() const { return value().begin(); }
   orientation_2d orient() const { return orient_; }
   bool dirty() const { return false; } //result of a boolean is clean
   bool sorted() const { return true; } //result of a boolean is sorted
@@ -140,7 +148,7 @@ class polygon_set_view<ltype, rtype, op_type, operator_provides_storage, rtag> {
 public:
   typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
   typedef std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > > value_type;
-  typedef typename value_type::iterator iterator_type;
+  typedef typename value_type::const_iterator iterator_type;
   typedef polygon_set_view operator_arg_type;
   typedef operator_provides_storage operator_storage_tag;
 private:
@@ -173,6 +181,8 @@ public:
     return output_;
   }
 
+  iterator_type begin() const { return value().begin(); }
+  iterator_type end() const { return value().begin(); }
   orientation_2d orient() const { return orient_; }
   bool dirty() const { return false; } //result of a boolean is clean
   bool sorted() const { return true; } //result of a boolean is sorted
@@ -190,7 +200,7 @@ class polygon_set_view<ltype, rtype, op_type, ltag, operator_provides_storage> {
 public:
   typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
   typedef std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > > value_type;
-  typedef typename value_type::iterator iterator_type;
+  typedef typename value_type::const_iterator iterator_type;
   typedef polygon_set_view operator_arg_type;
 private:
   const ltype& lvalue_;
@@ -223,6 +233,8 @@ public:
     return output_;
   }
 
+  iterator_type begin() const { return value().begin(); }
+  iterator_type end() const { return value().begin(); }
   orientation_2d orient() const { return orient_; }
   bool dirty() const { return false; } //result of a boolean is clean
   bool sorted() const { return true; } //result of a boolean is sorted

@@ -15,7 +15,7 @@ private:
 public:
   typedef typename T::value_type geometry_type;
   typedef typename geometry_concept<geometry_type>::type concept_type;
-  typedef typename concept_type::template registration<geometry_type>::coordinate_type coordinate_type;
+  typedef typename concept_type::template coordinate_type<geometry_type>::type coordinate_type;
   typedef iterator_geometry_range_to_set<concept_type, typename T::const_iterator> iterator_type;
   typedef polygon_set_const_wrapper operator_arg_type;
   typedef operator_requires_copy operator_storage_tag;
@@ -26,15 +26,15 @@ public:
     return iterator_type(t_.begin());
   }
 
-  inline iterator_type end(const T& polygon_set) const {
+  inline iterator_type end() const {
     return iterator_type(t_.end());
   }
 
   inline orientation_2d orient() const { return HORIZONTAL; }
 
-  inline bool dirty(const T& polygon_set) const { return true; }
+  inline bool dirty() const { return true; }
 
-  inline bool sorted(const T& polygon_set) const { return false; }
+  inline bool sorted() const { return false; }
 
 };
 
@@ -50,7 +50,7 @@ private:
 public:
   typedef typename T::value_type geometry_type;
   typedef typename geometry_concept<geometry_type>::type concept_type;
-  typedef typename concept_type::template registration<geometry_type>::coordinate_type coordinate_type;
+  typedef typename concept_type::template coordinate_type<geometry_type>::type coordinate_type;
   typedef iterator_geometry_range_to_set<concept_type, typename T::const_iterator> iterator_type;
   typedef polygon_set_wrapper operator_arg_type;
   typedef operator_requires_copy operator_storage_tag;
@@ -61,7 +61,7 @@ public:
     return iterator_type(t_.begin());
   }
 
-  inline iterator_type end(const T& polygon_set) const {
+  inline iterator_type end() const {
     return iterator_type(t_.end());
   }
 
@@ -71,9 +71,9 @@ public:
 
   inline orientation_2d orient() const { return HORIZONTAL; }
 
-  inline bool dirty(const T& polygon_set) const { return true; }
+  inline bool dirty() const { return true; }
 
-  inline bool sorted(const T& polygon_set) const { return false; }
+  inline bool sorted() const { return false; }
 
 };
 

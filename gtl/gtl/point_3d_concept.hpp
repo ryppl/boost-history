@@ -11,11 +11,6 @@ namespace gtl {
 struct point_3d_concept : point_concept {
   point_3d_concept() {}
 
-  template <typename point_3d_type>
-  struct registration {
-    typedef typename point_3d_traits<point_3d_type>::coordinate_type component_type;
-  };
-
   template <orientation_3d_enum orient, typename T>
   static inline typename point_3d_traits<T>::coordinate_type get(const T& point) {
     return point_3d_traits<T>::get(point, orient); }

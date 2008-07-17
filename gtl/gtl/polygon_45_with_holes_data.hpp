@@ -8,10 +8,11 @@
 #ifndef GTL_POLYGON_45_WITH_HOLES_DATA_HPP
 #define GTL_POLYGON_45_WITH_HOLES_DATA_HPP
 namespace gtl {
-
+struct polygon_45_with_holes_concept;
 template <typename T>
 class polygon_45_with_holes_data {
 public:
+  typedef polygon_45_with_holes_concept geometry_type;
   typedef T coordinate_type;
   typedef typename polygon_45_data<T>::iterator_type iterator_type;
   typedef typename polygon_45_data<T>::compact_iterator_type compact_iterator_type;

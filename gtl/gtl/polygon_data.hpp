@@ -8,9 +8,11 @@
 #ifndef GTL_POLYGON_DATA_HPP
 #define GTL_POLYGON_DATA_HPP
 namespace gtl {
+struct polygon_concept;
 template <typename T>
 class polygon_data : public polygon_45_data<T> {
-  //inherits everything
+public:
+  typedef polygon_concept geometry_type;
 };
 }
 #endif

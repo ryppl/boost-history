@@ -13,6 +13,7 @@ class iterator_geometry_to_set {};
 
 template <typename concept_type, typename iterator_type>
 class iterator_geometry_range_to_set {
+public:
   typedef typename std::iterator_traits<iterator_type>::value_type geometry_type;
   typedef iterator_geometry_to_set<concept_type, geometry_type> internal_iterator_type;
   typedef typename internal_iterator_type::value_type value_type;
@@ -26,6 +27,7 @@ private:
   mutable bool dereferenced_;
   orientation_2d orient_;
 public:
+  iterator_geometry_range_to_set() {}
   iterator_geometry_range_to_set(iterator_type itr,
                            orientation_2d orient = HORIZONTAL) : 
     itr_(itr), dereferenced_(false), orient_(orient) {}

@@ -556,12 +556,14 @@ namespace polygon_formation {
   template <typename Unit>
   void destroyActiveTail(ActiveTail<Unit>* aTail);
      
+  struct polygon_90_concept;
 
   template<bool orientT, typename Unit>
   class PolyLineHoleData {
   private:
     ActiveTail<Unit>* p_;
   public:
+    typedef polygon_90_concept geometry_type;
     typedef Unit coordinate_type;
     typedef typename ActiveTail<Unit>::iterator compact_iterator_type;
     typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;
@@ -584,11 +586,14 @@ namespace polygon_formation {
    
   };
 
+  struct polygon_90_with_holes_concept;
+
   template<bool orientT, typename Unit>
   class PolyLinePolygonData {
   private:
     ActiveTail<Unit>* p_;
   public:
+    typedef polygon_90_with_holes_concept geometry_type;
     typedef Unit coordinate_type;
     typedef typename ActiveTail<Unit>::iterator compact_iterator_type;
     typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;

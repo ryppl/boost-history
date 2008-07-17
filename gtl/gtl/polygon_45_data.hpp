@@ -8,9 +8,11 @@
 #ifndef GTL_POLYGON_45_DATA_HPP
 #define GTL_POLYGON_45_DATA_HPP
 namespace gtl {
+struct polygon_45_concept;
 template <typename T>
 class polygon_45_data {
 public:
+  typedef polygon_45_concept geometry_type;
   typedef T coordinate_type;
   typedef typename std::vector<point_data<coordinate_type> >::const_iterator iterator_type;
   typedef iterator_points_to_compact<iterator_type, point_data<coordinate_type> > compact_iterator_type;

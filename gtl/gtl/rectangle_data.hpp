@@ -8,9 +8,13 @@
 #ifndef GTL_RECTANGLE_DATA_HPP
 #define GTL_RECTANGLE_DATA_HPP
 namespace gtl {
+
+struct rectangle_concept;
+
 template <typename T>
 class rectangle_data {
 public:
+  typedef rectangle_concept geometry_type;
   typedef T coordinate_type;
   inline rectangle_data() {}
   template <typename interval_type_1, typename interval_type_2>

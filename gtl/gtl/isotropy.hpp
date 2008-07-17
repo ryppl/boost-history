@@ -9,7 +9,56 @@
 #ifndef GTL_ISOTROPY_HPP
 #define GTL_ISOTROPY_HPP
 namespace gtl {
-struct no_type {};
+
+template <typename T>
+struct coordinate_traits {
+  typedef T coordinate_type;
+  typedef T area_type;
+  typedef T difference_type;
+  typedef T distance_type;
+};
+
+template <>
+struct coordinate_traits<int> {
+  typedef int coordinate_type;
+  typedef long long area_type;
+  typedef long long difference_type;
+  typedef double distance_type;
+};
+
+template <>
+struct coordinate_traits<long long> {
+  typedef long long coordinate_type;
+  typedef long long area_type;
+  typedef long long difference_type;
+  typedef double distance_type;
+};
+
+struct coordinate_concept {
+  template <typename T>
+  struct coordinate_type {
+    typedef typename coordinate_traits<T>::coordinate_type type;
+  };
+  template <typename T>
+  struct area_type {
+    typedef typename coordinate_traits<T>::area_type type;
+  };
+  template <typename T>
+  struct difference_type {
+    typedef typename coordinate_traits<T>::difference_type type;
+  };
+  template <typename T>
+  struct distance_type {
+    typedef typename coordinate_traits<T>::distance_type type;
+  };
+
+  template <typename coordinate_type_1, typename coordinate_type_2>
+  static typename difference_type<coordinate_type_1>::type 
+  distance(const coordinate_type_1& lvalue, const coordinate_type_2& rvalue) {
+    typedef typename difference_type<coordinate_type_1>::type Unit;
+    return (lvalue < rvalue) ? (Unit)rvalue - (Unit)lvalue : (Unit)lvalue - (Unit)rvalue;
+  }
+};
 
 enum direction_1d_enum { LOW = 0, HIGH = 1,
                          LEFT = 0, RIGHT = 1,

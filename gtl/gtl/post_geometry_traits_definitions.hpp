@@ -12,19 +12,37 @@ namespace gtl {
 template <typename geometry_type>
 struct component_type { 
   typedef typename geometry_concept<geometry_type>::type::template
-  registration<geometry_type>::component_type type;
+  component_type<geometry_type>::type type;
 };
 
 template <typename geometry_type>
 struct coordinate_type { 
   typedef typename geometry_concept<geometry_type>::type::template
-  registration<geometry_type>::coordinate_type type;
+  coordinate_type<geometry_type>::type type;
 };
 
 template <typename geometry_type>
 struct center_type { 
   typedef typename geometry_concept<geometry_type>::type::template
-  registration<geometry_type>::center_type type;
+  center_type<geometry_type>::type type;
+};
+
+template <typename geometry_type>
+struct area_type {
+  typedef typename geometry_concept<geometry_type>::type::template
+  area_type<geometry_type>::type type;
+};
+
+template <typename geometry_type>
+struct distance_type {
+  typedef typename geometry_concept<geometry_type>::type::template
+  distance_type<geometry_type>::type type;
+};
+
+template <typename geometry_type>
+struct difference_type {
+  typedef typename geometry_concept<geometry_type>::type::template
+  difference_type<geometry_type>::type type;
 };
 
 }

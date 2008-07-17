@@ -12,19 +12,37 @@ namespace gtl {
 struct rectangle_concept {
   rectangle_concept() {}
 
-  template <typename rectangle_type>
-  struct registration {
-    typedef typename rectangle_traits<rectangle_type>::coordinate_type coordinate_type;
-    typedef interval_data<coordinate_type> component_type;
-    typedef point_data<coordinate_type> center_type;
+  template <typename T>
+  struct coordinate_type {
+    typedef typename rectangle_traits<T>::coordinate_type type;
   };
 
-  template <orientation_2d_enum orient, typename T>
-  static inline typename rectangle_traits<T>::interval_type 
-  get(const T& rectangle) {
-    return rectangle_traits<T>::get(rectangle, orient); 
-  }
-  
+  template <typename T>
+  struct component_type {
+    typedef typename rectangle_traits<T>::interval_type type;
+  };
+
+  template <typename T>
+  struct center_type {
+    //should we make point_type a trait?
+    typedef point_data<typename coordinate_type<T>::type > type;
+  };
+
+  template <typename T>
+  struct area_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::area_type type;
+  };
+
+  template <typename T>
+  struct difference_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  };
+
+  template <typename T>
+  struct distance_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::distance_type type;
+  };
+
   template <typename T>
   static inline typename rectangle_traits<T>::interval_type 
   get(const T& rectangle, orientation_2d orient) {
@@ -68,10 +86,10 @@ struct rectangle_concept {
                             const T3& interval_vertical) {
     return rectangle_traits<T>::construct(interval_horizontal, interval_vertical); }
 
-  template <typename T, typename coordinate_type>
-  static inline T construct(coordinate_type xl, coordinate_type yl, coordinate_type xh, coordinate_type yh) {
-    return rectangle_traits<T>::construct(interval_data<coordinate_type>(xl, xh), 
-                                          interval_data<coordinate_type>(yl, yh)); 
+  template <typename T, typename coord_type>
+  static inline T construct(coord_type xl, coord_type yl, coord_type xh, coord_type yh) {
+    return rectangle_traits<T>::construct(interval_data<coord_type>(xl, xh), 
+                                          interval_data<coord_type>(yl, yh)); 
   }
 
   template <typename T, typename T2>
@@ -102,22 +120,8 @@ struct rectangle_concept {
     return interval_concept::get(rectangle_traits<rectangle_type>::get(rectangle, orient), dir); 
   }
 
-  template <direction_1d_enum dir, typename rectangle_type>
-  static inline typename rectangle_traits<rectangle_type>::coordinate_type 
-  get(const rectangle_type& rectangle, orientation_2d orient) {
-    return get(rectangle, orient, dir);
-  }
-
   template <typename rectangle_type>
   static inline void set(rectangle_type& rectangle, orientation_2d orient, direction_1d dir, 
-                         typename rectangle_traits<rectangle_type>::coordinate_type value) {
-    typename rectangle_traits<rectangle_type>::interval_type ivl = orient(rectangle);
-    interval_concept::set(ivl, dir, value);
-    set(rectangle, orient, ivl);
-  }
-
-  template <direction_1d_enum dir, typename rectangle_type>
-  static inline void set(rectangle_type& rectangle, orientation_2d orient,
                          typename rectangle_traits<rectangle_type>::coordinate_type value) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
     interval_concept::set(ivl, dir, value);
@@ -127,58 +131,60 @@ struct rectangle_concept {
   template <typename rectangle_type>
   static typename rectangle_traits<rectangle_type>::coordinate_type
   xl(const rectangle_type& rectangle) {
-    return get<LOW>(rectangle, HORIZONTAL);
+    return get(rectangle, HORIZONTAL, LOW);
   }
 
   template <typename rectangle_type>
   static void xl(rectangle_type& rectangle, typename rectangle_traits<rectangle_type>::coordinate_type value) {
-    return set<LOW>(rectangle, HORIZONTAL, value);
+    return set(rectangle, HORIZONTAL, LOW, value);
   }
 
   template <typename rectangle_type>
   static typename rectangle_traits<rectangle_type>::coordinate_type
   xh(const rectangle_type& rectangle) {
-    return get<HIGH>(rectangle, HORIZONTAL);
+    return get(rectangle, HORIZONTAL, HIGH);
   }
 
   template <typename rectangle_type>
   static void xh(rectangle_type& rectangle, typename rectangle_traits<rectangle_type>::coordinate_type value) {
-    return set<HIGH>(rectangle, HORIZONTAL, value);
+    return set(rectangle, HORIZONTAL, HIGH, value);
   }
 
   template <typename rectangle_type>
   static typename rectangle_traits<rectangle_type>::coordinate_type
   yl(const rectangle_type& rectangle) {
-    return get<LOW>(rectangle, VERTICAL);
+    return get(rectangle, VERTICAL, LOW);
   }
 
   template <typename rectangle_type>
   static void yl(rectangle_type& rectangle, typename rectangle_traits<rectangle_type>::coordinate_type value) {
-    return set<LOW>(rectangle, VERTICAL, value);
+    return set(rectangle, VERTICAL, LOW, value);
   }
 
   template <typename rectangle_type>
   static typename rectangle_traits<rectangle_type>::coordinate_type
   yh(const rectangle_type& rectangle) {
-    return get<HIGH>(rectangle, VERTICAL);
+    return get(rectangle, VERTICAL, HIGH);
   }
 
   template <typename rectangle_type>
   static void yh(rectangle_type& rectangle, typename rectangle_traits<rectangle_type>::coordinate_type value) {
-    return set<HIGH>(rectangle, VERTICAL, value);
+    return set(rectangle, VERTICAL, HIGH, value);
   }
 
   template <typename rectangle_type, typename rectangle_type2>
   static bool contains(const rectangle_type& rectangle, const rectangle_type2 rectangle_contained, 
                                 bool consider_touch, rectangle_concept tag) {
-    return interval_concept::contains(get<HORIZONTAL>(rectangle), get<HORIZONTAL>(rectangle_contained), consider_touch, interval_concept()) &&
-      interval_concept::contains(get<VERTICAL>(rectangle), get<VERTICAL>(rectangle_contained), consider_touch, interval_concept());
+    return interval_concept::contains(horizontal(rectangle), horizontal(rectangle_contained), consider_touch, interval_concept()) &&
+      interval_concept::contains(vertical(rectangle), vertical(rectangle_contained), consider_touch, interval_concept());
   }
   template <typename rectangle_type, typename point_type>
   static bool contains(const rectangle_type& rectangle, const point_type point_contained, 
                                 bool consider_touch, point_concept tag) {
-    return interval_concept::contains(get<HORIZONTAL>(rectangle), point_concept::get<HORIZONTAL>(point_contained), consider_touch, no_type()) &&
-      interval_concept::contains(get<VERTICAL>(rectangle), point_concept::get<VERTICAL>(point_contained), consider_touch, no_type());
+    return interval_concept::contains(horizontal(rectangle), point_concept::x(point_contained), 
+                                      consider_touch, coordinate_concept()) &&
+      interval_concept::contains(vertical(rectangle), point_concept::y(point_contained), 
+                                 consider_touch, coordinate_concept());
   }
 
   /// set all four coordinates based upon two points
@@ -198,7 +204,7 @@ struct rectangle_concept {
   /// move rectangle by delta in orient
   template <typename rectangle_type>
   static rectangle_type& move(rectangle_type& rectangle, orientation_2d orient, 
-            typename rectangle_traits<rectangle_type>::coordinate_type delta) {
+            typename difference_type<rectangle_type>::type delta) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
     interval_concept::move(ivl, delta);
     set(rectangle, orient, ivl);
@@ -294,12 +300,12 @@ struct rectangle_concept {
     horizontal(rectangle, 
                interval_concept::convolve(ivl,
                                           point_concept::x(convolution_point),
-                                          no_type()));
+                                          coordinate_concept()));
     ivl = vertical(rectangle);
     vertical(rectangle, 
              interval_concept::convolve(ivl,
                                         point_concept::y(convolution_point),
-                                        no_type()));
+                                        coordinate_concept()));
     return rectangle;
   }
 
@@ -312,12 +318,12 @@ struct rectangle_concept {
     horizontal(rectangle, 
                interval_concept::deconvolve(ivl,
                                             point_concept::x(convolution_point),
-                                            no_type()));
+                                            coordinate_concept()));
     ivl = vertical(rectangle);
     vertical(rectangle, 
              interval_concept::deconvolve(ivl,
                                           point_concept::y(convolution_point),
-                                          no_type()));
+                                          coordinate_concept()));
     return rectangle;
   }
 
@@ -330,9 +336,10 @@ struct rectangle_concept {
 
   /// get the area of the rectangle
   template <typename rectangle_type>
-  static typename rectangle_traits<rectangle_type>::coordinate_type
+  static typename area_type<rectangle_type>::type
   area(const rectangle_type& rectangle) {
-    return delta(rectangle, HORIZONTAL) * delta(rectangle, VERTICAL);
+    typedef typename area_type<rectangle_type>::type area_type;
+    return (area_type)delta(rectangle, HORIZONTAL) * (area_type)delta(rectangle, VERTICAL);
   }
 
   /// returns the orientation of the longest side
@@ -344,14 +351,14 @@ struct rectangle_concept {
 
   /// get the half perimeter of the rectangle
   template <typename rectangle_type>
-  static typename rectangle_traits<rectangle_type>::coordinate_type
+  static typename difference_type<rectangle_type>::type
   half_perimeter(const rectangle_type& rectangle) {
     return delta(rectangle, HORIZONTAL) + delta(rectangle, VERTICAL);
   }
    
   /// get the perimeter of the rectangle
   template <typename rectangle_type>
-  static typename rectangle_traits<rectangle_type>::coordinate_type
+  static typename difference_type<rectangle_type>::type
   perimeter(const rectangle_type& rectangle) {
     return 2 * half_perimeter(rectangle);
   }
@@ -523,20 +530,20 @@ struct rectangle_concept {
 
   /// returns the center of the rectangle
   template <typename rectangle_type>
-  static inline typename registration<rectangle_type>::center_type
+  static inline typename center_type<rectangle_type>::type
   center(const rectangle_type& rectangle) {
-    return typename registration<rectangle_type>::center_type(interval_concept::center(horizontal(rectangle)),
-                                                              interval_concept::center(vertical(rectangle)));
+    return typename center_type<rectangle_type>::type(interval_concept::center(horizontal(rectangle)),
+                                                      interval_concept::center(vertical(rectangle)));
   }
 
   template <typename rectangle_type>
-  static typename registration<rectangle_type>::center_type
+  static typename center_type<rectangle_type>::type
   get_corner(const rectangle_type& rectangle, direction_2d direction_facing, direction_1d direction_turning) {
     typedef typename rectangle_traits<rectangle_type>::coordinate_type Unit;
     Unit u1 = get(rectangle, direction_facing);
     Unit u2 = get(rectangle, direction_facing.turn(direction_turning));
     if(orientation_2d(direction_facing).to_int()) std::swap(u1, u2);
-    return point_concept::construct<typename registration<rectangle_type>::center_type>(u1, u2);
+    return point_concept::construct<typename center_type<rectangle_type>::type>(u1, u2);
   }
 
   template <typename rectangle_type>
@@ -566,54 +573,41 @@ struct rectangle_concept {
     return false;
   }
 
-  //TODO: Add distance_type<geometry_type>::type and difference_type<geometry_type>::type
-  
-//   /// Returns the euclidian distance between the edge of the
-//   /// rectangle and the point. Returns 0 if point is inside the
-//   /// rectangle
-//   template <class T2>
-//   double
-//   euclidianDistance(const PointImpl<T2> & p) const;
+  template <typename rectangle_type, typename point_type>
+  static typename difference_type<rectangle_type>::type 
+  distance(rectangle_type& lvalue, const point_type& rvalue, 
+           orientation_2d orient, point_concept tag) {
+    return interval_concept::distance(get(lvalue, orient), point_concept::get(rvalue, orient), coordinate_concept());
+  }
 
-//   /// Returns the square of the euclidian distance between the edge of the
-//   /// rectangle and the point. Returns 0 if point is inside the
-//   /// rectangle
-//   template <class T2>
-//   UnsignedLongUnit
-//   squareEuclidianDistance(const PointImpl<T2> & p) const;
+  template <typename rectangle_type, typename point_type>
+  static typename difference_type<rectangle_type>::type 
+  distance(rectangle_type& lvalue, const point_type& rvalue, 
+           orientation_2d orient, rectangle_concept tag) {
+    return interval_concept::distance(get(lvalue, orient), get(rvalue, orient), interval_concept());
+  }
 
-//   /// Returns the manhattan distance (deltax + deltay) between the
-//   /// edge of the rectangle and the point. Returns 0 if point is
-//   /// inside the rectangle
-//   template <class T2>
-//   double
-//   manhattanDistance(const PointImpl<T2> & p) const;
+  template <typename rectangle_type, typename point_type, typename tag_type>
+  static typename difference_type<rectangle_type>::type 
+  square_euclidian_distance(rectangle_type& lvalue, const point_type& rvalue, tag_type tag) {
+    typename difference_type<rectangle_type>::type xdist, ydist;
+    xdist = distance(lvalue, rvalue, HORIZONTAL, tag);
+    ydist = distance(lvalue, rvalue, VERTICAL, tag);
+    return (xdist * xdist) + (ydist * ydist);
+  }
 
-//   /// Returns the distance between this rectangle and a unit or a point
-//   /// returns 0 if point or coordinate lies within
-//   /// the range of the rectangle
-//   Unit distance(Unit u, Orientation2D o) const;
-//   template <class T2>
-//   Unit distance(const PointImpl<T2> & p, Orientation2D o) const;
+  template <typename rectangle_type, typename point_type, typename tag_type>
+  static typename distance_type<rectangle_type>::type 
+  distance(rectangle_type& lvalue, const point_type& rvalue, tag_type tag) {
+    return sqrt((typename distance_type<rectangle_type>::type)(square_euclidian_distance(lvalue, rvalue, tag)));
+  }
 
-//   /// Returns the distance between two rectangles along the given orientation
-//   template <class T2>
-//   Unit distance(const RectangleImpl<T2> & r2, Orientation2D o) const;
-
-//   /// Returns closest euclidian distance between the edges of the two rectangles.
-//   /// Returns 0 if they overlap or touch
-//   template <class T2>
-//   double euclidianDistance(const RectangleImpl<T2> & r2) const;
-
-//   /// Returns the square of the closest euclidian distance between the edges of the two rectangles.
-//   /// Returns 0 if they overlap or touch
-//   template <class T2>
-//   UnsignedLongUnit squareEuclidianDistance(const RectangleImpl<T2> & r2) const;
-
-//   /// Returns manhattan distance (deltax + deltay) between the two rectangles
-//   /// Returns 0 if they overlap or touch
-//   template <class T2>
-//   Unit manhattanDistance(const RectangleImpl<T2> & r2) const;
+  template <typename rectangle_type, typename point_type, typename tag_type>
+  static typename difference_type<rectangle_type>::type 
+  manhattan_distance(rectangle_type& lvalue, const point_type& rvalue, 
+                     tag_type tag) {
+    return distance(lvalue, rvalue, HORIZONTAL, tag) + distance(lvalue, rvalue, VERTICAL, tag);
+  }
 
   template <typename rectangle_type_1, typename rectangle_type_2>
   class less : public std::binary_function<const rectangle_type_1&, const rectangle_type_2&, bool> {

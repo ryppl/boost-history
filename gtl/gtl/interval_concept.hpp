@@ -11,12 +11,32 @@ namespace gtl {
 struct interval_concept {
   interval_concept() {}
 
-  template <typename interval_type>
-  struct registration {
-    typedef typename interval_traits<interval_type>::coordinate_type coordinate_type;
-    typedef typename interval_traits<interval_type>::coordinate_type component_type;
-    typedef typename interval_traits<interval_type>::coordinate_type center_type;
+  template <typename T>
+  struct coordinate_type {
+    typedef typename interval_traits<T>::coordinate_type type;
   };
+
+  template <typename T>
+  struct component_type {
+    typedef typename interval_traits<T>::coordinate_type type;
+  };
+
+  template <typename T>
+  struct center_type {
+    typedef typename interval_traits<T>::coordinate_type type;
+  };
+
+  template <typename T>
+  struct difference_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  };
+
+  template <typename T>
+  struct distance_type {
+    //1D distance is difference
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  };
+
 
   template <direction_1d_enum dir, typename T>
   static inline typename interval_traits<T>::coordinate_type 
@@ -73,7 +93,7 @@ struct interval_concept {
   template <typename interval_type>
   static bool contains(const interval_type& interval,
                        typename interval_traits<interval_type>::coordinate_type value, 
-                       bool consider_touch, no_type tag) {
+                       bool consider_touch, coordinate_concept tag) {
     if(consider_touch) {
       return value <= get<HIGH>(interval) && value >= get<LOW>(interval);
     } else {
@@ -84,8 +104,8 @@ struct interval_concept {
   template <typename interval_type, typename interval_type_2>
   static bool contains(const interval_type& interval,
                        const interval_type_2& value, bool consider_touch, interval_concept tag) {
-    return contains(interval, get(value, LOW), consider_touch, no_type()) &&
-      contains(interval, get(value, HIGH), consider_touch, no_type());
+    return contains(interval, get(value, LOW), consider_touch, coordinate_concept()) &&
+      contains(interval, get(value, HIGH), consider_touch, coordinate_concept());
   }
 
     /// get the low coordinate
@@ -117,8 +137,10 @@ struct interval_concept {
   
   /// get the magnitude of the interval
   template <typename interval_type>
-  static inline typename interval_traits<interval_type>::coordinate_type 
-  delta(const interval_type& interval) { return high(interval) - low(interval); }
+  static inline typename difference_type<interval_type>::type 
+  delta(const interval_type& interval) { 
+    typedef typename difference_type<interval_type>::type diffT;
+    return (diffT)high(interval) - (diffT)low(interval); }
     
   /// flip this about coordinate
   template <typename interval_type>
@@ -146,18 +168,18 @@ struct interval_concept {
   /// move interval by delta
   template <typename interval_type>
   static interval_type& move(interval_type& interval,
-                             typename interval_traits<interval_type>::coordinate_type delta) {
-    typedef typename interval_traits<interval_type>::coordinate_type Unit;
-    Unit len = high(interval) - low(interval);
-    low(interval, low(interval) + delta);
-    high(interval, low(interval) + len);
+                             typename difference_type<interval_type>::type displacement) {
+    typedef typename difference_type<interval_type>::type Unit;
+    Unit len = delta(interval);
+    low(interval, (Unit)low(interval) + displacement);
+    high(interval, (Unit)low(interval) + len);
     return interval;
   }
   
   /// convolve this with b
   template <typename interval_type>
   static interval_type& convolve(interval_type& interval,
-                                 typename interval_traits<interval_type>::coordinate_type b, no_type tag) {
+                                 typename interval_traits<interval_type>::coordinate_type b, coordinate_concept tag) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
     Unit newLow  = low(interval) + b;
     Unit newHigh = high(interval) + b;
@@ -169,7 +191,7 @@ struct interval_concept {
   /// deconvolve this with b
   template <typename interval_type>
   static interval_type& deconvolve(interval_type& interval,
-                                   typename interval_traits<interval_type>::coordinate_type b, no_type tag) {
+                                   typename interval_traits<interval_type>::coordinate_type b, coordinate_concept tag) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
     Unit newLow  = low(interval)  - b;
     Unit newHigh = high(interval) - b;
@@ -228,22 +250,22 @@ struct interval_concept {
   
   /// distance from a coordinate to an interval
   template <typename interval_type>
-  static inline typename interval_traits<interval_type>::coordinate_type 
+  static inline typename distance_type<interval_type>::type 
   distance(const interval_type& interval,
-           typename interval_traits<interval_type>::coordinate_type position, no_type tag) {
-    typedef typename interval_traits<interval_type>::coordinate_type Unit;
-    Unit dist[3] = {0, low(interval) - position, position - high(interval)};
+           typename interval_traits<interval_type>::coordinate_type position, coordinate_concept tag) {
+    typedef typename distance_type<interval_type>::type Unit;
+    Unit dist[3] = {0, (Unit)low(interval) - (Unit)position, (Unit)position - (Unit)high(interval)};
     return dist[ (dist[1] > 0) + ((dist[2] > 0) << 1) ];
   }
 
 
   /// distance between two intervals
   template <typename interval_type, typename interval_type_2>
-  static inline typename interval_traits<interval_type>::coordinate_type 
+  static inline typename distance_type<interval_type>::type 
   distance(const interval_type& interval,
            const interval_type_2& b, interval_concept tag) {
-    typedef typename interval_traits<interval_type>::coordinate_type Unit;
-    Unit dist[3] = {0, low(interval) - high(b), low(b) - high(interval)};
+    typedef typename distance_type<interval_type>::type Unit;
+    Unit dist[3] = {0, (Unit)low(interval) - (Unit)high(b), (Unit)low(b) - (Unit)high(interval)};
     return dist[ (dist[1] > 0) + ((dist[2] > 0) << 1) ];
   }
 
@@ -260,10 +282,10 @@ struct interval_concept {
   template <typename interval_type, typename interval_type_2>
   static bool boundaries_intersect(const interval_type& interval, const interval_type_2& b, 
                                    bool consider_touch, interval_concept tag) {
-    return (contains(interval, low(b), consider_touch, no_type()) || 
-            contains(interval, high(b), consider_touch, no_type())) &&
-      (contains(b, low(interval), consider_touch, no_type()) || 
-       contains(b, high(interval), consider_touch, no_type()));
+    return (contains(interval, low(b), consider_touch, coordinate_concept()) || 
+            contains(interval, high(b), consider_touch, coordinate_concept())) &&
+      (contains(b, low(interval), consider_touch, coordinate_concept()) || 
+       contains(b, high(interval), consider_touch, coordinate_concept()));
   }
 
   /// check if they are end to end

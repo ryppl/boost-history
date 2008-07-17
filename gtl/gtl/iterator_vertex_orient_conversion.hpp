@@ -12,7 +12,7 @@ template <typename iterator_type>
 class iterator_vertex_orient_conversion {
 private:
   iterator_type iter_;
-  typename std::iterator_traits<iterator_type>::value_type vertex_;
+  mutable typename std::iterator_traits<iterator_type>::value_type vertex_;
 public:
   typedef std::forward_iterator_tag iterator_category;
   typedef typename std::iterator_traits<iterator_type>::value_type value_type;

@@ -9,14 +9,31 @@
 #define GTL_POLYGON_90_CONCEPT_HPP
 namespace gtl {
 struct polygon_90_concept {
-  inline polygon_90_concept() {}
 
-  template <typename polygon_type>
-  struct registration {
-    typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
-    typedef point_data<coordinate_type> center_type;
+  template <typename T>
+  struct coordinate_type {
+    typedef typename polygon_traits<T>::coordinate_type type;
   };
 
+  template <typename T>
+  struct center_type {
+    typedef point_data<typename coordinate_type<T>::type> type;
+  };
+
+  template <typename T>
+  struct area_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::area_type type;
+  };
+
+  template <typename T>
+  struct difference_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  };
+
+  template <typename T>
+  struct distance_type {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::distance_type type;
+  };
 
   template<typename polygon_type, typename compact_iterator_type>
   static void set_compact(polygon_type& polygon, compact_iterator_type input_begin, compact_iterator_type input_end) {
@@ -154,18 +171,19 @@ struct polygon_90_concept {
   }
 
   template <typename polygon_type>
-  static typename registration<polygon_type>::center_type
+  static typename center_type<polygon_type>::type
   center(const polygon_type& polygon) {
     return rectangle_concept::center(bounding_box(polygon));
   }
 
   template <typename polygon_type>
-  static typename polygon_traits<polygon_type>::coordinate_type 
+  static typename area_type<polygon_type>::type
   area(const polygon_type& polygon) {
     //for (long i = 2; i < _size; i += 2) res += ((double)_vertex[i-1])*((double)(_vertex[i-2] - _vertex[i]));
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
+    typedef typename coordinate_traits<coordinate_type>::area_type area_type;
     typedef typename polygon_traits<polygon_type>::compact_iterator_type iterator;
-    coordinate_type retval = 0;
+    area_type retval = 0;
     iterator itr = begin_compact(polygon);
     iterator end_itr = end_compact(polygon);
     coordinate_type firstx = *itr;
@@ -179,22 +197,21 @@ struct polygon_90_concept {
       ++itr;
       if(itr == end_itr) break;
       coordinate_type y = *itr;
-      retval += (prevy * (prevx - x));
+      retval += ((area_type)prevy * ((area_type)prevx - (area_type)x));
       prevy = y;
       prevx = x;
     }
-    retval += (prevy * (prevx - firstx));
+    retval += ((area_type)prevy * ((area_type)prevx - (area_type)firstx));
     return retval >= 0 ? retval : -retval;
   }
 
   /// get the perimeter of the polygon
   template <typename polygon_type>
-  static typename polygon_traits<polygon_type>::coordinate_type
+  static typename difference_type<polygon_type>::type
   perimeter(const polygon_type& polygon) {
-    typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
     typedef typename std::iterator_traits<iterator>::value_type point_type;
-    coordinate_type return_value = 0;
+    typename difference_type<polygon_type>::type return_value = 0;
     point_type previous_point, first_point;
     iterator itr = begin(polygon);
     iterator itr_end = end(polygon);
@@ -237,7 +254,7 @@ struct polygon_90_concept {
         interval_data<coordinate_type> ivl = 
           interval_concept::construct<interval_data<coordinate_type> >(point_concept::get<VERTICAL>(current_pt), 
                                                                        point_concept::get<VERTICAL>(prev_pt));
-        if(interval_concept::contains(ivl, point_concept::get<VERTICAL>(point), true, no_type())) {
+        if(interval_concept::contains(ivl, point_concept::get<VERTICAL>(point), true, coordinate_concept())) {
           if(point_concept::get<HORIZONTAL>(current_pt) == 
              point_concept::get<HORIZONTAL>(point)) return consider_touch;
           ++increment;

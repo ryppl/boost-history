@@ -8,9 +8,11 @@
 #ifndef GTL_POLYGON_WITH_HOLES_DATA_HPP
 #define GTL_POLYGON_WITH_HOLES_DATA_HPP
 namespace gtl {
-
+struct polygon_with_holes_concept;
 template <typename T>
 class polygon_with_holes_data : public polygon_45_with_holes_data<T> {
+public:
+  typedef polygon_with_holes_concept geometry_type;
   //inherits everything
 };
 

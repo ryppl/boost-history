@@ -8,6 +8,7 @@
 #ifndef GTL_GTL_HPP
 #define GTL_GTL_HPP
 //external
+#include <math.h>
 #include <vector>
 #include <deque>
 #include <map>
@@ -67,22 +68,27 @@
 #include "boolean_op.hpp"
 #include "polygon_formation.hpp"
 #include "rectangle_formation.hpp"
+#include "property_merge.hpp"
 #include "iterator_vertex_orient_conversion.hpp"
 #include "iterator_geometry_to_set.hpp"
 
-//polygon set data types
-#include "polygon_set_data.hpp"
+//geometry traits
+#include "geometry_concept.hpp"
+
 //polygon set trait types
 #include "polygon_set_traits.hpp"
 //polygon set concepts
 #include "polygon_set_view.hpp"
-//geometry traits
-#include "geometry_concept.hpp"
+//polygon set data types
+#include "polygon_set_data.hpp"
 
 #include "polygon_set_wrapper.hpp"
 
 //defintions
 #include "post_geometry_traits_definitions.hpp"
+
+//general scanline
+#include "scan_arbitrary.hpp"
 
 namespace gtl {
 
@@ -195,7 +201,7 @@ delta(const geometry_type& geometry_object, orientation_3d orient) {
 
 //accepts: rectangle, polygon
 template <typename geometry_type>
-typename coordinate_type<geometry_type>::type
+typename area_type<geometry_type>::type
 area(const geometry_type& geometry_object) {
   return geometry_concept<geometry_type>::type::area(geometry_object);
 }
@@ -209,7 +215,7 @@ half_perimeter(const geometry_type& geometry_object) {
 
 //accepts: rectangle
 template <typename geometry_type>
-typename coordinate_type<geometry_type>::type
+typename distance_type<geometry_type>::type
 perimeter(const geometry_type& geometry_object) {
   return geometry_concept<geometry_type>::type::perimeter(geometry_object);
 }
@@ -295,8 +301,8 @@ void vertical(geometry_type_1& geometry_object, const geometry_type_2& value) {
 template <typename geometry_type_1, typename geometry_type_2>
 bool contains(const geometry_type_1& geometry_object, const geometry_type_2& contained_geometry_object, 
               bool consider_touch = true) {
-  return typename geometry_concept<geometry_type_1>::type().contains(geometry_object, contained_geometry_object,
-                      consider_touch, typename geometry_concept<geometry_type_2>::type());
+  return geometry_concept<geometry_type_1>::type::contains(geometry_object, contained_geometry_object,
+                                                           consider_touch, typename geometry_concept<geometry_type_2>::type());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
@@ -358,7 +364,7 @@ geometry_type_1& reflected_deconvolve(geometry_type_1& lvalue, const geometry_ty
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-typename coordinate_type<geometry_type_1>::type distance(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+typename distance_type<geometry_type_1>::type distance(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return geometry_concept<geometry_type_1>::type::distance(lvalue, rvalue, typename geometry_concept<geometry_type_2>::type());
 }
 
