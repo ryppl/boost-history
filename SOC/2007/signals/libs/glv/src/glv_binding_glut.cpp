@@ -121,7 +121,7 @@ Window :: Window(unsigned int width, unsigned int height, char * title, GLV * gl
 : AbstractWindow(width, height, title, glv, framerate)
 {
 	int argc = 0;
-	char * argv[] = {};
+	char * argv[] = {0};
 	if(singletonWindow == NULL){
 		glutInit(&argc,argv);
 		glutInitWindowSize(width,height);

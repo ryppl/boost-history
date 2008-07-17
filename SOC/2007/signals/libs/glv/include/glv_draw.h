@@ -260,7 +260,7 @@ inline void translateY(float y){ translate(0, y, 0); }
 inline void translateZ(float z){ translate(0, 0, z); }
 
 template <class T>
-void vertexY(T * ys, unsigned long len, T xInc=1, int prim = LineStrip){
+void vertexY(T * ys, unsigned long len, T xInc, int prim){
 	begin(prim);
 	for(unsigned long i=0; i<len; ++i) vertex((float)(xInc * i), (float)ys[i]);
 	end();

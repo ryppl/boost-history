@@ -29,8 +29,10 @@ project dataflow/example/glv
         <toolset>gcc:<library>pthread
         <toolset>gcc:<library>Xv
         <toolset>gcc:<library>Xext
+        <toolset>msvc:<define>WIN32
     : requirements
         <include>include
+        <toolset>msvc:<define>WIN32
     ;
 
 SOURCES = glv_abstract_binding glv_color glv_core glv_draw glv_glv

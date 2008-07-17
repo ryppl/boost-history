@@ -14,7 +14,7 @@
 	#include <GL/glut.h>
 #endif
 #ifdef WIN32
-	#include <?/glut.h>
+	#include <GL/glut.h>
 #endif
 
 namespace glv {
