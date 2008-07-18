@@ -6,14 +6,32 @@
 
 #include <boost/functional/hash.hpp>
 
+namespace detail
+{
+    // Not for the faint of heart. This helps get around type punning issues
+    // by using a union to hide the explicit recast of an array of bytes to
+    // a real object.
+    template <typename T>
+    union union_caster
+    {
+        inline union_caster(void* src) : src(src) { }
+        T cast;
+        void* src;
+    };
+
+    // Use the union caster to affect type punning.
+    template <typename T>
+    inline T union_cast(void* x)
+    { union_caster<T> u(x); return u.cast; }
+}
+
 /**
  * The blob type is used to allocate a small buffer of memory that can be
  * reinterpreted as a type of the same size. This is used solely as a means
  * of deferring the immediate need for the type of an object if you can guess
  * its size.
  *
- * One can imagine this stands for "Binary Little OBject". Little because you
- * probably don't want to copy these around all over the place.
+ * One can imagine this stands for "Binary Little OBject".
  *
  * If you're going to write something hacky, you may as well try to make it a
  * little bit pretty.
@@ -45,10 +63,18 @@ struct blob
 
     /** Get the value of the blob object, returning it as an object of type T. */
     template <typename T>
-    inline T& get() const
+    inline T& get()
     {
         static_assert(sizeof(T) == N, "Getting value of wrong size");
-        return *reinterpret_cast<T*>(mem);
+        return *detail::union_cast<T*>(mem);
+    }
+
+    /** Get the value of the blob object, returning it as an object of type T. */
+    template <typename T>
+    inline T const& get() const
+    {
+        static_assert(sizeof(T) == N, "Getting value of wrong size");
+        return *detail::union_cast<T const*>(mem);
     }
 
     /** @name Equality Comparable
