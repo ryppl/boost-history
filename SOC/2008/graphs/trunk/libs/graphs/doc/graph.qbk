@@ -1,0 +1,134 @@
+[article Graph Library
+    [quickbook 1.4]
+    [version 0.1]
+    [authors [Andrew Sutton]]
+    [copyright 2008 Andrew Sutton]
+]
+
+[def DefaultConstructible `DefaultConstructible]
+[def CopyConstructible `CopyConstructible`]
+[def LessThanComparable `LessThanComparable`]
+[def Hashable `Hashable`]
+
+This graph library...
+
+[section Adjacency Lists]
+One of the most common and flexible graph data structures is the adjacency list.
+The adjacenct list component of this library provides implementations for both
+directed and undirected graphs. Adjacency list types can be defined as follows,
+depending on whether you want directed or undirected graphs.
+
+``
+typedef undirected_graph<VertexLabel, EdgeLabel, VertexSet, EdgeSet, Policies> Graph;
+typedef directed_graph<VertexLabel, EdgeLabel, VertexSet, EdgeSet, Policies> Graph;
+``
+
+Several graph types are provided to encapsulate common implementations.
+
+``
+typedef graph<VertexLabel, EdgeLabel> Graph;        // A simple undirected graph
+typedef digraph<VertexLabel, EdgeLabel> Graph;      // A simple directed graph
+``
+
+[section Descriptors]
+The vertices and edges of the graph are accessible via descriptor objects. A
+descriptor is a lightweight, opaque reference to an object. All operations on
+these graphs are defined in terms of these descriptors. Methods for getting
+and using descriptors will be shown throughout this manual.
+
+[heading Perspective]
+Descriptors can cause problems for programmers who expect a significant class
+interface for returned vertices and descriptors. In fact, most graph libraries
+prefer to return heavyweight vertex objects (or pointers to them) that define
+their own interfaces. This approach is not feasible when combined with the
+amount of genericism offered by this library.
+[endsect]
+
+[section Vertex and Edge Labels]
+Vertex and Edge labels allow you to attach data to the vertices and edges of the
+graph in much the same manner as creating standard containers. In general, you
+can use almost any type as a label for vertices or edges, although they are
+required to be [DefaultConstructible] and [CopyConstructible] at a minimum. To
+explicitly specify the absence of type, you can use `none` as a value for that
+type.
+
+The choice of the `VertexSet` can also impose additional requirements on the
+vertex labels in your graph. If you choose `vertex_set` then the `VertexLabel`
+type must also be [LessThanComparable]. If you choose `vertex_unordered_set`,
+then the `VertexLabel` type must be [Hashable].
+
+Vertex properties are accessible via the `properties()` function:
+
+``
+vertex_label& Graph::properties(vertex_descriptor v);
+vertex_label const& Graph::properties(vertex_descriptor v) const;
+``
+
+[endsect]
+
+[section The Vertex Set]
+The vertex set component of the graph is responsible for the storage of vertices
+within the graph. In fact, The selection of `VertexSet` type helps to define the
+overall interface of the graph, based on the properties of the underlying container.
+
+There are a number of aspects to consider when selecting the vertex set for your
+graph: mutability, labels, queries, and performance. Here, mutabilty
+refers to the operations available for modifying the graph. Some vertex sets have
+restricted mutability due to performance constraints. Labeling refers to any
+additional constraints placed on the the `VertexLabel`. Specifically, labels can
+be unique via comparability or hashing. Some vertex sets disallow the use of the
+`none` type as a `VertexLabel`. Queryability is the ability to find vertices based
+on their labels. The performance profile describes the relative "classes" of
+performance for insert, remove, and find operations.
+
+There are essentially four distinct types of sets that can be selected: vector,
+list, set, and map. Each type vertex set has different profiles with respect to
+these aspects. There are multiple implementations of each.
+
+[heading Vertex Vector]
+``
+    vertex_vector<Allocator = std::allocator>
+``
+
+* ['mutability] - Add only
+* ['labels] - Not unique, Allows `none`.
+* ['query] - Find first
+* ['performance] - Constant add, Linear find
+
+[heading Vertex List]
+``
+    vertex_list<Allocator = std::allocator>
+``
+
+* ['mutability] - Add and Remove
+* ['labels] - Not unique, Allows `none`.
+* ['query] - Find first
+* ['performance] - Constant add and remove, Linear find
+
+[heading Vertex Set]
+``
+    vertex_set<Comparator = std::less, Allocator = std::allocator>
+``
+
+* ['mutability] - Add and Remove
+* ['labels] - Sorted on [LessThanComparable], Not `none`.
+* ['query] - Find unique
+* ['performance] - Logarithmic add, remove, and find
+
+[heading Vertex Map]
+``
+    vertex_map<Key, Comparator = st::less, Allocator = std::allocator>
+``
+* ['mutability] - Add and Remove
+* ['labels] - Mapped on [LessThanComparable] key, Not `none`
+* ['query] - Find unique
+* ['performance] - Logarithmic add, remove, and find
+
+[endsect]
+
+[section The Edge Set]
+The edge set component of the graph is responsible for defining how edges are
+stored in the graph.
+[endsect]
+
+[endsect]

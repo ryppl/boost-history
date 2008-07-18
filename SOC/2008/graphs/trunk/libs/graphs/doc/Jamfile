@@ -1,0 +1,46 @@
+
+using quickbook ;
+
+# path-constant images_location : html ;
+
+xml graph : graph.qbk ;
+
+# boostbook standalone
+#     :
+#         graph
+#     :
+#         # Paths
+#         <xsl:param>boost.root=$(boost-root)
+#         <xsl:param>boost.libraries=$(boost-root)/libs/libraries.htm
+#         <xsl:param>html.stylesheet=$(boost-root)/doc/html/boostbook.css
+# 
+#         # General style settings:
+#         <xsl:param>table.footnote.number.format=1
+#         <xsl:param>footnote.number.format=1
+# 
+#         # HTML options
+#         <xsl:param>navig.graphics=1
+#         <xsl:param>chunk.section.depth=10
+#         <xsl:param>chunk.first.sections=1
+#         <xsl:param>toc.section.depth=10
+#         <xsl:param>toc.max.depth=4
+#         <xsl:param>generate.section.toc.level=10
+#         #<xsl:param>root.filename="sf_dist_and_tools"
+# 
+#         # PDF options
+#         <xsl:param>fop1.extensions=0
+#         <xsl:param>admon.graphics=1
+#         <format>pdf:<xsl:param>xep.extensions=1
+#         <format>pdf:<xsl:param>fop.extensions=0
+#         <format>pdf:<xsl:param>body.start.indent=0pt
+#         <format>pdf:<xsl:param>page.margin.inner=0.5in
+#         <format>pdf:<xsl:param>page.margin.inner=0.5in
+#         <format>pdf:<xsl:param>page.margin.outer=0.5in
+#         <format>pdf:<xsl:param>paper.type=A4
+#         <format>pdf:<xsl:param>admon.graphics.extension=".svg"
+#         <format>pdf:<xsl:param>use.role.for.mediaobject=1
+#         <format>pdf:<xsl:param>preferred.mediaobject.role=print
+#         <format>pdf:<xsl:param>img.src.path=$(images_location)/
+#         <format>pdf:<xsl:param>admon.graphics.path=$(images_location)/images/
+#         <format>pdf:<xsl:param>draft.mode="no"
+#     ;
