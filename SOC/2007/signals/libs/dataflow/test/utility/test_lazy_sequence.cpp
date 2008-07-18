@@ -72,7 +72,7 @@ int test_main(int, char* [])
     BOOST_CHECK_EQUAL(fusion::at_c<3>(index_shift), 4u);
 
     
-    BOOST_CHECK_EQUAL(fusion::at_c<0>(fusion::make_lazy_sequence(one, boost::mpl::int_<1>())), 1);
+    BOOST_CHECK_EQUAL(fusion::at_c<0>(fusion::make_lazy_sequence(&one, boost::mpl::int_<1>())), 1);
     
     return 0;
 } // int test_main(int, char* [])

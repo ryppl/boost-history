@@ -67,9 +67,10 @@ public:
         // Output and input components
         add_component<output_valuator>("out");
         add_component<input_valuator>("in");
-        // A filter that doubles
-        add_component<signals::function<void (float), float(float)> >
-            ("x2", boost::function<float(float)>(boost::bind(std::multiplies<float>(), _1, 2)));
+#ifndef BOOST_MSVC
+        add_component<signals::function<void (int), int(int)> >
+            ("x2", boost::function<int(int)>(boost::bind(std::multiplies<int>(), _1, 2)));
+#endif
     }
 };
 

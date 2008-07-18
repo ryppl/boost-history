@@ -169,6 +169,42 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="glv_gui"
+			>
+			<File
+				RelativePath="..\..\example\glv_gui\blueprint_bank.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\blueprint_bank.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\blueprint_component.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\blueprint_component.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\blueprint_window.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\blueprint_window.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\glvgui_example.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\glv_gui\glvgui_logic.cpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\example\edit_distance.cpp"
 			>

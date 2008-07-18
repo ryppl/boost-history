@@ -10,16 +10,20 @@
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
+namespace test {
+
 int one(int index)
 {
     return 1;
+}
+
 }
 
 int test_main(int, char* [])
 {
     using namespace boost::fusion;
     
-    vector<int, float, double> ones(make_lazy_sequence(one, boost::mpl::int_<3>()));
+    vector<int, float, double> ones(make_lazy_sequence(&test::one, boost::mpl::int_<3>()));
 
     BOOST_CHECK_EQUAL(at_c<0>(ones), 1);
     BOOST_CHECK_EQUAL(at_c<1>(ones), 1.0f);

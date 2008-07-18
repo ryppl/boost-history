@@ -31,7 +31,8 @@ void blueprint_window::add_component(boost::function<blueprint::component *()> f
     std::cout << "Adding component" << name << std::endl;
 
     std::auto_ptr<blueprint::component> c(f());
-    blueprint_component *bc = new blueprint_component(name, *c, m_network.add_component(c));
+    blueprint::component &cr = *c;
+    blueprint_component *bc = new blueprint_component(name, cr, m_network.add_component(c));
     add_component_helper(*bc);
 
 /*    gui::wnd<blueprint_component> bc = gui::create<blueprint_component>
@@ -99,7 +100,7 @@ namespace detail
     {
         int dx = x1 - x0;
         int dy = y1 - y0;
-        return sqrt(dx*dx+dy*dy);    
+        return sqrt(double(dx*dx+dy*dy));    
     }
     
     double distance(int x0, int y0, int x1, int y1, int xp, int yp)

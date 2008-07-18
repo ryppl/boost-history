@@ -37,10 +37,9 @@ namespace boost {
 class bad_switch : public std::runtime_error {
 public:
     template<class Int>
-    explicit bad_switch(Int v) :
+    explicit bad_switch(Int &v) :
         std::runtime_error(
-            "boost::switch_ default case called -- none provided. value is: " +
-            boost::lexical_cast<std::string>(v)) {}
+            "boost::switch_ default case called -- none provided.") {}
 };
 
 namespace switch_detail {

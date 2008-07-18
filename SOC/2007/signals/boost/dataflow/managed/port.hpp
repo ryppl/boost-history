@@ -59,7 +59,7 @@ class port<T, ports::producer> : public port_base
 public:
     typedef producer_port_traits<T> dataflow_traits;
     
-    port(component &component_context) : port_base(component_context)
+    port(component &component_context) : port_base(component_context), m_value()
     {
     };
     void set(const T &value)

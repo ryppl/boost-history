@@ -476,6 +476,34 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="managed"
+				>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\managed\component.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\managed\fusion_component.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\managed\network.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\managed\port.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\managed\runtime_support.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\dataflow\managed\support.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="solution build"
@@ -490,6 +518,82 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\project-root.jam"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="glv"
+			>
+			<File
+				RelativePath="..\..\..\glv\include\glv.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_abstract_binding.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_behavior.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_binding_carbon.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_binding_fltk.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_binding_glut.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_color.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_conf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_core.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_draw.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_layout.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_observer_pattern.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_rect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_sliders.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_texture.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_textview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\include\glv_util.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\glv\Jamfile"
 				>
 			</File>
 		</Filter>
