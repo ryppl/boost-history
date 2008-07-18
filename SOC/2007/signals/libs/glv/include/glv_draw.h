@@ -313,13 +313,13 @@ inline void pop2D(){
 
 
 template <class T>
-void push3D(T w, T h, T near, T far){
+void push3D(T w, T h, T znear, T zfar){
 	//pushAttrib(DepthBufferBit);
 	pushAttrib(ColorBufferBit | DepthBufferBit | EnableBit);
 	enable(DepthTest);
 	
 	push(Projection); identity();
-		gluPerspective(45, w/(GLfloat)h, near, far);
+		gluPerspective(45, w/(GLfloat)h, znear, zfar);
 	
 	push(Model); identity();
 		translate(0, 0, -2.42);

@@ -3,6 +3,8 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+import os ;
+
 lib glut : : <name>glut ;
 lib openGL : : <name>GL ;
 lib openGLU : : <name>GLU ;
@@ -13,6 +15,19 @@ lib Xext : : <name>Xext ;
 lib X11-xcb : : <name>X11-xcb ;
 lib pthread : : <name>pthread ;
 
+lib mingw_glut : : <name>glut32 ;
+lib mingw_openGL : : <name>opengl32 ;
+lib mingw_openGLU : : <name>glu32 ;
+
+if [ os.name ] = NT
+{
+    GLlibraries = mingw_openGL mingw_openGLU mingw_glut ;
+}
+else
+{
+    GLlibraries = glut openGL openGLU X11 Xaw Xv Xext X11-xcb pthread ;
+}
+
 project dataflow/example/glv
     : source-location src
     : usage-requirements
@@ -20,15 +35,7 @@ project dataflow/example/glv
         <toolset>darwin:<linkflags>"-framework AGL"
         <toolset>darwin:<linkflags>"-framework GLUT"
         <toolset>darwin:<linkflags>"-framework OpenGL"
-        <toolset>gcc:<library>glut
-        <toolset>gcc:<library>openGL
-        <toolset>gcc:<library>openGLU
-        <toolset>gcc:<library>X11-xcb
-        <toolset>gcc:<library>X11
-        <toolset>gcc:<library>Xaw
-        <toolset>gcc:<library>pthread
-        <toolset>gcc:<library>Xv
-        <toolset>gcc:<library>Xext
+        <toolset>gcc:<library>$(GLlibraries)
         <toolset>msvc:<define>WIN32
     : requirements
         <include>include
