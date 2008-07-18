@@ -229,6 +229,28 @@ namespace rectangle_formation {
 
 }; //namespace rectangle_formation
   
+  template <typename output_container, typename iterator_type, typename rectangle_concept>
+  void get_rectangles(output_container& output, iterator_type begin, iterator_type end,
+                      orientation_2d orient, rectangle_concept tag) {
+    typedef typename output_container::value_type rectangle_type;
+    typedef typename rectangle_concept::template coordinate_type<rectangle_type>::type Unit;
+    rectangle_data<Unit> model;
+    Unit prevPos = std::numeric_limits<Unit>::max();
+    rectangle_formation::ScanLineToRects<rectangle_type> scanlineToRects(orient, model);
+    for(iterator_type itr = begin;
+        itr != end; ++ itr) {
+      Unit pos = (*itr).first;
+      if(pos != prevPos) {
+        scanlineToRects.nextMajorCoordinate(pos);
+        prevPos = pos;
+      }
+      Unit lowy = (*itr).second.first;
+      ++itr;
+      Unit highy = (*itr).second.first;
+      scanlineToRects.processEdge(output, interval_data<Unit>(lowy, highy));
+      if(abs((*itr).second.second) > 1) --itr; //next edge begins from this vertex
+    }
+  }
 }
 #endif
 

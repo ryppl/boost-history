@@ -14,24 +14,24 @@ template <typename T>
 struct coordinate_traits {
   typedef T coordinate_type;
   typedef T area_type;
-  typedef T difference_type;
-  typedef T distance_type;
+  typedef T coordinate_difference;
+  typedef T coordinate_distance;
 };
 
 template <>
 struct coordinate_traits<int> {
   typedef int coordinate_type;
   typedef long long area_type;
-  typedef long long difference_type;
-  typedef double distance_type;
+  typedef long long coordinate_difference;
+  typedef double coordinate_distance;
 };
 
 template <>
 struct coordinate_traits<long long> {
   typedef long long coordinate_type;
   typedef long long area_type;
-  typedef long long difference_type;
-  typedef double distance_type;
+  typedef long long coordinate_difference;
+  typedef double coordinate_distance;
 };
 
 struct coordinate_concept {
@@ -44,18 +44,18 @@ struct coordinate_concept {
     typedef typename coordinate_traits<T>::area_type type;
   };
   template <typename T>
-  struct difference_type {
-    typedef typename coordinate_traits<T>::difference_type type;
+  struct coordinate_difference {
+    typedef typename coordinate_traits<T>::coordinate_difference type;
   };
   template <typename T>
-  struct distance_type {
-    typedef typename coordinate_traits<T>::distance_type type;
+  struct coordinate_distance {
+    typedef typename coordinate_traits<T>::coordinate_distance type;
   };
 
   template <typename coordinate_type_1, typename coordinate_type_2>
-  static typename difference_type<coordinate_type_1>::type 
-  distance(const coordinate_type_1& lvalue, const coordinate_type_2& rvalue) {
-    typedef typename difference_type<coordinate_type_1>::type Unit;
+  static typename coordinate_difference<coordinate_type_1>::type 
+  euclidean_distance(const coordinate_type_1& lvalue, const coordinate_type_2& rvalue) {
+    typedef typename coordinate_difference<coordinate_type_1>::type Unit;
     return (lvalue < rvalue) ? (Unit)rvalue - (Unit)lvalue : (Unit)lvalue - (Unit)rvalue;
   }
 };

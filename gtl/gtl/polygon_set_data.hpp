@@ -8,6 +8,7 @@
 #ifndef GTL_POLYGON_SET_DATA_HPP
 #define GTL_POLYGON_SET_DATA_HPP
 namespace gtl {
+
   template <typename T>
   class polygon_set_data {
   public:
@@ -68,6 +69,20 @@ namespace gtl {
       data_ = that.value();
       dirty_ = false;
       unsorted_ = false;
+      return *this;
+    }
+
+    template <typename geometry_object>
+    inline polygon_set_data& operator=(const geometry_object& geometry) {
+      data_.clear();
+      insert(geometry);
+      return *this;
+    }
+
+    template <typename geometry_object>
+    inline polygon_set_data& operator=(const  polygon_set_const_wrapper<geometry_object>& geometry) {
+      data_.clear();
+      insert(geometry.begin(), geometry.end());
       return *this;
     }
 
@@ -166,6 +181,13 @@ namespace gtl {
       unsorted_ = false;
     }
 
+    template <typename input_iterator_type>
+    void set(input_iterator_type input_begin, input_iterator_type input_end, orientation_2d orient) {
+      data_.clear();
+      data_.insert(data_.end(), input_begin, input_end);
+      orient_ = orient;
+    }
+
     void set(const value_type& value, orientation_2d orient) {
       data_ = value; 
       orient_ = orient;
@@ -180,25 +202,8 @@ namespace gtl {
     //functions
     template <typename output_container>
     void get_dispatch(output_container& output, rectangle_concept tag) {
-      typedef typename output_container::value_type rectangle_type;
-      typedef typename rectangle_concept::coordinate_type<rectangle_type>::type Unit;
       clean();
-      rectangle_data<Unit> model;
-      Unit prevPos = std::numeric_limits<Unit>::max();
-      rectangle_formation::ScanLineToRects<rectangle_type> scanlineToRects(orient_, model);
-      for(iterator_type itr = data_.begin();
-          itr != data_.end(); ++ itr) {
-        Unit pos = (*itr).first;
-        if(pos != prevPos) {
-          scanlineToRects.nextMajorCoordinate(pos);
-          prevPos = pos;
-        }
-        Unit lowy = (*itr).second.first;
-        ++itr;
-        Unit highy = (*itr).second.first;
-        scanlineToRects.processEdge(output, interval_data<Unit>(lowy, highy));
-        if(abs((*itr).second.second) > 1) --itr; //next edge begins from this vertex
-      }
+      get_rectangles(output, data_.begin(), data_.end(), orient_, tag);
     }
     template <typename output_container>
     void get_dispatch(output_container& output, polygon_90_concept tag) {
@@ -210,85 +215,42 @@ namespace gtl {
     }
     template <typename output_container, typename concept_type>
     void get_fracture(output_container& container, bool fracture_holes, concept_type tag) {
-      typedef typename output_container::value_type polygon_type;
-      polygon_type poly;
       clean();
-      unsigned int countPolygons = 0;
-      polygon_formation::ScanLineToPolygonItrs<true, coordinate_type> scanlineToPolygonItrsV(fracture_holes);
-      polygon_formation::ScanLineToPolygonItrs<false, coordinate_type> scanlineToPolygonItrsH(fracture_holes);
-      std::vector<interval_data<coordinate_type> > leftEdges;
-      std::vector<interval_data<coordinate_type> > rightEdges;
-      coordinate_type prevPos = std::numeric_limits<coordinate_type>::max();
-      coordinate_type prevY = std::numeric_limits<coordinate_type>::max();
-      int count = 0;
-      for(iterator_type itr = data_.begin();
-          itr != data_.end(); ++ itr) {
-        coordinate_type pos = (*itr).first;
-        if(pos != prevPos) {
-          if(orient_ == VERTICAL) {
-            typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type>::iterator itrPoly, itrPolyEnd;
-            scanlineToPolygonItrsV.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
-            for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
-              ++countPolygons;
-              concept_type::assign(poly, *itrPoly);
-              container.insert(container.end(), poly);
-            }
-          } else {
-            typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type>::iterator itrPoly, itrPolyEnd;
-            scanlineToPolygonItrsH.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
-            for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
-              ++countPolygons;
-              concept_type::assign(poly, *itrPoly);
-              container.insert(container.end(), poly);
-            }
-          }
-          leftEdges.clear();
-          rightEdges.clear();
-          prevPos = pos;
-          prevY = (*itr).second.first;
-          count = (*itr).second.second;
-          continue;
-        }
-        coordinate_type y = (*itr).second.first;
-        if(count != 0 && y != prevY) {
-          std::pair<interval_data<coordinate_type>, int> element(interval_data<coordinate_type>(prevY, y), count);
-          if(element.second == 1) {
-            if(leftEdges.size() && leftEdges.back().high() == element.first.low()) {
-              interval_concept::encompass(leftEdges.back(), element.first, interval_concept());
-            } else {
-              leftEdges.push_back(element.first);
-            }
-          } else {
-            if(rightEdges.size() && rightEdges.back().high() == element.first.low()) {
-              interval_concept::encompass(rightEdges.back(), element.first, interval_concept());
-            } else {
-              rightEdges.push_back(element.first);
-            }
-          }
-
-        }
-        prevY = y;
-        count += (*itr).second.second;
-      }
-      if(orient_ == VERTICAL) {
-        typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type>::iterator itrPoly, itrPolyEnd;
-        scanlineToPolygonItrsV.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
-        for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
-          ++countPolygons;
-          concept_type::assign(poly, *itrPoly);
-          container.insert(container.end(), poly);
-        }
-      } else {
-        typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type>::iterator itrPoly, itrPolyEnd;
-        scanlineToPolygonItrsH.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
-        for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
-          ++countPolygons;
-          concept_type::assign(poly, *itrPoly);
-          container.insert(container.end(), poly);
-        }
-      }
+      get_polygons(container, data_.begin(), data_.end(), orient_, fracture_holes, tag);
     }
   };
+
+  template <typename T>
+  struct polygon_set_traits<polygon_set_data<T> > {
+    typedef typename polygon_set_data<T>::coordinate_type coordinate_type;
+    typedef typename polygon_set_data<T>::iterator_type iterator_type;
+    typedef typename polygon_set_data<T>::operator_arg_type operator_arg_type;
+    typedef typename polygon_set_data<T>::operator_storage_tag operator_storage_tag;
+
+    static inline iterator_type begin(const polygon_set_data<T>& polygon_set) {
+      return polygon_set.begin();
+    }
+
+    static inline iterator_type end(const polygon_set_data<T>& polygon_set) {
+      return polygon_set.end();
+    }
+
+    template <typename input_iterator_type>
+    static inline void set(polygon_set_data<T>& polygon_set, 
+                           input_iterator_type input_begin, input_iterator_type input_end, 
+                           orientation_2d orient) {
+      polygon_set.set(input_begin, input_end, orient);
+    }
+
+    static inline orientation_2d orient(const polygon_set_data<T>& polygon_set) { return polygon_set.orient(); }
+
+    static inline bool dirty(const polygon_set_data<T>& polygon_set) { return polygon_set.dirty(); }
+
+    static inline bool sorted(const polygon_set_data<T>& polygon_set) { return polygon_set.sorted(); }
+
+  };
+
+
   
   template <typename coordinate_type, typename property_type>
   class property_merge {

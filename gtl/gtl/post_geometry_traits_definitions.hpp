@@ -34,15 +34,15 @@ struct area_type {
 };
 
 template <typename geometry_type>
-struct distance_type {
+struct coordinate_distance {
   typedef typename geometry_concept<geometry_type>::type::template
-  distance_type<geometry_type>::type type;
+  coordinate_distance<geometry_type>::type type;
 };
 
 template <typename geometry_type>
-struct difference_type {
+struct coordinate_difference {
   typedef typename geometry_concept<geometry_type>::type::template
-  difference_type<geometry_type>::type type;
+  coordinate_difference<geometry_type>::type type;
 };
 
 }

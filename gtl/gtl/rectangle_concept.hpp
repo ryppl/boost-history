@@ -34,13 +34,13 @@ struct rectangle_concept {
   };
 
   template <typename T>
-  struct difference_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  struct coordinate_difference {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
   };
 
   template <typename T>
-  struct distance_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::distance_type type;
+  struct coordinate_distance {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_distance type;
   };
 
   template <typename T>
@@ -204,7 +204,7 @@ struct rectangle_concept {
   /// move rectangle by delta in orient
   template <typename rectangle_type>
   static rectangle_type& move(rectangle_type& rectangle, orientation_2d orient, 
-            typename difference_type<rectangle_type>::type delta) {
+            typename coordinate_difference<rectangle_type>::type delta) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
     interval_concept::move(ivl, delta);
     set(rectangle, orient, ivl);
@@ -351,14 +351,14 @@ struct rectangle_concept {
 
   /// get the half perimeter of the rectangle
   template <typename rectangle_type>
-  static typename difference_type<rectangle_type>::type
+  static typename coordinate_difference<rectangle_type>::type
   half_perimeter(const rectangle_type& rectangle) {
     return delta(rectangle, HORIZONTAL) + delta(rectangle, VERTICAL);
   }
    
   /// get the perimeter of the rectangle
   template <typename rectangle_type>
-  static typename difference_type<rectangle_type>::type
+  static typename coordinate_difference<rectangle_type>::type
   perimeter(const rectangle_type& rectangle) {
     return 2 * half_perimeter(rectangle);
   }
@@ -574,39 +574,39 @@ struct rectangle_concept {
   }
 
   template <typename rectangle_type, typename point_type>
-  static typename difference_type<rectangle_type>::type 
-  distance(rectangle_type& lvalue, const point_type& rvalue, 
+  static typename coordinate_difference<rectangle_type>::type 
+  euclidean_distance(rectangle_type& lvalue, const point_type& rvalue, 
            orientation_2d orient, point_concept tag) {
-    return interval_concept::distance(get(lvalue, orient), point_concept::get(rvalue, orient), coordinate_concept());
+    return interval_concept::euclidean_distance(get(lvalue, orient), point_concept::get(rvalue, orient), coordinate_concept());
   }
 
   template <typename rectangle_type, typename point_type>
-  static typename difference_type<rectangle_type>::type 
-  distance(rectangle_type& lvalue, const point_type& rvalue, 
+  static typename coordinate_difference<rectangle_type>::type 
+  euclidean_distance(rectangle_type& lvalue, const point_type& rvalue, 
            orientation_2d orient, rectangle_concept tag) {
-    return interval_concept::distance(get(lvalue, orient), get(rvalue, orient), interval_concept());
+    return interval_concept::euclidean_distance(get(lvalue, orient), get(rvalue, orient), interval_concept());
   }
 
   template <typename rectangle_type, typename point_type, typename tag_type>
-  static typename difference_type<rectangle_type>::type 
+  static typename coordinate_difference<rectangle_type>::type 
   square_euclidian_distance(rectangle_type& lvalue, const point_type& rvalue, tag_type tag) {
-    typename difference_type<rectangle_type>::type xdist, ydist;
-    xdist = distance(lvalue, rvalue, HORIZONTAL, tag);
-    ydist = distance(lvalue, rvalue, VERTICAL, tag);
+    typename coordinate_difference<rectangle_type>::type xdist, ydist;
+    xdist = euclidean_distance(lvalue, rvalue, HORIZONTAL, tag);
+    ydist = euclidean_distance(lvalue, rvalue, VERTICAL, tag);
     return (xdist * xdist) + (ydist * ydist);
   }
 
   template <typename rectangle_type, typename point_type, typename tag_type>
-  static typename distance_type<rectangle_type>::type 
-  distance(rectangle_type& lvalue, const point_type& rvalue, tag_type tag) {
-    return sqrt((typename distance_type<rectangle_type>::type)(square_euclidian_distance(lvalue, rvalue, tag)));
+  static typename coordinate_distance<rectangle_type>::type 
+  euclidean_distance(rectangle_type& lvalue, const point_type& rvalue, tag_type tag) {
+    return sqrt((typename coordinate_distance<rectangle_type>::type)(square_euclidian_distance(lvalue, rvalue, tag)));
   }
 
   template <typename rectangle_type, typename point_type, typename tag_type>
-  static typename difference_type<rectangle_type>::type 
+  static typename coordinate_difference<rectangle_type>::type 
   manhattan_distance(rectangle_type& lvalue, const point_type& rvalue, 
                      tag_type tag) {
-    return distance(lvalue, rvalue, HORIZONTAL, tag) + distance(lvalue, rvalue, VERTICAL, tag);
+    return euclidean_distance(lvalue, rvalue, HORIZONTAL, tag) + euclidean_distance(lvalue, rvalue, VERTICAL, tag);
   }
 
   template <typename rectangle_type_1, typename rectangle_type_2>

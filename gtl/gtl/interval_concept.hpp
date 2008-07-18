@@ -27,14 +27,14 @@ struct interval_concept {
   };
 
   template <typename T>
-  struct difference_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  struct coordinate_difference {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
   };
 
   template <typename T>
-  struct distance_type {
+  struct coordinate_distance {
     //1D distance is difference
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
   };
 
 
@@ -137,9 +137,9 @@ struct interval_concept {
   
   /// get the magnitude of the interval
   template <typename interval_type>
-  static inline typename difference_type<interval_type>::type 
+  static inline typename coordinate_difference<interval_type>::type 
   delta(const interval_type& interval) { 
-    typedef typename difference_type<interval_type>::type diffT;
+    typedef typename coordinate_difference<interval_type>::type diffT;
     return (diffT)high(interval) - (diffT)low(interval); }
     
   /// flip this about coordinate
@@ -168,8 +168,8 @@ struct interval_concept {
   /// move interval by delta
   template <typename interval_type>
   static interval_type& move(interval_type& interval,
-                             typename difference_type<interval_type>::type displacement) {
-    typedef typename difference_type<interval_type>::type Unit;
+                             typename coordinate_difference<interval_type>::type displacement) {
+    typedef typename coordinate_difference<interval_type>::type Unit;
     Unit len = delta(interval);
     low(interval, (Unit)low(interval) + displacement);
     high(interval, (Unit)low(interval) + len);
@@ -250,10 +250,10 @@ struct interval_concept {
   
   /// distance from a coordinate to an interval
   template <typename interval_type>
-  static inline typename distance_type<interval_type>::type 
-  distance(const interval_type& interval,
+  static inline typename coordinate_distance<interval_type>::type 
+  euclidean_distance(const interval_type& interval,
            typename interval_traits<interval_type>::coordinate_type position, coordinate_concept tag) {
-    typedef typename distance_type<interval_type>::type Unit;
+    typedef typename coordinate_distance<interval_type>::type Unit;
     Unit dist[3] = {0, (Unit)low(interval) - (Unit)position, (Unit)position - (Unit)high(interval)};
     return dist[ (dist[1] > 0) + ((dist[2] > 0) << 1) ];
   }
@@ -261,10 +261,10 @@ struct interval_concept {
 
   /// distance between two intervals
   template <typename interval_type, typename interval_type_2>
-  static inline typename distance_type<interval_type>::type 
-  distance(const interval_type& interval,
+  static inline typename coordinate_distance<interval_type>::type 
+  euclidean_distance(const interval_type& interval,
            const interval_type_2& b, interval_concept tag) {
-    typedef typename distance_type<interval_type>::type Unit;
+    typedef typename coordinate_distance<interval_type>::type Unit;
     Unit dist[3] = {0, (Unit)low(interval) - (Unit)high(b), (Unit)low(b) - (Unit)high(interval)};
     return dist[ (dist[1] > 0) + ((dist[2] > 0) << 1) ];
   }

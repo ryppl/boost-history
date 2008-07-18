@@ -1696,6 +1696,91 @@ namespace polygon_formation {
 
 }; //polygon_formation namespace
 
+  //public API to access polygon formation algorithm
+  template <typename output_container, typename iterator_type, typename concept_type>
+  unsigned int get_polygons(output_container& container, iterator_type begin, iterator_type end,
+                    orientation_2d orient, bool fracture_holes, concept_type tag) {
+    typedef typename output_container::value_type polygon_type;
+    typedef typename iterator_type::value_type::first_type coordinate_type;
+    polygon_type poly;
+    unsigned int countPolygons = 0;
+    polygon_formation::ScanLineToPolygonItrs<true, coordinate_type> scanlineToPolygonItrsV(fracture_holes);
+    polygon_formation::ScanLineToPolygonItrs<false, coordinate_type> scanlineToPolygonItrsH(fracture_holes);
+    std::vector<interval_data<coordinate_type> > leftEdges;
+    std::vector<interval_data<coordinate_type> > rightEdges;
+    coordinate_type prevPos = std::numeric_limits<coordinate_type>::max();
+    coordinate_type prevY = std::numeric_limits<coordinate_type>::max();
+    int count = 0;
+    for(iterator_type itr = begin;
+        itr != end; ++ itr) {
+      coordinate_type pos = (*itr).first;
+      if(pos != prevPos) {
+        if(orient == VERTICAL) {
+          typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type>::iterator itrPoly, itrPolyEnd;
+          scanlineToPolygonItrsV.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
+          for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
+            ++countPolygons;
+            concept_type::assign(poly, *itrPoly);
+            container.insert(container.end(), poly);
+          }
+        } else {
+          typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type>::iterator itrPoly, itrPolyEnd;
+          scanlineToPolygonItrsH.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
+          for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
+            ++countPolygons;
+            concept_type::assign(poly, *itrPoly);
+            container.insert(container.end(), poly);
+          }
+        }
+        leftEdges.clear();
+        rightEdges.clear();
+        prevPos = pos;
+        prevY = (*itr).second.first;
+        count = (*itr).second.second;
+        continue;
+      }
+      coordinate_type y = (*itr).second.first;
+      if(count != 0 && y != prevY) {
+        std::pair<interval_data<coordinate_type>, int> element(interval_data<coordinate_type>(prevY, y), count);
+        if(element.second == 1) {
+          if(leftEdges.size() && leftEdges.back().high() == element.first.low()) {
+            interval_concept::encompass(leftEdges.back(), element.first, interval_concept());
+          } else {
+            leftEdges.push_back(element.first);
+          }
+        } else {
+          if(rightEdges.size() && rightEdges.back().high() == element.first.low()) {
+            interval_concept::encompass(rightEdges.back(), element.first, interval_concept());
+          } else {
+            rightEdges.push_back(element.first);
+          }
+        }
+
+      }
+      prevY = y;
+      count += (*itr).second.second;
+    }
+    if(orient == VERTICAL) {
+      typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type>::iterator itrPoly, itrPolyEnd;
+      scanlineToPolygonItrsV.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
+      for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
+        ++countPolygons;
+        concept_type::assign(poly, *itrPoly);
+        container.insert(container.end(), poly);
+      }
+    } else {
+      typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type>::iterator itrPoly, itrPolyEnd;
+      scanlineToPolygonItrsH.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
+      for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
+        ++countPolygons;
+        concept_type::assign(poly, *itrPoly);
+        container.insert(container.end(), poly);
+      }
+    }
+    return countPolygons;
+  }
+
+
 }
 #endif
 

@@ -79,9 +79,9 @@ public:
 
   /// get the perimeter of the polygon
   template <typename polygon_with_holes_type>
-  static typename difference_type<polygon_with_holes_type>::type
+  static typename coordinate_difference<polygon_with_holes_type>::type
   perimeter(const polygon_with_holes_type& polygon) {
-    typename difference_type<polygon_with_holes_type>::type retval = polygon_90_concept::perimeter(polygon);
+    typename coordinate_difference<polygon_with_holes_type>::type retval = polygon_90_concept::perimeter(polygon);
     typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type b, e;
     e = end_holes(polygon);
     for(b = begin_holes(polygon); b != e; ++b) {

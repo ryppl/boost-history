@@ -29,13 +29,13 @@ public:
   };
 
   template <typename T>
-  struct difference_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  struct coordinate_difference {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
   };
 
   template <typename T>
-  struct distance_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::distance_type type;
+  struct coordinate_distance {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_distance type;
   };
 
   template <typename polygon_with_holes_type_1, typename polygon_with_holes_type_2>
@@ -74,9 +74,9 @@ public:
 
   /// get the perimeter of the polygon
   template <typename polygon_with_holes_type>
-  static typename distance_type<polygon_with_holes_type>::type 
+  static typename coordinate_distance<polygon_with_holes_type>::type 
   perimeter(const polygon_with_holes_type& polygon) {
-    typename distance_type<polygon_with_holes_type>::type retval = polygon_45_concept::perimeter(polygon);
+    typename coordinate_distance<polygon_with_holes_type>::type retval = polygon_45_concept::perimeter(polygon);
     typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type b, e;
     e = end_holes(polygon);
     for(b = begin_holes(polygon); b != e; ++b) {

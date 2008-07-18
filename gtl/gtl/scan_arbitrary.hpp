@@ -210,11 +210,11 @@ namespace gtl {
         multiplier *= -1;
       half_edge he;
       he.first = next_point;
-      he.second[property] = multiplier * (point_concept::distance(next_point, current_point, HORIZONTAL) == 0 ? -1: 1);
+      he.second[property] = multiplier * (point_concept::euclidean_distance(next_point, current_point, HORIZONTAL) == 0 ? -1: 1);
       current_vertex.second.push_back(he);
       he.second.clear();
       he.first = previous_point;
-      he.second[property] = -1 * multiplier * (point_concept::distance(previous_point, current_point, HORIZONTAL) == 0 ? -1: 1);
+      he.second[property] = -1 * multiplier * (point_concept::euclidean_distance(previous_point, current_point, HORIZONTAL) == 0 ? -1: 1);
       current_vertex.second.push_back(he);
       sort_vertex_half_edges(current_vertex);
     }
@@ -237,8 +237,8 @@ namespace gtl {
       const internal_point* pts[2] = {edge.first, edge.second};
       if(*(pts[0]) > *(pts[1]))
         std::swap(pts[0], pts[1]);
-      internal_coordinate dx = point_concept::distance(*(pts[0]), *(pts[1]), HORIZONTAL);
-      internal_coordinate dy = point_concept::distance(*(pts[0]), *(pts[1]), VERTICAL);
+      internal_coordinate dx = point_concept::euclidean_distance(*(pts[0]), *(pts[1]), HORIZONTAL);
+      internal_coordinate dy = point_concept::euclidean_distance(*(pts[0]), *(pts[1]), VERTICAL);
       internal_coordinate dx_intercept = coordinate - point_concept::get(*(pts[0]), HORIZONTAL);
       return point_concept::get(*(pts[0]), VERTICAL) + compute_intercept(dy, dx_intercept, dx);
     }

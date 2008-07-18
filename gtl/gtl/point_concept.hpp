@@ -27,13 +27,13 @@ struct point_concept {
   };
 
   template <typename T>
-  struct difference_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  struct coordinate_difference {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
   };
 
   template <typename T>
-  struct distance_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::distance_type type;
+  struct coordinate_distance {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_distance type;
   };
 
 
@@ -101,30 +101,30 @@ struct point_concept {
   }
 
   template <typename point_type_1, typename point_type_2>
-  static typename difference_type<point_type_1>::type
+  static typename coordinate_difference<point_type_1>::type
   manhattan_distance(const point_type_1& point1, const point_type_2& point2) {
-    return distance(point1, point2, HORIZONTAL) + distance(point1, point2, VERTICAL);
+    return euclidean_distance(point1, point2, HORIZONTAL) + euclidean_distance(point1, point2, VERTICAL);
   }
 
   template <typename point_type_1, typename point_type_2>
-  static typename difference_type<point_type_1>::type
-  distance(const point_type_1& point1, const point_type_2& point2, orientation_2d orient) {
+  static typename coordinate_difference<point_type_1>::type
+  euclidean_distance(const point_type_1& point1, const point_type_2& point2, orientation_2d orient) {
     typename point_traits<point_type_1>::coordinate_type return_value =
       get(point1, orient) - get(point2, orient);
     return return_value < 0 ? -return_value : return_value;
   }
 
   template <typename point_type_1, typename point_type_2>
-  static typename distance_type<point_type_1>::type
-  distance(const point_type_1& point1, const point_type_2& point2) {
-    return sqrt((typename distance_type<point_type_1>::type)(distance_squared(point1, point2)));
+  static typename coordinate_distance<point_type_1>::type
+  euclidean_distance(const point_type_1& point1, const point_type_2& point2) {
+    return sqrt((typename coordinate_distance<point_type_1>::type)(distance_squared(point1, point2)));
   }
   
   template <typename point_type_1, typename point_type_2>
-  static typename difference_type<point_type_1>::type
+  static typename coordinate_difference<point_type_1>::type
   distance_squared(const point_type_1& point1, const point_type_2& point2) {
-    typename difference_type<point_type_1>::type dx = distance(point1, point2, HORIZONTAL);
-    typename difference_type<point_type_1>::type dy = distance(point1, point2, VERTICAL);
+    typename coordinate_difference<point_type_1>::type dx = euclidean_distance(point1, point2, HORIZONTAL);
+    typename coordinate_difference<point_type_1>::type dy = euclidean_distance(point1, point2, VERTICAL);
     dx *= dx;
     dy *= dy;
     return dx + dy;

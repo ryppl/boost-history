@@ -10,6 +10,8 @@
 namespace gtl {
 struct polygon_90_concept {
 
+  inline polygon_90_concept() {}
+
   template <typename T>
   struct coordinate_type {
     typedef typename polygon_traits<T>::coordinate_type type;
@@ -26,13 +28,13 @@ struct polygon_90_concept {
   };
 
   template <typename T>
-  struct difference_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::difference_type type;
+  struct coordinate_difference {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
   };
 
   template <typename T>
-  struct distance_type {
-    typedef typename coordinate_traits<typename coordinate_type<T>::type>::distance_type type;
+  struct coordinate_distance {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_distance type;
   };
 
   template<typename polygon_type, typename compact_iterator_type>
@@ -207,11 +209,11 @@ struct polygon_90_concept {
 
   /// get the perimeter of the polygon
   template <typename polygon_type>
-  static typename difference_type<polygon_type>::type
+  static typename coordinate_difference<polygon_type>::type
   perimeter(const polygon_type& polygon) {
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
     typedef typename std::iterator_traits<iterator>::value_type point_type;
-    typename difference_type<polygon_type>::type return_value = 0;
+    typename coordinate_difference<polygon_type>::type return_value = 0;
     point_type previous_point, first_point;
     iterator itr = begin(polygon);
     iterator itr_end = end(polygon);

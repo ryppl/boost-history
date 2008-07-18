@@ -67,6 +67,7 @@ public:
 
   inline void set(const std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > >& value,
            orientation_2d orient) { 
+    //TODO
   }
 
   inline orientation_2d orient() const { return HORIZONTAL; }
@@ -81,6 +82,66 @@ template <typename T>
 polygon_set_const_wrapper<T> wrap(const T& t) {
   return polygon_set_wrapper<T>(t);
 }
+
+  template <typename T>
+  struct polygon_set_traits<polygon_set_wrapper<T> > {
+    typedef typename polygon_set_wrapper<T>::coordinate_type coordinate_type;
+    typedef typename polygon_set_wrapper<T>::iterator_type iterator_type;
+    typedef T operator_arg_type;
+    typedef typename polygon_set_wrapper<T>::operator_storage_tag operator_storage_tag;
+
+    static inline iterator_type begin(const T& polygon_set) {
+      return wrap_const(polygon_set).begin();
+    }
+
+    static inline iterator_type end(const T& polygon_set) {
+      return wrap_const(polygon_set).end();
+    }
+
+    static inline void set(T& polygon_set, 
+                           const std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > >& value,
+                           orientation_2d orient) {
+      wrap(polygon_set).set(value, orient);
+    }
+
+    static inline orientation_2d orient(const T& polygon_set) { return HORIZONTAL; }
+
+    static inline bool dirty(const T& polygon_set) { return true; }
+
+    static inline bool sorted(const T& polygon_set) { return false; }
+
+  };
+
+  template <typename T>
+  struct polygon_set_traits<polygon_set_const_wrapper<T> > {
+    typedef typename polygon_set_const_wrapper<T>::coordinate_type coordinate_type;
+    typedef typename polygon_set_const_wrapper<T>::iterator_type iterator_type;
+    typedef T operator_arg_type;
+    typedef typename polygon_set_const_wrapper<T>::operator_storage_tag operator_storage_tag;
+
+    static inline iterator_type begin(const polygon_set_const_wrapper<T>& polygon_set) {
+      return polygon_set.begin();
+    }
+
+    static inline iterator_type end(const polygon_set_const_wrapper<T>& polygon_set) {
+      return polygon_set.end();
+    }
+
+    static inline void set(polygon_set_const_wrapper<T>& polygon_set, 
+                           const std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > >& value,
+                           orientation_2d orient) {
+      polygon_set.set(value, orient);
+    }
+
+    static inline orientation_2d orient(const polygon_set_const_wrapper<T>& polygon_set) { return polygon_set.orient(); }
+
+    static inline bool dirty(const polygon_set_const_wrapper<T>& polygon_set) { return polygon_set.dirty(); }
+
+    static inline bool sorted(const polygon_set_const_wrapper<T>& polygon_set) { return polygon_set.sorted(); }
+
+  };
+
+
 
 }
 #endif

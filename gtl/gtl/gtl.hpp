@@ -80,15 +80,15 @@
 //polygon set concepts
 #include "polygon_set_view.hpp"
 //polygon set data types
+#include "polygon_set_wrapper.hpp"
 #include "polygon_set_data.hpp"
 
-#include "polygon_set_wrapper.hpp"
 
 //defintions
 #include "post_geometry_traits_definitions.hpp"
 
 //general scanline
-#include "scan_arbitrary.hpp"
+//#include "scan_arbitrary.hpp"
 
 namespace gtl {
 
@@ -180,21 +180,21 @@ center(const geometry_type& geometry_object) {
 
 //accepts: interval
 template <typename geometry_type>
-typename coordinate_type<geometry_type>::type
+typename coordinate_difference<geometry_type>::type
 delta(const geometry_type& geometry_object) {
   return geometry_concept<geometry_type>::type::delta(geometry_object);
 }
 
 //accepts: rectangle prism
 template <typename geometry_type>
-typename coordinate_type<geometry_type>::type
+typename coordinate_difference<geometry_type>::type
 delta(const geometry_type& geometry_object, orientation_2d orient) {
   return geometry_concept<geometry_type>::type::delta(geometry_object, orient);
 }
 
 //accepts: prism
 template <typename geometry_type>
-typename coordinate_type<geometry_type>::type
+typename coordinate_difference<geometry_type>::type
 delta(const geometry_type& geometry_object, orientation_3d orient) {
   return geometry_concept<geometry_type>::type::delta(geometry_object, orient);
 }
@@ -208,14 +208,14 @@ area(const geometry_type& geometry_object) {
 
 //accepts: rectangle
 template <typename geometry_type>
-typename coordinate_type<geometry_type>::type
+typename coordinate_distance<geometry_type>::type
 half_perimeter(const geometry_type& geometry_object) {
   return geometry_concept<geometry_type>::type::half_perimeter(geometry_object);
 }
 
-//accepts: rectangle
+//accepts: rectangle, polygon
 template <typename geometry_type>
-typename distance_type<geometry_type>::type
+typename coordinate_distance<geometry_type>::type
 perimeter(const geometry_type& geometry_object) {
   return geometry_concept<geometry_type>::type::perimeter(geometry_object);
 }
@@ -364,8 +364,8 @@ geometry_type_1& reflected_deconvolve(geometry_type_1& lvalue, const geometry_ty
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-typename distance_type<geometry_type_1>::type distance(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
-  return geometry_concept<geometry_type_1>::type::distance(lvalue, rvalue, typename geometry_concept<geometry_type_2>::type());
+typename coordinate_distance<geometry_type_1>::type euclidean_distance(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+  return geometry_concept<geometry_type_1>::type::euclidean_distance(lvalue, rvalue, typename geometry_concept<geometry_type_2>::type());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
@@ -459,94 +459,192 @@ void set_compact(geometry_type& geometry_object, iterator_type input_begin, iter
 //boolean operator functions
 
 template <typename geometry_type_1, typename geometry_type_2>
-polygon_set_view<typename geometry_type_1::operator_arg_type,
-                 typename geometry_type_2::operator_arg_type,
+polygon_set_view<typename polygon_set_traits<geometry_type_1>::operator_arg_type,
+                 typename polygon_set_traits<geometry_type_2>::operator_arg_type,
                  boolean_op::BinaryOr, 
-                 typename geometry_type_1::operator_storage_tag, 
-                 typename geometry_type_2::operator_storage_tag> 
+                 typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+                 typename polygon_set_traits<geometry_type_2>::operator_storage_tag> 
 operator|(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return polygon_set_view<geometry_type_1, geometry_type_2,
     boolean_op::BinaryOr, 
-    typename geometry_type_1::operator_storage_tag, 
-    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+    typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+    typename polygon_set_traits<geometry_type_2>::operator_storage_tag>(lvalue, rvalue, 
                                                     polygon_set_traits<geometry_type_1>::orient(lvalue),
                                                     boolean_op::BinaryOr());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-polygon_set_view<typename geometry_type_1::operator_arg_type,
-                 typename geometry_type_2::operator_arg_type,
+polygon_set_view<typename polygon_set_traits<geometry_type_1>::operator_arg_type,
+                 typename polygon_set_traits<geometry_type_2>::operator_arg_type,
                  boolean_op::BinaryOr, 
-                 typename geometry_type_1::operator_storage_tag, 
-                 typename geometry_type_2::operator_storage_tag> 
+                 typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+                 typename polygon_set_traits<geometry_type_2>::operator_storage_tag> 
 operator+(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return polygon_set_view<geometry_type_1, geometry_type_2,
     boolean_op::BinaryOr, 
-    typename geometry_type_1::operator_storage_tag, 
-    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+    typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+    typename polygon_set_traits<geometry_type_2>::operator_storage_tag>(lvalue, rvalue, 
                                                     polygon_set_traits<geometry_type_1>::orient(lvalue),
                                                     boolean_op::BinaryOr());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-polygon_set_view<typename geometry_type_1::operator_arg_type,
-                 typename geometry_type_2::operator_arg_type,
+polygon_set_view<typename polygon_set_traits<geometry_type_1>::operator_arg_type,
+                 typename polygon_set_traits<geometry_type_2>::operator_arg_type,
                  boolean_op::BinaryAnd, 
-                 typename geometry_type_1::operator_storage_tag, 
-                 typename geometry_type_2::operator_storage_tag> 
+                 typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+                 typename polygon_set_traits<geometry_type_2>::operator_storage_tag> 
 operator*(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return polygon_set_view<geometry_type_1, geometry_type_2,
     boolean_op::BinaryAnd, 
-    typename geometry_type_1::operator_storage_tag, 
-    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+    typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+    typename polygon_set_traits<geometry_type_2>::operator_storage_tag>(lvalue, rvalue, 
                                                     polygon_set_traits<geometry_type_1>::orient(lvalue),
                                                     boolean_op::BinaryAnd());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-polygon_set_view<typename geometry_type_1::operator_arg_type,
-                 typename geometry_type_2::operator_arg_type,
+polygon_set_view<typename polygon_set_traits<geometry_type_1>::operator_arg_type,
+                 typename polygon_set_traits<geometry_type_2>::operator_arg_type,
                  boolean_op::BinaryAnd, 
-                 typename geometry_type_1::operator_storage_tag, 
-                 typename geometry_type_2::operator_storage_tag> 
+                 typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+                 typename polygon_set_traits<geometry_type_2>::operator_storage_tag> 
 operator&(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return polygon_set_view<geometry_type_1, geometry_type_2,
     boolean_op::BinaryAnd, 
-    typename geometry_type_1::operator_storage_tag, 
-    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+    typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+    typename polygon_set_traits<geometry_type_2>::operator_storage_tag>(lvalue, rvalue, 
                                                      polygon_set_traits<geometry_type_1>::orient(lvalue),
                                                      boolean_op::BinaryAnd());
 }
 
 template <typename geometry_type_1, typename geometry_type_2>
-polygon_set_view<typename geometry_type_1::operator_arg_type,
-                 typename geometry_type_2::operator_arg_type,
+polygon_set_view<typename polygon_set_traits<geometry_type_1>::operator_arg_type,
+                 typename polygon_set_traits<geometry_type_2>::operator_arg_type,
                  boolean_op::BinaryXor, 
-                 typename geometry_type_1::operator_storage_tag, 
-                 typename geometry_type_2::operator_storage_tag> 
+                 typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+                 typename polygon_set_traits<geometry_type_2>::operator_storage_tag> 
 operator^(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return polygon_set_view<geometry_type_1, geometry_type_2,
     boolean_op::BinaryXor, 
-    typename geometry_type_1::operator_storage_tag, 
-    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+    typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+    typename polygon_set_traits<geometry_type_2>::operator_storage_tag>(lvalue, rvalue, 
                                                     polygon_set_traits<geometry_type_1>::orient(lvalue),
                                                     boolean_op::BinaryXor());
 }
  
 template <typename geometry_type_1, typename geometry_type_2>
-polygon_set_view<typename geometry_type_1::operator_arg_type,
-                 typename geometry_type_2::operator_arg_type,
+polygon_set_view<typename polygon_set_traits<geometry_type_1>::operator_arg_type,
+                 typename polygon_set_traits<geometry_type_2>::operator_arg_type,
                  boolean_op::BinaryNot, 
-                 typename geometry_type_1::operator_storage_tag, 
-                 typename geometry_type_2::operator_storage_tag> 
+                 typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+                 typename polygon_set_traits<geometry_type_2>::operator_storage_tag> 
 operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
   return polygon_set_view<geometry_type_1, geometry_type_2,
     boolean_op::BinaryNot, 
-    typename geometry_type_1::operator_storage_tag, 
-    typename geometry_type_2::operator_storage_tag>(lvalue, rvalue, 
+    typename polygon_set_traits<geometry_type_1>::operator_storage_tag, 
+    typename polygon_set_traits<geometry_type_2>::operator_storage_tag>(lvalue, rvalue, 
                                                     polygon_set_traits<geometry_type_1>::orient(lvalue),
                                                     boolean_op::BinaryNot());
 }
+
+  template <typename T>
+  struct polygon_set_traits<std::vector<rectangle_data<T> > > {
+    typedef T coordinate_type;
+    typedef typename polygon_set_const_wrapper<std::vector<rectangle_data<T> > >::iterator_type iterator_type;
+    typedef typename std::vector<rectangle_data<T> > operator_arg_type;
+    typedef operator_requires_copy operator_storage_tag;
+
+    static inline iterator_type begin(const std::vector<rectangle_data<T> >& polygon_set) {
+      return wrap_const(polygon_set).begin();
+    }
+
+    static inline iterator_type end(const std::vector<rectangle_data<T> >& polygon_set) {
+      return wrap_const(polygon_set).end();
+    }
+
+    template <typename input_iterator_type>
+    static inline void set(std::vector<rectangle_data<T> >& polygon_set, 
+                           input_iterator_type input_begin, input_iterator_type input_end, 
+                           orientation_2d orient) {
+      wrap(polygon_set).set(input_begin, input_end, orient);
+    }
+
+    static inline orientation_2d orient(const std::vector<rectangle_data<T> >& polygon_set) { return HORIZONTAL; }
+
+    static inline bool dirty(const std::vector<rectangle_data<T> >& polygon_set) { return true; }
+
+    static inline bool sorted(const std::vector<rectangle_data<T> >& polygon_set) { return false; }
+
+  };
+
+  template <typename T>
+  struct polygon_set_traits<std::vector<polygon_90_data<T> > > {
+    typedef T coordinate_type;
+    typedef typename polygon_set_const_wrapper<std::vector<polygon_90_data<T> > >::iterator_type iterator_type;
+    typedef typename std::vector<polygon_90_data<T> > operator_arg_type;
+    typedef operator_requires_copy operator_storage_tag;
+
+    static inline iterator_type begin(const std::vector<polygon_90_data<T> >& polygon_set) {
+      return wrap_const(polygon_set).begin();
+    }
+
+    static inline iterator_type end(const std::vector<polygon_90_data<T> >& polygon_set) {
+      return wrap_const(polygon_set).end();
+    }
+
+    template <typename input_iterator_type>
+    static inline void set(std::vector<polygon_90_data<T> >& polygon_set, 
+                           input_iterator_type input_begin, input_iterator_type input_end, 
+                           orientation_2d orient) {
+      wrap(polygon_set).set(input_begin, input_end, orient);
+    }
+
+    static inline orientation_2d orient(const std::vector<polygon_90_data<T> >& polygon_set) { return HORIZONTAL; }
+
+    static inline bool dirty(const std::vector<polygon_90_data<T> >& polygon_set) { return true; }
+
+    static inline bool sorted(const std::vector<polygon_90_data<T> >& polygon_set) { return false; }
+
+  };
+
+//   template <typename T>
+//   struct polygon_set_traits<std::vector<polygon_90_with_holes_data<T> > > {
+//     typedef T coordinate_type;
+//     typedef typename polygon_set_const_wrapper<std::vector<polygon_90_with_holes_data<T> > >::iterator_type iterator_type;
+//     typedef typename std::vector<polygon_90_with_holes_data<T> > operator_arg_type;
+//     typedef operator_requires_copy operator_storage_tag;
+
+//     static inline iterator_type begin(const std::vector<polygon_90_with_holes_data<T> >& polygon_set) {
+//       return wrap_const(polygon_set).begin();
+//     }
+
+//     static inline iterator_type end(const std::vector<polygon_90_with_holes_data<T> >& polygon_set) {
+//       return wrap_const(polygon_set).end();
+//     }
+
+//     template <typename input_iterator_type>
+//     static inline void set(std::vector<polygon_90_with_holes_data<T> >& polygon_set, 
+//                            input_iterator_type input_begin, input_iterator_type input_end, 
+//                            orientation_2d orient) {
+//       wrap(polygon_set).set(input_begin, input_end, orient);
+//     }
+
+//     static inline orientation_2d orient(const std::vector<polygon_90_with_holes_data<T> >& polygon_set) { return HORIZONTAL; }
+
+//     static inline bool dirty(const std::vector<polygon_90_with_holes_data<T> >& polygon_set) { return true; }
+
+//     static inline bool sorted(const std::vector<polygon_90_with_holes_data<T> >& polygon_set) { return false; }
+
+//   };
+
+  template <typename T>
+  struct polygon_set_traits<std::vector<polygon_90_with_holes_data<T> > > : public 
+  polygon_set_traits<polygon_set_wrapper<std::vector<polygon_90_with_holes_data<T> > > > {};
+  // template <typename T>
+ //  struct polygon_set_traits<const std::vector<polygon_90_with_holes_data<T> > > : public 
+//   polygon_set_traits<polygon_set_const_wrapper<const std::vector<polygon_90_with_holes_data<T> > > > {};
+
 
 }
 #endif

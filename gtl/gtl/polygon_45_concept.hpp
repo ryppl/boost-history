@@ -115,12 +115,12 @@ struct polygon_45_concept : polygon_90_concept {
 
   /// get the perimeter of the polygon
   template <typename polygon_type>
-  static typename distance_type<polygon_type>::type 
+  static typename coordinate_distance<polygon_type>::type 
   perimeter(const polygon_type& polygon) {
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
     typedef typename polygon_traits<polygon_type>::iterator_type iterator;
     typedef typename std::iterator_traits<iterator>::value_type point_type;
-    typename distance_type<polygon_type>::type return_value = 0;
+    typename coordinate_distance<polygon_type>::type return_value = 0;
     point_type previous_point, first_point;
     iterator itr = begin(polygon);
     iterator itr_end = end(polygon);
@@ -129,10 +129,10 @@ struct polygon_45_concept : polygon_90_concept {
     ++itr;
     for( ; itr != itr_end; ++itr) {
       point_type current_point = *itr;
-      return_value += point_concept::distance(current_point, previous_point);
+      return_value += point_concept::euclidean_distance(current_point, previous_point);
       previous_point = current_point;
     }
-    return_value += point_concept::distance(previous_point, first_point);
+    return_value += point_concept::euclidean_distance(previous_point, first_point);
     return return_value;
   }
 
