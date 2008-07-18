@@ -1,0 +1,194 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro BOOST_MIRRORED_NAMESPACE</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="The Mirror library documentation">
+<link rel="up" href="mirror/reference.html#header.boost.mirror.meta_namespace.hpp" title="Header &lt;boost/mirror/meta_namespace.hpp&gt;">
+<link rel="prev" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">
+<link rel="next" href="BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_MIRROR_REG_NAMESPACE.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_namespace.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_MIRRORED_GLOBAL_SCOPE.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="BOOST_MIRRORED_NAMESPACE"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_MIRRORED_NAMESPACE</span></h2>
+<p>BOOST_MIRRORED_NAMESPACE &#8212; This macro is used to reflect a namespace and expands into a specialization
+		of the <code class="computeroutput">meta_namespace</code> template, which provides
+		meta-data about the namespace. To reflect the global scope use the 
+		<code class="computeroutput"><a class="link" href="BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a></code> macro.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRRORED_NAMESPACE(FULL_NAMESPACE_NAME)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id740390"></a><h2>Description</h2>
+<p>The <code class="computeroutput"><a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code> macro reflects a namespace 
+		previously registered with the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library by the means of 
+		the <code class="computeroutput"><a class="link" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a></code>. 
+		The only argument of this macro is the full namespace name including the leading double colon,
+		so this is ok
+		</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_NAMESPACE(::boost::mirror) /* OK */</code></pre>
+<p>
+		but, neither this
+		</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_NAMESPACE(boost::mirror) /* Error */</code></pre>
+<p>
+		nor this
+		</p>
+<pre class="programlisting"><code class="computeroutput">BOOST_MIRRORED_NAMESPACE(mirror) /* Error */</code></pre>
+<p>
+		will work.
+		</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.RFL_NAMESPACE.reference.samples"></a>Examples</h6></div></div></div>
+<p>This example shows the registering and reflection of namespaces
+			and basic usage of the <code class="computeroutput">meta_namespace</code>
+			template class and its members.
+			</p>
+<pre class="programlisting">
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+#include &lt;boost/mpl/assert.hpp&gt;
+
+namespace foo {
+namespace bar {
+namespace baz {
+
+} //namespace baz
+} //namespace bar
+} //namespace foo
+
+// the registering must be done in the boost::mirror namespace
+namespace boost {
+namespace mirror {
+
+// register foo
+<a class="link" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((foo))
+// register foo::bar
+<a class="link" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((foo)(bar))
+// register foo::bar::baz
+<a class="link" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((foo)(bar)(baz))
+
+} // namespace mirror
+} // namespace boost
+
+
+// prints meta-info about the global scope
+template &lt; class MetaNamespace &gt;
+void do_print_meta_data(::boost::true_type)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	cts::bostream&amp; bcout = cts::bcout();
+	bcout &lt;&lt; 
+		BOOST_CTS_LIT("This is the global scope") &lt;&lt; 
+	endl &lt;&lt;
+		BOOST_CTS_LIT("------------------------------------") &lt;&lt; 
+	endl;
+}
+
+// prints meta-info about named namespaces
+template &lt; class MetaNamespace &gt;
+void do_print_meta_data(::boost::false_type)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::bcout();
+
+	bcout &lt;&lt; 
+		BOOST_CTS_LIT("Namespace '") &lt;&lt; 
+		MetaNamespace::base_name() &lt;&lt; 
+		BOOST_CTS_LIT("': ") &lt;&lt; 
+	endl &lt;&lt;
+		BOOST_CTS_LIT(" - the full name is '") &lt;&lt; 
+		MetaNamespace::full_name() &lt;&lt; 
+		BOOST_CTS_LIT("'") &lt;&lt; 
+	endl &lt;&lt;
+		BOOST_CTS_LIT(" - it's defined "); 
+
+	if(reflects_global_scope&lt;typename MetaNamespace::scope&gt;::value)
+		bcout &lt;&lt; BOOST_CTS_LIT(" - on the global scope "); 
+	else
+		bcout &lt;&lt; BOOST_CTS_LIT(" - in the '") &lt;&lt;
+			MetaNamespace::scope::full_name() &lt;&lt;
+			BOOST_CTS_LIT("' namespace"); 
+
+	bcout &lt;&lt; endl &lt;&lt;
+		BOOST_CTS_LIT("------------------------------------") &lt;&lt; 
+	endl;
+}
+
+
+
+template &lt; class MetaNamespace &gt;
+void print_meta_data(void)
+{
+	using namespace ::boost::mirror;
+	// check the template argument
+	BOOST_MPL_ASSERT((
+		reflects_namespace&lt; MetaNamespace &gt;	
+	));
+
+	// call the specialized printer based on whether
+	// the passed meta-namespace reflects the global
+	// scope or not
+	typename reflects_global_scope&lt;MetaNamespace&gt;::type 
+		selector;
+
+	do_print_meta_data&lt;MetaNamespace&gt;(selector);
+}
+
+
+int main(void)
+{
+	// reflect and print meta-info about the pre-registered namespaces
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a>() &gt;();
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::std) &gt;();
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost) &gt;();
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror) &gt;();
+
+	// reflect and print meta-info about the namespaces registered here
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo) &gt;();
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo::bar) &gt;();
+	print_meta_data&lt; <a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo::bar::baz) &gt;();
+	
+	return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_MIRROR_REG_NAMESPACE.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_namespace.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_MIRRORED_GLOBAL_SCOPE.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

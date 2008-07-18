@@ -29,7 +29,7 @@
 </para>
 <para>
 	<libraryname>Mirror</libraryname> is designed with the principle of stratification
-	in mind and tries to be as less intrusive as possible. New classes do not need
+	in mind and tries to be as less intrusive as possible. New or existing classes do not need
 	to be designed to directly support <libraryname>Mirror</libraryname>
        	and no <libraryname>Mirror</libraryname> related code is necessary
 	in the class' definition, as far as some general guidelines are followed
@@ -91,6 +91,9 @@
 </para>
 
 <itemizedlist>
+	<listitem>
+		Reflection of class' member functions and constructors.
+	</listitem>
 	<listitem>
 		Facility for generating customizable object factories with a uniform interface.
 	</listitem>

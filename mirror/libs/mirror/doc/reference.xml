@@ -6,8 +6,25 @@
 
 	<para>
 	</para>
-	<xi:include href="reference/meta_namespace.xml"/>
-	<xi:include href="reference/meta_type.xml"/>
-	<xi:include href="reference/meta_class.xml"/>
+	<section>
+		<title>Meta Objects</title>
+	</section>
+	<section>
+		<title>Traits</title>
+	</section>
+	<section>
+		<title>Header files</title>
+		<xi:include href="reference/meta_namespace.xml"/>
+		<xi:include href="reference/meta_type.xml"/>
+		<xi:include href="reference/meta_class.xml"/>
+	
+		<xi:include href="reference/traits/reflects_namespace.xml"/>
+		<xi:include href="reference/traits/reflects_global_scope.xml"/>
+		<xi:include href="reference/traits/reflects_type.xml"/>
+		<xi:include href="reference/traits/reflects_class.xml"/>
+
+		<xi:include href="reference/traits/reflects_inheritance.xml"/>
+		<xi:include href="reference/traits/reflects_virtual_inheritance.xml"/>
+	</section>
 
 </library-reference>

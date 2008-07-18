@@ -208,6 +208,8 @@ int main(void)
 	//
 	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
+	//
+	//
 	// Print some basic info about the reflected class
 	//
 	bcout << "The reflected class has " << endl;

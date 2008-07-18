@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_GLOBAL_SCOPE" kind="functionlike">
+	<purpose>
+		<para>This macro is used to reflect the global scope and expands into a specialization
+		of the <code><classname>meta_namespace</classname></code> template, which provides
+		meta-data about the global scope. 
+		To reflect a registered named namespace use the <code><macroname>BOOST_MIRRORED_NAMESPACE</macroname></code>.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>()</code> macro can be used to get
+		the meta-data about the global scope, which is registered with the <libraryname>Mirror</libraryname> library by default.
+		</para>
+	<section id="mirror.RFL_GLOBAL_SCOPE.reference.samples">
+		<title>Examples</title>
+<programlisting>
+BOOST_STATIC_ASSERT((
+	reflects_global_scope&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() &gt;::value
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	reflects_global_scope&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() &gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	::boost::is_same&lt;
+		<macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std)::scope,
+		<macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() 
+	&gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	::boost::is_same&lt;
+		<macroname>BOOST_MIRRORED_TYPE</macroname>(int)::scope,
+		<macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() 
+	&gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	::boost::is_same&lt;
+		<macroname>BOOST_MIRRORED_TYPE</macroname>(::std::wstring)::scope::scope,
+		<macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() 
+	&gt;
+));
+</programlisting>
+
+	</section>
+	</description>
+</macro>

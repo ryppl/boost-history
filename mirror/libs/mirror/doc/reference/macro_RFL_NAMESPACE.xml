@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_NAMESPACE" kind="functionlike">
+	<macro-parameter name="FULL_NAMESPACE_NAME"/>
+	<purpose>
+		<para>This macro is used to reflect a namespace and expands into a specialization
+		of the <code><classname>meta_namespace</classname></code> template, which provides
+		meta-data about the namespace. To reflect the global scope use the 
+		<code><macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname></code> macro.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRRORED_NAMESPACE</macroname></code> macro reflects a namespace 
+		previously registered with the <libraryname>Mirror</libraryname> library by the means of 
+		the <code><macroname>BOOST_MIRROR_REG_NAMESPACE</macroname></code>. 
+		The only argument of this macro is the full namespace name including the leading double colon,
+		so this is ok
+		<programlisting><code>BOOST_MIRRORED_NAMESPACE(::boost::mirror) /* OK */</code></programlisting>
+		but, neither this
+		<programlisting><code>BOOST_MIRRORED_NAMESPACE(boost::mirror) /* Error */</code></programlisting>
+		nor this
+		<programlisting><code>BOOST_MIRRORED_NAMESPACE(mirror) /* Error */</code></programlisting>
+		will work.
+		</para>
+		<section id="mirror.RFL_NAMESPACE.reference.samples">
+			<title>Examples</title>
+			<para>This example shows the registering and reflection of namespaces
+			and basic usage of the <code><classname>meta_namespace</classname></code>
+			template class and its members.
+			</para>
+			<xi:include href="../samples/usage_namespaces_01.xml"/>
+		</section>
+	</description>
+</macro>

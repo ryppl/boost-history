@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/traits/reflects_namespace.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="reflects_namespace">
+			<template>
+				<template-type-parameter name="MetaObject"/>
+			</template>
+			<purpose>
+				<para>If <code>MetaObject</code> is an instantiation of <code><classname>meta_namespace</classname></code>,
+				then <code><classname>reflects_namespace</classname></code>
+				inherits from <code><classname>::boost::true_type</classname></code>. Otherwise it inherits from
+				<code><classname>::boost::false_type</classname></code>.
+				</para>
+			</purpose>
+			<inherit access="public">
+				<type><classname>false_type</classname>-or-<classname>true_type</classname></type>
+			</inherit>
+			<description>
+				<para>This template can be used to distinguish whether the opaque <code>MetaObject</code> type reflects a namespace
+				and thus is an instantiation of <code><classname>meta_namespace</classname></code>.
+				</para>
+				<section id="mirror.reflects_namespace.reference.samples">
+					<title>Examples</title>
+<programlisting>
+BOOST_STATIC_ASSERT((
+	reflects_namespace&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) &gt;::value
+));
+</programlisting>
+<programlisting>
+BOOST_STATIC_ASSERT((
+	reflects_namespace&lt; BOOST_MIRRORED_TYPE(::std::string)::scope &gt;::value
+));
+</programlisting>
+<programlisting>
+BOOST_STATIC_ASSERT((
+	!reflects_namespace&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;::value
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	reflects_namespace&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) &gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	reflects_namespace&lt; BOOST_MIRRORED_TYPE(::std::string)::scope &gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	reflects_namespace&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

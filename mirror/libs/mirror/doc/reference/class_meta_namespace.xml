@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<class name="meta_namespace">
+	<template>
+		<template-type-parameter name="NamespacePlaceholder"/>
+	</template>
+	<purpose>
+		<para>
+		This class template provides meta-data
+		about the reflected namespace, especially allows to get the 
+		base and full namespace name and to 
+		get information about the scope inside of which this namespace
+		has been defined.
+		</para>
+		<para>
+		To obtain a <code><classname>meta_namespace</classname></code> for a particular
+		namespace (with the exception of the global scope) use the reflection
+		macro <code><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(FULL_NAMESPACE_NAME)</code>. To
+		get the <code><classname>meta_namespace</classname></code> specialization for
+		the global scope use the <code><macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>()</code>
+		macro.
+		</para>
+	</purpose>
+	<description>
+		<para>The specializations of <code><classname>meta_type</classname></code> can 
+		be used to get meta-information about the reflected types, some at compile-time and some at run-time.
+		The following examples show type reflection and basic 
+		<code><classname>meta_type</classname></code> usage. Mirror works with the native C++ types
+		and some of the very common types like <code>::std::string</code>, etc. out of the box.
+		Meta-types for many other types from the standard library and <libraryname>Boost</libraryname>
+		are also provided and can be <code>#include</code>d when necessary.
+		</para>
+		<section id="mirror.meta_namespace.reference.samples">
+		<section id="mirror.meta_namespace.reference.sample01">
+			<title>Example - Basic usage</title>
+			<para>This sample code shows how to reflect a namespace and how to get its 
+			base and full name. 
+			</para>
+			<xi:include href="../samples/usage_meta_namespace_01.xml"/>
+		</section>
+		<section id="mirror.meta_namespace.reference.sample02">
+			<title>Example - Scope and ancestors</title>
+			<para>The following example shows what can be done with the 
+			<code><classname>meta_namespace</classname></code>s <code>scope</code> and
+			<code>ancestors</code> <code>typedef</code>s. It also shows the usage
+			of the <code><classname>reflects_global_scope</classname></code> trait
+			template.
+			</para>
+			<xi:include href="../samples/usage_meta_namespace_02.xml"/>
+		</section>
+		<section id="mirror.meta_namespace.reference.sample03">
+			<title>Example - Generic namespace name getter</title>
+			<para>The <code><methodname>base_name</methodname></code> and the 
+			<code><methodname>full_name</methodname></code> methods
+			are convenient but not very generic. The <code><methodname>get_name</methodname></code> 
+			member function allows to specify the character type of the returned string and 
+			to specify wheter a full or just the base namespace name should be returned, based
+			on compile time arguments.
+			</para>
+			<para>The first argument must be either <code>mpl::true_</code> for full type name
+			or <code>mpl::false_</code> for base type name and the second argument must be
+			an instance of the <code>::std::char_traits</code> template with <code>char</code>
+			for <code>::std::string</code> return value type or <code>wchar_t</code> for
+			<code>::std::wstring</code> return value type.
+			</para>
+			<xi:include href="../samples/usage_meta_namespace_03.xml"/>
+		</section>
+		</section>
+	</description>
+
+	<access name="public">
+	<typedef name="scope">
+		<type><emphasis>unspecified</emphasis></type>
+		<purpose>Meta-namespace describing the scope where the reflected namespace is defined</purpose>
+		<description>
+			<para>A meta-object describing the scope in which the reflected namespace
+			is defined. It is a specialization of <code><classname>meta_namespace</classname></code>
+			with the exception of the meta-namespace reflecting the global scope where
+			this type is not defined.
+			</para>
+			<para>To find out whether a meta-namespace reflects the global scope
+			use the <code><classname>reflects_global_scope</classname></code> template meta-function.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="ancestors">
+		<type><emphasis>unspecified</emphasis></type>
+		<purpose>mpl::vector containing the whole path to the reflected namespace</purpose>
+		<description>
+			<para>An <code>mpl::vector</code> containing the <code><classname>meta_namespace</classname></code>
+			specializations for all the namespaces in which the reflected namespace is
+			directly or indirectly nested (not-containing the <code><classname>meta_namespace</classname></code>
+			for the reflected namespace). The elements of this <code>mpl::vector</code> are
+			ordered from the <code><classname>meta_namespace</classname></code> reflecting
+			the global scope to the <code><classname>meta_namespace</classname></code>
+			reflecting the parent namespace. The following holds 
+			for <code><classname>meta_namespace</classname></code>s
+			reflecting any namespace with the exception of the global scope:
+			</para>
+			<xi:include href="../samples/meta_namespace_ancestors_01.xml"/>
+			<para>For the <code><classname>meta_namespace</classname></code>
+			reflecting the global scope the following holds true.
+			</para>
+			<xi:include href="../samples/meta_namespace_ancestors_02.xml"/>
+			<para>To find out whether a meta-namespace reflects the global scope
+			use the <code><classname>reflects_global_scope</classname></code> template meta-function.
+			</para>
+		</description>
+	</typedef>
+	<method name="base_name">
+		<type>const <classname>cts::bstring</classname>&amp;</type>
+		<purpose>
+			<para>This static member function returns the base name of the 
+			namespace reflected by a <code><classname>meta_namespace</classname></code>.
+			For example the base namespace name "returned" by the invocation of 
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: base_name()
+			</programlisting>
+			is <code>"mirror"</code>. When a full namespace name 
+			<emphasis role="bold">with</emphasis> the nested name specifier
+			is needed use the <methodname>full_name</methodname> member function
+			instead.</para>
+		</purpose>
+	</method>
+	<method name="full_name">
+		<type>const <classname>cts::bstring</classname>&amp;</type>
+		<purpose>
+			<para>This static member function returns the full name of the 
+			namespace reflected by a <code><classname>meta_namespace</classname></code>
+			with the nested name specifier. For example:
+			<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: full_name()
+			</programlisting>
+			returns <code>"::boost::mirror"</code>. When the base namespace name 
+			<emphasis role="bold">without</emphasis> the nested name specifier
+			is needed use the <methodname>base_name</methodname> member function
+			instead.</para>
+		</purpose>
+		<notes>
+			<para>The first call to this function can be expensive 
+			for deeply nested namespaces, because the name needs to be properly composed from 
+			the base namespace names, which may 
+			lead to multiple string concatenations. Subsequent calls to this member function
+			for a concrete specialization of <classname>meta_namespace</classname>
+			are usually much faster.
+			</para>
+		</notes>
+	</method>
+	<method name="get_name">
+		<template>
+			<template-nontype-parameter name="FullName">
+				<type>bool</type>
+			</template-nontype-parameter>
+			<template-type-parameter name="CharT"/>
+		</template>
+		<type>const <classname>::std::basic_string&lt;CharT&gt;</classname>&amp;</type>
+		<parameter name="full">
+			<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
+		</parameter>
+		<parameter name="cht">
+			<paramtype>::std::char_traits&lt;CharT&gt;</paramtype>
+		</parameter>
+		<purpose>
+			<para>This static member template function returns either the base name 
+			<emphasis role="bold">without</emphasis> the nested name specifier 
+			or the full name <emphasis role="bold">with</emphasis> the 
+			nested name specifier of the namespace reflected by this
+			<code><classname>meta_namespace</classname></code>,
+			depending on the value of the template argument <code>FullName</code>.
+			Furthermore it allows to choose whether the return value type is 
+			<code>::std::string</code> or <code>::std::wstring</code> based
+			on the type of the second argument.
+			For example:
+			<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
+			</programlisting> is equivalent to calling the 
+			<code><methodname>base_name</methodname></code> member function with the 
+			<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol undefined, 
+			which returns a <code>::std::string</code> holding the string <code>"mirror"</code> and calling
+			<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
+			</programlisting> is equivalent to calling the 
+			<code><methodname>full_name</methodname></code> method with the 
+			<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol defined, 
+			which returns a <code>::std::wstring</code> holding this string <code>L"::boost::mirror"</code>.
+			</para>
+		</purpose>
+	</method>
+	</access>
+</class>
+

@@ -34,7 +34,7 @@
 </div></div>
 <div><p class="copyright">Copyright © 2008 Matú&#353; Chochlík</p></div>
 <div><div class="legalnotice">
-<a name="id694223"></a><p>Use, modification and distribution is subject to the Boost
+<a name="id739006"></a><p>Use, modification and distribution is subject to the Boost
 			Software License, Version 1.0. (See accompanying file
 			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
 			</p>
@@ -51,9 +51,9 @@
 <dt><span class="section"><a href="mirror/tutorial.html">Tutorial</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html">Mirror Reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="mirror/reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="mirror/reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="mirror/reference.html#header.boost.mirror.meta_class.hpp">Header &lt;boost/mirror/meta_class.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id739386">Meta Objects</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id739393">Traits</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id739400">Header files</a></span></dt>
 </dl></dd>
 </dl>
 </div>
@@ -95,7 +95,7 @@
 </p>
 <p>
 	<a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> is designed with the principle of stratification
-	in mind and tries to be as less intrusive as possible. New classes do not need
+	in mind and tries to be as less intrusive as possible. New or existing classes do not need
 	to be designed to directly support <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a>
        	and no <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> related code is necessary
 	in the class' definition, as far as some general guidelines are followed
@@ -153,6 +153,9 @@
 	Most important <span class="bold"><strong>planned</strong></span> features include:
 </p>
 <div class="itemizedlist"><ul type="disc">
+<li>
+		Reflection of class' member functions and constructors.
+	</li>
 <li>
 		Facility for generating customizable object factories with a uniform interface.
 	</li>

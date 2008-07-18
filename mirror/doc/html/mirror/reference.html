@@ -26,15 +26,38 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="mirror.reference"></a>Mirror Reference</h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_class.hpp">Header &lt;boost/mirror/meta_class.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id739386">Meta Objects</a></span></dt>
+<dt><span class="section"><a href="reference.html#id739393">Traits</a></span></dt>
+<dt><span class="section"><a href="reference.html#id739400">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="id739386"></a>Meta Objects</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="id739393"></a>Traits</h3></div></div></div></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.mirror.meta_namespace.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_namespace.hpp" target="_top">boost/mirror/meta_namespace.hpp</a>&gt;</h3></div></div></div>
+<a name="id739400"></a>Header files</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_class.hpp">Header &lt;boost/mirror/meta_class.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_namespace.hpp">Header &lt;boost/mirror/traits/reflects_namespace.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_global_scope.hpp">Header &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_type.hpp">Header &lt;boost/mirror/traits/reflects_type.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_class.hpp">Header &lt;boost/mirror/traits/reflects_class.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_inheritance.hpp">Header &lt;boost/mirror/traits/reflects_inheritance.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_virtual_inheritance.hpp">Header &lt;boost/mirror/traits/reflects_virtual_inheritance.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.meta_namespace.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_namespace.hpp" target="_top">boost/mirror/meta_namespace.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a class="link" href="../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>(PP_SEQ)
+<a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(FULL_NAMESPACE_NAME)
+<a class="link" href="../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a>()</pre>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> NamespacePlaceholder&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a>;
@@ -42,8 +65,8 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.mirror.meta_type.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_type.hpp" target="_top">boost/mirror/meta_type.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.meta_type.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_type.hpp" target="_top">boost/mirror/meta_type.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a>;
@@ -51,13 +74,68 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.mirror.meta_class.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_class.hpp" target="_top">boost/mirror/meta_class.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.meta_class.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_class.hpp" target="_top">boost/mirror/meta_class.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Class&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_class.html" title="Class template meta_class">meta_class</a>;
   }
 }</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_namespace.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_namespace.hpp" target="_top">boost/mirror/traits/reflects_namespace.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_namespace.html" title="Class template reflects_namespace">reflects_namespace</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_global_scope.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_global_scope.hpp" target="_top">boost/mirror/traits/reflects_global_scope.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_type.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_type.hpp" target="_top">boost/mirror/traits/reflects_type.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_type.html" title="Class template reflects_type">reflects_type</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_class.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_class.hpp" target="_top">boost/mirror/traits/reflects_class.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_class.html" title="Class template reflects_class">reflects_class</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_inheritance.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_inheritance.hpp" target="_top">boost/mirror/traits/reflects_inheritance.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_inheritance.html" title="Class template reflects_inheritance">reflects_inheritance</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_virtual_inheritance.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_virtual_inheritance.hpp" target="_top">boost/mirror/traits/reflects_virtual_inheritance.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaInheritance&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_virtual_inheritance.html" title="Class template reflects_virtual_inheritance">reflects_virtual_inheritance</a>;
+  }
+}</pre>
+</div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

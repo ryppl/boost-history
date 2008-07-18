@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting>
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+#include &lt;boost/mpl/assert.hpp&gt;
+
+namespace foo {
+namespace bar {
+namespace baz {
+
+} //namespace baz
+} //namespace bar
+} //namespace foo
+
+// the registering must be done in the boost::mirror namespace
+namespace boost {
+namespace mirror {
+
+// register foo
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo))
+// register foo::bar
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo)(bar))
+// register foo::bar::baz
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo)(bar)(baz))
+
+} // namespace mirror
+} // namespace boost
+
+
+// prints meta-info about the global scope
+template &lt; class MetaNamespace &gt;
+void do_print_meta_data(::boost::true_type)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	cts::bostream&amp; bcout = cts::bcout();
+	bcout &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("This is the global scope") &lt;&lt; 
+	endl &lt;&lt;
+		<macroname>BOOST_CTS_LIT</macroname>("------------------------------------") &lt;&lt; 
+	endl;
+}
+
+// prints meta-info about named namespaces
+template &lt; class MetaNamespace &gt;
+void do_print_meta_data(::boost::false_type)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::bcout();
+
+	bcout &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("Namespace '") &lt;&lt; 
+		MetaNamespace::base_name() &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("': ") &lt;&lt; 
+	endl &lt;&lt;
+		<macroname>BOOST_CTS_LIT</macroname>(" - the full name is '") &lt;&lt; 
+		MetaNamespace::full_name() &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("'") &lt;&lt; 
+	endl &lt;&lt;
+		<macroname>BOOST_CTS_LIT</macroname>(" - it's defined "); 
+
+	if(reflects_global_scope&lt;typename MetaNamespace::scope&gt;::value)
+		bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>(" - on the global scope "); 
+	else
+		bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>(" - in the '") &lt;&lt;
+			MetaNamespace::scope::full_name() &lt;&lt;
+			<macroname>BOOST_CTS_LIT</macroname>("' namespace"); 
+
+	bcout &lt;&lt; endl &lt;&lt;
+		<macroname>BOOST_CTS_LIT</macroname>("------------------------------------") &lt;&lt; 
+	endl;
+}
+
+
+
+template &lt; class MetaNamespace &gt;
+void print_meta_data(void)
+{
+	using namespace ::boost::mirror;
+	// check the template argument
+	BOOST_MPL_ASSERT((
+		<classname>reflects_namespace</classname>&lt; MetaNamespace &gt;	
+	));
+
+	// call the specialized printer based on whether
+	// the passed meta-namespace reflects the global
+	// scope or not
+	typename <classname>reflects_global_scope</classname>&lt;MetaNamespace&gt;::type 
+		selector;
+
+	do_print_meta_data&lt;MetaNamespace&gt;(selector);
+}
+
+
+int main(void)
+{
+	// reflect and print meta-info about the pre-registered namespaces
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) &gt;();
+
+	// reflect and print meta-info about the namespaces registered here
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo::bar) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo::bar::baz) &gt;();
+	
+	return 0;
+}
+</programlisting>
+

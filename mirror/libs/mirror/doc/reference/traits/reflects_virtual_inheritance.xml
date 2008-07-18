@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/traits/reflects_virtual_inheritance.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="reflects_virtual_inheritance">
+			<template>
+				<template-type-parameter name="MetaInheritance"/>
+			</template>
+			<purpose>
+				<para>If <code>MetaInheritance</code> is a specialization of <code><classname>meta_inheritance</classname></code>
+				reflecting virtual inheritance,
+				then <code><classname>reflects_virtual_inheritance</classname></code>
+				inherits from <code><classname>::boost::true_type</classname></code>. Otherwise it inherits from
+				<code><classname>::boost::false_type</classname></code>.
+				</para>
+			</purpose>
+			<inherit access="public">
+				<type><classname>false_type</classname>-or-<classname>true_type</classname></type>
+			</inherit>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

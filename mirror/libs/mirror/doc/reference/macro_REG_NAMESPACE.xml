@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRROR_REG_NAMESPACE" kind="functionlike">
+	<macro-parameter name="PP_SEQ">
+	</macro-parameter>
+	<purpose>
+		<para>This macro is used to register a namespace with <libraryname>Mirror</libraryname>.
+		After successful registration the namespace can be reflected and can be used 
+		as a scope when registering types, classes, etc.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRROR_REG_NAMESPACE</macroname></code> macro registers a namespace with 
+		the <libraryname>Mirror</libraryname> library. 
+		<note>The registering must be done in the <code>::boost::mirror</code> namespace.</note>
+		The only argument of this macro is a <libraryname>Preprocessor</libraryname> sequence, containing
+		the names of the namespaces from the topmost to the one being registered. For example to register
+		these namespaces,
+<programlisting>
+namespace ns_1 {
+  namespace ns_2 {
+    namespace ns_3 {
+      //...
+                namespace ns_N {
+                } // namespace ns_N
+      // ...
+    } // namespace ns_3
+  } // namespace ns_2
+} // namespace ns_1
+</programlisting>
+		use 
+<programlisting>
+// note that the registering must be done
+// in the boost::mirror namespace
+
+namespace boost {
+namespace mirror {
+
+// registers ::ns_1
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((ns_1))
+// registers ::ns_1::ns_2
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((ns_1)(ns_2))
+// registers ::ns_1::ns_2::ns_3
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((ns_1)(ns_2)(ns_3))
+// registers ::ns_1::ns_2::ns_3::...::ns_N
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((ns_1)(ns_2)(ns_3)...(ns_N))
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+	and afterwards the namespaces can be reflected with the 
+	<code><macroname>BOOST_MIRRORED_NAMESPACE</macroname></code> macro
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_namespace</classname>&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::ns_1) &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_namespace</classname>&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::ns_1::ns_2::ns_3) &gt;
+));
+BOOST_MPL_ASSERT_NOT((
+	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::ns_1) &gt;
+));
+BOOST_MPL_ASSERT_NOT((
+	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::ns_1::ns_2::ns_3) &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::ns_1::ns_2)::scope::scope &gt;
+));
+</programlisting>
+		and referenced in other registering macros. The <libraryname>Mirror</libraryname> has several namespaces preregistered: 
+<programlisting>
+namespace boost {
+namespace mirror {
+
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((std))
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((boost))
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((boost)(mirror))
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+		</para>
+
+		<section id="mirror.REG_NAMESPACE.reference.samples">
+			<title>Examples</title>
+			<para>This example shows the registering and reflection of namespaces
+			and basic usage of the <code><classname>meta_namespace</classname></code>
+			template class and its members.
+			</para>
+			<xi:include href="../samples/usage_namespaces_01.xml"/>
+		</section>
+
+	</description>
+</macro>
