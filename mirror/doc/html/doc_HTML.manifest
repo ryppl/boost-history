@@ -9,6 +9,10 @@ BOOST_MIRROR_REG_NAMESPACE.html
 BOOST_MIRRORED_NAMESPACE.html
 BOOST_MIRRORED_GLOBAL_SCOPE.html
 boost/mirror/meta_type.html
+BOOST_MIRRORED_TYPE.html
+BOOST_MIRRORED_TYPE_NS.html
+BOOST_MIRRORED_TYPEDEF.html
+BOOST_MIRRORED_TYPEOF.html
 boost/mirror/meta_class.html
 boost/mirror/reflects_namespace.html
 boost/mirror/reflects_global_scope.html

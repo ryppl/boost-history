@@ -20,7 +20,7 @@ int main(void)
 	typedef T4 (T)(const T1&amp;, T2, volatile T3*);
 	
 	// reflect it using mirror
-	typedef BOOST_MIRRORED_TYPE(T) meta_T;
+	typedef <macroname>BOOST_MIRRORED_TYPE</macroname>(T) meta_T;
 
 	// print out the full type name
 	cts::bcout() &lt;&lt; 

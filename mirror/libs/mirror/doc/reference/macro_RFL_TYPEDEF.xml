@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_TYPEDEF" kind="functionlike">
+	<macro-parameter name="FULL_NAMESPACE_NAME"/>
+	<macro-parameter name="TYPEDEF"/>
+	<purpose>
+		<para>This macro is used to reflect a <code>typedef</code>-ined type and expands into a specialization
+		of the <code><classname>meta_type</classname></code> template, which provides
+		meta-data about the reflected type. 
+		To reflect a base type (not a <code>typedef</code>-ined) use the 
+		<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro.
+		To reflect the type of an expression use the 
+		<code><macroname>BOOST_MIRRORED_TYPEOF</macroname></code> macro.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code> macro reflects a type
+		that is registered with the <libraryname>Mirror</libraryname> library as a <code>typedef</code>-ined
+		type. 
+		The difference between this macro and the <code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro
+		is, that <code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code> returns a <code><classname>meta_type</classname></code>
+		specialization which is aware of the <code>typedef</code>-ined name and the scope in which the type is 
+		<code>typedef</code>'d. For example the <code>size_t</code> is a <code>typedef</code> from the <code>::std</code> namespace
+		and is usually defined as 
+<programlisting>
+namespace std {
+typedef unsigned int size_t;
+} // namespace std
+</programlisting>
+		or
+<programlisting>
+namespace std {
+typedef unsigned long size_t;
+} // namespace std
+</programlisting>
+	the <code><methodname>full_name</methodname></code> function called on <classname>meta_type</classname>
+	expanded from <macroname>BOOST_MIRRORED_TYPEDEF</macroname>
+<programlisting>
+	<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::std, size_t)::full_name()
+</programlisting>
+	returns <code>"::std::size_t"</code>, while calling
+<programlisting>
+	<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::std, size_t)::full_name()
+</programlisting>
+		or 
+<programlisting>
+	<macroname>BOOST_MIRRORED_TYPE</macroname>(::std::size_t)::full_name()
+</programlisting>
+		returns <code>"unsigned int"</code> or <code>"unsigned long"</code>.
+		</para>
+		<section id="mirror.RFL_TYPEDEF.reference.samples">
+			<title>Examples</title>
+			<section id="mirror.RFL_TYPEDEF.reference.samples.simple">
+				<title>Basic usage</title>
+<programlisting>
+<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::boost::cts, bstring)::base_name();
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::std, size_t)::scope::scope
+	&gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::boost::cts, bstring)::scope
+	&gt;
+));
+</programlisting>
+<programlisting>
+<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::boost::cts, bstring)::scope::full_name();
+</programlisting>
+<programlisting>
+assert(
+	<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::std, size_t)::full_name() !=
+	<macroname>BOOST_MIRRORED_TYPE</macroname>(::std::size_t)::full_name()
+);
+</programlisting>
+<programlisting>
+assert(
+	<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::boost::cts, bstring)::full_name() !=
+	<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::boost::cts, bstring)::full_name()
+);
+</programlisting>
+			</section>
+
+		</section>
+	</description>
+</macro>

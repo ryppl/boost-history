@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro BOOST_MIRRORED_TYPE</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="The Mirror library documentation">
+<link rel="up" href="mirror/reference.html#header.boost.mirror.meta_type.hpp" title="Header &lt;boost/mirror/meta_type.hpp&gt;">
+<link rel="prev" href="boost/mirror/meta_type.html" title="Class template meta_type">
+<link rel="next" href="BOOST_MIRRORED_TYPE_NS.html" title="Macro BOOST_MIRRORED_TYPE_NS">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/mirror/meta_type.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_MIRRORED_TYPE_NS.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="BOOST_MIRRORED_TYPE"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_MIRRORED_TYPE</span></h2>
+<p>BOOST_MIRRORED_TYPE &#8212; This macro is used to reflect a type and expands into a specialization
+		of the <code class="computeroutput">meta_type</code> template, which provides
+		meta-data about the reflected type. 
+		To reflect a <code class="computeroutput">typedef</code>-ined type use the 
+		<code class="computeroutput"><a class="link" href="BOOST_MIRRORED_TYPEDEF.html" title="Macro BOOST_MIRRORED_TYPEDEF">BOOST_MIRRORED_TYPEDEF</a></code> macro.
+		To reflect the type of an expression use the 
+		<code class="computeroutput"><a class="link" href="BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code> macro.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRRORED_TYPE(TYPE)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id710467"></a><h2>Description</h2>
+<p>The <code class="computeroutput"><a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code> macro reflects a type
+		previously registered with the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library or a type derived
+		from a registered type. The argument of this macro is a type.
+		</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.RFL_TYPE.reference.samples"></a>Examples</h6></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.RFL_TYPE.reference.samples.simple"></a>Basic usage</h6></div></div></div>
+<pre class="programlisting">
+<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(int)::base_name();
+</pre>
+<pre class="programlisting">
+BOOST_MPL_ASSERT((
+	reflects_global_scope&lt;
+		<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(int)::scope
+	&gt;
+));
+</pre>
+<pre class="programlisting">
+BOOST_MPL_ASSERT_NOT((
+	reflects_global_scope&lt;
+		<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string)::scope
+	&gt;
+));
+</pre>
+<pre class="programlisting">
+<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::wstring)::scope::full_name();
+</pre>
+</div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/mirror/meta_type.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_MIRRORED_TYPE_NS.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

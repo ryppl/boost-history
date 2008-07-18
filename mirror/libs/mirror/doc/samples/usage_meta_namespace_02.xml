@@ -37,7 +37,7 @@ int main(void)
 	using namespace ::boost::mirror;
 	cts::bostream&amp; bcout = cts::bcout();
 	//
-	typedef BOOST_MIRRORED_NAMESPACE(::boost::mirror) meta_boost_mirror;
+	typedef <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) meta_boost_mirror;
 	//
 	// get the full name of the parent scope of the reflected namespace
 	bcout &lt;&lt; meta_boost_mirror::scope::full_name() &lt;&lt; endl;

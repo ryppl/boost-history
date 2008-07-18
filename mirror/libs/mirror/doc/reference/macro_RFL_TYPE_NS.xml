@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_TYPE_NS" kind="functionlike">
+	<macro-parameter name="FULL_NAMESPACE_NAME"/>
+	<macro-parameter name="TYPE"/>
+	<purpose>
+		<para>This macro is a variation of the 
+		<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro, which
+		takes the name of the type split into two arguments the full namespace
+		name and the base type name.
+		</para>
+	</purpose>
+	<description>
+		<para><code><macroname>BOOST_MIRRORED_TYPE_NS</macroname>(NAMESPACE, TYPE)</code> 
+		is equivalent to <code><macroname>BOOST_MIRRORED_TYPE</macroname>(NAMESPACE :: TYPE)</code>.
+		</para>
+		<section id="mirror.RFL_TYPE_NS.reference.samples">
+			<title>Examples</title>
+<programlisting>
+<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::std, string)::base_name();
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::std, string)::scope
+	&gt;
+));
+</programlisting>
+<programlisting>
+assert(
+	<macroname>BOOST_MIRRORED_TYPE</macroname>(::std::wstring)::full_name() ==
+	<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::std, wstring)::full_name()
+);
+</programlisting>
+<programlisting>
+assert(
+	<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::boost::cts, bstring)::full_name() !=
+	<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::boost::cts, bstring)::full_name()
+);
+</programlisting>
+		</section>
+	</description>
+</macro>

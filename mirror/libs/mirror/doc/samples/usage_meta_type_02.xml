@@ -50,16 +50,16 @@ int main(void)
 
 	// reflect the type of an expression
 	// and print the meta-data
-	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(1+2) &gt;();
-	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(1.0+2.0) &gt;();
-	print_meta_data&lt; BOOST_MIRRORED_TYPEOF("1" "+" "2") &gt;();
-	print_meta_data&lt; BOOST_MIRRORED_TYPEOF(string("1")+string("2")) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPEOF</macroname>(1+2) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPEOF</macroname>(1.0+2.0) &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPEOF</macroname>("1" "+" "2") &gt;();
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPEOF</macroname>(string("1")+string("2")) &gt;();
 
 	// BOOST_MIRRORED_TYPEOF is actually a shorter form of this:
-	print_meta_data&lt; BOOST_MIRRORED_TYPE(
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(
 		BOOST_TYPEOF(L"1" L"+" L"2")
 	) &gt;();
-	print_meta_data&lt; BOOST_MIRRORED_TYPE(
+	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(
 		BOOST_TYPEOF(wstring(L"1")+wstring(L"2"))
 	) &gt;();
 

@@ -24,7 +24,7 @@ int main(void)
 {
 	using namespace ::std;
 	//
-	typedef BOOST_MIRRORED_NAMESPACE(::boost::mirror) meta_Ns;
+	typedef <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) meta_Ns;
 	meta_Ns mns;
 	//
 	cout &lt;&lt; mns &lt;&lt; endl;

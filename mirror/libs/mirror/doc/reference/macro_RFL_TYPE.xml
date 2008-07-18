@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_TYPE" kind="functionlike">
+	<macro-parameter name="TYPE"/>
+	<purpose>
+		<para>This macro is used to reflect a type and expands into a specialization
+		of the <code><classname>meta_type</classname></code> template, which provides
+		meta-data about the reflected type. 
+		To reflect a <code>typedef</code>-ined type use the 
+		<code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code> macro.
+		To reflect the type of an expression use the 
+		<code><macroname>BOOST_MIRRORED_TYPEOF</macroname></code> macro.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro reflects a type
+		previously registered with the <libraryname>Mirror</libraryname> library or a type derived
+		from a registered type. The argument of this macro is a type.
+		</para>
+		<section id="mirror.RFL_TYPE.reference.samples">
+			<title>Examples</title>
+			<section id="mirror.RFL_TYPE.reference.samples.simple">
+				<title>Basic usage</title>
+<programlisting>
+<macroname>BOOST_MIRRORED_TYPE</macroname>(int)::base_name();
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPE</macroname>(int)::scope
+	&gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string)::scope
+	&gt;
+));
+</programlisting>
+<programlisting>
+<macroname>BOOST_MIRRORED_TYPE</macroname>(::std::wstring)::scope::full_name();
+</programlisting>
+			</section>
+
+		</section>
+	</description>
+</macro>

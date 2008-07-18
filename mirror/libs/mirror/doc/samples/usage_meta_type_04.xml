@@ -24,7 +24,7 @@ int main(void)
 {
 	using namespace ::std;
 	//
-	typedef BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) meta_T;
+	typedef <macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::boost::cts, bstring) meta_T;
 	meta_T mt;
 	//
 	cout &lt;&lt; mt &lt;&lt; endl;

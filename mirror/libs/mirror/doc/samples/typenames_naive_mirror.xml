@@ -10,7 +10,7 @@ const char* get_typename(void)
 	// The BOOST_MIRRORED_TYPE macro expands into
 	// the proper specialization of meta_type
 	// reflecting the passed type
-	return BOOST_MIRRORED_TYPE(T)::full_name().c_str();
+	return <macroname>BOOST_MIRRORED_TYPE</macroname>(T)::full_name().c_str();
 }
 
 </programlisting>

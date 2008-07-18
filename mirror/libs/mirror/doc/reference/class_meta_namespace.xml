@@ -128,7 +128,7 @@
 			<para>This static member function returns the full name of the 
 			namespace reflected by a <code><classname>meta_namespace</classname></code>
 			with the nested name specifier. For example:
-			<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: full_name()
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: full_name()
 			</programlisting>
 			returns <code>"::boost::mirror"</code>. When the base namespace name 
 			<emphasis role="bold">without</emphasis> the nested name specifier
@@ -170,12 +170,12 @@
 			<code>::std::string</code> or <code>::std::wstring</code> based
 			on the type of the second argument.
 			For example:
-			<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
 			</programlisting> is equivalent to calling the 
 			<code><methodname>base_name</methodname></code> member function with the 
 			<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol undefined, 
 			which returns a <code>::std::string</code> holding the string <code>"mirror"</code> and calling
-			<programlisting><classname>BOOST_MIRRORED_NAMESPACE</classname>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
 			</programlisting> is equivalent to calling the 
 			<code><methodname>full_name</methodname></code> method with the 
 			<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol defined, 

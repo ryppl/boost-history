@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_TYPEOF" kind="functionlike">
+	<macro-parameter name="EXPRESSION"/>
+	<purpose>
+		<para>This macro is used to reflect the type of an expression. 
+		</para>
+	</purpose>
+	<description>
+		This macro is basically just a shorter form of 
+<programlisting>
+	<macroname>BOOST_MIRRORED_TYPE</macroname>(BOOST_TYPEOF(EXPRESSION))
+</programlisting>
+	<section id="mirror.RFL_TYPEOF.reference.samples">
+		<title>Examples</title>
+<programlisting>
+	<macroname>BOOST_MIRRORED_TYPEOF</macroname>(1+1)::base_name();
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPEOF</macroname>(1.0+1.0)::scope
+	&gt;
+));
+</programlisting>
+	</section>
+	</description>
+</macro>

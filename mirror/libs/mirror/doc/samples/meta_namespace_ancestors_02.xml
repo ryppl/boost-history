@@ -4,7 +4,7 @@
 <programlisting id="mirror.reference.sample.meta_namespace.ancestors02">
 BOOST_MPL_ASSERT((
 	mpl::empty &lt;
-		BOOST_MIRRORED_GLOBAL_SCOPE()::ancestors
+		<macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>()::ancestors
 	&gt;
 ));
 

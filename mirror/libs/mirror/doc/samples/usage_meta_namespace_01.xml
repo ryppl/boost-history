@@ -13,15 +13,15 @@ int main(void)
 	cts::bostream&amp; bcout = cts::bcout();
 
 	// several namespaces are pre-registered
-	bcout &lt;&lt; BOOST_MIRRORED_GLOBAL_SCOPE() ::base_name() &lt;&lt; endl;
-	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::std) ::base_name() &lt;&lt; endl;
-	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost) ::base_name() &lt;&lt; endl;
-	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost) ::base_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) ::base_name() &lt;&lt; endl;
 	//
-	bcout &lt;&lt; BOOST_MIRRORED_GLOBAL_SCOPE() ::full_name() &lt;&lt; endl;
-	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::std) ::full_name() &lt;&lt; endl;
-	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost) ::full_name() &lt;&lt; endl;
-	bcout &lt;&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost) ::full_name() &lt;&lt; endl;
+	bcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) ::full_name() &lt;&lt; endl;
 
 	return 0;
 }
