@@ -2,8 +2,6 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_namespace.ancestors02">
-	<using-namespace name="boost::mirror"/>
-	<using-namespace name="boost::cts"/>
 <macroname>BOOST_MPL_ASSERT</macroname>((
 	mpl::empty &lt;
 		<macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>()::ancestors

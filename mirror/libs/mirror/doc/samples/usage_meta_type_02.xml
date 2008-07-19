@@ -2,8 +2,6 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_type.usage02">
-	<using-namespace name="boost::mirror"/>
-	<using-namespace name="boost::cts"/>
 #include &lt;string&gt;
 #include &lt;boost/char_type_switch/iostream.hpp&gt;
 #include &lt;boost/typeof/typeof.hpp&gt;
