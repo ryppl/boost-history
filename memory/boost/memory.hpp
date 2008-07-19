@@ -89,10 +89,14 @@ public:
 		swap_object(this, &o);
 	}
 
-	void BOOST_MEMORY_CALL defrag() {
-		defragment o;
-		o.copy(*this);
-		swap(o);
+	void BOOST_MEMORY_CALL defrag()
+	{
+		alloc_type alloc2;
+		alloc_type::swap(alloc2);
+		
+		ContainerT data2(get_alloc());
+		data2.copy(*static_cast<const ContainerT*>(this));
+		ContainerT::swap(data2);
 	}
 
 public:
