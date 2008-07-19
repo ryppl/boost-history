@@ -27,7 +27,7 @@
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_MIRRORED_NAMESPACE</span></h2>
 <p>BOOST_MIRRORED_NAMESPACE &#8212; This macro is used to reflect a namespace and expands into a specialization
-		of the <code class="computeroutput">meta_namespace</code> template, which provides
+		of the <code class="computeroutput"><a class="link" href="boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template, which provides
 		meta-data about the namespace. To reflect the global scope use the 
 		<code class="computeroutput"><a class="link" href="BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a></code> macro.
 		</p>
@@ -35,7 +35,7 @@
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRRORED_NAMESPACE(FULL_NAMESPACE_NAME)</pre></div>
 <div class="refsect1" lang="en">
-<a name="id671665"></a><h2>Description</h2>
+<a name="id2634089"></a><h2>Description</h2>
 <p>The <code class="computeroutput"><a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code> macro reflects a namespace 
 		previously registered with the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library by the means of 
 		the <code class="computeroutput"><a class="link" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a></code>. 
@@ -58,7 +58,7 @@
 <div class="titlepage"><div><div><h6 class="title">
 <a name="mirror.RFL_NAMESPACE.reference.samples"></a>Examples</h6></div></div></div>
 <p>This example shows the registering and reflection of namespaces
-			and basic usage of the <code class="computeroutput">meta_namespace</code>
+			and basic usage of the <code class="computeroutput"><a class="link" href="boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>
 			template class and its members.
 			</p>
 <pre class="programlisting">
@@ -126,7 +126,7 @@ void do_print_meta_data(::boost::false_type)
 	endl &lt;&lt;
 		BOOST_CTS_LIT(" - it's defined "); 
 
-	if(reflects_global_scope&lt;typename MetaNamespace::scope&gt;::value)
+	if(<a class="link" href="boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt;typename MetaNamespace::scope&gt;::value)
 		bcout &lt;&lt; BOOST_CTS_LIT(" - on the global scope "); 
 	else
 		bcout &lt;&lt; BOOST_CTS_LIT(" - in the '") &lt;&lt;
@@ -146,13 +146,13 @@ void print_meta_data(void)
 	using namespace ::boost::mirror;
 	// check the template argument
 	BOOST_MPL_ASSERT((
-		reflects_namespace&lt; MetaNamespace &gt;	
+		<a class="link" href="boost/mirror/reflects_namespace.html" title="Class template reflects_namespace">reflects_namespace</a>&lt; MetaNamespace &gt;	
 	));
 
 	// call the specialized printer based on whether
 	// the passed meta-namespace reflects the global
 	// scope or not
-	typename reflects_global_scope&lt;MetaNamespace&gt;::type 
+	typename <a class="link" href="boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt;MetaNamespace&gt;::type 
 		selector;
 
 	do_print_meta_data&lt;MetaNamespace&gt;(selector);
