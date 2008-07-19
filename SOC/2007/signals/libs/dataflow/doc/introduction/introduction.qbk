@@ -261,8 +261,7 @@ documentation.  Here are some good starting points for the different layers:
 [heading Generic dataflow layer]
 
 * If you would like to implement Dataflow support for the dataflow framework
-you are working with,  see the
-[link dataflow.introduction.examples.new_layer example] showing
+you are working with,  see the [vtk_example example] showing
 how the [VTK] support layer was developed.
 * If you are interested in developing generic code on top of the dataflow
 layer, see the [concepts] documentation.
@@ -272,16 +271,16 @@ layer, see the [concepts] documentation.
 For examples of how the [DataflowSignals] layer can be used, see:
 
 * The example on developing a
-  [link dataflow.introduction.examples.distributed distributed dataflow application].
+  [link dataflow.signals.introduction.examples.distributed distributed dataflow application].
 * The example on developing an
-  [link dataflow.introduction.examples.gil image processing network].
+  [link dataflow.signals.introduction.examples.gil image processing network].
 * The [DataflowSignals] documentation.
 
 [heading Dataflow.Blueprint layer]
 
 The development of this layer is ongoing.  To find out more about it, see:
 
-* The example on [link dataflow.introduction.examples.blueprint run-time
+* The example on [link dataflow.blueprint.examples.blueprint run-time
   reflection and connectivity modeling].
 * The example of [gui_example a GUI dataflow editor] built on top of
   [DataflowBlueprint]
@@ -411,7 +410,11 @@ Version 0.9.1 (under development)
 * [DataflowSignals]
  * [connect] now returns the `signals::connection` object
  * added tracking_call_consumer example
-
+ * added a GUI example using GLV
+ 
+* Added new Dataflow.Managed framework
+ * added a gui example using GLV
+ 
 Version 0.9.0
  \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 

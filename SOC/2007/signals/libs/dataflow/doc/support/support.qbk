@@ -4,6 +4,8 @@
 
 [include concepts/concepts.qbk]
 
+[include examples.qbk]
+
 [xinclude ../dataflow_support_doxygen.xml]
 
 [endsect]

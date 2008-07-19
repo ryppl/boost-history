@@ -12,13 +12,15 @@
 #include <boost/dataflow/managed/component.hpp>
 #include <boost/dataflow/support/component_operation.hpp>
 #include <boost/dataflow/utility/forced_sequence.hpp>
-#include <boost/fusion/container/lazy_sequence.hpp>
+//#include <boost/fusion/container/lazy_sequence.hpp>
 #include <boost/fusion/include/as_vector.hpp>
 #include <boost/fusion/include/size.hpp>
 #include <boost/fusion/include/transform.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/range_c.hpp>
+
 
 namespace boost { namespace dataflow { namespace managed {
 
@@ -100,7 +102,7 @@ public:
     
     fusion_component(network &n)
         : component(n)
-        , m_ports(boost::fusion::make_lazy_sequence(detail::component_f(*this), typename fusion::result_of::size<ports_type>::type()))
+        , m_ports(fusion::transform(mpl::range_c<int,0,fusion::result_of::size<ports_type>::type::value>(), detail::component_f(*this)))
     {}
     template<int Index>
     typename fusion::result_of::at_c<ports_type, Index>::type port()

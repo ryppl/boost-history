@@ -1,6 +1,6 @@
 [article Dataflow
     [quickbook 1.4]
-    [version 0.9.0]
+    [version 0.9.1]
     [authors [Rajko, Stjepan]]
     [copyright 2007 2008 Stjepan Rajko]
     [purpose Generic dataflow lirary providing support for data producers,
@@ -29,7 +29,7 @@
 [template VectorPort[] [link dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
 [template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
 [template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
-[template KeyedPortTraits[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPortTraitr]]]
+[template KeyedPortTraits[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPortTraits]]]
 [template DynamicPort[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPort]]]
 [template DynamicPortTraits[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPortTraits]]]
 
@@ -61,8 +61,8 @@
 [template PhoenixProducer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
 [template PhoenixConsumer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
-[template vtk_example[text] [link dataflow.introduction.examples.new_layer [text]]]
-[template gui_example[text] [link dataflow.introduction.examples.fltk_gui [text]]]
+[template vtk_example[text] [link dataflow.support.examples.new_layer [text]]]
+[template gui_example[text] [link dataflow.blueprint.examples.fltk_gui [text]]]
 [template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
 
 [template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
