@@ -329,7 +329,7 @@ NS_BOOST_MEMORY_END
 
 #else
 
-#define BOOST_MEMORY_UNMANAGED_NEW_(alloc, Type)			\
+#define BOOST_MEMORY_UNMANAGED_NEW_(alloc, Type)		\
 	::new((alloc).unmanaged_alloc(BOOST_MEMORY_NEW_ARG(Type))) Type
 
 #define BOOST_MEMORY_GET_MANAGED_(alloc, Type)			\
@@ -357,3 +357,4 @@ NS_BOOST_MEMORY_END
 // $Log: basic.hpp,v $
 
 #endif /* BOOST_MEMORY_BASIC_HPP */
+
