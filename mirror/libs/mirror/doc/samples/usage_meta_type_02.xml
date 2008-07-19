@@ -2,7 +2,8 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_type.usage02">
-
+	<using-namespace name="boost::mirror"/>
+	<using-namespace name="boost::cts"/>
 #include &lt;string&gt;
 #include &lt;boost/char_type_switch/iostream.hpp&gt;
 #include &lt;boost/typeof/typeof.hpp&gt;
@@ -16,25 +17,25 @@ void print_meta_data(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::bcout(); 
+	cts::<classname>bostream</classname>&amp; bcout = cts::bcout(); 
 	// print out the base type name
 	bcout &lt;&lt; 
-		BOOST_CTS_LIT("The type name is: ") &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("The type name is: ") &lt;&lt; 
 		MetaType::base_name() &lt;&lt; 
 	endl;
 	// 
-	if(reflects_global_scope&lt;typename MetaType::scope&gt;::value)
+	if(<classname>reflects_global_scope</classname>&lt;typename MetaType::scope&gt;::value)
 	{
 		bcout &lt;&lt; 
-		BOOST_CTS_LIT("It's defined on the global scope") &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("It's defined on the global scope") &lt;&lt; 
 		endl;
 	}
 	else 
 	{
 		bcout &lt;&lt; 
-			BOOST_CTS_LIT("It's defined in the ") &lt;&lt; 
+			<macroname>BOOST_CTS_LIT</macroname>("It's defined in the ") &lt;&lt; 
 			MetaType::scope::full_name() &lt;&lt; 
-			BOOST_CTS_LIT(" namespace") &lt;&lt; 
+			<macroname>BOOST_CTS_LIT</macroname>(" namespace") &lt;&lt; 
 		endl;
 		bcout &lt;&lt; 
 		BOOST_CTS_LIT("--------------------------------------") &lt;&lt; 
@@ -57,10 +58,10 @@ int main(void)
 
 	// BOOST_MIRRORED_TYPEOF is actually a shorter form of this:
 	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(
-		BOOST_TYPEOF(L"1" L"+" L"2")
+		<macroname>BOOST_TYPEOF</macroname>(L"1" L"+" L"2")
 	) &gt;();
 	print_meta_data&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(
-		BOOST_TYPEOF(wstring(L"1")+wstring(L"2"))
+		<macroname>BOOST_TYPEOF</macroname>(wstring(L"1")+wstring(L"2"))
 	) &gt;();
 
 	return 0;

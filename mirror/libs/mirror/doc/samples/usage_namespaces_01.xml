@@ -2,6 +2,8 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting>
+	<using-namespace name="boost::mirror"/>
+	<using-namespace name="boost::cts"/>
 #include &lt;boost/char_type_switch/iostream.hpp&gt;
 #include &lt;boost/mirror/meta_namespace.hpp&gt;
 #include &lt;boost/mirror/traits/reflects_namespace.hpp&gt;
@@ -38,7 +40,7 @@ void do_print_meta_data(::boost::true_type)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::bostream&amp; bcout = cts::bcout();
+	cts::<classname>bostream</classname>&amp; bcout = cts::bcout();
 	bcout &lt;&lt; 
 		<macroname>BOOST_CTS_LIT</macroname>("This is the global scope") &lt;&lt; 
 	endl &lt;&lt;
@@ -66,7 +68,7 @@ void do_print_meta_data(::boost::false_type)
 	endl &lt;&lt;
 		<macroname>BOOST_CTS_LIT</macroname>(" - it's defined "); 
 
-	if(reflects_global_scope&lt;typename MetaNamespace::scope&gt;::value)
+	if(<classname>reflects_global_scope</classname>&lt;typename MetaNamespace::scope&gt;::value)
 		bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>(" - on the global scope "); 
 	else
 		bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>(" - in the '") &lt;&lt;
@@ -85,7 +87,7 @@ void print_meta_data(void)
 {
 	using namespace ::boost::mirror;
 	// check the template argument
-	BOOST_MPL_ASSERT((
+	<macroname>BOOST_MPL_ASSERT</macroname>((
 		<classname>reflects_namespace</classname>&lt; MetaNamespace &gt;	
 	));
 

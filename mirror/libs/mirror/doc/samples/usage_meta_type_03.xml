@@ -2,7 +2,8 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_type.usage03">
-
+	<using-namespace name="boost::mirror"/>
+	<using-namespace name="boost::cts"/>
 #include &lt;boost/char_type_switch/iostream.hpp&gt;
 #include &lt;boost/mirror/meta_type.hpp&gt;
 
@@ -11,12 +12,12 @@ void print_meta_data(void)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::bostream&amp; bcout = cts::bcout();
-	bcout &lt;&lt; BOOST_CTS_LIT("type: '");
+	cts::<classname>bostream</classname>&amp; bcout = cts::bcout();
+	bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("type: '");
 	bcout &lt;&lt; MetaType::base_name();
-	bcout &lt;&lt; BOOST_CTS_LIT("'  defined in: '");
+	bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("'  defined in: '");
 	bcout &lt;&lt; MetaType::scope::full_name();
-	bcout &lt;&lt; BOOST_CTS_LIT("'");
+	bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("'");
 	bcout &lt;&lt; endl;
 }
 

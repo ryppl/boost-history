@@ -2,26 +2,28 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_namespace.ancestors01">
+	<using-namespace name="boost::mirror"/>
+	<using-namespace name="boost::cts"/>
 using namespace ::boost;
 using namespace ::boost::mirror;
 
-BOOST_MPL_ASSERT((
-	reflects_global_scope &lt; 
+<macroname>BOOST_MPL_ASSERT</macroname>((
+	<classname>reflects_global_scope</classname> &lt; 
 		mpl::front &lt; 
 			<macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std)::ancestors 
 		&gt;
 	&gt;
 ));
 
-BOOST_MPL_ASSERT((
-	reflects_global_scope &lt; 
+<macroname>BOOST_MPL_ASSERT</macroname>((
+	<classname>reflects_global_scope</classname> &lt; 
 		mpl::front &lt; 
 			<macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror)::ancestors
 		&gt;
 	&gt;
 ));
 
-BOOST_MPL_ASSERT((
+<macroname>BOOST_MPL_ASSERT</macroname>((
 	is_same &lt;
 		mpl::back &lt; 
 			<macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror)::ancestors 

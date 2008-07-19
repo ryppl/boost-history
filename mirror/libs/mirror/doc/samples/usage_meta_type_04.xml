@@ -2,6 +2,8 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <programlisting id="mirror.reference.sample.meta_type.usage04">
+	<using-namespace name="boost::mirror"/>
+	<using-namespace name="boost::cts"/>
 #include &lt;iostream&gt;
 #include &lt;boost/mirror/meta_type.hpp&gt;
 
@@ -10,7 +12,7 @@ template &lt; typename CharT, typename Type &gt;
 ::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
 operator &lt;&lt; (
 	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
-	::boost::mirror::meta_type&lt; Type &gt; _mt
+	::boost::mirror::<classname>meta_type</classname>&lt; Type &gt; _mt
 )
 {
 	return _s &lt;&lt;_mt.get_name(

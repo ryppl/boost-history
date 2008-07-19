@@ -88,7 +88,7 @@
 		<type>Type</type>
 		<purpose>The reflected type</purpose>
 		<description>
-			<para>The type reflected by this overload of <code><classname>meta_type</classname></code>.
+			<para>The type reflected by this specialization of <code><classname>meta_type</classname></code>.
 			</para>
 		</description>
 	</typedef>

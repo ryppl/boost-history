@@ -24,7 +24,7 @@ int main(void)
 
 	// print out the full type name
 	cts::bcout() &lt;&lt; 
-		BOOST_CTS_LIT("The full type name is: ") &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>("The full type name is: ") &lt;&lt; 
 		meta_T::full_name() &lt;&lt; 
 	endl;
 
