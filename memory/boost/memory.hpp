@@ -49,6 +49,26 @@
 #endif
 
 // -------------------------------------------------------------------------
+// function swap_object
+
+NS_BOOST_MEMORY_BEGIN
+
+inline void winx_call swap(void* a, void* b, size_t cb)
+{
+	void* t = _alloca(cb);
+	memcpy(t, a, cb);
+	memcpy(a, b, cb);
+	memcpy(b, t, cb);
+}
+
+template <class Type>
+void winx_call swap_object(Type* a, Type* b) {
+	swap(a, b, sizeof(Type));
+}
+
+NS_BOOST_MEMORY_END
+
+// -------------------------------------------------------------------------
 // class defragment
 
 NS_BOOST_MEMORY_BEGIN
@@ -66,8 +86,7 @@ public:
 	}
 
 	void BOOST_MEMORY_CALL swap(defragment& o) {
-		ContainerT::swap(o);
-		alloc_type::swap(o.get_alloc());
+		swap_object(this, &o);
 	}
 
 	void BOOST_MEMORY_CALL defrag() {
@@ -142,6 +161,10 @@ public:
 	AllocT& BOOST_MEMORY_CALL get_alloc() const {
 		return *m_alloc;
 	}
+	
+	void BOOST_MEMORY_CALL swap(stl_allocator& o) {
+		std::swap(m_alloc, o.m_alloc);
+	}
 };
 
 #if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION)
@@ -208,6 +231,21 @@ inline bool operator!=(const stl_allocator<Type, AllocT>&,
 }
 
 NS_BOOST_MEMORY_END
+
+// -------------------------------------------------------------------------
+// std::swap
+
+namespace std {
+
+template <class Type, class AllocT>
+__forceinline void swap(
+	NS_BOOST_MEMORY::stl_allocator<Type, AllocT>& a,
+	NS_BOOST_MEMORY::stl_allocator<Type, AllocT>& b)
+{
+	a.swap(b);
+}
+
+} // namespace std
 
 // -------------------------------------------------------------------------
 

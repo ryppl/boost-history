@@ -321,7 +321,7 @@ NS_BOOST_MEMORY_END
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 //
-// Backard options:
+// Backward options:
 // 	not strict in accord with normal C++ semantics but a bit faster
 //
 #define BOOST_MEMORY_NEW(alloc, Type)					\
