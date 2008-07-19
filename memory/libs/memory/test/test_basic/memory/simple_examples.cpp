@@ -30,7 +30,7 @@ void testAutoAlloc()
 
 void testScopedAlloc()
 {
-	boost::block_pool recycle;
+	NS_BOOST_MEMORY::block_pool recycle;
 	boost::scoped_alloc alloc(recycle);
 	
 	int* intObj = BOOST_NEW(alloc, int);

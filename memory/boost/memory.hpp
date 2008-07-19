@@ -49,6 +49,42 @@
 #endif
 
 // -------------------------------------------------------------------------
+// class defragment
+
+NS_BOOST_MEMORY_BEGIN
+
+template <class ContainerT>
+class defragment :
+	private ContainerT::alloc_type,
+	public ContainerT
+{
+public:
+ 	typedef typename ContainerT::alloc_type alloc_type;
+
+	alloc_type& BOOST_MEMORY_CALL get_alloc() {
+		return *static_cast<alloc_type*>(this);
+	}
+
+	void BOOST_MEMORY_CALL swap(defragment& o) {
+		ContainerT::swap(o);
+		alloc_type::swap(o.get_alloc());
+	}
+
+	void BOOST_MEMORY_CALL defrag() {
+		defragment o;
+		o.copy(*this);
+		swap(o);
+	}
+
+public:
+	defragment()
+		: ContainerT(get_alloc()) {
+	}
+};
+
+NS_BOOST_MEMORY_END
+
+// -------------------------------------------------------------------------
 // class stl_allocator
 
 NS_BOOST_MEMORY_BEGIN
@@ -103,7 +139,9 @@ public:
 public:
 	typedef AllocT alloc_type;
 	
-	AllocT& get_alloc() const { return *m_alloc; }
+	AllocT& BOOST_MEMORY_CALL get_alloc() const {
+		return *m_alloc;
+	}
 };
 
 #if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION)
@@ -175,13 +213,6 @@ NS_BOOST_MEMORY_END
 
 namespace boost
 {
-	namespace memory {}
-
-	using NS_BOOST_MEMORY::system_alloc;
-
-	using NS_BOOST_MEMORY::block_pool;
-	using NS_BOOST_MEMORY::tls_block_pool;
-
 	using NS_BOOST_MEMORY::auto_alloc;
 	using NS_BOOST_MEMORY::scoped_alloc;
 	using NS_BOOST_MEMORY::gc_alloc;
@@ -204,3 +235,4 @@ namespace boost
 // $Log: memory.hpp,v $
 
 #endif /* BOOST_MEMORY_HPP */
+

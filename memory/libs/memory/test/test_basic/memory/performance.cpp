@@ -151,7 +151,7 @@ public:
 	template <class LogT2>
 	void doScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		NS_BOOST_MEMORY::block_pool& recycle = boost::tls_block_pool::instance();
+		NS_BOOST_MEMORY::block_pool& recycle = NS_BOOST_MEMORY::tls_block_pool::instance();
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
@@ -169,7 +169,7 @@ public:
 	template <class LogT2>
 	void doGcAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		NS_BOOST_MEMORY::block_pool& recycle = boost::tls_block_pool::instance();
+		NS_BOOST_MEMORY::block_pool& recycle = NS_BOOST_MEMORY::tls_block_pool::instance();
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
@@ -189,7 +189,7 @@ public:
 		const int PerAlloc1 = PerAlloc/2;
 		const int PerAlloc2 = PerAlloc - PerAlloc1;
 		int i;
-		NS_BOOST_MEMORY::block_pool& recycle = boost::tls_block_pool::instance();
+		NS_BOOST_MEMORY::block_pool& recycle = NS_BOOST_MEMORY::tls_block_pool::instance();
 		NS_BOOST_DETAIL::performance_counter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
@@ -300,3 +300,4 @@ void testPerformance()
 // -------------------------------------------------------------------------
 // $Log: performance.cpp,v $
 //
+
