@@ -30,30 +30,30 @@
 				This class template is to provides meta-data
 				about the reflected class.
 				
-				Although the specializations of <code class="computeroutput">meta_class</code> 
+				Although the specializations of <code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code> 
 				template can be used directly to get the meta data about a particular class (or type), 
 				it is recomended to use the reflection macro 
 				<code class="computeroutput">BOOST_MIRRORED_CLASS(CLASS)</code>
 				instead, to get the proper specializations of 
-				<code class="computeroutput">meta_class</code>.
+				<code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code>.
 				</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Class&gt; 
-<span class="bold"><strong>class</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a> : <span class="bold"><strong>public</strong></span> meta_type&lt;Class&gt;   <span class="emphasis"><em>// The basic type meta-information about the reflected class.
+<span class="bold"><strong>class</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a> : <span class="bold"><strong>public</strong></span> <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a>&lt;Class&gt;   <span class="emphasis"><em>// The basic type meta-information about the reflected class.
 					</em></span>
 {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_class.html#id513764-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_class.html#id2468502-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_class.html#boost.mirror.meta_class.base_classes">base_classes</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_class.html#boost.mirror.meta_class.attributes">attributes</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_class.html#boost.mirror.meta_class.all_attributes">all_attributes</a>;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id710593"></a><h2>Description</h2>
+<a name="id2636856"></a><h2>Description</h2>
 <div class="refsect2" lang="en">
-<a name="id710597"></a><h3>
-<a name="id513764-bbtypes"></a><code class="computeroutput">meta_class</code> public types</h3>
+<a name="id2636860"></a><h3>
+<a name="id2468502-bbtypes"></a><code class="computeroutput">meta_class</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
