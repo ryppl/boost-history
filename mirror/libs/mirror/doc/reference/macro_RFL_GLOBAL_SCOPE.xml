@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<macro name="BOOST_MIRRORED_GLOBAL_SCOPE" kind="functionlike">
+<macro name="BOOST_MIRRORED_GLOBAL_SCOPE" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
 	<purpose>
 		<para>This macro is used to reflect the global scope and expands into a specialization
 		of the <code><classname>meta_namespace</classname></code> template, which provides

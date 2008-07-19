@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<macro name="BOOST_MIRRORED_TYPE" kind="functionlike">
+<macro name="BOOST_MIRRORED_TYPE" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
 	<macro-parameter name="TYPE"/>
 	<purpose>
 		<para>This macro is used to reflect a type and expands into a specialization

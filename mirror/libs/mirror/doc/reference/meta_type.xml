@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<header name="boost/mirror/meta_type.hpp">
+<header name="boost/mirror/meta_type.hpp"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
 	<namespace name="boost">
 	<namespace name="mirror">
 

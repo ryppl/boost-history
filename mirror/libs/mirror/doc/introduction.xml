@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
-	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<section id="mirror.intro">
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"
+>
+<section id="mirror.intro"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
 	<title>Introduction</title>
-
 	<using-namespace name="boost"/>
 	<using-namespace name="boost::mirror"/>
 
 <section id="mirror.abstract">
 	<title>Abstract</title>
+
 
 <para>
 	The aim of the <libraryname>Mirror</libraryname> library is to provide 
@@ -176,7 +179,7 @@
 	</para>
 	<para>
 		This is when <libraryname>Mirror</libraryname> comes in handy. One of the basic
-		facilities is the <code><classname>::boost::mirror::meta_type</classname></code> template. 
+		facilities is the <code><classname>boost::mirror::meta_type</classname></code> class template. 
 		Among other things this template has two member functions - <code>base_name</code>
 		and <code>full_name</code> that return the base type name without the nested
 		name specifier and the full type name with the nested name specifier respectively.

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<class name="meta_namespace">
+<class name="meta_namespace"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
 	<template>
 		<template-type-parameter name="NamespacePlaceholder"/>
 	</template>
@@ -55,7 +57,7 @@
 			<code><methodname>full_name</methodname></code> methods
 			are convenient but not very generic. The <code><methodname>get_name</methodname></code> 
 			member function allows to specify the character type of the returned string and 
-			to specify wheter a full or just the base namespace name should be returned, based
+			to specify whether a full or just the base namespace name should be returned, based
 			on compile time arguments.
 			</para>
 			<para>The first argument must be either <code>mpl::true_</code> for full type name

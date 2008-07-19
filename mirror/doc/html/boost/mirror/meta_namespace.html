@@ -45,14 +45,14 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> NamespacePlaceholder&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_namespace.html#id439099-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_namespace.html#id460945-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_namespace.html#boost.mirror.meta_namespace.scope">scope</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_namespace.html#boost.mirror.meta_namespace.ancestors">ancestors</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id438958-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id438916-bb">full_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id460803-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_namespace.html#id460761-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_namespace.html#id438863-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_namespace.html#id460708-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
 <a name="id705766"></a><h2>Description</h2>
@@ -169,7 +169,7 @@ int main(void)
 			<code class="computeroutput">full_name</code> methods
 			are convenient but not very generic. The <code class="computeroutput">get_name</code> 
 			member function allows to specify the character type of the returned string and 
-			to specify wheter a full or just the base namespace name should be returned, based
+			to specify whether a full or just the base namespace name should be returned, based
 			on compile time arguments.
 			</p>
 <p>The first argument must be either <code class="computeroutput">mpl::true_</code> for full type name
@@ -214,7 +214,7 @@ int main(void)
 </div>
 <div class="refsect2" lang="en">
 <a name="id705980"></a><h3>
-<a name="id439099-bbtypes"></a><code class="computeroutput">meta_namespace</code> public types</h3>
+<a name="id460945-bbtypes"></a><code class="computeroutput">meta_namespace</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
@@ -287,7 +287,7 @@ BOOST_MPL_ASSERT((
 </li>
 </ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id438958-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id460803-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
 			namespace reflected by a <code class="computeroutput">meta_namespace</code>.
 			For example the base namespace name "returned" by the invocation of 
@@ -299,7 +299,7 @@ BOOST_MPL_ASSERT((
 			<span class="bold"><strong>with</strong></span> the nested name specifier
 			is needed use the <code class="computeroutput">full_name</code> member function
 			instead.</p>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id438916-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id460761-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
 			namespace reflected by a <code class="computeroutput">meta_namespace</code>
 			with the nested name specifier. For example:
@@ -326,7 +326,7 @@ BOOST_MPL_ASSERT((
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id438863-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id460708-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier 
 			or the full name <span class="bold"><strong>with</strong></span> the 

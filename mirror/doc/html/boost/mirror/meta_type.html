@@ -44,14 +44,14 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id491750-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id513596-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> Type <a class="link" href="meta_type.html#boost.mirror.meta_type.reflected_type">reflected_type</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_type.html#boost.mirror.meta_type.scope">scope</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id490450-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id492118-bb">full_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id512295-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id513963-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_type.html#id491912-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_type.html#id513758-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
 <a name="id707081"></a><h2>Description</h2>
@@ -237,7 +237,7 @@ int main(void)
 			<code class="computeroutput">full_name</code> member functions
 			are convenient but not very generic. The <code class="computeroutput">get_name</code> 
 			method allows to specify the character type of the returned string and 
-			to specify wheter a full or just the base name should be returned, based
+			to specify whether a full or just the base name should be returned, based
 			on compile time arguments.
 			</p>
 <p>The first argument must be either <code class="computeroutput">mpl::true_</code> for full type name
@@ -281,8 +281,8 @@ int main(void)
 </div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id710080"></a><h3>
-<a name="id491750-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
+<a name="id709534"></a><h3>
+<a name="id513596-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
@@ -301,7 +301,7 @@ int main(void)
 </li>
 </ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id490450-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id512295-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
 			type reflected by <code class="computeroutput">meta_type</code>
 			without the nested name specifier. For example:
@@ -331,7 +331,7 @@ int main(void)
 			</p></td>
 </tr></tbody>
 </table></div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id492118-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id513963-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
 			type reflected by <code class="computeroutput">meta_type</code>
 			with the nested name specifier. For example:
@@ -363,7 +363,7 @@ int main(void)
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id491912-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id513758-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier 
 			or the full name <span class="bold"><strong>with</strong></span> the 
