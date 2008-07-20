@@ -11,15 +11,19 @@
 
 // No header guards, as this header is intended to be included multiple times.
 
-// The basic_constructor_info class is used as a key in the map
-// of constructors available for the current reflection.
-// There are two types - those with ParameterInfo defined, and
-// those without.
+/** The basic_constructor_info class is used as a key in the map
+  * of constructors available for the current reflection.
+  * There are two types - those with ParameterInfo defined, and
+  * those without.
+  */
 #ifdef BOOST_REFLECTION_WITH_PARAMETER_INFO
 template<class TypeInfo, class ParameterInfo = void>
 struct basic_constructor_info {
-  // A description for each parameter of the function.
-  // If ParameterInfo=void, this does not appear.
+/** A description for each parameter of the function.
+  * If ParameterInfo=void, this does not appear.
+  * This member variable only occurs for reflections with
+  * parameter info.
+  */
   std::vector<ParameterInfo> parameter_info_;
 #else
 template<class TypeInfo>

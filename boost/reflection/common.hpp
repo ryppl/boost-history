@@ -19,6 +19,9 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/concept_check.hpp>
 
+/** This determines the maximum number of parameters that a reflected
+  * function can have. 10 is the same default as Boost.Function.
+  */
 #ifndef BOOST_REFLECTION_MAX_FUNCTOR_PARAMS
 #define BOOST_REFLECTION_MAX_FUNCTOR_PARAMS 10
 #endif  // BOOST_REFLECTION_MAX_FUNCTOR_PARAMS

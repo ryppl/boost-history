@@ -30,7 +30,7 @@ public:
 template <class Info = std::string,
           class TypeInfo = extensions::default_type_info>
 class basic_parameter_map
-  : public std::multimap<Info, generic_parameter<TypeInfo>*> {
+  : protected std::multimap<Info, generic_parameter<TypeInfo>*> {
 public:
   ~basic_parameter_map() {
     for (typename map_type::iterator it = begin(); it != end(); ++it) {
@@ -42,19 +42,84 @@ public:
   using map_type::begin;
   using map_type::end;
   using map_type::insert;
+
+  /** \brief Return all parameters matching the TypeInfo and Info.
+    *
+    * Given a type (D) and Info (ie, string describing the parameter),
+    * return a vector containing all generic_parameters that match,
+    * or can be converted to the given type.
+    *
+    * \return Matching parameters.
+    * \pre None.
+    * \post None.
+    * \param Info The Info (ie, name) describing the parameter needed.
+    * \tparam D The type of parameter to return.
+    */
   template <class D>
-  std::vector<generic_parameter<TypeInfo>*> get(Info info) const {
+  std::vector<generic_parameter<TypeInfo>*> get(Info info) {
     std::vector<generic_parameter<TypeInfo>*> parameters;
     std::pair<typename map_type::iterator, typename map_type::iterator> its
       = equal_range(info);
-    for (typename map_type::iterator current = its->first;
-         current != its->second; ++current) {
+    for (typename map_type::iterator current = its.first;
+         current != its.second; ++current) {
       generic_parameter<TypeInfo>& p = *current->second;
       if (p.template can_cast<D>()) {
         parameters.push_back(current->second);
       }
     }
     return parameters;
+  }
+
+  /** \brief Return true if the given parameter exists.
+    *
+    * Given a type (D) and Info (ie, string describing the parameter),
+    * return true if the element exists in the parameter_map.
+    *
+    * \return True if the parameter exists.
+    * \pre None.
+    * \post None.
+    * \param Info The Info (ie, name) describing the parameter needed.
+    * \tparam D The type of parameter to search for.
+    */
+  template <class D>
+  bool has(Info info) const {
+    std::pair<typename map_type::const_iterator,
+              typename map_type::const_iterator> its
+      = equal_range(info);
+    for (typename map_type::const_iterator current = its.first;
+         current != its.second; ++current) {
+      generic_parameter<TypeInfo>& p = *current->second;
+      if (p.template can_cast<D>()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** \brief Return the first matching parameter.
+    *
+    * Given a type (D) and Info (ie, string describing the parameter),
+    * return first parameter matching, or that can be converted to that
+    * type.
+    *
+    * \return The first matching parameter.
+    * \pre None.
+    * \post None.
+    * \param Info The Info (ie, name) describing the parameter needed.
+    * \tparam D The type of parameter to search for.
+    */
+  template <class D>
+  generic_parameter<TypeInfo>* get_first(Info info) {
+    std::pair<typename map_type::iterator, typename map_type::iterator> its
+      = equal_range(info);
+    for (typename map_type::iterator current = its.first;
+         current != its.second; ++current) {
+      generic_parameter<TypeInfo>& p = *current->second;
+      if (p.template can_cast<D>()) {
+        return &p;
+      }
+    }
+    throw parameter_unavailable_exception();
   }
 };
 typedef basic_parameter_map<> parameter_map;
