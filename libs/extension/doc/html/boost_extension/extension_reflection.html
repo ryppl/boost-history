@@ -1,0 +1,183 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Boost.Reflection/Boost.Extension
+    Interoperability</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="prev" href="../boost/extensions/shared_library.html" title="Class shared_library">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../boost/extensions/shared_library.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_extension.extension_reflection"></a><a href="extension_reflection.html" title=" Boost.Reflection/Boost.Extension
+    Interoperability"> Boost.Reflection/Boost.Extension
+    Interoperability</a></h2></div></div></div>
+<p>
+      Reflections are designed to work with Boost.Extension, or with shared libraries
+      in general. A simple example is included in examples<span class="emphasis"><em>extension</em></span>.
+    </p>
+<p>
+      Declaring the reflected class itself is similar to the process for doing the
+      same in Boost.Extension.
+    </p>
+<p>
+      Here's how the Jamfile for these libraries is defined. Note that, like in Boost.Extension,
+      one can rename the shared library extensions, for consistency across platforms.
+      Here, we use the .reflection suffix for each shared library. 
+</p>
+<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="special">;</span>
+<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="special">;</span>
+<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">reflection</span> <span class="special">;</span>
+<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">lib</span> <span class="special">;</span>
+<span class="identifier">exe</span> <span class="identifier">extension</span><span class="special">-</span><span class="identifier">reflection</span> <span class="special">:</span> <span class="identifier">extension</span><span class="special">/</span><span class="identifier">extension</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">car_lib</span> <span class="special">:</span> <span class="identifier">extension</span><span class="special">/</span><span class="identifier">car_lib</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+</pre>
+<p>
+    </p>
+<p>
+      The code in the shared library is defined in libs/reflection/examples/extension/car_lib.cpp.
+    </p>
+<p>
+      We define two classes to export as reflections. Note that they are not derived
+      from the same base class. If we were using Boost.Extension factories, this
+      would be required. 
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">suv</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">suv</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">name</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">car</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_type</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"It's an SUV."</span><span class="special">;</span> <span class="special">}</span>
+        <span class="special">~</span><span class="identifier">suv</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">compact</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">compact</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">name</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">car</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_type</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"It's a compact."</span><span class="special">;</span> <span class="special">}</span>
+        <span class="special">~</span><span class="identifier">compact</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+    </p>
+<p>
+      Just like Boost.Extension, an external function needs to be defined that will
+      be called by the main module.
+    </p>
+<p>
+      extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_car(std::map&lt;std::string,
+      reflection&gt; reflection_map) { reflection_map&#8220;<span class="quote">suv"</span>&#8221; .reflect&lt;suv&gt;()
+      .constructor&lt;const char*&gt;() .function(&amp;suv::get_type, "get_type");
+      reflection_map&#8220;<span class="quote">suv"</span>&#8221; .reflect&lt;compact&gt;() .constructor&lt;const
+      char*&gt;() .function(&amp;compact::get_type, "get_type"); }
+    </p>
+<p>
+      This is all that is necessary to export one constructor and one function for
+      each class.
+    </p>
+<p>
+      Now, in extension.cpp, we combine Boost.Extension and Boost.Reflection code
+      to load and use the reflections declared in the shared library.
+    </p>
+<p>
+      Create a mapping of reflections to strings that will be populated inside the
+      shared library. 
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">reflection</span><span class="special">&gt;</span> <span class="identifier">reflection_map</span><span class="special">;</span>
+</pre>
+<p>
+      Load the shared library using Boost.Extension. 
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">lib</span>
+  <span class="special">((</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_EXTENSION_DIR_START</span><span class="special">)</span> <span class="special">+</span>
+   <span class="string">"libcar_lib.extension"</span><span class="special">).</span><span class="identifier">c_str</span><span class="special">());</span>
+<span class="identifier">lib</span><span class="special">.</span><span class="identifier">open</span><span class="special">();</span>
+</pre>
+<p>
+      Call an exported function to populate reflection_map. 
+</p>
+<pre class="programlisting"><span class="identifier">lib</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> 
+  <span class="identifier">reflection</span><span class="special">&gt;</span> <span class="special">&amp;&gt;</span>
+  <span class="special">(</span><span class="string">"extension_export_car"</span><span class="special">)(</span><span class="identifier">reflection_map</span><span class="special">);</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">reflection_map</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">!=</span> <span class="identifier">size_t</span><span class="special">(</span><span class="number">2</span><span class="special">))</span> <span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Could not load reflections!"</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      Pull out two reflections that were named "suv" and "compact"
+      respectively. 
+</p>
+<pre class="programlisting"><span class="identifier">reflection</span> <span class="special">&amp;</span> <span class="identifier">first_reflection</span> <span class="special">=</span>
+  <span class="identifier">reflection_map</span><span class="special">[</span><span class="string">"suv"</span><span class="special">];</span>
+<span class="identifier">reflection</span> <span class="special">&amp;</span> <span class="identifier">second_reflection</span> <span class="special">=</span>
+  <span class="identifier">reflection_map</span><span class="special">[</span><span class="string">"compact"</span><span class="special">];</span>
+</pre>
+<p>
+      Use the get_constructor function to find a constructor that takes one argument,
+      a const char*. 
+</p>
+<pre class="programlisting"><span class="identifier">instance_constructor</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;</span> <span class="identifier">first_constructor</span> <span class="special">=</span>
+  <span class="identifier">first_reflection</span><span class="special">.</span><span class="identifier">get_constructor</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;();</span>
+</pre>
+<p>
+      Use the constructor retrieved to create an instance. Warning! instances should
+      only be used with functions and constructors generated by a single reflection
+      object. 
+</p>
+<pre class="programlisting"><span class="identifier">instance</span> <span class="identifier">first_instance</span> <span class="special">=</span> 
+  <span class="identifier">first_constructor</span><span class="special">(</span><span class="string">"First Instance"</span><span class="special">);</span>
+</pre>
+<p>
+      Get a function to call on this instance. 
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">reflections</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;</span> <span class="identifier">first_function</span> <span class="special">=</span>
+  <span class="identifier">first_reflection</span><span class="special">.</span><span class="identifier">get_function</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;(</span><span class="string">"get_type"</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"First reflection: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">first_function</span><span class="special">(</span><span class="identifier">first_instance</span><span class="special">)</span>
+          <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+ </pre>
+<p>
+      Repeat the steps for the second reflection. 
+</p>
+<pre class="programlisting"><span class="identifier">instance_constructor</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;</span> <span class="identifier">second_constructor</span> <span class="special">=</span>
+  <span class="identifier">second_reflection</span><span class="special">.</span><span class="identifier">get_constructor</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;();</span>
+<span class="identifier">instance</span> <span class="identifier">second_instance</span> <span class="special">=</span> 
+  <span class="identifier">second_constructor</span><span class="special">(</span><span class="string">"Second Instance"</span><span class="special">);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">reflections</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;</span> <span class="identifier">second_function</span> <span class="special">=</span>
+  <span class="identifier">second_reflection</span><span class="special">.</span><span class="identifier">get_function</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;(</span><span class="string">"get_type"</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Second reflection: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">second_function</span><span class="special">(</span><span class="identifier">second_instance</span><span class="special">)</span>
+          <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../boost/extensions/shared_library.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
