@@ -7,8 +7,10 @@
 
 [library Boost.Extension
     [quickbook 1.4]
-    [copyright 2008 Jeremy Pack, Mariano G. Consoni]
-    [purpose Factory management and facilities for using shared libraries]
+    [copyright 2008 Jeremy Pack]
+    [authors [Pack, Jeremy]]
+    [purpose
+        Factory management and facilities for using shared libraries]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -24,10 +26,13 @@
 [def _factory_        [^[classref boost::extensions::factory factory]]]
 
 [include introduction.qbk]
-[include tutorials.qbk]
-[include factories.qbk]
+[include motivation.qbk]
 [include shared_libraries.qbk]
-[xinclude autodoc.xml]
+[include factories.qbk]
+[include tutorials.qbk]
+[xinclude autodoc_extension.xml]
+[include extension_reflection.qbk]
+[xinclude autodoc_reflection.xml]
 [include info.qbk]
 [include performance_analysis.qbk]
 [include faq.qbk]

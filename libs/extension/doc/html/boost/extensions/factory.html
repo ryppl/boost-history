@@ -5,9 +5,9 @@
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
-<link rel="up" href="../../header/boost/extension/factory/hpp.html" title="Header &lt;boost/extension/factory.hpp&gt;">
-<link rel="prev" href="../../header/boost/extension/factory/hpp.html" title="Header &lt;boost/extension/factory.hpp&gt;">
-<link rel="next" href="../../header/boost/extension/factory_map/hpp.html" title="Header &lt;boost/extension/factory_map.hpp&gt;">
+<link rel="up" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp" title="Header &lt;boost/extension/factory.hpp&gt;">
+<link rel="prev" href="../../BOOST_EXTENSION_EXPORT_DECL.html" title="Macro BOOST_EXTENSION_EXPORT_DECL">
+<link rel="next" href="basic_factory_map.html" title="Class template basic_factory_map">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../header/boost/extension/factory_map/hpp.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_EXTENSION_EXPORT_DECL.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="boost.extensions.factory"></a><div class="titlepage"></div>
@@ -33,39 +33,39 @@
 <span class="bold"><strong>class</strong></span> <a href="factory.html" title="Class template factory">factory</a> {
 <span class="bold"><strong>public</strong></span>:
   <span class="emphasis"><em>// <a href="factory.html#boost.extensions.factoryconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a href="factory.html#id288474-bb">factory</a>();
-  <a href="factory.html#id288478-bb">factory</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
-  factory&amp; <a href="factory.html#id288488-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <a href="factory.html#id290278-bb">factory</a>();
+  <a href="factory.html#id290283-bb">factory</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  factory&amp; <a href="factory.html#id290292-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
 
-  <span class="emphasis"><em>// <a href="factory.html#id93876-bb">public member functions</a></em></span>
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="factory.html#id93878-bb">set</a>() ;
-  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="factory.html#id89970-bb">is_valid</a>() ;
-  <span class="type">T *</span> <a href="factory.html#id288450-bb">create</a>(Params...) ;
+  <span class="emphasis"><em>// <a href="factory.html#id92772-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="factory.html#id91786-bb">set</a>() ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="factory.html#id81090-bb">is_valid</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">T *</span> <a href="factory.html#id290255-bb">create</a>(Params...) <span class="bold"><strong>const</strong></span>;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id450310"></a><h2>Description</h2>
+<a name="id450219"></a><h2>Description</h2>
 <p>This class is a function object that returns new instances of type T, using factories that take parameters described in the variable length list Params... </p>
 <div class="refsect2" lang="en">
-<a name="id450320"></a><h3>
+<a name="id450229"></a><h3>
 <a name="boost.extensions.factoryconstruct-copy-destruct"></a><code class="computeroutput">factory</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
-<li><pre class="literallayout"><a name="id288474-bb"></a>factory();</pre></li>
-<li><pre class="literallayout"><a name="id288478-bb"></a>factory(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
-<li><pre class="literallayout">factory&amp; <a name="id288488-bb"></a><span class="bold"><strong>operator</strong></span>=(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
+<li><pre class="literallayout"><a name="id290278-bb"></a>factory();</pre></li>
+<li><pre class="literallayout"><a name="id290283-bb"></a>factory(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
+<li><pre class="literallayout">factory&amp; <a name="id290292-bb"></a><span class="bold"><strong>operator</strong></span>=(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id450426"></a><h3>
-<a name="id93876-bb"></a><code class="computeroutput">factory</code> public member functions</h3>
+<a name="id450335"></a><h3>
+<a name="id92772-bb"></a><code class="computeroutput">factory</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id93878-bb"></a>set() ;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id91786-bb"></a>set() ;</pre>
 <p>This sets the factory function to the constructor for type D. Example: factory&lt;Base, int, int&gt; f; f.set&lt;Derived&gt;(); </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id89970-bb"></a>is_valid() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id81090-bb"></a>is_valid() <span class="bold"><strong>const</strong></span>;</pre>
 <p>Until set is called, a factory cannot be used. This function can be used to determine if set has been called. 
 
 
@@ -92,7 +92,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="type">T *</span> <a name="id288450-bb"></a>create(Params...) ;</pre>
+<pre class="literallayout"><span class="type">T *</span> <a name="id290255-bb"></a>create(Params...) <span class="bold"><strong>const</strong></span>;</pre>
 <p>Returns an instance of T (but does NOT retain ownership of the instance). 
 
 
@@ -125,7 +125,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -133,7 +133,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../header/boost/extension/factory/hpp.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../header/boost/extension/factory_map/hpp.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_EXTENSION_EXPORT_DECL.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
-<link rel="prev" href="factories.html" title=" Factories">
-<link rel="next" href="reference.html" title="Reference">
+<link rel="prev" href="motivation.html" title=" Motivation">
+<link rel="next" href="factories.html" title=" Factories">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,14 +20,24 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="factories.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="motivation.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factories.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_extension.shared_libraries"></a><a href="shared_libraries.html" title=" Shared Libraries"> Shared Libraries</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.name_resolution"> Name
+      Resolution</a></span></dt>
+<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_issues">
+      Other Issues with Shared Libraries</a></span></dt>
+<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_inefficiencies">
+      Possible Inefficiencies in Shared Libraries</a></span></dt>
+<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_class">shared_library
+      class</a></span></dt>
+</dl></div>
 <p>
-      A <code class="computeroutput"><span class="identifier">shared_library</span></code> refers to
-      a loadable module, the type of which depends on the platform:
+      A <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+      refers to a loadable module, the type of which depends on the platform:
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -40,80 +50,136 @@
         Mac OS X: .dylib or .bundle (See <a href="../">Appendix C</a>)
       </li>
 </ul></div>
-<a name="boost_extension.shared_libraries._code__phrase_role__identifier__shared_library__phrase__phrase_role__special_____phrase__phrase_role__keyword__const__phrase___phrase_role__keyword__char__phrase___phrase_role__special_____phrase___phrase_role__identifier__location__phrase__phrase_role__special_____phrase___phrase_role__keyword__bool__phrase___phrase_role__identifier__auto_close__phrase___phrase_role__special_____phrase___phrase_role__keyword__false__phrase__phrase_role__special_____phrase___code_"></a><h4>
-<a name="id449093"></a>
-      <a href="shared_libraries.html#boost_extension.shared_libraries._code__phrase_role__identifier__shared_library__phrase__phrase_role__special_____phrase__phrase_role__keyword__const__phrase___phrase_role__keyword__char__phrase___phrase_role__special_____phrase___phrase_role__identifier__location__phrase__phrase_role__special_____phrase___phrase_role__keyword__bool__phrase___phrase_role__identifier__auto_close__phrase___phrase_role__special_____phrase___phrase_role__keyword__false__phrase__phrase_role__special_____phrase___code_"><code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">location</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">auto_close</span>
-      <span class="special">=</span> <span class="keyword">false</span><span class="special">)</span></code></a>
-    </h4>
 <p>
-      <code class="computeroutput"><span class="identifier">location</span></code> is the relative path
-      of the shared library to laod, and <code class="computeroutput"><span class="identifier">auto_close</span></code>
-      sets whether or not the library will be automatically closed when the <code class="computeroutput"><span class="identifier">shared_library</span></code> is destroyed. This function
-      does not open the library.
+      Normally, shared libraries are loaded by an application when it starts. This
+      is commonly used by Boost libraries that can be built as shared libraries,
+      such as Boost.Thread or Boost.Filesystem.
     </p>
-<a name="boost_extension.shared_libraries._code__phrase_role__keyword__bool__phrase___phrase_role__identifier__open__phrase__phrase_role__special______phrase___code_"></a><h4>
-<a name="id449221"></a>
-      <a href="shared_libraries.html#boost_extension.shared_libraries._code__phrase_role__keyword__bool__phrase___phrase_role__identifier__open__phrase__phrase_role__special______phrase___code_"><code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">open</span><span class="special">()</span></code></a>
-    </h4>
 <p>
-      Returns true if the library is opened successfully.
+      Shared libraries can also be loaded at will, during program execution.
     </p>
-<a name="boost_extension.shared_libraries._code__phrase_role__keyword__bool__phrase___phrase_role__identifier__is_open__phrase__phrase_role__special______phrase___code_"></a><h4>
-<a name="id449276"></a>
-      <a href="shared_libraries.html#boost_extension.shared_libraries._code__phrase_role__keyword__bool__phrase___phrase_role__identifier__is_open__phrase__phrase_role__special______phrase___code_"><code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">is_open</span><span class="special">()</span></code></a>
-    </h4>
 <p>
-      Returns true if the library is open.
+      Whenever a shared library is loaded, either at load time or later during a
+      program's execution, the function and variable locations in the library are
+      resolved.
     </p>
-<a name="boost_extension.shared_libraries._code__phrase_role__keyword__void__phrase___phrase_role__identifier__close__phrase__phrase_role__special______phrase___code_"></a><h4>
-<a name="id449331"></a>
-      <a href="shared_libraries.html#boost_extension.shared_libraries._code__phrase_role__keyword__void__phrase___phrase_role__identifier__close__phrase__phrase_role__special______phrase___code_"><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">close</span><span class="special">()</span></code></a>
-    </h4>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.shared_libraries.name_resolution"></a><a href="shared_libraries.html#boost_extension.shared_libraries.name_resolution" title=" Name
+      Resolution"> Name
+      Resolution</a></h3></div></div></div>
 <p>
-      Close the library. Note that an OS specific shared library usually keeps a
-      reference count, meaning that calling this function will just decrease the
-      reference count. If the reference count drops to 0, the library will be ready
-      to actually closed - though the platform is not required to actually close
-      the library even then. As such, this function can sometimes give a performance
-      boost, by freeing up RAM, but will often do nothing.
-    </p>
-<a name="boost_extension.shared_libraries._code__phrase_role__identifier__returnvalue__phrase___phrase_role__special______phrase__phrase_role__identifier__get__phrase__phrase_role__special_____phrase__phrase_role__keyword__const__phrase___phrase_role__keyword__char__phrase___phrase_role__special_____phrase___phrase_role__identifier__name__phrase__phrase_role__special_______phrase__phrase_role__identifier__args__phrase__phrase_role__special_____phrase___code_"></a><h4>
-<a name="id449389"></a>
-      <a href="shared_libraries.html#boost_extension.shared_libraries._code__phrase_role__identifier__returnvalue__phrase___phrase_role__special______phrase__phrase_role__identifier__get__phrase__phrase_role__special_____phrase__phrase_role__keyword__const__phrase___phrase_role__keyword__char__phrase___phrase_role__special_____phrase___phrase_role__identifier__name__phrase__phrase_role__special_______phrase__phrase_role__identifier__args__phrase__phrase_role__special_____phrase___code_"><code class="computeroutput"><span class="identifier">ReturnValue</span> <span class="special">(*</span><span class="identifier">get</span><span class="special">(</span><span class="keyword">const</span>
-      <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">name</span><span class="special">))(</span><span class="identifier">ARGS</span><span class="special">)</span></code></a>
-    </h4>
+        A loaded shared library can be searched for functions or data. In C++, this
+        requires that the function be marked as follows:
+      </p>
 <p>
-      This function returns a pointer to a function in a dll with <code class="computeroutput"><span class="identifier">name</span></code>.
-      Note that a C++ function needs to have <code class="computeroutput"><span class="keyword">extern</span>
-      <span class="string">"C"</span></code> before it in order for
-      this to work. To get a function like this: 
+        \code extern "C" void MyFunction() { // do stuff } \endcode
+      </p>
+<p>
+        The reason for this is the name-mangling that C++ performs, to give different
+        names to, for instance, multiple overloads with the same function name.
+      </p>
+<p>
+        Because different compilers mangle names differently (and in ways that are
+        often undocumented), it would be very difficult to create a cross-platform
+        solution to avoid the use of extern "C" declarations. This is the
+        primary cause of the inherent lack of type-safety with calls in the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+        class.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.shared_libraries.shared_library_issues"></a><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_issues" title="
+      Other Issues with Shared Libraries">
+      Other Issues with Shared Libraries</a></h3></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Separate symbol tables are required in each shared library.
+        </li>
+<li>
+          RTTI merging: Some compilers do it. Some don't.
+        </li>
+<li>
+          Optimizations are harder because the code must be position independent.
+        </li>
+<li>
+          The following may break binary compatibility between an application and
+          a shared library (among other things):
+          <div class="itemizedlist"><ul type="circle">
+<li>
+              Any part of shared class changes. Variable ordering, public<span class="emphasis"><em>private</em></span>
+              protected, virtual function implementations, add<span class="emphasis"><em>remove variables</em></span>
+              functions etc.
+            </li>
+<li>
+              Different compiler or compiler options used, or headers included differently.
+            </li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.shared_libraries.shared_library_inefficiencies"></a><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_inefficiencies" title="
+      Possible Inefficiencies in Shared Libraries">
+      Possible Inefficiencies in Shared Libraries</a></h3></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Position Independent Code:
+          <div class="itemizedlist"><ul type="circle">
+<li>
+              Since the shared library could be loaded to any part of the address
+              space, it cannot hard code addresses of its functions and data. This
+              must be resolved when the library is loaded.
+            </li>
+<li>
+              They can take a really long time to load.
+            </li>
+<li>
+              OS's attempt to mitigate this in various ways.
+            </li>
+</ul></div>
+</li>
+<li>
+          Extra levels of indirection in non-virtual function calls.
+          <div class="itemizedlist"><ul type="circle"><li>
+              No inlining across library boundaries.
+            </li></ul></div>
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.shared_libraries.shared_library_class"></a><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_class" title="shared_library
+      class">shared_library
+      class</a></h3></div></div></div>
+<p>
+        Provides for automatic loading of named modules, and retrieval of functions
+        in those modules:
+      </p>
+<p>
+        
 </p>
-<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span>
-<span class="keyword">int</span> <span class="identifier">get_value</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">name</span><span class="special">)</span> <span class="special">{</span>
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>
+<pre class="programlisting"><span class="identifier">shared_library</span> <span class="identifier">m</span><span class="special">(</span><span class="string">"my_module_name"</span><span class="special">);</span>
+<span class="comment">// Call a function that returns an int and takes a float parameter.
+</span><span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">float</span><span class="special">&gt;(</span><span class="string">"function_name"</span><span class="special">)(</span><span class="number">5.0f</span><span class="special">);</span>
+<span class="identifier">m</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span>
 </pre>
 <p>
-      You would call: 
-</p>
-<pre class="programlisting"><span class="identifier">mySharedLibrary</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;(</span><span class="string">"get_value"</span><span class="special">);</span>
-</pre>
+      </p>
 <p>
-    </p>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/html/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top"><p>
-        It is recommended that you use Boost.Function to capture the return values
-        of <code class="computeroutput"><span class="identifier">get</span></code>, but not required.
-      </p></td></tr>
-</table></div>
+        The <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code>
+        function returns a function pointer that can be wrapped in Boost.Function
+        objects or used by itself.
+      </p>
+<p>
+        Reference: <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+      </p>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -121,7 +187,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="factories.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="motivation.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factories.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

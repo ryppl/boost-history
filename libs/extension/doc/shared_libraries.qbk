@@ -7,49 +7,91 @@
 
 [section:shared_libraries Shared Libraries]
 
-A `shared_library` refers to a loadable module, the type of which depends
+A _shared_library_ refers to a loadable module, the type of which depends
 on the platform:
 
 * Windows: .dll
 * Most Linux or Unix: .so
 * Mac OS X: .dylib or .bundle (See [link appendix_c Appendix C])
 
+Normally, shared libraries are loaded by an application when it starts.
+This is commonly used by Boost libraries that can be built as shared libraries,
+such as Boost.Thread or Boost.Filesystem.
 
-[h4 `shared_library(const char * location, bool auto_close = false)`]
-`location` is the relative path of the shared library to laod, and
-`auto_close` sets whether or not the library will be automatically
-closed when the `shared_library` is destroyed. This function does
-not open the library.
+Shared libraries can also be loaded at will, during program execution.
 
-[h4 `bool open()`]
-Returns true if the library is opened successfully.
+Whenever a shared library is loaded, either at load time or later during
+a program's execution, the function and variable locations in the library
+are resolved.
 
-[h4 `bool is_open()`]
-Returns true if the library is open.
+[section:name_resolution Name Resolution]
 
-[h4 `void close()`]
-Close the library. Note that an OS specific shared library usually keeps a 
-reference count, meaning that calling this function will just decrease the
-reference count. If the reference count drops to 0, the library will be
-ready to actually closed - though the platform is not required to actually
-close the library even then. As such, this function can sometimes give a
-performance boost, by freeing up RAM, but will often do nothing.
-[h4 `ReturnValue (*get(const char * name))(ARGS)`]
-This function returns a pointer to a function in a dll with `name`. Note
-that a C++ function needs to have `extern "C"` before it in order for this
-to work. To get a function like this:
-``
-extern "C"
-int get_value(const char * name) {
-  return 0;
+A loaded shared library can be searched for functions or data. In C++,
+this requires that the function be marked as follows:
+
+\code extern "C" void MyFunction() {
+  // do stuff
 }
-``
-You would call:
-``
-mySharedLibrary.get<int, const char *>("get_value");
-``
-[note 
-It is recommended that you use Boost.Function to capture the return values
-of `get`, but not required.]
+\endcode
+
+The reason for this is the name-mangling that C++ performs, to give
+different names to, for instance, multiple overloads with the same
+function name.
+
+Because different compilers mangle names differently (and in ways
+that are often undocumented), it would be very difficult to create
+a cross-platform solution to avoid the use of extern "C" declarations.
+This is the primary cause of the inherent lack of type-safety with
+calls in the _shared_library_ class.
+
+[endsect]
+
+[section:shared_library_issues Other Issues with Shared Libraries]
+
+* Separate symbol tables are required in each shared library. 
+* RTTI merging: Some compilers do it. Some don't. 
+* Optimizations are harder because the code must be position 
+independent. 
+* The following may break binary compatibility between an application and 
+a shared library (among other things): 
+  * Any part of shared class changes. Variable ordering, public/private/ 
+protected, virtual function implementations, add/remove variables/ 
+functions etc. 
+  * Different compiler or compiler options used, or headers included 
+differently.
+
+[endsect]
+
+[section:shared_library_inefficiencies Possible Inefficiencies in Shared Libraries]
+
+* Position Independent Code: 
+  * Since the shared library could be loaded to any part of the address space, it 
+cannot hard code addresses of its functions and data. This must be resolved 
+when the library is loaded. 
+  * They can take a really long time to load. 
+  * OS's attempt to mitigate this in various ways. 
+* Extra levels of indirection in non-virtual function calls. 
+  * No inlining across library boundaries. 
+
+[endsect]
+
+[section shared_library class]
+
+Provides for automatic loading of named modules, and retrieval of functions
+in those modules:
+
+```
+shared_library m("my_module_name");
+// Call a function that returns an int and takes a float parameter.
+int result = m.get<int, float>("function_name")(5.0f);
+m.close();
+```
+
+The `get()` function returns a function
+pointer that can be wrapped in Boost.Function objects or used by itself.
+
+Reference: _shared_library_
+
+[endsect]
 
 [endsect]

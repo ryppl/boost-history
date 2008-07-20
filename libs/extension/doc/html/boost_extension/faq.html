@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> FAQ</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="prev" href="performance_analysis.html" title=" Performance Analysis">
+<link rel="next" href="appendices.html" title=" Appendices">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="performance_analysis.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="appendices.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_extension.faq"></a><a href="faq.html" title=" FAQ"> FAQ</a></h2></div></div></div>
+<p>
+      Question: What if I have multiple versions of the same interface (I've added
+      new member functions as they've become necessary), and I want to keep track
+      of which version is implemented by different plugins?
+    </p>
+<p>
+      Answer: The simplest way is to change the name of your interface (or the namespace
+      it is in) each time its contents change. This is actually what I would recommend.
+      However, it is also possible to include such information as part of the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/factory.html" title="Class template factory">factory</a></code></code>. A <code class="literal"><code class="computeroutput"><a href="../boost/extensions/factory.html" title="Class template factory">factory</a></code></code> can contain
+      arbitrary information about the plugin that it loads through the Info type.
+      In the <code class="computeroutput"><span class="identifier">hello_world</span></code> sample,
+      the <code class="computeroutput"><span class="identifier">Info</span></code> type is an <code class="computeroutput"><span class="keyword">int</span></code>, and the <code class="computeroutput"><span class="identifier">hello</span></code>
+      class has a number (it could be a version) of 1, and the <code class="computeroutput"><span class="identifier">world</span></code>
+      class has a version of 2. In the multiple_inheritance sample, this type is
+      a string. This will be detailed in greater detail in this documentation.
+    </p>
+<p>
+      Question: What if I want to have a library close automatically when I've destroyed
+      all of the plugins in it?
+    </p>
+<p>
+      Answer: I have not yet found a general enough way to do this that doesn't introduce
+      too many constraints for programmers. I recommend developing a specific solution
+      for your use case for now if you really need this.
+    </p>
+<p>
+      Question:
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="performance_analysis.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="appendices.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

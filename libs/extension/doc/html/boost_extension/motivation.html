@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Motivation</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="prev" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="next" href="shared_libraries.html" title=" Shared Libraries">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="shared_libraries.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_extension.motivation"></a><a href="motivation.html" title=" Motivation"> Motivation</a></h2></div></div></div>
+<p>
+      The original motivation for Boost.Extension was a moving-object-tracking application.
+      This application was to be used for both real-time and post-processing analysis
+      of a series of images. The types of cameras used for tracking were anything
+      from low-speed, low-resolution IR cameras, to medium-speed color camcorders
+      to high-speed, multi-spectral IR cameras.
+    </p>
+<p>
+      Each client or potential client of the application had different input types,
+      and different types of data they needed at the end. There were, in general,
+      the following major problems:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Some clients had proprietary image formats that needed to be input, or proprietary
+        algorithms they wished to use for the data. We could not give these algorithms
+        to other clients.
+      </li>
+<li>
+        Clients wanted to be able to adapt the software to work with new requirements,
+        such as a new camera type, in the future. To do this, one client in particular
+        wanted full ownership of the source code.
+      </li>
+<li>
+        Our code had become very entangled, and our application had become a mess
+        of menus covering the various bits of functionality.
+      </li>
+</ul></div>
+<p>
+      Initially, we just delivered different builds to each customer. This was tedious,
+      and only solved the first problem.
+    </p>
+<p>
+      For this reason, work was begun on using shared libraries which would each
+      contain a related set of modules. Each customer would be given two sets of
+      files:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Shared libraries for their specific data types, UI needs, algorithms, etc.
+      </li>
+<li>
+        An SDK to develop plugins in the future to handle any new requirements for
+        the software.
+      </li>
+</ul></div>
+<p>
+      Boost.Extension is designed to make this type of solution simple, portable,
+      and easily extensible.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="shared_libraries.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

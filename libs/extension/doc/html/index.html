@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="index.html" title="Chapter 1. Boost.Extension">
-<link rel="next" href="boost_extension/tutorials.html" title="Tutorials">
+<link rel="next" href="boost_extension/motivation.html" title=" Motivation">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,14 +17,17 @@
 <td align="center"><a href="../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_extension/tutorials.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_extension/motivation.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
 <div class="chapter" lang="en">
 <div class="titlepage"><div>
 <div><h2 class="title">
 <a name="boost_extension"></a>Chapter 1. Boost.Extension</h2></div>
-<div><p class="copyright">Copyright © 2008 Jeremy Pack, Mariano G. Consoni</p></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Jeremy</span> <span class="surname">Pack</span>
+</h3></div></div>
+<div><p class="copyright">Copyright © 2008 Jeremy Pack</p></div>
 <div><div class="legalnotice">
-<a name="id435092"></a><p>
+<a name="id435100"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -34,26 +37,56 @@
 <p><b>Table of Contents</b></p>
 <dl>
 <dt><span class="section"><a href="index.html#boost_extension.introduction"> Introduction</a></span></dt>
+<dt><span class="section"><a href="boost_extension/motivation.html"> Motivation</a></span></dt>
+<dt><span class="section"><a href="boost_extension/shared_libraries.html"> Shared Libraries</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_extension/shared_libraries.html#boost_extension.shared_libraries.name_resolution"> Name
+      Resolution</a></span></dt>
+<dt><span class="section"><a href="boost_extension/shared_libraries.html#boost_extension.shared_libraries.shared_library_issues">
+      Other Issues with Shared Libraries</a></span></dt>
+<dt><span class="section"><a href="boost_extension/shared_libraries.html#boost_extension.shared_libraries.shared_library_inefficiencies">
+      Possible Inefficiencies in Shared Libraries</a></span></dt>
+<dt><span class="section"><a href="boost_extension/shared_libraries.html#boost_extension.shared_libraries.shared_library_class">shared_library
+      class</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_extension/factories.html"> Factories</a></span></dt>
 <dt><span class="section"><a href="boost_extension/tutorials.html">Tutorials</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="boost_extension/tutorials.html#boost_extension.tutorials.tutorial01"> Tutorial 1</a></span></dt>
-<dt><span class="section"><a href="boost_extension/tutorials/tutorial02.html"> Tutorial 2</a></span></dt>
-<dt><span class="section"><a href="boost_extension/tutorials/tutorial03.html"> Tutorial 3</a></span></dt>
-<dt><span class="section"><a href="boost_extension/tutorials/tutorial04.html"> Tutorial 4</a></span></dt>
-<dt><span class="section"><a href="boost_extension/tutorials/tutorial05.html"> Tutorial 5</a></span></dt>
+<dt><span class="section"><a href="boost_extension/tutorials.html#boost_extension.tutorials.tutorial02"> Tutorial 2</a></span></dt>
+<dt><span class="section"><a href="boost_extension/tutorials.html#boost_extension.tutorials.tutorial03"> Tutorial 3</a></span></dt>
+<dt><span class="section"><a href="boost_extension/tutorials.html#boost_extension.tutorials.tutorial04"> Tutorial 4</a></span></dt>
+<dt><span class="section"><a href="boost_extension/tutorials.html#boost_extension.tutorials.tutorial05"> Tutorial 5</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_extension/factories.html"> Factories</a></span></dt>
-<dt><span class="section"><a href="boost_extension/shared_libraries.html"> Shared Libraries</a></span></dt>
 <dt><span class="section"><a href="boost_extension/reference.html">Reference</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.common.hpp">Header &lt;boost/extension/common.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/convenience/hpp.html">Header &lt;boost/extension/convenience.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/extension/hpp.html">Header &lt;boost/extension/extension.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/factory/hpp.html">Header &lt;boost/extension/factory.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/factory_map/hpp.html">Header &lt;boost/extension/factory_map.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/filesystem/hpp.html">Header &lt;boost/extension/filesystem.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/functor/hpp.html">Header &lt;boost/extension/functor.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="header/boost/extension/shared_library/hpp.html">Header &lt;boost/extension/shared_library.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.convenience.hpp">Header &lt;boost/extension/convenience.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.extension.hpp">Header &lt;boost/extension/extension.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.factory.hpp">Header &lt;boost/extension/factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.factory_map.hpp">Header &lt;boost/extension/factory_map.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.filesystem.hpp">Header &lt;boost/extension/filesystem.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.functor.hpp">Header &lt;boost/extension/functor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.extension.shared_library.hpp">Header &lt;boost/extension/shared_library.hpp&gt;</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_extension/extension_reflection.html"> Boost.Reflection/Boost.Extension
+    Interoperability</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.adapter.hpp">Header &lt;boost/reflection/adapter.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.common.hpp">Header &lt;boost/reflection/common.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.constructor.hpp">Header &lt;boost/reflection/constructor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.constructor_info.hpp">Header &lt;boost/reflection/constructor_info.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.data.hpp">Header &lt;boost/reflection/data.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.data_info.hpp">Header &lt;boost/reflection/data_info.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.factory.hpp">Header &lt;boost/reflection/factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.function.hpp">Header &lt;boost/reflection/function.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.function_info.hpp">Header &lt;boost/reflection/function_info.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.generic_constructor.hpp">Header &lt;boost/reflection/generic_constructor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.instance.hpp">Header &lt;boost/reflection/instance.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.parameter.hpp">Header &lt;boost/reflection/parameter.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.parameter_map.hpp">Header &lt;boost/reflection/parameter_map.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_extension/reference.html#header.boost.reflection.reflection.hpp">Header &lt;boost/reflection/reflection.hpp&gt;</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="boost_extension/info.html"> Info Classes</a></span></dt>
 <dt><span class="section"><a href="boost_extension/performance_analysis.html"> Performance Analysis</a></span></dt>
@@ -62,7 +95,7 @@
 <dd><dl>
 <dt><span class="section"><a href="boost_extension/appendices.html#boost_extension.appendices.appendix_a"> Appendix A -
       Windows Export and Import Declarations</a></span></dt>
-<dt><span class="section"><a href="boost_extension/appendices/appendix_b.html"> Appendix B -
+<dt><span class="section"><a href="boost_extension/appendices.html#boost_extension.appendices.appendix_b"> Appendix B -
       Optional Dependencies</a></span></dt>
 </dl></dd>
 </dl>
@@ -108,6 +141,6 @@
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_extension/tutorials.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_extension/motivation.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
 </body>
 </html>
