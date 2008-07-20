@@ -71,6 +71,24 @@ BOOST_AUTO_TEST_CASE(float_convert) {
   BOOST_CHECK_EQUAL(5, g->cast<int>());
   parameter_map m;
   m.insert(std::make_pair("some_integer", p));
+  m.insert(std::make_pair("some_other_integer",
+                          new parameter<int>(12)));
+  g = m.get_first<int>("some_integer");
+
+  BOOST_CHECK(g->can_cast<float>());
+  BOOST_CHECK(g->can_cast<double>());
+  BOOST_CHECK(!g->can_cast<char>());
+  BOOST_CHECK(!g->can_cast<short>());
+
+  BOOST_CHECK_EQUAL(5.0f, g->cast<float>());
+  BOOST_CHECK_EQUAL(5.0, g->cast<double>());
+  BOOST_CHECK_EQUAL(5, g->cast<int>());
+
+  g = m.get_first<int>("some_other_integer");
+
+  BOOST_CHECK(g->can_cast<int>());
+
+  BOOST_CHECK_EQUAL(12, g->cast<int>());
 }
 
 class base {

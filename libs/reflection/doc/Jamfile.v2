@@ -1,6 +1,6 @@
-# Boost.Reflection - documentation Jamfile
+# Boost.Extension - documentation Jamfile
 #
-# Copyright 2007 Jeremy Pack
+# Copyright 2008 Jeremy Pack
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -8,20 +8,44 @@
 # See http://www.boost.org/ for latest version.
 #
 
-using quickbook ;
-xml reflection : reflection.qbk : : :  
-         <xsl:param>toc.max.depth=5
-         <xsl:param>toc.section.depth=5
-        <xsl:param>chunk.section.depth=5 ;
+import doxygen ;
+import quickbook ;
+
+import os ;
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+
+doxygen autodoc
+    :
+        [ glob ../../../boost/reflection/common.hpp ]
+    :
+        <doxygen:param>EXTRACT_ALL=NO
+        <doxygen:param>"PREDEFINED=\"BOOST_REFLECTION_DOXYGEN_INVOKED\" \\
+                                   \"U_EXPORT2=\""
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+    ;
+
+xml reflection : reflection.qbk ;
+
 boostbook standalone
     :
         reflection
     :
-      <xsl:param>generate.section.toc.level=3
-        <xsl:param>chunk.first.sections=1
-        <xsl:param>admon.graphics=1
-
+        <xsl:param>toc.max.depth=300
+        <xsl:param>toc.section.depth=2
+        <xsl:param>chunk.section.depth=1
+        <dependency>autodoc
     ;
 
-install html : $(BOOST_ROOT)/doc/html/boostbook.css ;
-install ../ : $(BOOST_ROOT)/boost.png ;
+install css : [ glob $(BOOST_ROOT)/doc/src/*.css ]
+    : <location>html ;
+install images : [ glob $(BOOST_ROOT)/doc/src/images/*.png ]
+    : <location>html/images ;
+
+install main_image : [ glob $(BOOST_ROOT)/boost.png ]
+    : <location>../ ;
