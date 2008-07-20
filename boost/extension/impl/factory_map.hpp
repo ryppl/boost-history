@@ -39,14 +39,12 @@ get() {
     holder = new map_holder<map_type>;
     it = maps_.insert(std::make_pair(t, holder)).first;
   }
-  else
-  {
+  else {
     holder = static_cast<map_holder<map_type>* > (it->second);
   }
 
   return *(static_cast<map_type* >(holder));
 }
-
 
 template <class Interface, class Info
           BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param) >

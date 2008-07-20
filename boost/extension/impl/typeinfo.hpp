@@ -24,6 +24,8 @@ class default_type_info {
 public:
   default_type_info(const std::type_info& new_type) : type(new_type) {
   }
+  default_type_info(const default_type_info& first) : type(first.type) {
+  }
   const std::type_info& type;
 };
 template <class ClassType>

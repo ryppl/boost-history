@@ -11,6 +11,7 @@
  * See http://www.boost.org/ for latest version.
  */
 
+
 #ifndef BOOST_EXTENSION_SHARED_LIBRARY_HPP
 #define BOOST_EXTENSION_SHARED_LIBRARY_HPP
 
@@ -24,9 +25,10 @@ namespace boost {
 namespace extensions {
 
 /** \brief A wrapper around OS-specific shared library functions.
-  * \warning This class is inherently not type-safe. Carefully
-  * check the signature of the function or type in the shared library
-  * against the template arguments of the get functions.
+
+\note This class is inherently not type-safe. Carefully
+check the signature of the function or type in the shared library
+against the template arguments of the get functions.
   */
 class shared_library {
 public:
