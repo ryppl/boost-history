@@ -5,13 +5,13 @@
 #include <boost/descriptors.hpp>
 
 // Include associative adpaters for exterior properties.
-#include "property_map/hashed_property_container.hpp"
-#include "property_map/indexed_property_container.hpp"
+#include "properties/hashed_property_container.hpp"
+#include "properties/indexed_property_container.hpp"
 
 // Include property map implementations.
-#include "property_map/container_property_map.hpp"
-#include "property_map/simple_property_map.hpp"
-#include "property_map/bundled_property_map.hpp"
+#include "properties/container_property_map.hpp"
+#include "properties/simple_property_map.hpp"
+#include "properties/bundled_property_map.hpp"
 
 // TODO: We currently distinguish between exterior and interior using the names
 // of the structures...
