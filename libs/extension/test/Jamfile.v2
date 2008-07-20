@@ -23,9 +23,9 @@ project
     :
     ;
 
-
 test-suite extension_tests_all
 :
+  [ run adaptable_factory_test.cpp ]
   [ run factory_test.cpp ] 
   [ run zone_test.cpp ] 
   [ run construction.cpp ]
