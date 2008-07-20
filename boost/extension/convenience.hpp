@@ -15,6 +15,7 @@
 #define BOOST_EXTENSION_CONVENIENCE_HPP
 
 #include <boost/extension/factory_map.hpp>
+#include <boost/extension/type_map.hpp>
 
 namespace boost {
 namespace extensions {
