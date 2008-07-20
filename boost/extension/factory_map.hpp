@@ -14,7 +14,6 @@
 #define BOOST_EXTENSION_FACTORY_MAP_HPP
 
 #include <map>
-#include <boost/extension/adaptable_factory.hpp>
 #include <boost/extension/factory.hpp>
 #include <boost/extension/impl/typeinfo.hpp>
 
@@ -36,32 +35,6 @@ public:
     }
   }
 
-  
-  template <class Interface, class Info, class AdaptableInfo>
-  std::map<
-    Info,
-    adaptable_factory<Interface, AdaptableInfo, TypeInfo> >&
-  get_adaptable() {
-    TypeInfo t = adaptable_factory<Interface>::get_class_type();
-
-    typename std::map<TypeInfo, generic_map_holder*>::iterator
-      it = maps_.find(t);
-  
-    typedef adaptable_factory<
-      Interface, AdaptableInfo, TypeInfo
-    > factory_type;
-    typedef std::map<Info, factory_type> map_type;
-
-    map_holder<map_type>* holder;
-    if (it == maps_.end()) {
-      holder = new map_holder<map_type>;
-      it = maps_.insert(std::make_pair(t, holder)).first;
-    }
-    else {
-      holder = static_cast<map_holder<map_type>* > (it->second);
-    }
-    return *(static_cast<map_type*>(holder));
-  }
 /* Include simplified versions of the get and conversion member
  * functions for Doxygen, and to make it easier for readers of
  * this file.

@@ -51,6 +51,22 @@ inline bool load_single_library(factory_map& current_factory_map,
     (*func)(current_factory_map);
     return true;
 }
+
+inline bool load_single_library(type_map& current_type_map,
+                                const std::string& library_path,
+                                const std::string& external_function_name) {
+    shared_library lib(library_path);
+    if (!lib.open()) {
+      return false;
+    }
+    void (*func)(type_map&) =
+      lib.shared_library::get<void, type_map&>(external_function_name);
+    if (!func) {
+      return false;
+    }
+    (*func)(current_type_map);
+    return true;
+}
 }  // namespace extensions
 }  // namespace boost
 
