@@ -88,6 +88,17 @@ std::ostream& operator<<(std::ostream& os, const directed_edge<O,I>& e)
 { return os << "(" << e.source() << " " << e.target() << ")"; }
 
 /**
+ * This is gonna be a little funky.
+ */
+template <typename O, typename I>
+std::size_t hash_value(directed_edge<O,I> const& e)
+{
+    using boost::hash;
+    std::cout << e.out << std::endl;
+    return hash_value(e.out);
+}
+
+/**
  * The directed edge iterator provides functionality for iterating over the
  * edges of a directed graph. This is essenitally done by iterating over the
  * out edges of each vertex in the order in which they were added to the graph.
@@ -110,24 +121,48 @@ struct directed_edge_iterator
     typedef value_type pointer;
 
     directed_edge_iterator()
-        : verts(0), vert(), edge()
+        : store(0), vert(), edge()
     { }
 
-    directed_edge_iterator(vertex_store& store, vertex_iterator i)
-        : verts(&store)
+    directed_edge_iterator(vertex_store& s, vertex_iterator i)
+        : store(&s)
         , vert(i)
-        , edge((i == store.end_vertices())
-            ? edge_iterator()               // empty out iterator
-            : vertex(*i).begin_out())       // first out iterator of v
+        , edge(next(vert == store->end_vertices()
+                    ? edge_iterator()
+                    : vertex().begin_out(), true))
     { }
 
-    /** Return the vertex, given the descriptor. */
-    inline vertex_type& vertex(vertex_descriptor v)
-    { return verts->vertex(v); }
+    /** Locate the next valid edge iterator, skipping the update on init. */
+    inline edge_iterator next(edge_iterator e, bool first = false)
+    {
+        if(vert == store->end_vertices()) {
+            // If we're at the end already, don't do anything, Just return the same
+            // iterator that we got.
+            return e;
+        }
+        else {
+            if(e != vertex().end_out() && !first) {
+                ++e;
+            }
+
+            // If after incrementing, we reach the end of the vertices, then
+            // we have to skip to the next non-empty vertex or the end of the
+            // sequence, whichever comes first.
+            while(e == vertex().end_out() && vert != store->end_vertices()) {
+                ++vert;
+                e = vertex().begin_out();
+            }
+            return vert != store->end_vertices() ? e : edge_iterator();
+        }
+    }
 
     /** Return the vertex, given the descriptor. */
-    inline vertex_type const& vertex(vertex_descriptor v) const
-    { return verts->vertex(v); }
+    inline vertex_type& vertex()
+    { return store->vertex(*vert); }
+
+    /** Return the vertex, given the descriptor. */
+    inline vertex_type const& vertex() const
+    { return store->vertex(*vert); }
 
     /** Return the source vertex of the current edge. */
     inline vertex_descriptor source() const
@@ -142,22 +177,12 @@ struct directed_edge_iterator
      * descriptor
      */
     inline out_descriptor out_edge() const
-    { return vertex(*vert).out_edge(edge); }
+    { return vertex().out_edge(edge); }
 
     inline directed_edge_iterator& operator++()
     {
-        // If we're not done, increment the current edge. If that increment
-        // pushes the edge iterator off the vertex, move to the next vertex
-        // and reset the edge iterator.
-        if(vert != verts->end_vertices()) {
-            ++edge;
-            if(edge == vertex(*vert).end_out()) {
-                // Move to the next vertex, resetting the edge iterator.
-                ++vert;
-                edge = (vert != verts->end_vertices())
-                    ? vertex(*vert).begin_out()
-                    : edge_iterator();
-            }
+        if(vert != store->end_vertices()) {
+            edge = next(edge);
         }
         return *this;
     }
@@ -177,7 +202,7 @@ struct directed_edge_iterator
     inline reference operator*() const
     { return Edge(source(), target(), out_edge()); }
 
-    vertex_store*       verts;
+    vertex_store*       store;
     vertex_iterator     vert;
     edge_iterator       edge;
 };
