@@ -1,26 +1,18 @@
 
-
-# Import a newer version of g++ and configure it for C++0x support.
-using gcc : 4.4 : g++-4.4 : <cxxflags>-std=c++0x ;
-
-# Build all subrojects using g++-4.4
-project graphs
-    : requirements <toolset>gcc-4.4
-    ;
-
-
 # exe set : set.cpp : <include>../../ <include>/usr/local/include ;
 # exe map : map.cpp : <include>../../ <include>/usr/local/include ;
 # exe props : props.cpp : <include>../../ <include>/usr/local/include ;
 # exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;
 # exe desc : desc.cpp : <include>../../ <include>/usr/local/include ;
 
-exe test_verts : test_verts.cpp : <include>../../ ;
-exe test_props : test_props.cpp : <include>../../ ;
-exe test_incs : test_incs.cpp : <include>../../ ;
-exe test_outs : test_outs.cpp : <include>../../ ;
-exe test_ins : test_ins.cpp : <include>../../ ;
-exe test_es : test_es.cpp : <include>../../ ;
+exe test_verts : test_verts.cpp ;
+exe test_props : test_props.cpp ;
+exe test_incs : test_incs.cpp ;
+exe test_outs : test_outs.cpp ;
+exe test_ins : test_ins.cpp ;
+exe test_es : test_es.cpp  ;
 
-exe un : un.cpp : <include>../../ ;
-exe di : di.cpp : <include>../../ ;
+exe un : un.cpp ;
+exe di : di.cpp ;
+
+exe propmaps : propmaps.cpp ;

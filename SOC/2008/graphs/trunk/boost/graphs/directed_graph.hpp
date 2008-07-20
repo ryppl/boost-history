@@ -800,7 +800,7 @@ directed_graph<VP,EP,VS,ES>::begin_edges() const
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_iterator
 directed_graph<VP,EP,VS,ES>::end_edges() const
-{ return edge_iterator(_verts, _verts.end_vertices()); }
+{ return edge_iterator(_verts); }
 
 /** Return an iterator range over the edges in the graph. */
 template <BOOST_GRAPH_DG_PARAMS>
@@ -929,7 +929,10 @@ directed_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v)
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_properties&
 directed_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
-{ return e.properties(); }
+{
+    vertex_type& vert = _verts.vertex(e.source());
+    return vert.get_edge_properties(e.out_edge());
+}
 
 #undef BOOST_GRAPH_DG_PARAMS
 

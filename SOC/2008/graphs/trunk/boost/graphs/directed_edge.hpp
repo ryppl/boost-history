@@ -6,7 +6,9 @@
 
 /**
  * A directed edge represents an edge in a directed graph. A directed edge is
- * uniquely identified by its source and target vertices and edge property.
+ * uniquely identified by its source and target vertices the descriptor into
+ * the source vertex's out edge list, which also happens to uniquely describe
+ * the edge property, if applicable.
  *
  * @param VertexDesc A vertex descriptor
  * @param OutDesc An out edge descriptor.
@@ -94,7 +96,6 @@ template <typename O, typename I>
 std::size_t hash_value(directed_edge<O,I> const& e)
 {
     using boost::hash;
-    std::cout << e.out << std::endl;
     return hash_value(e.out);
 }
 
@@ -124,12 +125,14 @@ struct directed_edge_iterator
         : store(0), vert(), edge()
     { }
 
+    directed_edge_iterator(vertex_store& s)
+        : store(&s), vert(store->end_vertices()), edge()
+    { }
+
     directed_edge_iterator(vertex_store& s, vertex_iterator i)
         : store(&s)
         , vert(i)
-        , edge(next(vert == store->end_vertices()
-                    ? edge_iterator()
-                    : vertex().begin_out(), true))
+        , edge(next(vertex().begin_out(), true))
     { }
 
     /** Locate the next valid edge iterator, skipping the update on init. */
@@ -148,7 +151,8 @@ struct directed_edge_iterator
             // If after incrementing, we reach the end of the vertices, then
             // we have to skip to the next non-empty vertex or the end of the
             // sequence, whichever comes first.
-            while(e == vertex().end_out() && vert != store->end_vertices()) {
+            while(vert != store->end_vertices() && e == vertex().end_out())
+            {
                 ++vert;
                 e = vertex().begin_out();
             }

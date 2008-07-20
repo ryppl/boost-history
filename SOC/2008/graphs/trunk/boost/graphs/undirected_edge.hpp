@@ -104,14 +104,17 @@ template <typename V, typename P>
 std::ostream& operator<<(std::ostream& os, undirected_edge<V,P> const& e)
 { return os << "{" << e.first() << " " << e.second() << "}"; }
 
+/**
+ * The hash value of edges can be computed over the hash value of the property
+ * descriptors. This is because the property descriptor provides a global
+ * context for the edge.
+ */
 template <typename V, typename P>
 inline std::size_t
 hash_value(undirected_edge<V,P> const& e)
 {
-    std::size_t seed;
-    boost::hash_combine(seed, e.ends);
-    boost::hash_combine(seed, e.prop);
-    return seed;
+    using boost::hash;
+    return hash_value(e.prop);
 }
 
 /**

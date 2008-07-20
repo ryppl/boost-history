@@ -2,51 +2,50 @@
 #ifndef PROPERTIES_HPP
 #define PROPERTIES_HPP
 
-#include <vector>
-#include <tr1/unordered_map>
+#include <boost/descriptors.hpp>
 
-#include <boost/type_traits.hpp>
-#include <boost/mpl/if.hpp>
+// Include associative adpaters for exterior properties.
+#include "property_map/hashed_property_container.hpp"
+#include "property_map/indexed_property_container.hpp"
 
-#include "vertex_vector.hpp"
-#include "edge_vector.hpp"
+// Include property map implementations.
+#include "property_map/container_property_map.hpp"
+#include "property_map/simple_property_map.hpp"
+#include "property_map/bundled_property_map.hpp"
 
-#include "property_map/hashed_properties.hpp"
-#include "property_map/indexed_properties.hpp"
+// TODO: We currently distinguish between exterior and interior using the names
+// of the structures...
 
-// All the fun of exterior properties... We need a mechanism that determines
-// the underlying mapping type of exterior properties. For vector-based stores
-// we can simply map each vertex to its corresponding element in another vector.
-// For non-vector-based stores, it's easier to use a hash of the descriptor.
+// Define the mapping strategy based on the type of descriptor. By default,
+// we prefer to use hashing since the number of data structures that actually
+// index their vertices is... tiny.
+struct index_mapping { };
+struct hash_mapping { };
 
-// We need a metafunction to determine whether or not a vertex set allows
-// indexed or hashed exterior properties. By default, we should assume that
-// we're using hash tables (they're more flexible).
+template <typename Descriptor>
+struct descriptor_mapping
+{ typedef hash_mapping strategy; };
 
-template <typename VertexStore>
-struct use_hashing
-{ BOOST_STATIC_CONSTANT(bool, value = true); };
+template <typename Index>
+struct descriptor_mapping<index_descriptor<Index>>
+{ typedef index_mapping strategy;};
 
-// Specialize over the basic vertex vector and edge vector.
-template <template <typename> class Alloc>
-struct use_hashing< vertex_vector<Alloc> >
-{ BOOST_STATIC_CONSTANT(bool, value = false); };
-
-template <template <typename> class Alloc>
-struct use_hashing< edge_vector<Alloc> >
-{ BOOST_STATIC_CONSTANT(bool, value = false); };
-
-// Select the type of container based on the underlying store selector
+// Select the type of container based on the underlying store selector.
 template <typename Selector, typename Descriptor, typename Property>
 struct choose_container
 {
     typedef typename boost::mpl::if_<
-            use_hashing<Selector>,
+            boost::is_same<
+                typename descriptor_mapping<Descriptor>::strategy,
+                hash_mapping>,
             hashed_property_container<Descriptor, Property>,
             indexed_property_container<Descriptor, Property>
         >::type type;
 };
 
+/**
+ * Used to cotnain exterior vertex properties.
+ */
 template <typename Graph, typename Property>
 struct exterior_vertex_property
     : choose_container<
@@ -57,122 +56,68 @@ struct exterior_vertex_property
             typename Graph::vertex_store_selector, typename Graph::vertex_descriptor, Property
         >::type base_type;
 
-    exterior_vertex_property(Graph const& g)
-        : base_type(g.num_vertices())
-    { }
-
-    exterior_vertex_property(Graph const& g, Property const& p)
+    exterior_vertex_property(Graph const& g, Property const& p = Property())
         : base_type(g.begin_vertices(), g.end_vertices(), p)
     { }
 };
 
+/**
+ * Used to contain exterior edge properties.
+ *
+ * @todo It turns out that undirected edge_vectors can use vectors to store
+ * properties. This is because the edge descriptor is basically just returning
+ * the index into the vector as a key.
+ */
 template <typename Graph, typename Property>
 struct exterior_edge_property
     : hashed_property_container<typename Graph::edge_descriptor, Property>
 {
     typedef hashed_property_container<typename Graph::edge_descriptor, Property> base_type;
 
-    exterior_edge_property(const Graph& g)
-        : base_type(g.num_edges())
-    { }
-
-    exterior_edge_property(Graph const& g, Property const& p)
+    exterior_edge_property(Graph const& g, Property const& p = Property())
         : base_type(g.begin_edges(), g.end_edges(), p)
     { }
 };
 
-#if 0
-
-// For now, these tags are used to actually decide the underlying implementation
-// of the property map.
-struct indexed_property_map_tag { };
-struct hashed_property_map_tag { };
-
-template <typename Tag, typename Iterator, typename Property>
-struct exterior_property
+/**
+ * The property map structure provides a funtional abstraction over the
+ * associative mapping provided by some type (or set of types). The default
+ * implementation is constructed over an associative container.
+ *
+ * @requires AssociativeContainer<Container>
+ */
+template <typename Container>
+struct exterior_property_map
+    : container_property_map<Container>
 {
-    typedef typename mpl::if_<
-            is_same<Tag, hashed_property_map_tag>,
-            hashed_property_container<Iterator, Property>,
-            indexed_property_container<Iterator, Property>
-        >::type container_type;
-
-    typedef typename mpl::if_<
-            is_same<Tag, hashed_property_map_tag>,      // predicate
-            hashed_property_map<Iterator, Property>,    // on true
-            indexed_property_map<Iterator, Property>    // on false
-        >::type map_type;
+    exterior_property_map(Container& cont)
+        : container_property_map<Container>(cont)
+    { }
 };
 
-template <typename Graph, typename Property>
-struct exterior_vertex_property
+/**
+ * The interior property map defines a property map over the interior properties
+ * of a vertex. Although this takes 3 parameters, you should always use default
+ * value of the 3rd parameter. The Key parameter must either be the vertex
+ * or edge descriptor type of the graph.
+ */
+template <typename Graph, typename Key, typename Property = typename Graph::vertex_properties>
+struct interior_property_map
+    : simple_property_map<Graph, Key, Property>
 {
-    typedef exterior_property<
-            typename Graph::vertex_property_map_category,
-            typename Graph::vertex_iterator,
-            Property
-                    > base_type;
-            typedef typename base_type::container_type container_type;
-            typedef typename base_type::map_type map_type;};
-
-template <typename Graph, typename Property>
-struct exterior_edge_property
-{
-    typedef exterior_property<
-            typename Graph::edge_property_map_category,
-            typename Graph::edge_iterator,
-            Property
-        > base_type;
-    typedef typename base_type::container_type container_type;
-    typedef typename base_type::map_type map_type;
-
+    interior_property_map(Graph& g)
+        : simple_property_map<Graph, Key, Property>(g)
+    { }
 };
 
-
-// Interior properties aer also a great deal of fun.
-
-template <typename Graph, typename Property = typename Graph::vertex_properties>
-struct interior_vertex_property
+/** A specialization of the above for members of the vertex/edge label. */
+template <typename Graph, typename Key, typename Bundle, typename Property>
+struct interior_property_map<Graph, Key, Property Bundle::*>
+    : bundled_property_map<Graph, Key, Bundle, Property>
 {
-    typedef simple_property_map<
-            Graph,
-            typename Graph::vertex_descriptor,
-            typename Graph::vertex_properties
-        > map_type;
+    interior_property_map(Graph& g, Property Bundle::* b)
+        : bundled_property_map<Graph, Key, Bundle, Property>(g, b)
+    { }
 };
-
-template <typename Graph, typename Bundle, typename Property>
-struct interior_vertex_property<Graph, Property Bundle::*>
-{
-    typedef bundled_property_map<
-            Graph,
-            typename Graph::vertex_descriptor,
-            Bundle,
-            Property
-        > map_type;
-};
-
-template <typename Graph, typename Property = typename Graph::vertex_properties>
-struct interior_edge_property
-{
-    typedef simple_property_map<
-            Graph,
-            typename Graph::edge_descriptor,
-            typename Graph::edge_properties
-        > map_type;
-};
-
-template <typename Graph, typename Bundle, typename Property>
-struct interior_edge_property<Graph, Property Bundle::*>
-{
-    typedef bundled_property_map<
-            Graph,
-            typename Graph::edge_descriptor,
-            Bundle,
-            Property
-        > map_type;
-};
-
-#endif
 
 #endif

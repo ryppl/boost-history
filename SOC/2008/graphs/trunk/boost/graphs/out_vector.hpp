@@ -79,9 +79,14 @@ public:
     inline vertex_descriptor target(out_descriptor o) const
     { return make_iterator(_edges, o)->first; }
 
+
     /** Return the properties stored with this edge. */
+    inline edge_properties& properties(out_descriptor o)
+    { return make_iterator(_edges, o)->second.first; }
+
     inline edge_properties const& properties(out_descriptor o) const
     { return make_iterator(_edges, o)->second.first; }
+
 
     /** Return the in edge descriptor bound to this edge. */
     inline in_descriptor in_edge(out_descriptor o) const

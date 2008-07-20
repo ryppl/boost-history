@@ -104,6 +104,9 @@ public:
     { return make_iterator(_edges, o)->first; }
 
     /** Return the properties stored with this edge. */
+    inline edge_properties& properties(out_descriptor o)
+    { return make_iterator(_edges, o)->second.first; }
+
     inline edge_properties const& properties(out_descriptor o) const
     { return make_iterator(_edges, o)->second.first; }
 

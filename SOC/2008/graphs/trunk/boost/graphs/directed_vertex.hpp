@@ -66,13 +66,20 @@ public:
     { return _out.find(v); }
     //@}
 
-    /** @name Property Accessors */
+    /** @name Vertex Property Accessors */
     //@{
     inline vertex_properties& properties()
     { return _props; }
 
     inline vertex_properties const& properties() const
     { return _props; }
+
+    // Return the edge properties for the given out edge descriptor.
+    inline edge_properties& get_edge_properties(out_descriptor o)
+    { return _out.properties(o); }
+
+    inline edge_properties const& get_edge_properties(out_descriptor o) const
+    { return _out.properties(o); }
     //@}
 
     /** Return the reverse out descriptor for the given in edge. */
