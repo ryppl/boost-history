@@ -68,6 +68,7 @@ public:
         add_component<output_valuator>("out");
         add_component<input_valuator>("in");
 #ifndef BOOST_MSVC
+        // a doubler (this doesn't compile on MSVC...)
         add_component<signals::function<void (int), int(int)> >
             ("x2", boost::function<int(int)>(boost::bind(std::multiplies<int>(), _1, 2)));
 #endif

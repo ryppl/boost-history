@@ -203,6 +203,7 @@
 		08A6B26A0E25A566005539F2 /* blueprint_window.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = blueprint_window.hpp; sourceTree = "<group>"; };
 		08A6B26B0E25A566005539F2 /* glvgui_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glvgui_example.cpp; sourceTree = "<group>"; };
 		08A6B26C0E25A566005539F2 /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
+		08A74E790E33AFA900B1A8CF /* glvgui_graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glvgui_graph.cpp; sourceTree = "<group>"; };
 		08A82B550E11EBF500AAB117 /* dynamic_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_port.hpp; sourceTree = "<group>"; };
 		08AD8AB50D84DF31008A9764 /* test_has_call_operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_has_call_operator.cpp; sourceTree = "<group>"; };
 		08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = has_call_operator.hpp; sourceTree = "<group>"; };
@@ -633,6 +634,7 @@
 		08A6B2640E25A566005539F2 /* glv_gui */ = {
 			isa = PBXGroup;
 			children = (
+				08A74E790E33AFA900B1A8CF /* glvgui_graph.cpp */,
 				08C617FB0E27E39500FC4F24 /* glvgui_logic.cpp */,
 				08A6B2650E25A566005539F2 /* blueprint_bank.cpp */,
 				08A6B2660E25A566005539F2 /* blueprint_bank.hpp */,

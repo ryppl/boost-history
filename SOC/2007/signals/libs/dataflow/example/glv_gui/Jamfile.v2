@@ -21,3 +21,4 @@ local sources =
 
 exe glv_example : glvgui_example.cpp $(sources).cpp ;
 exe glv_logic : glvgui_logic.cpp $(sources).cpp ;
+exe glv_graph : glvgui_graph.cpp $(sources).cpp ;

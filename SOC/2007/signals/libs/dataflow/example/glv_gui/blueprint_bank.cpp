@@ -21,7 +21,7 @@ public:
     }
     void spawn()
     {
-        m_bank.m_blueprint->add_component(m_bank.m_bank[m_label], m_label);
+        m_bank.m_blueprint->add_component(std::auto_ptr<blueprint::component>(m_bank.m_bank[m_label]()), m_label);
     }
 private:
     std::string m_label;

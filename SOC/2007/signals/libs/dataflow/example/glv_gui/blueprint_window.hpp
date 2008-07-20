@@ -32,11 +32,9 @@ class blueprint_window
 public:
     blueprint_window();
     void add_component(std::auto_ptr<blueprint::component> c, const std::string &name);
-    void add_component(boost::function<blueprint::component *()> f, const std::string &name);
     void register_port_click(blueprint_component_port *port);
 private:
     void onDraw();
-    void add_component_helper(blueprint_component &bc);
     blueprint::network m_network;
     std::vector<blueprint_component *> m_components;
     blueprint_component_port *m_dragged;

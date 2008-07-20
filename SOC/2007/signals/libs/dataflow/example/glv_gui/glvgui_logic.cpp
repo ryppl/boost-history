@@ -22,17 +22,16 @@ namespace blueprint=boost::dataflow::blueprint;
 
 using df::managed::fusion_component;
 
-// source just provides an output port
-class source : public fusion_component<bool>, public glv::Button
+// the input/output component (link between GUI and dataflow network)
+class io : public fusion_component<bool>, public glv::Button
 {
 public:
     typedef glv::View runtime_base_class_type;
-    source(df::managed::network &network)
+    io(df::managed::network &network)
         : fusion_component<bool>(network)
         , glv::Button(glv::Rect(100,100),true)
     {
         anchor(glv::Place::CL);
-//        m_producer_port.set(value);
     }
     void invoke()
     {
@@ -51,30 +50,21 @@ public:
     }
 };
 
-// adder has two input ports and an output port.
-// invoking adds the two inputs into the output.
-class not_operation : public fusion_component<bool>, public glv::Button
+// logical NOT component.
+class not_operation : public fusion_component<bool>
 {
 public:
-    typedef glv::View runtime_base_class_type;
     not_operation(df::managed::network &network)
         : fusion_component<bool>(network)
-        , glv::Button(glv::Rect(100,100),true)
-    {
-        anchor(glv::Place::CL);
-    }
+    {}
     void invoke()
     {
         if(port<0>().connected())
-        {
             port<1>().set(!port<0>().get());
-            value(port<1>().get(), 0);
-        }
     }
 };
 
-// adder has two input ports and an output port.
-// invoking adds the two inputs into the output.
+// logical AND component.
 class and_operation : public fusion_component<boost::mpl::vector<bool,bool>,bool>
 {
 public:
@@ -92,8 +82,7 @@ public:
     }
 };
 
-// adder has two input ports and an output port.
-// invoking adds the two inputs into the output.
+// logical OR component.
 class or_operation : public fusion_component<boost::mpl::vector<bool,bool>,bool>
 {
 public:
@@ -111,8 +100,7 @@ public:
     }
 };
 
-// adder has two input ports and an output port.
-// invoking adds the two inputs into the output.
+// This component requests a network update.
 class update_network : public fusion_component<bool>
 {
 public:
@@ -132,7 +120,7 @@ class example_bank : public blueprint::tag_component_bank<df::managed::tag>
 public:
     example_bank()
     {
-        add_component<source>("src", boost::ref(m_network));
+        add_component<io>("io", boost::ref(m_network));
         add_component<not_operation>("not", boost::ref(m_network));
         add_component<and_operation>("and", boost::ref(m_network));
         add_component<or_operation>("or", boost::ref(m_network));

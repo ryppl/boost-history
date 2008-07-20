@@ -22,38 +22,14 @@ blueprint_window::blueprint_window()
 void blueprint_window::add_component(std::auto_ptr<blueprint::component> c, const std::string &name)
 {
     std::cout << "Adding component" << name << std::endl;
-    blueprint_component *bc = new blueprint_component(name, *c, m_network.add_component(c));
-    add_component_helper(*bc);
-}
 
-void blueprint_window::add_component(boost::function<blueprint::component *()> f, const std::string &name)
-{
-    std::cout << "Adding component" << name << std::endl;
-
-    std::auto_ptr<blueprint::component> c(f());
     blueprint::component &cr = *c;
     blueprint_component *bc = new blueprint_component(name, cr, m_network.add_component(c));
-    add_component_helper(*bc);
-
-/*    gui::wnd<blueprint_component> bc = gui::create<blueprint_component>
-        ( gui::_pos = std::make_pair(m_next_created_x, m_next_created_y)
-        , gui::_size = std::make_pair(100, 100)
-        , gui::_text = name
-        , gui::_parent = this_);*/
-
-//    std::auto_ptr<blueprint::component> c(f());
-//    blueprint::network::component_type id = m_network.add_component(c);
-//    bc->set_component(m_network[id], id);
-
-
-//    add_component_helper(*bc);
+    if((m_components.size()%5)==0)
+        m_layout.pos(0, m_components.size()/5 * 220);
+    m_components.push_back(bc);
+    m_layout << *bc;
 }
-
-void blueprint_window::add_component_helper(blueprint_component &bc)
-{
-    m_layout << bc;
-}
-
 
 void blueprint_window::register_port_click(blueprint_component_port *port)
 {
