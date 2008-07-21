@@ -8,6 +8,7 @@
 ###
 ###     /ext/irrlicht//Irrlicht
 
+import set ;
 import extension ;
 
 extension.declare irrlicht ;
@@ -186,6 +187,22 @@ rule init ( version ? : location : options * )
         :   $(requirements)
             <dependency>/ext/irrlicht//IrrCompileConfig.h
         ;
+    
+    extension.text irrlicht $(version)
+        :   irrPNG.h
+        :   ## format
+            "#ifndef IRR_PNG_H"
+            "#define IRR_PNG_H"
+            "#include <png.h>"
+            <target-os>iphone:<>"#define png_set_swap_alpha(x)"
+            <target-os>iphone:<>"#define png_set_bgr(x)"
+            "#endif"
+        :   $(requirements)
+        :   <toolset>msvc:<cxxflags>"/FIirrPNG.h"
+            <toolset>gcc:<cxxflags>"-include irrPNG.h"
+            <toolset>darwin:<cxxflags>"-include irrPNG.h"
+        ;
+        
     common-requirements +=
         <implicit-dependency>/ext/irrlicht//IrrCompileConfigPre.h
         <dependency>/ext/irrlicht//IrrCompileConfigPre.h
@@ -226,8 +243,23 @@ rule init ( version ? : location : options * )
         ext-libs += /ext/irrlicht//gl ;
     }
     
+    local custom-objs =
+        [ glob $(location)/source/Irrlicht/CImageLoaderPNG.cpp ] ;
+    
+    obj CImageLoaderPNG
+        :   [ glob $(location)/source/Irrlicht/CImageLoaderPNG.cpp ]
+        :   $(requirements) $(common-requirements)
+            <use>$(ext-libs)
+            <location-prefix>Irrlicht
+            <link>shared:<define>IRRLICHT_EXPORTS=1
+            <link>static:<define>_IRR_STATIC_LIB_
+            <implicit-dependency>irrPNG.h
+            <dependency>irrPNG.h
+        ;
+    
     lib Irrlicht
-        :   [ glob $(location)/source/Irrlicht/*.cpp ]
+        :   [ set.difference [ glob $(location)/source/Irrlicht/*.cpp ] : $(custom-objs) ]
+            $(custom-objs:B)
             $(ext-libs)
         :   $(requirements) $(common-requirements)
             <location-prefix>Irrlicht
