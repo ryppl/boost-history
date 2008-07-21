@@ -653,25 +653,17 @@ typename undirected_graph<VP,EP,VS,ES>::edge_range
 undirected_graph<VP,EP,VS,ES>::edges() const
 { return std::make_pair(begin_edges(), end_edges()); }
 
-/**
- * Return the number of iterators in this graph.
- */
+/** Return the number of iterators in this graph. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertices_size_type
 undirected_graph<VP,EP,VS,ES>::num_vertices() const
-{
-    return _verts.size();
-}
+{ return _verts.size(); }
 
-/**
- * Return the number of edges in this graph.
- */
+/** Return the number of edges in this graph. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edges_size_type
 undirected_graph<VP,EP,VS,ES>::num_edges() const
-{
-    return _props.size();
-}
+{ return _props.size(); }
 
 /** Return an iterator to the first incident edge of the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>

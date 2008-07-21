@@ -58,7 +58,7 @@ struct undirected_types
     typedef std::pair<incident_edge_iterator, incident_edge_iterator> incident_edge_range;
 
     // Generate the vertex type and its store and key type.
-    typedef undirected_vertex<EdgeProps, incidence_store> vertex_type;
+    typedef undirected_vertex<VertexProps, incidence_store> vertex_type;
     typedef typename VertexStore::template store<vertex_type>::type vertex_store;
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;
