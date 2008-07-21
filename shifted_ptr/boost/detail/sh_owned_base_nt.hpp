@@ -81,6 +81,9 @@ struct pool : boost::pool<>
     /**
         @brief
         This function returns the most recent allocation block that contains p.
+        
+        @note
+        Every block allocated after p is discarded.
     */
     
     owned_base * top(void * p)
@@ -220,12 +223,12 @@ template <typename T>
         
         void * operator new (size_t s)
         {
-            return pool_.allocate(s);
+            return (char *) pool_.allocate(s) + sizeof(owned_base);
         }
         
         void operator delete (void * p)
         {
-            pool_.deallocate(p, sizeof(shifted));
+            pool_.deallocate((char *) p - sizeof(owned_base), sizeof(shifted));
         }
     };
 
