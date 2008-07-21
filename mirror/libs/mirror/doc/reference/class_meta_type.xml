@@ -93,7 +93,7 @@
 		</description>
 	</typedef>
 	<typedef name="scope">
-		<type><emphasis>unspecified</emphasis></type>
+		<type><classname>meta_namespace</classname>&lt;<emphasis>unspecified</emphasis>&gt;-or-<classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
 		<purpose>Meta-object describing the scope where Type is defined</purpose>
 		<description>
 			<para>A meta-object describing the scope in which the reflected type
@@ -104,7 +104,7 @@
 		</description>
 	</typedef>
 	<method name="base_name">
-		<type>const <classname>cts::bstring</classname>&amp;</type>
+		<type>const cts::<classname>bstring</classname>&amp;</type>
 		<purpose>
 			<para>This static member function returns the base name of the 
 			type reflected by <code><classname>meta_type</classname></code>
@@ -130,7 +130,7 @@
 		</notes>
 	</method>
 	<method name="full_name">
-		<type>const <classname>cts::bstring</classname>&amp;</type>
+		<type>const cts::<classname>bstring</classname>&amp;</type>
 		<purpose>
 			<para>This static member function returns the full name of the 
 			type reflected by <code><classname>meta_type</classname></code>

@@ -580,26 +580,29 @@ namespace mirror {
 	>
 	struct meta_class_attribute
 	{
-		struct detail 
-		{
-			struct result_of_get
-			{
-				typedef typename mpl::at<
-					typename MetaAttributes::type_list,
-					AttribPos
-				>::type type;
-
-			};
-		}; // struct detail 
-
+	public:
 		// the meta-class for the class to which 
 		// the attribute belongs
+		// this is actually the scope of the meta-attribute
 		typedef ::boost::mirror::meta_class<ReflectedType, VariantTag> 
-			meta_class;
+			scope;
+	private:
+		struct result_of_get
+		{
+			typedef typename mpl::at<
+				typename MetaAttributes::type_list,
+				AttribPos
+			>::type type;
+		};
+		typedef typename scope::reflected_type
+			owner_class;
+
+	public:
 
 		// the meta-attributes list (own/all)
 		// into which the attribute belongs
 		// in this instance
+		typedef MetaAttributes container;
 		typedef MetaAttributes meta_attributes;
 
 		// the position of the meta-attribute 
@@ -607,7 +610,7 @@ namespace mirror {
 
 		// the type of the attribute
 		typedef typename mpl::at<
-			typename meta_attributes::type_list,
+			typename MetaAttributes::type_list,
 			position
 		>::type type;
 
@@ -617,11 +620,10 @@ namespace mirror {
 			return meta_attributes::base_name(position());
 		}
 
-		typedef typename meta_class::reflected_type reflected_class;
-
 		// value getter
-		inline static typename detail::result_of_get::type
-		get(const reflected_class& instance)
+		inline static typename result_of_get::type get(
+			const typename owner_class& instance
+		)
 		{
 			return meta_attributes::get(instance, position());
 		}
@@ -629,21 +631,30 @@ namespace mirror {
 		// value query
 		template <typename DestType>
 		inline static DestType& 
-		query(const reflected_class& instance, DestType& dest)
+		query(
+			const typename owner_class& instance, 
+			DestType& dest
+		)
 		{
 			return meta_attributes::query(instance, position(), dest);
 		}
 
 		// value setter
 		inline static void 
-		set(reflected_class& instance, typename call_traits<type>::param_type val)
+		set(
+			owner_class& instance, 
+			typename call_traits<type>::param_type val
+		)
 		{
 			meta_attributes::set(instance, position(), val);
 		}
 
 		// value setter
 		inline static void 
-		set(const reflected_class& instance, typename call_traits<type>::param_type val)
+		set(
+			const owner_class& instance, 
+			typename call_traits<type>::param_type val
+		)
 		{
 			meta_attributes::set(instance, position(), val);
 		}
@@ -655,8 +666,9 @@ namespace mirror {
 		)
 		typedef typename detail_traits::type traits;
 		
+		// mirror type selector 
 		typedef typename traits::meta_type_selector
-			type_selector;
+			typedef_or_type;
 
 	};
 

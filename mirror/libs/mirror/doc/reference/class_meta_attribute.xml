@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<class name="meta_attribute"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<template>
+		<template-type-parameter name="unspecified"/>
+	</template>
+	<purpose>
+		<para>This class template reflects individual attributes of a class. The
+		<code><classname>meta_attribute</classname></code> template should not be instantiated
+		directly, but are obtained only as results of introspection operations on
+		<code><classname>meta_class_attributes</classname></code> and
+		<code><classname>meta_class_all_attributes</classname></code>.
+		</para>
+	</purpose>
+	<description>
+		<para>
+		</para>
+		<section id="mirror.meta_attribute.reference.samples">
+		<section id="mirror.meta_attribute.reference.sample01">
+			<title>Example - Basic usage</title>
+			<para>
+			</para>
+			<!--
+			<xi:include href="../samples/usage_meta_attribute_01.xml"/>
+			-->
+		</section>
+		</section>
+	</description>
+
+	<access name="public">
+	<typedef name="scope">
+		<type><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<purpose>Meta-class describing the scope where the reflected attribute is defined</purpose>
+		<description>
+			<para>A meta-object describing the class to which the reflected attribute belongs. 
+			</para>
+		</description>
+	</typedef>
+	<method name="base_name">
+		<type>const cts::<classname>bstring</classname>&amp;</type>
+		<purpose>
+			<para>This static member function returns the base name of the 
+			attribute reflected by the <code><classname>meta_attribute</classname></code>.
+			When a full attribute name 
+			<emphasis role="bold">with</emphasis> the nested name specifier
+			is needed use the <methodname>full_name</methodname> member function
+			instead.</para>
+		</purpose>
+	</method>
+	<method name="full_name">
+		<type>const cts::<classname>bstring</classname>&amp;</type>
+		<purpose>
+			<para>This static member function returns the full name of the 
+			namespace reflected by a <code><classname>meta_namespace</classname></code>
+			with the nested name specifier. For example:
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: full_name()
+			</programlisting>
+			returns <code>"::boost::mirror"</code>. When the base namespace name 
+			<emphasis role="bold">without</emphasis> the nested name specifier
+			is needed use the <methodname>base_name</methodname> member function
+			instead.</para>
+		</purpose>
+		<notes>
+			<para>The first call to this function can be expensive 
+			for deeply nested namespaces, because the name needs to be properly composed from 
+			the base namespace names, which may 
+			lead to multiple string concatenations. Subsequent calls to this member function
+			for a concrete specialization of <classname>meta_namespace</classname>
+			are usually much faster.
+			</para>
+		</notes>
+	</method>
+	<method name="get_name">
+		<template>
+			<template-nontype-parameter name="FullName">
+				<type>bool</type>
+			</template-nontype-parameter>
+			<template-type-parameter name="CharT"/>
+		</template>
+		<type>const <classname>::std::basic_string&lt;CharT&gt;</classname>&amp;</type>
+		<parameter name="full">
+			<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
+		</parameter>
+		<parameter name="cht">
+			<paramtype>::std::char_traits&lt;CharT&gt;</paramtype>
+		</parameter>
+		<purpose>
+			<para>This static member template function returns either the base name 
+			<emphasis role="bold">without</emphasis> the nested name specifier 
+			or the full name <emphasis role="bold">with</emphasis> the 
+			nested name specifier of the attribute reflected by this
+			<code><classname>meta_attribute</classname></code>,
+			depending on the value of the template argument <code>FullName</code>.
+			Furthermore it allows to choose whether the return value type is 
+			<code>::std::string</code> or <code>::std::wstring</code> based
+			on the type of the second argument.
+			For example:
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
+			</programlisting> is equivalent to calling the 
+			<code><methodname>base_name</methodname></code> member function with the 
+			<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol undefined, 
+			which returns a <code>::std::string</code> holding the string <code>"mirror"</code> and calling
+			<programlisting><macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
+			</programlisting> is equivalent to calling the 
+			<code><methodname>full_name</methodname></code> method with the 
+			<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol defined, 
+			which returns a <code>::std::wstring</code> holding this string <code>L"::boost::mirror"</code>.
+			</para>
+		</purpose>
+	</method>
+	</access>
+</class>
+

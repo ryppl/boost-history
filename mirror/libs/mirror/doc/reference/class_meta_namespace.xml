@@ -73,13 +73,14 @@
 
 	<access name="public">
 	<typedef name="scope">
-		<type><emphasis>unspecified</emphasis></type>
+		<type><classname>meta_namespace</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
 		<purpose>Meta-namespace describing the scope where the reflected namespace is defined</purpose>
 		<description>
 			<para>A meta-object describing the scope in which the reflected namespace
 			is defined. It is a specialization of <code><classname>meta_namespace</classname></code>
 			with the exception of the meta-namespace reflecting the global scope where
-			this type is not defined.
+			this type refers back to the <code><classname>meta_namespace</classname></code>
+			describing the global scope.
 			</para>
 			<para>To find out whether a meta-namespace reflects the global scope
 			use the <code><classname>reflects_global_scope</classname></code> template meta-function.
@@ -111,7 +112,7 @@
 		</description>
 	</typedef>
 	<method name="base_name">
-		<type>const <classname>cts::bstring</classname>&amp;</type>
+		<type>const cts::<classname>bstring</classname>&amp;</type>
 		<purpose>
 			<para>This static member function returns the base name of the 
 			namespace reflected by a <code><classname>meta_namespace</classname></code>.
@@ -125,7 +126,7 @@
 		</purpose>
 	</method>
 	<method name="full_name">
-		<type>const <classname>cts::bstring</classname>&amp;</type>
+		<type>const cts::<classname>bstring</classname>&amp;</type>
 		<purpose>
 			<para>This static member function returns the full name of the 
 			namespace reflected by a <code><classname>meta_namespace</classname></code>

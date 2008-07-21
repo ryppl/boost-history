@@ -17,6 +17,8 @@
 		<xi:include href="reference/meta_namespace.xml"/>
 		<xi:include href="reference/meta_type.xml"/>
 		<xi:include href="reference/meta_class.xml"/>
+
+		<xi:include href="reference/meta_attributes.xml"/>
 	
 		<xi:include href="reference/traits/reflects_namespace.xml"/>
 		<xi:include href="reference/traits/reflects_global_scope.xml"/>

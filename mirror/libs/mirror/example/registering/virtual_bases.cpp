@@ -186,7 +186,7 @@ struct attrib_printer
 				"    " << 
 				MetaAttribute::position::value << 
 				": " << 
-				MetaAttribute::meta_class::full_name() << 
+				MetaAttribute::scope::full_name() << 
 				" " << 
 				ma.base_name() << 
 				";" << 

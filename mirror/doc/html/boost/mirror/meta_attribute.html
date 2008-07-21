@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template meta_attribute</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="The Mirror library documentation">
+<link rel="up" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp" title="Header &lt;boost/mirror/meta_attributes.hpp&gt;">
+<link rel="prev" href="meta_class.html" title="Class template meta_class">
+<link rel="next" href="reflects_namespace.html" title="Class template reflects_namespace">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="meta_class.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.mirror.meta_attribute"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template meta_attribute</span></h2>
+<p>boost::mirror::meta_attribute &#8212; This class template reflects individual attributes of a class. The
+		<code class="computeroutput">meta_attribute</code> template should not be instantiated
+		directly, but are obtained only as results of introspection operations on
+		<code class="computeroutput">meta_class_attributes</code> and
+		<code class="computeroutput">meta_class_all_attributes</code>.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id452461-bbtypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.scope">scope</a>;
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id453667-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id453631-bb">full_name</a>();
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
+    <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
+    <a class="link" href="meta_attribute.html#id453485-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id710855"></a><h2>Description</h2>
+<p>
+		</p>
+<div class="section" lang="en">
+<div class="titlepage"></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.meta_attribute.reference.sample01"></a>Example - Basic usage</h6></div></div></div>
+<p>
+			</p>
+</div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id710880"></a><h3>
+<a name="id452461-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
+<div class="orderedlist"><ol type="1"><li>
+<p>
+<span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.scope"></a>scope;</p>
+<p>A meta-object describing the class to which the reflected attribute belongs. 
+			</p>
+</li></ol></div>
+</div>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id453667-bb"></a>base_name();</pre>
+<p>This static member function returns the base name of the 
+			attribute reflected by the <code class="computeroutput">meta_attribute</code>.
+			When a full attribute name 
+			<span class="bold"><strong>with</strong></span> the nested name specifier
+			is needed use the <code class="computeroutput">full_name</code> member function
+			instead.</p>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id453631-bb"></a>full_name();</pre>
+<p>This static member function returns the full name of the 
+			namespace reflected by a <code class="computeroutput">meta_namespace</code>
+			with the nested name specifier. For example:
+			</p>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: full_name()
+			</pre>
+<p>
+			returns <code class="computeroutput">"::boost::mirror"</code>. When the base namespace name 
+			<span class="bold"><strong>without</strong></span> the nested name specifier
+			is needed use the <code class="computeroutput">base_name</code> member function
+			instead.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The first call to this function can be expensive 
+			for deeply nested namespaces, because the name needs to be properly composed from 
+			the base namespace names, which may 
+			lead to multiple string concatenations. Subsequent calls to this member function
+			for a concrete specialization of meta_namespace
+			are usually much faster.
+			</p></td>
+</tr></tbody>
+</table></div>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
+  <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
+  <a name="id453485-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+<p>This static member template function returns either the base name 
+			<span class="bold"><strong>without</strong></span> the nested name specifier 
+			or the full name <span class="bold"><strong>with</strong></span> the 
+			nested name specifier of the attribute reflected by this
+			<code class="computeroutput">meta_attribute</code>,
+			depending on the value of the template argument <code class="computeroutput">FullName</code>.
+			Furthermore it allows to choose whether the return value type is 
+			<code class="computeroutput">::std::string</code> or <code class="computeroutput">::std::wstring</code> based
+			on the type of the second argument.
+			For example:
+			</p>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
+			</pre>
+<p> is equivalent to calling the 
+			<code class="computeroutput">base_name</code> member function with the 
+			<code class="computeroutput">BOOST_CTS_USE_WIDE_CHARS</code> symbol undefined, 
+			which returns a <code class="computeroutput">::std::string</code> holding the string <code class="computeroutput">"mirror"</code> and calling
+			</p>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
+			</pre>
+<p> is equivalent to calling the 
+			<code class="computeroutput">full_name</code> method with the 
+			<code class="computeroutput">BOOST_CTS_USE_WIDE_CHARS</code> symbol defined, 
+			which returns a <code class="computeroutput">::std::wstring</code> holding this string <code class="computeroutput">L"::boost::mirror"</code>.
+			</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="meta_class.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

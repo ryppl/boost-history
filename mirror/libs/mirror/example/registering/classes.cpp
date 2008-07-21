@@ -415,7 +415,9 @@ struct pretty_printer
 		{
 			using namespace ::std;
 			s << endl << " - " << 
-				BOOST_MIRRORED_TYPE(typename MetaAttribute::type_selector)::full_name() <<
+				BOOST_MIRRORED_TYPE(
+					typename MetaAttribute::typedef_or_type
+				)::full_name() <<
 				"        " <<
 				ma.base_name();
 		}
