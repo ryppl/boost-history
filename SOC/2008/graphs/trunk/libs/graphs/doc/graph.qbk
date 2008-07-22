@@ -12,6 +12,8 @@
 
 This graph library...
 
+[include descriptors.qbk]
+
 [section Adjacency Lists]
 One of the most common and flexible graph data structures is the adjacency list.
 The adjacenct list component of this library provides implementations for both
@@ -29,20 +31,6 @@ Several graph types are provided to encapsulate common implementations.
 typedef graph<VertexLabel, EdgeLabel> Graph;        // A simple undirected graph
 typedef digraph<VertexLabel, EdgeLabel> Graph;      // A simple directed graph
 ``
-
-[section Descriptors]
-The vertices and edges of the graph are accessible via descriptor objects. A
-descriptor is a lightweight, opaque reference to an object. All operations on
-these graphs are defined in terms of these descriptors. Methods for getting
-and using descriptors will be shown throughout this manual.
-
-[heading Perspective]
-Descriptors can cause problems for programmers who expect a significant class
-interface for returned vertices and descriptors. In fact, most graph libraries
-prefer to return heavyweight vertex objects (or pointers to them) that define
-their own interfaces. This approach is not feasible when combined with the
-amount of genericism offered by this library.
-[endsect]
 
 [section Vertex and Edge Labels]
 Vertex and Edge labels allow you to attach data to the vertices and edges of the

@@ -1,0 +1,40 @@
+
+[section Algorithms and Algorithm Objects]
+
+The following definitions will be important in the discussion of graph algorithms
+and their implementations. These definitions are based 
+
+[heading Walks]
+A walk over a graph is a sequence of moves over connected edges and vertices
+/(v0, e1, v1, e2, v3, ..., vn)/ such that /v0/ is the starting vertex and each
+edge /ei/ is incident on both vertices /vi-1/ and /vi+1/. In this sense, /vi-1/
+is the source vertex and /vi+1/ is the target vertex.
+
+Here, the term walk is applied to any algorithm object that moves over the
+connected elements of a graph (i.e., not arbitrarily). Contrast this with the
+notion of a graph's vertex iterator where vertex /vi/ may not be adjacent to
+vertex /vi+1/. The implication is that walks are limited to movement over
+connected components of a graph.
+
+There are two types of walks: a vertex walk and an edge walk. A vertex is a walk
+that rests (between steps) on a vertex. Conversely an edge walk rests between
+edges.
+
+Note that the source and target vertices of edges in an edge walk can have
+meaning beyond that of the edges of the undirected graphs. Specifically, the
+source vertex is that which was already visted and the target is one that will
+(probably) be visited in the walk.
+
+[heading Traversals]
+We define a traversal as a sequence of walks that will potentially visit all
+elements in a graph, connected or not. A traversal is allowed to skip
+arbitrarily from component to component.
+
+A common application of traversals is to aggregate a series of walks over a
+graph to accomodate searches on the graph (e.g., breadth- or depth-first).
+
+Like walks, traversals are also classified as vertex and edge traversals.
+
+[heading Iterators]
+
+Walks and traversals are iterable.
