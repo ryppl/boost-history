@@ -16,3 +16,5 @@ exe un : un.cpp ;
 exe di : di.cpp ;
 
 exe propmaps : propmaps.cpp ;
+
+exe bfs : bfs.cpp ;
