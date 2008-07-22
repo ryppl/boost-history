@@ -8,12 +8,14 @@ import os ;
 lib glut : : <name>glut ;
 lib openGL : : <name>GL ;
 lib openGLU : : <name>GLU ;
-lib X11 : : <name>X11 ;
+lib X11 : : <name>X11 <link>shared ;
+lib Xext : : <name>Xext ;
+lib pthread : : <name>pthread <link>shared ;
+
 lib Xaw : : <name>Xaw7 ;
 lib Xv : : <name>Xv ;
-lib Xext : : <name>Xext ;
-lib X11-xcb : : <name>X11-xcb ;
-lib pthread : : <name>pthread ;
+lib X11-xcb : : <name>X11-xcb  ;
+lib gtk : : <name>GTK ;
 
 lib mingw_glut : : <name>glut32 ;
 lib mingw_openGL : : <name>opengl32 ;
@@ -25,7 +27,7 @@ if [ os.name ] = NT
 }
 else
 {
-    GLlibraries = glut openGL openGLU X11 Xaw Xv Xext X11-xcb pthread ;
+    GLlibraries = glut openGL openGLU X11 Xext pthread ;
 }
 
 project dataflow/example/glv
