@@ -223,12 +223,12 @@ template <typename T>
         
         void * operator new (size_t s)
         {
-            return (char *) pool_.allocate(s) + sizeof(owned_base);
+            return pool_.allocate(s);
         }
         
         void operator delete (void * p)
         {
-            pool_.deallocate((char *) p - sizeof(owned_base), sizeof(shifted));
+            pool_.deallocate(p, sizeof(shifted));
         }
     };
 
