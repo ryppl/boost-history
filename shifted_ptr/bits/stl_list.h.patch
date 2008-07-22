@@ -1,0 +1,316 @@
+--- /local/include/c++/3.4.5/bits/stl_list.h	Wed Jan 18 11:06:54 2006
++++ stl_list.h	Tue Jul 22 02:11:25 2008
+@@ -51,10 +51,21 @@
+  * in supporting documentation.  Silicon Graphics makes no
+  * representations about the suitability of this software for any
+  * purpose.  It is provided "as is" without express or implied warranty.
+  */
+ 
++/**
++    Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
++
++    Distributed under the Boost Software License, Version 1.0.
++
++    See accompanying file LICENSE_1_0.txt or copy at
++    http://www.boost.org/LICENSE_1_0.txt
++
++    See http://www.boost.org/libs/smart_ptr/doc/index.html for documentation.
++*/
++
+ /** @file stl_list.h
+  *  This is an internal header file, included by other library headers.
+  *  You should not attempt to use it directly.
+  */
+ 
+@@ -69,62 +80,77 @@
+   // latter publicly inherits from the former in an effort to reduce code
+   // duplication.  This results in some "needless" static_cast'ing later on,
+   // but it's all safe downcasting.
+ 
+   /// @if maint Common part of a node in the %list.  @endif
++  template<typename _Alloc>
+   struct _List_node_base
+   {
+-    _List_node_base* _M_next;   ///< Self-explanatory
+-    _List_node_base* _M_prev;   ///< Self-explanatory
++      typedef typename _Alloc::template rebind<_List_node_base<_Alloc> >::other _Node_Alloc_type;
++
++      typedef typename _Node_Alloc_type::pointer                   pointer;
++      typedef typename _Node_Alloc_type::const_pointer             const_pointer;
++      typedef typename _Node_Alloc_type::reference                 reference;
++      typedef typename _Node_Alloc_type::const_reference           const_reference;
++
++      pointer _M_next;   ///< Self-explanatory
++      pointer _M_prev;   ///< Self-explanatory
+ 
+     static void
+     swap(_List_node_base& __x, _List_node_base& __y);
+ 
+     void
+-    transfer(_List_node_base * const __first,
+-	     _List_node_base * const __last);
++      transfer(pointer const & __first,
++	       pointer const & __last);
+ 
+     void
+     reverse();
+ 
+     void
+-    hook(_List_node_base * const __position);
++      hook(pointer const & __position);
+ 
+     void
+     unhook();
+   };
+ 
+   /// @if maint An actual node in the %list.  @endif
+-  template<typename _Tp>
+-    struct _List_node : public _List_node_base
++  template<typename _Tp, typename _Alloc>
++    struct _List_node : public _List_node_base<_Alloc>
+     {
++      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other _Node_Alloc_type;
++
++      typedef typename _Node_Alloc_type::pointer                   pointer;
++      typedef typename _Node_Alloc_type::const_pointer             const_pointer;
++      typedef typename _Node_Alloc_type::reference                 reference;
++      typedef typename _Node_Alloc_type::const_reference           const_reference;
++
+       _Tp _M_data;                ///< User's data.
+     };
+ 
+   /**
+    *  @brief A list::iterator.
+    *
+    *  @if maint
+    *  All the functions are op overloads.
+    *  @endif
+   */
+-  template<typename _Tp>
++  template<typename _Tp, typename _Alloc>
+     struct _List_iterator
+     {
+-      typedef _List_iterator<_Tp>           _Self;
+-      typedef _List_node<_Tp>               _Node;
++      typedef _List_iterator<_Tp, _Alloc>   _Self;
++      typedef _List_node<_Tp, _Alloc>       _Node;
+ 
+       typedef ptrdiff_t                     difference_type;
+       typedef bidirectional_iterator_tag    iterator_category;
+       typedef _Tp                           value_type;
+       typedef _Tp*                          pointer;
+       typedef _Tp&                          reference;
+ 
+       _List_iterator()
+       : _M_node() { }
+ 
+-      _List_iterator(_List_node_base* __x)
++      _List_iterator(_List_node_base<_Alloc>* __x)
+       : _M_node(__x) { }
+ 
+       // Must downcast from List_node_base to _List_node to get to _M_data.
+       reference
+       operator*() const
+@@ -171,37 +197,37 @@
+       bool
+       operator!=(const _Self& __x) const
+       { return _M_node != __x._M_node; }
+ 
+       // The only member points to the %list element.
+-      _List_node_base* _M_node;
++      _List_node_base<_Alloc>* _M_node;
+     };
+ 
+   /**
+    *  @brief A list::const_iterator.
+    *
+    *  @if maint
+    *  All the functions are op overloads.
+    *  @endif
+   */
+-  template<typename _Tp>
++  template<typename _Tp, typename _Alloc>
+     struct _List_const_iterator
+     {
+-      typedef _List_const_iterator<_Tp>     _Self;
+-      typedef const _List_node<_Tp>         _Node;
+-      typedef _List_iterator<_Tp>           iterator;
++      typedef _List_const_iterator<_Tp, _Alloc> _Self;
++      typedef const _List_node<_Tp, _Alloc>     _Node;
++      typedef _List_iterator<_Tp, _Alloc>       iterator;
+ 
+       typedef ptrdiff_t                     difference_type;
+       typedef bidirectional_iterator_tag    iterator_category;
+       typedef _Tp                           value_type;
+       typedef const _Tp*                    pointer;
+       typedef const _Tp&                    reference;
+ 
+       _List_const_iterator()
+       : _M_node() { }
+ 
+-      _List_const_iterator(const _List_node_base* __x)
++      _List_const_iterator(const _List_node_base<_Alloc>* __x)
+       : _M_node(__x) { }
+ 
+       _List_const_iterator(const iterator& __x)
+       : _M_node(__x._M_node) { }
+ 
+@@ -252,23 +278,23 @@
+       bool
+       operator!=(const _Self& __x) const
+       { return _M_node != __x._M_node; }
+ 
+       // The only member points to the %list element.
+-      const _List_node_base* _M_node;
++      const _List_node_base<_Alloc>* _M_node;
+     };
+ 
+-  template<typename _Val>
++  template<typename _Val, typename _Alloc>
+     inline bool
+-    operator==(const _List_iterator<_Val>& __x,
+-	       const _List_const_iterator<_Val>& __y)
++    operator==(const _List_iterator<_Val, _Alloc>& __x,
++	       const _List_const_iterator<_Val, _Alloc>& __y)
+     { return __x._M_node == __y._M_node; }
+ 
+-  template<typename _Val>
++  template<typename _Val, typename _Alloc>
+     inline bool
+-    operator!=(const _List_iterator<_Val>& __x,
+-               const _List_const_iterator<_Val>& __y)
++    operator!=(const _List_iterator<_Val, _Alloc>& __x,
++               const _List_const_iterator<_Val, _Alloc>& __y)
+     { return __x._M_node != __y._M_node; }
+ 
+ 
+   /**
+    *  @if maint
+@@ -290,34 +316,34 @@
+       //
+       // We put this to the test in the constructors and in
+       // get_allocator, where we use conversions between
+       // allocator_type and _Node_Alloc_type. The conversion is
+       // required by table 32 in [20.1.5].
+-      typedef typename _Alloc::template rebind<_List_node<_Tp> >::other
++      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other 
+ 
+       _Node_Alloc_type;
+ 
+       struct _List_impl 
+ 	: public _Node_Alloc_type {
+-	_List_node_base _M_node;
++	_List_node_base<_Alloc> _M_node;
+ 	_List_impl (const _Node_Alloc_type& __a)
+ 	  : _Node_Alloc_type(__a)
+ 	{ }
+       };
+ 
+       _List_impl _M_impl;
+ 
+-      _List_node<_Tp>*
++      _List_node<_Tp, _Alloc> *
+       _M_get_node()
+       { return _M_impl._Node_Alloc_type::allocate(1); }
+       
+       void
+-      _M_put_node(_List_node<_Tp>* __p)
++      _M_put_node(_List_node<_Tp, _Alloc> * __p)
+       { _M_impl._Node_Alloc_type::deallocate(__p, 1); }
+       
+   public:
+-      typedef _Alloc allocator_type;
++      typedef _Node_Alloc_type allocator_type;
+ 
+       allocator_type
+       get_allocator() const
+       { return allocator_type(*static_cast<const _Node_Alloc_type*>(&this->_M_impl)); }
+ 
+@@ -393,26 +419,26 @@
+ 
+       typedef _List_base<_Tp, _Alloc>                   _Base;
+ 
+     public:
+       typedef _Tp                                        value_type;
+-      typedef typename _Alloc::pointer                   pointer;
+-      typedef typename _Alloc::const_pointer             const_pointer;
+-      typedef typename _Alloc::reference                 reference;
+-      typedef typename _Alloc::const_reference           const_reference;
+-      typedef _List_iterator<_Tp>                        iterator;
+-      typedef _List_const_iterator<_Tp>                  const_iterator;
++      typedef typename _List_node<_Tp, _Alloc>::pointer         pointer;
++      typedef typename _List_node<_Tp, _Alloc>::const_pointer   const_pointer;
++      typedef typename _List_node<_Tp, _Alloc>::reference       reference;
++      typedef typename _List_node<_Tp, _Alloc>::const_reference const_reference;
++      typedef _List_iterator<_Tp, _Alloc>                       iterator;
++      typedef _List_const_iterator<_Tp, _Alloc>                 const_iterator;
+       typedef std::reverse_iterator<const_iterator>      const_reverse_iterator;
+       typedef std::reverse_iterator<iterator>            reverse_iterator;
+       typedef size_t                                     size_type;
+       typedef ptrdiff_t                                  difference_type;
+       typedef typename _Base::allocator_type             allocator_type;
+ 
+     protected:
+       // Note that pointers-to-_Node's can be ctor-converted to
+       // iterator types.
+-      typedef _List_node<_Tp>				_Node;
++      typedef _List_node<_Tp, _Alloc>                           _Node;
+ 
+       /** @if maint
+        *  One data member plus two memory-handling functions.  If the
+        *  _Alloc type requires separate instances, then one of those
+        *  will also be included, accumulated from the topmost parent.
+@@ -595,20 +621,20 @@
+        *  Returns a read/write iterator that points to the first element in the
+        *  %list.  Iteration is done in ordinary element order.
+        */
+       iterator
+       begin()
+-      { return this->_M_impl._M_node._M_next; }
++      { return iterator(this->_M_impl._M_node._M_next); }
+ 
+       /**
+        *  Returns a read-only (constant) iterator that points to the
+        *  first element in the %list.  Iteration is done in ordinary
+        *  element order.
+        */
+       const_iterator
+       begin() const
+-      { return this->_M_impl._M_node._M_next; }
++      { return const_iterator(this->_M_impl._M_node._M_next); }
+ 
+       /**
+        *  Returns a read/write iterator that points one past the last
+        *  element in the %list.  Iteration is done in ordinary element
+        *  order.
+@@ -908,11 +934,11 @@
+        *  specialized such that std::swap(l1,l2) will feed to this
+        *  function.
+        */
+       void
+       swap(list& __x)
+-      { _List_node_base::swap(this->_M_impl._M_node,__x._M_impl._M_node); }
++      { _List_node_base<_Alloc>::swap(this->_M_impl._M_node,__x._M_impl._M_node); }
+ 
+       /**
+        *  Erases all the elements.  Note that this function only erases
+        *  the elements, and that if the elements themselves are
+        *  pointers, the pointed-to memory is not touched in any way.
+@@ -1167,13 +1193,17 @@
+       // Erases element at position given.
+       void
+       _M_erase(iterator __position)
+       {
+         __position._M_node->unhook();
++/**
++    FIXME: distinguish with raw pointers
++
+         _Node* __n = static_cast<_Node*>(__position._M_node);
+         std::_Destroy(&__n->_M_data);
+         _M_put_node(__n);
++*/
+       }
+     };
+ 
+   /**
+    *  @brief  List equality comparison.
