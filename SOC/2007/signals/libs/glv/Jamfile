@@ -5,9 +5,9 @@
 
 import os ;
 
-lib glut : : <name>glut ;
-lib openGL : : <name>GL ;
-lib openGLU : : <name>GLU ;
+lib glut : : <name>glut <link>shared ;
+lib openGL : : <name>GL <link>shared ;
+lib openGLU : : <name>GLU <link>shared ;
 lib X11 : : <name>X11 <link>shared ;
 lib Xext : : <name>Xext ;
 lib pthread : : <name>pthread <link>shared ;
@@ -27,7 +27,7 @@ if [ os.name ] = NT
 }
 else
 {
-    GLlibraries = glut openGL openGLU X11 Xext pthread ;
+    GLlibraries = glut ;
 }
 
 project dataflow/example/glv
