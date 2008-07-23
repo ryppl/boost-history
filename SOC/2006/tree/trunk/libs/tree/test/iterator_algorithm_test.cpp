@@ -210,20 +210,20 @@ int test_main(int, char* [])
 
 	// Now the iterators based on stack-based cursors (that don't use cursor.to_parent())
 
-	test::preorder::traversal(preorder::begin(ascending_cursor<cursor>(test_tree.root())), 
-						   	  preorder::end(ascending_cursor<cursor>(test_tree.root())));
-	test::preorder::reverse_traversal(preorder::end(ascending_cursor<cursor>(test_tree.root())), 
-								   	  preorder::begin(ascending_cursor<cursor>(test_tree.root())));	
+	test::preorder::traversal(preorder::begin(make_ascending_cursor(test_tree.root())), 
+						   	  preorder::end(make_ascending_cursor(test_tree.root())));
+	test::preorder::reverse_traversal(preorder::end(make_ascending_cursor(test_tree.root())), 
+								   	  preorder::begin(make_ascending_cursor(test_tree.root())));	
 	
-	test::inorder::traversal(inorder::begin(ascending_cursor<cursor>(test_tree.root())), 
-							 inorder::end(ascending_cursor<cursor>(test_tree.root())));
-	test::inorder::reverse_traversal(inorder::end(ascending_cursor<cursor>(test_tree.root())), 
-									 inorder::begin(ascending_cursor<cursor>(test_tree.root())));
+	test::inorder::traversal(inorder::begin(make_ascending_cursor(test_tree.root())), 
+							 inorder::end(make_ascending_cursor(test_tree.root())));
+	test::inorder::reverse_traversal(inorder::end(make_ascending_cursor(test_tree.root())), 
+									 inorder::begin(make_ascending_cursor(test_tree.root())));
 
-	test::postorder::traversal(postorder::begin(ascending_cursor<cursor>(test_tree.root())), 
-						   	   postorder::end(ascending_cursor<cursor>(test_tree.root())));
-	test::postorder::reverse_traversal(postorder::end(ascending_cursor<cursor>(test_tree.root())), 
-								   	   postorder::begin(ascending_cursor<cursor>(test_tree.root())));
+	test::postorder::traversal(postorder::begin(make_ascending_cursor(test_tree.root())), 
+						   	   postorder::end(make_ascending_cursor(test_tree.root())));
+	test::postorder::reverse_traversal(postorder::end(make_ascending_cursor(test_tree.root())), 
+								   	   postorder::begin(make_ascending_cursor(test_tree.root())));
 
 	//Ascending iterator.
 	binary_tree<int>::cursor c = test_tree.root();
