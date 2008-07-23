@@ -13,4 +13,3 @@
 #include <boost/spatial_index/rtree.hpp>
 
 #endif // BOOST_SPATIAL_INDEX_HPP
-
