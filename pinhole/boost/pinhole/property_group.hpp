@@ -168,6 +168,12 @@ namespace boost { namespace pinhole
             }
             m_actions.clear();
         }
+
+        property_group& operator=( const property_group& other )
+        {
+            // do nothing
+            return *this;
+        }
         
 
         /**
