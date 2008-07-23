@@ -185,13 +185,6 @@ class ascending_cursor
 	{
 		m_s.pop();
 	}
-
-public:
-// TODO: Deprecate
-	bool is_root() const
-	{
-		return (m_s.size() == 1);
-	}
 };
 
 template <class Cursor>
