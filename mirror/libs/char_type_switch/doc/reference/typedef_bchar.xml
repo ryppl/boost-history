@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<typedef name="bchar"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<type>char-or-wchar_t</type>
+	<purpose>
+		<para>This type is defined as <code>wchar_t</code> or as <code>char</code> based
+		on the <code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> preprocessing
+		symbol being defined.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code>bchar</code> type is defined as follows:
+<programlisting>
+namespace boost {
+  namespace cts {	
+#ifdef <macroname>BOOST_CTS_USE_WIDE_CHARS</macroname>
+    typedef wchar_t <classname>bchar</classname>;
+#else
+    typedef char <classname>bchar</classname>;
+#endif
+  } // namespace cts
+} // namespace boost
+</programlisting>
+		</para>
+	</description>
+</typedef>

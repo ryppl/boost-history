@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_CTS_LIT" 
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	kind="functionlike"
+>
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::cts"/>
+
+	<macro-parameter name="STRING_LITERAL">
+	</macro-parameter>
+	<purpose>
+		<para>This macro expands into wide character string literal if the 
+		<code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> symbol is defined,
+		or expands into <code>char</code> string literal otherwise.
+		</para>
+	</purpose>
+	<description>
+		<para>This macro is defined as follows:
+<programlisting>
+
+#ifdef <macroname>BOOST_CTS_USE_WIDE_CHARS</macroname>
+#	define <macroname>BOOST_CTS_LIT</macroname>(STRING_LITERAL) L##STRING_LITERAL
+#else
+#	define <macroname>BOOST_CTS_LIT</macroname>(STRING_LITERAL) STRING_LITERAL
+#endif
+</programlisting>
+			</para>
+			<section id="char_type_switch.LITERAL.reference.samples">
+				<title>Examples</title>
+<programlisting>
+#include &lt;boost/char_type_switch/string.hpp&gt;
+//...
+
+#ifdef <macroname>BOOST_CTS_USE_WIDE_CHARS</macroname>
+<macroname>BOOST_MPL_ASSERT</macroname>((
+	::boost::<classname>is_same</classname>&lt;
+		<macroname>BOOST_TYPEOF</macroname>(<macroname>BOOST_CTS_LIT</macroname>("foo")),
+		<macroname>BOOST_TYPEOF</macroname>(L"foo")
+	&gt;
+));
+#else
+<macroname>BOOST_MPL_ASSERT</macroname>((
+	::boost::<classname>is_same</classname>&lt;
+		<macroname>BOOST_TYPEOF</macroname>(<macroname>BOOST_CTS_LIT</macroname>("foo")),
+		<macroname>BOOST_TYPEOF</macroname>("foo")
+	&gt;
+));
+#endif
+</programlisting>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+#ifdef <macroname>BOOST_CTS_USE_WIDE_CHARS</macroname>
+	assert(::boost::cts::<functionname>bstrcmp</functionname>(<macroname>BOOST_CTS_LIT</macroname>("foo"), L"foo") == 0);
+#else
+	assert(::boost::cts::<functionname>bstrcmp</functionname>(<macroname>BOOST_CTS_LIT</macroname>("foo"), "foo") == 0);
+#endif
+	return 0;
+}
+</programlisting>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	assert(::boost::cts::<functionname>bstrcmp</functionname>(<macroname>BOOST_CTS_LIT</macroname>("foo"), <macroname>BOOST_CTS_STRINGIZE</macroname>(foo)) == 0);
+	return 0;
+}
+</programlisting>
+		</section>
+	</description>
+</macro>

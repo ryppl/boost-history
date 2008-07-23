@@ -22,3 +22,8 @@ boost/mirror/reflects_class.html
 boost/mirror/reflects_inheritance.html
 boost/mirror/reflects_virtual_inheritance.html
 char_type_switch.html
+char_type_switch/reference.html
+BOOST_CTS_USE_WIDE_CHARS.html
+boost/cts/bchar.html
+BOOST_CTS_LIT.html
+BOOST_CTS_STRINGIZE.html

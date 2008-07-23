@@ -31,8 +31,6 @@ namespace cts {
 	//
 	// define character type
 	typedef wchar_t bchar;
-	// define string class type
-	typedef ::std::wstring bstring;
 	// define macro for string literal type selection
 #	define BOOST_CTS_LIT(STR) L##STR
 	// stringization
@@ -45,14 +43,14 @@ namespace cts {
 	//
 	// define character type
 	typedef char bchar;
-	// define string class type
-	typedef ::std::string bstring;
 	// define macro for string literal type selection
 #	define BOOST_CTS_LIT(STR) STR
 	// stringization
 #	define BOOST_CTS_STRINGIZE(TO_TEXT) BOOST_PP_STRINGIZE(TO_TEXT)
 #endif // NOT BOOST_CTS_USE_WIDE_CHARS
 
+// define string class type
+typedef ::std::basic_string<bchar> bstring;
 // define char traits
 typedef ::std::char_traits<bchar> bchar_traits;
 

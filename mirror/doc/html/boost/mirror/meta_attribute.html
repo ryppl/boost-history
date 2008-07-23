@@ -37,16 +37,16 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id452461-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id477583-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.scope">scope</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id453667-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id453631-bb">full_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id478789-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id478753-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_attribute.html#id453485-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_attribute.html#id478607-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id710855"></a><h2>Description</h2>
+<a name="id707758"></a><h2>Description</h2>
 <p>
 		</p>
 <div class="section" lang="en">
@@ -59,8 +59,8 @@
 </div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id710880"></a><h3>
-<a name="id452461-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
+<a name="id707783"></a><h3>
+<a name="id477583-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
 <div class="orderedlist"><ol type="1"><li>
 <p>
 <span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.scope"></a>scope;</p>
@@ -68,14 +68,14 @@
 			</p>
 </li></ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id453667-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id478789-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
 			attribute reflected by the <code class="computeroutput">meta_attribute</code>.
 			When a full attribute name 
 			<span class="bold"><strong>with</strong></span> the nested name specifier
 			is needed use the <code class="computeroutput">full_name</code> member function
 			instead.</p>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id453631-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id478753-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
 			namespace reflected by a <code class="computeroutput">meta_namespace</code>
 			with the nested name specifier. For example:
@@ -102,7 +102,7 @@
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id453485-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id478607-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier 
 			or the full name <span class="bold"><strong>with</strong></span> the 
@@ -118,14 +118,14 @@
 			</pre>
 <p> is equivalent to calling the 
 			<code class="computeroutput">base_name</code> member function with the 
-			<code class="computeroutput">BOOST_CTS_USE_WIDE_CHARS</code> symbol undefined, 
+			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol undefined, 
 			which returns a <code class="computeroutput">::std::string</code> holding the string <code class="computeroutput">"mirror"</code> and calling
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
 			</pre>
 <p> is equivalent to calling the 
 			<code class="computeroutput">full_name</code> method with the 
-			<code class="computeroutput">BOOST_CTS_USE_WIDE_CHARS</code> symbol defined, 
+			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol defined, 
 			which returns a <code class="computeroutput">::std::wstring</code> holding this string <code class="computeroutput">L"::boost::mirror"</code>.
 			</p>
 </div>

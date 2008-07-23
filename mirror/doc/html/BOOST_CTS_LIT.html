@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro BOOST_CTS_LIT</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="The Mirror library documentation">
+<link rel="up" href="char_type_switch/reference.html#header.boost.char_type_switch.switch.hpp" title="Header &lt;boost/char_type_switch/switch.hpp&gt;">
+<link rel="prev" href="boost/cts/bchar.html" title="Type definition bchar">
+<link rel="next" href="BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/cts/bchar.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="char_type_switch/reference.html#header.boost.char_type_switch.switch.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_CTS_STRINGIZE.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="BOOST_CTS_LIT"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_CTS_LIT</span></h2>
+<p>BOOST_CTS_LIT &#8212; This macro expands into wide character string literal if the 
+		<code class="computeroutput"><a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol is defined,
+		or expands into <code class="computeroutput">char</code> string literal otherwise.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_CTS_LIT(STRING_LITERAL)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id710054"></a><h2>Description</h2>
+<p>This macro is defined as follows:
+</p>
+<pre class="programlisting">
+
+#ifdef <a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a>
+#	define <a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>(STRING_LITERAL) L##STRING_LITERAL
+#else
+#	define <a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>(STRING_LITERAL) STRING_LITERAL
+#endif
+</pre>
+<p>
+			</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="char_type_switch.LITERAL.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+#include &lt;boost/char_type_switch/string.hpp&gt;
+//...
+
+#ifdef <a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a>
+BOOST_MPL_ASSERT((
+	::boost::is_same&lt;
+		BOOST_TYPEOF(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo")),
+		BOOST_TYPEOF(L"foo")
+	&gt;
+));
+#else
+BOOST_MPL_ASSERT((
+	::boost::is_same&lt;
+		BOOST_TYPEOF(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo")),
+		BOOST_TYPEOF("foo")
+	&gt;
+));
+#endif
+</pre>
+<pre class="programlisting">
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+#ifdef <a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a>
+	assert(::boost::cts::bstrcmp(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), L"foo") == 0);
+#else
+	assert(::boost::cts::bstrcmp(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), "foo") == 0);
+#endif
+	return 0;
+}
+</pre>
+<pre class="programlisting">
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	assert(::boost::cts::bstrcmp(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), <a class="link" href="BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">BOOST_CTS_STRINGIZE</a>(foo)) == 0);
+	return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/cts/bchar.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="char_type_switch/reference.html#header.boost.char_type_switch.switch.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_CTS_STRINGIZE.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

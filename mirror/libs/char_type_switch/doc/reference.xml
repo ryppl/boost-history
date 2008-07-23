@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<library-reference xmlns:xi="http://www.w3.org/2001/XInclude">
+	<title>Char Type Switch Reference</title>
+	<para>
+	</para>
+	<section>
+		<title>Header files</title>
+		<xi:include href="reference/choice.xml"/>
+		<xi:include href="reference/string.xml"/>
+		<xi:include href="reference/iostream.xml"/>
+	</section>
+
+</library-reference>

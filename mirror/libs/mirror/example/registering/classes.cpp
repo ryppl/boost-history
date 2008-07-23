@@ -19,6 +19,7 @@
 #include <boost/mpl/at.hpp>
 
 #include <boost/char_type_switch/iostream.hpp>
+#include <boost/char_type_switch/string.hpp>
 
 #include <boost/mirror/meta_namespace.hpp>
 #include <boost/mirror/meta_type.hpp>
