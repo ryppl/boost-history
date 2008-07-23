@@ -25,13 +25,6 @@ namespace boost
 
     template < typename Point, typename Value > class quadtree
     {
-    private:
-      quadtree_node < Point, Value > root;
-      unsigned int element_count;
-
-      // number of points in each node
-      unsigned int node_size_;
-
     public:
       quadtree(const geometry::box < Point > &r)
                : root(r, 1), element_count(0), node_size_(1)
@@ -115,6 +108,14 @@ namespace boost
       {
         return element_count;
       }
+
+    private:
+      quadtree_node < Point, Value > root;
+      unsigned int element_count;
+
+      // number of points in each node
+      unsigned int node_size_;
+
     };
 
 

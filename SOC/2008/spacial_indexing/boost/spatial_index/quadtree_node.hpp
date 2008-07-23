@@ -27,83 +27,6 @@ namespace boost
 
     template < typename Point, typename Value > class quadtree_node
     {
-    private:
-      /// pointers to child nodes
-      boost::shared_ptr < quadtree_node > nw_;
-      boost::shared_ptr < quadtree_node > ne_;
-      boost::shared_ptr < quadtree_node > sw_;
-      boost::shared_ptr < quadtree_node > se_;
-
-      /// this node's points
-      std::map < Point, Value > m_;
-
-      /// the bounding rectangle for the node
-      geometry::box < Point > bounding_rectangle_;
-
-      /// number of points in each node
-      unsigned int node_size_;
-
-      /// divide the node in four quadrants
-      void divide_quadrants(geometry::box < Point > &ne_box,
-                            geometry::box < Point > &sw_box,
-                            geometry::box < Point > &se_box,
-                            geometry::box < Point > &nw_box) const
-      {
-
-        geometry::get < 0 > (ne_box.min()) =
-          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
-          (bounding_rectangle_.min());
-        geometry::get < 1 > (ne_box.min()) =
-          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
-          (bounding_rectangle_.min());
-        geometry::get < 0 > (ne_box.max()) =
-          geometry::get < 0 > (bounding_rectangle_.max());
-        geometry::get < 1 > (ne_box.max()) =
-          geometry::get < 1 > (bounding_rectangle_.max());
-
-        geometry::get < 0 > (sw_box.min()) =
-          geometry::get < 0 > (bounding_rectangle_.min());
-        geometry::get < 1 > (sw_box.min()) =
-          geometry::get < 1 > (bounding_rectangle_.min());
-        geometry::get < 0 > (sw_box.max()) =
-          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
-          (bounding_rectangle_.min());
-        geometry::get < 1 > (sw_box.max()) =
-          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
-          (bounding_rectangle_.min());
-
-        geometry::get < 0 > (se_box.min()) =
-          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
-          (bounding_rectangle_.min());
-        geometry::get < 1 > (se_box.min()) =
-          geometry::get < 1 > (bounding_rectangle_.min());
-        geometry::get < 0 > (se_box.max()) =
-          geometry::get < 0 > (bounding_rectangle_.max());
-        geometry::get < 1 > (se_box.max()) =
-          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
-          (bounding_rectangle_.min());
-
-        geometry::get < 0 > (nw_box.min()) =
-          geometry::get < 0 > (bounding_rectangle_.min());
-        geometry::get < 1 > (nw_box.min()) =
-          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
-          (bounding_rectangle_.min());
-        geometry::get < 0 > (nw_box.max()) =
-          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
-           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
-          (bounding_rectangle_.min());
-        geometry::get < 1 > (nw_box.max()) =
-          geometry::get < 1 > (bounding_rectangle_.max());
-      }
-
-
     public:
       quadtree_node(const geometry::box < Point > &r,
                       const unsigned int node_size)
@@ -367,6 +290,84 @@ namespace boost
         }
         std::cerr << "--------------------------------------" << std::endl;
       }
+
+    private:
+      /// pointers to child nodes
+      boost::shared_ptr < quadtree_node > nw_;
+      boost::shared_ptr < quadtree_node > ne_;
+      boost::shared_ptr < quadtree_node > sw_;
+      boost::shared_ptr < quadtree_node > se_;
+
+      /// this node's points
+      std::map < Point, Value > m_;
+
+      /// the bounding rectangle for the node
+      geometry::box < Point > bounding_rectangle_;
+
+      /// number of points in each node
+      unsigned int node_size_;
+
+      /// divide the node in four quadrants
+      void divide_quadrants(geometry::box < Point > &ne_box,
+                            geometry::box < Point > &sw_box,
+                            geometry::box < Point > &se_box,
+                            geometry::box < Point > &nw_box) const
+      {
+
+        geometry::get < 0 > (ne_box.min()) =
+          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
+          (bounding_rectangle_.min());
+        geometry::get < 1 > (ne_box.min()) =
+          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
+          (bounding_rectangle_.min());
+        geometry::get < 0 > (ne_box.max()) =
+          geometry::get < 0 > (bounding_rectangle_.max());
+        geometry::get < 1 > (ne_box.max()) =
+          geometry::get < 1 > (bounding_rectangle_.max());
+
+        geometry::get < 0 > (sw_box.min()) =
+          geometry::get < 0 > (bounding_rectangle_.min());
+        geometry::get < 1 > (sw_box.min()) =
+          geometry::get < 1 > (bounding_rectangle_.min());
+        geometry::get < 0 > (sw_box.max()) =
+          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
+          (bounding_rectangle_.min());
+        geometry::get < 1 > (sw_box.max()) =
+          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
+          (bounding_rectangle_.min());
+
+        geometry::get < 0 > (se_box.min()) =
+          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
+          (bounding_rectangle_.min());
+        geometry::get < 1 > (se_box.min()) =
+          geometry::get < 1 > (bounding_rectangle_.min());
+        geometry::get < 0 > (se_box.max()) =
+          geometry::get < 0 > (bounding_rectangle_.max());
+        geometry::get < 1 > (se_box.max()) =
+          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
+          (bounding_rectangle_.min());
+
+        geometry::get < 0 > (nw_box.min()) =
+          geometry::get < 0 > (bounding_rectangle_.min());
+        geometry::get < 1 > (nw_box.min()) =
+          (geometry::get < 1 > (bounding_rectangle_.max()) - geometry::get < 1 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 1 >
+          (bounding_rectangle_.min());
+        geometry::get < 0 > (nw_box.max()) =
+          (geometry::get < 0 > (bounding_rectangle_.max()) - geometry::get < 0 >
+           (bounding_rectangle_.min())) / 2.0 + geometry::get < 0 >
+          (bounding_rectangle_.min());
+        geometry::get < 1 > (nw_box.max()) =
+          geometry::get < 1 > (bounding_rectangle_.max());
+      }
+
+
 
     };
 
