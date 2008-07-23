@@ -187,7 +187,8 @@ public:
 		return (!m_pos && (m_node != parent_begin_node));
 		// (*this != this->parent().begin())
 	}
-		
+
+public:
 	// TODO: protect?
 	void attach(node_pointer p_node)
 	{

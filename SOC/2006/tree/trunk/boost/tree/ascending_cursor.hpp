@@ -254,7 +254,6 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
     , m_root_depth(other.base().m_s.size()) {}
 
  private: 
- 
  	std::size_t const m_root_depth;
  	
  	friend class boost::iterator_core_access;

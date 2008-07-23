@@ -103,59 +103,48 @@ void compare_cursor_to_iterator_traversal() {
 	//comparisons(test_tree2.root());
 
 	binary_tree<int>::cursor c = test_tree2.insert(test_tree2.root(), 8);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 
 	c = test_tree2.insert(c, 3);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 		
 	test_tree2.insert(c, 1);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	c = test_tree2.insert(++c, 6);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	test_tree2.insert(c, 4);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	test_tree2.insert(++c, 7);	
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	c = test_tree2.insert(test_tree2.root().end(), 10);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	c = test_tree2.insert(test_tree2.root().end().end(), 14);	
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	c = test_tree2.insert(c, 13);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	c = test_tree2.insert(c, 11);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	c = test_tree2.insert(++c, 12);
-	comparisons(test_tree2.root());
-	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	comparisons(make_root_tracking_cursor(test_tree2.root()));
+	comparisons(make_root_tracking_cursor(make_ascending_cursor(test_tree2.root())));
 	
 	underefed_for_each(test_tree2.root(), comparisons_using_ac);
 	underefed_for_each(test_tree2.root(), comparisons_using_rtc);
@@ -178,35 +167,35 @@ int test_main(int, char* [])
 	create_test_data_tree(test_tree);
 
 	//Preorder	
-	test::preorder::traversal(preorder::begin(test_tree.root()),
-							  preorder::end(test_tree.root()));
+	test::preorder::traversal(preorder::begin(make_root_tracking_cursor(test_tree.root())),
+							  preorder::end(make_root_tracking_cursor(test_tree.root())));
 
-	test::preorder::reverse_traversal(preorder::end(test_tree.root()),
-									  preorder::begin(test_tree.root()));
+	test::preorder::reverse_traversal(preorder::end(make_root_tracking_cursor(test_tree.root())),
+									  preorder::begin(make_root_tracking_cursor(test_tree.root())));
 									
-	BOOST_CHECK(std::distance(preorder::begin(test_tree.root()), 
-						      preorder::end(test_tree.root())) == 11);
+	BOOST_CHECK(std::distance(preorder::begin(make_root_tracking_cursor(test_tree.root())), 
+						      preorder::end(make_root_tracking_cursor(test_tree.root()))) == 11);
 
 	// Inorder
-	test::inorder::traversal(inorder::begin(test_tree.root()), 
-						   inorder::end(test_tree.root()));
+	test::inorder::traversal(inorder::begin(make_root_tracking_cursor(test_tree.root())), 
+						   inorder::end(make_root_tracking_cursor(test_tree.root())));
 
-	test::inorder::reverse_traversal(inorder::end(test_tree.root()), 
-								   inorder::begin(test_tree.root()));
+	test::inorder::reverse_traversal(inorder::end(make_root_tracking_cursor(test_tree.root())), 
+								   inorder::begin(make_root_tracking_cursor(test_tree.root())));
 	
 	// TODO: Also check with binary_tree-specialized inorder begin()!
 
-	BOOST_CHECK(std::distance(inorder::begin(test_tree.root()), 
-						      inorder::end(test_tree.root())) == 11);
+	BOOST_CHECK(std::distance(inorder::begin(make_root_tracking_cursor(test_tree.root())), 
+						      inorder::end(make_root_tracking_cursor(test_tree.root()))) == 11);
 
 	//Postorder
-	test::postorder::traversal(postorder::begin(test_tree.root()), 
-							 postorder::end(test_tree.root()));
-	test::postorder::reverse_traversal(postorder::end(test_tree.root()), 
-									 postorder::begin(test_tree.root()));
+	test::postorder::traversal(postorder::begin(make_root_tracking_cursor(test_tree.root())), 
+							 postorder::end(make_root_tracking_cursor(test_tree.root())));
+	test::postorder::reverse_traversal(postorder::end(make_root_tracking_cursor(test_tree.root())), 
+									 postorder::begin(make_root_tracking_cursor(test_tree.root())));
 
-	BOOST_CHECK(std::distance(postorder::begin(test_tree.root()), 
-						      postorder::end(test_tree.root())) == 11);
+	BOOST_CHECK(std::distance(postorder::begin(make_root_tracking_cursor(test_tree.root())), 
+						      postorder::end(make_root_tracking_cursor(test_tree.root()))) == 11);
 
 	// Now the iterators based on stack-based cursors (that don't use cursor.to_parent())
 
