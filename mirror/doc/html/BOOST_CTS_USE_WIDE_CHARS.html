@@ -26,25 +26,25 @@
 <a name="BOOST_CTS_USE_WIDE_CHARS"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_CTS_USE_WIDE_CHARS</span></h2>
-<p>BOOST_CTS_USE_WIDE_CHARS &#8212; This preprocessor symbol is used to switch the definition of <code class="computeroutput">bchar</code>
+<p>BOOST_CTS_USE_WIDE_CHARS &#8212; This preprocessor symbol is used to switch the definition of <code class="computeroutput"><a class="link" href="boost/cts/bchar.html" title="Type definition bchar">bchar</a></code>
 			and everything derived from this type.
 			</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_CTS_USE_WIDE_CHARS</pre></div>
 <div class="refsect1" lang="en">
-<a name="id709851"></a><h2>Description</h2>
+<a name="id2640042"></a><h2>Description</h2>
 <p>If the <code class="computeroutput"><a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol is defined
-			then the type <code class="computeroutput">bchar</code> is defined as <code class="computeroutput">wchar_t</code>,
+			then the type <code class="computeroutput"><a class="link" href="boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> is defined as <code class="computeroutput">wchar_t</code>,
 			otherwise it's defined as <code class="computeroutput">char</code>:
 </p>
 <pre class="programlisting">
 #include &lt;boost/char_type_switch/string.hpp&gt;
 
 #ifdef <a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a>
-BOOST_MPL_ASSERT((::boost::is_same&lt; ::boost::cts::bchar, wchar_t &gt;));
+BOOST_MPL_ASSERT((::boost::is_same&lt; ::boost::cts::<a class="link" href="boost/cts/bchar.html" title="Type definition bchar">bchar</a>, wchar_t &gt;));
 #else
-BOOST_MPL_ASSERT((::boost::is_same&lt; ::boost::cts::bchar, char &gt;));
+BOOST_MPL_ASSERT((::boost::is_same&lt; ::boost::cts::<a class="link" href="boost/cts/bchar.html" title="Type definition bchar">bchar</a>, char &gt;));
 #endif
 </pre>
 <p>
