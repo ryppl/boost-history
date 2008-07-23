@@ -36,24 +36,39 @@ void edge_walk(Graph& g)
     typedef exterior_property_map<ColorProp> ColorMap;
     typedef queue<Vertex> Queue;
 
-    typedef breadth_first_edge_walk<Graph, ColorMap, Queue> BreadthFirstWalk;
-    typedef breadth_first_edge_traversal<Graph, ColorMap, Queue> BreadthFirstTraversal;
+    {
+        typedef breadth_first_edge_walk<Graph> Walk;
+        cout << "--- default walk ----" << endl;
+        Walk walk(g, *g.begin_vertices());
+        iterate(g, walk );
+    }
 
     {
-        cout << "--- walk ---" << endl;
+        typedef breadth_first_edge_walk<Graph, ColorMap, Queue> BreadthFirstWalk;
+        cout << "--- custom walk ---" << endl;
         ColorProp color_prop(g, white_color);
         ColorMap color(color_prop);
         BreadthFirstWalk walk(g, *g.begin_vertices(), color);
         iterate(g, walk);
     }
 
+
     {
-        cout << "--- traversal ---" << endl;
+        typedef breadth_first_edge_traversal<Graph> Traversal;
+        cout << "--- default traversal ---" << endl;
+        Traversal trav(g);
+        iterate(g, trav);
+    }
+
+    {
+        typedef breadth_first_edge_traversal<Graph, ColorMap, Queue> BreadthFirstTraversal;
+        cout << "--- custom traversal ---" << endl;
         ColorProp color_prop(g, white_color);
         ColorMap color(color_prop);
         BreadthFirstTraversal trav(g, color);
         iterate(g, trav);
     }
+
 }
 
 int main()

@@ -58,6 +58,13 @@ public:
     inline edge_pair const& edge() const
     { return ends; }
 
+    /** @name End Points
+     * Provide access to the end points of the undirected edge. Because the
+     * ends of this edge are unordered, they do not provide a source and target
+     * interface. See the rooted_undirected_edge class for a variant of this
+     * type that imposes a source/target interface on these edges.
+     */
+    //@{
     inline vertex_descriptor first() const
     { return ends.first(); }
 
@@ -66,6 +73,7 @@ public:
 
     inline vertex_descriptor opposite(vertex_descriptor v)
     { return v == first() ? second() : first(); }
+    //@}
 
     /** Return true if the edge connects the two vertices. */
     inline bool connects(vertex_descriptor u, vertex_descriptor v) const
@@ -116,6 +124,35 @@ hash_value(undirected_edge<V,P> const& e)
     using boost::hash;
     return hash_value(e.prop);
 }
+
+/**
+ * The rooted undirected edge is a variant of undirected edges that imposes
+ * a source/target ordering over the edges in the graph. This is done by
+ * maintaining an additional vertex descriptor references the source of an
+ * edge.
+ */
+template <typename Edge>
+class rooted_undirected_edge
+    : public Edge
+{
+public:
+    typedef typename Edge::vertex_descriptor vertex_descriptor;
+
+    /** @name Constructors */
+    inline rooted_undirected_edge(Edge const& edge, vertex_descriptor src)
+        : Edge(edge), src(src)
+    { }
+
+    /** Return the source of the rooted edge. */
+    inline vertex_descriptor source() const
+    { return src; }
+
+    /** Return the target of the rooted edge. */
+    inline vertex_descriptor target() const
+    { return this->opposite(src); }
+
+    vertex_descriptor src;
+};
 
 /**
  * The undirected edge iterator simply wraps the iterator over the global edge

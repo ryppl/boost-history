@@ -13,7 +13,7 @@ class incidence_iterator
 public:
     typedef Iter iterator;
     typedef typename iterator::value_type base_value_type;
-    typedef typename base_value_type::first_type vertex_descriptor;
+    typedef typename boost::remove_const<typename base_value_type::first_type>::type vertex_descriptor;
     typedef typename base_value_type::second_type property_descriptor;
 
     // This is a little misleading. This iterator can be either bidi or random.
@@ -30,7 +30,7 @@ public:
         : base(), iter()
     { }
 
-    inline incidence_iterator(vertex_descriptor v, iterator const& x)
+    inline incidence_iterator(vertex_descriptor v, iterator x)
         : base(v), iter(x)
     { }
 
@@ -49,6 +49,9 @@ public:
      */
     inline vertex_descriptor opposite() const
     { return iter->first; }
+
+    inline incidence_iterator& operator=(incidence_iterator const& x)
+    { base = x.base; iter = x.iter; return *this; }
 
     inline incidence_iterator& operator++()
     { ++iter; return *this; }

@@ -64,7 +64,6 @@ void test_props()
 
     // If bundled, constructed over the entire bundle.
 
-
     {
         typedef interior_property_map<Graph, Vertex> PropMap;
         typedef interior_property_map<Graph, Vertex, string VertexProps::*> NameMap;
@@ -88,6 +87,19 @@ void test_props()
             cout << names(e) << endl;
         }
     }
+
+    {
+        // Generic stuff?
+        exterior_vertex_property<Graph, double> these_weights(g, 6.28);
+
+        generic_vertex_map<Graph, double> my_weights(g, 3.14);
+        generic_vertex_map<Graph, double> your_weights(these_weights);
+
+        for(vr.first = g.begin_vertices(); vr.first != vr.second; ++vr.first) {
+            Vertex v = *vr.first;
+            cout << my_weights(v) << ", " << your_weights(v) << endl;
+        }
+    }
 }
 
 
@@ -99,6 +111,9 @@ struct Object
 
     int id;
     string name;
+
+    inline bool operator<(Object const& x) const
+    { return id < x.id; }
 };
 
 typedef Object City;
@@ -106,28 +121,25 @@ typedef Object Road;
 
 int main()
 {
-    /*
     {
-        typedef undirected_graph<int, int, vertex_vector<>, edge_vector<>> G1;
-        typedef undirected_graph<int, int, vertex_list<>, edge_list<>> G2;
-        typedef undirected_graph<int, int, vertex_set<>, edge_set<>> G3;
+        typedef undirected_graph<City, Road, vertex_vector<>, edge_vector<>> G1;
+        typedef undirected_graph<City, Road, vertex_list<>, edge_list<>> G2;
+        typedef undirected_graph<City, Road, vertex_set<>, edge_set<>> G3;
 
         test_props<G1>();
         test_props<G2>();
         test_props<G3>();
     }
-    */
 
     {
         typedef directed_graph<City, Road, vertex_vector<>, edge_vector<>> G1;
-        typedef directed_graph<int, int, vertex_list<>, edge_list<>> G2;
-        typedef directed_graph<int, int, vertex_set<>, edge_set<>> G3;
+        typedef directed_graph<City, Road, vertex_list<>, edge_list<>> G2;
+        typedef directed_graph<City, Road, vertex_set<>, edge_set<>> G3;
 
         test_props<G1>();
-        // test_props<G2>();
-        // test_props<G3>();
+        test_props<G2>();
+        test_props<G3>();
     }
-
 
     return 0;
 }

@@ -45,13 +45,20 @@ public:
     { return !is_null(); }
     //@}
 
-    /** Return the source vertex descriptor. */
+    /** @name End Points
+     * Provide access to the source and target of the directed edge. The
+     * opposite member provides parity with undirected edge type.
+     */
+    //@{
     inline vertex_descriptor source() const
     { return ends.first; }
 
-    /** Return the target vertex descriptor. */
     inline vertex_descriptor target() const
     { return ends.second; }
+
+    inline vertex_descriptor opposite(vertex_descriptor v) const
+    { return v == source() ? target() : source(); }
+    //@}
 
     /** Return the descriptor to the out edge, where the property is stored. */
     inline out_descriptor out_edge() const

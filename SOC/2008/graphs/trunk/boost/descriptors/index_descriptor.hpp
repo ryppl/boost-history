@@ -34,7 +34,6 @@ struct index_descriptor
     inline operator bool() const
     { return !is_null(); }
 
-
     /** @name Equality Comparable */
     //@{
     inline bool operator==(index_descriptor const& x) const
