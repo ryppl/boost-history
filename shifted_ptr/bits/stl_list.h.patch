@@ -1,5 +1,5 @@
 --- /local/include/c++/3.4.5/bits/stl_list.h	Wed Jan 18 11:06:54 2006
-+++ stl_list.h	Tue Jul 22 02:11:25 2008
++++ stl_list.h	Wed Jul 23 00:33:26 2008
 @@ -51,10 +51,21 @@
   * in supporting documentation.  Silicon Graphics makes no
   * representations about the suitability of this software for any
@@ -155,6 +155,19 @@
        _List_const_iterator(const iterator& __x)
        : _M_node(__x._M_node) { }
  
+@@ -216,11 +242,11 @@
+       { return &static_cast<_Node*>(_M_node)->_M_data; }
+ 
+       _Self&
+       operator++()
+       {
+-	_M_node = _M_node->_M_next;
++        _M_node = &*_M_node->_M_next;
+ 	return *this;
+       }
+ 
+       _Self
+       operator++(int)
 @@ -252,23 +278,23 @@
        bool
        operator!=(const _Self& __x) const
@@ -186,7 +199,7 @@
  
    /**
     *  @if maint
-@@ -290,34 +316,34 @@
+@@ -290,41 +316,47 @@
        //
        // We put this to the test in the constructors and in
        // get_allocator, where we use conversions between
@@ -200,10 +213,18 @@
        struct _List_impl 
  	: public _Node_Alloc_type {
 -	_List_node_base _M_node;
-+	_List_node_base<_Alloc> _M_node;
- 	_List_impl (const _Node_Alloc_type& __a)
- 	  : _Node_Alloc_type(__a)
+-	_List_impl (const _Node_Alloc_type& __a)
+-	  : _Node_Alloc_type(__a)
++        _List_base & _M_base;
++        _List_node_base<_Alloc> & _M_node;
++        _List_impl (const _Node_Alloc_type& __a, _List_base& __b)
++          : _Node_Alloc_type(__a), _M_base(__b), _M_node(* new (_M_base._M_get_node()) _List_node_base<_Alloc>())
  	{ }
++        ~_List_impl ()
++        {
++          _M_node.~_List_node_base<_Alloc>();
++          _M_base._M_put_node(static_cast<_List_node<_Tp, _Alloc> *>(&_M_node));
++        }
        };
  
        _List_impl _M_impl;
@@ -226,7 +247,15 @@
        get_allocator() const
        { return allocator_type(*static_cast<const _Node_Alloc_type*>(&this->_M_impl)); }
  
-@@ -393,26 +419,26 @@
+       _List_base(const allocator_type& __a)
+-	: _M_impl(__a)
++	: _M_impl(__a, *this)
+       { _M_init(); }
+ 
+       // This is what actually destroys the list.
+       ~_List_base()
+       { _M_clear(); }
+@@ -393,26 +425,26 @@
  
        typedef _List_base<_Tp, _Alloc>                   _Base;
  
@@ -260,14 +289,14 @@
         *  One data member plus two memory-handling functions.  If the
         *  _Alloc type requires separate instances, then one of those
         *  will also be included, accumulated from the topmost parent.
-@@ -595,20 +621,20 @@
+@@ -595,20 +627,20 @@
         *  Returns a read/write iterator that points to the first element in the
         *  %list.  Iteration is done in ordinary element order.
         */
        iterator
        begin()
 -      { return this->_M_impl._M_node._M_next; }
-+      { return iterator(this->_M_impl._M_node._M_next); }
++      { return iterator(&*this->_M_impl._M_node._M_next); }
  
        /**
         *  Returns a read-only (constant) iterator that points to the
@@ -277,13 +306,13 @@
        const_iterator
        begin() const
 -      { return this->_M_impl._M_node._M_next; }
-+      { return const_iterator(this->_M_impl._M_node._M_next); }
++      { return const_iterator(&*this->_M_impl._M_node._M_next); }
  
        /**
         *  Returns a read/write iterator that points one past the last
         *  element in the %list.  Iteration is done in ordinary element
         *  order.
-@@ -908,11 +934,11 @@
+@@ -908,11 +940,11 @@
         *  specialized such that std::swap(l1,l2) will feed to this
         *  function.
         */
@@ -296,7 +325,7 @@
         *  Erases all the elements.  Note that this function only erases
         *  the elements, and that if the elements themselves are
         *  pointers, the pointed-to memory is not touched in any way.
-@@ -1167,13 +1193,17 @@
+@@ -1167,13 +1199,17 @@
        // Erases element at position given.
        void
        _M_erase(iterator __position)

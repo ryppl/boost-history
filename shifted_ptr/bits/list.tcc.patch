@@ -1,5 +1,5 @@
 --- /local/include/c++/3.4.5/bits/list.tcc	Wed Jan 18 11:06:46 2006
-+++ list.tcc	Mon Jul 21 03:28:48 2008
++++ list.tcc	Tue Jul 22 23:41:23 2008
 @@ -51,42 +51,74 @@
   * in supporting documentation.  Silicon Graphics makes no
   * representations about the suitability of this software for any
@@ -56,12 +56,12 @@
 -      _Node* __cur = static_cast<_Node*>(this->_M_impl._M_node._M_next);
 +      typedef _List_node<_Tp,_Alloc>  _Node;
 +      typedef _List_node_base<_Alloc>  _Node_base;
-+      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(this->_M_impl._M_node._M_next));
++      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*this->_M_impl._M_node._M_next));
        while (__cur != &this->_M_impl._M_node)
        {
          _Node* __tmp = __cur;
 -        __cur = static_cast<_Node*>(__cur->_M_next);
-+        __cur = static_cast<_Node*>(static_cast<_Node_base*>(__cur->_M_next));
++        __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*__cur->_M_next));
          std::_Destroy(&__tmp->_M_data);
          _M_put_node(__tmp);
        }
