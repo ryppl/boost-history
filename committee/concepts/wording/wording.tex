@@ -65,7 +65,7 @@ Jeremy Siek, University of Colorado at Boulder
 \par\noindent Document number:  DRAFT\vspace{-6pt}
 \par\noindent Revises document number: N2676=08-0186 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
-\par\noindent Project: Programming Language C++, Core Working Group\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Core Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:doug.gregor@gmail.com}{doug.gregor@gmail.com}$>$
 
 \section*{Introduction}
@@ -1012,9 +1012,10 @@ using-declaration:\br
 \pnum 
 \addedConcepts{A \mbox{\techterm{using-declaration}} for a concept map
   is an alias to 
-the concept map that matches (\mbox{\ref{temp.concept.map}}) the
-concept instance corresponding to the
-\mbox{\techterm{concept-id}} from the specified
+the concept map}
+\changedCCC{that matches (\mbox{\ref{temp.concept.map}}) the
+concept instance corresponding to the}{determined by concept map lookup (\mbox{\ref{temp.req.sat}}) of the}
+\addedConcepts{\mbox{\techterm{concept-id}} from the specified
   namespace.
 \mbox{\enterexample}}
 %
