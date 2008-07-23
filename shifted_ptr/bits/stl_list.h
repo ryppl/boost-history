@@ -244,7 +244,7 @@ namespace _GLIBCXX_STD
       _Self&
       operator++()
       {
-        _M_node = _M_node->_M_next;
+        _M_node = &*_M_node->_M_next;
         return *this;
       }
 
@@ -323,11 +323,17 @@ namespace _GLIBCXX_STD
       _Node_Alloc_type;
 
       struct _List_impl 
-	: public _Node_Alloc_type {
-	_List_node_base<_Alloc> _M_node;
-	_List_impl (const _Node_Alloc_type& __a)
-	  : _Node_Alloc_type(__a)
-	{ }
+        : public _Node_Alloc_type {
+        _List_base & _M_base;
+        _List_node_base<_Alloc> & _M_node;
+        _List_impl (const _Node_Alloc_type& __a, _List_base& __b)
+          : _Node_Alloc_type(__a), _M_base(__b), _M_node(* new (_M_base._M_get_node()) _List_node_base<_Alloc>())
+        { }
+        ~_List_impl ()
+        {
+          _M_node.~_List_node_base<_Alloc>();
+          _M_base._M_put_node(static_cast<_List_node<_Tp, _Alloc> *>(&_M_node));
+        }
       };
 
       _List_impl _M_impl;
@@ -348,7 +354,7 @@ namespace _GLIBCXX_STD
       { return allocator_type(*static_cast<const _Node_Alloc_type*>(&this->_M_impl)); }
 
       _List_base(const allocator_type& __a)
-	: _M_impl(__a)
+	: _M_impl(__a, *this)
       { _M_init(); }
 
       // This is what actually destroys the list.
@@ -623,7 +629,7 @@ namespace _GLIBCXX_STD
        */
       iterator
       begin()
-      { return iterator(this->_M_impl._M_node._M_next); }
+      { return iterator(&*this->_M_impl._M_node._M_next); }
 
       /**
        *  Returns a read-only (constant) iterator that points to the
@@ -632,7 +638,7 @@ namespace _GLIBCXX_STD
        */
       const_iterator
       begin() const
-      { return const_iterator(this->_M_impl._M_node._M_next); }
+      { return const_iterator(&*this->_M_impl._M_node._M_next); }
 
       /**
        *  Returns a read/write iterator that points one past the last

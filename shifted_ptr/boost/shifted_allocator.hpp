@@ -36,36 +36,6 @@ namespace sh
 {
 
 
-template <typename T>
-    class shifted_ptr_stl : public shifted_ptr<T>
-    {
-        typedef shifted_ptr<T> base;
-
-    public:
-        typedef T element_type;
-
-
-        shifted_ptr_stl()
-        {
-        }
-
-        //! FIXME
-        shifted_ptr_stl(T * p) : base((shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(p)))
-        {
-        }
-
-        operator T * ()
-        {
-            return base::get();
-        }
-
-        operator T const * () const
-        {
-            return base::get();
-        }
-    };
-
-
 /**
     STL compliant allocator.
 */
@@ -75,13 +45,13 @@ template <typename T>
     class shifted_allocator
     {
     public:
-        typedef size_t                      size_type;
-        typedef ptrdiff_t                   difference_type;
-        typedef shifted_ptr_stl<T>          pointer;
-        typedef const shifted_ptr_stl<T>    const_pointer;
-        typedef T &                         reference;
-        typedef const T &                   const_reference;
-        typedef T                           value_type;
+        typedef size_t                  size_type;
+        typedef ptrdiff_t               difference_type;
+        typedef shifted_ptr<T>          pointer;
+        typedef const shifted_ptr<T>    const_pointer;
+        typedef T &                     reference;
+        typedef const T &               const_reference;
+        typedef T                       value_type;
 
         template <typename U>
             struct rebind

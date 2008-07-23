@@ -101,11 +101,11 @@ namespace _GLIBCXX_STD
     {
       typedef _List_node<_Tp,_Alloc>  _Node;
       typedef _List_node_base<_Alloc>  _Node_base;
-      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(this->_M_impl._M_node._M_next));
+      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*this->_M_impl._M_node._M_next));
       while (__cur != &this->_M_impl._M_node)
       {
         _Node* __tmp = __cur;
-        __cur = static_cast<_Node*>(static_cast<_Node_base*>(__cur->_M_next));
+        __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*__cur->_M_next));
         std::_Destroy(&__tmp->_M_data);
         _M_put_node(__tmp);
       }

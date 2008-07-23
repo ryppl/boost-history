@@ -77,6 +77,7 @@ struct create_type {
 };
 
 int main() {
+/*
     count = 0;
 	{
 	    list l;
@@ -88,14 +89,14 @@ int main() {
 	    }
 	}
     std::cout << count << std::endl;
-    
+*/
     count = 0;
     {
         shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     std::cout << count << std::endl;
-
+/*
     {
         vector v;
         v.elements.push_back(new shifted<vector>());
@@ -116,4 +117,5 @@ int main() {
         boost::mpl::for_each<boost::mpl::range_c<int, 1, 100> >(create_type());
     }
     std::cout << count << std::endl;
+*/
 }

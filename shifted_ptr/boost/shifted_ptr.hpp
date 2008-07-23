@@ -240,6 +240,41 @@ template <typename T>
                 return operator = <T>(p);
             }
 
+//! FIXME
+#if 1
+        template <typename V>
+            shifted_ptr(V * p)
+            {
+                shifted<element_type> * const q = (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(p));
+
+                base::operator = (q);
+
+                if (! owned_base::pool_.is_from(this))
+                {
+                    ps_ = new set();
+
+                    init(q);
+                }
+                else
+                {
+                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
+                    owned_base::pool_.top(this)->inits()->merge(* q->inits());
+                }
+            }
+
+        template <typename V>
+            shifted_ptr & operator = (V * p)
+            {
+                shifted<element_type> * const q = (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(p));
+
+                release();
+                init(q);
+                base::operator = (q);
+
+                return * this;
+            }
+#endif
+
         void reset()
         {
             release();
