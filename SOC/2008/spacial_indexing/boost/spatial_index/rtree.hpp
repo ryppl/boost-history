@@ -1,13 +1,13 @@
 //
-//      Spatial Index - rTree
-//
+// Boost.SpatialIndex - rtree implementation
 //
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-
+//  See http://www.boost.org/ for latest version.
+//
 
 #ifndef BOOST_SPATIAL_INDEX_RTREE_HPP
 #define BOOST_SPATIAL_INDEX_RTREE_HPP
@@ -93,7 +93,8 @@ namespace boost
             insert(it->first, it->second);
           }
 
-          // if the root has only one child and the child is not a leaf, make it the root
+          // if the root has only one child and the child is not a leaf, 
+          // make it the root
           if (root_->elements() == 1) {
             if (!root_->first_element()->is_leaf()) {
               root_ = root_->first_element();
@@ -484,7 +485,8 @@ namespace boost
           throw std::logic_error("Empty Node trying to Pick Seeds");
         }
         // only two dim for now
-        // unsigned int dimensions = geometry::point_traits<Point>::coordinate_count;
+        // unsigned int dimensions = 
+        //   geometry::point_traits<Point>::coordinate_count;
 
         // find the first two elements
         double separation_x, separation_y;
