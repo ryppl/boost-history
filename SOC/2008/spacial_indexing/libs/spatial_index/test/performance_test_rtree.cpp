@@ -1,8 +1,13 @@
+//
+// Boost.SpatialIndex - performance example for quadtree
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-
+//
+//  See http://www.boost.org/ for latest version.
+//
 
 #include <boost/spatial_index.hpp>
 
@@ -102,7 +107,8 @@ int test_main(int, char* [])
   typedef geometry::point_xy<double> point_type;
   typedef unsigned int value_type;
 
-  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(16, 8);
+  boost::spatial_index::spatial_index<point_type, value_type, 
+         boost::spatial_index::rtree<point_type, value_type> > q(16, 8);
 
   // load data
   std::cerr << " --> bulk insert" << std::endl;
@@ -112,7 +118,8 @@ int test_main(int, char* [])
 
   start = time(NULL);
   q.bulk_insert(ids, points);
-  std::cerr << "Insertion time: " << time(NULL) - start << " seconds." << std::endl;
+  std::cerr << "Insertion time: " << time(NULL) - start << " seconds." 
+            << std::endl;
 
   //       std::cerr << "Elements: " << q.elements() << std::endl;
 
@@ -138,27 +145,32 @@ int test_main(int, char* [])
   std::deque<unsigned int> d = q.find(query_box);
   std::cerr << " --> find rectangle" << std::endl;
   BOOST_CHECK_EQUAL(rect_count, d.size());
-  //       for(std::deque<unsigned int>::const_iterator it = d.begin(); it != d.end(); ++it) {
-  // 	std::cerr << "r: " << *it << std::endl;
-  //       }
-  std::cerr << "Retrieve (rectangle with " << d.size() << " elements) time: " << time(NULL) - start << " seconds." << std::endl;
+  // for(std::deque<unsigned int>::const_iterator it = d.begin(); 
+  //     it != d.end(); ++it) {
+  //   std::cerr << "r: " << *it << std::endl;
+  // }
+  std::cerr << "Retrieve (rectangle with " << d.size() 
+            << " elements) time: " << time(NULL) - start << " seconds." 
+            << std::endl;
 
   start = time(NULL);
   for(unsigned int j=0; j < find_count; j++) {
     unsigned int i = q.find(search_positions[j]);
     // 	std::vector<unsigned int>::iterator it = q.find(search_positions[j]);
     //std::cout << search_data[j] 
-    //  << " - found in (" << search_positions[j].first << "," << search_positions[j].second << ") --> " 
+    //  << " - found in (" << search_positions[j].first << "," 
+    //  << search_positions[j].second << ") --> " 
     //  << *it << std::endl;
     
     BOOST_CHECK_EQUAL(i, search_data[j]);
   }
-  std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." << std::endl;
+  std::cerr << "Retrieve time: " << time(NULL) - start << " seconds." 
+            << std::endl;
 
-  
   std::cerr << " --> removal tests" << std::endl;
   for(unsigned int j=0; j < find_count/1000; j++) {
-    q.remove(geometry::box<geometry::point_xy<double> >(search_positions[j], search_positions[j]));
+    q.remove(geometry::box<geometry::point_xy<double> >(search_positions[j], 
+             search_positions[j]));
     // std::cerr << "Elements: " << q.elements() << std::endl;
   }      
   std::cerr << std::endl;
@@ -170,13 +182,15 @@ int test_main(int, char* [])
     // std::cerr << "Prev. Value: " << search_data[j] << std::endl;
     BOOST_CHECK_EQUAL(i, 0u);
   }
-  std::cerr << "Removal time: " << time(NULL) - start << " seconds." << std::endl;
+  std::cerr << "Removal time: " << time(NULL) - start << " seconds." 
+            << std::endl;
 
   //       std::cerr << " --> complete removal tests" << std::endl;
   //       unsigned int total = q.elements();
   //       for(unsigned int j=0; j < total; j++) {
   // // 	unsigned int e = q.elements();
-  //  	q.remove(geometry::box<geometry::point_xy<double> >(points[j], points[j]));
+  //  	q.remove(geometry::box<geometry::point_xy<double> >(points[j], 
+  //  	points[j]));
   // // 	q.print();
   // // 	BOOST_CHECK_EQUAL(e, q.elements()+1);
   // //   	std::cerr << "Elements: " << e << std::endl;
