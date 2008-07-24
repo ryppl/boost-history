@@ -1,8 +1,13 @@
+//
+// Boost.SpatialIndex - rtree example with random data
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-
+//
+//  See http://www.boost.org/ for latest version.
+//
 
 #include <boost/spatial_index.hpp>
 
@@ -21,15 +26,15 @@
 
 double drandom(unsigned int upper_bound)
 {
-  double r;		/* random value in range [0,1) */
-  long int M;	/* user supplied upper boundary */
+  double r;     /* random value in range [0,1) */
+  long int M;   /* user supplied upper boundary */
 
   struct timeval tv;
   struct timezone tz;
   gettimeofday(&tv, &tz);
   srand(tv.tv_usec);
 
-  M = upper_bound;		/* Choose M. Upper bound */
+  M = upper_bound;     /* Choose M. Upper bound */
   r = (   (double)rand() / ((double)(RAND_MAX)+(double)(1)) );
 
   return r * M;
@@ -40,7 +45,7 @@ int test_main(int, char* [])
 {
   // data and indexed points
   std::vector<unsigned int> ids;
-  std::vector<geometry::point_xy<double> > points;	
+  std::vector<geometry::point_xy<double> > points;
 
   // number of points
   const unsigned int points_count = 500;
@@ -51,7 +56,8 @@ int test_main(int, char* [])
   typedef geometry::point_xy<double> point_type;
   typedef unsigned int value_type;
 
-  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(8, 4);
+  boost::spatial_index::spatial_index<point_type, value_type, 
+         boost::spatial_index::rtree<point_type, value_type> > q(8, 4);
 
   // generate random data
   for(unsigned int i = 0; i < points_count; i++) {
@@ -61,7 +67,8 @@ int test_main(int, char* [])
     ids.push_back(i);
     points.push_back(geometry::point_xy<double>(x, y));
 
-    // std::cerr << "insert " << i << " -> (" << x << ", " << y << ")" << std::endl;
+    // std::cerr << "insert " << i << " -> (" << x << ", " << y << ")" 
+    //           << std::endl;
   }
 
   // insert data
@@ -71,27 +78,28 @@ int test_main(int, char* [])
   // e = ids.end();
   q.bulk_insert(ids, points);
 
-      // search
-      std::vector<geometry::point_xy<double> > search_positions;
-      std::vector<unsigned int> search_data;
+  // search
+  std::vector<geometry::point_xy<double> > search_positions;
+  std::vector<unsigned int> search_data;
 
-      // compute random positions to do the searches, store the data
-      for(unsigned int j=0; j < find_count; j++) {
-	unsigned int pos = (int) drandom(points_count);
-	search_positions.push_back(points[pos]);
-	search_data.push_back(pos);
-      }
+  // compute random positions to do the searches, store the data
+  for(unsigned int j=0; j < find_count; j++) {
+    unsigned int pos = (int) drandom(points_count);
+    search_positions.push_back(points[pos]);
+    search_data.push_back(pos);
+  }
 
-      // search data and compare
-      for(unsigned int j=0; j < find_count; j++) {
-	unsigned int i = q.find(search_positions[j]);
-	std::cout << search_data[j] 
-		  << " - found in (" << geometry::get<0>(search_positions[j]) << "," << geometry::get<1>(search_positions[j])
-		  << ") --> " << i << std::endl;
-	
-	// check if the retrieved data is equal to the stored data
-	BOOST_CHECK_EQUAL(i, search_data[j]);
-      }
+  // search data and compare
+  for(unsigned int j=0; j < find_count; j++) {
+    unsigned int i = q.find(search_positions[j]);
+    std::cout << search_data[j] 
+              << " - found in (" << geometry::get<0>(search_positions[j]) 
+              << "," << geometry::get<1>(search_positions[j])
+              << ") --> " << i << std::endl;
 
-      return 0;
+    // check if the retrieved data is equal to the stored data
+    BOOST_CHECK_EQUAL(i, search_data[j]);
+  }
+
+  return 0;
 }
