@@ -78,11 +78,12 @@ class defragment :
 	private ContainerT::alloc_type,
 	public ContainerT
 {
-public:
- 	typedef typename ContainerT::alloc_type alloc_type;
+private:
+	typedef ContainerT::alloc_type AllocT;
 
-	alloc_type& BOOST_MEMORY_CALL get_alloc() {
-		return *static_cast<alloc_type*>(this);
+public:
+	AllocT& BOOST_MEMORY_CALL get_alloc() {
+		return *static_cast<AllocT*>(this);
 	}
 
 	void BOOST_MEMORY_CALL swap(defragment& o) {
@@ -91,8 +92,8 @@ public:
 
 	void BOOST_MEMORY_CALL defrag()
 	{
-		alloc_type alloc2;
-		alloc_type::swap(alloc2);
+		AllocT alloc2;
+		AllocT::swap(alloc2);
 		
 		ContainerT data2(get_alloc());
 		data2.copy(*static_cast<const ContainerT*>(this));
