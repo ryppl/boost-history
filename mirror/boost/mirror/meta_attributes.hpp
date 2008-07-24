@@ -309,26 +309,42 @@ namespace mirror {
 			/** This function is used to get the names of the member 
 		 	 *  attributes from the base classes.
 		 	 */
-			template <int I>
-			static const cts::bchar*
-			base_name(mpl::int_<I> pos, mpl::bool_<true>)
+			template <int I, typename CharT>
+			static const ::std::basic_string<CharT>& get_name(
+				mpl::int_<I> pos, 
+				mpl::false_ full_name,
+				::std::char_traits<CharT> cht,
+				mpl::bool_<true> is_inherited
+			)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::meta_class meta_class;
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::position new_position;
 
-				return meta_class::attributes::base_name(new_position());
+				return meta_class::attributes::get_name(
+					new_position(),
+					full_name,
+					cht
+				);
 			}
 
-			template <int I>
-			static const cts::bchar*
-			base_name(mpl::int_<I> pos, mpl::bool_<false>)
+			template <int I, typename CharT>
+			static const ::std::basic_string<CharT>& get_name(
+				mpl::int_<I> pos, 
+				mpl::false_ full_name,
+				::std::char_traits<CharT> cht,
+				mpl::bool_<false> is_inherited
+			)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
 					::position new_position;
 
-				return meta_class::attributes::base_name(new_position());
+				return meta_class::attributes::get_name(
+					new_position(),
+					full_name,
+					cht
+				);
 			}
 
 		
@@ -504,12 +520,17 @@ namespace mirror {
 		/** Gets the name of the I-th member (including
 		 *  the inherited ones)
 		 */
-		template <int I>
-		static const cts::bchar* 
-		base_name(mpl::int_<I> pos)
+		template <int I, typename CharT>
+		static const ::std::basic_string<CharT>& get_name(
+			mpl::int_<I> pos, 
+			mpl::false_ full_name,
+			::std::char_traits<CharT> cht
+		)
 		{
-			return detail::base_name(
+			return detail::get_name(
 				pos, 
+				full_name,
+				cht,
 				is_inherited(pos)
 			);
 		}
@@ -597,6 +618,26 @@ namespace mirror {
 		typedef typename scope::reflected_type
 			owner_class;
 
+		inline static const char* get_double_colon(::std::char_traits<char>)
+		{
+			return "::";
+		}
+		inline static const wchar_t* get_double_colon(::std::char_traits<wchar_t>)
+		{
+			return L"::";
+		}
+		template <typename CharT>
+		inline static ::std::basic_string<CharT> init_full_name(
+			::std::char_traits<CharT> cht
+		)
+		{
+			typedef ::std::basic_string<CharT> str_type;
+			str_type name(scope::get_name(mpl::true_(), cht));
+			name.append(str_type(get_double_colon(cht)));
+			name.append(base_name());
+			return name;
+		}
+
 	public:
 
 		// the meta-attributes list (own/all)
@@ -614,15 +655,51 @@ namespace mirror {
 			position
 		>::type type;
 
-		// base name getter
-		inline static const cts::bchar* base_name(void)
+		template <typename CharT>
+		inline static const ::std::basic_string<CharT>& get_name(
+			mpl::false_ full_name,
+			::std::char_traits<CharT> cht
+		)
 		{
-			return meta_attributes::base_name(position());
+			return meta_attributes::get_name(
+				position(),
+				full_name,
+				cht
+			);
+		}
+
+		// base name getter
+		inline static const cts::bstring& base_name(void)
+		{
+			return get_name(
+				mpl::false_(),
+				cts::bchar_traits()
+			);
+		}
+
+		template <typename CharT>
+		inline static const ::std::basic_string<CharT>& get_name(
+			mpl::true_ full_name,
+			::std::char_traits<CharT> cht
+		)
+		{
+			typedef ::std::basic_string<CharT> str_type;
+			static str_type name(init_full_name(cht));
+			return name;
+		}
+
+		// full name getter
+		inline static const cts::bstring& full_name(void)
+		{
+			return get_name(
+				mpl::true_(),
+				cts::bchar_traits()
+			);
 		}
 
 		// value getter
 		inline static typename result_of_get::type get(
-			const typename owner_class& instance
+			const owner_class& instance
 		)
 		{
 			return meta_attributes::get(instance, position());
@@ -630,9 +707,8 @@ namespace mirror {
 
 		// value query
 		template <typename DestType>
-		inline static DestType& 
-		query(
-			const typename owner_class& instance, 
+		inline static DestType& query(
+			const owner_class& instance, 
 			DestType& dest
 		)
 		{
@@ -640,8 +716,7 @@ namespace mirror {
 		}
 
 		// value setter
-		inline static void 
-		set(
+		inline static void set(
 			owner_class& instance, 
 			typename call_traits<type>::param_type val
 		)
@@ -650,8 +725,7 @@ namespace mirror {
 		}
 
 		// value setter
-		inline static void 
-		set(
+		inline static void set(
 			const owner_class& instance, 
 			typename call_traits<type>::param_type val
 		)

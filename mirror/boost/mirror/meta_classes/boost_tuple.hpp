@@ -16,6 +16,25 @@
 
 namespace boost {
 namespace mirror {
+namespace detail {
+	//
+	// specializations of this meta-function return a vector
+	// containing the proper 'static string' that is used as
+	// prefix for tuple member attribute names
+	template <typename CharT>
+	struct meta_class_boost_tuple_attrib_name_prefix;
+
+	template <>
+	struct meta_class_boost_tuple_attrib_name_prefix<char>
+	{
+		typedef mpl::vector_c<char, '_' > type;
+	};
+	template <>
+	struct meta_class_boost_tuple_attrib_name_prefix<wchar_t>
+	{
+		typedef mpl::vector_c<wchar_t, L'_' > type;
+	};
+} // namespace detail
 
 BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	__dummy_list;
@@ -31,16 +50,27 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	>::type template_params;
 	//
 	// member attribute base name getter
-	template <int I>
-	static const cts::bchar* base_name(mpl::int_<I>)
+	template <int I, typename CharT>
+	inline static const ::std::basic_string<CharT>& get_name(
+		mpl::int_<I> pos, 
+		mpl::false_ full_name,
+		::std::char_traits<CharT> cht
+	)
 	{
+		// get the prefix 'static string'
+		typedef typename detail::meta_class_boost_tuple_attrib_name_prefix<
+			CharT
+		>::type prefix;
+		// get a prefixed name builder
 		typedef typename boost::mirror::detail::static_int_to_str_w_prefix<
-			mpl::vector_c<cts::bchar, BOOST_CTS_LIT('_') >, 
-			cts::bchar,
+			prefix,
+			CharT,
 			I
-		>::holder name;
-		// 
-		return name::get();
+		>::holder name_builder;
+		// build the name and assing it to the static name
+		static ::std::basic_string<CharT> name(name_builder::get());
+		// return the built name
+		return name;
 	}
 
 	template <int I>

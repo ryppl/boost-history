@@ -10,7 +10,7 @@
 	<purpose>
 		<para>This class template reflects individual attributes of a class. The
 		<code><classname>meta_attribute</classname></code> template should not be instantiated
-		directly, but are obtained only as results of introspection operations on
+		directly, but meta-attributes are obtained only as results of introspection operations on
 		<code><classname>meta_class_attributes</classname></code> and
 		<code><classname>meta_class_all_attributes</classname></code>.
 		</para>

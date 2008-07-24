@@ -57,7 +57,7 @@
 	or a library when the development process starts.
 	This decision is influenced by factors many of which are clear 
 	only much later in the development process or even just before
-	the deployment in a concrete enviroment, like the character
+	the deployment in a concrete environment, like the character
 	encodings to be used, the memory requirements, other libraries,
 	etc.
 </para>

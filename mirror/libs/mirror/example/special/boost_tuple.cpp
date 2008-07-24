@@ -54,7 +54,7 @@ private:
 
 struct str_printer
 {
-	void operator()(const ::boost::cts::bchar* str) const
+	void operator()(const ::boost::cts::bstring& str) const
 	{
 		::boost::cts::bcout() << str << ", ";
 	}
@@ -102,11 +102,11 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The class has "<< meta_T1::all_attributes::size::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
-	bcout << meta_T1::all_attributes::base_name(mpl::int_<0>()) << " = ";
+	bcout << meta_T1::all_attributes::get_name(mpl::int_<0>(), mpl::false_(), cts::bchar_traits()) << " = ";
 	bcout << meta_T1::all_attributes::get(t1, mpl::int_<0>()) << endl;
-	bcout << meta_T1::all_attributes::base_name(mpl::int_<1>()) << " = ";
+	bcout << meta_T1::all_attributes::get_name(mpl::int_<1>(), mpl::false_(), cts::bchar_traits()) << " = ";
 	bcout << meta_T1::all_attributes::get(t1, mpl::int_<1>()) << endl;
-	bcout << meta_T1::all_attributes::base_name(mpl::int_<2>()) << " = ";
+	bcout << meta_T1::all_attributes::get_name(mpl::int_<2>(), mpl::false_(), cts::bchar_traits()) << " = ";
 	bcout << meta_T1::all_attributes::get(t1, mpl::int_<2>()) << endl;
 	bcout << "---------------------------------------------------" << endl;
 	//
@@ -133,7 +133,7 @@ int main(void)
 	for_each<
 		begin<meta_X::all_attributes>::type,
 		end<meta_X::all_attributes>::type
-	>(cref(select_base_name()), cref(str_printer()));
+	>(cref(select_full_name()), cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	reverse_for_each<
 		begin<meta_X::all_attributes>::type,
