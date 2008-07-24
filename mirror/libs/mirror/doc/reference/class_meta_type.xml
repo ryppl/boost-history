@@ -162,7 +162,7 @@
 			</template-nontype-parameter>
 			<template-type-parameter name="CharT"/>
 		</template>
-		<type>const <classname>::std::basic_string&lt;CharT&gt;</classname>&amp;</type>
+		<type>const ::std::basic_string&lt;CharT&gt;&amp;</type>
 		<parameter name="full">
 			<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
 		</parameter>

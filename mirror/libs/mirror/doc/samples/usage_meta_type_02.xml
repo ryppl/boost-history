@@ -15,7 +15,7 @@ void print_meta_data(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::<classname>bostream</classname>&amp; bcout = cts::bcout(); 
+	cts::<classname>bostream</classname>&amp; bcout = cts::<functionname>bcout</functionname>(); 
 	// print out the base type name
 	bcout &lt;&lt; 
 		<macroname>BOOST_CTS_LIT</macroname>("The type name is: ") &lt;&lt; 

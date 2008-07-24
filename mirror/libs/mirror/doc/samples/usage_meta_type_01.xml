@@ -23,7 +23,7 @@ int main(void)
 	typedef <macroname>BOOST_MIRRORED_TYPE</macroname>(T) meta_T;
 
 	// print out the full type name
-	cts::bcout() &lt;&lt; 
+	cts::<functionname>bcout</functionname>() &lt;&lt; 
 		<macroname>BOOST_CTS_LIT</macroname>("The full type name is: ") &lt;&lt; 
 		meta_T::full_name() &lt;&lt; 
 	endl;

@@ -101,26 +101,19 @@ const wchar_t* get_some_text_wide(SomeType an_arg);
 
 </programlisting>
 <para>
-	This however, sometimes leads to long and ugly expressions and adds the requirement
+	This however, usually leads to long and ugly expressions and adds the requirement
 	to somehow pass the character type to the function or template. 
 	There are many applications that consistently use just one character type
 	and here the need to explicitly pass the type over and over is especially 
 	annoying.
 </para>
 <para>
-	This can be solved using <code>typedef</code>s.
+	This can be solved using conditional <code>typedef</code>s, defining a new character type
+	and types derived from it. If the application
+	or library is being compiled in an environment where wide chars are not necessary
+	then the character type is defined as <code>char</code> otherwise it's defined as
+	<code>wchar_t</code>. 
 </para>
-
-<!--
-<section id="char_type_switch.motivation.problem.typenames">
-	<title>Problem - Querying typenames</title>
-
-	<para>
-	</para>
-	<xi:include href="samples/typenames_naive.xml"/>
-
-</section>
--->
 
 </section>
 

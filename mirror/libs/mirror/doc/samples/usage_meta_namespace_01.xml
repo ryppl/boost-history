@@ -10,7 +10,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::bcout();
+	cts::bostream&amp; bcout = cts::<functionname>bcout</functionname>();
 
 	// several namespaces are pre-registered
 	bcout &lt;&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() ::base_name() &lt;&lt; endl;

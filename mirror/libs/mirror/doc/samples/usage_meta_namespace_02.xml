@@ -15,7 +15,7 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		cts::<classname>bostream</classname>&amp; bcout = cts::bcout();
+		cts::<classname>bostream</classname>&amp; bcout = cts::<functionname>bcout</functionname>();
 		bcout &lt;&lt; 
 			<macroname>BOOST_CTS_LIT</macroname>("ancestor ") &lt;&lt;
 			ctr++ &lt;&lt;
@@ -35,7 +35,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::<classname>bostream</classname>&amp; bcout = cts::bcout();
+	cts::<classname>bostream</classname>&amp; bcout = cts::<functionname>bcout</functionname>();
 	//
 	typedef <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) meta_boost_mirror;
 	//

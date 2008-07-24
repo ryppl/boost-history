@@ -10,7 +10,7 @@ void print_meta_data(void)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::<classname>bostream</classname>&amp; bcout = cts::bcout();
+	cts::<classname>bostream</classname>&amp; bcout = cts::<functionname>bcout</functionname>();
 	bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("type: '");
 	bcout &lt;&lt; MetaType::base_name();
 	bcout &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("'  defined in: '");

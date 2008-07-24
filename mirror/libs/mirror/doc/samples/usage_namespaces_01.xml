@@ -38,7 +38,7 @@ void do_print_meta_data(::boost::true_type)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::<classname>bostream</classname>&amp; bcout = cts::bcout();
+	cts::<classname>bostream</classname>&amp; bcout = cts::<functionname>bcout</functionname>();
 	bcout &lt;&lt; 
 		<macroname>BOOST_CTS_LIT</macroname>("This is the global scope") &lt;&lt; 
 	endl &lt;&lt;
@@ -53,7 +53,7 @@ void do_print_meta_data(::boost::false_type)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::bcout();
+	cts::bostream&amp; bcout = cts::<functionname>bcout</functionname>();
 
 	bcout &lt;&lt; 
 		<macroname>BOOST_CTS_LIT</macroname>("Namespace '") &lt;&lt; 

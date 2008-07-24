@@ -23,9 +23,9 @@
 int main(void)
 {
 	using namespace ::boost::cts;
-	<classname>bstring</classname> foobar(<macroname>BOOST_STR_LIT</macroname>("foo"));
-	foo.append(<classname>bstring</classname>(<macroname>BOOST_STR_LIT</macroname>("bar")));
-	assert(foobar == <classname>bstring</classname>(<macroname>BOOST_STR_LIT</macroname>("foobar")));
+	<classname>bstring</classname> foobar(<macroname>BOOST_CTS_LIT</macroname>("foo"));
+	foo.append(<classname>bstring</classname>(<macroname>BOOST_CTS_LIT</macroname>("bar")));
+	assert(foobar == <classname>bstring</classname>(<macroname>BOOST_CTS_LIT</macroname>("foobar")));
 	return 0;
 }
 </programlisting>
