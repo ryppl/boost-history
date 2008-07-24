@@ -198,7 +198,9 @@ public:
      */
     //@{
     vertex_properties& operator[](vertex_descriptor);
+    vertex_properties const& operator[](vertex_descriptor) const;
     edge_properties& operator[](edge_descriptor);
+    edge_properties const& operator[](edge_descriptor) const;
     //@}
 
     mutable property_store  _props;
@@ -724,25 +726,29 @@ undirected_graph<VP,EP,VS,ES>::degree(vertex_descriptor v) const
     return _verts.vertex(v).degree();
 }
 
-/**
- * Return the properties for the given vertex.
- */
+/** Return the properties for the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_properties&
 undirected_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v)
-{
-    return _verts.properties(v);
-}
+{ return _verts.properties(v); }
 
-/**
- * Return the properties for the given edge.
- */
+/** Return the properties for the given vertex. */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::vertex_properties const&
+undirected_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v) const
+{ return _verts.properties(v); }
+
+/** Return the properties for the given edge. */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_properties&
 undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
-{
-    return _props.properties(e.properties());
-}
+{ return _props.properties(e.properties()); }
+
+/** Return the properties for the given edge. */
+template <BOOST_GRAPH_UG_PARAMS>
+typename undirected_graph<VP,EP,VS,ES>::edge_properties const&
+undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e) const
+{ return _props.properties(e.properties()); }
 
 #undef BOOST_GRAPH_UG_PARAMS
 

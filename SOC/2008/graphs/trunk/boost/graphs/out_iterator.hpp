@@ -22,7 +22,7 @@ public:
     typedef Vertex vertex_type;
     typedef typename Vertex::out_iterator iterator;
     typedef typename iterator::value_type base_value_type;
-    typedef typename base_value_type::first_type vertex_descriptor;
+    typedef typename boost::remove_const<typename base_value_type::first_type>::type vertex_descriptor;
     typedef typename base_value_type::second_type edge_pair;
     typedef typename edge_pair::first_type edge_properties;
     typedef typename edge_pair::second_type in_descriptor;
@@ -58,6 +58,9 @@ public:
      */
     inline vertex_descriptor opposite() const
     { return target(); }
+
+    inline basic_out_iterator& operator=(basic_out_iterator const& x)
+    { vert = x.vert; src = x.src; iter = x.iter; return *this; }
 
     inline basic_out_iterator& operator++()
     { ++iter; return *this; }

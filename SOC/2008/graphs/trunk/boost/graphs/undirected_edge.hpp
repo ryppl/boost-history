@@ -5,6 +5,7 @@
 #include <iosfwd>
 
 #include <boost/unordered_pair.hpp>
+#include <boost/graphs/directional_edge.hpp>
 
 /**
  * This structure implements an unordered edge - sort of. Because the undirected
@@ -71,7 +72,7 @@ public:
     inline vertex_descriptor second() const
     { return ends.second(); }
 
-    inline vertex_descriptor opposite(vertex_descriptor v)
+    inline vertex_descriptor opposite(vertex_descriptor v) const
     { return v == first() ? second() : first(); }
     //@}
 
@@ -125,34 +126,34 @@ hash_value(undirected_edge<V,P> const& e)
     return hash_value(e.prop);
 }
 
-/**
- * The rooted undirected edge is a variant of undirected edges that imposes
- * a source/target ordering over the edges in the graph. This is done by
- * maintaining an additional vertex descriptor references the source of an
- * edge.
- */
-template <typename Edge>
-class rooted_undirected_edge
-    : public Edge
+namespace detail
 {
-public:
-    typedef typename Edge::vertex_descriptor vertex_descriptor;
+    // Provide an implementation of directionality for undirected edges.
+    template <typename Vert, typename Prop>
+    struct directional_edge_adapter<undirected_edge<Vert,Prop>>
+        : undirected_edge<Vert,Prop>
+    {
+        inline directional_edge_adapter()
+            : undirected_edge<Vert, Prop>(), src()
+        { }
 
-    /** @name Constructors */
-    inline rooted_undirected_edge(Edge const& edge, vertex_descriptor src)
-        : Edge(edge), src(src)
-    { }
+        inline directional_edge_adapter(undirected_edge<Vert,Prop> e, Vert s)
+            : undirected_edge<Vert,Prop>(e), src(s)
+        { }
 
-    /** Return the source of the rooted edge. */
-    inline vertex_descriptor source() const
-    { return src; }
+        inline directional_edge_adapter(Vert s, Vert t)
+            : undirected_edge<Vert,Prop>(s, t), src(s)
+        { }
 
-    /** Return the target of the rooted edge. */
-    inline vertex_descriptor target() const
-    { return this->opposite(src); }
+        inline Vert source() const
+        { return src; }
 
-    vertex_descriptor src;
-};
+        inline Vert target() const
+        { return this->opposite(src); }
+
+        Vert src;
+    };
+}
 
 /**
  * The undirected edge iterator simply wraps the iterator over the global edge

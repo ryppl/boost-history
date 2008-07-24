@@ -92,8 +92,8 @@ void test_props()
         // Generic stuff?
         exterior_vertex_property<Graph, double> these_weights(g, 6.28);
 
-        generic_vertex_map<Graph, double> my_weights(g, 3.14);
-        generic_vertex_map<Graph, double> your_weights(these_weights);
+        optional_vertex_map<Graph, double> my_weights(g, 3.14);
+        optional_vertex_map<Graph, double> your_weights(these_weights);
 
         for(vr.first = g.begin_vertices(); vr.first != vr.second; ++vr.first) {
             Vertex v = *vr.first;

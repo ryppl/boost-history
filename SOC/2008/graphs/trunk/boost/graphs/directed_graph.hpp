@@ -246,7 +246,9 @@ public:
      */
     //@{
     vertex_properties& operator[](vertex_descriptor);
+    vertex_properties const& operator[](vertex_descriptor) const;
     edge_properties& operator[](edge_descriptor);
+    edge_properties const& operator[](edge_descriptor) const;
     //@}
 
 private:
@@ -915,24 +917,29 @@ typename directed_graph<VP,EP,VS,ES>::adjacent_vertex_range
 directed_graph<VP,EP,VS,ES>::adjacent_vertices(vertex_descriptor v) const
 { return std::make_pair(begin_adjacent_vertices(v), end_adjacent_vertices(v)); }
 
-/**
- * Return the properties for the given vertex.
- */
+/** Return the properties for the given vertex. */
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::vertex_properties&
 directed_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v)
 { return _verts.properties(v); }
 
-/**
- * Return the properties for the given edge.
- */
+/** Return the properties for the given vertex. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::vertex_properties const&
+directed_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v) const
+{ return _verts.properties(v); }
+
+/** Return the properties for the given edge. */
 template <BOOST_GRAPH_DG_PARAMS>
 typename directed_graph<VP,EP,VS,ES>::edge_properties&
 directed_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
-{
-    vertex_type& vert = _verts.vertex(e.source());
-    return vert.get_edge_properties(e.out_edge());
-}
+{ return _verts.vertex(e.source()).get_edge_properties(e.out_edge()); }
+
+/** Return the properties for the given edge. */
+template <BOOST_GRAPH_DG_PARAMS>
+typename directed_graph<VP,EP,VS,ES>::edge_properties const&
+directed_graph<VP,EP,VS,ES>::operator[](edge_descriptor e) const
+{ return _verts.vertex(e.source()).get_edge_properties(e.out_edge()); }
 
 #undef BOOST_GRAPH_DG_PARAMS
 

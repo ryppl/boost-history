@@ -4,6 +4,8 @@
 #include <iosfwd>
 #include <iterator>
 
+#include <boost/graphs/directional_edge.hpp>
+
 /**
  * A directed edge represents an edge in a directed graph. A directed edge is
  * uniquely identified by its source and target vertices the descriptor into
@@ -217,5 +219,6 @@ struct directed_edge_iterator
     vertex_iterator     vert;
     edge_iterator       edge;
 };
+
 
 #endif

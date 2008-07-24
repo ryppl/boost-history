@@ -164,55 +164,87 @@ struct property_wrapper
     typedef typename map_type::key_type key_type;
     typedef typename map_type::reference reference;
 
+    // Delay initialization...
+    inline property_wrapper()
+        : container(), map()
+    { }
+
     // Construct an underlying store over the map.
-    property_wrapper(Graph const& g, value_type const& x = value_type())
+    inline property_wrapper(Graph const& g, value_type const& x = value_type())
         : container(new container_type(detail::get_range(g, Descriptor()), x))
         , map(*container)
     { }
 
-    // Simply construct
-    property_wrapper(map_type map)
+    // Construct the map over a user-provided property map. No container needed.
+    inline property_wrapper(map_type map)
         : container(), map(map)
     { }
 
-    value_type& operator()(key_type const& key)
+    inline value_type& operator()(key_type const& key)
     { return map(key); }
 
-    value_type const& operator()(key_type const& key) const
+    inline value_type const& operator()(key_type const& key) const
     { return map(key); }
+
+    inline void swap(property_wrapper& x)
+    {
+        using std::swap;
+        container.swap(x.container);
+        swap(map, x.map);
+    }
 
     boost::shared_ptr<container_type> container;
     map_type map;
 };
 
+/**
+ * The optional vertex map allows a user-provided property map or a self-
+ * contained exterior property to be passed to a generic function. The user
+ * provided property map is not required to be constructed over an exterior
+ * property.
+ */
 template <typename Graph, typename Property>
-struct generic_vertex_map
+struct optional_vertex_map
     : property_wrapper<Graph, typename Graph::vertex_descriptor, Property>
 {
     typedef property_wrapper<Graph, typename Graph::vertex_descriptor, Property> base_type;
     typedef typename base_type::map_type map_type;
 
-    generic_vertex_map(Graph const& g, Property const& x = Property())
+    inline optional_vertex_map()
+        : base_type()
+    { }
+
+    inline optional_vertex_map(Graph const& g, Property const& x = Property())
         : base_type(g, x)
     { }
 
-    generic_vertex_map(map_type map)
+    inline optional_vertex_map(map_type map)
         : base_type(map)
     { }
 };
 
+/**
+ * The optional edge map allows a user-provided property map or a self-
+ * contained exterior property to be passed to a generic function. The user
+ * provided property map is not required to be constructed over an exterior
+ * property.
+ */
 template <typename Graph, typename Property>
-struct generic_edge_map
+struct optional_edge_map
     : property_wrapper<Graph, typename Graph::edge_descriptor, Property>
 {
     typedef property_wrapper<Graph, typename Graph::vertex_descriptor, Property> base_type;
     typedef typename base_type::map_type map_type;
 
-    generic_edge_map(Graph const& g, Property const& x = Property())
+    inline optional_edge_map()
+        : base_type()
+    { }
+
+    inline optional_edge_map(Graph const& g, Property const& x = Property())
         : base_type(g, x)
     { }
 
-    generic_edge_map(map_type map)
+    inline optional_edge_map(map_type map)
         : base_type(map)
     { }
 };

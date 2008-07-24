@@ -4,8 +4,6 @@
 
 #include <queue>
 
-#include "edge_iterator.hpp"
-
 // Multi-rooted BFS: A variant of a BFS that seeds the queue with multiple
 // initial vertices, but otherwise proceeds normally. The effect is of searching
 // for a vertex in the middle. Should work with both directed and undirected
@@ -18,6 +16,35 @@
 // prooperty map that counts the number of dependent edges, only visiting when
 // the count reaches 0. This probably only applies to the traversal.
 
+/**
+ * The status object contains information about the current state of the breadth
+ * first edge algorithm. Specifically, this provides the walk state and also
+ * the color map used by the algorithm.
+ */
+template <typename Graph, typename ColorMap>
+struct breadth_first_edge_status
+{
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+    typedef typename Graph::edge_descriptor edge_descriptor;
+
+    breadth_first_edge_status(edge_descriptor e, vertex_descriptor u, vertex_descriptor v, ColorMap c)
+        : cur(e), src(u), tgt(v), color(c)
+    { }
+
+    inline edge_descriptor current() const
+    { return cur; }
+
+    inline vertex_descriptor source() const
+    { return src; }
+
+    inline vertex_descriptor target() const
+    { return tgt; }
+
+    edge_descriptor cur;
+    vertex_descriptor src, tgt;
+
+    ColorMap color;
+};
 
 /**
  * The edge-walk implements a breadth-first walk that provides access to the
@@ -31,13 +58,15 @@
  *
  * This algorithm object essentially provides the next tree edge at each step.
  *
+ * As a walk, the returned edge must be directional.
+ *
  * @requires IncidenceGraph<Graph>
  * @requires ReadWritePropertyMap<ColorMap>
  * @requires Queue<Queue>
  */
 template <
     typename Graph,
-    typename ColorMap = generic_vertex_map<Graph, color>,
+    typename ColorMap = optional_vertex_map<Graph, color>,
     typename Queue = std::queue<typename Graph::vertex_descriptor>>
 struct breadth_first_edge_walk
 {
@@ -48,10 +77,11 @@ struct breadth_first_edge_walk
 
     typedef Graph graph_type;
     typedef typename Graph::vertex_descriptor vertex_descriptor;
-    typedef typename Graph::edge_descriptor edge_descriptor;
+    typedef directional_edge<typename Graph::edge_descriptor> edge_descriptor;
     typedef typename Graph::incident_edge_range IncidenceRange;
 
-    typedef breadth_first_edge_iterator<this_type> iterator;
+    typedef breadth_first_edge_status<Graph, ColorMap> status_type;
+    typedef algorithm_iterator<this_type> iterator;
 
     breadth_first_edge_walk(Graph& g, vertex_descriptor v)
         : graph(g), color(g, ColorTraits::white()), queue(), range()
@@ -165,11 +195,11 @@ struct breadth_first_edge_walk
     }
 
     /**
-     * Return the current edge "pointed" to by the algorithm, which will be
+     * Return the current edge "pointed" to by the algorithm. This will be
      * null if the queue is empty (the algorithm has finished).
      */
-    inline edge_descriptor edge() const
-    { return queue.empty() ? edge_descriptor() : *range.first; }
+    inline edge_descriptor current() const
+    { return queue.empty() ? edge_descriptor() : edge_descriptor(*range.first, queue.front()); }
 
     /**
      * Returns the source vertex of the current edge. This is the vertex in the
@@ -183,7 +213,11 @@ struct breadth_first_edge_walk
      * pointed to by the algorithm.
      */
     inline vertex_descriptor target() const
-    { return queue.empty() ? vertex_descriptor() : edge().opposite(source()); }
+    { return queue.empty() ? vertex_descriptor() : current().target(); }
+
+    /** Return a copy of the current status. */
+    inline status_type status() const
+    { return status_type(current(), source(), target(), color); }
 
     /** Return true if the current target has already been visited. */
     bool discoverable() const
@@ -211,7 +245,7 @@ struct breadth_first_edge_walk
  */
 template <
     typename Graph,
-    typename ColorMap = generic_vertex_map<Graph, color>,
+    typename ColorMap = optional_vertex_map<Graph, color>,
     typename Queue = std::queue<typename Graph::vertex_descriptor>>
 struct breadth_first_edge_traversal
 {
@@ -226,7 +260,8 @@ struct breadth_first_edge_traversal
     typedef color_traits<Color> ColorTraits;
 
     typedef breadth_first_edge_walk<Graph, ColorMap, Queue> Walk;
-    typedef breadth_first_edge_iterator<this_type> iterator;
+    typedef breadth_first_edge_status<Graph, ColorMap> status_type;
+    typedef algorithm_iterator<this_type> iterator;
 
     breadth_first_edge_traversal(Graph& g)
         : graph(g), color(g, ColorTraits::white()), range(g.vertices())
@@ -249,7 +284,7 @@ struct breadth_first_edge_traversal
         }
 
         // Did we just walk off the edge?
-        if(!walk.edge()) {
+        if(!walk.current()) {
             // Find the next connected component.
             while(range.first != range.second && !discoverable()) {
                 ++range.first;
@@ -263,8 +298,11 @@ struct breadth_first_edge_traversal
         }
     }
 
-    inline edge_descriptor edge() const
-    { return walk.edge(); }
+    inline status_type status() const
+    { return status_type(current(), source(), target(), color); }
+
+    inline edge_descriptor current() const
+    { return walk.current(); }
 
     inline vertex_descriptor source() const
     { return walk.source(); }
