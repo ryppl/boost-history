@@ -67,15 +67,15 @@ std::vector< geometry::point_xy<double> > read_data(void)
 
 double drandom(unsigned int upper_bound)
 {
-  double r;		/* random value in range [0,1) */
-  long int M;	/* user supplied upper boundary */
+  double r;     /* random value in range [0,1) */
+  long int M;   /* user supplied upper boundary */
 
   struct timeval tv;
   struct timezone tz;
   gettimeofday(&tv, &tz);
   srand(tv.tv_usec);
 
-  M = upper_bound;		/* Choose M. Upper bound */
+  M = upper_bound;    /* Choose M. Upper bound */
   r = (   (double)rand() / ((double)(RAND_MAX)+(double)(1)) );
   
   return r * M;
@@ -121,9 +121,9 @@ int test_main(int, char* [])
   std::cerr << "Insertion time: " << time(NULL) - start << " seconds." 
             << std::endl;
 
-  //       std::cerr << "Elements: " << q.elements() << std::endl;
+  // std::cerr << "Elements: " << q.elements() << std::endl;
 
-  //       q.print();
+  // q.print();
 
   // -- wait to check memory
   //       std::cerr << "check memory --> After Building Index." << std::endl;
@@ -156,8 +156,8 @@ int test_main(int, char* [])
   start = time(NULL);
   for(unsigned int j=0; j < find_count; j++) {
     unsigned int i = q.find(search_positions[j]);
-    // 	std::vector<unsigned int>::iterator it = q.find(search_positions[j]);
-    //std::cout << search_data[j] 
+    // std::vector<unsigned int>::iterator it = q.find(search_positions[j]);
+    // std::cout << search_data[j] 
     //  << " - found in (" << search_positions[j].first << "," 
     //  << search_positions[j].second << ") --> " 
     //  << *it << std::endl;
@@ -185,18 +185,19 @@ int test_main(int, char* [])
   std::cerr << "Removal time: " << time(NULL) - start << " seconds." 
             << std::endl;
 
-  //       std::cerr << " --> complete removal tests" << std::endl;
-  //       unsigned int total = q.elements();
-  //       for(unsigned int j=0; j < total; j++) {
-  // // 	unsigned int e = q.elements();
-  //  	q.remove(geometry::box<geometry::point_xy<double> >(points[j], 
-  //  	points[j]));
-  // // 	q.print();
-  // // 	BOOST_CHECK_EQUAL(e, q.elements()+1);
-  // //   	std::cerr << "Elements: " << e << std::endl;
-  //       }      
-  //       std::cerr << std::endl;
-  //       q.print();
+  // std::cerr << " --> complete removal tests" << std::endl;
+  // unsigned int total = q.elements();
+  // for(unsigned int j=0; j < total; j++) {
+  // // unsigned int e = q.elements();
+  //   q.remove(geometry::box<geometry::point_xy<double> >(points[j], 
+  //   points[j]));
+  // // q.print();
+  // // BOOST_CHECK_EQUAL(e, q.elements()+1);
+  // //  std::cerr << "Elements: " << e << std::endl;
+  //    }      
+  //    std::cerr << std::endl;
+  //    q.print();
 
   return 0;
 }
+

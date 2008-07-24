@@ -112,11 +112,11 @@ int test_main(int, char *[])
   boost::spatial_index::spatial_index < my_2d_point, value_type,
     boost::spatial_index::quadtree < my_2d_point, value_type > >q(b, 1);
 
-//      std::cerr << " --> bulk insert" << std::endl;
-//      std::vector<std::string>::iterator b, e;
-//      b = data.begin();
-//      e = data.end();
-//      q.bulk_insert(b,e, points);
+  //  std::cerr << " --> bulk insert" << std::endl;
+  //  std::vector<std::string>::iterator b, e;
+  //  b = data.begin();
+  //  e = data.end();
+  //  q.bulk_insert(b,e, points);
 
   std::vector < std::string >::iterator it = data.begin();
 
