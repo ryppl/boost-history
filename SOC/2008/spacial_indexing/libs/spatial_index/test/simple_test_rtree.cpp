@@ -1,7 +1,13 @@
+//
+// Boost.SpatialIndex - simple rtree test 
+//
 // Copyright 2008 Federico J. Fernandez.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+//
+//  See http://www.boost.org/ for latest version.
+//
 
 
 #include <boost/spatial_index.hpp>
@@ -21,14 +27,15 @@ int test_main(int, char* [])
   typedef unsigned int value_type;
 
   {
-    boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(4, 2);
+    boost::spatial_index::spatial_index<point_type, value_type, 
+             boost::spatial_index::rtree<point_type, value_type> > q(4, 2);
 
     std::cerr << std::endl;
     std::cerr << " --> bulk insert" << std::endl;
     std::cerr << std::endl;
 
     std::vector<unsigned int> data;
-    std::vector< geometry::point_xy<double> > points;	
+    std::vector< geometry::point_xy<double> > points;
 
     points.push_back(geometry::point_xy<double>(2.0,2.0));
     points.push_back(geometry::point_xy<double>(1.0,3.0));
@@ -44,7 +51,7 @@ int test_main(int, char* [])
 
     q.bulk_insert(data, points);
 
-    // 	  q.print();
+    // q.print();
   }
 
   std::cerr << std::endl;
@@ -53,51 +60,112 @@ int test_main(int, char* [])
 
 
   /// insertion tests
-  boost::spatial_index::spatial_index<point_type, value_type, boost::spatial_index::rtree<point_type, value_type> > q(4, 2);
+  boost::spatial_index::spatial_index<point_type, value_type, 
+          boost::spatial_index::rtree<point_type, value_type> > q(4, 2);
  
 
-  geometry::box<geometry::point_xy<double> > e1(geometry::point_xy<double>(2.0, 2.0), geometry::point_xy<double>(4.0, 4.0));
-  geometry::box<geometry::point_xy<double> > e2(geometry::point_xy<double>(0.0, 1.0), geometry::point_xy<double>(2.0, 2.0));
-  geometry::box<geometry::point_xy<double> > e3(geometry::point_xy<double>(5.0, 4.0), geometry::point_xy<double>(6.0, 6.0));
-  geometry::box<geometry::point_xy<double> > e4(geometry::point_xy<double>(5.0, 5.0), geometry::point_xy<double>(8.0, 8.0));
-  geometry::box<geometry::point_xy<double> > e5(geometry::point_xy<double>(7.0, 4.0), geometry::point_xy<double>(12.0, 7.0));
+  geometry::box<geometry::point_xy<double> > e1(
+              geometry::point_xy<double>(2.0, 2.0), 
+              geometry::point_xy<double>(4.0, 4.0));
+  geometry::box<geometry::point_xy<double> > e2(
+              geometry::point_xy<double>(0.0, 1.0), 
+              geometry::point_xy<double>(2.0, 2.0));
+  geometry::box<geometry::point_xy<double> > e3(
+              geometry::point_xy<double>(5.0, 4.0), 
+              geometry::point_xy<double>(6.0, 6.0));
+  geometry::box<geometry::point_xy<double> > e4(
+              geometry::point_xy<double>(5.0, 5.0), 
+              geometry::point_xy<double>(8.0, 8.0));
+  geometry::box<geometry::point_xy<double> > e5(
+              geometry::point_xy<double>(7.0, 4.0), 
+              geometry::point_xy<double>(12.0, 7.0));
 
     
-  geometry::box<geometry::point_xy<double> > e6(geometry::point_xy<double>(5.0, 5.0), geometry::point_xy<double>(9.0, 10.0));
-  geometry::box<geometry::point_xy<double> > e7(geometry::point_xy<double>(7.0, 7.0), geometry::point_xy<double>(12.0, 12.0));
+  geometry::box<geometry::point_xy<double> > e6(
+              geometry::point_xy<double>(5.0, 5.0), 
+              geometry::point_xy<double>(9.0, 10.0));
+  geometry::box<geometry::point_xy<double> > e7(
+              geometry::point_xy<double>(7.0, 7.0), 
+              geometry::point_xy<double>(12.0, 12.0));
 
-  geometry::box<geometry::point_xy<double> > e8(geometry::point_xy<double>(1.0, 5.0), geometry::point_xy<double>(2.0, 10.0));
-  geometry::box<geometry::point_xy<double> > e9(geometry::point_xy<double>(1.0, 1.0), geometry::point_xy<double>(3.0, 3.0));
-  geometry::box<geometry::point_xy<double> > e10(geometry::point_xy<double>(1.5, 1.0), geometry::point_xy<double>(2.5, 3.0));
-  geometry::box<geometry::point_xy<double> > e11(geometry::point_xy<double>(1.0, 0.0), geometry::point_xy<double>(2.0, 3.0));
+  geometry::box<geometry::point_xy<double> > e8(
+              geometry::point_xy<double>(1.0, 5.0), 
+              geometry::point_xy<double>(2.0, 10.0));
+  geometry::box<geometry::point_xy<double> > e9(
+              geometry::point_xy<double>(1.0, 1.0), 
+              geometry::point_xy<double>(3.0, 3.0));
+  geometry::box<geometry::point_xy<double> > e10(
+              geometry::point_xy<double>(1.5, 1.0), 
+              geometry::point_xy<double>(2.5, 3.0));
+  geometry::box<geometry::point_xy<double> > e11(
+              geometry::point_xy<double>(1.0, 0.0), 
+              geometry::point_xy<double>(2.0, 3.0));
 
-  geometry::box<geometry::point_xy<double> > e12(geometry::point_xy<double>(10.0, 10.0), geometry::point_xy<double>(12.0, 13.0));
-  geometry::box<geometry::point_xy<double> > e13(geometry::point_xy<double>(10.0, 12.0), geometry::point_xy<double>(13.0, 13.0));
-  geometry::box<geometry::point_xy<double> > e14(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(10.0, 13.0));
-  geometry::box<geometry::point_xy<double> > e15(geometry::point_xy<double>(10.0, 13.0), geometry::point_xy<double>(12.0, 14.0));
+  geometry::box<geometry::point_xy<double> > e12(
+              geometry::point_xy<double>(10.0, 10.0), 
+              geometry::point_xy<double>(12.0, 13.0));
+  geometry::box<geometry::point_xy<double> > e13(
+              geometry::point_xy<double>(10.0, 12.0), 
+              geometry::point_xy<double>(13.0, 13.0));
+  geometry::box<geometry::point_xy<double> > e14(
+              geometry::point_xy<double>(10.0, 13.0), 
+              geometry::point_xy<double>(10.0, 13.0));
+  geometry::box<geometry::point_xy<double> > e15(
+              geometry::point_xy<double>(10.0, 13.0), 
+              geometry::point_xy<double>(12.0, 14.0));
 
-  geometry::box<geometry::point_xy<double> > e16(geometry::point_xy<double>(7.0, 7.0), geometry::point_xy<double>(8.8,8.8));
-  geometry::box<geometry::point_xy<double> > e17(geometry::point_xy<double>(8.0, 9.0), geometry::point_xy<double>(9.0,10.0));
-  geometry::box<geometry::point_xy<double> > e18(geometry::point_xy<double>(10.0, 10.0), geometry::point_xy<double>(11.0,11.0));
-  geometry::box<geometry::point_xy<double> > e19(geometry::point_xy<double>(10.0, 11.0), geometry::point_xy<double>(12.0,12.5));
-  geometry::box<geometry::point_xy<double> > e20(geometry::point_xy<double>(11.0, 10.0), geometry::point_xy<double>(14.0,14.0));
-  geometry::box<geometry::point_xy<double> > e21(geometry::point_xy<double>(12.0, 12.0), geometry::point_xy<double>(14.0,14.0));
-  geometry::box<geometry::point_xy<double> > e22(geometry::point_xy<double>(12.0, 12.0), geometry::point_xy<double>(12.5,12.5));
-  geometry::box<geometry::point_xy<double> > e23(geometry::point_xy<double>(13.0, 11.0), geometry::point_xy<double>(13.5,11.5));
-  geometry::box<geometry::point_xy<double> > e24(geometry::point_xy<double>(13.0, 12.0), geometry::point_xy<double>(13.5,12.5));
-  geometry::box<geometry::point_xy<double> > e25(geometry::point_xy<double>(13.0, 13.0), geometry::point_xy<double>(13.5,13.5));
+  geometry::box<geometry::point_xy<double> > e16(
+              geometry::point_xy<double>(7.0, 7.0), 
+              geometry::point_xy<double>(8.8,8.8));
+  geometry::box<geometry::point_xy<double> > e17(
+              geometry::point_xy<double>(8.0, 9.0), 
+              geometry::point_xy<double>(9.0,10.0));
+  geometry::box<geometry::point_xy<double> > e18(
+              geometry::point_xy<double>(10.0, 10.0), 
+              geometry::point_xy<double>(11.0,11.0));
+  geometry::box<geometry::point_xy<double> > e19(
+              geometry::point_xy<double>(10.0, 11.0), 
+              geometry::point_xy<double>(12.0,12.5));
+  geometry::box<geometry::point_xy<double> > e20(
+              geometry::point_xy<double>(11.0, 10.0), 
+              geometry::point_xy<double>(14.0,14.0));
+  geometry::box<geometry::point_xy<double> > e21(
+              geometry::point_xy<double>(12.0, 12.0), 
+              geometry::point_xy<double>(14.0,14.0));
+  geometry::box<geometry::point_xy<double> > e22(
+              geometry::point_xy<double>(12.0, 12.0), 
+              geometry::point_xy<double>(12.5,12.5));
+  geometry::box<geometry::point_xy<double> > e23(
+              geometry::point_xy<double>(13.0, 11.0), 
+              geometry::point_xy<double>(13.5,11.5));
+  geometry::box<geometry::point_xy<double> > e24(
+              geometry::point_xy<double>(13.0, 12.0), 
+              geometry::point_xy<double>(13.5,12.5));
+  geometry::box<geometry::point_xy<double> > e25(
+              geometry::point_xy<double>(13.0, 13.0), 
+              geometry::point_xy<double>(13.5,13.5));
 
-  geometry::box<geometry::point_xy<double> > e26(geometry::point_xy<double>(11.0, 13.0), geometry::point_xy<double>(13.5,15.5));
-  geometry::box<geometry::point_xy<double> > e27(geometry::point_xy<double>(11.0, 13.0), geometry::point_xy<double>(13.5,13.5));
+  geometry::box<geometry::point_xy<double> > e26(
+              geometry::point_xy<double>(11.0, 13.0), 
+              geometry::point_xy<double>(13.5,15.5));
+  geometry::box<geometry::point_xy<double> > e27(
+              geometry::point_xy<double>(11.0, 13.0), 
+              geometry::point_xy<double>(13.5,13.5));
 
 
-  geometry::box<geometry::point_xy<double> > e28(geometry::point_xy<double>(9.0, 13.0), geometry::point_xy<double>(10.0,14.0));
-  geometry::box<geometry::point_xy<double> > e29(geometry::point_xy<double>(9.0, 10.0), geometry::point_xy<double>(15.0,15.0));
+  geometry::box<geometry::point_xy<double> > e28(
+              geometry::point_xy<double>(9.0, 13.0), 
+              geometry::point_xy<double>(10.0,14.0));
+  geometry::box<geometry::point_xy<double> > e29(
+              geometry::point_xy<double>(9.0, 10.0), 
+              geometry::point_xy<double>(15.0,15.0));
 
-  geometry::box<geometry::point_xy<double> > e30(geometry::point_xy<double>(9.0, 13.0), geometry::point_xy<double>(9.5,14.0));
-  geometry::box<geometry::point_xy<double> > e31(geometry::point_xy<double>(10.0, 10.0), geometry::point_xy<double>(14.0,15.0));
-
-
+  geometry::box<geometry::point_xy<double> > e30(
+              geometry::point_xy<double>(9.0, 13.0), 
+              geometry::point_xy<double>(9.5,14.0));
+  geometry::box<geometry::point_xy<double> > e31(
+              geometry::point_xy<double>(10.0, 10.0), 
+              geometry::point_xy<double>(14.0,15.0));
 
   std::cerr << " --> insert env" << std::endl;
   q.insert(e1, 1);
@@ -156,11 +224,14 @@ int test_main(int, char* [])
   result.push_back(9);
   result.push_back(10);
   result.push_back(11);
-  geometry::box<geometry::point_xy<double> > query_box(geometry::point_xy<double>(0.0, 0.0), geometry::point_xy<double>(2.0, 2.0));
+  geometry::box<geometry::point_xy<double> > query_box(
+           geometry::point_xy<double>(0.0, 0.0), 
+           geometry::point_xy<double>(2.0, 2.0));
   std::deque< unsigned int > d = q.find(query_box);
   BOOST_CHECK_EQUAL(d.size(), 5u);
   unsigned int i = 0;
-  for(std::deque<unsigned int>::const_iterator dit = d.begin(); dit != d.end(); ++dit) {
+  for(std::deque<unsigned int>::const_iterator dit = d.begin(); 
+      dit != d.end(); ++dit) {
     std::cerr << "Value: " << *dit << std::endl;
     BOOST_CHECK_EQUAL(*dit, result[i++]);
   }
@@ -183,16 +254,24 @@ int test_main(int, char* [])
 
   // remove test
   std::cerr << " --> remove" << std::endl;
-  q.remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(12.0,13.0)));
+  q.remove(geometry::box<geometry::point_xy<double> >(
+       geometry::point_xy<double>(10.0,10.0), 
+       geometry::point_xy<double>(12.0,13.0)));
 
   std::cerr << " --> remove" << std::endl;
-  q.remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(7.0,4.0), geometry::point_xy<double>(12.0,7.0)));
+  q.remove(geometry::box<geometry::point_xy<double> >(
+       geometry::point_xy<double>(7.0,4.0), 
+       geometry::point_xy<double>(12.0,7.0)));
 
   std::cerr << " --> remove" << std::endl;
-  q.remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,12.0), geometry::point_xy<double>(13.0,13.0)));
+  q.remove(geometry::box<geometry::point_xy<double> >(
+       geometry::point_xy<double>(10.0,12.0), 
+       geometry::point_xy<double>(13.0,13.0)));
 
   std::cerr << " --> remove" << std::endl;
-  q.remove(geometry::box<geometry::point_xy<double> >(geometry::point_xy<double>(10.0,10.0), geometry::point_xy<double>(11.0,11.0)));
+  q.remove(geometry::box<geometry::point_xy<double> >(
+       geometry::point_xy<double>(10.0,10.0), 
+       geometry::point_xy<double>(11.0,11.0)));
   q.print();
   
   return 0;
