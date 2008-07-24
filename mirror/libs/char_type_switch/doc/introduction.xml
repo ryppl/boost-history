@@ -18,16 +18,16 @@
 </para>
 <para>
 	The library introduces a new character type called 
-	<code><classname>::boost::cts::bchar</classname></code> that can be 
+	<code>::boost::cts::<classname>bchar</classname></code> that can be 
 	defined as <code>wchar_t</code> or as <code>char</code> based on whether
 	the <code>BOOST_CTS_USE_WIDE_CHARS</code> preprocessor symobol is or is not defined.
 	Based on the real type of <code>bchar</code> other types like 
-	<code><classname>::boost::cts::bstring</classname></code>, 
-	<code><classname>::boost::cts::bistream</classname></code>, 
-	<code><classname>::boost::cts::bostream</classname></code>, etc., 
+	<code>::boost::cts::<classname>bstring</classname></code>, 
+	<code>::boost::cts::<classname>bistream</classname></code>, 
+	<code>::boost::cts::<classname>bostream</classname></code>, etc., 
 	functions like 
-	<code><functionname>::boost::cts::bstrlen</functionname></code>, 
-	<code><functionname>::boost::cts::bstrcpy</functionname></code>, etc.
+	<code>::boost::cts::<functionname>bstrlen</functionname></code>, 
+	<code>::boost::cts::<functionname>bstrcpy</functionname></code>, etc.
 	and macros like 
 	<code><macroname>BOOST_CTS_LIT</macroname>(STRING_LITERAL)</code> OR
 	<code><macroname>BOOST_CTS_LIT_LENGTH</macroname>(STRING_LITERAL)</code> 

@@ -26,21 +26,21 @@
 <a name="boost.cts.bistream"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Type definition bistream</span></h2>
-<p>bistream &#8212; This type is defined as <code class="computeroutput">::std::istream</code> if <code class="computeroutput">bchar</code> is <code class="computeroutput">char</code>
-		and is defined as <code class="computeroutput">::std::wistream</code> if <code class="computeroutput">bchar</code> is <code class="computeroutput">wchar_t</code>.
+<p>bistream &#8212; This type is defined as <code class="computeroutput">::std::istream</code> if <code class="computeroutput"><a class="link" href="bchar.html" title="Type definition bchar">bchar</a></code> is <code class="computeroutput">char</code>
+		and is defined as <code class="computeroutput">::std::wistream</code> if <code class="computeroutput"><a class="link" href="bchar.html" title="Type definition bchar">bchar</a></code> is <code class="computeroutput">wchar_t</code>.
 		</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
-<span class="bold"><strong>typedef</strong></span> ::std::basic_istream&lt;bchar, bchar_traits&gt; bistream;</pre></div>
+<span class="bold"><strong>typedef</strong></span> ::std::basic_istream&lt;<a class="link" href="bchar.html" title="Type definition bchar">bchar</a>, <a class="link" href="bchar_traits.html" title="Type definition bchar_traits">bchar_traits</a>&gt; bistream;</pre></div>
 <div class="refsect1" lang="en">
-<a name="id697734"></a><h2>Description</h2>
-<p>The <code class="computeroutput">bistream</code> type is defined as an abbreviation for 
-		<code class="computeroutput">::std::basic_istream&lt;bchar, bchar_traits&gt;</code>.
+<a name="id2641715"></a><h2>Description</h2>
+<p>The <code class="computeroutput"><a class="link" href="bistream.html" title="Type definition bistream">bistream</a></code> type is defined as an abbreviation for 
+		<code class="computeroutput">::std::basic_istream&lt;<a class="link" href="bchar.html" title="Type definition bchar">bchar</a>, <a class="link" href="bchar_traits.html" title="Type definition bchar_traits">bchar_traits</a>&gt;</code>.
 		</p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
-<a name="id697752"></a>Examples</h6></div></div></div>
+<a name="id2641755"></a>Examples</h6></div></div></div>
 <pre class="programlisting">
 #include &lt;assert.h&gt;
 #include &lt;boost/char_type_switch/string.hpp&gt;
@@ -50,8 +50,8 @@ int main(void)
 {
 	using namespace ::std;
 	using namespace ::boost::cts;
-	bistream&amp; in  = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcin_id553299">bcin</a>();
-	bostream&amp; out = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id553355">bcout</a>();
+	<a class="link" href="bistream.html" title="Type definition bistream">bistream</a>&amp; in  = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcin_id2404164">bcin</a>();
+	<a class="link" href="bostream.html" title="Type definition bostream">bostream</a>&amp; out = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2513037">bcout</a>();
 
 	bstring str;
 	out &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("Enter a string: ") &lt;&lt; flush;

@@ -27,7 +27,7 @@
 <div class="refnamediv">
 <h2><span class="refentrytitle">Class template meta_attribute</span></h2>
 <p>boost::mirror::meta_attribute &#8212; This class template reflects individual attributes of a class. The
-		<code class="computeroutput">meta_attribute</code> template should not be instantiated
+		<code class="computeroutput"><a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code> template should not be instantiated
 		directly, but are obtained only as results of introspection operations on
 		<code class="computeroutput">meta_class_attributes</code> and
 		<code class="computeroutput">meta_class_all_attributes</code>.
@@ -37,16 +37,16 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id469938-bbtypes">types</a></em></span>
-  <span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.scope">scope</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id471144-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id471108-bb">full_name</a>();
+  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id2565571-bbtypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.scope">scope</a>;
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_attribute.html#id2436307-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_attribute.html#id2496639-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_attribute.html#id470961-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_attribute.html#id2533170-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id694651"></a><h2>Description</h2>
+<a name="id2637870"></a><h2>Description</h2>
 <p>
 		</p>
 <div class="section" lang="en">
@@ -59,25 +59,25 @@
 </div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id694676"></a><h3>
-<a name="id469938-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
+<a name="id2637900"></a><h3>
+<a name="id2565571-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
 <div class="orderedlist"><ol type="1"><li>
 <p>
-<span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.scope"></a>scope;</p>
+<span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.scope"></a>scope;</p>
 <p>A meta-object describing the class to which the reflected attribute belongs. 
 			</p>
 </li></ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id471144-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2436307-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
-			attribute reflected by the <code class="computeroutput">meta_attribute</code>.
+			attribute reflected by the <code class="computeroutput"><a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>.
 			When a full attribute name 
 			<span class="bold"><strong>with</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput">full_name</code> member function
+			is needed use the <code class="computeroutput"><a class="link" href="meta_attribute.html#id2496639-bb">full_name</a></code> member function
 			instead.</p>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id471108-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2496639-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
-			namespace reflected by a <code class="computeroutput">meta_namespace</code>
+			namespace reflected by a <code class="computeroutput"><a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>
 			with the nested name specifier. For example:
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: full_name()
@@ -85,7 +85,7 @@
 <p>
 			returns <code class="computeroutput">"::boost::mirror"</code>. When the base namespace name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput">base_name</code> member function
+			is needed use the <code class="computeroutput"><a class="link" href="meta_attribute.html#id2436307-bb">base_name</a></code> member function
 			instead.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -95,19 +95,19 @@
 			for deeply nested namespaces, because the name needs to be properly composed from 
 			the base namespace names, which may 
 			lead to multiple string concatenations. Subsequent calls to this member function
-			for a concrete specialization of meta_namespace
+			for a concrete specialization of <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a>
 			are usually much faster.
 			</p></td>
 </tr></tbody>
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id470961-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id2533170-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier 
 			or the full name <span class="bold"><strong>with</strong></span> the 
 			nested name specifier of the attribute reflected by this
-			<code class="computeroutput">meta_attribute</code>,
+			<code class="computeroutput"><a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>,
 			depending on the value of the template argument <code class="computeroutput">FullName</code>.
 			Furthermore it allows to choose whether the return value type is 
 			<code class="computeroutput">::std::string</code> or <code class="computeroutput">::std::wstring</code> based
@@ -117,14 +117,14 @@
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
 			</pre>
 <p> is equivalent to calling the 
-			<code class="computeroutput">base_name</code> member function with the 
+			<code class="computeroutput"><a class="link" href="meta_attribute.html#id2436307-bb">base_name</a></code> member function with the 
 			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol undefined, 
 			which returns a <code class="computeroutput">::std::string</code> holding the string <code class="computeroutput">"mirror"</code> and calling
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
 			</pre>
 <p> is equivalent to calling the 
-			<code class="computeroutput">full_name</code> method with the 
+			<code class="computeroutput"><a class="link" href="meta_attribute.html#id2496639-bb">full_name</a></code> method with the 
 			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol defined, 
 			which returns a <code class="computeroutput">::std::wstring</code> holding this string <code class="computeroutput">L"::boost::mirror"</code>.
 			</p>
