@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<function name="bstrncpy"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<type><classname>bchar</classname>*</type>
+	<parameter name="dst">
+		<paramtype><classname>bchar</classname>*</paramtype>
+	</parameter>
+	<parameter name="src">
+		<paramtype>const <classname>bchar</classname>*</paramtype>
+	</parameter>
+	<parameter name="num">
+		<paramtype>size_t</paramtype>
+	</parameter>
+	<purpose>
+		<para>This function copies the first <code>num</code> characters from <code>src</code> into <code>dst</code> and returns <code>dst</code>.
+		If the end of <code>src</code> is found before <code>num</code> characters are copied, <code>dst</code> is padded with null characters
+		until the count of modified characters reaches <code>num</code>. If <code>num</code> is less or equal to the length of <code>src</code>,
+		then the null character is not implicitly appended to <code>dst</code>.
+		</para>
+	</purpose>
+	<description>
+		<para>Calling this function is equivalent to calling <code>strncpy</code> if 
+		<code><classname>bchar</classname></code> is defined as <code>char</code> or to calling <code>wcsncpy</code> if
+		<code><classname>bchar</classname></code> is defined as <code>wchar_t</code>.
+		</para>
+		<section id="char_type_switch.bstrncpy.reference.samples">
+			<title>Examples</title>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/cstring.hpp&gt;
+
+int main(void)
+{
+	using namespace ::boost::cts;
+	const size_t size = 4;
+	<classname>bchar</classname> aaa[size];
+	<classname>bchar</classname> bbb[size];
+
+	<functionname>bstrncpy</functionname>(aaa, <macroname>BOOST_CTS_LIT</macroname>("foo"), size);
+	<functionname>bstrncpy</functionname>(bbb, <macroname>BOOST_CTS_LIT</macroname>("bar"), size);
+	assert(<functionname>bstrcmp</functionname>(aaa, bbb) != 0);
+
+	<functionname>bstrncpy</functionname>(bbb, aaa, size);
+	assert(<functionname>bstrcmp</functionname>(aaa, bbb) == 0);
+
+	<functionname>bstrncpy</functionname>(bbb, <macroname>BOOST_CTS_LIT</macroname>("foobar"), size);
+	bbb[size-1] = <macroname>BOOST_CTS_LIT</macroname>('\0');
+	assert(<functionname>bstrcmp</functionname>(aaa, bbb) == 0);	return 0;
+}
+</programlisting>
+		</section>
+	</description>
+</function>

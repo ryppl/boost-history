@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Type definition bistream</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="The Mirror library documentation">
+<link rel="up" href="../../char_type_switch/reference.html#header.boost.char_type_switch.iostream.hpp" title="Header &lt;boost/char_type_switch/iostream.hpp&gt;">
+<link rel="prev" href="bstring.html" title="Type definition bstring">
+<link rel="next" href="bostream.html" title="Type definition bostream">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bstring.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../char_type_switch/reference.html#header.boost.char_type_switch.iostream.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="bostream.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.cts.bistream"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Type definition bistream</span></h2>
+<p>bistream &#8212; This type is defined as <code class="computeroutput">::std::istream</code> if <code class="computeroutput">bchar</code> is <code class="computeroutput">char</code>
+		and is defined as <code class="computeroutput">::std::wistream</code> if <code class="computeroutput">bchar</code> is <code class="computeroutput">wchar_t</code>.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
+<span class="bold"><strong>typedef</strong></span> ::std::basic_istream&lt;bchar, bchar_traits&gt; bistream;</pre></div>
+<div class="refsect1" lang="en">
+<a name="id697734"></a><h2>Description</h2>
+<p>The <code class="computeroutput">bistream</code> type is defined as an abbreviation for 
+		<code class="computeroutput">::std::basic_istream&lt;bchar, bchar_traits&gt;</code>.
+		</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="id697752"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost::cts;
+	bistream&amp; in  = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcin_id553299">bcin</a>();
+	bostream&amp; out = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id553355">bcout</a>();
+
+	bstring str;
+	out &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("Enter a string: ") &lt;&lt; flush;
+	in &gt;&gt; str;
+	out &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("The string is ") &lt;&lt; 
+		str.length() &lt;&lt; 
+		<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>(" characters long") &lt;&lt; 
+	endl;
+	return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bstring.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../char_type_switch/reference.html#header.boost.char_type_switch.iostream.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="bostream.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

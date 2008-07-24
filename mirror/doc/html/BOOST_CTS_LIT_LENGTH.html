@@ -1,0 +1,100 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro BOOST_CTS_LIT_LENGTH</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="The Mirror library documentation">
+<link rel="up" href="char_type_switch/reference.html#header.boost.char_type_switch.char.hpp" title="Header &lt;boost/char_type_switch/char.hpp&gt;">
+<link rel="prev" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">
+<link rel="next" href="BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_CTS_LIT.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="char_type_switch/reference.html#header.boost.char_type_switch.char.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_CTS_STRINGIZE.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="BOOST_CTS_LIT_LENGTH"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_CTS_LIT_LENGTH</span></h2>
+<p>BOOST_CTS_LIT_LENGTH &#8212; This macro expands into the length of the given string literal without 
+		the terminating null character. The "returned" length is a compile-time constant.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_CTS_LIT_LENGTH(STRING_LITERAL)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id697079"></a><h2>Description</h2>
+<p>This macro is defined as follows:
+</p>
+<pre class="programlisting">
+#define <a class="link" href="BOOST_CTS_LIT_LENGTH.html" title="Macro BOOST_CTS_LIT_LENGTH">BOOST_CTS_LIT_LENGTH</a>(STRING_LITERAL) \
+	((sizeof(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>(STRING_LITERAL))/sizeof(::boost::cts::bchar))-1)
+</pre>
+<p>
+			</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="char_type_switch.LIT_LENGTH.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	assert(<a class="link" href="BOOST_CTS_LIT_LENGTH.html" title="Macro BOOST_CTS_LIT_LENGTH">BOOST_CTS_LIT_LENGTH</a>("foo") == 3);
+	return 0;
+}
+</pre>
+<pre class="programlisting">
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	assert(
+		<a class="link" href="BOOST_CTS_LIT_LENGTH.html" title="Macro BOOST_CTS_LIT_LENGTH">BOOST_CTS_LIT_LENGTH</a>("foo") == 
+		::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrlen_id553444">bstrlen</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"))
+	);
+	return 0;
+}
+</pre>
+<pre class="programlisting">
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	using namespace ::boost::cts;
+	bchar foo[<a class="link" href="BOOST_CTS_LIT_LENGTH.html" title="Macro BOOST_CTS_LIT_LENGTH">BOOST_CTS_LIT_LENGTH</a>("foo")+1];
+	<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcpy_id552013">bstrcpy</a>(foo, <a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"));
+	assert(<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id553545">bstrcmp</a>(foo, <a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo")) == 0);
+	return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_CTS_LIT.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="char_type_switch/reference.html#header.boost.char_type_switch.char.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_CTS_STRINGIZE.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

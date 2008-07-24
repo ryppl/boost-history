@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<typedef name="bostream"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<type>::std::basic_ostream&lt;<classname>bchar</classname>, <classname>bchar_traits</classname>&gt;</type>
+	<purpose>
+		<para>This type is defined as <code>::std::ostream</code> if <code><classname>bchar</classname></code> is <code>char</code>
+		and is defined as <code>::std::wostream</code> if <code><classname>bchar</classname></code> is <code>wchar_t</code>.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><classname>bostream</classname></code> type is defined as an abbreviation for 
+		<code>::std::basic_ostream&lt;<classname>bchar</classname>, <classname>bchar_traits</classname>&gt;</code>.
+		</para>
+		<xi:include href="../samples/iostream_samples.xml"/>
+	</description>
+</typedef>

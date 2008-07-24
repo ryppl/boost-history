@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_CTS_LIT_LENGTH" 
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	kind="functionlike"
+>
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::cts"/>
+
+	<macro-parameter name="STRING_LITERAL">
+	</macro-parameter>
+	<purpose>
+		<para>This macro expands into the length of the given string literal without 
+		the terminating null character. The "returned" length is a compile-time constant.
+		</para>
+	</purpose>
+	<description>
+		<para>This macro is defined as follows:
+<programlisting>
+#define <macroname>BOOST_CTS_LIT_LENGTH</macroname>(STRING_LITERAL) \
+	((sizeof(<macroname>BOOST_CTS_LIT</macroname>(STRING_LITERAL))/sizeof(::boost::cts::<classname>bchar</classname>))-1)
+</programlisting>
+			</para>
+			<section id="char_type_switch.LIT_LENGTH.reference.samples">
+				<title>Examples</title>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	assert(<macroname>BOOST_CTS_LIT_LENGTH</macroname>("foo") == 3);
+	return 0;
+}
+</programlisting>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	assert(
+		<macroname>BOOST_CTS_LIT_LENGTH</macroname>("foo") == 
+		::boost::cts::<functionname>bstrlen</functionname>(<macroname>BOOST_CTS_LIT</macroname>("foo"))
+	);
+	return 0;
+}
+</programlisting>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	using namespace ::boost::cts;
+	<classname>bchar</classname> foo[<macroname>BOOST_CTS_LIT_LENGTH</macroname>("foo")+1];
+	<functionname>bstrcpy</functionname>(foo, <macroname>BOOST_CTS_LIT</macroname>("foo"));
+	assert(<functionname>bstrcmp</functionname>(foo, <macroname>BOOST_CTS_LIT</macroname>("foo")) == 0);
+	return 0;
+}
+</programlisting>
+		</section>
+	</description>
+</macro>

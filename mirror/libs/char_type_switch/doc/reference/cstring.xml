@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<header name="boost/char_type_switch/iostream.hpp"
+<header name="boost/char_type_switch/cstring.hpp"
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 >
 	<using-namespace name="boost"/>
@@ -10,15 +10,15 @@
 	<namespace name="boost">
 	<namespace name="cts">
 
-	<xi:include href="typedef_bistream.xml"/>
-	<xi:include href="typedef_bostream.xml"/>
-	<xi:include href="typedef_biostream.xml"/>
-
 	<free-function-group name="free-functions">
-		<xi:include href="function_bcin.xml"/>
-		<xi:include href="function_bcout.xml"/>
+		<xi:include href="function_bstrlen.xml"/>
+		<xi:include href="function_bstrcmp.xml"/>
+		<xi:include href="function_bstrcpy.xml"/>
+		<xi:include href="function_bstrncpy.xml"/>
 	</free-function-group>
 
 	</namespace><!-- cts -->
 	</namespace><!-- boost -->
+
+
 </header>

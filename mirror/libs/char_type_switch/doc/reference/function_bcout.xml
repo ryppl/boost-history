@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<function name="bcout"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<type><classname>bostream</classname>&amp;</type>
+	<purpose>
+		<para>Returns a reference to the standard output stream. 
+		</para>
+	</purpose>
+	<description>
+		<para>If <code><classname>bchar</classname></code> is defined as <code>char</code> then this function returns a reference 
+		to <code>::std::cout</code>, otherwise if <code><classname>bchar</classname></code> is defined as <code>wchar_t</code>,
+		then <code><functionname>bcout</functionname></code> returns a reference to <code>::std::wcout</code>.
+		</para>
+	</description>
+</function>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section 
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+<title>Examples</title>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost::cts;
+	<classname>bistream</classname>&amp; in  = <functionname>bcin</functionname>();
+	<classname>bostream</classname>&amp; out = <functionname>bcout</functionname>();
+
+	bstring str;
+	out &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("Enter a string: ") &lt;&lt; flush;
+	in &gt;&gt; str;
+	out &lt;&lt; <macroname>BOOST_CTS_LIT</macroname>("The string is ") &lt;&lt; 
+		str.length() &lt;&lt; 
+		<macroname>BOOST_CTS_LIT</macroname>(" characters long") &lt;&lt; 
+	endl;
+	return 0;
+}
+</programlisting>
+</section>

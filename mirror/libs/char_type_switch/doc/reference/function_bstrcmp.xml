@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<function name="bstrcmp"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	id="char_type_switch.bstrcmp"
+>
+	<type>int</type>
+	<parameter name="str1">
+		<paramtype>const <classname>bchar</classname>*</paramtype>
+	</parameter>
+	<parameter name="str2">
+		<paramtype>const <classname>bchar</classname>*</paramtype>
+	</parameter>
+	<purpose>
+		<para>This function compares the given two strings and returns an integral value that indicates the relationship between them.
+		</para>
+	</purpose>
+	<description>
+		<para>Calling this function is equivalent to calling <code>strcmp</code> if 
+		<code><classname>bchar</classname></code> is defined as <code>char</code> or to calling <code>wcscmp</code> if
+		<code><classname>bchar</classname></code> is defined as <code>wchar_t</code>.
+		If the first string is lexicographically less than the second the return value is negative,
+		if the first string is lexicographically greater than the second the return value is positive,
+		if the strings are equal then the return value is zero.
+		</para>
+		<section id="char_type_switch.bstrcmp.reference.samples">
+			<title>Examples</title>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/cstring.hpp&gt;
+
+int main(void)
+{
+	using namespace ::boost::cts;
+	const <classname>bchar</classname> foo[] = <macroname>BOOST_CTS_LIT</macroname>("foo");
+	const <classname>bchar</classname> bar[] = <macroname>BOOST_CTS_LIT</macroname>("bar");
+
+	assert(<functionname>bstrcmp</functionname>(foo, bar) &gt; 0);
+	assert(<functionname>bstrcmp</functionname>(foo, foo) == 0);
+	assert(<functionname>bstrcmp</functionname>(bar, foo) &lt; 0);
+
+	assert(<functionname>bstrcmp</functionname>(foo, <macroname>BOOST_CTS_LIT</macroname>("baz")) &gt; 0);
+	assert(<functionname>bstrcmp</functionname>(foo, <macroname>BOOST_CTS_STRINGIZE</macroname>(foobar)) &lt;= 0);
+	return 0;
+}
+</programlisting>
+		</section>
+	</description>
+</function>
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<typedef name="bstring"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<type>::std::basic_string&lt;<classname>bchar</classname>&gt;</type>
+	<purpose>
+		<para>This type is basically defined as <code>::std::string</code> if <code><classname>bchar</classname></code> is <code>char</code>
+		and is defined as <code>::std::wstring</code> if <code><classname>bchar</classname></code> is <code>wchar_t</code>.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><classname>bstring</classname></code> type is defined as an abbreviation for 
+		<code>::std::basic_string&lt;<classname>bchar</classname>&gt;</code>.
+		</para>
+		<section id="char_type_switch.bstring.reference.samples">
+			<title>Examples</title>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/string.hpp&gt;
+
+int main(void)
+{
+	using namespace ::boost::cts;
+	<classname>bstring</classname> foobar(<macroname>BOOST_STR_LIT</macroname>("foo"));
+	foo.append(<classname>bstring</classname>(<macroname>BOOST_STR_LIT</macroname>("bar")));
+	assert(foobar == <classname>bstring</classname>(<macroname>BOOST_STR_LIT</macroname>("foobar")));
+	return 0;
+}
+</programlisting>
+		</section>
+	</description>
+</typedef>

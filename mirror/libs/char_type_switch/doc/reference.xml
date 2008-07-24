@@ -8,8 +8,11 @@
 	<section>
 		<title>Header files</title>
 		<xi:include href="reference/choice.xml"/>
+		<xi:include href="reference/char.xml"/>
 		<xi:include href="reference/string.xml"/>
 		<xi:include href="reference/iostream.xml"/>
+
+		<xi:include href="reference/cstring.xml"/>
 	</section>
 
 </library-reference>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<function name="bstrcpy"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<type><classname>bchar</classname>*</type>
+	<parameter name="dst">
+		<paramtype><classname>bchar</classname>*</paramtype>
+	</parameter>
+	<parameter name="src">
+		<paramtype>const <classname>bchar</classname>*</paramtype>
+	</parameter>
+	<purpose>
+		<para>This function copies <code>src</code> into <code>dst</code> including the terminating null character and returns <code>dst</code>.
+			<code>dst</code> should not overlap <code>src</code> in memory.
+		</para>
+	</purpose>
+	<description>
+		<para>Calling this function is equivalent to calling <code>strcpy</code> if 
+		<code><classname>bchar</classname></code> is defined as <code>char</code> or to calling <code>wcscpy</code> if
+		<code><classname>bchar</classname></code> is defined as <code>wchar_t</code>.
+		</para>
+		<section id="char_type_switch.bstrcpy.reference.samples">
+			<title>Examples</title>
+<programlisting>
+#include &lt;assert.h&gt;
+#include &lt;boost/char_type_switch/cstring.hpp&gt;
+
+int main(void)
+{
+	using namespace ::boost::cts;
+	<classname>bchar</classname> aaa[4];
+	<classname>bchar</classname> bbb[4];
+
+	<functionname>bstrcpy</functionname>(aaa, <macroname>BOOST_CTS_LIT</macroname>("foo"));
+	<functionname>bstrcpy</functionname>(bbb, <macroname>BOOST_CTS_LIT</macroname>("bar"));
+	assert(<functionname>bstrcmp</functionname>(aaa, bbb) != 0);
+
+	<functionname>bstrcpy</functionname>(bbb, aaa);
+	assert(<functionname>bstrcmp</functionname>(aaa, bbb) == 0);
+	return 0;
+}
+</programlisting>
+		</section>
+	</description>
+</function>

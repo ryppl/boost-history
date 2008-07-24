@@ -26,4 +26,10 @@ char_type_switch/reference.html
 BOOST_CTS_USE_WIDE_CHARS.html
 boost/cts/bchar.html
 BOOST_CTS_LIT.html
+BOOST_CTS_LIT_LENGTH.html
 BOOST_CTS_STRINGIZE.html
+boost/cts/bchar_traits.html
+boost/cts/bstring.html
+boost/cts/bistream.html
+boost/cts/bostream.html
+boost/cts/biostream.html

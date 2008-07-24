@@ -34,7 +34,7 @@
 </div></div>
 <div><p class="copyright">Copyright © 2008 Matú&#353; Chochlík</p></div>
 <div><div class="legalnotice">
-<a name="id2622985"></a><p>Use, modification and distribution is subject to the Boost
+<a name="id688761"></a><p>Use, modification and distribution is subject to the Boost
 			Software License, Version 1.0. (See accompanying file
 			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
 			</p>
@@ -51,9 +51,9 @@
 <dt><span class="section"><a href="mirror/tutorial.html">Tutorial</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html">Mirror Reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="mirror/reference.html#id2585480">Meta Objects</a></span></dt>
-<dt><span class="section"><a href="mirror/reference.html#id2585487">Traits</a></span></dt>
-<dt><span class="section"><a href="mirror/reference.html#id2585494">Header files</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id689149">Meta Objects</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id689156">Traits</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id689163">Header files</a></span></dt>
 </dl></dd>
 </dl>
 </div>
@@ -292,7 +292,7 @@ const char* get_typename(void)
 	</p>
 <p>
 		This is when <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> comes in handy. One of the basic
-		facilities is the <code class="computeroutput">boost::mirror::<a class="link" href="boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> class template. 
+		facilities is the <code class="computeroutput">boost::mirror::meta_type</code> class template. 
 		Among other things this template has two member functions - <code class="computeroutput">base_name</code>
 		and <code class="computeroutput">full_name</code> that return the base type name without the nested
 		name specifier and the full type name with the nested name specifier respectively.
@@ -301,7 +301,7 @@ const char* get_typename(void)
 		and portable.
 	</p>
 <p>
-		Using <code class="computeroutput"><a class="link" href="boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> the <code class="computeroutput">get_typename&lt;T&gt;()</code> 
+		Using <code class="computeroutput">meta_type</code> the <code class="computeroutput">get_typename&lt;T&gt;()</code> 
 		function could look like this:
 	</p>
 <pre class="programlisting">
@@ -319,7 +319,7 @@ const char* get_typename(void)
 </pre>
 <p>
 		With native C++ types and some common types from the STL
-		and from Boost the <code class="computeroutput"><a class="link" href="boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code>
+		and from Boost the <code class="computeroutput">meta_type</code>
 		works out of the box.
 	</p>
 </div>
