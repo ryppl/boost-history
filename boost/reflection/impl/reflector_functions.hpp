@@ -53,9 +53,9 @@ reflector& constructor() {
 // This version of the function is for reflecting functions that have
 // return values - so that the name of the return value can be set.
 template <class ReturnValue BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS(N, class Param)>
+          BOOST_PP_ENUM_PARAMS(N, class Param), class A>
 #ifdef BOOST_REFLECTION_WITH_PARAMETER_INFO
-reflector& function(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
+reflector& function(ReturnValue (A::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
              Info info, ParameterInfo i_return BOOST_PP_COMMA_IF(N)
              BOOST_PP_ENUM_PARAMS(N, ParameterInfo i)) {
   // Create the function_info for this function.
@@ -67,7 +67,7 @@ reflector& function(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
   // Add the ParameterInfo for the return type.
   f.parameter_info_.push_back(i_return);
 #else
-reflector& function(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
+reflector& function(ReturnValue (A::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
                     Info info) {
     // Create the function_info for this function.
   function_info f(reflections::type_info_handler<TypeInfo,
@@ -96,9 +96,9 @@ reflector& function(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
 // This version of the function is for reflecting functions that have
 // no return value.
 template <class ParamFirst BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS(N, class Param)>
+          BOOST_PP_ENUM_PARAMS(N, class Param), class A>
 #ifdef BOOST_REFLECTION_WITH_PARAMETER_INFO
-reflector& function(void (T::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
+reflector& function(void (A::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
                              BOOST_PP_ENUM_PARAMS(N, Param)),
              Info info, ParameterInfo i_first BOOST_PP_COMMA_IF(N)
              BOOST_PP_ENUM_PARAMS(N, ParameterInfo i)) {
@@ -109,7 +109,7 @@ reflector& function(void (T::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
   f.parameter_info_.push_back(i_first);
   BOOST_REFLECTION_PUSH_PARAMETER_INFO(f, N);
 #else
-reflector& function(void (T::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
+reflector& function(void (A::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
                              BOOST_PP_ENUM_PARAMS(N, Param)),
                     Info info) {
    function_info f(reflections::type_info_handler<TypeInfo,

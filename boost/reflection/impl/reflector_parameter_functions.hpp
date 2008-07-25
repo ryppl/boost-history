@@ -47,8 +47,8 @@ reflector& reflect_constructor(BOOST_PP_ENUM_PARAMS(N, ParameterInfo i)) {
 // This version of the function is for reflecting functions that have
 // return values - so that the name of the return value can be set.
 template <class ReturnValue BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS(N, class Param)>
-reflector& function(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
+          BOOST_PP_ENUM_PARAMS(N, class Param), class A>
+reflector& function(ReturnValue (A::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
              Info info, ParameterInfo i_return BOOST_PP_COMMA_IF(N)
              BOOST_PP_ENUM_PARAMS(N, ParameterInfo i)) {
   // Create the function_info for this function.
@@ -82,8 +82,8 @@ reflector& function(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)),
 // This version of the function is for reflecting functions that have
 // no return value.
 template <class ParamFirst BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS(N, class Param)>
-reflector& function(void (T::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
+          BOOST_PP_ENUM_PARAMS(N, class Param), class A>
+reflector& function(void (A::*func)(ParamFirst p_first BOOST_PP_COMMA_IF(N)
                              BOOST_PP_ENUM_PARAMS(N, Param)),
              Info info, ParameterInfo i_first BOOST_PP_COMMA_IF(N)
              BOOST_PP_ENUM_PARAMS(N, ParameterInfo i)) {

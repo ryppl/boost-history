@@ -69,7 +69,8 @@ typedef void ParameterInfo;
   #define BOOST_PP_FILENAME_1 \
     <boost/reflection/impl/reflector_functions.hpp>
   #include BOOST_PP_ITERATE()
-    reflector& function(void (T::*func)(), Info info) {
+    template <class A>
+    reflector& function(void (A::*func)(), Info info) {
 #ifdef BOOST_REFLECTION_WITH_PARAMETER_INFO
       function_info f(reflections::type_info_handler<TypeInfo,
                         void (*)()>::get_class_type(), info, false);
