@@ -1,0 +1,234 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template reflector</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../basic_reflection.html#id465290" title="Description">
+<link rel="prev" href="../parameter/specialized_converter.html" title="Class template specialized_converter">
+<link rel="next" href="../../../boost_extension/appendices/appendix_a.html" title=" Appendix A -
+      Windows Export and Import Declarations">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../parameter/specialized_converter.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../basic_reflection.html#id465290"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../boost_extension/appendices/appendix_a.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.reflections.basic_reflection.reflector"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template reflector</span></h2>
+<p>boost::reflections::basic_reflection::reflector &#8212; Internal class for reflecting constructors, functions etc. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
+
+<span class="emphasis"><em>// Internal class for reflecting constructors, functions etc. </em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+<span class="bold"><strong>class</strong></span> <a href="reflector.html" title="Class template reflector">reflector</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> basic_function_info&lt; Info, TypeInfo, ParameterInfo &gt; <a name="boost.reflections.basic_reflection.reflector.function_info"></a>function_info;   
+  <span class="bold"><strong>typedef</strong></span> basic_constructor_info&lt; TypeInfo, ParameterInfo &gt;    <a name="boost.reflections.basic_reflection.reflector.constructor_info"></a>constructor_info;
+
+  <span class="emphasis"><em>// <a href="reflector.html#boost.reflections.basic_reflection.reflectorconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="reflector.html#id294223-bb">reflector</a>(basic_reflection&lt; Info, ParameterInfo, TypeInfo &gt; *);
+
+  <span class="emphasis"><em>// <a href="reflector.html#id294089-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; <span class="type"><a href="reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="reflector.html#id294092-bb">constructor</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type"><a href="reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="reflector.html#id294124-bb">data</a>(Data T::*, Info) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReturnValue = <span class="bold"><strong>void</strong></span>, <span class="bold"><strong>typename</strong></span> Params...&gt; 
+    <span class="type"><a href="reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="reflector.html#id294170-bb">function</a>(<span class="bold"><strong>void</strong></span>(T::*)(), Info) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id465794"></a><h2>Description</h2>
+<p>The reflector class is returned by the reflect method, and can then be used to reflect constructors, functions or data. It is normally used chained: </p>
+<pre class="programlisting"> reflection r;
+ r.reflect&lt;MyClass&gt;()
+  .constructor()
+  .constructor&lt;int, float&gt;();
+</pre>
+<p> </p>
+<div class="refsect2" lang="en">
+<a name="id465812"></a><h3>
+<a name="boost.reflections.basic_reflection.reflectorconstruct-copy-destruct"></a><code class="computeroutput">reflector</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1"><li>
+<pre class="literallayout"><a name="id294223-bb"></a>reflector(basic_reflection&lt; Info, ParameterInfo, TypeInfo &gt; * current_reflection);</pre>
+<p>Initialize with a pointer to the reflection this reflector will be reflecting into. This is called by the reflection::reflect function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td>
+<span class="term"><code class="computeroutput">current_reflection</code></span></td>
+<td><p>The reflection to set to type T. </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>current_reflection has not already been reflected into. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li></ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id465902"></a><h3>
+<a name="id294089-bb"></a><code class="computeroutput">reflector</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; <span class="type"><a href="reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a name="id294092-bb"></a>constructor() ;</pre>
+<p>
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>*this. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type"><a href="reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a name="id294124-bb"></a>data(Data T::* data_ptr, Info info) ;</pre>
+<p>
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">data_ptr</code></span></td>
+<td><p>The fully-qualified member address of the data member. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">info</code></span></td>
+<td><p>A description or other Info of this data member. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReturnValue = <span class="bold"><strong>void</strong></span>, <span class="bold"><strong>typename</strong></span> Params...&gt; 
+  <span class="type"><a href="reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a name="id294170-bb"></a>function(<span class="bold"><strong>void</strong></span>(T::*)() func, Info info) ;</pre>
+<p>
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">func</code></span></td>
+<td><p>The fully-qualified member address of the function. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term"><code class="computeroutput">info</code></span></td>
+<td><p>A description or other Info of this function. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../parameter/specialized_converter.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../basic_reflection.html#id465290"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../boost_extension/appendices/appendix_a.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

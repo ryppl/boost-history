@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class instance</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../boost_extension/reference.html#header.boost.reflection.instance.hpp" title="Header &lt;boost/reflection/instance.hpp&gt;">
+<link rel="prev" href="generic_constructor.html" title="Class template generic_constructor">
+<link rel="next" href="conversion_not_found_exception.html" title="Class conversion_not_found_exception">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generic_constructor.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.instance.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="conversion_not_found_exception.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.reflections.instance"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class instance</span></h2>
+<p>boost::reflections::instance &#8212; </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
+<span class="bold"><strong>class</strong></span> <a href="instance.html" title="Class instance">instance</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a href="instance.html#boost.reflections.instanceconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="instance.html#id293714-bb">instance</a>(<span class="bold"><strong>void</strong></span> * = 0, <span class="bold"><strong>void</strong></span>(*)(<span class="bold"><strong>void</strong></span> *val) = 0);
+  <a href="instance.html#id293731-bb">instance</a>(<span class="bold"><strong>const</strong></span> instance &amp;);
+  instance&amp; <a href="instance.html#id293737-bb"><span class="bold"><strong>operator</strong></span>=</a>(instance &amp;);
+  <a href="instance.html#id293730-bb">~instance</a>();
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id462614"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id462620"></a><h3>
+<a name="boost.reflections.instanceconstruct-copy-destruct"></a><code class="computeroutput">instance</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><a name="id293714-bb"></a>instance(<span class="bold"><strong>void</strong></span> * val = 0, <span class="bold"><strong>void</strong></span>(*)(<span class="bold"><strong>void</strong></span> *val) destructor = 0);</pre></li>
+<li><pre class="literallayout"><a name="id293731-bb"></a>instance(<span class="bold"><strong>const</strong></span> instance &amp; first);</pre></li>
+<li><pre class="literallayout">instance&amp; <a name="id293737-bb"></a><span class="bold"><strong>operator</strong></span>=(instance &amp; first);</pre></li>
+<li><pre class="literallayout"><a name="id293730-bb"></a>~instance();</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generic_constructor.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.instance.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="conversion_not_found_exception.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

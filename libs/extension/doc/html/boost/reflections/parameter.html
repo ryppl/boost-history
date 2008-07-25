@@ -1,0 +1,97 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template parameter</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../boost_extension/reference.html#header.boost.reflection.parameter.hpp" title="Header &lt;boost/reflection/parameter.hpp&gt;">
+<link rel="prev" href="generic_parameter/basic_converter.html" title="Class basic_converter">
+<link rel="next" href="parameter/default_converter.html" title="Class template default_converter">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generic_parameter/basic_converter.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.parameter.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="parameter/default_converter.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.reflections.parameter"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template parameter</span></h2>
+<p>boost::reflections::parameter &#8212; </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TypeInfo = extensions::default_type_info&gt; 
+<span class="bold"><strong>class</strong></span> <a href="parameter.html" title="Class template parameter">parameter</a> : <span class="bold"><strong>public</strong></span> boost::reflections::generic_parameter&lt; TypeInfo &gt; {
+<span class="bold"><strong>public</strong></span>:
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; 
+  <span class="bold"><strong>class</strong></span> <a href="parameter/default_converter.html" title="Class template default_converter">default_converter</a> :
+    <span class="bold"><strong>public</strong></span> boost::reflections::generic_parameter&lt; TypeInfo &gt;::basic_converter
+  {
+  <span class="bold"><strong>public</strong></span>:
+
+    <span class="emphasis"><em>// <a href="parameter/default_converter.html#id293904-bb">public member functions</a></em></span>
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="parameter/default_converter.html#id293907-bb">convert</a>(<span class="bold"><strong>void</strong></span> *, <span class="bold"><strong>void</strong></span> *) <span class="bold"><strong>const</strong></span>;
+  };
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; 
+  <span class="bold"><strong>class</strong></span> <a href="parameter/specialized_converter.html" title="Class template specialized_converter">specialized_converter</a> :
+    <span class="bold"><strong>public</strong></span> boost::reflections::generic_parameter&lt; TypeInfo &gt;::basic_converter
+  {
+  <span class="bold"><strong>public</strong></span>:
+    <span class="emphasis"><em>// <a href="parameter/specialized_converter.html#boost.reflections.parameter.specialized_converterconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+    <a href="parameter/specialized_converter.html#id293958-bb">specialized_converter</a>(<span class="bold"><strong>void</strong></span>(*)(T *, S *));
+
+    <span class="emphasis"><em>// <a href="parameter/specialized_converter.html#id293938-bb">public member functions</a></em></span>
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="parameter/specialized_converter.html#id293941-bb">convert</a>(<span class="bold"><strong>void</strong></span> *, <span class="bold"><strong>void</strong></span> *) <span class="bold"><strong>const</strong></span>;
+  };
+  <span class="emphasis"><em>// <a href="parameter.html#boost.reflections.parameterconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="parameter.html#id294006-bb">parameter</a>(T);
+
+  <span class="emphasis"><em>// <a href="parameter.html#id293965-bb">public member functions</a></em></span>
+  <span class="type">TypeInfo</span> <a href="parameter.html#id293968-bb">type</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="parameter.html#id293974-bb">converts_to_with_func</a>(<span class="bold"><strong>void</strong></span>(*)(T *, S *)) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="parameter.html#id293993-bb">converts_to</a>() ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id464148"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id464153"></a><h3>
+<a name="boost.reflections.parameterconstruct-copy-destruct"></a><code class="computeroutput">parameter</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id294006-bb"></a>parameter(T value);</pre></li></ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id464194"></a><h3>
+<a name="id293965-bb"></a><code class="computeroutput">parameter</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><span class="type">TypeInfo</span> <a name="id293968-bb"></a>type() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id293974-bb"></a>converts_to_with_func(<span class="bold"><strong>void</strong></span>(*)(T *, S *) convert_func) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id293993-bb"></a>converts_to() ;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generic_parameter/basic_converter.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.parameter.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="parameter/default_converter.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

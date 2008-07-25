@@ -1,0 +1,187 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_reflection</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../boost_extension/reference.html#header.boost.reflection.reflection.hpp" title="Header &lt;boost/reflection/reflection.hpp&gt;">
+<link rel="prev" href="parameter/specialized_converter.html" title="Class template specialized_converter">
+<link rel="next" href="basic_reflection/reflector.html" title="Class template reflector">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parameter/specialized_converter.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.reflection.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_reflection/reflector.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.reflections.basic_reflection"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_reflection</span></h2>
+<p>boost::reflections::basic_reflection &#8212; </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Info = std::string, <span class="bold"><strong>typename</strong></span> ParameterInfo = <span class="bold"><strong>void</strong></span>, 
+         <span class="bold"><strong>typename</strong></span> TypeInfo = extensions::default_type_info&gt; 
+<span class="bold"><strong>class</strong></span> <a href="basic_reflection.html" title="Class template basic_reflection">basic_reflection</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="bold"><strong>void</strong></span> <a name="boost.reflections.basic_reflection.ParameterInfo"></a>ParameterInfo;
+
+  <span class="emphasis"><em>// Internal class for reflecting constructors, functions etc. </em></span>  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="bold"><strong>class</strong></span> <a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> {
+  <span class="bold"><strong>public</strong></span>:
+    <span class="emphasis"><em>// types</em></span>
+    <span class="bold"><strong>typedef</strong></span> basic_function_info&lt; Info, TypeInfo, ParameterInfo &gt; <a href="basic_reflection/reflector.html#boost.reflections.basic_reflection.reflector.function_info">function_info</a>;   
+    <span class="bold"><strong>typedef</strong></span> basic_constructor_info&lt; TypeInfo, ParameterInfo &gt;    <a href="basic_reflection/reflector.html#boost.reflections.basic_reflection.reflector.constructor_info">constructor_info</a>;
+
+    <span class="emphasis"><em>// <a href="basic_reflection/reflector.html#boost.reflections.basic_reflection.reflectorconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+    <a href="basic_reflection/reflector.html#id294223-bb">reflector</a>(basic_reflection&lt; Info, ParameterInfo, TypeInfo &gt; *);
+
+    <span class="emphasis"><em>// <a href="basic_reflection/reflector.html#id294089-bb">public member functions</a></em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id294092-bb">constructor</a>() ;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id294124-bb">data</a>(Data T::*, Info) ;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReturnValue = <span class="bold"><strong>void</strong></span>, <span class="bold"><strong>typename</strong></span> Params...&gt; 
+      <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id294170-bb">function</a>(<span class="bold"><strong>void</strong></span>(T::*)(), Info) ;
+  };
+
+  <span class="emphasis"><em>// <a href="basic_reflection.html#id294252-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; 
+    <span class="type">instance_constructor&lt; Params...&gt;</span> <a href="basic_reflection.html#id294255-bb">get_constructor</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type">data&lt; Data &gt;</span> <a href="basic_reflection.html#id294293-bb">get_data</a>(Info) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a>&lt; T &gt;</span> <a href="basic_reflection.html#id294336-bb">reflect</a>() ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id465290"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id465295"></a><h3>
+<a name="id294252-bb"></a><code class="computeroutput">basic_reflection</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; 
+  <span class="type">instance_constructor&lt; Params...&gt;</span> <a name="id294255-bb"></a>get_constructor() <span class="bold"><strong>const</strong></span>;</pre>
+<p>
+
+Attempt to retrieve any constructor whose Params match the list in Params... For example: </p>
+<pre class="programlisting"> r.reflect&lt;MyClass&gt;()
+  .constructor() ;
+ instance_constructor&lt;&gt; ic = r.get_constructor();
+ if (i.valid()) {
+   instance i = ic();
+ }
+</pre>
+<p> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>A constructor reference (that must be checked for validity).</p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type">data&lt; Data &gt;</span> <a name="id294293-bb"></a>get_data(Info info) <span class="bold"><strong>const</strong></span>;</pre>
+<p>
+
+Attempt to retrieve any data of type Data and the same Info. For example: </p>
+<pre class="programlisting"> r.reflect&lt;MyClass&gt;()
+  .constructor()
+  .data(&amp;MyClass:someInt, "My Int");
+ instance_constructor&lt;&gt; ic = r.get_constructor();
+ instance i = ic();
+ data&lt;int&gt; d = r.get_data&lt;int&gt;("My Int");
+ int&amp; myIntRef = d(i);
+</pre>
+<p> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>A data reference (that must be checked for validity).</p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a>&lt; T &gt;</span> <a name="id294336-bb"></a>reflect() ;</pre>
+<p>
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>reflect() has not been called. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>A reflector instance. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parameter/specialized_converter.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.reflection.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_reflection/reflector.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

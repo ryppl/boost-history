@@ -1,0 +1,94 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template generic_parameter</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../boost_extension/reference.html#header.boost.reflection.parameter.hpp" title="Header &lt;boost/reflection/parameter.hpp&gt;">
+<link rel="prev" href="conversion_not_found_exception.html" title="Class conversion_not_found_exception">
+<link rel="next" href="generic_parameter/basic_converter.html" title="Class basic_converter">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="conversion_not_found_exception.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.parameter.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="generic_parameter/basic_converter.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.reflections.generic_parameter"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template generic_parameter</span></h2>
+<p>boost::reflections::generic_parameter &#8212; </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo = extensions::default_type_info&gt; 
+<span class="bold"><strong>class</strong></span> <a href="generic_parameter.html" title="Class template generic_parameter">generic_parameter</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="bold"><strong>void</strong></span>(* <a name="boost.reflections.generic_parameter.FunctionPtr"></a>FunctionPtr;
+
+  <span class="bold"><strong>class</strong></span> <a href="generic_parameter/basic_converter.html" title="Class basic_converter">basic_converter</a> {
+  <span class="bold"><strong>public</strong></span>:
+    <span class="emphasis"><em>// <a href="generic_parameter/basic_converter.html#boost.reflections.generic_parameter.basic_converterconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+    <a href="generic_parameter/basic_converter.html#id293799-bb">~basic_converter</a>();
+
+    <span class="emphasis"><em>// <a href="generic_parameter/basic_converter.html#id293779-bb">public member functions</a></em></span>
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="generic_parameter/basic_converter.html#id293782-bb">convert</a>(<span class="bold"><strong>void</strong></span> *, <span class="bold"><strong>void</strong></span> *) <span class="bold"><strong>const</strong></span>;
+  };
+
+  <span class="emphasis"><em>// <a href="generic_parameter.html#boost.reflections.generic_parameterconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="generic_parameter.html#id293863-bb">generic_parameter</a>(<span class="bold"><strong>void</strong></span> *);
+  <a href="generic_parameter.html#id293859-bb">~generic_parameter</a>();
+
+  <span class="emphasis"><em>// <a href="generic_parameter.html#id293805-bb">public member functions</a></em></span>
+  <span class="type">TypeInfo</span> <a href="generic_parameter.html#id293808-bb">type</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="generic_parameter.html#id293815-bb">can_cast</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type">S</span> <a href="generic_parameter.html#id293828-bb">cast</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="generic_parameter.html#id293841-bb">cast</a>(S *) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id463318"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id463323"></a><h3>
+<a name="boost.reflections.generic_parameterconstruct-copy-destruct"></a><code class="computeroutput">generic_parameter</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><a name="id293863-bb"></a>generic_parameter(<span class="bold"><strong>void</strong></span> * value);</pre></li>
+<li><pre class="literallayout"><a name="id293859-bb"></a>~generic_parameter();</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id463386"></a><h3>
+<a name="id293805-bb"></a><code class="computeroutput">generic_parameter</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><span class="type">TypeInfo</span> <a name="id293808-bb"></a>type() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id293815-bb"></a>can_cast() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type">S</span> <a name="id293828-bb"></a>cast() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> S&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id293841-bb"></a>cast(S * dest) ;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="conversion_not_found_exception.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.parameter.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="generic_parameter/basic_converter.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

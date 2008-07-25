@@ -1,0 +1,266 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_parameter_map</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../../boost_extension/reference.html#header.boost.reflection.adapter.hpp" title="Header &lt;boost/reflection/adapter.hpp&gt;">
+<link rel="prev" href="parameter_unavailable_exception.html" title="Class parameter_unavailable_exception">
+<link rel="next" href="parameter_map.html" title="Type definition parameter_map">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parameter_unavailable_exception.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.adapter.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="parameter_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.reflections.basic_parameter_map"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_parameter_map</span></h2>
+<p>boost::reflections::basic_parameter_map &#8212; A container for generic_parameters. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Info = std::string, 
+         <span class="bold"><strong>typename</strong></span> TypeInfo = extensions::default_type_info&gt; 
+<span class="bold"><strong>class</strong></span> <a href="basic_parameter_map.html" title="Class template basic_parameter_map">basic_parameter_map</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> std::multimap&lt; Info, generic_parameter&lt; TypeInfo &gt; * &gt; <a name="boost.reflections.basic_parameter_map.map_type"></a>map_type;
+  <span class="bold"><strong>typedef</strong></span> std::multimap&lt; Info, generic_parameter&lt; TypeInfo &gt; * &gt; <a name="boost.reflections.basic_parameter_map.map_type"></a>map_type;
+
+  <span class="emphasis"><em>// <a href="basic_parameter_map.html#boost.reflections.basic_parameter_mapconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="basic_parameter_map.html#id293095-bb">~basic_parameter_map</a>();
+  <a href="basic_parameter_map.html#id293101-bb">~basic_parameter_map</a>();
+
+  <span class="emphasis"><em>// <a href="basic_parameter_map.html#id292890-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
+    <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id292893-bb">get</a>(Info) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
+    <span class="type">std::vector&lt; <span class="bold"><strong>const</strong></span> generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id292935-bb">get</a>(Info) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
+    <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id292979-bb">get</a>(Info) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="basic_parameter_map.html#id293019-bb">has</a>(Info) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type">generic_parameter&lt; TypeInfo &gt; *</span> <a href="basic_parameter_map.html#id293057-bb">get_first</a>(Info) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id459291"></a><h2>Description</h2>
+<p>The basic_parameter_map is designed to hold arbitrary data indexed by the value of the Info parameter, and can return all items that match a certain type and Info parameter, ie all integers called "foobar". </p>
+<div class="refsect2" lang="en">
+<a name="id459302"></a><h3>
+<a name="boost.reflections.basic_parameter_mapconstruct-copy-destruct"></a><code class="computeroutput">basic_parameter_map</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id293095-bb"></a>~basic_parameter_map();</pre>
+<p>The destructor deletes all of the parameters that it references. </p>
+</li>
+<li><pre class="literallayout"><a name="id293101-bb"></a>~basic_parameter_map();</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id459362"></a><h3>
+<a name="id292890-bb"></a><code class="computeroutput">basic_parameter_map</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
+  <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id292893-bb"></a>get(Info info) ;</pre>
+<p>Given an Info value and a type, this will return all parameters that either match the given type or are convertible to the given type. 
+
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td>
+<span class="term"><code class="computeroutput">info</code></span></td>
+<td><p>The index or name of the parameters to return. </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>A vector of all parameters that match the given type and Info. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
+  <span class="type">std::vector&lt; <span class="bold"><strong>const</strong></span> generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id292935-bb"></a>get(Info info) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Given an Info value and a type, this will return all parameters that either match the given type or are convertible to the given type. This function is const. 
+
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Parameters:</span></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td>
+<span class="term"><code class="computeroutput">info</code></span></td>
+<td><p>The index or name of the parameters to return. </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>A vector of all parameters that match the given type and Info. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
+  <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id292979-bb"></a>get(Info info) ;</pre>
+<p>Given a type (D) and Info (ie, string describing the parameter), return a vector containing all generic_parameters that match, or can be converted to the given type.</p>
+<p>
+
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>Matching parameters. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id293019-bb"></a>has(Info info) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Given a type (D) and Info (ie, string describing the parameter), return true if the element exists in the parameter_map.</p>
+<p>
+
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>True if the parameter exists. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type">generic_parameter&lt; TypeInfo &gt; *</span> <a name="id293057-bb"></a>get_first(Info info) ;</pre>
+<p>Given a type (D) and Info (ie, string describing the parameter), return first parameter matching, or that can be converted to that type.</p>
+<p>
+
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td>
+<span class="term">Requires:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Postconditions:</span></td>
+<td><p>None. </p></td>
+</tr>
+<tr>
+<td>
+<span class="term">Returns:</span></td>
+<td><p>The first matching parameter. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parameter_unavailable_exception.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.reflection.adapter.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="parameter_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
