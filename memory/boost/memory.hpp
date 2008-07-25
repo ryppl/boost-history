@@ -79,7 +79,7 @@ class defragment :
 	public ContainerT
 {
 private:
-	typedef ContainerT::alloc_type AllocT;
+	typedef typename ContainerT::alloc_type AllocT;
 
 public:
 	AllocT& BOOST_MEMORY_CALL get_alloc() {
