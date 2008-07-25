@@ -56,7 +56,7 @@ template <typename T>
         template <typename U>
             struct rebind
             {
-                typedef shifted_allocator<U> other; 
+                typedef shifted_allocator<U> other;
             };
 
         shifted_allocator() throw()                                 {}
@@ -71,46 +71,53 @@ template <typename T>
         //! FIXME
         value_type * allocate(size_type s, const void * = 0)
         {
-            return static_cast<shifted<T> *>(new (shifted<T>::operator new(s)) owned_base)->element(); 
+            //return static_cast<shifted<T> *>(::new (shifted<T>::operator new(s)) owned_base)->element();
+            shifted<T> * p = (shifted<T> *) shifted<T>::operator new(sizeof(shifted<T>));
+
+std::cout << __FUNCTION__ << ": " << (void *) p << " - " << (void *)((char *) p + sizeof(shifted<T>)) << ", " << (void *) p->element() << std::endl;
+
+            return static_cast<shifted<T> *>(::new (p) owned_base)->element();
         }
 
         //! FIXME
         void deallocate(value_type * p, size_type)
         {
+/*
             owned_base * const q = (typename shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(p));
-            
+
             q->~owned_base();
 
-            shifted<T>::operator delete(q); 
+            shifted<T>::operator delete(q);
+*/
         }
 
         //! FIXME
-        size_type max_size() const throw() 
+        size_type max_size() const throw()
         {
-            return size_t(-1) / sizeof(T); 
+            return size_t(-1) / sizeof(T);
         }
 
-        void construct(pointer p, const T & x) 
+        void construct(pointer p, const T & x)
         {
-            ::new (p) T(x); 
+            ::new (p) T(x);
         }
 
-        void destroy(pointer p) 
+        void destroy(pointer p)
         {
-            p->~T(); 
+            p->~T();
         }
     };
 
 template <typename T>
     inline bool operator == (const shifted_allocator<T> &, const shifted_allocator<T> &)
     {
-        return true; 
+        return true;
     }
 
 template <typename T>
     inline bool operator != (const shifted_allocator<T> &, const shifted_allocator<T> &)
     {
-        return false; 
+        return false;
     }
 
 

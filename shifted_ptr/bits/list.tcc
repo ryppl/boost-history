@@ -101,8 +101,8 @@ namespace _GLIBCXX_STD
     {
       typedef _List_node<_Tp,_Alloc>  _Node;
       typedef _List_node_base<_Alloc>  _Node_base;
-      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*this->_M_impl._M_node._M_next));
-      while (__cur != &this->_M_impl._M_node)
+      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*this->_M_impl._M_node->_M_next));
+      while (__cur != &*this->_M_impl._M_node)
       {
         _Node* __tmp = __cur;
         __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*__cur->_M_next));
@@ -269,8 +269,8 @@ namespace _GLIBCXX_STD
     sort()
     {
       // Do nothing if the list has length 0 or 1.
-      if (this->_M_impl._M_node._M_next != &this->_M_impl._M_node
-	  && this->_M_impl._M_node._M_next->_M_next != &this->_M_impl._M_node)
+      if (this->_M_impl._M_node->_M_next != this->_M_impl._M_node
+	  && this->_M_impl._M_node->_M_next->_M_next != this->_M_impl._M_node)
       {
         list __carry;
         list __tmp[64];
@@ -373,8 +373,8 @@ namespace _GLIBCXX_STD
       sort(_StrictWeakOrdering __comp)
       {
 	// Do nothing if the list has length 0 or 1.
-	if (this->_M_impl._M_node._M_next != &this->_M_impl._M_node
-	    && this->_M_impl._M_node._M_next->_M_next != &this->_M_impl._M_node)
+	if (this->_M_impl._M_node->_M_next != this->_M_impl._M_node
+	    && this->_M_impl._M_node->_M_next->_M_next != this->_M_impl._M_node)
 	  {
 	    list __carry;
 	    list __tmp[64];

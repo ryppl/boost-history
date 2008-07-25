@@ -77,52 +77,57 @@ struct pool : boost::pool<>
         alloc_.reset(new lpp());
         constr_.reset(new lpp());
     }
-    
+
     /**
         @brief
         This function returns the most recent allocation block that contains p.
-        
+
         @note
         Every block allocated after p is discarded.
     */
-    
+
     owned_base * top(void * p)
     {
         char * const q = static_cast<char *>(p);
-        
+
         lpp::reverse_iterator i;
         for (i = alloc_.get()->rbegin(); i != alloc_.get()->rend(); i ++)
             if (i->first <= q && q <= i->second)
                 break;
 
+//std::cout << __FUNCTION__ << ": " << &* i.base() << " - " << &* alloc_.get()->end() << std::endl;
         alloc_.get()->erase(i.base(), alloc_.get()->end());
-        
+
         return (owned_base *)(i->first);
     }
-    
+
     lpp & construct()
     {
         return * constr_.get();
     }
-    
+
     void * allocate(std::size_t s)
     {
         char * p = static_cast<char *>(ordered_malloc(s));
-        
+
         alloc_.get()->push_back(std::make_pair(p, p + s));
-        
+
+//std::cout << __FUNCTION__ << ": " << (void *) p << " - " << (void *) (p + s) << std::endl;
+
         return p;
     }
 
     void deallocate(void * p, std::size_t s)
     {
         char * const q = static_cast<char *>(p);
-        
+
+//std::cout << __FUNCTION__ << ": " << (void *) q << " - " << (void *) (q + s) << std::endl;
+
         lpp::reverse_iterator i;
         for (i = alloc_.get()->rbegin(); i != alloc_.get()->rend(); i ++)
             if (i->first <= q && q <= i->second)
                 break;
-        
+
         alloc_.get()->erase(i.base(), alloc_.get()->end());
         free(p, s);
     }
@@ -149,11 +154,11 @@ class owned_base : public sp_counted_base
 
 	intrusive_stack ptrs_;
 	intrusive_list inits_;
-    
+
 protected:
     owned_base()
     {
-        inits_.push_back(& init_tag_); 
+        inits_.push_back(& init_tag_);
     }
 
 public:
@@ -166,7 +171,7 @@ public:
     intrusive_list::node * init_tag() 				{ return & init_tag_; }
 
     static pool pool_;
-    
+
 private:
     virtual void dispose() 				            {} // dummy
     virtual void * get_deleter( std::type_info const & ti ) {} // dummy
@@ -194,7 +199,7 @@ template <typename T>
         typedef T data_type;
 
         data_type e_; // need alignas<long>
-        
+
     public:
         class roofof;
         friend class roofof;
@@ -217,15 +222,17 @@ template <typename T>
 
         public:
             roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::e_), p)) {}
-            
+
             operator shifted<data_type> * () const { return p_; }
         };
-        
+
         void * operator new (size_t s)
         {
+//std::cout << std::hex << __FUNCTION__ << ": " << s << std::endl;
+
             return pool_.allocate(s);
         }
-        
+
         void operator delete (void * p)
         {
             pool_.deallocate(p, sizeof(shifted));
@@ -260,7 +267,7 @@ template <>
 
         public:
             roofof(data_type * p) : p_(sh::roofof((long shifted<data_type>::*)(& shifted<data_type>::p_), static_cast<long *>(p))) {}
-            
+
             operator shifted<data_type> * () const { return p_; }
         };
     };

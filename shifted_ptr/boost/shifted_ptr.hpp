@@ -72,6 +72,8 @@ public:
 
     set() : count_(1), redir_(this)
     {
+std::cout << __FUNCTION__ << ": " << this << std::endl;
+
         includes_.push_back(& tag_);
     }
 
@@ -86,11 +88,11 @@ public:
                 i->add_ref_copy();
                 delete &* i;
             }
-                
+
             for (intrusive_list::iterator<set, & set::tag_> i = p->includes_.begin(), j; j = i, ++ j, i != p->includes_.end(); i = j)
                 if (&* i != this && &* i != p)
                     delete &* i;
-                    
+
             if (p != this)
                 delete p;
 
@@ -102,6 +104,8 @@ public:
 
     set * redir() const
     {
+//std::cout << __FUNCTION__ << ": " << this << std::endl;
+
         if (redir_ == this) return redir_;
         else return redir_ = redir_->redir();
     }
@@ -121,12 +125,16 @@ public:
     {
         return & redir()->elements_;
     }
-    
+
     void * operator new (size_t s)
     {
-        return pool_.allocate(s);
+        void * p = pool_.allocate(s);
+
+std::cout << __FUNCTION__ << ": " << (void *) p << " - " << (void *)((char *) p + sizeof(set)) << std::endl;
+
+        return p;
     }
-    
+
     void * operator new (size_t s, set * p)
     {
         return p;
@@ -134,6 +142,8 @@ public:
 
     void operator delete (void * p)
     {
+//std::cout << __FUNCTION__ << ": " << p << std::endl;
+
         pool_.deallocate(static_cast<set *>(p), sizeof(set));
     }
 };
@@ -167,6 +177,7 @@ template <typename T>
 
         shifted_ptr() : ps_(0)
         {
+std::cout << __FUNCTION__ << ": " << this << std::endl;
             if (! owned_base::pool_.is_from(this))
                 ps_ = new set();
             else
@@ -213,8 +224,12 @@ template <typename T>
         template <typename V>
             shifted_ptr & operator = (shifted<V> * p)
             {
-                release();
-                init(p);
+                // initialized yet or not?
+                if (ps_ && ! owned_base::pool_.is_from(ps_))
+                {
+                    release();
+                    init(p);
+                }
                 base::operator = (p);
 
                 return * this;
@@ -225,10 +240,15 @@ template <typename T>
             {
                 if (p.po_ != base::po_)
                 {
-                    if (ps_->redir() != p.ps_->redir())
+                    // initialized yet or not?
+std::cout << ps_ << ": " << p.ps_ << std::endl;
+                    if (ps_ && ! owned_base::pool_.is_from(ps_) && p.ps_ && ! owned_base::pool_.is_from(p.ps_))
                     {
-                        release();
-                        ps_->redir(p.ps_);
+                        if (ps_->redir() != p.ps_->redir())
+                        {
+                            release();
+                            ps_->redir(p.ps_);
+                        }
                     }
                     base::operator = (p);
                 }
@@ -267,8 +287,12 @@ template <typename T>
             {
                 shifted<element_type> * const q = (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(p));
 
-                release();
-                init(q);
+                // initialized yet or not?
+                if (ps_ && ! owned_base::pool_.is_from(ps_))
+                {
+                    release();
+                    init(q);
+                }
                 base::operator = (q);
 
                 return * this;
@@ -299,7 +323,7 @@ template <typename T>
                     else
                         delete ps_;
                 }
-                else 
+                else
                 {
                     base::reset();
 
@@ -316,11 +340,11 @@ template <typename T>
             for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
             {
                 ps_->elements()->push_back(i->set_tag());
-                
+
                 for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = p->ptrs()->begin(), n; n = m, ++ n, m != p->ptrs()->end(); m = n)
                     m->ps_ = ps_;
             }
-            
+
             owned_base::pool_.construct().clear();
         }
     };

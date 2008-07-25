@@ -318,22 +318,16 @@ namespace _GLIBCXX_STD
       // get_allocator, where we use conversions between
       // allocator_type and _Node_Alloc_type. The conversion is
       // required by table 32 in [20.1.5].
-      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other 
-      
+      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other
+
       _Node_Alloc_type;
 
-      struct _List_impl 
+      struct _List_impl
         : public _Node_Alloc_type {
-        _List_base & _M_base;
-        _List_node_base<_Alloc> & _M_node;
+        typename _List_node_base<_Alloc>::pointer _M_node;
         _List_impl (const _Node_Alloc_type& __a, _List_base& __b)
-          : _Node_Alloc_type(__a), _M_base(__b), _M_node(* new (_M_base._M_get_node()) _List_node_base<_Alloc>())
+          : _Node_Alloc_type(__a), _M_node(new (__b._M_get_node()) _List_node_base<_Alloc>())
         { }
-        ~_List_impl ()
-        {
-          _M_node.~_List_node_base<_Alloc>();
-          _M_base._M_put_node(static_cast<_List_node<_Tp, _Alloc> *>(&_M_node));
-        }
       };
 
       _List_impl _M_impl;
@@ -341,11 +335,11 @@ namespace _GLIBCXX_STD
       _List_node<_Tp, _Alloc> *
       _M_get_node()
       { return _M_impl._Node_Alloc_type::allocate(1); }
-      
+
       void
       _M_put_node(_List_node<_Tp, _Alloc> * __p)
       { _M_impl._Node_Alloc_type::deallocate(__p, 1); }
-      
+
   public:
       typedef _Node_Alloc_type allocator_type;
 
@@ -367,8 +361,8 @@ namespace _GLIBCXX_STD
       void
       _M_init()
       {
-        this->_M_impl._M_node._M_next = &this->_M_impl._M_node;
-        this->_M_impl._M_node._M_prev = &this->_M_impl._M_node;
+        this->_M_impl._M_node->_M_next = this->_M_impl._M_node;
+        this->_M_impl._M_node->_M_prev = this->_M_impl._M_node;
       }
     };
 
@@ -629,7 +623,7 @@ namespace _GLIBCXX_STD
        */
       iterator
       begin()
-      { return iterator(&*this->_M_impl._M_node._M_next); }
+      { return iterator(&*this->_M_impl._M_node->_M_next); }
 
       /**
        *  Returns a read-only (constant) iterator that points to the
@@ -638,7 +632,7 @@ namespace _GLIBCXX_STD
        */
       const_iterator
       begin() const
-      { return const_iterator(&*this->_M_impl._M_node._M_next); }
+      { return const_iterator(&*this->_M_impl._M_node->_M_next); }
 
       /**
        *  Returns a read/write iterator that points one past the last
@@ -646,7 +640,7 @@ namespace _GLIBCXX_STD
        *  order.
        */
       iterator
-      end() { return &this->_M_impl._M_node; }
+      end() { return &*this->_M_impl._M_node; }
 
       /**
        *  Returns a read-only (constant) iterator that points one past
@@ -655,7 +649,7 @@ namespace _GLIBCXX_STD
        */
       const_iterator
       end() const
-      { return &this->_M_impl._M_node; }
+      { return &*this->_M_impl._M_node; }
 
       /**
        *  Returns a read/write reverse iterator that points to the last
@@ -700,7 +694,7 @@ namespace _GLIBCXX_STD
        */
       bool
       empty() const
-      { return this->_M_impl._M_node._M_next == &this->_M_impl._M_node; }
+      { return this->_M_impl._M_node->_M_next == this->_M_impl._M_node; }
 
       /**  Returns the number of elements in the %list.  */
       size_type
@@ -829,7 +823,7 @@ namespace _GLIBCXX_STD
        */
       void
       pop_back()
-      { this->_M_erase(this->_M_impl._M_node._M_prev); }
+      { this->_M_erase(this->_M_impl._M_node->_M_prev); }
 
       /**
        *  @brief  Inserts given value into %list before specified iterator.
@@ -1105,7 +1099,7 @@ namespace _GLIBCXX_STD
        */
       void
       reverse()
-      { this->_M_impl._M_node.reverse(); }
+      { this->_M_impl._M_node->reverse(); }
 
       /**
        *  @brief  Sort the elements.
