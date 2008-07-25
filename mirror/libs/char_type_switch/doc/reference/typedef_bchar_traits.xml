@@ -4,14 +4,15 @@
 <typedef name="bchar_traits"
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 >
-	<type>::std::char_traits&lt;<classname>bchar</classname>&gt;</type>
+	<type>::std::<xi:include href="../ulinks/std__char_traits.xml"/>&lt;<classname>bchar</classname>&gt;</type>
 	<purpose>
-		<para>The <code>::std::char_traits</code> for the <code><classname>bchar</classname></code> character type.
+		<para>The <code>::std::<xi:include href="../ulinks/std__char_traits.xml"/></code> for the 
+		<code><classname>bchar</classname></code> character type.
 		</para>
 	</purpose>
 	<description>
 		<para>The <code><classname>bchar_traits</classname></code> type is defined as abbreviation for 
-		<code>::std::char_traits&lt;<classname>bchar</classname>&gt;</code>.
+		<code>::std::<xi:include href="../ulinks/std__char_traits.xml"/>&lt;<classname>bchar</classname>&gt;</code>.
 		</para>
 	</description>
 </typedef>

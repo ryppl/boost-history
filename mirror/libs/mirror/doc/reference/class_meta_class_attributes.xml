@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<class name="meta_class_attributes"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<template>
+		<template-type-parameter name="unspecified"/>
+	</template>
+	<purpose>
+		<para>This class template contains the <code><classname>meta_attribute</classname></code>s
+		reflecting the individual attributes of a class. More precisely, only those attributes,
+		that are defined in the reflected class, not including the inherited member attributes. 
+		To inspect all attributes of a class use the specializations of the <code><classname>meta_class_all_attributes</classname></code>
+		template.
+		</para>
+		<para>The <code><classname>meta_class_attributes</classname></code> template should not be instantiated
+		directly, <code><classname>meta_class_attributes</classname></code> are obtained only as result
+	       	of introspection operations on <code><classname>meta_class</classname></code>.
+		</para>
+		The individual <code><classname>meta_attribute</classname></code>s and 
+		iterators pointing to them should be obtained as results
+		of the meta-object-sequence algoritms. See the examples for more details on usage of 
+		<code><classname>meta_class_attributes</classname></code>.
+		</para>
+	</purpose>
+	<description>
+		<para>
+		</para>
+		<section id="mirror.meta_class_attributes.reference.samples">
+		<section id="mirror.meta_class_attributes.reference.sample01">
+			<title>Example - Basic usage</title>
+			<para>
+			</para>
+			<!--
+			<xi:include href="../samples/usage_meta_attribute_01.xml"/>
+			-->
+		</section>
+		</section>
+	</description>
+</class>
+

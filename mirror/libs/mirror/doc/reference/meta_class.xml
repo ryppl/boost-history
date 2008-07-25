@@ -8,62 +8,12 @@
 	<using-namespace name="boost::cts"/>
 	<namespace name="boost">
 	<namespace name="mirror">
-		<class name="meta_class">
-			<template>
-				<template-type-parameter name="Class"/>
-				<!--
-				<template-type-parameter name="VariantTag"/>
-				-->
-			</template>
-			<purpose>
-				<para>
-				This class template is to provides meta-data
-				about the reflected class.
-				</para>
-				<para>
-				Although the specializations of <code><classname>meta_class</classname></code> 
-				template can be used directly to get the meta data about a particular class (or type), 
-				it is recomended to use the reflection macro 
-				<code><macroname>BOOST_MIRRORED_CLASS</macroname>(CLASS)</code>
-				instead, to get the proper specializations of 
-				<code><classname>meta_class</classname></code>.
-				</para>
-			</purpose>
-			<inherit access="public">
-				<type><classname>meta_type</classname>&lt;Class&gt;</type>
-				<purpose>
-					<para>The basic type meta-information about the reflected class.
-					</para>
-				</purpose>
-			</inherit>
 
-			<access name="public">
-			<typedef name="base_classes">
-				<type><emphasis>unspecified</emphasis></type>
-				<purpose>The list of base classes</purpose>
-				<description>
-					<para>
-					</para>
-				</description>
-			</typedef>
-			<typedef name="attributes">
-				<type><emphasis>unspecified</emphasis></type>
-				<purpose>The own attributes of the class</purpose>
-				<description>
-					<para>
-					</para>
-				</description>
-			</typedef>
-			<typedef name="all_attributes">
-				<type><emphasis>unspecified</emphasis></type>
-				<purpose>All attributes of the class including the inherited ones</purpose>
-				<description>
-					<para>
-					</para>
-				</description>
-			</typedef>
-			</access>
-		</class>
+		<xi:include href="class_meta_class.xml"/>
+
 	</namespace><!-- mirror -->
 	</namespace><!-- boost -->
+
+	<!-- macros -->
+	<xi:include href="macro_RFL_CLASS.xml"/>
 </header>

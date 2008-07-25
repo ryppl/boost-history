@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="../../index.html" title="The Mirror library documentation">
 <link rel="up" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp" title="Header &lt;boost/mirror/meta_attributes.hpp&gt;">
-<link rel="prev" href="meta_class.html" title="Class template meta_class">
+<link rel="prev" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">
 <link rel="next" href="reflects_namespace.html" title="Class template reflects_namespace">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,15 +20,15 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="meta_class.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_MIRRORED_CLASS.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="boost.mirror.meta_attribute"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Class template meta_attribute</span></h2>
-<p>boost::mirror::meta_attribute &#8212; This class template reflects individual attributes of a class. The
-		<code class="computeroutput"><a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code> template should not be instantiated
-		directly, but meta-attributes are obtained only as results of introspection operations on
+<p>boost::mirror::meta_attribute &#8212; This class template reflects one individual attribute of a class. The
+		<code class="computeroutput">meta_attribute</code> template should not be instantiated
+		directly, meta-attributes are obtained only as results of introspection operations on
 		<code class="computeroutput">meta_class_attributes</code> and
 		<code class="computeroutput">meta_class_all_attributes</code>.
 		</p>
@@ -37,17 +37,29 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id2537717-bbtypes">types</a></em></span>
-  <span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.scope">scope</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_attribute.html#id2462728-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_attribute.html#id2500006-bb">full_name</a>();
+  <span class="emphasis"><em>// <a class="link" href="meta_attribute.html#id478762-bbtypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.scope">scope</a>;
+  <span class="bold"><strong>typedef</strong></span> meta_class_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt;-or-meta_class_all_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.container">container</a>;
+  <span class="bold"><strong>typedef</strong></span> container <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.meta_attributes">meta_attributes</a>;
+  <span class="bold"><strong>typedef</strong></span> mpl::int_&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.position">position</a>;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.type">type</a>;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.typedef_or_type">typedef_or_type</a>;
+  <span class="bold"><strong>typedef</strong></span> meta_class_attribute_traits&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_attribute.html#boost.mirror.meta_attribute.traits">traits</a>;
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id478559-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_attribute.html#id478529-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_attribute.html#id2485570-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_attribute.html#id478473-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+  <span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a class="link" href="meta_attribute.html#id478408-bb">get</a>(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>typename</strong></span> scope::reflected_type&amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> DestType&gt; 
+    <span class="type">DestType&amp;</span> <a class="link" href="meta_attribute.html#id478350-bb">query</a>(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>typename</strong></span> scope::reflected_type&amp;, DestType&amp;);
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="meta_attribute.html#id477879-bb">set</a>(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>typename</strong></span> scope::reflected_type&amp;, type);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2637935"></a><h2>Description</h2>
-<p>
+<a name="id699341"></a><h2>Description</h2>
+<p>This template allows to get both compile-time and run-time meta-data about
+		the member attribute of a class. At compile time the scope, position, type and several other traits of the attribute
+		can be inspected. At run-time one can get the base and full name of the attribute and to generically get and set its value.
 		</p>
 <div class="section" lang="en">
 <div class="titlepage"></div>
@@ -59,74 +71,204 @@
 </div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id2637965"></a><h3>
-<a name="id2537717-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
-<div class="orderedlist"><ol type="1"><li>
+<a name="id699367"></a><h3>
+<a name="id478762-bbtypes"></a><code class="computeroutput">meta_attribute</code> public types</h3>
+<div class="orderedlist"><ol type="1">
+<li>
 <p>
-<span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.scope"></a>scope;</p>
-<p>A meta-object describing the class to which the reflected attribute belongs. 
+<span class="bold"><strong>typedef</strong></span> meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.scope"></a>scope;</p>
+<p>Meta-class describing the scope where the reflected attribute is defined.
+			The scope is the class that the reflected attribute belongs to. 
 			</p>
-</li></ol></div>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> meta_class_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt;-or-meta_class_all_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.container"></a>container;</p>
+<p>The meta-attribute-sequence containing this <code class="computeroutput">meta_attribute</code>.
+			It is the container that the <code class="computeroutput">meta_attribute</code> belongs to.
+			It can be either the "own" class' attributes - 
+			<code class="computeroutput">meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt;::attributes</code> 
+			or all class attributes including the inherited ones - 
+			<code class="computeroutput">meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt;::all_attributes</code>.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> container <a name="boost.mirror.meta_attribute.meta_attributes"></a>meta_attributes;</p>
+<p>This is an alias for the <code class="computeroutput">container</code> typedef.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> mpl::int_&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.position"></a>position;</p>
+<p>This member is an instantiation of the <code class="computeroutput">::boost::mpl::int_&lt;N&gt;</code>
+			template and specifies the position of the <code class="computeroutput">meta_attribute</code>
+			in the <code class="computeroutput">container</code>.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_attribute.type"></a>type;</p>
+<p>The type of the reflected attribute.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_attribute.typedef_or_type"></a>typedef_or_type;</p>
+<p>This type should be used to reflect the type of the attribute (to get a <code class="computeroutput">meta_type</code>
+			or a <code class="computeroutput">meta_class</code> that reflects the type of the attribute), because it allows
+			to distinguish <code class="computeroutput">typedef</code>ined types.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> meta_class_attribute_traits&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_attribute.traits"></a>traits;</p>
+<p>Additional traits of the attribute, like storage class specifiers, etc.
+			See the documentation of <code class="computeroutput">meta_class_attribute_traits</code> for more details.
+			</p>
+</li>
+</ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2462728-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id478559-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
-			attribute reflected by the <code class="computeroutput"><a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>.
+			attribute reflected by the <code class="computeroutput">meta_attribute</code>.
 			When a full attribute name 
-			<span class="bold"><strong>with</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput"><a class="link" href="meta_attribute.html#id2500006-bb">full_name</a></code> member function
+			<span class="bold"><strong>including</strong></span> the class name, that the
+			reflected member attribute belongs to,
+			is needed use the <code class="computeroutput">full_name</code> member function
 			instead.</p>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2500006-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id478529-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
-			namespace reflected by a <code class="computeroutput"><a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>
-			with the nested name specifier. For example:
-			</p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: full_name()
-			</pre>
+			attribute reflected by the <code class="computeroutput">meta_attribute</code>
+			including the full name of the class that the attribute belongs to. For example:
+</p>
+<pre class="programlisting">
+typedef ::std::pair&lt;int, double&gt; pair;
+// reflect the class
+typedef <code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a></code>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+// get the full name
+meta_pair_first::full_name();
+</pre>
 <p>
-			returns <code class="computeroutput">"::boost::mirror"</code>. When the base namespace name 
-			<span class="bold"><strong>without</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput"><a class="link" href="meta_attribute.html#id2462728-bb">base_name</a></code> member function
+			returns <code class="computeroutput">"::std::pair&lt; int, double &gt;::first"</code>. When the base attribute name 
+			<span class="bold"><strong>without</strong></span> the full class name 
+			is needed use the <code class="computeroutput">base_name</code> member function
 			instead.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term">Notes:</span></p></td>
 <td><p>The first call to this function can be expensive 
-			for deeply nested namespaces, because the name needs to be properly composed from 
-			the base namespace names, which may 
+			for attributes of deeply nested classes, because the name needs to be properly composed from 
+			the class name and namespace names, which may 
 			lead to multiple string concatenations. Subsequent calls to this member function
-			for a concrete specialization of <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a>
+			for a concrete specialization of meta_attribute
 			are usually much faster.
 			</p></td>
 </tr></tbody>
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id2485570-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id478473-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
-			<span class="bold"><strong>without</strong></span> the nested name specifier 
-			or the full name <span class="bold"><strong>with</strong></span> the 
-			nested name specifier of the attribute reflected by this
-			<code class="computeroutput"><a class="link" href="meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>,
+			or the full name of the attribute reflected by this
+			<code class="computeroutput">meta_attribute</code>,
 			depending on the value of the template argument <code class="computeroutput">FullName</code>.
 			Furthermore it allows to choose whether the return value type is 
 			<code class="computeroutput">::std::string</code> or <code class="computeroutput">::std::wstring</code> based
 			on the type of the second argument.
-			For example:
 			</p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
-			</pre>
-<p> is equivalent to calling the 
-			<code class="computeroutput"><a class="link" href="meta_attribute.html#id2462728-bb">base_name</a></code> member function with the 
-			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol undefined, 
-			which returns a <code class="computeroutput">::std::string</code> holding the string <code class="computeroutput">"mirror"</code> and calling
+<pre class="literallayout"><span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a name="id478408-bb"></a>get(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>typename</strong></span> scope::reflected_type&amp; instance);</pre>
+<p>This static member function returns the value of the attribute reflected
+			by this <code class="computeroutput">meta_attribute</code> when given 
+			an <code class="computeroutput">instance</code> of the class that the attribute belongs to:
+</p>
+<pre class="programlisting">
+typedef ::std::pair&lt;int, double&gt; pair;
+// reflect the class
+typedef <code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a></code>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;1&gt; &gt;::type meta_pair_second;
+//
+// create an instance of the pair
+pair p(10, 20.0);
+assert(meta_pair_first::<code class="computeroutput">get</code>(p) == p.first);
+assert(meta_pair_second::<code class="computeroutput">get</code>(p) == p.second);
+</pre>
+<p>
 			</p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
-			</pre>
-<p> is equivalent to calling the 
-			<code class="computeroutput"><a class="link" href="meta_attribute.html#id2500006-bb">full_name</a></code> method with the 
-			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol defined, 
-			which returns a <code class="computeroutput">::std::wstring</code> holding this string <code class="computeroutput">L"::boost::mirror"</code>.
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> DestType&gt; 
+  <span class="type">DestType&amp;</span> <a name="id478350-bb"></a>query(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>typename</strong></span> scope::reflected_type&amp; instance, 
+                  DestType&amp; destination);</pre>
+<p>This static member function assigns the value of the attribute reflected
+			by this <code class="computeroutput">meta_attribute</code> (when given 
+			an <code class="computeroutput">instance</code> of the class that the attribute belongs to),
+			to <code class="computeroutput">destination</code> and returns <code class="computeroutput">destination</code>. The <code class="computeroutput">DestType</code>
+			type must be assignable with the <code class="computeroutput">type</code> of the attribute:
+</p>
+<pre class="programlisting">
+typedef ::std::pair&lt;int, float&gt; pair;
+// reflect the class
+typedef <code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a></code>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;1&gt; &gt;::type meta_pair_second;
+//
+// create an instance of the pair
+pair p(10, 20.0f);
+// and two other variables
+long first = 30;
+float second = 40.0f;
+// query the values and check them
+assert(meta_pair_first::<code class="computeroutput">query</code>(p, first) == 10);
+assert(meta_pair_second::<code class="computeroutput">query</code>(p, second) == 20.0f);
+// and double check the variables
+assert(first == p.first);
+assert(second == p.second);
+</pre>
+<p>
+			</p>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id477879-bb"></a>set(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>typename</strong></span> scope::reflected_type&amp; instance, type value);</pre>
+<p>This static member function sets the given value to the attribute reflected
+			by this <code class="computeroutput">meta_attribute</code> when given 
+			an <code class="computeroutput">instance</code> of the class that the attribute belongs to:
+</p>
+<pre class="programlisting">
+typedef ::std::pair&lt;int, float&gt; pair;
+// reflect the class
+typedef <code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a></code>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+typedef <code class="computeroutput">at</code>&lt;meta_pair_attribs, mpl::int_&lt;1&gt; &gt;::type meta_pair_second;
+//
+// create an instance of the pair
+pair p(10, 20.0f);
+pair r(30, 40.0f);
+// 
+assert(meta_pair_first::<code class="computeroutput">get</code>(p) != meta_pair_first::<code class="computeroutput">get</code>(r));
+assert(meta_pair_second::<code class="computeroutput">get</code>(p) != meta_pair_second::<code class="computeroutput">get</code>(r));
+// set new values
+meta_pair_first::<code class="computeroutput">set</code>(p, meta_pair_first::<code class="computeroutput">get</code>(r));
+meta_pair_second::<code class="computeroutput">set</code>(p, meta_pair_second::<code class="computeroutput">get</code>(r));
+// and check the values 
+assert(meta_pair_first::<code class="computeroutput">get</code>(p) == meta_pair_first::<code class="computeroutput">get</code>(r));
+assert(meta_pair_second::<code class="computeroutput">get</code>(p) == meta_pair_second::<code class="computeroutput">get</code>(r));
+// and double check them
+assert(p.first == r.first);
+assert(p.second == r.second);
+</pre>
+<p>
 			</p>
 </div>
 </div>
@@ -140,7 +282,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="meta_class.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_MIRRORED_CLASS.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_attributes.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<class name="meta_class"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<template>
+		<template-type-parameter name="Class"/>
+		<!--
+		<template-type-parameter name="VariantTag"/>
+		-->
+	</template>
+	<purpose>
+		<para>
+		This class template provides meta-data about the reflected class.
+		</para>
+		<para>
+		Although the specializations of <code><classname>meta_class</classname></code> 
+		template can be used directly to get the meta data about a particular class (or type), 
+		it is recomended to use the reflection macro 
+		<code><macroname>BOOST_MIRRORED_CLASS</macroname>(CLASS)</code>
+		instead, to get the proper specializations of 
+		<code><classname>meta_class</classname></code>.
+		</para>
+	</purpose>
+	<inherit access="public">
+		<type><classname>meta_type</classname>&lt;Class&gt;</type>
+		<description>
+			<para>The basic type meta-information about the reflected class.
+			</para>
+		</description>
+	</inherit>
+
+	<access name="public">
+	<typedef name="base_classes">
+		<type><classname>meta_base_classes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>The list of <code><classname>meta_inheritance</classname></code> specializations
+			reflecting the base classes of the class reflected by this <code><classname>meta_class</classname></code>.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="attributes">
+		<type><classname>meta_class_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>The container of <code><classname>meta_attribute</classname></code>s reflecting the
+			"own" attributes of a class. These are the attributes that are defined directly
+			in the class reflected by this <code><classname>meta_class</classname></code>, not including
+			the attributes inherited from the base classes.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="all_attributes">
+		<type><classname>meta_class_all_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>The container of <code><classname>meta_attribute</classname></code>s reflecting 
+			all attributes of a class including the ones inherited from base classes.
+			</para>
+		</description>
+	</typedef>
+	</access>
+</class>

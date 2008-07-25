@@ -10,6 +10,8 @@
 	<namespace name="mirror">
 
 		<xi:include href="class_meta_attribute.xml"/>
+		<xi:include href="class_meta_class_attributes.xml"/>
+		<xi:include href="class_meta_class_all_attributes.xml"/>
 
 	</namespace><!-- mirror -->
 	</namespace><!-- boost -->

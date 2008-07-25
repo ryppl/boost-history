@@ -27,7 +27,7 @@
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_MIRRORED_TYPE</span></h2>
 <p>BOOST_MIRRORED_TYPE &#8212; This macro is used to reflect a type and expands into a specialization
-		of the <code class="computeroutput"><a class="link" href="boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template, which provides
+		of the <code class="computeroutput">meta_type</code> template, which provides
 		meta-data about the reflected type. 
 		To reflect a <code class="computeroutput">typedef</code>-ined type use the 
 		<code class="computeroutput"><a class="link" href="BOOST_MIRRORED_TYPEDEF.html" title="Macro BOOST_MIRRORED_TYPEDEF">BOOST_MIRRORED_TYPEDEF</a></code> macro.
@@ -38,7 +38,7 @@
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRRORED_TYPE(TYPE)</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2636576"></a><h2>Description</h2>
+<a name="id698146"></a><h2>Description</h2>
 <p>The <code class="computeroutput"><a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code> macro reflects a type
 		previously registered with the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library or a type derived
 		from a registered type. The argument of this macro is a type.
@@ -54,14 +54,14 @@
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT((
-	<a class="link" href="boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt;
+	reflects_global_scope&lt;
 		<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(int)::scope
 	&gt;
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT_NOT((
-	<a class="link" href="boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt;
+	reflects_global_scope&lt;
 		<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string)::scope
 	&gt;
 ));

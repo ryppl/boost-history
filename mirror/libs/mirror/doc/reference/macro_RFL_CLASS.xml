@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_CLASS" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<macro-parameter name="CLASS"/>
+	<purpose>
+		<para>This macro is used to reflect a class and expands into a specialization
+		of the <code><classname>meta_class</classname></code> template, which provides
+		meta-data about the reflected class. 
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRRORED_CLASS</macroname></code> macro reflects a class
+		previously registered with the <libraryname>Mirror</libraryname> library. 
+		The argument of this macro is a class name.
+		</para>
+		<section id="mirror.RFL_CLASS.reference.samples">
+			<title>Examples</title>
+			<section id="mirror.RFL_CLASS.reference.samples.simple">
+				<title>Basic usage</title>
+<programlisting>
+<macroname>BOOST_MIRRORED_CLASS</macroname>(::std::pair&lt;int, double&gt;)::base_name();
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	<classname>reflects_global_scope</classname>&lt;
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(::std::pair&lt;int, char&gt;)::scope
+	&gt;
+));
+</programlisting>
+<programlisting>
+<macroname>BOOST_MIRRORED_CLASS</macroname>(::boost::tuple&lt;bool, char, int, char&gt;)::scope::full_name();
+</programlisting>
+			</section>
+		</section>
+	</description>
+</macro>

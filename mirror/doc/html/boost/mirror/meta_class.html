@@ -7,7 +7,7 @@
 <link rel="start" href="../../index.html" title="The Mirror library documentation">
 <link rel="up" href="../../mirror/reference.html#header.boost.mirror.meta_class.hpp" title="Header &lt;boost/mirror/meta_class.hpp&gt;">
 <link rel="prev" href="../../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">
-<link rel="next" href="meta_attribute.html" title="Class template meta_attribute">
+<link rel="next" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,58 +20,61 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../BOOST_MIRRORED_TYPEOF.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_class.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="meta_attribute.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_MIRRORED_TYPEOF.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_class.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../BOOST_MIRRORED_CLASS.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="boost.mirror.meta_class"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Class template meta_class</span></h2>
 <p>boost::mirror::meta_class &#8212; 
-				This class template is to provides meta-data
-				about the reflected class.
-				
-				Although the specializations of <code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code> 
-				template can be used directly to get the meta data about a particular class (or type), 
-				it is recomended to use the reflection macro 
-				<code class="computeroutput">BOOST_MIRRORED_CLASS(CLASS)</code>
-				instead, to get the proper specializations of 
-				<code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code>.
-				</p>
+		This class template provides meta-data about the reflected class.
+		
+		Although the specializations of <code class="computeroutput">meta_class</code> 
+		template can be used directly to get the meta data about a particular class (or type), 
+		it is recomended to use the reflection macro 
+		<code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(CLASS)</code>
+		instead, to get the proper specializations of 
+		<code class="computeroutput">meta_class</code>.
+		</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Class&gt; 
-<span class="bold"><strong>class</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a> : <span class="bold"><strong>public</strong></span> <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a>&lt;Class&gt;   <span class="emphasis"><em>// The basic type meta-information about the reflected class.
-					</em></span>
+<span class="bold"><strong>class</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a> : <span class="bold"><strong>public</strong></span> meta_type&lt;Class&gt;
 {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_class.html#id2502055-bbtypes">types</a></em></span>
-  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_class.html#boost.mirror.meta_class.base_classes">base_classes</a>;
-  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_class.html#boost.mirror.meta_class.attributes">attributes</a>;
-  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_class.html#boost.mirror.meta_class.all_attributes">all_attributes</a>;
+  <span class="emphasis"><em>// <a class="link" href="meta_class.html#id656414-bbtypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> meta_base_classes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_class.html#boost.mirror.meta_class.base_classes">base_classes</a>;
+  <span class="bold"><strong>typedef</strong></span> meta_class_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_class.html#boost.mirror.meta_class.attributes">attributes</a>;
+  <span class="bold"><strong>typedef</strong></span> meta_class_all_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_class.html#boost.mirror.meta_class.all_attributes">all_attributes</a>;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2637584"></a><h2>Description</h2>
+<a name="id698825"></a><h2>Description</h2>
 <div class="refsect2" lang="en">
-<a name="id2637587"></a><h3>
-<a name="id2502055-bbtypes"></a><code class="computeroutput">meta_class</code> public types</h3>
+<a name="id698829"></a><h3>
+<a name="id656414-bbtypes"></a><code class="computeroutput">meta_class</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
-<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_class.base_classes"></a>base_classes;</p>
-<p>
-					</p>
+<span class="bold"><strong>typedef</strong></span> meta_base_classes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_class.base_classes"></a>base_classes;</p>
+<p>The list of <code class="computeroutput">meta_inheritance</code> specializations
+			reflecting the base classes of the class reflected by this <code class="computeroutput">meta_class</code>.
+			</p>
 </li>
 <li>
 <p>
-<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_class.attributes"></a>attributes;</p>
-<p>
-					</p>
+<span class="bold"><strong>typedef</strong></span> meta_class_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_class.attributes"></a>attributes;</p>
+<p>The container of <code class="computeroutput">meta_attribute</code>s reflecting the
+			"own" attributes of a class. These are the attributes that are defined directly
+			in the class reflected by this <code class="computeroutput">meta_class</code>, not including
+			the attributes inherited from the base classes.
+			</p>
 </li>
 <li>
 <p>
-<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_class.all_attributes"></a>all_attributes;</p>
-<p>
-					</p>
+<span class="bold"><strong>typedef</strong></span> meta_class_all_attributes&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_class.all_attributes"></a>all_attributes;</p>
+<p>The container of <code class="computeroutput">meta_attribute</code>s reflecting 
+			all attributes of a class including the ones inherited from base classes.
+			</p>
 </li>
 </ol></div>
 </div>
@@ -87,7 +90,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../BOOST_MIRRORED_TYPEOF.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_class.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="meta_attribute.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_MIRRORED_TYPEOF.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_class.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../BOOST_MIRRORED_CLASS.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

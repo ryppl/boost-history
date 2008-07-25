@@ -4,7 +4,7 @@
 <typedef name="bstring"
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 >
-	<type>::std::basic_string&lt;<classname>bchar</classname>&gt;</type>
+	<type>::std::<xi:include href="../ulinks/std__basic_string.xml"/>&lt;<classname>bchar</classname>&gt;</type>
 	<purpose>
 		<para>This type is basically defined as <code>::std::string</code> if <code><classname>bchar</classname></code> is <code>char</code>
 		and is defined as <code>::std::wstring</code> if <code><classname>bchar</classname></code> is <code>wchar_t</code>.
@@ -12,7 +12,7 @@
 	</purpose>
 	<description>
 		<para>The <code><classname>bstring</classname></code> type is defined as an abbreviation for 
-		<code>::std::basic_string&lt;<classname>bchar</classname>&gt;</code>.
+		<code>::std::<xi:include href="../ulinks/std__basic_string.xml"/>&lt;<classname>bchar</classname>&gt;</code>.
 		</para>
 		<section id="char_type_switch.bstring.reference.samples">
 			<title>Examples</title>

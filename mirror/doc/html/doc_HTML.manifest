@@ -14,6 +14,7 @@ BOOST_MIRRORED_TYPE_NS.html
 BOOST_MIRRORED_TYPEDEF.html
 BOOST_MIRRORED_TYPEOF.html
 boost/mirror/meta_class.html
+BOOST_MIRRORED_CLASS.html
 boost/mirror/meta_attribute.html
 boost/mirror/reflects_namespace.html
 boost/mirror/reflects_global_scope.html

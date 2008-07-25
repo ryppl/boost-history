@@ -34,7 +34,7 @@
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_CTS_LIT(STRING_LITERAL)</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2640485"></a><h2>Description</h2>
+<a name="id702264"></a><h2>Description</h2>
 <p>This macro is defined as follows:
 </p>
 <pre class="programlisting">
@@ -77,9 +77,9 @@ BOOST_MPL_ASSERT((
 int main(void)
 {
 #ifdef <a class="link" href="BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a>
-	assert(::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id2503319">bstrcmp</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), L"foo") == 0);
+	assert(::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id601645">bstrcmp</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), L"foo") == 0);
 #else
-	assert(::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id2503319">bstrcmp</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), "foo") == 0);
+	assert(::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id601645">bstrcmp</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), "foo") == 0);
 #endif
 	return 0;
 }
@@ -90,7 +90,7 @@ int main(void)
 
 int main(void)
 {
-	assert(::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id2503319">bstrcmp</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), <a class="link" href="BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">BOOST_CTS_STRINGIZE</a>(foo)) == 0);
+	assert(::boost::cts::<a class="link" href="char_type_switch/reference.html#boost.cts.bstrcmp_id601645">bstrcmp</a>(<a class="link" href="BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("foo"), <a class="link" href="BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">BOOST_CTS_STRINGIZE</a>(foo)) == 0);
 	return 0;
 }
 </pre>
