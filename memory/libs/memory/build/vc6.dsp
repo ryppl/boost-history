@@ -121,15 +121,15 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\src\block_pool.cpp
+SOURCE=..\src\block_pool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\gc_alloc.cpp
+SOURCE=..\src\gc_alloc.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\system_pool.cpp
+SOURCE=..\src\system_pool.cpp
 # End Source File
 # End Group
 # Begin Group "misc"
@@ -137,11 +137,11 @@ SOURCE=.\src\system_pool.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\memory_w32.def
+SOURCE=..\build.def
 # End Source File
 # Begin Source File
 
-SOURCE=.\StdAfx.cpp
+SOURCE=..\stdafx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
 # End Group
