@@ -31,34 +31,34 @@
 		base and full type name of the reflected type and to 
 		get information about the scope inside of which this type
 		has been declared.
-		Although the specializations of <code class="computeroutput">meta_type</code> 
+		Although the specializations of <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> 
 		template can be used directly to get the meta data about a particular type, 
 		it is recomended to use the reflection macros like 
 		<code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(TYPE)</code> or
 		<code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a>(EXPR)</code>
 		instead, to get the proper specializations of 
-		<code class="computeroutput">meta_type</code>.
+		<code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>.
 		</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id519408-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_type.html#id2523932-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> Type <a class="link" href="meta_type.html#boost.mirror.meta_type.reflected_type">reflected_type</a>;
-  <span class="bold"><strong>typedef</strong></span> meta_namespace&lt;<span class="emphasis"><em>unspecified</em></span>&gt;-or-meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_type.html#boost.mirror.meta_type.scope">scope</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id657141-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a class="link" href="meta_type.html#id657078-bb">full_name</a>();
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt;-or-<a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_type.html#boost.mirror.meta_type.scope">scope</a>;
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_type.html#id2501390-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_type.html#id2431193-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_type.html#id656230-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_type.html#id2476880-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id695245"></a><h2>Description</h2>
-<p>The specializations of <code class="computeroutput">meta_type</code> can 
+<a name="id2635263"></a><h2>Description</h2>
+<p>The specializations of <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> can 
 		be used to get meta-information about the reflected types, some at compile-time and some at run-time.
 		The following examples show type reflection and basic 
-		<code class="computeroutput">meta_type</code> usage. Mirror works with the native C++ types
+		<code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> usage. Mirror works with the native C++ types
 		and some of the very common types like <code class="computeroutput">::std::string</code>, etc. out of the box.
 		Meta-types for many other types from the standard library and Boost
 		are also provided and can be <code class="computeroutput">#include</code>d when necessary.
@@ -70,7 +70,7 @@
 <a name="mirror.meta_type.reference.sample01"></a>Example - Basic usage</h6></div></div></div>
 <p>This sample code shows how to reflect a type and how to get its full type name.
 			Since various instances of <code class="computeroutput">::std::pair</code> are reflected,
-			the <code class="computeroutput">meta_type</code>s for this template need to be 
+			the <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>s for this template need to be 
 			included.
 			</p>
 <a name="mirror.reference.sample.meta_type.usage01"></a><pre class="programlisting">
@@ -95,7 +95,7 @@ int main(void)
 	typedef <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(T) meta_T;
 
 	// print out the full type name
-	cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id589807">bcout</a>() &lt;&lt; 
+	cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2525641">bcout</a>() &lt;&lt; 
 		<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("The full type name is: ") &lt;&lt; 
 		meta_T::full_name() &lt;&lt; 
 	endl;
@@ -124,14 +124,14 @@ void print_meta_data(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id589807">bcout</a>(); 
+	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2525641">bcout</a>(); 
 	// print out the base type name
 	bcout &lt;&lt; 
 		<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("The type name is: ") &lt;&lt; 
 		MetaType::base_name() &lt;&lt; 
 	endl;
 	// 
-	if(reflects_global_scope&lt;typename MetaType::scope&gt;::value)
+	if(<a class="link" href="reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt;typename MetaType::scope&gt;::value)
 	{
 		bcout &lt;&lt; 
 		<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("It's defined on the global scope") &lt;&lt; 
@@ -182,7 +182,7 @@ int main(void)
 			types. This is useful when the info about the name and the scope of the <code class="computeroutput">typedef</code>
 			is required instead of the meta-information about the "source" type.
 			However, the usage shown in this example is not very common. The full utility becomes obvious 
-			only when the <code class="computeroutput">meta_type</code> is part of 
+			only when the <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> is part of 
 			some other meta-structure like for example with <code class="computeroutput">typedef</code>'d class member attributes.
 			</p>
 <p>Mirror comes with several pre-registered <code class="computeroutput">typedef</code>s. If user-defined
@@ -197,7 +197,7 @@ void print_meta_data(void)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::bostream&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id589807">bcout</a>();
+	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2525641">bcout</a>();
 	bcout &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("type: '");
 	bcout &lt;&lt; MetaType::base_name();
 	bcout &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("'  defined in: '");
@@ -231,9 +231,9 @@ int main(void)
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
 <a name="mirror.meta_type.reference.sample04"></a>Example - Generic typename getter</h6></div></div></div>
-<p>The <code class="computeroutput">base_name</code> and the 
-			<code class="computeroutput">full_name</code> member functions
-			are convenient but not very generic. The <code class="computeroutput">get_name</code> 
+<p>The <code class="computeroutput"><a class="link" href="meta_type.html#id2501390-bb">base_name</a></code> and the 
+			<code class="computeroutput"><a class="link" href="meta_type.html#id2431193-bb">full_name</a></code> member functions
+			are convenient but not very generic. The <code class="computeroutput"><a class="link" href="meta_type.html#id2476880-bb">get_name</a></code> 
 			method allows to specify the character type of the returned string and 
 			to specify whether a full or just the base name should be returned, based
 			on compile time arguments.
@@ -253,7 +253,7 @@ template &lt; typename CharT, typename Type &gt;
 ::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
 operator &lt;&lt; (
 	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
-	::boost::mirror::meta_type&lt; Type &gt; _mt
+	::boost::mirror::<a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a>&lt; Type &gt; _mt
 )
 {
 	return _s &lt;&lt;_mt.get_name(
@@ -279,41 +279,41 @@ int main(void)
 </div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id697750"></a><h3>
-<a name="id519408-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
+<a name="id2635901"></a><h3>
+<a name="id2523932-bbtypes"></a><code class="computeroutput">meta_type</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
 <span class="bold"><strong>typedef</strong></span> Type <a name="boost.mirror.meta_type.reflected_type"></a>reflected_type;</p>
-<p>The type reflected by this specialization of <code class="computeroutput">meta_type</code>.
+<p>The type reflected by this specialization of <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>.
 			</p>
 </li>
 <li>
 <p>
-<span class="bold"><strong>typedef</strong></span> meta_namespace&lt;<span class="emphasis"><em>unspecified</em></span>&gt;-or-meta_class&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_type.scope"></a>scope;</p>
+<span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt;-or-<a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_type.scope"></a>scope;</p>
 <p>A meta-object describing the scope in which the reflected type
 			is defined. Depending on where the type has been defined <code class="computeroutput">scope</code>
-			can be either a specialization of <code class="computeroutput">meta_namespace</code>
-			or a specialization of <code class="computeroutput">meta_class</code>.
+			can be either a specialization of <code class="computeroutput"><a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>
+			or a specialization of <code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code>.
 			</p>
 </li>
 </ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id657141-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2501390-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
-			type reflected by <code class="computeroutput">meta_type</code>
+			type reflected by <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>
 			without the nested name specifier. For example:
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::std::string) :: base_name()
 			</pre>
 <p> or 
 			</p>
-<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: base_name()
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> &lt; ::std::string &gt; :: base_name()
 			</pre>
 <p>
 			returns simply <code class="computeroutput">"string"</code>. When a full type name 
 			<span class="bold"><strong>with</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput">full_name</code> member function
+			is needed use the <code class="computeroutput"><a class="link" href="meta_type.html#id2431193-bb">full_name</a></code> member function
 			instead.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -324,26 +324,26 @@ int main(void)
 			types, arrays etc. because the type name needs to be properly composed from 
 			the base type name, which may depending on the complexity of the type
 			lead to multiple string concatenations. Subsequent calls to this member function
-			for a concrete specialization of meta_type
+			for a concrete specialization of <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a>
 			are usually much faster.
 			</p></td>
 </tr></tbody>
 </table></div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::bstring&amp;</span> <a name="id657078-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2431193-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
-			type reflected by <code class="computeroutput">meta_type</code>
+			type reflected by <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>
 			with the nested name specifier. For example:
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::std::string) :: full_name()
 			</pre>
 <p> or 
 			</p>
-<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: full_name()
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> &lt; ::std::string &gt; :: full_name()
 			</pre>
 <p> 
 			returns <code class="computeroutput">"::std::string"</code>. When the base type name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput">base_name</code> member function
+			is needed use the <code class="computeroutput"><a class="link" href="meta_type.html#id2501390-bb">base_name</a></code> member function
 			instead.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -354,19 +354,19 @@ int main(void)
 			types, arrays etc. because the type name needs to be properly composed from 
 			the base type name, which may depending on the complexity of the type
 			lead to multiple string concatenations. Subsequent calls to this member function
-			for a concrete specialization of meta_type
+			for a concrete specialization of <a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a>
 			are usually much faster.
 			</p></td>
 </tr></tbody>
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id656230-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id2476880-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier 
 			or the full name <span class="bold"><strong>with</strong></span> the 
 			nested name specifier of the type reflected by this
-			<code class="computeroutput">meta_type</code>,
+			<code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>,
 			depending on the value of the template argument <code class="computeroutput">FullName</code>.
 			Furthermore it allows to choose whether the return value type is 
 			<code class="computeroutput">::std::string</code> or <code class="computeroutput">::std::wstring</code> based
@@ -376,19 +376,19 @@ int main(void)
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::std::string) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())</pre>
 <p> or 
 			</p>
-<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())</pre>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> &lt; ::std::string &gt; :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())</pre>
 <p> 
 			is equivalent to calling the 
-			<code class="computeroutput">base_name</code> member function with the
+			<code class="computeroutput"><a class="link" href="meta_type.html#id2501390-bb">base_name</a></code> member function with the
 			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol undefined, 
 			which returns a <code class="computeroutput">::std::string</code> containing <code class="computeroutput">"string"</code> and calling
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::std::string) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())</pre>
 <p> or 
 			</p>
-<pre class="programlisting"><code class="computeroutput">meta_type</code> &lt; ::std::string &gt; :: get_name( ::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())</pre>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> &lt; ::std::string &gt; :: get_name( ::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())</pre>
 <p> is equivalent to calling the 
-			<code class="computeroutput">full_name</code> method with the 
+			<code class="computeroutput"><a class="link" href="meta_type.html#id2431193-bb">full_name</a></code> method with the 
 			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol defined, 
 			which returns a <code class="computeroutput">::std::wstring</code> containing <code class="computeroutput">L"::std::string"</code>.
 			</p>

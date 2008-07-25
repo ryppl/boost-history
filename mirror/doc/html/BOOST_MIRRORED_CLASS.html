@@ -27,14 +27,14 @@
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_MIRRORED_CLASS</span></h2>
 <p>BOOST_MIRRORED_CLASS &#8212; This macro is used to reflect a class and expands into a specialization
-		of the <code class="computeroutput">meta_class</code> template, which provides
+		of the <code class="computeroutput"><a class="link" href="boost/mirror/meta_class.html" title="Class template meta_class">meta_class</a></code> template, which provides
 		meta-data about the reflected class. 
 		</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRRORED_CLASS(CLASS)</pre></div>
 <div class="refsect1" lang="en">
-<a name="id698953"></a><h2>Description</h2>
+<a name="id2637791"></a><h2>Description</h2>
 <p>The <code class="computeroutput"><a class="link" href="BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a></code> macro reflects a class
 		previously registered with the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library. 
 		The argument of this macro is a class name.
@@ -50,7 +50,7 @@
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT_NOT((
-	reflects_global_scope&lt;
+	<a class="link" href="boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt;
 		<a class="link" href="BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(::std::pair&lt;int, char&gt;)::scope
 	&gt;
 ));
