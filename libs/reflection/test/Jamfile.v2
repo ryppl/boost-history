@@ -25,6 +25,7 @@ project
 
 test-suite reflection_tests_all
 : 
+  [ run inheritance_test.cpp ]
   [ run parameter_map_test.cpp ]
   [ run basic_test.cpp ] 
   [ run single_param_test.cpp ]
