@@ -137,12 +137,12 @@ SOURCE=..\src\system_pool.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\build.def
+SOURCE=.\build.def
 # End Source File
 # Begin Source File
 
-SOURCE=..\stdafx.cpp
-# ADD CPP /Yc"stdafx.h"
+SOURCE=..\src\stdafx.cpp
+# ADD CPP /Yc"..\src\stdafx.h"
 # End Source File
 # End Group
 # End Target
