@@ -25,9 +25,6 @@ project
     :
     ;
 
-exe HelloWorld : main.cpp ;
-lib HelloWorldLib : hello_world.cpp : <link>shared ;
-
 exe HelloWorldVersions : versioning/main_versions.cpp ;
 lib HelloWorldLibv2 : versioning/hello_world_versions.cpp : <link>shared ;
 lib SaluteLib : versioning/salute.cpp : <link>shared ;
@@ -56,29 +53,17 @@ lib CarOfTheFuture :
 ;
 exe MultipleInheritance : multiple_inheritance/main_mi.cpp Computer Vehicle ;
 
-#lib RegistryLibrary : registry/registry_library.cpp : <link>shared ;
-#exe RegistryExample : registry/registry_example.cpp ;
-
-stage ../stage :
-  HelloWorld HelloWorldLib 
-  MultilanguageWord MultilanguageHelloWorld
-  Vehicle Boat FlyingCar Car Plane
-  CarOfTheFuture MultipleInheritance 
-  # RegistryLibrary
-   Computer
- # RegistryExample
-  ;
+lib tutorial_1 : tutorial_1/hello_world.cpp : <link>shared ;
+exe tutorial_1_bin : tutorial_1/main.cpp ;
 
 install ../test/ : 
-  HelloWorld HelloWorldLib 
+  tutorial_1 tutorial_1_bin
   Parameters ParametersLib
   MultilanguageWord MultilanguageHelloWorld
   IM IMPlugins
   Vehicle Boat FlyingCar Car Plane
   CarOfTheFuture MultipleInheritance 
-  # RegistryLibrary 
   Computer
- # RegistryExample
   :
   <install-dependencies>on 
   <install-type>EXE 
