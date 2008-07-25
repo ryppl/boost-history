@@ -7,48 +7,72 @@
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="prev" href="../index.html" title="Chapter 1. Boost.Extension">
-<link rel="next" href="tutorials.html" title="Tutorials">
+<link rel="next" href="motivation.html" title=" Motivation">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
-<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
 <td align="center"><a href="../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorials.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="motivation.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_extension.introduction"></a> Introduction</h2></div></div></div>
+<a name="boost_extension.introduction"></a><a href="introduction.html" title=" Introduction"> Introduction</a></h2></div></div></div>
 <p>
       The Boost.Extension library has been developed to ease the development of plugins
-      and similar extensions to software. Classes can be made available from shared
-      libraries and loaded by the application.
+      and similar extensions to software using shared libraries. Classes, functions
+      and data can be made available from shared libraries and loaded by the application.
     </p>
+<p>
+      It consists of the following parts:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Shared library handling
+      </li>
+<li>
+        Typed data containers
+      </li>
+<li>
+        Factories
+      </li>
+<li>
+        Reflection
+      </li>
+</ul></div>
 <p>
       Among others, the library has the following features:
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-        Multiple and virtual inheritance are supported
+        Multiple and virtual inheritance are supported.
       </li>
 <li>
         Library users do not need to use any macros (besides those required by Windows
-        for exported functions)
+        for exported functions).
       </li>
 <li>
-        Only one external function required per shared library to export classes
+        Only one external function required per shared library to export classes.
       </li>
 <li>
-        RTTI is used by default, but it is possible to use user-defined type identification
+        RTTI is used by default, but it is possible to use user-defined type identification.
       </li>
 <li>
-        Classes do not need to be modified to be loadable
+        Classes do not need to be modified to be loadable through factories or reflection.
+      </li>
+<li>
+        Constructors can be called even when the signature is unknown, for both factories
+        and reflection.
+      </li>
+<li>
+        Run-time compilation and loading of shared libraries.
       </li>
 </ul></div>
 <p>
@@ -56,10 +80,14 @@
       in the Boost C++ Libraries. For ongoing status updates, check <a href="http://boost-extension.blogspot.com/" target="_top">C++
       Plugins and Reflection</a>.
     </p>
+<p>
+      The most up-to-date portions of this documentation are the header references.
+      Other sections of the documentation will be updated in the coming weeks.
+    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jeremy Pack, Mariano G. Consoni<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -67,7 +95,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorials.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="motivation.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../../boost_extension/reference.html#header.boost.extension.factory_map.hpp" title="Header &lt;boost/extension/factory_map.hpp&gt;">
-<link rel="prev" href="factory.html" title="Class template factory">
+<link rel="prev" href="../../BOOST_EXTENSION_EXPORT_DECL.html" title="Macro BOOST_EXTENSION_EXPORT_DECL">
 <link rel="next" href="factory_map.html" title="Type definition factory_map">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="factory.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_EXTENSION_EXPORT_DECL.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="boost.extensions.basic_factory_map"></a><div class="titlepage"></div>
@@ -33,32 +33,32 @@
 <span class="bold"><strong>class</strong></span> <a href="basic_factory_map.html" title="Class template basic_factory_map">basic_factory_map</a> {
 <span class="bold"><strong>public</strong></span>:
   <span class="emphasis"><em>// <a href="basic_factory_map.html#boost.extensions.basic_factory_mapconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a href="basic_factory_map.html#id290381-bb">~basic_factory_map</a>();
+  <a href="basic_factory_map.html#id292467-bb">~basic_factory_map</a>();
 
-  <span class="emphasis"><em>// <a href="basic_factory_map.html#id290321-bb">public member functions</a></em></span>
+  <span class="emphasis"><em>// <a href="basic_factory_map.html#id292397-bb">public member functions</a></em></span>
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-    <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a href="basic_factory_map.html#id290323-bb">get</a>() ;
+    <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a href="basic_factory_map.html#id292400-bb">get</a>() ;
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-    <a href="basic_factory_map.html#id290355-bb"><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;</a>() ;
+    <a href="basic_factory_map.html#id292436-bb"><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;</a>() ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id450769"></a><h2>Description</h2>
+<a name="id456712"></a><h2>Description</h2>
 <p>
 </p>
 <div class="refsect2" lang="en">
-<a name="id450777"></a><h3>
+<a name="id456720"></a><h3>
 <a name="boost.extensions.basic_factory_mapconstruct-copy-destruct"></a><code class="computeroutput">basic_factory_map</code> 
         public
        construct/copy/destruct</h3>
-<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id290381-bb"></a>~basic_factory_map();</pre></li></ol></div>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id292467-bb"></a>~basic_factory_map();</pre></li></ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id450817"></a><h3>
-<a name="id290321-bb"></a><code class="computeroutput">basic_factory_map</code> public member functions</h3>
+<a name="id456760"></a><h3>
+<a name="id292397-bb"></a><code class="computeroutput">basic_factory_map</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-  <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a name="id290323-bb"></a>get() ;</pre>
+  <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a name="id292400-bb"></a>get() ;</pre>
 <p>
 
 This returns a map of the given type of factories. It can return an empty map if no such factories are found. </p>
@@ -73,7 +73,7 @@ This returns a map of the given type of factories. It can return an empty map if
 </li>
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-  <a name="id290355-bb"></a><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;() ;</pre>
+  <a name="id292436-bb"></a><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;() ;</pre>
 <p>A conversion operator for convenience in calling functions that take a map of factories. This is identical to the get() function. </p>
 </li>
 </ol></div>
@@ -90,7 +90,7 @@ This returns a map of the given type of factories. It can return an empty map if
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="factory.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_EXTENSION_EXPORT_DECL.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

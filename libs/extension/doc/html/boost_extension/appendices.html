@@ -7,6 +7,7 @@
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="prev" href="faq.html" title=" FAQ">
+<link rel="next" href="reference.html" title="Reference">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -19,85 +20,31 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="faq.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a>
+<a accesskey="p" href="faq.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_extension.appendices"></a><a href="appendices.html" title=" Appendices"> Appendices</a></h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="appendices.html#boost_extension.appendices.appendix_a"> Appendix A -
+<dt><span class="section"><a href="appendices.html#boost_extension.appendices.appendices_description"> Contents
+      in Appendices</a></span></dt>
+<dt><span class="section"><a href="reference.html">Reference</a></span></dt>
+<dt><span class="section"><a href="appendices/appendix_a.html"> Appendix A -
       Windows Export and Import Declarations</a></span></dt>
-<dt><span class="section"><a href="appendices.html#boost_extension.appendices.appendix_b"> Appendix B -
+<dt><span class="section"><a href="appendices/appendix_b.html"> Appendix B -
       Optional Dependencies</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.appendices.appendix_a"></a><a href="appendices.html#boost_extension.appendices.appendix_a" title=" Appendix A -
-      Windows Export and Import Declarations"> Appendix A -
-      Windows Export and Import Declarations</a></h3></div></div></div>
+<a name="boost_extension.appendices.appendices_description"></a><a href="appendices.html#boost_extension.appendices.appendices_description" title=" Contents
+      in Appendices"> Contents
+      in Appendices</a></h3></div></div></div>
 <p>
-        On the Windows platform, special export declarations are required to make
-        functions or classes in a .dll file accessible to the outside world. For
-        normal usage of Boost.Extension, the only place this is required is in the
-        one function that is exported from each .dll. The Hello World sample program
-        illustrates how this is done using <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_EXPORT</span></code>.
-      </p>
-<p>
-        For implementation inheritance across shared libraries, such as that in the
-        Multiple Inheritance sample, each class that is not header-only that needs
-        to be exported must have these declarations included. To make it more difficult,
-        they must be different depending on whether the class is being imported into
-        or exported from the current module. The Multiple Inheritance sample shows
-        how this is done.
-      </p>
-<a name="boost_extension.appendices.appendix_a.warning"></a><h3>
-<a name="id463774"></a>
-        <a href="appendices.html#boost_extension.appendices.appendix_a.warning">Warning</a>
-      </h3>
-<p>
-        Now for a word of warning that many of you will ignore: In the great majority
-        of cases, even if non-header-only implementation inheritance across shared
-        libraries seems like a good idea, there is probably a better solution. Although
-        it certainly has its uses, it can cause problems like the following:
-      </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          Version problems - if the original implementation changes at all, every
-          dependent shared library must be recompiled with the new implementation.
-        </li>
-<li>
-          Tight coupling between shared libraries. One of the primary reasons for
-          using shared libraries is to decrease coupling, and promote reuse.
-        </li>
-<li>
-          It can lead to overly complicated, over-designed class hierarchies.
-        </li>
-</ul></div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.appendices.appendix_b"></a><a href="appendices.html#boost_extension.appendices.appendix_b" title=" Appendix B -
-      Optional Dependencies"> Appendix B -
-      Optional Dependencies</a></h3></div></div></div>
-<p>
-        As suggested by Boost guidelines and our thoughts, we tried to keep the number
-        of dependencies of Boost.Extension at the minimum. But we also wanted to
-        take advantage of several boost libraries that have additional features and
-        are easy to use.
-      </p>
-<p>
-        For basic use of the library, currently only Boost.Preprocessor is required.
-        There are certain convenience headers that rely on other libraries, such
-        as Boost.Filesystem.
-      </p>
-<p>
-        Also, the <code class="computeroutput"><span class="identifier">shared_library</span></code>
-        class has been designed to be easy to use with Boost.Function. It returns
-        function pointers that can be loaded directly into Boost.Function objects.
+        The reference documentation for both the Boost.Extension and Boost.Reflection
+        libraries are contained here, until it is decided where (and if) to split
+        the two libraries, since they share many pieces of functionality.
       </p>
 </div>
-<p>
-    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -109,7 +56,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="faq.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a>
+<a accesskey="p" href="faq.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

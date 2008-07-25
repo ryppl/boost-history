@@ -1,0 +1,161 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Header Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
+<link rel="prev" href="extension_reflection.html" title=" Boost.Reflection/Boost.Extension
+    Interoperability">
+<link rel="next" href="../boost/extensions/adaptable_factory.html" title="Class template adaptable_factory">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="extension_reflection.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/extensions/adaptable_factory.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_extension.header_reference"></a><a href="header_reference.html" title=" Header Reference"> Header Reference</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="header_reference.html#boost_extension.reference">Reference</a></span></dt>
+<dt><span class="section"><a href="reference.html">Reference</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.reference"></a>Reference</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.adaptable_factory.hpp">Header &lt;boost/extension/adaptable_factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.common.hpp">Header &lt;boost/extension/common.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.convenience.hpp">Header &lt;boost/extension/convenience.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.extension.hpp">Header &lt;boost/extension/extension.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.factory.hpp">Header &lt;boost/extension/factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.factory_map.hpp">Header &lt;boost/extension/factory_map.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.filesystem.hpp">Header &lt;boost/extension/filesystem.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.functor.hpp">Header &lt;boost/extension/functor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.shared_library.hpp">Header &lt;boost/extension/shared_library.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="header_reference.html#header.boost.extension.type_map.hpp">Header &lt;boost/extension/type_map.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.adaptable_factory.hpp"></a>Header &lt;<a href="../../../boost/extension/adaptable_factory.hpp" target="_top">boost/extension/adaptable_factory.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info = std::string, 
+             <span class="bold"><strong>typename</strong></span> TypeInfo = default_type_info&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/adaptable_factory.html" title="Class template adaptable_factory">adaptable_factory</a>;
+    <span class="bold"><strong>namespace</strong></span> impl {
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.common.hpp"></a>Header &lt;<a href="../../../boost/extension/common.hpp" target="_top">boost/extension/common.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a href="../BOOST_EXTENSION_MAX_FUNCTOR_PARAMS.html" title="Macro BOOST_EXTENSION_MAX_FUNCTOR_PARAMS">BOOST_EXTENSION_MAX_FUNCTOR_PARAMS</a></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.convenience.hpp"></a>Header &lt;<a href="../../../boost/extension/convenience.hpp" target="_top">boost/extension/convenience.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../boost/extensions/load_single_library_id290854.html" title="Function load_single_library">load_single_library</a>(<a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a> &amp;, <span class="bold"><strong>const</strong></span> std::string &amp;, 
+                             <span class="bold"><strong>const</strong></span> std::string &amp;);
+    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="boost.extensions.load_single_library_id290910"></a>load_single_library(<a href="../boost/extensions/type_map.html" title="Type definition type_map">type_map</a> &amp; current_type_map, 
+                             <span class="bold"><strong>const</strong></span> std::string &amp; library_path, 
+                             <span class="bold"><strong>const</strong></span> std::string &amp; external_function_name);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.extension.hpp"></a>Header &lt;<a href="../../../boost/extension/extension.hpp" target="_top">boost/extension/extension.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a href="../BOOST_EXTENSION_EXPORT_DECL.html" title="Macro BOOST_EXTENSION_EXPORT_DECL">BOOST_EXTENSION_EXPORT_DECL</a></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.factory.hpp"></a>Header &lt;<a href="../../../boost/extension/factory.hpp" target="_top">boost/extension/factory.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Params...&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/factory.html" title="Class template factory">factory</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.factory_map.hpp"></a>Header &lt;<a href="../../../boost/extension/factory_map.hpp" target="_top">boost/extension/factory_map.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/basic_factory_map.html" title="Class template basic_factory_map">basic_factory_map</a>;
+    <span class="bold"><strong>typedef</strong></span> <a href="../boost/extensions/basic_factory_map.html" title="Class template basic_factory_map">basic_factory_map</a>&lt; default_type_info &gt; <a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.filesystem.hpp"></a>Header &lt;<a href="../../../boost/extension/filesystem.hpp" target="_top">boost/extension/filesystem.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.extensions.load_all_libraries"></a>load_all_libraries(<a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a> &amp; current_zone, 
+                            <span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * directory, 
+                            <span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * external_function_name, 
+                            <span class="bold"><strong>int</strong></span> max_depth = 0);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.functor.hpp"></a>Header &lt;<a href="../../../boost/extension/functor.hpp" target="_top">boost/extension/functor.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a href="../BOOST_PP_ITERATION_LIMITS_id291185.html" title="Macro BOOST_PP_ITERATION_LIMITS">BOOST_PP_ITERATION_LIMITS</a>
+<a href="../BOOST_PP_FILENAME_1_id291190.html" title="Macro BOOST_PP_FILENAME_1">BOOST_PP_FILENAME_1</a></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.shared_library.hpp"></a>Header &lt;<a href="../../../boost/extension/shared_library.hpp" target="_top">boost/extension/shared_library.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.type_map.hpp"></a>Header &lt;<a href="../../../boost/extension/type_map.hpp" target="_top">boost/extension/type_map.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>;
+    <span class="bold"><strong>typedef</strong></span> <a href="../boost/extensions/basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>&lt; default_type_info &gt; <a href="../boost/extensions/type_map.html" title="Type definition type_map">type_map</a>;
+  }
+}</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="extension_reflection.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/extensions/adaptable_factory.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

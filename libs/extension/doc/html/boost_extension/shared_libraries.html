@@ -7,7 +7,8 @@
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="prev" href="motivation.html" title=" Motivation">
-<link rel="next" href="factories.html" title=" Factories">
+<link rel="next" href="shared_libraries/shared_library_issues.html" title="
+      Other Issues with Shared Libraries">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +21,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="motivation.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factories.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="motivation.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="shared_libraries/shared_library_issues.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -28,11 +29,11 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.name_resolution"> Name
       Resolution</a></span></dt>
-<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_issues">
+<dt><span class="section"><a href="shared_libraries/shared_library_issues.html">
       Other Issues with Shared Libraries</a></span></dt>
-<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_inefficiencies">
+<dt><span class="section"><a href="shared_libraries/shared_library_inefficiencies.html">
       Possible Inefficiencies in Shared Libraries</a></span></dt>
-<dt><span class="section"><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_class">shared_library
+<dt><span class="section"><a href="shared_libraries/shared_library_class.html">shared_library
       class</a></span></dt>
 </dl></div>
 <p>
@@ -87,95 +88,6 @@
         class.
       </p>
 </div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.shared_libraries.shared_library_issues"></a><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_issues" title="
-      Other Issues with Shared Libraries">
-      Other Issues with Shared Libraries</a></h3></div></div></div>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          Separate symbol tables are required in each shared library.
-        </li>
-<li>
-          RTTI merging: Some compilers do it. Some don't.
-        </li>
-<li>
-          Optimizations are harder because the code must be position independent.
-        </li>
-<li>
-          The following may break binary compatibility between an application and
-          a shared library (among other things):
-          <div class="itemizedlist"><ul type="circle">
-<li>
-              Any part of shared class changes. Variable ordering, public<span class="emphasis"><em>private</em></span>
-              protected, virtual function implementations, add<span class="emphasis"><em>remove variables</em></span>
-              functions etc.
-            </li>
-<li>
-              Different compiler or compiler options used, or headers included differently.
-            </li>
-</ul></div>
-</li>
-</ul></div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.shared_libraries.shared_library_inefficiencies"></a><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_inefficiencies" title="
-      Possible Inefficiencies in Shared Libraries">
-      Possible Inefficiencies in Shared Libraries</a></h3></div></div></div>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          Position Independent Code:
-          <div class="itemizedlist"><ul type="circle">
-<li>
-              Since the shared library could be loaded to any part of the address
-              space, it cannot hard code addresses of its functions and data. This
-              must be resolved when the library is loaded.
-            </li>
-<li>
-              They can take a really long time to load.
-            </li>
-<li>
-              OS's attempt to mitigate this in various ways.
-            </li>
-</ul></div>
-</li>
-<li>
-          Extra levels of indirection in non-virtual function calls.
-          <div class="itemizedlist"><ul type="circle"><li>
-              No inlining across library boundaries.
-            </li></ul></div>
-</li>
-</ul></div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.shared_libraries.shared_library_class"></a><a href="shared_libraries.html#boost_extension.shared_libraries.shared_library_class" title="shared_library
-      class">shared_library
-      class</a></h3></div></div></div>
-<p>
-        Provides for automatic loading of named modules, and retrieval of functions
-        in those modules:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">shared_library</span> <span class="identifier">m</span><span class="special">(</span><span class="string">"my_module_name"</span><span class="special">);</span>
-<span class="comment">// Call a function that returns an int and takes a float parameter.
-</span><span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">float</span><span class="special">&gt;(</span><span class="string">"function_name"</span><span class="special">)(</span><span class="number">5.0f</span><span class="special">);</span>
-<span class="identifier">m</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span>
-</pre>
-<p>
-      </p>
-<p>
-        The <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code>
-        function returns a function pointer that can be wrapped in Boost.Function
-        objects or used by itself.
-      </p>
-<p>
-        Reference: <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
-      </p>
-</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -187,7 +99,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="motivation.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="factories.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="motivation.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="shared_libraries/shared_library_issues.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

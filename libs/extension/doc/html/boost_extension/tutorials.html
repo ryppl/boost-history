@@ -7,7 +7,7 @@
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="prev" href="factories.html" title=" Factories">
-<link rel="next" href="reference.html" title="Reference">
+<link rel="next" href="tutorials/tutorial02.html" title=" Tutorial 2">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,209 +20,67 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="factories.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="factories.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorials/tutorial02.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_extension.tutorials"></a><a href="tutorials.html" title="Tutorials">Tutorials</a></h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorials.html#boost_extension.tutorials.tutorial01"> Tutorial 1</a></span></dt>
-<dt><span class="section"><a href="tutorials.html#boost_extension.tutorials.tutorial02"> Tutorial 2</a></span></dt>
-<dt><span class="section"><a href="tutorials.html#boost_extension.tutorials.tutorial03"> Tutorial 3</a></span></dt>
-<dt><span class="section"><a href="tutorials.html#boost_extension.tutorials.tutorial04"> Tutorial 4</a></span></dt>
-<dt><span class="section"><a href="tutorials.html#boost_extension.tutorials.tutorial05"> Tutorial 5</a></span></dt>
+<dt><span class="section"><a href="tutorials.html#boost_extension.tutorials.tutorial01"> Tutorial 1 - Using
+      the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+      class</a></span></dt>
+<dt><span class="section"><a href="tutorials/tutorial02.html"> Tutorial 2</a></span></dt>
+<dt><span class="section"><a href="tutorials/tutorial03.html"> Tutorial 3</a></span></dt>
+<dt><span class="section"><a href="tutorials/tutorial04.html"> Tutorial 4</a></span></dt>
+<dt><span class="section"><a href="tutorials/tutorial05.html"> Tutorial 5</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial01"></a><a href="tutorials.html#boost_extension.tutorials.tutorial01" title=" Tutorial 1"> Tutorial 1</a></h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial01"></a><a href="tutorials.html#boost_extension.tutorials.tutorial01" title=" Tutorial 1 - Using
+      the shared_library
+      class"> Tutorial 1 - Using
+      the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+      class</a></h3></div></div></div>
 <p>
-        Create a class that we will later subclass and put it into a header file
-        called word.hpp. 
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">word</span><span class="special">(){}</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">""</span><span class="special">;}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        This file will be included by both the shared library in which classes implement
-        this interface, and in the executable that will load these implementations.
-        The destructor ought to be virtual, just to ensure proper deletion. We create
-        one virtual function. We could actually add data to this class as well.
+        The <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+        class facilitates loading shared libraries and calling functions from them.
       </p>
 <p>
-        Now create a file called hello_world.cpp. This will be compiled into a shared
-        library:
+        This tutorial will describe building a shared library with a single exported
+        function, and then creating an executable that loads the shared library and
+        calls the function.
       </p>
 <p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"word.hpp"</span> 
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">factory_map</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world!"</span><span class="special">;}</span>
-<span class="special">};</span>
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        Now we have two classes that are derived from word, and that both implement
-        the virtual function get_val. All that's left is to declare them for exporting.
-        Normally, we just put one function in the entire shared library that exports
-        all exportable classes in the library. 
-</p>
-<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>
-<span class="special">}</span>
-</pre>
-<p>
-        <code class="computeroutput"><span class="keyword">extern</span> <span class="string">"C"</span></code>
-        is required to keep the function name from being mangled. <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span></code>
-        is only necessary on Windows - on other platforms it does nothing. On Windows,
-        it declares that the function should be exported. This is the default in
-        shared libraries on other platforms.
+        For purposes of this tutorial, Boost.Build will be used as the build system.
       </p>
 <p>
-        The <code class="computeroutput"><span class="identifier">factory_map</span><span class="special">::</span><span class="identifier">get</span></code> function takes two template arguments:
-        the type of factory to get (the interface returned by it), and what type
-        of info is used to identify it (which can be an arbitrary type).
+        The options put into this build file are boilerplate that will be reused
+        for the other examples in this documentation.
       </p>
 <p>
-        This returns a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code>, in this case, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>.
-        We then index the map to find (and perhaps create) the appropriate factory,
-        and set the type of class it instantiates to the template argument of the
-        <code class="computeroutput"><span class="identifier">set</span></code> function. The argument
-        is the value for that identification info.
-      </p>
-<p>
-        Now we can write the executable.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">factory_map</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">shared_library</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">convenience</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="string">"word.hpp"</span>
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
-<span class="special">{</span>
-  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
-  <span class="comment">//  Create the factory_map object - it will hold all of the available
-</span>  <span class="comment">//  constructors. Multiple factory_maps can be constructed.
-</span>  <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
-  <span class="comment">// load the shared library with 
-</span>  <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLib.extension"</span><span class="special">,</span> 
-                          <span class="string">"extension_export_word"</span><span class="special">);</span>
-  <span class="comment">//  Get a reference to the list of constructors for words.
-</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">factory_list</span> <span class="special">=</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;();</span>  
-  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the classes were not found."</span><span class="special">;</span>
-  <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_word</span> <span class="special">=</span>
-       <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">current_word</span> <span class="special">!=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-       <span class="special">++</span><span class="identifier">current_word</span><span class="special">)</span> <span class="special">{</span>
-    <span class="comment">//  Using auto_ptr to avoid needing delete. Using smart_ptrs is recommended.
-</span>    <span class="comment">//  Note that this has a zero argument constructor - currently constructors
-</span>    <span class="comment">//  with up to six arguments can be used.
-</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">word_ptr</span><span class="special">(</span><span class="identifier">current_word</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">());</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">word_ptr</span><span class="special">-&gt;</span><span class="identifier">get_val</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
-  <span class="special">}</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-        Now we just need to write the build file. You may have noticed above that
-        the name of the library is assumed to be libHelloWorld.extension - we'll
-        need to rename whatever shared library is compiled to that. Boost.Build can
-        do this automatically.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="special">;</span>
-<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="special">;</span>
-<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">extension</span> <span class="special">;</span>
-<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">lib</span> <span class="special">;</span>
-<span class="identifier">import</span> <span class="identifier">os</span> <span class="special">;</span>
-
-<span class="identifier">local</span> <span class="identifier">BOOST_ROOT</span> <span class="special">=</span> <span class="special">[</span> <span class="identifier">os</span><span class="special">.</span><span class="identifier">environ</span> <span class="identifier">BOOST_ROOT</span> <span class="special">]</span> <span class="special">;</span>
-<span class="identifier">project</span> 
-    <span class="special">:</span> <span class="identifier">requirements</span>
-      <span class="special">&lt;</span><span class="identifier">include</span><span class="special">&gt;../../../</span>
-      <span class="special">&lt;</span><span class="identifier">include</span><span class="special">&gt;</span>#<span class="special">(</span><span class="identifier">BOOST_ROOT</span><span class="special">)</span>
-    <span class="special">:</span>
-    <span class="special">;</span>
-
-<span class="identifier">exe</span> <span class="identifier">HelloWorld</span> <span class="special">:</span> <span class="identifier">main</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">HelloWorldLib</span> <span class="special">:</span> <span class="identifier">hello_world</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">install</span> <span class="special">../</span><span class="identifier">bin</span> <span class="special">:</span> <span class="identifier">HelloWorld</span> <span class="identifier">HelloWorldLib</span> <span class="special">;</span>
-</pre>
-<p>
-        If you use another build system, you'll need to make sure that the output
-        shared library (dll, so, dylib etc.) is renamed correctly.
-      </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial02"></a><a href="tutorials.html#boost_extension.tutorials.tutorial02" title=" Tutorial 2"> Tutorial 2</a></h3></div></div></div>
-<p>
-        This tutorial shows more advanced class loading. The example described here
-        is contrived, and such a convoluted design is not used as an example of good
-        object-oriented program, but as a way to illustrate some of the possibilities
-        with this library.
-      </p>
-<p>
-        Let's design a class hierarchy based on the following:
+        Shared libraries on different platforms can have different prefixes and/or
+        extensions, for example:
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          There is a vehicle class
+          .dll (Windows)
         </li>
 <li>
-          There is a computer class
+          .so (Unix/Linux)
         </li>
 <li>
-          A car is a vehicle
-        </li>
-<li>
-          A boat is a vehicle
-        </li>
-<li>
-          A plane is a vehicle
-        </li>
-<li>
-          A flying_car is a plane and a car
-        </li>
-<li>
-          A car_of_the_future is a flying_car, a boat, and a computer.
+          .dylib or .bundle (OS X)
         </li>
 </ul></div>
 <p>
-        In addition, we are not going to have any of these classes be interfaces.
-        They will each have an implementation in a .cpp file. This will require multiple
-        inheritance, as well as virtual inheritance (because otherwise a car_of_the_future
-        would consist of three separate vehicle base classes!).
+        In order to simplify loading of these libraries, it is common to use a custom
+        naming scheme. For these examples, all shared libraries are prefixed with
+        "lib" and end with ".extension", but it is fine to use
+        a different naming scheme.
       </p>
 <p>
-        In addition, each class will be compiled into a separate shared library.
-        This is not necessary, certainly, but will serve to illustrate some of the
-        more advanced capabilities of the library, as well as some of the techniques
-        necessary in this situation.
-      </p>
-<p>
-        To begin with, let's look at the Jamfile:
+        To achieve this in Boost.Build, add the following lines at the top of the
+        Jamfile:
       </p>
 <p>
         
@@ -235,745 +93,211 @@
 <p>
       </p>
 <p>
-        First we must rename the generated libraries (this is required for cross-platform
-        use - but the prefix and suffix are arbitrary).
+        This example uses code from both the main Boost tree, and from the Extension
+        headers - which are currently located in the sandbox. Make sure that BOOST_ROOT
+        and BOOST_SANDBOX_ROOT are set to the locations of these two trees - or use
+        the related options for your compiler or IDE.
+      </p>
+<p>
+        Here, both of those directories are added as include paths.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">vehicle</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Car</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">os</span> <span class="special">;</span>
+
+<span class="identifier">local</span> <span class="identifier">BOOST_ROOT</span> <span class="special">=</span> <span class="special">[</span> <span class="identifier">os</span><span class="special">.</span><span class="identifier">environ</span> <span class="identifier">BOOST_ROOT</span> <span class="special">]</span> <span class="special">;</span>
+<span class="identifier">local</span> <span class="identifier">BOOST_SANDBOX_ROOT</span> <span class="special">=</span> <span class="special">[</span> <span class="identifier">os</span><span class="special">.</span><span class="identifier">environ</span> <span class="identifier">BOOST_SANDBOX_ROOT</span> <span class="special">]</span> <span class="special">;</span>
+<span class="identifier">project</span> 
+    <span class="special">:</span> <span class="identifier">requirements</span>
+      <span class="special">&lt;</span><span class="identifier">include</span><span class="special">&gt;</span>#<span class="special">(</span><span class="identifier">BOOST_SANDBOX_ROOT</span><span class="special">)</span>
+      <span class="special">&lt;</span><span class="identifier">include</span><span class="special">&gt;</span>#<span class="special">(</span><span class="identifier">BOOST_ROOT</span><span class="special">)</span>
+    <span class="special">:</span>
+    <span class="special">;</span>
 </pre>
 <p>
       </p>
 <p>
-        Notice here that the Car library is linked to the Vehicle library - this
-        is necessary because the Car class needs the implementation of the Vehicle
-        class. This is unrelated to the Boost.Extension library, but just a standard
-        requirement when inheriting from shared library classes. The same will be
-        done with the other shared libraries.
+        This final section of the Jamfile compiles both the shared library and main
+        executable, and installs them into the binaries/ subdirectory.
+      </p>
+<p>
+        It is usually simplest to place all shared libraries used by an application
+        in a common directory.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">Plane</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">plane</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Boat</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">boat</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Computer</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">computer</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">FlyingCar</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">flying_car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span>
-              <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">CarOfTheFuture</span> <span class="special">:</span> 
-  <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car_of_the_future</span><span class="special">.</span><span class="identifier">cpp</span> 
-  <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span> 
-  <span class="identifier">FlyingCar</span> <span class="identifier">Computer</span> <span class="identifier">Boat</span> 
-  <span class="special">:</span> 
-  <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> 
-<span class="special">;</span>
+<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">tutorial_1</span> <span class="special">:</span> <span class="identifier">tutorial_1</span><span class="special">/</span><span class="identifier">hello_world</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">exe</span> <span class="identifier">tutorial_1_bin</span> <span class="special">:</span> <span class="identifier">tutorial_1</span><span class="special">/</span><span class="identifier">main</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">;</span>
 
-<span class="identifier">install</span> <span class="special">../</span><span class="identifier">bin</span> <span class="special">:</span> 
-  <span class="identifier">HelloWorld</span> <span class="identifier">HelloWorldLib</span> <span class="identifier">Vehicle</span> <span class="identifier">Boat</span> <span class="identifier">FlyingCar</span> 
-  <span class="identifier">CarOfTheFuture</span> <span class="identifier">MultipleInheritance</span> 
-  <span class="special">:</span>
+<span class="identifier">install</span> <span class="identifier">binaries</span> <span class="special">:</span> 
+  <span class="identifier">tutorial_1</span> <span class="identifier">tutorial_1_bin</span>
   <span class="special">;</span>
 </pre>
 <p>
       </p>
 <p>
-        Refer to the examples/multiple_inheritance folder for the source code of
-        these classes. Only the most complex will be described here - the rest are
-        similar.
+        The hello_world.cpp file is the source of the shared library. It consists
+        of a single exported function which prints out a message a number of times,
+        according to the <code class="computeroutput"><span class="identifier">repetitions</span></code>
+        parameter to the function.
       </p>
 <p>
-        On the Windows platform, there are special declarations that are required
-        when a dll must use a class that is defined in another dll. For interface
-        only classes this is unnecessary, and is not needed on other platforms. The
-        macros BOOST_EXTENSION_IMPORT_DECL and BOOST_EXTENSION_EXPORT_DECL can be
-        used to insert the proper declaration. This is detailed in the appendix.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_FLYING_CAR_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_BOAT_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_COMPUTER_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#include</span> <span class="string">"flying_car.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boat.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"computer.hpp"</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">typeinfo</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL</span> 
-  <span class="identifier">car_of_the_future</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">flying_car</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">boat</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">computer</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nCreated a Car of the Future"</span><span class="special">;}</span>
-  <span class="special">~</span><span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nDestroyed a Car of the Future"</span><span class="special">;}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">list_capabilities</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial03"></a><a href="tutorials.html#boost_extension.tutorials.tutorial03" title=" Tutorial 3"> Tutorial 3</a></h3></div></div></div>
-<p>
-        This tutorial shows how to register and instantiate classes that have multi-argument
-        constructors (not default constructors) in Boost.Extension. In the example
-        that we will describe in this tutorial (examples/parameters) we create a
-        dummy class with a constructor that have six arguments. We'll register this
-        class in a factory map and then get it from the main file.
-      </p>
-<p>
-        It is expected that before following this tutorial you have gone trough the
-        first tutorial at least, and you are familiar with the basic use of Boost.Extension.
-      </p>
-<p>
-        Let's start defining our class. Its constructor receives six parameters (we
-        chose that number because it's the default argument limit of the library),
-        each one of a different type including a class defined in the interface (class
-        A) and a smart pointer to this class. It shows via stdout the received parameters
-        at construction.
+        The &lt;iostream&gt; header is included for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span></code>.
+        The &lt;boost/extension/extension.hpp&gt; header is used for the <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span></code> macro.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">six_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lots_of_parameters_interface</span>
-<span class="special">{</span>
-  <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span>
-                   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> 
-                   <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">ptr_a</span><span class="special">)</span>
-    <span class="special">{</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Constructor called."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Parameters:"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tbool: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tunsigned int: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tchar: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">c</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tstring: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tA.i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tptr_a-&gt;i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">ptr_a</span><span class="special">-&gt;</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-    <span class="special">}</span>
-
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        <br> The interface that we are inheriting is just the bare minimum needed
-        to make it compile:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">A</span>
-<span class="special">{</span>
-  <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">A</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{}</span>
-    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
-<span class="special">};</span>
-
-
-<span class="keyword">class</span> <span class="identifier">lots_of_parameters_interface</span>
-<span class="special">{</span>
-  <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> 
-                                 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span> 
-                                 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> <span class="special">{}</span>
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        <br> Having the class defined, we should write the export function to register
-        the class in the passed factory map. The point here is that the factory_map::add
-        method must be set with the first type as the third argument, and with the
-        second type as the fourth argument and so on.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> 
-         <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> 
-         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;()[</span><span class="number">6</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">six_parameters</span><span class="special">&gt;();</span>
-<span class="special">}</span>
-</pre>
-<p>
-        <br> Finally, let's see how it is used in the main file.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
-
-  <span class="comment">//  Create the factory_map object - it will hold all of the available
-</span>  <span class="comment">//  constructors. Multiple factory_maps can be constructed.
-</span>  <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
-
-  <span class="comment">// load the shared library with 
-</span>  <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libParametersLib.extension"</span><span class="special">,</span> <span class="string">"extension_export"</span><span class="special">);</span>
-
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
-                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span>
-                        <span class="identifier">factory_list</span> <span class="special">=</span> 
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> 
-         <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span>  <span class="special">&gt;();</span>
-  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">!=</span> <span class="number">1</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the class was not found."</span><span class="special">;</span>
-    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
-  <span class="special">}</span>
-
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
-                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
-                        <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">par</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">&gt;</span>
-    <span class="identifier">par_ptr</span><span class="special">(</span><span class="identifier">par</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">true</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="char">'c'</span><span class="special">,</span> <span class="string">"test"</span><span class="special">,</span> <span class="identifier">A</span><span class="special">(</span><span class="number">2</span><span class="special">),</span>
-                        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">A</span><span class="special">(</span><span class="number">15</span><span class="special">))));</span>
-
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">extension</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <p>
       </p>
 <p>
-        Please note the following details:
+        In C, each function name in a compilation unit is unique. In C++, however,
+        function overloading is permitted - as are various types of templated functions,
+        namespaces etc. Because of this, C++ function names are mangled for linking.
+        In order to find a function in a shared library, its name must be known.
+        This leaves two options:
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          Shared library loading is exactly the same.
+          Determine the mangled name.
         </li>
 <li>
-          When we get the factory we should specify the template parameters, as we
-          did in the factory_map::add method.
-        </li>
-<li>
-          When we call the create method we just supply the needed arguments and
-          just works!
+          Declare that the function has C linkage, using the <code class="computeroutput"><span class="keyword">extern</span>
+          <span class="string">"C"</span></code> declaration.
         </li>
 </ul></div>
 <p>
-        <br>
-      </p>
-<p>
-        It is expected that at this point you can create your own classes with multi-argument
-        constructors and use them via Boost.extensions without problems.
-      </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial04"></a><a href="tutorials.html#boost_extension.tutorials.tutorial04" title=" Tutorial 4"> Tutorial 4</a></h3></div></div></div>
-<p>
-        In this tutorial we will see different features of the library related to
-        multiple loading of the same library, instance or interface.
-      </p>
-<p>
-        We will follow some parts of versions example (<code class="literal">examples/versioning</code>).
-        As we expect that at this point you've gone through the first tutorials we
-        will not enter into specific details of the use of the library.
-      </p>
-<p>
-        First, we want to show that it is possible to load several libraries into
-        one factory map. We'll create a new HelloWorld library very similar to the
-        one that we have described in the first tutorial.
-      </p>
-<p>
-        Let's remember the classes that we have implemented (in <code class="literal">hello_world.cpp</code>)
-        for the "hello world" example:
+        Extension uses the second approach. Though this eases portability, it also
+        poses a risk to type safety. A simple, cross-platform solution to this problem
+        would probably require direction from the C++ Standards Committee. Until
+        that time, the <a href="../">Type Safety</a> section has
+        advice on avoding type safety issues when using the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+        class.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world!"</span><span class="special">;}</span>
-<span class="special">};</span>
+<pre class="programlisting"><span class="comment">// Any exported function or variable must be declared
+</span><span class="comment">// extern "C" to avoid C++ name mangling.
+</span><span class="keyword">extern</span> <span class="string">"C"</span>
 
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>
-<span class="special">}</span>
 </pre>
 <p>
       </p>
 <p>
-        And now let's see the new version that we've implemented for this example
-        (as defined in <code class="literal">hello_world_versions.cpp</code>). The classes
-        have the same name and methods, both implement the same interface, but the
-        <code class="computeroutput"><span class="identifier">get_val</span><span class="special">()</span></code>
-        methods differ in the returned string (to be able to recognize each one after
-        loading them).
+        Compilers have a number of options for exporting functions, variables and
+        type information when a shared library is loaded. For some compilers, or
+        with certain compiler settings, functions are not exported by default. Using
+        the `BOOST_EXTENSION_EXPORT_DECL macro, declared in extension.hpp, puts any
+        necessary export declarations in the function definition.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world! v2"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"| v2 hello"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
- <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">22</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>	
- <span class="comment">// int could be used as version (v2 word 2)
-</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">21</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>	
- <span class="comment">// int could be used as version (v2 word 1)
-</span><span class="special">}</span>
-</pre>
-<p>
-      </p>
-<p>
-        Also note that we are using the Info int to store some kind of "version",
-        and then we could differentiate the classes by its int (see Info class tutorial
-        for more information on this).
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
-
-<span class="comment">// load hello world first version
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLib.extension"</span><span class="special">,</span>
-                     <span class="string">"extension_export_word"</span><span class="special">);</span>
-
-<span class="comment">// load hello world second version
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
-                     <span class="string">"extension_export_word"</span><span class="special">);</span>
-
-<span class="comment">// load hello world second version again
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
-                     <span class="string">"extension_export_word"</span><span class="special">);</span>
-</pre>
-<p>
-      </p>
-<p>
-        We can see here that loading multiple libraries is as easy as calling <code class="computeroutput"><span class="identifier">load_single_library</span></code> for each one and using
-        the same factory map.
-      </p>
-<p>
-        Then you can access them as any other factory_map:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">for</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_word</span> <span class="special">=</span>
-    <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">current_word</span> <span class="special">!=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-    <span class="special">++</span><span class="identifier">current_word</span><span class="special">)</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">word_ptr</span><span class="special">(</span><span class="identifier">current_word</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">word_ptr</span><span class="special">-&gt;</span><span class="identifier">get_val</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
-<span class="special">}</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        We get the following output:
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                <code class="literal">words:</code><br> <code class="literal">hello world! | v2 hello
-                world! v2 | v2 hello world! v2</code>
-              </p>
-              </td></tr></tbody>
-</table></div>
-<p>
-        The first "hello world" is returned by the first version of the
-        library, and the second and third returned by the second version.
-      </p>
-<p>
-        Finally, we will show another example similar to the former but in this case
-        we implement a different interface, same class name ('hello') but with different
-        interface ('salute').
-      </p>
-<p>
-        Let's see the interface:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">salute</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">salute</span><span class="special">(){}</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">say</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">""</span><span class="special">;}</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-<p>
-        And the implementations:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">bye</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"bye!"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_salute</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">bye</span><span class="special">&gt;();</span>
-<span class="special">}</span>
-</pre>
-<p>
-      </p>
-<p>
-        Note that we are adding a new class called 'hello' too but that implements
-        'salute' interface.
-      </p>
-<p>
-        <br>
-      </p>
-<p>
-        Finally in the main function we get the factory list specifying that we want
-        the 'salute' factory. We iterate it getting each of the salutes, including
-        hello.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">salute_factory_list</span> <span class="special">=</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;();</span>  
-
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"salutes: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-<span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_salute</span> <span class="special">=</span>
-     <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> 
-     <span class="identifier">current_salute</span> <span class="special">!=</span> <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-     <span class="special">++</span><span class="identifier">current_salute</span><span class="special">)</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="identifier">salute_ptr</span><span class="special">(</span><span class="identifier">current_salute</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">salute_ptr</span><span class="special">-&gt;</span><span class="identifier">say</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
-<span class="special">}</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        The output is:
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                <code class="literal">salutes:</code> <br> <code class="literal">hello bye!</code>
-              </p>
-              </td></tr></tbody>
-</table></div>
-<p>
-        In conclusion, with Boost.Extension we can implement the same class in different
-        libraries, the same class for different interfaces and load multiple libraries
-        into the same factory.
-      </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial05"></a><a href="tutorials.html#boost_extension.tutorials.tutorial05" title=" Tutorial 5"> Tutorial 5</a></h3></div></div></div>
-<p>
-        In this tutorial we will describe an advanced example using the Info class.
-        The basics of Info classes are explained in the specific section. We expect
-        that you've gone through that section before following this example.
-      </p>
-<p>
-        Let's imagine that we are implementing an multi-protocol instant messaging
-        client. Of course we want to support the maximum quantity of protocols, and
-        it would be great if 3rd party programmers can implement new protocols and
-        can add them dynamically.
-      </p>
-<p>
-        So let's define an interface for the protocols, with the expected operations:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">protocol</span>
-<span class="special">{</span>
- <span class="keyword">public</span><span class="special">:</span>
-
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{}</span>
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">""</span><span class="special">);</span> <span class="special">}</span>
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{}</span>
-
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">protocol</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-<p>
-        Now we will implement some example protocols:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="comment">// MSN protocol implementation
-</span><span class="keyword">class</span> <span class="identifier">MSN</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">protocol</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: Logged In"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
-        <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: message ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">msg</span> <span class="special">&lt;&lt;</span> <span class="string">"] sent"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
-        <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"MSN: hello! msg received"</span><span class="special">);</span> 
-        <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: Status changed to ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">new_status</span> <span class="special">&lt;&lt;</span> <span class="string">"]"</span> 
-                    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
-        <span class="special">}</span>
-
-        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MSN</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-
-<span class="comment">// Jabber protocol implementation
-</span><span class="keyword">class</span> <span class="identifier">Jabber</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">protocol</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">login</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">user</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">pass</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: Logged In"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
-        <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">send</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">msg</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: message ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">msg</span> <span class="special">&lt;&lt;</span> <span class="string">"] sent"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
-        <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">receive</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Jabber: hello! msg received"</span><span class="special">);</span> 
-        <span class="special">}</span>
-        <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">change_status</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">new_status</span><span class="special">)</span> <span class="special">{</span> 
-          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: Status changed to ["</span> <span class="special">&lt;&lt;</span> <span class="identifier">new_status</span> <span class="special">&lt;&lt;</span> <span class="string">"]"</span> 
-                    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> 
-        <span class="special">}</span>
-
-        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Jabber</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-<p>
-        Apart from that we need some protocol information like the server address,
-        port or modes. This data is needed for each protocol and each protocol maybe
-        could have different implementations with different servers or ports.
-      </p>
-<p>
-        Of course our Info class is a perfect solution to store this data. But in
-        this case as the information is needed for each protocol we could define
-        a base class as the info class and then implement specific versions for each
-        protocol (at least one, could be more for each protocol).
-      </p>
-<p>
-        So let's define the base class:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="comment">// interface for the parameters of each plugin
-</span><span class="keyword">class</span> <span class="identifier">network_parameters</span>
-<span class="special">{</span>
- <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)=</span> <span class="number">0</span><span class="special">;</span>
-
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">network_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{};</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-<p>
-        And the implementation for each of the defined plugins (protocols):
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="comment">// MSN implementation
-</span><span class="keyword">class</span> <span class="identifier">MSN_network_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">network_parameters</span>
-<span class="special">{</span>
- <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"msn.messenger.com"</span><span class="special">;</span> <span class="special">}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"1863"</span><span class="special">;</span> <span class="special">}</span>
-
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"http mode set"</span>
-                                               <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
-
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MSN_network_parameters</span><span class="special">()</span> <span class="special">{}</span>
-<span class="special">};</span>
-
-
-<span class="comment">// Jabber implementation
-</span><span class="keyword">class</span> <span class="identifier">Jabber_network_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">network_parameters</span>
-<span class="special">{</span>
- <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hostname</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"jabber.org"</span><span class="special">;</span> <span class="special">}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">port</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"7063"</span><span class="special">;</span> <span class="special">}</span>
-
-  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">set_http_mode</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"http mode not supported"</span>
-                                               <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
-
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Jabber_network_parameters</span><span class="special">()</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        We want to be able to compare smart pointers to <code class="computeroutput"><span class="identifier">network_parameters</span></code>:
-        
-</p>
-<pre class="programlisting"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">first</span><span class="special">,</span>
-                      <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">second</span><span class="special">)</span> <span class="special">{</span>
-  <span class="keyword">int</span> <span class="identifier">comp</span> <span class="special">=</span> <span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">first</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">(),</span> <span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">());</span>
-  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">comp</span><span class="special">)</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">first</span><span class="special">-&gt;</span><span class="identifier">port</span><span class="special">(),</span> <span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">port</span><span class="special">())</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">;</span>
+<pre class="programlisting"><span class="comment">// Depending on the compiler and settings,
+</span><span class="comment">// it may be necessary to add a specific export
+</span><span class="comment">// declaration. The BOOST_EXTENSION_EXPORT_DECL
+</span><span class="comment">// adds this if necessary.
+</span><span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span>
+<span class="identifier">boost_extension_hello_world</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">repetitions</span><span class="special">)</span> <span class="special">{</span>
+  <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">repetitions</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello World"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
   <span class="special">}</span>
-  <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">comp</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-        Now we can define our Info class as a smart pointer to the <code class="computeroutput"><span class="identifier">network_parameters</span></code> class and register it
-        in the factory map:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_plugins</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span> <span class="identifier">MSN</span><span class="special">,</span> <span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;</span>
-		<span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">MSN_network_parameters</span><span class="special">));</span>
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span> <span class="identifier">Jabber</span><span class="special">,</span> <span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;</span>
-		<span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">Jabber_network_parameters</span><span class="special">));</span>
 <span class="special">}</span>
 </pre>
 <p>
       </p>
 <p>
-        Finally let's use our implementation for an hypothetical connection:
+        Now that the shared library contents are set, the main executable needs to
+        be written to load it, and find the boost_extension_hello_world function.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span></code> header is included for error output.
+        </li>
+<li>
+          The <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">shared_library</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> header is included for the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+          class.
+        </li>
+<li>
+          The <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> header is included for boost::function.
+          Though ordinary function pointers can be used with the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+          class, Boost.Function provides a more straightforward interface.
+        </li>
+</ul></div>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">shared_library</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<p>
+        Create a <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+        object, and open it.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
-<span class="special">{</span>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
   <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
 
-  <span class="comment">//  create the factory_map object - it will hold all of the available
-</span>  <span class="comment">//  constructors. Multiple factory_maps can be constructed.
-</span>  <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
+  <span class="comment">// In the Jamfile, shared libraries are set to have the same
+</span>  <span class="comment">// prefix and extension, even on different operating systems.
+</span>  <span class="comment">// This is for convenience in writing cross-platform code, but
+</span>  <span class="comment">// is not required. All shared libraries are set to start with
+</span>  <span class="comment">// "lib" and end with "extension".
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">library_path</span> <span class="special">=</span> <span class="string">"libtutorial_1.extension"</span><span class="special">;</span>
 
-  <span class="comment">// load the shared library with 
-</span>  <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libIMPlugins.extension"</span><span class="special">,</span> 
-                      <span class="string">"extension_export_plugins"</span><span class="special">);</span>
+  <span class="comment">// Create shared_library object with the relative or absolute
+</span>  <span class="comment">// path to the shared library.
+</span>  <span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="identifier">library_path</span><span class="special">);</span>
 
-  <span class="comment">//  get a reference to the list of constructors for protocols
-</span>   <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
-    <span class="identifier">factory_list</span> <span class="special">=</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+  <span class="comment">// Attempt to open the shared library.
+</span>  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">lib</span><span class="special">.</span><span class="identifier">open</span><span class="special">())</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Library failed to open: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">library_path</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        If it opened successfully, find a call the <code class="computeroutput"><span class="identifier">boost_extension_hello_world</span></code>
+        function.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">  <span class="comment">// Retrieve a function from the library, and store it in a Boost.Function
+</span>  <span class="comment">// object. It is also possible to use function pointers, but the syntax
+</span>  <span class="comment">// for Boost.Function is easier to understand. This retrieves a function
+</span>  <span class="comment">// called "boost_extension_hello_world" with a void return type and a single
+</span>  <span class="comment">// parameter of type int.
+</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span>
+    <span class="identifier">f</span><span class="special">(</span><span class="identifier">lib</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;(</span><span class="string">"boost_extension_hello_world"</span><span class="special">));</span>
 
-  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the classes were not found."</span><span class="special">;</span>
+  <span class="comment">// Check that the function was found.
+</span>  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">f</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Function not found!"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
   <span class="special">}</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="special">&gt;</span>
-    <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">current_plugin</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
-
-  <span class="comment">// MSN plugin
-</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="identifier">MSN_ptr</span><span class="special">(</span><span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="identifier">msn_parameters</span> <span class="special">=</span> 
-    <span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">first</span><span class="special">;</span>
-  <span class="identifier">current_plugin</span><span class="special">++;</span>
-
-  <span class="comment">// Jabber plugin
-</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">protocol</span><span class="special">&gt;</span> <span class="identifier">Jabber_ptr</span><span class="special">(</span><span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">network_parameters</span><span class="special">&gt;</span> <span class="identifier">jabber_parameters</span> <span class="special">=</span> 
-    <span class="identifier">current_plugin</span><span class="special">-&gt;</span><span class="identifier">first</span><span class="special">;</span>
-
-  <span class="comment">// server
-</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN hostname: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">msn_parameters</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber hostname: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">jabber_parameters</span><span class="special">-&gt;</span><span class="identifier">hostname</span><span class="special">()</span> 
-            <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-
-  <span class="comment">// http_mode: note that one of the implementations doesn't support it, 
-</span>  <span class="comment">// having a base class
-</span>  <span class="comment">// and different specific concrete network parameters allow us to handle this
-</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"MSN: "</span><span class="special">;</span>
-  <span class="identifier">msn_parameters</span><span class="special">-&gt;</span><span class="identifier">set_http_mode</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Jabber: "</span><span class="special">;</span>
-  <span class="identifier">jabber_parameters</span><span class="special">-&gt;</span><span class="identifier">set_http_mode</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  
-  <span class="comment">// login
-</span>  <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">login</span><span class="special">(</span><span class="string">"testuser"</span><span class="special">,</span> <span class="string">"testpass"</span><span class="special">);</span>
-  <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">login</span><span class="special">(</span><span class="string">"testuser"</span><span class="special">,</span> <span class="string">"testpass"</span><span class="special">);</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-        
-  <span class="comment">// send message
-</span>  <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">send</span><span class="special">(</span><span class="string">"hi"</span><span class="special">);</span>
-  <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">send</span><span class="special">(</span><span class="string">"hi"</span><span class="special">);</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-        
-  <span class="comment">// change status
-</span>  <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">change_status</span><span class="special">(</span><span class="string">"away"</span><span class="special">);</span>
-  <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">change_status</span><span class="special">(</span><span class="string">"away"</span><span class="special">);</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-
-  <span class="comment">// wait for message
-</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">MSN_ptr</span><span class="special">-&gt;</span><span class="identifier">receive</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">Jabber_ptr</span><span class="special">-&gt;</span><span class="identifier">receive</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="comment">// Call the function from the shared library with
+</span>  <span class="comment">// an integer parameter.
+</span>  <span class="identifier">f</span><span class="special">(</span><span class="number">4</span><span class="special">);</span>
 <span class="special">}</span>
-
 </pre>
 <p>
       </p>
 <p>
-        And we get the following output:
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                <code class="literal">MSN hostname: msn.messenger.com<br> Jabber hostname: jabber.org<br>
-                <br> MSN: http mode set<br> Jabber: http mode not supported<br>
-                <br> MSN: Logged In<br> Jabber: Logged In<br> <br> MSN: message
-                [hi] sent<br> Jabber: message [hi] sent<br> <br> MSN: Status
-                changed to [away]<br> Jabber: Status changed to [away]<br> <br>
-                MSN: hello! msg received<br> Jabber: hello! msg received<br>
-                </code>
-              </p>
-              </td></tr></tbody>
-</table></div>
-<p>
-        The complete code is in the <code class="literal">examples/info/im</code> directory.
+        This will print out "Hello World" four times.
       </p>
 </div>
 <p>
@@ -1012,7 +336,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="factories.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="factories.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorials/tutorial02.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

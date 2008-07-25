@@ -5,10 +5,9 @@
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
-<link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
-<link rel="prev" href="extension_reflection.html" title=" Boost.Reflection/Boost.Extension
-    Interoperability">
-<link rel="next" href="../boost/reflections/parameter_unavailable_exception.html" title="Class parameter_unavailable_exception">
+<link rel="up" href="appendices.html" title=" Appendices">
+<link rel="prev" href="appendices.html" title=" Appendices">
+<link rel="next" href="../boost/extensions/adaptable_factory.html" title="Class template adaptable_factory">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -21,19 +20,29 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="extension_reflection.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/reflections/parameter_unavailable_exception.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="appendices.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="appendices.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/extensions/adaptable_factory.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_extension.reference"></a>Reference</h2></div></div></div>
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.reference"></a>Reference</h3></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.boost.extension.adaptable_factory.hpp">Header &lt;boost/extension/adaptable_factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.convenience.hpp">Header &lt;boost/extension/convenience.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.extension.hpp">Header &lt;boost/extension/extension.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.factory_map.hpp">Header &lt;boost/extension/factory_map.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.filesystem.hpp">Header &lt;boost/extension/filesystem.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.functor.hpp">Header &lt;boost/extension/functor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.shared_library.hpp">Header &lt;boost/extension/shared_library.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.type_map.hpp">Header &lt;boost/extension/type_map.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.adapter.hpp">Header &lt;boost/reflection/adapter.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.common.hpp">Header &lt;boost/reflection/common.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.common.hpp">Header &lt;boost/extension/common.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.constructor.hpp">Header &lt;boost/reflection/constructor.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.constructor_info.hpp">Header &lt;boost/reflection/constructor_info.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.data.hpp">Header &lt;boost/reflection/data.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.data_info.hpp">Header &lt;boost/reflection/data_info.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.factory.hpp">Header &lt;boost/reflection/factory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.extension.factory.hpp">Header &lt;boost/extension/factory.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.function.hpp">Header &lt;boost/reflection/function.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.function_info.hpp">Header &lt;boost/reflection/function_info.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.reflection.generic_constructor.hpp">Header &lt;boost/reflection/generic_constructor.hpp&gt;</a></span></dt>
@@ -43,8 +52,90 @@
 <dt><span class="section"><a href="reference.html#header.boost.reflection.reflection.hpp">Header &lt;boost/reflection/reflection.hpp&gt;</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.adapter.hpp"></a>Header &lt;<a href="../../../boost/reflection/adapter.hpp" target="_top">boost/reflection/adapter.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.adaptable_factory.hpp"></a>Header &lt;<a href="../../../boost/extension/adaptable_factory.hpp" target="_top">boost/extension/adaptable_factory.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info = std::string, 
+             <span class="bold"><strong>typename</strong></span> TypeInfo = default_type_info&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/adaptable_factory.html" title="Class template adaptable_factory">adaptable_factory</a>;
+    <span class="bold"><strong>namespace</strong></span> impl {
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.convenience.hpp"></a>Header &lt;<a href="../../../boost/extension/convenience.hpp" target="_top">boost/extension/convenience.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../boost/extensions/load_single_library_id292277.html" title="Function load_single_library">load_single_library</a>(<a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a> &amp;, <span class="bold"><strong>const</strong></span> std::string &amp;, 
+                             <span class="bold"><strong>const</strong></span> std::string &amp;);
+    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="boost.extensions.load_single_library_id292336"></a>load_single_library(<a href="../boost/extensions/type_map.html" title="Type definition type_map">type_map</a> &amp; current_type_map, 
+                             <span class="bold"><strong>const</strong></span> std::string &amp; library_path, 
+                             <span class="bold"><strong>const</strong></span> std::string &amp; external_function_name);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.extension.hpp"></a>Header &lt;<a href="../../../boost/extension/extension.hpp" target="_top">boost/extension/extension.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a href="../BOOST_EXTENSION_EXPORT_DECL.html" title="Macro BOOST_EXTENSION_EXPORT_DECL">BOOST_EXTENSION_EXPORT_DECL</a></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.factory_map.hpp"></a>Header &lt;<a href="../../../boost/extension/factory_map.hpp" target="_top">boost/extension/factory_map.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/basic_factory_map.html" title="Class template basic_factory_map">basic_factory_map</a>;
+    <span class="bold"><strong>typedef</strong></span> <a href="../boost/extensions/basic_factory_map.html" title="Class template basic_factory_map">basic_factory_map</a>&lt; default_type_info &gt; <a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.filesystem.hpp"></a>Header &lt;<a href="../../../boost/extension/filesystem.hpp" target="_top">boost/extension/filesystem.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.extensions.load_all_libraries"></a>load_all_libraries(<a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a> &amp; current_zone, 
+                            <span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * directory, 
+                            <span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * external_function_name, 
+                            <span class="bold"><strong>int</strong></span> max_depth = 0);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.functor.hpp"></a>Header &lt;<a href="../../../boost/extension/functor.hpp" target="_top">boost/extension/functor.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a href="../BOOST_PP_ITERATION_LIMITS_id292527.html" title="Macro BOOST_PP_ITERATION_LIMITS">BOOST_PP_ITERATION_LIMITS</a>
+<a href="../BOOST_PP_FILENAME_1_id292533.html" title="Macro BOOST_PP_FILENAME_1">BOOST_PP_FILENAME_1</a></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.shared_library.hpp"></a>Header &lt;<a href="../../../boost/extension/shared_library.hpp" target="_top">boost/extension/shared_library.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.type_map.hpp"></a>Header &lt;<a href="../../../boost/extension/type_map.hpp" target="_top">boost/extension/type_map.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>;
+    <span class="bold"><strong>typedef</strong></span> <a href="../boost/extensions/basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>&lt; default_type_info &gt; <a href="../boost/extensions/type_map.html" title="Type definition type_map">type_map</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.adapter.hpp"></a>Header &lt;<a href="../../../boost/reflection/adapter.hpp" target="_top">boost/reflection/adapter.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>class</strong></span> <a href="../boost/reflections/parameter_unavailable_exception.html" title="Class parameter_unavailable_exception">parameter_unavailable_exception</a>;
@@ -56,25 +147,32 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.common.hpp"></a>Header &lt;<a href="../../../boost/reflection/common.hpp" target="_top">boost/reflection/common.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.common.hpp"></a>Header &lt;<a href="../../../boost/reflection/common.hpp" target="_top">boost/reflection/common.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis">
 
 <a href="../BOOST_REFLECTION_MAX_FUNCTOR_PARAMS.html" title="Macro BOOST_REFLECTION_MAX_FUNCTOR_PARAMS">BOOST_REFLECTION_MAX_FUNCTOR_PARAMS</a></pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.constructor.hpp"></a>Header &lt;<a href="../../../boost/reflection/constructor.hpp" target="_top">boost/reflection/constructor.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.common.hpp"></a>Header &lt;<a href="../../../boost/extension/common.hpp" target="_top">boost/extension/common.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis">
 
-<a href="../BOOST_PP_ITERATION_LIMITS_id291518.html" title="Macro BOOST_PP_ITERATION_LIMITS">BOOST_PP_ITERATION_LIMITS</a>
-<a href="../BOOST_PP_FILENAME_1_id291521.html" title="Macro BOOST_PP_FILENAME_1">BOOST_PP_FILENAME_1</a></pre>
+<a href="../BOOST_EXTENSION_MAX_FUNCTOR_PARAMS.html" title="Macro BOOST_EXTENSION_MAX_FUNCTOR_PARAMS">BOOST_EXTENSION_MAX_FUNCTOR_PARAMS</a></pre>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.constructor_info.hpp"></a>Header &lt;<a href="../../../boost/reflection/constructor_info.hpp" target="_top">boost/reflection/constructor_info.hpp</a>&gt;</h3></div></div></div></div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.data.hpp"></a>Header &lt;<a href="../../../boost/reflection/data.hpp" target="_top">boost/reflection/data.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.constructor.hpp"></a>Header &lt;<a href="../../../boost/reflection/constructor.hpp" target="_top">boost/reflection/constructor.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a href="../BOOST_PP_ITERATION_LIMITS_id293146.html" title="Macro BOOST_PP_ITERATION_LIMITS">BOOST_PP_ITERATION_LIMITS</a>
+<a href="../BOOST_PP_FILENAME_1_id293149.html" title="Macro BOOST_PP_FILENAME_1">BOOST_PP_FILENAME_1</a></pre>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.constructor_info.hpp"></a>Header &lt;<a href="../../../boost/reflection/constructor_info.hpp" target="_top">boost/reflection/constructor_info.hpp</a>&gt;</h4></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.data.hpp"></a>Header &lt;<a href="../../../boost/reflection/data.hpp" target="_top">boost/reflection/data.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/reflections/data.html" title="Class template data">data</a>;
@@ -87,8 +185,8 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.data_info.hpp"></a>Header &lt;<a href="../../../boost/reflection/data_info.hpp" target="_top">boost/reflection/data_info.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.data_info.hpp"></a>Header &lt;<a href="../../../boost/reflection/data_info.hpp" target="_top">boost/reflection/data_info.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="bold"><strong>struct</strong></span> <a href="../boost/reflections/basic_data_info.html" title="Struct template basic_data_info">basic_data_info</a>;
@@ -96,12 +194,12 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.factory.hpp"></a>Header &lt;<a href="../../../boost/reflection/factory.hpp" target="_top">boost/reflection/factory.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.factory.hpp"></a>Header &lt;<a href="../../../boost/reflection/factory.hpp" target="_top">boost/reflection/factory.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis">
 
 <a href="../BOOST_REFLECTION_CONSTRUCT_FUNCTION.html" title="Macro BOOST_REFLECTION_CONSTRUCT_FUNCTION">BOOST_REFLECTION_CONSTRUCT_FUNCTION</a>(Z, N, _)
-<a href="../BOOST_REFLECTION_CONSTRUCTI_FUNCTION_id291790.html" title="Macro BOOST_REFLECTION_CONSTRUCTI_FUNCTION">BOOST_REFLECTION_CONSTRUCTI_FUNCTION</a>(Z, N, _)</pre>
+<a href="../BOOST_REFLECTION_CONSTRUCTI_FUNCTION_id293418.html" title="Macro BOOST_REFLECTION_CONSTRUCTI_FUNCTION">BOOST_REFLECTION_CONSTRUCTI_FUNCTION</a>(Z, N, _)</pre>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
      <a href="../boost/reflections/BOOST_REFLECTION_CONSTRUCTI_FUNCTION.html" title="Global BOOST_REFLECTION_CONSTRUCTI_FUNCTION">BOOST_REFLECTION_CONSTRUCTI_FUNCTION</a>;
@@ -111,12 +209,21 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.function.hpp"></a>Header &lt;<a href="../../../boost/reflection/function.hpp" target="_top">boost/reflection/function.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.extension.factory.hpp"></a>Header &lt;<a href="../../../boost/extension/factory.hpp" target="_top">boost/extension/factory.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Params...&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/factory.html" title="Class template factory">factory</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.function.hpp"></a>Header &lt;<a href="../../../boost/reflection/function.hpp" target="_top">boost/reflection/function.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis">
 
-<a href="../BOOST_PP_ITERATION_LIMITS_id291821.html" title="Macro BOOST_PP_ITERATION_LIMITS">BOOST_PP_ITERATION_LIMITS</a>
-<a href="../BOOST_PP_FILENAME_1_id291824.html" title="Macro BOOST_PP_FILENAME_1">BOOST_PP_FILENAME_1</a></pre>
+<a href="../BOOST_PP_ITERATION_LIMITS_id293579.html" title="Macro BOOST_PP_ITERATION_LIMITS">BOOST_PP_ITERATION_LIMITS</a>
+<a href="../BOOST_PP_FILENAME_1_id293582.html" title="Macro BOOST_PP_FILENAME_1">BOOST_PP_FILENAME_1</a></pre>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>namespace</strong></span> impl {
@@ -125,11 +232,11 @@
   }
 }</pre>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.function_info.hpp"></a>Header &lt;<a href="../../../boost/reflection/function_info.hpp" target="_top">boost/reflection/function_info.hpp</a>&gt;</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.function_info.hpp"></a>Header &lt;<a href="../../../boost/reflection/function_info.hpp" target="_top">boost/reflection/function_info.hpp</a>&gt;</h4></div></div></div></div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.generic_constructor.hpp"></a>Header &lt;<a href="../../../boost/reflection/generic_constructor.hpp" target="_top">boost/reflection/generic_constructor.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.generic_constructor.hpp"></a>Header &lt;<a href="../../../boost/reflection/generic_constructor.hpp" target="_top">boost/reflection/generic_constructor.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a href="../boost/reflections/generic_constructor.html" title="Class template generic_constructor">generic_constructor</a>;
@@ -137,8 +244,8 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.instance.hpp"></a>Header &lt;<a href="../../../boost/reflection/instance.hpp" target="_top">boost/reflection/instance.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.instance.hpp"></a>Header &lt;<a href="../../../boost/reflection/instance.hpp" target="_top">boost/reflection/instance.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>class</strong></span> <a href="../boost/reflections/instance.html" title="Class instance">instance</a>;
@@ -146,8 +253,8 @@
 }</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.parameter.hpp"></a>Header &lt;<a href="../../../boost/reflection/parameter.hpp" target="_top">boost/reflection/parameter.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.parameter.hpp"></a>Header &lt;<a href="../../../boost/reflection/parameter.hpp" target="_top">boost/reflection/parameter.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>class</strong></span> <a href="../boost/reflections/conversion_not_found_exception.html" title="Class conversion_not_found_exception">conversion_not_found_exception</a>;
@@ -158,11 +265,11 @@
   }
 }</pre>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.parameter_map.hpp"></a>Header &lt;<a href="../../../boost/reflection/parameter_map.hpp" target="_top">boost/reflection/parameter_map.hpp</a>&gt;</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.parameter_map.hpp"></a>Header &lt;<a href="../../../boost/reflection/parameter_map.hpp" target="_top">boost/reflection/parameter_map.hpp</a>&gt;</h4></div></div></div></div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="header.boost.reflection.reflection.hpp"></a>Header &lt;<a href="../../../boost/reflection/reflection.hpp" target="_top">boost/reflection/reflection.hpp</a>&gt;</h3></div></div></div>
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.reflection.reflection.hpp"></a>Header &lt;<a href="../../../boost/reflection/reflection.hpp" target="_top">boost/reflection/reflection.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> reflections {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Info = std::string, <span class="bold"><strong>typename</strong></span> ParameterInfo = <span class="bold"><strong>void</strong></span>, 
@@ -184,7 +291,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="extension_reflection.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/reflections/parameter_unavailable_exception.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="appendices.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="appendices.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/extensions/adaptable_factory.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

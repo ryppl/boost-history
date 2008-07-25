@@ -1,0 +1,29 @@
+[/ Boost.Extension - Type Safety ]
+[/ Copyright 2008 Jeremy Pack ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+
+[section:type_safety Type Safety of Boost.Extension]
+
+This section is currently incomplete. More work is being done to avoid
+type safety issues with the _instance_ class especially.
+
+Type-safe classes in Boost.Extension:
+
+* _factory_
+* _adaptable_factory_
+* _type_map_
+* _parameter_map_
+
+Other classes:
+
+* _reflection_, _instance_: An _instance_ must be used only with the _reflection_ from
+which it was created. Other than this, these two classes are type safe.
+* _shared_library_: The get functions for this class do not guarantee type safety. This
+is caused by the fact that the underlying operating system-specific functions return void
+pointers that must be converted to function pointers.
+
+[endsect]
