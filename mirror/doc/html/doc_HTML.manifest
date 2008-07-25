@@ -16,6 +16,8 @@ BOOST_MIRRORED_TYPEOF.html
 boost/mirror/meta_class.html
 BOOST_MIRRORED_CLASS.html
 boost/mirror/meta_attribute.html
+boost/mirror/meta_class_attributes.html
+boost/mirror/meta_class_all_attributes.html
 boost/mirror/reflects_namespace.html
 boost/mirror/reflects_global_scope.html
 boost/mirror/reflects_type.html
