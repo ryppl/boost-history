@@ -881,6 +881,63 @@ T add(T x, T y) {
 }
 \end{codeblock}
 \exitexample\
+\addedCC{
+\mbox{\enternote}
+this demonstrates the kind of template whose instantiations may
+    suffer from the dreaded ``dropped concept maps'' pitfall.
+\mbox{\exitnote} 
+}
+
+
+\pnum
+\addedCC{
+\mbox{\enternote}
+within a late-checked block,
+    users should prefer to avoid using operations which,
+    if written outside of the late-checked block and in the nearest
+        enclosing unconstrained context,
+    would bind to a member of a concept map archetype.
+If said avoidance is not practical,
+    those operations should be clearly documented.
+For example, the author of \mbox{\tcode{add(T,T)}} should warn other users
+against satisfying \
+\mbox{\tcode{Semigroup<T>::operator+}} with anything other than the
+\mbox{\tcode{operator+}} that would normally be selected for a given type
+\mbox{\tcode{T}}.
+\mbox{\exitnote} 
+}
+
+\pnum
+\addedCC{
+The use of \mbox{\tcode{late\_check}} is deprecated.
+}
+
+\pnum
+\addedCC{
+\mbox{\enternote}
+a late-checked block should generally be used only when certain suitably
+constrained versions of templates are not yet available for use from
+within the body of a constrained template definition and the only viable
+alternative is the use of an unconstrained template.
+\mbox{\tcode{late\_check}} is regarded as an evolutionary tool only,
+and it was added to the language only after several debates and careful
+deliberation.
+In the end,
+    it was decided that migrating a template library toward the use of
+    concepts would be prohibitively difficult in too many cases without
+    the ability to use an unconstrained template from within a constrained
+    template.
+So there are times when \mbox{\tcode{late\_check}} is a ``necessary
+evil''.
+But it is still
+``evil'' (because it can lead to dangers associated with ``dropped concept
+maps'' as in the \mbox{\tcode{Semigroup}} example above---not to mention
+the general loss of type-checking).
+Therefore users are encouraged to remove a use of
+\mbox{\tcode{late\_check}} when it is reasonable to do so.
+\mbox{\exitnote} 
+}
+
 \color{black}
 
 \end{paras}
