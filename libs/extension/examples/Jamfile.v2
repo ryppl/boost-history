@@ -56,8 +56,12 @@ exe MultipleInheritance : multiple_inheritance/main_mi.cpp Computer Vehicle ;
 lib tutorial_1 : tutorial_1/hello_world.cpp : <link>shared ;
 exe tutorial_1_bin : tutorial_1/main.cpp ;
 
+lib tutorial_2 : tutorial_2/factories_lib.cpp : <link>shared ;
+exe tutorial_2_bin : tutorial_2/factories_main.cpp ;
+
 install ../test/ : 
   tutorial_1 tutorial_1_bin
+  tutorial_2 tutorial_2_bin
   Parameters ParametersLib
   MultilanguageWord MultilanguageHelloWorld
   IM IMPlugins

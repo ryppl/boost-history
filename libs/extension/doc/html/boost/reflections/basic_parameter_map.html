@@ -38,42 +38,42 @@
   <span class="bold"><strong>typedef</strong></span> std::multimap&lt; Info, generic_parameter&lt; TypeInfo &gt; * &gt; <a name="boost.reflections.basic_parameter_map.map_type"></a>map_type;
 
   <span class="emphasis"><em>// <a href="basic_parameter_map.html#boost.reflections.basic_parameter_mapconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a href="basic_parameter_map.html#id293095-bb">~basic_parameter_map</a>();
-  <a href="basic_parameter_map.html#id293101-bb">~basic_parameter_map</a>();
+  <a href="basic_parameter_map.html#id295211-bb">~basic_parameter_map</a>();
+  <a href="basic_parameter_map.html#id295216-bb">~basic_parameter_map</a>();
 
-  <span class="emphasis"><em>// <a href="basic_parameter_map.html#id292890-bb">public member functions</a></em></span>
+  <span class="emphasis"><em>// <a href="basic_parameter_map.html#id295005-bb">public member functions</a></em></span>
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
-    <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id292893-bb">get</a>(Info) ;
+    <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id295008-bb">get</a>(Info) ;
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
-    <span class="type">std::vector&lt; <span class="bold"><strong>const</strong></span> generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id292935-bb">get</a>(Info) <span class="bold"><strong>const</strong></span>;
+    <span class="type">std::vector&lt; <span class="bold"><strong>const</strong></span> generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id295051-bb">get</a>(Info) <span class="bold"><strong>const</strong></span>;
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
-    <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id292979-bb">get</a>(Info) ;
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="basic_parameter_map.html#id293019-bb">has</a>(Info) <span class="bold"><strong>const</strong></span>;
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type">generic_parameter&lt; TypeInfo &gt; *</span> <a href="basic_parameter_map.html#id293057-bb">get_first</a>(Info) ;
+    <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a href="basic_parameter_map.html#id295094-bb">get</a>(Info) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="basic_parameter_map.html#id295134-bb">has</a>(Info) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type">generic_parameter&lt; TypeInfo &gt; *</span> <a href="basic_parameter_map.html#id295172-bb">get_first</a>(Info) ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id459291"></a><h2>Description</h2>
+<a name="id461560"></a><h2>Description</h2>
 <p>The basic_parameter_map is designed to hold arbitrary data indexed by the value of the Info parameter, and can return all items that match a certain type and Info parameter, ie all integers called "foobar". </p>
 <div class="refsect2" lang="en">
-<a name="id459302"></a><h3>
+<a name="id461570"></a><h3>
 <a name="boost.reflections.basic_parameter_mapconstruct-copy-destruct"></a><code class="computeroutput">basic_parameter_map</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><a name="id293095-bb"></a>~basic_parameter_map();</pre>
+<pre class="literallayout"><a name="id295211-bb"></a>~basic_parameter_map();</pre>
 <p>The destructor deletes all of the parameters that it references. </p>
 </li>
-<li><pre class="literallayout"><a name="id293101-bb"></a>~basic_parameter_map();</pre></li>
+<li><pre class="literallayout"><a name="id295216-bb"></a>~basic_parameter_map();</pre></li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id459362"></a><h3>
-<a name="id292890-bb"></a><code class="computeroutput">basic_parameter_map</code> public member functions</h3>
+<a name="id461631"></a><h3>
+<a name="id295005-bb"></a><code class="computeroutput">basic_parameter_map</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
-  <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id292893-bb"></a>get(Info info) ;</pre>
+  <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id295008-bb"></a>get(Info info) ;</pre>
 <p>Given an Info value and a type, this will return all parameters that either match the given type or are convertible to the given type. 
 
 
@@ -115,7 +115,7 @@
 </li>
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
-  <span class="type">std::vector&lt; <span class="bold"><strong>const</strong></span> generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id292935-bb"></a>get(Info info) <span class="bold"><strong>const</strong></span>;</pre>
+  <span class="type">std::vector&lt; <span class="bold"><strong>const</strong></span> generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id295051-bb"></a>get(Info info) <span class="bold"><strong>const</strong></span>;</pre>
 <p>Given an Info value and a type, this will return all parameters that either match the given type or are convertible to the given type. This function is const. 
 
 
@@ -157,7 +157,7 @@
 </li>
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; 
-  <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id292979-bb"></a>get(Info info) ;</pre>
+  <span class="type">std::vector&lt; generic_parameter&lt; TypeInfo &gt; * &gt;</span> <a name="id295094-bb"></a>get(Info info) ;</pre>
 <p>Given a type (D) and Info (ie, string describing the parameter), return a vector containing all generic_parameters that match, or can be converted to the given type.</p>
 <p>
 
@@ -187,7 +187,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id293019-bb"></a>has(Info info) <span class="bold"><strong>const</strong></span>;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id295134-bb"></a>has(Info info) <span class="bold"><strong>const</strong></span>;</pre>
 <p>Given a type (D) and Info (ie, string describing the parameter), return true if the element exists in the parameter_map.</p>
 <p>
 
@@ -217,7 +217,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type">generic_parameter&lt; TypeInfo &gt; *</span> <a name="id293057-bb"></a>get_first(Info info) ;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type">generic_parameter&lt; TypeInfo &gt; *</span> <a name="id295172-bb"></a>get_first(Info info) ;</pre>
 <p>Given a type (D) and Info (ie, string describing the parameter), return first parameter matching, or that can be converted to that type.</p>
 <p>
 

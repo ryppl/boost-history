@@ -1,12 +1,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Tutorial 3</title>
+<title> Tutorial 3 - Multiple
+      and Implementation Inheritance</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../tutorials.html" title="Tutorials">
-<link rel="prev" href="tutorial02.html" title=" Tutorial 2">
+<link rel="prev" href="tutorial02.html" title=" Tutorial 2 - Basic
+      Factories">
 <link rel="next" href="tutorial04.html" title=" Tutorial 4">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -24,151 +26,231 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial03"></a><a href="tutorial03.html" title=" Tutorial 3"> Tutorial 3</a></h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial03"></a><a href="tutorial03.html" title=" Tutorial 3 - Multiple
+      and Implementation Inheritance"> Tutorial 3 - Multiple
+      and Implementation Inheritance</a></h3></div></div></div>
 <p>
-        This tutorial shows how to register and instantiate classes that have multi-argument
-        constructors (not default constructors) in Boost.Extension. In the example
-        that we will describe in this tutorial (examples/parameters) we create a
-        dummy class with a constructor that have six arguments. We'll register this
-        class in a factory map and then get it from the main file.
+        This tutorial shows more advanced class loading. The example described here
+        is contrived, and such a convoluted design is not used as an example of good
+        object-oriented program, but as a way to illustrate some of the possibilities
+        with this library.
       </p>
 <p>
-        It is expected that before following this tutorial you have gone trough the
-        first tutorial at least, and you are familiar with the basic use of Boost.Extension.
+        Most complications with this type of factory usage only occur on Windows,
+        or with less popular compiler options. Refer to <a href="../appendices/appendix_a.html" title=" Appendix A -
+      Windows Export and Import Declarations">Appendix
+        A</a>.
       </p>
 <p>
-        Let's start defining our class. Its constructor receives six parameters (we
-        chose that number because it's the default argument limit of the library),
-        each one of a different type including a class defined in the interface (class
-        A) and a smart pointer to this class. It shows via stdout the received parameters
-        at construction.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">six_parameters</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lots_of_parameters_interface</span>
-<span class="special">{</span>
-  <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span>
-                   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> 
-                   <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">ptr_a</span><span class="special">)</span>
-    <span class="special">{</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Constructor called."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Parameters:"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tbool: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tunsigned int: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tchar: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">c</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tstring: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tA.i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\tptr_a-&gt;i: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">ptr_a</span><span class="special">-&gt;</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-    <span class="special">}</span>
-
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">six_parameters</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        <br> The interface that we are inheriting is just the bare minimum needed
-        to make it compile:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">A</span>
-<span class="special">{</span>
-  <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">A</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{}</span>
-    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
-<span class="special">};</span>
-
-
-<span class="keyword">class</span> <span class="identifier">lots_of_parameters_interface</span>
-<span class="special">{</span>
-  <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">char</span> <span class="identifier">c</span><span class="special">,</span> 
-                                 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span> 
-                                 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="identifier">ptr_a</span><span class="special">)</span> <span class="special">{}</span>
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">lots_of_parameters_interface</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
-<span class="special">};</span>
-</pre>
-<p>
-        <br> Having the class defined, we should write the export function to register
-        the class in the passed factory map. The point here is that the factory_map::add
-        method must be set with the first type as the third argument, and with the
-        second type as the fourth argument and so on.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> 
-         <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> 
-         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;()[</span><span class="number">6</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">six_parameters</span><span class="special">&gt;();</span>
-<span class="special">}</span>
-</pre>
-<p>
-        <br> Finally, let's see how it is used in the main file.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
-
-  <span class="comment">//  Create the factory_map object - it will hold all of the available
-</span>  <span class="comment">//  constructors. Multiple factory_maps can be constructed.
-</span>  <span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
-
-  <span class="comment">// load the shared library with 
-</span>  <span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libParametersLib.extension"</span><span class="special">,</span> <span class="string">"extension_export"</span><span class="special">);</span>
-
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
-                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span>
-                        <span class="identifier">factory_list</span> <span class="special">=</span> 
-	<span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">char</span><span class="special">,</span> 
-         <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span>  <span class="special">&gt;();</span>
-  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">!=</span> <span class="number">1</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Error - the class was not found."</span><span class="special">;</span>
-    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
-  <span class="special">}</span>
-
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
-                        <span class="keyword">char</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">A</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
-                        <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">par</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">lots_of_parameters_interface</span><span class="special">&gt;</span>
-    <span class="identifier">par_ptr</span><span class="special">(</span><span class="identifier">par</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">true</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="char">'c'</span><span class="special">,</span> <span class="string">"test"</span><span class="special">,</span> <span class="identifier">A</span><span class="special">(</span><span class="number">2</span><span class="special">),</span>
-                        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">A</span><span class="special">(</span><span class="number">15</span><span class="special">))));</span>
-
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-      </p>
-<p>
-        Please note the following details:
+        Let's design a class hierarchy based on the following:
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          Shared library loading is exactly the same.
+          There is a vehicle class
         </li>
 <li>
-          When we get the factory we should specify the template parameters, as we
-          did in the factory_map::add method.
+          There is a computer class
         </li>
 <li>
-          When we call the create method we just supply the needed arguments and
-          just works!
+          A car is a vehicle
+        </li>
+<li>
+          A boat is a vehicle
+        </li>
+<li>
+          A plane is a vehicle
+        </li>
+<li>
+          A flying_car is a plane and a car
+        </li>
+<li>
+          A car_of_the_future is a flying_car, a boat, and a computer.
         </li>
 </ul></div>
 <p>
-        <br>
+        In addition, we are not going to have any of these classes be interfaces.
+        They will each have an implementation in a .cpp file. This will require multiple
+        inheritance, as well as virtual inheritance (because otherwise a car_of_the_future
+        would consist of three separate vehicle base classes!).
       </p>
 <p>
-        It is expected that at this point you can create your own classes with multi-argument
-        constructors and use them via Boost.extensions without problems.
+        In addition, each class will be compiled into a separate shared library.
+        This is not necessary, certainly, but will serve to illustrate some of the
+        more advanced capabilities of the library, as well as some of the techniques
+        necessary in this situation.
+      </p>
+<p>
+        To begin with, let's look at the Jamfile:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="special">;</span>
+<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="special">;</span>
+<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">extension</span> <span class="special">;</span>
+<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">lib</span> <span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+        As usual, first we must rename the generated libraries (this is required
+        for cross-platform use - but the prefix and suffix are arbitrary).
+      </p>
+<p>
+        Next, some special options are needed for certain compilers, to make sure
+        that the shared libraries are found correctly. This is only needed for this
+        example because we have shared libraries that are linked by the linker after
+        compilation to other shared libraries, rather than loaded by the shared_library
+        class at runtime. Library paths and includes need to be set as follows:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">local</span> <span class="identifier">BOOST_ROOT</span> <span class="special">=</span> <span class="special">[</span> <span class="identifier">os</span><span class="special">.</span><span class="identifier">environ</span> <span class="identifier">BOOST_ROOT</span> <span class="special">]</span> <span class="special">;</span>
+<span class="identifier">project</span> 
+    <span class="special">:</span> <span class="identifier">requirements</span>
+      <span class="special">&lt;</span><span class="identifier">include</span><span class="special">&gt;../../../</span>
+      <span class="special">&lt;</span><span class="identifier">include</span><span class="special">&gt;</span>#<span class="special">(</span><span class="identifier">BOOST_ROOT</span><span class="special">)</span>
+      <span class="special">&lt;</span><span class="identifier">toolset</span><span class="special">&gt;</span><span class="identifier">gcc</span><span class="special">:&lt;</span><span class="identifier">find</span><span class="special">-</span><span class="identifier">shared</span><span class="special">-</span><span class="identifier">library</span><span class="special">&gt;</span><span class="identifier">dl</span>
+      <span class="special">&lt;</span><span class="identifier">toolset</span><span class="special">&gt;</span><span class="identifier">gcc</span><span class="special">:&lt;</span><span class="identifier">linkflags</span><span class="special">&gt;</span><span class="string">"-Wl,-rpath,'$ORIGIN'"</span>
+      <span class="special">&lt;</span><span class="identifier">toolset</span><span class="special">&gt;</span><span class="identifier">darwin</span><span class="special">:&lt;</span><span class="identifier">define</span><span class="special">&gt;</span><span class="identifier">DYLD_LIBRARY_PATH</span><span class="special">=./</span>
+    <span class="special">:</span>
+    <span class="special">;</span>
+
+</pre>
+<p>
+      </p>
+<p>
+        The rules for building the first two libraries are the same as those from
+        earlier tutorials.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">vehicle</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Car</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+        Notice here that the Car library is linked to the Vehicle library - this
+        is necessary because the Car class needs the implementation of the Vehicle
+        class. This is not specific to the Boost.Extension library, but just a standard
+        requirement when inheriting from shared library classes. The same will be
+        done with the other shared libraries.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">Plane</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">plane</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Boat</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">boat</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Computer</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">computer</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">FlyingCar</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">flying_car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span>
+              <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">CarOfTheFuture</span> <span class="special">:</span> 
+  <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car_of_the_future</span><span class="special">.</span><span class="identifier">cpp</span> 
+  <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span> 
+  <span class="identifier">FlyingCar</span> <span class="identifier">Computer</span> <span class="identifier">Boat</span> 
+  <span class="special">:</span> 
+  <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> 
+<span class="special">;</span>
+
+<span class="identifier">install</span> <span class="special">../</span><span class="identifier">bin</span> <span class="special">:</span> 
+  <span class="identifier">HelloWorld</span> <span class="identifier">HelloWorldLib</span> <span class="identifier">Vehicle</span> <span class="identifier">Boat</span> <span class="identifier">FlyingCar</span> 
+  <span class="identifier">CarOfTheFuture</span> <span class="identifier">MultipleInheritance</span> 
+  <span class="special">:</span>
+  <span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+        Refer to the examples/multiple_inheritance folder for the source code of
+        these classes. Only the most complex will be described here - the rest are
+        similar.
+      </p>
+<p>
+        On the Windows platform, there are special declarations that are required
+        when a dll must use a class that is defined in another dll. For interface
+        only classes this is unnecessary, and is not needed on other platforms. The
+        macros BOOST_EXTENSION_IMPORT_DECL and BOOST_EXTENSION_EXPORT_DECL can be
+        used to insert the proper declaration. This is detailed in <a href="../appendices/appendix_a.html" title=" Appendix A -
+      Windows Export and Import Declarations">Appendix
+        A</a>.
+      </p>
+<p>
+        The macros here are defined in such a way that in the <code class="computeroutput"><span class="identifier">car_of_the_future</span></code>
+        class, the classes it depends on from other shared libraries are declared
+        as imports. The BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL must be defined by
+        any source file using this class - as <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span></code>
+        by the shared library containing the <code class="computeroutput"><span class="identifier">car_of_the_future</span></code>,
+        and as <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span></code>
+        by any shared library or executable linking directly to that shared library.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_FLYING_CAR_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_BOAT_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_COMPUTER_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
+<span class="preprocessor">#include</span> <span class="string">"flying_car.hpp"</span>
+<span class="preprocessor">#include</span> <span class="string">"boat.hpp"</span>
+<span class="preprocessor">#include</span> <span class="string">"computer.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">typeinfo</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL</span> 
+  <span class="identifier">car_of_the_future</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">flying_car</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">boat</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">computer</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nCreated a Car of the Future"</span><span class="special">;}</span>
+  <span class="special">~</span><span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nDestroyed a Car of the Future"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">list_capabilities</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        In the implementation file for the <code class="computeroutput"><span class="identifier">car_of_the_future</span></code>,
+        it is exported as an implementation of each of its base classes.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">car_of_the_future</span><span class="special">::</span><span class="identifier">list_capabilities</span><span class="special">()</span> <span class="special">{</span>
+  <span class="keyword">return</span> <span class="identifier">boat</span><span class="special">::</span><span class="identifier">list_capabilities</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">flying_car</span><span class="special">::</span><span class="identifier">list_capabilities</span><span class="special">()</span> <span class="special">+</span>
+         <span class="identifier">computer</span><span class="special">::</span><span class="identifier">list_capabilities</span><span class="special">()</span> <span class="special">+</span> <span class="string">"\nCosts an arm and a leg"</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory</span><span class="special">;</span>
+
+<span class="identifier">BOOST_EXTENSION_TYPE_MAP_FUNCTION</span> <span class="special">{</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">vehicle</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a vehicle"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">car</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a car"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">plane</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a plane"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">flying_car</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a flying car"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">boat</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a boat"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">computer</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a computer"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+  <span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;()</span>
+    <span class="special">[</span><span class="string">"A car of the future exported as a car of the future"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">car_of_the_future</span><span class="special">&gt;();</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        The main executable is relatively straightforward, but does introduce a new
+        function: <code class="computeroutput"><span class="identifier">load_single_library</span></code>,
+        which takes a <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        and the location of the shared library, and loads the library and calls the
+        function declared as <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_TYPE_MAP_FUNCTION</span></code>.
+      </p>
+<p>
+        Now, place all of the compiled libraries and the main executable in a directory
+        together, and run the executable.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

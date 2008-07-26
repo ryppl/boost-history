@@ -22,16 +22,17 @@ these types of macros are not necessary for classes
 #define BOOST_EXTENSION_VEHICLE_DECL BOOST_EXTENSION_EXPORT_DECL
 
 #include "vehicle.hpp"
-#include <boost/extension/factory_map.hpp>
+#include <boost/extension/type_map.hpp>
+#include <boost/extension/factory.hpp>
 
 std::string vehicle::list_capabilities()
 {
   return "\nIt is some sort of vehicle.";
 }
 
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export(boost::extensions::factory_map & z)
-{
-  z.get<vehicle, std::string>()["A vehicle exported as a vehicle"]
-    .set<vehicle>();
+using boost::extensions::factory;
+
+BOOST_EXTENSION_TYPE_MAP_FUNCTION {
+  types.get<std::map<std::string, factory<vehicle> > >()
+    ["A vehicle exported as a vehicle"].set<vehicle>();
 }

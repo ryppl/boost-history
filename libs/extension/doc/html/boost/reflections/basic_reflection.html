@@ -44,30 +44,30 @@
     <span class="bold"><strong>typedef</strong></span> basic_constructor_info&lt; TypeInfo, ParameterInfo &gt;    <a href="basic_reflection/reflector.html#boost.reflections.basic_reflection.reflector.constructor_info">constructor_info</a>;
 
     <span class="emphasis"><em>// <a href="basic_reflection/reflector.html#boost.reflections.basic_reflection.reflectorconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-    <a href="basic_reflection/reflector.html#id294223-bb">reflector</a>(basic_reflection&lt; Info, ParameterInfo, TypeInfo &gt; *);
+    <a href="basic_reflection/reflector.html#id296338-bb">reflector</a>(basic_reflection&lt; Info, ParameterInfo, TypeInfo &gt; *);
 
-    <span class="emphasis"><em>// <a href="basic_reflection/reflector.html#id294089-bb">public member functions</a></em></span>
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id294092-bb">constructor</a>() ;
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id294124-bb">data</a>(Data T::*, Info) ;
+    <span class="emphasis"><em>// <a href="basic_reflection/reflector.html#id296204-bb">public member functions</a></em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id296207-bb">constructor</a>() ;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id296240-bb">data</a>(Data T::*, Info) ;
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReturnValue = <span class="bold"><strong>void</strong></span>, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-      <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id294170-bb">function</a>(<span class="bold"><strong>void</strong></span>(T::*)(), Info) ;
+      <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a> &amp;</span> <a href="basic_reflection/reflector.html#id296286-bb">function</a>(<span class="bold"><strong>void</strong></span>(T::*)(), Info) ;
   };
 
-  <span class="emphasis"><em>// <a href="basic_reflection.html#id294252-bb">public member functions</a></em></span>
+  <span class="emphasis"><em>// <a href="basic_reflection.html#id296368-bb">public member functions</a></em></span>
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; 
-    <span class="type">instance_constructor&lt; Params...&gt;</span> <a href="basic_reflection.html#id294255-bb">get_constructor</a>() <span class="bold"><strong>const</strong></span>;
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type">data&lt; Data &gt;</span> <a href="basic_reflection.html#id294293-bb">get_data</a>(Info) <span class="bold"><strong>const</strong></span>;
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a>&lt; T &gt;</span> <a href="basic_reflection.html#id294336-bb">reflect</a>() ;
+    <span class="type">instance_constructor&lt; Params...&gt;</span> <a href="basic_reflection.html#id296370-bb">get_constructor</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type">data&lt; Data &gt;</span> <a href="basic_reflection.html#id296409-bb">get_data</a>(Info) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a>&lt; T &gt;</span> <a href="basic_reflection.html#id296455-bb">reflect</a>() ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id465290"></a><h2>Description</h2>
+<a name="id467550"></a><h2>Description</h2>
 <div class="refsect2" lang="en">
-<a name="id465295"></a><h3>
-<a name="id294252-bb"></a><code class="computeroutput">basic_reflection</code> public member functions</h3>
+<a name="id467556"></a><h3>
+<a name="id296368-bb"></a><code class="computeroutput">basic_reflection</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Params...&gt; 
-  <span class="type">instance_constructor&lt; Params...&gt;</span> <a name="id294255-bb"></a>get_constructor() <span class="bold"><strong>const</strong></span>;</pre>
+  <span class="type">instance_constructor&lt; Params...&gt;</span> <a name="id296370-bb"></a>get_constructor() <span class="bold"><strong>const</strong></span>;</pre>
 <p>
 
 Attempt to retrieve any constructor whose Params match the list in Params... For example: </p>
@@ -103,7 +103,7 @@ Attempt to retrieve any constructor whose Params match the list in Params... For
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type">data&lt; Data &gt;</span> <a name="id294293-bb"></a>get_data(Info info) <span class="bold"><strong>const</strong></span>;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Data&gt; <span class="type">data&lt; Data &gt;</span> <a name="id296409-bb"></a>get_data(Info info) <span class="bold"><strong>const</strong></span>;</pre>
 <p>
 
 Attempt to retrieve any data of type Data and the same Info. For example: </p>
@@ -140,7 +140,7 @@ Attempt to retrieve any data of type Data and the same Info. For example: </p>
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a>&lt; T &gt;</span> <a name="id294336-bb"></a>reflect() ;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><a href="basic_reflection/reflector.html" title="Class template reflector">reflector</a>&lt; T &gt;</span> <a name="id296455-bb"></a>reflect() ;</pre>
 <p>
 
 

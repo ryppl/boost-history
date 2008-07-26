@@ -23,17 +23,17 @@ these types of macros are not necessary for classes
 
 
 #include "computer.hpp"
-#include <boost/extension/factory_map.hpp>
+#include <boost/extension/type_map.hpp>
+#include <boost/extension/factory.hpp>
 
 std::string computer::list_capabilities()
 {
   return "\nIt computes.";
 }
 
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export(boost::extensions::factory_map & z)
-{
-  z.get<computer,
-    std::string>()["\nA computer exported as a computer"]
-    .set<computer>();
+using boost::extensions::factory;
+
+BOOST_EXTENSION_TYPE_MAP_FUNCTION {
+  types.get<std::map<std::string, factory<computer> > >()
+    ["\nA computer exported as a computer"].set<computer>();
 }

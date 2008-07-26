@@ -1,135 +1,189 @@
-[/ Boost.Extension - third tutorial ]
-[/ Copyright 2008 Mariano G. Consoni ]
+[/ Boost.Extension - second tutorial ]
+[/ Copyright 2008 Jeremy Pack ]
 [/ Distributed under the Boost Software License, Version 1.0. (See]
 [/ accompanying file LICENSE_1_0.txt or copy at ]
 [/ http://www.boost.org/LICENSE_1_0.txt) ]
 [/ See http://www.boost.org/ for latest version. ]
 
+[section:tutorial03 Tutorial 3 - Multiple and Implementation Inheritance]
 
-[section:tutorial03 Tutorial 3]
+This tutorial shows more advanced class loading. The example described here is
+contrived, and such a convoluted design is not used as an example of good 
+object-oriented program, but as a way to illustrate some of the possibilities 
+with this library.
 
-This tutorial shows how to register and instantiate classes that have 
-multi-argument constructors (not default constructors) in Boost.Extension. 
-In the example that we will describe in this tutorial (examples/parameters) 
-we create a dummy class with a constructor that have six arguments. We'll 
-register this class in a factory map and then get it from the main file.
+Most complications with this type of factory usage only occur on Windows, or with
+less popular compiler options. Refer to
+[link boost_extension.appendices.appendix_a Appendix A].
 
-It is expected that before following this tutorial you have gone trough the 
-first tutorial at least, and you are familiar with the basic use of 
-Boost.Extension.
+Let's design a class hierarchy based on the following:
 
 
-Let's start defining our class. Its constructor receives six parameters (we 
-chose that number because it's the default argument limit of the library), 
-each one of a different type including a class defined in the interface 
-(class A) and a smart pointer to this class. It shows via stdout the received 
-parameters at construction.
+* There is a vehicle class
+* There is a computer class
+* A car is a vehicle
+* A boat is a vehicle
+* A plane is a vehicle
+* A flying_car is a plane and a car
+* A car_of_the_future is a flying_car, a boat, and a computer.
+
+
+In addition, we are not going to have any of these classes be interfaces. They 
+will each have an implementation in a .cpp file. This will require multiple 
+inheritance, as well as virtual inheritance (because otherwise a 
+car_of_the_future would consist of three separate vehicle base classes!).
+
+
+In addition, each class will be compiled into a separate shared library. This 
+is not necessary, certainly, but will serve to illustrate some of the more 
+advanced capabilities of the library, as well as some of the techniques 
+necessary in this situation.
+
+
+To begin with, let's look at the Jamfile:
 
 
 ``
-class six_parameters : public lots_of_parameters_interface
-{
-  public:
-    six_parameters(bool b, unsigned int i, char c, std::string s, A a,
-                   boost::shared_ptr<A> ptr_a) 
-                   lots_of_parameters_interface(b, i, c, s, a, ptr_a)
-    {
-      std::cout << "Constructor called." << std::endl << std::endl;
-      std::cout << "Parameters:" << std::endl;
-      std::cout << "\tbool: " << b << std::endl;
-      std::cout << "\tunsigned int: " << i << std::endl;
-      std::cout << "\tchar: " << c << std::endl;
-      std::cout << "\tstring: " << s << std::endl;
-      std::cout << "\tA.i: " << a.i << std::endl;
-      std::cout << "\tptr_a->i: " << ptr_a->i << std::endl;
-      std::cout << std::endl;
-    }
+import type : change-generated-target-suffix ;
+import type : change-generated-target-prefix ;
+type.change-generated-target-suffix SHARED_LIB : : extension ;
+type.change-generated-target-prefix SHARED_LIB : : lib ;
+``
 
-    virtual ~six_parameters(void) {}
+As usual, first we must rename the generated libraries (this is required for 
+cross-platform use - but the prefix and suffix are arbitrary).
+
+Next, some special options are needed for certain compilers, to make sure
+that the shared libraries are found correctly. This is only needed for this
+example because we have shared libraries that are linked by the linker after
+compilation to other shared libraries, rather than loaded by the shared_library
+class at runtime. Library paths and includes need to be set as follows:
+
+``
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+project 
+    : requirements
+      <include>../../../
+      <include>$(BOOST_ROOT)
+      <toolset>gcc:<find-shared-library>dl
+      <toolset>gcc:<linkflags>"-Wl,-rpath,'$ORIGIN'"
+      <toolset>darwin:<define>DYLD_LIBRARY_PATH=./
+    :
+    ;
+
+``
+
+The rules for building the first two libraries are the same
+as those from earlier tutorials.
+
+``
+lib Vehicle : multiple_inheritance/vehicle.cpp : <link>shared ;
+lib Car : multiple_inheritance/car.cpp Vehicle : <link>shared ;
+``
+
+
+Notice here that the Car library is linked to the Vehicle library - this is 
+necessary because the Car class needs the implementation of the Vehicle class. 
+This is not specific to the Boost.Extension library, but just a standard 
+requirement when inheriting from shared library classes. The same will be done 
+with the other shared libraries.
+
+
+``
+lib Plane : multiple_inheritance/plane.cpp Vehicle : <link>shared ;
+lib Boat : multiple_inheritance/boat.cpp Vehicle : <link>shared ;
+lib Computer : multiple_inheritance/computer.cpp : <link>shared ;
+lib FlyingCar : multiple_inheritance/flying_car.cpp Plane Car Vehicle
+              : <link>shared ;
+lib CarOfTheFuture : 
+  multiple_inheritance/car_of_the_future.cpp 
+  Plane Car Vehicle 
+  FlyingCar Computer Boat 
+  : 
+  <link>shared 
+;
+
+install ../bin : 
+  HelloWorld HelloWorldLib Vehicle Boat FlyingCar 
+  CarOfTheFuture MultipleInheritance 
+  :
+  ;
+``
+
+
+Refer to the examples/multiple_inheritance folder for the source code of these
+classes. Only the most complex will be described here - the rest are similar.
+
+
+On the Windows platform, there are special declarations that are required when 
+a dll must use a class that is defined in another dll. For interface only 
+classes this is unnecessary, and is not needed on other platforms. The macros 
+BOOST_EXTENSION_IMPORT_DECL and BOOST_EXTENSION_EXPORT_DECL can be used
+to insert the proper declaration. This is detailed in
+[link boost_extension.appendices.appendix_a Appendix A].
+
+The macros here are defined in such a way that in the `car_of_the_future`
+class, the classes it depends on from other shared libraries are
+declared as imports. The BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL must be
+defined by any source file using this class - as `BOOST_EXTENSION_IMPORT_DECL`
+by the shared library containing the `car_of_the_future`, and as
+`BOOST_EXTENSION_EXPORT_DECL` by any shared library or executable linking
+directly to that shared library.
+
+``
+#define BOOST_EXTENSION_FLYING_CAR_DECL BOOST_EXTENSION_IMPORT_DECL
+#define BOOST_EXTENSION_BOAT_DECL BOOST_EXTENSION_IMPORT_DECL
+#define BOOST_EXTENSION_COMPUTER_DECL BOOST_EXTENSION_IMPORT_DECL
+#include "flying_car.hpp"
+#include "boat.hpp"
+#include "computer.hpp"
+#include <iostream>
+#include <typeinfo>
+class BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL 
+  car_of_the_future : public flying_car, public boat, public computer
+{
+public:
+  car_of_the_future(void){std::cout << "\nCreated a Car of the Future";}
+  ~car_of_the_future(void){std::cout << "\nDestroyed a Car of the Future";}
+  virtual std::string list_capabilities(void);
 };
 ``
-\n
-The interface that we are inheriting is just the bare minimum needed to make it
-compile:
+
+In the implementation file for the `car_of_the_future`, it is exported
+as an implementation of each of its base classes.
 
 ``
-class A
-{
-  public:
-    A(unsigned int i) : i(i) {}
-    int i;
-};
+std::string car_of_the_future::list_capabilities() {
+  return boat::list_capabilities() + flying_car::list_capabilities() +
+         computer::list_capabilities() + "\nCosts an arm and a leg";
+}
 
+using boost::extensions::factory;
 
-class lots_of_parameters_interface
-{
-  public:
-    lots_of_parameters_interface(bool b, unsigned int i, char c, 
-                                 std::string s, A a, 
-                                 boost::shared_ptr<A> ptr_a) {}
-    virtual ~lots_of_parameters_interface(void) {}
-};
-``
-\n
-Having the class defined, we should write the export function to register the 
-class in the passed factory map. The point here is that the factory_map::add 
-method must be set with the first type as the third argument, and with the 
-second type as the fourth argument and so on.
-
-``
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export(boost::extensions::factory_map & fm)
-{
-  fm.get<lots_of_parameters_interface, int, bool, 
-         unsigned int, char, std::string, A, 
-         boost::shared_ptr<A> >()[6].set<six_parameters>();
+BOOST_EXTENSION_TYPE_MAP_FUNCTION {
+  types.get<std::map<std::string, factory<vehicle> > >()
+    ["A car of the future exported as a vehicle"].set<car_of_the_future>();
+  types.get<std::map<std::string, factory<car> > >()
+    ["A car of the future exported as a car"].set<car_of_the_future>();
+  types.get<std::map<std::string, factory<plane> > >()
+    ["A car of the future exported as a plane"].set<car_of_the_future>();
+  types.get<std::map<std::string, factory<flying_car> > >()
+    ["A car of the future exported as a flying car"].set<car_of_the_future>();
+  types.get<std::map<std::string, factory<boat> > >()
+    ["A car of the future exported as a boat"].set<car_of_the_future>();
+  types.get<std::map<std::string, factory<computer> > >()
+    ["A car of the future exported as a computer"].set<car_of_the_future>();
+  types.get<std::map<std::string, factory<car_of_the_future> > >()
+    ["A car of the future exported as a car of the future"].set<car_of_the_future>();
 }
 ``
-\n
-Finally, let's see how it is used in the main file.
 
-``
-int main(void)
-{
-  using namespace boost::extensions;
+The main executable is relatively straightforward, but does introduce a new
+function: `load_single_library`, which takes a _type_map_ and the location
+of the shared library, and loads the library and calls the function declared
+as `BOOST_EXTENSION_TYPE_MAP_FUNCTION`.
 
-  //  Create the factory_map object - it will hold all of the available
-  //  constructors. Multiple factory_maps can be constructed.
-  factory_map fm;
-
-  // load the shared library with 
-  load_single_library(fm, "libParametersLib.extension", "extension_export");
-
-  std::map<int, factory<lots_of_parameters_interface, bool, unsigned int,
-                        char, std::string, A, boost::shared_ptr<A> > > &
-                        factory_list = 
-	fm.get<lots_of_parameters_interface, int, bool, unsigned int, char, 
-         std::string, A, boost::shared_ptr<A>  >();
-  if (factory_list.size() != 1) {
-    std::cout << "Error - the class was not found.";
-    return 1;
-  }
-
-  std::map<int, factory<lots_of_parameters_interface, bool, unsigned int,
-                        char, std::string, A, boost::shared_ptr<A> > >
-                        ::iterator par = factory_list.begin();
-  std::auto_ptr<lots_of_parameters_interface>
-    par_ptr(par->create(true, 4, 'c', "test", A(2),
-                        boost::shared_ptr<A>(new A(15))));
-
-  return 0;
-}
-``
-
-Please note the following details:
-
-* Shared library loading is exactly the same.
-* When we get the factory we should specify the template parameters, as we did in the factory_map::add method.
-* When we call the create method we just supply the needed arguments and just works!
-
-\n
-
-It is expected that at this point you can create your own classes with 
-multi-argument constructors and use them via Boost.extensions without problems.
+Now, place all of the compiled libraries and the main executable in a directory together,
+and run the executable.
 
 [endsect]

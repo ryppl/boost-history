@@ -23,18 +23,18 @@ these types of macros are not necessary for classes
 
 
 #include "plane.hpp"
-#include <boost/extension/factory_map.hpp>
+#include <boost/extension/type_map.hpp>
+#include <boost/extension/factory.hpp>
 
-std::string plane::list_capabilities()
-{
+std::string plane::list_capabilities() {
   return "\nIt flies in the air.";
 }
 
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export(boost::extensions::factory_map & z)
-{
-  z.get<vehicle, std::string>()["A plane exported as a vehicle"]
-    .set<plane>();
-  z.get<plane, std::string>()["A plane exported as a plane"]
-    .set<plane>();
+using boost::extensions::factory;
+
+BOOST_EXTENSION_TYPE_MAP_FUNCTION {
+  types.get<std::map<std::string, factory<vehicle> > >()
+    ["A plane exported as a vehicle"].set<plane>();
+  types.get<std::map<std::string, factory<plane> > >()
+    ["A plane exported as a plane"].set<plane>();
 }

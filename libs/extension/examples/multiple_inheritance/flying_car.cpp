@@ -25,7 +25,8 @@ these types of macros are not necessary for classes
 
 
 #include "flying_car.hpp"
-#include <boost/extension/factory_map.hpp>
+#include <boost/extension/type_map.hpp>
+#include <boost/extension/factory.hpp>
 
 std::string flying_car::list_capabilities()
 {
@@ -33,14 +34,15 @@ std::string flying_car::list_capabilities()
     + "\nIt takes off from your driveway";
 }
 
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export(boost::extensions::factory_map & z)
-{
-  z.get<vehicle, 
-    std::string>()["A flying car exported as a vehicle"].set<flying_car>();
-  z.get<plane, std::string>()["A flying car exported as a plane"]
-    .set<flying_car>();
-  z.get<car, std::string>()["A flying car exported as a car"].set<flying_car>();
-  z.get<flying_car, 
-    std::string>()["A flying car exported as a flying car"].set<flying_car>();
+using boost::extensions::factory;
+
+BOOST_EXTENSION_TYPE_MAP_FUNCTION {
+  types.get<std::map<std::string, factory<vehicle> > >()
+    ["A flying car exported as a vehicle"].set<flying_car>();
+  types.get<std::map<std::string, factory<plane> > >()
+    ["A flying car exported as a plane"].set<flying_car>();
+  types.get<std::map<std::string, factory<car> > >()
+    ["A flying car exported as a car"].set<flying_car>();
+  types.get<std::map<std::string, factory<flying_car> > >()
+    ["A flying car exported as a flying car"].set<flying_car>();
 }

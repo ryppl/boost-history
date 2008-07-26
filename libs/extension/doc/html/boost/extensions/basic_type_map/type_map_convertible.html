@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class type_map_convertible</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. Boost.Extension">
+<link rel="up" href="../basic_type_map.html#id460386" title="Description">
+<link rel="prev" href="../shared_library.html" title="Class shared_library">
+<link rel="next" href="type_map_convertible/generic_type_holder.html" title="Struct generic_type_holder">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../shared_library.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../basic_type_map.html#id460386"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="type_map_convertible/generic_type_holder.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.extensions.basic_type_map.type_map_convertible"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class type_map_convertible</span></h2>
+<p>boost::extensions::basic_type_map::type_map_convertible &#8212; </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
+
+<span class="bold"><strong>class</strong></span> <a href="type_map_convertible.html" title="Class type_map_convertible">type_map_convertible</a> {
+<span class="bold"><strong>public</strong></span>:
+
+  <span class="bold"><strong>struct</strong></span> <a href="type_map_convertible/generic_type_holder.html" title="Struct generic_type_holder">generic_type_holder</a> {
+    <span class="emphasis"><em>// <a href="type_map_convertible/generic_type_holder.html#boost.extensions.basic_type_map.type_map_convertible.generic_type_holderconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+    <a href="type_map_convertible/generic_type_holder.html#id294865-bb">~generic_type_holder</a>();
+  };
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="bold"><strong>struct</strong></span> <a href="type_map_convertible/type_holder.html" title="Struct template type_holder">type_holder</a> : <span class="bold"><strong>public</strong></span> boost::extensions::basic_type_map&lt; TypeInfo &gt;::type_map_convertible::generic_type_holder
+  {
+    <span class="type">T</span> val;
+  };
+  <span class="emphasis"><em>// <a href="type_map_convertible.html#boost.extensions.basic_type_map.type_map_convertibleconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a href="type_map_convertible.html#id294901-bb">~type_map_convertible</a>();
+
+  <span class="emphasis"><em>// <a href="type_map_convertible.html#id294885-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <a href="type_map_convertible.html#id294888-bb"><span class="bold"><strong>operator</strong></span> Type &amp;</a>() ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id460645"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id460650"></a><h3>
+<a name="boost.extensions.basic_type_map.type_map_convertibleconstruct-copy-destruct"></a><code class="computeroutput">type_map_convertible</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id294901-bb"></a>~type_map_convertible();</pre></li></ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id460693"></a><h3>
+<a name="id294885-bb"></a><code class="computeroutput">type_map_convertible</code> public member functions</h3>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <a name="id294888-bb"></a><span class="bold"><strong>operator</strong></span> Type &amp;() ;</pre></li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Jeremy Pack<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../shared_library.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../basic_type_map.html#id460386"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="type_map_convertible/generic_type_holder.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

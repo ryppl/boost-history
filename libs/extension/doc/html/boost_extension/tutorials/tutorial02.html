@@ -1,13 +1,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Tutorial 2</title>
+<title> Tutorial 2 - Basic
+      Factories</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../tutorials.html" title="Tutorials">
 <link rel="prev" href="../tutorials.html" title="Tutorials">
-<link rel="next" href="tutorial03.html" title=" Tutorial 3">
+<link rel="next" href="tutorial03.html" title=" Tutorial 3 - Multiple
+      and Implementation Inheritance">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -24,140 +26,263 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial02"></a><a href="tutorial02.html" title=" Tutorial 2"> Tutorial 2</a></h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial02"></a><a href="tutorial02.html" title=" Tutorial 2 - Basic
+      Factories"> Tutorial 2 - Basic
+      Factories</a></h3></div></div></div>
 <p>
-        This tutorial shows more advanced class loading. The example described here
-        is contrived, and such a convoluted design is not used as an example of good
-        object-oriented program, but as a way to illustrate some of the possibilities
-        with this library.
-      </p>
-<p>
-        Let's design a class hierarchy based on the following:
-      </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          There is a vehicle class
-        </li>
-<li>
-          There is a computer class
-        </li>
-<li>
-          A car is a vehicle
-        </li>
-<li>
-          A boat is a vehicle
-        </li>
-<li>
-          A plane is a vehicle
-        </li>
-<li>
-          A flying_car is a plane and a car
-        </li>
-<li>
-          A car_of_the_future is a flying_car, a boat, and a computer.
-        </li>
-</ul></div>
-<p>
-        In addition, we are not going to have any of these classes be interfaces.
-        They will each have an implementation in a .cpp file. This will require multiple
-        inheritance, as well as virtual inheritance (because otherwise a car_of_the_future
-        would consist of three separate vehicle base classes!).
-      </p>
-<p>
-        In addition, each class will be compiled into a separate shared library.
-        This is not necessary, certainly, but will serve to illustrate some of the
-        more advanced capabilities of the library, as well as some of the techniques
-        necessary in this situation.
-      </p>
-<p>
-        To begin with, let's look at the Jamfile:
+        The easiest method for creating plugins in C++ is to use factories. Consider
+        the following base class:
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="special">;</span>
-<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="special">;</span>
-<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">extension</span> <span class="special">;</span>
-<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">lib</span> <span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        First we must rename the generated libraries (this is required for cross-platform
-        use - but the prefix and suffix are arbitrary).
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">vehicle</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Car</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        Notice here that the Car library is linked to the Vehicle library - this
-        is necessary because the Car class needs the implementation of the Vehicle
-        class. This is unrelated to the Boost.Extension library, but just a standard
-        requirement when inheriting from shared library classes. The same will be
-        done with the other shared libraries.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">lib</span> <span class="identifier">Plane</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">plane</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Boat</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">boat</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Computer</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">computer</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">FlyingCar</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">flying_car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span>
-              <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">CarOfTheFuture</span> <span class="special">:</span> 
-  <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car_of_the_future</span><span class="special">.</span><span class="identifier">cpp</span> 
-  <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span> 
-  <span class="identifier">FlyingCar</span> <span class="identifier">Computer</span> <span class="identifier">Boat</span> 
-  <span class="special">:</span> 
-  <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> 
-<span class="special">;</span>
-
-<span class="identifier">install</span> <span class="special">../</span><span class="identifier">bin</span> <span class="special">:</span> 
-  <span class="identifier">HelloWorld</span> <span class="identifier">HelloWorldLib</span> <span class="identifier">Vehicle</span> <span class="identifier">Boat</span> <span class="identifier">FlyingCar</span> 
-  <span class="identifier">CarOfTheFuture</span> <span class="identifier">MultipleInheritance</span> 
-  <span class="special">:</span>
-  <span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        Refer to the examples/multiple_inheritance folder for the source code of
-        these classes. Only the most complex will be described here - the rest are
-        similar.
-      </p>
-<p>
-        On the Windows platform, there are special declarations that are required
-        when a dll must use a class that is defined in another dll. For interface
-        only classes this is unnecessary, and is not needed on other platforms. The
-        macros BOOST_EXTENSION_IMPORT_DECL and BOOST_EXTENSION_EXPORT_DECL can be
-        used to insert the proper declaration. This is detailed in the appendix.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_FLYING_CAR_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_BOAT_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_COMPUTER_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#include</span> <span class="string">"flying_car.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boat.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"computer.hpp"</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">typeinfo</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL</span> 
-  <span class="identifier">car_of_the_future</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">flying_car</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">boat</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">computer</span>
-<span class="special">{</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">animal</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nCreated a Car of the Future"</span><span class="special">;}</span>
-  <span class="special">~</span><span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nDestroyed a Car of the Future"</span><span class="special">;}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">list_capabilities</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
+  <span class="identifier">animal</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">age</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">age_</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span>
+  <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">animal</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+  <span class="special">}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="string">"A generic animal"</span><span class="special">;</span>
+  <span class="special">}</span>
+  <span class="keyword">int</span> <span class="identifier">get_age</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">age_</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="keyword">protected</span><span class="special">:</span>
+  <span class="keyword">int</span> <span class="identifier">age_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <p>
+      </p>
+<p>
+        The goal here is to create a main executable which creates and uses instances
+        of the <code class="computeroutput"><span class="identifier">animal</span></code> class. A shared
+        library will then be created which includes classes derived from the <code class="computeroutput"><span class="identifier">animal</span></code> class, which the main executable
+        will also be able to load and use as <code class="computeroutput"><span class="identifier">animal</span></code>s.
+      </p>
+<p>
+        The main executable will use a number of Extension and other Boost headers:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">map</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">factory</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">shared_library</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">type_map</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">scoped_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<p>
+        It will also use the <code class="computeroutput"><span class="identifier">animal</span></code>
+        header, which will also be used by the shared library:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"animal.hpp"</span>
+</pre>
+<p>
+      </p>
+<p>
+        The main function is similar to that from <a href="../../">Tutorial
+        1</a>.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">library_path</span> <span class="special">=</span> <span class="string">"libtutorial_2.extension"</span><span class="special">;</span>
+
+  <span class="comment">// Create shared_library object with the relative or absolute
+</span>  <span class="comment">// path to the shared library.
+</span>  <span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="identifier">library_path</span><span class="special">);</span>
+
+  <span class="comment">// Attempt to open the shared library.
+</span>  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">lib</span><span class="special">.</span><span class="identifier">open</span><span class="special">())</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Library failed to open: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">library_path</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Here though, instead of using the <code class="literal"><code class="computeroutput">shared_library::get</code></code>
+        function, we use the _shared_library<span class="underline">call</span>
+        function. It expects a function with the following signature:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">boost_extension_exported_type_map_function</span>
+  <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">type_map</span><span class="special">&amp;</span> <span class="identifier">types</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        A <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        is a generic container with items indexed by type - only one item of each
+        type can be contained in it. To retrieve (or add) an integer to it, do the
+        following:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">my_int</span><span class="special">(</span><span class="identifier">my_type_map</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+</pre>
+<p>
+      </p>
+<p>
+        For the rationale of the <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        class, see the discussion on <a href="../../">type safety</a>.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="comment">// Use the shared_library::call to automatically call an
+</span><span class="comment">// Extension-specific function in the shared library,
+</span><span class="comment">// which takes a type_map.
+</span><span class="identifier">type_map</span> <span class="identifier">types</span><span class="special">;</span>
+<span class="keyword">if</span> <span class="special">(!</span><span class="identifier">lib</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">types</span><span class="special">))</span> <span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Function not found!"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Now, a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> of factories, indexed by <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+        is retrieved from the <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        that was sent to the shared library.
+      </p>
+<p>
+        The <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/factory.html" title="Class template factory">factory</a></code></code>
+        is declared as <code class="computeroutput"><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">animal</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span></code> meaning
+        it returns pointers to instances of the <code class="computeroutput"><span class="identifier">animal</span></code>
+        class, and that it is used for constructors taking integer arguments.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="comment">// Retrieve a map of all animal factories taking an int and indexed
+</span><span class="comment">// by a string from the type_map.
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">animal</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;&amp;</span> <span class="identifier">factories</span><span class="special">(</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">factories</span><span class="special">.</span><span class="identifier">empty</span><span class="special">())</span> <span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Animals not found!"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Now, iterate through the factory, creating each available <code class="computeroutput"><span class="identifier">animal</span></code>.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">  <span class="comment">// Create each animal.
+</span>  <span class="keyword">int</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+  <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">animal</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">it</span>
+         <span class="special">=</span> <span class="identifier">factories</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+       <span class="identifier">it</span> <span class="special">!=</span> <span class="identifier">factories</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">it</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">++</span><span class="identifier">age</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Creating an animal using factory: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">first</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scoped_ptr</span><span class="special">&lt;</span><span class="identifier">animal</span><span class="special">&gt;</span> <span class="identifier">current_animal</span><span class="special">(</span><span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="identifier">age</span><span class="special">));</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Created an animal: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">current_animal</span><span class="special">-&gt;</span><span class="identifier">get_name</span><span class="special">()</span>
+              <span class="special">&lt;&lt;</span> <span class="string">" Age: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">current_animal</span><span class="special">-&gt;</span><span class="identifier">get_age</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Now, the shared library will define a number of animals. It will use the
+        following headers:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">map</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">extension</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">factory</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">type_map</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="string">"animal.hpp"</span>
+</pre>
+<p>
+      </p>
+<p>
+        The following animals will be exported:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">puma</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">animal</span> <span class="special">{</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">puma</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">age</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">animal</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="string">"puma"</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">leopard</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">animal</span> <span class="special">{</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">leopard</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">age</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">animal</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="string">"leopard"</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">wildcat</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">animal</span> <span class="special">{</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">wildcat</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">age</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">animal</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="string">"wildcat"</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">cougar</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">animal</span> <span class="special">{</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">cougar</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">age</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">animal</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="string">"cougar"</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        The <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_TYPE_MAP_FUNCTION</span></code>
+        declaration can be used in place of a function declaration to automatically
+        insert the function definition referred to above, that takes a <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>. See <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">extension</span><span class="special">/</span><span class="identifier">extension</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        for more details.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">BOOST_EXTENSION_TYPE_MAP_FUNCTION</span> <span class="special">{</span>
+  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">animal</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;&amp;</span>
+    <span class="identifier">animal_factories</span><span class="special">(</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+  <span class="identifier">animal_factories</span><span class="special">[</span><span class="string">"Puma factory"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">puma</span><span class="special">&gt;();</span>
+  <span class="identifier">animal_factories</span><span class="special">[</span><span class="string">"Leopard factory"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">leopard</span><span class="special">&gt;();</span>
+  <span class="identifier">animal_factories</span><span class="special">[</span><span class="string">"Wildcat factory"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">wildcat</span><span class="special">&gt;();</span>
+  <span class="identifier">animal_factories</span><span class="special">[</span><span class="string">"Cougar factory"</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">cougar</span><span class="special">&gt;();</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Now, compile the shared library and main executable. Then run the main executable
+        in the directory with the compiled library. If all is successful, a message
+        will be printed out for each animal.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

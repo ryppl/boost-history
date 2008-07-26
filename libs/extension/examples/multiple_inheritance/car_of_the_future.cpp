@@ -23,30 +23,30 @@ these types of macros are not necessary for classes
 #define BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL BOOST_EXTENSION_EXPORT_DECL
 
 #include "car_of_the_future.hpp"
-#include <boost/extension/factory_map.hpp>
+#include <boost/extension/type_map.hpp>
+#include <boost/extension/factory.hpp>
 #include <string>
 
-std::string car_of_the_future::list_capabilities()
-{
+std::string car_of_the_future::list_capabilities() {
   return boat::list_capabilities() + flying_car::list_capabilities() +
          computer::list_capabilities() + "\nCosts an arm and a leg";
 }
 
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export(boost::extensions::factory_map & z)
-{
-  z.get<vehicle, std::string>()
+using boost::extensions::factory;
+
+BOOST_EXTENSION_TYPE_MAP_FUNCTION {
+  types.get<std::map<std::string, factory<vehicle> > >()
     ["A car of the future exported as a vehicle"].set<car_of_the_future>();
-  z.get<car, std::string>()
+  types.get<std::map<std::string, factory<car> > >()
     ["A car of the future exported as a car"].set<car_of_the_future>();
-  z.get<plane, std::string>()
+  types.get<std::map<std::string, factory<plane> > >()
     ["A car of the future exported as a plane"].set<car_of_the_future>();
-  z.get<flying_car, std::string>()
+  types.get<std::map<std::string, factory<flying_car> > >()
     ["A car of the future exported as a flying car"].set<car_of_the_future>();
-  z.get<boat, std::string>()
+  types.get<std::map<std::string, factory<boat> > >()
     ["A car of the future exported as a boat"].set<car_of_the_future>();
-  z.get<computer, std::string>()
+  types.get<std::map<std::string, factory<computer> > >()
     ["A car of the future exported as a computer"].set<car_of_the_future>();
-  z.get<car_of_the_future, std::string>()
+  types.get<std::map<std::string, factory<car_of_the_future> > >()
     ["A car of the future exported as a car of the future"].set<car_of_the_future>();
 }

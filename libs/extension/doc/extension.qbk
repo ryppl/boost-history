@@ -17,11 +17,12 @@
         [@http://www.boost.org/LICENSE_1_0.txt http://www.boost.org/LICENSE_1_0.txt])
     ]
     [category Programming Interfaces]
-    [last-revision $Date: 2008/7/23 21:36:00 $]
+    [last-revision $Date: 2008/7/25 7:36:00 $]
 ]
 
 
 [def _shared_library_ [^[classref boost::extensions::shared_library shared_library]]]
+[def _shared_library_get_ [^[funcref boost::extensions::shared_library::get shared_library::get]]]
 [def _factory_map_    [^[classref boost::extensions::factory_map factory_map]]]
 [def _factory_        [^[classref boost::extensions::factory factory]]]
 [def _type_map_        [^[classref boost::extensions::type_map type_map]]]
@@ -61,11 +62,15 @@ Class references:
 
 Tutorials:
 
-* [link tutorial01 Tutorial 1: The shared_library class]
+* [link boost_extension.tutorials.tutorial01 Tutorial 1 - `shared_library` class]
+* [link boost_extension.tutorials.tutorial02 Tutorial 2 - `factory` class]
+* [link boost_extension.tutorials.tutorial03 Tutorial 3 - Multiple and Implementation Inheritance]
 
 Other Sections:
 
-* [link motivation Motivation]
+* [link boost_extension.motivation Motivation]
+* [link boost_extension.shared_libraries Shared Libraries]
+* [link boost_extension.extension_reflection Extension/Reflection Interoperability]
 
 The other sections in the documentation should be updated over the next few weeks, in
 preparation for review.

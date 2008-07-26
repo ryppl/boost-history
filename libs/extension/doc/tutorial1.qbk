@@ -6,7 +6,7 @@
 [/ See http://www.boost.org/ for latest version. ]
 
 
-[section:tutorial01 Tutorial 1 - Using the _shared_library_ class]
+[section:tutorial01 Tutorial 1 - Using the `shared_library` class]
 
 The _shared_library_ class facilitates loading shared libraries
 and calling functions from them.
