@@ -54,14 +54,14 @@ inline bool load_single_library(factory_map& current_factory_map,
 }
 
 inline bool load_single_library(type_map& current_type_map,
-                                const std::string& library_path,
-                                const std::string& external_function_name) {
+                                const std::string& library_path) {
     shared_library lib(library_path);
     if (!lib.open()) {
       return false;
     }
     void (*func)(type_map&) =
-      lib.shared_library::get<void, type_map&>(external_function_name);
+      lib.shared_library::get<void, type_map&>
+      ("boost_extension_exported_type_map_function");
     if (!func) {
       return false;
     }
