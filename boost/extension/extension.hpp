@@ -22,5 +22,10 @@
 #define BOOST_EXTENSION_EXPORT_DECL
 #else
 #include <boost/extension/impl/decl.hpp>
+#define BOOST_EXTENSION_TYPE_MAP_FUNCTION \
+extern "C" \
+void BOOST_EXTENSION_EXPORT_DECL \
+boost_extension_exported_type_map_function \
+  (boost::extensions::type_map& types)
 #endif  // BOOST_EXTENSION_EXPORT_DECL
 #endif  // BOOST_EXTENSION_EXTENSION_HPP

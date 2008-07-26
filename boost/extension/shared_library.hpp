@@ -23,6 +23,8 @@
 
 namespace boost {
 namespace extensions {
+template <class TypeInfo>
+class basic_type_map;
 
 /** \brief A wrapper around OS-specific shared library functions.
 
@@ -84,6 +86,30 @@ public:
     return impl::close_shared_library(handle_);
   }
 
+  /** \brief Call a special Extension function in the library.
+    *
+    * There is a special function called
+    * boost_extension_exported_type_map_function which is commonly
+    * used by shared libraries. The call function attempts to find
+    * and call that function, given a type_map.
+    *
+    * \return true on success.
+    * \param types A type_map that will be sent to the function.
+    * \pre is_open() == true
+    * \post None.
+    */
+  template <class TypeInfo>
+  bool call(basic_type_map<TypeInfo>& types) {
+    void (*func)(basic_type_map<TypeInfo>&);
+    func = get<void, basic_type_map<TypeInfo>&>
+      ("boost_extension_exported_type_map_function");
+    if (func) {
+      (*func)(types);
+      return true;
+    } else {
+      return false;
+    }
+  }
 // If Doxygen is being run, use more readable definitions for the
 // documentation.
 #ifdef BOOST_EXTENSION_DOXYGEN_INVOKED
