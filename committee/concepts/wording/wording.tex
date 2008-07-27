@@ -331,7 +331,9 @@ concept map.}
 
 \rSec2[basic.scope.req]{Requirements scope}
 \pnum
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}),
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}),
 the names of all associated functions inside the concepts named 
 by the concept requirements in the template's requirements
 are visible in the scope of the template
@@ -852,7 +854,12 @@ context. Outside of a constrained context, the late-checked block
   parameters do not behave as if they were replaced with their
   corresponding archetypes. Thus, template parameters imply the
   existence of dependent types, type-dependent expressions, and
-  dependent names as in an unconstrained template. \mbox{\exitnote}} 
+  dependent names as in an unconstrained template.  }
+\addedCC{
+Furthermore, names at requirements scope (\mbox{\ref{basic.scope.req}})
+are not visible.
+}
+\addedConcepts{ \mbox{\exitnote}} 
   
 \begin{bnf}
 late-check-block:\br
@@ -1208,7 +1215,9 @@ namespace N3 {
 
 \setcounter{Paras}{6}
 \pnum
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), 
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}),
   a type archetype \mbox{\techterm{cv} \tcode{T}} shall only
   be used as the type of a variable if the template has a concept
   requirement \mbox{\tcode{VariableType<T>}}.}
@@ -1216,7 +1225,9 @@ namespace N3 {
 \rSec2[dcl.ptr]{Pointers}
 \setcounter{Paras}{4}
 \pnum
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), 
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}),
   a type archetype \mbox{\techterm{cv} \tcode{T}} shall only
   be used to form a type ``pointer to \mbox{\techterm{cv} \tcode{T}}''
     if the template has a concept requirement 
@@ -1225,7 +1236,9 @@ namespace N3 {
 \rSec2[dcl.ref]{References}
 \setcounter{Paras}{5}
 \pnum
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}), a
   type archetype \mbox{\techterm{cv} \tcode{T}} shall only be
   used to form a type ``reference to \mbox{\techterm{cv} \tcode{T}}''
   if the 
@@ -1240,7 +1253,9 @@ a member with reference type,
 or
 ``\textit{cv}\
 \tcode{void}.''
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}), a
   pointer to member shall only point to a type archetype \mbox{\techterm{cv}
     \tcode{T}} if the template has a concept
   requirement \mbox{\tcode{MemberPointeeType<T>}}.}
@@ -1263,7 +1278,9 @@ from a pointer,
 from a pointer to member, from a class,
 from an enumeration type,
 or from another array.
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), an
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}), an
   array shall only be constructed from a type archetype \mbox{\techterm{cv}
     \tcode{T}} if the template has a concept
   requirement \mbox{\tcode{ObjectType<T>}}.}
@@ -1293,7 +1310,9 @@ Functions shall not have a return type of type array or function,
 although they may have a return type of type pointer or reference to such things.
 There shall be no arrays of functions, although there can be arrays of pointers
 to functions.
-\addedConcepts{In a constrained template (\mbox{\ref{temp.constrained}}), a
+\addedConcepts{In a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ (\mbox{\ref{temp.constrained}}), a
   type archetype \mbox{\techterm{cv}} \mbox{\tcode{T}} shall
   only be used as the return type of a function type if the template
   has a concept requirement \mbox{\tcode{Returnable<T>}}.}
@@ -5480,7 +5499,9 @@ the archetype of a template is a class template, and the archetype of
 a value is a value. }
 
 \pnum
-\addedConcepts{A type in a constrained template aliases an archetype if it is:}
+\addedConcepts{A type in a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ aliases an archetype if it is:}
 \begin{itemize}
 \item \addedConcepts{a template type parameter (\mbox{\ref{temp.param}}),}
 \item \addedConcepts{an associated type (\mbox{\ref{concept.assoc}}), or}
@@ -5489,14 +5510,18 @@ a value is a value. }
 \end{itemize}
 
 \pnum
-\addedConcepts{A template in a constrained template aliases an archetype if it is:}
+\addedConcepts{A template in a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ aliases an archetype if it is:}
 \begin{itemize}
 \additemConcepts{a template template parameter (\mbox{\ref{temp.param}}) or}
 \additemConcepts{an associated class template (\mbox{\ref{concept.assoc}}).}
 \end{itemize}
 
 \pnum
-\addedConcepts{A value in a constrained template aliases an archetype if it is a
+\addedConcepts{A value in a constrained }
+ \changedCCC{template}{context} 
+\addedConcepts{ aliases an archetype if it is a
   \mbox{\techterm{constant-expression}} (\mbox{\ref{expr.const}})
   whose value depends on a template parameter.} 
 
@@ -5872,8 +5897,11 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \rSec2[temp.constrained.set]{Candidate sets}
 \pnum
 \addedConcepts{A \mbox{\techterm{candidate set}} is a set containing
-  functions and function templates that is defined in a constrained
-  template (a \mbox{\techterm{retained}} \mbox{\techterm{candidate
+  functions and function templates that is defined in a constrained 
+}
+\changedCCC{template }{context}
+\addedConcepts{
+   (a \mbox{\techterm{retained}} \mbox{\techterm{candidate
       set}},~\mbox{\ref{temp.constrained.inst}}) or as the result of
   satisfying an associated function requirement in a concept map (an
   \mbox{\techterm{associated}} \mbox{\techterm{function}} \mbox{\techterm{candidate
