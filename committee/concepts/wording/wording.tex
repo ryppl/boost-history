@@ -62,7 +62,7 @@ James Widman, Gimpel Software \\
 Jeremy Siek, University of Colorado at Boulder
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number:  DRAFT\vspace{-6pt}
+\par\noindent Document number:  D2710=08-0220\vspace{-6pt}
 \par\noindent Revises document number: N2676=08-0186 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Core Working Group\vspace{-6pt}
@@ -104,6 +104,12 @@ standard library are discussed in separate documents:
 \end{itemize}
 
 \section*{Changes from N2676}
+\begin{itemize}
+\item Deprecate the \tcode{late_check} feature, which is meant only as
+  an evolutionary tool.
+\item Clarify where concept semantics occur only within a constrained
+  context, rather than within a complete constrained template.
+\end{itemize}
 
 \section*{Typographical conventions}
 Within the proposed wording, text that has been added
@@ -888,12 +894,12 @@ T add(T x, T y) {
 }
 \end{codeblock}
 \exitexample\
-\addedCC{
-\mbox{\enternote}
-this demonstrates the kind of template whose instantiations may
-    suffer from the dreaded ``dropped concept maps'' pitfall.
-\mbox{\exitnote} 
-}
+% \addedCC{
+% \mbox{\enternote}
+% this demonstrates the kind of template whose instantiations may
+%     suffer from the dreaded ``dropped concept maps'' pitfall.
+% \mbox{\exitnote} 
+% }
 
 
 \pnum
@@ -4934,22 +4940,12 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
 \end{itemize}
 
 \pnum
-\addedConcepts{If a type or expression within the signature of a constrained
+\removedCCC{If a type or expression within the signature of a constrained
 template, the \mbox{\techterm{template-parameter-list}} of a
 constrained template, or the \mbox{\techterm{requires-clause}} of a
 constrained template (if any) would be ill-formed if the associated
 context were a constrained context, the program is
-ill-formed. \mbox{\enterexample}}
-\begin{codeblock}
-concept C<typename T> {
-  typename type;
-}
-
-template<typename T> requires C<T>
-typename C<T>::type::inner_type f(T const&); // error: typename C<T>::type::inner_type would be ill-formed 
-                                             // in a constrained context
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
+ill-formed. \mbox{\enterexample} [removed example] \mbox{\exitexample}}
 
 \pnum
 \addedConcepts{Within a constrained context, a program shall not refer to an
