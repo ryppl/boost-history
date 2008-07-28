@@ -54,6 +54,7 @@ struct my_2d_point: boost::tuple < float, float >
 };
 
 
+// point traits as in the geometry library proposal
 namespace geometry
 {
   template <> 
@@ -74,7 +75,7 @@ namespace geometry
   };
 }                               // namespace geometry
 
-
+// point operator<<
 template < typename CH, typename TR >
 inline std::basic_ostream < CH,TR > &
 operator<<(std::basic_ostream < CH, TR > &os, const my_2d_point & p)
@@ -90,6 +91,7 @@ int test_main(int, char *[])
   std::vector < std::string > data;
   std::vector < my_2d_point > points;
 
+  // insert data
   data.push_back("test0");
   data.push_back("test1");
   data.push_back("test2");
@@ -109,6 +111,7 @@ int test_main(int, char *[])
 
   typedef std::vector < std::string >::iterator value_type;
 
+  // create index
   boost::spatial_index::spatial_index < my_2d_point, value_type,
     boost::spatial_index::quadtree < my_2d_point, value_type > >q(b, 1);
 
@@ -120,6 +123,7 @@ int test_main(int, char *[])
 
   std::vector < std::string >::iterator it = data.begin();
 
+  // insert data
   std::cerr << " --> insert" << std::endl;
   q.insert(my_2d_point(1.0, 1.0), it++);
   std::cerr << " --> insert" << std::endl;
@@ -136,6 +140,7 @@ int test_main(int, char *[])
 
   std::vector < std::string >::iterator it1;
 
+  // find data
   std::cerr << " --> find" << std::endl;
   it1 = q.find(my_2d_point(9.0, 9.0));
   BOOST_CHECK_EQUAL(*it1, "test4");

@@ -24,6 +24,7 @@ int test_main(int, char* [])
   std::vector<std::string> data;
   std::vector< geometry::point_xy<double> > points;
 
+  // insert data
   data.push_back("test0");
   data.push_back("test1");
   data.push_back("test2");
@@ -70,6 +71,7 @@ int test_main(int, char* [])
   q.insert(geometry::point_xy<double>(9.0,8.0), it++);
 
 
+  // search data
   std::vector<std::string>::iterator it1;
 
   std::cerr << " --> find" << std::endl;
