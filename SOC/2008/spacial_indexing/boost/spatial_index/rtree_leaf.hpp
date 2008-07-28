@@ -24,20 +24,33 @@ namespace boost
       class rtree_leaf:public rtree_node < Point, Value >
     {
     public:
+      /// container type for the leaves
       typedef std::vector < std::pair < geometry::box < Point >,
         Value > >leaves_map;
 
     public:
+      /**
+       * \brief Creates an empty leaf
+       */
       rtree_leaf(void)
       {
       }
-      
+
+
+      /**
+       * \brief Creates a new leaf, with 'parent' as parent
+       */
       rtree_leaf(const boost::shared_ptr < rtree_node < Point, Value > >&parent)
         : rtree_node < Point, Value > (parent, 0)
       {
       }
 
-      /// query method
+
+      /**
+       * \brief Search for elements in 'e' in the Rtree. Add them to r.
+       *        If exact_match is true only return the elements having as
+       *        key the box 'e'. Otherwise return everything inside 'e'.
+       */
       virtual void find(const geometry::box < Point > &e,
                         std::deque < Value > &r, const bool exact_match)
       {
@@ -55,7 +68,10 @@ namespace boost
         }
       }
 
-      /// compute bounding box for this leaf
+
+      /**
+       * \brief Compute bounding box for this leaf
+       */
       virtual geometry::box < Point > compute_box(void) const
       {
         if (nodes_.empty())
@@ -72,29 +88,47 @@ namespace boost
         return r;
       }
 
-      /// yes, we are a leaf
+
+      /**
+       * \brief True if we are a leaf
+       */
       virtual bool is_leaf(void) const
       {
         return true;
       }
 
-      /// element count
+
+      /**
+       * \brief Number of elements in the tree
+       */
       virtual unsigned int elements(void) const
       {
         return nodes_.size();
       }
 
+
+      /**
+       * \brief Insert a new element, with key 'e' and value 'v'
+       */
       virtual void insert(const geometry::box < Point > &e, const Value & v)
       {
         nodes_.push_back(std::make_pair(e, v));
       }
 
-      virtual std::vector < std::pair < geometry::box < Point >,
-        Value > >get_leaves(void) const
+
+      /**
+       * \brief Proyect leaves of this node.
+       */
+      virtual std::vector < std::pair < geometry::box < Point >, Value > >
+      get_leaves(void) const
       {
         return nodes_;
       }
 
+
+      /**
+       * \brief Add a new child (node) to this node
+       */
       virtual void add_node(const geometry::box < Point > &b,
                             const boost::shared_ptr < rtree_node < Point,
                             Value > >&n)
@@ -102,24 +136,37 @@ namespace boost
         throw std::logic_error("Can't add node to leaf node.");
       }
 
+
+      /**
+       * \brief Add a new leaf to this node
+       */
       virtual void add_value(const geometry::box < Point > &b, const Value & v)
       {
         nodes_.push_back(std::make_pair(b, v));
       }
 
+
+      /**
+       * \brief Proyect value in position 'i' in the nodes container
+       */
       virtual Value get_value(const unsigned int i) const
       {
         return nodes_[i].second;
       }
 
-      /// box projector for leaf
+
+      /**
+       * \brief Box projector for leaf
+       */
       virtual geometry::box < Point > get_box(const unsigned int i) const
       {
         return nodes_[i].first;
       }
 
 
-      /// remove value with key 'k' in this leaf
+      /**
+       * \brief Remove value with key 'k' in this leaf
+       */
       virtual void remove(const geometry::box < Point > &k)
       {
 
@@ -134,6 +181,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Proyect boxes from this node
+       */
       virtual std::vector < geometry::box < Point > >get_boxes(void) const
       {
         std::vector < geometry::box < Point > >r;
@@ -144,6 +194,10 @@ namespace boost
         return r;
       }
 
+
+      /**
+       * \brief Print leaf (mainly for debug)
+       */
       virtual void print(void) const
       {
         std::cerr << "\t" << " --> Leaf --------" << std::endl;
@@ -167,6 +221,7 @@ namespace boost
       }
 
     private:
+      /// leaves of this node
       leaves_map nodes_;
     };
 

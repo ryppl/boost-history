@@ -19,7 +19,9 @@ namespace boost
   {
 
 
-    /// given two boxes, create the minimal box that contains them
+    /**
+     * \brief Given two boxes, returns the minimal box that contains them
+     */
     template < typename Point >
       geometry::box < Point > enlarge_box(const geometry::box < Point > &b1,
                                           const geometry::box < Point > &b2)
@@ -41,7 +43,10 @@ namespace boost
         return geometry::box < Point > (min, max);
     }
 
-    /// compute the area of the union of b1 and b2
+
+    /**
+     * \brief Compute the area of the union of b1 and b2
+     */
     template < typename Point >
       double compute_union_area(const geometry::box < Point > &b1,
                                 const geometry::box < Point > &b2)
@@ -51,6 +56,9 @@ namespace boost
     }
 
 
+    /**
+     * \brief Checks if boxes overlap
+     */
     template < typename Point >
       bool overlaps(const geometry::box < Point > &b1,
                     const geometry::box < Point > &b2)

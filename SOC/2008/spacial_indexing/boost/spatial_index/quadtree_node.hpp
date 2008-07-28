@@ -28,6 +28,10 @@ namespace boost
     template < typename Point, typename Value > class quadtree_node
     {
     public:
+      /**
+       * \brief Creates a quadtree node, with 'r' as the bounding box
+       *        and 'node_size' as the maximum number of nodes.
+       */
       quadtree_node(const geometry::box < Point > &r,
                       const unsigned int node_size)
                     : bounding_rectangle_(r), node_size_(node_size)
@@ -35,6 +39,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Retuns true if the leaf is empty (no elements and no children)
+       */
       bool empty_leaf(void) const
       {
         return (m_.size() == 0) &&
@@ -44,6 +51,11 @@ namespace boost
           (sw_ == boost::shared_ptr < quadtree_node > ());
       }
 
+
+      /**
+       * \brief Inserts a new element in this node (if suitable) or in 
+       *        one of the children.
+       */
       void insert(const Point & k, const Value & v)
       {
         if (m_.size() < node_size_) {
@@ -92,7 +104,9 @@ namespace boost
         }
       }
 
-
+      /**
+       * \brief Search for element inside 'r' in this node and its children.
+       */
       void find(std::deque < Value > &result, const geometry::box < Point > &r)
       {
         if (m_.size() != 0) {
@@ -137,6 +151,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Searchs for 'k' in this node or its children.
+       */
       Value find(const Point & k)
       {
         typename std::map < Point, Value >::const_iterator it = m_.find(k);
@@ -147,6 +164,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Recursive step of the search algorithm
+       */
       Value recursive_search(const Point & k)
       {
         // IMP: maybe this could be done only one time at node creation
@@ -188,6 +208,10 @@ namespace boost
       }
 
 
+      /**
+       * \brief Remove element with key 'k' from this ode or one of its
+       *        children.
+       */
       void remove(const Point & k)
       {
         typename std::map < Point, Value >::iterator it = m_.find(k);
@@ -198,7 +222,9 @@ namespace boost
         recursive_remove(k);
       }
 
-
+      /**
+       * \brief Recursive step of the remove algorithm
+       */
       void recursive_remove(const Point & k)
       {
         // IMP: maybe this could be done only one time at node creation
@@ -254,6 +280,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Print Quadtree (mainly for debug)
+       */
       void print(void) const
       {
         std::cerr << "--------------------------------------" << std::endl;

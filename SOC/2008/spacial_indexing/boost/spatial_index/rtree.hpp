@@ -27,6 +27,10 @@ namespace boost
     template < typename Point, typename Value > class rtree
     {
     public:
+      /**
+       * \brief Creates a rtree with M maximum elements per node
+       *        and m minimum.
+       */
       rtree(const unsigned int &M, const unsigned int &m)
       : element_count_(0), m_(m), M_(M),
         root_(new rtree_node < Point,
@@ -34,6 +38,11 @@ namespace boost
       {
       }
 
+
+      /**
+       * \brief Creates a rtree with M maximum elements per node
+       *        and m minimum (b is ignored).
+       */
       rtree(const geometry::box < Point > &b, const unsigned int &M,
             const unsigned int &m)
       : element_count_(0), m_(m), M_(M), root_(
@@ -44,7 +53,9 @@ namespace boost
       }
 
 
-      /// remove the element with key 'k'
+      /**
+       * \brief Remove the element with key 'k'
+       */
       void remove(const Point & k)
       {
         /// it's the same than removing a box of only one point
@@ -52,7 +63,9 @@ namespace boost
       }
 
 
-      /// remove elements inside the box 'k'
+      /**
+       * \brief Remove elements inside the box 'k'
+       */
       void remove(const geometry::box < Point > &k)
       {
         try {
@@ -119,12 +132,18 @@ namespace boost
       }
 
 
+      /**
+       * \brief Returns the number of elements.
+       */
       unsigned int elements(void) const
       {
         return element_count_;
       }
 
 
+      /**
+       * \brief Print Rtree (mainly for debug)
+       */
       void print(void)
       {
         std::cerr << "===================================" << std::endl;
@@ -134,13 +153,20 @@ namespace boost
         std::cerr << "===================================" << std::endl;
       }
 
+
+      /**
+       * \brief Inserts a new element with key 'k' and value 'v'
+       */
       void insert(const Point & k, const Value & v)
       {
-        // it's the same than inserting a box of only one point
+        // it's the same that inserting a box of only one point
         this->insert(geometry::box < Point > (k, k), v);
       }
 
 
+      /**
+       * \brief Inserts a new element with key 'e' and value 'v'
+       */
       void insert(const geometry::box < Point > &e, const Value & v)
       {
         element_count_++;
@@ -167,6 +193,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Insert all the elements in 'values' and 'points'
+       */
       void bulk_insert(std::vector < Value > &values,
                        std::vector < Point > &points)
       {
@@ -193,6 +222,10 @@ namespace boost
         }
       }
 
+      /**
+       * \brief Search for 'k' in the Rtree. If 'k' is found
+       *        it returns its value, otherwise it returns Value()
+       */
       Value find(const Point & k)
       {
         std::deque < Value > result;
@@ -206,13 +239,14 @@ namespace boost
       }
 
 
+      /**
+       * \brief Returns all the values inside 'r'
+       */
       std::deque < Value > find(const geometry::box < Point > &r) {
         std::deque < Value > result;
         root_->find(r, result, false);
         return result;
       }
-
-
 
     private:
       /// number of elements
@@ -230,6 +264,10 @@ namespace boost
 
     private:
 
+      /**
+       * \brief Reorganize the tree after a removal. It tries to
+       *        join nodes with less elements than m.
+       */
       void condense_tree(const boost::shared_ptr < rtree_node < Point,
                          Value > >&l, typename rtree_node < Point,
                          Value >::node_map & q_nodes)
@@ -266,6 +304,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief After an insertion splits nodes with more than M elements.
+       */
       void adjust_tree(boost::shared_ptr < rtree_node < Point, Value > >&n)
       {
         if (n.get() == root_.get()) {
@@ -279,6 +320,10 @@ namespace boost
         adjust_tree(parent);
       }
 
+      /**
+       * \brief After an insertion splits nodes with more than M elements
+       *        (recursive step with subtrees 'n1' and 'n2' to be joined).
+       */
       void adjust_tree(boost::shared_ptr < rtree_node < Point, Value > >&l,
                        boost::shared_ptr < rtree_node < Point, Value > >&n1,
                        boost::shared_ptr < rtree_node < Point, Value > >&n2)
@@ -325,10 +370,13 @@ namespace boost
       }
 
 
+      /**
+       * \brief Splits 'n' in 'n1' and 'n2'
+       */
       void split_node(const boost::shared_ptr < rtree_node < Point, Value > >&n,
                       boost::shared_ptr < rtree_node < Point, Value > >&n1,
-                      boost::shared_ptr < rtree_node < Point,
-                      Value > >&n2) const
+                      boost::shared_ptr < rtree_node < Point, Value > >&n2) 
+                      const
       {
         unsigned int seed1, seed2;
           std::vector < geometry::box < Point > >boxes = n->get_boxes();
@@ -475,6 +523,9 @@ namespace boost
       }
 
 
+      /**
+       * \brief Choose initial values for the split algorithm (linear version)
+       */
       void linear_pick_seeds(const boost::shared_ptr < rtree_node < Point,
                              Value > >&n, unsigned int &seed1,
                              unsigned int &seed2) const
@@ -507,6 +558,10 @@ namespace boost
       }
 
 
+      /**
+       * \brief Find distances between possible initial values for the
+       *        pick_seeds algorithm.
+       */
       template < unsigned int Dimension >
         void find_normalized_separations(const std::vector < geometry::box <
                                          Point > >&boxes, double &separation,
@@ -582,8 +637,11 @@ namespace boost
       }
 
 
-      boost::shared_ptr < rtree_node < Point,
-        Value > >choose_corresponding_leaf(const geometry::box < Point > e)
+      /**
+       * \brief Choose one of the possible leaves to make an insertion
+       */
+      boost::shared_ptr < rtree_node < Point, Value > >
+      choose_corresponding_leaf(const geometry::box < Point > e)
       {
         boost::shared_ptr < rtree_node < Point, Value > >N = root_;
 
@@ -603,7 +661,9 @@ namespace boost
         return N;
       }
 
-
+      /**
+       * \brief Choose the exact leaf where an insertion should be done
+       */
       boost::shared_ptr < rtree_node < Point,
         Value > >choose_exact_leaf(const geometry::box < Point > &e) const
       {
