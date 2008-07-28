@@ -62,7 +62,7 @@ James Widman, Gimpel Software \\
 Jeremy Siek, University of Colorado at Boulder
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number:  D2710=08-0220\vspace{-6pt}
+\par\noindent Document number:  N2710=08-0220\vspace{-6pt}
 \par\noindent Revises document number: N2676=08-0186 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Core Working Group\vspace{-6pt}
@@ -927,28 +927,22 @@ The use of \mbox{\tcode{late\_check}} is deprecated.
 
 \pnum
 \addedCC{
-\mbox{\enternote}
-a late-checked block should generally be used only when certain suitably
+\mbox{\enterrationale}
+a late-checked block should be used only when certain suitably
 constrained versions of templates are not yet available for use from
 within the body of a constrained template definition and the only viable
 alternative is the use of an unconstrained template.
-\mbox{\tcode{late\_check}} is regarded as an evolutionary tool only,
-and it was added to the language only after several debates and careful
-deliberation.
-In the end,
-    it was decided that migrating a template library toward the use of
-    concepts would be prohibitively difficult in too many cases without
-    the ability to use an unconstrained template from within a constrained
-    template.
-So there are times when \mbox{\tcode{late\_check}} is a ``necessary
-evil''.
-But it is still
-``evil'' (because it can lead to dangers associated with ``dropped concept
-maps'' as in the \mbox{\tcode{Semigroup}} example above---not to mention
-the general loss of type-checking).
-Therefore users are encouraged to remove a use of
-\mbox{\tcode{late\_check}} when it is reasonable to do so.
-\mbox{\exitnote} 
+\mbox{\tcode{late\_check}} is regarded as an evolutionary tool,
+to mitigate the cost of migrating a template library to use concepts
+when the library is based on unconstrained templates that cannot be
+constrained at that time. The use of \mbox{\tcode{late\_check}}
+involves a loss of type-checking and can circumvent the syntax
+adaptation capabilities provided by concept maps, leading to
+instantiations that will silently invoke different operations than
+expected, as in the use of \mbox{\tcode{+}} in the 
+\mbox{\tcode{add}} example above. For these reasons, the use of
+\mbox{\tcode{late\_check}} should be avoided whenever possible.
+\mbox{\exitrationale}
 }
 
 \color{black}
@@ -5578,7 +5572,7 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   template, or nested class cannot prevent the expression of
   additional requirements on template parameters from enclosing
   scopes. \mbox{\exitnote} \mbox{\enterexample} Given:}
-\color{ccadd}
+\color{addclr}
 \begin{codeblock}
 concept C1<typename T> { }
 concept C2<typename T> { }
