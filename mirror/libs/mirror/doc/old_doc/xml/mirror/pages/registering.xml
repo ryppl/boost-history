@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../../xslt/html.xsl"?>
-<doc_page title="Registering" name="registering">
-	<paragraph>
-		In order to be able to reflect various C++ constructs, <lib_name_ref/> needs (most of) them to be registered beforehand. The registering is done by the means of several preprocessor macros like <feat_ref>REG_NAMESPACE</feat_ref>, <feat_ref>REG_NAMESPACE_TOP_LEVEL</feat_ref>, <feat_ref>REG_TYPE</feat_ref>, etc. 
-	</paragraph>
-	<include reference_section="reg_namespaces"/>
-	<include reference_section="reg_types"/>
-</doc_page>

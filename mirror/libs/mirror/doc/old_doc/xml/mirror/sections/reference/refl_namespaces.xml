@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<section title="Reflecting namespaces" name="refl_namespaces">
-	<paragraph>
-		Namespaces are reflected with the <feat_ref>REFLECT_NAMESPACE</feat_ref> macro. 
-	</paragraph>
-	<include reference="REFLECT_NAMESPACE"/>
-</section>

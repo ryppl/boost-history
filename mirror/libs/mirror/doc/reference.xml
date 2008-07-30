@@ -6,10 +6,96 @@
 
 	<para>
 	</para>
-	<section>
+	<section id="mirror.reference.registering">
+		<title>Registering</title>
+		<para>Constructs like namespaces, types, typedefs, classes, class member attributes, base classes, etc. 
+			need to be registered before they can be reflected or otherwise used. To simplify the registration 
+			process and to make it more convenient, the <libraryname>Mirror</libraryname> library provides several 
+			preprocessor macros described in greater detail in the references pages accessible through the links provided below. 
+		</para>
+		<para>Preprocessor macros are frowned upon and not without reasons, but they are helpful in many situations non the less
+		and with little caution don't cause any problems. One of the reasons for using macros for registering various things in 
+		<libraryname>Mirror</libraryname> is, that they hide rather complex definitions of specializations of various templates 
+		and other details and are much more readable and understandable. 
+		Another reason for using macros is, that mirror needs to "remember" the name of the namespace, type, class, etc.
+		and this is where the preprocessor's stringization operator is extremly useful as it removes the necessity to explicitly 
+		pass the name in a c-string literal.
+		</para>
+		<para>The registering macros are listed in the following table together with brief notes and links to reference pages for 
+		the individual macros.
+		As a general rule of the thumb these macros should be used in the <code>boost::mirror</code> namespace.
+		</para>
+		<table frame="all"><title>Registering macros</title>
+		<tgroup cols="3">
+		<thead>
+			<row> <entry>Macro</entry> <entry>Usage</entry> <entry>Notes</entry> </row>
+		</thead>
+		<tbody>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_NAMESPACE</macroname></code></entry> 
+				<entry>Registers a namespace</entry> 
+				<entry></entry> 
+			</row>
+		</tbody>
+		</tgroup>
+		</table>
+	</section>
+	<section id="mirror.reference.reflecting">
+		<title>Reflecting</title>
+		<para>
+		</para>
+		<para>The reflecting macros are listed in the following table together with brief notes and links to reference pages for 
+		the individual macros.
+		</para>
+		<table frame="all"><title>Reflection macros</title>
+		<tgroup cols="3">
+		<thead>
+			<row> <entry>Macro</entry> <entry>Usage</entry> <entry>Notes</entry> </row>
+		</thead>
+		<tbody>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_NAMESPACE</macroname></code></entry> 
+				<entry>Reflects a namespace</entry> 
+				<entry>Expands into a <code><classname>meta_namespace</classname></code> specialization providing meta-data about the reflected namespace.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname></code></entry> 
+				<entry>Reflects the global scope</entry> 
+				<entry>Expands into a <code><classname>meta_namespace</classname></code> specialization providing meta-data about the global scope.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_TYPE</macroname></code></entry> 
+				<entry>Reflects a type</entry> 
+				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a type.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_TYPE_NS</macroname></code></entry> 
+				<entry>Reflects a type</entry> 
+				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a (nested) type. This version of the <code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro takes the scope of the type and the base type name as two separate arguments.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code></entry> 
+				<entry>Reflects a <code>typedef</code>ined type</entry> 
+				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a (nested) typedef.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_TYPEOF</macroname></code></entry> 
+				<entry>Reflects the type of an expression</entry> 
+				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about the type of the expression given as an argument.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_CLASS</macroname></code></entry> 
+				<entry>Reflects a class</entry> 
+				<entry>Expands into a <code><classname>meta_class</classname></code> specialization providing meta-data about a class.</entry> 
+			</row>
+		</tbody>
+		</tgroup>
+		</table>
+	</section>
+	<section id="mirror.reference.meta_objects">
 		<title>Meta Objects</title>
 	</section>
-	<section>
+	<section id="mirror.reference.traits">
 		<title>Traits</title>
 	</section>
 	<section>

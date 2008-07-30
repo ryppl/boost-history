@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<section title="Reflecting types" name="refl_types">
-	<paragraph>
-		There are several macros that can be used to reflect types. To reflect a concrete type the <feat_ref>REFLECT_TYPE</feat_ref> macro can be used. To reflect the type of an expression, the <feat_ref>REFLECT_TYPEOF</feat_ref> macro or a combination of <feat_ref>REFLECT_TYPE</feat_ref> and <cpp_expr>BOOST_TYPEOF</cpp_expr> can be used.
-	</paragraph>
-	<include reference="REFLECT_TYPE"/>
-	<include reference="REFLECT_TYPEOF"/>
-	<include reference="REFLECT_TYPEDEFD"/>
-</section>
