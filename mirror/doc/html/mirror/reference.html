@@ -26,19 +26,125 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="mirror.reference"></a>Mirror Reference</h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="reference.html#id2585480">Meta Objects</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2585487">Traits</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2585494">Header files</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.registering">Registering</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.reflecting">Reflecting</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.meta_objects">Meta Objects</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.traits">Traits</a></span></dt>
+<dt><span class="section"><a href="reference.html#id2632560">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="id2585480"></a>Meta Objects</h3></div></div></div></div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="id2585487"></a>Traits</h3></div></div></div></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2585494"></a>Header files</h3></div></div></div>
+<a name="mirror.reference.registering"></a>Registering</h3></div></div></div>
+<p>Constructs like namespaces, types, typedefs, classes, class member attributes, base classes, etc. 
+			need to be registered before they can be reflected or otherwise used. To simplify the registration 
+			process and to make it more convenient, the <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> library provides several 
+			preprocessor macros described in greater detail in the references pages accessible through the links provided below. 
+		</p>
+<p>Preprocessor macros are frowned upon and not without reasons, but they are helpful in many situations non the less
+		and with little caution don't cause any problems. One of the reasons for using macros for registering various things in 
+		<a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> is, that they hide rather complex definitions of specializations of various templates 
+		and other details and are much more readable and understandable. 
+		Another reason for using macros is, that mirror needs to "remember" the name of the namespace, type, class, etc.
+		and this is where the preprocessor's stringization operator is extremly useful as it removes the necessity to explicitly 
+		pass the name in a c-string literal.
+		</p>
+<p>The registering macros are listed in the following table together with brief notes and links to reference pages for 
+		the individual macros.
+		As a general rule of the thumb these macros should be used in the <code class="computeroutput">boost::mirror</code> namespace.
+		</p>
+<div class="table">
+<a name="id2585542"></a><p class="title"><b>Table 1.1. Registering macros</b></p>
+<div class="table-contents"><table class="table" summary="Registering macros">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Macro</th>
+<th>Usage</th>
+<th>Notes</th>
+</tr></thead>
+<tbody><tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a></code></td>
+<td>Registers a namespace</td>
+<td> </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.reflecting"></a>Reflecting</h3></div></div></div>
+<p>
+		</p>
+<p>The reflecting macros are listed in the following table together with brief notes and links to reference pages for 
+		the individual macros.
+		</p>
+<div class="table">
+<a name="id2585620"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
+<div class="table-contents"><table class="table" summary="Reflection macros">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Macro</th>
+<th>Usage</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code></td>
+<td>Reflects a namespace</td>
+<td>Expands into a <code class="computeroutput">meta_namespace</code> specialization providing meta-data about the reflected namespace.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a></code></td>
+<td>Reflects the global scope</td>
+<td>Expands into a <code class="computeroutput">meta_namespace</code> specialization providing meta-data about the global scope.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code></td>
+<td>Reflects a type</td>
+<td>Expands into a <code class="computeroutput">meta_type</code> specialization providing meta-data about a type.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE_NS.html" title="Macro BOOST_MIRRORED_TYPE_NS">BOOST_MIRRORED_TYPE_NS</a></code></td>
+<td>Reflects a type</td>
+<td>Expands into a <code class="computeroutput">meta_type</code> specialization providing meta-data about a (nested) type. This version of the <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code> macro takes the scope of the type and the base type name as two separate arguments.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEDEF.html" title="Macro BOOST_MIRRORED_TYPEDEF">BOOST_MIRRORED_TYPEDEF</a></code></td>
+<td>Reflects a <code class="computeroutput">typedef</code>ined type</td>
+<td>Expands into a <code class="computeroutput">meta_type</code> specialization providing meta-data about a (nested) typedef.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code></td>
+<td>Reflects the type of an expression</td>
+<td>Expands into a <code class="computeroutput">meta_type</code> specialization providing meta-data about the type of the expression given as an argument.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a></code></td>
+<td>Reflects a class</td>
+<td>Expands into a <code class="computeroutput">meta_class</code> specialization providing meta-data about a class.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.meta_objects"></a>Meta Objects</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.traits"></a>Traits</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id2632560"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
