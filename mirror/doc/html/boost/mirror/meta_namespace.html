@@ -45,17 +45,17 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> NamespacePlaceholder&gt; 
 <span class="bold"><strong>class</strong></span> <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a> {
 <span class="bold"><strong>public</strong></span>:
-  <span class="emphasis"><em>// <a class="link" href="meta_namespace.html#id2496363-bbtypes">types</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="meta_namespace.html#id2290519-bbtypes">types</a></em></span>
   <span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a>&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_namespace.html#boost.mirror.meta_namespace.scope">scope</a>;
   <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_namespace.html#boost.mirror.meta_namespace.ancestors">ancestors</a>;
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_namespace.html#id2501063-bb">base_name</a>();
-  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_namespace.html#id2528611-bb">full_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_namespace.html#id2559608-bb">base_name</a>();
+  <span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a class="link" href="meta_namespace.html#id2518414-bb">full_name</a>();
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
     <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-    <a class="link" href="meta_namespace.html#id2553347-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
+    <a class="link" href="meta_namespace.html#id2391689-bb">get_name</a>(::boost::mpl::bool_&lt;FullName&gt;, ::std::char_traits&lt;CharT&gt;);
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2632897"></a><h2>Description</h2>
+<a name="id2632906"></a><h2>Description</h2>
 <p>The specializations of <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code> can 
 		be used to get meta-information about the reflected types, some at compile-time and some at run-time.
 		The following examples show type reflection and basic 
@@ -81,7 +81,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2547534">bcout</a>();
+	cts::bostream&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2519748">bcout</a>();
 
 	// several namespaces are pre-registered
 	bcout &lt;&lt; <a class="link" href="../../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a>() ::base_name() &lt;&lt; endl;
@@ -121,7 +121,7 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2547534">bcout</a>();
+		cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2519748">bcout</a>();
 		bcout &lt;&lt; 
 			<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("ancestor ") &lt;&lt;
 			ctr++ &lt;&lt;
@@ -141,7 +141,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2547534">bcout</a>();
+	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2519748">bcout</a>();
 	//
 	typedef <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror) meta_boost_mirror;
 	//
@@ -165,9 +165,9 @@ int main(void)
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
 <a name="mirror.meta_namespace.reference.sample03"></a>Example - Generic namespace name getter</h6></div></div></div>
-<p>The <code class="computeroutput"><a class="link" href="meta_namespace.html#id2501063-bb">base_name</a></code> and the 
-			<code class="computeroutput"><a class="link" href="meta_namespace.html#id2528611-bb">full_name</a></code> methods
-			are convenient but not very generic. The <code class="computeroutput"><a class="link" href="meta_namespace.html#id2553347-bb">get_name</a></code> 
+<p>The <code class="computeroutput"><a class="link" href="meta_namespace.html#id2559608-bb">base_name</a></code> and the 
+			<code class="computeroutput"><a class="link" href="meta_namespace.html#id2518414-bb">full_name</a></code> methods
+			are convenient but not very generic. The <code class="computeroutput"><a class="link" href="meta_namespace.html#id2391689-bb">get_name</a></code> 
 			member function allows to specify the character type of the returned string and 
 			to specify whether a full or just the base namespace name should be returned, based
 			on compile time arguments.
@@ -213,8 +213,8 @@ int main(void)
 </div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id2633396"></a><h3>
-<a name="id2496363-bbtypes"></a><code class="computeroutput">meta_namespace</code> public types</h3>
+<a name="id2633405"></a><h3>
+<a name="id2290519-bbtypes"></a><code class="computeroutput">meta_namespace</code> public types</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <p>
@@ -288,7 +288,7 @@ BOOST_MPL_ASSERT((
 </li>
 </ol></div>
 </div>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2501063-bb"></a>base_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2559608-bb"></a>base_name();</pre>
 <p>This static member function returns the base name of the 
 			namespace reflected by a <code class="computeroutput"><a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>.
 			For example the base namespace name "returned" by the invocation of 
@@ -298,9 +298,9 @@ BOOST_MPL_ASSERT((
 <p>
 			is <code class="computeroutput">"mirror"</code>. When a full namespace name 
 			<span class="bold"><strong>with</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput"><a class="link" href="meta_namespace.html#id2528611-bb">full_name</a></code> member function
+			is needed use the <code class="computeroutput"><a class="link" href="meta_namespace.html#id2518414-bb">full_name</a></code> member function
 			instead.</p>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2528611-bb"></a>full_name();</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> cts::<a class="link" href="../cts/bstring.html" title="Type definition bstring">bstring</a>&amp;</span> <a name="id2518414-bb"></a>full_name();</pre>
 <p>This static member function returns the full name of the 
 			namespace reflected by a <code class="computeroutput"><a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>
 			with the nested name specifier. For example:
@@ -310,7 +310,7 @@ BOOST_MPL_ASSERT((
 <p>
 			returns <code class="computeroutput">"::boost::mirror"</code>. When the base namespace name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier
-			is needed use the <code class="computeroutput"><a class="link" href="meta_namespace.html#id2501063-bb">base_name</a></code> member function
+			is needed use the <code class="computeroutput"><a class="link" href="meta_namespace.html#id2559608-bb">base_name</a></code> member function
 			instead.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -327,7 +327,7 @@ BOOST_MPL_ASSERT((
 </table></div>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>bool</strong></span> FullName, <span class="bold"><strong>typename</strong></span> CharT&gt; 
   <span class="type"><span class="bold"><strong>const</strong></span> ::std::basic_string&lt;CharT&gt;&amp;</span> 
-  <a name="id2553347-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
+  <a name="id2391689-bb"></a>get_name(::boost::mpl::bool_&lt;FullName&gt; full, ::std::char_traits&lt;CharT&gt; cht);</pre>
 <p>This static member template function returns either the base name 
 			<span class="bold"><strong>without</strong></span> the nested name specifier 
 			or the full name <span class="bold"><strong>with</strong></span> the 
@@ -342,14 +342,14 @@ BOOST_MPL_ASSERT((
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::false_(), ::std::char_traits&lt;char&gt;())
 			</pre>
 <p> is equivalent to calling the 
-			<code class="computeroutput"><a class="link" href="meta_namespace.html#id2501063-bb">base_name</a></code> member function with the 
+			<code class="computeroutput"><a class="link" href="meta_namespace.html#id2559608-bb">base_name</a></code> member function with the 
 			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol undefined, 
 			which returns a <code class="computeroutput">::std::string</code> holding the string <code class="computeroutput">"mirror"</code> and calling
 			</p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) :: get_name(::boost::mpl::true_(), ::std::char_traits&lt;wchar_t&gt;())
 			</pre>
 <p> is equivalent to calling the 
-			<code class="computeroutput"><a class="link" href="meta_namespace.html#id2528611-bb">full_name</a></code> method with the 
+			<code class="computeroutput"><a class="link" href="meta_namespace.html#id2518414-bb">full_name</a></code> method with the 
 			<code class="computeroutput"><a class="link" href="../../BOOST_CTS_USE_WIDE_CHARS.html" title="Macro BOOST_CTS_USE_WIDE_CHARS">BOOST_CTS_USE_WIDE_CHARS</a></code> symbol defined, 
 			which returns a <code class="computeroutput">::std::wstring</code> holding this string <code class="computeroutput">L"::boost::mirror"</code>.
 			</p>

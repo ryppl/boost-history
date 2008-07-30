@@ -7,6 +7,7 @@
 	<para>
 	</para>
 	<section id="mirror.reference.registering">
+		<using namespace="boost::mirror"/>
 		<title>Registering</title>
 		<para>Constructs like namespaces, types, typedefs, classes, class member attributes, base classes, etc. 
 			need to be registered before they can be reflected or otherwise used. To simplify the registration 
@@ -41,6 +42,7 @@
 		</table>
 	</section>
 	<section id="mirror.reference.reflecting">
+		<using namespace="boost::mirror"/>
 		<title>Reflecting</title>
 		<para>
 		</para>
