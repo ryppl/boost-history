@@ -49,7 +49,7 @@
 \huge
 \begin{center}
 Proposed Wording for Concepts\\
-(Revision 7)
+(Revision 8)
 \end{center}
 
 \normalsize
@@ -62,8 +62,8 @@ James Widman, Gimpel Software \\
 Jeremy Siek, University of Colorado at Boulder
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number:  N2710=08-0220\vspace{-6pt}
-\par\noindent Revises document number: N2676=08-0186 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2710=08-0220 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Core Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:doug.gregor@gmail.com}{doug.gregor@gmail.com}$>$
@@ -5377,8 +5377,12 @@ concept instance (\mbox{\ref{concept.refine}}, \mbox{\ref{concept.req}}) are
 implied.}
 
 \pnum 
-\addedConcepts{The formation of types within the declaration of a
-  constrained template implies the template requirements needed to
+\addedConcepts{The formation of types within}
+\addedCC{certain parts of}
+\addedConcepts{the declaration of a
+  constrained template}
+\addedCC{(described above)}
+\addedConcepts{implies the template requirements needed to
   ensure that the types themselves are well-formed within any
   instantiation. The following type constructions imply template
   requirements:}
