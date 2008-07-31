@@ -30,6 +30,11 @@ doxygen autodoc_extension
         <doxygen:param>EXPAND_ONLY_PREDEF=YES
         <doxygen:param>SEARCH_INCLUDES=YES
         <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+        <doxygen:param>INLINE_SOURCES=YES
+        <doxygen:param>SOURCE_BROWSER=YES
+        <doxygen:param>VERBATIM_HEADERS=YES
+        <doxygen:param>REFERENCES_RELATION=YES
+        <doxygen:param>REFERENCES_LINK_SOURCE=YES
     ;
 
 xml extension : extension.qbk ;

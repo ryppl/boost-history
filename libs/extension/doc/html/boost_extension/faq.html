@@ -7,7 +7,7 @@
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension">
 <link rel="prev" href="type_safety.html" title=" Type Safety of Boost.Extension">
-<link rel="next" href="appendices.html" title=" Appendices">
+<link rel="next" href="faq/shared_libraries.html" title="Shared Libraries">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,39 +20,72 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="type_safety.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="appendices.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="type_safety.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="faq/shared_libraries.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_extension.faq"></a><a href="faq.html" title=" FAQ"> FAQ</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="faq.html#boost_extension.faq.factories">Factories</a></span></dt>
+<dt><span class="section"><a href="faq/shared_libraries.html">Shared Libraries</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_extension.faq.factories"></a><a href="faq.html#boost_extension.faq.factories" title="Factories">Factories</a></h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="faq.html#boost_extension.faq.factories.what_if_i_have_multiple_versions_of_the_same_interface__i_ve_added_new_member_functions_as_they_ve_become_necessary___and_i_want_to_keep_track_of_which_version_is_implemented_by_different_plugins_">What
+        if I have multiple versions of the same interface (I've added new member
+        functions as they've become necessary), and I want to keep track of which
+        version is implemented by different plugins?</a></span></dt>
+<dt><span class="section"><a href="faq.html#boost_extension.faq.factories.do_my_factory_classes_need_to_be_based_on_classes_with_only_pure_virtual_functions_">Do
+        my factory classes need to be based on classes with only pure virtual functions?</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_extension.faq.factories.what_if_i_have_multiple_versions_of_the_same_interface__i_ve_added_new_member_functions_as_they_ve_become_necessary___and_i_want_to_keep_track_of_which_version_is_implemented_by_different_plugins_"></a><a href="faq.html#boost_extension.faq.factories.what_if_i_have_multiple_versions_of_the_same_interface__i_ve_added_new_member_functions_as_they_ve_become_necessary___and_i_want_to_keep_track_of_which_version_is_implemented_by_different_plugins_" title="What
+        if I have multiple versions of the same interface (I've added new member
+        functions as they've become necessary), and I want to keep track of which
+        version is implemented by different plugins?">What
+        if I have multiple versions of the same interface (I've added new member
+        functions as they've become necessary), and I want to keep track of which
+        version is implemented by different plugins?</a></h4></div></div></div>
 <p>
-      Question: What if I have multiple versions of the same interface (I've added
-      new member functions as they've become necessary), and I want to keep track
-      of which version is implemented by different plugins?
-    </p>
+          Answer: The simplest way is to change the name of your interface (or the
+          namespace it is in) each time its contents change. This is actually what
+          I would recommend. However, it is also possible to include such information
+          as part of the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/factory.html" title="Class template factory">factory</a></code></code>.
+          A <code class="literal"><code class="computeroutput"><a href="../boost/extensions/factory.html" title="Class template factory">factory</a></code></code>
+          can contain arbitrary information about the plugin that it loads through
+          the Info type. In the <code class="computeroutput"><span class="identifier">hello_world</span></code>
+          sample, the <code class="computeroutput"><span class="identifier">Info</span></code> type is
+          an <code class="computeroutput"><span class="keyword">int</span></code>, and the <code class="computeroutput"><span class="identifier">hello</span></code> class has a number (it could be
+          a version) of 1, and the <code class="computeroutput"><span class="identifier">world</span></code>
+          class has a version of 2. In the multiple_inheritance sample, this type
+          is a string. This will be detailed in greater detail in this documentation.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_extension.faq.factories.do_my_factory_classes_need_to_be_based_on_classes_with_only_pure_virtual_functions_"></a><a href="faq.html#boost_extension.faq.factories.do_my_factory_classes_need_to_be_based_on_classes_with_only_pure_virtual_functions_" title="Do
+        my factory classes need to be based on classes with only pure virtual functions?">Do
+        my factory classes need to be based on classes with only pure virtual functions?</a></h4></div></div></div>
 <p>
-      Answer: The simplest way is to change the name of your interface (or the namespace
-      it is in) each time its contents change. This is actually what I would recommend.
-      However, it is also possible to include such information as part of the <code class="literal"><code class="computeroutput"><a href="../boost/extensions/factory.html" title="Class template factory">factory</a></code></code>. A <code class="literal"><code class="computeroutput"><a href="../boost/extensions/factory.html" title="Class template factory">factory</a></code></code> can contain
-      arbitrary information about the plugin that it loads through the Info type.
-      In the <code class="computeroutput"><span class="identifier">hello_world</span></code> sample,
-      the <code class="computeroutput"><span class="identifier">Info</span></code> type is an <code class="computeroutput"><span class="keyword">int</span></code>, and the <code class="computeroutput"><span class="identifier">hello</span></code>
-      class has a number (it could be a version) of 1, and the <code class="computeroutput"><span class="identifier">world</span></code>
-      class has a version of 2. In the multiple_inheritance sample, this type is
-      a string. This will be detailed in greater detail in this documentation.
-    </p>
+          No. The classes work just as well if they contain data or functions that
+          aren't pure virtual. Using virtual destructors in base classes is highly
+          recommended though.
+        </p>
 <p>
-      Question: What if I want to have a library close automatically when I've destroyed
-      all of the plugins in it?
-    </p>
+          It is actually possible to define the implementation of a base class's
+          functions in a .cpp file. Check out <a href="tutorials/tutorial03.html" title=" Tutorial 3 - Multiple
+      and Implementation Inheritance">Tutorial
+          3</a>.
+        </p>
 <p>
-      Answer: I have not yet found a general enough way to do this that doesn't introduce
-      too many constraints for programmers. I recommend developing a specific solution
-      for your use case for now if you really need this.
-    </p>
-<p>
-      Question:
-    </p>
+          In general it can often be a good idea to use pure virtual methods, just
+          for simplicity, but it is not a requirement.
+        </p>
+</div>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -64,7 +97,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="type_safety.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="appendices.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="type_safety.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="faq/shared_libraries.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

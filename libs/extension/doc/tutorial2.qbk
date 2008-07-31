@@ -54,7 +54,8 @@ shared library:
 #include "animal.hpp"
 ``
 
-The main function is similar to that from [link tutorial01 Tutorial 1].
+The main function is similar to that from
+[link boost_extension.tutorials.tutorial01 Tutorial 1].
 
 ``
 int main() {
@@ -89,7 +90,7 @@ int& my_int(my_type_map.get());
 ``
 
 For the rationale of the _type_map_ class, see the discussion on
-[link type_safety type safety].
+[link boost_extension.type_safety type safety].
 
 ``
 

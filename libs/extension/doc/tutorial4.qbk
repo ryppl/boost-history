@@ -5,190 +5,42 @@
 [/ http://www.boost.org/LICENSE_1_0.txt) ]
 [/ See http://www.boost.org/ for latest version. ]
 
-[section:tutorial04 Tutorial 4]
+[section:tutorial04 Tutorial 4 - Type Maps and Paramter Maps]
+The _type_map_ class and the _parameter_map_ class are similar - both
+used for storing objects of heterogeneous types.
 
+The _type_map_ is the simplest of the two, as it can hold exactly one
+element of each type. It can hold multiple objects, but they will each
+be of a different type.
 
-In this tutorial we will see different features of the library related to 
-multiple loading of the same library, instance or interface.
-
-We will follow some parts of versions example ([^examples\/versioning]). 
-As we expect that at this point you've gone through the first tutorials we 
-will not enter into specific details of the use of the library.
-
-First, we want to show that it is possible to load several libraries into one 
-factory map. We'll create a new HelloWorld library very similar to the one 
-that we have described in the first tutorial. 
-
-Let's remember the classes that we have implemented (in [^hello_world.cpp]) 
-for the "hello world" example:
+Here's an example showing a _type_map_ holding an `int` and a
+`std::map<std::string, std::string>`.
 
 ``
-class world : public word
-{
-public:
-  virtual const char * get_val(){return "world!";}
-};
+using namespace boost::extensions;
 
-class hello : public word
-{
-public:
-  virtual const char * get_val(){return "hello";}
-};
+// A type_map can hold one of each type, constructed
+// as needed.
+type_map types;
+int& first_int(types.get());
+first_int = 100;
 
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export_word(boost::extensions::factory_map & fm)
-{
-  fm.get<word, int>()[1].set<hello>();
-  fm.get<word, int>()[2].set<world>();
-}
+// This actually points to the same int as first_int.
+int& second_int(types.get());
+
+second_int = 500;
+
+// This will print out 500.
+std::cout << "first_int: " << first_int << std::endl;
+
+// Arbitrary default-constructible types can be held in a type_map.
+std::map<std::string, std::string>& string_pairs(types.get());
 ``
 
-And now let's see the new version that we've implemented for this example 
-(as defined in [^hello_world_versions.cpp]). The classes have the same name 
-and methods, both implement the same interface, but the `get_val()` methods 
-differ in the returned string (to be able to recognize each one after loading 
-them).
+Note that pulling an integer out of it twice results in two references
+to the same integer. The same occurs with any type placed into the _type_map_.
 
-``
-class world : public word
-{
-public:
-  virtual const char * get_val(){return "world! v2";}
-};
-
-class hello : public word
-{
-public:
-  virtual const char * get_val(){return "| v2 hello";}
-};
-
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export_word(boost::extensions::factory_map & fm)
-{
- fm.get<word, int>()[22].set<world>();	
- // int could be used as version (v2 word 2)
- fm.get<word, int>()[21].set<hello>();	
- // int could be used as version (v2 word 1)
-}
-``
-
-
-Also note that we are using the Info int to store some kind of "version", 
-and then we could differentiate the classes by its int (see Info class 
-tutorial for more information on this).
-
-``
-	factory_map fm;
-
-	// load hello world first version
-	load_single_library(fm, "libHelloWorldLib.extension",
-                      "extension_export_word");
-
-	// load hello world second version
-	load_single_library(fm, "libHelloWorldLibv2.extension",
-                      "extension_export_word");
-
-	// load hello world second version again
-	load_single_library(fm, "libHelloWorldLibv2.extension",
-                      "extension_export_word");
-``
-
-We can see here that loading multiple libraries is as easy as calling 
-`load_single_library` for each one and using the same factory map.
-
-Then you can access them as any other factory_map:
-
-``
-  for(std::list<factory<word, int> >::iterator current_word =
-      factory_list.begin(); current_word != factory_list.end();
-      ++current_word) {
-    std::auto_ptr<word> word_ptr(current_word->create());
-    std::cout << word_ptr->get_val() << " ";
-  }
-  std::cout << std::endl << std::endl;
-``
-
-We get the following output:
-[table 
-[[=words:=\n
-[^hello world! | v2 hello world! v2 | v2 hello world! v2]]]]
-
-
-The first "hello world" is returned by the first version of the library, 
-and the second and third returned by the second version.
-
-Finally, we will show another example similar to the former but in this case 
-we implement a different interface, same class name ('hello') but with 
-different interface ('salute').
-
-Let's see the interface:
-
-``
-class salute
-{
-public:
-  virtual ~salute(){}
-  virtual const char * say(){return "";}
-};
-``
-
-And the implementations:
-
-``
-class hello : public salute
-{
-public:
-  virtual const char *say(void) {return "hello";}
-};
-
-class bye : public salute
-{
-public:
-  virtual const char *say(void) {return "bye!";}
-};
-
-
-extern "C" void BOOST_EXTENSION_EXPORT_DECL 
-extension_export_salute(boost::extensions::factory_map & fm)
-{
-  fm.get<salute, int>()[1].set<hello>();
-  fm.get<salute, int>()[2].set<bye>();
-}
-``
-
-Note that we are adding a new class called 'hello' too but that implements 
-'salute' interface.
-
-\n
-
-Finally in the main function we get the factory list specifying that we want 
-the 'salute' factory. We iterate it getting each of the salutes, including 
-hello.
-
-``
-std::map<int, factory<salute> > & salute_factory_list =
-  fm.get<salute, int>();  
-
-std::cout << "salutes: " << std::endl;
-for (std::map<int, factory<salute> >::iterator current_salute =
-     salute_factory_list.begin(); 
-     current_salute != salute_factory_list.end();
-     ++current_salute) {
-  std::auto_ptr<salute> salute_ptr(current_salute->second.create());
-  std::cout << salute_ptr->say() << " ";
-}
-std::cout << std::endl;
-``
-
-The output is:
-
-[table 
-[[=salutes:= \n
-=hello bye!=]]]
-
-
-In conclusion, with Boost.Extension we can implement the same class in 
-different libraries, the same class for different interfaces and
-load multiple libraries into the same factory.
+A _parameter_map_ on the other hand, can hold any number of elements of any
+type, and can automatically convert objects to compatible types.
 
 [endsect]

@@ -12,7 +12,7 @@ on the platform:
 
 * Windows: .dll
 * Most Linux or Unix: .so
-* Mac OS X: .dylib or .bundle (See [link appendix_c Appendix C])
+* Mac OS X: .dylib or .bundle
 
 Normally, shared libraries are loaded by an application when it starts.
 This is commonly used by Boost libraries that can be built as shared libraries,

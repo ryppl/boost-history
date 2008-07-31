@@ -7,7 +7,7 @@
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../../boost_extension/reference.html#header.boost.extension.type_map.hpp" title="Header &lt;boost/extension/type_map.hpp&gt;">
 <link rel="prev" href="shared_library.html" title="Class shared_library">
-<link rel="next" href="basic_type_map/type_map_convertible.html" title="Class type_map_convertible">
+<link rel="next" href="type_map.html" title="Type definition type_map">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="shared_library.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.type_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_type_map/type_map_convertible.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="shared_library.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.type_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="type_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="boost.extensions.basic_type_map"></a><div class="titlepage"></div>
@@ -33,40 +33,40 @@
 <span class="bold"><strong>class</strong></span> <a href="basic_type_map.html" title="Class template basic_type_map">basic_type_map</a> {
 <span class="bold"><strong>public</strong></span>:
 
-  <span class="bold"><strong>class</strong></span> <a href="basic_type_map/type_map_convertible.html" title="Class type_map_convertible">type_map_convertible</a> {
-  <span class="bold"><strong>public</strong></span>:
-
-    <span class="bold"><strong>struct</strong></span> <a href="basic_type_map/type_map_convertible/generic_type_holder.html" title="Struct generic_type_holder">generic_type_holder</a> {
-      <span class="emphasis"><em>// <a href="basic_type_map/type_map_convertible/generic_type_holder.html#boost.extensions.basic_type_map.type_map_convertible.generic_type_holderconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-      <a href="basic_type_map/type_map_convertible/generic_type_holder.html#id294865-bb">~generic_type_holder</a>();
-    };
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
-    <span class="bold"><strong>struct</strong></span> <a href="basic_type_map/type_map_convertible/type_holder.html" title="Struct template type_holder">type_holder</a> : <span class="bold"><strong>public</strong></span> boost::extensions::basic_type_map&lt; TypeInfo &gt;::type_map_convertible::generic_type_holder
-    {
-      <span class="type">T</span> val;
-    };
-    <span class="emphasis"><em>// <a href="basic_type_map/type_map_convertible.html#boost.extensions.basic_type_map.type_map_convertibleconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-    <a href="basic_type_map/type_map_convertible.html#id294901-bb">~type_map_convertible</a>();
-
-    <span class="emphasis"><em>// <a href="basic_type_map/type_map_convertible.html#id294885-bb">public member functions</a></em></span>
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <a href="basic_type_map/type_map_convertible.html#id294888-bb"><span class="bold"><strong>operator</strong></span> Type &amp;</a>() ;
-  };
-
-  <span class="emphasis"><em>// <a href="basic_type_map.html#id294902-bb">public member functions</a></em></span>
-  <span class="type">type_map_convertible &amp;</span> <a href="basic_type_map.html#id294905-bb">get</a>() ;
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a href="basic_type_map.html#id294912-bb">get</a>() ;
+  <span class="emphasis"><em>// <a href="basic_type_map.html#id285192-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a href="basic_type_map.html#id285194-bb">get</a>() ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id460386"></a><h2>Description</h2>
+<a name="id450606"></a><h2>Description</h2>
 <p>
-</p>
+The `type_map` class is used for holding an arbitrary collection of types - no more than one of each type. In general, standard usage is as follows:</p>
+<pre class="programlisting"> type_map types;
+ // This will add an integer to the type_map, or retrieve
+ // one if it already exists.
+ int&amp; first_int(types.get());
+ first_int = 5;
+ // This will make second_int point to the same value
+ // as first_int.
+ int&amp; second_int(types.get());
+ second_int = 10;
+ // Now first_int is 10.
+ // It is also possible to use arbitrary types in the map,
+ // as long as they are default constructible.
+ std::set&lt;std::string&gt;&amp; my_string(types.get());
+</pre>
+<p> </p>
 <div class="refsect2" lang="en">
-<a name="id460393"></a><h3>
-<a name="id294902-bb"></a><code class="computeroutput">basic_type_map</code> public member functions</h3>
-<div class="orderedlist"><ol type="1">
-<li><pre class="literallayout"><span class="type">type_map_convertible &amp;</span> <a name="id294905-bb"></a>get() ;</pre></li>
-<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a name="id294912-bb"></a>get() ;</pre></li>
-</ol></div>
+<a name="id450622"></a><h3>
+<a name="id285192-bb"></a><code class="computeroutput">basic_type_map</code> public member functions</h3>
+<div class="orderedlist"><ol type="1"><li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a name="id285194-bb"></a>get() ;</pre>
+<p>This is the only method users should ever need to use. By calling it with a template argument `Type`, a reference to the single object of that type will be returned, after being created if necessary. It is possible to omit the template parameter if it is clear from context: </p>
+<pre class="programlisting"> type_map types;
+ int&amp; my_int(types.get());
+</pre>
+<p> 
+</p>
+</li></ol></div>
 </div>
 </div>
 </div>
@@ -80,7 +80,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="shared_library.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.type_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_type_map/type_map_convertible.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="shared_library.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.type_map.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="type_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

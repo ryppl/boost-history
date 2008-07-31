@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp" title="Header &lt;boost/extension/factory.hpp&gt;">
-<link rel="prev" href="../../BOOST_REFLECTION_CONSTRUCTI_FUNCTION_id295534.html" title="Macro BOOST_REFLECTION_CONSTRUCTI_FUNCTION">
-<link rel="next" href="../../BOOST_PP_ITERATION_LIMITS_id295694.html" title="Macro BOOST_PP_ITERATION_LIMITS">
+<link rel="prev" href="../../BOOST_EXTENSION_EXPORT_DECL.html" title="Macro BOOST_EXTENSION_EXPORT_DECL">
+<link rel="next" href="basic_factory_map.html" title="Class template basic_factory_map">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../BOOST_REFLECTION_CONSTRUCTI_FUNCTION_id295534.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../BOOST_PP_ITERATION_LIMITS_id295694.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_EXTENSION_EXPORT_DECL.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="boost.extensions.factory"></a><div class="titlepage"></div>
@@ -33,39 +33,39 @@
 <span class="bold"><strong>class</strong></span> <a href="factory.html" title="Class template factory">factory</a> {
 <span class="bold"><strong>public</strong></span>:
   <span class="emphasis"><em>// <a href="factory.html#boost.extensions.factoryconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a href="factory.html#id295652-bb">factory</a>();
-  <a href="factory.html#id295657-bb">factory</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
-  factory&amp; <a href="factory.html#id295667-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <a href="factory.html#id284756-bb">factory</a>();
+  <a href="factory.html#id284760-bb">factory</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  factory&amp; <a href="factory.html#id284770-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp;);
 
-  <span class="emphasis"><em>// <a href="factory.html#id295576-bb">public member functions</a></em></span>
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="factory.html#id295579-bb">set</a>() ;
-  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="factory.html#id295600-bb">is_valid</a>() <span class="bold"><strong>const</strong></span>;
-  <span class="type">T *</span> <a href="factory.html#id295626-bb">create</a>(Params...) <span class="bold"><strong>const</strong></span>;
+  <span class="emphasis"><em>// <a href="factory.html#id284680-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="factory.html#id284682-bb">set</a>() ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="factory.html#id284704-bb">is_valid</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">T *</span> <a href="factory.html#id284730-bb">create</a>(Params...) <span class="bold"><strong>const</strong></span>;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id463734"></a><h2>Description</h2>
+<a name="id448788"></a><h2>Description</h2>
 <p>This class is a function object that returns new instances of type T, using factories that take parameters described in the variable length list Params... </p>
 <div class="refsect2" lang="en">
-<a name="id463744"></a><h3>
+<a name="id448798"></a><h3>
 <a name="boost.extensions.factoryconstruct-copy-destruct"></a><code class="computeroutput">factory</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
-<li><pre class="literallayout"><a name="id295652-bb"></a>factory();</pre></li>
-<li><pre class="literallayout"><a name="id295657-bb"></a>factory(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
-<li><pre class="literallayout">factory&amp; <a name="id295667-bb"></a><span class="bold"><strong>operator</strong></span>=(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
+<li><pre class="literallayout"><a name="id284756-bb"></a>factory();</pre></li>
+<li><pre class="literallayout"><a name="id284760-bb"></a>factory(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
+<li><pre class="literallayout">factory&amp; <a name="id284770-bb"></a><span class="bold"><strong>operator</strong></span>=(<a href="factory.html" title="Class template factory">factory</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; first);</pre></li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id463851"></a><h3>
-<a name="id295576-bb"></a><code class="computeroutput">factory</code> public member functions</h3>
+<a name="id448905"></a><h3>
+<a name="id284680-bb"></a><code class="computeroutput">factory</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id295579-bb"></a>set() ;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> D&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id284682-bb"></a>set() ;</pre>
 <p>This sets the factory function to the constructor for type D. Example: factory&lt;Base, int, int&gt; f; f.set&lt;Derived&gt;(); </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id295600-bb"></a>is_valid() <span class="bold"><strong>const</strong></span>;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id284704-bb"></a>is_valid() <span class="bold"><strong>const</strong></span>;</pre>
 <p>Until set is called, a factory cannot be used. This function can be used to determine if set has been called. 
 
 
@@ -92,7 +92,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="type">T *</span> <a name="id295626-bb"></a>create(Params...) <span class="bold"><strong>const</strong></span>;</pre>
+<pre class="literallayout"><span class="type">T *</span> <a name="id284730-bb"></a>create(Params...) <span class="bold"><strong>const</strong></span>;</pre>
 <p>Returns an instance of T (but does NOT retain ownership of the instance). 
 
 
@@ -133,7 +133,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../BOOST_REFLECTION_CONSTRUCTI_FUNCTION_id295534.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../BOOST_PP_ITERATION_LIMITS_id295694.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../BOOST_EXTENSION_EXPORT_DECL.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_extension/reference.html#header.boost.extension.factory.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_factory_map.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -110,7 +110,7 @@ two options:
 Extension uses the second approach. Though this eases portability, it also poses
 a risk to type safety. A simple, cross-platform solution to this problem would
 probably require direction from the C++ Standards Committee. Until that time,
-the [link type_safety Type Safety] section has advice on avoding type safety issues
+the [link boost_extension.type_safety Type Safety] section has advice on avoding type safety issues
 when using the _shared_library_ class.
 
 ``

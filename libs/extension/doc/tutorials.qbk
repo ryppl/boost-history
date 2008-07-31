@@ -9,7 +9,5 @@
 [include tutorial1.qbk]
 [include tutorial2.qbk]
 [include tutorial3.qbk]
-[include tutorial4.qbk]
-[include tutorial5.qbk]
 
 [endsect]
