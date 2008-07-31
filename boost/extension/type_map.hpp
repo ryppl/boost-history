@@ -23,10 +23,31 @@ namespace extensions {
   * \tparam TypeInfo The type used for TypeInfo. By default,
   *         RTTI is used, but users can define their own TypeInfo.
   *         See impl/typeinfo.hpp.
+  *
+  * The `type_map` class is used for holding an arbitrary collection
+  * of types - no more than one of each type.
+  * In general, standard usage is as follows:
+  *
+  * \code
+  * type_map types;
+  * // This will add an integer to the type_map, or retrieve
+  * // one if it already exists.
+  * int& first_int(types.get());
+  * first_int = 5;
+  * // This will make second_int point to the same value
+  * // as first_int.
+  * int& second_int(types.get());
+  * second_int = 10;
+  * // Now first_int is 10.
+  * // It is also possible to use arbitrary types in the map,
+  * // as long as they are default constructible.
+  * std::set<std::string>& my_string(types.get());
+  * \endcode
   */
 template <class TypeInfo>
 class basic_type_map {
 public:
+#ifndef BOOST_EXTENSION_DOXYGEN_INVOKED
   class type_map_convertible {
   public:
     ~type_map_convertible() {
@@ -66,7 +87,21 @@ public:
   type_map_convertible& get() {
     return convertible_;
   }
-
+#endif
+  /** \brief Retrieve a given type from the type_map.
+    *
+    * This is the only method users should ever need to use.
+    * By calling it with a template argument `Type`, a reference
+    * to the single object of that type will be returned, after
+    * being created if necessary.
+    * It is possible to omit the template parameter if it is clear
+    * from context:
+    * \code
+    * type_map types;
+    * int& my_int(types.get());
+    * \endcode
+    * \tparam Type The type of the object to return a reference to.
+    */
   template <class Type>
   Type& get() {
     return convertible_;
