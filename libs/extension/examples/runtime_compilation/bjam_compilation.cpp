@@ -11,7 +11,7 @@
  */
 
 
-#include "../compilation.hpp"
+#include "compilation.hpp"
 
 #include <iostream>
 
@@ -22,7 +22,7 @@
 
 namespace boost {
 namespace extensions {
-namespace impl {
+namespace {
 const char* boost_build_contents =
 "local rule if-has-file ( file + : dir * ) \n"
 "{ \n"
@@ -54,7 +54,8 @@ void PrintHeader(std::ostream& out, const std::string& header_location) {
   out << "#include " << header_location << std::endl;
 }
 
-}  // namespace impl
+}  // namespace
+
 class bjam_compilation : public compilation {
 public:
   virtual bool run(const std::string& library_name,
@@ -62,28 +63,41 @@ public:
                    type_map& types,
                    const std::string& earlier_file_contents = "") const {
     using namespace boost::filesystem;
+
+    // Find the current path so that it can be reset after
+    // the shared library is loaded.
     path initial_path(current_path());
+
+    // If there is a compilation_directory set, switch to it.
     if (!compilation_directory_.empty()) {
       std::system(("cd " + compilation_directory_).c_str());
     }
+
+    // Create boost-build.jam.
     path compilation_path(current_path());
     ofstream o(compilation_path / "boost-build.jam");
     o << "# Start\n\n"
-      << std::string(impl::boost_build_contents) << std::endl;
+      << std::string(boost_build_contents) << std::endl;
+
+    // Create Jamfile.v2
     ofstream p(compilation_path / "Jamfile.v2");
     p << "# Start\n\n"
-      << std::string(impl::jamfile_preamble)
+      << std::string(jamfile_preamble)
       << " lib " << library_name << " : " << library_name
       << ".cpp ;\ninstall . : " << library_name << " ;"
       << std::endl;
     p.close();
+
+    // Create Jamroot.
     ofstream r(compilation_path / "Jamroot");
     r << "# empty" << std::endl;
     r.close();
+
+    // Create the source file that will be compiled.
     ofstream cpp_file(compilation_path / (library_name + ".cpp"));
     cpp_file << "// Boost.Extension generated file" << std::endl;
     std::for_each(headers_.begin(), headers_.end(),
-                  boost::bind(impl::PrintHeader, boost::ref(cpp_file), _1));
+                  boost::bind(PrintHeader, boost::ref(cpp_file), _1));
     cpp_file <<
       "\n\nextern \"C\" "
       "void BOOST_EXTENSION_EXPORT_DECL\n"
@@ -91,12 +105,16 @@ public:
       "boost::extensions::type_map& types) {\n"
       << external_function_contents << "\n}" << std::endl;
     cpp_file.close();
+
+    // Compile it!
     int result = 0;
-    if ((result = std::system("~/bin/bjam --toolset=darwin --d+2")) != 0) {
+    if ((result = std::system("bjam")) != 0) {
       std::cerr << "Compilation failed." << std::endl;
       return false;
     }
     std::cout << "Compilation result: " << result << std::endl;
+
+    // Open the shared library, and call the function.
     shared_library library("lib" + library_name + ".extension");
     if (!library.open()) {
       std::cerr << "Library not found." << std::endl;
@@ -110,7 +128,9 @@ public:
       return false;
     }
     func(types);
-    std::system(("cd " + compilation_path.string()).c_str());
+
+    // Return to the original directory.
+    std::system(("cd " + initial_path.string()).c_str());
     return true;
   }
 };
