@@ -40,7 +40,6 @@ namespace sh
     STL compliant allocator.
 */
 
-//! FIXME
 template <typename T>
     class shifted_allocator
     {
@@ -68,43 +67,29 @@ template <typename T>
         pointer address(reference x) const                          { return & x; }
         const_pointer address(const_reference x) const              { return & x; }
 
-        //! FIXME
         value_type * allocate(size_type s, const void * = 0)
         {
-            //return static_cast<shifted<T> *>(::new (shifted<T>::operator new(s)) owned_base)->element();
             shifted<T> * p = (shifted<T> *) shifted<T>::operator new(sizeof(shifted<T>));
-
-std::cout << __FUNCTION__ << ": " << (void *) p << " - " << (void *)((char *) p + sizeof(shifted<T>)) << ", " << (void *) p->element() << std::endl;
 
             return static_cast<shifted<T> *>(::new (p) owned_base)->element();
         }
 
-        //! FIXME
         void deallocate(value_type * p, size_type)
         {
-/*
-            owned_base * const q = (typename shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(p));
-
-            q->~owned_base();
-
-            shifted<T>::operator delete(q);
-*/
         }
 
-        //! FIXME
         size_type max_size() const throw()
         {
             return size_t(-1) / sizeof(T);
         }
 
-        void construct(pointer p, const T & x)
+        void construct(value_type * p, const value_type & x)
         {
             ::new (p) T(x);
         }
 
-        void destroy(pointer p)
+        void destroy(value_type * p)
         {
-            p->~T();
         }
     };
 

@@ -99,14 +99,14 @@ namespace _GLIBCXX_STD
       swap(_List_node_base& __x, _List_node_base& __y);
 
       void
-      transfer(pointer const & __first,
-	       pointer const & __last);
+      transfer(_List_node_base * const __first,
+	       _List_node_base * const __last);
 
       void
       reverse();
 
       void
-      hook(pointer const & __position);
+      hook(_List_node_base * const __position);
 
       void
       unhook();
@@ -124,6 +124,8 @@ namespace _GLIBCXX_STD
       typedef typename _Node_Alloc_type::const_reference           const_reference;
 
       _Tp _M_data;                ///< User's data.
+
+      _List_node(const _Tp& __x = _Tp()) : _M_data(__x) {}
     };
 
   /**
@@ -461,7 +463,7 @@ namespace _GLIBCXX_STD
         _Node* __p = this->_M_get_node();
         try
           {
-            std::_Construct(&__p->_M_data, __x);
+            _M_impl._Base::_Node_Alloc_type::construct(__p, _Node(__x));
           }
         catch(...)
           {
@@ -483,7 +485,7 @@ namespace _GLIBCXX_STD
         _Node* __p = this->_M_get_node();
         try
           {
-            std::_Construct(&__p->_M_data);
+            _M_impl._Base::_Node_Alloc_type::construct(__p, _Node());
           }
         catch(...)
           {
@@ -1195,13 +1197,9 @@ namespace _GLIBCXX_STD
       _M_erase(iterator __position)
       {
         __position._M_node->unhook();
-/**
-    FIXME: distinguish with raw pointers
-
         _Node* __n = static_cast<_Node*>(__position._M_node);
         std::_Destroy(&__n->_M_data);
         _M_put_node(__n);
-*/
       }
     };
 

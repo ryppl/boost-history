@@ -76,7 +76,7 @@ namespace _GLIBCXX_STD
 {
   template<typename _Alloc>
     void
-    _List_node_base<_Alloc>::hook(pointer const & __position)
+    _List_node_base<_Alloc>::hook(_List_node_base * const __position)
     {
         this->_M_next = __position;
         this->_M_prev = __position->_M_prev;
@@ -88,8 +88,8 @@ namespace _GLIBCXX_STD
     void
     _List_node_base<_Alloc>::unhook()
     {
-        pointer const __next_node = this->_M_next;
-        pointer const __prev_node = this->_M_prev;
+        _List_node_base* __next_node = this->_M_next;
+        _List_node_base* __prev_node = this->_M_prev;
         __prev_node->_M_next = __next_node;
         __next_node->_M_prev = __prev_node;
     }
@@ -116,7 +116,7 @@ namespace _GLIBCXX_STD
     list<_Tp,_Alloc>::
     insert(iterator __position, const value_type& __x)
     {
-      typename _Node::pointer __tmp = _M_create_node(__x);
+      _Node* __tmp = _M_create_node(__x);
       __tmp->hook(__position._M_node);
       return __tmp;
     }

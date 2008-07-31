@@ -95,7 +95,6 @@ struct pool : boost::pool<>
             if (i->first <= q && q <= i->second)
                 break;
 
-//std::cout << __FUNCTION__ << ": " << &* i.base() << " - " << &* alloc_.get()->end() << std::endl;
         alloc_.get()->erase(i.base(), alloc_.get()->end());
 
         return (owned_base *)(i->first);
@@ -103,7 +102,7 @@ struct pool : boost::pool<>
 
     lpp & construct()
     {
-        return * constr_.get();
+        return * alloc_.get();
     }
 
     void * allocate(std::size_t s)
@@ -112,16 +111,12 @@ struct pool : boost::pool<>
 
         alloc_.get()->push_back(std::make_pair(p, p + s));
 
-//std::cout << __FUNCTION__ << ": " << (void *) p << " - " << (void *) (p + s) << std::endl;
-
         return p;
     }
 
     void deallocate(void * p, std::size_t s)
     {
         char * const q = static_cast<char *>(p);
-
-//std::cout << __FUNCTION__ << ": " << (void *) q << " - " << (void *) (q + s) << std::endl;
 
         lpp::reverse_iterator i;
         for (i = alloc_.get()->rbegin(); i != alloc_.get()->rend(); i ++)
@@ -152,11 +147,12 @@ class owned_base : public sp_counted_base
 {
     template <typename U> friend class shifted_allocator;
 
-	intrusive_stack ptrs_;
-	intrusive_list inits_;
+    bool init_;
+    intrusive_stack ptrs_;
+    intrusive_list inits_;
 
 protected:
-    owned_base()
+    owned_base() : init_(false)
     {
         inits_.push_back(& init_tag_);
     }
@@ -165,10 +161,13 @@ public:
     intrusive_list::node set_tag_;
     intrusive_list::node init_tag_;
 
-    intrusive_stack * ptrs() 						{ return & ptrs_; }
-    intrusive_list * inits()						{ return & inits_; }
+    intrusive_stack * ptrs() 					{ return & ptrs_; }
+    intrusive_list * inits()					{ return & inits_; }
     intrusive_list::node * set_tag() 				{ return & set_tag_; }
     intrusive_list::node * init_tag() 				{ return & init_tag_; }
+
+    bool init()                                                 { return init_; }
+    void init(bool b)                                           { init_ = b; }
 
     static pool pool_;
 
@@ -204,7 +203,7 @@ template <typename T>
         class roofof;
         friend class roofof;
 
-		shifted() : e_() {}
+        shifted() : e_() {}
 
         BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, shifted)
 
