@@ -15,6 +15,9 @@
 namespace boost {
 namespace reflections {
 namespace impl {
+#ifdef BOOST_EXTENSION_DOXYGEN_INVOKED
+
+#else
 typedef void (instance::*MemberFunctionPtr)();
 }  // namespace impl
 template <class ReturnValue = void
@@ -27,6 +30,7 @@ class function;
     BOOST_PP_INC(BOOST_REFLECTION_MAX_FUNCTOR_PARAMS) - 1)
 #define BOOST_PP_FILENAME_1 <boost/reflection/impl/function.hpp>
 #include BOOST_PP_ITERATE()
+#endif
 }  // namespace reflections
 }  // namespace boost
 #endif

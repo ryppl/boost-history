@@ -20,7 +20,6 @@
 #include <boost/reflection/constructor.hpp>
 #include <boost/reflection/data.hpp>
 #include <boost/reflection/data_info.hpp>
-#include <boost/reflection/factory.hpp>
 #include <boost/reflection/function.hpp>
 
 namespace boost {
