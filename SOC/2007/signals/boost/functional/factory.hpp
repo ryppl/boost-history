@@ -46,9 +46,7 @@ namespace boost
         inline result_type operator()() const
         {
             memory m(this->obj_allocator);
-//            result_type result( new(m.get()) value_type() );
-            obj_allocator.construct(m.get(), value_type());
-            result_type result(m.get());
+            result_type result( new(m.get()) value_type() );
             m.release();
             return result;
         }
