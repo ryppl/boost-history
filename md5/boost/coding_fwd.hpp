@@ -1,17 +1,17 @@
 // Boost coding_fwd.hpp header file  -----------------------------------------//
-
-// (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
-// License, Version 1.0.  (See the accompanying file LICENSE_1_0.txt or a copy
-// at <http://www.boost.org/LICENSE_1_0.txt>.)
-
-// See <http://www.boost.org/libs/coding> for documentation.
-
 /** \file
-    \brief  Forward declarations of Boost.Coding components
+    \brief  Forward declarations of Boost.Coding components.
+
+    \author  Daryle Walker
 
     Contains the forward declarations of Boost.Coding's public structures,
     classes, and templates thereof, and any type aliases.
+ 
+    (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
+    License, Version 1.0. (See the accompanying file LICENSE_1_0.txt or a copy
+    at <http://www.boost.org/LICENSE_1_0.txt>.)
  */
+// See <http://www.boost.org/libs/coding> for documentation.
 
 #ifndef BOOST_CODING_FWD_HPP
 #define BOOST_CODING_FWD_HPP
@@ -33,13 +33,13 @@ namespace coding
 
 //  From <boost/coding/coding_shell.hpp>  ------------------------------------//
 
-template < class ByteProcessor, typename SizeType = std::size_t >
+template < class ByteProcessor >
 class byte_coding_shell;
 
 template < class BitProcessor, bool BigEndian >
 class bit_to_byte_processor;
 
-template < class BitProcessor, bool BigEndian, typename SizeType = std::size_t >
+template < class BitProcessor, bool BigEndian >
 class bit_coding_shell;
 
 

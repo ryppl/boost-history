@@ -1,18 +1,18 @@
 // Boost md5.cpp implementation file  ----------------------------------------//
-
-// (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
-// License, Version 1.0.  (See the accompanying file LICENSE_1_0.txt or a copy
-// at <http://www.boost.org/LICENSE_1_0.txt>.)
-
-// See <http://www.boost.org/libs/coding> for documentation.
-
 /** \file
-    \brief  Definitions of MD5 computation components
+    \brief  Definitions of MD5 computation components.
+
+    \author  Daryle Walker
 
     Contains the definitions of constants and functions used for computing MD5
     message digests of given data blocks and granting I/O capability to any
     applicable types.
+ 
+    (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
+    License, Version 1.0. (See the accompanying file LICENSE_1_0.txt or a copy
+    at <http://www.boost.org/LICENSE_1_0.txt>.)
  */
+// See <http://www.boost.org/libs/coding> for documentation.
 
 #include <boost/coding/md5.hpp>
 
@@ -187,10 +187,15 @@ namespace coding
 
 //  MD5 message-digest class-static member definitions  ----------------------//
 
+/** Represents the number of bits per word as given in RFC 1321, section 2.
+ */
 int const          md5_digest::bits_per_word;
+/** Represents the number of registers in a MD buffer.
+ */
 std::size_t const  md5_digest::words_per_digest;
 
 
+//! \cond
 //  Implementation detail object definitions  --------------------------------//
 
 namespace detail
@@ -212,15 +217,33 @@ std::size_t const  md5_constants::nybbles_per_word;
 std::size_t const  md5_constants::characters_per_digest;
 
 }  // namespace detail
+//! \endcond
 
 
 //  MD5 message-digest computer class-static member definitions  -------------//
 
 std::size_t const  md5_computerX::words_per_block;
 
+/** Represents the number of significant (low-order) bits kept for the
+    message length, which can also be processed as two words, all as given
+    in RFC 1321, section 3.2, paragraph 1.
+ */
 int const          md5_computerX::significant_bits_per_length;
+/** Represents the number of submitted bits that are queued until that queue
+    is emptied as a single block to be hashed, implied from RFC 1321,
+    section 3.4.  The count of unhashed bits is always less than this value.
+    (The input processing member functions trigger a hash right after a bit
+    fills the queue.)
+ */
 std::size_t const  md5_computerX::bits_per_block;
 
+/** Sample of the table described in RFC 1321, section 3.4, paragraph 4.
+    Its values are taken directly from the "MD5Transform" function in the
+    RFC's section A.3, and are not computed.  Of course, the index is
+    zero-based (C++) instead of one-based (RFC).
+
+    \see  #generate_hashing_table
+ */
 array<md5_digest::word_type, 64> const  md5_computerX::hashing_table = { {
     0xD76AA478ul,
     0xE8C7B756ul,
@@ -297,7 +320,15 @@ md5_computerX::ibuffer_type const  md5_computerX::initial_buffer_ = {
 
 //  MD5 message-digest computer class-static member function definitions  ----//
 
-// Generated copy of "hashing_table"; see header for notes
+/** Constructs the hashing sine table based on the directions given in RFC
+    1321, section 3.4, paragraph 4.  It should give the same values as
+    #hashing_table, but it's dependent on the quality of the environment's
+    math library, thereby giving a test of the environment.
+
+    \return  The computed hashing sine table
+
+    \see  #hashing_table
+ */
 array<md5_digest::word_type, 64>
 md5_computerX::generate_hashing_table()
 {
@@ -408,7 +439,11 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 
 //  MD5 message-digest computation digest-output member function definition  -//
 
-// Check-sum computation; see header for notes
+/** Provides the computed check-sum of all the submitted bits.  (The queued
+    bits are temporarily hashed with a special finishing procedure.)
+
+    \return  The check-sum (i.e. message digest).
+ */
 md5_computerX::value_type
 md5_computerX::checksum() const
 {

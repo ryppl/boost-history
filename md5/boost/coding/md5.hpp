@@ -1,18 +1,18 @@
-// Boost md5.hpp header file  ------------------------------------------------//
-
-// (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
-// License, Version 1.0.  (See the accompanying file LICENSE_1_0.txt or a copy
-// at <http://www.boost.org/LICENSE_1_0.txt>.)
-
-// See <http://www.boost.org/libs/coding> for documentation.
-
+// Boost coding/md5.hpp header file  -----------------------------------------//
 /** \file
-    \brief  Declarations of MD5 computation components
+    \brief  Declarations of MD5 computation components.
+
+    \author  Daryle Walker
 
     Contains the declaration of types and functions used for computing MD5
     message digests of given data blocks and granting I/O capability to any
     applicable types.
+ 
+    (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
+    License, Version 1.0. (See the accompanying file LICENSE_1_0.txt or a copy
+    at <http://www.boost.org/LICENSE_1_0.txt>.)
  */
+// See <http://www.boost.org/libs/coding> for documentation.
 
 #ifndef BOOST_CODING_MD5_HPP
 #define BOOST_CODING_MD5_HPP
@@ -23,7 +23,7 @@
 #include <boost/assert.hpp>                // for BOOST_ASSERT
 #include <boost/coding/coding_shell.hpp>   // for b:c:bit_coding_shell
 #include <boost/coding/operations.hpp>     // for b:c:queued_bit_processing_base
-#include <boost/integer.hpp>               // for boost::uint_t
+#include <boost/integer.hpp>               // for boost::sized_integral
 #include <boost/serialization/access.hpp>  // for boost::serialization::access
 #include <boost/static_assert.hpp>         // for BOOST_STATIC_ASSERT
 #include <boost/typeof/typeof.hpp>         // for BOOST_AUTO
@@ -58,28 +58,23 @@ namespace coding
     purposes, but not ordering.  Persistence is supported through the standard
     text stream I/O system.
 
-    \see  boost::coding::md5_computerX
+    \see  boost::coding::md5_context
+    \see  boost::coding::md5_computer
     \see  boost::coding::compute_md5(void const*,std::size_t)
  */
 class md5_digest
 {
 public:
-    /** \brief  Number of bits for word-sized quantities
-
-        Represents the number of bits per word as given in RFC 1321, section 2.
-     */
+    //! Number of bits for word-sized quantities
     static  int const  bits_per_word = 32;
 
     /** \brief  Type of MD register
 
         Represents the type of each register of the MD buffer.
      */
-    typedef uint_t<bits_per_word>::least  word_type;
+    typedef boost::sized_integral<bits_per_word, unsigned>::type  word_type;
 
-    /** \brief  Length of MD buffer
-
-        Represents the number of registers in a MD buffer.
-     */
+    //! Length of MD buffer
     static  std::size_t const  words_per_digest = 4u;
 
     /** \brief  The MD5 message digest checksum
@@ -107,7 +102,7 @@ public:
     \see  boost::coding::md5_digest
     \see  boost::coding::compute_md5(void const*,std::size_t)
 
-    \todo  Replace "uint_fast64_t" with "uint_t<significant_bits_per_length>::
+    \todo  Replace "uint_fast64_t" with "uint_t&lt;significant_bits_per_length&gt;::
            fast", where "significant_bits_per_length" is 64.  (Need to tweak
            Boost.Integer to support 64-bit types.)  Also need to make a
            convienent constant for the "16" in the base class declaration.
@@ -145,33 +140,13 @@ public:
     using base_type::bytes;
 
     // Constants
-    /** \brief  Number of bits for length quantities
-
-        Represents the number of significant (low-order) bits kept for the
-        message length, which can also be processed as two words, all as given
-        in RFC 1321, section 3.2, paragraph 1.
-     */
+    //! Number of bits for length quantities
     static  int const          significant_bits_per_length = 2 *
      md5_digest::bits_per_word;
-    /** \brief  Number of bits in hash queue
-
-        Represents the number of submitted bits that are queued until that queue
-        is emptied as a single block to be hashed, implied from RFC 1321,
-        section 3.4.  The count of unhashed bits is always less than this value.
-        (The input processing member functions trigger a hash right after a bit
-        fills the queue.)
-     */
+    //! Number of bits in hash queue
     static  std::size_t const  bits_per_block = base_type::queue_length;
 
-    /** \brief  Hashing sine table
-
-        Sample of the table described in RFC 1321, section 3.4, paragraph 4.
-        Its values are taken directly from the "MD5Transform" function in the
-        RFC's section A.3, and are not computed.  Of course, the index is
-        zero-based (C++) instead of one-based (RFC).
-
-        \see  #generate_hashing_table
-     */
+    //! Hashing sine table
     static  array<md5_digest::word_type, 64> const  hashing_table;
 
     // Types
@@ -247,11 +222,6 @@ public:
     /*! \name Message-digest writing */ //@{
     // Output processing
     //! Returns the message digest, assuming all bits have been hashed
-    /** Provides the computed check-sum of all the submitted bits.  (The queued
-        bits are temporarily hashed with a special finishing procedure.)
-
-        \return  The check-sum (i.e. message digest).
-     */
     value_type  checksum() const;//@}
 
     /*! \name Operators */ //@{
@@ -269,15 +239,6 @@ public:
 
     // Extras
     //! Creates a copy of #hashing_table using calculated, not static, values
-    /** Constructs the hashing sine table based on the directions given in RFC
-        1321, section 3.4, paragraph 4.  It should give the same values as
-        #hashing_table, but it's dependent on the quality of the environment's
-        math library, thereby giving a test of the environment.
-
-        \return  The computed hashing sine table
-
-        \see  #hashing_table
-     */
     static  array<md5_digest::word_type, 64>  generate_hashing_table();
 
 private:
@@ -312,25 +273,61 @@ private:
 
 };  // md5_computerX
 
+/** \brief  A computer that produces MD5 message digests from consuming bits.
+
+    This class is the bare-bones engine for the MD5 message-digest algorithm
+    described in RFC 1321.  Besides computation, it also supports comparisons
+    (equivalence only, not ordering) and serialization.
+
+    \see  boost::coding::md5_digest
+ */
 class md5_context
 {
+    typedef md5_context  self_type;
+
     friend class md5_computer;
 
 public:
-    typedef md5_computerX::value_type  value_type;
+    typedef md5_digest  product_type;
+    typedef bool        consumed_type;
 
-    void  operator ()( bool bit )  { this->worker.process_bit(bit); }
-    bool  operator ==( md5_context const &o ) const
+    void  operator ()( consumed_type bit )  { this->worker.process_bit(bit); }
+    bool  operator ==( self_type const &o ) const
       { return this->worker == o.worker; }
-    bool  operator !=( md5_context const &o ) const
+    bool  operator !=( self_type const &o ) const
       { return !this->operator ==( o ); }
-    value_type  operator ()() const  { return this->worker.checksum(); }
+    product_type  operator ()() const  { return this->worker.checksum(); }
 
 private:
     md5_computerX  worker;
 
+    // Serialization
+    friend class boost::serialization::access;
+
+    template < class Archive >
+    void  serialize( Archive &ar, const unsigned int version );  // not defined yet
+
 };  // md5_context
 
+/** \brief  A class for generating a MD5 message digest from submitted data.
+
+    This class can accept data in several runs and produce a hash based on that
+    data from the MD5 message-digest algorithm described in RFC 1321.  It should
+    have a similar interface to Boost.CRC, plus specialized function object
+    interfaces for bit- and byte-level processing (inspired by Boost.Bimap).
+    Comparisons are supported for check-summing purposes, but not ordering.
+    Persistence is supported though Boost.Serialization.
+
+    \see  boost::coding::md5_digest
+    \see  boost::coding::md5_context
+    \see  boost::coding::compute_md5(void const*,std::size_t)
+
+    \todo  Replace "uint_fast64_t" with "uint_t&lt;significant_bits_per_length&gt;::
+           fast", where "significant_bits_per_length" is 64.  (Need to tweak
+           Boost.Integer to support 64-bit types.)  Also need to make a
+           convienent constant for the "16" in the base class declaration.
+           (It's the number of words per block, from RFC 1321, section 3.4.)
+ */
 class md5_computer
     : public bit_coding_shell<md5_context, true>
 {
@@ -390,6 +387,13 @@ public:
     // Extras
     static  array<md5_digest::word_type, 64>  generate_hashing_table()
       { return md5_computerX::generate_hashing_table(); }
+
+private:
+    // Serialization
+    friend class boost::serialization::access;
+
+    template < class Archive >
+    void  serialize( Archive &ar, const unsigned int version );  // not defined yet
 
 };  // md5_computer
 
@@ -965,6 +969,7 @@ swap
 
     \return  The MD5 message digest of the data block.
 
+    \see  boost::coding::md5_digest
     \see  boost::coding::md5_computer
  */
 inline
