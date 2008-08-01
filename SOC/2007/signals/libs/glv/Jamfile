@@ -41,12 +41,19 @@ project dataflow/example/glv
         <toolset>msvc:<define>WIN32
     : requirements
         <include>include
+        <toolset>darwin:<linkflags>"-framework AGL"
+        <toolset>darwin:<linkflags>"-framework GLUT"
+        <toolset>darwin:<linkflags>"-framework OpenGL"
+        <toolset>gcc:<library>$(GLlibraries)
+        <toolset>msvc:<define>WIN32
         <toolset>msvc:<define>WIN32
     ;
 
-SOURCES = glv_abstract_binding glv_color glv_core glv_draw glv_glv
-    glv_inputdevice glv_layout glv_sliders glv_textview glv_view
-    glv_binding_glut ;
+SOURCES =  glv_buttons glv_color glv_core glv_draw glv_glv
+    glv_inputdevice glv_layout glv_sliders glv_textview glv_view ;
 
-lib lib_glv : $(SOURCES).cpp
+lib lib_glv : glv_abstract_binding.cpp $(SOURCES).cpp glv_binding_glut.cpp
+    ;
+    
+lib lib_glv_pimpl : glv_pimpl_binding.cpp $(SOURCES).cpp glv_pimpl_binding_glut.cpp
     ;

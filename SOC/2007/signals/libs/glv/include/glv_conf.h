@@ -57,8 +57,8 @@
 #endif
 
 #ifdef WIN32
-
-    #define GLV_PLATFORM		"WIN32"
+	
+	#define GLV_PLATFORM		"WIN32"
 
 	#include <windows.h>
 

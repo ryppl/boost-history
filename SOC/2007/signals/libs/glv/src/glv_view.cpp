@@ -9,9 +9,8 @@ namespace glv{
 	Notifier(),\
 	parent(0), child(0), sibling(0), \
 	draw(cb),\
-	mFlags(Visible | DrawBack | DrawBorder | CropSelf | FocusHighlight | HitTest), \
-	mStyle(&(Style::standard())), mAnchorX(0), mAnchorY(0), mStretchX(0), mStretchY(0),\
-	mFocused(false)
+	mFlags(Visible | DrawBack | DrawBorder | CropSelf | FocusHighlight | HitTest | Controllable), \
+	mStyle(&(Style::standard())), mAnchorX(0), mAnchorY(0), mStretchX(0), mStretchY(0)
 
 View::View(space_t left, space_t top, space_t width, space_t height, drawCallback cb)
 :	Rect(left, top, width, height), VIEW_INIT
@@ -203,7 +202,7 @@ void View::drawBorder() const{
 		float borderWidth = 1.0;
 		//draw::color((mFocused && focusHighlight) ? colors().fore : colors().border);
 		
-		if(mFocused && enabled(FocusHighlight)){
+		if(enabled(Focused) && enabled(FocusHighlight)){
 			HSV hsv(colors().border);
 			hsv.v > 0.5 ? hsv.v -= 0.2 : hsv.v += 0.2;
 			color(Color(hsv));
@@ -259,7 +258,7 @@ View * View::findTarget(space_t &x, space_t &y){
 
 
 void View::focused(bool b){
-	mFocused = b;
+	property(Focused, b);
 	if(b) makeLastSibling(); // move to end of chain, so drawn last
 	notify();
 }
@@ -305,15 +304,15 @@ View& View::pos(Place::t p, space_t x, space_t y){
 	using namespace glv::Place;
 	
 	switch(p){
-		case TL: Rect::pos(x		,y); break;
-		case TC: Rect::pos(x-w/2	,y); break;
-		case TR: Rect::pos(x-w	,y); break;
-		case CL: Rect::pos(x		,y-h/2); break;
-		case CC: Rect::pos(x-w/2	,y-h/2); break;
-		case CR: Rect::pos(x-w	,y-h/2); break;
-		case BL: Rect::pos(x		,y-h); break;
-		case BC: Rect::pos(x-w/2	,y-h); break;
-		case BR: Rect::pos(x-w	,y-h); break;
+		case TL: Rect::pos(x	, y    ); break;
+		case TC: Rect::pos(x-w/2, y    ); break;
+		case TR: Rect::pos(x-w	, y    ); break;
+		case CL: Rect::pos(x	, y-h/2); break;
+		case CC: Rect::pos(x-w/2, y-h/2); break;
+		case CR: Rect::pos(x-w	, y-h/2); break;
+		case BL: Rect::pos(x	, y-h  ); break;
+		case BC: Rect::pos(x-w/2, y-h  ); break;
+		case BR: Rect::pos(x-w	, y-h  ); break;
 	}
 	
 	return *this;
@@ -333,6 +332,9 @@ void View::reanchor(space_t dx, space_t dy){
 	posAdd(dx * mAnchorX, dy * mAnchorY);
 	extent(w + dx * mStretchX, h + dy * mStretchY);
 }
+
+
+View& View::stretch(space_t mx, space_t my){ mStretchX=mx; mStretchY=my; return *this; }
 
 
 void View::style(Style * style){

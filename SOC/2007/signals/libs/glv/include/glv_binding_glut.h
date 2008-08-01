@@ -29,7 +29,10 @@ protected:
 
 class Window : public AbstractWindow{
 public:
-	Window(unsigned int width=800, unsigned int height=600, char * title="GLV Window", GLV * glv=0, double framerate=40);
+	Window(
+		unsigned int width=800, unsigned int height=600, 
+		char * title="GLV Window", GLV * glv=0, double framerate=40, int mode=DefaultBuf
+	);
 	virtual ~Window();
 
 	void draw();	// GLUT draw function

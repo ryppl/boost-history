@@ -14,6 +14,8 @@
 #include <boost/mpl/size.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 
 
 namespace boost { namespace dataflow { namespace blueprint {
@@ -63,10 +65,42 @@ namespace detail
     };
 }
 
-template<typename Component, typename Tag=default_tag>
-class component_t : public based_component<typename runtime_base_class<Component>::type>
+template<typename T, typename Enable=void>
+struct underlying_component_type
 {
-    typedef typename runtime_base_class<Component>::type runtime_base_class_type;
+    typedef T type;
+};
+
+template<typename T>
+struct underlying_component_type<T,
+    typename dataflow::utility::enable_if_type<typename T::element_type>::type >
+{
+    typedef typename T::element_type type;
+};
+
+template<typename T, typename Enable=void>
+struct get_underlying_component
+{
+    T &operator()(T &t) const
+    {
+        return t;
+    }
+};
+
+template<typename T>
+struct get_underlying_component<T, typename dataflow::utility::enable_if_type<typename T::element_type>::type >
+{
+    typename T::element_type &operator()(T &t) const
+    {
+        return *t;
+    }
+};
+
+template<typename Component, typename Tag=default_tag>
+class component_t : public based_component<typename runtime_base_class<typename underlying_component_type<Component>::type>::type>
+{
+    typedef typename underlying_component_type<Component>::type component_type;
+    typedef typename runtime_base_class<component_type>::type runtime_base_class_type;
 public:
     component_t() {component_t_();}
     template<typename T0>
@@ -78,15 +112,15 @@ public:
     
     void invoke()
     {
-        detail::try_invoke<Component, Tag>()(c);
+        detail::try_invoke<component_type, Tag>()(get_underlying_component<Component>()(c));
     }
     virtual bool is_invocable()
     {
-        return is_component_operable<Component, operations::invoke, Tag>::type::value;
+        return is_component_operable<component_type, operations::invoke, Tag>::type::value;
     };
     size_t num_ports() const
     {
-        return mpl::size<typename traits_of<Component, Tag>::type::ports>::value;
+        return mpl::size<typename traits_of<component_type, Tag>::type::ports>::value;
     }
     port & get_port(int port_num)
     {
@@ -103,7 +137,7 @@ private:
     void component_t_()
     {
         for(size_t i=0; i<num_ports(); i++)
-            ports.push_back(blueprint::get_port<Tag>(c, i));
+            ports.push_back(blueprint::get_port<Tag>(get_underlying_component<Component>()(c), i));
     }
     Component c;
     ptr_vector<port> ports;

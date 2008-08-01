@@ -188,7 +188,7 @@
 [import ../example/signals/gil_example.cpp]
 [import ../example/signals/quick_start_examples.cpp]
 
-[import ../example/VTK/vtk_dataflow_support.hpp]
+[import ../../../boost/dataflow/vtk/support.hpp]
 [import ../example/VTK/Cone.cxx]
 
 [import ../example/blueprint/blueprint_example.cpp]

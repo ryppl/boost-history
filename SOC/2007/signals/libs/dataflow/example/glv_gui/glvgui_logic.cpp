@@ -6,7 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <glv.h>
-#include <glv_binding_glut.h>
+#include <glv_pimpl_binding.h>
 
 #include "blueprint_bank.hpp"
 #include "blueprint_window.hpp"
@@ -37,15 +37,14 @@ public:
     {
         if(port<0>().connected())
         {
-            value(port<0>().get(), 0);
+            value(port<0>().get());
             port<1>().set(port<0>().get());
         }
     }
     bool onEvent(glv::Event::t e, glv::GLV& glv)
     {
         bool response = glv::Button::onEvent(e, glv);
-        std::cout <<"preval: " << value(0) << std::endl;
-        port<1>().set(value(0));
+        port<1>().set(value());
         return response;
     }
 };

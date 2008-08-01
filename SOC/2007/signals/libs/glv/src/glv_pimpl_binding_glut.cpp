@@ -1,21 +1,87 @@
 /*	Graphics Library of Views (GLV) - GUI Building Toolkit
 	See COPYRIGHT file for authors and license information */
 
-#include "glv_binding_glut.h"
+#include "glv_pimpl_binding.h"
+#include "glv_core.h"
 
-namespace glv{
+#if defined (__APPLE__) || defined (OSX)
+	#include <GLUT/glut.h>
+#endif
+#if defined(__linux__)
+	#include <GL/glut.h>
+#endif
+#ifdef WIN32
+	#include <GL/glut.h>
+#endif
+
+#include <map>
+#include <iostream>
+
+namespace glv {
+
+class WindowImpl
+{
+public:
+    WindowImpl(Window *window, int window_id)
+        : mWindow(window)
+        , mGLUTWindowId(window_id)
+    {
+        mWindows[mGLUTWindowId]=this;
+    }
+    ~WindowImpl()
+    {
+        mWindows.erase(mGLUTWindowId);
+    }
+	void draw();	// GLUT draw function
+    void scheduleDraw()
+    {
+        scheduleDrawStatic(mGLUTWindowId);
+    }
+    static WindowImpl *getWindowImpl()
+    {
+        return mWindows[glutGetWindow()];
+    }
+    static WindowImpl *getWindowImpl(int window_id)
+    {
+        return mWindows[window_id];
+    }
+    static Window *getWindow()
+    {
+        return getWindowImpl()->mWindow;
+    }
+private:
+    static void scheduleDrawStatic(int window_id)
+    {
+        WindowImpl *impl = WindowImpl::getWindowImpl(window_id);
+        if(impl)
+        {
+            int current = glutGetWindow();
+            glutSetWindow(window_id);
+            impl->draw();
+            glutTimerFunc((unsigned int)(1000.0/WindowImpl::getWindow()->fps()), scheduleDrawStatic, window_id);
+            glutSetWindow(current);
+        }
+    }
+
+    static std::map<int, WindowImpl *> mWindows;
+    static bool mGLUTInitialized;
+
+    Window *mWindow;
+    int mGLUTWindowId;
+    
+    friend class Window;
+};
+
+bool WindowImpl::mGLUTInitialized = false;
+std::map<int, WindowImpl *> WindowImpl::mWindows;
 
 void Application::quit(){
 }
 
 void Application::run(){
-	AbstractApplication::run();
+    GLV_PLATFORM_INIT
 	glutMainLoop();	
 }
-
-
-
-static Window * singletonWindow = NULL;
 
 static void glutDisplayCB(){
 	// this is empty because we are using a periodic timer for drawing
@@ -24,7 +90,8 @@ static void glutDisplayCB(){
 // this must be called whenever a GLUT input event for a keyboard or mouse
 // callback is generated.
 static void modToGLV(){
-	GLV * glv = singletonWindow->glv;
+    
+	GLV * glv = WindowImpl::getWindow()->glv;
 	int mod = glutGetModifiers();	
 	glv->keyboard.alt  (mod & GLUT_ACTIVE_ALT);
 	glv->keyboard.ctrl (mod & GLUT_ACTIVE_CTRL);
@@ -33,7 +100,7 @@ static void modToGLV(){
 
 static void keyToGLV(unsigned int key, bool down, bool special){
 	//printf("GLUT: keyboard event k:%d d:%d s:%d\n", key, down, special);
-	GLV * glv = singletonWindow->glv;
+	GLV * glv = WindowImpl::getWindow()->glv;
 	if(special){
 
 		#define CS(glut, glv) case GLUT_KEY_##glut: key = Key::glv; break;
@@ -61,7 +128,7 @@ static void glutSpecialUpCB(int key, int x, int y){ keyToGLV(key, false, true); 
 
 static void glutMouseCB(int btn, int state, int ax, int ay){
 	//printf("GLUT: mouse event x:%d y:%d bt:#%d,%d\n", ax,ay, btn, state==GLUT_DOWN);
-	GLV * glv = singletonWindow->glv;
+	GLV * glv = WindowImpl::getWindow()->glv;
 	space_t x = (space_t)ax;
 	space_t y = (space_t)ay;
 	space_t relx = x;
@@ -85,7 +152,7 @@ static void glutMouseCB(int btn, int state, int ax, int ay){
 static void glutMotionCB(int ax, int ay){
 	//printf("GLUT: motion event x:%d y:%d\n", ax, ay);
 
-	GLV * glv = singletonWindow->glv;
+	GLV * glv = WindowImpl::getWindow()->glv;
 	space_t x = (space_t)ax;
 	space_t y = (space_t)ay;
 	space_t relx = x;
@@ -99,7 +166,7 @@ static void glutMotionCB(int ax, int ay){
 }
 
 static void glutReshapeCB(int w, int h){
-	singletonWindow->AbstractWindow::resize(w, h);
+	WindowImpl::getWindow()->resize(w, h);
 }
 
 static void registerCBs(){
@@ -113,43 +180,47 @@ static void registerCBs(){
 	glutSpecialUpFunc(glutSpecialUpCB);
 }
 
-static void scheduleDraw(int value){
-	singletonWindow->draw();
-	glutTimerFunc((unsigned int)(1000.0/singletonWindow->fps()), scheduleDraw, 0);
-}
-
-Window :: Window(unsigned int w, unsigned int h, char * title, GLV * glv, double framerate, int mode)
-:	AbstractWindow(w, h, title, glv, framerate, mode)
+Window::Window(
+	unsigned int w, unsigned int h, char * title, GLV * glv, double framerate, int mode
+)
+:	glv(0), mFPS(framerate),
+	mLabel(title), 
+	w(w), h(h),
+	mDispMode(mode),
+	mFullscreen(false), mVisible(true), mIsActive(true)
 {
-	int argc = 0;
-	char * argv[] = {0};
-	if(singletonWindow == NULL){
-		glutInit(&argc,argv);
-		glutInitWindowSize(w, h);
-		//glutInitWindowPosition (100, 100);
-		
-		int bits = 
-			(enabled(SingleBuf ) ? GLUT_SINGLE :0) |
-			(enabled(DoubleBuf ) ? GLUT_DOUBLE :0) |
-			(enabled(AccumBuf  ) ? GLUT_ACCUM  :0) |
-			(enabled(AlphaBuf  ) ? GLUT_ALPHA  :0) |
-			(enabled(DepthBuf  ) ? GLUT_DEPTH  :0) |
-			(enabled(StencilBuf) ? GLUT_STENCIL:0) |
-			(enabled(Stereo    ) ? GLUT_STEREO :0);
-		
-		glutInitDisplayMode(GLUT_RGBA | bits);
-		glutCreateWindow(title);
+	if(glv) setGLV(*glv);
+    
+    if(!WindowImpl::mGLUTInitialized)
+    {
+        int argc = 0;
+        char * argv[] = {0};
 
-		registerCBs();
+        glutInit(&argc,argv);
+        WindowImpl::mGLUTInitialized = true;
+    }
+    glutInitWindowSize(w, h);
+    //glutInitWindowPosition (100, 100);
 		
-		glutIgnoreKeyRepeat(1);
+    int bits = 
+        (enabled(SingleBuf ) ? GLUT_SINGLE :0) |
+        (enabled(DoubleBuf ) ? GLUT_DOUBLE :0) |
+        (enabled(AccumBuf  ) ? GLUT_ACCUM  :0) |
+        (enabled(AlphaBuf  ) ? GLUT_ALPHA  :0) |
+        (enabled(DepthBuf  ) ? GLUT_DEPTH  :0) |
+        (enabled(StencilBuf) ? GLUT_STENCIL:0) |
+        (enabled(Stereo    ) ? GLUT_STEREO :0);
 		
-		singletonWindow = this;
-		scheduleDraw(0);
-	}
+    glutInitDisplayMode(GLUT_RGBA | bits);
+    int window_id = glutCreateWindow(title);
+		
+    glutIgnoreKeyRepeat(1);
+		
+    mImpl.reset(new WindowImpl(this, window_id));
+
+	registerCBs();
+    mImpl->scheduleDraw();
 }
-
-Window::~Window(){ }
 
 void Window::platformFullscreen(){
 
@@ -213,11 +284,16 @@ void Window::platformResize(int width, int height){
 
 void Window::platformShowHide(){ }
 
-void Window::draw(){	
-	if(shouldDraw()){
-		glv->drawGLV(w, h);
+void WindowImpl::draw(){
+    std::cout << "draw" << std::endl;
+	if(mWindow->shouldDraw()){
+		mWindow->glv->drawGLV(mWindow->w, mWindow->h);
 		glutSwapBuffers();
 	}
 }
+
+Window::~Window()
+{}
+
 
 } // end namespace glv

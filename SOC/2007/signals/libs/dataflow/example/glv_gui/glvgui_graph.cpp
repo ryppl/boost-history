@@ -6,7 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <glv.h>
-#include <glv_binding_glut.h>
+#include <glv_pimpl_binding.h>
 
 #include "blueprint_bank.hpp"
 #include "blueprint_window.hpp"

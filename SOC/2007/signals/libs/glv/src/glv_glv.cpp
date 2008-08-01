@@ -13,9 +13,38 @@ GLV::GLV(drawCallback cb, space_t width, space_t height)
 }
 
 
+
+void GLV::broadcastEvent(Event::t e){ 
+
+	View * const root = this;
+	View * cv = root;
+	
+	doEventCallbacks(*cv, e);
+	
+	while(true){
+		if(cv->child) cv = cv->child;
+		
+		else if(cv->sibling) cv = cv->sibling;
+		
+		// retrace upwards until a parent's sibling is found
+		else{
+			while(cv != root && cv->sibling == 0) cv = cv->parent;
+			
+			if(cv->sibling) cv = cv->sibling;
+
+			else break; // break the loop when the traversal returns to the root
+		}
+		
+		doEventCallbacks(*cv, e);
+	}
+}
+
+
 // Since we possibly have multiple event callbacks, we will bubble the event if any
 // one of them has bubbling set to true.
 bool GLV::doEventCallbacks(View& v, Event::t e){
+
+	if(!v.enabled(Controllable)) return false;
 
 	bool bubble = v.onEvent(e, *this);					// Execute virtual callback
 
@@ -147,14 +176,14 @@ void GLV::drawWidgets(unsigned int w, unsigned int h){
 
 void GLV::preamble(unsigned int w, unsigned int h){
 	using namespace draw;
+	glDrawBuffer(GL_BACK);
 	clearColor(colors().back.r, colors().back.g, colors().back.b, colors().back.a);
-	clear(ColorBufferBit | DepthBufferBit);
+	clear(ColorBufferBit | DepthBufferBit);	// TODO: this needs to be coordinated with the display settings
 }
 
 void GLV::propagateEvent(){ //printf("GLV::propagateEvent(): %s\n", Event::getName(eventtype));
 	View * v = mFocusedView;
-	Event::t e = eventType();	// get current event type
-
+	Event::t e = eventType();
 	while(v && doEventCallbacks(*v, e)) v = v->parent;
 }
 

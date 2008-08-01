@@ -33,7 +33,7 @@ bool are_binary_operable(port &left, port &right)
 
     if (right.is_complemented_port())
     {
-        port &resolved_left = left.resolve_key(left);
+        port &resolved_left = left.resolve_key(right);
         
         return right.as<complemented_port>().template is_operable_complement_to_port<Operation>()
             && (right.as<complemented_port>().complement_type_info()

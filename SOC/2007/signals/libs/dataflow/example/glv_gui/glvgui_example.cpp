@@ -6,7 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <glv.h>
-#include <glv_binding_glut.h>
+#include <glv_pimpl_binding.h>
 
 #include "blueprint_bank.hpp"
 #include "blueprint_window.hpp"
@@ -26,13 +26,13 @@ class output_valuator : public signals::filter<output_valuator, void(float), boo
 public:
     typedef glv::View runtime_base_class_type;
     output_valuator()
-        : glv::Slider(glv::Rect(100,100),0)
+        : glv::Slider(glv::Rect(100,100))
     {
         anchor(glv::Place::CL);
     }
     void operator()(float x)
     {
-        value(x, 0);
+        value(x);
         out(x);
     }
 };
@@ -43,7 +43,7 @@ class input_valuator : public boost::signals::filter<input_valuator, void(float)
 public:
     typedef glv::View runtime_base_class_type;
     input_valuator()
-        : glv::Slider(glv::Rect(100,100),0)
+        : glv::Slider(glv::Rect(100,100))
     {
         anchor(glv::Place::CL);
     }
@@ -51,7 +51,7 @@ public:
     bool onEvent(glv::Event::t e, glv::GLV& glv)
     {
         bool response = glv::Slider::onEvent(e, glv);
-        out(value(0));
+        out(value());
         return response;
     }
 };
@@ -69,8 +69,8 @@ public:
         add_component<input_valuator>("in");
 #ifndef BOOST_MSVC
         // a doubler (this doesn't compile on MSVC...)
-        add_component<signals::function<void (int), int(int)> >
-            ("x2", boost::function<int(int)>(boost::bind(std::multiplies<int>(), _1, 2)));
+        add_component<signals::function<void (float), float(float)> >
+            ("x2", boost::function<float(float)>(boost::bind(std::multiplies<float>(), _1, 2)));
 #endif
     }
 };

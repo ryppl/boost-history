@@ -36,7 +36,7 @@
 #include "vtkActor.h"
 #include "vtkRenderer.h"
 
-#include "vtk_dataflow_support.hpp"
+#include <boost/dataflow/vtk/support.hpp>
 
 // Callback for the interaction
 class vtkMyCallback : public vtkCommand

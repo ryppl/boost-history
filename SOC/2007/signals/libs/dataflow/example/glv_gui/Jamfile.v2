@@ -8,7 +8,7 @@ import os ;
 project dataflow/example/glv_gui
     : requirements
       <library>/boost/signals//boost_signals/<link>static
-      <library>$(TOP)/libs/glv//lib_glv/<link>static
+      <library>$(TOP)/libs/glv//lib_glv_pimpl/<link>static
       <library>$(TOP)/libs/dataflow/build/managed//dataflow_managed/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
@@ -18,7 +18,10 @@ local sources =
     blueprint_window
     blueprint_component
     ;
+    
+lib glv_gui : $(sources).cpp : <link>static ;
 
-exe glv_example : glvgui_example.cpp $(sources).cpp ;
-exe glv_logic : glvgui_logic.cpp $(sources).cpp ;
-exe glv_graph : glvgui_graph.cpp $(sources).cpp ;
+exe glv_example : glvgui_example.cpp glv_gui ;
+exe glv_logic : glvgui_logic.cpp glv_gui ;
+exe glv_graph : glvgui_graph.cpp glv_gui ;
+exe glv_vtk : glvgui_vtk.cpp glv_gui $(TOP)/libs/vtk//VTK_dataflow ;

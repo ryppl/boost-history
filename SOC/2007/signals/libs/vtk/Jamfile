@@ -1,0 +1,44 @@
+# Copyright 2008 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+lib vtkRendering : : <name>vtkRendering ;
+lib vtkCommon : : <name>vtkCommon ;
+lib vtkFiltering : : <name>vtkFiltering ;
+lib vtkGraphics : : <name>vtkGraphics ;
+lib vtkHybrid : : <name>vtkHybrid ;
+lib vtkIO : : <name>vtkIO ;
+lib vtkImaging : : <name>vtkImaging ;
+lib vtkGenericFiltering : : <name>vtkGenericFiltering ;
+lib vtkVolumeRendering : : <name>vtkVolumeRendering ;
+lib vtkWidgets : : <name>vtkWidgets ;
+lib vtkftgl : : <name>vtkftgl ;
+
+lib GL : : <name>GL <search>/usr/X11R6/lib ;
+lib GLU : : <name>GLU <search>/usr/X11R6/lib ;
+lib OSMesa : : <name>OSMesa <search>/usr/X11R6/lib ;
+lib X11 : : <name>X11 <search>/usr/X11R6/lib ;
+lib Xt : : <name>Xt <search>/usr/X11R6/lib ;
+
+lib pthread : : <name>pthread ;
+
+project dataflow/vtk
+    : requirements
+    : usage-requirements
+      <library>vtkCommon/<link>shared
+      <library>vtkRendering/<link>shared
+      <library>vtkFiltering/<link>shared
+      <library>vtkGraphics/<link>shared
+
+      <toolset>darwin:<include>/usr/local/include/vtk-5.0/
+      <toolset>darwin:<include>/usr/include/vtk-5.0/
+      <toolset>darwin:<linkflags>"-framework CoreServices"
+#      <toolset>darwin:<library>GL
+#      <toolset>darwin:<library>X11
+#      <toolset>darwin:<library>Xt
+	  <toolset>gcc:<library>pthread
+
+    ;
+    
+alias VTK_dataflow ;

@@ -144,7 +144,6 @@ bool character(int c, float dx, float dy){
 	return c == ' ';
 }
 
-
 void grid(float l, float t, float w, float h, float divx, float divy, bool incEnds){
 	double inc, r=l+w, b=t+h;
 	begin(Lines);
@@ -217,14 +216,14 @@ void spokes(float l, float t, float w, float h, int n, float a){
 
 
 void text(const char * s, float l, float t, float lineSpacing, unsigned int tabSpaces){
-	float x=l, y=t, tabUnits = tabSpaces*8;
+	float x=l, y=t, tabUnits = tabSpaces * Glyph::baseline();
 	//x = (int)x + 0.5; y = (int)y + 0.5;
 	begin(Lines);
 	while(*s){
 		switch(*s){
 			case '\t':	x = ((int)(x/tabUnits) + 1) * tabUnits; break;
-			case '\n':	x = l; y += 16 * lineSpacing; break;
-			default:	if(character(*s, x, y)) x += 8;
+			case '\n':	x = l; y += Glyph::baseline() * 2.f * lineSpacing; break;
+			default:	if(character(*s, x, y)) x += Glyph::baseline();
 		}
 		s++;
 	}

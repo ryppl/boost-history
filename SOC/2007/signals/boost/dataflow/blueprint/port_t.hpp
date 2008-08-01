@@ -139,6 +139,17 @@ private:
     };
     virtual bool is_operable_complement_to_port(int operation_uuid)
     {
+        typedef port_type right_type;
+        typedef typename port_traits_type::complement_port_type left_type;
+        
+        if(operation_uuid == runtime::property<operations::connect, int>()())
+            return dataflow::are_binary_operable<
+                left_type, right_type, operations::connect, Tag>::type::value; 
+
+        if(operation_uuid == runtime::property<operations::extract, int>()())
+            return dataflow::are_binary_operable<
+                left_type, right_type, operations::extract, Tag>::type::value;
+
         return false;
     }
 

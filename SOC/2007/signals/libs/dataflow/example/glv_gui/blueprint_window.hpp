@@ -7,7 +7,7 @@
 #define BLUEPRINT_WINDOW_HPP
 
 #include "glv.h"
-#include "glv_binding_glut.h"
+#include "glv_pimpl_binding.h"
 
 #include <boost/dataflow/blueprint/network.hpp>
 #include <boost/dataflow/signals/runtime_support.hpp>

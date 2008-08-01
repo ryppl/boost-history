@@ -1,8 +1,10 @@
-#ifndef INC_GLV_ABSTRACT_BINDING_H
-#define INC_GLV_ABSTRACT_BINDING_H
+#ifndef INC_GLV_PIMPL_BINDING_H
+#define INC_GLV_PIMPL_BINDING_H
 
 /*	Graphics Library of Views (GLV) - GUI Building Toolkit
 	See COPYRIGHT file for authors and license information */
+
+#include <memory>
 
 namespace glv{
 
@@ -20,15 +22,16 @@ enum{
 	DefaultBuf	= DoubleBuf|AlphaBuf|DepthBuf
 };
 
+class WindowImpl;
 
-class AbstractWindow{
+class Window{
 
 public:
-	AbstractWindow(
+	Window(
 		unsigned int width=800, unsigned int height=600, 
 		char * title="GLV Window", GLV * glv=0, double framerate=40.0, int mode=DefaultBuf
 	);
-	virtual ~AbstractWindow(){}
+	~Window();
 
 	int enabled(int dispMode) const { return mDispMode & dispMode; }
 	void fullscreen(bool on);
@@ -59,16 +62,24 @@ protected:
 	
 	void onContextChange();
 
-	// These virtuals should be overridden for the specific bindings
-	virtual void platformFullscreen(){}
-	virtual void platformHideCursor(bool hide){}
-	virtual void platformResize(int width, int height){}	// platform specific resize stuff
-	virtual void platformShowHide(){}						// platform specific show/hide stuff
+	// These will be implemented in the the specific bindings
+	void platformFullscreen();
+	void platformHideCursor(bool hide);
+	void platformResize(int width, int height);	// platform specific resize stuff
+	void platformShowHide();						// platform specific show/hide stuff
+    
+    // pointer to the binding-specific implementation
+    std::auto_ptr<WindowImpl> mImpl;
+    // with the auto_ptr for the implementation, disallow assignment and copy
+private:
+    const Window& operator=(const Window&);
+    Window(const Window&);
+    friend class WindowImpl;
 };
 
 
 
-class AbstractApplication{
+class Application{
 public:
 
 	static void			run();
@@ -76,9 +87,11 @@ public:
 //	static void			windowNotify(Notifier * sender, void * userdata);
 
 protected:
-	static AbstractWindow *focusedWindow;
+	static Window *focusedWindow;
 };
 
+typedef Window AbstractWindow;
+typedef Application AbstractApplication;
 
 } // glv::
 

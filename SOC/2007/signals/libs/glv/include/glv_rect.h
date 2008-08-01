@@ -44,9 +44,10 @@ public:
 
 	const TRect& operator= (const TRect& r);
 
-	void extent(T v);				///< Set extent to fit in square.
-	void extent(T w, T h);			///< Set extent.
 	void copyUnder(const TRect<T>& from, T by=0);
+	void extent(T v);				///< Set extent to be square.
+	void extent(T w, T h);			///< Set extent.
+	void fitSquare(T v);			///< Set extent to fit in square.
 	void fixNegativeExtent();		///< Fixes negative width or height to be positive.
 	void insetFrom(const TRect<T>& from, T inset);	///< Make TRect relative inset from 'from'
 	void pos(T left, T top);		///< Set left-top position.
@@ -122,7 +123,7 @@ TEM void TRect<T>::copyUnder(const TRect<T> & r, T by){
 	extent(r.w, r.h);
 }
 
-TEM inline void TRect<T>::extent(T v){ w > h ? extent(v, v * h/w) : extent(v * w/h, v); }
+TEM inline void TRect<T>::extent(T v){ extent(v, v); }
 
 TEM inline void TRect<T>::extent(T wi, T he){
 	T dx = wi - w;
@@ -130,6 +131,8 @@ TEM inline void TRect<T>::extent(T wi, T he){
 	w = wi; h = he;
 	onResize(dx, dy);
 }
+
+TEM inline void TRect<T>::fitSquare(T v){ w > h ? extent(v, v * h/w) : extent(v * w/h, v); }
 
 TEM inline void TRect<T>::fixNegativeExtent(){
 	if(w < (T)0){ w = -w; l -= w; }

@@ -37,11 +37,13 @@ enum{
 enum{
 	Blend			= GL_BLEND,
 	DepthTest		= GL_DEPTH_TEST,
+	Fog				= GL_FOG,
 	LineSmooth		= GL_LINE_SMOOTH,
 	LineStipple		= GL_LINE_STIPPLE,
 	PolygonSmooth	= GL_POLYGON_SMOOTH,
 	PointSmooth		= GL_POINT_SMOOTH,
-	ScissorTest		= GL_SCISSOR_TEST
+	ScissorTest		= GL_SCISSOR_TEST,
+	Texture2D		= GL_TEXTURE_2D
 };
 
 // attribute masks
@@ -64,24 +66,32 @@ struct Glyph{
 	const unsigned char field;
 	float x[8], y[8];
 	
-	unsigned char dots(){ return (field & MaskDots) >> 5; }
-	unsigned char once(){ return (field           ) >> 7; }
-	unsigned char size(){ return (field & MaskSize)     ; }
+	static int cap()		{ return 0; }
+	static int median()		{ return 3; }
+	static int baseline()	{ return 8; }
+	static int descent()	{ return 11; }
+	static int width()		{ return 8; }
+	
+	unsigned char dots() const { return (field & MaskDots) >> 5; }
+	unsigned char once() const { return (field           ) >> 7; }
+	unsigned char size() const { return (field & MaskSize)     ; }
 };
 
 
 
 // Basic rendering commands
 void begin(int primitive);							///< Begin vertex group delimitation
+void blendFunc(int sfactor, int dfactor);			///< Set blending function
+void blendTrans();									///< Set blending function to transparent
+void blendAdd();									///< Set blending function to additive
 void clear(int mask);								///< Clear drawing buffers
 void clearColor(float r, float g, float b, float a=1);	///< Set clear color
 void color(float gray, float a=1);					///< Set current draw color
 void color(float r, float g, float b, float a=1);		///< Set current draw color
 void color(const Color& c);							///< Set current draw color
 void color(const Color& c, float a);				///< Set current draw color, but override alpha component
-void disable(int cap);								///< Disable a rendering capability
-void enable(int cap);								///< Enable a rendering capability
 void end();											///< End vertex group delimitation
+void fog(float end, float start, float density=1);	///< Set linear fog parameters
 void identity();									///< Load identity transform matrix
 void lineStipple(char factor, short pattern);		///< Specify line stipple pattern
 void lineWidth(float val);							///< Set width of lines
@@ -104,13 +114,15 @@ void rotateY(float deg);
 void rotateZ(float deg);
 void scale(float x, float y, float z=1.f);
 void scissor(float x, float y, float w, float h);
+void texCoord(float x, float y);
 void translate(float x, float y, float z=0.f);
 void translateX(float x);
 void translateY(float y);
 void translateZ(float z);
 void viewport(float x, float y, float w, float h);
 
-void vertex(float x, float y, float z=0);
+template <class V3> void vertex(const V3& v);		///< Send single vertex given 3-element array accessible object
+void vertex(float x, float y, float z=0);			///< Send single vertex
 
 template <class T>
 void vertexY(T * ys, unsigned long len, T xInc=1, int prim = LineStrip);
@@ -121,6 +133,7 @@ void vertex(T * xs, T * ys, unsigned long len, int prim = LineStrip);
 
 // icons
 void check		(float l, float t, float r, float b);
+template <int N> void dot(float l, float t, float r, float b);
 void frame		(float l, float t, float r, float b);
 void minus		(float l, float t, float r, float b);
 void plus		(float l, float t, float r, float b);
@@ -164,6 +177,21 @@ bool character(int c, float dx=0, float dy=0);
 void text(const char * s, float l=0, float t=0, float lineSpacing=1, unsigned int tabSpaces=4);
 
 
+/// Functor for disabling rendering capabilities
+struct Disable{
+	const Disable& operator() (int cap) const { glDisable(cap); return *this; }
+	const Disable& operator<< (int cap) const { return (*this)(cap); }
+};
+
+static Disable disable;
+
+/// Functor for enabling rendering capabilities
+struct Enable{
+	const Enable& operator() (int cap) const { glEnable(cap); return *this; }
+	const Enable& operator<< (int cap) const { return (*this)(cap); }
+};
+
+static Enable enable;
 
 
 
@@ -171,6 +199,22 @@ void text(const char * s, float l=0, float t=0, float lineSpacing=1, unsigned in
 
 inline void check(float l, float t, float r, float b){
 	shape(LineStrip, l,0.5*(t+b), l+(r-l)*0.3,b, r,t);
+}
+
+template <int N>
+void dot(float l, float t, float r, float b){
+	float px=1, py=0, rx=cos(6.28318530718/N), ry=sin(6.28318530718/N);
+	float mx=0.5*(l+r), my=0.5*(t+b), sx=(r-l)*0.5, sy=(b-t)*0.5;
+	
+	begin(TriangleFan);
+	vertex(mx, my);
+	for(int i=0; i<N+1; ++i){	
+		vertex(mx+px*sx, my+py*sy);
+		float tx=px;
+		px = px*rx - py*ry;
+		py = tx*ry + py*rx;
+	}
+	end();
 }
 
 inline void frame(float l, float t, float r, float b){
@@ -259,6 +303,9 @@ inline void translateX(float x){ translate(x, 0, 0); }
 inline void translateY(float y){ translate(0, y, 0); }
 inline void translateZ(float z){ translate(0, 0, z); }
 
+template <class V3>
+inline void vertex(const V3& v){ vertex(v[0], v[1], v[2]); }
+
 template <class T>
 void vertexY(T * ys, unsigned long len, T xInc, int prim){
 	begin(prim);
@@ -281,21 +328,15 @@ inline void begin(int primitive){ glBegin(primitive); }
 inline void clear(int mask){ glClear(mask); }
 inline void clearColor(float r, float g, float b, float a){ glClearColor(r,g,b,a); }
 inline void color(float r, float g, float b, float a){ glColor4f(r,g,b,a); }
-inline void disable(int cap){ glDisable(cap); }
-inline void enable(int cap){ glEnable(cap); }
 inline void end(){ glEnd(); }
 
 // we need to push and pop matrices and viewport bit
 template <class T>
 void push2D(T w, T h){
-
-	disable(DepthTest);
-	disable(PolygonSmooth);	// to ensure polygon edges blend properly
-	
-	enable(Blend);
-	enable(LineSmooth);
-	
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							// to ensure polygon edges blend properly
+	disable << DepthTest << PolygonSmooth;
+	enable << Blend << LineSmooth;
+	blendTrans();
 
 	push(Projection); pushAttrib(ViewPortBit); identity();
 		viewport(0, 0, w, h);
@@ -313,13 +354,13 @@ inline void pop2D(){
 
 
 template <class T>
-void push3D(T w, T h, T znear, T zfar){
+void push3D(T w, T h, T near, T far){
 	//pushAttrib(DepthBufferBit);
 	pushAttrib(ColorBufferBit | DepthBufferBit | EnableBit);
 	enable(DepthTest);
 	
 	push(Projection); identity();
-		gluPerspective(45, w/(GLfloat)h, znear, zfar);
+		gluPerspective(45, w/(GLfloat)h, near, far);
 	
 	push(Model); identity();
 		translate(0, 0, -2.42);
@@ -330,6 +371,15 @@ inline void pop3D(){
 	popAttrib();					// for popping GL_DEPTH_BUFFER_BIT
 	pop(Projection);
 	pop(Model);
+}
+
+inline void blendFunc(int sfactor, int dfactor){ glBlendFunc(sfactor, dfactor); }
+inline void blendTrans(){ blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
+inline void blendAdd(){ blendFunc(GL_SRC_COLOR, GL_ONE); }
+
+inline void fog(float end, float start, float density){
+	glFogi(GL_FOG_MODE, GL_LINEAR); 
+	glFogf(GL_FOG_DENSITY, density); glFogf(GL_FOG_START, start); glFogf(GL_FOG_END, end);
 }
 
 inline void identity(){ glLoadIdentity(); }
@@ -347,6 +397,7 @@ inline void rotateY(float deg){ glRotatef(deg, 0.f, 1.f, 0.f); }
 inline void rotateZ(float deg){ glRotatef(deg, 0.f, 0.f, 1.f); }
 inline void scale(float x, float y, float z){ glScalef(x,y,z); }
 inline void scissor(float x, float y, float w, float h){ glScissor((GLint)x,(GLint)y,(GLsizei)w,(GLsizei)h); }
+inline void texCoord(float x, float y){ glTexCoord2f(x,y); }
 inline void translate(float x, float y, float z){ glTranslatef(x,y,z); }
 inline void viewport(float x, float y, float w, float h){ glViewport((GLint)x,(GLint)y,(GLsizei)w,(GLsizei)h); }
 inline void vertex(float x, float y, float z){ glVertex3f(x,y,z); }

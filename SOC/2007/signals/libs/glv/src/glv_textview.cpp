@@ -14,13 +14,19 @@ namespace glv{
 	label(str);\
 	vertical(vert);
 
-Label::Label(const std::string str, bool vert)
+Label::Label(const std::string& str, bool vert)
 :	View(0,0,0,0), CTOR_LIST
 {	CTOR_BODY }
 
-Label::Label(const std::string str, space_t l, space_t t, bool vert)
+Label::Label(const std::string& str, space_t l, space_t t, bool vert)
 :	View(l,t,0,0), CTOR_LIST
 {	CTOR_BODY }
+
+Label::Label(const std::string& str, Place::t p, space_t px, space_t py, bool vert)
+:	View(0,0,0,0), CTOR_LIST
+{	CTOR_BODY 
+	pos(p, px, py).anchor(p);
+}
 
 #undef CTOR_LIST
 #undef CTOR_BODY

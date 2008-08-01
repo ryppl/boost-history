@@ -5,6 +5,8 @@
 	See COPYRIGHT file for authors and license information */
 
 #include "glv_core.h"
+#include "glv_widget.h"
+#include <vector>
 
 namespace glv {
 
@@ -12,110 +14,6 @@ namespace glv {
 // LJP: The constructor for widgets takes a Rect as an argument rather than
 // individual l,t,w,h components since it's more flexible for layout and 
 // only requires writing one constructor.
-
-/// Icon function type
-typedef void (* iconFunc)(float l, float t, float r, float b);
-
-template <int N>
-class ButtonBase : public View{
-public:
-
-	ButtonBase(const Rect& r=Rect(20), bool toggles=true, iconFunc on=draw::rect, iconFunc off=0, space_t iconInset=2)
-	:	View(r), mIconOff(off), mIconOn(on), mIconInset(iconInset), mToggles(toggles)
-	{
-		valueMin();
-	}
-
-	
-	ButtonBase& iconInset(space_t v){ mIconInset = v; return *this; }
-
-	/// Set button's inactive icon.
-	ButtonBase& iconOff(iconFunc fnc){ mIconOff = fnc; return *this; }
-	
-	/// Set button's active icon.
-	ButtonBase& iconOn(iconFunc fnc){ mIconOn = fnc; return *this; }
-	
-	ButtonBase& toggles(bool v){ mToggles = v; return *this; }
-	
-	ButtonBase& value(bool v, int i){ mVals[i] = v; return *this; }
-	
-	ButtonBase& valueMin(){ memset(mVals, 0, sizeof(bool) * size()); return *this; }
-	
-	
-	space_t iconInset() const { return mIconInset; }
-	
-	bool toggles() const { return mToggles; }
-	
-	/// Get value of button
-	bool value(int i=0) const { return mVals[i]; }
-	
-	static int size(){ return N; }
-
-
-protected:
-	iconFunc mIconOff, mIconOn;	// state icons
-	space_t mIconInset;			// num pixels to inset icon
-	bool mVals[N];				// values
-	bool mToggles;				// whether button stays on or off when clicked once
-};
-
-
-
-
-/// Button widget
-class Button : public ButtonBase<1>{
-public:
-
-	using ButtonBase<1>::iconInset;
-	using ButtonBase<1>::toggles;
-	using ButtonBase<1>::value;
-	
-	/// Constructor
-	Button(const Rect& r=Rect(20), bool toggles=true, iconFunc on=draw::rect, iconFunc off=0);
-	
-	virtual void onDraw();
-	virtual bool onEvent(Event::t e, GLV& glv);
-};
-
-
-
-template <int Nx, int Ny=1>
-class Buttons : public ButtonBase<Nx * Ny>{
-public:
-
-	using ButtonBase<Nx * Ny>::iconInset;
-	using ButtonBase<Nx * Ny>::toggles;
-	using ButtonBase<Nx * Ny>::value;
-	using ButtonBase<Nx * Ny>::valueMin;
-	using ButtonBase<Nx * Ny>::w;
-	using ButtonBase<Nx * Ny>::h;
-	using ButtonBase<Nx * Ny>::colors;
-
-	/// Constructor
-	Buttons(const Rect& r=Rect(20), bool mutExc=false, iconFunc on=draw::rect, iconFunc off=0);
-	
-	int lastClicked() const;
-
-	virtual void onDraw();
-	virtual bool onEvent(Event::t e, GLV& glv);
-
-protected:
-
-	using ButtonBase<Nx * Ny>::mIconOn;
-	using ButtonBase<Nx * Ny>::mIconOff;
-
-	int cx, cy;
-	
-	float rNx(){ return 1./Nx; }
-	float rNy(){ return 1./Ny; }
-	int index(int x, int y) const { return x + y*Nx; }
-	float cellW(){ return w * rNx(); }
-	float cellH(){ return h * rNy(); }
-	float iconW(){ return cellW() - 2*iconInset() + 0.5; }
-	float iconH(){ return cellH() - 2*iconInset() + 0.5; }
-};
-
-
 
 /// Abstract multidimensional slider
 
@@ -130,10 +28,10 @@ public:
 	
 	float value(int dim=0) const;			///< Returns a slider value
 	
-	void value(float val, int dim);			///< Sets a slider value
-	void valueAdd(float val, int dim);		///< Add to a slider value
-	void valueMax();						///< Max all slider values
-	void valueMid();						///< Center all slider values
+	SliderBase& value(float val, int dim);		///< Sets a slider value
+	SliderBase& valueAdd(float val, int dim);	///< Add to a slider value
+	SliderBase& valueMax();						///< Max all slider values
+	SliderBase& valueMid();						///< Center all slider values
 	
 	static int dimensions(){ return Dim; }	///< Returns number of dimensions of slider
 
@@ -150,15 +48,18 @@ protected:
 
 
 /// A 1-D slider
-class Slider : public SliderBase<1>{
-public:
-
-	/// Constructor
-	Slider(const Rect& r=Rect(200,20), float val=0);
-
-	virtual void onDraw();
-	virtual bool onEvent(Event::t e, GLV & glv);
-};
+//class Slider : public SliderBase<1>{
+//public:
+//
+//	/// Constructor
+//	Slider(const Rect& r=Rect(200,20), float val=0);
+//
+//	float value() const { return SliderBase<1>::value(0); }		///< Return slider value
+//	Slider& value(float v){ SliderBase<1>::value(v,0); return *this; }		///< Set slider value
+//
+//	virtual void onDraw();
+//	virtual bool onEvent(Event::t e, GLV & glv);
+//};
 
 
 
@@ -210,130 +111,286 @@ protected:
 
 
 
+template <class V>
+class Slider1DBase: public ValueWidget<V>{
+public:
+	GLV_INHERIT_VALUEWIDGET
+
+	Slider1DBase(const Rect& r, int nx, int ny, bool dragSelect=false);
+
+	virtual ~Slider1DBase(){}
+	
+	virtual void onDraw();
+	virtual bool onEvent(Event::t e, GLV& glv);
+	
+protected:
+	float mAcc;
+
+	void selectSlider(GLV& g, bool click);
+	bool isVertical() const { return this->dy() > this->dx(); }
+};
+
+
+/// Single slider
+class Slider : public Slider1DBase<Values<float> >{
+public:
+	typedef Slider1DBase<Values<float> > super;
+
+	Slider(const Rect& r=Rect(20)): super(r, 1, 1, false){}
+	
+	float value() const { return super::value()[0]; }
+	Slider& value(float v){ super::value()[0] = v; return *this; }
+};
+
+
+/// Multiple sliders
+typedef Slider1DBase<Array<float> > Sliders;
+
+
+
+
+//there must be at least 3 points
+class FunctionGraph : public View{
+public:
+	class Curve : public Array<float>{
+	public:
+		Curve(int res)
+		: Array<float>(res)
+		{}
+		
+		~Curve() {}
+	};
+	
+	struct Knot {
+	public:
+		Knot() : x(0), y(0)
+		{}
+		
+		~Knot() {}
+		
+		Knot(const Knot& k) : x(k.x), y(k.y)
+		{}
+		
+		float x;
+		float y;
+	};
+
+public:
+	FunctionGraph(const Rect& r, int nKnots, int res);
+	virtual ~FunctionGraph();
+	
+	virtual void onDraw();
+	virtual bool onEvent(Event::t e, GLV& glv);
+
+	void eval(int n, float *vals);
+	void tension(float v) {mTension = v; calcCurves();}
+	float tension() {return mTension;}
+
+protected:
+	void calcCurves();
+	
+	/*
+	Tension: 1 is high, 0 normal, -1 is low
+	Bias: 0 is even,
+	positive is towards first segment,
+	negative towards the other
+	*/
+	inline float HermiteInterpolate( float y0, float y1,
+						float y2, float y3,
+						float mu,
+						float tension,
+						float bias)
+	{
+		float m0,m1,mu2,mu3;
+		float a0,a1,a2,a3;
+
+		mu2 = mu * mu;
+		mu3 = mu2 * mu;
+		m0  = (y1-y0)*(1+bias)*(1-tension)/2;
+		m0 += (y2-y1)*(1-bias)*(1-tension)/2;
+		m1  = (y2-y1)*(1+bias)*(1-tension)/2;
+		m1 += (y3-y2)*(1-bias)*(1-tension)/2;
+		a0 =  2*mu3 - 3*mu2 + 1;
+		a1 =    mu3 - 2*mu2 + mu;
+		a2 =    mu3 -   mu2;
+		a3 = -2*mu3 + 3*mu2;
+		
+		return (a0*y1+a1*m0+a2*m1+a3*y2);
+	}
+	
+	//returns -1 on failure (> mKnobSize pixels away)
+	int knotHitTest(space_t x, space_t y);
+
+	float mTension;
+	int mKnobSize;
+	int mCurrentKnot;
+	int mNKnots;
+	Knot *mKnots;
+	std::vector<Curve *> mCurves;
+};
+
+
 // Implementation ______________________________________________________________
-
-template <int Nx, int Ny>
-Buttons<Nx, Ny>::Buttons(const Rect& r, bool mutExc, iconFunc on, iconFunc off)
-:	ButtonBase<Nx*Ny>(r, !mutExc, on, off), cx(0), cy(0)
-{}
-
-
-template <int Nx, int Ny>
-int Buttons<Nx, Ny>::lastClicked() const{ return index(cx, cy); }
-
-
-template <int Nx, int Ny>
-void Buttons<Nx, Ny>::onDraw(){
-	using namespace glv::draw;
-
-	float wi = pix(w);
-	float hi = pix(h);
-	float wc = cellW();
-	float hc = cellH();
-
-	// draw the grid lines
-	color(colors().border);
-	lineWidth(1);
-	begin(Lines);
-		for(int x=1; x<Nx; ++x){
-			vertex(pix(x * wc), 0); vertex(pix(x * wc), hi);
-		}
-		for(int y=1; y<Ny; ++y){
-			vertex(0, pix(y * hc), 0); vertex(wi, pix(y * hc));
-		}
-	end();
-	
-	for(int x=0; x<Nx; ++x){
-	
-		float dx = x * wc + iconInset();
-	
-		for(int y=0; y<Ny; ++y){
-		
-			float dy = y * hc + iconInset();
-		
-			if(value(index(x,y))){
-				color(colors().fore);
-				if(mIconOn) mIconOn(pix(dx), pix(dy), pix(dx+iconW()), pix(dy+iconH()+0.5));
-			}
-			else{
-				color(colors().fore);
-				if(mIconOff) mIconOff(pix(dx), pix(dy), pix(dx+iconW()), pix(dy+iconH()+0.5));
-			}
-		}
-	}
-}
-
-template <int Nx, int Ny>
-bool Buttons<Nx, Ny>::onEvent(Event::t e, GLV& g){
-	switch(e){		
-	case Event::MouseDown:
-		if(g.mouse.left()){
-			cx = (int)((g.mouse.xRel() / w) * Nx);
-			cy = (int)((g.mouse.yRel() / h) * Ny);
-			cx < 0 ? cx=0 : cx>=Nx ? cx=Nx-1 : 0;
-			cy < 0 ? cy=0 : cy>=Ny ? cy=Ny-1 : 0;
-			
-			if(!toggles()){ valueMin(); value(true, index(cx, cy)); }
-			else value(!value(index(cx, cy)), index(cx, cy));
-			return false;
-		}
-	default: break;
-	}
-	return true;
-}
-
-
 
 // SliderBase
 
-template <int Dim>
-SliderBase<Dim>::SliderBase(const Rect& r)
+#define TEM template <int Dim>
+
+TEM SliderBase<Dim>::SliderBase(const Rect& r)
 :	View(r)
 {
 	memset(mAcc, 0, sizeof(float) * Dim);
 	memset(mVal, 0, sizeof(float) * Dim);
 }
 
-template <int Dim>
-inline void SliderBase<Dim>::valueAdd(float add, int dim){
-	if(!validDim(dim)) return;
-	float acc = mAcc[dim] + add;
-	mAcc[dim] = mVal[dim] = acc;
-	clip(mVal[dim]);	// clip in [0, 1]
-}
-
-template <int Dim>
-inline float SliderBase<Dim>::value(int dim) const{
+TEM inline float SliderBase<Dim>::value(int dim) const{
 	return validDim(dim) ? mVal[dim] : 0;
 }
 
-template <int Dim>
-inline void SliderBase<Dim>::valueMid(){
-	for(int i=0; i<Dim; ++i) mVal[i] = mAcc[i] = 0.5;
+TEM inline SliderBase<Dim>& SliderBase<Dim>::value(float value, int dim){
+	if(validDim(dim)) mVal[dim] = mAcc[dim] = value; return *this;
 }
 
-template <int Dim>
-inline void SliderBase<Dim>::valueMax(){
-	for(int i=0; i<Dim; ++i) mVal[i] = mAcc[i] = 1;
+TEM inline SliderBase<Dim>& SliderBase<Dim>::valueAdd(float add, int dim){
+	if(!validDim(dim)) return *this;
+	float acc = mAcc[dim] + add;
+	mAcc[dim] = mVal[dim] = acc;
+	clip(mVal[dim]);	// clip in [0, 1]
+	return *this;
 }
 
-template <int Dim>
-inline void SliderBase<Dim>::value(float value, int dim){
-	if(validDim(dim)) mVal[dim] = mAcc[dim] = value;
+TEM inline SliderBase<Dim>& SliderBase<Dim>::valueMax(){
+	for(int i=0; i<Dim; ++i) mVal[i] = mAcc[i] = 1; return *this;
+}
+
+TEM inline SliderBase<Dim>& SliderBase<Dim>::valueMid(){
+	for(int i=0; i<Dim; ++i) mVal[i] = mAcc[i] = 0.5; return *this;
 }
 
 
 
-template <int Dim>
-SliderGrid<Dim>::SliderGrid(const Rect& r, space_t knobSize)
+#define TEMV template <class V>
+
+TEMV Slider1DBase<V>::Slider1DBase(const Rect& r, int nx, int ny, bool dragSelect)
+:	ValueWidget<V>(r, nx, ny, 1, false, false, true),
+	mAcc(0)
+{
+	property(SelectOnDrag, dragSelect);
+}
+
+TEMV void Slider1DBase<V>::onDraw(){
+
+	float x=padding()*0.5, xd=this->dx(), yd=this->dy();
+
+	if(isVertical()){
+		for(int i=0; i<sizeX(); ++i){
+		
+			float y = padding()*0.5;
+		
+			for(int j=0; j<sizeY(); ++j){
+				int ind = index(i,j);
+				if(isSelected(i,j)) draw::color(colors().fore);
+				else draw::color(colors().fore, colors().fore.a*0.5);
+				draw::rect(x, y+yd-value()[ind]*yd, x+xd-padding(), y+yd);
+				y += yd;
+			}
+			x += xd;	
+		}
+	}
+	else{
+		for(int i=0; i<sizeX(); ++i){
+		
+			float y = padding()*0.5;
+		
+			for(int j=0; j<sizeY(); ++j){
+				int ind = index(i,j);
+				if(isSelected(i,j)) draw::color(colors().fore);
+				else draw::color(colors().fore, colors().fore.a*0.5);
+				draw::rect(x, y, value()[ind]*xd+x, y+yd-padding());
+				y += yd;
+			}
+			x += xd;
+		}
+	}
+}
+
+TEMV bool Slider1DBase<V>::onEvent(Event::t e, GLV& g){
+
+	switch(e){
+		case Event::MouseDrag:
+			// if drag settable
+			if(enabled(SelectOnDrag)){
+				selectSlider(g, false);
+			}
+
+			if(g.mouse.right() || g.mouse.left()) {
+				
+				// accumulate differences
+				mAcc += (isVertical() ? -g.mouse.dy()*sizeY()/h : g.mouse.dx()*sizeX()/w) * this->sens(g.mouse);
+				value()[selected()] = this->clip1(mAcc);
+			}
+
+			notify();
+			return false;
+			
+		case Event::MouseDown:
+			selectSlider(g, true);
+			notify();
+			return false;
+			
+		case Event::KeyDown:{
+			ValueWidget<V>::onSelectKey(g);
+			int i = selected();
+
+			switch(g.keyboard.key()){
+			case 'x':
+			case 'a': value()[i] = this->clip1(value()[i] + 1/32.); return false;
+			case 'z': value()[i] = this->clip1(value()[i] - 1/32.); return false;
+			default:;
+			}
+		}
+
+		default:;
+			
+	}
+	return true;
+}
+
+TEMV void Slider1DBase<V>::selectSlider(GLV& g, bool click){
+
+	Mouse& m = g.mouse;
+	
+	int oldIdx = selected();
+	ValueWidget<V>::onSelectClick(g);
+	
+	float val = isVertical() ? 1-(m.yRel()*sizeY()/h - selectedY()) : m.xRel()*sizeX()/w - selectedX();
+	
+	int idx = selected();
+	
+	// if left-button, set value
+	if(m.left() && !m.right()) value()[idx] = val;
+	
+	// if click or new slider, reset accumulator
+	if(click || (oldIdx != idx)){
+		if(m.left() && !m.right()) mAcc = val;
+		else mAcc = value()[idx];
+	}
+}
+
+#undef TEMV
+
+
+
+
+
+TEM SliderGrid<Dim>::SliderGrid(const Rect& r, space_t knobSize)
 :	SliderBase<Dim>(r), knobSize(knobSize), cx(0), cy(0)
 {
 	//this->cropSelf = false;
 	this->disable(CropSelf);
 }
 
-template <int Dim>
-void SliderGrid<Dim>::onDraw(){
+TEM void SliderGrid<Dim>::onDraw(){
 	using namespace glv::draw;
 
 	float rDim = 1./Dim;
@@ -346,6 +403,38 @@ void SliderGrid<Dim>::onDraw(){
 	shape(Lines,0,h,w,0);
 	disable(LineStipple);
 
+	/*
+	float dx = rDim*w;
+	float dy = rDim*h;
+
+	glShadeModel(GL_SMOOTH);
+	glBegin(GL_QUADS);
+	for(int i=0; i<Dim; ++i){
+		float x = i*dx;
+		HSV xc(i/(float)Dim, 0.8, 0.2);
+		
+		for(int j=0; j<Dim; ++j){
+			float y = (Dim-j-1)*dy;
+			
+			HSV yc(j/(float)Dim, 0.8, 0.2);
+			HSV mid( (xc.h+yc.h)*0.5, 0.8, 0.2);
+			
+			color(Color(yc));
+			glVertex3f(x, y, 0);
+			
+			glColor4f(1, 1, 1, 1.);
+			glVertex3f(x, y+dy, 0);
+			
+			color(Color(xc));
+			glVertex3f(x+dx, y+dy, 0);
+			
+			color(Color(mid));
+			glVertex3f(x+dx, y, 0);
+		}
+	}
+	glEnd();
+
+	glColor4f(1, 1, 1, 1.);*/
 	pointSize(knobSize);
 	begin(Points);
 	for(int i=0; i<Dim; ++i){
@@ -360,8 +449,7 @@ void SliderGrid<Dim>::onDraw(){
 	end();
 }
 
-template <int Dim>
-bool SliderGrid<Dim>::onEvent(Event::t e, GLV& g){
+TEM bool SliderGrid<Dim>::onEvent(Event::t e, GLV& g){
 
 	switch(e){
 	case Event::MouseDrag:
@@ -389,6 +477,9 @@ bool SliderGrid<Dim>::onEvent(Event::t e, GLV& g){
 	}
 	return false;
 }
+
+#undef TEM
+
 
 
 

@@ -19,10 +19,13 @@ void AbstractApplication::quit(){
 
 
 
-AbstractWindow::AbstractWindow(unsigned int w, unsigned int h, char * title, GLV * glv, double framerate)
+AbstractWindow::AbstractWindow(
+	unsigned int w, unsigned int h, char * title, GLV * glv, double framerate, int mode
+)
 :	glv(0), mFPS(framerate),
 	mLabel(title), 
 	w(w), h(h),
+	mDispMode(mode),
 	mFullscreen(false), mVisible(true), mIsActive(true)
 {
 	if(glv) setGLV(*glv);
@@ -31,6 +34,7 @@ AbstractWindow::AbstractWindow(unsigned int w, unsigned int h, char * title, GLV
 void AbstractWindow::setGLV(GLV & g){ 
 	glv = &g;
 	g.extent(w, h);
+	onContextChange();
 }
 
 void AbstractWindow::fullscreen(bool on){
@@ -38,6 +42,7 @@ void AbstractWindow::fullscreen(bool on){
 		wwin = w, hwin = h;
 		mFullscreen = true;
 		platformFullscreen();
+		onContextChange();
 	}
 	else if(!on && mFullscreen){
 		//resize(wwin, hwin);
@@ -45,6 +50,7 @@ void AbstractWindow::fullscreen(bool on){
 		if(glv) glv->extent(w, h);
 		mFullscreen = false;
 		platformFullscreen();
+		onContextChange();
 	}
 }
 
@@ -53,6 +59,10 @@ void AbstractWindow::fullscreenToggle(){ fullscreen(!mFullscreen); }
 void AbstractWindow::hideCursor(bool hide){
 	mHideCursor = hide;
 	platformHideCursor(hide);
+}
+
+void AbstractWindow::onContextChange(){
+	if(mIsActive && glv) glv->broadcastEvent(Event::ContextChange);
 }
 
 void AbstractWindow::resize(int width, int height){

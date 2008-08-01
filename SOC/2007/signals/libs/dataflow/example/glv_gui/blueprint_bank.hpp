@@ -11,7 +11,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 #include <glv.h>
-#include <glv_binding_glut.h>
+#include <glv_pimpl_binding.h>
 
 namespace boost { namespace dataflow { namespace glv_gui {
 

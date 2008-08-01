@@ -6,98 +6,6 @@
 
 namespace glv{
 
-// Button
-
-Button::Button(const Rect& r, bool toggles, iconFunc on, iconFunc off)
-:	ButtonBase<1>(r, toggles, on, off, 3)
-{}
-	
-void Button::onDraw(){
-	using namespace glv::draw;
-
-	draw::lineWidth(2);
-
-	float v1 = pix(iconInset());
-	float vr = pix(w - iconInset() + 0.5);	// add 0.5 for rect, 0 o.w.; not sure why?
-	float vb = pix(h - iconInset() + 0.5);
-
-	if(value()){
-		color(colors().fore);
-		if(mIconOn) mIconOn(v1, v1, vr, vb);
-	}
-	else{
-		color(colors().fore);
-		if(mIconOff) mIconOff(v1, v1, vr, vb);
-	}
-}
-
-bool Button::onEvent(Event::t e, GLV& g){
-	switch(e){
-		case Event::MouseDown:
-			if(g.mouse.left()){
-				value(toggles() ? !value() : true, 0);
-				notify();
-			}
-			break;
-			
-		case Event::MouseUp:
-			if(g.mouse.button() == Mouse::Left){
-				if(!toggles()){ value(false, 0); notify(); }
-			}
-			break;
-		default: break;
-	}
-	return false;
-}
-
-
-
-// Slider
-
-Slider::Slider(const Rect& r, float val)
-:	SliderBase<1>(r)
-{
-	value(val, 0);
-}
-
-
-void Slider::onDraw(){
-	using namespace glv::draw;
-	draw::color(colors().fore);
-	if(isVertical())	rect(1, pix(h * (1.f - value())), pix(w), pix(h));
-	else				rect(1, 1, pix(w * value()), pix(h));
-}
-
-bool Slider::onEvent(Event::t e, GLV& g){
-
-	switch(e){
-		case Event::MouseDrag:
-			if(isVertical()) valueAdd(-g.mouse.dy()/h * sens(g), 0);
-			else             valueAdd( g.mouse.dx()/w * sens(g), 0);
-			notify();
-			break;
-			
-		case Event::MouseDown:
-			if(g.mouse.left() && !g.mouse.right()){
-				if(isVertical()) value(1.f - g.mouse.yRel() / h, 0);
-				else             value(      g.mouse.xRel() / w, 0);
-			}
-			notify();
-			break;
-			
-		case Event::MouseUp: clipAccs(); break;
-			
-		case Event::KeyDown:
-			switch(g.keyboard.key()){
-			default: return true;
-			}
-		default: break;
-			
-	}
-	return false;
-}
-
-
 // Slider2D
 
 Slider2D::Slider2D(const Rect& r, float valX, float valY, space_t knobSize)
@@ -232,6 +140,247 @@ void Slider2D::onDraw(){
 
 
 
+FunctionGraph::FunctionGraph(const Rect& r, int nKnots, int res)
+: View(r), mTension(0.), mKnobSize(3), mCurrentKnot(-1), mNKnots(nKnots), mKnots(0)
+{
+	//minimum 3 knots
+	if(mNKnots < 3) mNKnots = 3;
+	
+	mKnots = new Knot[mNKnots];
+	for(int i=0; i < mNKnots; i++) {
+		mKnots[i].x = ((float)i)/(mNKnots-1);
+		mKnots[i].y = mKnots[i].x*mKnots[i].x;
+	}
+	
+	for(int i=0; i < mNKnots-1; i++) {
+		mCurves.push_back(new Curve(res));
+	}
+	calcCurves();
+}
 
+FunctionGraph::~FunctionGraph()
+{
+	if(mKnots) delete[] mKnots;
+	std::vector<Curve *>::iterator it = mCurves.begin();
+	std::vector<Curve *>::iterator it_e = mCurves.end();
+	for(; it != it_e; ++it){
+		delete *it;
+	}
+}
+
+void FunctionGraph::calcCurves()
+{
+	std::vector<Curve *>::iterator it = mCurves.begin();
+	std::vector<Curve *>::iterator it_e = mCurves.end();
+	int i=0;
+	for(; it != it_e; ++it){
+		//for now we duplicate boundry points
+		int idx0, idx1, idx2, idx3;
+		
+		if(i==0) {
+			idx0 = idx1 = 0;
+			idx2 = 1;
+			idx3 = 2;
+		}
+		else if(i == (mNKnots-2)) {
+			idx0 = i-1;
+			idx1 = i;
+			idx2 = idx3 = mNKnots-1;
+		}
+		else {
+			idx0 = i-1;
+			idx1 = i;
+			idx2 = i+1;
+			idx3 = i+2;
+		}
+	
+		Curve &c = *(*it);
+	
+		float mu = 0.;
+		float dmu = 1./(float)(c.size()-1);
+		for(int t = 0; t < c.size(); t++) {
+			c[t] = HermiteInterpolate(mKnots[idx0].y, mKnots[idx1].y, mKnots[idx2].y, mKnots[idx3].y, mu, mTension, 0);
+			mu += dmu;
+		}
+		
+		i++;
+	}
+}
+
+void FunctionGraph::eval(int n, float *vals)
+{
+	float dx = 1./(n-1);
+	float x = 0;
+	int idx = 0;
+	int k = 0;
+	vals[idx] = mKnots[k].y;
+	
+	int idx0 = 0;
+	int idx1 = 0;
+	int idx2 = 1;
+	int idx3 = 2;
+
+	for(; idx < n-1; idx++) {
+		if(x > mKnots[k+1].x) {
+			while(x > mKnots[k+1].x) {
+				k++;
+			}
+			
+			if(k == (mNKnots-2)) {
+				idx0 = k-1;
+				idx1 = k;
+				idx2 = idx3 = mNKnots-1;
+			}
+			else {
+				idx0 = k-1;
+				idx1 = k;
+				idx2 = k+1;
+				idx3 = k+2;
+			}
+		}
+		
+		float mu = (x - mKnots[k].x) / (mKnots[k+1].x - mKnots[k].x);
+		vals[idx] = HermiteInterpolate(mKnots[idx0].y, mKnots[idx1].y, mKnots[idx2].y, mKnots[idx3].y, mu, mTension, 0);
+		
+		x += dx;
+	}
+	
+	vals[idx] = mKnots[k].y;
+}
+
+void FunctionGraph::onDraw()
+{
+	using namespace glv::draw;
+
+	
+	std::vector<Curve *>::iterator it = mCurves.begin();
+	std::vector<Curve *>::iterator it_e = mCurves.end();
+	
+	color(mStyle->color.fore);
+	begin(LineStrip);
+	int i=0;
+	for(; it != it_e; ++it){
+		Curve &c = *(*it);
+		
+		float dx = (mKnots[i+1].x - mKnots[i].x)/(c.size()-1);
+		float x = mKnots[i].x;
+		for(int t = 0; t < c.size(); t++) {
+			vertex(x*w, (1.-c[t])*h);
+			x += dx;
+		}
+		i++;
+	}
+	end();
+	
+	color(mStyle->color.fore, mStyle->color.fore.a*0.5);
+	begin(QuadStrip);
+	i=0;
+	it = mCurves.begin();
+	for(; it != it_e; ++it){
+		Curve &c = *(*it);
+		
+		float dx = (mKnots[i+1].x - mKnots[i].x)/(c.size()-1);
+		float x = mKnots[i].x;
+		for(int t = 0; t < c.size(); t++) {
+			vertex(x*w, (1.-c[t])*h);
+			vertex(x*w, h);
+			x += dx;
+		}
+		i++;
+	}
+	end();
+	
+	for(int k = 0; k < mNKnots; k++) {
+		int cx = mKnots[k].x*w;
+		int cy = (1.-mKnots[k].y)*h;
+		frame(cx-mKnobSize, cy-mKnobSize, cx+mKnobSize, cy+mKnobSize);
+	}
+}
+
+bool FunctionGraph::onEvent(Event::t e, GLV& glv)
+{
+	switch(e){
+	case Event::MouseDrag: {
+		if(glv.mouse.left() && mCurrentKnot >= 0) {
+			if(mCurrentKnot == 0 || mCurrentKnot == (mNKnots-1)) {
+				mKnots[mCurrentKnot].y = 1.-(glv.mouse.yRel()/h);
+				mKnots[mCurrentKnot].y = (mKnots[mCurrentKnot].y < 0.) ? 0. : 
+												((mKnots[mCurrentKnot].y > 1.) ? 1. : mKnots[mCurrentKnot].y);
+			}
+			else {
+				mKnots[mCurrentKnot].x = (glv.mouse.xRel()/w);
+				mKnots[mCurrentKnot].y = 1.-(glv.mouse.yRel()/h);
+				
+				mKnots[mCurrentKnot].x = (mKnots[mCurrentKnot].x < 0) ? 0 : 
+											((mKnots[mCurrentKnot].x > 1.) ? 1 : mKnots[mCurrentKnot].x);
+				
+				mKnots[mCurrentKnot].y = (mKnots[mCurrentKnot].y < 0.) ? 0. : 
+												((mKnots[mCurrentKnot].y > 1.) ? 1. : mKnots[mCurrentKnot].y);
+				
+				//check if we went beyond neighboring knots
+				if(mKnots[mCurrentKnot].x < mKnots[mCurrentKnot-1].x && mCurrentKnot != mCurrentKnot+1) {
+					Knot kt;
+					kt.x = mKnots[mCurrentKnot].x;
+					kt.y = mKnots[mCurrentKnot].y;
+					
+					mKnots[mCurrentKnot].x = mKnots[mCurrentKnot-1].x;
+					mKnots[mCurrentKnot].y = mKnots[mCurrentKnot-1].y;
+					
+					mKnots[mCurrentKnot-1].x = kt.x;
+					mKnots[mCurrentKnot-1].y = kt.y;
+					
+					mCurrentKnot--;
+				}
+				else if(mKnots[mCurrentKnot].x > mKnots[mCurrentKnot+1].x && mCurrentKnot != mNKnots-2) {
+					Knot kt;
+					kt.x = mKnots[mCurrentKnot].x;
+					kt.y = mKnots[mCurrentKnot].y;
+					
+					mKnots[mCurrentKnot].x = mKnots[mCurrentKnot+1].x;
+					mKnots[mCurrentKnot].y = mKnots[mCurrentKnot+1].y;
+					
+					mKnots[mCurrentKnot+1].x = kt.x;
+					mKnots[mCurrentKnot+1].y = kt.y;
+					
+					mCurrentKnot++;
+				}
+			}
+			
+			calcCurves();
+		}
+	}
+	break;
+	
+	case Event::MouseDown: {
+		if(glv.mouse.left()) {
+			mCurrentKnot = knotHitTest(glv.mouse.xRel(), glv.mouse.yRel());
+		}
+	}
+	break;
+	
+	default:
+	break;
+	}
+	
+	return false;
+}
+
+int FunctionGraph::knotHitTest(space_t x, space_t y)
+{
+	int idx = -1;
+	float min_dsq = mKnobSize*mKnobSize*2.5;
+	
+	for(int k = 0; k < mNKnots; k++) {
+		float dx = mKnots[k].x*w - x;
+		float dy =(1.-mKnots[k].y)*h - y;
+		float dsq = dx*dx+dy*dy;
+		if(dsq < min_dsq) {
+			min_dsq = dsq;
+			idx = k;
+		}
+	}
+	
+	return idx;
+}
 
 } // end namespace glv

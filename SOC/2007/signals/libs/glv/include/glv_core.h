@@ -41,13 +41,20 @@ typedef std::list<eventCallback> eventCallbackList;
 
 /// View property flags
 enum{
-	Visible			=1<<0,	/**< Whether to draw myself */
-	DrawBack		=1<<1,	/**< Whether to draw back rect */
-	DrawBorder		=1<<2,	/**< Whether to draw border */
-	CropChildren	=1<<3,	/**< Whether to crop children when drawing */
-	CropSelf		=1<<4,	/**< Whether to crop own drawing routine(s) */
-	FocusHighlight	=1<<5,	/**< Whether to highlight border when focused */
-	HitTest			=1<<6	/**< Whether View can be clicked */
+	Visible			=1<< 0,	/**< Whether to draw myself */
+	DrawBack		=1<< 1,	/**< Whether to draw back rect */
+	DrawBorder		=1<< 2,	/**< Whether to draw border */
+	CropChildren	=1<< 3,	/**< Whether to crop children when drawing */
+	CropSelf		=1<< 4,	/**< Whether to crop own drawing routine(s) */
+	Focused			=1<< 5,	/**< Whether View is focused */
+	FocusHighlight	=1<< 6,	/**< Whether to highlight border when focused */
+	HitTest			=1<< 7,	/**< Whether View can be clicked */
+	Controllable	=1<< 8,	/**< Whether View can be controlled through events */
+	
+	DrawGrid		=1<<28,	/**< Whether to draw grid lines between widget elements */
+	MutualExc		=1<<29,	/**< Whether only one element of a widget can be non-zero */
+	SelectOnDrag	=1<<30,	/**< Whether a new element of a widget is selected while dragging */
+	Toggleable		=1<<31	/**< Whether widget element toggles when clicked */
 };
 
 
@@ -80,6 +87,7 @@ namespace Event{
 		
 		// core events
 		Quit,		/**< Application quit */
+		ContextChange,	/**< New graphics context */
 		
 		// view events
 		GetFocus,	/**< View got focus */
@@ -330,47 +338,27 @@ public:
 	drawCallback draw;		///< Drawing callback
 	
 	
-	// const methods
 	bool absToRel(View * target, space_t& x, space_t& y) const;
-
-	StyleColor& colors() const;
-	int enabled(int prop) const;	///< Returns whether a property is set
-	int visible() const;			///< Returns whether View is visible
+	StyleColor& colors() const;					///< Returns my style colors
+	int enabled(int prop) const;				///< Returns whether a property is set
 	int numEventCallbacks(Event::t e) const;	///< Returns number of registered callbacks
-	void printDescendents() const;	///< Print tree of descendent Views to stdout
-	void printFlags() const;
+	void printDescendents() const;				///< Print tree of descendent Views to stdout
+	void printFlags() const;					
+	Style& style() const { return *mStyle; }	///< Get style object
+	int visible() const;						///< Returns whether View is visible
 
-	/// Get style
-	Style& style() const { return *mStyle; }
-
-
-	
-	/// Set anchor translation factors
-	View& anchor(space_t mx, space_t my);
-
-	/// Set anchor place on parent
-	View& anchor(Place::t parentPlace);//{ mAnchor = parentPlace; return *this; }
+		
+	View& anchor(space_t mx, space_t my);		///< Set anchor translation factors	
+	View& anchor(Place::t parentPlace);			///< Set anchor place on parent
 
 	/// Append callback to a specific event type callback sequence.
 	void appendCallback(Event::t type, eventCallback cb);
+	View& operator()(Event::t e, eventCallback cb){ appendCallback(e, cb); return *this; }
 	
-	/// Append callback to a specific event type callback sequence.
-	View& operator()(Event::t e, eventCallback cb){
-		appendCallback(e, cb);
-		return *this;
-	}	
-
-	/// Creates own copy of current style
-	void cloneStyle();
-
-	/// Force to remain in parent
-	void constrainWithinParent();
-
-	/// Disable property flag(s)
-	View& disable(int prop);
-	
-	/// Enable property flag(s)
-	View& enable(int prop);
+	void cloneStyle();							///< Creates own copy of current style
+	void constrainWithinParent();				///< Force to remain in parent	
+	View& disable(int prop);					///< Disable property flag(s)
+	View& enable(int prop);						///< Enable property flag(s)
 
 	/// Returns View under these absolute coordinates or 0 if none.
 	
@@ -378,50 +366,28 @@ public:
 	///
 	View * findTarget(space_t& x, space_t& y);
 
-	/// Set whether I'm focused
-	void focused(bool b);
+	void focused(bool b);						///< Set whether I'm focused
+	void move(space_t x, space_t y);			///< Translate constraining within parent.
+	void on(Event::t e, eventCallback cb=0);	///< Set first callback for a specific event type.
 
-	/// Translate constraining within parent.
-	void move(space_t x, space_t y);
-	
-	/// Set first callback for a specific event type.
-	void on(Event::t e, eventCallback cb = 0);
-	
-	/// Main drawing callback
-	virtual void onDraw();
-	
-	/// Main event callback
-	virtual bool onEvent(Event::t e, GLV& glv);
-	
-	/// Resize callback
-	virtual void onResize(space_t dx, space_t dy);
-	
-	/// Set position according to a specific place on rect
-	View& pos(Place::t p, space_t x=0, space_t y=0);
+	virtual void onDraw();						///< Main drawing callback
+	virtual bool onEvent(Event::t e, GLV& glv);	///< Main event callback
+	virtual void onResize(space_t dx, space_t dy);	///< Resize callback
 
-	/// Set property flag(s) to a specfic value
-	View& property(int prop, bool v);
-
-	/// Toggle property flag(s)
-	View& toggle(int prop);
-
-	/// Set parent resize stretch factors
-	View& stretch(space_t mx, space_t my){ mStretchX=mx; mStretchY=my;	return *this; }
-	
-	/// Set pointer to style
-	void style(Style * style);
-
+	View& pos(Place::t p, space_t x=0, space_t y=0);///< Set position according to a specific place on rect
+	View& property(int prop, bool v);			///< Set property flag(s) to a specfic value	
+	View& stretch(space_t mx, space_t my);		///< Set parent resize stretch factors
+	void style(Style * style);					///< Set pointer to style	
+	View& toggle(int prop);						///< Toggle property flag(s)
 	
 protected:
 	int mFlags;						// Property flags
 	Style * mStyle;					// Visual appearance
 	space_t mAnchorX, mAnchorY;		// Position anchoring factors when parent is resized
 	space_t mStretchX, mStretchY;	// Stretch factors when parent is resized
-	bool mFocused;					// Whether I have focus
 
-	void drawBack() const;			///< Draw the back rect
-	void drawBorder() const;		///< Draw the border
-	
+	void drawBack() const;			// Draw the back rect
+	void drawBorder() const;		// Draw the border
 	void reanchor(space_t dx, space_t dy);	// Reanchor when parent resizes
 };
 
@@ -440,6 +406,10 @@ public:
 
 	Mouse mouse;		///< Current mouse state
 	Keyboard keyboard;	///< Current keyboard state
+
+
+	/// Send this event to everyone in tree
+	void broadcastEvent(Event::t e);
 
 	
 	/// GLV MAIN RENDER LOOP: draw all Views in the GLV
@@ -482,7 +452,9 @@ public:
 	void setMouseMove(space_t& x, space_t& y);
 
 	void setMouseWheel(int wheelDelta);	// Sets mouse and GLV event state
-		
+
+	View * focusedView(){ return mFocusedView; }
+
 protected:
 	View * mFocusedView;	// current focused widget
 	Event::t mEventType;	// current event type
@@ -492,8 +464,6 @@ protected:
 	
 	void doFocusCallback(bool get); // Call get or lose focus callback of focused view
 };
-
-
 
 
 
@@ -515,11 +485,11 @@ inline int Keyboard::key() const { return mKeycode; }
 inline int Keyboard::keyAsNumber() const { return key() - 48; }
 inline bool Keyboard::isDown() const { return mIsDown; }
 inline bool Keyboard::isNumber() const { return (key() >= '0') && (key() <= '9'); }
-inline bool Keyboard::alt()   const { return mModifiers[1]; };
-inline bool Keyboard::caps()  const { return mModifiers[3]; };
-inline bool Keyboard::ctrl()  const { return mModifiers[2]; };
-inline bool Keyboard::meta()  const { return mModifiers[4]; };
-inline bool Keyboard::shift() const { return mModifiers[0]; };
+inline bool Keyboard::alt()   const { return mModifiers[1]; }
+inline bool Keyboard::caps()  const { return mModifiers[3]; }
+inline bool Keyboard::ctrl()  const { return mModifiers[2]; }
+inline bool Keyboard::meta()  const { return mModifiers[4]; }
+inline bool Keyboard::shift() const { return mModifiers[0]; }
 inline bool Keyboard::key(int k) const { return mKeycode == k; }
 inline void Keyboard::alt  (bool state){mModifiers[1] = state;}
 inline void Keyboard::caps (bool state){mModifiers[3] = state;}
@@ -549,14 +519,8 @@ inline bool Mouse::left() const { return b[Left]; }
 inline bool Mouse::middle() const { return b[Middle]; }
 inline bool Mouse::right() const { return b[Right]; }
 
-inline void Mouse::setContext(View * v){
-	mXRel -= v->l;
-	mYRel -= v->t;
-}
-inline void Mouse::unsetContext(View * v){
-	mXRel += v->l;
-	mYRel += v->t;
-}
+inline void Mouse::  setContext(View * v){mXRel -= v->l; mYRel -= v->t;}
+inline void Mouse::unsetContext(View * v){mXRel += v->l; mYRel += v->t;}
 inline void	Mouse::pos(int x, int y) {
 	bufferPos((space_t)x, mX);
 	bufferPos((space_t)y, mY);
@@ -566,10 +530,7 @@ inline void Mouse::bufferPos(space_t newPos, space_t * pos){
 	pos[1] = pos[0];
 	pos[0] = newPos;
 }
-inline void	Mouse::posRel(space_t relx, space_t rely){
-	mXRel = relx; mYRel = rely;
-}
-
+inline void	Mouse::posRel(space_t rx, space_t ry){ mXRel=rx; mYRel=ry;}
 
 
 } // glv::

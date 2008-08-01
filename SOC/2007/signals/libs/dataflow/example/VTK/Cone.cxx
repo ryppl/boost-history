@@ -35,7 +35,7 @@
 #include "vtkRenderer.h"
 
 // ... and include the VTK Dataflow support layer.
-#include "vtk_dataflow_support.hpp"
+#include <boost/dataflow/vtk/support.hpp>
 
 int main()
 {
