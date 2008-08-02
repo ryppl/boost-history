@@ -23,7 +23,11 @@
 #include <boost/assert.hpp>                // for BOOST_ASSERT
 #include <boost/coding/coding_shell.hpp>   // for b:c:bit_coding_shell
 #include <boost/coding/operations.hpp>     // for b:c:queued_bit_processing_base
-#include <boost/integer.hpp>               // for boost::sized_integral
+#include <boost/cstdint.hpp>               // for boost::uint_least8_t, etc.
+#include <boost/integer.hpp>               // for boost::sized_integral, etc.
+#include <boost/mpl/arithmetic.hpp>        // for boost::mpl::times
+#include <boost/mpl/int.hpp>               // for boost::mpl::int_
+#include <boost/mpl/size_t.hpp>            // for boost::mpl::size_t
 #include <boost/serialization/access.hpp>  // for boost::serialization::access
 #include <boost/static_assert.hpp>         // for BOOST_STATIC_ASSERT
 #include <boost/typeof/typeof.hpp>         // for BOOST_AUTO
@@ -65,25 +69,31 @@ namespace coding
 class md5_digest
 {
 public:
-    //! Number of bits for word-sized quantities
-    static  int const  bits_per_word = 32;
+    // Types
+    /** \brief  Number of bits for word-sized quantities
 
+        Represents the number of bits per word as given in RFC 1321, section 2.
+     */
+    typedef mpl::int_<32>                                     bits_per_word;
     /** \brief  Type of MD register
 
         Represents the type of each register of the MD buffer.
      */
-    typedef boost::sized_integral<bits_per_word, unsigned>::type  word_type;
+    typedef sized_integral<bits_per_word::value, unsigned>::type  word_type;
+    /** \brief  Length of MD buffer
 
-    //! Length of MD buffer
-    static  std::size_t const  words_per_digest = 4u;
+        Represents the number of registers in a MD buffer.
+     */
+    typedef mpl::size_t<4u>                                words_per_digest;
 
+    // Member data
     /** \brief  The MD5 message digest checksum
 
         Represents the checksum from a MD5 hashing, mirroring for format of the
         MD buffer (see RFC 1321, section 3.3).  The zero-index corresponds to
         the "A" register, up to index 3 representing the "D" register.
      */
-    word_type  hash[ words_per_digest ];
+    word_type  hash[ words_per_digest::value ];
 
 };  // md5_digest
 
@@ -119,18 +129,18 @@ public:
  */
 class md5_computerX
     : protected queued_bit_processing_base<md5_computerX, uint_fast64_t, 16u *
-       md5_digest::bits_per_word>
+       md5_digest::bits_per_word::value>
 {
     typedef queued_bit_processing_base<md5_computerX, uint_fast64_t, 16u *
-     md5_digest::bits_per_word>  base_type;
+     md5_digest::bits_per_word::value>  base_type;
 
     friend  void base_type::process_bit( bool );  // needs "update_hash" access
 
     // Implementation constants, followed by sanity checks
     static  std::size_t const  words_per_block = base_type::queue_length /
-     md5_digest::bits_per_word;
+     md5_digest::bits_per_word::value;
 
-    BOOST_STATIC_ASSERT( (base_type::queue_length % md5_digest::bits_per_word)
+    BOOST_STATIC_ASSERT( (base_type::queue_length % md5_digest::bits_per_word::value)
      == 0u );
     BOOST_STATIC_ASSERT( words_per_block == 16u );  // RFC 1321, section 3.4
 
@@ -142,7 +152,7 @@ public:
     // Constants
     //! Number of bits for length quantities
     static  int const          significant_bits_per_length = 2 *
-     md5_digest::bits_per_word;
+     md5_digest::bits_per_word::value;
     //! Number of bits in hash queue
     static  std::size_t const  bits_per_block = base_type::queue_length;
 
@@ -174,7 +184,7 @@ public:
         prior \e completed hashed blocks.  The zero-index corresponds to the "A"
         register, up to index 3 representing the "D" register.
      */
-    typedef array<md5_digest::word_type, md5_digest::words_per_digest>
+    typedef array<md5_digest::word_type, md5_digest::words_per_digest::value>
       buffer_type;
 
     // Lifetime management (use automatic destructor)
@@ -263,13 +273,15 @@ private:
     // Implementation types
     typedef md5_computerX  self_type;
 
-    typedef uint_t<md5_digest::bits_per_word>::fast  iword_type;
-    typedef array<iword_type, md5_digest::words_per_digest>  ibuffer_type;
+    typedef uint_t<md5_digest::bits_per_word::value>::fast  iword_type;
+    typedef array<iword_type, md5_digest::words_per_digest::value> ibuffer_type;
 
     // (Computation) member data
     ibuffer_type  buffer_;
 
     static  ibuffer_type const  initial_buffer_;
+
+    friend class md5_context;
 
 };  // md5_computerX
 
@@ -285,27 +297,134 @@ class md5_context
 {
     typedef md5_context  self_type;
 
-    friend class md5_computer;
-
 public:
-    typedef md5_digest  product_type;
-    typedef bool        consumed_type;
+    // Types
+    /** \brief  Type of the produced output
 
-    void  operator ()( consumed_type bit )  { this->worker.process_bit(bit); }
+        Represents the result type, the checksums from hashing.
+     */
+    typedef md5_digest  product_type;
+    /** \brief  Type of the consumed input
+
+        Represents the argument type, the data to hash.
+     */
+    typedef bool       consumed_type;
+
+    // Lifetime management (use automatic copy constructor and destructor)
+    //! Default construction
+    md5_context()  : worker(), length(), buffer( initial_buffer ), queue()  {}
+
+    /*! \name Operators */ //@{
+    // Operators (use automatic copy-assignment)
+    //! Application, consumer
+    void  operator ()( consumed_type bit )
+    {
+        this->worker.process_bit(bit);
+        this->consume_bit( bit );
+    }
+    //! Equals
     bool  operator ==( self_type const &o ) const
-      { return this->worker == o.worker; }
+    {
+        bool const  result1( this->worker == o.worker );
+        bool const  result2( (this->length == o.length) && (this->buffer ==
+         o.buffer) && std::equal(this->queue.begin(), this->queue.begin() +
+         this->length % bits_per_block::value, o.queue.begin()) );
+        BOOST_ASSERT( result1 == result2 );
+        return result1;
+    }
+    //! Not-equals
     bool  operator !=( self_type const &o ) const
       { return !this->operator ==( o ); }
-    product_type  operator ()() const  { return this->worker.checksum(); }
+    //! Application, producer
+    product_type  operator ()() const
+    {
+        product_type const  result1( this->worker.checksum() );
+        product_type        result2;
+        {
+            self_type  c( *this );
+            c.finish();
+            std::copy( c.buffer.begin(), c.buffer.end(), result2.hash );
+        }
+        BOOST_ASSERT( std::equal(result1.hash, result1.hash+4, result2.hash) );
+        return result1;
+    }//@}
 
 private:
-    md5_computerX  worker;
+    friend class md5_computer;
 
+    // Implementation types and meta-constants
+    typedef md5_digest::bits_per_word        bits_per_word;
+    typedef md5_digest::word_type                word_type;
+    typedef md5_digest::words_per_digest  words_per_digest;
+
+    typedef mpl::int_<2>                                words_per_length;
+    typedef mpl::times<words_per_length, bits_per_word>  bits_per_length;
+    typedef mpl::int_<16>                                words_per_block;
+    typedef mpl::times<words_per_block, bits_per_word>    bits_per_block;
+
+    typedef sized_integral<bits_per_length::value, unsigned>::type  length_type;
+    typedef fast_integral<length_type>::type                       length_ftype;
+    typedef fast_integral<word_type>::type                           word_ftype;
+    typedef array<word_ftype, words_per_digest::value>              buffer_type;
+    typedef array<consumed_type, bits_per_block::value>              queue_type;
+    typedef array<word_ftype, 64>                               hash_table_type;
+
+    // Implementation constants
+    static  buffer_type const     initial_buffer;
+    static  hash_table_type const  hashing_table;
+
+    // Member data
+    md5_computerX  worker;
+    length_ftype  length;
+    buffer_type   buffer;
+    queue_type    queue;
+
+    // Implementation
+    void  update_hash();
+    void  consume_bit( bool bit )
+    {
+        this->queue[ this->length++ % bits_per_block::value ] = bit;
+        if ( this->length % bits_per_block::value == 0u )
+            this->update_hash();
+    }
+    void  consume_octet( uint_fast8_t octet )
+    {
+        for ( int  i = 0 ; i < 8 ; ++i, octet <<= 1 )  // high bit going down
+            this->consume_bit( octet & 0x80u );
+    }
+    void  consume_word( word_ftype word )
+    {
+        for ( int  i = 0 ; i < 4 ; ++i, word >>= 8 )  // low octet going up
+            this->consume_octet( word & 0xFFu );
+    }
+    void  consume_dword( length_ftype dword )
+    {
+        for ( int  i = 0 ; i < 2 ; ++i, dword >>= 32 )  // low word going up
+            this->consume_word( dword & 0xFFFFFFFFul );
+    }
+    void  finish()
+    {
+        // Save the current length before we mutate it.
+        length_ftype const  original_length = length;
+
+        // Enter a One, then enough Zeros so the length would fill the queue.
+        this->consume_bit( true );
+        for ( int  i = bits_per_block::value - (this->length +
+         bits_per_length::value) % bits_per_block::value ; i > 0 ; --i )
+            this->consume_bit( false );
+
+        this->consume_dword( original_length );
+        BOOST_ASSERT( !(this->length % bits_per_block::value) );
+
+        // Now a finished checksum in this->buffer is ready to read.
+    }
+
+    /*! \name Persistence */ //@{
     // Serialization
     friend class boost::serialization::access;
 
     template < class Archive >
-    void  serialize( Archive &ar, const unsigned int version );  // not defined yet
+    void  serialize( Archive &ar, const unsigned int version );//@}  // not defined yet
 
 };  // md5_context
 
@@ -343,7 +462,7 @@ public:
 
     // Types
     typedef uint_least64_t  length_type;
-    typedef array<md5_digest::word_type, md5_digest::words_per_digest>
+    typedef array<md5_digest::word_type, md5_digest::words_per_digest::value>
       buffer_type;
 
     // Assignment
@@ -371,18 +490,24 @@ public:
       { return this->context().worker.copy_unbuffered( o ); }
 
     // Input processing
+    //! Enters an octet
+    void  process_octet( uint_least8_t octet )
+    {
+        this->context().worker.process_octet( octet );
+        this->context().consume_octet( octet );
+    }
     //! Enters a word for hashing
     void  process_word( md5_digest::word_type word )
-      { this->context().worker.process_word( word ); }
+    {
+        this->context().worker.process_word( word );
+        this->context().consume_word( word );
+    }
     //! Enters a double-word for hashing
     void  process_double_word( length_type dword )
-      { this->context().worker.process_double_word( dword ); }
-
-    // Operators
-    bool  operator ==( self_type const &o ) const
-      { return this->base_type::operator ==( o ); }
-    bool  operator !=( self_type const &o ) const
-      { return !this->operator ==( o ); }
+    {
+        this->context().worker.process_double_word( dword );
+        this->context().consume_dword( dword );
+    }
 
     // Extras
     static  array<md5_digest::word_type, 64>  generate_hashing_table()
@@ -417,13 +542,13 @@ struct md5_constants
     static  char const  hex_digits_uc[ number_of_hexadecimal_digits + 1 ];
 
     // MD words
-    static  std::size_t const  nybbles_per_word = md5_digest::bits_per_word /
-     bits_per_nybble;
+    static  std::size_t const  nybbles_per_word =
+     md5_digest::bits_per_word::value / bits_per_nybble;
 
     // MD strings
-    static  std::size_t const  characters_per_digest = md5_digest::bits_per_word
-     * md5_digest::words_per_digest / ( nybbles_per_hexadecimal_digit *
-     bits_per_nybble );
+    static  std::size_t const  characters_per_digest =
+     md5_digest::bits_per_word::value * md5_digest::words_per_digest::value /
+     ( nybbles_per_hexadecimal_digit * bits_per_nybble );
 
 };  // md5_constants
 
@@ -450,7 +575,8 @@ inline
 bool
 operator ==( md5_digest const &l, md5_digest const &r )
 {
-    return std::equal( l.hash, l.hash + md5_digest::words_per_digest, r.hash );
+    return std::equal( l.hash, l.hash + md5_digest::words_per_digest::value,
+     r.hash );
 }
 
 /** \brief  Not-equals

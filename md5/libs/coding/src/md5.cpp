@@ -18,7 +18,7 @@
 
 #include <boost/array.hpp>                  // for boost::array
 #include <boost/assert.hpp>                 // for BOOST_ASSERT
-#include <boost/integer/integer_mask.hpp>   // for boost::low_bits_mask_t
+#include <boost/integer/integer_mask.hpp>   // for boost::integer_lo_mask
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
 #include <boost/static_assert.hpp>          // for BOOST_STATIC_ASSERT
 
@@ -185,16 +185,6 @@ namespace coding
 {
 
 
-//  MD5 message-digest class-static member definitions  ----------------------//
-
-/** Represents the number of bits per word as given in RFC 1321, section 2.
- */
-int const          md5_digest::bits_per_word;
-/** Represents the number of registers in a MD buffer.
- */
-std::size_t const  md5_digest::words_per_digest;
-
-
 //! \cond
 //  Implementation detail object definitions  --------------------------------//
 
@@ -311,11 +301,17 @@ array<md5_digest::word_type, 64> const  md5_computerX::hashing_table = { {
     0xEB86D391ul
 } };
 
+md5_context::hash_table_type const   md5_context::hashing_table =
+ md5_computerX::hashing_table;
+
 // Initial values of the MD buffer, taken from RFC 1321, section 3.3.  (Note
 // that the RFC lists each number low-order byte first, while numbers need to be
 // written high-order byte first in C++.)
 md5_computerX::ibuffer_type const  md5_computerX::initial_buffer_ = {
  {0x67452301ul, 0xEFCDAB89ul, 0x98BADCFEul, 0x10325476ul} };
+
+md5_context::buffer_type const  md5_context::initial_buffer =
+ md5_computerX::initial_buffer_;
 
 
 //  MD5 message-digest computer class-static member function definitions  ----//
@@ -350,6 +346,89 @@ md5_computerX::generate_hashing_table()
 
 // Hash an entire block into the running checksum, using RFC 1321, section 3.4
 void
+md5_context::update_hash()
+{
+    using std::size_t;
+
+    // Convert the queued bit block to a word block
+    std::valarray<word_ftype>  words( words_per_block::value ),
+                               scratch( words_per_block::value );  // for later
+
+    for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+    {
+        // Use the default inner-product; since "queue" has "bool" elements,
+        // which convert to 0 or 1, multiplication acts as AND; since
+        // "order_in_word" has distinct single-bit values, addition acts as OR.
+        words[ i ] = std::inner_product( order_in_word.begin(),
+         order_in_word.end(), this->queue.begin() + i * bits_per_word::value,
+         word_ftype(0u) );
+    }
+
+    // Set up rounds
+    buffer_type  buffer = this->buffer;
+
+    // Round 1
+    {
+        md5_special_op<md5_f, word_ftype, bits_per_word::value>  ff;
+
+        scratch = words[ skipped_indices(words_per_block::value, 0, 1) ];
+        for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+        {
+            ff( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[0][i % 4u], hashing_table[i] );
+        }
+    }
+
+    // Round 2
+    {
+        md5_special_op<md5_g, word_ftype, bits_per_word::value>  gg;
+
+        scratch = words[ skipped_indices(words_per_block::value, 1, 5) ];
+        for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+        {
+            gg( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[1][i % 4u], hashing_table[16 + i] );
+        }
+    }
+
+    // Round 3
+    {
+        md5_special_op<md5_h, word_ftype, bits_per_word::value>  hh;
+
+        scratch = words[ skipped_indices(words_per_block::value, 5, 3) ];
+        for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+        {
+            hh( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[2][i % 4u], hashing_table[32 + i] );
+        }
+    }
+
+    // Round 4
+    {
+        md5_special_op<md5_i, word_ftype, bits_per_word::value>  ii;
+
+        scratch = words[ skipped_indices(words_per_block::value, 0, 7) ];
+        for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+        {
+            ii( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
+             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
+             md5_s[3][i % 4u], hashing_table[48 + i] );
+        }
+    }
+
+    // Update buffer
+    for ( size_t  i = 0u ; i < words_per_digest::value ; ++i )
+    {
+        this->buffer[ i ] += buffer[ i ];
+        this->buffer[ i ] &= integer_lo_mask<bits_per_word::value>::value;
+    }
+}
+
+// Hash an entire block into the running checksum, using RFC 1321, section 3.4
+void
 md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 {
     using std::size_t;
@@ -366,7 +445,7 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
         // elements, which convert to 0 or 1, multiplication acts as AND; since
         // "order_in_word" has distinct single-bit values, addition acts as OR
         words[ i ] = std::inner_product( order_in_word.begin(),
-         order_in_word.end(), &scratch[ i * md5_digest::bits_per_word ],
+         order_in_word.end(), &scratch[ i * md5_digest::bits_per_word::value ],
          iword_type(0u) );
     }
 
@@ -377,7 +456,7 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 
     // Round 1
     {
-        md5_special_op<md5_f, iword_type, md5_digest::bits_per_word>  ff;
+        md5_special_op<md5_f, iword_type, md5_digest::bits_per_word::value>  ff;
 
         scratch = words[ skipped_indices(words_per_block, 0, 1) ];
         for ( size_t  i = 0u ; i < words_per_block ; ++i )
@@ -390,7 +469,7 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 
     // Round 2
     {
-        md5_special_op<md5_g, iword_type, md5_digest::bits_per_word>  gg;
+        md5_special_op<md5_g, iword_type, md5_digest::bits_per_word::value>  gg;
 
         scratch = words[ skipped_indices(words_per_block, 1, 5) ];
         for ( size_t  i = 0u ; i < words_per_block ; ++i )
@@ -403,7 +482,7 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 
     // Round 3
     {
-        md5_special_op<md5_h, iword_type, md5_digest::bits_per_word>  hh;
+        md5_special_op<md5_h, iword_type, md5_digest::bits_per_word::value>  hh;
 
         scratch = words[ skipped_indices(words_per_block, 5, 3) ];
         for ( size_t  i = 0u ; i < words_per_block ; ++i )
@@ -416,7 +495,7 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
 
     // Round 4
     {
-        md5_special_op<md5_i, iword_type, md5_digest::bits_per_word>  ii;
+        md5_special_op<md5_i, iword_type, md5_digest::bits_per_word::value>  ii;
 
         scratch = words[ skipped_indices(words_per_block, 0, 7) ];
         for ( size_t  i = 0u ; i < words_per_block ; ++i )
@@ -428,11 +507,11 @@ md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
     }
 
     // Update buffer
-    for ( size_t  i = 0u ; i < md5_digest::words_per_digest ; ++i )
+    for ( size_t  i = 0u ; i < md5_digest::words_per_digest::value ; ++i )
     {
         this->buffer_[ i ] += buffer[ i ];
-        this->buffer_[ i ] &= low_bits_mask_t< md5_digest :: bits_per_word > ::
-         sig_bits;
+        this->buffer_[ i ] &= integer_lo_mask<md5_digest::bits_per_word::value>
+         ::value;
     }
 }
 
