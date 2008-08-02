@@ -1087,7 +1087,6 @@ namespace tr2 {
 
     <i>// capacity:</i>
     bool      empty() const;
-    size_type size() const;
     size_type max_size() const;
 
     <i>// modifiers:</i>
@@ -1422,7 +1421,6 @@ namespace tr2 {
 
     <i>// capacity:</i>
     bool      empty() const;
-    size_type size() const;
     size_type max_size() const;
     size_type capacity(cursor position) const;
     void      reserve(cursor position, size_type n);
@@ -1733,7 +1731,6 @@ namespace tr2 {
 
     <i>// capacity:</i>
     bool      empty() const { return h.empty(); }
-    size_type size() const  { return h.size(); }
     size_type max_size() const;
 
     <i>// modifiers:</i>
@@ -1987,7 +1984,6 @@ namespace tr2 {
 
     <i>// capacity:</i>
     bool      empty() const;
-    size_type size() const;
     size_type max_size() const;
     size_type capacity(cursor position) const;
     void      reserve(cursor position, size_type n);
@@ -2337,7 +2333,6 @@ namespace tr2 {
 
     <i>// capacity:</i>
     bool      empty() const;
-    size_type size() const;
     size_type max_size() const;
     size_type capacity(cursor position) const;
     void      reserve(cursor position, size_type n);
@@ -2401,7 +2396,8 @@ namespace tr2 {
       </li>
 
       <li>
-        <p><strong>Complexity:</strong> logarithmic in <tt>size()</tt>.</p>
+        <p><strong>Complexity:</strong> logarithmic in the <tt>rank_tree</tt>'s
+        size.</p>
       </li>
     </ol>
 

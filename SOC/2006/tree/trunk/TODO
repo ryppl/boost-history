@@ -110,7 +110,7 @@ Proposal:
   (and output_cursor_iterator_wrapper?) proposal.
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
- * Remove shoot()
+ * Remove shoot(), size()
  * Change some occurences of "vector" (oops) to the respective tree type.
 * Add (subtree) cursor algorithms.
 * Probably split up cursor categories into: cursor (value access) category, vertical traversal 

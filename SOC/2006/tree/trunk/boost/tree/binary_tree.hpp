@@ -198,11 +198,6 @@ class binary_tree {
 		return m_header[1] == &m_header;
 	}
 	
-	size_type size() const
-	{
-		return boost::tree::size(root());
-	}
-	
 	// Hierarchy-specific
 	
 	/**
@@ -571,7 +566,7 @@ template <class Tp, class Alloc>
 inline bool operator==(binary_tree<Tp, Alloc> const& x 
 					 , binary_tree<Tp, Alloc> const& y)
 {
-	 return (x.size() == y.size() 
+	 return (size(x.root()) == size(y.root()) 
 	 		 && equal(x.root(), y.root()));
 }
 

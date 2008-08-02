@@ -15,6 +15,7 @@
 
 #include <boost/tree/cursor_facade.hpp>
 #include <boost/tree/detail/node/nary.hpp>
+#include <boost/tree/detail/iterator/inorder.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -52,11 +53,14 @@ class nary_tree_cursor
 	typedef base_type* base_pointer;
   	
     struct enabler {};
-
- public:
+ 	
  	typedef Node node_type;
 	typedef node_type* node_pointer;
+	
+public:
 
+ 	//friend class inorder::iterator< nary_tree_cursor<Node> >;
+ 	
   	typedef typename mpl::eval_if<
 						is_const<Node>
 					   , add_const<typename Node::value_type>
