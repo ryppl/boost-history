@@ -566,8 +566,7 @@ template <class Tp, class Alloc>
 inline bool operator==(binary_tree<Tp, Alloc> const& x 
 					 , binary_tree<Tp, Alloc> const& y)
 {
-	 return (size(x.root()) == size(y.root()) 
-	 		 && equal(x.root(), y.root()));
+	 return (size(x.root()) == size(y.root()) && equal(x.root(), y.root()));
 }
 
 /// Based on operator==

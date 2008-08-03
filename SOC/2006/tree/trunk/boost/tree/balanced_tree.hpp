@@ -40,6 +40,8 @@ using boost::multi_index::member;
 
 struct empty_class { };
 
+// TODO: Remove Meta2. This stuff must be done via some MPL magic.
+ 
 template <class Val, class Meta, class Meta2 = empty_class>
 struct augmented_type {
 	typedef Val value_type;
@@ -77,6 +79,38 @@ struct metadata< augmented_type<Val,Meta,Meta2> > {
 	typedef typename augmented_type<Val,Meta,Meta2>::metadata_type type;
 };
 
+template <class Cursor>
+class is_on_top_cursor
+: public Cursor {
+public:
+	is_on_top_cursor()
+	: Cursor() {}
+
+	is_on_top_cursor(Cursor p)
+	: Cursor(p) {}
+	
+	bool is_root() const
+	{
+		return this->is_on_top();
+	}
+};
+
+template <class Cursor>
+class balanced_tree_iterator
+: public inorder::iterator< is_on_top_cursor<Cursor> > {
+public:
+	balanced_tree_iterator()
+	: inorder::iterator< is_on_top_cursor<Cursor> >() {}
+	
+	explicit balanced_tree_iterator(Cursor p)
+    : inorder::iterator< is_on_top_cursor<Cursor> >(p) {}
+    
+	operator Cursor()
+	{
+		return Cursor(this->base());
+	}
+}; 
+
 /** 
  * @brief A %balanced_tree.
  * This class models the hierarchy concept, the container concept and the
@@ -105,8 +139,8 @@ class balanced_tree {
 	typedef typename hierarchy_type::const_cursor const_cursor;
 
  public:	
-	typedef augmented_iterator<inorder::iterator<cursor>, typename data_type::extract_data, bidirectional_traversal_tag> iterator;
-	typedef augmented_iterator<inorder::iterator<const_cursor>, typename data_type::extract_data, bidirectional_traversal_tag> const_iterator;
+	typedef augmented_iterator<balanced_tree_iterator<cursor>, typename data_type::extract_data, bidirectional_traversal_tag> iterator;
+	typedef augmented_iterator<balanced_tree_iterator<const_cursor>, typename data_type::extract_data, bidirectional_traversal_tag> const_iterator;
 	
 	typedef std::reverse_iterator<iterator> reverse_iterator;
 	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;

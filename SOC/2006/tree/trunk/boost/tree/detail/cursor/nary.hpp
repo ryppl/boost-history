@@ -59,8 +59,6 @@ class nary_tree_cursor
 	
 public:
 
- 	//friend class inorder::iterator< nary_tree_cursor<Node> >;
- 	
   	typedef typename mpl::eval_if<
 						is_const<Node>
 					   , add_const<typename Node::value_type>
@@ -181,9 +179,8 @@ public:
 		m_node = static_cast<base_pointer>(m_node->parent());
 	}
 	
-public:
-	// TODO This isn't really a permanently public thing.
-	bool is_root() const
+protected:
+	bool is_on_top() const
 	{
 		base_pointer parent_begin_node = 
 			static_cast<base_pointer>(m_node->parent())
