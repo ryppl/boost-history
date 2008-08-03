@@ -15,6 +15,7 @@
 
 General:
 
+* Check if Cursor(balanced_tree_iterator) rellay has no is_root member()!
 * Revisit binary_tree (inorder::)iterator functions
 * Possibly sort out some more concepts, like trees with "downwards" or "upwards" insertion
   (insert()/insert_above()), trees with values only at the leaves (makes sense in combination
