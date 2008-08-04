@@ -148,7 +148,7 @@ fast_pool_allocator<set> set::pool_;
 template <typename T>
     class shifted_ptr : public shifted_ptr_base<T>
     {
-        //template <typename, template <typename> class> friend class shifted_ptr;
+        template <typename> friend class shifted_ptr;
 
         typedef shifted_ptr_base<T> base;
         
@@ -282,15 +282,18 @@ template <typename T>
 
         void init(owned_base * p)
         {
+            if (p->init())
+                return;
+        
             for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
             {
                 ps_->elements()->push_back(i->set_tag());
                 
                 for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs()->begin(), n; n = m, ++ n, m != i->ptrs()->end(); m = n)
-                {
                     m->ps_ = ps_;
-                }
             }
+            
+            p->init(true);
         }
     };
 

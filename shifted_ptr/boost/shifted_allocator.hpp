@@ -69,7 +69,8 @@ template <typename T>
 
         value_type * allocate(size_type s, const void * = 0)
         {
-            value_type * p = (value_type *) value_type::operator new(sizeof(value_type));
+            //value_type * p = (value_type *) value_type::operator new(sizeof(value_type));
+            value_type * p = new value_type();
 
             return p;
         }
@@ -85,8 +86,8 @@ template <typename T>
 
         void construct(value_type * p, const T & x)
         {
-            ::new (p) owned_base;
-            ::new (p->element()) T(x);
+            //::new (p) owned_base;
+            //::new (p->element()) T(x);
         }
 
         void destroy(pointer & p)

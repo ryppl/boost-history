@@ -1,5 +1,5 @@
 --- /local/include/c++/3.4.5/bits/stl_list.h	Wed Jan 18 11:06:54 2006
-+++ stl_list.h	Thu Jul 31 02:32:03 2008
++++ stl_list.h	Mon Aug  4 08:34:46 2008
 @@ -51,10 +51,21 @@
   * in supporting documentation.  Silicon Graphics makes no
   * representations about the suitability of this software for any
@@ -22,7 +22,7 @@
   *  You should not attempt to use it directly.
   */
  
-@@ -69,14 +80,22 @@
+@@ -69,62 +80,82 @@
    // latter publicly inherits from the former in an effort to reduce code
    // duplication.  This results in some "needless" static_cast'ing later on,
    // but it's all safe downcasting.
@@ -35,6 +35,7 @@
 -    _List_node_base* _M_prev;   ///< Self-explanatory
 +      typedef typename _Alloc::template rebind<_List_node_base<_Alloc> >::other _Node_Alloc_type;
 +
++      typedef typename _Node_Alloc_type::value_type                value_type;
 +      typedef typename _Node_Alloc_type::pointer                   pointer;
 +      typedef typename _Node_Alloc_type::const_pointer             const_pointer;
 +      typedef typename _Node_Alloc_type::reference                 reference;
@@ -47,7 +48,18 @@
      swap(_List_node_base& __x, _List_node_base& __y);
  
      void
-@@ -92,39 +111,48 @@
+-    transfer(_List_node_base * const __first,
+-	     _List_node_base * const __last);
++      transfer(value_type * const __first,
++	       value_type * const __last);
+ 
+     void
+     reverse();
+ 
+     void
+-    hook(_List_node_base * const __position);
++      hook(value_type * const __position);
+ 
      void
      unhook();
    };
@@ -60,6 +72,7 @@
      {
 +      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other _Node_Alloc_type;
 +
++      typedef typename _Node_Alloc_type::value_type                value_type;
 +      typedef typename _Node_Alloc_type::pointer                   pointer;
 +      typedef typename _Node_Alloc_type::const_pointer             const_pointer;
 +      typedef typename _Node_Alloc_type::reference                 reference;
@@ -67,7 +80,8 @@
 +
        _Tp _M_data;                ///< User's data.
 +
-+      _List_node(const _Tp& __x = _Tp()) : _M_data(__x) {}
++      _List_node() : _M_data() {}
++      _List_node(const _Tp& __x) : _M_data(__x) {}
      };
  
    /**
@@ -102,7 +116,7 @@
        // Must downcast from List_node_base to _List_node to get to _M_data.
        reference
        operator*() const
-@@ -171,37 +199,37 @@
+@@ -171,37 +202,37 @@
        bool
        operator!=(const _Self& __x) const
        { return _M_node != __x._M_node; }
@@ -146,7 +160,7 @@
        _List_const_iterator(const iterator& __x)
        : _M_node(__x._M_node) { }
  
-@@ -216,11 +244,11 @@
+@@ -216,11 +247,11 @@
        { return &static_cast<_Node*>(_M_node)->_M_data; }
  
        _Self&
@@ -159,7 +173,7 @@
  
        _Self
        operator++(int)
-@@ -252,23 +280,23 @@
+@@ -252,23 +283,23 @@
        bool
        operator!=(const _Self& __x) const
        { return _M_node != __x._M_node; }
@@ -190,38 +204,42 @@
  
    /**
     *  @if maint
-@@ -290,41 +318,41 @@
+@@ -290,41 +321,43 @@
        //
        // We put this to the test in the constructors and in
        // get_allocator, where we use conversions between
        // allocator_type and _Node_Alloc_type. The conversion is
        // required by table 32 in [20.1.5].
 -      typedef typename _Alloc::template rebind<_List_node<_Tp> >::other
-+      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other
- 
-       _Node_Alloc_type;
+-
+-      _Node_Alloc_type;
++      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other _Node_Alloc_type;
  
        struct _List_impl 
  	: public _Node_Alloc_type {
 -	_List_node_base _M_node;
 -	_List_impl (const _Node_Alloc_type& __a)
--	  : _Node_Alloc_type(__a)
-+        typename _List_node_base<_Alloc>::pointer _M_node;
++        typename _Node_Alloc_type::pointer _M_node;
 +        _List_impl (const _Node_Alloc_type& __a, _List_base& __b)
-+          : _Node_Alloc_type(__a), _M_node(new (__b._M_get_node()) _List_node_base<_Alloc>())
- 	{ }
+ 	  : _Node_Alloc_type(__a)
+-	{ }
++        { 
++            typename _Node_Alloc_type::value_type * __p = __b._M_get_node();
++            _Node_Alloc_type::construct(__p, _List_node<_Tp, _Alloc>());
++            _M_node = __p;
++        }
        };
  
        _List_impl _M_impl;
  
 -      _List_node<_Tp>*
-+      _List_node<_Tp, _Alloc> *
++      typename _Node_Alloc_type::value_type *
        _M_get_node()
        { return _M_impl._Node_Alloc_type::allocate(1); }
        
        void
 -      _M_put_node(_List_node<_Tp>* __p)
-+      _M_put_node(_List_node<_Tp, _Alloc> * __p)
++      _M_put_node(typename _Node_Alloc_type::pointer & __p)
        { _M_impl._Node_Alloc_type::deallocate(__p, 1); }
        
    public:
@@ -240,7 +258,7 @@
        // This is what actually destroys the list.
        ~_List_base()
        { _M_clear(); }
-@@ -333,12 +361,12 @@
+@@ -333,12 +366,12 @@
        _M_clear();
  
        void
@@ -255,7 +273,7 @@
  
    /**
     *  @brief A standard container with linear time access to elements,
-@@ -393,26 +421,26 @@
+@@ -393,26 +426,26 @@
  
        typedef _List_base<_Tp, _Alloc>                   _Base;
  
@@ -289,10 +307,18 @@
         *  One data member plus two memory-handling functions.  If the
         *  _Alloc type requires separate instances, then one of those
         *  will also be included, accumulated from the topmost parent.
-@@ -433,11 +461,11 @@
+@@ -427,21 +460,21 @@
+        *  @param  x  An instance of user data.
+        *
+        *  Allocates space for a new node and constructs a copy of @a x in it.
+        *  @endif
+        */
+-      _Node*
++      typename _Base::_Node_Alloc_type::value_type*
        _M_create_node(const value_type& __x)
        {
- 	_Node* __p = this->_M_get_node();
+-	_Node* __p = this->_M_get_node();
++        typename _Base::_Node_Alloc_type::value_type* __p = this->_M_get_node();
  	try
  	  {
 -	    std::_Construct(&__p->_M_data, __x);
@@ -300,12 +326,25 @@
  	  }
  	catch(...)
  	  {
- 	    _M_put_node(__p);
+-	    _M_put_node(__p);
++            //_M_put_node(__p);
  	    __throw_exception_again;
-@@ -455,11 +483,11 @@
+ 	  }
+ 	return __p;
+       }
+ 
+@@ -449,21 +482,21 @@
+        *  @if maint
+        *  Allocates space for a new node and default-constructs a new
+        *  instance of @c value_type in it.
+        *  @endif
+        */
+-      _Node*
++      typename _Base::_Node_Alloc_type::value_type*
        _M_create_node()
        {
- 	_Node* __p = this->_M_get_node();
+-	_Node* __p = this->_M_get_node();
++        typename _Base::_Node_Alloc_type::value_type* __p = this->_M_get_node();
  	try
  	  {
 -	    std::_Construct(&__p->_M_data);
@@ -313,9 +352,14 @@
  	  }
  	catch(...)
  	  {
- 	    _M_put_node(__p);
+-	    _M_put_node(__p);
++            //_M_put_node(__p);
  	    __throw_exception_again;
-@@ -595,37 +623,37 @@
+ 	  }
+ 	return __p;
+       }
+ 
+@@ -595,37 +628,37 @@
         *  Returns a read/write iterator that points to the first element in the
         *  %list.  Iteration is done in ordinary element order.
         */
@@ -357,7 +401,7 @@
         *  Returns a read/write reverse iterator that points to the last
         *  element in the %list.  Iteration is done in reverse element
         *  order.
-@@ -666,11 +694,11 @@
+@@ -666,11 +699,11 @@
         *  Returns true if the %list is empty.  (Thus begin() would equal
         *  end().)
         */
@@ -370,7 +414,7 @@
        size_type
        size() const
        { return std::distance(begin(), end()); }
-@@ -795,11 +823,11 @@
+@@ -795,11 +828,11 @@
         *  Note that no data is returned, and if the last element's data
         *  is needed, it should be retrieved before pop_back() is called.
         */
@@ -383,7 +427,7 @@
         *  @brief  Inserts given value into %list before specified iterator.
         *  @param  position  An iterator into the %list.
         *  @param  x  Data to be inserted.
-@@ -908,11 +936,11 @@
+@@ -908,11 +941,11 @@
         *  specialized such that std::swap(l1,l2) will feed to this
         *  function.
         */
@@ -396,7 +440,7 @@
         *  Erases all the elements.  Note that this function only erases
         *  the elements, and that if the elements themselves are
         *  pointers, the pointed-to memory is not touched in any way.
-@@ -1071,11 +1099,11 @@
+@@ -1071,11 +1104,11 @@
         *
         *  Reverse the order of elements in the list in linear time.
         */
@@ -409,3 +453,19 @@
         *  @brief  Sort the elements.
         *
         *  Sorts the elements of this list in NlogN time.  Equivalent
+@@ -1158,12 +1191,13 @@
+ 
+       // Inserts new element at position given and with value given.
+       void
+       _M_insert(iterator __position, const value_type& __x)
+       {
+-        _Node* __tmp = _M_create_node(__x);
+-        __tmp->hook(__position._M_node);
++        __position._M_node->hook(reinterpret_cast<typename _List_node_base<_Alloc>::value_type*>(_M_create_node(__x)));
++        //typename _Base::_Node_Alloc_type::value_type* __tmp = _M_create_node(__x);
++        //static_cast<_Node &>(*__tmp).hook(__position._M_node);
+       }
+ 
+       // Erases element at position given.
+       void
+       _M_erase(iterator __position)

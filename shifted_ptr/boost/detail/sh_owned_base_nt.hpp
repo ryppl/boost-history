@@ -128,6 +128,7 @@ struct pool : boost::pool<>,
 
 class owned_base : public sp_counted_base
 {
+    bool init_;
 	intrusive_stack ptrs_;
 	intrusive_list inits_;
 
@@ -139,11 +140,13 @@ public:
     intrusive_list::node set_tag_;
     intrusive_list::node init_tag_;
 
-    owned_base()
+    owned_base() : init_(false)
     {
         inits_.push_back(& init_tag_); 
     }
 
+    bool init()                                     { return init_; }
+    void init(bool i)                               { init_ = i; }
     intrusive_stack * ptrs() 						{ return & ptrs_; }
     intrusive_list * inits()						{ return & inits_; }
     intrusive_list::node * set_tag() 				{ return & set_tag_; }

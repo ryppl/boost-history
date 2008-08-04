@@ -1,6 +1,6 @@
 --- /local/include/c++/3.4.5/bits/list.tcc	Wed Jan 18 11:06:46 2006
-+++ list.tcc	Thu Jul 31 02:28:37 2008
-@@ -51,31 +51,63 @@
++++ list.tcc	Mon Aug  4 08:26:07 2008
+@@ -51,35 +51,72 @@
   * in supporting documentation.  Silicon Graphics makes no
   * representations about the suitability of this software for any
   * purpose.  It is provided "as is" without express or implied warranty.
@@ -29,12 +29,17 @@
  {
 +  template<typename _Alloc>
 +    void
-+    _List_node_base<_Alloc>::hook(_List_node_base * const __position)
++    _List_node_base<_Alloc>::hook(value_type * const __position)
 +    {
-+        this->_M_next = __position;
-+        this->_M_prev = __position->_M_prev;
-+        __position->_M_prev->_M_next = this;
-+        __position->_M_prev = this;
++        static_cast<_List_node_base &>(*__position)._M_next = this->_M_next->_M_prev;
++        static_cast<_List_node_base &>(*__position)._M_prev = this->_M_prev;
++        this->_M_prev->_M_next = __position;
++        this->_M_prev = __position;
++
++//        this->_M_next = __position;
++//        this->_M_prev = __position->_M_prev;
++//        __position->_M_prev->_M_next = this;
++//        __position->_M_prev = this;
 +    }
 +
 +  template<typename _Alloc>
@@ -55,20 +60,29 @@
 -      typedef _List_node<_Tp>  _Node;
 -      _Node* __cur = static_cast<_Node*>(this->_M_impl._M_node._M_next);
 -      while (__cur != &this->_M_impl._M_node)
-+      typedef _List_node<_Tp,_Alloc>  _Node;
-+      typedef _List_node_base<_Alloc>  _Node_base;
-+      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*this->_M_impl._M_node->_M_next));
-+      while (__cur != &*this->_M_impl._M_node)
-       {
-         _Node* __tmp = __cur;
+-      {
+-        _Node* __tmp = __cur;
 -        __cur = static_cast<_Node*>(__cur->_M_next);
-+        __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*__cur->_M_next));
-         std::_Destroy(&__tmp->_M_data);
-         _M_put_node(__tmp);
-       }
+-        std::_Destroy(&__tmp->_M_data);
+-        _M_put_node(__tmp);
+-      }
++/*      typedef _List_node<_Tp,_Alloc>  _Node;
++      typedef _List_node_base<_Alloc>  _Node_base;
++      typename _Node_base::pointer* __cur = & this->_M_impl._M_node->_M_next;
++      while (__cur != & this->_M_impl._M_node)
++      {
++        typename _Node_base::pointer* __tmp = __cur;
++        __cur = & (*__cur)->_M_next;
++        _M_impl._Node_Alloc_type::destroy(*(typename _Node::pointer*) __tmp);
++        _M_put_node(*(typename _Node::pointer*) __tmp);
      }
++*/    }
  
-@@ -235,12 +267,12 @@
+   template<typename _Tp, typename _Alloc>
+     typename list<_Tp,_Alloc>::iterator
+     list<_Tp,_Alloc>::
+     insert(iterator __position, const value_type& __x)
+@@ -235,12 +272,12 @@
      void
      list<_Tp,_Alloc>::
      sort()
@@ -83,7 +97,7 @@
          list __tmp[64];
          list * __fill = &__tmp[0];
          list * __counter;
-@@ -339,12 +371,12 @@
+@@ -339,12 +376,12 @@
        void
        list<_Tp,_Alloc>::
        sort(_StrictWeakOrdering __comp)

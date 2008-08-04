@@ -127,7 +127,8 @@ namespace _GLIBCXX_STD
 
       _Tp _M_data;                ///< User's data.
 
-      _List_node(const _Tp& __x = _Tp()) : _M_data(__x) {}
+      _List_node() : _M_data() {}
+      _List_node(const _Tp& __x) : _M_data(__x) {}
     };
 
   /**
@@ -326,7 +327,7 @@ namespace _GLIBCXX_STD
 
       struct _List_impl
         : public _Node_Alloc_type {
-        typename _List_node_base<_Alloc>::pointer _M_node;
+        typename _Node_Alloc_type::pointer _M_node;
         _List_impl (const _Node_Alloc_type& __a, _List_base& __b)
           : _Node_Alloc_type(__a)
         { 
