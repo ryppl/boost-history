@@ -56,9 +56,19 @@ template < class Derived, typename LengthType, LengthType QueueLength, typename
 class queued_bit_processing_base;
 
 
-//  From <boost/coding/md5.hpp>  ---------------------------------------------//
+//  From <boost/coding/md5_digest_core.hpp>  ---------------------------------//
 
-class md5_digest;
+struct md5_digest;
+
+// Also has operator free-functions
+
+
+//  From <boost/coding/md5_digest.hpp>  --------------------------------------//
+
+// Only has operator free-functions, #includes "md5_digest_core.hpp"
+
+
+//  From <boost/coding/md5.hpp>  ---------------------------------------------//
 
 class md5_computerX;
 

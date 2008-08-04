@@ -185,31 +185,6 @@ namespace coding
 {
 
 
-//! \cond
-//  Implementation detail object definitions  --------------------------------//
-
-namespace detail
-{
-
-// Nybbles and hexadecimal digits
-std::size_t const  md5_constants::nybbles_per_hexadecimal_digit;
-std::size_t const  md5_constants::bits_per_nybble;
-
-std::size_t const  md5_constants::number_of_hexadecimal_digits;
-
-char const  md5_constants::hex_digits_lc[] = "0123456789abcdef";
-char const  md5_constants::hex_digits_uc[] = "0123456789ABCDEF";
-
-// MD words
-std::size_t const  md5_constants::nybbles_per_word;
-
-// MD strings
-std::size_t const  md5_constants::characters_per_digest;
-
-}  // namespace detail
-//! \endcond
-
-
 //  MD5 message-digest computer class-static member definitions  -------------//
 
 std::size_t const  md5_computerX::words_per_block;

@@ -149,8 +149,8 @@ BOOST_AUTO_TEST_CASE( md5_digest_output_test )
         std::ostringstream  oss;
 
         // Check generic options
-        oss << setfill( '*' ) << setw( md5_constants::characters_per_digest + 2
-         ) << left << md5_initial;
+        oss << setfill( '*' ) << setw( md5_constants::chars_per_digest::value +
+         2 ) << left << md5_initial;
         BOOST_CHECK_EQUAL( oss.str(), string(md5_initial_s) + "**" );
 
         // Check upper-case flag
@@ -160,8 +160,8 @@ BOOST_AUTO_TEST_CASE( md5_digest_output_test )
 
         // Redo for the all-zeros value
         oss.str( "" );
-        oss << setfill( '*' ) << setw( md5_constants::characters_per_digest + 2
-         ) << left << zeros;
+        oss << setfill( '*' ) << setw( md5_constants::chars_per_digest::value +
+         2 ) << left << zeros;
         BOOST_CHECK_EQUAL( oss.str(), string(zeros_s) + "**" );
 
         oss.str( "" );
@@ -174,8 +174,8 @@ BOOST_AUTO_TEST_CASE( md5_digest_output_test )
         std::wostringstream  woss;
 
         // Check generic options
-        woss << setfill( L'*' ) << setw( md5_constants::characters_per_digest +
-         2 ) << left << md5_initial;
+        woss << setfill( L'*' ) << setw( md5_constants::chars_per_digest::value
+         + 2 ) << left << md5_initial;
         BOOST_CHECK( woss.str() == (wstring( md5_initial_ws ) + L"**") );
 
         // Check upper-case flag
@@ -185,8 +185,8 @@ BOOST_AUTO_TEST_CASE( md5_digest_output_test )
 
         // Redo for the all-zeros value
         woss.str( L"" );
-        woss << setfill( L'*' ) << setw( md5_constants::characters_per_digest +
-         2 ) << left << zeros;
+        woss << setfill( L'*' ) << setw( md5_constants::chars_per_digest::value
+         + 2 ) << left << zeros;
         BOOST_CHECK( woss.str() == (wstring( zeros_ws ) + L"**") );
 
         woss.str( L"" );

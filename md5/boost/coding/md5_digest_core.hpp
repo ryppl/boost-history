@@ -18,7 +18,6 @@
 #define BOOST_CODING_MD5_HPP
 
 #include <boost/coding_fwd.hpp>
-#include <boost/coding/md5_digest.hpp>  // for boost::coding::md5_digest
 
 #include <boost/array.hpp>                 // for boost::array
 #include <boost/assert.hpp>                // for BOOST_ASSERT
@@ -51,6 +50,52 @@ namespace coding
 //  Forward declarations  ----------------------------------------------------//
 
 // None right now
+
+
+//  MD5 message-digest class declaration  ------------------------------------//
+
+/** \brief  A class for storing a MD5 message digest.
+
+    This type is as basic as possible, meant to be the return type for MD5
+    hashing operations.  It is supposed to mirror the buffer described in RFC
+    1321, sections 3.3&ndash;3.5.  Comparisons are supported for check-summing
+    purposes, but not ordering.  Persistence is supported through the standard
+    text stream I/O system.
+
+    \see  boost::coding::md5_context
+    \see  boost::coding::md5_computer
+    \see  boost::coding::compute_md5(void const*,std::size_t)
+ */
+class md5_digest
+{
+public:
+    // Types
+    /** \brief  Number of bits for word-sized quantities
+
+        Represents the number of bits per word as given in RFC 1321, section 2.
+     */
+    typedef mpl::int_<32>                                     bits_per_word;
+    /** \brief  Type of MD register
+
+        Represents the type of each register of the MD buffer.
+     */
+    typedef sized_integral<bits_per_word::value, unsigned>::type  word_type;
+    /** \brief  Length of MD buffer
+
+        Represents the number of registers in a MD buffer.
+     */
+    typedef mpl::size_t<4u>                                words_per_digest;
+
+    // Member data
+    /** \brief  The MD5 message digest checksum
+
+        Represents the checksum from a MD5 hashing, mirroring for format of the
+        MD buffer (see RFC 1321, section 3.3).  The zero-index corresponds to
+        the "A" register, up to index 3 representing the "D" register.
+     */
+    word_type  hash[ words_per_digest::value ];
+
+};  // md5_digest
 
 
 //  MD5 message-digest computation class declaration  ------------------------//
@@ -476,6 +521,227 @@ private:
     void  serialize( Archive &ar, const unsigned int version );  // not defined yet
 
 };  // md5_computer
+
+
+//! \cond
+//  Implementation details  --------------------------------------------------//
+
+namespace detail
+{
+
+// MD5 message digest constants, especially for I/O
+struct md5_constants
+{
+    // Nybbles and hexadecimal digits
+    static  std::size_t const  nybbles_per_hexadecimal_digit = 1u;
+    static  std::size_t const  bits_per_nybble = 4u;
+
+    static  std::size_t const  number_of_hexadecimal_digits = 16u;  // duh!
+
+    static  char const  hex_digits_lc[ number_of_hexadecimal_digits + 1 ];
+    static  char const  hex_digits_uc[ number_of_hexadecimal_digits + 1 ];
+
+    // MD words
+    static  std::size_t const  nybbles_per_word =
+     md5_digest::bits_per_word::value / bits_per_nybble;
+
+    // MD strings
+    static  std::size_t const  characters_per_digest =
+     md5_digest::bits_per_word::value * md5_digest::words_per_digest::value /
+     ( nybbles_per_hexadecimal_digit * bits_per_nybble );
+
+};  // md5_constants
+
+}  // namespace detail
+//! \endcond
+
+
+//  MD5 message-digest structure non-member operator function definitions  ---//
+
+/** \brief  Equals
+
+    Compares MD5 message digests for equivalence.  Such digests are equal if all
+    of the corresponding parts of their hashes are equal.
+
+    \param l  The left-side operand to be compared.
+    \param r  The right-side operand to be compared.
+
+    \retval true   \p l and \p r are equivalent.
+    \retval false  \p l and \p r are not equivalent.
+
+    \relates  boost::coding::md5_digest
+ */
+inline
+bool
+operator ==( md5_digest const &l, md5_digest const &r )
+{
+    return std::equal( l.hash, l.hash + md5_digest::words_per_digest::value,
+     r.hash );
+}
+
+/** \brief  Not-equals
+
+    Compares MD5 message digests for non-equivalence.  Such digests are unequal
+    if at least one set of corresponding parts in their hashes are unequal.
+
+    \param l  The left-side operand to be compared.
+    \param r  The right-side operand to be compared.
+
+    \retval true   \p l and \p r are not equivalent.
+    \retval false  \p l and \p r are equivalent.
+
+    \see  boost::coding::operator==(md5_digest const&,md5_digest const&)
+
+    \relates  boost::coding::md5_digest
+ */
+inline
+bool
+operator !=( md5_digest const &l, md5_digest const &r )
+{
+    return !( l == r );
+}
+
+/** \brief  Reads a \c md5_digest from an input stream
+
+    Receives a \c md5_digest object from an input stream.  The format is as
+    given in RFC 1321, section 3.5, i.e. go from the least-significant octet of
+    the first hash component to the most-significant octet of the last hash
+    component.  The format for each octet read is two hexadecimal digits
+    (0&ndash;9 and either a&ndash;f or A&ndash;F), with the digit for the
+    most-significant nybble read first.  The letter-case of the higher-order
+    hexadecimal digits does not matter.  (Note that exactly 32 characters are
+    read, not counting how \c std::ios_base::skipws for \p i is set.)
+
+    \param i  The input stream to perform the reading.
+    \param n  The \c md5_digest object to store the read.
+
+    \return  \p i
+
+    \see  boost::coding::operator<<(std::basic_ostream<Ch,Tr>&,md5_digest const&)
+
+    \relates  boost::coding::md5_digest
+ */
+template < typename Ch, class Tr >
+std::basic_istream<Ch, Tr> &
+operator >>( std::basic_istream<Ch, Tr> &i, md5_digest &n )
+{
+    typename std::basic_istream<Ch, Tr>::sentry  is( i );
+
+    if ( is )
+    {
+        // Set up
+        BOOST_AUTO( const &  f, std::use_facet< std::ctype<Ch> >(i.getloc()) );
+        std::size_t  nybble_index = 0u;
+        md5_digest   temp = { {0} };
+
+        // Read the exact number of characters
+        for ( std::istreambuf_iterator<Ch, Tr>  ii(i), ie ; (ie != ii) &&
+         (nybble_index < detail::md5_constants::characters_per_digest) ; ++ii,
+         ++nybble_index )
+        {
+            // Read a character, which represents one nybble
+            md5_digest::word_type  nybble = 0u;
+
+            switch ( f.narrow(*ii, '\0') )
+            {
+            case 'F': case 'f':  ++nybble;  // FALL THROUGH
+            case 'E': case 'e':  ++nybble;  // FALL THROUGH
+            case 'D': case 'd':  ++nybble;  // FALL THROUGH
+            case 'C': case 'c':  ++nybble;  // FALL THROUGH
+            case 'B': case 'b':  ++nybble;  // FALL THROUGH
+            case 'A': case 'a':  ++nybble;  // FALL THROUGH
+            case '9':  ++nybble;  // FALL THROUGH
+            case '8':  ++nybble;  // FALL THROUGH
+            case '7':  ++nybble;  // FALL THROUGH
+            case '6':  ++nybble;  // FALL THROUGH
+            case '5':  ++nybble;  // FALL THROUGH
+            case '4':  ++nybble;  // FALL THROUGH
+            case '3':  ++nybble;  // FALL THROUGH
+            case '2':  ++nybble;  // FALL THROUGH
+            case '1':  ++nybble;  // FALL THROUGH
+            case '0':  break;
+            default:   goto abort_read;
+            }
+
+            // Place the nybble within its word.  (Octets are read lowest to
+            // highest, but the nybbles are read in the reverse order, so swap
+            // the positions of the high and low nybbles when putting them in
+            // the appropriate octet.)
+            temp.hash[ nybble_index / detail::md5_constants::nybbles_per_word ]
+             |= nybble << ( detail::md5_constants::bits_per_nybble * ((
+             nybble_index % detail::md5_constants::nybbles_per_word ) ^ 0x01u)
+             );
+        }
+
+abort_read:
+        // Finish up
+        if ( nybble_index < detail::md5_constants::characters_per_digest )
+        {
+            // Incomplete read
+            i.setstate( std::ios_base::failbit );
+        }
+        else
+        {
+            // Successful read
+            n = temp;
+        }
+    }
+
+    return i;
+}
+
+/** \brief  Writes a \c md5_digest to an output stream
+
+    Sends a \c md5_digest object to an output stream.  The format is as given
+    in RFC 1321, section 3.5, i.e. go from the least-significant octet of the
+    first hash component to the most-significant octet of the last hash
+    component.  The format for each octet written is two hexadecimal digits
+    (0&ndash;9 and either a&ndash;f or A&ndash;F), with the digit for the
+    most-significant nybble written first.  The setting of
+    \c std::ios_base::uppercase in \p o affects which characters are used for
+    the higher-order hexadecimal digits.  (Note that exactly 32 characters are
+    written, not counting how <code><var>o</var>.width()</code> is set.)
+
+    \param o  The output stream to perform the writing.
+    \param n  The \c md5_digest object to be written.
+
+    \return  \p o
+
+    \see  boost::coding::operator>>(std::basic_istream<Ch,Tr>&,md5_digest&)
+
+    \relates  boost::coding::md5_digest
+ */
+template < typename Ch, class Tr >
+std::basic_ostream<Ch, Tr> &
+operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
+{
+    // The message always has an exact number of characters; plot it out.
+    // (Leave an extra character for the NUL terminator.)
+    char    hex_string[ detail::md5_constants::characters_per_digest + 1u ];
+    char *  p = hex_string;
+
+    // Each nybble will be printed as a hexadecimal digit.
+    char const  (&digits)[ detail::md5_constants::number_of_hexadecimal_digits +
+     1 ] = ( o.flags() & std::ios_base::uppercase )
+     ? detail::md5_constants::hex_digits_uc
+     : detail::md5_constants::hex_digits_lc;
+
+    // Print each nybble.  Since the nybble progression within an octet is the
+    // reverse of the octet and word progressions, stick in a reversal flag
+    // while indexing.
+    for ( std::size_t  nybble_index = 0u ; nybble_index <
+     detail::md5_constants::characters_per_digest ; ++nybble_index )
+    {
+        *p++ = digits[ 0x0Fu & (n.hash[ nybble_index /
+         detail::md5_constants::nybbles_per_word ] >> (
+         detail::md5_constants::bits_per_nybble * (( nybble_index %
+         detail::md5_constants::nybbles_per_word ) ^ 0x01u) )) ];
+    }
+    *p = '\0';
+
+    // Print the message, taking stream settings into account
+    return o << hex_string;
+}
 
 
 //  MD5 message-digest computation constructor definitions  ------------------//
