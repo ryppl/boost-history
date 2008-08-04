@@ -21,7 +21,6 @@
 #ifndef BOOST_DETAIL_SH_RTCMM_H_INCLUDED
 #define BOOST_DETAIL_SH_RTCMM_H_INCLUDED
 
-#include <iterator>
 
 #if defined(_MSC_VER)
 #pragma warning( push )
@@ -86,11 +85,11 @@ public:
                 i->add_ref_copy();
                 delete &* i;
             }
-
+                
             for (intrusive_list::iterator<set, & set::tag_> i = p->includes_.begin(), j; j = i, ++ j, i != p->includes_.end(); i = j)
                 if (&* i != this && &* i != p)
                     delete &* i;
-
+                    
             if (p != this)
                 delete p;
 
@@ -121,14 +120,12 @@ public:
     {
         return & redir()->elements_;
     }
-
+    
     void * operator new (size_t s)
     {
-        char * p = reinterpret_cast<char *>(pool_.allocate(s));
-
-        return p;
+        return pool_.allocate(s);
     }
-
+    
     void * operator new (size_t s, set * p)
     {
         return p;
@@ -139,6 +136,7 @@ public:
         pool_.deallocate(static_cast<set *>(p), sizeof(set));
     }
 };
+
 
 fast_pool_allocator<set> set::pool_;
 
@@ -151,8 +149,9 @@ template <typename T>
     class shifted_ptr : public shifted_ptr_base<T>
     {
         //template <typename, template <typename> class> friend class shifted_ptr;
-        typedef shifted_ptr_base<T> base;
 
+        typedef shifted_ptr_base<T> base;
+        
         using base::share;
 
 
@@ -198,8 +197,7 @@ template <typename T>
                 else
                     owned_base::pool_.top(this)->ptrs()->push(& pn_);
 
-                if (init())
-                    ps_->redir(p.ps_);
+                ps_->redir(p.ps_);
             }
 
             shifted_ptr(shifted_ptr<T> const & p) : base(p)
@@ -209,16 +207,17 @@ template <typename T>
                 else
                     owned_base::pool_.top(this)->ptrs()->push(& pn_);
 
-                if (init())
-                    ps_->redir(p.ps_);
+                ps_->redir(p.ps_);
             }
 
         template <typename V>
             shifted_ptr & operator = (shifted<V> * p)
             {
-                if (init())
+                if (ps_ && ! owned_base::pool_.is_from(ps_))
                 {
-                    release();
+                    if (! owned_base::pool_.is_from(this))
+                        release();
+
                     init(p);
                 }
                 base::operator = (p);
@@ -229,15 +228,14 @@ template <typename T>
         template <typename V>
             shifted_ptr & operator = (shifted_ptr<V> const & p)
             {
-                if (p.po_ != base::po_)
-                {
-                    if (init() && ps_->redir() != p.ps_->redir())
+                if (ps_ && ! owned_base::pool_.is_from(ps_))
+                    if (ps_->redir() != p.ps_->redir())
                     {
                         release();
                         ps_->redir(p.ps_);
                     }
-                    base::operator = (p);
-                }
+                base::operator = (p);
+
                 return * this;
             }
 
@@ -245,44 +243,6 @@ template <typename T>
             {
                 return operator = <T>(p);
             }
-
-//! FIXME
-#if 1
-        template <typename V>
-            shifted_ptr(V * p)
-            {
-                shifted<element_type> * const q = (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(p));
-
-                base::operator = (q);
-
-                if (! owned_base::pool_.is_from(this))
-                {
-                    ps_ = new set();
-
-                    init(q);
-                }
-                else
-                {
-                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
-                    owned_base::pool_.top(this)->inits()->merge(* q->inits());
-                }
-            }
-
-        template <typename V>
-            shifted_ptr & operator = (V * p)
-            {
-                shifted<element_type> * const q = (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(p));
-
-                if (init())
-                {
-                    release();
-                    init(q);
-                }
-                base::operator = (q);
-
-                return * this;
-            }
-#endif
 
         void reset()
         {
@@ -295,11 +255,6 @@ template <typename T>
         }
 
     private:
-        bool init()
-        {
-            return ps_ && ! owned_base::pool_.is_from(ps_);
-        }
-
         void release(bool d = false)
         {
             if (! owned_base::pool_.is_from(this))
@@ -313,7 +268,7 @@ template <typename T>
                     else
                         delete ps_;
                 }
-                else
+                else 
                 {
                     base::reset();
 
@@ -327,18 +282,14 @@ template <typename T>
 
         void init(owned_base * p)
         {
-            if (! p->init())
+            for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
             {
-                for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
+                ps_->elements()->push_back(i->set_tag());
+                
+                for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs()->begin(), n; n = m, ++ n, m != i->ptrs()->end(); m = n)
                 {
-                    ps_->elements()->push_back(i->set_tag());
-
-                    for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = p->ptrs()->begin(), n; n = m, ++ n, m != p->ptrs()->end() && ! m->init(); m = n)
-                        m->ps_ = ps_;
+                    m->ps_ = ps_;
                 }
-
-                p->init(true);
-                owned_base::pool_.construct().clear();
             }
         }
     };

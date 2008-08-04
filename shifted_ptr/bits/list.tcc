@@ -76,12 +76,17 @@ namespace _GLIBCXX_STD
 {
   template<typename _Alloc>
     void
-    _List_node_base<_Alloc>::hook(_List_node_base * const __position)
+    _List_node_base<_Alloc>::hook(value_type * const __position)
     {
-        this->_M_next = __position;
-        this->_M_prev = __position->_M_prev;
-        __position->_M_prev->_M_next = this;
-        __position->_M_prev = this;
+        static_cast<_List_node_base &>(*__position)._M_next = this->_M_next->_M_prev;
+        static_cast<_List_node_base &>(*__position)._M_prev = this->_M_prev;
+        this->_M_prev->_M_next = __position;
+        this->_M_prev = __position;
+
+//        this->_M_next = __position;
+//        this->_M_prev = __position->_M_prev;
+//        __position->_M_prev->_M_next = this;
+//        __position->_M_prev = this;
     }
 
   template<typename _Alloc>
@@ -99,17 +104,17 @@ namespace _GLIBCXX_STD
     _List_base<_Tp,_Alloc>::
     _M_clear()
     {
-      typedef _List_node<_Tp,_Alloc>  _Node;
+/*      typedef _List_node<_Tp,_Alloc>  _Node;
       typedef _List_node_base<_Alloc>  _Node_base;
-      _Node* __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*this->_M_impl._M_node->_M_next));
-      while (__cur != &*this->_M_impl._M_node)
+      typename _Node_base::pointer* __cur = & this->_M_impl._M_node->_M_next;
+      while (__cur != & this->_M_impl._M_node)
       {
-        _Node* __tmp = __cur;
-        __cur = static_cast<_Node*>(static_cast<_Node_base*>(&*__cur->_M_next));
-        std::_Destroy(&__tmp->_M_data);
-        _M_put_node(__tmp);
+        typename _Node_base::pointer* __tmp = __cur;
+        __cur = & (*__cur)->_M_next;
+        _M_impl._Node_Alloc_type::destroy(*(typename _Node::pointer*) __tmp);
+        _M_put_node(*(typename _Node::pointer*) __tmp);
       }
-    }
+*/    }
 
   template<typename _Tp, typename _Alloc>
     typename list<_Tp,_Alloc>::iterator

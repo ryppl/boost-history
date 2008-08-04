@@ -87,6 +87,7 @@ namespace _GLIBCXX_STD
     {
       typedef typename _Alloc::template rebind<_List_node_base<_Alloc> >::other _Node_Alloc_type;
 
+      typedef typename _Node_Alloc_type::value_type                value_type;
       typedef typename _Node_Alloc_type::pointer                   pointer;
       typedef typename _Node_Alloc_type::const_pointer             const_pointer;
       typedef typename _Node_Alloc_type::reference                 reference;
@@ -99,14 +100,14 @@ namespace _GLIBCXX_STD
       swap(_List_node_base& __x, _List_node_base& __y);
 
       void
-      transfer(_List_node_base * const __first,
-	       _List_node_base * const __last);
+      transfer(value_type * const __first,
+	       value_type * const __last);
 
       void
       reverse();
 
       void
-      hook(_List_node_base * const __position);
+      hook(value_type * const __position);
 
       void
       unhook();
@@ -118,6 +119,7 @@ namespace _GLIBCXX_STD
     {
       typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other _Node_Alloc_type;
 
+      typedef typename _Node_Alloc_type::value_type                value_type;
       typedef typename _Node_Alloc_type::pointer                   pointer;
       typedef typename _Node_Alloc_type::const_pointer             const_pointer;
       typedef typename _Node_Alloc_type::reference                 reference;
@@ -320,26 +322,28 @@ namespace _GLIBCXX_STD
       // get_allocator, where we use conversions between
       // allocator_type and _Node_Alloc_type. The conversion is
       // required by table 32 in [20.1.5].
-      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other
-
-      _Node_Alloc_type;
+      typedef typename _Alloc::template rebind<_List_node<_Tp, _Alloc> >::other _Node_Alloc_type;
 
       struct _List_impl
         : public _Node_Alloc_type {
         typename _List_node_base<_Alloc>::pointer _M_node;
         _List_impl (const _Node_Alloc_type& __a, _List_base& __b)
-          : _Node_Alloc_type(__a), _M_node(new (__b._M_get_node()) _List_node_base<_Alloc>())
-        { }
+          : _Node_Alloc_type(__a)
+        { 
+            typename _Node_Alloc_type::value_type * __p = __b._M_get_node();
+            _Node_Alloc_type::construct(__p, _List_node<_Tp, _Alloc>());
+            _M_node = __p;
+        }
       };
 
       _List_impl _M_impl;
 
-      _List_node<_Tp, _Alloc> *
+      typename _Node_Alloc_type::value_type *
       _M_get_node()
       { return _M_impl._Node_Alloc_type::allocate(1); }
 
       void
-      _M_put_node(_List_node<_Tp, _Alloc> * __p)
+      _M_put_node(typename _Node_Alloc_type::pointer & __p)
       { _M_impl._Node_Alloc_type::deallocate(__p, 1); }
 
   public:
@@ -457,17 +461,17 @@ namespace _GLIBCXX_STD
        *  Allocates space for a new node and constructs a copy of @a x in it.
        *  @endif
        */
-      _Node*
+      typename _Base::_Node_Alloc_type::value_type*
       _M_create_node(const value_type& __x)
       {
-        _Node* __p = this->_M_get_node();
+        typename _Base::_Node_Alloc_type::value_type* __p = this->_M_get_node();
         try
           {
             _M_impl._Base::_Node_Alloc_type::construct(__p, _Node(__x));
           }
         catch(...)
           {
-            _M_put_node(__p);
+            //_M_put_node(__p);
             __throw_exception_again;
           }
         return __p;
@@ -479,17 +483,17 @@ namespace _GLIBCXX_STD
        *  instance of @c value_type in it.
        *  @endif
        */
-      _Node*
+      typename _Base::_Node_Alloc_type::value_type*
       _M_create_node()
       {
-        _Node* __p = this->_M_get_node();
+        typename _Base::_Node_Alloc_type::value_type* __p = this->_M_get_node();
         try
           {
             _M_impl._Base::_Node_Alloc_type::construct(__p, _Node());
           }
         catch(...)
           {
-            _M_put_node(__p);
+            //_M_put_node(__p);
             __throw_exception_again;
           }
         return __p;
@@ -1188,8 +1192,9 @@ namespace _GLIBCXX_STD
       void
       _M_insert(iterator __position, const value_type& __x)
       {
-        _Node* __tmp = _M_create_node(__x);
-        __tmp->hook(__position._M_node);
+        __position._M_node->hook(reinterpret_cast<typename _List_node_base<_Alloc>::value_type*>(_M_create_node(__x)));
+        //typename _Base::_Node_Alloc_type::value_type* __tmp = _M_create_node(__x);
+        //static_cast<_Node &>(*__tmp).hook(__position._M_node);
       }
 
       // Erases element at position given.

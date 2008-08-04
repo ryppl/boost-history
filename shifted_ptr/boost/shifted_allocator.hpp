@@ -44,13 +44,13 @@ template <typename T>
     class shifted_allocator
     {
     public:
+        typedef shifted<T>              value_type;
         typedef size_t                  size_type;
         typedef ptrdiff_t               difference_type;
         typedef shifted_ptr<T>          pointer;
         typedef const shifted_ptr<T>    const_pointer;
-        typedef T &                     reference;
-        typedef const T &               const_reference;
-        typedef T                       value_type;
+        typedef value_type &            reference;
+        typedef const value_type &      const_reference;
 
         template <typename U>
             struct rebind
@@ -69,12 +69,12 @@ template <typename T>
 
         value_type * allocate(size_type s, const void * = 0)
         {
-            shifted<T> * p = (shifted<T> *) shifted<T>::operator new(sizeof(shifted<T>));
+            value_type * p = (value_type *) value_type::operator new(sizeof(value_type));
 
-            return static_cast<shifted<T> *>(::new (p) owned_base)->element();
+            return p;
         }
 
-        void deallocate(value_type * p, size_type)
+        void deallocate(pointer & p, size_type)
         {
         }
 
@@ -83,13 +83,15 @@ template <typename T>
             return size_t(-1) / sizeof(T);
         }
 
-        void construct(value_type * p, const value_type & x)
+        void construct(value_type * p, const T & x)
         {
-            ::new (p) T(x);
+            ::new (p) owned_base;
+            ::new (p->element()) T(x);
         }
 
-        void destroy(value_type * p)
+        void destroy(pointer & p)
         {
+            p.reset();
         }
     };
 

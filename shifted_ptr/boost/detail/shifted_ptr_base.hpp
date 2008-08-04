@@ -112,16 +112,6 @@ template <typename T>
 			}
 			return po_;
 		}
-        
-        bool operator == (shifted_ptr_base<element_type> const & p) const
-        {
-            return po_ == p.po_;
-        }
-
-        bool operator != (shifted_ptr_base<element_type> const & p) const
-        {
-            return po_ != p.po_;
-        }
 
 		void reset(element_type * p = 0)
 		{
@@ -225,16 +215,6 @@ template <typename T, size_t N>
 			}
 			return po_;
 		}
-        
-        bool operator == (shifted_ptr_base<element_type> const & p) const
-        {
-            return po_ == p.po_;
-        }
-
-        bool operator != (shifted_ptr_base<element_type> const & p) const
-        {
-            return po_ != p.po_;
-        }
 
 		void reset(element_type * p = 0)
 		{
@@ -255,7 +235,7 @@ template <typename T, size_t N>
 
 
 	protected:
-		owned_base * header() const
+		detail::sh::owned_base * header() const
 		{
 			return (shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
 		}
@@ -327,16 +307,6 @@ template <>
 			}
 			return po_;
 		}
-        
-        bool operator == (shifted_ptr_base<element_type> const & p) const
-        {
-            return po_ == p.po_;
-        }
-
-        bool operator != (shifted_ptr_base<element_type> const & p) const
-        {
-            return po_ != p.po_;
-        }
 
 		void reset(element_type * p = 0)
 		{
