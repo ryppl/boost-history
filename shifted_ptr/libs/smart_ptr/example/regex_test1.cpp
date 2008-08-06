@@ -52,7 +52,7 @@ struct neuron
 
 int main(int argv, char * argc[])
 {
-    shifted_ptr<neuron> brain = new shifted<neuron>("I eat ([a-z ]+) then drink ([a-z ]+)", new shifted<neuron>("beef|chicken"), new shifted<neuron>("vodka|water"));
+    shifted_ptr<neuron> brain = new shifted<neuron>("I eat ([a-z]+) then drink ([a-z]+)", new shifted<neuron>("beef|chicken"), new shifted<neuron>("vodka|water"));
 
     cout << ((* brain)("I eat beef then drink water") > .5 ? "true" : "false") << endl;
 }
