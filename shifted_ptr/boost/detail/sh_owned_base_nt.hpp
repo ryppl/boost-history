@@ -46,7 +46,6 @@
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
 #include <boost/detail/sh_utility.h>
-#include <boost/detail/sp_counted_base_nt.hpp>
 
 
 namespace boost
