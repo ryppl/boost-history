@@ -1,0 +1,45 @@
+[/ 
+  Copyright 2008 John Maddock.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:member_object member_object]
+
+   template <class T>
+   struct member_object
+   {
+      typedef __below type;
+   };
+  
+__type The same type as `T` if T is not a pointer to a member, 
+otherwise the type of the object whose member is being pointer to.
+Note that for pointers to cv-qualified member functions, then the result
+is a cv-qualified type (see examples below).
+
+__std_ref 8.3.3.
+
+__compat Requires that the compiler supports partial specialization of class-templates.
+
+__header ` #include <boost/type_traits/member_object.hpp>` or ` #include <boost/type_traits.hpp>`
+
+[table Examples
+
+[ [Expression] [Result Type]]
+
+[[`member_object<int>::type`][`int`]]
+
+[[`member_object<int const*>::type`] [`int const*`]]
+
+[[`member_object<int (myclass::*)>::type`] [`myclass`]]
+
+[[`member_object<int (myclass::*)(short)>::type`] [`myclass`]]
+
+[[`member_object<int (myclass::*const)(short)>::type`] [`myclass`]]
+
+[[`member_object<int (myclass::*)(short)const>::type`] [`myclass const`]]
+]
+
+[endsect]
+
