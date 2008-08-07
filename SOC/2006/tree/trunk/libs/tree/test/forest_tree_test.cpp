@@ -7,11 +7,17 @@
 #include <boost/tree/forest_tree.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#include <boost/test/minimal.hpp>
+#include <boost/lambda/bind.hpp>
 
 #include <list>
 
+#include <boost/test/minimal.hpp>
+
 #include "test_tree_traversal_data.hpp"
+
+#define ORDER preorder
+#include "subtree_algorithms_checks.hpp"
+#undef ORDER
 
 //TODO: Make this a test suite.
 
@@ -73,59 +79,29 @@ void test_natural_correspondence()
 	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 	
-//  Preliminary checks, delete as soon as issues are resolved
-
-//	forest_tree_type::cursor s = ft.root();
-//	forest_tree_type::cursor r = s.end();
-//	*t.to_begin() = *s.to_begin();
-//		BOOST_CHECK(!s.empty());
-//		if (!s.empty()) {
-//			r = s.end();
-//			*t.to_begin() = *s.to_begin();
-//		}
-//		
-//		BOOST_CHECK(!s.empty());
-//		if (!s.empty()) {
-//			r = s.end();
-//			*t.to_begin() = *s.to_begin();
-//		}
-//	
-//	BOOST_CHECK(s.empty());
-//	++t;
-//	
-//	BOOST_CHECK(s != r);
-//	BOOST_CHECK(s++ != r);
-//	BOOST_CHECK(s == r);
-//	
-//	BOOST_CHECK(s.empty());
-//	++t;
-
-	//BOOST_CHECK(s++ == r);
-		
-//	do {
-//		if (!s.empty())
-//			*t = *s;
-//			//copy(s, t);
-//		++t;
-//	} while (s++ != r);
-	
+	boost::tree::preorder::for_each(
+		ft.root(), 
+		boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
+	);
+	test::preorder::traversal(test_list.begin(), test_list.end());
+	BOOST_CHECK(test_list.size() == 11);
+	test_list.clear();
 	
 	boost::tree::preorder::copy(ft.root(), oc_test_list);
-	//test::preorder::traversal(test_list.begin(), test_list.end());
-	
-	BOOST_CHECK(test_list.size() == 6);
-	
-	std::list<int>::const_iterator lci = test_list.begin();
-	BOOST_CHECK(*lci == 8);
-	BOOST_CHECK(*++lci == 3);
-	BOOST_CHECK(*++lci == 1);
-//	BOOST_CHECK(*++lci != 4); // wrong!
-//	BOOST_CHECK(*++lci != 13 ); // wrong!
-//	BOOST_CHECK(*++lci != 11); // wrong!
-	
+	test::preorder::traversal(test_list.begin(), test_list.end());
+	BOOST_CHECK(test_list.size() == 11);
 	test_list.clear();
+	
+	boost::tree::preorder::transform(ft.root(), oc_test_list, std::bind2nd(std::plus<int>(),0));
+	test::preorder::traversal(test_list.begin(), test_list.end());
+	BOOST_CHECK(test_list.size() == 11);
+	test_list.clear();
+	
+	//test::preorder::algorithms(ft.root(), ft.root()); // FIXME: Fix algorithms for use in here.
+	
 	//boost::tree::postorder::copy(ft.root(), oc_test_list);
 	//test::inorder::traversal(test_list.begin(), test_list.end());
+	//BOOST_CHECK(test_list.size() == 11);
 }
 
 int test_main(int, char* [])

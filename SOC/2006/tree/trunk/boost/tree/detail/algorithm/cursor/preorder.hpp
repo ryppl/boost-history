@@ -156,11 +156,15 @@ void for_each_recursive(Cursor s, Op& f)
 {
 	Cursor t = s.end();
 	s.to_begin();
-	f(*s);
-	do
+	do {
+		f(*s);
 		if (!s.empty())
 			for_each_recursive(s, f);
-	while (s++ != t);
+		++s;
+	} while (s != t);
+	
+	if (!s.empty())
+		for_each_recursive(s, f);
 }
 
 /**
@@ -178,11 +182,15 @@ Op for_each(Cursor s, Op f)
 {
 	Cursor t = s.end();
 	s.to_begin();
-	f(*s);
-	do
+	do {
+		f(*s);
 		if (!s.empty())
 			for_each_recursive(s, f);
-	while (s++ != t);
+		++s;
+	} while (s != t);
+	
+	if (!s.empty())
+		for_each_recursive(s, f);
 	
 	return f;
 }
@@ -197,8 +205,11 @@ template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
 	InCursor r = s.end();
-	*t.to_begin() = *s.to_begin();
+	s.to_begin();
+	t.to_begin();
+	
 	do {
+		*t = *s;
 		if (!s.empty())
 			copy(s, t);
 		++t;
@@ -228,13 +239,19 @@ template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
 	InCursor r = s.end();
-	*t.to_begin() = op(*s.to_begin());
+	s.to_begin();
+	t.to_begin();
 	do {
+		*t = op(*s);
 		if (!s.empty())
 			transform(s, t, op);
+		++s;
 		++t;
-	} while (s++ != r);
+	} while (s != r);
 
+	if (!s.empty())
+		transform(s, t, op);
+		
 	return t;
 }
 

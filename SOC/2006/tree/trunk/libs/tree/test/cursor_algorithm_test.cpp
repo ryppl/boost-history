@@ -26,15 +26,14 @@ using namespace boost::tree;
 
 #define ORDER preorder
 #include "subtree_algorithms_checks.hpp"
-
 #undef ORDER
+
 #define ORDER inorder
 #include "subtree_algorithms_checks.hpp"
-
 #undef ORDER
+
 #define ORDER postorder
 #include "subtree_algorithms_checks.hpp"
-
 #undef ORDER
 
 int test_main(int, char* [])

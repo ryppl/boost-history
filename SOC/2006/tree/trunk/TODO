@@ -15,6 +15,9 @@
 
 General:
 
+* Remove the word "recursive" from *order subtree algorithms context, as we might
+  implement these using iterative versions. Rename *_recursive algorithms to 
+  *_with_references or so; and use something like #ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 * Check if Cursor(balanced_tree_iterator) rellay has no is_root member()!
 * Revisit binary_tree (inorder::)iterator functions
 * Possibly sort out some more concepts, like trees with "downwards" or "upwards" insertion
