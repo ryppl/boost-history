@@ -1,0 +1,48 @@
+[/ Boost.SpatialIndex - Index types ]
+[/ Copyright 2008 Federico J. Fernandez ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+[section:index_types Index types]
+
+The library implements different types of indexes. In this field, there is
+no general solution, so specific indexes are needed for specific problems.
+
+Two different data structures are proposed for spatial indexing, quadtree and
+rtree.
+
+
+[subsection:quadtree Quadtree]
+
+This structure is a generalization of binary trees for spatial indexing. 
+It's organized in recursive quadrants called cells that have a maximum
+capacity for data. When this maximum is reached the cell splits.
+
+There are several types of Quadtrees. In this library we implement the
+point-quadtree, thats indexes points in a two dimensional space.
+
+The structure is very simple and very well suited for collision detection 
+algorithms or any algorithms that has a "normal" distribution. It's very 
+fast if the data is well-conditioned because each time a quadrant is selected
+a quarter of the total data of the structure is discarded. It allows fast 
+insertions (because of its simplicity) and is very good for not very 
+large sets that can be loaded in memory.
+
+
+[subsection:rtree Rtree]
+
+Inspired in database B-trees, this data structure splits the space in
+hierarchical areas called minimum bounding rectangles (MBR). Each node
+has a variable number of entries bounded by a minimum and a maximum.
+
+The insertion algorithms choose bounding boxes to ensure that elements
+are placed "near" their spatially related elements. The searching
+algorithms use the bounding boxes to decide to search or not into 
+a child node.
+
+Different algorithms could be used to split the nodes when a node is 
+full balancing between performance and accuracy in finding the best
+node. In this implementation a linear algorithm is used.
+

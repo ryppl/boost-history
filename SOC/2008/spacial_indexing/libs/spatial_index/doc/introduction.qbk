@@ -1,0 +1,21 @@
+[/ Boost.SpatialIndex - intro ]
+[/ Copyright 2008 Federico J. Fernandez ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+[section:introduction Introduction]
+
+Spatial indexes are data structures optimized for spatial oriented queries. The
+classic index structures (i.e. a binary tree) aren't spatially enabled, they 
+have different ordering criteria but none of them relates to topological 
+properties.
+
+Bosot.SpatialIndex aims to implement spatial indexes as part of the Geometry 
+Library proposal that Barend Gehrels is preparing for Boost. Nowadays, the 
+library supports Quadtree and rTree indexes. Details of the strengths of 
+each one will be detailed afterwards.
+
+The scope of these structures is really wide, from collision detection for
+games to geometry indexing for GIS software.
