@@ -8,6 +8,19 @@
 using namespace boost::dsearch;
 using namespace boost::minimal_test;
 
+
+template<class T>
+void print_pat(const T &pat)
+{
+	typename T::const_iterator it;
+	std::cout<<"<print pat>"<<std::endl;
+	for ( it=pat.begin(); it!=pat.end(); it++ )
+	{
+		std::cout<<(*it).first<<" "<<(*it).second<<std::endl;
+	}
+	std::cout<<"</print pat>"<<std::endl;
+}
+
 template<class T>
 struct select_iterator{
 	typedef typename T::iterator type;
@@ -27,10 +40,12 @@ void iterator_test(T &pat)
 	
 	//std::cout<<"into iterator_test"<<std::endl;
 	
+	print_pat(pat);
+	
 	for ( it=pat.begin(), rit=pat.rend(); rit!=pat.rbegin() && it!=pat.end(); ++it )
 	{
 		BOOST_CHECK( (*--rit).first==(*it).first);
-		//std::cout<<(*it).first<<"=="<<(*rit).first<<std::endl;
+		std::cout<<(*it).first<<"=="<<(*rit).first<<std::endl;
 	}
 	BOOST_CHECK ( rit==pat.rbegin() );
 	BOOST_CHECK( it==pat.end() );
@@ -39,22 +54,14 @@ void iterator_test(T &pat)
 	for ( it=pat.end(),rit=pat.rbegin(); it!=pat.begin() && rit!=pat.rend();rit++)
 	{
 		BOOST_CHECK( (*rit).first==(*--it).first) ;
-		//std::cout<<(*it).first<<std::endl;
+		std::cout<<(*it).first<<std::endl;
 	}
 	
 	//std::cout<<"out of iterator_test"<<std::endl;
 	return;
 }
 
-template<class T>
-void print_pat(const T &pat)
-{
-	typename T::const_iterator it;
-	for ( it=pat.begin(); it!=pat.end(); it++ )
-	{
-		std::cout<<(*it).first<<" "<<(*it).second<<std::endl;
-	}
-}
+
 template<class T>
 void print_pat(const T &beg,const T &end)
 {
@@ -66,7 +73,7 @@ template<class T>
 void insert_test_1()
 {
 	T pat;
-	BOOST_CHECK ( pat.exists("") == 0 ) ;
+	BOOST_CHECK ( pat.exists("") == 0 );
 
 	pat.insert ( std::make_pair("",1) );
 	BOOST_CHECK ( pat.exists("") );
@@ -531,7 +538,7 @@ void copy_test()
 
 int test_main(int argc,char **argv)
 {
-	typedef patricia< std::string, int, pat_key_traits> pat_type;
+	typedef patricia< std::string, int, pat_string_traits> pat_type;
 
 #ifndef NOTEST
 	insert_test_1<pat_type>();
@@ -544,5 +551,10 @@ int test_main(int argc,char **argv)
 #endif
 	if ( argc > 1 )
 		insert_test_3<pat_type>(argv[1]);
+	
+	pat_type pat_trie;
+	pat_trie["hello"]=1;
+	pat_trie["aello"]=1;
+	BOOST_CHECK( (*pat_trie.rbegin()).first==std::string("hello") );
 	return 0;
 }
