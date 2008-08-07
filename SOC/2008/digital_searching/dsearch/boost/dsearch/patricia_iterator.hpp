@@ -104,7 +104,11 @@ Value_type, bidirectional_traversal_tag >
 	 */
 	template<class V,class N,class A>
 	bool equal(patricia_iterator<V,N,A> const &other) const
-	{		
+	{
+	#ifdef PAT_DEBUG
+		std::cout<<cur << " " << other.cur << " " << next  << 
+		" "<< other.next << std::endl;
+	#endif
 		if ( cur == other.cur && next == other.next )
 			return true;
 		return false;
@@ -133,7 +137,9 @@ Value_type, bidirectional_traversal_tag >
 			next=cur->left?cur->left:cur->right;
 			//std::cout<<"To left most"<<cur->value.first<<"<-"<<next->value.first<<std::endl;
 		}
+	#ifdef PAT_DEBUG
 		std::cout<<"To left most"<<cur->value.first<<"<-"<<next->value.first<<std::endl;
+	#endif
 	}
 
 	public:
@@ -153,8 +159,9 @@ Value_type, bidirectional_traversal_tag >
 		{
 			if(root==0) 
 			{
+				std::cout<<"root is zero"<<std::endl;
 				cur=0;
-				root=0;
+				next=0;
 				return;
 			}
 			//*move to the left most wrt root.
@@ -265,18 +272,15 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 	{
 	}
 
-
 	///use to intialize begin or end.
 	/**
 	 	\param root is the patricia's root node
 	 	\param start specifies start or end
 	 */
-	patricia_reverse_iterator(Node_type *root,bool start) 
+	patricia_reverse_iterator(Node_type *root,bool start) : forward_type(root,false)
 	{
-		forward_type::cur=0;
-		forward_type::next=root;
-		if(start)
-			forward_type::decrement(); ///rbegin()=end()-1
+		if(start && root!=0)
+			forward_type::decrement();
 	}
 	///copy constructor for reverse the iterator
 	/**
@@ -292,6 +296,7 @@ public patricia_iterator<Value_type, Node_type, Alloc>
 	: forward_type(other.next,other.cur)
 	{
 	}
+
 };
 
 }
