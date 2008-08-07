@@ -41,7 +41,7 @@ class patricia{
 	typedef patricia<Key,Mapped,Key_traits,Alloc> self;
 	/// key_iterator to iterator over elements of the key.
 	typedef typename Key_traits::const_iterator key_iterator;
-	/// key_element_type is he type of each element.
+	/// key_element_type is the type of each element.
 	typedef typename Key_traits::element_type key_element_type;
 
 	/**
@@ -468,7 +468,9 @@ class patricia{
 			{
 				//*going into a new node so increment size
 				ret_size++;
+			#ifdef PAT_DEBUG
 				std::cout<<cur->value.first<<std::endl;
+			#endif
 				prev=cur;
 				
 				//*goto left otherwise goto right other go up.
@@ -483,7 +485,7 @@ class patricia{
 		return ret_size;
 	}
 
-	///class destructor
+	/// class destructor
 	~patricia()
 	{
 		this->clear();
@@ -688,7 +690,9 @@ class patricia{
 		//*if the key already exists return
 		if(common.second==2)
 		{
-			std::cout<<"The key \""<<key<<"\" already exists"<<std::endl;
+			#ifdef PAT_DEBUG
+				std::cout<<"The key \""<<key<<"\" already exists"<<std::endl;
+			#endif
 			return next->value.second;
 		}
 		
@@ -873,7 +877,7 @@ class patricia{
 		it=Key_traits::begin(key);
 		std::size_t pos=0;
 		if(key_size==0)
-			key_size=key.size();
+			key_size=Key_traits::size(key);
 		
 		if ( root==0 ) return 0;
 
@@ -919,7 +923,7 @@ class patricia{
 		std::size_t pos=0;
 	
 		if(key_size==0)
-			key_size=key.size();
+			key_size=Key_traits::size(key);
 
 		if(cur==0) return std::make_pair<patricia_node*,patricia_node*>(0,0);
 		
@@ -1031,13 +1035,14 @@ class patricia{
 	void erase(patricia_node*found,patricia_node *prev)
 	{
 		if(root==0 || found==0) return;
-		
-		std::cout<<"in erase: found "<<found->value.first<<" and prev "<<prev->value.first<<std::endl;
-
+		#ifdef PAT_DEBUG	
+			std::cout<<"in erase: found "<<found->value.first<<" and prev "<<prev->value.first<<std::endl;
+		#endif		
 		if ( found-> par == 0 ) {  
 			//*==> found=root node 
-
+		#ifdef PAT_DEBUG	
 			std::cout<<"par"<<std::endl;
+		#endif		
 			assert(root==found);
 
 			if( (found->right==0 || found->left==0) && found==prev){ 
@@ -1060,8 +1065,9 @@ class patricia{
 		if ( found->right==0 || found->left==0 )
 			prev=found;
 		//* now prev contains the node from which found is wired with an uplink
-
-		std::cout<<"here"<<std::endl;
+		#ifdef PAT_DEBUG	
+			std::cout<<"here"<<std::endl;
+		#endif
 		//*if a node is looping to itself
 		//*deleting the leaf node. 
 		//*this case for root node is handled before
@@ -1093,7 +1099,9 @@ class patricia{
 					//*Probably erasing "" for lets be extra careful
 					//*check whether the par is as expected proper.
 					assert(found->par==root);
-					std::cout<<"\"\" node to be erased"<<std::endl;
+					#ifdef PAT_DEBUG
+						std::cout<<"\"\" node to be erased"<<std::endl;
+					#endif
 				}
 				deallocate_node(found);	
 				return;
@@ -1140,7 +1148,9 @@ class patricia{
 		
 		assert(root->par==0);
 		
-		std::cout<< ((root->left!=0)?" \"\" exists":"\"\" does not exists")<<std::endl;
+		#ifdef PAT_DEBUG
+			std::cout<< ((root->left!=0)?" \"\" exists":"\"\" does not exists")<<std::endl;
+		#endif
 		
 		assert( (root->left!=0 && root->left!=root)? root->left->par==root: 1 );
 
@@ -1299,7 +1309,9 @@ class patricia{
 		next=node_pair.first.first;
 		cur =node_pair.first.second;
 		common=node_pair.second;
-		std::cout<<"Upper Bound:SECOND: "<<common.second<<std::endl;
+		#ifdef PAT_DEBUG
+			std::cout<<"Upper Bound:SECOND: "<<common.second<<std::endl;
+		#endif
 		switch ( common.second )
 		{
 		  case 2:
@@ -1311,7 +1323,9 @@ class patricia{
 		  case 0:
 		  	//*it is in the subtree
 			it=iterator(next,cur);
-			std::cout<<next->value.first<<"<-"<<cur->value.first<<std::endl;
+			#ifdef PAT_DEBUG
+				std::cout<<next->value.first<<"<-"<<cur->value.first<<std::endl;
+			#endif
 			//*go to the least element in the subtree.
 			it.to_left_most();
 			return it;
@@ -1354,14 +1368,18 @@ class patricia{
 			//*if key is already found we will need to re adjust this thing
 			//*the bit index to be searched for
 			common.first=key_size*( bit_width +  1 );
-			std::cout<<"FOUND"<<std::endl;
+			#ifdef PAT_DEBUG
+				std::cout<<"FOUND"<<std::endl;
+			#endif
 		}
 
 		//*if we did not find a key with entire string as prefix. then then
 		//*then we will need to ditch the procedure here.
 		if ( common.second!=0 || common.first % ( bit_width +  1 ) != 0)
 			return std::make_pair(end(),end());
-		std::cout<<"HERE with KEY="<<key<<std::endl;
+		#ifdef PAT_DEBUG
+			std::cout<<"HERE with KEY="<<key<<std::endl;
+		#endif
 
 		//*we start searching for the until we get a key  with index>common.first
 		next=cur=root;
