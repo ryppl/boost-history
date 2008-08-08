@@ -49,13 +49,21 @@ public:
 
     /** @name End Points
      * Provide access to the source and target of the directed edge. The
-     * opposite member provides parity with undirected edge type.
+     * opposite member provides parity with undirected edge type. The first and
+     * second accessors provide direction-free semantics, but return the source
+     * and target() directly.
      */
     //@{
     inline vertex_descriptor source() const
     { return ends.first; }
 
     inline vertex_descriptor target() const
+    { return ends.second; }
+
+    inline vertex_descriptor first() const
+    { return ends.first; }
+
+    inline vertex_descriptor second() const
     { return ends.second; }
 
     inline vertex_descriptor opposite(vertex_descriptor v) const
