@@ -35,15 +35,7 @@ namespace sh
 {
 
 
-struct map_node
-{
-    typedef boost::shifted_ptr<map_node> pointer;
-    
-    pointer prev_;
-    pointer next_;
-};
-
-struct neuron_base : map_node
+struct neuron_base
 {
     typedef boost::shifted_ptr<neuron_base> pointer;
 
@@ -59,8 +51,12 @@ struct neuron_base : map_node
 };
 
 template <neuron_base::sense_t>
-    struct neuron : neuron_base
+    class neuron : public neuron_base
     {
+        // disable non-"shifted<neuron>" allocations:
+        void * operator new (size_t);
+
+    public:
         typedef boost::shifted<neuron> pointee;
         typedef std::map<std::string, pointer> map_sn_t;
         
@@ -68,7 +64,7 @@ template <neuron_base::sense_t>
     
         neuron(std::string const & s, pointee * p1 = 0, pointee * p2 = 0, pointee * p3 = 0) : neuron_base(s)
         {
-            search_[s] = reinterpret_cast<pointee *>(this);
+            search_[s] = reinterpret_cast<pointee *>(this); /// FIXME
         
             if (p1) sub_[0] = p1;
             if (p2) sub_[1] = p2;
@@ -91,7 +87,7 @@ template <neuron_base::sense_t>
                 if (what[i].matched)
                     accuracy += (* sub_[i])(what[i].str()) / (what.size() - 1);
             
-            // learn if sounds equitable
+            // learn if sounds equitable, God tells you to or "energy" spent is still low
             if (accuracy > .7)
                 for (int i = 1; i < what.size(); i ++)
                     if (! what[i].matched)
@@ -99,9 +95,21 @@ template <neuron_base::sense_t>
                         typename map_sn_t::iterator j = search_.find(what[i].str());
                         
                         if (j != search_.end())
+                        {
+                            /**
+                                What we should do here is to:
+                                - cummulate suggestions
+                                - calculate difference between all proposals
+                                - create new regular expression when demand is too high
+                            */
                             sub_[i] = j->second;
+                        }
                         else
-                            ; // pick a guess...
+                        {
+                            /**
+                                Over here we should start guessing
+                            */
+                        }
                     }
             
             return accuracy;
