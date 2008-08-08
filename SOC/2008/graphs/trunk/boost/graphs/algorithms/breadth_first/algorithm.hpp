@@ -2,6 +2,8 @@
 #ifndef BREADTH_FIRST_ALGORITHM_HPP
 #define BREADTH_FIRST_ALGORITHM_HPP
 
+#include <queue>
+
 // Contents:
 //
 // breadth_first_visit_edge - Visits a single edge.
@@ -66,8 +68,6 @@ breadth_first_walk(Graph const& g, Visitor vis, ColorMap color, Queue& queue)
 {
     typedef color_traits<typename ColorMap::value_type> ColorTraits;
     typedef typename Graph::vertex_descriptor Vertex;
-    typedef typename Graph::edge_descriptor Edge;
-    typedef typename Graph::incident_edge_range EdgeRange;
 
     // Run the walk on the vertices attached to start.
     while(!queue.empty()) {
@@ -91,7 +91,6 @@ breadth_first_visit(
     Queue queue = Queue())
 {
     typedef color_traits<typename ColorMap::value_type> ColorTraits;
-    typedef typename Graph::vertex_descriptor Vertex;
 
     detail::optional_prop_init(g, color, ColorTraits::white());
 
