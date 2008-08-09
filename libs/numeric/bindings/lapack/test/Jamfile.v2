@@ -11,7 +11,6 @@ project libs/numeric/bindings/lapack/test : requirements
 import testing ;
 
 alias bindings-lapack-tests :
-    [ run lapack.cpp ]
     [ run hseqr.cpp ]
 
     [ run ublas_geev.cpp ]
@@ -44,6 +43,7 @@ alias bindings-lapack-tests :
     [ run ublas_sysv.cc : 20 ]
 
     [ run ublas_getrf_getrs.cc : 20 ]
+    [ run ublas_getrf_getrs1.cpp ]
     [ run ublas_hetrf_hetrs.cc ]
     [ run ublas_hptrf_hptrs.cc ]
     [ run ublas_potrf_potrs.cc ]
