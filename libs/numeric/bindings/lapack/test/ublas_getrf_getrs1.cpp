@@ -1,5 +1,5 @@
 #include "../../blas/test/blas.hpp"
-#include <boost/numeric/bindings/lapack/lapack.hpp>
+#include <boost/numeric/bindings/lapack/gesv.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 
@@ -13,9 +13,12 @@ void test_getrf_getrs(matrix_type& lu, matrix_type& x)
   std::vector< int > ipiv( x.size1() ) ;
 
   boost::numeric::bindings::lapack::getrf( lu, ipiv ) ;
+  matrix_type ia( lu );
   boost::numeric::bindings::lapack::getrs( 'N', lu, ipiv, x ) ;
+  boost::numeric::bindings::lapack::getri( ia, ipiv ) ;
 
   std::cout << prod(a,x) - b << std::endl ; 
+  std::cout << prod(a,ia) << std::endl ; 
 }
 
 template < typename value_type, typename orientation, int size >

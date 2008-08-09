@@ -79,8 +79,12 @@ int main (int argc, char **argv) {
   std::vector<int> ipiv (n);  // pivot vector
 
   lapack::getrf (a, ipiv);      // factor a
+  m_t ia (a);
   lapack::getrs (a, ipiv, b);   // solve from factorization 
   print_m (b, "X"); 
+  cout << endl; 
+  lapack::getri (ia, ipiv);     // invert a
+  print_m (ia, "InvA"); 
   cout << endl; 
 
   print_v (ipiv, "pivots"); 
@@ -97,8 +101,12 @@ int main (int argc, char **argv) {
   cout << endl; 
   
   lapack::getrf (a2, ipiv); // factor a
+  m_t ia2 (a2);
   lapack::getrs ('T', a2, ipiv, b2); // solve 
   print_m (b2, "X"); 
+  cout << endl; 
+  lapack::getri (ia2, ipiv); // invert a2
+  print_m (ia2, "InvA2"); 
   cout << endl; 
 
   print_v (ipiv, "pivots"); 

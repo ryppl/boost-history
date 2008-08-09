@@ -90,15 +90,21 @@ int main (int argc, char **argv) {
   
   int err = lapack::sptrf (sal, ipiv);  
   if (err == 0) {
+    symml_t isal (sal);
     lapack::sptrs (sal, ipiv, bl); 
     print_m (bl, "xl"); 
+    lapack::sptri (isal, ipiv);
+    print_m (isal, "isal"); 
   } 
   cout << endl; 
 
   err = lapack::sptrf (sau, ipiv);  
   if (err == 0) {
+    symmu_t isau (sau);
     lapack::sptrs (sau, ipiv, bu); 
     print_m (bu, "xu"); 
+    lapack::sptri (isau, ipiv);
+    print_m (isau, "isau"); 
   } 
   else 
     cout << "?" << endl; 
@@ -136,8 +142,11 @@ int main (int argc, char **argv) {
 
   int ierr = lapack::sptrf (scal, ipiv); 
   if (ierr == 0) {
+    csymml_t iscal (scal);
     lapack::sptrs (scal, ipiv, cbl); 
     print_m (cbl, "cxl"); 
+    lapack::sptri (iscal, ipiv);
+    print_m (iscal, "iscal"); 
   }
   else 
     cout << "?" << endl;
@@ -145,8 +154,11 @@ int main (int argc, char **argv) {
 
   ierr = lapack::sptrf (scau, ipiv); 
   if (ierr == 0) {
+    csymmu_t iscau (scau);
     lapack::sptrs (scau, ipiv, cbu); 
     print_m (cbu, "cxu"); 
+    lapack::sptri (iscau, ipiv);
+    print_m (iscau, "iscau"); 
   }
   else 
     cout << "?" << endl;
