@@ -293,10 +293,75 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
 
-    // TO DO: sptri 
+    namespace detail {
+      inline 
+      void sptri (char const uplo, int const n, 
+          float* ap, int* ipiv, float* work, int* info) 
+      {
+        LAPACK_SSPTRI (&uplo, &n, ap, ipiv, work, info);
+      }
 
-  }
+      inline 
+      void sptri (char const uplo, int const n, 
+          double* ap, int* ipiv, double* work, int* info) 
+      {
+        LAPACK_DSPTRI (&uplo, &n, ap, ipiv, work, info);
+      }
 
-}}}
+      inline 
+      void sptri (char const uplo, int const n, 
+          traits::complex_f* ap, int* ipiv, traits::complex_f* work, int* info) 
+      {
+        LAPACK_CSPTRI (&uplo, &n, traits::complex_ptr (ap), 
+            ipiv, traits::complex_ptr (work), info);
+      }
+
+      inline 
+      void sptri (char const uplo, int const n, 
+          traits::complex_d* ap, int* ipiv, traits::complex_d* work, int* info) 
+      {
+        LAPACK_ZSPTRI (&uplo, &n, traits::complex_ptr (ap), 
+            ipiv, traits::complex_ptr (work), info);
+      }
+    } // namespace detail
+
+    template <typename SymmA, typename IVec>
+    inline
+    int sptri (SymmA& a, IVec& ipiv) 
+    {
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename traits::matrix_traits<SymmA>::matrix_structure, 
+        traits::symmetric_packed_t
+      >::value));
+#endif
+
+      int const n = traits::matrix_size1 (a);
+      assert (n == traits::matrix_size2 (a)); 
+      assert (n == traits::vector_size (ipiv)); 
+
+      char uplo = traits::matrix_uplo_tag (a);
+      int info; 
+
+      typedef typename SymmA::value_type value_type;
+      traits::detail::array<value_type> work(traits::matrix_size1(a));
+
+      detail::sptri (uplo, n, traits::matrix_storage (a), 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+          traits::vector_storage (ipiv),  
+#else
+          traits::vector_storage_const (ipiv), 
+#endif
+          traits::vector_storage (work),
+          &info);
+      return info; 
+    }
+
+  } // namespace lapack
+
+}}} // namespace boost::numeric::bindings
+
+
+
 
 #endif 
