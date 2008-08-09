@@ -6,8 +6,7 @@
 
     Contains the declaration of types and functions used for computing MD5
     message digests of given data blocks and granting I/O capability to any
-    applicable types.  Non-inline items declared here are defined in
-    &quot;$BOOST_ROOT/libs/coding/src/md5.cpp&quot;.
+    applicable types.
  
     (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
     License, Version 1.0. (See the accompanying file LICENSE_1_0.txt or a copy
@@ -19,18 +18,14 @@
 #define BOOST_CODING_MD5_HPP
 
 #include <boost/coding_fwd.hpp>
-#include <boost/coding/md5_digest.hpp>   // for boost::coding::md5_digest
-#include <boost/coding/md5_context.hpp>  // for boost::coding::md5_context
+#include <boost/coding/md5_digest.hpp>  // for boost::coding::md5_digest
 
 #include <boost/array.hpp>                 // for boost::array
 #include <boost/assert.hpp>                // for BOOST_ASSERT
 #include <boost/coding/coding_shell.hpp>   // for b:c:bit_coding_shell
 #include <boost/coding/operations.hpp>     // for b:c:queued_bit_processing_base
-#include <boost/concept/assert.hpp>        // for BOOST_CONCEPT_ASSERT
-#include <boost/concept_check.hpp>         // for boost::OutputIterator
 #include <boost/cstdint.hpp>               // for boost::uint_least8_t, etc.
 #include <boost/integer.hpp>               // for boost::sized_integral, etc.
-#include <boost/integer/integer_mask.hpp>  // for boost::integer_lo_mask
 #include <boost/mpl/arithmetic.hpp>        // for boost::mpl::times
 #include <boost/mpl/int.hpp>               // for boost::mpl::int_
 #include <boost/mpl/size_t.hpp>            // for boost::mpl::size_t
@@ -245,6 +240,149 @@ private:
 
 };  // md5_computerX
 
+/** \brief  A computer that produces MD5 message digests from consuming bits.
+
+    This class is the bare-bones engine for the MD5 message-digest algorithm
+    described in RFC 1321.  Besides computation, it also supports comparisons
+    (equivalence only, not ordering) and serialization.
+
+    \see  boost::coding::md5_digest
+ */
+class md5_context
+{
+    typedef md5_context  self_type;
+
+public:
+    // Types
+    /** \brief  Type of the produced output
+
+        Represents the result type, the checksums from hashing.
+     */
+    typedef md5_digest  product_type;
+    /** \brief  Type of the consumed input
+
+        Represents the argument type, the data to hash.
+     */
+    typedef bool       consumed_type;
+
+    // Lifetime management (use automatic copy constructor and destructor)
+    //! Default construction
+    md5_context()  : worker(), length(), buffer( initial_buffer ), queue()  {}
+
+    /*! \name Operators */ //@{
+    // Operators (use automatic copy-assignment)
+    //! Application, consumer
+    void  operator ()( consumed_type bit )
+    {
+        this->worker.process_bit(bit);
+        this->consume_bit( bit );
+    }
+    //! Equals
+    bool  operator ==( self_type const &o ) const
+    {
+        bool const  result1( this->worker == o.worker );
+        bool const  result2( (this->length == o.length) && (this->buffer ==
+         o.buffer) && std::equal(this->queue.begin(), this->queue.begin() +
+         this->length % bits_per_block::value, o.queue.begin()) );
+        BOOST_ASSERT( result1 == result2 );
+        return result1;
+    }
+    //! Not-equals
+    bool  operator !=( self_type const &o ) const
+      { return !this->operator ==( o ); }
+    //! Application, producer
+    product_type  operator ()() const
+    {
+        product_type const  result1( this->worker.checksum() );
+        product_type        result2;
+        {
+            self_type  c( *this );
+            c.finish();
+            std::copy( c.buffer.begin(), c.buffer.end(), result2.hash );
+        }
+        BOOST_ASSERT( std::equal(result1.hash, result1.hash+4, result2.hash) );
+        return result1;
+    }//@}
+
+private:
+    friend class md5_computer;
+
+    // Implementation types and meta-constants
+    typedef md5_digest::bits_per_word        bits_per_word;
+    typedef md5_digest::word_type                word_type;
+    typedef md5_digest::words_per_digest  words_per_digest;
+
+    typedef mpl::int_<2>                                words_per_length;
+    typedef mpl::times<words_per_length, bits_per_word>  bits_per_length;
+    typedef mpl::int_<16>                                words_per_block;
+    typedef mpl::times<words_per_block, bits_per_word>    bits_per_block;
+
+    typedef sized_integral<bits_per_length::value, unsigned>::type  length_type;
+    typedef fast_integral<length_type>::type                       length_ftype;
+    typedef fast_integral<word_type>::type                           word_ftype;
+    typedef array<word_ftype, words_per_digest::value>              buffer_type;
+    typedef array<consumed_type, bits_per_block::value>              queue_type;
+    typedef array<word_ftype, 64>                               hash_table_type;
+
+    // Implementation constants
+    static  buffer_type const     initial_buffer;
+    static  hash_table_type const  hashing_table;
+
+    // Member data
+    md5_computerX  worker;
+    length_ftype  length;
+    buffer_type   buffer;
+    queue_type    queue;
+
+    // Implementation
+    void  update_hash();
+    void  consume_bit( bool bit )
+    {
+        this->queue[ this->length++ % bits_per_block::value ] = bit;
+        if ( this->length % bits_per_block::value == 0u )
+            this->update_hash();
+    }
+    void  consume_octet( uint_fast8_t octet )
+    {
+        for ( int  i = 0 ; i < 8 ; ++i, octet <<= 1 )  // high bit going down
+            this->consume_bit( octet & 0x80u );
+    }
+    void  consume_word( word_ftype word )
+    {
+        for ( int  i = 0 ; i < 4 ; ++i, word >>= 8 )  // low octet going up
+            this->consume_octet( word & 0xFFu );
+    }
+    void  consume_dword( length_ftype dword )
+    {
+        for ( int  i = 0 ; i < 2 ; ++i, dword >>= 32 )  // low word going up
+            this->consume_word( dword & 0xFFFFFFFFul );
+    }
+    void  finish()
+    {
+        // Save the current length before we mutate it.
+        length_ftype const  original_length = length;
+
+        // Enter a One, then enough Zeros so the length would fill the queue.
+        this->consume_bit( true );
+        for ( int  i = bits_per_block::value - (this->length +
+         bits_per_length::value) % bits_per_block::value ; i > 0 ; --i )
+            this->consume_bit( false );
+
+        this->consume_dword( original_length );
+        BOOST_ASSERT( !(this->length % bits_per_block::value) );
+
+        // Now a finished checksum in this->buffer is ready to read.
+    }
+
+    /*! \name Persistence */ //@{
+    // Serialization
+    friend class boost::serialization::access;
+
+    template < class Archive >
+    void  serialize( Archive &ar, const unsigned int version );//@}  // not defined yet
+
+};  // md5_context
+
 /** \brief  A class for generating a MD5 message digest from submitted data.
 
     This class can accept data in several runs and produce a hash based on that
@@ -278,7 +416,7 @@ public:
     static  array<md5_digest::word_type, 64> const  hashing_table;
 
     // Types
-    typedef md5_context::length_type  length_type;
+    typedef uint_least64_t  length_type;
     typedef array<md5_digest::word_type, md5_digest::words_per_digest::value>
       buffer_type;
 
@@ -294,41 +432,35 @@ public:
     // Inspectors
     //! Returns the count of bits read so far
     length_type  bits_read() const
-    {
-        return this->context().length &
-         boost::integer_lo_mask<md5_context::bits_per_length::value>::value;
-    }
+      { return this->context().worker.bits_read(); }
     //! Returns the checksum buffer of hashed bits
     buffer_type  last_buffer() const
-      { return this->context().buffer; }
+      { return this->context().worker.last_buffer(); }
     //! Returns the count of the queued bits
     length_type  bits_unbuffered() const
-      { return this->bits_read() % md5_context::bits_per_block::value; }
+      { return this->context().worker.bits_unbuffered(); }
     //! Copies out the queued bits
     template < typename OutputIterator >
     OutputIterator  copy_unbuffered( OutputIterator o ) const
-    {
-        // Parameter check
-        BOOST_CONCEPT_ASSERT( (boost::OutputIterator<OutputIterator, bool>) );
-
-        return std::copy( this->context().queue.begin(),
-         this->context().queue.begin() + this->bits_unbuffered(), o );
-    }
+      { return this->context().worker.copy_unbuffered( o ); }
 
     // Input processing
     //! Enters an octet
     void  process_octet( uint_least8_t octet )
     {
+        this->context().worker.process_octet( octet );
         this->context().consume_octet( octet );
     }
     //! Enters a word for hashing
     void  process_word( md5_digest::word_type word )
     {
+        this->context().worker.process_word( word );
         this->context().consume_word( word );
     }
     //! Enters a double-word for hashing
     void  process_double_word( length_type dword )
     {
+        this->context().worker.process_double_word( dword );
         this->context().consume_dword( dword );
     }
 
