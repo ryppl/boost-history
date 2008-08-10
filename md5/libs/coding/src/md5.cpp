@@ -16,18 +16,19 @@
  */
 // See <http://www.boost.org/libs/coding> for documentation.
 
-#include <boost/coding/md5.hpp>
+#include <boost/coding/md5_context.hpp>
+#include <boost/coding/md5_computer.hpp>
 
 #include <boost/array.hpp>                  // for boost::array
 #include <boost/assert.hpp>                 // for BOOST_ASSERT
 #include <boost/integer/integer_mask.hpp>   // for boost::integer_lo_mask
+#include <boost/limits.hpp>                 // for std::numeric_limits
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
 #include <boost/static_assert.hpp>          // for BOOST_STATIC_ASSERT
 
 #include <algorithm>  // for std::copy
 #include <cmath>      // for std::sin, abs, ldexp, modf
 #include <cstddef>    // for std::size_t
-#include <limits>     // for std::numeric_limits
 #include <numeric>    // for std::inner_product, partial_sum
 #include <valarray>   // for std::valarray, etc.
 
@@ -128,7 +129,7 @@ public:
 
 template < typename Unsigned, int TotalRotated >
 Unsigned const  left_rotator<Unsigned, TotalRotated>::mask_ =
- boost::low_bits_mask_t<TotalRotated>::sig_bits;
+ boost::integer_lo_mask<TotalRotated>::value;
 
 // Order of listed bits within a 32-bit word: octets are listed lowest-order
 // first, but the bits within octets are listed highest-order first!  The order
@@ -172,12 +173,6 @@ skipped_indices( std::size_t total_size, std::size_t first_index, std::size_t
     return r;
 }
 
-// The exact amount of bits needed to be in the queue so an appendage of the
-// length will exactly fill the queue.
-std::size_t const  padding_remainder =
- boost::coding::md5_computerX::bits_per_block -
- boost::coding::md5_computerX::significant_bits_per_length;
-
 }  // unnamed namespace
 
 
@@ -187,31 +182,29 @@ namespace coding
 {
 
 
-//  MD5 message-digest computer class-static member definitions  -------------//
+//  MD5 message-digest core computation non-inline member definitions  -------//
 
-std::size_t const  md5_computerX::words_per_block;
+/** Provides the computed check-sum of all the submitted bits (as if the message
+    is complete), through a standard generator interface.
 
-/** Represents the number of significant (low-order) bits kept for the
-    message length, which can also be processed as two words, all as given
-    in RFC 1321, section 3.2, paragraph 1.
+    \return  The check-sum.
  */
-int const          md5_computerX::significant_bits_per_length;
-/** Represents the number of submitted bits that are queued until that queue
-    is emptied as a single block to be hashed, implied from RFC 1321,
-    section 3.4.  The count of unhashed bits is always less than this value.
-    (The input processing member functions trigger a hash right after a bit
-    fills the queue.)
- */
-std::size_t const  md5_computerX::bits_per_block;
+md5_context::product_type
+md5_context::operator ()() const
+{
+    self_type  copy( *this );
+    copy.finish();
 
-/** Sample of the table described in RFC 1321, section 3.4, paragraph 4.
-    Its values are taken directly from the "MD5Transform" function in the
-    RFC's section A.3, and are not computed.  Of course, the index is
-    zero-based (C++) instead of one-based (RFC).
+    product_type  result;
+    std::copy( copy.buffer.begin(), copy.buffer.end(), result.hash );
+    return result;
+}
 
-    \see  #generate_hashing_table
- */
-array<md5_digest::word_type, 64> const  md5_computerX::hashing_table = { {
+// Sample of the table described in RFC 1321, section 3.4, paragraph 4.  Its
+// values are taken directly from the "MD5Transform" function in the RFC's
+// section A.3, and are not computed.  Of course, the index is zero-based (C++)
+// instead of one-based (RFC).
+md5_context::hash_table_type const   md5_context::hashing_table = { {
     0xD76AA478ul,
     0xE8C7B756ul,
     0x242070DBul,
@@ -281,196 +274,8 @@ array<md5_digest::word_type, 64> const  md5_computerX::hashing_table = { {
 // Initial values of the MD buffer, taken from RFC 1321, section 3.3.  (Note
 // that the RFC lists each number low-order byte first, while numbers need to be
 // written high-order byte first in C++.)
-md5_computerX::ibuffer_type const  md5_computerX::initial_buffer_ = {
- {0x67452301ul, 0xEFCDAB89ul, 0x98BADCFEul, 0x10325476ul} };
-
-
-//  MD5 message-digest computer class-static member function definitions  ----//
-
-/** Constructs the hashing sine table based on the directions given in RFC
-    1321, section 3.4, paragraph 4.  It should give the same values as
-    #hashing_table, but it's dependent on the quality of the environment's
-    math library, thereby giving a test of the environment.
-
-    \return  The computed hashing sine table
-
-    \see  #hashing_table
- */
-array<md5_digest::word_type, 64>
-md5_computerX::generate_hashing_table()
-{
-    array<md5_digest::word_type, 64>  r;
-
-    for ( int  i = 0 ; i < 64 ; ++i )
-    {
-        double  x = std::ldexp( std::abs(std::sin( static_cast<double>(i + 1)
-         )), +32 );  // 2**32 * abs(sin(I)), where I = i + 1
-
-        std::modf( x, &x );  // x -> x rounded towards zero
-        r[ i ] = static_cast<unsigned long>( x );
-    }
-    return r;
-}
-
-
-//  MD5 message-digest computer implementation member function definitions  --//
-
-// Hash an entire block into the running checksum, using RFC 1321, section 3.4
-void
-md5_computerX::update_hash( bool const *queue_b, bool const *queue_e )
-{
-    using std::size_t;
-
-    // Convert the queued bit block to a word block
-    std::valarray<iword_type>  words( words_per_block ), scratch( queue_e -
-     queue_b );
-
-    BOOST_ASSERT( scratch.size() == bits_per_block );
-    std::copy( queue_b, queue_e, &scratch[0] );
-    for ( size_t  i = 0u ; i < words_per_block ; ++i )
-    {
-        // Use the default inner-product; since "unbuffered_" has "bool"
-        // elements, which convert to 0 or 1, multiplication acts as AND; since
-        // "order_in_word" has distinct single-bit values, addition acts as OR
-        words[ i ] = std::inner_product( order_in_word.begin(),
-         order_in_word.end(), &scratch[ i * md5_digest::bits_per_word::value ],
-         iword_type(0u) );
-    }
-
-    // Set up rounds
-    ibuffer_type  buffer = this->buffer_;
-
-    scratch.resize( words.size() );  // repurposed!
-
-    // Round 1
-    {
-        md5_special_op<md5_f, iword_type, md5_digest::bits_per_word::value>  ff;
-
-        scratch = words[ skipped_indices(words_per_block, 0, 1) ];
-        for ( size_t  i = 0u ; i < words_per_block ; ++i )
-        {
-            ff( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
-             md5_s[0][i % 4u], hashing_table[i] );
-        }
-    }
-
-    // Round 2
-    {
-        md5_special_op<md5_g, iword_type, md5_digest::bits_per_word::value>  gg;
-
-        scratch = words[ skipped_indices(words_per_block, 1, 5) ];
-        for ( size_t  i = 0u ; i < words_per_block ; ++i )
-        {
-            gg( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
-             md5_s[1][i % 4u], hashing_table[16 + i] );
-        }
-    }
-
-    // Round 3
-    {
-        md5_special_op<md5_h, iword_type, md5_digest::bits_per_word::value>  hh;
-
-        scratch = words[ skipped_indices(words_per_block, 5, 3) ];
-        for ( size_t  i = 0u ; i < words_per_block ; ++i )
-        {
-            hh( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
-             md5_s[2][i % 4u], hashing_table[32 + i] );
-        }
-    }
-
-    // Round 4
-    {
-        md5_special_op<md5_i, iword_type, md5_digest::bits_per_word::value>  ii;
-
-        scratch = words[ skipped_indices(words_per_block, 0, 7) ];
-        for ( size_t  i = 0u ; i < words_per_block ; ++i )
-        {
-            ii( buffer[( 16u - i ) % 4u], buffer[( 17u - i ) % 4u],
-             buffer[( 18u - i ) % 4u], buffer[( 19u - i ) % 4u], scratch[i],
-             md5_s[3][i % 4u], hashing_table[48 + i] );
-        }
-    }
-
-    // Update buffer
-    for ( size_t  i = 0u ; i < md5_digest::words_per_digest::value ; ++i )
-    {
-        this->buffer_[ i ] += buffer[ i ];
-        this->buffer_[ i ] &= integer_lo_mask<md5_digest::bits_per_word::value>
-         ::value;
-    }
-}
-
-
-//  MD5 message-digest computation digest-output member function definition  -//
-
-/** Provides the computed check-sum of all the submitted bits.  (The queued
-    bits are temporarily hashed with a special finishing procedure.)
-
-    \return  The check-sum (i.e. message digest).
- */
-md5_computerX::value_type
-md5_computerX::checksum() const
-{
-    // As explained in RFC 1321, section 3, the final check-sum is the state of
-    // the hash after padding and the original length are appended to the
-    // message data.  (The padding is sized such that the length's bits always
-    // exactly finishes a block.)  The padding is one mandatory TRUE value
-    // followed by the appropriate amount of FALSE values.
-    //
-    // Technically, the modulo-bits_per_block is needed only if bits_unbuffered
-    // exceeds padding_remainder (when it doesn't, just do the subtraction
-    // directly), but this way always works and a conditional is avoided.  (The
-    // corresponding test added cases to make sure the old conditional was hit.)
-    self_type  cache( *this );
-
-    cache.process_bit( true );
-    cache.process_bit_copies( false, (padding_remainder +
-     self_type::bits_per_block - cache.bits_unbuffered()) %
-     self_type::bits_per_block );
-    cache.process_double_word( this->bits_read() );
-    BOOST_ASSERT( cache.bits_unbuffered() == 0u );
-
-    self_type::buffer_type const  rb = cache.last_buffer();
-    self_type::value_type         r;
-
-    std::copy( rb.begin(), rb.end(), r.hash );
-    return r;
-}
-
-
-//  MD5 message-digest core computation non-inline member definitions  -------//
-
-/** Provides the computed check-sum of all the submitted bits (as if the message
-    is complete), through a standard generator interface.
-
-    \return  The check-sum.
- */
-md5_context::product_type
-md5_context::operator ()() const
-{
-    self_type  copy( *this );
-    copy.finish();
-
-    product_type  result;
-    std::copy( copy.buffer.begin(), copy.buffer.end(), result.hash );
-    return result;
-}
-
-// Sample of the table described in RFC 1321, section 3.4, paragraph 4.  Its
-// values are taken directly from the "MD5Transform" function in the RFC's
-// section A.3, and are not computed.  Of course, the index is zero-based (C++)
-// instead of one-based (RFC).
-md5_context::hash_table_type const   md5_context::hashing_table =
- md5_computerX::hashing_table;
-
-// Initial values of the MD buffer, taken from RFC 1321, section 3.3.  (Note
-// that the RFC lists each number low-order byte first, while numbers need to be
-// written high-order byte first in C++.)
-md5_context::buffer_type const  md5_context::initial_buffer =
- md5_computerX::initial_buffer_;
+md5_context::buffer_type const  md5_context::initial_buffer = { {0x67452301ul,
+ 0xEFCDAB89ul, 0x98BADCFEul, 0x10325476ul} };
 
 // Hash an entire block into the running checksum, using RFC 1321, section 3.4
 void
@@ -586,7 +391,7 @@ md5_context::finish()
     \see  #generate_hashing_table
  */
 md5_computer::hash_table_type const  md5_computer::hashing_table =
- md5_computerX::hashing_table;
+ md5_context::hashing_table;
 
 /** Constructs the hashing sine table based on the directions given in RFC 1321,
     section 3.4, paragraph 4.  It should give the same values as
