@@ -6,7 +6,8 @@
 
     Contains the definitions of constants and functions used for computing MD5
     message digests of given data blocks and granting I/O capability to any
-    applicable types.  Non-inline items from &lt;boost/coding/md5.hpp&gt; and
+    applicable types.  Non-inline items from
+    &lt;boost/coding/md5_computer.hpp&gt; and
     &lt;boost/coding/md5_context.hpp&gt; are defined here.
  
     (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
@@ -439,11 +440,6 @@ md5_computerX::checksum() const
     return r;
 }
 
-int const  md5_computer::significant_bits_per_length;
-std::size_t const  md5_computer::bits_per_block;
-array<md5_digest::word_type, 64> const  md5_computer::hashing_table =
- md5_computerX::hashing_table;
-
 
 //  MD5 message-digest core computation non-inline member definitions  -------//
 
@@ -577,6 +573,44 @@ md5_context::finish()
     BOOST_ASSERT( !(this->length % bits_per_block::value) );
 
     // Now a finished checksum in this->buffer is ready to read.
+}
+
+
+//  MD5 message-digest computation non-inline member definitions  ------------//
+
+/** Sample of the table described in RFC 1321, section 3.4, paragraph 4.  Its
+    values are taken directly from the "MD5Transform" function in the RFC's
+    section A.3, and are not computed.  Of course, the index is zero-based (C++)
+    instead of one-based (RFC).
+
+    \see  #generate_hashing_table
+ */
+md5_computer::hash_table_type const  md5_computer::hashing_table =
+ md5_computerX::hashing_table;
+
+/** Constructs the hashing sine table based on the directions given in RFC 1321,
+    section 3.4, paragraph 4.  It should give the same values as
+    \c #hashing_table, but it is dependent on the quality of the platform's math
+    library, thereby testing that environment.
+
+    \return  The computed hashing sine table
+
+    \see  #hashing_table
+ */
+md5_computer::hash_table_type
+md5_computer::generate_hashing_table()
+{
+    hash_table_type  result;
+
+    for ( int  i = 0 ; i < hash_table_type::static_size ; ++i )
+    {
+        double  x = std::ldexp( std::abs(std::sin( static_cast<double>(i + 1)
+         )), +32 );  // 2**32 * abs(sin(I)), where I = i + 1
+
+        std::modf( x, &x );  // x -> x rounded towards zero
+        result[ i ] = static_cast<unsigned long>( x );
+    }
+    return result;
 }
 
 

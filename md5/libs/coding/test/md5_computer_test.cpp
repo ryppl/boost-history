@@ -27,7 +27,7 @@ using boost::array;
 using boost::coding::md5_computer;
 using boost::coding::md5_digest;
 
-typedef array<bool, md5_computer::bits_per_block>  bit_queue;
+typedef array<bool, md5_computer::bits_per_block::value>  bit_queue;
 
 
 // Put custom types/templates and helper functions here
@@ -188,7 +188,8 @@ BOOST_AUTO_TEST_CASE( md5_computer_simple_submission_test )
         md5_computer         c7;
         size_t const         bytes_to_use = 3u;
         unsigned char const  value = 0x37u;  // {'0' x (CHAR_BIT-6)}110111
-        BOOST_REQUIRE( CHAR_BIT * bytes_to_use < md5_computer::bits_per_block );
+        BOOST_REQUIRE_LT( CHAR_BIT * bytes_to_use,
+         md5_computer::bits_per_block::value );
         c7.process_byte_copies( value, bytes_to_use );
         BOOST_CHECK_EQUAL( c7.bits_read(), CHAR_BIT * bytes_to_use );
         BOOST_CHECK_EQUAL( c7.bits_unbuffered(), CHAR_BIT * bytes_to_use );
@@ -213,7 +214,8 @@ BOOST_AUTO_TEST_CASE( md5_computer_simple_submission_test )
         md5_computer                   c8;
         array<unsigned char, 3> const  values = { {0x37u, 0x48u, 0x1Cu} };
         size_t const                   bytes_to_use = 3u;
-        BOOST_REQUIRE( CHAR_BIT * bytes_to_use < md5_computer::bits_per_block );
+        BOOST_REQUIRE_LT( CHAR_BIT * bytes_to_use,
+         md5_computer::bits_per_block::value );
         c8.process_block( values.begin(), values.end() );
         BOOST_CHECK_EQUAL( c8.bits_read(), CHAR_BIT * bytes_to_use );
         BOOST_CHECK_EQUAL( c8.bits_unbuffered(), CHAR_BIT * bytes_to_use );
@@ -323,10 +325,10 @@ BOOST_AUTO_TEST_CASE( md5_computer_hashed_submission_test )
     // This simulates running MD5 on an empty message
     md5_computer  c;
     c.process_bit( true );
-    c.process_bit_copies( false, md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length - 1u );
+    c.process_bit_copies( false, md5_computer::bits_per_block::value -
+     md5_computer::significant_bits_per_length::value - 1u );
     c.process_double_word( 0ull );
-    BOOST_CHECK_EQUAL( c.bits_read(), md5_computer::bits_per_block );
+    BOOST_CHECK_EQUAL( c.bits_read(), md5_computer::bits_per_block::value );
     BOOST_CHECK_EQUAL( c.bits_unbuffered(), 0u );
 
     md5_computer::buffer_type const  b = c.last_buffer();
@@ -344,13 +346,13 @@ BOOST_AUTO_TEST_CASE( md5_computer_equality_test )
 
     // Make some non-default, something like an empty MD5
     c3.process_bit( true );
-    c3.process_bit_copies( false, md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length - 1u );
+    c3.process_bit_copies( false, md5_computer::bits_per_block::value -
+     md5_computer::significant_bits_per_length::value - 1u );
     c3.process_double_word( 0ull );
 
     c4.process_bit( true );
-    c4.process_bit_copies( false, md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length - 1u );
+    c4.process_bit_copies( false, md5_computer::bits_per_block::value -
+     md5_computer::significant_bits_per_length::value - 1u );
     c4.process_double_word( 0ull );
 
     // Compare
@@ -365,8 +367,8 @@ BOOST_AUTO_TEST_CASE( md5_computer_equality_test )
 
     // Make the only difference at the hash level
     c2.process_bit( true );
-    c2.process_bit_copies( false, md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length - 1u );
+    c2.process_bit_copies( false, md5_computer::bits_per_block::value -
+     md5_computer::significant_bits_per_length::value - 1u );
     c2.process_double_word( 1ull );  // one bit differs
     BOOST_REQUIRE_EQUAL( c2.bits_read(), c3.bits_read() );
     BOOST_REQUIRE_EQUAL( c2.bits_unbuffered(), 0u );
@@ -388,8 +390,8 @@ BOOST_AUTO_TEST_CASE( md5_computer_copy_constructor_status_test )
     bit_queue     scratch;
 
     c1.process_bit( true );
-    c1.process_bit_copies( false, md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length - 1u );
+    c1.process_bit_copies( false, md5_computer::bits_per_block::value -
+     md5_computer::significant_bits_per_length::value - 1u );
     c1.process_double_word( 0ull );
     c1.process_bit( false );  // one extra after buffer hash
     BOOST_CHECK( c1.bits_read() != c1.bits_unbuffered() );
@@ -446,8 +448,8 @@ BOOST_AUTO_TEST_CASE( md5_computer_checksum_test )
     // Non-empty message below the limit of padding wrap-around
     c1.process_octet( 0x61u );  // 'a' in ASCII
     BOOST_REQUIRE( c1.bits_unbuffered() > 0u );
-    BOOST_REQUIRE( c1.bits_unbuffered() < md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length );
+    BOOST_REQUIRE_LT( c1.bits_unbuffered(), md5_computer::bits_per_block::value
+     - md5_computer::significant_bits_per_length::value );
     BOOST_CHECK_EQUAL( c1.checksum(),
      lexical_cast<md5_digest>("0cc175b9c0f1b6a831c399e269772661") );
 
@@ -458,8 +460,8 @@ BOOST_AUTO_TEST_CASE( md5_computer_checksum_test )
     for ( unsigned  i = 48 ; i <=  57 ; ++i )  c1.process_octet( i );
         // "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" in
         // ASCII
-    BOOST_REQUIRE( c1.bits_unbuffered() > md5_computer::bits_per_block -
-     md5_computer::significant_bits_per_length );
+    BOOST_REQUIRE_GT( c1.bits_unbuffered(), md5_computer::bits_per_block::value
+     - md5_computer::significant_bits_per_length::value );
     BOOST_CHECK_EQUAL( c1.checksum(),
      lexical_cast<md5_digest>("d174ab98d277d9f5a5611c2c9f419d9f") );
 }

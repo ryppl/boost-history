@@ -19,9 +19,8 @@
 #define BOOST_CODING_MD5_HPP
 
 #include <boost/coding_fwd.hpp>
-#include <boost/coding/md5_digest.hpp>    // for boost::coding::md5_digest
-#include <boost/coding/md5_context.hpp>   // for boost::coding::md5_context
-#include <boost/coding/md5_computer.hpp>  // for boost::coding::md5_computer
+#include <boost/coding/md5_digest.hpp>   // for boost::coding::md5_digest
+#include <boost/coding/md5_context.hpp>  // for boost::coding::md5_context
 
 #include <boost/array.hpp>                 // for boost::array
 #include <boost/assert.hpp>                // for BOOST_ASSERT
@@ -245,6 +244,106 @@ private:
     friend class md5_context;
 
 };  // md5_computerX
+
+/** \brief  A class for generating a MD5 message digest from submitted data.
+
+    This class can accept data in several runs and produce a hash based on that
+    data from the MD5 message-digest algorithm described in RFC 1321.  It should
+    have a similar interface to Boost.CRC, plus specialized function object
+    interfaces for bit- and byte-level processing (inspired by Boost.Bimap).
+    Comparisons are supported for check-summing purposes, but not ordering.
+    Persistence is supported though Boost.Serialization.
+
+    \see  boost::coding::md5_digest
+    \see  boost::coding::md5_context
+    \see  boost::coding::compute_md5(void const*,std::size_t)
+
+    \todo  Replace "uint_fast64_t" with "uint_t&lt;significant_bits_per_length&gt;::
+           fast", where "significant_bits_per_length" is 64.  (Need to tweak
+           Boost.Integer to support 64-bit types.)  Also need to make a
+           convienent constant for the "16" in the base class declaration.
+           (It's the number of words per block, from RFC 1321, section 3.4.)
+ */
+class md5_computer
+    : public bit_coding_shell<md5_context, true>
+{
+    typedef bit_coding_shell<md5_context, true>  base_type;
+    typedef md5_computer                         self_type;
+
+public:
+    // Constants
+    static  int const            significant_bits_per_length =
+     md5_computerX::significant_bits_per_length;
+    static  std::size_t const    bits_per_block = md5_computerX::bits_per_block;
+    static  array<md5_digest::word_type, 64> const  hashing_table;
+
+    // Types
+    typedef md5_context::length_type  length_type;
+    typedef array<md5_digest::word_type, md5_digest::words_per_digest::value>
+      buffer_type;
+
+    // Assignment
+    //! Sets state back to initial conditions
+    void  reset()  { *this = self_type(); }
+    //! Changes the current state to a copy of another object's
+    void  assign( self_type const &c )  { *this = c; }
+
+    //! Exchanges state with another object
+    void  swap( self_type &other )  { std::swap( *this, other ); }
+
+    // Inspectors
+    //! Returns the count of bits read so far
+    length_type  bits_read() const
+    {
+        return this->context().length &
+         boost::integer_lo_mask<md5_context::bits_per_length::value>::value;
+    }
+    //! Returns the checksum buffer of hashed bits
+    buffer_type  last_buffer() const
+      { return this->context().buffer; }
+    //! Returns the count of the queued bits
+    length_type  bits_unbuffered() const
+      { return this->bits_read() % md5_context::bits_per_block::value; }
+    //! Copies out the queued bits
+    template < typename OutputIterator >
+    OutputIterator  copy_unbuffered( OutputIterator o ) const
+    {
+        // Parameter check
+        BOOST_CONCEPT_ASSERT( (boost::OutputIterator<OutputIterator, bool>) );
+
+        return std::copy( this->context().queue.begin(),
+         this->context().queue.begin() + this->bits_unbuffered(), o );
+    }
+
+    // Input processing
+    //! Enters an octet
+    void  process_octet( uint_least8_t octet )
+    {
+        this->context().consume_octet( octet );
+    }
+    //! Enters a word for hashing
+    void  process_word( md5_digest::word_type word )
+    {
+        this->context().consume_word( word );
+    }
+    //! Enters a double-word for hashing
+    void  process_double_word( length_type dword )
+    {
+        this->context().consume_dword( dword );
+    }
+
+    // Extras
+    static  array<md5_digest::word_type, 64>  generate_hashing_table()
+      { return md5_computerX::generate_hashing_table(); }
+
+private:
+    // Serialization
+    friend class boost::serialization::access;
+
+    template < class Archive >
+    void  serialize( Archive &ar, const unsigned int version );  // not defined yet
+
+};  // md5_computer
 
 
 //  MD5 message-digest computation constructor definitions  ------------------//
@@ -549,6 +648,36 @@ md5_computerX::value_type
 md5_computerX::operator ()() const
 {
     return this->checksum();
+}
+
+
+//  MD5 message-digest computation miscellaneous function definitions  -------//
+
+/** \brief  Non-member swapping function for \c md5_computer
+
+    Exchanges the states of two \c md5_computer objects.  This specialization of
+    the algorithm can be called by generic code that uses free-function
+    (template) swap assisted with Koenig lookup.
+
+    \param a  The first object involved in the swap.
+    \param b  The second object involved in the swap.
+
+    \post  <code><var>a</var> == <var>old_b</var> &amp;&amp; <var>old_a</var> ==
+           <var>b</var></code>
+
+    \see  boost::coding::md5_computer::swap
+
+    \relates  boost::coding::md5_computer
+ */
+inline
+void
+swap
+(
+    md5_computer &  a,
+    md5_computer &  b
+)
+{
+    a.swap( b );
 }
 
 
