@@ -10,4 +10,4 @@ project
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-exe example : example.cpp ;
+exe classroom : classroom.cpp ;
