@@ -1,13 +1,28 @@
-# Copyright 2007 Stjepan Rajko.
+# Copyright 2007-2008 Stjepan Rajko.
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+import os ;
 
+# Set the BOOST_ROOT environment variable on your command-line or in the 
+# environment to point at the root of your regular Boost installation.
+
+# get the BOOST_ROOT environment variable
+path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+
+# record the root of the datalow directory structure
+path-constant TOP : . ;
+
+# point to Boost.Build
+boost-build $(BOOST_ROOT)/tools/build/v2 ;
+
+# we are using Boost
 use-project boost
    : $(BOOST_ROOT)
    ;
-   
+
+# the Dataflow project and anything using it needs Dataflow and Boost headers
 project dataflow
    : build-dir bin.v2
    : usage-requirements
@@ -16,5 +31,4 @@ project dataflow
     : requirements
         <include>.
         <include>$(BOOST_ROOT)
-        
    ;
