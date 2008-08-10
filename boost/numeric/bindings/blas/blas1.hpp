@@ -130,7 +130,13 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #endif
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
-    typedef typename vector_type_x::value_type value_type ;
+    typedef
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    typename traits::vector_traits< vector_type_x >::value_type
+#else
+    typename vector_type_x::value_type
+#endif
+    value_type ;
 
     const int n = traits::vector_size( x ) ;
     const int stride_x = traits::vector_stride( x ) ;
@@ -159,7 +165,13 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #endif
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
-    typedef typename vector_type_x::value_type value_type ;
+    typedef
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    typename traits::vector_traits< vector_type_x >::value_type
+#else
+    typename vector_type_x::value_type
+#endif
+    value_type ;
 
     const int n = traits::vector_size( x ) ;
     const int stride_x = traits::vector_stride( x ) ;
