@@ -6,9 +6,8 @@
 
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
-
 #include <boost/graphs/utility.hpp>
-#include <boost/graphs/vertex_iterator.hpp>
+#include <boost/graphs/adjacency_list/vertex_iterator.hpp>
 
 // Forward declarations
 template <typename, typename, typename> class vertices_set;

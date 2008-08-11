@@ -1,9 +1,9 @@
 
 #include <iostream>
 
-#include <boost/graphs/in_vector.hpp>
-#include <boost/graphs/in_list.hpp>
-#include <boost/graphs/in_set.hpp>
+#include <boost/graphs/adjacency_list/in_vector.hpp>
+#include <boost/graphs/adjacency_list/in_list.hpp>
+#include <boost/graphs/adjacency_list/in_set.hpp>
 
 #include "typestr.hpp"
 #include "in_edge_traits.hpp"

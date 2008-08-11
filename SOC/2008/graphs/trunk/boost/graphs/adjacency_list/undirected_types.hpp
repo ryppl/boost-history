@@ -3,30 +3,30 @@
 #define UNDIRECTED_TYPES_HPP
 
 // Vertex stores
-#include <boost/graphs/vertex_vector.hpp>
-#include <boost/graphs/vertex_list.hpp>
-#include <boost/graphs/vertex_set.hpp>
-#include <boost/graphs/vertex_map.hpp>
+#include <boost/graphs/adjacency_list/vertex_vector.hpp>
+#include <boost/graphs/adjacency_list/vertex_list.hpp>
+#include <boost/graphs/adjacency_list/vertex_set.hpp>
+#include <boost/graphs/adjacency_list/vertex_map.hpp>
 
 // Edge stores
-#include <boost/graphs/edge_vector.hpp>
-#include <boost/graphs/edge_list.hpp>
-#include <boost/graphs/edge_set.hpp>
+#include <boost/graphs/adjacency_list/edge_vector.hpp>
+#include <boost/graphs/adjacency_list/edge_list.hpp>
+#include <boost/graphs/adjacency_list/edge_set.hpp>
 
 // Edges store components
-#include <boost/graphs/property_vector.hpp>
-#include <boost/graphs/property_list.hpp>
-#include <boost/graphs/incidence_vector.hpp>
-#include <boost/graphs/incidence_list.hpp>
-#include <boost/graphs/incidence_set.hpp>
-#include <boost/graphs/incidence_iterator.hpp>
+#include <boost/graphs/adjacency_list/property_vector.hpp>
+#include <boost/graphs/adjacency_list/property_list.hpp>
+#include <boost/graphs/adjacency_list/incidence_vector.hpp>
+#include <boost/graphs/adjacency_list/incidence_list.hpp>
+#include <boost/graphs/adjacency_list/incidence_set.hpp>
+#include <boost/graphs/adjacency_list/incidence_iterator.hpp>
 
 // Vertex and Edge components
-#include <boost/graphs/undirected_vertex.hpp>
-#include <boost/graphs/undirected_edge.hpp>
+#include <boost/graphs/adjacency_list/undirected_vertex.hpp>
+#include <boost/graphs/adjacency_list/undirected_edge.hpp>
 
 // Adjacency components
-#include <boost/graphs/adjacency_iterator.hpp>
+#include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
 using namespace std;
 

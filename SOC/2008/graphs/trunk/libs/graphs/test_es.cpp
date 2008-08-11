@@ -3,21 +3,21 @@
 
 #include <boost/next_prior.hpp>
 
-#include <boost/graphs/edge_vector.hpp>
-#include <boost/graphs/edge_list.hpp>
-#include <boost/graphs/edge_set.hpp>
+#include <boost/graphs/adjacency_list/edge_vector.hpp>
+#include <boost/graphs/adjacency_list/edge_list.hpp>
+#include <boost/graphs/adjacency_list/edge_set.hpp>
 
-#include <boost/graphs/property_vector.hpp>
-#include <boost/graphs/property_list.hpp>
-#include <boost/graphs/incidence_vector.hpp>
-#include <boost/graphs/incidence_list.hpp>
-#include <boost/graphs/incidence_set.hpp>
-#include <boost/graphs/out_vector.hpp>
-#include <boost/graphs/out_list.hpp>
-#include <boost/graphs/out_set.hpp>
-#include <boost/graphs/in_vector.hpp>
-#include <boost/graphs/in_list.hpp>
-#include <boost/graphs/in_set.hpp>
+#include <boost/graphs/adjacency_list/property_vector.hpp>
+#include <boost/graphs/adjacency_list/property_list.hpp>
+#include <boost/graphs/adjacency_list/incidence_vector.hpp>
+#include <boost/graphs/adjacency_list/incidence_list.hpp>
+#include <boost/graphs/adjacency_list/incidence_set.hpp>
+#include <boost/graphs/adjacency_list/out_vector.hpp>
+#include <boost/graphs/adjacency_list/out_list.hpp>
+#include <boost/graphs/adjacency_list/out_set.hpp>
+#include <boost/graphs/adjacency_list/in_vector.hpp>
+#include <boost/graphs/adjacency_list/in_list.hpp>
+#include <boost/graphs/adjacency_list/in_set.hpp>
 
 #include "typestr.hpp"
 #include "properties_traits.hpp"

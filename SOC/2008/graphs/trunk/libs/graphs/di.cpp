@@ -3,7 +3,7 @@
 #include <set>
 
 #include <boost/assert.hpp>
-#include <boost/graphs/directed_graph.hpp>
+#include <boost/graphs/adjacency_list/directed_graph.hpp>
 
 #include "typestr.hpp"
 #include "out_edge_traits.hpp"

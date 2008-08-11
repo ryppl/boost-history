@@ -183,8 +183,8 @@ struct property_wrapper
     inline value_type& operator()(key_type const& key)
     { return map(key); }
 
-    inline value_type const& operator()(key_type const& key) const
-    { return map(key); }
+    inline void operator()(key_type const& key, value_type const& value) const
+    { return map(key, value); }
 
     inline void swap(property_wrapper& x)
     {

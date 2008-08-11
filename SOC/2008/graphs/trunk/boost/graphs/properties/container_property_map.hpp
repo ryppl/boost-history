@@ -22,8 +22,8 @@ struct container_property_map
     inline value_type& operator()(key_type const& key)
     { return (*container)[key]; }
 
-    inline value_type const& operator()(key_type const& key) const
-    { return (*container)[key]; }
+    inline void operator()(key_type const& key, value_type const& value) const
+    { (*container)[key] = value; }
 
     inline void swap(container_property_map& x)
     { std::swap(container, x.container); }

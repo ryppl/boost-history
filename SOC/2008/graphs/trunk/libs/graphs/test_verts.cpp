@@ -1,10 +1,10 @@
 
 #include <iostream>
 
-#include <boost/graphs/vertex_vector.hpp>
-#include <boost/graphs/vertex_list.hpp>
-#include <boost/graphs/vertex_set.hpp>
-#include <boost/graphs/vertex_map.hpp>
+#include <boost/graphs/adjacency_list/vertex_vector.hpp>
+#include <boost/graphs/adjacency_list/vertex_list.hpp>
+#include <boost/graphs/adjacency_list/vertex_set.hpp>
+#include <boost/graphs/adjacency_list/vertex_map.hpp>
 
 #include "typestr.hpp"
 #include "vertices_traits.hpp"

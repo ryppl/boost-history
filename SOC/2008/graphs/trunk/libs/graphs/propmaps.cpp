@@ -3,8 +3,8 @@
 #include <iterator>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/graphs/undirected_graph.hpp>
-#include <boost/graphs/directed_graph.hpp>
+#include <boost/graphs/adjacency_list/undirected_graph.hpp>
+#include <boost/graphs/adjacency_list/directed_graph.hpp>
 #include <boost/graphs/properties.hpp>
 
 #include "typestr.hpp"

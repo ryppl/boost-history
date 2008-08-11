@@ -29,7 +29,7 @@
 // the out edge (which could be implemented as an iterator of some kind).
 
 #include <boost/none.hpp>
-#include <boost/graphs/directed_types.hpp>
+#include <boost/graphs/adjacency_list/directed_types.hpp>
 
 template <
     typename VertexProps,

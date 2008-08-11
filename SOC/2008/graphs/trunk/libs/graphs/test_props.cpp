@@ -1,8 +1,8 @@
 
 #include <iostream>
 
-#include <boost/graphs/property_vector.hpp>
-#include <boost/graphs/property_list.hpp>
+#include <boost/graphs/adjacency_list/property_vector.hpp>
+#include <boost/graphs/adjacency_list/property_list.hpp>
 
 #include "typestr.hpp"
 #include "properties_traits.hpp"

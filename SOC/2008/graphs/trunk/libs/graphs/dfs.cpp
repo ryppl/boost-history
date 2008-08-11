@@ -5,22 +5,28 @@
 
 #include <boost/graphs/adjacency_list/undirected_graph.hpp>
 #include <boost/graphs/adjacency_list/directed_graph.hpp>
-#include <boost/graphs/algorithms/breadth_first.hpp>
+#include <boost/graphs/algorithms/depth_first.hpp>
 
 #include "typestr.hpp"
 #include "read.hpp"
 
 using namespace std;
 
-struct edge_printer : bfs_visitor
+struct edge_printer : dfs_visitor
 {
+    template <typename Graph, typename Vertex>
+    void discover_vertex(Graph const& g, Vertex v)
+    {
+        // cout << g[v] << " " << endl;
+    }
+
     template <typename Graph, typename Edge>
     void tree_edge(Graph const& g, Edge e)
     {
         typedef typename Graph::vertex_descriptor Vertex;
         Vertex u = e.source();
         Vertex v = e.target();
-        cout << "(" << g[u] << g[v] << ") ";
+        // cout << "(" << g[u] << g[v] << ") ";
     }
 };
 
@@ -48,8 +54,9 @@ void edge_walk(Graph& g)
     typedef typename Graph::edge_descriptor Edge;
     typedef exterior_vertex_property<Graph, color> ColorProp;
     typedef exterior_property_map<ColorProp> ColorMap;
-    typedef queue<Vertex> Queue;
+    typedef stack<Vertex> Stack;
 
+    /*
     {
         typedef breadth_first_edge_walk<Graph> Walk;
         cout << "--- default walk ----" << endl;
@@ -82,21 +89,22 @@ void edge_walk(Graph& g)
         BreadthFirstTraversal trav(g, color);
         iterate(g, trav);
     }
+    */
 
     {
         ColorProp colors(g, white_color);
         ColorMap color(colors);
 
         cout << "--- algo visit ---" << endl;
-        breadth_first_visit(g, *g.begin_vertices(), edge_printer());
+        depth_first_visit(g, *g.begin_vertices(), edge_printer());
         cout << endl;
 
         cout << "--- algo multi visit ---" << endl;
-        breadth_first_visit(g, g.begin_vertices(), next(g.begin_vertices(), 2), edge_printer());
+        // breadth_first_visit(g, g.begin_vertices(), next(g.begin_vertices(), 2), edge_printer());
         cout << endl;
 
         cout << "--- algo bfs ---" << endl;
-        breadth_first_search(g, edge_printer());
+        // breadth_first_search(g, edge_printer());
         cout << endl;
     }
 

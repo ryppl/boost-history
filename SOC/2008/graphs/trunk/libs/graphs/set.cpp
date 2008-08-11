@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include <boost/graphs/undirected_graph.hpp>
+#include <boost/graphs/adjacency_list/undirected_graph.hpp>
 
 using namespace std;
 using namespace boost;

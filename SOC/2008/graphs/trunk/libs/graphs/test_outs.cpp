@@ -1,9 +1,9 @@
 
 #include <iostream>
 
-#include <boost/graphs/out_vector.hpp>
-#include <boost/graphs/out_list.hpp>
-#include <boost/graphs/out_set.hpp>
+#include <boost/graphs/adjacency_list/out_vector.hpp>
+#include <boost/graphs/adjacency_list/out_list.hpp>
+#include <boost/graphs/adjacency_list/out_set.hpp>
 
 #include "typestr.hpp"
 #include "out_edge_traits.hpp"

@@ -2,7 +2,7 @@
 #ifndef UNDIRECTED_VERTEX_HPP
 #define UNDIRECTED_VERTEX_HPP
 
-#include "incidence_iterator.hpp"
+#include <boost/graphs/adjacency_list/incidence_iterator.hpp>
 
 /**
  * A vertex, at least for an undirected graph, is simply an repository

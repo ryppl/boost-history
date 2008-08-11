@@ -3,7 +3,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/utility.hpp>
-#include <boost/graphs/undirected_graph.hpp>
+#include <boost/graphs/adjacency_list/undirected_graph.hpp>
 
 #include "typestr.hpp"
 #include "incidence_traits.hpp"

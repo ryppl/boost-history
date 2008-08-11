@@ -1,9 +1,9 @@
 
 #include <iostream>
 
-#include <boost/graphs/incidence_vector.hpp>
-#include <boost/graphs/incidence_list.hpp>
-#include <boost/graphs/incidence_set.hpp>
+#include <boost/graphs/adjacency_list/incidence_vector.hpp>
+#include <boost/graphs/adjacency_list/incidence_list.hpp>
+#include <boost/graphs/adjacency_list/incidence_set.hpp>
 
 #include "typestr.hpp"
 #include "incidence_traits.hpp"

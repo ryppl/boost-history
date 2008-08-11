@@ -5,8 +5,8 @@
 #include <boost/assert.hpp>
 #include <boost/none.hpp>
 
-#include <boost/graphs/undirected_types.hpp>
-#include <boost/graphs/adjacency_iterator.hpp>
+#include <boost/graphs/adjacency_list/undirected_types.hpp>
+#include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
 template <
     typename VertexProps,

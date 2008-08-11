@@ -3,32 +3,32 @@
 #define DIRECTED_TYPES_HPP
 
 // Vertex stores
-#include <boost/graphs/vertex_vector.hpp>
-#include <boost/graphs/vertex_list.hpp>
-#include <boost/graphs/vertex_set.hpp>
-#include <boost/graphs/vertex_map.hpp>
+#include <boost/graphs/adjacency_list/vertex_vector.hpp>
+#include <boost/graphs/adjacency_list/vertex_list.hpp>
+#include <boost/graphs/adjacency_list/vertex_set.hpp>
+#include <boost/graphs/adjacency_list/vertex_map.hpp>
 
 // Edge stores
-#include <boost/graphs/edge_vector.hpp>
-#include <boost/graphs/edge_list.hpp>
-#include <boost/graphs/edge_set.hpp>
+#include <boost/graphs/adjacency_list/edge_vector.hpp>
+#include <boost/graphs/adjacency_list/edge_list.hpp>
+#include <boost/graphs/adjacency_list/edge_set.hpp>
 
 // Edges store components
-#include <boost/graphs/out_vector.hpp>
-#include <boost/graphs/out_list.hpp>
-#include <boost/graphs/out_set.hpp>
-#include <boost/graphs/out_iterator.hpp>
-#include <boost/graphs/in_vector.hpp>
-#include <boost/graphs/in_list.hpp>
-#include <boost/graphs/in_set.hpp>
-#include <boost/graphs/in_iterator.hpp>
+#include <boost/graphs/adjacency_list/out_vector.hpp>
+#include <boost/graphs/adjacency_list/out_list.hpp>
+#include <boost/graphs/adjacency_list/out_set.hpp>
+#include <boost/graphs/adjacency_list/out_iterator.hpp>
+#include <boost/graphs/adjacency_list/in_vector.hpp>
+#include <boost/graphs/adjacency_list/in_list.hpp>
+#include <boost/graphs/adjacency_list/in_set.hpp>
+#include <boost/graphs/adjacency_list/in_iterator.hpp>
 
 // Vertex and Edge components
-#include <boost/graphs/directed_vertex.hpp>
-#include <boost/graphs/directed_edge.hpp>
+#include <boost/graphs/adjacency_list/directed_vertex.hpp>
+#include <boost/graphs/adjacency_list/directed_edge.hpp>
 
 // Adjacency components
-#include <boost/graphs/adjacency_iterator.hpp>
+#include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
 /**
  * This class is a metafunction that generates all of the types needed to

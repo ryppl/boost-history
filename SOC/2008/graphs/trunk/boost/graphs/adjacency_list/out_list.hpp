@@ -5,7 +5,6 @@
 #include <list>
 #include <algorithm>
 
-#include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
 

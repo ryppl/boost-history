@@ -18,3 +18,5 @@ exe di : di.cpp ;
 exe propmaps : propmaps.cpp ;
 
 exe bfs : bfs.cpp ;
+exe dfs : dfs.cpp ;
+exe search : search.cpp ;

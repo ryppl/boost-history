@@ -5,7 +5,6 @@
 #include <map>
 #include <memory>
 
-#include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
 
 /**

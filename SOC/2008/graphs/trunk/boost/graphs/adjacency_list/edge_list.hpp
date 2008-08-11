@@ -4,7 +4,6 @@
 
 #include <list>
 
-#include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
 
 // Forward declarations

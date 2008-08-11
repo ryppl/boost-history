@@ -9,36 +9,19 @@
 #include <boost/graphs/algorithms/utility.hpp>
 #include <boost/graphs/algorithms/iterator.hpp>
 
-struct bfs_visitor
+#include <boost/graphs/algorithms/search.hpp>
+
+// A BFS search visitor is a basically just a search visitor.
+struct bfs_visitor : search_visitor { };
+
+
+template <typename Graph, typename Visitor, typename ColorMap = optional_vertex_map<Graph, color>>
+void
+breadth_first_search(Graph const& g, Visitor vis, ColorMap color = ColorMap())
 {
-    template <typename Graph, typename Vertex>
-    inline void discover_vertex(Graph const& g, Vertex v)
-    { }
-
-    template <typename Graph, typename Vertex>
-    inline void finish_vertex(Graph const& g, Vertex v)
-    { }
-
-    template <typename Graph, typename Vertex>
-    inline void gray_target(Graph const& g, Vertex v)
-    { }
-
-    template <typename Graph, typename Vertex>
-    inline void black_target(Graph const& g, Vertex v)
-    { }
-
-    template <typename Graph, typename Edge>
-    inline void tree_edge(Graph const& g, Edge e)
-    { }
-
-    template <typename Graph, typename Edge>
-    inline void non_tree_edge(Graph const& g, Edge e)
-    { }
-
-};
-
-#include <boost/graphs/algorithms/breadth_first/algorithm.hpp>
-#include <boost/graphs/algorithms/breadth_first/vertex_walk.hpp>
-#include <boost/graphs/algorithms/breadth_first/edge_walk.hpp>
+    std::queue<typename Graph::vertex_descriptor> buf;
+    detail::optional_prop_init(g, color, color_traits<typename ColorMap::value_type>::white());
+    search_graph(g, vis, color, buf);
+}
 
 #endif

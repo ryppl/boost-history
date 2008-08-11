@@ -1,9 +1,6 @@
 
-#ifndef BOOST_GRAPHS_PROPERTY_MAP_SIMPLE_PROPERTIES_HPP
-#define BOOST_GRAPHS_PROPERTY_MAP_SIMPLE_PROPERTIES_HPP
-
-namespace boost {
-namespace graphs {
+#ifndef SIMPLE_PROPERTY_MAP_HPP
+#define SIMPLE_PROPERTY_MAP_HPP
 
 /**
  * A simple property map provides get/put functions for non-bundled or simple
@@ -12,42 +9,28 @@ namespace graphs {
  * vertex or edge (depending on the descriptor) without any indirection. To
  * build property maps over members or a structured (or bundled) property,
  * use the bundled property map.
+ *
+ * Note that this works because all graph types overload the [] operators to
+ * return either vertex or edge properties depending on key type.
  */
-template <typename Graph, typename Descriptor, typename Property>
+template <typename Graph, typename Key, typename Property>
 struct simple_property_map
 {
-    typedef Descriptor key_type;
-    typedef Property property_type;
+    typedef Key key_type;
+    typedef Property value_type;
+    typedef value_type& reference;
 
-    simple_property_map(Graph& g)
+    inline simple_property_map(Graph& g)
         : graph(g)
     { }
 
-    simple_property_map(simple_property_map const& x)
-        : graph(x.g)
-    { }
+    inline value_type& operator()(key_type const& key)
+    { return graph[key]; }
+
+    inline void operator()(key_type const& key, value_type const& value) const
+    { graph[key] = value; }
 
     Graph& graph;
 };
-
-template <typename G, typename D, typename P>
-typename simple_property_map<G,D,P>::property_type const&
-get(simple_property_map<G,D,P> const& pm,
-    typename simple_property_map<G,D,P>::key_type const& x)
-{
-    return pm.graph.properties(x);
-}
-
-template <typename G, typename D, typename P>
-void
-put(simple_property_map<G,D,P>& pm,
-    typename simple_property_map<G,D,P>::key_type const& x,
-    typename simple_property_map<G,D,P>::property_type const& v)
-{
-    pm.graph.properties(x) = v;
-}
-
-} /* namesapce graphs */
-} /* namespace boost */
 
 #endif
