@@ -2,6 +2,7 @@
 #ifndef INDEX_DESCRIPTOR_HPP
 #define INDEX_DESCRIPTOR_HPP
 
+#include <boost/next_prior.hpp>
 #include <boost/functional/hash.hpp>
 
 /**
@@ -63,7 +64,7 @@ struct index_descriptor
 
     template <typename Container>
     inline typename Container::iterator get(Container& c) const
-    { return std::next(c.begin(), value); }
+    { return boost::next(c.begin(), value); }
 
     descriptor_type value;
 };
