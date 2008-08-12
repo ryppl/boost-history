@@ -79,7 +79,6 @@
 		08A77AB30E4F91AA00B8793E /* Jamroot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Jamroot; path = ../../../../Jamroot; sourceTree = SOURCE_ROOT; };
 		08A77AB40E4F91AB00B8793E /* LICENSE_1_0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE_1_0.txt; path = ../../../../LICENSE_1_0.txt; sourceTree = SOURCE_ROOT; };
 		08A77ADC0E4FB06600B8793E /* framework.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework.hpp; sourceTree = "<group>"; };
-		08A77ADD0E4FB06600B8793E /* traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits.hpp; sourceTree = "<group>"; };
 		08A77AED0E4FB4C800B8793E /* enable_if_type.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = enable_if_type.hpp; sourceTree = "<group>"; };
 		08A77AEE0E4FB4C800B8793E /* is_type.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = is_type.hpp; sourceTree = "<group>"; };
 		08A77B010E4FC51C00B8793E /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
@@ -87,6 +86,9 @@
 		08B8F1AC0E512CF7000545B8 /* traits_sequence_intrusive_registration.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits_sequence_intrusive_registration.hpp; sourceTree = "<group>"; };
 		08B8F1AD0E512D31000545B8 /* framework_entity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework_entity.hpp; sourceTree = "<group>"; };
 		08B8F1B60E512DA3000545B8 /* test_framework_entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_framework_entity.cpp; sourceTree = "<group>"; };
+		08B8F1BE0E512E72000545B8 /* traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits.hpp; sourceTree = "<group>"; };
+		08B8F1C00E512F45000545B8 /* test_framework_entity_traits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_framework_entity_traits.cpp; sourceTree = "<group>"; };
+		08B8F1D00E513569000545B8 /* test_framework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_framework.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -135,7 +137,6 @@
 				08A77ADC0E4FB06600B8793E /* framework.hpp */,
 				08B8F1AD0E512D31000545B8 /* framework_entity.hpp */,
 				08B8F1AB0E512CF7000545B8 /* framework_entity */,
-				08A77ADD0E4FB06600B8793E /* traits.hpp */,
 			);
 			path = generic;
 			sourceTree = "<group>";
@@ -152,8 +153,10 @@
 		08A77AFF0E4FC51C00B8793E /* generic */ = {
 			isa = PBXGroup;
 			children = (
-				08B8F1B60E512DA3000545B8 /* test_framework_entity.cpp */,
 				08A77B060E4FC58D00B8793E /* Jamfile */,
+				08B8F1D00E513569000545B8 /* test_framework.cpp */,
+				08B8F1B60E512DA3000545B8 /* test_framework_entity.cpp */,
+				08B8F1C00E512F45000545B8 /* test_framework_entity_traits.cpp */,
 			);
 			path = generic;
 			sourceTree = "<group>";
@@ -161,6 +164,7 @@
 		08B8F1AB0E512CF7000545B8 /* framework_entity */ = {
 			isa = PBXGroup;
 			children = (
+				08B8F1BE0E512E72000545B8 /* traits.hpp */,
 				08B8F1AC0E512CF7000545B8 /* traits_sequence_intrusive_registration.hpp */,
 			);
 			path = framework_entity;
