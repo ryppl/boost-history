@@ -20,5 +20,6 @@ int main(int argv, char * argc[])
 {
     shifted_ptr<neuron_sight> t100 = new shifted<neuron_sight>("I eat ([a-z]+) then drink ([a-z]+)", new shifted<neuron_sight>("beef|chicken"), new shifted<neuron_sight>("vodka|water"));
 
-    cout << ((* t100)("I eat beef then drink water") > .5 ? "true" : "false") << endl;
+    cout << (* t100)("I eat beef then drink wine") << endl;
+    cout << (* t100)("I eat beef then drink wine") << endl;
 }

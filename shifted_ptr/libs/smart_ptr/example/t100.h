@@ -42,7 +42,7 @@ struct neuron_base
     enum sense_t {sight, sound, touch, smell, taste};
 
     boost::regex exp_;
-    std::vector<pointer> sub_;
+    std::vector< std::pair<double, pointer> > sub_;
 
     neuron_base(std::string const & s) : exp_(s), sub_(exp_.mark_count()) {}
     virtual ~neuron_base() {};
@@ -66,9 +66,9 @@ template <neuron_base::sense_t>
         {
             search_[s] = reinterpret_cast<pointee *>(this); /// FIXME
         
-            if (p1) sub_[0] = p1;
-            if (p2) sub_[1] = p2;
-            if (p3) sub_[2] = p3;
+            if (p1) sub_[0].second = p1;
+            if (p2) sub_[1].second = p2;
+            if (p3) sub_[2].second = p3;
         }
 
         double operator () (std::string const & input)
@@ -77,20 +77,31 @@ template <neuron_base::sense_t>
 
             if (! boost::regex_match(input, what, exp_, boost::match_default | boost::match_partial))
                 return 0;
-              
+            
             if (! what[0].matched)
                 return 0;
 
             // ponderate
-            double accuracy = 0;
+            double accuracy = what.size() > 1 ? 0 : 1;
+            for (int i = 1; i < what.size(); i ++)
+            {
+                if (what[i].matched)
+                {
+                    sub_[i - 1].first = (* sub_[i - 1].second)(what[i].str()) / (what.size() - 1);
+                    accuracy += sub_[i - 1].first;
+                }
+            }
+
+/*
+            if (accuracy < .7)
+                return accuracy;
+*/
+
+            // learn if sounds equitable, God tells you to or "energy" spent is still low
             for (int i = 1; i < what.size(); i ++)
                 if (what[i].matched)
-                    accuracy += (* sub_[i])(what[i].str()) / (what.size() - 1);
-            
-            // learn if sounds equitable, God tells you to or "energy" spent is still low
-            if (accuracy > .7)
-                for (int i = 1; i < what.size(); i ++)
-                    if (! what[i].matched)
+                {
+                    if (sub_[i - 1].first == 0)
                     {
                         typename map_sn_t::iterator j = search_.find(what[i].str());
                         
@@ -102,15 +113,17 @@ template <neuron_base::sense_t>
                                 - calculate difference between all proposals
                                 - create new regular expression when demand is too high
                             */
-                            sub_[i] = j->second;
+                            sub_[i - 1].second = j->second;
                         }
                         else
                         {
                             /**
-                                Over here we should start guessing
+                                Learn
                             */
+                            sub_[i - 1].second->exp_.str() = sub_[i - 1].second->exp_.str() + "|" + input;
                         }
                     }
+                }
             
             return accuracy;
         }

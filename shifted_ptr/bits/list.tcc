@@ -53,17 +53,6 @@
  * purpose.  It is provided "as is" without express or implied warranty.
  */
 
-/**
-    Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
-
-    Distributed under the Boost Software License, Version 1.0.
-
-    See accompanying file LICENSE_1_0.txt or copy at
-    http://www.boost.org/LICENSE_1_0.txt
-
-    See http://www.boost.org/libs/smart_ptr/doc/index.html for documentation.
-*/
-
 /** @file list.tcc
  *  This is an internal header file, included by other library headers.
  *  You should not attempt to use it directly.

@@ -1,28 +1,6 @@
 --- /local/include/c++/3.4.5/bits/stl_list.h	Wed Jan 18 11:06:54 2006
-+++ stl_list.h	Mon Aug  4 08:34:46 2008
-@@ -51,10 +51,21 @@
-  * in supporting documentation.  Silicon Graphics makes no
-  * representations about the suitability of this software for any
-  * purpose.  It is provided "as is" without express or implied warranty.
-  */
- 
-+/**
-+    Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
-+
-+    Distributed under the Boost Software License, Version 1.0.
-+
-+    See accompanying file LICENSE_1_0.txt or copy at
-+    http://www.boost.org/LICENSE_1_0.txt
-+
-+    See http://www.boost.org/libs/smart_ptr/doc/index.html for documentation.
-+*/
-+
- /** @file stl_list.h
-  *  This is an internal header file, included by other library headers.
-  *  You should not attempt to use it directly.
-  */
- 
-@@ -69,62 +80,82 @@
++++ stl_list.h	Tue Aug 12 02:58:50 2008
+@@ -69,62 +69,82 @@
    // latter publicly inherits from the former in an effort to reduce code
    // duplication.  This results in some "needless" static_cast'ing later on,
    // but it's all safe downcasting.
@@ -116,7 +94,7 @@
        // Must downcast from List_node_base to _List_node to get to _M_data.
        reference
        operator*() const
-@@ -171,37 +202,37 @@
+@@ -171,37 +191,37 @@
        bool
        operator!=(const _Self& __x) const
        { return _M_node != __x._M_node; }
@@ -160,7 +138,7 @@
        _List_const_iterator(const iterator& __x)
        : _M_node(__x._M_node) { }
  
-@@ -216,11 +247,11 @@
+@@ -216,11 +236,11 @@
        { return &static_cast<_Node*>(_M_node)->_M_data; }
  
        _Self&
@@ -173,7 +151,7 @@
  
        _Self
        operator++(int)
-@@ -252,23 +283,23 @@
+@@ -252,23 +272,23 @@
        bool
        operator!=(const _Self& __x) const
        { return _M_node != __x._M_node; }
@@ -204,7 +182,7 @@
  
    /**
     *  @if maint
-@@ -290,41 +321,43 @@
+@@ -290,41 +310,43 @@
        //
        // We put this to the test in the constructors and in
        // get_allocator, where we use conversions between
@@ -258,7 +236,7 @@
        // This is what actually destroys the list.
        ~_List_base()
        { _M_clear(); }
-@@ -333,12 +366,12 @@
+@@ -333,12 +355,12 @@
        _M_clear();
  
        void
@@ -273,7 +251,7 @@
  
    /**
     *  @brief A standard container with linear time access to elements,
-@@ -393,26 +426,26 @@
+@@ -393,26 +415,26 @@
  
        typedef _List_base<_Tp, _Alloc>                   _Base;
  
@@ -307,7 +285,7 @@
         *  One data member plus two memory-handling functions.  If the
         *  _Alloc type requires separate instances, then one of those
         *  will also be included, accumulated from the topmost parent.
-@@ -427,21 +460,21 @@
+@@ -427,21 +449,21 @@
         *  @param  x  An instance of user data.
         *
         *  Allocates space for a new node and constructs a copy of @a x in it.
@@ -333,7 +311,7 @@
  	return __p;
        }
  
-@@ -449,21 +482,21 @@
+@@ -449,21 +471,21 @@
         *  @if maint
         *  Allocates space for a new node and default-constructs a new
         *  instance of @c value_type in it.
@@ -359,7 +337,7 @@
  	return __p;
        }
  
-@@ -595,37 +628,37 @@
+@@ -595,37 +617,37 @@
         *  Returns a read/write iterator that points to the first element in the
         *  %list.  Iteration is done in ordinary element order.
         */
@@ -401,7 +379,7 @@
         *  Returns a read/write reverse iterator that points to the last
         *  element in the %list.  Iteration is done in reverse element
         *  order.
-@@ -666,11 +699,11 @@
+@@ -666,11 +688,11 @@
         *  Returns true if the %list is empty.  (Thus begin() would equal
         *  end().)
         */
@@ -414,7 +392,7 @@
        size_type
        size() const
        { return std::distance(begin(), end()); }
-@@ -795,11 +828,11 @@
+@@ -795,11 +817,11 @@
         *  Note that no data is returned, and if the last element's data
         *  is needed, it should be retrieved before pop_back() is called.
         */
@@ -427,7 +405,7 @@
         *  @brief  Inserts given value into %list before specified iterator.
         *  @param  position  An iterator into the %list.
         *  @param  x  Data to be inserted.
-@@ -908,11 +941,11 @@
+@@ -908,11 +930,11 @@
         *  specialized such that std::swap(l1,l2) will feed to this
         *  function.
         */
@@ -440,7 +418,7 @@
         *  Erases all the elements.  Note that this function only erases
         *  the elements, and that if the elements themselves are
         *  pointers, the pointed-to memory is not touched in any way.
-@@ -1071,11 +1104,11 @@
+@@ -1071,11 +1093,11 @@
         *
         *  Reverse the order of elements in the list in linear time.
         */
@@ -453,7 +431,7 @@
         *  @brief  Sort the elements.
         *
         *  Sorts the elements of this list in NlogN time.  Equivalent
-@@ -1158,12 +1191,13 @@
+@@ -1158,12 +1180,13 @@
  
        // Inserts new element at position given and with value given.
        void

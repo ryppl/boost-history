@@ -1,27 +1,6 @@
 --- /local/include/c++/3.4.5/bits/list.tcc	Wed Jan 18 11:06:46 2006
-+++ list.tcc	Mon Aug  4 08:26:07 2008
-@@ -51,35 +51,72 @@
-  * in supporting documentation.  Silicon Graphics makes no
-  * representations about the suitability of this software for any
-  * purpose.  It is provided "as is" without express or implied warranty.
-  */
- 
-+/**
-+    Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
-+
-+    Distributed under the Boost Software License, Version 1.0.
-+
-+    See accompanying file LICENSE_1_0.txt or copy at
-+    http://www.boost.org/LICENSE_1_0.txt
-+
-+    See http://www.boost.org/libs/smart_ptr/doc/index.html for documentation.
-+*/
-+
- /** @file list.tcc
-  *  This is an internal header file, included by other library headers.
-  *  You should not attempt to use it directly.
-  */
- 
++++ list.tcc	Tue Aug 12 02:58:56 2008
+@@ -61,25 +61,51 @@
  #ifndef _LIST_TCC
  #define _LIST_TCC 1
  
@@ -82,7 +61,7 @@
      typename list<_Tp,_Alloc>::iterator
      list<_Tp,_Alloc>::
      insert(iterator __position, const value_type& __x)
-@@ -235,12 +272,12 @@
+@@ -235,12 +261,12 @@
      void
      list<_Tp,_Alloc>::
      sort()
@@ -97,7 +76,7 @@
          list __tmp[64];
          list * __fill = &__tmp[0];
          list * __counter;
-@@ -339,12 +376,12 @@
+@@ -339,12 +365,12 @@
        void
        list<_Tp,_Alloc>::
        sort(_StrictWeakOrdering __comp)
