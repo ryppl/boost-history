@@ -227,6 +227,15 @@
 
 
 /********************************************/
+/* generalized eigenvalue/eigenvector */
+
+#define LAPACK_SSYGV FORTRAN_ID( ssygv ) 
+#define LAPACK_DSYGV FORTRAN_ID( dsygv )
+#define LAPACK_CHEGV FORTRAN_ID( chegv ) 
+#define LAPACK_ZHEGV FORTRAN_ID( zhegv )
+
+
+/********************************************/
 /* QR factorization */
 
 #define LAPACK_SGEQRF FORTRAN_ID( sgeqrf )

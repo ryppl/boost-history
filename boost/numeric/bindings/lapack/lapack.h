@@ -527,6 +527,28 @@ extern "C" {
   void LAPACK_DSYTRD( char const* uplo, int const* n, double* a, int const* lda, double* d,
                       double* e, double* tau, double* work, int const* lwork, int* INFO ) ;
 
+
+  /**********************************************************************/
+  /*               generalized eigenvalue / eigenvector                 */
+  /**********************************************************************/
+
+   void LAPACK_SSYGV(int const* itype, char const* jobz, char const* uplo, int const* n,
+                     float* a, int const* lda, float* b, int const* ldb,
+                     float* w, float* work, int const* lwork, int* info);
+
+   void LAPACK_DSYGV(int const* itype, char const* jobz, char const* uplo, int const* n,
+                     double* a, int const* lda, double* b, int const* ldb,
+                     double* w, double* work, int const* lwork, int* info);
+
+   void LAPACK_CHEGV(int const* itype, char const* jobz, char const* uplo, int const* n,
+                     fcomplex_t* a, int const* lda, fcomplex_t* b, int const* ldb,
+                     float* w, fcomplex_t* work, int const* lwork, float* rwork, int* info);
+
+   void LAPACK_ZHEGV(int const *itype, char const* jobz, char const *uplo, int const * n,
+                     dcomplex_t *a, int const *lda, dcomplex_t *b, int const *ldb,
+                     double *w, dcomplex_t *work, int const *lwork, double* rwork, int* info);
+
+
   /*********************************************************************/
   /*                             SVD                                   */
   /*********************************************************************/

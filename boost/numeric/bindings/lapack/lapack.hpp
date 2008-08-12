@@ -33,16 +33,19 @@
 #include <boost/numeric/bindings/lapack/trevc.hpp>
 #include <boost/numeric/bindings/lapack/trexc.hpp>
 #include <boost/numeric/bindings/lapack/hbev.hpp>
+#include <boost/numeric/bindings/lapack/syev.hpp>
 
 // SVD
 
 #include <boost/numeric/bindings/lapack/gesvd.hpp>
 #include <boost/numeric/bindings/lapack/gesdd.hpp>
+#include <boost/numeric/bindings/lapack/sygv.hpp>
 
 // Miscellaneous
-
+// QR
 #include <boost/numeric/bindings/lapack/geqrf.hpp>
 #include <boost/numeric/bindings/lapack/ormqr.hpp>
+#include <boost/numeric/bindings/lapack/orgqr.hpp>
 
 
 
