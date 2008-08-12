@@ -24,6 +24,8 @@ alias bindings-lapack-tests :
     [ run ublas_heevd.cpp ]
     [ run ublas_heevx.cpp ]
 
+    [ run ublas_hegv.cpp ]
+
     [ run ublas_gesdd.cc ]
     [ run ublas_gesdd2.cc ]
     [ run ublas_gesdd3.cc ]
