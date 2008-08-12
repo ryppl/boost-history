@@ -1,22 +1,34 @@
 // test_switch.cpp
 //
-// Copyright (c) 2007
+// Copyright (c) 2007-2008
 // Steven Watanabe
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_AUTO_TEST_MAIN
-
-#include <boost/switch.hpp>
+#include <boost/control/switch.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/range_c.hpp>
-#include <boost/test/auto_unit_test.hpp>
+
+#define BOOST_TEST_MAIN
+
+#include <boost/test/unit_test.hpp>
 
 namespace {
     typedef boost::mpl::vector_c<int, 0, 2, 1, 4, 5, 6, 3> values;
+
+    template<class Cases, class F>
+    struct simple_case {
+        typedef Cases labels;
+        F impl;
+        template<class R, class N>
+        R apply(N n) {
+            return impl(n);
+        }
+    };
+
     struct f {
         typedef int result_type;
         template<class Index>
@@ -62,70 +74,70 @@ namespace {
 }
 
 BOOST_AUTO_TEST_CASE(without_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<test_range>(5, f())), 6);
-    BOOST_CHECK_EQUAL((boost::switch_<test_range>(1, f())), 2);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(5, simple_case<test_range, f>())), 6);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(1, simple_case<test_range, f>())), 2);
 
-    BOOST_CHECK_THROW((boost::switch_<test_range>(-1, f())), boost::bad_switch);
-    BOOST_CHECK_THROW((boost::switch_<test_range>(7, f())), boost::bad_switch);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(-1, simple_case<test_range, f>())), 0);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(7, simple_case<test_range, f>())), 0);
 }
 
 BOOST_AUTO_TEST_CASE(with_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<test_range>(5, f(), &default_)), 6);
-    BOOST_CHECK_EQUAL((boost::switch_<test_range>(1, f(), &default_)), 2);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(5, simple_case<test_range, f>(), &default_)), 6);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(1, simple_case<test_range, f>(), &default_)), 2);
 
-    BOOST_CHECK_EQUAL((boost::switch_<test_range>(-1, f(), &default_)), -1);
-    BOOST_CHECK_EQUAL((boost::switch_<test_range>(7, f(), &default_)), 7);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(-1, simple_case<test_range, f>(), &default_)), -1);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(7, simple_case<test_range, f>(), &default_)), 7);
 }
 
 BOOST_AUTO_TEST_CASE(non_sequential_without_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<non_sequential_range>(5, f())), 6);
-    BOOST_CHECK_EQUAL((boost::switch_<non_sequential_range>(1, f())), 2);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(5, simple_case<non_sequential_range, f>())), 6);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(1, simple_case<non_sequential_range, f>())), 2);
 
-    BOOST_CHECK_THROW((boost::switch_<non_sequential_range>(-1, f())), boost::bad_switch);
-    BOOST_CHECK_THROW((boost::switch_<non_sequential_range>(7, f())), boost::bad_switch);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(-1, simple_case<non_sequential_range, f>())), 0);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(7, simple_case<non_sequential_range, f>())), 0);
 }
 
 BOOST_AUTO_TEST_CASE(non_sequential_with_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<non_sequential_range>(5, f(), &default_)), 6);
-    BOOST_CHECK_EQUAL((boost::switch_<non_sequential_range>(1, f(), &default_)), 2);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(5, simple_case<non_sequential_range, f>(), &default_)), 6);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(1, simple_case<non_sequential_range, f>(), &default_)), 2);
 
-    BOOST_CHECK_EQUAL((boost::switch_<non_sequential_range>(-1, f(), &default_)), -1);
-    BOOST_CHECK_EQUAL((boost::switch_<non_sequential_range>(7, f(), &default_)), 7);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(-1, simple_case<non_sequential_range, f>(), &default_)), -1);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(7, simple_case<non_sequential_range, f>(), &default_)), 7);
 }
 
 BOOST_AUTO_TEST_CASE(zero_params_without_default) {
-    BOOST_CHECK_THROW((boost::switch_<empty_range>(5, f())), boost::bad_switch);
-    BOOST_CHECK_THROW((boost::switch_<empty_range>(1, f())), boost::bad_switch);
-    BOOST_CHECK_THROW((boost::switch_<empty_range>(0, f())), boost::bad_switch);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(5, simple_case<empty_range, f>())), 0);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(1, simple_case<empty_range, f>())), 0);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(0, simple_case<empty_range, f>())), 0);
 
-    BOOST_CHECK_THROW((boost::switch_<empty_range>(-1, f())), boost::bad_switch);
-    BOOST_CHECK_THROW((boost::switch_<empty_range>(7, f())), boost::bad_switch);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(-1, simple_case<empty_range, f>())), 0);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(7, simple_case<empty_range, f>())), 0);
 }
 
 BOOST_AUTO_TEST_CASE(zero_params_with_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<empty_range>(5, f(), &default_)), 5);
-    BOOST_CHECK_EQUAL((boost::switch_<empty_range>(1, f(), &default_)), 1);
-    BOOST_CHECK_EQUAL((boost::switch_<empty_range>(0, f(), &default_)), 0);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(5, simple_case<empty_range, f>(), &default_)), 5);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(1, simple_case<empty_range, f>(), &default_)), 1);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(0, simple_case<empty_range, f>(), &default_)), 0);
 
-    BOOST_CHECK_EQUAL((boost::switch_<empty_range>(-1, f(), &default_)), -1);
-    BOOST_CHECK_EQUAL((boost::switch_<empty_range>(7, f(), &default_)), 7);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(-1, simple_case<empty_range, f>(), &default_)), -1);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(7, simple_case<empty_range, f>(), &default_)), 7);
 }
 
 BOOST_AUTO_TEST_CASE(limit_without_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<limit_range>(limit_value, limit_test())), -limit_value);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(limit_value, simple_case<limit_range, limit_test>())), -limit_value);
 }
 
 BOOST_AUTO_TEST_CASE(limit_with_default) {
-    BOOST_CHECK_EQUAL((boost::switch_<limit_range>(limit_value, limit_test(), &default_)), -limit_value);
+    BOOST_CHECK_EQUAL((boost::control::switch_<int>(limit_value, simple_case<limit_range, limit_test>(), &default_)), -limit_value);
 }
 
 BOOST_AUTO_TEST_CASE(test_void) {
-    boost::switch_<test_range>(0, void_return<void>());
-    boost::switch_<test_range>(0, void_return<const void>());
-    boost::switch_<test_range>(0, void_return<volatile void>());
-    boost::switch_<test_range>(0, void_return<const volatile void>());
+    boost::control::switch_<void>(0, simple_case<test_range, void_return<void> >());
+    boost::control::switch_<void>(0, simple_case<test_range, void_return<const void> >());
+    boost::control::switch_<void>(0, simple_case<test_range, void_return<volatile void> >());
+    boost::control::switch_<void>(0, simple_case<test_range, void_return<const volatile void> >());
 }
 
 BOOST_AUTO_TEST_CASE(test_reference) {
-    boost::switch_<test_range>(0, return_reference());
+    //BOOST_CHECK_EQUAL((boost::control::switch_<int&>(0, simple_case<test_range, return_reference>())), &test_int);
 }
