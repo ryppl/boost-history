@@ -60,3 +60,14 @@ Q: Why does the out iterator need a pointer back to the out store?
 Because you can't translate between the wrapped iterator and a descriptor to
 the wrapped iterator without a reference to the container. If descritpors were
 self-translating, this wouldn't be a problem...
+
+
+Q: Why did you give up on the idea of iterable algorithms? Several reasons.
+First, it's important to know exactly where to divide the algorithm - what's
+the current status of the algorithm at each step. This is extremely difficult
+to generalize because each algorithm does things a little bit differently. It's
+not terribly hard for BFS/DFS, but it doesn't make a lot of sense for spanning
+trees or shortest paths. Second, splitting the algorithm adds a lot of overhead,
+causing the implemetnation to be significantly slower than a function. Finally,
+with lamdba expressions and variadic templates, it shouldn't be too hard to
+simply inline your visitors... Ideally, anyway.

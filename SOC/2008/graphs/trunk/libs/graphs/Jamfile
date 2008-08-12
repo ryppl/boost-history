@@ -19,4 +19,6 @@ exe propmaps : propmaps.cpp ;
 
 # exe bfs : bfs.cpp ;
 # exe dfs : dfs.cpp ;
-exe search : search.cpp ;
+# exe search : search.cpp ;
+exe adv_search : adv_search.cpp ;
+exe vis : visitors.cpp ;
