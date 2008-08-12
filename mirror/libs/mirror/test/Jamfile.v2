@@ -20,5 +20,6 @@ test-suite "mirror"
          [ compile namespaces_ct_03.cpp ]
          [ compile namespaces_ct_04.cpp ]
          [ compile-fail namespaces_cf_01.cpp ]
+         [ compile types_ct_01.cpp ]
     ;
 

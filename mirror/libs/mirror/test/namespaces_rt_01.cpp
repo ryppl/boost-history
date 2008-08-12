@@ -23,32 +23,32 @@ void test_main()
 	//
 	//
 	// define an alternative name for the ::test namespace meta-data
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test) meta_ns_test;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) meta_ns_test_stuff;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) meta_ns_test_stuff_detail;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature) meta_ns_test_feature;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature_detail) meta_ns_test_feature_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test) meta_ns_test;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff) meta_ns_test_stuff;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) meta_ns_test_stuff_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature) meta_ns_test_feature;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test::base_name(), 
-		BOOST_STR_LIT("test")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_stuff::base_name(), 
-		BOOST_STR_LIT("stuff")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_stuff_detail::base_name(), 
-		BOOST_STR_LIT("detail")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_feature::base_name(), 
-		BOOST_STR_LIT("feature")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_feature_detail::base_name(), 
-		BOOST_STR_LIT("detail")
-	) == 0);
+	BOOST_CHECK(
+		meta_ns_test::base_name() ==
+		BOOST_CTS_LIT("test")
+	);
+	BOOST_CHECK(
+		meta_ns_test_stuff::base_name() ==
+		BOOST_CTS_LIT("stuff")
+	);
+	BOOST_CHECK(
+		meta_ns_test_stuff_detail::base_name() ==
+		BOOST_CTS_LIT("detail")
+	);
+	BOOST_CHECK(
+		meta_ns_test_feature::base_name() ==
+		BOOST_CTS_LIT("feature")
+	);
+	BOOST_CHECK(
+		meta_ns_test_feature_detail::base_name() ==
+		BOOST_CTS_LIT("detail")
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

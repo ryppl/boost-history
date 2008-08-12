@@ -23,36 +23,36 @@ void test_main()
 	//
 	//
 	// define an alternative name for the global scope meta-data
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) meta_ns_;
-	BOOST_STATIC_ASSERT( reflects_global_scope<meta_ns_>::value );
+	typedef BOOST_MIRRORED_GLOBAL_SCOPE() meta_gs;
+	BOOST_STATIC_ASSERT( reflects_global_scope<meta_gs>::value );
 	//
 	// define an alternative name for the ::test namespace meta-data
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test) meta_ns_test;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) meta_ns_test_stuff;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) meta_ns_test_stuff_detail;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature) meta_ns_test_feature;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature_detail) meta_ns_test_feature_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test) meta_ns_test;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff) meta_ns_test_stuff;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) meta_ns_test_stuff_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature) meta_ns_test_feature;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test::full_name(), 
-		BOOST_STR_LIT("::test")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_stuff::full_name(), 
-		BOOST_STR_LIT("::test::stuff")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_stuff_detail::full_name(), 
-		BOOST_STR_LIT("::test::stuff::detail")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_feature::full_name(), 
-		BOOST_STR_LIT("::test::feature")
-	) == 0);
-	BOOST_CHECK(bstrcmp(
-		meta_ns_test_feature_detail::full_name(), 
-		BOOST_STR_LIT("::test::feature::detail")
-	) == 0);
+	BOOST_CHECK(
+		meta_ns_test::full_name() == 
+		BOOST_CTS_LIT("::test")
+	);
+	BOOST_CHECK(
+		meta_ns_test_stuff::full_name() ==
+		BOOST_CTS_LIT("::test::stuff")
+	);
+	BOOST_CHECK(
+		meta_ns_test_stuff_detail::full_name() ==
+		BOOST_CTS_LIT("::test::stuff::detail")
+	);
+	BOOST_CHECK(
+		meta_ns_test_feature::full_name() ==
+		BOOST_CTS_LIT("::test::feature")
+	);
+	BOOST_CHECK(
+		meta_ns_test_feature_detail::full_name() ==
+		BOOST_CTS_LIT("::test::feature::detail")
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

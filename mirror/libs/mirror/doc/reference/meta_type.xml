@@ -15,6 +15,9 @@
 	</namespace><!-- boost -->
 
 	<!-- macros -->
+	<!-- registering -->
+	<xi:include href="macro_REG_TYPE.xml"/>
+	<!-- reflection -->
 	<xi:include href="macro_RFL_TYPE.xml"/>
 	<xi:include href="macro_RFL_TYPE_NS.xml"/>
 	<xi:include href="macro_RFL_TYPEDEF.xml"/>

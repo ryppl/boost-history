@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRROR_REG_TYPE" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<macro-parameter name="NAMESPACE">
+	</macro-parameter>
+	<macro-parameter name="TYPE">
+	</macro-parameter>
+	<purpose>
+		<para>This macro is used to register a type that is defined inside of a namespace with <libraryname>Mirror</libraryname>.
+		After successful registration the type can be reflected.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRROR_REG_TYPE</macroname></code> macro registers a type with 
+		the <libraryname>Mirror</libraryname> library. To register a type defined in the global scope
+		use the <code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code> or the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code> macro. To register a <code>typedef</code>ined
+		type use one of the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code>, 
+		<code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> or <code><macroname>BOOST_MIRROR_REG_TYPEDEF</macroname></code>
+		macros. To register a type that is defined inside of a class use either the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_EMBEDDED</macroname></code> or the <code><macroname>BOOST_MIRROR_REG_TYPE_EMB</macroname></code>
+		macro.
+		<note>The registering must be done in the <code>::boost::mirror</code> namespace.</note>
+		To register a type <code>bar</code> defined in a named namespace <code>foo</code>, 
+		</para>
+<programlisting>
+namespace foo {
+  struct bar { };
+} // namespace foo
+</programlisting>
+		do this:
+<programlisting>
+// note that the registering must be done
+// in the boost::mirror namespace
+
+namespace boost {
+namespace mirror {
+
+// registers ::foo
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo))
+// note that the full namespace name including the leading 
+// double colon must be passed as the first argument
+<macroname>BOOST_MIRROR_REG_TYPE</macroname>(::foo, bar)
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+	Afterwards the types can be reflected with the 
+	<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro:
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_type</classname>&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::foo::bar) &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_namespace</classname>&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::foo::bar)::scope &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::foo::bar)::scope::scope &gt;
+));
+</programlisting>
+		The <libraryname>Mirror</libraryname> has several preregistered types: 
+<programlisting>
+namespace boost {
+namespace mirror {
+
+<macroname>BOOST_MIRROR_REG_TYPE</macroname>(::std, string)
+<macroname>BOOST_MIRROR_REG_TYPE</macroname>(::std, wstring)
+<macroname>BOOST_MIRROR_REG_TYPE</macroname>(::boost::tuples, tuple)
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+		</para>
+
+		<section id="mirror.REG_TYPE.reference.samples">
+			<title>Examples</title>
+			<para>This example shows the registering and reflection of namespaces
+			and basic usage of the <code><classname>meta_namespace</classname></code>
+			template class and its members.
+			</para>
+		</section>
+
+	</description>
+</macro>

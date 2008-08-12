@@ -11,7 +11,7 @@
  */
 
 // not operator
-#include <boost/mpl/not.hpp>
+#include <boost/mpl/assert.hpp>
 // namespace registering 
 #include <boost/mirror/traits/reflects_global_scope.hpp>
 //
@@ -25,21 +25,21 @@ void test_main()
 	using namespace ::boost::mirror;
 	//
 	// define an alternative name for the global scope meta-data
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) meta_ns_;
-	BOOST_STATIC_ASSERT( reflects_global_scope<meta_ns_>::value );
+	typedef BOOST_MIRRORED_GLOBAL_SCOPE() meta_gs;
+	BOOST_STATIC_ASSERT( reflects_global_scope<meta_gs>::value );
 	//
 	// define an alternative name for the ::test namespace meta-data
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test) meta_ns_test;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) meta_ns_test_stuff;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) meta_ns_test_stuff_detail;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature) meta_ns_test_feature;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature_detail) meta_ns_test_feature_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test) meta_ns_test;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff) meta_ns_test_stuff;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) meta_ns_test_stuff_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature) meta_ns_test_feature;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
-	BOOST_STATIC_ASSERT( mpl::not_<reflects_global_scope<meta_ns_test> >::value );
-	BOOST_STATIC_ASSERT( mpl::not_<reflects_global_scope<meta_ns_test_stuff> >::value );
-	BOOST_STATIC_ASSERT( mpl::not_<reflects_global_scope<meta_ns_test_stuff_detail> >::value );
-	BOOST_STATIC_ASSERT( mpl::not_<reflects_global_scope<meta_ns_test_feature> >::value );
-	BOOST_STATIC_ASSERT( mpl::not_<reflects_global_scope<meta_ns_test_feature_detail> >::value );
+	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test> ));
+	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_stuff> ));
+	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_stuff_detail> ));
+	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_feature> ));
+	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_feature_detail> ));
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

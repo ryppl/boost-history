@@ -10,7 +10,7 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <boost/mpl/not.hpp>
+#include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp> 
 // namespace registering 
 #include <boost/mirror/traits/reflects_namespace.hpp>
@@ -27,44 +27,44 @@ void test_main()
 	using namespace ::boost::mirror;
 	//
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(bool) :: scope
+		BOOST_MIRRORED_TYPE(bool) :: scope
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(char) :: scope
+		BOOST_MIRRORED_TYPE(char) :: scope
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(int) :: scope
+		BOOST_MIRRORED_TYPE(int) :: scope
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(double) :: scope
+		BOOST_MIRRORED_TYPE(double) :: scope
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(void*) :: scope
+		BOOST_MIRRORED_TYPE(void*) :: scope
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(int const * const *) :: scope
+		BOOST_MIRRORED_TYPE(int const * const *) :: scope
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_TYPE(char volatile * const &) :: scope
+		BOOST_MIRRORED_TYPE(char volatile * const &) :: scope
 	>::value );
 	//
 	BOOST_STATIC_ASSERT(( is_same<
-		BOOST_MIRROR_REFLECT_TYPE(const char* []) :: scope,
-		BOOST_MIRROR_REFLECT_TYPE(int volatile &) :: scope
+		BOOST_MIRRORED_TYPE(const char* []) :: scope,
+		BOOST_MIRRORED_TYPE(int volatile &) :: scope
 	>::value ));
 
-	BOOST_STATIC_ASSERT(( is_same<
-		BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bchar) :: scope,
-		BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bstring) :: scope
-	>::value ));
-	BOOST_STATIC_ASSERT(( mpl::not_<is_same<
-		BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bchar) :: scope,
-		BOOST_MIRROR_REFLECT_TYPE(char) :: scope
-	> >::value ));
-	BOOST_STATIC_ASSERT(( mpl::not_<is_same<
-		BOOST_MIRROR_REFLECT_TYPEDEFD(_boost, bchar) :: scope,
-		BOOST_MIRROR_REFLECT_TYPE(wchar_t) :: scope
-	> >::value ));
+	BOOST_MPL_ASSERT(( is_same<
+		BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
+		BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) :: scope
+	> ));
+	BOOST_MPL_ASSERT_NOT((is_same<
+		BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
+		BOOST_MIRRORED_TYPE(char) :: scope
+	> ));
+	BOOST_MPL_ASSERT_NOT(( is_same<
+		BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
+		BOOST_MIRRORED_TYPE(wchar_t) :: scope
+	> ));
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

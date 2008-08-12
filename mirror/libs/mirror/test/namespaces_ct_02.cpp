@@ -10,6 +10,7 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <boost/mpl/assert.hpp>
 // namespace registering 
 #include <boost/mirror/traits/reflects_namespace.hpp>
 //
@@ -23,20 +24,20 @@ void test_main()
 	using namespace ::boost::mirror;
 	//
 	// define an alternative name for the global scope meta-data
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_) meta_ns_;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test) meta_ns_test;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff) meta_ns_test_stuff;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail) meta_ns_test_stuff_detail;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature) meta_ns_test_feature;
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature_detail) meta_ns_test_feature_detail;
+	typedef BOOST_MIRRORED_GLOBAL_SCOPE() meta_gs;
+	typedef BOOST_MIRRORED_NAMESPACE(::test) meta_ns_test;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff) meta_ns_test_stuff;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::stuff::detail) meta_ns_test_stuff_detail;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature) meta_ns_test_feature;
+	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
 	//
-	BOOST_STATIC_ASSERT( reflects_namespace<meta_ns_>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<meta_ns_test>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<meta_ns_test_stuff>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<meta_ns_test_stuff_detail>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<meta_ns_test_feature>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<meta_ns_test_feature_detail>::value );
+	BOOST_MPL_ASSERT(( reflects_namespace<meta_gs> ));
+	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test> ));
+	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_stuff> ));
+	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_stuff_detail> ));
+	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_feature> ));
+	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_feature_detail> ));
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

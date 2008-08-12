@@ -35,13 +35,13 @@ namespace mirror {
 
 // register the namespaces
 //
-BOOST_MIRROR_REG_NAMESPACE_TOP_LEVEL(test)
+BOOST_MIRROR_REG_NAMESPACE((test))
 //
-BOOST_MIRROR_REG_NAMESPACE(_test, feature)
-BOOST_MIRROR_REG_NAMESPACE(_test_feature, detail)
+BOOST_MIRROR_REG_NAMESPACE((test)(feature))
+BOOST_MIRROR_REG_NAMESPACE((test)(feature)(detail))
 // 
-BOOST_MIRROR_REG_NAMESPACE(_test, stuff)
-BOOST_MIRROR_REG_NAMESPACE(_test_stuff, detail)
+BOOST_MIRROR_REG_NAMESPACE((test)(stuff))
+BOOST_MIRROR_REG_NAMESPACE((test)(stuff)(detail))
 
 } // namespace mirror
 } // namespace boost

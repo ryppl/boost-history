@@ -23,22 +23,22 @@ void test_main()
 	using namespace ::boost::mirror;
 	//
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_NAMESPACE(_)
+		BOOST_MIRRORED_GLOBAL_SCOPE()
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_NAMESPACE(_test)
+		BOOST_MIRRORED_NAMESPACE(::test)
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff)
+		BOOST_MIRRORED_NAMESPACE(::test::stuff)
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_NAMESPACE(_test_stuff_detail)
+		BOOST_MIRRORED_NAMESPACE(::test::stuff::detail)
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature)
+		BOOST_MIRRORED_NAMESPACE(::test::feature)
 	>::value );
 	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRROR_REFLECT_NAMESPACE(_test_feature_detail)
+		BOOST_MIRRORED_NAMESPACE(::test::feature::detail)
 	>::value );
 }
 

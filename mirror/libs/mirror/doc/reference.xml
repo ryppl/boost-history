@@ -37,6 +37,11 @@
 				<entry>Registers a namespace</entry> 
 				<entry></entry> 
 			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPE</macroname></code></entry> 
+				<entry>Registers a type defined inside of a named namespace</entry> 
+				<entry></entry> 
+			</row>
 		</tbody>
 		</tgroup>
 		</table>
