@@ -61,6 +61,7 @@ class pat_string_traits {
 	
 };
 
+///vector key triats class.
 template<typename type>
 class pat_vector_traits {
 	public:
