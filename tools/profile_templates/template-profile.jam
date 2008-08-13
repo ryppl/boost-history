@@ -24,19 +24,43 @@ type.register INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : : CPP ;
 type.register RAW_TEMPLATE_PROFILE : rtp ;
 type.register TEMPLATE_PROFILE : template-profile ;
 
-generators.register-standard template-profile.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP ;
-
 feature.feature <template-profile-toolset> : msvc gcc : free ;
 feature.feature <template-profile-filter> : : path incidental ;
 
-toolset.flags template-profile.preprocess PREPROCESS-ACTION <template-profile-toolset>msvc : cl /E ;
-toolset.flags template-profile.preprocess PREPROCESS-ACTION <template-profile-toolset>gcc : g++-4.3.0 -E ;
-toolset.flags template-profile.preprocess INCLUDE-COMMAND <template-profile-toolset>msvc : /I ;
-toolset.flags template-profile.preprocess INCLUDE-COMMAND <template-profile-toolset>gcc : -I ;
-toolset.flags template-profile.preprocess INCLUDES <include> ;
+toolset.flags gcc.compile.c++.preprocess INSTRUMENT-ACTION : $(INSTRUMENT-ACTION) : unchecked ;
 
-actions preprocess {
-    "$(PREPROCESS-ACTION)" "$(INCLUDE-COMMAND)$(INCLUDES)" "$(>)" | "$(INSTRUMENT-ACTION)" >"$(<)"
+module gcc {
+
+    actions compile.c++.preprocess {
+        $(CONFIG_COMMAND) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -E "$(>)" | $(INSTRUMENT-ACTION) >"$(<)"
+    }
+
+    generators.register-c-compiler gcc.compile.c++.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : <toolset>gcc ;
+
+    actions compile.c++.template-profile {
+        "$(CONFIG_COMMAND)" $(LANG) -ftemplate-depth-$(TEMPLATE_DEPTH) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -D PROFILE_TEMPLATES -I"$(INCLUDES)" -c "$(>:W)" 2>&1 | "$(FILTER)" >"$(<)"
+    }
+
+    toolset.flags gcc.compile.c++.template-profile FILTER <template-profile-filter> ;
+
+}
+
+toolset.flags msvc.compile.c++.preprocess INSTRUMENT-ACTION : $(INSTRUMENT-ACTION) : unchecked ;
+
+module msvc {
+
+    actions compile.c++.preprocess {
+        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -E $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) $(nl)-D$(DEFINES) $(nl)"-I$(INCLUDES:W)")" | $(INSTRUMENT-ACTION) >"$(<[1]:W)"
+    }
+
+    generators.register-c-compiler msvc.compile.c++.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : <toolset>msvc ;
+
+    actions compile.c++.template-profile {
+        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -c $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) -W4 $(nl)-D$(DEFINES) -D PROFILE_TEMPLATES $(nl)"-I$(INCLUDES:W)")" 2>&1 | "$(FILTER)" >"$(<)"
+    }
+
+    toolset.flags msvc.compile.c++.template-profile FILTER <template-profile-filter> ;
+
 }
 
 class warn-generator : generator {
@@ -46,8 +70,8 @@ class warn-generator : generator {
     import path ;
     import modules ;
 
-    rule __init__ ( ) {
-        generator.__init__ template-profile.build-generic : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : RAW_TEMPLATE_PROFILE ;
+    rule __init__ ( * : * ) {
+        generator.__init__ $(1) : $(2) : $(3) : $(4) : $(5) : $(6) : $(7) : $(8) : $(9) ;
     }
     rule run ( project name : properties : sources * : multiple ? ) {
         local toolset = [ $(properties).get <toolset> ] ;
@@ -87,26 +111,14 @@ class warn-generator : generator {
             errors.error Could not find filter binary ;
         }
 
-        local new-properties = [ $(properties).add-raw <template-profile-toolset>$(toolset) <dependency>$(filter-binary-dependencies) <template-profile-filter>$(filter-binary) <include>$(self-dir) ] ;
+        local new-properties = [ $(properties).add-raw <dependency>$(filter-binary-dependencies) <template-profile-filter>$(filter-binary) <include>$(self-dir) ] ;
 
         return [ generator.run $(project) $(name) : $(new-properties)  : $(sources) : $(multiple) ] ;
     }
 }
 
-generators.register [ class.new warn-generator ] ;
-
-toolset.flags template-profile.build-generic INVOCATION-COMMAND <template-profile-toolset>msvc : cl /W4 /c /D PROFILE_TEMPLATES ;
-toolset.flags template-profile.build-generic INCLUDE-COMMAND <template-profile-toolset>msvc : /I ;
-
-toolset.flags template-profile.build-generic INVOCATION-COMMAND <template-profile-toolset>gcc : g++ -Wall -c -D PROFILE_TEMPLATES ;
-toolset.flags template-profile.build-generic INCLUDE-COMMAND <template-profile-toolset>gcc : -I ;
-
-toolset.flags template-profile.build-generic INCLUDES <include> ;
-toolset.flags template-profile.build-generic FILTER <template-profile-filter> ;
-
-actions build-generic {
-    $(INVOCATION-COMMAND) "$(INCLUDE-COMMAND)$(INCLUDES)" "$(>)" 2>&1 | "$(FILTER)" >"$(<)"
-}
+generators.register [ class.new warn-generator msvc.compile.c++.template-profile : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : RAW_TEMPLATE_PROFILE : <toolset>msvc ] ;
+generators.register [ class.new warn-generator gcc.compile.c++.template-profile : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : RAW_TEMPLATE_PROFILE : <toolset>gcc ] ;
 
 class final-profile-generator : generator {
 
@@ -156,5 +168,6 @@ feature.feature <postprocess-binary> : : path incidental ;
 toolset.flags template-profile.process-raw-profile POSTPROCESS-BINARY <postprocess-binary> ;
 
 actions process-raw-profile {
-    "$(POSTPROCESS-BINARY)" <"$(>)" >"$(<)"
+    "$(POSTPROCESS-BINARY)" "$(>)" >"$(<)"
+    echo true
 }

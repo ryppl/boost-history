@@ -1,6 +1,6 @@
 #include <test.hpp>
 
 int main() {
-    X<int> x;
-    X<char> x;
+    X<int> x1;
+    X<char> x2;
 }

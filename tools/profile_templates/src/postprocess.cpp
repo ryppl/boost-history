@@ -1,6 +1,7 @@
 #include <boost/regex.hpp>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <exception>
 #include <iterator>
@@ -39,17 +40,24 @@ struct compare {
     }
 };
 
-int main() {
+int main(int argc, char** argv) {
+    if(argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <input file>\n";
+        return(EXIT_FAILURE);
+    }
     std::map<std::string, int> messages;
     std::string line;
     int total_matches = 0;
     std::ptrdiff_t max_match_length = 0;
-    while(std::getline(std::cin, line)) {
-        boost::smatch match;
-        if(boost::regex_match(line, match, warning_message)) {
-            max_match_length = (std::max)(max_match_length, match[1].length());
-            ++messages[match[1]];
-            ++total_matches;
+    {
+        std::ifstream input(argv[1]);
+        while(std::getline(input, line)) {
+            boost::smatch match;
+            if(boost::regex_match(line, match, warning_message)) {
+                max_match_length = (std::max)(max_match_length, match[1].length());
+                ++messages[match[1]];
+                ++total_matches;
+            }
         }
     }
     std::vector<std::pair<std::string, int> > copy(messages.begin(), messages.end());
