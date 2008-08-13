@@ -11,3 +11,4 @@ project
     ;
 
 exe classroom : classroom.cpp ;
+exe 3d-points-colour : 3d-points-colour.cpp ;
