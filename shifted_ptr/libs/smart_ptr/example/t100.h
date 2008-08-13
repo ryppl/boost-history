@@ -120,7 +120,7 @@ template <neuron_base::sense_t>
                             /**
                                 Learn
                             */
-                            sub_[i - 1].second->exp_.str() = sub_[i - 1].second->exp_.str() + "|" + input;
+                            sub_[i - 1].second->exp_ = sub_[i - 1].second->exp_.str() + "|" + input;
                         }
                     }
                 }
