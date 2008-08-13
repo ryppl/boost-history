@@ -27,40 +27,44 @@ type.register TEMPLATE_PROFILE : template-profile ;
 
 feature.feature <template-profile-toolset> : msvc gcc : free ;
 feature.feature <template-profile-filter> : : path incidental ;
+feature.feature <flat-profile> : on off : incidental propagated ;
+feature.feature <call-graph> : on off : incidental propagated ;
 
-toolset.flags gcc.compile.c++.preprocess INSTRUMENT-ACTION : $(INSTRUMENT-ACTION) : unchecked ;
+rule init-toolset ( toolset ) {
+    toolset.flags $(toolset).compile.c++.preprocess INSTRUMENT-ACTION : $(INSTRUMENT-ACTION) : unchecked ;
+    toolset.flags $(toolset).compile.c++.template-profile FILTER <template-profile-filter> : : unchecked ;
+    toolset.flags $(toolset).compile.c++.template-profile FILTER-OPTIONS <call-graph>on : --call-graph : unchecked ;
+    generators.register-c-compiler $(toolset).compile.c++.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : <toolset>$(toolset) ;
+}
 
 module gcc {
+
+    import template-profile : init-toolset ;
+
+    template-profile.init-toolset gcc ;
 
     actions compile.c++.preprocess {
         $(CONFIG_COMMAND) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -E "$(>)" | $(INSTRUMENT-ACTION) >"$(<)"
     }
 
-    generators.register-c-compiler gcc.compile.c++.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : <toolset>gcc ;
-
     actions compile.c++.template-profile {
-        "$(CONFIG_COMMAND)" $(LANG) -ftemplate-depth-$(TEMPLATE_DEPTH) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -D PROFILE_TEMPLATES -I"$(INCLUDES)" -c "$(>:W)" 2>&1 | "$(FILTER)" >"$(<)"
+        "$(CONFIG_COMMAND)" $(LANG) -ftemplate-depth-$(TEMPLATE_DEPTH) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -D PROFILE_TEMPLATES -I"$(INCLUDES)" -c "$(>:W)" 2>&1 "$(FILTER)" | $(FILTER-OPTIONS) >"$(<)"
     }
-
-    toolset.flags gcc.compile.c++.template-profile FILTER <template-profile-filter> ;
 
 }
 
-toolset.flags msvc.compile.c++.preprocess INSTRUMENT-ACTION : $(INSTRUMENT-ACTION) : unchecked ;
-
 module msvc {
+
+    import template-profile : init-toolset ;
+    template-profile.init-toolset msvc ;
 
     actions compile.c++.preprocess {
         $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -E $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) $(nl)-D$(DEFINES) $(nl)"-I$(INCLUDES:W)")" | $(INSTRUMENT-ACTION) >"$(<[1]:W)"
     }
 
-    generators.register-c-compiler msvc.compile.c++.preprocess : CPP : INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : <toolset>msvc ;
-
     actions compile.c++.template-profile {
-        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -c $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) -W4 $(nl)-D$(DEFINES) -D PROFILE_TEMPLATES $(nl)"-I$(INCLUDES:W)")" 2>&1 | "$(FILTER)" >"$(<)"
+        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -c $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) -W4 $(nl)-D$(DEFINES) -D PROFILE_TEMPLATES $(nl)"-I$(INCLUDES:W)")" 2>&1 | "$(FILTER)" $(FILTER-OPTIONS) >"$(<)"
     }
-
-    toolset.flags msvc.compile.c++.template-profile FILTER <template-profile-filter> ;
 
 }
 
@@ -167,8 +171,8 @@ generators.register [ class.new final-profile-generator ] ;
 feature.feature <postprocess-binary> : : path incidental ;
 
 toolset.flags template-profile.process-raw-profile POSTPROCESS-BINARY <postprocess-binary> ;
+toolset.flags template-profile.process-raw-profile POSTPROCESS-OPTIONS <call-graph>on : --call-graph ;
 
 actions process-raw-profile {
-    "$(POSTPROCESS-BINARY)" "$(>)" >"$(<)"
-    echo true
+    "$(POSTPROCESS-BINARY)" $(POSTPROCESS-OPTIONS) "$(>)" >"$(<)"
 }
