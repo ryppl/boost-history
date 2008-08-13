@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Iterator Concepts for the C++0x Standard Library\\
-(Revision 3)
+(Revision 4)
 \vspace{0.5in}
 
 \normalsize
@@ -59,8 +59,8 @@ Douglas Gregor, Jeremy Siek and Andrew Lumsdaine \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2695=08-0205 \vspace{-6pt}
-\par\noindent Revises document number: N2624=08-0134 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2695=08-0205 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -253,16 +253,9 @@ existing iterators. Indeed, many of the observations that drove this
 refactoring came from implementation experience: the \tcode{operator*}
 ambiguity, for example, was initially detected by ConceptGCC. 
 
-\paragraph*{Changes from N2624}
+\paragraph*{Changes from N2695}
 \begin{itemize}
-\item Removed the \tcode{Mutable} iterator concepts, which no
-  longer make sense, because the C++0x standard library has several
-  different forms of mutability for different classes of algorithms.
-\item Removed the \tcode{BasicOutputIterator} concept, because it is
-  no longer needed as a base for the mutable iterator concepts.
-\item Removed the \tcode{SwappableIterator} concept, which is no
-  longer used in algorithms. Instead, we use \tcode{HasSwap} or the
-  new \tcode{ShuffleIterator} concept.
+\item The \tcode{HasStdMove} concept has moved into Nxxxx, ``Supplemental Concepts for the C++0x Standard Library.''
 \end{itemize}
 
 
@@ -287,47 +280,6 @@ ambiguity, for example, was initially detected by ConceptGCC.
 
 \renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
-
-\setcounter{chapter}{20}
-\rSec1[utility.concepts]{Concepts}
-\editorial{Add to the header \tcode{<concepts>} synopsis at the end of
-the [concept.operator] section} 
-\begin{codeblock}
-auto concept HasComma<typename T, typename U> @\textit{see below}@ ;
-@\addedCC{auto concept HasStdMove<typename T> \mbox{\textit{see below}} ;}
-\end{codeblock}
-
-\setcounter{section}{7}
-\rSec2[concept.operator]{Operator concepts}
-\editorial{Add to the end of [concept.operator]}
-\setcounter{Paras}{42}
-\color{ccadd}
-\begin{itemdecl}
-auto concept HasStdMove<typename T> {
-  typename result_type = typename remove_reference<T>::type&&;
-  result_type std_move(T&& x) { return x; }
-}
-\end{itemdecl}
-\color{black}
-
-\editorial{The \tcode{HasStdMove} concept is required to handle a
-  pecularity with the \tcode{std::move} operation, whose result type
-  is move a simple constructed by like \tcode{T\&\&} but a
-  type metafunction involving \tcode{remove_reference}. Type
-  metafunctions are at odds with concepts, because the former requires
-  precise type information to compute a result (at template instantiation time)
-  while the latter seeks to tie down details without precise types (at
-  template definition time); thus, to accurately characterize the
-  behavior of \tcode{std::move}, we encapsulate its return type in an
-  associated type \tcode{result_type}, so that we can describe
-  requirements on that return type.}
-
-\begin{itemdescr}
-\pnum
-\addedCC{\mbox{\reallynote} describes the behavior of the
-  \mbox{\tcode{std::move}} 
-  operation and encapsulates its result in an associated type.}
-\end{itemdescr}
 
 \setcounter{chapter}{23}
 \rSec0[iterators]{Iterators library}
@@ -362,38 +314,27 @@ as summarized in Table~\ref{tab:iterators.lib.summary}.
 \synopsis{Header \tcode{<iterator_concepts>}\ synopsis}
 \begin{codeblock}
 namespace std {
-  @\addedCC{concept Iterator<typename X> \mbox{\textit{see below}};}@
+  concept Iterator<typename X> @\textit{see below}@;
 
   // \ref{input.iterators}, input iterators:
   concept InputIterator<typename X> @\textit{see below}@;
 
   // \ref{output.iterators}, output iterators:
-  @\addedCC{auto}@ concept OutputIterator<typename X, typename Value> @\textit{see below}@;
-  @\removedCCC{concept BasicOutputIterator<typename X> \mbox{\textit{see below}};}@
-
-  @\removedCCC{template<BasicOutputIterator X, CopyAssignable Value>}@
-    @\removedCCC{requires HasCopyAssign<X::reference, Value>}@
-    @\removedCCC{concept_map OutputIterator<X, Value> \mbox{\textit{see below}};}@
+  auto concept OutputIterator<typename X, typename Value> @\textit{see below}@;
 
   // \ref{forward.iterators}, forward iterators:
   concept ForwardIterator<typename X> @\textit{see below}@;
-  @\removedCCC{concept MutableForwardIterator<typename X> \mbox{\textit{see below}};}@
 
   @\textcolor{addclr}{}@// \ref{bidirectional.iterators}, bidirectional iterators:
   concept BidirectionalIterator<typename X> @\textit{see below}@;
-  @\removedCCC{concept MutableBidirectionalIterator<typename X> \mbox{\textit{see below}};}@
 
   // \ref{random.access.iterators}, random access iterators:
   concept RandomAccessIterator<typename X> @\textit{see below}@;
-  @\removedCCC{concept MutableRandomAccessIterator<typename X> \mbox{\textit{see below}};}@
-  template<ObjectType T> concept_map @\removedCCC{Mutable}@RandomAccessIterator<T*> @\textit{see below}@;
+  template<ObjectType T> concept_map RandomAccessIterator<T*> @\textit{see below}@;
   template<ObjectType T> concept_map RandomAccessIterator<const T*> @\textit{see below}@;
 
-  @\removedCCC{// \mbox{\ref{swappable.iterators}}, swappable iterators:}@
-  @\removedCCC{concept SwappableIterator<typename X> \mbox{\textit{see below}};}@
-
-  @\addedCC{// \mbox{\ref{shuffle.iterators}}, shuffle iterators:}@
-  @\addedCC{auto concept ShuffleIterator<typename X> \mbox{\textit{see below}};}@
+  @\addedConcepts{// \mbox{\ref{shuffle.iterators}}, shuffle iterators:}@
+  auto concept ShuffleIterator<typename X> @\textit{see below}@;
 }
 \end{codeblock}
 \color{black}
@@ -405,7 +346,7 @@ Iterators are a generalization of pointers that allow a \Cpp\ program to work wi
 To be able to construct template algorithms that work correctly and
 efficiently on different types of data structures, the library formalizes not just the interfaces but also the
 semantics and complexity assumptions of iterators.
-\addedCC{All iterators meet the requirements of the
+\addedConcepts{All iterators meet the requirements of the
   \mbox{\tcode{Iterator}} concept.}
 All input iterators
 \tcode{i}\
@@ -447,39 +388,36 @@ function template
 that takes iterators
 works as well with regular pointers.
 This International Standard defines
-\changedCCC{nine iterator concepts}{several iterator concepts}, according to the operations
+\changedConcepts{five categories of iterators}{several iterator concepts}, according to the operations
 defined on them:
 \techterm{input iterators},
 \techterm{output iterators},
 \techterm{forward iterators}, 
-\techterm{bidirectional iterators}, 
-\techterm{random access iterators}, and
-\addedCC{shuffle iterators},
+\techterm{bidirectional iterators}, \removedConcepts{and}
+\techterm{random access iterators}\addedConcepts{,} 
+\addedConcepts{and shuffle iterators},
 as shown in Table~\ref{tab:iterators.relations}.
 
 \begin{floattable}{Relations among iterator \changedConcepts{categories}{concepts}}{tab:iterators.relations}
 {ccccc}
 \topline
 \textbf{Random Access}                  &       $\rightarrow$ \textbf{Bidirectional}    &
-$\rightarrow$ \textbf{Forward}  &       $\rightarrow$ \textbf{Input}  & \addedCC{\mbox{$\rightarrow$} \mbox{\textbf{Iterator}}}                   \\ 
- &  &  & \addedCC{\mbox{$\uparrow$}} & \addedCC{\mbox{$\uparrow$}} \\
-   &        &     & \addedCC{\mbox{\textbf{Shuffle}}} &   \addedCC{\mbox{$\rightarrow$}} \textbf{Output}                   \\
+$\rightarrow$ \textbf{Forward}  &       $\rightarrow$ \textbf{Input}  & \addedConcepts{\mbox{$\rightarrow$} \mbox{\textbf{Iterator}}}                   \\ 
+ &  &  & \addedConcepts{\mbox{$\uparrow$}} & \addedConcepts{\mbox{$\uparrow$}} \\
+   &        &     & \addedConcepts{\mbox{\textbf{Shuffle}}} &   \addedConcepts{\mbox{$\rightarrow$}} \textbf{Output}                   \\
 \end{floattable}
 
 \pnum
 Forward iterators satisfy all the requirements of the input
 \removedConcepts{and output} iterators and can be used whenever 
 \changedConcepts{either kind}{an input iterator} is specified.
-\removedCCC{Mutable forward iterators satisfy all the requirements
-  of forward and output iterators, an can be used whenever either kind
-is specified}.
 Bidirectional iterators also satisfy all the requirements of the
 forward iterators and can be used whenever a forward iterator is specified.
 Random access iterators also satisfy all the requirements of bidirectional
 iterators and can be used whenever a bidirectional iterator is specified.
 
 \pnum
-\changedCC{
+\changedConcepts{
 Besides its category, a forward, bidirectional, or random access iterator
 can also be
 mutable
@@ -631,7 +569,7 @@ concept Iterator<typename X> : Semiregular<X> {
 \color{black}
 
 \pnum
-\addedCC{The \mbox{\tcode{Iterator}} concept forms the basis of the
+\addedConcepts{The \mbox{\tcode{Iterator}} concept forms the basis of the
   iterator concept taxonomy, and every iterator meets the requirements
   of the \mbox{\tcode{Iterator}} concept. This concept specifies
   operations for dereferencing and incrementing the iterator, but
@@ -679,9 +617,8 @@ requirements of the }\addedConcepts{\tt InputIterator}\addedConcepts{ concept.}
 
 \color{addclr}
 \begin{codeblock}
-concept InputIterator<typename X> : @\changedCCC{Semiregular}{Iterator}@<X>, EqualityComparable<X> {
+concept InputIterator<typename X> : Iterator<X>, EqualityComparable<X> {
   ObjectType value_type = typename X::value_type;
-  @\removedCCC{MoveConstructible reference = typename X::reference;}@
   MoveConstructible pointer = typename X::pointer;
 
   SignedIntegralLike difference_type = typename X::difference_type;
@@ -690,14 +627,9 @@ concept InputIterator<typename X> : @\changedCCC{Semiregular}{Iterator}@<X>, Equ
         && Convertible<reference, const value_type &>;
         @\textcolor{addclr}{}@&& Convertible<pointer, const value_type*>;
 
-  @\removedCCC{MoveConstructible postincrement_result;}@
-  requires @\removedCCC{Dereferenceable<postincrement_result> \&\&}@
-           Convertible<Dereferenceable<postincrement_result>::reference, @\addedCC{const}@ value_type@\addedCC{\&}@>;
+  requires Convertible<Dereferenceable<postincrement_result>::reference, const value_type&>;
 
-  @\removedCCC{reference operator*(const X\&);}@
   pointer operator->(const X&);
-  @\removedCCC{X\& operator++(X\&);}@
-  @\removedCCC{postincrement_result operator++(X\&, int);}@
 }
 \end{codeblock}
 \color{black}
@@ -753,7 +685,7 @@ class.
 
 \color{addclr}
 \begin{itemdecl}
-reference operator*(@\removedCCC{const}@ X&@\addedCC{\&}@ @\farg{a}@); @\addedCC{// inherited from Iterator<X>}@
+reference operator*(X&& @\farg{a}@); // inherited from Iterator<X>
 \end{itemdecl}
 
 \pnum
@@ -819,7 +751,7 @@ if
 is a CopyConstructible (20.1.3)
 and Assignable type (23.1) and also
 the following expressions are
-valid, as shown in Table~96}{meets the syntactic and semantic requirements of the \mbox{\tcode{OutputIterator}}} \removedCCC{or \mbox{\tcode{BasicOutputIterator}}} \addedConcepts{concept}\removedCCC{s}\addedConcepts{.}
+valid, as shown in Table~96}{meets the syntactic and semantic requirements of the \mbox{\tcode{OutputIterator}} concept.}
 
 \eremove{Remove Table 97: Output iterator requirements}
 
@@ -846,45 +778,33 @@ may permit output of many different value types.
 
 \color{addclr}
 \begin{itemdecl}
-@\addedCC{auto}@ concept OutputIterator<typename X, typename Value> @\removedCCC{: CopyConstructible<X>}@ {
-  @\addedCC{requires Iterator<X>;}@
+auto concept OutputIterator<typename X, typename Value> {
+  requires Iterator<X>;
 
-  typename reference@\addedCC{ = Iterator<X>::reference}@;
-  typename postincrement_result@\addedCC{ = Iterator<X>::postincrement_result}@;
-  @\removedCCC{requires HasCopyAssign<reference, Value> \&\& CopyAssignable<Value>;}@
-  requires @\removedCCC{Dereferenceable<postincrement_result>}@
-           @\addedCC{SameType<reference, Iterator<X>::reference>}@
-        @\addedCC{\&\& SameType<postincrement_result, Iterator<X>::postincrement_result>}@
+  typename reference = Iterator<X>::reference;
+  typename postincrement_result = Iterator<X>::postincrement_result;
+  requires SameType<reference, Iterator<X>::reference>
+        && SameType<postincrement_result, Iterator<X>::postincrement_result>
         && Convertible<postincrement_result, const X&>
-        @\addedCC{\&\& HasAssign<reference, Value>}@
-        && Has@\removedCCC{Copy}@Assign<Dereferenceable<postincrement_result>::reference, Value>;
-
-  @\removedCCC{reference operator*(X\&);}@
-  @\removedCCC{X\& operator++(X\&);}@
-  @\removedCCC{postincrement_result operator++(X\&, int);}@
+        && HasAssign<reference, Value>
+        && HasAssign<Dereferenceable<postincrement_result>::reference, Value>;
 }
 \end{itemdecl}
 \color{black}
 
 \pnum
-\addedCC{\enternote\ Any iterator that meets the additional requirements
+\addedConcepts{\enternote\ Any iterator that meets the additional requirements
   specified by \mbox{\tcode{OutputIterator}} for a given
   \mbox{\tcode{Value}} type is considered an output iterator. \exitnote}
 
 \color{addclr}
 \begin{itemdecl}
-X& operator++(X& r); @\addedCC{// from Iterator<X>}@
+X& operator++(X& r); // from Iterator<X>
 \end{itemdecl}
 
 \pnum
 \addedConcepts{\mbox{\postcondition}
 \mbox{\tcode{\&\farg{r} == \&++\farg{r}}}}
-
-\pnum
-\removedCCC{The \mbox{\tcode{BasicOutputIterator}} concept describes an output iterator
-that has one, fixed value type. Unlike \mbox{\tcode{OutputIterator}},
-\mbox{\tcode{BasicOutputIterator}} is a part of the iterator refinement
-hierarchy.}
 
 \color{black}
 
@@ -896,8 +816,7 @@ A class or a built-in type
 satisfies the requirements of a forward iterator if 
 \changedConcepts{the following expressions are
 valid, as shown in Table~97.}{it meets the syntactic and semantic
-requirements of the ForwardIterator} \removedCCC{or
-MutableForwardIterator concepts.}\addedCC{concept.}
+requirements of the ForwardIterator concept.}
 
 \eremove{Remove Table 98: Forward iterator requirements.}
 
@@ -909,7 +828,6 @@ concept ForwardIterator<typename X> : InputIterator<X>, Regular<X> {
   axiom MultiPass(X a, X b) {
     if (a == b) *a == *b;
     if (a == b) ++a == ++b;
-    @\removedCCC{\&a == \&++a;}@
   }
 }
 \end{itemdecl}
@@ -950,12 +868,12 @@ allows the use of multi-pass one-directional algorithms with forward iterators.
 \exitnote\ 
 
 \begin{itemdecl}
-@\addedCC{X\& operator++(X\& r); // inherited from InputIterator<X>}@
+X& operator++(X& r); // inherited from InputIterator<X>
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\postcondition} \mbox{\tcode{\&r == \&++r}}.}
+\addedConcepts{\mbox{\postcondition} \mbox{\tcode{\&r == \&++r}}.}
 \end{itemdescr}
 
 \rSec2[bidirectional.iterators]{Bidirectional iterators}
@@ -969,7 +887,7 @@ in addition to satisfying the requirements for forward iterators,
 the following expressions are valid as shown in
 Table~98.}{it meets the
 syntactic and semantic requirements of the
-BidirectionalIterator} \changedCCC{or MutableBidirectionalIterator concepts.}{concept.}
+BidirectionalIterator concept.}
 
 \eremove{Remove Table 99: Bidirectional iterator requirements.}
 
@@ -977,9 +895,9 @@ BidirectionalIterator} \changedCCC{or MutableBidirectionalIterator concepts.}{co
 \begin{itemdecl}
 concept BidirectionalIterator<typename X> : ForwardIterator<X> {
   MoveConstructible postdecrement_result;
-  requires Dereferenceable<postdecrement_result> &&
-           Convertible<Dereferenceable<postdecrement_result>::reference, @\addedCC{const}@ value_type@\addedCC{\&}@> &&
-           Convertible<postdecrement_result, const X&>;
+  requires Dereferenceable<postdecrement_result>
+        &&   Convertible<Dereferenceable<postdecrement_result>::reference, const value_type&>
+        &&   Convertible<postdecrement_result, const X&>;
 
   X& operator--(X&);
   postdecrement_result operator--(X&, int);
@@ -987,7 +905,6 @@ concept BidirectionalIterator<typename X> : ForwardIterator<X> {
   axiom BackwardTraversal(X a, X b) {
     --(++a) == a;
     if (--a == --b) a == b;
-    @\removedCCC{\&a == \&--a;}@
   }
 }
 \end{itemdecl}
@@ -1010,7 +927,7 @@ there exists \mbox{\tcode{s}} such that \mbox{\tcode{r == ++s}}.}
 \pnum
 \addedConcepts{\mbox{\postcondition}
 \mbox{\tcode{r}} is dereferenceable.}
-\addedCC{\mbox{\tcode{\&r == \&{-}{-}r}}.}
+\addedConcepts{\mbox{\tcode{\&r == \&{-}{-}r}}.}
 
 \begin{itemdecl}
 postdecrement_result operator--(X& r, int);
@@ -1036,20 +953,19 @@ satisfies the requirements of a random access iterator if
 in addition to satisfying the requirements for bidirectional iterators,
 the following expressions are valid as shown in Table~99.}
 {it meets the syntactic and semantic requirements of the
-\mbox{\tcode{RandomAccessIterator}}} 
-\changedCCC{or \mbox{\tcode{MutableRandomAccessIterator}} concepts.}{concept.}
+\mbox{\tcode{RandomAccessIterator}} concept.}
 
 \color{addclr}
 \begin{itemdecl}
 concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanComparable<X> {
   X& operator+=(X&, difference_type);
-  X  operator+ (const X& x, difference_type n) @\addedCC{\{ X tmp(x); x += n; return x; \}}@
-  X  operator+ (difference_type n, const X& x) @\addedCC{\{ X tmp(x); x += n; return x; \}}@
+  X  operator+ (const X& x, difference_type n) { X tmp(x); x += n; return x; }
+  X  operator+ (difference_type n, const X& x) { X tmp(x); x += n; return x; }
   X& operator-=(X&, difference_type);
-  X  operator- (const X& x, difference_type n) @\addedCC{\{ X tmp(x); x -= n; return x; \}}@
+  X  operator- (const X& x, difference_type n) { X tmp(x); x -= n; return x; }
 
   difference_type operator-(const X&, const X&);
-  reference operator[](const X& x, difference_type n) @\addedCC{\{ return *(x + n); \}}@
+  reference operator[](const X& x, difference_type n) { return *(x + n); }
 }
 \end{itemdecl}
 \color{black}
@@ -1126,15 +1042,14 @@ there exists a value \mbox{\tcode{n}} of \mbox{\tcode{difference_type}}
 \mbox{\tcode{(a < b) ? distance(a,b) : -distance(b,a)}}}
 
 \pnum
-\addedConcepts{Pointers are} \removedCCC{mutable}
-\addedConcepts{random access iterators with the following
+\addedConcepts{Pointers are random access iterators with the following
 concept map}
 
 \begin{codeblock}
 namespace std {
-  template<ObjectType T> concept_map @\removedCCC{Mutable}@RandomAccessIterator<T*> {
+  template<ObjectType T> concept_map RandomAccessIterator<T*> {
     typedef T value_type;
-    typedef @\removedCC{std::}@ptrdiff_t difference_type;
+    typedef ptrdiff_t difference_type;
     typedef T& reference;
     typedef T* pointer;
   }
@@ -1147,7 +1062,7 @@ namespace std {
 namespace std {
   template<ObjectType T> concept_map RandomAccessIterator<const T*> {
     typedef T value_type;
-    typedef @\removedCC{std::}@ptrdiff_t difference_type;
+    typedef ptrdiff_t difference_type;
     typedef const T& reference;
     typedef const T* pointer;
   }
@@ -1166,7 +1081,7 @@ an implementation may define}
 
 \color{addclr}
 \begin{codeblock}
-  template <ObjectType T> concept_map @\removedCCC{Mutable}@RandomAccessIterator<T @\xname{far}@*> {
+  template <ObjectType T> concept_map RandomAccessIterator<T @\xname{far}@*> {
     typedef long difference_type;
     typedef T value_type;
     typedef T @\xname{far}@* pointer;
@@ -1185,7 +1100,7 @@ an implementation may define}
 
 \rSec2[shuffle.iterators]{Shuffle iterators}
 \pnum
-\addedCC{A class or built-in type \mbox{\tcode{X}} satisfies the
+\addedConcepts{A class or built-in type \mbox{\tcode{X}} satisfies the
   requirements of a shuffle iterator if it meets the syntactic and
   semantic requirements of the \mbox{\tcode{ShuffleIterator}} concept.}
 
@@ -1208,7 +1123,7 @@ auto concept ShuffleIterator<typename X> {
 \color{black}
 
 \pnum
-\addedCC{A shuffle iterator is a form of input and output iterator
+\addedConcepts{A shuffle iterator is a form of input and output iterator
   that allows values to be moved into or out of a sequence, along with
   permitting efficient swapping of values within the sequence. Shuffle
   iterators are typically used in algorithms that need to rearrange
@@ -1216,7 +1131,7 @@ auto concept ShuffleIterator<typename X> {
   efficiently with swaps alone.}
 
 \pnum
-\addedCC{\enternote\ Any iterator that meets the additional requirements
+\addedConcepts{\enternote\ Any iterator that meets the additional requirements
   specified by \mbox{\tcode{ShuffleIterator}} is considered a shuffle
   iterator. \exitnote}
 
@@ -1287,7 +1202,7 @@ respectively. \removedConcepts{In the case of an output iterator, the types}
 
 \setcounter{Paras}{5}
 \pnum
-\addedCC{For each iterator category, a partial specializations of the
+\addedConcepts{For each iterator category, a partial specializations of the
   \mbox{\tcode{iterator_traits}} class template provide appropriate
   type definitions for programs that use the deprecated iterator
   traits mechanism. These partial specializations provide backward
@@ -1447,8 +1362,7 @@ are given the same values as their counterparts in
 
 \pnum
 \color{addclr}
-\changedCCC{These concept maps shall only be defined when}{When}
-\addedConcepts{ the 
+\addedConcepts{When the 
 \mbox{\tcode{iterator_traits}}
 specialization contains the nested types 
 \mbox{\tcode{difference_type}},
@@ -1456,17 +1370,15 @@ specialization contains the nested types
 \mbox{\tcode{pointer}},
 \mbox{\tcode{reference}}
 and
-\mbox{\tcode{iterator_category}}}\addedCC{, the
-\mbox{\tcode{iterator_traits}} specialization is considered to be \mbox{\techterm{valid}}}\addedConcepts{.}
+\mbox{\tcode{iterator_category}}, the
+\mbox{\tcode{iterator_traits}} specialization is considered to be \mbox{\techterm{valid}}.}
 
 \addedConcepts{\enterexample}
 \addedConcepts{The following example is well-formed. The backward-compatbility
 concept map for \mbox{\tcode{InputIterator}} does not match because
-\mbox{\tcode{iterator_traits<int>}}}
-\changedCCC{fails to provide the required nested
-types}{is not valid}\addedConcepts{.}
+\mbox{\tcode{iterator_traits<int>}} is not valid.}
 \begin{codeblock}
-@\color{addclr}@template<@\changedCCC{Integral}{IntegralLike}@ T> void f(T);
+@\color{addclr}@template<IntegralLike T> void f(T);
 template<InputIterator T> void f(T);
 
 void g(int x) {
@@ -1478,52 +1390,48 @@ void g(int x) {
 \pnum
 \addedConcepts{The library shall provide a concept map
 \mbox{\tcode{Iterator<Iter>}}
-for any type \mbox{\tcode{Iter}} with}
-\addedCC{a valid \mbox{\tcode{iterator_traits<Iter>}}, an}
+for any type \mbox{\tcode{Iter}} with a valid \mbox{\tcode{iterator_traits<Iter>}}, an
 \mbox{\tcode{iterator_traits<Iter>::it\-er\-a\-tor_ca\-te\-go\-ry}}
 convertible to 
-\mbox{\tcode{output_iterator_tag}}\addedCC{, and that meets the
+\mbox{\tcode{output_iterator_tag}}, and that meets the
   syntactic requirements of the \mbox{\tcode{Iterator}}
-  concept}\addedConcepts{.} 
+  concept.} 
 
 \pnum
 \addedConcepts{The library shall provide a concept map
 \mbox{\tcode{InputIterator<Iter>}}
-for any type \mbox{\tcode{Iter}} with}
-\addedCC{a valid \mbox{\tcode{iterator_traits<Iter>}}, an}
-\addedConcepts{\mbox{\tcode{iterator_traits<Iter>::it\-er\-a\-tor_ca\-te\-go\-ry}} convertible to
-\mbox{\tcode{input_iterator_tag}}}\addedCC{, and that meets the
-syntactic requirements of the \mbox{\tcode{InputIterator}} concept}\addedConcepts{.}
+for any type \mbox{\tcode{Iter}} with a valid \mbox{\tcode{iterator_traits<Iter>}}, an \mbox{\tcode{iterator_traits<Iter>::it\-er\-a\-tor_ca\-te\-go\-ry}} convertible to
+\mbox{\tcode{input_iterator_tag}}, and that meets the
+syntactic requirements of the \mbox{\tcode{InputIterator}} concept.}
 
 \pnum
 \addedConcepts{The library shall provide a concept map
 \mbox{\tcode{ForwardIterator<Iter>}}
-for any type \mbox{\tcode{Iter}} with} \addedCC{a valid}
-\\\addedCC{\mbox{\tcode{iterator_traits<Iter>}}, an}
-\addedConcepts{\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
-convertible to}
-\\\addedConcepts{\mbox{\tcode{forward_iterator_tag}}}\addedCC{, and that meets the
-syntactic requirements of the \mbox{\tcode{ForwardIterator}} concept}\addedConcepts{.}
+for any type \mbox{\tcode{Iter}} with a valid
+\mbox{\tcode{iterator_traits<Iter>}}, an \mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to
+\mbox{\tcode{forward_iterator_tag}}, and that meets the
+syntactic requirements of the \mbox{\tcode{ForwardIterator}} concept.}
 
 \pnum
 \addedConcepts{The library shall provide a concept map
 \mbox{\tcode{BidirectionalIterator<Iter>}}
-for any type \mbox{\tcode{Iter}} with} \addedCC{a valid}
-\\\addedCC{\mbox{\tcode{iterator_traits<Iter>}}, an}
-\addedConcepts{\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
-convertible to}
-\\\addedConcepts{\mbox{\tcode{bidirectional_iterator_tag}}}\addedCC{, and that meets the
-syntactic requirements of the \mbox{\tcode{BidirectionalIterator}} concept}\addedConcepts{.}
+for any type \mbox{\tcode{Iter}} with a valid
+\mbox{\tcode{iterator_traits<Iter>}}, an
+\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to
+\mbox{\tcode{bidirectional_iterator_tag}}, and that meets the
+syntactic requirements of the \mbox{\tcode{BidirectionalIterator}} concept.}
 
 \pnum
 \addedConcepts{The library shall provide a concept map
 \mbox{\tcode{RandomAccessIterator<Iter>}}
-for any type \mbox{\tcode{Iter}} with} \addedCC{a valid}
-\\\addedCC{\mbox{\tcode{iterator_traits<Iter>}}, an}
-\addedConcepts{\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
-convertible to}
-\\\addedConcepts{\mbox{\tcode{random_access_iterator_tag}}}\addedCC{, and that meets the
-syntactic requirements of the \mbox{\tcode{RandomAccessIterator}} concept}\addedConcepts{.}
+for any type \mbox{\tcode{Iter}} with a valid
+\mbox{\tcode{iterator_traits<Iter>}}, an
+\mbox{\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}}
+convertible to
+\mbox{\tcode{random_access_iterator_tag}}, and that meets the
+syntactic requirements of the \mbox{\tcode{RandomAccessIterator}} concept.}
 
 \section*{Acknowledgments}
 Thanks to Beman Dawes for alerting us to omissions from the iterator
