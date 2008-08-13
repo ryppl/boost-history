@@ -18,12 +18,11 @@
 
 #include <boost/coding_fwd.hpp>
 
-#include <boost/assert.hpp>                // for BOOST_ASSERT
-#include <boost/mpl/bool.hpp>              // for boost::mpl::bool_
-#include <boost/mpl/if.hpp>                // for boost::mpl::if_
-#include <boost/mpl/int.hpp>               // for boost::mpl::int_
-#include <boost/serialization/access.hpp>  // for boost::serialization::access
-#include <boost/typeof/typeof.hpp>         // for BOOST_AUTO
+#include <boost/assert.hpp>         // for BOOST_ASSERT
+#include <boost/mpl/bool.hpp>       // for boost::mpl::bool_
+#include <boost/mpl/if.hpp>         // for boost::mpl::if_
+#include <boost/mpl/int.hpp>        // for boost::mpl::int_
+#include <boost/typeof/typeof.hpp>  // for BOOST_AUTO
 
 #include <algorithm>  // for std::copy, equal
 #include <climits>    // for CHAR_BIT
@@ -64,7 +63,6 @@ namespace coding
                            - a (<code>const</code>) member <code>operator
                              ()</code> that takes nothing and returns a
                              \c product_type value.
-                           - serialization (through Boost.Serialization).
  */
 template < class ByteProcessor >
 class byte_coding_shell
@@ -150,15 +148,6 @@ public:
 
     //! Application
     value_type  operator ()() const;//@}  // remove?
-
-private:
-    /*! \name Persistence */ //@{
-    // Serialization
-    friend class boost::serialization::access;
-
-    //! Enables persistence with Boost.Serialization-compatible archives
-    template < class Archive >
-    void  serialize( Archive &ar, const unsigned int version );//@}  // not defined yet
 
 };  // byte_coding_shell
 
@@ -366,7 +355,6 @@ byte_coding_shell<ByteProcessor>::operator ()() const
                           - a (<code>const</code>) member <code>operator
                             ()</code> that takes nothing and returns a
                             \c product_type value.
-                          - serialization (through Boost.Serialization).
     \tparam BigEndian     The order the bits within a byte are processed.  If
                           \c true, the most-significant bit of the byte is
                           processed first, going down to the least-significant
@@ -428,14 +416,6 @@ public:
     product_type  operator ()() const;//@}
 
 private:
-    /*! \name Persistence */ //@{
-    // Serialization
-    friend class boost::serialization::access;
-
-    //! Enables persistence with Boost.Serialization-compatible archives
-    template < class Archive >
-    void  serialize( Archive &ar, const unsigned int version );//@}  // not defined yet
-
     // Bit-loop implementation
     void  consume_bits( unsigned char byte, int amount )
     {
@@ -485,7 +465,7 @@ bit_to_byte_processor<BitProcessor, BigEndian>::bit_to_byte_processor
 
     \post  Calls <code>this-&gt;inner( <var>x</var> )</code> \c CHAR_BIT times,
            with \p x iterating from either the highest-order bit (if
-           \c #reads_start_highest is \c true) or lowest-order bit (if \c false)
+           \c #read_from_highest is \c true) or lowest-order bit (if \c false)
            towards, and including, the opposite-order bit.
  */
 template < class BitProcessor, bool BigEndian >
@@ -566,7 +546,6 @@ bit_to_byte_processor<BitProcessor, BigEndian>::operator ()() const
                           - a (<code>const</code>) member <code>operator
                             ()</code> that takes nothing and returns a
                             \c product_type value.
-                          - serialization (through Boost.Serialization).
     \tparam BigEndian     The order the bits within a byte are processed.  If
                           \c true, the most-significant bit of the byte is
                           processed first, going down to the least-significant
@@ -638,14 +617,14 @@ public:
         algorithms that return updated function objects to work.
 
         \todo  The current implementation stores a reference pointer to
-               \c #bytes' wrapped engine, but copies of this sub-object will
-               allocate (with regular <code>operator new</code>) independent
-               copies of that engine.  This will cause throws/crashes in
-               situations when default memory allocation is full or disabled.
-               (And there's no choice for an alternate allocation scheme.)
-               Maybe a <code>boost::variant&lt; BitProcessor *, BitProcessor
-               &gt;</code> can be used, but it has its own complicated storage
-               issues, especially during assignment.
+               \c byte_coding_shell::bytes' wrapped engine, but copies of this
+               sub-object will allocate (with regular <code>operator new</code>)
+               independent copies of that engine.  This will cause throws or
+               crashes in situations when default memory allocation is full or
+               disabled.  (And there's no choice for an alternate allocation
+               scheme.)  Maybe a <code>boost::variant&lt; BitProcessor *,
+               BitProcessor &gt;</code> can be used, but it has its own
+               complicated storage issues, especially during assignment.
      */
     applicator  bits;
 
@@ -675,15 +654,6 @@ public:
     // Operators
     //! Copy-assignment
     self_type &  operator =( self_type const &c );
-
-private:
-    /*! \name Persistence */ //@{
-    // Serialization
-    friend class boost::serialization::access;
-
-    //! Enables persistence with Boost.Serialization-compatible archives
-    template < class Archive >
-    void  serialize( Archive &ar, const unsigned int version );//@}  // not defined yet
 
 };  // bit_coding_shell
 
@@ -767,9 +737,9 @@ bit_coding_shell<BitProcessor, BigEndian>::process_bit( bool bit )
 
     \post  Calls <code>this-&gt;bits( <var>x</var> )</code> \p bit_count times,
            with \p x iterating from either the 2<sup><var>bit_count</var> -
-           1</sup>-place (if \c #reads_start_highest is \c true) or the
-           ones-place (if \c false) towards, and including, the other mentioned
-           bit.  (If \p bit_count is zero, no calls are made.)
+           1</sup>-place (if \c #read_from_highest is \c true) or the ones-place
+           (if \c false) towards, and including, the other mentioned bit.  (If
+           \p bit_count is zero, no calls are made.)
  */
 template < class BitProcessor, bool BigEndian >
 inline void

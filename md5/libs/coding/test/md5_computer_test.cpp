@@ -15,9 +15,32 @@
 #include <boost/lexical_cast.hpp>    // for boost::lexical_cast
 #include <boost/test/unit_test.hpp>  // unit testing framework
 
+#include <boost/archive/xml_iarchive.hpp>  // for boost::archive::xml_iarchive
+#include <boost/archive/xml_oarchive.hpp>  // for boost::archive::xml_oarchive
+#include <boost/serialization/nvp.hpp>     // for boost::serialization::make_nvp
+
 #include <algorithm>  // for std::reverse, for_each
 #include <climits>    // for CHAR_BIT
 #include <cstddef>    // for std::size_t
+#include <iostream>   // for std::cout
+#include <istream>    // for std::basic_istream
+#include <ostream>    // for std::endl, basic_ostream
+#include <sstream>    // for std::stringstream
+
+
+// Control if XML code will be printed conventionally, or just logged.
+#ifndef CONTROL_SHOW_XML
+#define CONTROL_SHOW_XML  0
+#endif
+
+// Logging
+#if CONTROL_SHOW_XML
+#define PRIVATE_SHOW_MESSAGE( m )  std::cout << m << std::endl
+#else
+#define PRIVATE_SHOW_MESSAGE( m )  BOOST_TEST_MESSAGE( m )
+#endif
+
+BOOST_TEST_DONT_PRINT_LOG_VALUE( boost::coding::md5_computer );
 
 
 #pragma mark Intro stuff
@@ -43,6 +66,26 @@ md5_computer::buffer_type const  md5_empty = { {0xD98C1DD4ul, 0x04B2008Ful,
 // Sample MD values
 md5_digest const  md5_empty_data = { {0xD98C1DD4ul, 0x04B2008Ful, 0x980980E9ul,
  0x7E42F8ECul} };  // see md5_empty
+
+// Completely read an archive from a stream
+template < typename Ch, class Tr, typename T >
+void  read_xml_archive( std::basic_istream<Ch, Tr> &i, T &target, char const
+ *name )
+{
+    boost::archive::xml_iarchive  ar( i );
+
+    ar >> boost::serialization::make_nvp( name, target );
+}
+
+// Completely write an archive to a stream
+template < typename Ch, class Tr, typename T >
+void  write_xml_archive( std::basic_ostream<Ch, Tr> &o, T const &target, char
+ const *name )
+{
+    boost::archive::xml_oarchive  ar( o );
+
+    ar << boost::serialization::make_nvp( name, target );
+}
 
 }  // unnamed namespace
 
@@ -544,15 +587,100 @@ BOOST_AUTO_TEST_CASE( md5_computer_byte_input_test )
     BOOST_CHECK( c4 == c3 );
 }
 
-// Output archiving test
-//BOOST_AUTO_TEST_CASE( md5_computer_output_test )
-//{
-//}
+// Archiving test
+BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
+{
+    // Make differing computers, to compare/contrast against a test computer
+    md5_computer  c1, c2;
 
-// Input archiving test
-//BOOST_AUTO_TEST_CASE( md5_computer_input_test )
-//{
-//}
+    c2.bits( true );
+    BOOST_REQUIRE_NE( c1, c2 );
+
+    md5_computer  test = c2;
+
+    BOOST_REQUIRE_NE( test, c1 );
+    BOOST_REQUIRE_EQUAL( test, c2 );
+
+    // Write to an archive
+    std::stringstream  ss;
+    write_xml_archive( ss, test, "test" );
+
+    // Reset the test computer to ensure reading works
+    test.reset();
+    BOOST_REQUIRE_EQUAL( test, c1 );
+    BOOST_REQUIRE_NE( test, c2 );
+
+    // Read from an archive
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+
+    // Confirm the change and proper read-back
+    BOOST_CHECK_NE( test, c1 );
+    BOOST_CHECK_EQUAL( test, c2 );
+
+    // Do tests again, but use exactly 6 bits total
+    c2.process_bits( 0x0Au, 5u );
+    BOOST_REQUIRE_EQUAL( c2.bits_read(), 6u );
+
+    test.assign( c2 );
+    ss.str( "" );
+    write_xml_archive( ss, test, "test" );
+    test.reset();
+    BOOST_REQUIRE_NE( test, c2 );
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+    BOOST_CHECK_EQUAL( test, c2 );
+
+    // Now try whole and partial bit-sextets
+    c2.process_octet( 66 );  // 'B' in ASCII
+    BOOST_REQUIRE_EQUAL( c2.bits_read(), 14u );
+
+    test.assign( c2 );
+    ss.str( "" );
+    write_xml_archive( ss, test, "test" );
+    test.reset();
+    BOOST_REQUIRE_NE( test, c2 );
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+    BOOST_CHECK_EQUAL( test, c2 );
+
+    // Rig a result that gives all the Base-64 (URL style) characters, plus fill
+    // the queue to just below full.  (Full would immediately reset the queue to
+    // empty.)  That way, the last character should contain extra bits that
+    // definately shouldn't be copied down.  (It would lead to an access error.)
+    int const  block_size = md5_computer::bits_per_block::value;
+    BOOST_REQUIRE_NE( (block_size - 1) % 6, 0 );
+    BOOST_REQUIRE_GE( 6 - (block_size - 1) % 6, 3 );
+
+    c2.reset();
+    for ( int  i = 0 ; i < 64 ; ++i )  c2.process_bits( i, 6 );
+    c2.process_bit_copies( false, (block_size - 1 - c2.bits_read()) / 2 );
+    c2.process_bit_copies( true, block_size - 1 - c2.bits_read() );
+    BOOST_REQUIRE_EQUAL( c2.bits_read(), block_size - 1 );
+
+    test.assign( c2 );
+    ss.str( "" );
+    write_xml_archive( ss, test, "test" );
+    test.reset();
+    BOOST_REQUIRE_NE( test, c2 );
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+    BOOST_CHECK_EQUAL( test, c2 );
+
+    // Now turn over the queue, hopefully see an empty string
+    c2.process_bit( false );
+    BOOST_REQUIRE_EQUAL( c2.bits_read(), block_size );
+    BOOST_REQUIRE_EQUAL( c2.bits_unbuffered(), 0u );
+
+    test.assign( c2 );
+    ss.str( "" );
+    write_xml_archive( ss, test, "test" );
+    test.reset();
+    BOOST_REQUIRE_NE( test, c2 );
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+    BOOST_CHECK_EQUAL( test, c2 );
+}
 
 // Single-call function test
 BOOST_AUTO_TEST_CASE( compute_md5_test )

@@ -21,6 +21,7 @@
 
 #include <boost/array.hpp>                  // for boost::array
 #include <boost/assert.hpp>                 // for BOOST_ASSERT
+#include <boost/bimap.hpp>                  // for boost::bimap
 #include <boost/integer/integer_mask.hpp>   // for boost::integer_lo_mask
 #include <boost/limits.hpp>                 // for std::numeric_limits
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
@@ -30,6 +31,7 @@
 #include <cmath>      // for std::sin, abs, ldexp, modf
 #include <cstddef>    // for std::size_t
 #include <numeric>    // for std::inner_product, partial_sum
+#include <string>     // for std::string
 #include <valarray>   // for std::valarray, etc.
 
 
@@ -172,6 +174,34 @@ skipped_indices( std::size_t total_size, std::size_t first_index, std::size_t
 
     return r;
 }
+
+// Convert an array, which maps an index to a value, to a bimap so the index can
+// be found given a value.  This assumes that each array element is unique.
+template < typename T, std::size_t N >
+boost::bimap<std::size_t, T>  array_to_bimap( T const (&array)[N] )
+{
+    typedef boost::bimap<std::size_t, T>     result_type;
+    typedef typename result_type::value_type  value_type;
+
+    result_type  result;
+
+    for ( std::size_t  i = 0u ; i < N ; ++i )
+        result.insert( value_type(i, array[ i ]) );
+    BOOST_ASSERT( result.size() == N );
+    return result;
+}
+
+// This is the "base64url" encoding; see RFC 4648, section 5
+char const  base64url_str[] =
+ "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+char const  (&base64url)[64] = *reinterpret_cast<char const (*)[64]>(
+ &base64url_str );
+char const  base64url_pad = '=';
+
+// Now make that encoding searchable both ways
+typedef boost::bimap<std::size_t, char>  base64url_map_t;
+
+base64url_map_t const  base64url_map = array_to_bimap( base64url );
 
 }  // unnamed namespace
 
@@ -378,6 +408,78 @@ md5_context::finish()
     BOOST_ASSERT( !(this->length % bits_per_block::value) );
 
     // Now a finished checksum in this->buffer is ready to read.
+}
+
+// Convert the current queue to a string to serialize
+std::string  md5_context::queue_to_string() const
+{
+    using std::size_t;
+
+    size_t const  unbuffered = this->length % bits_per_block::value,
+                  bits_per_sextet = 6,
+                  full_sextets = unbuffered / bits_per_sextet,
+                  leftover_bits = unbuffered % bits_per_sextet,
+                  partial_sextet = ( leftover_bits != 0u );
+    bool const *  i = this->queue.begin();
+    size_t        index;
+    std::string   result;
+
+    result.reserve( full_sextets + partial_sextet );
+
+    for ( size_t  j = 0u ; j < full_sextets ; ++j )
+    {
+        // leading Booleans get high-order spots
+        index = 0u;
+        for ( size_t  k = 0u ; k < bits_per_sextet ; ++k )
+        {
+            index <<= 1;
+            if ( *i++ )  index |= 1u;
+        }
+        result.push_back( base64url[index] );
+    }
+
+    if ( partial_sextet )
+    {
+        index = 0u;
+        for ( size_t  l = 0u ; l < leftover_bits ; ++l )
+        {
+            index <<= 1;
+            if ( *i++ )  index |= 1u;
+        }
+
+        // Fill in remaining spots of this sextet
+        index <<= bits_per_sextet - leftover_bits;
+        result.push_back( base64url[index] );
+    }
+
+    return result;
+}
+
+// Convert an unserialized string back to a queue state
+void  md5_context::string_to_queue( std::string const &s )
+{
+    using std::size_t;
+
+    size_t const  bits_per_sextet = 6;
+    bool *        i = this->queue.begin();
+    int           limit = bits_per_block::value;  // resolves partial sextets
+
+    for ( std::string::const_iterator  si = s.begin(), se = s.end() ; (si != se)
+     && (limit > 0) ; ++si )
+    {
+        // Skip over any illegal characters
+        base64url_map_t::right_const_iterator const  p_index =
+         base64url_map.right.find( *si );
+
+        if ( p_index == base64url_map.right.end() )  continue;
+
+        // Insert the bits expanded from the index 
+        size_t const  mask = 1u << ( bits_per_sextet - 1u );
+
+        for ( size_t  j = 0u, index = p_index->second ; (j < bits_per_sextet) &&
+         (limit-- > 0) ; ++j, index <<= 1 )
+            *i++ = index & mask;
+    }
 }
 
 

@@ -23,12 +23,24 @@
 #include <boost/mpl/size_t.hpp>  // for boost::mpl::size_t
 
 #include <algorithm>  // for std::equal
+#include <iosfwd>     // for std::basic_istream, basic_ostream (declarations)
 
 
 namespace boost
 {
 namespace coding
 {
+
+
+//  Forward declarations  ----------------------------------------------------//
+
+// I/O streaming operator functions
+template < typename Ch, class Tr >
+  std::basic_istream<Ch, Tr> &  operator >>( std::basic_istream<Ch, Tr> &i,
+  md5_digest &n );
+template < typename Ch, class Tr >
+  std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &o,
+  md5_digest const &n );
 
 
 //  MD5 message-digest class declaration  ------------------------------------//
