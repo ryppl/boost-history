@@ -21,6 +21,7 @@
 #include <boost/mirror/meta_type.hpp>
 //
 #include "./namespaces.hpp"
+#include "./types.hpp"
 #include "./test.hpp"
 
 void test_main()
@@ -31,6 +32,9 @@ void test_main()
 	//
 	typedef BOOST_MIRRORED_TYPE(int) meta_int;
 	typedef BOOST_MIRRORED_TYPE(::std::string) meta_std_string;
+	typedef BOOST_MIRRORED_TYPE(::boost::cts::bstring) meta_boost_cts_bstring;
+	typedef BOOST_MIRRORED_TYPE(::test::feature::foo) meta_test_feature_foo;
+	typedef BOOST_MIRRORED_TYPE(baz) meta_baz;
 	//
 	BOOST_MPL_ASSERT_NOT(( is_same<meta_int, meta_std_string> ));
 	BOOST_MPL_ASSERT(( reflects_global_scope<meta_int::scope> ));
@@ -40,6 +44,18 @@ void test_main()
 	//
 	BOOST_MPL_ASSERT(( is_same<meta_int::reflected_type, int> ));
 	BOOST_MPL_ASSERT(( is_same<meta_std_string::reflected_type, ::std::string> ));
+	BOOST_MPL_ASSERT(( is_same<
+		meta_boost_cts_bstring::reflected_type, 
+		::boost::cts::bstring
+	> ));
+	BOOST_MPL_ASSERT(( is_same<
+		meta_test_feature_foo::reflected_type, 
+		::test::feature::foo
+	> ));
+	BOOST_MPL_ASSERT(( is_same<
+		meta_baz::reflected_type, 
+		baz
+	> ));
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )
