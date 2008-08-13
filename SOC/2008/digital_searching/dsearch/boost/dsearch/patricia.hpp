@@ -93,7 +93,7 @@ class patricia{
 		/// Used while creating a new node.
 		patricia_node(const key_type& key_,const std::size_t &index_,patricia_node *left_
 		,patricia_node *right_,patricia_node *par_) 
-		:par(par_),value(std::make_pair(key_,0)),index(index_),left(left_),right(right_)
+		:par(par_),value(std::make_pair(key_,data_type())),index(index_),left(left_),right(right_)
 		{
 		}
 
@@ -127,6 +127,23 @@ class patricia{
 	typedef patricia_reverse_iterator<value_type, patricia_node, Alloc> reverse_iterator;
 	/// Bidirectional const_reverse_iterator which when dereferenced returns const value_type.
 	typedef patricia_reverse_iterator<const value_type, const patricia_node, Alloc> const_reverse_iterator;
+
+
+	///patricia's allocator type.
+	typedef typename Alloc::template rebind<value_type>::other allocator_type;
+	///pointer to value_type.
+    typedef typename allocator_type::pointer pointer;
+    ///const pointer to value_type.
+    typedef typename allocator_type::const_pointer        const_pointer;
+    ///reference to value_type.
+	typedef typename allocator_type::reference            reference;
+	///const reference to value_type.
+	typedef typename allocator_type::const_reference      const_reference;
+	///return type of size()
+	typedef typename std::size_t           size_type;
+	///represents distance between two iterators.
+	typedef typename allocator_type::difference_type      difference_type; 
+    
     /// Default constructor.
     /** the default constructor
     */
