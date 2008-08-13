@@ -10,14 +10,20 @@ int main() {
     bool matched = false;
     int counter = 0;
     while((ch = std::getchar()) != EOF) {
-        buffer.push_back(ch);
+        buffer.push_back(static_cast<char>(ch));
         if(ch == '\n') {
             if(matched) {
-                for(int i = 0; i < buffer.size(); ++i) {
+                for(std::size_t i = 0; i < buffer.size(); ++i) {
                     std::putchar(buffer[i]);
                 }
-                if(++counter % 100 == 0) {
-                    std::fprintf(stderr, "On Instantiation %d\n", counter);
+                ++counter;
+#ifdef _MSC_VER
+                int instantiations = counter / 2;
+#else
+                int instantiations = counter;
+#endif
+                if(++instantiations % 100 == 0) {
+                    std::fprintf(stderr, "On Instantiation %d\n", instantiations);
                 }
             }
             buffer.clear();
