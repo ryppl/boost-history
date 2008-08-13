@@ -18,7 +18,8 @@ import "class" ;
 
 module-location = [ path.parent [ path.make [ modules.binding template-profile ] ] ] ;
 
-INSTRUMENT-ACTION = perl [ path.native [ path.join $(module-location) preprocess.pl ] ] ;
+INSTRUMENT-ACTION = [ path.native [ path.join $(module-location) preprocess.pl ] ] ;
+INSTRUMENT-ACTION = perl \"$(INSTRUMENT-ACTION)\" ;
 
 type.register INSTRUMENTED_TEMPLATE_PREPROCESSED_CPP : : CPP ;
 type.register RAW_TEMPLATE_PROFILE : rtp ;
