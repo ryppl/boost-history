@@ -9,3 +9,20 @@
 
 [section:tutorial1 Tutorial - Basic usage]
 
+This tutorial describes the basic usage of the Spatial Indexes. We won't use an specific index to
+show the basic usage of  the library. Next tutorials will address specifc index types.
+
+In this tutorial an empty item is created (a quadtree in this example) and some points are added.
+Then we perform two searches and finally some points are removed.
+
+We will follow the first test of our test suite, test/basic_test.cpp
+
+The first step is to create the index. We have to choose which index we'll use. In this case
+we will select the quadtree.
+
+Now that we have chosen our index type, we have to carefully look the constructor. Altough a
+generic interface is defined (in spatial_index.hpp), each index type has its own creation parameters. 
+
+Let's see 
+
+[endsect]
