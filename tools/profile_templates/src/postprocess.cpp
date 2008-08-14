@@ -148,10 +148,8 @@ int main(int argc, char** argv) {
                 int line = boost::lexical_cast<int>(match[2].str());
                 std::set<line_id>::const_iterator pos = lines.lower_bound(line_id(file, line));
                 if(pos != lines.end()) {
-                    if(*pos != line_id(file, line)) {
-                        if(pos != lines.begin()) {
-                            --pos;
-                        }
+                    if(*pos != line_id(file, line) && pos != lines.begin() && boost::prior(pos)->first == file) {
+                        --pos;
                     }
                 } else if(pos != lines.begin()) {
                     --pos;
