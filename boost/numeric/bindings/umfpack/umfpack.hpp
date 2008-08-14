@@ -30,6 +30,7 @@ namespace boost { namespace numeric { namespace bindings {  namespace umfpack {
   template <typename T = double>
   struct symbolic_type : private noncopyable { 
     void *ptr; 
+    symbolic_type():ptr(0){}
     ~symbolic_type() { 
       if (ptr)
         detail::free_symbolic (T(), 0, &ptr); 
@@ -47,6 +48,7 @@ namespace boost { namespace numeric { namespace bindings {  namespace umfpack {
   template <typename T = double>
   struct numeric_type : private noncopyable { 
     void *ptr; 
+    numeric_type():ptr(0){}
     ~numeric_type() { 
       if (ptr)
         detail::free_numeric (T(), 0, &ptr); 
