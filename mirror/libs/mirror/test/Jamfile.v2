@@ -22,5 +22,9 @@ test-suite "mirror"
          [ compile-fail namespaces_cf_01.cpp ]
          [ compile types_ct_01.cpp ]
          [ compile types_ct_02.cpp ]
+         [ compile types_ct_03.cpp ]
+         [ compile types_ct_04.cpp ]
+         [ run types_rt_01.cpp ]
+         [ run types_rt_02.cpp ]
     ;
 

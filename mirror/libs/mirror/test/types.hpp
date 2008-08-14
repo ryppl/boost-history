@@ -12,8 +12,8 @@
 #ifndef BOOST_MIRROR_LIBS_MIRROR_TEST_TYPES_HPP
 #define BOOST_MIRROR_LIBS_MIRROR_TEST_TYPES_HPP
 
-// test namespaces
 #include "./namespaces.hpp"
+#include <boost/mirror/meta_type.hpp>
 
 namespace test {
 namespace feature {
@@ -29,6 +29,8 @@ struct foo;
 
 struct bar;
 
+typedef feature::foo foobar;
+
 } // namespace test
 
 // type on the global scope
@@ -42,6 +44,8 @@ namespace mirror {
 BOOST_MIRROR_REG_TYPE(::test::feature::detail, foo_impl)
 BOOST_MIRROR_REG_TYPE(::test::feature, foo)
 BOOST_MIRROR_REG_TYPE(::test, bar)
+// register the nested typedef
+BOOST_MIRROR_REG_TYPEDEF(::test, foobar)
 // register the type defined on the global scope
 BOOST_MIRROR_REG_TYPE_GS(baz)
 
