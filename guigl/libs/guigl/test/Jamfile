@@ -1,0 +1,28 @@
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
+
+
+import testing ;
+
+project guigl/test
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+      <library>/boost/test//boost_unit_test_framework/<link>static
+    ;
+
+run test_field_map.cpp ;
+run test_field_map_compilation.cpp ;
+run test_parameter_compilation.cpp ;
+run test_parameter_dispatch_compilation.cpp ;
+
+#obj test_field_map_compilation : test_field_map_compilation.cpp ;
+#time time-test_field_map_compilation :  test_field_map_compilation ;
+#obj test_parameter_compilation : test_parameter_compilation.cpp ;
+#time time-test_parameter_compilation :  test_parameter_compilation ;
+#obj test_parameter_dispatch_compilation : test_parameter_dispatch_compilation.cpp ;
+#time time-test_parameter_dispatch_compilation :  test_parameter_dispatch_compilation ;
