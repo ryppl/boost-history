@@ -16,7 +16,7 @@ It consists of the following parts:
 
 
 * Shared library handling
-* Typed data containers
+* Heterogeneous data containers
 * Factories
 * Reflection
  
@@ -24,7 +24,7 @@ It consists of the following parts:
 Among others, the library has the following features:
 
 
-* Multiple and virtual inheritance are supported.
+* Multiple and virtual inheritance are supported for factories and reflections.
 * Library users do not need to use any macros (besides those required by
 Windows for exported functions).
 * Only one external function required per shared library to export classes.

@@ -33,11 +33,13 @@
 <span class="bold"><strong>class</strong></span> <a href="basic_type_map.html" title="Class template basic_type_map">basic_type_map</a> {
 <span class="bold"><strong>public</strong></span>:
 
-  <span class="emphasis"><em>// <a href="basic_type_map.html#id285192-bb">public member functions</a></em></span>
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a href="basic_type_map.html#id285194-bb">get</a>() ;
+  <span class="emphasis"><em>// <a href="basic_type_map.html#id286606-bb">public member functions</a></em></span>
+  <span class="type"></span> <a href="basic_type_map.html#id286609-bb">BOOST_STATIC_ASSERT</a>(has_nothrow_assign&lt; TypeInfo &gt;::value) ;
+  <span class="type"></span> <a href="basic_type_map.html#id286620-bb">BOOST_STATIC_ASSERT</a>(has_nothrow_copy_constructor&lt; TypeInfo &gt;::value) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a href="basic_type_map.html#id286632-bb">get</a>() ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id450606"></a><h2>Description</h2>
+<a name="id451840"></a><h2>Description</h2>
 <p>
 The `type_map` class is used for holding an arbitrary collection of types - no more than one of each type. In general, standard usage is as follows:</p>
 <pre class="programlisting"> type_map types;
@@ -56,17 +58,21 @@ The `type_map` class is used for holding an arbitrary collection of types - no m
 </pre>
 <p> </p>
 <div class="refsect2" lang="en">
-<a name="id450622"></a><h3>
-<a name="id285192-bb"></a><code class="computeroutput">basic_type_map</code> public member functions</h3>
-<div class="orderedlist"><ol type="1"><li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a name="id285194-bb"></a>get() ;</pre>
+<a name="id451856"></a><h3>
+<a name="id286606-bb"></a><code class="computeroutput">basic_type_map</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><span class="type"></span> <a name="id286609-bb"></a>BOOST_STATIC_ASSERT(has_nothrow_assign&lt; TypeInfo &gt;::value) ;</pre></li>
+<li><pre class="literallayout"><span class="type"></span> <a name="id286620-bb"></a>BOOST_STATIC_ASSERT(has_nothrow_copy_constructor&lt; TypeInfo &gt;::value) ;</pre></li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Type&gt; <span class="type">Type &amp;</span> <a name="id286632-bb"></a>get() ;</pre>
 <p>This is the only method users should ever need to use. By calling it with a template argument `Type`, a reference to the single object of that type will be returned, after being created if necessary. It is possible to omit the template parameter if it is clear from context: </p>
 <pre class="programlisting"> type_map types;
  int&amp; my_int(types.get());
 </pre>
 <p> 
 </p>
-</li></ol></div>
+</li>
+</ol></div>
 </div>
 </div>
 </div>

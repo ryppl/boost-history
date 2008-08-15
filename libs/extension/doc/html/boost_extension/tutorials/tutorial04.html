@@ -1,14 +1,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Tutorial 4</title>
+<title> Tutorial 4 - Multi-type
+      Containers</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension">
 <link rel="up" href="../tutorials.html" title="Tutorials">
 <link rel="prev" href="tutorial03.html" title=" Tutorial 3 - Multiple
       and Implementation Inheritance">
-<link rel="next" href="tutorial05.html" title=" Tutorial 5">
+<link rel="next" href="../extension_reflection.html" title=" Boost.Reflection/Boost.Extension
+    Interoperability">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -21,240 +23,124 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial03.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorials.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial05.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial03.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorials.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../extension_reflection.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial04"></a><a href="tutorial04.html" title=" Tutorial 4"> Tutorial 4</a></h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial04"></a><a href="tutorial04.html" title=" Tutorial 4 - Multi-type
+      Containers"> Tutorial 4 - Multi-type
+      Containers</a></h3></div></div></div>
 <p>
-        In this tutorial we will see different features of the library related to
-        multiple loading of the same library, instance or interface.
+        There are two types of containers in the library that can hold objects of
+        heterogeneous types. The <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        is designed for use with <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>
+        so that a standard function signature, taking a <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>,
+        can be provided by each shared library, helping to avoid type safety problems.
       </p>
 <p>
-        We will follow some parts of versions example (<code class="literal">examples/versioning</code>).
-        As we expect that at this point you've gone through the first tutorials we
-        will not enter into specific details of the use of the library.
+        The second type, <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>,
+        is designed for use with reflections or factories where the type of the function
+        is not known at compile time. A <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>
+        can be passed into such a factory or reflection, and then searched for needed
+        parameters, and return a list of missing parameters if necessary.
       </p>
 <p>
-        First, we want to show that it is possible to load several libraries into
-        one factory map. We'll create a new HelloWorld library very similar to the
-        one that we have described in the first tutorial.
+        The <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        is the simplest of the two, as it can hold exactly one element of each type.
+        It can hold multiple objects, but they will each be of a different type.
       </p>
 <p>
-        Let's remember the classes that we have implemented (in <code class="literal">hello_world.cpp</code>)
-        for the "hello world" example:
+        Here's an example showing a <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>
+        holding an <code class="computeroutput"><span class="keyword">int</span></code> and a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span></code>.
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world!"</span><span class="special">;}</span>
-<span class="special">};</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">;</span>
 
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
-<span class="special">};</span>
+<span class="comment">// A type_map can hold one of each type, constructed
+</span><span class="comment">// as needed.
+</span><span class="identifier">type_map</span> <span class="identifier">types</span><span class="special">;</span>
+<span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">first_int</span><span class="special">(</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+<span class="identifier">first_int</span> <span class="special">=</span> <span class="number">100</span><span class="special">;</span>
 
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>
+<span class="comment">// This actually points to the same int as first_int.
+</span><span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">second_int</span><span class="special">(</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+
+<span class="identifier">second_int</span> <span class="special">=</span> <span class="number">500</span><span class="special">;</span>
+
+<span class="comment">// This will print out 500.
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"first_int: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">first_int</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+<span class="comment">// Arbitrary default-constructible types can be held in a type_map.
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;&amp;</span> <span class="identifier">string_pairs</span><span class="special">(</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+</pre>
+<p>
+      </p>
+<p>
+        Note that pulling an integer out of it twice results in two references to
+        the same integer. The same occurs with any type placed into the <code class="literal"><code class="computeroutput"><a href="../../boost/extensions/type_map.html" title="Type definition type_map">type_map</a></code></code>.
+      </p>
+<p>
+        A <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>
+        on the other hand, can hold any number of elements of any type, and can automatically
+        convert objects to compatible types.
+      </p>
+<p>
+        The basic type stored in a <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>
+        is a <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter.html" title="Class template parameter">parameter</a></code></code>.
+        It is possible to declare a <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter.html" title="Class template parameter">parameter</a></code></code>
+        as being convertible to other types.
+      </p>
+<p>
+        By default, a <code class="computeroutput"><span class="keyword">static_cast</span></code> is
+        used to convert the types, but any conversion function can be provided. 
+</p>
+<pre class="programlisting"><span class="identifier">parameter</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;*</span> <span class="identifier">p</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">parameter</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="number">5</span><span class="special">);</span>
+<span class="identifier">p</span><span class="special">-&gt;</span><span class="identifier">converts_to</span><span class="special">&lt;</span><span class="keyword">float</span><span class="special">&gt;();</span>
+<span class="identifier">p</span><span class="special">-&gt;</span><span class="identifier">converts_to</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;();</span>
+</pre>
+<p>
+      </p>
+<p>
+        To have a float change to its ceiling when converted to an integer, one could
+        write:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">FloatCeilingToInt</span><span class="special">(</span><span class="keyword">float</span><span class="special">*</span> <span class="identifier">f</span><span class="special">,</span> <span class="keyword">int</span><span class="special">*</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+  <span class="special">*</span><span class="identifier">i</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ceil</span><span class="special">(*</span><span class="identifier">f</span><span class="special">));</span>
 <span class="special">}</span>
 </pre>
 <p>
-      </p>
-<p>
-        And now let's see the new version that we've implemented for this example
-        (as defined in <code class="literal">hello_world_versions.cpp</code>). The classes
-        have the same name and methods, both implement the same interface, but the
-        <code class="computeroutput"><span class="identifier">get_val</span><span class="special">()</span></code>
-        methods differ in the returned string (to be able to recognize each one after
-        loading them).
-      </p>
-<p>
         
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">world</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"world! v2"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">word</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">get_val</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">"| v2 hello"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_word</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
- <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">22</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">world</span><span class="special">&gt;();</span>	
- <span class="comment">// int could be used as version (v2 word 2)
-</span> <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">21</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>	
- <span class="comment">// int could be used as version (v2 word 1)
-</span><span class="special">}</span>
-</pre>
+<pre class="programlisting"><span class="identifier">parameter</span><span class="special">&lt;</span><span class="keyword">float</span><span class="special">&gt;*</span> <span class="identifier">p</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">parameter</span><span class="special">&lt;</span><span class="keyword">float</span><span class="special">&gt;(</span><span class="number">4.9f</span><span class="special">);</span>
+<span class="identifier">p</span><span class="special">-&gt;</span><span class="identifier">converts_to_with_func</span><span class="special">(&amp;</span><span class="identifier">FloatCeilingToInt</span><span class="special">);</span>
+<span class="identifier">p</span><span class="special">-&gt;</span><span class="identifier">cast</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span> <span class="comment">// returns 5
+</span></pre>
 <p>
       </p>
 <p>
-        Also note that we are using the Info int to store some kind of "version",
-        and then we could differentiate the classes by its int (see Info class tutorial
-        for more information on this).
+        Once created, a <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter.html" title="Class template parameter">parameter</a></code></code>
+        can be placed into a <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>,
+        along with some sort of name. This name can be of arbitrary type: <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>
+        is a specialized <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/basic_parameter_map.html" title="Class template basic_parameter_map">basic_parameter_map</a></code></code>
+        with the std::string type as the name, but other types are also possible.
       </p>
 <p>
+        A <code class="literal"><code class="computeroutput"><a href="../../boost/reflections/parameter_map.html" title="Type definition parameter_map">parameter_map</a></code></code>
+        works much like a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">multi_map</span></code> - since it is built on one. It
+        has a few specialty methods though. It is possible, for instance, to retrieve
+        all values that match a certain type and name, or the first value that matches.
         
 </p>
-<pre class="programlisting"><span class="identifier">factory_map</span> <span class="identifier">fm</span><span class="special">;</span>
-
-<span class="comment">// load hello world first version
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLib.extension"</span><span class="special">,</span>
-                     <span class="string">"extension_export_word"</span><span class="special">);</span>
-
-<span class="comment">// load hello world second version
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
-                     <span class="string">"extension_export_word"</span><span class="special">);</span>
-
-<span class="comment">// load hello world second version again
-</span><span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libHelloWorldLibv2.extension"</span><span class="special">,</span>
-                     <span class="string">"extension_export_word"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">parameter_map</span> <span class="identifier">map</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">generic_parameter</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;*&gt;</span> <span class="identifier">int_vector</span><span class="special">(</span><span class="identifier">map</span><span class="special">.</span><span class="identifier">get</span><span class="special">(</span><span class="string">"some_int_name"</span><span class="special">));</span>
+<span class="identifier">generic_parameter</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;*</span> <span class="identifier">first_int</span><span class="special">(</span><span class="identifier">map</span><span class="special">.</span><span class="identifier">get_first</span><span class="special">(</span><span class="string">"some_int_name"</span><span class="special">));</span>
 </pre>
 <p>
-      </p>
-<p>
-        We can see here that loading multiple libraries is as easy as calling <code class="computeroutput"><span class="identifier">load_single_library</span></code> for each one and using
-        the same factory map.
-      </p>
-<p>
-        Then you can access them as any other factory_map:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">for</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_word</span> <span class="special">=</span>
-    <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">current_word</span> <span class="special">!=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-    <span class="special">++</span><span class="identifier">current_word</span><span class="special">)</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">word_ptr</span><span class="special">(</span><span class="identifier">current_word</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">word_ptr</span><span class="special">-&gt;</span><span class="identifier">get_val</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
-<span class="special">}</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        We get the following output:
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                <code class="literal">words:</code><br> <code class="literal">hello world! | v2 hello
-                world! v2 | v2 hello world! v2</code>
-              </p>
-              </td></tr></tbody>
-</table></div>
-<p>
-        The first "hello world" is returned by the first version of the
-        library, and the second and third returned by the second version.
-      </p>
-<p>
-        Finally, we will show another example similar to the former but in this case
-        we implement a different interface, same class name ('hello') but with different
-        interface ('salute').
-      </p>
-<p>
-        Let's see the interface:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">salute</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">salute</span><span class="special">(){}</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">say</span><span class="special">(){</span><span class="keyword">return</span> <span class="string">""</span><span class="special">;}</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-<p>
-        And the implementations:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">hello</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"hello"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">bye</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">salute</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="identifier">say</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"bye!"</span><span class="special">;}</span>
-<span class="special">};</span>
-
-
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
-<span class="identifier">extension_export_salute</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
-<span class="special">{</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">1</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">hello</span><span class="special">&gt;();</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;()[</span><span class="number">2</span><span class="special">].</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">bye</span><span class="special">&gt;();</span>
-<span class="special">}</span>
-</pre>
-<p>
-      </p>
-<p>
-        Note that we are adding a new class called 'hello' too but that implements
-        'salute' interface.
-      </p>
-<p>
-        <br>
-      </p>
-<p>
-        Finally in the main function we get the factory list specifying that we want
-        the 'salute' factory. We iterate it getting each of the salutes, including
-        hello.
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">salute_factory_list</span> <span class="special">=</span>
-  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;();</span>  
-
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"salutes: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-<span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current_salute</span> <span class="special">=</span>
-     <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> 
-     <span class="identifier">current_salute</span> <span class="special">!=</span> <span class="identifier">salute_factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-     <span class="special">++</span><span class="identifier">current_salute</span><span class="special">)</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">salute</span><span class="special">&gt;</span> <span class="identifier">salute_ptr</span><span class="special">(</span><span class="identifier">current_salute</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">create</span><span class="special">());</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">salute_ptr</span><span class="special">-&gt;</span><span class="identifier">say</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
-<span class="special">}</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-</pre>
-<p>
-      </p>
-<p>
-        The output is:
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                <code class="literal">salutes:</code> <br> <code class="literal">hello bye!</code>
-              </p>
-              </td></tr></tbody>
-</table></div>
-<p>
-        In conclusion, with Boost.Extension we can implement the same class in different
-        libraries, the same class for different interfaces and load multiple libraries
-        into the same factory.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -267,7 +153,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial03.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorials.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial05.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial03.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorials.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../extension_reflection.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

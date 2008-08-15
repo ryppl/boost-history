@@ -33,29 +33,29 @@
 <span class="bold"><strong>class</strong></span> <a href="shared_library.html" title="Class shared_library">shared_library</a> {
 <span class="bold"><strong>public</strong></span>:
   <span class="emphasis"><em>// <a href="shared_library.html#boost.extensions.shared_libraryconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a href="shared_library.html#id285121-bb">shared_library</a>(<span class="bold"><strong>const</strong></span> std::string &amp;, <span class="bold"><strong>bool</strong></span> = false);
-  <a href="shared_library.html#id285147-bb">~shared_library</a>();
+  <a href="shared_library.html#id286535-bb">shared_library</a>(<span class="bold"><strong>const</strong></span> std::string &amp;, <span class="bold"><strong>bool</strong></span> = false);
+  <a href="shared_library.html#id286561-bb">~shared_library</a>();
 
-  <span class="emphasis"><em>// <a href="shared_library.html#id284949-bb">public member functions</a></em></span>
-  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id284952-bb">is_open</a>() <span class="bold"><strong>const</strong></span>;
-  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id284973-bb">open</a>() ;
-  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id284997-bb">close</a>() ;
-  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id285024-bb">call</a>(<a href="basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>&lt; TypeInfo &gt; &amp;) ;
+  <span class="emphasis"><em>// <a href="shared_library.html#id286363-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id286366-bb">is_open</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id286387-bb">open</a>() ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id286411-bb">close</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="shared_library.html#id286438-bb">call</a>(<a href="basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>&lt; TypeInfo &gt; &amp;) ;
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> RetValue, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-    <span class="type">FunctionPtr&lt; ReturnValue(Params...)&gt;</span> <a href="shared_library.html#id285070-bb">get</a>(<span class="bold"><strong>const</strong></span> std::string &amp;) <span class="bold"><strong>const</strong></span>;
+    <span class="type">FunctionPtr&lt; ReturnValue(Params...)&gt;</span> <a href="shared_library.html#id286484-bb">get</a>(<span class="bold"><strong>const</strong></span> std::string &amp;) <span class="bold"><strong>const</strong></span>;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id449941"></a><h2>Description</h2>
+<a name="id451149"></a><h2>Description</h2>
 <p>
 </p>
 <div class="refsect2" lang="en">
-<a name="id449949"></a><h3>
+<a name="id451156"></a><h3>
 <a name="boost.extensions.shared_libraryconstruct-copy-destruct"></a><code class="computeroutput">shared_library</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><a name="id285121-bb"></a>shared_library(<span class="bold"><strong>const</strong></span> std::string &amp; location, <span class="bold"><strong>bool</strong></span> auto_close = false);</pre>
+<pre class="literallayout"><a name="id286535-bb"></a>shared_library(<span class="bold"><strong>const</strong></span> std::string &amp; location, <span class="bold"><strong>bool</strong></span> auto_close = false);</pre>
 <p>shared_library constructor 
 </p>
 <div class="variablelist"><table border="0">
@@ -82,17 +82,17 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><a name="id285147-bb"></a>~shared_library();</pre>
+<pre class="literallayout"><a name="id286561-bb"></a>~shared_library();</pre>
 <p>shared_library destructor If auto_close_ was set to true in the constructor, this closes the library if it is currently open. </p>
 </li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id450065"></a><h3>
-<a name="id284949-bb"></a><code class="computeroutput">shared_library</code> public member functions</h3>
+<a name="id451272"></a><h3>
+<a name="id286363-bb"></a><code class="computeroutput">shared_library</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id284952-bb"></a>is_open() <span class="bold"><strong>const</strong></span>;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id286366-bb"></a>is_open() <span class="bold"><strong>const</strong></span>;</pre>
 <p>
 
 
@@ -119,7 +119,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id284973-bb"></a>open() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id286387-bb"></a>open() ;</pre>
 <p>
 
 
@@ -146,7 +146,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id284997-bb"></a>close() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id286411-bb"></a>close() ;</pre>
 <p>
 
 
@@ -173,7 +173,7 @@
 </table></div>
 </li>
 <li>
-<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id285024-bb"></a>call(<a href="basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>&lt; TypeInfo &gt; &amp; types) ;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TypeInfo&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id286438-bb"></a>call(<a href="basic_type_map.html" title="Class template basic_type_map">basic_type_map</a>&lt; TypeInfo &gt; &amp; types) ;</pre>
 <p>There is a special function called boost_extension_exported_type_map_function which is commonly used by shared libraries. The call function attempts to find and call that function, given a type_map.</p>
 <p>
 
@@ -215,7 +215,7 @@
 </li>
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> RetValue, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-  <span class="type">FunctionPtr&lt; ReturnValue(Params...)&gt;</span> <a name="id285070-bb"></a>get(<span class="bold"><strong>const</strong></span> std::string &amp; name) <span class="bold"><strong>const</strong></span>;</pre>
+  <span class="type">FunctionPtr&lt; ReturnValue(Params...)&gt;</span> <a name="id286484-bb"></a>get(<span class="bold"><strong>const</strong></span> std::string &amp; name) <span class="bold"><strong>const</strong></span>;</pre>
 <p>A templated function taking as template arguments the type of the return value and parameters of a function to look up in the shared library.</p>
 <p>This function must have been declared with the same parameters and return type and marked as extern "C".</p>
 <p>Depending on platform and compiler settings, it may also be necessary to prefix the function with BOOST_EXTENSION_DECL, to make it externally visible.</p>

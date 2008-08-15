@@ -34,6 +34,7 @@ test-suite extension_tests_all
   [ run double_param_test.cpp ]
   [ run mixed_param_test.cpp ]
   [ run shared_library_test.cpp ]
+  [ run not_class_test.cpp ]
   # [ run hello_world_test.cpp ]
   # [ run lib_caching_test.cpp ]
   # [ run versions_test.cpp ]

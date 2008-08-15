@@ -27,11 +27,6 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_extension.type_safety"></a><a href="type_safety.html" title=" Type Safety of Boost.Extension"> Type Safety of Boost.Extension</a></h2></div></div></div>
 <p>
-      This section is currently incomplete. More work is being done to avoid type
-      safety issues with the <span class="underline">instance</span> class
-      especially.
-    </p>
-<p>
       Type-safe classes in Boost.Extension:
     </p>
 <div class="itemizedlist"><ul type="disc">
@@ -57,6 +52,21 @@
         void pointers that must be converted to function pointers.
       </li>
 </ul></div>
+<p>
+      To help alleviate type safety issues when using <code class="literal"><code class="computeroutput"><a href="../boost/extensions/shared_library.html" title="Class shared_library">shared_library</a></code></code>,
+      it is recommended that a common function signature be used in each shared library.
+      The library provides shortcuts for this technique, which are used in <a href="tutorials/tutorial02.html" title=" Tutorial 2 - Basic
+      Factories">boost_extension.tutorials.tutorial02</a>.
+    </p>
+<p>
+      To help overcome the type safety problems with the <span class="underline">instance</span>
+      class, it would be possible to have each <span class="underline">instance</span>
+      contain a reference to the <code class="literal"><code class="computeroutput"><a href="reference.html#boost.reflections.reflection">reflection</a></code></code>
+      that created it, and then only allow that functions from that <code class="literal"><code class="computeroutput"><a href="reference.html#boost.reflections.reflection">reflection</a></code></code> to be
+      called. The plan is to add this as an option, which can be disabled with a
+      preprocessor macro, but it may be added permanently, depending on input from
+      the Boost community.
+    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

@@ -10,8 +10,9 @@
  */
 
 
-#include <string>
+#include <cmath>
 #include <iostream>
+#include <string>
 
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK 1
@@ -89,6 +90,17 @@ BOOST_AUTO_TEST_CASE(float_convert) {
   BOOST_CHECK(g->can_cast<int>());
 
   BOOST_CHECK_EQUAL(12, g->cast<int>());
+}
+
+void FloatCeilingToInt(float* f, int* i) {
+  *i = static_cast<int>(std::ceil(*f));
+}
+
+BOOST_AUTO_TEST_CASE(converts_to_with_func) {
+  parameter<float>* p = new parameter<float>(4.9f);
+  p->converts_to_with_func(&FloatCeilingToInt);
+  BOOST_CHECK(p->can_cast<int>());
+  BOOST_CHECK_EQUAL(p->cast<int>(), 5);
 }
 
 class base {

@@ -33,32 +33,32 @@
 <span class="bold"><strong>class</strong></span> <a href="basic_factory_map.html" title="Class template basic_factory_map">basic_factory_map</a> {
 <span class="bold"><strong>public</strong></span>:
   <span class="emphasis"><em>// <a href="basic_factory_map.html#boost.extensions.basic_factory_mapconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a href="basic_factory_map.html#id284875-bb">~basic_factory_map</a>();
+  <a href="basic_factory_map.html#id286286-bb">~basic_factory_map</a>();
 
-  <span class="emphasis"><em>// <a href="basic_factory_map.html#id284805-bb">public member functions</a></em></span>
+  <span class="emphasis"><em>// <a href="basic_factory_map.html#id286215-bb">public member functions</a></em></span>
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-    <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a href="basic_factory_map.html#id284808-bb">get</a>() ;
+    <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a href="basic_factory_map.html#id286218-bb">get</a>() ;
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-    <a href="basic_factory_map.html#id284845-bb"><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;</a>() ;
+    <a href="basic_factory_map.html#id286255-bb"><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;</a>() ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id449340"></a><h2>Description</h2>
+<a name="id450547"></a><h2>Description</h2>
 <p>
 </p>
 <div class="refsect2" lang="en">
-<a name="id449347"></a><h3>
+<a name="id450554"></a><h3>
 <a name="boost.extensions.basic_factory_mapconstruct-copy-destruct"></a><code class="computeroutput">basic_factory_map</code> 
         public
        construct/copy/destruct</h3>
-<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id284875-bb"></a>~basic_factory_map();</pre></li></ol></div>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id286286-bb"></a>~basic_factory_map();</pre></li></ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id449387"></a><h3>
-<a name="id284805-bb"></a><code class="computeroutput">basic_factory_map</code> public member functions</h3>
+<a name="id450595"></a><h3>
+<a name="id286215-bb"></a><code class="computeroutput">basic_factory_map</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-  <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a name="id284808-bb"></a>get() ;</pre>
+  <span class="type">std::map&lt; Info, <a href="factory.html" title="Class template factory">factory</a>&lt; Interface, Params...&gt; &gt; &amp;</span> <a name="id286218-bb"></a>get() ;</pre>
 <p>
 
 This returns a map of the given type of factories. It can return an empty map if no such factories are found. </p>
@@ -73,7 +73,7 @@ This returns a map of the given type of factories. It can return an empty map if
 </li>
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info, <span class="bold"><strong>typename</strong></span> Params...&gt; 
-  <a name="id284845-bb"></a><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;() ;</pre>
+  <a name="id286255-bb"></a><span class="bold"><strong>operator</strong></span> std::map&lt; Info, factory&lt; Interface, Params...&gt; &gt; &amp;() ;</pre>
 <p>A conversion operator for convenience in calling functions that take a map of factories. This is identical to the get() function. </p>
 </li>
 </ol></div>

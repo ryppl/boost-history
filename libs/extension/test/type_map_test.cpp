@@ -35,3 +35,11 @@ BOOST_AUTO_TEST_CASE(intFloatTest) {
   BOOST_CHECK_EQUAL(my_int, 5);
   BOOST_CHECK_EQUAL(my_float, 10.0);
 }
+
+BOOST_AUTO_TEST_CASE(constTest) {
+  type_map m;
+  int& my_int(m.get());
+  my_int = 5;
+  const int& my_const_int(m.get());
+  BOOST_CHECK_EQUAL(my_const_int, 5);
+}

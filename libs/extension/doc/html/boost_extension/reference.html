@@ -67,9 +67,9 @@
 <a name="header.boost.extension.convenience.hpp"></a>Header &lt;<a href="../../../boost/extension/convenience.hpp" target="_top">boost/extension/convenience.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> extensions {
-    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../boost/extensions/load_single_library_id284561.html" title="Function load_single_library">load_single_library</a>(<a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a> &amp;, <span class="bold"><strong>const</strong></span> std::string &amp;, 
+    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../boost/extensions/load_single_library_id285972.html" title="Function load_single_library">load_single_library</a>(<a href="../boost/extensions/factory_map.html" title="Type definition factory_map">factory_map</a> &amp;, <span class="bold"><strong>const</strong></span> std::string &amp;, 
                              <span class="bold"><strong>const</strong></span> std::string &amp;);
-    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="boost.extensions.load_single_library_id284621"></a>load_single_library(<a href="../boost/extensions/type_map.html" title="Type definition type_map">type_map</a> &amp; current_type_map, 
+    <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="boost.extensions.load_single_library_id286031"></a>load_single_library(<a href="../boost/extensions/type_map.html" title="Type definition type_map">type_map</a> &amp; current_type_map, 
                              <span class="bold"><strong>const</strong></span> std::string &amp; library_path);
   }
 }</pre>
@@ -147,9 +147,13 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="header.boost.extension.adapter.hpp"></a>Header &lt;<a href="../../../boost/extension/adapter.hpp" target="_top">boost/extension/adapter.hpp</a>&gt;</h4></div></div></div>
-<pre class="synopsis">
-
-<a href="../N.html" title="Macro N">N</a></pre>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> extensions {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Interface, <span class="bold"><strong>typename</strong></span> Info = std::string, 
+             <span class="bold"><strong>typename</strong></span> TypeInfo = default_type_info&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../boost/extensions/adapter.html" title="Class template adapter">adapter</a>;
+  }
+}</pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">

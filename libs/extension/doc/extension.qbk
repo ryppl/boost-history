@@ -29,6 +29,7 @@
 [def _adaptable_factory_        [^[classref boost::extensions::adaptable_factory adaptable_factory]]]
 [def _reflection_        [^[classref boost::reflections::reflection reflection]]]
 [def _parameter_map_        [^[classref boost::reflections::parameter_map parameter_map]]]
+[def _basic_parameter_map_  [^[classref boost::reflections::basic_parameter_map basic_parameter_map]]]
 [def _parameter_        [^[classref boost::reflections::parameter parameter]]]
 
 [section:recent_changes Recent Changes]
@@ -37,7 +38,7 @@ The most recent changes to Boost.Extension, in preparation for this library's su
 to Boost for review:
 
 
-* Deprecation of _factory_map_ in favor of _type_map_ (tutorials to come).
+* Deprecation of _factory_map_ in favor of _type_map_.
 * All reflection documentation will be contained within the Extension docs.
 During review, or perhaps shortly before, it will be determined whether or not
 these should be two separate libraries, and if so, where the split should occur -
@@ -47,33 +48,6 @@ the parameters of the constructor are unknown.
 * The addition of the source code for a runtime compilation example. This involves compiling
 a shared library at runtime, and calling code from it. Examples will come soon.
 
-
-The latest updates in this documentation are:
-
-Class references:
-
-* _shared_library_
-* _type_map_
-* _reflection_
-* _parameter_
-* _parameter_map_
-* _adaptable_factory_
-* _factory_
-
-Tutorials:
-
-* [link boost_extension.tutorials.tutorial01 Tutorial 1 - `shared_library` class]
-* [link boost_extension.tutorials.tutorial02 Tutorial 2 - `factory` class]
-* [link boost_extension.tutorials.tutorial03 Tutorial 3 - Multiple and Implementation Inheritance]
-
-Other Sections:
-
-* [link boost_extension.motivation Motivation]
-* [link boost_extension.shared_libraries Shared Libraries]
-* [link boost_extension.extension_reflection Extension/Reflection Interoperability]
-
-The other sections in the documentation should be updated over the next few weeks, in
-preparation for review.
 [endsect]
 [include introduction.qbk]
 [include motivation.qbk]
