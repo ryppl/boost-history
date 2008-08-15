@@ -27,9 +27,11 @@
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
 #include <boost/static_assert.hpp>          // for BOOST_STATIC_ASSERT
 
-#include <algorithm>  // for std::copy
+#include <algorithm>  // for std::copy, fill
+#include <climits>    // for CHAR_BIT
 #include <cmath>      // for std::sin, abs, ldexp, modf
 #include <cstddef>    // for std::size_t
+#include <cstdlib>    // for std::div_t, div
 #include <numeric>    // for std::inner_product, partial_sum
 #include <string>     // for std::string
 #include <valarray>   // for std::valarray, etc.
@@ -214,19 +216,44 @@ namespace coding
 
 //  MD5 message-digest core computation non-inline member definitions  -------//
 
+/** Compares computation contexts for equivalence.  Such contexts are equal if
+    their internal states are equal.  (This means that they should both return
+    the same checksum, and continue to do so as long as the same bit sequence is
+    submitted to both contexts.)
+
+    \param o  The right-side operand to be compared.
+
+    \retval true   \c *this and \p o are equivalent.
+    \retval false  \c *this and \p o are not equivalent.
+ */
+bool  md5_context::operator ==( self_type const &o ) const
+{
+    queue_type const  tq = this->expand_queue(), oq = o.expand_queue();
+
+    return ( this->length == o.length ) && ( this->buffer == o.buffer ) &&
+     std::equal( tq.begin(), tq.begin() + this->length % bits_per_block::value,
+     oq.begin() );
+}
+
 /** Provides the computed check-sum of all the submitted bits (as if the message
     is complete), through a standard generator interface.
 
     \return  The check-sum.
  */
-md5_context::product_type
-md5_context::operator ()() const
+md5_context::product_type  md5_context::operator ()() const
 {
     self_type  copy( *this );
     copy.finish();
 
     product_type  result;
     std::copy( copy.buffer.begin(), copy.buffer.end(), result.hash );
+    std::fill( copy.buffer.begin(), copy.buffer.end(), 0u );
+    // The above line should keep anyone from peeking at a complete MD5 (i.e.
+    // "copy") with a debugger or similar.  (The idea is from Kevin Sopp's 2007
+    // MD5 code.)  Unfortunately, this cannot prevent spying via "result" if
+    // either the return value isn't used or (named) return-value optimization
+    // isn't applied toward the final destination object, since I can't zero-out
+    // the (intermediate) temporary object(s).
     return result;
 }
 
@@ -307,14 +334,37 @@ md5_context::hash_table_type const   md5_context::hashing_table = { {
 md5_context::buffer_type const  md5_context::initial_buffer = { {0x67452301ul,
  0xEFCDAB89ul, 0x98BADCFEul, 0x10325476ul} };
 
+// Input a single bit.
+void  md5_context::consume_bit( bool bit )
+{
+    int const            index = this->length++ % bits_per_block::value;
+    std::div_t const     sub_indices = std::div( index, CHAR_BIT );
+    unsigned char &      byte = this->queue[ sub_indices.quot ];
+    unsigned char const  mask = 1u << ( CHAR_BIT - 1 - sub_indices.rem );
+
+    // Since moving representation of the Boolean queue from an regular "bool"
+    // array to a packed "unsigned char" array, there has been the question of
+    // how the packed bits are arranged in each byte.  We have the next read bit
+    // go into the highest-order spot that isn't already used.  This is manually
+    // kept in sync with "expand_queue", "contract_queue", and
+    // "md5_computer::copy_unbuffered".  The high-order-first order is also how
+    // the bit-oriented MD5 algorithm reads a byte.  There is a bonus that an
+    // optimized byte-consumption routine can copy a byte directly into the
+    // array for quick entry, at least if CHAR_BIT divides index.
+
+    if ( bit )  byte |=  mask;
+    else        byte &= ~mask;
+    if ( index + 1 == bits_per_block::value )  this->update_hash();
+}
+
 // Hash an entire block into the running checksum, using RFC 1321, section 3.4
-void
-md5_context::update_hash()
+void  md5_context::update_hash()
 {
     using std::size_t;
 
     // Convert the queued bit block to a word block
     std::valarray<word_ftype>  words( words_per_block::value ), scratch(words);
+    queue_type const           q = this->expand_queue();
 
     for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
     {
@@ -322,7 +372,7 @@ md5_context::update_hash()
         // which convert to 0 or 1, multiplication acts as AND; since
         // "order_in_word" has distinct single-bit values, addition acts as OR.
         words[ i ] = std::inner_product( order_in_word.begin(),
-         order_in_word.end(), this->queue.begin() + i * bits_per_word::value,
+         order_in_word.end(), q.begin() + i * bits_per_word::value,
          word_ftype(0u) );
     }
 
@@ -392,11 +442,10 @@ md5_context::update_hash()
 // Apply the finishing procedure by submitting padding bits then the
 // (pre-padding) length.  The padding + length should exactly turn over the
 // queue.
-void
-md5_context::finish()
+void  md5_context::finish()
 {
     // Save the current length before we mutate it.
-    length_ftype const  original_length = length;
+    length_ftype const  original_length = this->length;
 
     // Enter a One, then enough Zeros so the length would fill the queue.
     this->consume_bit( true );
@@ -410,19 +459,47 @@ md5_context::finish()
     // Now a finished checksum in this->buffer is ready to read.
 }
 
+// Copy the stored packed array to a regular Boolean array
+md5_context::queue_type  md5_context::expand_queue() const
+{
+    int         count = bits_per_block::value;
+    queue_type  result;
+    bool *      b = result.begin();
+
+    for ( unsigned char const *  p = this->queue.begin() ; count > 0 ; ++p )
+        for ( unsigned char  m = 1u << (CHAR_BIT - 1) ; m && count-- ; m >>= 1 )
+            *b++ = *p & m;
+    return result;
+}
+
+// Copy a regular Boolean array into the packed array
+void  md5_context::contract_queue( queue_type const &bits )
+{
+    int       count = bits_per_block::value;
+    bool const *  b = bits.begin();
+
+    for ( unsigned char *  p = this->queue.begin() ; count > 0 ; ++p )
+        for ( unsigned char  m = 1u << (CHAR_BIT - 1) ; m && count-- ; m >>= 1 )
+            if ( *b++ )
+                *p |= m;
+            else
+                *p &= ~m;
+}
+
 // Convert the current queue to a string to serialize
 std::string  md5_context::queue_to_string() const
 {
     using std::size_t;
 
-    size_t const  unbuffered = this->length % bits_per_block::value,
-                  bits_per_sextet = 6,
-                  full_sextets = unbuffered / bits_per_sextet,
-                  leftover_bits = unbuffered % bits_per_sextet,
-                  partial_sextet = ( leftover_bits != 0u );
-    bool const *  i = this->queue.begin();
-    size_t        index;
-    std::string   result;
+    size_t const      unbuffered = this->length % bits_per_block::value,
+                      bits_per_sextet = 6,
+                      full_sextets = unbuffered / bits_per_sextet,
+                      leftover_bits = unbuffered % bits_per_sextet,
+                      partial_sextet = ( leftover_bits != 0u );
+    queue_type const  q = this->expand_queue();
+    bool const *      i = q.begin();
+    size_t            index;
+    std::string       result;
 
     result.reserve( full_sextets + partial_sextet );
 
@@ -461,7 +538,8 @@ void  md5_context::string_to_queue( std::string const &s )
     using std::size_t;
 
     size_t const  bits_per_sextet = 6;
-    bool *        i = this->queue.begin();
+    queue_type    q = { {false} };
+    bool *        i = q.begin();
     int           limit = bits_per_block::value;  // resolves partial sextets
 
     for ( std::string::const_iterator  si = s.begin(), se = s.end() ; (si != se)
@@ -480,6 +558,7 @@ void  md5_context::string_to_queue( std::string const &s )
          (limit-- > 0) ; ++j, index <<= 1 )
             *i++ = index & mask;
     }
+    this->contract_queue( q );
 }
 
 

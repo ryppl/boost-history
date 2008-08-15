@@ -24,14 +24,17 @@
 #include <boost/cstdint.hpp>  // for boost::uint_fast8_t
 #include <boost/integer.hpp>  // for boost::sized_integral, fast_integral
 
-#include <boost/mpl/times.hpp>  // for boost::mpl::times
-#include <boost/mpl/int.hpp>    // for boost::mpl::int_
+#include <boost/mpl/arithmetic.hpp>    // for boost:mpl:times, divides, modulus
+#include <boost/mpl/int.hpp>           // for boost:mpl:int_
+#include <boost/mpl/next_prior.hpp>    // for boost:mpl:next
+#include <boost/mpl/not_equal_to.hpp>  // for boost:mpl:not_equal_to
 
 #include <boost/serialization/access.hpp>        // for boost::s11n::access
 #include <boost/serialization/nvp.hpp>           // for boost::s11n::make_nvp
 #include <boost/serialization/split_member.hpp>  // for boost:s11n:split_member
 
 #include <algorithm>  // for std::equal, copy
+#include <climits>    // for CHAR_BIT
 #include <string>     // for std::string
 
 
@@ -101,11 +104,19 @@ private:
     typedef mpl::int_<16>                                words_per_block;
     typedef mpl::times<words_per_block, bits_per_word>    bits_per_block;
 
+    typedef mpl::int_<CHAR_BIT>                                   bits_per_byte;
+    typedef mpl::divides<bits_per_block, bits_per_byte>        qbytes_per_block;
+    typedef mpl::modulus<bits_per_block, bits_per_byte>        rbytes_per_block;
+    typedef mpl::not_equal_to<mpl::int_<0>, rbytes_per_block>  extra_block_byte;
+    typedef mpl::if_<extra_block_byte, mpl::next<qbytes_per_block>::type,
+     qbytes_per_block>::type  bytes_per_block;
+
     typedef sized_integral<bits_per_length::value, unsigned>::type  length_type;
     typedef fast_integral<length_type>::type                       length_ftype;
     typedef fast_integral<word_type>::type                           word_ftype;
     typedef array<word_ftype, words_per_digest::value>              buffer_type;
     typedef array<consumed_type, bits_per_block::value>              queue_type;
+    typedef array<unsigned char, bytes_per_block::value>            queue_ctype;
     typedef array<word_ftype, 64>                               hash_table_type;
 
     // Implementation constants
@@ -115,7 +126,7 @@ private:
     // Member data
     length_ftype  length;
     buffer_type   buffer;
-    queue_type    queue;
+    queue_ctype    queue;
 
     // Implementation
     void  consume_bit( bool bit );
@@ -125,6 +136,9 @@ private:
 
     void  update_hash();
     void  finish();
+
+    queue_type  expand_queue() const;
+    void        contract_queue( queue_type const &bits );
 
     /*! \name Persistence */ //@{
     // Serialization
@@ -172,24 +186,6 @@ md5_context::md5_context()  : length(), buffer( initial_buffer ), queue()  {}
 inline void
 md5_context::operator ()( consumed_type bit )  { this->consume_bit( bit ); }
 
-/** Compares computation contexts for equivalence.  Such contexts are equal if
-    their internal states are equal.  (This means that they should both return
-    the same checksum, and continue to do so as long as the same bit sequence is
-    submitted to both contexts.)
-
-    \param o  The right-side operand to be compared.
-
-    \retval true   \c *this and \p o are equivalent.
-    \retval false  \c *this and \p o are not equivalent.
- */
-inline bool
-md5_context::operator ==( self_type const &o ) const
-{
-    return ( this->length == o.length ) && ( this->buffer == o.buffer ) &&
-     std::equal( this->queue.begin(), this->queue.begin() + this->length %
-     bits_per_block::value, o.queue.begin() );
-}
-
 /** Compares computation contexts for non-equivalence.  Such engines are unequal
     if their internal states are unequal.  (Usually, the two contexts would
     return checksums that differ either immediately or after the same bit
@@ -208,15 +204,6 @@ md5_context::operator !=( self_type const &o ) const
 
 
 //  MD5 message-digest core computation private member function definitions  -//
-
-// Input a single bit.
-inline void
-md5_context::consume_bit( bool bit )
-{
-    this->queue[ this->length++ % bits_per_block::value ] = bit;
-    if ( this->length % bits_per_block::value == 0u )
-        this->update_hash();
-}
 
 // Input an octet (8 bits).  Needed for word-input.
 inline void

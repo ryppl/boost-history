@@ -208,14 +208,19 @@ md5_computer::bits_unbuffered() const
     \see  #bits_per_block
  */
 template < typename OutputIterator >
-inline OutputIterator
+OutputIterator
 md5_computer::copy_unbuffered( OutputIterator o ) const
 {
     // Parameter check
     BOOST_CONCEPT_ASSERT( (boost::OutputIterator<OutputIterator, bool>) );
 
-    return std::copy( this->context().queue.begin(),
-     this->context().queue.begin() + this->bits_unbuffered(), o );
+    int  count = this->bits_unbuffered();
+
+    for (unsigned char const *  p = this->context().queue.begin() ; count ; ++p)
+        for ( unsigned char  m = 1u << (CHAR_BIT - 1) ; m && count ; m >>= 1,
+         --count, ++o )
+            *o = *p & m;
+    return o;
 }
 
 
