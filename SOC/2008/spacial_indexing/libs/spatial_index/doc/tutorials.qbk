@@ -15,7 +15,7 @@ show the basic usage of  the library. Next tutorials will address specifc index 
 In this tutorial an empty item is created (a quadtree in this example) and some points are added.
 Then we perform two searches and finally some points are removed.
 
-We will follow the first test of our test suite, test/basic_test.cpp
+We will follow the first test of our test suite, test/simple_test.cpp
 
 The first step is to create the index. We have to choose which index we'll use. In this case
 we will select the quadtree.
@@ -23,6 +23,81 @@ we will select the quadtree.
 Now that we have chosen our index type, we have to carefully look the constructor. Altough a
 generic interface is defined (in spatial_index.hpp), each index type has its own creation parameters. 
 
-Let's see 
+Let's see the quadtree's constructor:
+
+``
+/// quadtree constructor
+spatial_index(const geometry::box<Point> &b,
+              const unsigned int M)
+	         : i_(b, M)
+
+``
+
+As we can see we need to define the bounding rectangle of the indexed space and the maximum number of
+elements for each node. A general useful number for this maxium could be 8, but you could see a 
+detailed comparison with different values in the Performance comparison section.
+
+We define a Boost Geometry proposal box (0,0) x (20,20) for the test:
+
+``
+geometry::box<geometry::point_xy<double> > b(
+    geometry::point_xy<double>(0.0, 0.0),
+    geometry::point_xy<double>(20.0, 20.0));
+``
+
+Now we can define our index, using b as our bounding box and 8 elements of data
+per node. The first template parameter of the spatial index interface is
+the type of point. In this case we use the default point of the geometry proposal
+(point_xy<double>) and as the value_type an iterator to an vector of strings. This
+is to show that you can have your own container with the data and only store in
+the index the corresponding pointer, avoiding unnecessary dependency.
+
+``
+typedef geometry::point_xy<double> point_type;
+typedef std::vector<std::string>::iterator value_type;
+
+boost::spatial_index::spatial_index<point_type, value_type,
+      boost::spatial_index::quadtree<point_type, value_type> > q(b, 8);
+``
+
+Let's populate it with some points (and some data that we have preloaded in the 
+vector called data, string "test0" to "test5"):
+
+``
+std::vector<std::string>::iterator it = data.begin();
+
+q.insert(geometry::point_xy<double>(1.0,1.0), it++);
+q.insert(geometry::point_xy<double>(2.0,1.0), it++);
+q.insert(geometry::point_xy<double>(5.0,5.0), it++);
+q.insert(geometry::point_xy<double>(1.0,6.0), it++);
+q.insert(geometry::point_xy<double>(9.0,9.0), it++);
+q.insert(geometry::point_xy<double>(9.0,8.0), it++);
+``
+
+And because all of this is about searching spatial data, let's try some searches:
+
+``
+it1 = q.find(geometry::point_xy<double>(9.0,9.0));
+``
+
+Of course the string "test4" is returned.
+
+We can also do some "rectangle" queries, to return every point that it's inside the
+box:
+
+``
+geometry::box<geometry::point_xy<double> > query_box(
+    geometry::point_xy<double>(0.0, 0.0),
+    geometry::point_xy<double>(5.0, 5.0));
+std::deque< std::vector<std::string>::iterator > d = q.find(query_box);
+``
+
+We get the strings "test0", "test1" and "test2".
+
+Finally, we can remove some points:
+
+``
+q.remove(geometry::point_xy<double>(9.0,9.0));
+``
 
 [endsect]
