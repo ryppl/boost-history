@@ -17,8 +17,6 @@
 #include <boost/extension/impl/typeinfo.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/remove_const.hpp>
-#include <boost/type_traits/has_nothrow_assign.hpp>
-#include <boost/type_traits/has_nothrow_copy_constructor.hpp>
 
 namespace boost {
 namespace extensions {
@@ -51,9 +49,6 @@ namespace extensions {
 template <class TypeInfo>
 class basic_type_map {
 public:
-// Some assertions about the TypeInfo type.
-  BOOST_STATIC_ASSERT(has_nothrow_assign<TypeInfo>::value);
-  BOOST_STATIC_ASSERT(has_nothrow_copy_constructor<TypeInfo>::value);
 
 #ifndef BOOST_EXTENSION_DOXYGEN_INVOKED
   class type_map_convertible {
