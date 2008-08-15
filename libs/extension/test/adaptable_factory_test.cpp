@@ -10,8 +10,8 @@
  */
 
 #include <boost/extension/adaptable_factory.hpp>
+#include <boost/extension/parameter_map.hpp>
 #include <boost/extension/shared_library.hpp>
-#include <boost/reflection/parameter_map.hpp>
 #include <boost/scoped_ptr.hpp>
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK 1
@@ -19,7 +19,7 @@
 
 
 using namespace boost::extensions;
-using namespace boost::reflections;
+using namespace boost::extensions;
 using boost::scoped_ptr;
 using boost::function;
 

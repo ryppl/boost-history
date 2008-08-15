@@ -36,6 +36,7 @@ test-suite extension_tests_all
   [ run shared_library_test.cpp ]
   [ run parameters_test.cpp ]
   [ run executables_test.cpp ]
+  [ run parameter_map_test.cpp ]
   # [ run multiple_inheritance_test.cpp ]  # redundant
   [ run extension_test.cpp ]
 : 
