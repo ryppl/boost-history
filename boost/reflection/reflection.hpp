@@ -21,6 +21,7 @@
 #include <boost/reflection/data.hpp>
 #include <boost/reflection/data_info.hpp>
 #include <boost/reflection/function.hpp>
+#include <boost/reflection/parameter_map.hpp>
 
 namespace boost {
 namespace reflections {

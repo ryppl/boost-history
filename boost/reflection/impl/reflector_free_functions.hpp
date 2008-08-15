@@ -48,7 +48,7 @@ static ReturnValue call_member(void * val,
 
 // The following are versions of the above that don't require
 // knowing their parameters.
-
+/*
 template <class Derived, class Info, class TypeInfo
           BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param)>
 instance create_func(
@@ -105,5 +105,5 @@ if (!map.template has<BOOST_PP_CAT(Param, n)>(names[n])) \
   BOOST_PP_REPEAT(N, BOOST_REFLECTION_CHECK_IN_LIST, )
 #undef BOOST_REFLECTION_CHECK_IN_LIST
   return needed_parameters;
-}
+}*/
 #undef N
