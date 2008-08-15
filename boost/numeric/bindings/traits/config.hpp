@@ -19,7 +19,7 @@
 #    define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 #  endif
 
-#elif defined(__ICC)
+#elif defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)
 
 #elif defined(__IBMCPP__)
 
