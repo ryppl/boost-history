@@ -377,7 +377,7 @@ namespace std {
            Predicate<auto, InIter::value_type, InIter::value_type> Pred>
     requires CopyConstructible<Pred>
     OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
-                        OutIter @\farg{result}@);
+                        OutIter @\farg{result}@, Pred @\farg{pred}@);
   template<InputIterator InIter, ForwardIterator OutIter,
            Predicate<auto, OutIter::value_type, InIter::value_type> Pred>
     requires OutputIterator<OutIter, InIter::reference> 

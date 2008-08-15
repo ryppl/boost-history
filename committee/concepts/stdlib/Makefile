@@ -64,7 +64,7 @@ DVIPS		= dvips
 # Default rule
 #
 NAMES		= clib-intro clib-concepts clib-utilities clib-containers \
-                  clib-iterators clib-algorithms clib-numerics clib-suppconcepts
+                  clib-iterators clib-algorithms clib-numerics 
 
 OTHER_TEX	= macros.tex
 

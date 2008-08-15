@@ -237,7 +237,7 @@ namespace std {
   auto concept LessThanComparable<typename T> @\textit{see below}@;
   auto concept EqualityComparable<typename T> @\textit{see below}@;
   concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
-  auto concept StrictWeakOrder<typename F, typename T> @\textit{see below}}@;
+  auto concept StrictWeakOrder<typename F, typename T> @\textit{see below}@;
 
   // \ref{concept.construct}, construction:
   auto concept HasConstructor<typename T, typename... Args> @\textit{see below}@;
@@ -1399,7 +1399,7 @@ auto concept MoveAssignable<typename T> : HasAssign<T, T&&> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-result_type T::operator=(T&& rv); // inherited from HasAssign<T, T&&>
+result_type T::operator=(T&& rv); // inherited from HasAssign<T, T\&\&>
 \end{itemdecl}
 
 \begin{itemdescr}

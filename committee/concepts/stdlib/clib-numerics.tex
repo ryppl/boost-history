@@ -48,7 +48,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Numerics\\
-(Revision 2)
+(Revision 3)
 
 \vspace{0.5in}
 
@@ -61,8 +61,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2626=08-0136\vspace{-6pt}
-\par\noindent Revises document number: N2574=08-0084\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2626=08-0136\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -70,11 +70,7 @@ Bloomington, IN\ \  47405 \\
 \section*{Introduction}
 \libintrotext{Chapter 26}
 
-\paragraph*{Changes from N2574}
-\begin{itemize}
-\item Added concepts to \tcode{valarray} (\ref{numarray}).
-\item Added concepts for the transcendental operations (\ref{numeric.concepts}).
-\end{itemize}
+\paragraph*{Changes from N2626}
 
 \end{titlepage}
 
@@ -116,7 +112,7 @@ and facilities included from the ISO C library,
 as summarized in Table~\ref{tab:numerics.summary}.
 
 \begin{libsumtab}{Numerics library summary}{tab:numerics.summary}
-\ref{numeric.concepts} \changedCC{Requirements}{Concepts}	& \addedCC{\mbox{\tcode{<numeric_concepts>}}}						\\ \rowsep
+\ref{numeric.concepts} \changedConcepts{Requirements}{Concepts}	& \addedConcepts{\mbox{\tcode{<numeric_concepts>}}}						\\ \rowsep
 \ref{complex.numbers} Complex Numbers	&	\tcode{<complex>}	\\ \rowsep
 \ref{rand} \addedB{Random number generation} & \tcode{<random>} \\ \rowsep
 \ref{numarray} Numeric arrays			&	\tcode{<valarray>}	\\ \rowsep
@@ -140,9 +136,9 @@ components are parameterized by the type of information they contain and manipul
 A \Cpp\ program shall instantiate these components only with a type
 \tcode{T}\
 that satisfies the
-\changedCC{following requirements:}{\mbox{\tcode{Semiregular}} concept (\mbox{\ref{concept.regular}}).}%
+\changedConcepts{following requirements:}{\mbox{\tcode{Semiregular}} concept (\mbox{\ref{concept.regular}}).}%
 \footnote{
-\removedCC{In other words, value types.
+\removedConcepts{In other words, value types.
 These include built-in arithmetic types,
 pointers, the library class
 \mbox{\tcode{complex}},
@@ -151,13 +147,13 @@ and instantiations of
 for value types.
 }}
 \begin{itemize}
-\item \removedCC{\mbox{\farg{T}}\ is not an abstract class (it has no pure virtual member functions);}
-\item \removedCC{\mbox{\farg{T}}\ is not a reference type;}
-\item \removedCC{\mbox{\farg{T}}\ is not cv-qualified;}
-\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public default constructor;}
-\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public copy constructor with the signature \mbox{\tcode{\farg{T}::\farg{T}(const \farg{T}\&)}}}\
-\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public destructor;}
-\item \removedCC{If \mbox{\farg{T}}\ is a class, it has a public assignment operator whose signature is either
+\item \removedConcepts{\mbox{\farg{T}}\ is not an abstract class (it has no pure virtual member functions);}
+\item \removedConcepts{\mbox{\farg{T}}\ is not a reference type;}
+\item \removedConcepts{\mbox{\farg{T}}\ is not cv-qualified;}
+\item \removedConcepts{If \mbox{\farg{T}}\ is a class, it has a public default constructor;}
+\item \removedConcepts{If \mbox{\farg{T}}\ is a class, it has a public copy constructor with the signature \mbox{\tcode{\farg{T}::\farg{T}(const \farg{T}\&)}}}\
+\item \removedConcepts{If \mbox{\farg{T}}\ is a class, it has a public destructor;}
+\item \removedConcepts{If \mbox{\farg{T}}\ is a class, it has a public assignment operator whose signature is either
 \mbox{\tcode{\farg{T}\& \farg{T}::operator=(const \farg{T}\&)}}\
 or
 \mbox{\tcode{\farg{T}\& \farg{T}::operator=(\farg{T})}}}\
@@ -170,13 +166,13 @@ Destruction of an object, followed by
 initialization of its raw storage using the copy constructor,
 is semantically equivalent to assignment to the original object.}
 
-\removedCC{\mbox{\enternote}\ 
+\removedConcepts{\mbox{\enternote}\ 
 This rule states that there shall not be any subtle differences in the semantics
 of initialization versus assignment.
 This gives an implementation
 considerable flexibility in how arrays are initialized.}
 
-\removedCC{\mbox{\enterexample}\ 
+\removedConcepts{\mbox{\enterexample}\ 
 An implementation is allowed to initialize a
 \mbox{\tcode{valarray}}\
 by allocating storage using the
@@ -188,7 +184,7 @@ Or the implementation can allocate raw
 storage and use the copy constructor to initialize each element.
 \mbox{\exitexample}}
 
-\removedCC{If the distinction between initialization and assignment is important
+\removedConcepts{If the distinction between initialization and assignment is important
 for a class, or if it fails to satisfy any of
 the other conditions listed above, the programmer should use
 \mbox{\tcode{vector}}\
@@ -196,7 +192,7 @@ the other conditions listed above, the programmer should use
 \mbox{\tcode{valarray}}\
 for that class;
 \mbox{\exitnote}}
-\item \removedCC{If \mbox{\farg{T}}\ is a class, it does not overload unary
+\item \removedConcepts{If \mbox{\farg{T}}\ is a class, it does not overload unary
 \mbox{\tcode{operator\&}}.}
 \end{itemize}
 
@@ -263,7 +259,7 @@ auto concept HasAbs<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which an absolute value can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which an absolute value can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -274,7 +270,7 @@ auto concept HasAcos<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which an arc cosine.}
+\addedConcepts{\mbox{\reallynote} describes types for which an arc cosine.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -285,7 +281,7 @@ auto concept HasAsin<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which an arc sine can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which an arc sine can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -296,7 +292,7 @@ auto concept HasAtan<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which an arc tangent can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which an arc tangent can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -307,7 +303,7 @@ auto concept HasAtan2<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which an arc tangent can be computed from \mbox{\farg{y}}/\mbox{\farg{x}}.}
+\addedConcepts{\mbox{\reallynote} describes types for which an arc tangent can be computed from \mbox{\farg{y}}/\mbox{\farg{x}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -318,7 +314,7 @@ auto concept HasCos<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which a cosine can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which a cosine can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -329,7 +325,7 @@ auto concept HasCosh<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which a hyperbolic cosine can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which a hyperbolic cosine can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -340,7 +336,7 @@ auto concept HasExp<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the base-\mbox{\farg{e}} exponential can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the base-\mbox{\farg{e}} exponential can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -351,7 +347,7 @@ auto concept HasLog<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the natural logarithm can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the natural logarithm can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -362,7 +358,7 @@ auto concept HasLog10<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which a base-10 logarithm can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which a base-10 logarithm can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -373,7 +369,7 @@ auto concept HasPow<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the exponential \mbox{$\farg{x}^\farg{y}$} can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the exponential \mbox{$\farg{x}^\farg{y}$} can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -384,7 +380,7 @@ auto concept HasSin<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the sine can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the sine can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -395,7 +391,7 @@ auto concept HasSinh<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the hyperbolic sine can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the hyperbolic sine can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -406,7 +402,7 @@ auto concept HasSqrt<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the square root can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the square root can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -417,7 +413,7 @@ auto concept HasTan<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the tangent can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the tangent can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -428,7 +424,7 @@ auto concept HasTanh<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types for which the hyperbolic tangent can be computed.}
+\addedConcepts{\mbox{\reallynote} describes types for which the hyperbolic tangent can be computed.}
 \end{itemdescr}
 \color{black}
 
@@ -458,43 +454,43 @@ undefined.
 \index{complex@\tcode{<complex>}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedCC{class}{ArithmeticLike}@ T> class complex;
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> class complex;
   template<> class complex<float>;
   template<> class complex<double>;
   template<> class complex<long double>;
 
   // \ref{complex.ops} operators:
-  template<@\changedCC{class}{ArithmeticLike}@ T>
+  template<@\changedConcepts{class}{ArithmeticLike}@ T>
     complex<T> operator+(const complex<T>&, const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>&, const T&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator+(const T&, const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-
     (const complex<T>&, const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>&, const T&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-(const T&, const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator*
     (const complex<T>&, const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const complex<T>&, const T&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator*(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator*(const T&, const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator/
     (const complex<T>&, const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const complex<T>&, const T&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator/(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator/(const T&, const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator==
     (const complex<T>&, const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const complex<T>&, const T&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator==(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator==(const T&, const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>&, const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>&, const T&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>&, const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator!=(const T&, const complex<T>&);
 
   template<class T, class charT, class traits>
   basic_istream<charT, traits>&
@@ -505,51 +501,51 @@ namespace std {
   operator<<(basic_ostream<charT, traits>&, const complex<T>&);
 
   // \ref{complex.value.ops} values:
-  template<@\changedCC{class}{ArithmeticLike}@ T> T real(const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> T imag(const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> T real(const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> T imag(const complex<T>&);
 
-  template<class T> @\addedCC{requires HasSqrt<T>}@ T abs(const complex<T>&);
-  template<class T> @\addedCC{requires HasAtan2<T>}@ T arg(const complex<T>&);
-  template<@\changedCC{class}{ArithmeticLike}@ T> T norm(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSqrt<T>}@ T abs(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasAtan2<T>}@ T arg(const complex<T>&);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> T norm(const complex<T>&);
 
-  template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> conj(const complex<T>&);
-  @\ptr@template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T>}@ complex<T> polar(const T&, const T& = 0);
+  template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> conj(const complex<T>&);
+  @\ptr@template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T>}@ complex<T> polar(const T&, const T& = 0);
 
   // \ref{complex.transcendentals} transcendentals:
-  template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acos(const complex<T>&);
-  template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asin(const complex<T>&);
-  template<class T> @\addedCC{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atan(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acos(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asin(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atan(const complex<T>&);
 
-  template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acosh(const complex<T>&);
-  template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asinh(const complex<T>&);
-  template<class T> @\addedCC{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atanh(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acosh(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asinh(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atanh(const complex<T>&);
 
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
     complex<T> cos  (const complex<T>&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
     complex<T> cosh (const complex<T>&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T>}@ 
     complex<T> exp  (const complex<T>&);
-  template<class T> @\addedCC{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log  (const complex<T>&);
-  template<class T> @\addedCC{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log10(const complex<T>&);
+  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log  (const complex<T>&);
+  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log10(const complex<T>&);
 
-  template<class T> @\addedCC{requires ArithmeticLike<T>}@ complex<T> pow(const complex<T>&, int);
-  template<class T> @\addedCC{requires HasPow<T> \&\& HasLog<T> \&\& HasSin<T> \&\& HasCos<T>}@ 
+  template<class T> @\addedConcepts{requires ArithmeticLike<T>}@ complex<T> pow(const complex<T>&, int);
+  template<class T> @\addedConcepts{requires HasPow<T> \&\& HasLog<T> \&\& HasSin<T> \&\& HasCos<T>}@ 
     complex<T> pow(const complex<T>&, const T&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
     complex<T> pow(const complex<T>&, const complex<T>&);
-  template<class T> @\addedCC{requires HasPow<T> \&\& HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
+  template<class T> @\addedConcepts{requires HasPow<T> \&\& HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
     complex<T> pow(const T&, const complex<T>&);
 
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
     complex<T> sin  (const complex<T>&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
     complex<T> sinh (const complex<T>&);
-  template<class T> @\addedCC{requires HasSqrt<T>}@ complex<T> sqrt (const complex<T>&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+  template<class T> @\addedConcepts{requires HasSqrt<T>}@ complex<T> sqrt (const complex<T>&);
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
     complex<T> tan  (const complex<T>&);
-  template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
     complex<T> tanh (const complex<T>&);
 }
 \end{codeblock}
@@ -559,14 +555,14 @@ namespace std {
 \index{complex@\tcode{complex}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedCC{class}{ArithmeticLike}@ T>
+  template<@\changedConcepts{class}{ArithmeticLike}@ T>
   class complex {
   public:
     typedef T value_type;
 
     complex(const T& @\farg{re}@ = T(), const T& @\farg{im}@ = T());
     complex(const complex&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Constructible<T, X>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Constructible<T, X>}@
       complex(const complex<X>&);
 
     T real() const;
@@ -579,15 +575,15 @@ namespace std {
     complex<T>& operator/=(const T&);
 
     complex& operator=(const complex&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, T>}@
       complex<T>& operator= (const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, T>}@
       complex<T>& operator+=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, T>}@
       complex<T>& operator-=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, T>}@
       complex<T>& operator*=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, T>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, T>}@
       complex<T>& operator/=(const complex<X>&);
   };
 
@@ -626,15 +622,15 @@ number.
     complex<float>& operator/=(float);
 
     complex<float>& operator=(const complex<float>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, float>}@
       complex<float>& operator= (const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, float>}@
       complex<float>& operator+=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, float>}@
       complex<float>& operator-=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, float>}@
       complex<float>& operator*=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, float>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, float>}@
       complex<float>& operator/=(const complex<X>&);
   };
 
@@ -656,15 +652,15 @@ number.
     complex<double>& operator/=(double);
 
     complex<double>& operator=(const complex<double>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, double>}@
       complex<double>& operator= (const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, double>}@
       complex<double>& operator+=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, double>}@
       complex<double>& operator-=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, double>}@
       complex<double>& operator*=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, double>}@
       complex<double>& operator/=(const complex<X>&);
   };
 
@@ -686,15 +682,15 @@ number.
     complex<long double>& operator*=(long double);
     complex<long double>& operator/=(long double);
 
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, long double>}@
       complex<long double>& operator= (const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, long double>}@
       complex<long double>& operator+=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, long double>}@
       complex<long double>& operator-=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, long double>}@
       complex<long double>& operator*=(const complex<X>&);
-    template<@\changedCC{class}{ArithmeticLike}@ X> @\addedCC{requires Convertible<X, long double>}@
+    template<@\changedConcepts{class}{ArithmeticLike}@ X> @\addedConcepts{requires Convertible<X, long double>}@
       complex<long double>& operator/=(const complex<X>&);
   };
 \end{codeblock}
@@ -703,7 +699,7 @@ number.
 
 \index{complex@\tcode{complex}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> @\addedCC{requires Constructible<T, X>}@ 
+template<@\changedConcepts{class}{ArithmeticLike}@ T> @\addedConcepts{requires Constructible<T, X>}@ 
   complex(const T& @\farg{re}@ = T(), const T& @\farg{im}@ = T());
 \end{itemdecl}
 
@@ -722,7 +718,7 @@ Constructs an object of class
 
 \index{operator+=@\tcode{operator+=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template <class T>}@ complex<T>& operator+=(const T& @\farg{rhs}@);
+@\removedConcepts{template <class T>}@ complex<T>& operator+=(const T& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -741,7 +737,7 @@ leaving the imaginary part unchanged.
 
 \index{operator-=@\tcode{operator-=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template <class T>}@ complex<T>& operator-=(const T& @\farg{rhs}@);
+@\removedConcepts{template <class T>}@ complex<T>& operator-=(const T& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -760,7 +756,7 @@ leaving the imaginary part unchanged.
 
 \index{operator*=@\tcode{operator*=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template <class T>}@ complex<T>& operator*=(const T& @\farg{rhs}@);
+@\removedConcepts{template <class T>}@ complex<T>& operator*=(const T& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -778,7 +774,7 @@ and stores the result in
 
 \index{operator/=@\tcode{operator/=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template <class T>}@ complex<T>& operator/=(const T& @\farg{rhs}@);
+@\removedConcepts{template <class T>}@ complex<T>& operator/=(const T& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -796,7 +792,7 @@ and stores the result in
 
 \index{operator+=@\tcode{operator+=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template<class T>}@ complex<T>& operator+=(const complex<T>& @\farg{rhs}@);
+@\removedConcepts{template<class T>}@ complex<T>& operator+=(const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -814,7 +810,7 @@ and stores the sum in
 
 \index{operator-=@\tcode{operator-=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template<class T>}@ complex<T>& operator-=(const complex<T>& @\farg{rhs}@);
+@\removedConcepts{template<class T>}@ complex<T>& operator-=(const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -832,7 +828,7 @@ and stores the difference in
 
 \index{operator*=@\tcode{operator*=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template<class T>}@ complex<T>& operator*=(const complex<T>& @\farg{rhs}@);
+@\removedConcepts{template<class T>}@ complex<T>& operator*=(const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -849,7 +845,7 @@ and stores the product in
 
 \index{operator/=@\tcode{operator/=}!\tcode{complex}}%
 \begin{itemdecl}
-@\removedCC{template<class T>}@ complex<T>& operator/=(const complex<T>& @\farg{rhs}@);
+@\removedConcepts{template<class T>}@ complex<T>& operator/=(const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -869,7 +865,7 @@ and stores the quotient in
 
 \index{operator+@\tcode{operator+}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>& @\farg{lhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>& @\farg{lhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -883,10 +879,10 @@ unary operator.
 \end{itemdescr}
 
 \begin{codeblock}
-template<@\changedCC{class}{ArithmeticLike}@ T>
+template<@\changedConcepts{class}{ArithmeticLike}@ T>
   complex<T> operator+(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator+(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator+(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
 \end{codeblock}
 
 \begin{itemdescr}
@@ -897,7 +893,7 @@ template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator+(const T& @\
 
 \index{operator-@\tcode{operator-}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>& @\farg{lhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>& @\farg{lhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -911,10 +907,10 @@ unary operator.
 \end{itemdescr}
 
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T>
+template<@\changedConcepts{class}{ArithmeticLike}@ T>
   complex<T> operator-(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator-(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -925,10 +921,10 @@ template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator-(const T& @\
 
 \index{operator*@\tcode{operator*}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T>
+template<@\changedConcepts{class}{ArithmeticLike}@ T>
   complex<T> operator*(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator*(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator*(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -938,10 +934,10 @@ template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator*(const T& @\
 \end{itemdescr}
 
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T>
+template<@\changedConcepts{class}{ArithmeticLike}@ T>
   complex<T> operator/(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator/(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> operator/(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -952,10 +948,10 @@ template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> operator/(const T& @\
 
 \index{operator==@\tcode{operator==}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T>
+template<@\changedConcepts{class}{ArithmeticLike}@ T>
   bool operator==(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> bool operator==(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator==(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator==(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -974,10 +970,10 @@ arguments.
 
 \index{operator"!=@\tcode{operator"!=}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T>
+template<@\changedConcepts{class}{ArithmeticLike}@ T>
   bool operator!=(const complex<T>& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
-template<@\changedCC{class}{ArithmeticLike}@ T> bool operator!=(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator!=(const complex<T>& @\farg{lhs}@, const T& @\farg{rhs}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> bool operator!=(const T& @\farg{lhs}@, const complex<T>& @\farg{rhs}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1062,7 +1058,7 @@ operator<<(basic_ostream<charT, traits>& o, const complex<T>& x)
 
 \index{real@\tcode{real}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> T real(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> T real(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1073,7 +1069,7 @@ template<@\changedCC{class}{ArithmeticLike}@ T> T real(const complex<T>& @\farg{
 
 \index{imag@\tcode{imag}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> T imag(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> T imag(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1084,7 +1080,7 @@ template<@\changedCC{class}{ArithmeticLike}@ T> T imag(const complex<T>& @\farg{
 
 \index{abs@\tcode{abs}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSqrt<T>}@ T abs(const complex<T>& @\farg{x}@);
+template<class T> @\addedConcepts{requires HasSqrt<T>}@ T abs(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1095,7 +1091,7 @@ the magnitude of \farg{x}.
 
 \index{arg@\tcode{arg}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasAtan2<T>}@ T arg(const complex<T>& @\farg{x}@);
+template<class T> @\addedConcepts{requires HasAtan2<T>}@ T arg(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1106,7 +1102,7 @@ the phase angle of \farg{x}, or \tcode{atan2(imag(\farg{x}), real(\farg{x}))}.
 
 \index{norm@\tcode{norm}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> T norm(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> T norm(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1117,7 +1113,7 @@ the squared magnitude of \farg{x}.
 
 \index{conj@\tcode{conj}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> conj(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> conj(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1129,7 +1125,7 @@ the complex conjugate of \farg{x}.
 \index{fabs@\tcode{fabs}!\tcode{complex}}%
 \index{cabs@\tcode{cabs}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedCC{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1139,7 +1135,7 @@ defined in subclause 7.3.8.1.
 
 \index{polar@\tcode{polar}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T>}@ 
   complex<T> polar(const T& @\farg{rho}@, const T& @\farg{theta}@ = 0);
 \end{itemdecl}
 
@@ -1158,7 +1154,7 @@ is \farg{theta}.
 \index{acos@\tcode{acos}!\tcode{complex}}%
 \index{cacos@\tcode{cacos}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acos(const complex<T>& @\farg{x}@);
+@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acos(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1169,7 +1165,7 @@ defined in subclause 7.3.5.1.
 \index{asin@\tcode{asin}!\tcode{complex}}%
 \index{casin@\tcode{casin}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asin(const complex<T>& @\farg{x}@);
+@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asin(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1180,7 +1176,7 @@ defined in subclause 7.3.5.2.
 \index{atan@\tcode{atan}!\tcode{complex}}%
 \index{catan@\tcode{catan}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedCC{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atan(const complex<T>& @\farg{x}@);
+@\ptr@template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atan(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1191,7 +1187,7 @@ defined in subclause 7.3.5.3.
 \index{acosh@\tcode{acosh}!\tcode{complex}}%
 \index{cacosh@\tcode{cacosh}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acosh(const complex<T>& @\farg{x}@);
+@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acosh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1202,7 +1198,7 @@ defined in subclause 7.3.6.1.
 \index{asinh@\tcode{asinh}!\tcode{complex}}%
 \index{casinh@\tcode{casinh}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedCC{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asinh(const complex<T>& @\farg{x}@);
+@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asinh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1213,7 +1209,7 @@ defined in subclause 7.3.6.2.
 \index{atanh@\tcode{atanh}!\tcode{complex}}%
 \index{catanh@\tcode{catanh}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedCC{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atanh(const complex<T>& @\farg{x}@);
+@\ptr@template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atanh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1223,7 +1219,7 @@ defined in subclause 7.3.6.3.
 
 \index{cos@\tcode{cos}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
   complex<T> cos(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
@@ -1235,7 +1231,7 @@ the complex cosine of \farg{x}.
 
 \index{cosh@\tcode{cosh}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
   complex<T> cosh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
@@ -1247,7 +1243,7 @@ the complex hyperbolic cosine of \farg{x}.
 
 \index{exp@\tcode{exp}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T>}@ complex<T> exp(const complex<T>& @\farg{x}@);
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T>}@ complex<T> exp(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1258,7 +1254,7 @@ the complex base e exponential of \farg{x}.
 
 \index{log@\tcode{log}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log(const complex<T>& @\farg{x}@);
+template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1280,7 +1276,7 @@ is pi.
 
 \index{log10@\tcode{log10}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log10(const complex<T>& @\farg{x}@);
+template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log10(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1296,13 +1292,13 @@ the complex common (base 10) logarithm of \farg{x}, defined as
 
 \index{pow@\tcode{pow}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires ArithmeticLike<T>}@ complex<T> pow(const complex<T>& @\farg{x}@, int @\farg{y}@);
+template<class T> @\addedConcepts{requires ArithmeticLike<T>}@ complex<T> pow(const complex<T>& @\farg{x}@, int @\farg{y}@);
 template<class T>
-  complex<T> @\addedCC{requires HasPow<T> \&\& HasLog<T> \&\& HasSin<T> \&\& HasCos<T>}@ 
+  complex<T> @\addedConcepts{requires HasPow<T> \&\& HasLog<T> \&\& HasSin<T> \&\& HasCos<T>}@ 
   pow(const complex<T>& @\farg{x}@, const complex<T>& @\farg{y}@);
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ complex<T> 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ complex<T> 
   pow  (const complex<T>& @\farg{x}@, const T& @\farg{y}@);
-template<class T> @\addedCC{requires HasPow<T> \&\& HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
+template<class T> @\addedConcepts{requires HasPow<T> \&\& HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
   complex<T> pow  (const T& @\farg{x}@, const complex<T>& @\farg{y}@);
 \end{itemdecl}
 
@@ -1323,7 +1319,7 @@ is implementation-defined.
 
 \index{sin@\tcode{sin}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
   complex<T> sin  (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
@@ -1335,7 +1331,7 @@ the complex sine of \farg{x}.
 
 \index{sinh@\tcode{sinh}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
   complex<T> sinh (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
@@ -1347,7 +1343,7 @@ the complex hyperbolic sine of \farg{x}.
 
 \index{sqrt@\tcode{sqrt}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSqrt<T>}@ complex<T> sqrt (const complex<T>& @\farg{x}@);
+template<class T> @\addedConcepts{requires HasSqrt<T>}@ complex<T> sqrt (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1365,7 +1361,7 @@ value returned lies on the positive imaginary axis.
 
 \index{tan@\tcode{tan}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
   complex<T> tan  (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
@@ -1377,7 +1373,7 @@ the complex tangent of \farg{x}.
 
 \index{tanh@\tcode{tanh}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedCC{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
+template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
   complex<T> tanh (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
@@ -1452,219 +1448,219 @@ function and type names declared or defined in the neader \tcode{<complex>}.
 \index{valarray@\tcode{<valarray>}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedCC{class}{Semiregular}@ T> class valarray;         // An array of type \tcode{T}
+  template<@\changedConcepts{class}{Semiregular}@ T> class valarray;         // An array of type \tcode{T}
   class slice;                              // a BLAS-like slice out of an array
-  template<@\changedCC{class}{Semiregular}@ T> class slice_array;
+  template<@\changedConcepts{class}{Semiregular}@ T> class slice_array;
   class gslice;                             // a generalized slice out of an array
-  template<@\changedCC{class}{Semiregular}@ T> class gslice_array;
-  template<@\changedCC{class}{Semiregular}@ T> class mask_array;       // a masked array
-  template<@\changedCC{class}{Semiregular}@ T> class indirect_array;   // an indirected array
+  template<@\changedConcepts{class}{Semiregular}@ T> class gslice_array;
+  template<@\changedConcepts{class}{Semiregular}@ T> class mask_array;       // a masked array
+  template<@\changedConcepts{class}{Semiregular}@ T> class indirect_array;   // an indirected array
 
-  template<@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&);
-  template<@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&&, valarray<T>&);
-  template<@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&&);
+  template<@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&);
+  template<@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>&&, valarray<T>&);
+  template<@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&&);
 
   template<class T> 
-    @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator* (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator* (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator* (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator/ (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator/ (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator/ (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator% (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator% (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator% (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator+ (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator+ (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator+ (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator- (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator- (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator- (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator^ (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator^ (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator^ (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator& (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator& (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator& (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator| (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator| (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator| (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator<<(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator<<(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator<<(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator>>(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator>>(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
     valarray<T> operator>>(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasLogicalAnd<T>}@
+    @\addedConcepts{requires HasLogicalAnd<T>}@
     valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasLogicalAnd<T>}@
+    @\addedConcepts{requires HasLogicalAnd<T>}@
     valarray<bool> operator&&(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasLogicalAnd<T>}@
+    @\addedConcepts{requires HasLogicalAnd<T>}@
     valarray<bool> operator&&(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedCC{requires HasLogicalOr<T>}@
+    @\addedConcepts{requires HasLogicalOr<T>}@
     valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires HasLogicalOr<T>}@
+    @\addedConcepts{requires HasLogicalOr<T>}@
     valarray<bool> operator||(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires HasLogicalOr<T>}@
+    @\addedConcepts{requires HasLogicalOr<T>}@
     valarray<bool> operator||(const T&, const valarray<T>&);
 
   template<class T>
-    @\addedCC{requires EqualityComparable<T>}@
+    @\addedConcepts{requires EqualityComparable<T>}@
     valarray<bool> operator==(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires EqualityComparable<T>}@
+    @\addedConcepts{requires EqualityComparable<T>}@
     valarray<bool> operator==(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires EqualityComparable<T>}@
+    @\addedConcepts{requires EqualityComparable<T>}@
     valarray<bool> operator==(const T&, const valarray<T>&);
   template<class T>
-    @\addedCC{requires EqualityComparable<T>}@
+    @\addedConcepts{requires EqualityComparable<T>}@
     valarray<bool> operator!=(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires EqualityComparable<T>}@
+    @\addedConcepts{requires EqualityComparable<T>}@
     valarray<bool> operator!=(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires EqualityComparable<T>}@
+    @\addedConcepts{requires EqualityComparable<T>}@
     valarray<bool> operator!=(const T&, const valarray<T>&);
 
   template<class T>
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator< (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator< (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator< (const T&, const valarray<T>&);
   template<class T>
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator> (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator> (const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator> (const T&, const valarray<T>&);
   template<class T>
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator<=(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator<=(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator<=(const T&, const valarray<T>&);
   template<class T>
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator>=(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator>=(const valarray<T>&, const T&);
   template<class T> 
-    @\addedCC{requires LessThanComparable<T>}@
+    @\addedConcepts{requires LessThanComparable<T>}@
     valarray<bool> operator>=(const T&, const valarray<T>&);
 
-  template<@\changedCC{class}{HasAbs}@ T> valarray<T> abs  (const valarray<T>&);
-  template<@\changedCC{class}{HasAcos}@ T> valarray<T> acos (const valarray<T>&);
-  template<@\changedCC{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
-  template<@\changedCC{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
+  template<@\changedConcepts{class}{HasAbs}@ T> valarray<T> abs  (const valarray<T>&);
+  template<@\changedConcepts{class}{HasAcos}@ T> valarray<T> acos (const valarray<T>&);
+  template<@\changedConcepts{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
+  template<@\changedConcepts{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
 
-  template<@\changedCC{class}{Atan2}@ T> valarray<T> atan2
+  template<@\changedConcepts{class}{Atan2}@ T> valarray<T> atan2
     (const valarray<T>&, const valarray<T>&);
-  template<@\changedCC{class}{Atan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
-  template<@\changedCC{class}{Atan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
+  template<@\changedConcepts{class}{Atan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
+  template<@\changedConcepts{class}{Atan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
 
-  template<@\changedCC{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
-  template<@\changedCC{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
-  template<@\changedCC{class}{HasExp}@ T> valarray<T> exp  (const valarray<T>&);
-  template<@\changedCC{class}{HasLog}@ T> valarray<T> log  (const valarray<T>&);
-  template<@\changedCC{class}{HasLog10}@ T> valarray<T> log10(const valarray<T>&);
+  template<@\changedConcepts{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
+  template<@\changedConcepts{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
+  template<@\changedConcepts{class}{HasExp}@ T> valarray<T> exp  (const valarray<T>&);
+  template<@\changedConcepts{class}{HasLog}@ T> valarray<T> log  (const valarray<T>&);
+  template<@\changedConcepts{class}{HasLog10}@ T> valarray<T> log10(const valarray<T>&);
 
-  template<@\changedCC{class}{HasPow}@ T> valarray<T> pow(const valarray<T>&, const valarray<T>&);
-  template<@\changedCC{class}{HasPow}@ T> valarray<T> pow(const valarray<T>&, const T&);
-  template<@\changedCC{class}{HasPow}@ T> valarray<T> pow(const T&, const valarray<T>&);
+  template<@\changedConcepts{class}{HasPow}@ T> valarray<T> pow(const valarray<T>&, const valarray<T>&);
+  template<@\changedConcepts{class}{HasPow}@ T> valarray<T> pow(const valarray<T>&, const T&);
+  template<@\changedConcepts{class}{HasPow}@ T> valarray<T> pow(const T&, const valarray<T>&);
 
-  template<@\changedCC{class}{HasSin}@ T> valarray<T> sin  (const valarray<T>&);
-  template<@\changedCC{class}{HasSinh}@ T> valarray<T> sinh (const valarray<T>&);
-  template<@\changedCC{class}{HasSqrt}@ T> valarray<T> sqrt (const valarray<T>&);
-  template<@\changedCC{class}{HasTan}@ T> valarray<T> tan  (const valarray<T>&);
-  template<@\changedCC{class}{HasTanh}@ T> valarray<T> tanh (const valarray<T>&);
+  template<@\changedConcepts{class}{HasSin}@ T> valarray<T> sin  (const valarray<T>&);
+  template<@\changedConcepts{class}{HasSinh}@ T> valarray<T> sinh (const valarray<T>&);
+  template<@\changedConcepts{class}{HasSqrt}@ T> valarray<T> sqrt (const valarray<T>&);
+  template<@\changedConcepts{class}{HasTan}@ T> valarray<T> tan  (const valarray<T>&);
+  template<@\changedConcepts{class}{HasTanh}@ T> valarray<T> tanh (const valarray<T>&);
 }
 \end{codeblock}
 
@@ -1752,7 +1748,7 @@ Note that the exception is not mandated.
 \index{valarray@\tcode{valarray}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedCC{class}{Semiregular}@ @\farg{T}@> class valarray {
+  template<@\changedConcepts{class}{Semiregular}@ @\farg{T}@> class valarray {
   public:
     typedef T value_type;
 
@@ -1793,45 +1789,45 @@ namespace std {
     indirect_array<T> operator[](const valarray<size_t>&);
 
     // \ref{valarray.unary} unary operators:
-    @\addedCC{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
+    @\addedConcepts{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
       valarray<T> operator+() const;
-    @\addedCC{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
+    @\addedConcepts{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
       valarray<T> operator-() const;
-    @\addedCC{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
+    @\addedConcepts{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
       valarray<T> operator~() const;
-    @\addedCC{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
+    @\addedConcepts{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 
     // \ref{valarray.cassign} computed assignment:
-    @\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
-    @\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
-    @\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
-    @\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
-    @\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
-    @\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
-    @\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
-    @\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
-    @\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
-    @\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
+    @\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
+    @\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
+    @\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
+    @\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
+    @\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
+    @\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
+    @\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
+    @\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
+    @\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
+    @\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
 
-    @\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
-    @\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
-    @\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
-    @\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
-    @\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
-    @\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
-    @\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
-    @\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
-    @\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
-    @\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
+    @\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
+    @\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
+    @\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
+    @\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
+    @\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
+    @\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
+    @\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
+    @\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
+    @\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
+    @\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
 
     // \ref{valarray.members} member functions:
     @\addedD{void swap(valarray\&\&);}@
 
     size_t size() const;
 
-    @\addedCC{requires HasPlusAssign<T>}@      T    sum() const;
-    @\addedCC{requires LessThanComparable<T>}@ T    min() const;
-    @\addedCC{requires LessThanComparable<T>}@ T    max() const;
+    @\addedConcepts{requires HasPlusAssign<T>}@      T    sum() const;
+    @\addedConcepts{requires LessThanComparable<T>}@ T    min() const;
+    @\addedConcepts{requires LessThanComparable<T>}@ T    max() const;
 
     valarray<T> shift (int) const;
     valarray<T> cshift(int) const;
@@ -2202,18 +2198,18 @@ class template object which has reference semantics to the original array.
 \index{operator\~{}@\tcode{operator\~{}}!\tcode{valarray}}%
 \index{operator"!@\tcode{operator"!}!\tcode{valarray}}%
 \begin{itemdecl}
-@\addedCC{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
+@\addedConcepts{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
   valarray<T> operator+() const;
-@\addedCC{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
+@\addedConcepts{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
   valarray<T> operator-() const;
-@\addedCC{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
+@\addedConcepts{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
   valarray<T> operator~() const;
-@\addedCC{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
+@\addedConcepts{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\
 to which the indicated operator can be applied and for which the indicated
 operator returns a value which is of type \mbox{\farg{T}}\ (\mbox{\farg{bool}}\ for
 \mbox{\farg{operator!}}) or which may be unambiguously converted to type
@@ -2239,21 +2235,21 @@ applying the indicated operator to the corresponding element of the array.
 \index{operator<<=@\tcode{operator\shl=}!valarray@\tcode{valarray}}%
 \index{operator>>=@\tcode{operator\shr=}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-@\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
-@\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
-@\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
-@\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
-@\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
-@\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
-@\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
-@\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
-@\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
-@\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
+@\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
+@\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
+@\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
+@\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
+@\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
+@\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
+@\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
+@\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
+@\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
+@\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied.
 Each of these operators
 performs the indicated operation on each of its elements and the
@@ -2276,21 +2272,21 @@ hand side, the resulting behavior is undefined.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
-@\addedCC{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
-@\addedCC{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
-@\addedCC{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
-@\addedCC{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
-@\addedCC{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
-@\addedCC{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
-@\addedCC{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
-@\addedCC{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
-@\addedCC{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
+@\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
+@\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
+@\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
+@\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
+@\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
+@\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
+@\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
+@\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
+@\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
+@\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied.}
 
 \pnum
@@ -2337,11 +2333,11 @@ This function returns the number of elements in the array.
 
 \index{sum@\tcode{sum}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-@\addedCC{requires HasPlusAssign<T>}@ T sum() const;
+@\addedConcepts{requires HasPlusAssign<T>}@ T sum() const;
 \end{itemdecl}
 
 \begin{itemdescr}
-\removedCC{This function may only be instantiated for a type \mbox{\farg{T}}\ to which
+\removedConcepts{This function may only be instantiated for a type \mbox{\farg{T}}\ to which
 \mbox{\tcode{operator+=}}\
 can be applied.}
 This function returns the sum of all the elements of the array.
@@ -2361,7 +2357,7 @@ all other elements of the array in an unspecified order.%
 
 \index{min@\tcode{min}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-@\addedCC{requires LessThanComparable<T>}@ T min() const;
+@\addedConcepts{requires LessThanComparable<T>}@ T min() const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2378,7 +2374,7 @@ lengths, the determination is made using
 
 \index{max@\tcode{max}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-@\addedCC{requires LessThanComparable<T>}@ T max() const;
+@\addedConcepts{requires LessThanComparable<T>}@ T max() const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2489,40 +2485,40 @@ Resizing invalidates all pointers and references to elements in the array.
 \index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
 template<class T> 
-  @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator*(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator/(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator%(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator+(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator-(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator^(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator&(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator|(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator<<(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator>>(const valarray<T>&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which the indicated
 operator returns a value which is of type \mbox{\farg{T}}\ or which
 can be unambiguously converted to type \mbox{\farg{T}}.}
@@ -2541,70 +2537,70 @@ If the argument arrays do not have the same length, the behavior is undefined.%
 
 \begin{itemdecl}
 template<class T> 
-  @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator* (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator* (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator/ (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator/ (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator% (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator% (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator+ (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator+ (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator- (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator- (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator^ (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator^ (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator& (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator& (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator| (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator| (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator<<(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator<<(const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator>>(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
   valarray<T> operator>>(const T&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which
 the indicated operator returns a value which is of type \mbox{\farg{T}}\ 
 or which can be unambiguously converted to type \mbox{\farg{T}}.}
@@ -2629,34 +2625,34 @@ corresponding element of the array argument and the non-array argument.
 \index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
 template<class T> 
-  @\addedCC{requires EqualityComparable<T>}@
+  @\addedConcepts{requires EqualityComparable<T>}@
   valarray<bool> operator==(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires EqualityComparable<T>}@
+  @\addedConcepts{requires EqualityComparable<T>}@
   valarray<bool> operator!=(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator<(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator>(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator<=(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator>=(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasLogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T>}@
   valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasLogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T>}@
   valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which
 the indicated operator returns a value which is of type \mbox{\farg{bool}}\ 
 or which can be unambiguously converted to type \mbox{\farg{bool}}.}
@@ -2676,58 +2672,58 @@ the behavior is undefined.%
 
 \begin{itemdecl}
 template<class T> 
-  @\addedCC{requires EqualityComparable<T>}@
+  @\addedConcepts{requires EqualityComparable<T>}@
   valarray<bool> operator==(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires EqualityComparable<T>}@
+  @\addedConcepts{requires EqualityComparable<T>}@
   valarray<bool> operator==(const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires EqualityComparable<T>}@
+  @\addedConcepts{requires EqualityComparable<T>}@
   valarray<bool> operator!=(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires EqualityComparable<T>}@
+  @\addedConcepts{requires EqualityComparable<T>}@
   valarray<bool> operator!=(const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator< (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator< (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator> (const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator> (const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator<=(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator<=(const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator>=(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires LessThanComparable<T>}@
+  @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator>=(const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasLogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T>}@
   valarray<bool> operator&&(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasLogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T>}@
   valarray<bool> operator&&(const T&, const valarray<T>&);
 template<class T> 
-  @\addedCC{requires HasLogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T>}@
   valarray<bool> operator||(const valarray<T>&, const T&);
 template<class T> 
-  @\addedCC{requires HasLogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T>}@
   valarray<bool> operator||(const T&, const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these operators may only be instantiated for a type \mbox{\farg{T}}\ 
 to which the indicated operator can be applied and for which
 the indicated operator returns a value which is of type \mbox{\farg{bool}}\ 
 or which can be unambiguously converted to type \mbox{\farg{bool}}.}
@@ -2759,37 +2755,37 @@ indicated operator to the corresponding element of the array and the non-array a
 \index{tan@\tcode{tan}}%
 \index{tanh@\tcode{tanh}}%
 \begin{itemdecl}
-template<@\changedCC{class}{HasAbs}@ T> valarray<T> abs  (const valarray<T>&);
-template<@\changedCC{class}{HasAcos}@ T> valarray<T> acos (const valarray<T>&);
-template<@\changedCC{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
-template<@\changedCC{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
-template<@\changedCC{class}{HasAtan2}@ T> valarray<T> atan2
+template<@\changedConcepts{class}{HasAbs}@ T> valarray<T> abs  (const valarray<T>&);
+template<@\changedConcepts{class}{HasAcos}@ T> valarray<T> acos (const valarray<T>&);
+template<@\changedConcepts{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
+template<@\changedConcepts{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
+template<@\changedConcepts{class}{HasAtan2}@ T> valarray<T> atan2
     (const valarray<T>&, const valarray<T>&);
-template<@\changedCC{class}{HasAtan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
-template<@\changedCC{class}{HasAtan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
-template<@\changedCC{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
-template<@\changedCC{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
-template<@\changedCC{class}{HasExp}@ T> valarray<T> exp  (const valarray<T>&);
-template<@\changedCC{class}{HasLog}@ T> valarray<T> log  (const valarray<T>&);
-template<@\changedCC{class}{HasLog10}@ T> valarray<T> log10(const valarray<T>&);
-template<@\changedCC{class}{HasPow}@ T> valarray<T> pow
+template<@\changedConcepts{class}{HasAtan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
+template<@\changedConcepts{class}{HasAtan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
+template<@\changedConcepts{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
+template<@\changedConcepts{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
+template<@\changedConcepts{class}{HasExp}@ T> valarray<T> exp  (const valarray<T>&);
+template<@\changedConcepts{class}{HasLog}@ T> valarray<T> log  (const valarray<T>&);
+template<@\changedConcepts{class}{HasLog10}@ T> valarray<T> log10(const valarray<T>&);
+template<@\changedConcepts{class}{HasPow}@ T> valarray<T> pow
     (const valarray<T>&, const valarray<T>&);
-template<@\changedCC{class}{HasPow}@ T> valarray<T> pow  (const valarray<T>&, const T&);
-template<@\changedCC{class}{HasPow}@ T> valarray<T> pow  (const T&, const valarray<T>&);
-template<@\changedCC{class}{HasSin}@ T> valarray<T> sin  (const valarray<T>&);
-template<@\changedCC{class}{HasSinh}@ T> valarray<T> sinh (const valarray<T>&);
-template<@\changedCC{class}{HasSqrt}@ T> valarray<T> sqrt (const valarray<T>&);
-template<@\changedCC{class}{HasTan}@ T> valarray<T> tan  (const valarray<T>&);
-template<@\changedCC{class}{HasTanh}@ T> valarray<T> tanh (const valarray<T>&);
+template<@\changedConcepts{class}{HasPow}@ T> valarray<T> pow  (const valarray<T>&, const T&);
+template<@\changedConcepts{class}{HasPow}@ T> valarray<T> pow  (const T&, const valarray<T>&);
+template<@\changedConcepts{class}{HasSin}@ T> valarray<T> sin  (const valarray<T>&);
+template<@\changedConcepts{class}{HasSinh}@ T> valarray<T> sinh (const valarray<T>&);
+template<@\changedConcepts{class}{HasSqrt}@ T> valarray<T> sqrt (const valarray<T>&);
+template<@\changedConcepts{class}{HasTan}@ T> valarray<T> tan  (const valarray<T>&);
+template<@\changedConcepts{class}{HasTanh}@ T> valarray<T> tanh (const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{Each of these functions may only be instantiated for a type \mbox{\farg{T}}\ 
+\removedConcepts{Each of these functions may only be instantiated for a type \mbox{\farg{T}}\ 
 to which a unique function with the indicated name can be applied (unqualified).
 This function shall return a value which is of type \mbox{\farg{T}}\ 
 or which can be unambiguously converted to type \mbox{\farg{T}}.}
-\addedCC{Each 
+\addedConcepts{Each 
 element of the returned array is initialized with the result of applying the indicated function to the non-array argument (if any) and corresponding 
 element of the array argument or arguments.}
 \end{itemdescr}
@@ -2797,9 +2793,9 @@ element of the array argument or arguments.}
 \rSec3[valarray.special]{\tcode{valarray}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray<T>& y);
-template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>&& x, valarray<T>& y);
-template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray<T>&& y);
+template <@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray<T>& y);
+template <@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>&& x, valarray<T>& y);
+template <@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray<T>&& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2815,21 +2811,21 @@ template <@\changedCC{class}{Semiregular}@ T> void swap(valarray<T>& x, valarray
 \index{slice_array@\tcode{slice_array}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedCC{class}{Semiregular}@ T> class slice_array {
+  template <@\changedConcepts{class}{Semiregular}@ T> class slice_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     slice_array(const slice_array&);
    ~slice_array();
@@ -2915,16 +2911,16 @@ object refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{slice_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{slice_array}}%
 \begin{itemdecl}
-@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2962,21 +2958,21 @@ object refers.
 \index{gslice_array@\tcode{gslice_array}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedCC{class}{Semiregular}@ T> class gslice_array {
+  template <@\changedConcepts{class}{Semiregular}@ T> class gslice_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     gslice_array(const gslice_array&);
    ~gslice_array();
@@ -3059,16 +3055,16 @@ refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{gslice_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{gslice_array}}%
 \begin{itemdecl}
-@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3104,21 +3100,21 @@ object refers.
 \index{mask_array@\tcode{mask_array}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedCC{class}{Semiregular}@ T> class mask_array {
+  template <@\changedConcepts{class}{Semiregular}@ T> class mask_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     mask_array(const mask_array&);
    ~mask_array();
@@ -3196,16 +3192,16 @@ object to which it refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{mask_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{mask_array}}%
 \begin{itemdecl}
-@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3239,21 +3235,21 @@ object refers.
 \index{indirect_array@\tcode{indirect_array}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedCC{class}{Semiregular}@ T> class indirect_array {
+  template <@\changedConcepts{class}{Semiregular}@ T> class indirect_array {
   public:
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 
     indirect_array(const indirect_array&);
    ~indirect_array();
@@ -3350,16 +3346,16 @@ indirection.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{indirect_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{indirect_array}}%
 \begin{itemdecl}
-@\addedCC{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedCC{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedCC{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedCC{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedCC{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedCC{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedCC{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedCC{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedCC{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedCC{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
