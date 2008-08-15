@@ -14,6 +14,11 @@
 #define BOOST_EXTENSION_FACTORY_HPP
 
 #include <boost/extension/common.hpp>
+#include <boost/extension/impl/create.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_class.hpp>
+#include <boost/type_traits/is_const.hpp>
 
 namespace boost {
 namespace extensions {
@@ -86,15 +91,6 @@ public:
 };
 
 #else
-#define N BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
-namespace impl {
-template <class T, class D
-          BOOST_PP_COMMA_IF(N)
-          BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT( \
-            BOOST_PP_INC(N), class Param, void) >
-struct create_function;
-}  // namespace impl
-#undef N
 
 #define N BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
 
@@ -106,7 +102,7 @@ class factory;
 
 #undef N
 
-// generate specializations of create_function and factory
+// generate specializations of factory
 # define BOOST_PP_ITERATION_LIMITS \
   (0, BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS) - 1)
 # define BOOST_PP_FILENAME_1 <boost/extension/impl/factory.hpp>

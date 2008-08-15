@@ -13,12 +13,16 @@
 template <class Derived
           BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param)>
 void set(BOOST_PP_ENUM_PARAMS(N, Info i)) {
-  parameter_names_.resize(0);
+  parameter_names_.resize(N);
 #define BOOST_EXTENSION_ADD_TO_LIST(z, n, data) \
-parameter_names_.push_back(BOOST_PP_CAT(i, n));
+  parameter_names_[n] = BOOST_PP_CAT(i, n);
   BOOST_PP_REPEAT(N, BOOST_EXTENSION_ADD_TO_LIST, );
 #undef BOOST_EXTENSION_ADD_TO_LIST
   func_ = &impl::create_func
+    <Interface, Derived, Info, TypeInfo
+     BOOST_PP_COMMA_IF(N)
+     BOOST_PP_ENUM_PARAMS(N, Param)>;
+  functor_func_ = &impl::get_functor_func
     <Interface, Derived, Info, TypeInfo
      BOOST_PP_COMMA_IF(N)
      BOOST_PP_ENUM_PARAMS(N, Param)>;

@@ -11,37 +11,30 @@
 // No header guard - this file is intended to be included multiple times.
 
 # define N BOOST_PP_ITERATION()
-namespace impl {
-template <
-  class T,
-  class D
-  BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param)
->
-struct create_function<
-  T,
-  D
-  BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param)
-> {
-  static T * create(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p) ) {
-    return new D(BOOST_PP_ENUM_PARAMS(N, p));
-  }
-};
-}  // namespace impl
-
-
 template <class T BOOST_PP_COMMA_IF(N)  BOOST_PP_ENUM_PARAMS(N, class Param) >
 class factory<T BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param) >
 {
 public:
+  // This assertion will fire if a factory type is instantiated
+  // with something that is not a class.
+  BOOST_STATIC_ASSERT((is_class<T>::value));
+  // This assertion will fire if T is const.
+  BOOST_STATIC_ASSERT((!is_const<T>::value));
 
   template <class D>
   void set() {
+    // This assertion will fire if a factory type is
+    // set to a class from which it doesn't inherit.
+    BOOST_STATIC_ASSERT((is_base_of<T, D>::value));
+  // This assertion will fire if D is const.
+    BOOST_STATIC_ASSERT((!is_const<D>::value));
     this->func = &impl::create_function<
         T, D BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N,Param)
       >::create;
   }
 
-  factory() : func(0) {}
+  factory() : func(0) {
+  }
 
   factory(factory<T> const& first) : func(first.func) {}
 

@@ -22,11 +22,21 @@ struct type_info_handler {
 
 class default_type_info {
 public:
-  default_type_info(const std::type_info& new_type) : type(new_type) {
+  default_type_info() : type_(&typeid(void)) {
   }
-  default_type_info(const default_type_info& first) : type(first.type) {
+  default_type_info(const std::type_info& new_type) : type_(&new_type) {
   }
-  const std::type_info& type;
+  default_type_info(const default_type_info& first) : type_(first.type_) {
+  }
+  const std::type_info& type() const {
+    return *type_;
+  }
+  default_type_info& operator=(const default_type_info& first) {
+    type_ = first.type_;
+    return *this;
+  }
+private:
+  const std::type_info* type_;
 };
 template <class ClassType>
 struct type_info_handler<default_type_info, ClassType>
@@ -40,22 +50,23 @@ struct type_info_handler<default_type_info, ClassType>
 
 // This list should be expanded to all platforms that successfully
 // compare type_info across shared library boundaries.
-#if defined(__APPLE__) || defined(__GNUC__) || defined(BOOST_EXTENSION_FORCE_FAST_TYPEINFO)
+#if defined(__APPLE__) || defined(__GNUC__) || \
+    defined(BOOST_EXTENSION_FORCE_FAST_TYPEINFO)
 namespace boost {
 namespace extensions {
 inline bool operator<(const default_type_info& first,
                const default_type_info& second) {
-  return &first.type < &second.type;
+  return &first.type() < &second.type();
 }
 
 inline bool operator==(const default_type_info& first,
                const default_type_info& second) {
-  return &first.type == &second.type;
+  return &first.type() == &second.type();
 }
 
 inline bool operator>(const default_type_info& first,
                const default_type_info& second) {
-  return &first.type > &second.type;
+  return &first.type() > &second.type();
 }
 }}
 #else
@@ -64,17 +75,17 @@ inline bool operator>(const default_type_info& first,
 namespace boost { namespace extensions {
 inline bool operator<(const default_type_info& first,
                const default_type_info& second) {
-  return std::strcmp(first.type.raw_name(), second.type.raw_name()) < 0;
+  return std::strcmp(first.type().raw_name(), second.type().raw_name()) < 0;
 }
 
 inline bool operator==(const default_type_info& first,
                const default_type_info& second) {
-  return std::strcmp(first.type.raw_name(), second.type.raw_name()) == 0;
+  return std::strcmp(first.type().raw_name(), second.type().raw_name()) == 0;
 }
 
 inline bool operator>(const default_type_info& first,
                const default_type_info& second) {
-  return std::strcmp(first.type.raw_name(), second.type.raw_name()) > 0;
+  return std::strcmp(first.type().raw_name(), second.type().raw_name()) > 0;
 }
 }  // namespace extensions
 }  // namespace boost
@@ -83,17 +94,17 @@ inline bool operator>(const default_type_info& first,
 namespace boost { namespace extensions {
 inline bool operator<(const default_type_info& first,
                const default_type_info& second) {
-  return std::strcmp(first.type.name(), second.type.name()) < 0;
+  return std::strcmp(first.type().name(), second.type().name()) < 0;
 }
 
 inline bool operator==(const default_type_info& first,
                const default_type_info& second) {
-  return std::strcmp(first.type.name(), second.type.name()) == 0;
+  return std::strcmp(first.type().name(), second.type().name()) == 0;
 }
 
 inline bool operator>(const default_type_info& first,
                const default_type_info& second) {
-  return std::strcmp(first.type.name(), second.type.name()) > 0;
+  return std::strcmp(first.type().name(), second.type().name()) > 0;
 }
 }  // namespace extensions
 }  // namespace boost

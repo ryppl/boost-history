@@ -28,7 +28,6 @@ template <class Interface, class Derived
           BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, class Param)>
 static void check_func() {
 
-
 }
 
 

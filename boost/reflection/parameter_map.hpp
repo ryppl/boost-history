@@ -56,7 +56,7 @@ public:
     * \tparam D The type of parameter to return.
     */
   template <class D>
-  std::vector<generic_parameter<TypeInfo>*> get(Info info) {
+  std::vector<generic_parameter<TypeInfo>*> get(const Info& info) {
     std::vector<generic_parameter<TypeInfo>*> parameters;
     std::pair<typename map_type::iterator, typename map_type::iterator> its
       = equal_range(info);
@@ -82,7 +82,7 @@ public:
     * \tparam D The type of parameter to search for.
     */
   template <class D>
-  bool has(Info info) const {
+  bool has(const Info& info) const {
     std::pair<typename map_type::const_iterator,
               typename map_type::const_iterator> its
       = equal_range(info);
@@ -109,7 +109,7 @@ public:
     * \tparam D The type of parameter to search for.
     */
   template <class D>
-  generic_parameter<TypeInfo>* get_first(Info info) {
+  generic_parameter<TypeInfo>* get_first(const Info& info) {
     std::pair<typename map_type::iterator, typename map_type::iterator> its
       = equal_range(info);
     for (typename map_type::iterator current = its.first;
@@ -119,7 +119,7 @@ public:
         return &p;
       }
     }
-    throw parameter_unavailable_exception();
+    return 0;
   }
 };
 typedef basic_parameter_map<> parameter_map;

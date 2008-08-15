@@ -15,6 +15,10 @@
 
 #include <map>
 #include <boost/extension/impl/typeinfo.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/remove_const.hpp>
+#include <boost/type_traits/has_nothrow_assign.hpp>
+#include <boost/type_traits/has_nothrow_copy_constructor.hpp>
 
 namespace boost {
 namespace extensions {
@@ -47,6 +51,10 @@ namespace extensions {
 template <class TypeInfo>
 class basic_type_map {
 public:
+// Some assertions about the TypeInfo type.
+  BOOST_STATIC_ASSERT(has_nothrow_assign<TypeInfo>::value);
+  BOOST_STATIC_ASSERT(has_nothrow_copy_constructor<TypeInfo>::value);
+
 #ifndef BOOST_EXTENSION_DOXYGEN_INVOKED
   class type_map_convertible {
   public:
@@ -58,25 +66,30 @@ public:
     }
     template <class Type>
     operator Type&() {
-      TypeInfo t = type_info_handler<TypeInfo, Type>::get_class_type();
-  
+      typedef typename remove_const<Type>::type StoredType;
+      TypeInfo t =
+        type_info_handler<TypeInfo, StoredType>
+          ::get_class_type();
       typename std::map<TypeInfo, generic_type_holder*>::iterator
         it = instances_.find(t);
   
-      type_holder<Type>* holder;
+      type_holder<StoredType>* holder;
       if (it == instances_.end()) {
-        holder = new type_holder<Type>;
+        holder = new type_holder<StoredType>;
         it = instances_.insert(std::make_pair(t, holder)).first;
       }
       else {
-        holder = static_cast<type_holder<Type>* > (it->second);
+        holder = static_cast<type_holder<StoredType>*>(it->second);
       }
       return holder->val;
     }
+
   private:
     struct generic_type_holder {
       virtual ~generic_type_holder() {}
     };
+
+    // T must be default constructible.
     template <class T>
     struct type_holder : generic_type_holder {
       T val;
