@@ -100,4 +100,35 @@ Finally, we can remove some points:
 q.remove(geometry::point_xy<double>(9.0,9.0));
 ``
 
+[section:tutorial1 Tutorial - rtree particularities]
+
+In this tutorial we want to show how could change the previous tutorial with
+the use of an rtree. As it's a different structure the creation parameters are
+not the same, and we also have some other features in the insertion and
+deletion algorithms.
+
+First, let's see the constructor of the rtree:
+
+``
+spatial_index(const unsigned int m, const unsigned int M):i_(m, M)
+``
+
+In this case we have also two parameters, but none of them is a box because a 
+bounding box is not needed for this structure. We have two integers that are
+low and high bounds for the number of elements in a node.
+
+The great difference of the structure is that the rtree allows insertion of
+not only points, but rectangles. This adds a lot of flexibility because
+any shape could have a minimum bounding rectangle (MB) that could 
+be inserted into the index to represent the actual geometrical object.
+
+Then the insertion method is overloaded to support geometry proposal's boxes:
+
+``
+void insert(const geometry::box<Point> &e, const Value & v);
+``
+
+A complete example showing the basic usage of the rtree could be found in
+test/simple_test_rtree.cpp.
+
 [endsect]
