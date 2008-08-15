@@ -24,7 +24,12 @@ test-suite "mirror"
          [ compile types_ct_02.cpp ]
          [ compile types_ct_03.cpp ]
          [ compile types_ct_04.cpp ]
+         [ compile types_ct_05.cpp ]
          [ run types_rt_01.cpp ]
          [ run types_rt_02.cpp ]
+         [ compile classes_ct_01.cpp ]
+         [ compile classes_ct_02.cpp ]
+         [ compile classes_ct_03.cpp ]
+         [ compile classes_ct_04.cpp ]
     ;
 
