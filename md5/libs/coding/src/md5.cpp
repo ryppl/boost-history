@@ -22,10 +22,9 @@
 #include <boost/array.hpp>                  // for boost::array
 #include <boost/assert.hpp>                 // for BOOST_ASSERT
 #include <boost/bimap.hpp>                  // for boost::bimap
+#include <boost/detail/bit_rotation.hpp>    // for boost::detail::left_rotate
 #include <boost/integer/integer_mask.hpp>   // for boost::integer_lo_mask
-#include <boost/limits.hpp>                 // for std::numeric_limits
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
-#include <boost/static_assert.hpp>          // for BOOST_STATIC_ASSERT
 
 #include <algorithm>  // for std::copy, fill
 #include <climits>    // for CHAR_BIT
@@ -108,33 +107,6 @@ public:
 int const  md5_s[4][4] = { {7, 12, 17, 22}, {5, 9, 14, 20}, {4, 11, 16, 23}, {6,
  10, 15, 21} };
 
-// Rotating left-shift for bits
-template < typename Unsigned, int TotalRotated >
-class left_rotator
-{
-    typedef std::numeric_limits<Unsigned>  limits_type;
-
-    BOOST_STATIC_ASSERT( limits_type::is_specialized && limits_type::is_integer
-     && (limits_type::radix == 2) && limits_type::is_bounded &&
-     !limits_type::is_signed && (limits_type::digits >= TotalRotated) );
-
-    static  Unsigned const  mask_;
-
-public:
-    typedef Unsigned  result_type, first_argument_type;
-    typedef int       second_argument_type;
-
-    result_type  operator ()( first_argument_type x, second_argument_type n )
-     const
-    {
-        return ( (x << n) | (( x & mask_ ) >> ( TotalRotated - n )) ) & mask_;
-    }
-};
-
-template < typename Unsigned, int TotalRotated >
-Unsigned const  left_rotator<Unsigned, TotalRotated>::mask_ =
- boost::integer_lo_mask<TotalRotated>::value;
-
 // Order of listed bits within a 32-bit word: octets are listed lowest-order
 // first, but the bits within octets are listed highest-order first!  The order
 // is given in the appropriate power-of-two for that bit.
@@ -150,13 +122,13 @@ template < template <typename> class TernaryFuncTmpl, typename Word, int
  WordLength >
 class md5_special_op
 {
-    TernaryFuncTmpl<Word>           f_;
-    left_rotator<Word, WordLength>  lr_;
+    TernaryFuncTmpl<Word>  f_;
 
 public:
     void  operator ()(Word &a, Word b, Word c, Word d, Word xk, int s, Word ti)
     {
-        a = b + this->lr_( a + this->f_(b, c, d) + xk + ti, s );
+        a = b + boost::detail::left_rotate<WordLength>( a + this->f_(b, c, d) +
+         xk + ti, s );
     }
 };
 
