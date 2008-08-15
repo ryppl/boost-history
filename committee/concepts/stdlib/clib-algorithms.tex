@@ -410,7 +410,7 @@ namespace std {
           && CopyConstructible<Rand>
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
-                        Rand& @\farg{rand}@);
+                        Rand&& @\farg{rand}@);
   template<class RandomAccessIterator, class UniformRandomNumberGenerator>
     void random_shuffle(RandomAccessIterator @\farg{first}@,
                         RandomAccessIterator @\farg{last}@, 

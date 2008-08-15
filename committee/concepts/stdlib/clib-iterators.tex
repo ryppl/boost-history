@@ -559,7 +559,7 @@ concept Iterator<typename X> : Semiregular<X> {
   MoveConstructible reference = typename X::reference;  
   MoveConstructible postincrement_result;
 
-  requires Dereferenceable<postincrement_result>;
+  requires HasDereference<postincrement_result>;
 
   reference operator*(X&&);
   X& operator++(X&);
@@ -627,7 +627,7 @@ concept InputIterator<typename X> : Iterator<X>, EqualityComparable<X> {
         && Convertible<reference, const value_type &>;
         @\textcolor{addclr}{}@&& Convertible<pointer, const value_type*>;
 
-  requires Convertible<Dereferenceable<postincrement_result>::reference, const value_type&>;
+  requires Convertible<HasDereference<postincrement_result>::result_type, const value_type&>;
 
   pointer operator->(const X&);
 }
@@ -787,7 +787,7 @@ auto concept OutputIterator<typename X, typename Value> {
         && SameType<postincrement_result, Iterator<X>::postincrement_result>
         && Convertible<postincrement_result, const X&>
         && HasAssign<reference, Value>
-        && HasAssign<Dereferenceable<postincrement_result>::reference, Value>;
+        && HasAssign<HasDereference<postincrement_result>::result_type, Value>;
 }
 \end{itemdecl}
 \color{black}
@@ -895,8 +895,8 @@ BidirectionalIterator concept.}
 \begin{itemdecl}
 concept BidirectionalIterator<typename X> : ForwardIterator<X> {
   MoveConstructible postdecrement_result;
-  requires Dereferenceable<postdecrement_result>
-        &&   Convertible<Dereferenceable<postdecrement_result>::reference, const value_type&>
+  requires HasDereference<postdecrement_result>
+        &&   Convertible<HasDereference<postdecrement_result>::result_type, const value_type&>
         &&   Convertible<postdecrement_result, const X&>;
 
   X& operator--(X&);

@@ -7,7 +7,7 @@
 %% PDF
 
 \usepackage[pdftex,
-            pdftitle={Core Concepts for the C++0x Standard Library},
+            pdftitle={Foundational Concepts for the C++0x Standard Library},
             pdfsubject={C++ International Standard Proposal},
             pdfcreator={Douglas Gregor},
             bookmarks=true,
@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Foundational Concepts for the C++0x Standard Library\\
-(Revision 3)
+(Revision 4)
 \vspace{0.25in}
 \end{center}
 
@@ -64,8 +64,8 @@ Thomas Witt, Zephyr Associates, Inc.\\
 Andrew Lumsdaine, Indiana University
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number: N2677=08-0187\vspace{-6pt}
-\par\noindent Revises document number: N2621=08-0131\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2677=08-0187\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -83,12 +83,29 @@ Within the proposed wording, text that has been added
 \textcolor{addclr}{will be presented in blue} \addedConcepts{and
   underlined when possible}. Text that has been removed will be
 presented \textcolor{remclr}{in red},\removedConcepts{with
-  strike-through when possible}. Removals from the previous draft
-\removedCCC{strike out text in green}, additions are
-\addedCC{underlined in green}.
+  strike-through when possible}.
 
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
+
+\section*{Changes from N2677}
+\begin{itemize}
+\item Added the \tcode{Constructible} concept, which refines the
+  syntactic \tcode{HasConstructor} concept and
+  \tcode{NothrowDestructible}. In Sophia-Antipolis, LWG removed
+  \tcode{Destructible} from \tcode{HasConstructor} to decouple the
+  semantic coupling within \tcode{HasConstructor}, with the
+  understanding that, if \tcode{Destructible} requirements cropped up
+  in too many places, we would bring the \tcode{Destructible}
+  requirement back. The concepts drafting group realized that (1)
+  \tcode{Destructible} was used in many places, and all of those were
+  actually uses of \tcode{NothrowDestructible}, and (2) that
+  \tcode{HasConstructor} still should not imply any semantics, and
+  thus should not refine from any destruction concept. Hence, the
+  addition of the new \tcode{Constructible} concept that implies some
+  semantics by refining \tcode{NothrowDestructible}, and will be used
+  throughout most of the standard library.
+\end{itemize}
 
 \end{titlepage}
 
@@ -171,49 +188,47 @@ namespace std {
   concept_map True<true> { }
 
   // \ref{concept.operator}, operator concepts:
-  auto concept HasPlus<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasMinus<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasMultiply<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasDivide<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasModulus<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
+  auto concept HasPlus<typename T, typename U> @\textit{see below}@;
+  auto concept HasMinus<typename T, typename U> @\textit{see below}@;
+  auto concept HasMultiply<typename T, typename U> @\textit{see below}@;
+  auto concept HasDivide<typename T, typename U> @\textit{see below}@;
+  auto concept HasModulus<typename T, typename U> @\textit{see below}@;
   auto concept HasUnaryPlus<typename T> @\textit{see below}@;
   auto concept HasNegate<typename T> @\textit{see below}@;
-  auto concept HasLess<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  @\addedCC{auto concept HasGreater<typename T, typename U> \textit{see below};}@
-  @\addedCC{auto concept HasLessEqual<typename T, typename U> \textit{see below};}@
-  @\addedCC{auto concept HasGreaterEqual<typename T, typename U> \textit{see below};}@
-  auto concept HasEqualTo<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  @\addedCC{auto concept HasNotEqualTo<typename T, typename U> \textit{see below};}@
-  auto concept HasLogicalAnd<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasLogicalOr<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
+  auto concept HasLess<typename T, typename U> @\textit{see below}@;
+  auto concept HasGreater<typename T, typename U> @\textit{see below}@;
+  auto concept HasLessEqual<typename T, typename U> @\textit{see below}@;
+  auto concept HasGreaterEqual<typename T, typename U> @\textit{see below}@;
+  auto concept HasEqualTo<typename T, typename U> @\textit{see below}@;
+  auto concept HasNotEqualTo<typename T, typename U> @\textit{see below}@;
+  auto concept HasLogicalAnd<typename T, typename U> @\textit{see below}@;
+  auto concept HasLogicalOr<typename T, typename U> @\textit{see below}@;
   auto concept HasLogicalNot<typename T> @\textit{see below}@;
-  auto concept HasBitAnd<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasBitOr<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasBitXor<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
+  auto concept HasBitAnd<typename T, typename U> @\textit{see below}@;
+  auto concept HasBitOr<typename T, typename U> @\textit{see below}@;
+  auto concept HasBitXor<typename T, typename U> @\textit{see below}@;
   auto concept HasComplement<typename T> @\textit{see below}@;
-  auto concept HasLeftShift<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasRightShift<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept @\addedCC{Has}@Dereference@\removedCCC{able}@<typename T> @\textit{see below}@;
-  auto concept @\changedCCC{Addressable}{HasAddressOf}@<typename T> @\textit{see below}@;
+  auto concept HasLeftShift<typename T, typename U> @\textit{see below}@;
+  auto concept HasRightShift<typename T, typename U> @\textit{see below}@;
+  auto concept HasDereference<typename T> @\textit{see below}@;
+  auto concept HasAddressOf<typename T> @\textit{see below}@;
   auto concept Callable<typename F, typename... Args> @\textit{see below}@;
-  @\removedCCC{auto concept HasMoveAssign<typename T, typename U = T> \textit{see below};}@
-  @\removedCCC{auto concept HasCopyAssign<typename T, typename U = T> \textit{see below};}@
-  @\addedCC{auto concept HasAssign<typename T, typename U> \textit{see below};}@
-  auto concept HasPlusAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasMinusAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasMultiplyAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasDivideAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasModulusAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasBitAndAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasBitOrAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasBitXorAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasLeftShiftAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  auto concept HasRightShiftAssign<typename T, typename U@\removedCCC{= T}@> @\textit{see below}@;
-  @\addedCC{auto concept HasPreincrement<typename T> \textit{see below};}@
-  @\addedCC{auto concept HasPostincrement<typename T> \textit{see below};}@
-  @\addedCC{auto concept HasPredecrement<typename T> \textit{see below};}@
-  @\addedCC{auto concept HasPostdecrement<typename T> \textit{see below};}@
-  @\addedCC{auto concept HasComma<typename T, typename U> \textit{see below};}@
+  auto concept HasAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasPlusAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasMinusAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasMultiplyAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasDivideAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasModulusAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasBitAndAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasBitOrAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasBitXorAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasLeftShiftAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasRightShiftAssign<typename T, typename U> @\textit{see below}@;
+  auto concept HasPreincrement<typename T> @\textit{see below}@;
+  auto concept HasPostincrement<typename T> @\textit{see below}@;
+  auto concept HasPredecrement<typename T> @\textit{see below}@;
+  auto concept HasPostdecrement<typename T> @\textit{see below}@;
+  auto concept HasComma<typename T, typename U> @\textit{see below}@;
 
   // \ref{concept.predicate}, predicates:
   auto concept Predicate<typename F, typename... Args> @\textit{see below}@;
@@ -222,16 +237,17 @@ namespace std {
   auto concept LessThanComparable<typename T> @\textit{see below}@;
   auto concept EqualityComparable<typename T> @\textit{see below}@;
   concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
-  @\addedCC{auto concept StrictWeakOrder<typename F, typename T> \mbox{\textit{see below}};}@
+  auto concept StrictWeakOrder<typename F, typename T> @\textit{see below}}@;
 
   // \ref{concept.construct}, construction:
   auto concept HasConstructor<typename T, typename... Args> @\textit{see below}@;
+  auto concept Constructible<typename T, typename... Args> @\textit{see below}@;
   auto concept DefaultConstructible<typename T> @\textit{see below}@;
   concept TriviallyDefaultConstructible<typename T> @\textit{see below}@;
 
   // \ref{concept.destruct}, destruction:
-  auto concept @\changedCC{Destructible}{HasDestructor}@<typename T> @\textit{see below}@;
-  @\addedCC{auto concept NothrowDestructible<typename T> \textit{see below};}@
+  auto concept HasDestructor<typename T> @\textit{see below}@;
+  auto concept NothrowDestructible<typename T> @\textit{see below}@;
   concept TriviallyDestructible<typename T> @\textit{see below}@;
 
   // \ref{concept.copymove}, copy and move:
@@ -241,11 +257,11 @@ namespace std {
   auto concept MoveAssignable<typename T> @\textit{see below}@;
   auto concept CopyAssignable<typename T> @\textit{see below}@;
   concept TriviallyCopyAssignable<typename T> @\textit{see below}@;
-  @\addedCC{auto concept HasSwap<typename T, typename U> \textit{see below};}@
+  auto concept HasSwap<typename T, typename U> @\textit{see below}@;
   auto concept Swappable<typename T> @\textit{see below}@;
 
   // \ref{concept.memory}, memory allocation:
-  @\addedCC{auto concept HasPlacementNew<typename T> \textit{see below};}@
+  auto concept HasPlacementNew<typename T> @\textit{see below}@;
   auto concept FreeStoreAllocatable<typename T> @\textit{see below}@;
 
   // \ref{concept.regular}, regular types:
@@ -338,10 +354,10 @@ concept ReferentType<typename T> { }
 \begin{itemdescr}
 \pnum
 \mbox{\reallynote}
-describes types to which a reference can be
-created\addedCC{, including reference types (since references to
+\addedConcepts{describes types to which a reference can be
+created, including reference types (since references to
   references can be formed during substitution of template
-  arguments)}.
+  arguments).}
 
 \pnum 
 \mbox{\requires}
@@ -595,7 +611,7 @@ concept_map True<true> { }
 
 \rSec2[concept.operator]{Operator concepts}
 \begin{itemdecl}
-auto concept HasPlus<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasPlus<typename T, typename U> {
   typename result_type;
   result_type operator+(const T&, const U&);
 }
@@ -607,7 +623,7 @@ auto concept HasPlus<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasMinus<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasMinus<typename T, typename U> {
   typename result_type;
   result_type operator-(const T&, const U&);
 }
@@ -619,7 +635,7 @@ auto concept HasMinus<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasMultiply<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasMultiply<typename T, typename U> {
   typename result_type;
   result_type operator*(const T&, const U&);
 }
@@ -631,7 +647,7 @@ auto concept HasMultiply<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasDivide<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasDivide<typename T, typename U> {
   typename result_type;
   result_type operator/(const T&, const U&);
 }
@@ -643,7 +659,7 @@ auto concept HasDivide<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasModulus<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasModulus<typename T, typename U> {
   typename result_type;
   result_type operator%(const T&, const U&);
 }
@@ -679,7 +695,7 @@ auto concept HasNegate<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasLess<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasLess<typename T, typename U> {
   bool operator<(const T& a, const U& b);
 }
 \end{itemdecl}
@@ -691,43 +707,43 @@ auto concept HasLess<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasGreater<typename T, typename U> \{}@
-  @\addedCC{bool operator>(const T\& a, const U\& b);}@
-@\addedCC{\}}@
+auto concept HasGreater<typename T, typename U> {
+  bool operator>(const T& a, const U& b);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with an
+\addedConcepts{\mbox{\reallynote} describes types with an
   \mbox{\tcode{operator>}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasLessEqual<typename T, typename U> \{}@
-  @\addedCC{bool operator<=(const T\& a, const U\& b);}@
-@\addedCC{\}}@
+auto concept HasLessEqual<typename T, typename U> {
+  bool operator<=(const T& a, const U& b);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with an
+\addedConcepts{\mbox{\reallynote} describes types with an
   \mbox{\tcode{operator<=}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasGreaterEqual<typename T, typename U> \{}@
-  @\addedCC{bool operator>=(const T\& a, const U\& b);}@
-@\addedCC{\}}@
+auto concept HasGreaterEqual<typename T, typename U> {
+  bool operator>=(const T& a, const U& b);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with an
+\addedConcepts{\mbox{\reallynote} describes types with an
   \mbox{\tcode{operator>=}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasEqualTo<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasEqualTo<typename T, typename U> {
   bool operator==(const T& a, const U& b);
 }
 \end{itemdecl}
@@ -739,19 +755,19 @@ auto concept HasEqualTo<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasNotEqualTo<typename T, typename U> \{}@
-  @\addedCC{bool operator!=(const T\& a, const U\& b);}@
-@\addedCC{\}}@
+auto concept HasNotEqualTo<typename T, typename U> {
+  bool operator!=(const T& a, const U& b);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with an
+\addedConcepts{\mbox{\reallynote} describes types with an
   \mbox{\tcode{operator!=}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasLogicalAnd<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasLogicalAnd<typename T, typename U> {
   bool operator&&(const T&, const U&);
 }
 \end{itemdecl}
@@ -762,7 +778,7 @@ auto concept HasLogicalAnd<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasLogicalOr<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasLogicalOr<typename T, typename U> {
   bool operator||(const T&, const U&);
 }
 \end{itemdecl}
@@ -784,7 +800,7 @@ auto concept HasLogicalNot<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasBitAnd<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasBitAnd<typename T, typename U> {
   typename result_type;
   result_type operator&(const T&, const U&);
 }
@@ -796,7 +812,7 @@ auto concept HasBitAnd<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasBitOr<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasBitOr<typename T, typename U> {
   typename result_type;
   result_type operator|(const T&, const U&);
 }
@@ -808,7 +824,7 @@ auto concept HasBitOr<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasBitXor<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasBitXor<typename T, typename U> {
   typename result_type;
   result_type operator^(const T&, const U&);
 }
@@ -833,7 +849,7 @@ auto concept HasComplement<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasLeftShift<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasLeftShift<typename T, typename U> {
   typename result_type;
   result_type operator<<(const T&, const U&);
 }
@@ -845,7 +861,7 @@ auto concept HasLeftShift<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasRightShift<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasRightShift<typename T, typename U> {
   typename result_type;
   result_type operator>>(const T&, const U&);
 }
@@ -857,9 +873,9 @@ auto concept HasRightShift<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept @\addedCC{Has}@Dereference@\removedCCC{able}@<typename T> {
-  typename @\changedCCC{reference}{result_type}@;
-  @\changedCCC{reference}{result_type}@ operator*(@\addedCC{const}@ T@\addedCC{\&}@);
+auto concept HasDereference<typename T> {
+  typename result_type;
+  result_type operator*(const T&);
 }
 \end{itemdecl}
 
@@ -869,9 +885,9 @@ auto concept @\addedCC{Has}@Dereference@\removedCCC{able}@<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept @\changedCCC{Addressable}{HasAddressOf}@<typename T> {
-  typename @\changedCCC{pointer}{result_type}@;
-  @\changedCCC{pointer}{result_type}@ operator&(T&);
+auto concept HasAddressOf<typename T> {
+  typename result_type;
+  result_type operator&(T&);
 }
 \end{itemdecl}
 
@@ -883,7 +899,7 @@ auto concept @\changedCCC{Addressable}{HasAddressOf}@<typename T> {
 \begin{itemdecl}
 auto concept Callable<typename F, typename... Args> {
   typename result_type;
-  result_type operator()(F&@\addedCC{\&}@, Args...);
+  result_type operator()(F&&, Args...);
 }
 \end{itemdecl}
 
@@ -894,36 +910,21 @@ callable given arguments of types \mbox{\tcode{Args...}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept Has@\removedCCC{Move}@Assign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasAssign<typename T, typename U> {
   typename result_type;
-  result_type T::operator=(U@\removedCCC{\&\&}@);
+  result_type T::operator=(U);
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes types with}
-\changedCCC{the ability
-  to assign to an object from an rvalue (which may have a different
-  type), potentially altering the rvalue.}{an assignment operator.}
+\addedConcepts{\mbox{\reallynote} describes types with an assignment operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\removedCCC{auto concept HasCopyAssign<typename T, typename U = T> : HasMoveAssign<T, U> \{}@
-  @\removedCCC{result_type T::operator=(const U\&);}@
-@\removedCCC{\}}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes types with the ability to assign to an
-object (which may have a different type).}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept HasPlusAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasPlusAssign<typename T, typename U> {
   typename result_type;
-  result_type operator+=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator+=(T&, U);
 }
 \end{itemdecl}
 
@@ -933,9 +934,9 @@ auto concept HasPlusAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasMinusAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasMinusAssign<typename T, typename U> {
   typename result_type;
-  result_type operator-=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator-=(T&, U);
 }
 \end{itemdecl}
 
@@ -945,9 +946,9 @@ auto concept HasMinusAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasMultiplyAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasMultiplyAssign<typename T, typename U> {
   typename result_type;
-  result_type operator*=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator*=(T&, U);
 }
 \end{itemdecl}
 
@@ -957,9 +958,9 @@ auto concept HasMultiplyAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasDivideAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasDivideAssign<typename T, typename U> {
   typename result_type;
-  result_type operator/=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator/=(T&, U);
 }
 \end{itemdecl}
 
@@ -969,9 +970,9 @@ auto concept HasDivideAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasModulusAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasModulusAssign<typename T, typename U> {
   typename result_type;
-  result_type operator%=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator%=(T&, U);
 }
 \end{itemdecl}
 
@@ -981,9 +982,9 @@ auto concept HasModulusAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasBitAndAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasBitAndAssign<typename T, typename U> {
   typename result_type;
-  result_type operator&=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator&=(T&, U);
 }
 \end{itemdecl}
 
@@ -993,9 +994,9 @@ auto concept HasBitAndAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasBitOrAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasBitOrAssign<typename T, typename U> {
   typename result_type;
-  result_type operator|=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator|=(T&, U);
 }
 \end{itemdecl}
 
@@ -1005,9 +1006,9 @@ auto concept HasBitOrAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasBitXorAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasBitXorAssign<typename T, typename U> {
   typename result_type;
-  result_type operator^=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator^=(T&, U);
 }
 \end{itemdecl}
 
@@ -1017,9 +1018,9 @@ auto concept HasBitXorAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasLeftShiftAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasLeftShiftAssign<typename T, typename U> {
   typename result_type;
-  result_type operator<<=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator<<=(T&, U);
 }
 \end{itemdecl}
 
@@ -1029,9 +1030,9 @@ auto concept HasLeftShiftAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept HasRightShiftAssign<typename T, typename U@\removedCCC{= T}@> {
+auto concept HasRightShiftAssign<typename T, typename U> {
   typename result_type;
-  result_type operator>>=(T&, @\removedCCC{const}@ U@\removedCCC{\&}@);
+  result_type operator>>=(T&, U);
 }
 \end{itemdecl}
 
@@ -1041,69 +1042,69 @@ auto concept HasRightShiftAssign<typename T, typename U@\removedCCC{= T}@> {
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasPreincrement<typename T> \{}@
-  @\addedCC{typename result_type;}@
-  @\addedCC{result_type operator++(T\&);}@
-@\addedCC{\}}@
+auto concept HasPreincrement<typename T> {
+  typename result_type;
+  result_type operator++(T&);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with a pre-increment operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a pre-increment operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasPostincrement<typename T> \{}@
-  @\addedCC{typename result_type;}@
-  @\addedCC{result_type operator++(T\&, int);}@
-@\addedCC{\}}@
+auto concept HasPostincrement<typename T> {
+  typename result_type;
+  result_type operator++(T&, int);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with a post-increment operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a post-increment operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasPredecrement<typename T> \{}@
-  @\addedCC{typename result_type;}@
-  @\addedCC{result_type operator-{}-(T\&);}@
-@\addedCC{\}}@
+auto concept HasPredecrement<typename T> {
+  typename result_type;
+  result_type operator--(T&);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with a pre-decrement operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a pre-decrement operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasPostdecrement<typename T> \{}@
-  @\addedCC{typename result_type;}@
-  @\addedCC{result_type operator-{}-(T\&, int);}@
-@\addedCC{\}}@
+auto concept HasPostdecrement<typename T> {
+  typename result_type;
+  result_type operator--(T&, int);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with a post-decrement operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a post-decrement operator.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasComma<typename T, typename U> \{}@
-  @\addedCC{typename result_type}@
-  @\addedCC{result_type operator,(const T\&, const U\&);}@
-@\addedCC{\}}@
+auto concept HasComma<typename T, typename U> {
+  typename result_type
+  result_type operator,(const T&, const U&);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types with a comma operator.}
+\addedConcepts{\mbox{\reallynote} describes types with a comma operator.}
 \end{itemdescr}
 
 \rSec2[concept.predicate]{Predicates}
 
 \begin{itemdecl}
-auto concept Predicate<typename F, typename... Args> : Callable<F, @\addedCC{const}@ Args@\addedCC{\&}@...> {
+auto concept Predicate<typename F, typename... Args> : Callable<F, const Args&...> {
   requires Convertible<result_type, bool>;
 }
 \end{itemdecl}
@@ -1122,7 +1123,7 @@ through the predicate arguments.}
 
 \rSec2[concept.comparison]{Comparisons}
 \begin{itemdecl}
-auto concept LessThanComparable<typename T> : HasLess<T@\addedCC{, T}@> {
+auto concept LessThanComparable<typename T> : HasLess<T, T> {
   bool operator>(const T& a, const T& b) { return b < a; }
   bool operator<=(const T& a, const T& b) { return !(b < a); }
   bool operator>=(const T& a, const T& b) { return !(a < b); }
@@ -1185,12 +1186,12 @@ auto concept StrictWeakOrder<typename F, typename T> : Predicate<F, T, T> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} describes a strict weak ordering
+\addedConcepts{\mbox{\reallynote} describes a strict weak ordering
   relation (\mbox{\ref{alg.sorting}}), \mbox{\tcode{F}}, on a type \mbox{\tcode{T}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept EqualityComparable<typename T> : HasEqualTo<T@\addedCC{, T}@> {
+auto concept EqualityComparable<typename T> : HasEqualTo<T, T> {
   bool operator!=(const T& a, const T& b) { return !(a == b); }
 
   axiom Consistency(T a, T b) {
@@ -1241,7 +1242,7 @@ negatives, but never false positives. \mbox{\exitnote}}
 
 \rSec2[concept.construct]{Construction}
 \begin{itemdecl}
-auto concept HasConstructor<typename T, typename... Args> @\removedCCC{: Destructible<T>}@ {
+auto concept HasConstructor<typename T, typename... Args> {
   T::T(Args...);
 }
 \end{itemdecl}
@@ -1253,7 +1254,19 @@ auto concept HasConstructor<typename T, typename... Args> @\removedCCC{: Destruc
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept DefaultConstructible<typename T> : HasConstructor<T> { }
+auto concept Constructible<typename T, typename... Args> 
+  : HasConstructor<T, Args...>, NothrowDestructible<T> { }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes types that can be constructed
+  from a given set of arguments that also have a no-throw destructor.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept DefaultConstructible<typename T> : Constructible<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1264,14 +1277,14 @@ auto concept DefaultConstructible<typename T> : HasConstructor<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{concept TriviallyDefaultConstructible<typename T> : DefaultConstructible<T> \{\}}@
+concept TriviallyDefaultConstructible<typename T> : DefaultConstructible<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types whose default constructor is trivial.}
+\addedConcepts{\mbox{\reallynote} describes types whose default constructor is trivial.}
 
-\pnum \addedCC{\mbox{\requires} for every type \mbox{\tcode{T}} that is
+\pnum \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is
   a trivial type (\mbox{\ref{basic.types}}) or a class type with a
   trivial default constructor (\mbox{\ref{class.ctor}}), a concept map
   \mbox{\tcode{TriviallyDefaultConstructible<T>}} shall be implicitly
@@ -1280,37 +1293,30 @@ auto concept DefaultConstructible<typename T> : HasConstructor<T> { }
 
 \rSec2[concept.destruct]{Destruction}
 \begin{itemdecl}
-auto concept @\changedCCC{Destructible}{HasDestructor}@<typename T> : VariableType<T> {
+auto concept HasDestructor<typename T> : VariableType<T> {
   T::~T();
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes types that can be destroyed}\changedCCC{,
-  including}{. These are} 
-\addedConcepts{scalar types, references, and class types with a public}
-\addedCC{non-deleted}
-  \addedConcepts{destructor.}
-
-\pnum
-\removedCCC{\mbox{\requires} following destruction of an object, all resources owned by the object are reclaimed.}
+\addedConcepts{\mbox{\reallynote} describes types that can be destroyed. These are scalar types, references, and class types with a public non-deleted destructor.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept NothrowDestructible<typename T> : HasDestructor<T> \{ \}}@
+auto concept NothrowDestructible<typename T> : HasDestructor<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
 \begin{codeblock}
-T::~T() @\addedCC{// inherited from HasDestructor<T>}@
+T::~T() // inherited from HasDestructor<T>
 \end{codeblock}
 \pnum
-\addedCC{\mbox{\requires} no exception is propagated.}
+\addedConcepts{\mbox{\requires} no exception is propagated.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TriviallyDestructible<typename T> : @\addedCC{Nothrow}@Destructible<T> { }
+concept TriviallyDestructible<typename T> : NothrowDestructible<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1328,7 +1334,7 @@ destructors do not need to be executed when the object is destroyed.}
 
 \rSec2[concept.copymove]{Copy and move}
 \begin{itemdecl}
-auto concept MoveConstructible<typename T> : HasConstructor<T, T&&> { }
+auto concept MoveConstructible<typename T> : Constructible<T, T&&> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1353,7 +1359,7 @@ the constructed \mbox{\tcode{T}} object is equivalent to the value of
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept CopyConstructible<typename T> : MoveConstructible<T>, HasConstructor<T, const T&> {
+auto concept CopyConstructible<typename T> : MoveConstructible<T>, Constructible<T, const T&> {
   axiom CopyPreservation(T x) {
     T(x) == x;
   }
@@ -1383,7 +1389,7 @@ shall be implicitly defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MoveAssignable<typename T> : Has@\removedCCC{Move}@Assign<T@\addedCC{, T\&\&}@> { }
+auto concept MoveAssignable<typename T> : HasAssign<T, T&&> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1393,7 +1399,7 @@ auto concept MoveAssignable<typename T> : Has@\removedCCC{Move}@Assign<T@\addedC
 \end{itemdescr}
 
 \begin{itemdecl}
-result_type T::operator=(T&& rv); // inherited from \changedCCC{HasMoveAssign}{HasAssign<T, T\&\&>}
+result_type T::operator=(T&& rv); // inherited from HasAssign<T, T&&>
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1407,7 +1413,7 @@ the assignment. \mbox{\exitnote}}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept CopyAssignable<typename T> : @\addedCC{HasAssign<T, const T\&>, }@MoveAssignable<T> {
+auto concept CopyAssignable<typename T> : HasAssign<T, const T&>, MoveAssignable<T> {
   axiom CopyPreservation(T& x, T y) {
     (x = y, x) == y;
   }
@@ -1445,20 +1451,18 @@ defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedCC{auto concept HasSwap<typename T, typename U> \{}@
-  @\addedCC{void swap(T, U);}@
-@\addedCC{\}}@
+auto concept HasSwap<typename T, typename U> {
+  void swap(T, U);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes types that have a swap operation.}
+\addedConcepts{\mbox{\reallynote} describes types that have a swap operation.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept Swappable<typename T> @\addedCC{: HasSwap<T\&, T\&>}@ {
-  @\removedCCC{void swap(T\&, T\&);}@
-}
+auto concept Swappable<typename T> : HasSwap<T&, T&> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1468,7 +1472,7 @@ auto concept Swappable<typename T> @\addedCC{: HasSwap<T\&, T\&>}@ {
 \end{itemdescr}
 
 \begin{itemdecl}
-void swap(T& t, T& u); @\addedCC{// inherited from HasSwap<T, T>}@
+void swap(T& t, T& u); // inherited from HasSwap<T, T>
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1480,47 +1484,46 @@ and \mbox{\tcode{u}} has the value originally held by \mbox{\tcode{t}}.}
 
 \rSec2[concept.memory]{Memory allocation}
 \begin{itemdecl}
-@\addedCC{auto concept HasPlacementNew<typename T> \{}@
-  @\addedCC{void* T::operator new(size_t size, void*);}@
-@\addedCC{\}}@
+auto concept HasPlacementNew<typename T> {
+  void* T::operator new(size_t size, void*);
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} Describes types that have a placement new.}
+\addedConcepts{\mbox{\reallynote} Describes types that have a placement new.}
 \end{itemdescr}
 
 \begin{itemdecl}
 auto concept FreeStoreAllocatable<typename T> {
   void* T::operator new(size_t size);
-  @\removedCCC{void* T::operator new(size_t size, void*);}@
   void* T::operator new[](size_t size);
   void T::operator delete(void*);
   void T::operator delete[](void*);
 
-  @\addedCC{void* T::operator new(size_t size, const nothrow_t\&) \{}@
-    @\addedCC{try \{}@
-      @\addedCC{return T::operator new(size);}@
-    @\addedCC{\} catch(...) \{}@
-      @\addedCC{return 0;}@
-    @\addedCC{\}}@
-  @\addedCC{\}}@
+  void* T::operator new(size_t size, const nothrow_t&) {
+    try {
+      return T::operator new(size);
+    } catch(...) {
+      return 0;
+    }
+  }
 
-  @\addedCC{void* T::operator new[](size_t size, const nothrow_t\&) \{}@
-    @\addedCC{try \{}@
-      @\addedCC{return T::operator new[](size);}@
-    @\addedCC{\} catch(...) \{}@
-      @\addedCC{return 0;}@
-    @\addedCC{\}}@
-  @\addedCC{\}}@
+  void* T::operator new[](size_t size, const nothrow_t&) {
+    try {
+      return T::operator new[](size);
+    } catch(...) {
+      return 0;
+    }
+  }
 
-  @\addedCC{void T::operator delete(void* ptr, const nothrow_t\&) \{}@
-    @\addedCC{T::operator delete(ptr);}@
-  @\addedCC{\}}@
+  void T::operator delete(void* ptr, const nothrow_t&) {
+    T::operator delete(ptr);
+  }
 
-  @\addedCC{void T::operator delete[](void* ptr, const nothrow_t\&) \{}@
-    @\addedCC{T::operator delete[](ptr);}@
-  @\addedCC{\}}@
+  void T::operator delete[](void* ptr, const nothrow_t&) {
+    T::operator delete[](ptr);
+  }
 }
 \end{itemdecl}
 
@@ -1535,7 +1538,7 @@ arrays of objects can be allocated on or freed from the free store with
 
 \begin{itemdecl}
 auto concept Semiregular<typename T> 
-  : @\addedCC{NothrowDestructible<T>, }@CopyConstructible<T>, CopyAssignable<T>, FreeStoreAllocatable<T> { 
+  : CopyConstructible<T>, CopyAssignable<T>, FreeStoreAllocatable<T> { 
   requires SameType<CopyAssignable<T>::result_type, T&>;
 }
 \end{itemdecl}
@@ -1587,40 +1590,30 @@ auto concept Convertible<typename T, typename U> : ExplicitlyConvertible<T, U> {
 
 \begin{itemdecl}
 concept ArithmeticLike<typename T> 
-  : Regular<T>, @\removedCCC{LessThanComparable<T>,}@ HasUnaryPlus<T>, HasNegate<T>@\addedCC{,}@
-    HasPlus<T@\addedCC{, T}@>, HasMinus<T@\addedCC{, T}@>, HasMultiply<T@\addedCC{, T}@>, HasDivide<T@\addedCC{, T}@>, 
-    @\addedCC{HasLess<T, T>, HasGreater<T, T>, HasLessEqual<T, T>, HasGreaterEqual<T, T>}@,
-    @\addedCC{HasPreincrement<T>, HasPostincrement<T>, HasPredecrement<T>, HasPostdecrement<T>}@,
-    @\addedCC{HasPlusAssign<T, const T\&>, HasMinusAssign<T, const T\&>,}@
-    @\addedCC{HasMultiplyAssign<T, const T\&>, HasDivideAssign<T, const T\&>}@ {
+  : Regular<T>, HasUnaryPlus<T>, HasNegate<T>,
+    HasPlus<T, T>, HasMinus<T, T>, HasMultiply<T, T>, HasDivide<T, T>, 
+    HasLess<T, T>, HasGreater<T, T>, HasLessEqual<T, T>, HasGreaterEqual<T, T>,
+    HasPreincrement<T>, HasPostincrement<T>, HasPredecrement<T>, HasPostdecrement<T>,
+    HasPlusAssign<T, const T&>, HasMinusAssign<T, const T&>,
+    HasMultiplyAssign<T, const T&>, HasDivideAssign<T, const T&> {
   T::T(intmax_t);
-  @\addedCC{T::T(uintmax_t);}@
+  T::T(uintmax_t);
   T::T(long double);
-
-  @\removedCCC{T\& operator++(T\&);}@
-  @\removedCCC{T operator++(T\& t, int) \{ T tmp(t); ++t; return tmp; \}}@
-  @\removedCCC{T\& operator-{}-(T\&);}@
-  @\removedCCC{T operator-{}-(T\& t, int) \{ T tmp(t); --t; return tmp; \}}@
 
   requires Convertible<HasUnaryPlus<T>::result_type, T>
         && Convertible<HasNegate<T>::result_type, T>
-        && Convertible<HasPlus<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasMinus<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasMultiply<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasDivide<T@\addedCC{, T}@>::result_type, T>@\addedCC{,}@
-        @\addedCC{\&\& SameType<HasPreincrement<T>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasPostincrement<T>::result_type, T>,}@
-        @\addedCC{\&\& SameType<HasPredecrement<T>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasPostdecrement<T>::result_type, T>,}@
-        @\addedCC{\&\& SameType<HasPlusAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasMinusAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasMultiplyAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasDivideAssign<T, const T\&>::result_type, T\&>}@;
-
-  @\removedCCC{T\& operator*=(T\&, T);}@
-  @\removedCCC{T\& operator/=(T\&, T);}@
-  @\removedCCC{T\& operator+=(T\&, T);}@
-  @\removedCCC{T\& operator-=(T\&, T);}@
+        && Convertible<HasPlus<T, T>::result_type, T>
+        && Convertible<HasMinus<T, T>::result_type, T>
+        && Convertible<HasMultiply<T, T>::result_type, T>
+        && Convertible<HasDivide<T, T>::result_type, T>
+        && SameType<HasPreincrement<T>::result_type, T&>
+        && SameType<HasPostincrement<T>::result_type, T>
+        && SameType<HasPredecrement<T>::result_type, T&>
+        && SameType<HasPostdecrement<T>::result_type, T>
+        && SameType<HasPlusAssign<T, const T&>::result_type, T&>
+        && SameType<HasMinusAssign<T, const T&>::result_type, T&>
+        && SameType<HasMultiplyAssign<T, const T&>::result_type, T&>
+        && SameType<HasDivideAssign<T, const T&>::result_type, T&>;
 }
 \end{itemdecl}
 
@@ -1632,31 +1625,24 @@ concept ArithmeticLike<typename T>
 
 \begin{itemdecl}
 concept IntegralLike<typename T> 
-  : ArithmeticLike<T>, @\addedCC{LessThanComparable<T>,}@
-    HasComplement<T>, HasModulus<T@\addedCC{, T}@>, HasBitAnd<T@\addedCC{, T}@>, HasBitXor<T@\addedCC{, T}@>, HasBitOr<T@\addedCC{, T}@>,
-    HasLeftShift<T@\addedCC{, T}@>, HasRightShift<T@\addedCC{, T}@> 
-    @\addedCC{HasModulusAssign<T, const T\&>, HasLeftShiftAssign<T, const T\&>, HasRightShiftAssign<T, const T\&>}@
-    @\addedCC{HasBitAndAssign<T, const T\&>, HasBitXorAssign<T, const T\&>, HasBitOrAssign<T, const T\&>}@ {
+  : ArithmeticLike<T>, LessThanComparable<T>,
+    HasComplement<T>, HasModulus<T, T>, HasBitAnd<T, T>, HasBitXor<T, T>, HasBitOr<T, T>,
+    HasLeftShift<T, T>, HasRightShift<T, T> 
+    HasModulusAssign<T, const T&>, HasLeftShiftAssign<T, const T&>, HasRightShiftAssign<T, const T&>
+    HasBitAndAssign<T, const T&>, HasBitXorAssign<T, const T&>, HasBitOrAssign<T, const T&> {
   requires Convertible<HasComplement<T>::result_type, T>
-        && Convertible<HasModulus<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasBitAnd<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasBitXor<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasBitOr<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasLeftShift<T@\addedCC{, T}@>::result_type, T>
-        && Convertible<HasRightShift<T@\addedCC{, T}@>::result_type, T>@\addedCC{,}@
-        @\addedCC{\&\& SameType<HasModulusAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasLeftShiftAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasRightShiftAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasBitAndAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasBitXorAssign<T, const T\&>::result_type, T\&>,}@
-        @\addedCC{\&\& SameType<HasBitOrAssign<T, const T\&>::result_type, T\&>}@;
-
-  @\removedCCC{T\& operator\%=(T\&, T);}@
-  @\removedCCC{T\& operator\&=(T\&, T);}@
-  @\removedCCC{T\& operator\^=(T\&, T);}@
-  @\removedCCC{T\& operator|=(T\&, T);}@
-  @\removedCCC{T\& operator$\langle\langle$=(T\&, T);}@
-  @\removedCCC{T\& operator$\rangle\rangle$=(T\&, T);}@
+        && Convertible<HasModulus<T, T>::result_type, T>
+        && Convertible<HasBitAnd<T, T>::result_type, T>
+        && Convertible<HasBitXor<T, T>::result_type, T>
+        && Convertible<HasBitOr<T, T>::result_type, T>
+        && Convertible<HasLeftShift<T, T>::result_type, T>
+        && Convertible<HasRightShift<T, T>::result_type, T>
+        && SameType<HasModulusAssign<T, const T&>::result_type, T&>
+        && SameType<HasLeftShiftAssign<T, const T&>::result_type, T&>
+        && SameType<HasRightShiftAssign<T, const T&>::result_type, T&>
+        && SameType<HasBitAndAssign<T, const T&>::result_type, T&>
+        && SameType<HasBitXorAssign<T, const T&>::result_type, T&>
+        && SameType<HasBitOrAssign<T, const T&>::result_type, T&>;
 }
 \end{itemdecl}
 

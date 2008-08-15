@@ -31,6 +31,8 @@ Y - Add new concept StrictWeakOrdering (refines binary Predicate) and use it whe
 
 y - stable_partition, stable_sort, partial_sort requirements not sufficient for efficient implementation. See reference to extra memory.
      Possible need to retain second line of removed requirements.
+     (ShuffleIterator permits moving elements into extra memory allocated by
+      the algorithm)
 
 Y - Check for need of NoThrowDestructible
 
