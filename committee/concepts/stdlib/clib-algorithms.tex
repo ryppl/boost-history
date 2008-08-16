@@ -75,6 +75,9 @@ Andrew Lumsdaine, Indiana University
 \section*{Changes from N2696}
 \begin{itemize}
 \item Fixed requirements for \tcode{partial_sort_copy}.
+\item Replaced uses of the \tcode{HasStdMove} concept with uses of
+  \tcode{RvalueOf}, and reverted back to using \tcode{std::move} (that
+  than \tcode{std_move}) for semantic descriptions.
 \end{itemize}
 
 \end{titlepage}
@@ -228,13 +231,11 @@ namespace std {
 
   @\textcolor{black}{// \ref{alg.move}, move:}@
   template<InputIterator InIter, typename OutIter>
-    requires HasStdMove<InIter::reference>
-          && OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>
+    requires OutputIterator<OutIter, RvalueOf<InIter::reference>::type>
     OutIter move(InIter @\farg{first}@, InIter @\farg{last}@,
                  OutIter @\farg{result}@);
   template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
-    requires HasStdMove<InIter::reference>
-          && OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>
+    requires OutputIterator<OutIter, RvalueOf<InIter::reference>::type>
     OutIter move_backward(InIter @\farg{first}@, InIter @\farg{last}@,
                           OutIter @\farg{result}@);
 
@@ -1553,8 +1554,7 @@ assignments.
 \color{addclr}
 \begin{itemdecl}
 template<InputIterator InIter, typename OutIter>
-  requires HasStdMove<InIter::reference>
-        && OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>
+  requires OutputIterator<OutIter, RvalueOf<InIter::reference>::type>
   OutIter move(InIter first, InIter last,
                OutIter result);
 \end{itemdecl}
@@ -1569,7 +1569,7 @@ starting from \mbox{\farg{first}} and proceeding to \mbox{\farg{last}}.
 For each non-negative integer
 \mbox{\tcode{n < (\farg{last}-\farg{first})}},
 performs
-\mbox{\tcode{*(\farg{result}\ + n)}} \mbox{\tcode{=}} \mbox{\tcode{std_move}}} \addedD{\mbox{\tcode{(*(\farg{first}\ + n))}}.}
+\mbox{\tcode{*(\farg{result}\ + n)}} \mbox{\tcode{=}} \mbox{\tcode{std::move}}} \addedD{\mbox{\tcode{(*(\farg{first}\ + n))}}.}
 
 \pnum
 \addedD{\mbox{\returns}
@@ -1592,8 +1592,7 @@ move assignments.}
 \color{addclr}
 \begin{itemdecl}
 template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
-  requires HasStdMove<InIter::reference>
-        && OutputIterator<OutIter, HasStdMove<InIter::reference>::result_type>
+  requires OutputIterator<OutIter, RvalueOf<InIter::reference>::type>
   OutIter move_backward(InIter first, InIter last,
                         OutIter result);
 \end{itemdecl}
@@ -1618,7 +1617,7 @@ the range
 \addedD{For each positive integer
 \mbox{\tcode{n <= (\farg{last}\ - \farg{first})}},
 performs
-\mbox{\tcode{*(\farg{result}\ - n) =}} \mbox{\tcode{std_move}}\mbox{\tcode{(*(\farg{last}\ - n))}}.}
+\mbox{\tcode{*(\farg{result}\ - n) =}} \mbox{\tcode{std::move}}\mbox{\tcode{(*(\farg{last}\ - n))}}.}
 
 \pnum
 \addedD{\mbox{\requires}

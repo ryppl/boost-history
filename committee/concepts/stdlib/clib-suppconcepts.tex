@@ -8,7 +8,7 @@
 
 \usepackage[pdftex,
             pdftitle={Supplemental Concepts for the C++0x Standard Library},
-            pdfsubject={C++ International Sßtandard Proposal},
+            pdfsubject={C++ International Standard Proposal},
             pdfcreator={Douglas Gregor},
             bookmarks=true,
             bookmarksnumbered=true,
@@ -111,7 +111,6 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 namespace std {
   // \ref{concept.operator}, operator concepts:
   auto concept HasComma<typename T, typename U> @\textit{see below}@;
-  @\addedConcepts{auto concept HasStdMove<typename T> \mbox{\textit{see below}};}@
 
   // \ref{concept.destruct}, destruction:
   concept TriviallyDestructible<typename T> @\textit{see below}@;
@@ -143,37 +142,6 @@ concept EnumerationType<typename T> : IntegralConstantExpressionType<T> {
 for every type \mbox{\tcode{T}} that is an enumeration type, a concept map
 \mbox{\tcode{EnumerationType<T>}} shall be implicitly defined in namespace
 \mbox{\tcode{std}}.
-\end{itemdescr}
-
-\rSec2[concept.operator]{Operator concepts}
-\editorial{Add to the end of [concept.operator]}
-\setcounter{Paras}{42}
-\color{addclr}
-\begin{itemdecl}
-auto concept HasStdMove<typename T> {
-  typename result_type = typename remove_reference<T>::type&&;
-  result_type std_move(T&& x) { return x; }
-}
-\end{itemdecl}
-\color{black}
-
-\editorial{The \tcode{HasStdMove} concept is required to handle a
-  pecularity with the \tcode{std::move} operation, whose result type
-  is move a simple constructed by like \tcode{T\&\&} but a
-  type metafunction involving \tcode{remove_reference}. Type
-  metafunctions are at odds with concepts, because the former requires
-  precise type information to compute a result (at template instantiation time)
-  while the latter seeks to tie down details without precise types (at
-  template definition time); thus, to accurately characterize the
-  behavior of \tcode{std::move}, we encapsulate its return type in an
-  associated type \tcode{result_type}, so that we can describe
-  requirements on that return type.}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes the behavior of the
-  \mbox{\tcode{std::move}} 
-  operation and encapsulates its result in an associated type.}
 \end{itemdescr}
 
 \editorial{Add to the end of [concept.destruct]}

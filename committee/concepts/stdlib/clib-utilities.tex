@@ -49,7 +49,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Utilities\\
-(Revision 3)
+(Revision 4)
 
 \vspace{0.5in}
 
@@ -62,8 +62,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2622=08-0132\vspace{-6pt}
-\par\noindent Revises document number: N2322=07-0182\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2622=08-0132\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -71,14 +71,11 @@ Bloomington, IN\ \  47405 \\
 \section*{Introduction}
 \libintrotext{Chapter 20}.
 
-\section*{Changes since N2322}
+\section*{Changes since N2622}
 \begin{itemize}
-\item Added concept requirements to \tcode{make_pair} and
-  \tcode{make_tuple}.
-\item Switched from \tcode{ObjectType} to \tcode{VariableType} in
-  several components where we need to permit reference types.
-\item Many cleanups to bring specification up-to-date with changes to
-  concepts wording and the core concepts.
+\item Replaced \tcode{HasConstructor} requirements with \tcode{Constructible} requirements.
+\item Constrain \tcode{move} with the \tcode{RvalueOf} concept.
+\item Constrain the \tcode{identity} helper template of \tcode{forward}.
 \end{itemize}
 
 \end{titlepage}
@@ -151,7 +148,7 @@ namespace std {
   // \ref{forward}, forward/move:
   template <class T> struct identity;
   template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identity<T>::type&&);
-  template <@\changedConcepts{class}{VariableType}@ T> typename remove_reference<T>::type&& move(T&&);
+  template <@\changedConcepts{class}{RvalueOf}@ T> @\changedConcepts{typename remove_reference<T>::type\&\&}{RvalueOf<T>::type}@ move(T&&);
 
   // \ref{pairs}, pairs:
   template <@\changedConcepts{class}{ObjectType}@ T1,@\changedConcepts{class}{ObjectType}@ T2> struct pair;
@@ -281,7 +278,7 @@ of forwarding functions.}
 
 \index{identity@\tcode{identity}}%
 \begin{itemdecl}
-template <class T> struct identity { typedef T type; };
+template <@\changedConcepts{class}{VariableType}@ T> struct identity { typedef T type; };
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -305,7 +302,7 @@ template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identi
 \setcounter{Paras}{6}
 \index{move@\tcode{move}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{VariableType}@ T> typename remove_reference<T>::type&& move(T&& t);
+template <@\changedConcepts{class}{RvalueOf}@ T> @\changedConcepts{typename remove_reference<T>::type\&\&}{RvalueOf<T>::type}@ move(T&& t);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -337,17 +334,17 @@ struct pair {
   @\addedConcepts{requires DefaultConstructible<T1> \&\& DefaultConstructible<T2>}@ pair();
   @\addedConcepts{requires CopyConstructible<T1> \&\& CopyConstructible<T2>}@ pair(const T1& @\farg{x}@, const T2& @\farg{y}@);
   template<class @\farg{U}@, class @\farg{V}@>
-    @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, V\&\&>}@ 
+    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
     pair(U&& @\farg{x}@, V&& @\farg{y}@);
   @\addedConcepts{requires MoveConstructible<T1> \&\& MoveConstructible<T2>}@ pair(pair&& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@> 
-    @\addedConcepts{requires HasConstructor<T1, U> \&\& HasConstructor<T2, V>}@
+    @\addedConcepts{requires Constructible<T1, U> \&\& Constructible<T2, V>}@
     pair(const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@> 
-    @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, V\&\&>}@
+    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@
     pair(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
   template<class @\farg{U}@, class... @\farg{Args}@> 
-    @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, Args\&\&...>}@
+    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, Args\&\&...>}@
     pair(U&& @\farg{x}@, Args&&... @\farg{args}@);
   
   // allocator-extended constructors
@@ -440,7 +437,7 @@ with \farg{y}.
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@>
-  @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, V\&\&>}@ 
+  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
   pair(U&& @\farg{x}@, V&& @\farg{y}@);
 \end{itemdecl}
 
@@ -495,7 +492,7 @@ and \mbox{\tcode{second}} with
 
 \begin{itemdecl}
 template<class U, class... Args> 
-  @\addedConcepts{requires HasConstructor<T1, U\&\&> \&\& HasConstructor<T2, Args\&\&...>}@
+  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, Args\&\&...>}@
   pair(U&& x, Args&&... args);
 \end{itemdecl}
 
@@ -799,24 +796,24 @@ public:
   @\addedConcepts{requires DefaultConstructible<Types>...}@ tuple();
   @\addedConcepts{requires CopyConstructible<Types>...}@ explicit tuple(const Types&...);
   template <class... UTypes>
-    @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
     explicit tuple(UTypes&&...);
 
   @\addedConcepts{requires CopyConstructible<Types>...}@ tuple(const tuple&);
   @\addedConcepts{requires MoveConstructible<Types>...}@ tuple(tuple&&);
 
   template <class... UTypes>
-    @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+    @\addedConcepts{requires Constructible<Types, UTypes>...}@
     tuple(const tuple<UTypes...>&);
   template <class... UTypes>
-    @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
     tuple(tuple<UTypes...>&&);
 
   template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+    @\addedConcepts{requires Constructible<Types, UTypes>...}@
     tuple(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);      @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
   template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
     tuple(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);           @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
 
   // allocator-extended constructors
@@ -906,7 +903,7 @@ corresponding parameter.
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 @\addedD{template <class... UTypes>}@
-  @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
   @\addedD{tuple(UTypes\&\&... u);}@
 \end{itemdecl}
 
@@ -955,7 +952,7 @@ with the corresponding element of \mbox{\tcode{u}}.}
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <@\addedD{class... UTypes}@> 
-  @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+  @\addedConcepts{requires Constructible<Types, UTypes>...}@
   tuple(const tuple<@\addedD{UTypes...}@>& u);
 \end{itemdecl}
 
@@ -986,7 +983,7 @@ element of \tcode{u}.
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <class... UTypes> 
-  @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
   tuple(tuple<UTypes...>&& u);
 \end{itemdecl}
 
@@ -1010,7 +1007,7 @@ the source and target have the same number of elements. \mbox{\exitnote}}
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
 template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires HasConstructor<Types, UTypes>...}@
+  @\addedConcepts{requires Constructible<Types, UTypes>...}@
   tuple(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
 \end{itemdecl}
 
@@ -1031,7 +1028,7 @@ second element with \tcode{u.second}.
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
 template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires HasConstructor<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
   tuple(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 \end{itemdecl}
 

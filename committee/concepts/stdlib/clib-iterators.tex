@@ -76,8 +76,7 @@ Within the proposed wording, text that has been added
 \textcolor{addclr}{will be presented in blue} \addedConcepts{and
 underlined when possible}. Text that has been removed will be
 presented \textcolor{remclr}{in red},\removedConcepts{with
-strike-through when possible}. Non-editorial
-changes from the previous wording are \addedCC{highlighted in green}. 
+strike-through when possible}. 
 
 \editorial{Purely editorial comments will be written in a separate,
   shaded box. These comments are not intended to be included in the
@@ -255,7 +254,25 @@ ambiguity, for example, was initially detected by ConceptGCC.
 
 \paragraph*{Changes from N2695}
 \begin{itemize}
-\item The \tcode{HasStdMove} concept has moved into Nxxxx, ``Supplemental Concepts for the C++0x Standard Library.''
+\item Replaced the \tcode{HasStdMove} concept (and its uses) with
+  \tcode{RvalueOf}, which is now part of the foundational concepts.
+\item In the \tcode{ShuffleIterator} concept, the
+  \tcode{HasConstructor} requirement on the \tcode{value_type} has
+  been replaced with the equivalent \tcode{Constructible} requirement;
+  the explicit \tcode{NothrowDestructible} requirement has
+  subsequently been removed.
+\item Added move-constructibility of the value type into the
+  \tcode{ShuffleIterator} concept.
+\item We permit the \tcode{iterator_traits} typedefs for output
+  iterators to be \tcode{void}. This behavior is permitted by
+  \Cpp{}03, and was previously thought to cause problems with the
+  backward-compatibility concept maps for output iterators (which
+  relied on non-\tcode{void} typedefs even for output
+  iterators). However, we determined that the concepts mechanism can
+  deduce these types for output iterators, therefore ignoring the
+  types specified in \tcode{iterator_traits} and allowing us to
+  re-instate this user leeway. In [iterator.backward]p2, we clarify
+  that we perform this deduction for output iterators.
 \end{itemize}
 
 
@@ -1108,15 +1125,13 @@ an implementation may define}
 \begin{codeblock}
 auto concept ShuffleIterator<typename X> {
   requires InputIterator<X>
-        && NothrowDestructible<InputIterator<X>::value_type>
-        && HasStdMove<InputIterator<X>::value_type>
-        && HasStdMove<InputIterator<X>::reference>
-        && OutputIterator<X, HasStdMove<InputIterator<X>::value_type>::result_type>
-        && OutputIterator<X, HasStdMove<InputIterator<X>::reference>::result_type>
-        && HasConstructor<InputIterator<X>::value_type, 
-                          HasStdMove<InputIterator<X>::reference>::result_type>
+        && OutputIterator<X, RvalueOf<InputIterator<X>::value_type>::type>
+        && OutputIterator<X, RvalueOf<InputIterator<X>::reference>::type>
+        && Constructible<InputIterator<X>::value_type, 
+                         RvalueOf<InputIterator<X>::reference>::type>
+        && MoveConstructible<InputIterator<X>::value_type>
         && HasAssign<InputIterator<X>::value_type, 
-                     HasStdMove<InputIterator<X>::reference>::result_type>
+                     RvalueOf<InputIterator<X>::reference>::type>
         && HasSwap<InputIterator<X>::reference, InputIterator<X>::reference>;
 }
 \end{codeblock}
@@ -1189,16 +1204,16 @@ iterator_traits<Iterator>::pointer
 
 shall be defined as the iterator's reference and pointer types, that is, for an
 iterator object \tcode{a}, the same type as the type of \tcode{*a} and \tcode{a->},
-respectively. \removedConcepts{In the case of an output iterator, the types}
+respectively. In the case of an output iterator, the types
 
 \begin{codeblock}
-@\removedConcepts{iterator_traits<Iterator>::difference_type}@
-@\removedConcepts{iterator_traits<Iterator>::value_type}@
-@\removedConcepts{iterator_traits<Iterator>::reference}@
-@\removedConcepts{iterator_traits<Iterator>::pointer}@
+iterator_traits<Iterator>::difference_type
+iterator_traits<Iterator>::value_type
+iterator_traits<Iterator>::reference
+iterator_traits<Iterator>::pointer
 \end{codeblock}
 
-\removedConcepts{may be defined as void.}
+may be defined as \tcode{void}.
 
 \setcounter{Paras}{5}
 \pnum
@@ -1347,10 +1362,52 @@ namespace std {
 \pnum
 \addedConcepts{The library provides concept maps that allow iterators
   specified with \mbox{\tcode{iterator_traits}}
-to interoperate with algorithms that require iterator concepts. }
+to interoperate with algorithms that require iterator
+concepts. \enterexample}
+\begin{codeblock}
+struct random_iterator
+{
+  typedef std::input_iterator_tag iterator_category;
+  typedef int                     value_type;
+  typedef int                     difference_type;
+  typedef int*                    pointer;
+  typedef int                     reference;
+
+  random_iterator(int remaining = 0) : remaining(remaining) { }
+
+  int operator*() const { return std::rand(); }
+  int* operator->() const { return 0; }
+  
+  random_iterator& operator++() { --remaining; return *this; }
+
+  random_iterator operator++(int) { 
+    random_iterator tmp(*this); ++(*this); return tmp;
+  }
+
+  int remaining;
+
+  friend bool 
+  operator==(const random_iterator& i, const random_iterator& j)
+  {
+    return i.remaining == j.remaining;
+  }
+
+  friend bool 
+  operator!=(const random_iterator& i, const random_iterator& j)
+  {
+    return i.remaining != j.remaining;
+  }
+};
+
+void f(random_iterator i, random_iterator j) {
+  std::copy(i, j, std::ostream_iterator<int>(std::cout, " ")); // okay: standard library produces concept
+                                                               // map InputIterator<random_iterator>
+}
+\end{codeblock}
+\addedConcepts{\exitexample}
 
 \pnum
-\addedConcepts{The
+\addedConcepts{For all iterator types except output iterators, the
 associated types 
 \mbox{\tcode{difference_type}},
 \mbox{\tcode{value_type}},
@@ -1358,7 +1415,9 @@ associated types
 and
 \mbox{\tcode{reference}}
 are given the same values as their counterparts in 
-\mbox{\tcode{iterator_traits}}.}
+\mbox{\tcode{iterator_traits}}. For output iterators, the
+\mbox{\tcode{reference}} type is deduced from the type of the output
+iterator's dereference operator.}
 
 \pnum
 \color{addclr}

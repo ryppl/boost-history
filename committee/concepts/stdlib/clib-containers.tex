@@ -52,7 +52,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Containers\\
-(Revision 2)
+(Revision 3)
 \end{center}
 
 \normalsize
@@ -64,14 +64,25 @@ Douglas Gregor, Indiana University \\
 Mat Marcus, Adobe Systems, Inc.\\
 Pablo Halpern,  Bloomberg, L.P.
 \end{tabular}\vspace{-6pt}
-\par\noindent Document number: N2694=08-0204\vspace{-6pt}
-\par\noindent Revises document number: N2623=08-0133\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2694=08-0204\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
 
 \section*{Introduction}
 \libintrotext{Chapter 23}
+
+\section*{Changes from N2694}
+\begin{itemize}
+\item Added the \tcode{NothrowDestructible<Cont>} requirement to each
+  of the container adaptors (\tcode{queue}, \tcode{priority_queue},
+  \tcode{stack}).
+\item Changed all of the \tcode{HasConstructible} requirements to
+  \tcode{Constructible} requirements, since we always need a no-throw
+  destructor.
+\end{itemize}
+
 \end{titlepage}
 
 %%--------------------------------------------------
@@ -1362,6 +1373,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
     @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
             @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@
+            @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class queue;
   template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator==(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
@@ -1386,6 +1398,7 @@ namespace std {
         @\removedCC{{class}}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
              @\addedConcepts{\&\& }\changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
+             @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue;
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@@\addedConcepts{, Swappable Compare}@>
     void swap(priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>& x, priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>& y);
@@ -1403,6 +1416,7 @@ namespace std {
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
     @\addedConcepts{requires SameType<Cont::value_type, T>}@
+         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class stack;
   template <class T, @\changedCCC{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
@@ -3424,6 +3438,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
            @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
+           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class queue {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3439,16 +3454,16 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<Cont>}@ explicit queue(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     @\addedConcepts{requires MoveConstructible<Cont>}@ queue(queue&& q) : c(std::move(q.c)) {}
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Alloc>}@
       explicit queue(const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont, Alloc>}@
       queue(const Cont@\removedConcepts{ainer}@&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc>}@
       queue(Cont@\removedConcepts{ainer}@&&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc\&\&>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc\&\&>}@
       queue(queue&&, const Alloc&);
     @\addedConcepts{requires MoveAssignable<Cont>}@ queue& operator=(queue&& q)
                                         { c = std::move(q.c); return *this; }
@@ -3628,6 +3643,7 @@ namespace std {
        @\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
            @\addedConcepts{\&\&} \changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
+           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue { 
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3644,29 +3660,29 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<Cont>}@ 
       explicit priority_queue(const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{CopyConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+      @\addedConcepts{CopyConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
       priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Compare& x, const Cont@\removedConcepts{ainer}@&);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{MoveConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+      @\addedConcepts{MoveConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
       priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     @\addedConcepts{requires MoveConstructible<Cont>}@ priority_queue(priority_queue&&);
     @\addedConcepts{requires MoveAssignable<Cont>}@ priority_queue& operator=(priority_queue&&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Alloc>}@
       explicit priority_queue(const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Alloc>}@
       priority_queue(const Compare&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont, Alloc>}@
       priority_queue(const Compare&, const Cont@\removedConcepts{ainer}@&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc>}@
       priority_queue(const Compare&, Cont@\removedConcepts{ainer}@&&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires HasConstructor<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc>}@
       priority_queue(priority_queue&&, const Alloc&);
 
     bool      empty() const       { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
@@ -3729,11 +3745,11 @@ calls
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{CopyConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+  @\addedConcepts{CopyConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
   priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Compare& x, const Cont@\removedConcepts{ainer}@&);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{MoveConstructible<Cont> \&\& HasConstructor<Cont, Iter, Iter>}@
+  @\addedConcepts{MoveConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
   priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
 \end{itemdecl}
@@ -3845,6 +3861,7 @@ can be used.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires SameType<Cont::value_type, T>}@
+         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class stack {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3859,16 +3876,16 @@ namespace std {
     @\addedConcepts{requires CopyConstructible<Cont>}@ explicit stack(const Cont@\removedConcepts{ainer}@&);
     @\addedConcepts{requires MoveConstructible<Cont>}@ explicit stack(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     template <class Alloc> 
-      @\addedConcepts{HasConstructor<Cont, Alloc>}@
+      @\addedConcepts{Constructible<Cont, Alloc>}@
       explicit stack(const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{HasConstructor<Cont, Cont, Alloc>}@
+      @\addedConcepts{Constructible<Cont, Cont, Alloc>}@
       stack(const Cont@\removedConcepts{ainer}@&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{HasConstructor<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{Constructible<Cont, Cont\&\&, Alloc>}@
       stack(Cont@\removedConcepts{ainer}@&&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{HasConstructor<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{Constructible<Cont, Cont\&\&, Alloc>}@
       stack(stack&&, const Alloc&);
 
     bool      empty() const             { return @\removedCCC{c.}@empty(@\addedCC{c}@); }

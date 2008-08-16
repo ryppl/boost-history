@@ -105,6 +105,16 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
   addition of the new \tcode{Constructible} concept that implies some
   semantics by refining \tcode{NothrowDestructible}, and will be used
   throughout most of the standard library.
+
+\item Added the \tcode{RvalueOf} concept, which is needed to constrain
+  and use \tcode{std::move} within the standard library. This concept
+  replaces the \tcode{HasStdMove} concept that was part of the
+  iterator concepts proposal.
+
+\item In \tcode{MoveConstructible} and \tcode{MoveAssignable}, added a
+  constructor and copy-assignment operator requirement, respectively,
+  that accept an \tcode{RvalueOf<T>::type} on the right-hand side, to
+  account for uses of \tcode{std::move}.
 \end{itemize}
 
 \end{titlepage}
@@ -182,6 +192,10 @@ namespace std {
   concept EnumerationType<typename T> @\textit{see below}@;
   concept SameType<typename T, typename U> {  }
   concept DerivedFrom<typename Derived, typename Base> { }
+
+  // \ref{concept.rvalue}, rvalue:
+  auto concept RvalueOf<typename T> @\textit{see below}@;
+  template<typename T> concept_map RvalueOf<T&> @\textit{see below}@;
 
   // \ref{concept.true}, true:
   concept True<bool> { }
@@ -590,6 +604,34 @@ such that \mbox{\tcode{T}} is either the same as or publicly and
 unambiguously derived from \mbox{\tcode{U}}, a concept map
 \mbox{\tcode{DerivedFrom<T, U>}} shall be implicitly defined in namespace
 \mbox{\tcode{std}}.
+\end{itemdescr}
+
+\rSec2[concept.rvalue]{Rvalue}
+\begin{itemdecl}
+auto concept RvalueOf<typename T> {
+  typename type = T&&;
+  requires Convertible<T&, type> && Convertible<T&&, type>;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes the rvalue reference type
+  for an arbitrary type \mbox{\tcode{T}}.} 
+\end{itemdescr}
+
+\begin{itemdecl}
+template<typename T> concept_map RvalueOf<T&> {
+  typedef T&& type;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} provides the appropriate rvalue
+  reference type for the rvalue an lvalue reference type. \enternote this
+  concept map is required to circumvent reference collapsing for
+  lvalue references. \exitnote}
 \end{itemdescr}
 
 \rSec2[concept.true]{True}
@@ -1334,7 +1376,9 @@ destructors do not need to be executed when the object is destroyed.}
 
 \rSec2[concept.copymove]{Copy and move}
 \begin{itemdecl}
-auto concept MoveConstructible<typename T> : Constructible<T, T&&> { }
+auto concept MoveConstructible<typename T> : Constructible<T, T&&> { 
+  requires RvalueOf<T> && Constructible<T, RvalueOf<T>::type>;
+}
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1389,7 +1433,9 @@ shall be implicitly defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MoveAssignable<typename T> : HasAssign<T, T&&> { }
+auto concept MoveAssignable<typename T> : HasAssign<T, T&&> { 
+  requires RvalueOf<T> && HasAssign<T, RvalueOf<T>::type>;
+}
 \end{itemdecl}
 
 \begin{itemdescr}
