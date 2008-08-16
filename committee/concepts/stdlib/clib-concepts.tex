@@ -120,6 +120,12 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
   used for concepts (\ref{utility.concepts}).
 
 \item Added a new concept \tcode{EquivalenceRelation}.
+
+\item Added a new concept \tcode{HasVirtualDestructor}.
+
+\item In the \tcode{FreeStoreAllocatable} concept, default the
+  implementations of operators \tcode{new[]} and \tcode{delete[]} to
+  the use \tcode{new} and \tcode{delete}, respectively.
 \end{itemize}
 
 \end{titlepage}
@@ -277,6 +283,7 @@ namespace std {
 
   // \ref{concept.destruct}, destruction:
   auto concept HasDestructor<typename T> @\textit{see below}@;
+  auto concept HasVirtualDestructor<typename T> @\textit{see below}@;
   auto concept NothrowDestructible<typename T> @\textit{see below}@;
   concept TriviallyDestructible<typename T> @\textit{see below}@;
 
@@ -1381,6 +1388,18 @@ auto concept HasDestructor<typename T> : VariableType<T> {
 \end{itemdescr}
 
 \begin{itemdecl}
+concept HasVirtualDestructor<typename T> : HasDestructor<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote describes types with a virtual destructor.}
+
+\pnum
+\addedConcepts{\requires for every class type \mbox{\tcode{T}} that has a virtual destructor, a concept map \mbox{\tcode{HasVirtualDestructor<T>}} shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
 auto concept NothrowDestructible<typename T> : HasDestructor<T> { }
 \end{itemdecl}
 
@@ -1578,9 +1597,15 @@ auto concept HasPlacementNew<typename T> {
 \begin{itemdecl}
 auto concept FreeStoreAllocatable<typename T> {
   void* T::operator new(size_t size);
-  void* T::operator new[](size_t size);
   void T::operator delete(void*);
-  void T::operator delete[](void*);
+
+  void* T::operator new[](size_t size) {
+    return T::operator new(size);
+  }
+
+  void T::operator delete[](void* ptr) {
+    T::operator delete(ptr);
+  }
 
   void* T::operator new(size_t size, const nothrow_t&) {
     try {

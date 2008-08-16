@@ -105,19 +105,6 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 
 \rSec1[utility.concepts]{Concepts}
 
-\editorial{Add the following to the \tcode{<concepts>} header synopsis:}
-\synopsis{Header \tcode{<concepts>}\ synopsis}
-\begin{codeblock}
-namespace std {
-  // \ref{concept.operator}, operator concepts:
-  auto concept HasComma<typename T, typename U> @\textit{see below}@;
-
-  // \ref{concept.destruct}, destruction:
-  concept TriviallyDestructible<typename T> @\textit{see below}@;
-  @\addedConcepts{concept HasTrivialDestructor<typename T> \mbox{\textit{see below}};}@
-}
-\end{codeblock}
-
 \setcounter{section}{2}
 \editorial{Update [concept.support] as follows}
 \rSec2[concept.support]{Support concepts}
@@ -142,73 +129,6 @@ concept EnumerationType<typename T> : IntegralConstantExpressionType<T> {
 for every type \mbox{\tcode{T}} that is an enumeration type, a concept map
 \mbox{\tcode{EnumerationType<T>}} shall be implicitly defined in namespace
 \mbox{\tcode{std}}.
-\end{itemdescr}
-
-\editorial{Add to the end of [concept.destruct]}
-\setcounter{section}{6}
-\setcounter{Paras}{5}
-\color{addclr}
-\begin{itemdecl}
-concept HasVirtualDestructor<typename T> : HasDestructor<T> { }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\reallynote describes types with a virtual destructor.}
-
-\pnum
-\addedConcepts{\requires for every class type \mbox{\tcode{T}} that has a virtual destructor, a concept map \mbox{\tcode{HasVirtualDestructor<T>}} shall be implicitly defined in namespace \mbox{\tcode{std}}.}
-\end{itemdescr}
-
-\color{black}
-
-\editorial{Update [concept.memory] as follows}
-\setcounter{section}{8}
-\setcounter{Paras}{1}
-\begin{itemdecl}
-auto concept FreeStoreAllocatable<typename T> {
-  void* T::operator new(size_t size);
-  void T::operator delete(void*);
-
-  void* T::operator new[](size_t size)@\removedConcepts{;}@ @\addedConcepts{\{}@
-    @\addedConcepts{return T::operator new(size);}@
-  @\addedConcepts{\}}@
-
-  void T::operator delete[](void*)@\removedConcepts{;}@ @\addedConcepts{\{}@
-    @\addedConcepts{T::operator delete(ptr);}@
-  @\addedConcepts{\}}@
-
-  void* T::operator new(size_t size, const nothrow_t&) { 
-    try { 
-      return T::operator new(size); 
-    } catch(...) { 
-      return 0; 
-    } 
-  } 
-
-  void* T::operator new[](size_t size, const nothrow_t&) { 
-    try { 
-      return T::operator new[](size); 
-    } catch(...) { 
-      return 0; 
-    } 
-  } 
-
-  void T::operator delete(void* ptr, const nothrow_t&) { 
-    T::operator delete(ptr); 
-  } 
-
-  void T::operator delete[](void* ptr, const nothrow_t&) { 
-    T::operator delete[](ptr); 
-  } 
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\mbox{\reallynote} describes types for which objects and
-arrays of objects can be allocated on or freed from the free store with
-\mbox{\tcode{new}} and \mbox{\tcode{delete}}.
 \end{itemdescr}
 
 \end{document}
