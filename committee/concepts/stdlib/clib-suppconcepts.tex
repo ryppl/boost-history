@@ -1,0 +1,246 @@
+\documentclass[american,twoside]{book}
+\usepackage{refbib}
+\usepackage{pdfsync}
+\input{macros}
+
+%%--------------------------------------------------
+%% PDF
+
+\usepackage[pdftex,
+            pdftitle={Supplemental Concepts for the C++0x Standard Library},
+            pdfsubject={C++ International Sßtandard Proposal},
+            pdfcreator={Douglas Gregor},
+            bookmarks=true,
+            bookmarksnumbered=true,
+            pdfpagelabels=true,
+            pdfpagemode=UseOutlines,
+            pdfstartview=FitH,
+            linktocpage=true,
+            colorlinks=true,
+            linkcolor=blue,
+            plainpages=false
+           ]{hyperref}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{1}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\newsavebox\rebindbox
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Supplemental Concepts for the C++0x Standard Library
+\vspace{0.25in}
+\end{center}
+
+\normalsize
+\vspace{0.25in}
+\par\noindent Authors: 
+\begin{tabular}[t]{l}
+Douglas Gregor, Indiana University \\
+Andrew Lumsdaine, Indiana University
+\end{tabular}\vspace{-6pt}
+
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
+
+\section*{Introduction}
+This document proposes supplemental concepts for the \Cpp0x Standard
+Library, which extend the foundational concepts in N2677. The concepts
+and changes herein are the result of LWG discussions and requests.
+
+Within the proposed wording, text that has been added
+\textcolor{addclr}{will be presented in blue} \addedConcepts{and
+  underlined when possible}. Text that has been removed will be
+presented \textcolor{remclr}{in red},\removedConcepts{with
+  strike-through when possible}. 
+
+\editorial{Purely editorial comments will be written in a separate,
+  shaded box.}
+
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\setcounter{chapter}{19}
+\rSec0[utilities]{General utilities library}
+
+\rSec1[utility.concepts]{Concepts}
+
+\editorial{Add the following to the \tcode{<concepts>} header synopsis:}
+\synopsis{Header \tcode{<concepts>}\ synopsis}
+\begin{codeblock}
+namespace std {
+  // \ref{concept.operator}, operator concepts:
+  auto concept HasComma<typename T, typename U> @\textit{see below}@;
+  @\addedConcepts{auto concept HasStdMove<typename T> \mbox{\textit{see below}};}@
+
+  // \ref{concept.destruct}, destruction:
+  concept TriviallyDestructible<typename T> @\textit{see below}@;
+  @\addedConcepts{concept HasTrivialDestructor<typename T> \mbox{\textit{see below}};}@
+}
+\end{codeblock}
+
+\setcounter{section}{2}
+\editorial{Update [concept.support] as follows}
+\rSec2[concept.support]{Support concepts}
+\setcounter{Paras}{33}
+\begin{itemdecl}
+concept EnumerationType<typename T> : IntegralConstantExpressionType<T> {
+  @\addedConcepts{typename underlying_type;}@
+  @\addedConcepts{requires IntegralType<T>}@
+        @\addedConcepts{\&\& IntegralLike<T>}@
+        @\addedConcepts{\&\& ExplicitlyConvertible<T, underlying_type>}@
+        @\addedConcepts{\&\& ExplicitlyConvertible<underlying_type, T>;}@
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes enumeration types
+([dcl.enum]). \addedConcepts{\mbox{\tcode{underlying_type}} is the underlying type (\mbox{\ref{dcl.enum}}) of the enumeration type \mbox{\tcode{T}}.}
+
+\pnum
+\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an enumeration type, a concept map
+\mbox{\tcode{EnumerationType<T>}} shall be implicitly defined in namespace
+\mbox{\tcode{std}}.
+\end{itemdescr}
+
+\rSec2[concept.operator]{Operator concepts}
+\editorial{Add to the end of [concept.operator]}
+\setcounter{Paras}{42}
+\color{addclr}
+\begin{itemdecl}
+auto concept HasStdMove<typename T> {
+  typename result_type = typename remove_reference<T>::type&&;
+  result_type std_move(T&& x) { return x; }
+}
+\end{itemdecl}
+\color{black}
+
+\editorial{The \tcode{HasStdMove} concept is required to handle a
+  pecularity with the \tcode{std::move} operation, whose result type
+  is move a simple constructed by like \tcode{T\&\&} but a
+  type metafunction involving \tcode{remove_reference}. Type
+  metafunctions are at odds with concepts, because the former requires
+  precise type information to compute a result (at template instantiation time)
+  while the latter seeks to tie down details without precise types (at
+  template definition time); thus, to accurately characterize the
+  behavior of \tcode{std::move}, we encapsulate its return type in an
+  associated type \tcode{result_type}, so that we can describe
+  requirements on that return type.}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes the behavior of the
+  \mbox{\tcode{std::move}} 
+  operation and encapsulates its result in an associated type.}
+\end{itemdescr}
+
+\editorial{Add to the end of [concept.destruct]}
+\setcounter{section}{6}
+\setcounter{Paras}{5}
+\color{addclr}
+\begin{itemdecl}
+concept HasVirtualDestructor<typename T> : HasDestructor<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote describes types with a virtual destructor.}
+
+\pnum
+\addedConcepts{\requires for every class type \mbox{\tcode{T}} that has a virtual destructor, a concept map \mbox{\tcode{HasVirtualDestructor<T>}} shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\color{black}
+
+\editorial{Update [concept.memory] as follows}
+\setcounter{section}{8}
+\setcounter{Paras}{1}
+\begin{itemdecl}
+auto concept FreeStoreAllocatable<typename T> {
+  void* T::operator new(size_t size);
+  void T::operator delete(void*);
+
+  void* T::operator new[](size_t size)@\removedConcepts{;}@ @\addedConcepts{\{}@
+    @\addedConcepts{return T::operator new(size);}@
+  @\addedConcepts{\}}@
+
+  void T::operator delete[](void*)@\removedConcepts{;}@ @\addedConcepts{\{}@
+    @\addedConcepts{T::operator delete(ptr);}@
+  @\addedConcepts{\}}@
+
+  void* T::operator new(size_t size, const nothrow_t&) { 
+    try { 
+      return T::operator new(size); 
+    } catch(...) { 
+      return 0; 
+    } 
+  } 
+
+  void* T::operator new[](size_t size, const nothrow_t&) { 
+    try { 
+      return T::operator new[](size); 
+    } catch(...) { 
+      return 0; 
+    } 
+  } 
+
+  void T::operator delete(void* ptr, const nothrow_t&) { 
+    T::operator delete(ptr); 
+  } 
+
+  void T::operator delete[](void* ptr, const nothrow_t&) { 
+    T::operator delete[](ptr); 
+  } 
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote} describes types for which objects and
+arrays of objects can be allocated on or freed from the free store with
+\mbox{\tcode{new}} and \mbox{\tcode{delete}}.
+\end{itemdescr}
+
+\end{document}
