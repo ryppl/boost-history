@@ -115,6 +115,11 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
   constructor and copy-assignment operator requirement, respectively,
   that accept an \tcode{RvalueOf<T>::type} on the right-hand side, to
   account for uses of \tcode{std::move}.
+
+\item Added some introductory text describing the naming conventions
+  used for concepts (\ref{utility.concepts}).
+
+\item Added a new concept \tcode{EquivalenceRelation}.
 \end{itemize}
 
 \end{titlepage}
@@ -166,8 +171,18 @@ Table~\ref{tab:util.lib.summary}.
 \color{addclr}
 \rSec1[utility.concepts]{Concepts}
 
-\pnum The \tcode{<concepts>} header describes requirements on template
-arguments used throughout the \Cpp\ Standard Library.
+\pnum
+This subclause describes concepts that specify requirements on
+template arguments used throughout the \Cpp\ Standard
+Library. Concepts whose name is prefixed with \tcode{Has} provide
+detection of a specific syntax (e.g., \tcode{HasConstructor}), but do
+not imply the semantics of the corresponding operation. Concepts whose
+name has the \tcode{able} or \tcode{ible} suffix (e.g.,
+\tcode{Constructible}) require both a specific syntax and semantics of
+the associated operations. These semantic concepts refine the
+corresponding syntax-detection concepts, for example, the
+\tcode{Constructible} concept refines the \tcode{HasConstructor}
+concept.
 
 \synopsis{Header \tcode{<concepts>}\ synopsis}
 \begin{codeblock}
@@ -252,6 +267,7 @@ namespace std {
   auto concept EqualityComparable<typename T> @\textit{see below}@;
   concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
   auto concept StrictWeakOrder<typename F, typename T> @\textit{see below}@;
+  auto concept EquivalenceRelation<typename F, typename T> @\textit{see below}@;
 
   // \ref{concept.construct}, construction:
   auto concept HasConstructor<typename T, typename... Args> @\textit{see below}@;
@@ -1202,36 +1218,6 @@ auto concept LessThanComparable<typename T> : HasLess<T, T> {
   is a strict weak ordering relation (\mbox{\ref{alg.sorting}}).}
 \end{itemdescr}
 
-\color{ccadd}
-\begin{itemdecl}
-auto concept StrictWeakOrder<typename F, typename T> : Predicate<F, T, T> {
-
-  axiom Irreflexivity(F f, T a) { f(a, a) == false; }
-
-  axiom Antisymmetry(F f, T a, T b) { 
-    if (f(a, b)) 
-      f(b, a) == false;
-  }
-
-  axiom Transitivity(F f, T a, T b, T c) {
-    if (f(a, b) && f(b, c)) 
-      f(a, c) == true;
-  }
-
-  axiom TransitivityOfEquivalence(F f, T a, T b, T c) {
-    if (!f(a, b) && !f(b, a) && !f(b, c) && !f(c, b))
-      (!f(a, c) && !f(c, a)) == true;
-  }
-}
-\end{itemdecl}
-\color{addclr}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} describes a strict weak ordering
-  relation (\mbox{\ref{alg.sorting}}), \mbox{\tcode{F}}, on a type \mbox{\tcode{T}}.}
-\end{itemdescr}
-
 \begin{itemdecl}
 auto concept EqualityComparable<typename T> : HasEqualTo<T, T> {
   bool operator!=(const T& a, const T& b) { return !(a == b); }
@@ -1280,6 +1266,55 @@ negatives, but never false positives. \mbox{\exitnote}}
   \mbox{\tcode{T}} and pointer type, a concept map
   \mbox{\tcode{TriviallyEqualityComparable<T>}} shall be 
   defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept StrictWeakOrder<typename F, typename T> : Predicate<F, T, T> {
+
+  axiom Irreflexivity(F f, T a) { f(a, a) == false; }
+
+  axiom Antisymmetry(F f, T a, T b) { 
+    if (f(a, b)) 
+      f(b, a) == false;
+  }
+
+  axiom Transitivity(F f, T a, T b, T c) {
+    if (f(a, b) && f(b, c)) 
+      f(a, c) == true;
+  }
+
+  axiom TransitivityOfEquivalence(F f, T a, T b, T c) {
+    if (!f(a, b) && !f(b, a) && !f(b, c) && !f(c, b))
+      (!f(a, c) && !f(c, a)) == true;
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} describes a strict weak ordering
+  relation (\mbox{\ref{alg.sorting}}), \mbox{\tcode{F}}, on a type \mbox{\tcode{T}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept EquivalenceRelation<typename F, typename T> : Predicate<F, T, T> {
+  axiom Reflexivity(F f, T a) { f(a, a) == true; }
+
+  axiom Symmetry(F f, T a, T b) { 
+    if (f(a, b)) 
+      f(b, a) == true; 
+  }
+
+  axiom Transitivity(F f, T a, T b, T c) {
+    if (f(a, b) && f(b, c))
+      f(a, c) == true;
+  }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} describes an equivalence relation, \mbox{\tcode{F}}, on a type \mbox{\tcode{T}}.}
 \end{itemdescr}
 
 \rSec2[concept.construct]{Construction}

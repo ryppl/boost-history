@@ -81,6 +81,8 @@ Pablo Halpern,  Bloomberg, L.P.
 \item Changed all of the \tcode{HasConstructible} requirements to
   \tcode{Constructible} requirements, since we always need a no-throw
   destructor.
+\item Use the \tcode{EquivalenceRelation} concept instead of
+  \tcode{Predicate} for the \tcode{unique} member in \tcode{forward_list}.
 \end{itemize}
 
 \end{titlepage}
@@ -2225,8 +2227,8 @@ namespace std {
     template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedConcepts{icate}@> void remove_if(Pred@\removedConcepts{icate}@ pred); 
 
     @\addedConcepts{requires EqualityComparable<T>}@ void unique(); 
-    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
-      void unique(BinaryPredicate binary_pred); 
+    template <@\changedConcepts{class}{EquivalenceRelation<auto, T>}@ BinaryPredicate>
+      void unique(BinaryPredicate binary_pred);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
     template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
@@ -2573,7 +2575,7 @@ template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedCC{icate}@>
 
 \begin{itemdecl}
 @\addedConcepts{requires EqualityComparable<T>}@ void unique();
-template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
+template <@\changedConcepts{class}{EquivalenceRelation<auto, T>}@ BinaryPredicate>
   void unique(BinaryPredicate pred);
 \end{itemdecl}
 
@@ -2799,7 +2801,7 @@ namespace std {
     template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedConcepts{icate}@> void remove_if(Pred@\removedConcepts{icate}@ @\farg{pred}@);
 
     @\addedConcepts{requires EqualityComparable<T>}@ void unique();
-    template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate>
+    template <@\changedConcepts{class}{EquivalenceRelation<auto, T>}@ BinaryPredicate>
       void unique(BinaryPredicate @\farg{binary_pred}@);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@);
@@ -3245,7 +3247,7 @@ applications of the corresponding predicate.
 \index{unique@\tcode{unique}!\tcode{list}}%
 \begin{itemdecl}
 @\addedConcepts{requires EqualityComparable<T>}@ void unique();
-template <@\changedConcepts{class}{Predicate<auto, T, T>}@ BinaryPredicate> void unique(BinaryPredicate @\farg{binary_pred}@);
+template <@\changedConcepts{class}{EquivalenceRelation<auto, T>}@ BinaryPredicate> void unique(BinaryPredicate @\farg{binary_pred}@);
 \end{itemdecl}
 
 \begin{itemdescr}
