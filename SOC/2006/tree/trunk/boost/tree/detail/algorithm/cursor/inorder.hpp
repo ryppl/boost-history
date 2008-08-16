@@ -14,6 +14,7 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 
+#include <algorithm>
 
 namespace boost {
 namespace tree {

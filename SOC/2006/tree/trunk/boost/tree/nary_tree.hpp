@@ -20,7 +20,7 @@
 
 #include <memory>
 #include <vector>
-
+#include <climits>
 
 namespace boost {
 namespace tree {
