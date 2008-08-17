@@ -12,6 +12,7 @@
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/typeof/typeof.hpp>
 //
 #include <boost/mirror/meta_namespace.hpp>
@@ -39,13 +40,25 @@ void test_main()
 		BOOST_MIRRORED_TYPEOF(L'w')::reflected_type,
 		wchar_t
 	> ));
-	BOOST_MPL_ASSERT(( is_same<
-		BOOST_MIRRORED_TYPEOF("a+b")::reflected_type,
-		const char [4]
+	BOOST_MPL_ASSERT(( mpl::or_<
+		is_same<
+			BOOST_MIRRORED_TYPEOF("a+b")::reflected_type,
+			const char [4]
+		>,
+		is_same<
+			BOOST_MIRRORED_TYPEOF("a+b")::reflected_type,
+			char [4]
+		>
 	> ));
-	BOOST_MPL_ASSERT(( is_same<
-		BOOST_MIRRORED_TYPEOF(L"v+w")::reflected_type,
-		const wchar_t [4]
+	BOOST_MPL_ASSERT(( mpl::or_<
+		is_same<
+			BOOST_MIRRORED_TYPEOF(L"v+w")::reflected_type,
+			const wchar_t [4]
+		>,
+		is_same<
+			BOOST_MIRRORED_TYPEOF(L"v+w")::reflected_type,
+			wchar_t [4]
+		>
 	> ));
 	BOOST_MPL_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(1+2)::reflected_type,
