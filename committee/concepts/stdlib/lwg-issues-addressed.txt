@@ -1,0 +1,53 @@
+299. Incorrect return types for iterator dereference
+(Concepts specify the return type of operator[] to be the reference type
+of the iterator.)
+
+458. 24.1.5 contains unintented limitation for operator-
+(We now specify that the difference type of an iterator is a signed
+integral type.)
+
+484. Convertible to T
+(With concepts, the iterator requirements also specify
+"convertible to T", and this conversion will automatically be used
+within constrained templates as necessary, so that the overload that
+will be selected becomes clear from the requirements of the template.)
+
+556. is Compare a BinaryPredicate?
+(With concepts, we've specified exactly what "convertible to bool"
+means for predicates, and all Compare objects are predicates (since
+they refine the Predicate concept). Short-circuiting is taken care of
+because the Predicate concept forces conversion to bool inside all
+constrained templates.)
+
+631. conflicting requirements for BinaryPredicate
+(The concepts specification for lower_bound and upper_bound specify an
+exact order for the operands, following the principle that we specify
+minimal requirements for an algorithm (within reason).)
+
+704. MoveAssignable requirement for container value type overly strict
+(The concepts proposal for the containers will specify precisely which
+routines require MoveAssignable value types.)
+
+724. DefaultConstructible is not defined
+(The concepts proposal provides a DefaultConstructible concept.)
+
+742. Enabling swap for proxy iterators
+(The concepts proposal provides a two-parameter swap that is available
+when swap(w, v) is valid or when the types of w and v are the same and
+that type is MoveAssignable and MoveConstructible, per the std::swap
+algorithm.)
+
+779. Resolution of #283 incomplete
+(The concepts proposal spells out the exact requirements for the
+remove algorithm.)
+
+811. pair of pointers no longer works with literal 0
+(As mentioned in the discussion of the issue, making pair a
+constrained templates solves this issue.)
+
+Already marked NAD due to concepts:
+
+385. Does call by value imply the CopyConstructible requirement?
+532. Tuple comparison
+594. Disadvantages of defining Swappable in terms of CopyConstructible and Assignable
+
