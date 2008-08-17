@@ -71,6 +71,12 @@ Bloomington, IN\ \  47405 \\
 \libintrotext{Chapter 26}
 
 \paragraph*{Changes from N2626}
+\begin{itemize}
+\item Updated requirements for \tcode{accumulate},
+  \tcode{inner_product}, \tcode{partial_sum}, and
+  \tcode{adjacent_difference} to cope with move semantics and changes
+  to the foundational concepts.
+\end{itemize}
 
 \end{titlepage}
 
@@ -3404,56 +3410,66 @@ object refers.
 \color{addclr}
 \begin{codeblock}
 namespace std {
-  template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
-    requires CopyAssignable<T, T::result_type>
+  template <InputIterator Iter, MoveConstructible T>
+    requires HasPlus<T, Iter::reference>
+          && HasAssign<T, HasPlus<T, Iter::reference>::result_type>
     T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
-  template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
-    requires CopyAssignable<T, BinaryOperation::result_type>
+  template <InputIterator Iter, MoveConstructible T, 
+            Callable<auto, const T&, Iter::reference> BinaryOperation>
+    requires HasAssign<T, BinaryOperation::result_type>
+          && CopyConstructible<BinaryOperation>
     T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
   	         BinaryOperation @\farg{binary_op}@);
-  template <InputIterator Iter1, InputIterator Iter2, class T>
-    requires HasMultiply<Iter1::reference, Iter2::reference> &&
-             HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
-             CopyAssignable<
+  template <InputIterator Iter1, InputIterator Iter2, MoveConstructible T>
+    requires HasMultiply<Iter1::reference, Iter2::reference>
+          && HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type>
+          && HasAssign<
                T, 
                HasPlus<T, 
                        HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
     T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
   		    Iter2 @\farg{first2}@, T @\farg{init}@);
-  template <InputIterator Iter1, InputIterator Iter2, class T,
-  	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
-    requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
-             CopyAssignable<T, BinaryOperation1::result_type>
+  template <InputIterator Iter1, InputIterator Iter2, MoveConstructible T,
+  	    class BinaryOperation1, 
+            Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
+    requires Callable<BinaryOperation1, const T&, BinaryOperation2::result_type>
+          && HasAssign<T, BinaryOperation1::result_type>
+          && CopyConstructible<BinaryOperation1>
+          && CopyConstructible<BinaryOperation2>
     T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
   		    Iter2 @\farg{first2}@, T @\farg{init}@,
   		    BinaryOperation1 @\farg{binary_op1}@,
   		    BinaryOperation2 @\farg{binary_op2}@);
-  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-    requires HasPlus<InIter::value_type> && 
-             CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
-             CopyConstructible<InIter::value_type>
+  template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter>
+    requires HasPlus<InIter::value_type, _InIter::reference>
+          && HasAssign<InIter::value_type, 
+                       HasPlus<InIter::value_type, _InIter::reference>::result_type>
+          && Constructible<InIter::value_type, _InIter::reference>
     OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-  	  	        OutIter @\farg{result}@);
-  template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-           Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-    requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
-             CopyConstructible<InIter::value_type>
+  	  	      OutIter @\farg{result}@);
+  template<InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
+           Callable<auto, const InIter::value_type&, InIter::reference> BinaryOperation>
+    requires HasAssign<InIter::value_type, BinaryOperation::result_type>
+          && Constructible<InIter::value_type, InIter::reference>
+          && CopyConstructible<BinaryOperation>
     OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
-      		        OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
-  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-    requires HasMinus<InIter::value_type, InIter::value_type> &&
-             CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
-             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
+       		        OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
+  template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter>
+    requires HasMinus<InIter::value_type, InIter::value_type>
+          && Constructible<InIter::value_type, InIter::reference>
+          && OutputIterator<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type>
+          && MoveAssignable<InIter::value_type> 
     OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-     			        OutIter @\farg{result}@);
-  template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-            Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-    requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
-             CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
+     			      OutIter @\farg{result}@);
+  template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
+            Callable<auto, const InIter::value_type&, const InIter::value_type&> BinaryOperation>
+    requires Constructible<_InIter::value_type, _InIter::reference>
+          && OutputIterator<OutIter, BinaryOperation::result_type>
+          && MoveAssignable<InIter::value_type>
+          && CopyConstructible<BinaryOperation>
     OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
-    			        OutIter @\farg{result}@,
-    			        BinaryOperation @\farg{binary_op}@);
-}
+  			      OutIter @\farg{result}@,
+    			      BinaryOperation @\farg{binary_op}@);
 \end{codeblock}
 \color{black}
 
@@ -3467,11 +3483,14 @@ apply to the following algorithms.
 \color{addclr}
 \index{accumulate@\tcode{accumulate}}%
 \begin{itemdecl}
-template <InputIterator Iter, HasPlus<auto, Iter::reference> T>
-  requires CopyAssignable<T, T::result_type>
+template <InputIterator Iter, MoveConstructible T>
+  requires HasPlus<T, Iter::reference>
+        && HasAssign<T, HasPlus<T, Iter::reference>::result_type>
   T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@);
-template <InputIterator Iter, class T, Callable<auto, T, Iter::reference> BinaryOperation>
-  requires CopyAssignable<T, BinaryOperation::result_type>
+template <InputIterator Iter, MoveConstructible T, 
+          Callable<auto, const T&, Iter::reference> BinaryOperation>
+  requires HasAssign<T, BinaryOperation::result_type>
+        && CopyConstructible<BinaryOperation>
   T accumulate(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{init}@,
                BinaryOperation @\farg{binary_op}@);
 \end{itemdecl}
@@ -3515,19 +3534,22 @@ shall neither modify elements nor invalidate iterators or subranges.%
 
 \color{addclr}
 \begin{itemdecl}
-template <InputIterator Iter1, InputIterator Iter2, class T>
-  requires HasMultiply<Iter1::reference, Iter2::reference> &&
-           HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> &&
-           CopyAssignable<
+template <InputIterator Iter1, InputIterator Iter2, MoveConstructible T>
+  requires HasMultiply<Iter1::reference, Iter2::reference>
+        && HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type>
+        && HasAssign<
              T, 
              HasPlus<T, 
                      HasMultiply<Iter1::reference, Iter2::reference>::result_type>::result_type>
-  @\textcolor{addclr}{}@T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
+  T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
 		  Iter2 @\farg{first2}@, T @\farg{init}@);
-template <InputIterator Iter1, InputIterator Iter2, class T,
-	    class BinaryOperation1, Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
-  requires Callable<BinaryOperation1, T, BinaryOperation2::result_type> &&
-           CopyAssignable<T, BinaryOperation1::result_type>
+template <InputIterator Iter1, InputIterator Iter2, MoveConstructible T,
+          class BinaryOperation1, 
+          Callable<auto, Iter1::reference, Iter2::reference> BinaryOperation2>
+  requires Callable<BinaryOperation1, const T&, BinaryOperation2::result_type>
+        && HasAssign<T, BinaryOperation1::result_type>
+        && CopyConstructible<BinaryOperation1>
+        && CopyConstructible<BinaryOperation2>
   T inner_product(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
 		  Iter2 @\farg{first2}@, T @\farg{init}@,
 		  BinaryOperation1 @\farg{binary_op1}@,
@@ -3575,16 +3597,18 @@ shall neither modify elements nor invalidate iterators or subranges.%
 \index{partial_sum@\tcode{partial_sum}}%
 \color{addclr}
 \begin{itemdecl}
-template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-  requires HasPlus<InIter::value_type> && 
-           CopyAssignable<InIter::value_type, HasPlus<InIter::value_type>::result_type> &&
-           CopyConstructible<InIter::value_type>
+template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter>
+  requires HasPlus<InIter::value_type, _InIter::reference>
+        && HasAssign<InIter::value_type, 
+                     HasPlus<InIter::value_type, _InIter::reference>::result_type>
+        && Constructible<InIter::value_type, _InIter::reference>
   OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
 	  	      OutIter @\farg{result}@);
-template<InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-         Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-  requires CopyAssignable<InIter::value_type, BinaryOperation::result_type> && 
-           CopyConstructible<InIter::value_type>
+template<InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
+         Callable<auto, const InIter::value_type&, InIter::reference> BinaryOperation>
+  requires HasAssign<InIter::value_type, BinaryOperation::result_type>
+        && Constructible<InIter::value_type, InIter::reference>
+        && CopyConstructible<BinaryOperation>
   OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
     		      OutIter @\farg{result}@, BinaryOperation @\farg{binary_op}@);
 \end{itemdecl}
@@ -3645,16 +3669,19 @@ may be equal to
 \index{adjacent_difference@\tcode{adjacent_difference}}%
 \color{addclr}
 \begin{itemdecl}
-template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter>
-  requires HasMinus<InIter::value_type, InIter::value_type> &&
-           CopyAssignable<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type> &&
-           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type> 
+template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter>
+  requires HasMinus<InIter::value_type, InIter::value_type>
+        && Constructible<InIter::value_type, InIter::reference>
+        && OutputIterator<OutIter, HasMinus<InIter::value_type, InIter::value_type>::result_type>
+        && MoveAssignable<InIter::value_type> 
   OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
    			      OutIter @\farg{result}@);
-template <InputIterator InIter, OutputIterator<auto, InIter::value_type> OutIter, 
-          Callable<auto, InIter::value_type, InIter::value_type> BinaryOperation>
-  requires CopyAssignable<OutIter::reference, BinaryOperation::result_type> &&
-           CopyConstructible<InIter::value_type> && CopyAssignable<InIter::value_type>
+template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
+          Callable<auto, const InIter::value_type&, const InIter::value_type&> BinaryOperation>
+  requires Constructible<_InIter::value_type, _InIter::reference>
+        && OutputIterator<OutIter, BinaryOperation::result_type>
+        && MoveAssignable<InIter::value_type>
+        && CopyConstructible<BinaryOperation>
   OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
 			      OutIter @\farg{result}@,
   			      BinaryOperation @\farg{binary_op}@);
