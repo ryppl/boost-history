@@ -1,0 +1,71 @@
+[/ Boost.SpatialIndex - FAQ ]
+[/ Copyright 2008 Federico J. Fernandez ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+[section:performance_comparison Performance Comparison]
+
+In order to show the strenghts of each index we have run several tests
+comparing them with the same data sets to check both processor and
+memory performance.
+
+Also we have compared our library with some well-known spatial indexing 
+libraries. The results were really good in comparison.
+
+[subsection:processor_times Data set]
+
+For every test we used a GIS data set consisting in 220.000 unique points.
+The complete data set was read from disk, and then loaded into each
+index, using individual insertions.
+
+
+[subsection:processor_times Processor times]
+
+The processor benchmarks were done inserting the complete test data
+set, then doing several searches and finally making some remove
+operations.
+
+The searches were done in two phases: 
+
+- 100000 individual searches of random positions
+- a big search of an area returning near 96000 elements.
+
+About the remove operations we have done 10000 of them.
+
+For the quadtree the insertion phase takes only 3 seconds. And 
+one second for the 100000 random searches. The area search
+is retrieved in less than one second.
+
+Also, as the number of points per node is variable we compared the 
+performance for different node sizes, and greater sizes tend to be 
+slower at insertion, but not much faster for querying.
+
+Let's analyze the rtree. In this case we have two
+parameters to analyze, the minimum (m) and maximum (M) number of
+elements per node. 
+
+The best results for the insertion are with (m, M) = (4, 8). It takes
+15 secs. for the insertion and less than 1 second for the 
+box query. The 100000 random queries are done in 6 seconds.
+
+Meanwhile with (m, M) = (64, 32) we get the worst results, with an 
+insertion time of 30 seconds and the 100000 around 9
+seconds.
+
+In conclusion, the performance for insert seems to be slower than 
+quadtree because here the structure is more complicated (lots of splits are happening).
+
+
+[subsection:processor_times Memory times]
+
+We measured the memory consumption after the initial data load.
+The data size es 13 MB.
+
+For the quadtree, the total memory consumption was 27 MB which
+means that the index takes near 14 MB.
+
+For the rtree, the memory allocation was of approximately 15 MB.
+
+In conclusion, there isn't a big difference between both trees.

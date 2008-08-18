@@ -1,4 +1,3 @@
-
 [library Spatial Index
     [quickbook 1.4]
     [version 0.01]
@@ -29,7 +28,21 @@ games to geometry indexing for GIS software.
 
 [endsect]
 
-[endsect]
+
+[section:structure Structure]
+
+Tutorials:
+
+* [link tutorials.tutorial1 Tutorial 1 - Basic usage]
+* [link tutorials.tutorial2 Tutorial 2 - rtree particularities]
+* [link tutorials.tutorial3 Tutorial 3 - Using your own point structure]
+
+Other Sections:
+
+* [link index_types Index Types]
+* [link performance_comparison Performance comparison]
+* [link faq FAQ]
+
 
 [section:license License]
 
