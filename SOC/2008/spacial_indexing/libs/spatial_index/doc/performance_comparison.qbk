@@ -7,12 +7,13 @@
 
 [section:performance_comparison Performance Comparison]
 
-In order to show the strenghts of each index we have run several tests
-comparing them with the same data sets to check both processor and
+In order to show the strenghts of each index we ran several tests
+with the same data sets to check both processor and
 memory performance.
 
-Also we have compared our library with some well-known spatial indexing 
-libraries. The results were really good in comparison.
+Additionaly, we have compared our library with some well-known spatial indexing 
+libraries. The results were quite good.
+
 
 [subsection:processor_times Data set]
 
