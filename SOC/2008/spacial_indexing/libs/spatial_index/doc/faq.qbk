@@ -14,7 +14,7 @@ Which is the best index?
 Answer: There is no best index for every indexing problem, each one has its own 
 strenghts. In the "Performance comparison" section we show each index at work
 and we mark their own strenghts. As a rule of thumb you should use the rtree for
-large data sets with rare inserts/updates and the quadtree for 
-scenarios where insert/updates very frequent. This is motly because the rtree
+large data sets with few inserts/updates and the quadtree for 
+scenarios where insert/updates are very frequent. This is mostly because the rtree
 node spliting/joining algorithms are heavier than the simple quadree insertion
 algorithm.

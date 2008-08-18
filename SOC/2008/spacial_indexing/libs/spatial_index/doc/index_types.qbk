@@ -33,7 +33,7 @@ large sets that can be loaded in memory.
 
 [subsection:rtree Rtree]
 
-Inspired in database B-trees, this data structure splits the space in
+Inspired in database B-trees, this data structure divides the space in
 hierarchical areas called minimum bounding rectangles (MBR). Each node
 has a variable number of entries bounded by a minimum and a maximum.
 
@@ -43,6 +43,7 @@ algorithms use the bounding boxes to decide to search or not into
 a child node.
 
 Different algorithms could be used to split the nodes when a node is 
-full balancing between performance and accuracy in finding the best
-node. In this implementation a linear algorithm is used.
+full, making trade-offs between performance and accuracy (related to 
+the performance the best node search algorithm). In 
+this implementation a linear algorithm is used.
 

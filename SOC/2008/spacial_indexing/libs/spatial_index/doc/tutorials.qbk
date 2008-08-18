@@ -100,7 +100,7 @@ Finally, we can remove some points:
 q.remove(geometry::point_xy<double>(9.0,9.0));
 ``
 
-[section:tutorial1 Tutorial - rtree particularities]
+[section:tutorial2 Tutorial - rtree particularities]
 
 In this tutorial we want to show how could change the previous tutorial with
 the use of an rtree. As it's a different structure the creation parameters are
@@ -125,10 +125,87 @@ be inserted into the index to represent the actual geometrical object.
 Then the insertion method is overloaded to support geometry proposal's boxes:
 
 ``
-void insert(const geometry::box<Point> &e, const Value & v);
+hvoid insert(const geometry::box<Point> &e, const Value & v);
 ``
 
 A complete example showing the basic usage of the rtree could be found in
 test/simple_test_rtree.cpp.
+
+
+[section:tutorial3 Tutorial - Using your own point structure]
+
+As we have seen in the first tutorial, the data structure is
+a template parameter and we don't impose any requeriments over it, so it could be
+belong to any type. We have shown an example where an iterator to a STL
+container is used.
+
+As the title of this section suggests, it's also possible to use your own 
+point structure. We follow the approach used by the geometry library proposal.
+They define a point concept that your structure must fulfill to be able to be used
+with the library.
+
+The most important methods are the get<N> methods for each coordinate. You could
+easly get them inheriting from boost::tuple for example. Besides that an enum called
+"coordinate_count" should be declared setting the number of dimensions of the point.
+
+You also have to define a typedef defining the coordinate type. 
+
+Finally, there are some strategy traits that are used for the algorithms of the geometry
+library. For the Spatial Index it's ok to leave them as defaults because we don't use them,
+but if you want to use your point structure with the geometry library proposal you should
+do it.
+
+Let's see an example structure (taken from test/custom_point_test.cpp):
+
+``
+struct my_2d_point: boost::tuple < float, float >
+{
+  typedef float coordinate_type;
+  enum { coordinate_count = 2 };
+
+  my_2d_point(void)
+  {
+    get<0>() = 0.0;
+    get<1>() = 0.0;
+  }
+
+  my_2d_point(float x, float y)
+  {
+    get<0>() = x;
+    get<1>() = y;
+  }
+
+  bool operator<(const my_2d_point & o) const
+  {
+    return get<0> () <o. get <0> ();
+  }
+
+  // Because the geometry::point concept shares the "get" methods with 
+  // boost::tuple, no more methods are needed.
+};
+
+
+// point traits as in the geometry library proposal
+namespace geometry
+{
+  template <> 
+  struct strategy_traits < my_2d_point, my_2d_point >
+  {
+    typedef strategy::distance::pythagoras < my_2d_point, my_2d_point > 
+      point_distance;
+    typedef strategy::not_implemented point_segment_distance;
+    typedef strategy::not_implemented area;
+    typedef strategy::not_implemented within;
+    typedef strategy::not_implemented centroid;
+    typedef strategy::not_implemented envelope;
+  };
+
+  template <> struct wkt_traits < my_2d_point >
+  {
+    typedef impl::wkt::stream_point < my_2d_point > stream_type;
+  };
+}                               // namespace geometry
+``
+
 
 [endsect]

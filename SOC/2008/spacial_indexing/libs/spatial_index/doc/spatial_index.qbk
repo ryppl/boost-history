@@ -1,10 +1,10 @@
 
 [library Spatial Index
     [quickbook 1.4]
-    [version 0.01e-10]
+    [version 0.01]
     [authors [Fernandez, Federico J.]]
     [copyright 2008 Federico J. Fernandez]
-    [purpose Doing nothing.]
+    [purpose Structures for spatial indexing.]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,28 +12,24 @@
     ]
 ]
 
-Welcome to the Spatial Index!  One day, it will perhaps be called
-Boost.Spatial Index. Until then, feel free to use it to do nothing.
-
-[warning Spatial Index is not an official Boost library.]
-
 [section:introduction Introduction]
 
-User, this is Spatial Index.  Spatial Index, this is the user.  Be nice to each other.
+Spatial indexes are data structures optimized for spatial oriented queries. The
+classic index structures (i.e. a binary tree) aren't spatially enabled, they 
+have different ordering criteria but none of them relates to topological 
+properties.
 
-[section:start Getting Started]
+Bosot.SpatialIndex aims to implement spatial indexes as part of the Geometry 
+Library proposal that Barend Gehrels is preparing for Boost. Nowadays, the 
+library supports Quadtree and rTree indexes. Details of the strengths of 
+each one will be detailed afterwards.
 
-The Spatial Index is located in the spatial_index directory of the boost sandbox.
-
-
-You might also want to look at the [link spatial_index.reference reference].
-
+The scope of these structures is really wide, from collision detection for
+games to geometry indexing for GIS software.
 
 [endsect]
 
 [endsect]
-
-[xinclude spatial_index_doxygen.xml]
 
 [section:license License]
 
