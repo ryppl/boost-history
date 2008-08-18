@@ -116,6 +116,10 @@ Pablo Halpern,  Bloomberg, L.P.
   classifying containers because they excluded
   \tcode{forward_list}. The members and axioms have been redistributed
   to \tcode{FrontInsertionSequence} and \tcode{BackInsertionSequence}.
+\item Renamed \tcode{FrontInsertionSequence},
+  \tcode{BackInsertionSequence}, and \tcode{InsertionSequence} to
+  \tcode{FrontInsertionContainer}, \tcode{BackInsertionContainer}, and
+  \tcode{InsertionContainer}, respectively.
 \end{itemize}
 
 \end{titlepage}
@@ -830,21 +834,21 @@ because of its flexibility).}
 namespace std {
   // \ref{container.concepts.free}, container concepts
   concept Container<typename C> @\textit{see below}@
-  concept FrontInsertionSequence<typename C> @\textit{see below}@
-  concept BackInsertionSequence<typename C> @\textit{see below}@
-  concept InsertionSequence<typename C> @\textit{see below}@
+  concept FrontInsertionContainer<typename C> @\textit{see below}@
+  concept BackInsertionContainer<typename C> @\textit{see below}@
+  concept InsertionContainer<typename C> @\textit{see below}@
 
   // \ref{container.concepts.member}, member container concepts
   concept MemberContainer<typename C> @\textit{see below}@
-  concept MemberFrontInsertionSequence<typename C> @\textit{see below}@
-  concept MemberBackInsertionSequence<typename C> @\textit{see below}@
-  concept MemberInsertionSequence<typename C> @\textit{see below}@
+  concept MemberFrontInsertionContainer<typename C> @\textit{see below}@
+  concept MemberBackInsertionContainer<typename C> @\textit{see below}@
+  concept MemberInsertionContainer<typename C> @\textit{see below}@
 
   // \mbox{\ref{container.concepts.maps}}, container concept maps
   template <MemberContainer C>              concept_map Container<C> @\textit{see below}@
-  template <MemberFrontInsertionSequence C> concept_map FrontInsertionSequence<C> @\textit{see below}@
-  template <MemberBackInsertionSequence C>  concept_map BackInsertionSequence<C> @\textit{see below}@
-  template <MemberInsertionSequence C>      concept_map InsertionSequence<C> @\textit{see below}@
+  template <MemberFrontInsertionContainer C> concept_map FrontInsertionContainer<C> @\textit{see below}@
+  template <MemberBackInsertionContainer C>  concept_map BackInsertionContainer<C> @\textit{see below}@
+  template <MemberInsertionContainer C>      concept_map InsertionContainer<C> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<E[N]> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<const E[N]> @\textit{see below}@
 }
@@ -901,7 +905,7 @@ auto concept Container<typename C> {
 \end{itemdescr}
 
 \begin{itemdecl}
-concept FrontInsertionSequence<typename C> : Container<C> {
+concept FrontInsertionContainer<typename C> : Container<C> {
   reference       front(C&); 
   const_reference front(const C&);
 
@@ -927,7 +931,7 @@ concept FrontInsertionSequence<typename C> : Container<C> {
 \end{itemdescr}
 
 \begin{itemdecl}
-concept BackInsertionSequence<typename C> : Container<C> {
+concept BackInsertionContainer<typename C> : Container<C> {
   reference       back(C&);
   const_reference back(const C&);
 
@@ -954,7 +958,7 @@ concept BackInsertionSequence<typename C> : Container<C> {
 
 
 \begin{itemdecl}
-concept InsertionSequence<typename C> : Container<C> {
+concept InsertionContainer<typename C> : Container<C> {
   iterator insert(C&, const_iterator, const value_type&);
 }
 \end{itemdecl}
@@ -1015,7 +1019,7 @@ auto concept MemberContainer<typename C> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberFrontInsertionSequence<typename C> : MemberContainer<C> {
+auto concept MemberFrontInsertionContainer<typename C> : MemberContainer<C> {
   reference       C::front();
   const_reference C::front() const;
 
@@ -1041,7 +1045,7 @@ auto concept MemberFrontInsertionSequence<typename C> : MemberContainer<C> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberBackInsertionSequence<typename C> : MemberContainer<C> {
+auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
   reference       C::back();
   const_reference C::back() const;
 
@@ -1068,14 +1072,14 @@ auto concept MemberBackInsertionSequence<typename C> : MemberContainer<C> {
 
 
 \begin{itemdecl}
-auto concept MemberInsertionSequence<typename C> : MemberContainer<C> {
+auto concept MemberInsertionContainer<typename C> : MemberContainer<C> {
   iterator C::insert(const_iterator, const value_type&);
 }
 \end{itemdecl}
 
 \begin{itemdecl}
-template <MemberInsertionSequence C> 
-concept_map InsertionSequence<C> {
+template <MemberInsertionContainer C> 
+concept_map InsertionContainer<C> {
   Container<C>::iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
   { return c.insert(i, v); }
 }			
@@ -1173,8 +1177,8 @@ concept_map Container<const E[N]> {
 
 
 \begin{itemdecl}
-template <MemberFrontInsertionSequence C> 
-concept_map FrontInsertionSequence<C> {
+template <MemberFrontInsertionContainer C> 
+concept_map FrontInsertionContainer<C> {
   typedef Container<C>::reference       reference;
   typedef Container<C>::const_reference const_reference;
 
@@ -1190,12 +1194,12 @@ concept_map FrontInsertionSequence<C> {
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{FrontInsertionSequence}} concept.}
+  \\\addedConcepts{\mbox{\tcode{FrontInsertionContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberBackInsertionSequence C> 
-concept_map BackInsertionSequence<C> {
+template <MemberBackInsertionContainer C> 
+concept_map BackInsertionContainer<C> {
   typedef Container<C>::reference       reference;
   typedef Container<C>::const_reference const_reference;
 
@@ -1211,7 +1215,7 @@ concept_map BackInsertionSequence<C> {
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{BackInsertionSequence}} concept.}
+  \\\addedConcepts{\mbox{\tcode{BackInsertionContainer}} concept.}
 \end{itemdescr}
 
 \color{black}
@@ -1349,7 +1353,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
-    @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
+    @\addedConcepts{requires FrontInsertionContainer<Cont> \&\& BackInsertionContainer<Cont>}@
           @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class queue;
@@ -1372,7 +1376,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>&& y);
 
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{{class}}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
           @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
@@ -1392,7 +1396,7 @@ namespace std {
 
 \begin{codeblock} 
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
     @\addedConcepts{requires SameType<Cont::value_type, T>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class stack;
@@ -3397,8 +3401,8 @@ Any sequence container \changedConcepts{supporting operations
 \mbox{\tcode{push_back()}}
 and
 \mbox{\tcode{pop_front()}}}{meeting the requirements of the
-\mbox{\tcode{FrontInsertionSequence}} and
-\mbox{\tcode{BackInsertionSequence}} concepts}
+\mbox{\tcode{FrontInsertionContainer}} and
+\mbox{\tcode{BackInsertionContainer}} concepts}
 can be used to instantiate
 \tcode{queue}.
 In particular,
@@ -3414,7 +3418,7 @@ can be used.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
-  @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
+  @\addedConcepts{requires FrontInsertionContainer<Cont> \&\& BackInsertionContainer<Cont>}@
         @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class queue {
@@ -3599,7 +3603,7 @@ Any sequence container with random access iterator and \changedConcepts{supporti
 \mbox{\tcode{push_back()}}
 and
 \mbox{\tcode{pop_back()}}}{that meets the requirements of the
-\mbox{\tcode{BackInsertionSequence}} concept}
+\mbox{\tcode{BackInsertionContainer}} concept}
 can be used to instantiate
 \tcode{priority_queue}.
 In particular,
@@ -3617,7 +3621,7 @@ object defines a strict weak ordering (\ref{alg.sorting}).
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
             @\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
         @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
@@ -3820,7 +3824,7 @@ Any sequence container \changedConcepts{supporting operations
 \mbox{\tcode{push_back()}}
 and
 \mbox{\tcode{pop_back()}}}{that meets the requirements of the 
-\mbox{\tcode{BackInsertionSequence}} concept}
+\mbox{\tcode{BackInsertionContainer}} concept}
 can be used to instantiate
 \tcode{stack}.
 In particular,
@@ -3837,7 +3841,7 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires SameType<Cont::value_type, T>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class stack {
