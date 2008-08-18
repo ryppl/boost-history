@@ -83,6 +83,8 @@ Pablo Halpern,  Bloomberg, L.P.
   destructor.
 \item Use the \tcode{EquivalenceRelation} concept instead of
   \tcode{Predicate} for the \tcode{unique} member in \tcode{forward_list}.
+\item Changed the \tcode{Callable} requirements on the hash functions
+  to accept their value by reference-to-const.
 \end{itemize}
 
 \end{titlepage}
@@ -286,13 +288,13 @@ denotes a non-const rvalue of type \tcode{X}.
 \tcode{X(a);}               &
                             &
                             &
-\removedCCC{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{CopyConstructible}}.} post: \tcode{a == X(a)}.         &
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{CopyConstructible}}.} post: \tcode{a == X(a)}.         &
  linear                     \\ \rowsep
 
 \tcode{X u(a);}             &
                             &
                             &
-\removedCCC{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{CopyConstructible}}.}       &
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{CopyConstructible}}.}       &
  linear                     \\
 \tcode{X u = a;}            &
                             &
@@ -303,7 +305,7 @@ denotes a non-const rvalue of type \tcode{X}.
 \tcode{X u(rv);} &
                             &
                             &
-	\removedCCC{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{MoveConstructible}}.}													&
+	\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} is \mbox{\tcode{MoveConstructible}}.}													&
 (Note B)           \\
 \tcode{X u = rv;} &
                             &
@@ -426,12 +428,12 @@ and
 are defined in clause~\ref{algorithms}.
 Those entries marked ``(Note A)'' should have constant complexity.
 Those entries marked ``(Note B)'' have constant complexity unless
-\changedCCC{\mbox{\tcode{allocator_propagate_never<X::allocator_type>::value}}
+\changedConcepts{\mbox{\tcode{allocator_propagate_never<X::allocator_type>::value}}
   is \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateNever<X::allocator_type>}} is satisfied}, in which case they have linear complexity. Those
   entries marked ``(Note C)'' have constant complexity if
   \tcode{a.get_allocator() == rv.get_allocator()} or if either
-  \changedCCC{\mbox{\tcode{allocator_propagate_on_move_assignment<X::allocator_type>::value}}
-  is \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateOnMoveAssignment<X::allocator>}} is satisfied} or \changedCCC{\mbox{\tcode{allocator_propagate_on_copy_assignment<X::allocator_type>::value}} is
+  \changedConcepts{\mbox{\tcode{allocator_propagate_on_move_assignment<X::allocator_type>::value}}
+  is \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateOnMoveAssignment<X::allocator>}} is satisfied} or \changedConcepts{\mbox{\tcode{allocator_propagate_on_copy_assignment<X::allocator_type>::value}} is
   \mbox{\tcode{true}}}{\mbox{\tcode{AllocatorPropagateOnCopyAssignment<X::allocator>}} is satisfied} and linear complexity otherwise.
 
 \setcounter{Paras}{8}
@@ -479,13 +481,13 @@ The complexities of the expressions are sequence dependent.
 \tcode{X(n, t)}\br
 \tcode{X a(n, t)}   &
                 &
- \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}\br
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}\br
  post: \tcode{size() == n}\br
  Constructs a sequence container with \tcode{n}\ copies of \tcode{t}  \\ \rowsep
 \tcode{X(i, j)}\br
 \tcode{X a(i, j)}   &
                     &
-\mbox{\requires} \removedCC{If the iterator's dereference operation returns an
+\mbox{\requires} \removedConcepts{If the iterator's dereference operation returns an
  lvalue or a const rvalue, \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
  Each iterator in the range \range{i}{j} shall be dereferenced exactly once.\br
  post: \tcode{size() == distance}\ between \tcode{i}\ and \tcode{j}\br
@@ -493,30 +495,30 @@ The complexities of the expressions are sequence dependent.
 
 \tcode{a.emplace(p, args);}  &
  \tcode{iterator}            &
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}.}
  Inserts an object of type \tcode{T} constructed with
  \tcode{std::forward<Args>(args)...}.   \\ \rowsep
 
 \tcode{a.insert(p,t)}   &
  \tcode{iterator}       &
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}
  and \mbox{\tcode{T}} shall be \mbox{\tcode{CopyAssignable}}.}\br
  Inserts a copy of \tcode{t}\ before \tcode{p}. \\ \rowsep
 
 \tcode{a.insert(p,rv)}   &
  \tcode{iterator}       &
-\removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, T\&\&>}} and \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
+\removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, T\&\&>}} and \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
  Inserts a copy of \tcode{rv} before \tcode{p}. \\ \rowsep
 
 \tcode{a.insert(p,n,t)}     &
  \tcode{void}               &
- \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
  and \mbox{\tcode{CopyAssignable}}.}\br
  Inserts \tcode{n}\ copies of \tcode{t}\ before \tcode{p}. \\ \rowsep
 
 \tcode{a.insert(p,i,j)}    &
  \tcode{void}           &
-\mbox{\requires}  \removedCC{If the iterator's dereference operation returns an
+\mbox{\requires}  \removedConcepts{If the iterator's dereference operation returns an
  lvalue or a const rvalue, \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
  Each iterator in the range \range{i}{j} shall be dereferenced exactly once.\br
  pre: \tcode{i}\ and \tcode{j}\ are not iterators into \tcode{a}.\br
@@ -524,12 +526,12 @@ The complexities of the expressions are sequence dependent.
 
 \tcode{a.erase(q)}  &
  \tcode{iterator}   &
- \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
  Erases the element pointed to by \tcode{q} \\ \rowsep
 
 \tcode{a.erase(q1,q2)}  &
  \tcode{iterator}   &
- \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{MoveAssignable}}.}
  Erases the elements in the range \tcode{[q1, q2)}.  \\ \rowsep
 
 \tcode{a.clear()}   &
@@ -539,7 +541,7 @@ The complexities of the expressions are sequence dependent.
 
 \tcode{a.assign(i,j)}   &
  \tcode{void}           &
- \requires \removedCC{If the iterator's dereference operation returns an
+ \requires \removedConcepts{If the iterator's dereference operation returns an
  lvalue or a const rvalue, \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
  and \mbox{\tcode{CopyAssignable}}.}
  Each iterator in the range \range{i}{j} shall be dereferenced exactly once.\br
@@ -548,7 +550,7 @@ The complexities of the expressions are sequence dependent.
 
 \tcode{a.assign(n,t)}   &
  \tcode{void}           &
- \removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}
  and \mbox{\tcode{CopyAssignable}}.}\br
  pre: \tcode{t}\ is not a reference into \tcode{a}.\br
  Replaces elements in \tcode{a}\ with \tcode{n}\ copies of \tcode{t}.   \\
@@ -592,13 +594,13 @@ time.
 \tcode{a.push_-} \tcode{front(args)}      &
  \tcode{void}                &
  \tcode{a.emplace(a.begin(),} \tcode{std::forward<Args>(args)...)}
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}}    &
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}}    &
  \tcode{list}, \tcode{deque}  \\ \rowsep
 
 \tcode{a.push_-} \tcode{back(args)}      &
  \tcode{void}                &
  \tcode{a.emplace(a.end(),} \tcode{std::forward<Args>(args)...)}
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}}    &
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{T, Args>}}}    &
  \tcode{list}, \tcode{deque}, \tcode{vector}  \\ \rowsep
 
 \tcode{a.pop_front()}      &
@@ -664,7 +666,7 @@ and \tcode{c}\ denotes a value of type \tcode{X::key_compare}.
 
 \tcode{X::key_type}    &
  \tcode{Key}            &
- \removedCC{\mbox{\tcode{Key}} is \mbox{\tcode{CopyConstructible}} and \mbox{\tcode{CopyAssignable}}}  &
+ \removedConcepts{\mbox{\tcode{Key}} is \mbox{\tcode{CopyConstructible}} and \mbox{\tcode{CopyAssignable}}}  &
   compile time \\ \rowsep
 
 \tcode{X::key_compare} &   \tcode{Compare} &   defaults to 
@@ -680,14 +682,14 @@ and \tcode{c}\ denotes a value of type \tcode{X::key_compare}.
 \tcode{X(c)}\br
 \tcode{X a(c);}                         &
                                         &
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
  Constructs an empty container.\br
  Uses a copy of \tcode{c} as a comparison object.  &
  constant                               \\ \rowsep
 
 \tcode{X()}\br\tcode{X a;}                      &
                                                 &
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
  Constructs an empty container.\br
  Uses \tcode{Compare()} as a comparison object  &
  constant                                       \\ \rowsep
@@ -695,7 +697,7 @@ and \tcode{c}\ denotes a value of type \tcode{X::key_compare}.
 \tcode{X(i,j,c)}\br
 \tcode{X~a(i,j,c);}     &
                         &
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
  Constructs an empty container and inserts elements from the
  range \tcode{[i, j)}\ into it; uses \tcode{c}\ as a comparison object. &
  $N \log N$ in general ($N$ is the distance from \tcode{i}\ to \tcode{j});
@@ -703,7 +705,7 @@ and \tcode{c}\ denotes a value of type \tcode{X::key_compare}.
 
 \tcode{X(i,j)} \tcode{X~a(i,j);}    &
                                     &
- \removedCC{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
+ \removedConcepts{\mbox{\requires} \mbox{\tcode{ConstructibleAsElement<A,}} \mbox{\tcode{key_compare, key_compare>}}.}
  Same as above, but uses \tcode{Compare()}\ as a comparison object  &
  same as above                      \\ \rowsep
 
@@ -752,7 +754,7 @@ type \tcode{float}.
 %%
 \tcode{X::key_type}
 &   \tcode{Key}
-&   \removedCC{\mbox{\tcode{Key}} shall be \mbox{\tcode{CopyAssignable}} and \mbox{\tcode{CopyConstructible}}}
+&   \removedConcepts{\mbox{\tcode{Key}} shall be \mbox{\tcode{CopyAssignable}} and \mbox{\tcode{CopyConstructible}}}
     \index{unordered associative containers!key_type@\tcode{key_type}}%
     \index{key_type@\tcode{key_type}!unordered associative containers}%
 &   compile time
@@ -760,7 +762,7 @@ type \tcode{float}.
 %
 \tcode{X::hasher}
 &   \tcode{Hash}
-&   \removedCC{\mbox{\tcode{Hash}} shall be a unary function object type such that the expression 
+&   \removedConcepts{\mbox{\tcode{Hash}} shall be a unary function object type such that the expression 
     \mbox{\tcode{hf(k)}} has type \mbox{\tcode{std::size_t}}.}
     \index{unordered associative containers!hasher@\tcode{hasher}}%
     \index{hasher@\tcode{hasher}!unordered associative containers}%
@@ -769,7 +771,7 @@ type \tcode{float}.
 %
 \tcode{X::key_equal}
 &   \tcode{Pred}
-&   \removedCC{\mbox{\tcode{Pred}} shall be a binary predicate that takes two arguments
+&   \removedConcepts{\mbox{\tcode{Pred}} shall be a binary predicate that takes two arguments
     of type \mbox{\tcode{Key}}.}  \tcode{Pred} is an equivalence relation.%
     \index{unordered associative containers!key_equal@\tcode{key_equal}}%
     \index{key_equal@\tcode{key_equal}!unordered associative containers}%
@@ -788,37 +790,37 @@ type \tcode{float}.
 \synopsis{Header \tcode{<container_concepts>} synopsis}
 \begin{codeblock}
 namespace std {
-  @\addedCC{// \mbox{\ref{container.concepts.free}}, container concepts}@
+  // \ref{container.concepts.free}, container concepts
   concept Container<typename C> @\textit{see below}@
   concept SequenceContainer<typename C> @\textit{see below}@
   concept FrontInsertionSequence<typename C> @\textit{see below}@
   concept BackInsertionSequence<typename C> @\textit{see below}@
   concept InsertionSequence<typename C> @\textit{see below}@
 
-  @\addedCC{// \mbox{\ref{container.concepts.member}}, member container concepts}@
-  @\addedCC{concept MemberContainer<typename C>} \textit{see below}@
-  @\addedCC{concept MemberSequenceContainer<typename C>} \textit{see below}@
-  @\addedCC{concept MemberFrontInsertionSequence<typename C>} \textit{see below}@
-  @\addedCC{concept MemberBackInsertionSequence<typename C>} \textit{see below}@
-  @\addedCC{concept MemberInsertionSequence<typename C>} \textit{see below}@
+  // \ref{container.concepts.member}, member container concepts
+  concept MemberContainer<typename C> @\textit{see below}@
+  concept MemberSequenceContainer<typename C> @\textit{see below}@
+  concept MemberFrontInsertionSequence<typename C> @\textit{see below}@
+  concept MemberBackInsertionSequence<typename C> @\textit{see below}@
+  concept MemberInsertionSequence<typename C> @\textit{see below}@
 
-  @\addedCC{// \mbox{\ref{container.concepts.maps}}, container concept maps}@
-  @\addedCC{template <MemberContainer C>              concept_map Container<C>} \textit{see below}@
-  @\addedCC{template <MemberSequenceContainer C>      concept_map SequenceContainer<C>} \textit{see below}@
-  @\addedCC{template <MemberFrontInsertionSequence C> concept_map FrontInsertionSequence<C>} \textit{see below}@
-  @\addedCC{template <MemberBackInsertionSequence C>  concept_map BackInsertionSequence<C>} \textit{see below}@
-  @\addedCC{template <MemberInsertionSequence C>      concept_map InsertionSequence<C>} \textit{see below}@
-  @\addedCC{template <typename E, size_t N>           concept_map Container<E[N]>} \textit{see below}@
-  @\addedCC{template <typename E, size_t N>           concept_map Container<const E[N]>} \textit{see below}@
-  @\addedCC{template <typename E, size_t N>           concept_map SequenceContainer<E[N]>} \textit{see below}@
-  @\addedCC{template <typename E, size_t N>           concept_map SequenceContainer<const E[N]>} \textit{see below}@
+  // \mbox{\ref{container.concepts.maps}}, container concept maps
+  template <MemberContainer C>              concept_map Container<C> @\textit{see below}@
+  template <MemberSequenceContainer C>      concept_map SequenceContainer<C> @\textit{see below}@
+  template <MemberFrontInsertionSequence C> concept_map FrontInsertionSequence<C> @\textit{see below}@
+  template <MemberBackInsertionSequence C>  concept_map BackInsertionSequence<C> @\textit{see below}@
+  template <MemberInsertionSequence C>      concept_map InsertionSequence<C> @\textit{see below}@
+  template <typename E, size_t N>           concept_map Container<E[N]> @\textit{see below}@
+  template <typename E, size_t N>           concept_map Container<const E[N]> @\textit{see below}@
+  template <typename E, size_t N>           concept_map SequenceContainer<E[N]> @\textit{see below}@
+  template <typename E, size_t N>           concept_map SequenceContainer<const E[N]> @\textit{see below}@
 }
 \end{codeblock}
 
 \rSec3[container.concepts.free]{Free function container concepts}
 
 \pnum
-\addedCC{This section contains the container concepts that are used by
+\addedConcepts{This section contains the container concepts that are used by
   other parts of the library. These concepts are written in terms of
   free functions. For backward compatibility, member function versions and 
 concept maps adapting member to free syntax follow in
@@ -837,19 +839,17 @@ auto concept Container<typename C> {
   requires SameType<ForwardIterator<iterator>::value_type, value_type> 
            && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
-  bool           @\changedCCC{C::empty() const;}{empty(const C\& c) \{ return begin(c) == end(c)); \}}@
-  size_type      @\changedCCC{C::size() const;}{size(const C\& c)  \{ return std::distance(begin(c), end(c)); \}}@
+  bool           empty(const C& c) { return begin(c) == end(c); }
+  size_type      size(const C& c)  { return std::distance(begin(c), end(c)); }
 
-  iterator       @\changedCCC{C::begin();}{begin(C\&);}@
-  const_iterator @\changedCCC{C::begin() const;}{begin(const C\&);}@
-  iterator       @\changedCCC{C::end();}{end(C\&);}@
-  const_iterator @\changedCCC{C::end() const;}{end(const C\&);}@
-
-  @\removedCCC{void C::swap(C\&\&)}@
+  iterator       begin(C&);
+  const_iterator begin(const C&);
+  iterator       end(C&);
+  const_iterator end(const C&);
 
   axiom ContainerSize(C c) {
-    @\changedCCC{(C.begin() == C.end()) == C.empty();}{(begin(c) == end(c)) == empty(c);}@
-    @\changedCCC{(C.begin() != C.end()) == (C.size() > 0);}{(begin(c) != end(c)) == (size(c) > 0);}@
+    (begin(c) == end(c)) == empty(c);
+    (begin(c) != end(c)) == (size(c) > 0);
   }
 }
 
@@ -862,27 +862,24 @@ auto concept Container<typename C> {
 
 \pnum
 \addedConcepts{\mbox{\requires} for a (possibly 
-  \mbox{\tcode{const}}-qualified) container }\changedCCC{\mbox{\tcode{C}},}{\mbox{\tcode{c}},}
-  \removedCCC{\mbox{\tcode{[C.begin(), C.end())}} is a valid range.}
-  \addedConcepts{\mbox{\tcode{[begin(c), end(c))}} is a valid range.} 
+  \mbox{\tcode{const}}-qualified) container \mbox{\tcode{c}},
+  \mbox{\tcode{[begin(c), end(c))}} is a valid range.}
 
 \end{itemdescr}
 
 \begin{itemdecl}
 concept SequenceContainer<typename C> : Container<C> {
-  reference       @\changedCCC{C::front()}{front(C\&)}@; 
-  const_reference @\changedCCC{C::front() const}{front(const C\&)}@;
-  reference       @\changedCCC{C::back()}{back(C\&)}@;
-  const_reference @\changedCCC{C::back() const}{back(const C\&)}@;
+  reference       front(C&); 
+  const_reference front(const C&);
+  reference       back(C&);
+  const_reference back(const C&);
 
   axiom AccessFront(C c) {
-    @\removedCCC{if (c.begin() != c.end()) c.front() == *c.begin();}@
-    @\addedCC{if (begin(c) != end(c)) front(c) == *begin(c);}@
+    if (begin(c) != end(c)) front(c) == *begin(c);
   }  
 
   axiom AccessBack(C c) {
-    @\removedCCC{if (c.begin() != c.end()) c.back() == *(--c.end());}@
-    @\addedCC{if (begin(c) != end(c)) back(c) == *(--end(c));}@
+    if (begin(c) != end(c)) back(c) == *(--end(c));
   }
 }
 \end{itemdecl}
@@ -897,11 +894,11 @@ concept SequenceContainer<typename C> : Container<C> {
 
 \begin{itemdecl}
 concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
-  void @\removedCCC{C::}@push_front(@\addedCC{C\&, }@const value_type&);
-  void @\removedCCC{C::}@pop_front(@\addedCC{C\&}@);
+  void push_front(C&, const value_type&);
+  void pop_front(C&);
 
   axiom FrontInsertion(C c, value_type x) {
-    c == (@\removedCCC{c.}@push_front(@\addedCC{c, }@x), @\removedCCC{c.}@pop_front(@\addedCC{c}@)@\addedCC{, c}@);
+    c == (push_front(c, x), pop_front(c), c);
   }
 }
 \end{itemdecl}
@@ -916,11 +913,11 @@ concept FrontInsertionSequence<typename C> : SequenceContainer<C> {
 
 \begin{itemdecl}
 concept BackInsertionSequence<typename C> : SequenceContainer<C> {
-  void @\removedCCC{C::}@push_back(@\addedCC{C\&, }@const value_type&);
-  void @\removedCCC{C::}@pop_back(@\addedCC{C\&}@);
+  void push_back(C&, const value_type&);
+  void pop_back(C&);
 
   axiom BackInsertion(C c, value_type x) {
-    @\textcolor{addclr}{}@c == (@\removedCCC{c.}@push_back(@\addedCC{c, }@x), @\removedCCC{c.}@pop_back(@\addedCC{c})@@\addedCC{, c}@);
+    c == (push_back(c, x), pop_back(c), c);
   }
 }
 \end{itemdecl}
@@ -936,7 +933,7 @@ concept BackInsertionSequence<typename C> : SequenceContainer<C> {
 
 \begin{itemdecl}
 concept InsertionSequence<typename C> : SequenceContainer<C> {
-  iterator @\removedCCC{C::}@insert(@\addedCC{C\&, const_}@iterator, const value_type&);
+  iterator insert(C&, const_iterator, const value_type&);
 }
 \end{itemdecl}
 
@@ -949,14 +946,14 @@ concept InsertionSequence<typename C> : SequenceContainer<C> {
 \rSec3[container.concepts.member]{Member container concepts} 
 
 \pnum 
-\addedCC{This section contains backward compatibility concepts,
+\addedConcepts{This section contains backward compatibility concepts,
   written using member function syntax, corresponding to the container
   concepts (\mbox{\ref{container.concepts.free}}). Concept maps
   that automatically adapt these member function concepts to the free
   function concept syntax follow 
   (\mbox{\ref{container.concepts.maps}}).}
 
-\color{ccadd}
+\color{addclr}
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
   ObjectType           value_type      = typename C::value_type;
@@ -986,11 +983,11 @@ auto concept MemberContainer<typename C> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes a container, in terms of
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of
   member functions, which provides
   iteration through a sequence of elements stored in the container.}
 \pnum
-\addedCC{\mbox{\requires} for a (possibly
+\addedConcepts{\mbox{\requires} for a (possibly
   \mbox{\tcode{const}}-qualified) container \mbox{\tcode{c}},
   \mbox{\tcode{[c.begin(), c.end())}} is a valid range.}
 \end{itemdescr}
@@ -1015,7 +1012,7 @@ auto concept MemberSequenceContainer<typename C> : MemberContainer<C> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} describes a sequence container, in
+\addedConcepts{\mbox{\reallynote} describes a sequence container, in
   terms of member functions, which stores its elements in the order in
   which they were added.}
 \end{itemdescr}
@@ -1028,7 +1025,7 @@ auto concept MemberFrontInsertionSequence<typename C> : MemberSequenceContainer<
   void C::pop_front();
 
   axiom MemberFrontInsertion(C c, value_type x) {
-    c == (c.push_front(x), c.pop_front()@\addedCC{, c}@);
+    c == (c.push_front(x), c.pop_front(), c);
   }
 }
 \end{itemdecl}
@@ -1036,7 +1033,7 @@ auto concept MemberFrontInsertionSequence<typename C> : MemberSequenceContainer<
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes a container, in terms of
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of
   member functions, that can be
   modified by adding or removing elements from the front of the
   sequence.}
@@ -1048,7 +1045,7 @@ auto concept MemberBackInsertionSequence<typename C> : MemberSequenceContainer<C
   void C::pop_back();
 
   axiom MemberBackInsertion(C c, value_type x) {
-    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back()@\addedCC{, c}@);
+    @\textcolor{addclr}{}@c == (c.push_back(x), c.pop_back(), c);
   }
 }
 \end{itemdecl}
@@ -1056,7 +1053,7 @@ auto concept MemberBackInsertionSequence<typename C> : MemberSequenceContainer<C
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by adding or removing elements from the back of the
   sequence.}
 \end{itemdescr}
@@ -1078,14 +1075,14 @@ concept_map InsertionSequence<C> {
 
 \begin{itemdescr}
 \pnum
-\addedCC{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by inserting elements at any position within the sequence.}
 \end{itemdescr}
 
 \rSec3[container.concepts.maps]{Container concept maps}
 
 \pnum
-\addedCC{This section contains concept maps that automatically adapt
+\addedConcepts{This section contains concept maps that automatically adapt
   classes with the appropriate member functions, as specified in
   (\mbox{\ref{container.concepts.member}}), to meet the free function
   container concept syntax in (\mbox{\ref{container.concepts.free}}). It
@@ -1116,7 +1113,7 @@ concept_map Container<C> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+\addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the
   \mbox{\tcode{Container}} concept.}
 \end{itemdescr}
@@ -1162,7 +1159,7 @@ concept_map Container<const E[N]> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} Adapts built-in arrays to the 
+\addedConcepts{\mbox{\reallynote} Adapts built-in arrays to the 
   \mbox{\tcode{Container}} concept.}
 \end{itemdescr}
 
@@ -1179,9 +1176,9 @@ concept_map SequenceContainer<C> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+\addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
-\\\addedCC{\mbox{\tcode{SequenceContainer}} concept.}
+\\\addedConcepts{\mbox{\tcode{SequenceContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1204,7 +1201,7 @@ concept_map SequenceContainer<const E[N]> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} Adapts built-in arrays to the 
+\addedConcepts{\mbox{\reallynote} Adapts built-in arrays to the 
   \mbox{\tcode{SequenceContainer}} concept.}
 \end{itemdescr}
 
@@ -1218,9 +1215,9 @@ concept_map FrontInsertionSequence<C> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+\addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedCC{\mbox{\tcode{FrontSequenceContainer}} concept.}
+  \\\addedConcepts{\mbox{\tcode{FrontSequenceContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1233,9 +1230,9 @@ concept_map BackInsertionSequence<C> {
 
 \begin{itemdescr}
 \pnum 
-\addedCC{\mbox{\reallynote} Adapts an existing container, which uses
+\addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedCC{\mbox{\tcode{BackSequenceContainer}} concept.}
+  \\\addedConcepts{\mbox{\tcode{BackSequenceContainer}} concept.}
 \end{itemdescr}
 
 \color{black}
@@ -1374,8 +1371,8 @@ namespace std {
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
     @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
-            @\addedConcepts{ \&\& SameType<T, Cont::value_type>}@
-            @\addedConcepts{\&\& NothrowDestructible<Cont>}@
+          @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
+          @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class queue;
   template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator==(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
@@ -1389,25 +1386,25 @@ namespace std {
     bool operator>=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(queue<T,@\changedCCC{Allocator}{ Cont}@>& x, queue<T,@\changedCCC{Allocator}{ Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(queue<T,@\changedCCC{Allocator}{ Cont}@>&& x, queue<T,@\changedCCC{Allocator}{ Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(queue<T,@\changedCCC{Allocator}{ Cont}@>& x, queue<T,@\changedCCC{Allocator}{ Cont}@>&& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(queue<T,Cont@\removedConcepts{ainer}@>&& x, queue<T,Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>&& y);
 
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
-        @\removedCC{{class}}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
-    @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
-             @\addedConcepts{\&\& }\changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
-             @\addedConcepts{\&\& NothrowDestructible<Cont>}@
+        @\changedConcepts{{class}}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
+    @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \addedConcepts{RandomAccessIterator<Cont::iterator>}@
+          @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
+          @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue;
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@@\addedConcepts{, Swappable Compare}@>
-    void swap(priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>& x, priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@@\addedConcepts{, Swappable Compare}@>
-    void swap(priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>&& x, priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@@\addedConcepts{, Swappable Compare}@>
-    void swap(priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>& x, priority_queue<T,@\changedCCC{Allocator}{ Cont, Compare}@>&& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+    void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+    void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+    void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 }
 \end{codeblock}
 
@@ -1418,26 +1415,26 @@ namespace std {
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
     @\addedConcepts{requires SameType<Cont::value_type, T>}@
-         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
+          @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class stack;
-  template <class T, @\changedCCC{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+  template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator==(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, @\changedCCC{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator< (const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, @\changedCCC{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
+  template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator!=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, @\changedCCC{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator> (const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, @\changedCCC{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <class T, @\changedCCC{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
+  template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(stack<T,@\changedCCC{Allocator}{Cont}@>& x, stack<T, @\changedCCC{Allocator}{Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(stack<T, @\changedCCC{Allocator}{Cont}@>&& x, stack<T, @\changedCCC{Allocator}{Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(stack<T, @\changedCCC{Allocator}{Cont}@>& x, stack<T, @\changedCCC{Allocator}{Cont}@>&& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(stack<T,@\changedConcepts{Allocator}{Cont}@>& x, stack<T, @\changedConcepts{Allocator}{Cont}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 }
 \end{codeblock}
 
@@ -1749,27 +1746,27 @@ namespace std {
 
     // \ref{deque.cons} construct/copy/destroy:
     explicit deque(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit deque(size_type n);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ explicit deque(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       deque(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@ 
       deque(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ deque(const deque<T,Alloc@\removedConcepts{ator}@>& x);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ deque(deque&&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ deque(deque&&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ deque(const deque&, const Alloc@\removedConcepts{ator}@&);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ deque(deque&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ deque(deque&&, const Alloc@\removedConcepts{ator}@&);
 
    ~deque();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedConcepts{\&\& CopyAssignable<T>}@
       deque<T,Alloc@\removedConcepts{ator}@>& operator=(const deque<T,Alloc@\removedConcepts{ator}@>& x);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
-      deque<T,Alloc@\removedConcepts{ator}@>& operator=(@\removedCC{const}@ deque<T,Alloc@\removedConcepts{ator}@>&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+      deque<T,Alloc@\removedConcepts{ator}@>& operator=(@\removedConcepts{const}@ deque<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+            @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedConcepts{\&\& CopyAssignable<T>}@ 
       void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
 
@@ -1791,9 +1788,9 @@ namespace std {
     // \ref{deque.capacity} capacity:
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>} \removedCCC{\&\& MoveAssignable<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ 
       void resize(size_type sz);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \removedCCC{\&\& MoveAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@
       void resize(size_type sz, const T& c);
     bool empty() const;
 
@@ -1884,7 +1881,7 @@ Constant.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit deque(size_type n);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ explicit deque(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1946,7 +1943,7 @@ using the specified allocator.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+        @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -1960,7 +1957,7 @@ insert(begin(), first, last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedConcepts{\&\& CopyAssignable<T>}@
 void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -1977,7 +1974,7 @@ insert(begin(), n, t);
 
 \index{resize@\tcode{resize}!\tcode{deque}}%
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>} \removedCCC{\&\& MoveAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@
   void resize(size_type sz);
 \end{itemdecl}
 
@@ -1995,7 +1992,7 @@ sequence.
 
 \index{resize@\tcode{resize}!\tcode{deque}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \removedCCC{\&\& MoveAssignable<T>}@ 
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
   void resize(size_type sz, const T& c);
 \end{itemdecl}
 
@@ -2143,7 +2140,7 @@ namespace std {
 
     // \ref{forwardlist.cons} construct/copy/destroy: 
     explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ 
       explicit forward_list(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       forward_list(size_type n, const T& value, 
@@ -2154,17 +2151,17 @@ namespace std {
                    const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@()); 
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       forward_list(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ forward_list(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ forward_list(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
     ~forward_list(); 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
       forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(const forward_list<T,Alloc@\removedConcepts{ator}@>& x);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
       forward_list<T,Alloc@\removedConcepts{ator}@>& operator=(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+            @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
       void assign(size_type n, const T& t); 
     allocator_type get_allocator() const; 
 
@@ -2212,7 +2209,7 @@ namespace std {
     iterator erase_after(const_iterator position, iterator last); 
     void swap(forward_list<T,Alloc@\removedConcepts{ator}@>&&);
 
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, value_type c);
     void clear(); 
 
@@ -2231,11 +2228,11 @@ namespace std {
       void unique(BinaryPredicate binary_pred);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x); 
-    template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
+    template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> 
       void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, Compare comp);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void sort(); 
-    template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp); 
+    template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp); 
 
     void reverse(); 
   }; 
@@ -2279,7 +2276,7 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ 
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ 
   explicit forward_list(size_type n);
 \end{itemdecl}
 
@@ -2288,7 +2285,7 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 \effects Constructs a \tcode{forward_list} object with \tcode{n} default constructed elements.
 
 \pnum
-\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{DefaultConstructible}}.}
 
 \pnum
 \complexity Linear in \tcode{n}.
@@ -2304,7 +2301,7 @@ explicit forward_list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConce
 \effects Constructs a \tcode{forward_list} object with \tcode{n} copies of \tcode{value} using the specified allocator.
 
 \pnum
-\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be \mbox{\tcode{CopyConstructible}}.}
 
 \pnum
 \complexity Linear in \tcode{n}.
@@ -2328,7 +2325,7 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+        @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last); 
 \end{itemdecl}
 
@@ -2338,7 +2335,7 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@ 
+@\addedConcepts{ConstructibleAsElement<Alloc, T, const T\&>} \addedConcepts{\&\& CopyAssignable<T>}@ 
   void assign(size_type n, const T\& t);
 \end{itemdecl}
 
@@ -2488,7 +2485,7 @@ iterator erase_after(const_iterator position, iterator last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
 @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, value_type c);
 \end{itemdecl}
 
@@ -2559,7 +2556,7 @@ void splice_after(const_iterator position, forward_list<T,Alloc@\removedConcepts
 
 \begin{itemdecl}
 @\addedConcepts{requires EqualityComparable<T>}@ void remove(const T& value);
-template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedCC{icate}@> void remove_if(Pred@\removedCC{icate}@ pred);
+template <@\changedConcepts{class}{Predicate<auto, T>}@ Pred@\removedConcepts{icate}@> void remove_if(Pred@\removedConcepts{icate}@ pred);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2592,15 +2589,15 @@ template <@\changedConcepts{class}{EquivalenceRelation<auto, T>}@ BinaryPredicat
 
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x);
-template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
+template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> 
   void merge(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, Compare comp)
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \requires 
-\removedCC{\mbox{\tcode{comp}} defines a strict weak ordering~(\mbox{\ref{alg.sorting}}), and} \tcode{*this} and \tcode{x} are both sorted according to 
-\changedCC{this ordering}{the strict weak ordering defined by \mbox{\tcode{operator<}} or \mbox{\tcode{comp}}}.
+\removedConcepts{\mbox{\tcode{comp}} defines a strict weak ordering~(\mbox{\ref{alg.sorting}}), and} \tcode{*this} and \tcode{x} are both sorted according to 
+\changedConcepts{this ordering}{the strict weak ordering defined by \mbox{\tcode{operator<}} or \mbox{\tcode{comp}}}.
 
 \pnum
 \effects Merges \tcode{x} into \tcode{*this}. This operation shall be stable: for equivalent elements in the two lists, the elements from \tcode{*this} shall always precede the elements from \tcode{x}. \tcode{x} is empty after the merge. If an exception is thrown other than by a comparison there are no effects.
@@ -2611,12 +2608,12 @@ template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<a
 
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp);
+template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare comp);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{\mbox{\requires} \mbox{\tcode{operator<}} (for the version with no arguments) or \mbox{\tcode{comp}} (for the version with a comparison argument) defines a strict weak ordering~(\mbox{\ref{alg.sorting}}).}
+\removedConcepts{\mbox{\requires} \mbox{\tcode{operator<}} (for the version with no arguments) or \mbox{\tcode{comp}} (for the version with a comparison argument) defines a strict weak ordering~(\mbox{\ref{alg.sorting}}).}
 
 \pnum
 \effects Sorts the list according to the \tcode{operator<} or the \tcode{comp} function object. This operation shall be stable: the relative order of the equivalent elements is preserved. If an exception is thrown the order of the elements in \tcode{*this} is unspecified.
@@ -2711,26 +2708,26 @@ namespace std {
 
     // \ref{list.cons} construct/copy/destroy:
     explicit list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit list(size_type n);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ explicit list(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       list(size_type @\farg{n}@, const T& @\farg{value}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
       list(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ list(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ list(list&& x);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ list(list&& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ list(const list&, const Alloc@\removedConcepts{ator}@&);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ list(list&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ list(list&&, const Alloc@\removedConcepts{ator}@&);
    ~list();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
       list<T,Alloc@\removedConcepts{ator}@>& operator=(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
       list<T,Alloc@\removedConcepts{ator}@>& operator=(list<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+            @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
       void assign(size_type n, const T& t);
     allocator_type get_allocator() const;
 
@@ -2753,7 +2750,7 @@ namespace std {
     bool      empty() const;
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ void resize(size_type sz, const T& c);
 
     // element access:
@@ -2805,11 +2802,11 @@ namespace std {
       void unique(BinaryPredicate @\farg{binary_pred}@);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@);
-    template <@\removedConcepts{class}\removedCCC{BinaryPredicate<auto, T, T>}\addedCC{StrictWeakOrder<auto, T>}@ Compare> 
+    template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> 
       void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@, Compare @\farg{comp}@);
 
     @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-    template <@\removedCC{class}\removedCCC{BinaryPredicate<auto, T, T>}\addedCC{StrictWeakOrder<auto, T>}@ Compare> 
+    template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> 
       void sort(Compare @\farg{comp}@);
 
     void reverse();
@@ -2859,7 +2856,7 @@ Constant.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit list(size_type n);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ explicit list(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2926,7 +2923,7 @@ Linear in
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
+        @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -2944,7 +2941,7 @@ insert(begin(), n, t);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedCC{\&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>} \addedConcepts{\&\& CopyAssignable<T>}@
   void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -2958,7 +2955,7 @@ Replaces the contents of the list with \farg{n}\ copies of \farg{t}.
 
 \index{resize@\tcode{resize}!\tcode{list}}%
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ void resize(size_type sz);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3290,16 +3287,16 @@ otherwise no applications of the predicate.
 \index{merge@\tcode{merge}!\tcode{list}}%
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@);
-template <@\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> 
+template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> 
   void merge(list<T,Alloc@\removedConcepts{ator}@>&& @\farg{x}@, Compare @\farg{comp}@);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \requires\ 
-\removedCC{\mbox{\farg{comp}} shall define a strict weak ordering
+\removedConcepts{\mbox{\farg{comp}} shall define a strict weak ordering
 (\mbox{\ref{alg.sorting}}), and} both the list and the argument list shall be
-sorted according to \changedCC{this ordering}{\mbox{\tcode{operator<}} or \mbox{\tcode{comp}}}.
+sorted according to \changedConcepts{this ordering}{\mbox{\tcode{operator<}} or \mbox{\tcode{comp}}}.
 
 \pnum
 \effects\ 
@@ -3353,12 +3350,12 @@ Linear time.
 \index{sort@\tcode{sort}!\tcode{list}}%
 \begin{itemdecl}
 @\addedConcepts{requires LessThanComparable<T>}@ void sort();
-template <@\removedCC{class}\changedCCC{BinaryPredicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare @\farg{comp}@);
+template <@\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare> void sort(Compare @\farg{comp}@);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedCC{\mbox{\requires}
+\removedConcepts{\mbox{\requires}
 \mbox{\tcode{operator<}}
 (for the first
 version)
@@ -3439,8 +3436,8 @@ can be used.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires FrontInsertionSequence<Cont> \&\& BackInsertionSequence<Cont>}@
-           @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
-           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
+        @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
+        @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class queue {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3470,18 +3467,18 @@ namespace std {
     @\addedConcepts{requires MoveAssignable<Cont>}@ queue& operator=(queue&& q)
                                         { c = std::move(q.c); return *this; }
 
-    bool              empty() const     { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
-    size_type         size()  const     { return @\removedCCC{c.}@size(@\addedCC{c}@); }
-    reference         front()           { return @\removedCCC{c.}@front(@\addedCC{c}@); }
-    const_reference   front() const     { return @\removedCCC{c.}@front(@\addedCC{c}@); }
-    reference         back()            { return @\removedCCC{c.}@back(@\addedCC{c}@); }
-    const_reference   back() const      { return @\removedCCC{c.}@back(@\addedCC{c}@); }
-    void push(const value_type& x)      { @\removedCCC{c.}@push_back(@\addedCC{c, }@x); }
-    void push(value_type&& x)           { @\removedCCC{c.}@push_back(@\addedCC{c, }@std::move(x)); }
-    void pop()                          { @\removedCCC{c.}@pop_front(@\addedCC{c}@); }
+    bool              empty() const     { return @\removedConcepts{c.}@empty(@\addedConcepts{c}@); }
+    size_type         size()  const     { return @\removedConcepts{c.}@size(@\addedConcepts{c}@); }
+    reference         front()           { return @\removedConcepts{c.}@front(@\addedConcepts{c}@); }
+    const_reference   front() const     { return @\removedConcepts{c.}@front(@\addedConcepts{c}@); }
+    reference         back()            { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
+    const_reference   back() const      { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
+    void push(const value_type& x)      { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x); }
+    void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x)); }
+    void pop()                          { @\removedConcepts{c.}@pop_front(@\addedConcepts{c}@); }
     
-    @\addedCC{requires Swappable<Cont>}@
-      void swap(queue&& q)              { @\removedCCC{c.}@swap(@\addedCC{c}@, q.c); }
+    @\addedConcepts{requires Swappable<Cont>}@
+      void swap(queue&& q)              { @\removedConcepts{c.}@swap(@\addedConcepts{c, }@q.c); }
   };
 
   template <class T, @\changedConcepts{class}{EqualityComparable}@ Cont@\removedConcepts{ainer}@>
@@ -3497,11 +3494,11 @@ namespace std {
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
 
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Alloc>}@
@@ -3601,11 +3598,11 @@ template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedCo
 \rSec4[queue.special]{\tcode{queue} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
@@ -3642,10 +3639,10 @@ object defines a strict weak ordering (\ref{alg.sorting}).
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
-       @\removedCC{class}\changedCCC{Predicate<auto, T, T>}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
-  @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \removedCCC{Mutable}\addedConcepts{RandomAccessIterator<Cont::iterator>}@
-           @\addedConcepts{\&\&} \changedCCC{Swappable}{Shuffle}\addedConcepts{Iterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
-           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
+            @\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
+  @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
+        @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
+        @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue { 
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3687,21 +3684,21 @@ namespace std {
       @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc>}@
       priority_queue(priority_queue&&, const Alloc&);
 
-    bool      empty() const       { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
-    size_type size()  const       { return @\removedCCC{c.}@size(@\addedCC{c}@); }
-    const_reference   top() const { return @\removedCCC{c.}@front(@\addedCC{c}@); }
+    bool      empty() const       { return @\removedConcepts{c.}@empty(@\addedConcepts{c}@); }
+    size_type size()  const       { return @\removedConcepts{c.}@size(@\addedConcepts{c}@); }
+    const_reference   top() const { return @\removedConcepts{c.}@front(@\addedConcepts{c}@); }
     void push(const value_type& x);
     void push(value_type&& x);
     void pop();
-    @\addedCC{requires Swappable<Cont>}@
+    @\addedConcepts{requires Swappable<Cont>}@
       void swap(priority_queue&&);
   };
                 // no equality is provided
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Compare, class Alloc>}@
@@ -3731,7 +3728,7 @@ explicit priority_queue(const Compare& x = Compare(), Cont@\removedConcepts{aine
 
 \begin{itemdescr}
 \pnum
-\removedCC{\mbox{\requires}
+\removedConcepts{\mbox{\requires}
 \mbox{\farg{x}} shall define a strict weak ordering (\mbox{\ref{alg.sorting}}).}
 
 \pnum
@@ -3742,7 +3739,7 @@ Initializes
 \tcode{c}\ with
 \tcode{y} (copy constructing or move constructing as appropriate);
 calls
-\tcode{make_heap(\removedCCC{c.}c.begin(\addedCC{c}), \removedCCC{c.}c.end(\addedCC{c}), comp)}.
+\tcode{make_heap(\removedConcepts{c.}begin(\addedConcepts{c}), \removedConcepts{c.}end(\addedConcepts{c}), comp)}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -3758,7 +3755,7 @@ template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
 
 \begin{itemdescr}
 \pnum
-\removedCC{\mbox{\requires}
+\removedConcepts{\mbox{\requires}
 \mbox{\farg{x}} shall define a strict weak ordering (\mbox{\ref{alg.sorting}}).}
 
 \pnum
@@ -3769,9 +3766,9 @@ Initializes
 \tcode{c} with
 \tcode{y} (copy constructing or move constructing as appropriate);
 calls
-\tcode{c.insert(\removedCCC{c.}end(\addedCC{c}), first, last)};
+\tcode{\removedConcepts{c.}insert(\addedConcepts{c, }\removedConcepts{c.}end(\addedConcepts{c}), first, last)};
 and finally calls
-\tcode{make_heap(\removedCCC{c.}begin(\addedCC{c}), \removedCCC{c.}end(\addedCC{c}), comp)}.
+\tcode{make_heap(\removedConcepts{c.}begin(\addedConcepts{c}), \removedConcepts{c.}end(\addedConcepts{c}), comp)}.
 \end{itemdescr}
 
 \rSec4[priqueue.members]{\tcode{priority_queue}\ members}
@@ -3785,8 +3782,8 @@ void push(const value_type& x);
 \pnum
 \effects\ 
 \begin{codeblock}
-@\removedCCC{c.}@push_back(@\addedCC{c, }@x);
-push_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp);
+@\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x);
+push_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.}@end(@\addedConcepts{c}@), comp);
 \end{codeblock}
 \end{itemdescr}
 
@@ -3799,8 +3796,8 @@ void push(value_type&& x);
 \pnum
 \effects
 \begin{codeblock}
-@\removedCCC{c.}@push_back(@\addedCC{c, }@std::move(x));
-push_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp);
+@\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x));
+push_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.}@end(@\addedConcepts{c}@), comp);
 \end{codeblock}
 \end{itemdescr}
 
@@ -3814,19 +3811,19 @@ void pop();
 \pnum
 \effects\ 
 \begin{codeblock}
-pop_heap(@\removedCCC{c.}@begin(@\addedCC{c}@), @\removedCCC{c.}@end(@\addedCC{c}@), comp);
-@\removedCCC{c.}@pop_back(@\addedCC{c}@);
+pop_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.}@end(@\addedConcepts{c}@), comp);
+@\removedConcepts{c.}@pop_back(@\addedConcepts{c}@);
 \end{codeblock}
 \end{itemdescr}
 
 \rSec4[priqueue.special]{\tcode{priority_queue} specialized algorithms}
 
 \begin{itemdecl}
-template <class T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedCC{Swappable}@ Compare>
+template <class T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
   void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-template <class T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedCC{Swappable}@ Compare>
+template <class T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
   void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-template <class T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedCC{Swappable}@ Compare>
+template <class T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
   void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 \end{itemdecl}
 
@@ -3863,7 +3860,7 @@ can be used.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires SameType<Cont::value_type, T>}@
-         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
+        @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class stack {
   public:
     typedef typename Cont@\removedConcepts{ainer}@::value_type            value_type;
@@ -3890,15 +3887,15 @@ namespace std {
       @\addedConcepts{Constructible<Cont, Cont\&\&, Alloc>}@
       stack(stack&&, const Alloc&);
 
-    bool      empty() const             { return @\removedCCC{c.}@empty(@\addedCC{c}@); }
-    size_type size()  const             { return @\removedCCC{c.}@size(@\addedCC{c}@); }
-    reference         top()             { return @\removedCCC{c.}@back(@\addedCC{c}@); }
-    const_reference   top() const       { return @\removedCCC{c.}@back(@\addedCC{c}@); }
-    void push(const value_type& x)      { @\removedCCC{c.}@push_back(@\addedCC{c, }@x); }
-    void push(value_type&& x)           { @\removedCCC{c.}@push_back(@\addedCC{c, }@std::move(x)); }
-    void pop()                          { @\removedCCC{c.}@pop_back(@\addedCC{c}@); }
-    @\addedCC{requires Swappable<Cont>}@
-      void swap(stack&& s)              { @\removedCCC{c.}@swap(@\addedCC{c, }@s.c); }
+    bool      empty() const             { return @\removedConcepts{c.}@empty(@\addedConcepts{c}@); }
+    size_type size()  const             { return @\removedConcepts{c.}@size(@\addedConcepts{c}@); }
+    reference         top()             { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
+    const_reference   top() const       { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
+    void push(const value_type& x)      { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x); }
+    void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x)); }
+    void pop()                          { @\removedConcepts{c.}@pop_back(@\addedConcepts{c}@); }
+    @\addedConcepts{requires Swappable<Cont>}@
+      void swap(stack&& s)              { @\removedConcepts{c.}@swap(@\addedConcepts{c, }@s.c); }
   };
 
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Cont@\removedConcepts{ainer}@>
@@ -3913,12 +3910,12 @@ namespace std {
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(stack<T,@\changedCCC{Allocator}{ Cont}@>& x, stack<T,@\changedCCC{Allocator}{ Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(stack<T,@\changedCCC{Allocator}{ Cont}@>&& x, stack<T,@\changedCCC{Allocator}{ Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class Allocator}{Swappable Cont}@>
-    void swap(stack<T,@\changedCCC{Allocator}{ Cont}@>& x, stack<T,@\changedCCC{Allocator}{ Cont}@>&& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+    void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Alloc>}@
     @\addedConcepts{requires UsesAllocator<Cont, Alloc>}@
@@ -4017,11 +4014,11 @@ template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedCo
 \rSec4[stack.special]{\tcode{stack} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedCCC{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
@@ -4080,30 +4077,29 @@ namespace std {
 
     // \ref{vector.cons} construct/copy/destroy:
     explicit vector(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
-    @\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ 
       explicit vector(size_type n);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       vector(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@ @\addedCC{\&\& MoveConstructible<T>}@
-            @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
       vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector<T,Alloc@\removedConcepts{ator}@>& x);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ vector(vector&&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ vector(vector&&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector&, const Alloc@\removedConcepts{ator}@&);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ vector(vector&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&>}@ vector(vector&&, const Alloc@\removedConcepts{ator}@&);
    ~vector();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
       vector<T,Alloc@\removedConcepts{ator}@>& operator=(const vector<T,Alloc@\removedConcepts{ator}@>& x);
-    @\addedCC{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@
       vector<T,Alloc@\removedConcepts{ator}@>& operator=(vector<T,Alloc@\removedConcepts{ator}@>&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-            @\addedCC{\&\& HasAssign<T, Iter::reference>}@
-            @\addedCC{\&\& MoveConstructible<T>}@
+            @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<T>}@
       void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
       void assign(size_type n, const T& u);
     allocator_type get_allocator() const;
 
@@ -4125,14 +4121,13 @@ namespace std {
     // \ref{vector.capacity} capacity:
     size_type size() const;
     size_type max_size() const;
-    @\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ 
-             @\addedCC{ConstructibleAsElement<Alloc, T> \&\& MoveConstructible<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T> \&\& MoveConstructible<T>}@
       void resize(size_type sz);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& MoveConstructible<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
       void resize(size_type sz, const T& c);
     size_type capacity() const;
     bool      empty() const;
-    @\addedConcepts{requires} \changedCCC{ConstructibleAsElement<Alloc, T, T\&\&>}{MoveConstructible<T>}@ void reserve(size_type n);
+    @\addedConcepts{requires MoveConstructible<T>}@ void reserve(size_type n);
 
     // element access:
     reference       operator[](size_type n);
@@ -4150,24 +4145,24 @@ namespace std {
 
     // \ref{vector.modifiers} modifiers:
     template <class... Args> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
-            @\addedCC{\&\& MoveConstructible<T>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
+            @\addedConcepts{\&\& MoveConstructible<T>}@
       void push_back(Args&&... args);
     void pop_back();
 
     template <class... Args> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
-            @\addedCC{\&\& MoveAssignable<T> \&\& MoveConstructible<T>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
+            @\addedConcepts{\&\& MoveAssignable<T> \&\& MoveConstructible<T>}@
       iterator emplace(const_iterator position, Args&&... args);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@ 
       iterator insert(const_iterator position, const T& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
       void insert(const_iterator position, T&& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@ 
       void insert(const_iterator position, size_type n, const T& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
         @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-              @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>} \addedConcepts{\&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
+              @\addedConcepts{\&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
         void insert(const_iterator position,
                     @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
     @\addedConcepts{requires MoveAssignable<T>}@ iterator erase(const_iterator position);
@@ -4223,7 +4218,7 @@ specified allocator.
 
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{DefaultConstructible<T>}{ConstructibleAsElement<Alloc, T>}@ explicit vector(size_type n);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T>}@ explicit vector(size_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -4260,8 +4255,7 @@ copies of \tcode{value}, using the specified allocator.
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>} \addedCC{\&\& MoveConstructible<T>}@ 
-        @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>} \addedConcepts{\&\& MoveConstructible<T>}@ 
   vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -4296,8 +4290,8 @@ reallocations if they are just input iterators.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-        @\addedCC{\&\& HasAssign<T, Iter::reference>}@
-        @\addedCC{\&\& MoveConstructible<T>}@
+        @\addedConcepts{\&\& HasAssign<T, Iter::reference>}@
+        @\addedConcepts{\&\& MoveConstructible<T>}@
   void assign(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 \end{itemdecl}
 
@@ -4311,7 +4305,7 @@ insert(begin(), first, last);
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& CopyAssignable<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& CopyAssignable<T>}@
   void assign(size_type n, const T& t);
 \end{itemdecl}
 
@@ -4340,7 +4334,7 @@ without requiring reallocation.
 
 \index{reserve@\tcode{reserve}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires} \changedCCC{ConstructibleAsElement<Alloc, T, T\&\&>}{MoveConstructible<T>}@ void reserve(size_type n);
+@\addedConcepts{requires MoveConstructible<T>}@ void reserve(size_type n);
 \end{itemdecl}
 
 \pnum
@@ -4415,8 +4409,7 @@ Constant time.
 
 \index{resize@\tcode{resize}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& ConstructibleAsElement<Alloc, T, T\&\&>}@ 
-         @\addedCC{ConstructibleAsElement<Alloc, T> \&\& MoveConstructible<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T> \&\& MoveConstructible<T>}@
   void resize(size_type sz);
 \end{itemdecl}
 
@@ -4428,13 +4421,13 @@ appends \tcode{sz - size()} default constructed elements to the
 sequence.
 
 \pnum
-\removedCC{\mbox{\requires} \mbox{\tcode{T}} shall be
+\removedConcepts{\mbox{\requires} \mbox{\tcode{T}} shall be
 \mbox{\tcode{DefaultConstructible}}.}
 \end{itemdescr}
 
 \index{resize@\tcode{resize}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedCC{\&\& MoveConstructible<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
   void resize(size_type sz, const T& c);
 \end{itemdecl}
 
@@ -4481,25 +4474,25 @@ Nothing.
 
 \index{insert@\tcode{insert}!\tcode{vector}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
   iterator insert(const_iterator position, const T& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, T\&\&> \&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
   iterator insert(const_iterator position, T&& x);
-@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&> \&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
   void insert(const_iterator position, size_type n, const T& x);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
-          @\removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>} \addedConcepts{\&\& MoveAssignable<T>}@ @\addedCC{\&\& MoveConstructible<T>}@
+          @\addedConcepts{\&\& MoveAssignable<T>}@ @\addedConcepts{\&\& MoveConstructible<T>}@
     void insert(const_iterator position,
                 @\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
 template <class... Args> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
-        @\addedCC{\&\& MoveConstructible<T>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
+        @\addedConcepts{\&\& MoveConstructible<T>}@
   void push_back(Args&&... args);
 template <class... Args> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>} \removedCCC{\&\& ConstructibleAsElement<Alloc, T, T\&\&>}@
-        @\addedCC{\&\& MoveAssignable<T> \&\& MoveConstructible<T>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Args\&\&...>}@
+        @\addedConcepts{\&\& MoveAssignable<T> \&\& MoveConstructible<T>}@
   iterator emplace(const_iterator position, Args&&... args);
 \end{itemdecl}
 
@@ -4989,11 +4982,9 @@ namespace std {
     size_type max_size() const;
 
     // \ref{map.access} element access:
-    @\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
-             @\addedCC{ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
       T& operator[](const key_type& x);
-    @\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
-             @\addedCC{ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
       T& operator[](key_type&& x);
     T&       at(const key_type& x);
     const T& at(const key_type& x) const;
@@ -5139,8 +5130,7 @@ is \farg{last} - \farg{first}.
 
 \index{operator[]@\tcode{operator[]}!map@\tcode{map}}%
 \begin{itemdecl}
-@\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
-         @\addedCC{ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
   T& operator[](const key_type& x);
 \end{itemdecl}
 
@@ -5170,8 +5160,7 @@ logarithmic.
 
 \index{operator[]@\tcode{operator[]}!map@\tcode{map}}%
 \begin{itemdecl}
-@\addedConcepts{requires} \removedCCC{DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
-         @\addedCC{ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
   T& operator[](key_type&& x);
 \end{itemdecl}
 
@@ -6216,7 +6205,7 @@ namespace std {
   // \ref{unord.map}, class template unordered_map:
   template <@\changedConcepts{class}{ObjectType}@ Key,
             @\changedConcepts{class}{ObjectType}@ T,
-            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
     @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6230,7 +6219,7 @@ namespace std {
   // \ref{unord.multimap}, class template unordered_multimap:
   template <@\changedConcepts{class}{ObjectType}@ Key,
             @\changedConcepts{class}{ObjectType}@ T,
-            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
     @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6259,7 +6248,7 @@ namespace std {
 namespace std {
   // \ref{unord.set}, class template unordered_set:
   template <@\changedConcepts{class}{ObjectType}@ Value,
-            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
     @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6272,7 +6261,7 @@ namespace std {
 
   // \ref{unord.multiset}, class template unordered_multiset:
   template <@\changedConcepts{class}{ObjectType}@ Value,
-            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
     @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6318,7 +6307,7 @@ is additional semantic information.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key,
             @\changedConcepts{class}{ObjectType}@ T,
-            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
   @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6555,7 +6544,7 @@ there is additional semantic information.
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Key,
             @\changedConcepts{class}{ObjectType}@ T,
-            @\changedConcepts{class}{Callable<auto, Key>}@ Hash = hash<Key>,
+            @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
   @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6767,7 +6756,7 @@ is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Value,
-            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
   @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
@@ -6978,7 +6967,7 @@ is additional semantic information.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ObjectType}@ Value,
-            @\changedConcepts{class}{Callable<auto, Value>}@ Hash = hash<Value>,
+            @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
   @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
