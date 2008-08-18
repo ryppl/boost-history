@@ -85,6 +85,24 @@ Pablo Halpern,  Bloomberg, L.P.
   \tcode{Predicate} for the \tcode{unique} member in \tcode{forward_list}.
 \item Changed the \tcode{Callable} requirements on the hash functions
   to accept their value by reference-to-const.
+\item Added the \tcode{ConstructibleAsElement<Alloc, value_type,
+    value_type\&\&>} requirement to the move constructors for all of
+  the associative containers.
+\item Added the \tcode{CopyAssignable<value_type>} requirement to the
+  copy-assignment operators of all of the associative containers.
+\item Added the \tcode{MoveConstructible<value_type>} requirement to
+  the range-insertion functions and range constructors of the
+  associative containers, to account for the move-construction one
+  must perform to actually insert the value into the container (if an
+  equivalent value isn't already there).
+\item Fixed the requirements on \tcode{operator[]} for \tcode{map} and
+  \tcode{unordered_map}.
+\item The \tcode{rehash} member of the unordered associative
+  containers now requires the value type to be
+  \tcode{MoveConstructible}, rather than using the
+  \tcode{ConstructibleAsElement} form, because \tcode{rehash} is only
+  dealing with values already constructed with the container's
+  allocator.
 \end{itemize}
 
 \end{titlepage}
@@ -1395,7 +1413,7 @@ namespace std {
 
   template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionSequence}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{{class}}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
-    @\addedConcepts{requires SameType<Cont::value_type, T> \&\&} \addedConcepts{RandomAccessIterator<Cont::iterator>}@
+    @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
           @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue;
@@ -4944,6 +4962,7 @@ namespace std {
                  const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       map(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
           const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
@@ -4952,9 +4971,10 @@ namespace std {
     map(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       map(const map&, const Alloc@\removedConcepts{ator}@&);
-    map(map&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      map(map&&, const Alloc@\removedConcepts{ator}@&);
    ~map();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& operator=(const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
     map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&
       operator=(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x);
@@ -4982,9 +5002,11 @@ namespace std {
     size_type max_size() const;
 
     // \ref{map.access} element access:
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&, mapped_type\&\&>}@
+          @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
       T& operator[](const key_type& x);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&, mapped_type\&\&>}@
+          @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
       T& operator[](key_type&& x);
     T&       at(const key_type& x);
     const T& at(const key_type& x) const;
@@ -4999,15 +5021,15 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       pair<iterator, bool> insert(const value_type& x);
     template <class P> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
       pair<iterator, bool> insert(P&& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator position, const value_type& x);
     template <class P>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
       iterator insert(const_iterator position, P&&);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -5098,6 +5120,7 @@ Constant.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   map(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
       const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -5130,7 +5153,8 @@ is \farg{last} - \farg{first}.
 
 \index{operator[]@\tcode{operator[]}!map@\tcode{map}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&>, mapped_type\&\&>}@
+      @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
   T& operator[](const key_type& x);
 \end{itemdecl}
 
@@ -5160,7 +5184,8 @@ logarithmic.
 
 \index{operator[]@\tcode{operator[]}!map@\tcode{map}}%
 \begin{itemdecl}
-@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&>}@
+@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&, mapped_type\&\&>}@
+      @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
   T& operator[](key_type&& x);
 \end{itemdecl}
 
@@ -5212,10 +5237,10 @@ logarithmic.
 
 \begin{itemdecl}
 template <class P> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
   pair<iterator, bool> insert(P&& x);
 template <class P> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
   pair<iterator, bool> insert(const_iterator position, P&& x);
 \end{itemdecl}
 
@@ -5395,6 +5420,7 @@ namespace std {
                       const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       multimap(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
           const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
@@ -5403,9 +5429,10 @@ namespace std {
     multimap(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       multimap(const multimap&, const Alloc@\removedConcepts{ator}@&);
-    multimap(multimap&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      multimap(multimap&&, const Alloc@\removedConcepts{ator}@&);
    ~multimap();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& operator=(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x);
     multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&
       operator=(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x);
@@ -5442,15 +5469,15 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const value_type& x);
     template <class P> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
       iterator insert(P&& x);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator position, const value_type& x);
     template <class P> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
       iterator insert(const_iterator position, P&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>} \&\& MoveConstructible<value_type>@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -5540,6 +5567,7 @@ Constant.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   multimap(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
       const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -5573,10 +5601,10 @@ where $N$\ is
 
 \begin{itemdecl}
 template <class P> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
   iterator insert(P&& x);
 template <class P> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& Convertible<P, value_type>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
   iterator insert(const_iterator position, P&& x);
 \end{itemdecl}
 
@@ -5733,6 +5761,7 @@ namespace std {
                  const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       set(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
           const Compare& comp = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
@@ -5741,10 +5770,11 @@ namespace std {
     set(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       set(const set&, const Alloc@\removedConcepts{ator}@&);
-    set(set&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      set(set&&, const Alloc@\removedConcepts{ator}@&);
    ~set();
 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       set<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(const set<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
     set<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(set<Key,Compare,Alloc@\removedConcepts{ator}@>&& x);
     allocator_type get_allocator() const;
@@ -5786,7 +5816,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
       iterator insert(const_iterator position, value_type&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -5874,6 +5904,7 @@ Constant.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   set(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@,
       const Compare& @\farg{comp}@ = Compare(), const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
@@ -5999,6 +6030,7 @@ namespace std {
                       const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       multiset(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
                const Compare& comp = Compare(),
                const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
@@ -6008,9 +6040,10 @@ namespace std {
     multiset(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       multiset(const multiset&, const Alloc@\removedConcepts{ator}@&);
-    multiset(multiset&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      multiset(multiset&&, const Alloc@\removedConcepts{ator}@&);
    ~multiset();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x);
     multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& operator=(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>&& x);
     allocator_type get_allocator() const;
@@ -6052,7 +6085,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
       iterator insert(const_iterator position, value_type&& x);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator  erase(const_iterator position);
@@ -6140,6 +6173,7 @@ Constant.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   multiset(@\changedConcepts{InputIterator}{Iter}@ @\farg{first}@, @\changedConcepts{InputIterator}{Iter}@ @\farg{last}@,
            const Compare& @\farg{comp}@ = Compare(),
            const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
@@ -6208,7 +6242,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
              @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6222,7 +6256,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
              @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6251,7 +6285,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
              @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6264,7 +6298,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-    @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
              @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6310,7 +6344,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
            @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6345,6 +6379,7 @@ namespace std {
                            const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       unordered_map(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                     size_type n = @\textit{implementation-defined}@,
                     const hasher& hf = hasher(),
@@ -6355,9 +6390,10 @@ namespace std {
     unordered_map(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       unordered_map(const unordered_map&, const Alloc@\removedConcepts{ator}@&);
-    unordered_map(unordered_map&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      unordered_map(unordered_map&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_map();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       unordered_map& operator=(const unordered_map&);
     allocator_type get_allocator() const;
 
@@ -6386,7 +6422,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -6407,7 +6443,8 @@ namespace std {
     std::pair<iterator, iterator>             equal_range(const key_type& k);
     std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 
-    @\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<Key>}@ 
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&, mapped_type\&\&>}@
+          @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
       mapped_type& operator[](const key_type& k);
 
     // bucket interface
@@ -6424,7 +6461,7 @@ namespace std {
     float load_factor() const;
     float max_load_factor() const;
     void max_load_factor(float z);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ void rehash(size_type n);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
@@ -6464,6 +6501,7 @@ provided, the number of buckets is implementation defined.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   unordered_map(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                 size_type n = @\textit{implementation-defined}@,
                 const hasher& hf = hasher(),
@@ -6490,7 +6528,9 @@ inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
 \index{operator[]@\tcode{operator[]}!unordered_map@\tcode{unordered_map}}%
 \index{unordered_map@\tcode{unordered_map}!element access}%
 \begin{itemdecl}
-@\addedConcepts{requires DefaultConstructible<T> \&\& CopyConstructible<Key>}@ mapped_type& operator[](const key_type& k);
+@\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, key_type\&\&, mapped_type\&\&>}@
+      @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
+  mapped_type& operator[](const key_type& k);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -6547,7 +6587,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
            @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6582,6 +6622,7 @@ namespace std {
                                 const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       unordered_multimap(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                          size_type n = @\textit{implementation-defined}@,
                          const hasher& hf = hasher(),
@@ -6592,9 +6633,10 @@ namespace std {
     unordered_multimap(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
        unordered_multimap(const unordered_multimap&, const Alloc@\removedConcepts{ator}@&);
-    unordered_multimap(unordered_multimap&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      unordered_multimap(unordered_multimap&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_multimap();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       unordered_multimap& operator=(const unordered_multimap&);
     allocator_type get_allocator() const;
 
@@ -6623,6 +6665,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -6657,7 +6700,7 @@ namespace std {
     float load_factor() const;
     float max_load_factor() const;
     void max_load_factor(float z);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ void rehash(size_type n);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
   template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
@@ -6697,6 +6740,7 @@ provided, the number of buckets is implementation defined.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   unordered_multimap(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                      size_type n = @\textit{implementation-defined}@,
                      const hasher& hf = hasher(),
@@ -6759,7 +6803,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
            @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6793,6 +6837,7 @@ namespace std {
                            const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       unordered_set(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                     size_type n = @\textit{implementation-defined}@,
                     const hasher& hf = hasher(),
@@ -6803,9 +6848,10 @@ namespace std {
     unordered_set(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       unordered_set(const unordered_set&, const Alloc@\removedConcepts{ator}@&);
-    unordered_set(unordered_set&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      unordered_set(unordered_set&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_set();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       unordered_set& operator=(const unordered_set&);
     allocator_type get_allocator() const;
 
@@ -6834,7 +6880,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -6869,7 +6915,7 @@ namespace std {
     float load_factor() const;
     float max_load_factor() const;
     void max_load_factor(float z);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ void rehash(size_type n);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
   template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
@@ -6909,6 +6955,7 @@ defined.  \tcode{max_load_factor()} returns 1.0.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   unordered_set(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                 size_type n = @\textit{implementation-defined}@,
                 const hasher& hf = hasher(),
@@ -6970,7 +7017,7 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-  @\addedConcepts{requires SameType<Hash::result_type, std::size_t>}@
+  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
            @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -7004,6 +7051,7 @@ namespace std {
                                 const allocator_type& a = allocator_type());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+            @\addedConcepts{\&\& MoveConstructible<value_type>}@
       unordered_multiset(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                          size_type n = @\textit{implementation-defined}@,
                          const hasher& hf = hasher(),
@@ -7014,9 +7062,10 @@ namespace std {
     unordered_multiset(const Alloc@\removedConcepts{ator}@&);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       unordered_multiset(const unordered_multiset&, const Alloc@\removedConcepts{ator}@&);
-    unordered_multiset(unordered_multiset&&, const Alloc@\removedConcepts{ator}@&);
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@
+      unordered_multiset(unordered_multiset&&, const Alloc@\removedConcepts{ator}@&);
     ~unordered_multiset();
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
+    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&> \&\& CopyAssignable<value_type>}@
       unordered_multiset& operator=(const unordered_multiset&);
     allocator_type get_allocator() const;
 
@@ -7045,7 +7094,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
       iterator insert(const_iterator hint, const value_type& obj);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@> 
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::value_type>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::value_type> \&\& MoveConstructible<value_type>}@
       void insert(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
 
     iterator erase(const_iterator position);
@@ -7080,7 +7129,7 @@ namespace std {
     float load_factor() const;
     float max_load_factor() const;
     void max_load_factor(float z);
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ void rehash(size_type n);
+    @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
   template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
@@ -7120,6 +7169,7 @@ provided, the number of buckets is implementation defined.
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
   @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Iter::reference>}@
+          @\addedConcepts{\&\& MoveConstructible<value_type>}@
   unordered_multiset(@\changedConcepts{InputIterator}{Iter}@ f, @\changedConcepts{InputIterator}{Iter}@ l,
                      size_type n = @\textit{implementation-defined}@,
                      const hasher& hf = hasher(),
