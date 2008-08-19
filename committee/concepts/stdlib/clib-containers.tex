@@ -120,6 +120,10 @@ Pablo Halpern,  Bloomberg, L.P.
   \tcode{BackInsertionSequence}, and \tcode{InsertionSequence} to
   \tcode{FrontInsertionContainer}, \tcode{BackInsertionContainer}, and
   \tcode{InsertionContainer}, respectively.
+\item Added the \tcode{RangeInsertionContainer} and
+  \tcode{MemberRangeInsertionContainer} concepts, along with a concept
+  map to adapt from member- to free-function syntax, which is
+  necessary for \tcode{priority_queue}'s constructors.
 \end{itemize}
 
 \end{titlepage}
@@ -837,18 +841,22 @@ namespace std {
   concept FrontInsertionContainer<typename C> @\textit{see below}@
   concept BackInsertionContainer<typename C> @\textit{see below}@
   concept InsertionContainer<typename C> @\textit{see below}@
+  concept RangeInsertionContainer<typename C, typename Iter> @\textit{see below}@
 
   // \ref{container.concepts.member}, member container concepts
-  concept MemberContainer<typename C> @\textit{see below}@
-  concept MemberFrontInsertionContainer<typename C> @\textit{see below}@
-  concept MemberBackInsertionContainer<typename C> @\textit{see below}@
-  concept MemberInsertionContainer<typename C> @\textit{see below}@
+  auto concept MemberContainer<typename C> @\textit{see below}@
+  auto concept MemberFrontInsertionContainer<typename C> @\textit{see below}@
+  auto concept MemberBackInsertionContainer<typename C> @\textit{see below}@
+  auto concept MemberInsertionContainer<typename C> @\textit{see below}@
+  auto concept MemberRangeInsertionContainer<typename C, typename Iter> @\textit{see below}@
 
   // \mbox{\ref{container.concepts.maps}}, container concept maps
   template <MemberContainer C>              concept_map Container<C> @\textit{see below}@
   template <MemberFrontInsertionContainer C> concept_map FrontInsertionContainer<C> @\textit{see below}@
   template <MemberBackInsertionContainer C>  concept_map BackInsertionContainer<C> @\textit{see below}@
   template <MemberInsertionContainer C>      concept_map InsertionContainer<C> @\textit{see below}@
+  template <MemberRangeInsertionContainer C, InputIterator Iter>
+    concept_map RangeInsertionContainer<C, Iter> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<E[N]> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<const E[N]> @\textit{see below}@
 }
@@ -864,7 +872,7 @@ concept maps adapting member to free syntax follow in
 (\mbox{\ref{container.concepts.member}}) and (\mbox{\ref{container.concepts.maps}}).}
 
 \begin{itemdecl}
-auto concept Container<typename C> {
+concept Container<typename C> {
   ObjectType           value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
@@ -969,6 +977,19 @@ concept InsertionContainer<typename C> : Container<C> {
   modified by inserting elements at any position within the sequence.}
 \end{itemdescr}
 
+\begin{itemdecl}
+concept RangeInsertionContainer<typename C, typename Iter> : InsertionContainer<C> {
+  requires InputIterator<Iter>;
+  void insert(C&, const_iterator position, Iter first, Iter last);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum \addedConcepts{\mbox{\reallynote} describes a container that
+    can be modified by inserting a sequence of elements at any
+    position within the sequence.}
+\end{itemdescr}
+
 \rSec3[container.concepts.member]{Member container concepts} 
 
 \pnum 
@@ -1041,7 +1062,7 @@ auto concept MemberFrontInsertionContainer<typename C> : MemberContainer<C> {
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of
   member functions, that can be
   modified by adding or removing elements from the front of the
-  sequence.}
+  container.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1067,9 +1088,8 @@ auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
 \pnum
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by adding or removing elements from the back of the
-  sequence.}
+  container.}
 \end{itemdescr}
-
 
 \begin{itemdecl}
 auto concept MemberInsertionContainer<typename C> : MemberContainer<C> {
@@ -1077,18 +1097,23 @@ auto concept MemberInsertionContainer<typename C> : MemberContainer<C> {
 }
 \end{itemdecl}
 
-\begin{itemdecl}
-template <MemberInsertionContainer C> 
-concept_map InsertionContainer<C> {
-  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
-  { return c.insert(i, v); }
-}			
-\end{itemdecl}
-
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
-  modified by inserting elements at any position within the sequence.}
+  modified by inserting elements at any position within the container.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept MemberRangeInsertionContainer<typename C, typename Iter> : MemberInsertionContainer<C> {
+  requires InputIterator<Iter>;
+  void C::insert(const_iterator position, Iter first, Iter last);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum \addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions,  that
+    can be modified by inserting a sequence of elements at any
+    position within the sequence.}
 \end{itemdescr}
 
 \rSec3[container.concepts.maps]{Container concept maps}
@@ -1131,52 +1156,6 @@ concept_map Container<C> {
 \end{itemdescr}
 
 \begin{itemdecl}
-template <typename E, size_t N>
-concept_map Container<E[N]> {
-  typedef E                  value_type;
-  typedef E&                 reference;
-  typedef const E&           const_reference;
-  typedef size_t             size_type;
-  typedef E*                 iterator;
-  typedef const E*           const_iterator;
-
-  bool           empty(const E(&c)[N]) { return N==0; }
-  size_type      size(const E(&c) [N]) { return N; }
-
-  iterator       begin(E(&c)[N])       { return &c[0]; }
-  const_iterator begin(const E(&c)[N]) { return &c[0]; }
-  iterator       end(E(&c)[N])         { return &c[N]; }  
-  const_iterator end(const E(&c)[N])   { return &c[N]; }
-}
-\end{itemdecl}
-
-\begin{itemdecl}
-template <typename E, size_t N>
-concept_map Container<const E[N]> {
-  typedef E                  value_type;
-  typedef const E&           reference;
-  typedef const E&           const_reference;
-  typedef size_t             size_type;
-
-  typedef const E*           iterator;
-  typedef const E*           const_iterator;
-
-  bool           empty(const E(&c)[N]) { return N==0; }
-  size_type      size(const E(&c) c)   { return N; }
-
-  const_iterator begin(const E(&c)[N]) { return &c[0]; }
-  const_iterator end(const E(&c)[N])   { return &c[N]; }
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts built-in arrays to the 
-  \mbox{\tcode{Container}} concept.}
-\end{itemdescr}
-
-
-\begin{itemdecl}
 template <MemberFrontInsertionContainer C> 
 concept_map FrontInsertionContainer<C> {
   typedef Container<C>::reference       reference;
@@ -1206,7 +1185,7 @@ concept_map BackInsertionContainer<C> {
   reference       back(C& c)        { return c.back(); }
   const_reference back(const C& c)  { return c.back(); }
 
-  void push_back(C& c, const Container<C>::value_type &v)    { c.back(v); }
+  void push_back(C& c, const Container<C>::value_type &v)    { c.push_back(v); }
   void pop_back(C& c)                                        { c.pop_back(); }
 }			
 \end{itemdecl}
@@ -1216,6 +1195,81 @@ concept_map BackInsertionContainer<C> {
 \addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
   \\\addedConcepts{\mbox{\tcode{BackInsertionContainer}} concept.}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <MemberInsertionContainer C> 
+concept_map InsertionContainer<C> {
+  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, const Container<C>::value_type &v)    
+  { return c.insert(i, v); }
+}			
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} Adapts an existing insertion container, which uses
+  member function syntax for each of its operations, to the}
+  \\\addedConcepts{\mbox{\tcode{InsertionContainer}} concept.}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <MemberRangeInsertionContainer C, InputIterator Iter> 
+concept_map RangeInsertionContainer<C, Iter> {
+  void insert(C& c, Container<C>::const_iterator i, Iter first, Iter last)
+  { c.insert(i, first, last); }
+}			
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} Adapts an existing range-insertion container, which uses
+  member function syntax for each of its operations, to the}
+  \\\addedConcepts{\mbox{\tcode{RangeInsertionContainer}} concept.}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <typename E, size_t N>
+concept_map Container<E[N]> {
+  typedef E                  value_type;
+  typedef E&                 reference;
+  typedef const E&           const_reference;
+  typedef size_t             size_type;
+  typedef E*                 iterator;
+  typedef const E*           const_iterator;
+
+  bool           empty(const E(&c)[N]) { return N==0; }
+  size_type      size(const E(&c) [N]) { return N; }
+
+  iterator       begin(E(&c)[N])       { return c; }
+  const_iterator begin(const E(&c)[N]) { return c; }
+  iterator       end(E(&c)[N])         { return c + N; }  
+  const_iterator end(const E(&c)[N])   { return c + N; }
+}
+\end{itemdecl}
+
+\begin{itemdecl}
+template <typename E, size_t N>
+concept_map Container<const E[N]> {
+  typedef E                  value_type;
+  typedef const E&           reference;
+  typedef const E&           const_reference;
+  typedef size_t             size_type;
+
+  typedef const E*           iterator;
+  typedef const E*           const_iterator;
+
+  bool           empty(const E(&c)[N]) { return N==0; }
+  size_type      size(const E(&c)[N])  { return N; }
+
+  const_iterator begin(const E(&c)[N]) { return c; }
+  const_iterator end(const E(&c)[N])   { return c + N; }
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} Adapts built-in arrays to the 
+  \mbox{\tcode{Container}} concept.}
 \end{itemdescr}
 
 \color{black}
@@ -3436,16 +3490,16 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<Cont>}@ explicit queue(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     @\addedConcepts{requires MoveConstructible<Cont>}@ queue(queue&& q) : c(std::move(q.c)) {}
     template <class Alloc> 
-      @\addedConcepts{requires Constructible<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, const Alloc\&>}@
       explicit queue(const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires Constructible<Cont, Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, const Cont\&, const Alloc\&>}@
       queue(const Cont@\removedConcepts{ainer}@&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, const Alloc\&>}@
       queue(Cont@\removedConcepts{ainer}@&&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires Constructible<Cont, Cont\&\&, Alloc\&\&>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, const Alloc\&>}@
       queue(queue&&, const Alloc&);
     @\addedConcepts{requires MoveAssignable<Cont>}@ queue& operator=(queue&& q)
                                         { c = std::move(q.c); return *this; }
@@ -3642,20 +3696,20 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<Cont>}@ 
       explicit priority_queue(const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{CopyConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
+      @\addedConcepts{requires CopyConstructible<Cont> \&\& RangeInsertionContainer<Cont, Iter>}@
       priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Compare& x, const Cont@\removedConcepts{ainer}@&);
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{MoveConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
+      @\addedConcepts{requires MoveConstructible<Cont> \&\& RangeInsertionContainer<Cont, Iter>}@
       priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     @\addedConcepts{requires MoveConstructible<Cont>}@ priority_queue(priority_queue&&);
     @\addedConcepts{requires MoveAssignable<Cont>}@ priority_queue& operator=(priority_queue&&);
     template <class Alloc> 
-      @\addedConcepts{requires Constructible<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, const Alloc\&>}@
       explicit priority_queue(const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{requires Constructible<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, const Alloc\&>}@
       priority_queue(const Compare&, const Alloc&);
     template <class Alloc> 
       @\addedConcepts{requires Constructible<Cont, Cont, Alloc>}@
@@ -3727,11 +3781,11 @@ calls
 
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{CopyConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
+  @\addedConcepts{requires CopyConstructible<Cont> \&\& RangeInsertionContainer<Cont, Iter>}@
   priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Compare& x, const Cont@\removedConcepts{ainer}@&);
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{MoveConstructible<Cont> \&\& Constructible<Cont, Iter, Iter>}@
+  @\addedConcepts{requires MoveConstructible<Cont> \&\& RangeInsertionContainer<Cont, Iter>}@
   priority_queue(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Compare& x = Compare(), Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
 \end{itemdecl}
@@ -3858,16 +3912,16 @@ namespace std {
     @\addedConcepts{requires CopyConstructible<Cont>}@ explicit stack(const Cont@\removedConcepts{ainer}@&);
     @\addedConcepts{requires MoveConstructible<Cont>}@ explicit stack(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
     template <class Alloc> 
-      @\addedConcepts{Constructible<Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, const Alloc\&>}@
       explicit stack(const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{Constructible<Cont, Cont, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, const Cont\&, const Alloc\&>}@
       stack(const Cont@\removedConcepts{ainer}@&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{Constructible<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{requires Constructible<Cont, Cont\&\&, const Alloc\&>}@
       stack(Cont@\removedConcepts{ainer}@&&, const Alloc&);
     template <class Alloc> 
-      @\addedConcepts{Constructible<Cont, Cont\&\&, Alloc>}@
+      @\addedConcepts{Constructible<Cont, Cont\&\&, const Alloc\&>}@
       stack(stack&&, const Alloc&);
 
     bool      empty() const             { return @\removedConcepts{c.}@empty(@\addedConcepts{c}@); }
