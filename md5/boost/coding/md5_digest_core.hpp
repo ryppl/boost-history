@@ -37,10 +37,10 @@ namespace coding
 // I/O streaming operator functions
 template < typename Ch, class Tr >
   std::basic_istream<Ch, Tr> &  operator >>( std::basic_istream<Ch, Tr> &i,
-  md5_digest &n );
+  md5_digest &d );
 template < typename Ch, class Tr >
   std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &o,
-  md5_digest const &n );
+  md5_digest const &d );
 
 
 //  MD5 message-digest class declaration  ------------------------------------//
@@ -51,7 +51,7 @@ template < typename Ch, class Tr >
     hashing operations.  It is supposed to mirror the buffer described in RFC
     1321, sections 3.3&ndash;3.5.  Comparisons are supported for check-summing
     purposes, but not ordering.  Persistence is supported through the standard
-    text stream I/O system.
+    text stream I/O system and Boost.Serialization.
 
     \see  boost::coding::md5_context
     \see  boost::coding::md5_computer
@@ -103,9 +103,7 @@ struct md5_digest
 
     \relates  boost::coding::md5_digest
  */
-inline
-bool
-operator ==( md5_digest const &l, md5_digest const &r )
+inline bool  operator ==( md5_digest const &l, md5_digest const &r )
 {
     return std::equal( l.hash, l.hash + md5_digest::words_per_digest::value,
      r.hash );
@@ -126,15 +124,25 @@ operator ==( md5_digest const &l, md5_digest const &r )
 
     \relates  boost::coding::md5_digest
  */
-inline
-bool
-operator !=( md5_digest const &l, md5_digest const &r )
-{
-    return !( l == r );
-}
+inline bool  operator !=( md5_digest const &l, md5_digest const &r )
+{ return !( l == r ); }
 
 
 }  // namespace coding
+
+namespace serialization
+{
+
+
+//  More forward declarations  -----------------------------------------------//
+
+// Serialization
+template < class Archive >
+  void  serialize( Archive &ar, coding::md5_digest &d, const unsigned int
+  version );
+
+
+}  // namespace serialization
 }  // namespace boost
 
 

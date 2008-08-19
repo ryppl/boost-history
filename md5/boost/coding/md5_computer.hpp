@@ -27,7 +27,6 @@
 #include <boost/concept_check.hpp>         // for boost::OutputIterator
 #include <boost/cstdint.hpp>               // for boost::uint_least8_t
 #include <boost/integer/integer_mask.hpp>  // for boost::integer_lo_mask
-#include <boost/serialization/access.hpp>  // for boost::serialization::access
 #include <boost/serialization/nvp.hpp>     // for boost::serialization::make_nvp
 
 #include <algorithm>  // for std::copy, swap
@@ -137,14 +136,6 @@ public:
     // Extras
     //! Creates copy of \c #hashing_table using calculated, not static, values
     static  hash_table_type  generate_hashing_table();
-
-private:
-    // Serialization
-    friend class boost::serialization::access;
-
-    //! Enables persistence with Boost.Serialization-compatible archives
-    template < class Archive >
-    void  serialize( Archive &ar, const unsigned int version );
 
 };  // md5_computer
 
@@ -353,26 +344,6 @@ md5_computer::process_double_word( length_type dword )
 { this->context().consume_dword( dword ); }
 
 
-//  MD5 message-digest computation serialization function definition  --------//
-
-/** Streams a computer to/from an archive using the Boost.Serialization
-    protocols.  This member function is meant to be called only by the
-    Boost.Serialization system, as needed.
-
-    \tparam  Archive  The type of \p ar.  It must conform to the requirements
-                      Boost.Serialization expects of archiving classes.
-
-    \param  ar       The archiving object that this object's representation will
-                     be streamed to/from.
-    \param  version  The version of the persistence format for this object.  (It
-                     should be zero, since this type just got created.)
- */
-template < class Archive >
-inline void
-md5_computer::serialize( Archive &ar, const unsigned int version )
-{ ar & boost::serialization::make_nvp( "context", this->context() ); }
-
-
 //  MD5 message-digest computation miscellaneous function definitions  -------//
 
 /** \brief  Non-member swapping function for \c md5_computer
@@ -395,6 +366,46 @@ inline void  swap( md5_computer &a, md5_computer &b )  { a.swap( b ); }
 
 
 }  // namespace coding
+
+namespace serialization
+{
+
+
+//  MD5 message-digest structure serialization template function definition  -//
+
+/** \brief  Enables persistence with Boost.Serialization-compatible archives for
+            \c boost::coding::md5_computer, non-member
+
+    Streams a computer to/from an archive using the Boost.Serialization
+    protocols.  This function is meant to be called only by the
+    Boost.Serialization system, as needed.
+
+    \tparam Archive  The type of \p ar.  It must conform to the requirements
+                     Boost.Serialization expects of archiving classes.
+
+    \param ar       The archiving object that this object's representation will
+                     be streamed to/from.
+    \param c        The \c md5_computer object to be serialized or deserialized.
+    \param version  The version of the persistence format for this object.  (It
+                    should be zero, since this type just got created.)
+
+    \relates  boost::coding::md5_computer
+ */
+template < class Archive >
+inline void
+serialize( Archive &ar, coding::md5_computer &c, const unsigned int version )
+{
+    switch ( version )
+    {
+    default:
+    case 0u:
+        ar & make_nvp( "context", c.context() );
+        break;
+    }
+}
+
+
+}  // namespace serialization
 }  // namespace boost
 
 

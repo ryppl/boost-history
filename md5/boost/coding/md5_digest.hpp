@@ -19,11 +19,12 @@
 #include <boost/coding_fwd.hpp>
 #include <boost/coding/md5_digest_core.hpp>  // for boost::coding::md5_digest
 
-#include <boost/config.hpp>          // for BOOST_USE_FACET
-#include <boost/mpl/assert.hpp>      // for BOOST_MPL_ASSERT_RELATION
-#include <boost/mpl/arithmetic.hpp>  // for boost::mpl::divides, modulus, times
-#include <boost/mpl/size_t.hpp>      // for boost::mpl::size_t
-#include <boost/typeof/typeof.hpp>   // for BOOST_AUTO
+#include <boost/config.hpp>             // for BOOST_USE_FACET
+#include <boost/mpl/assert.hpp>         // for BOOST_MPL_ASSERT_RELATION
+#include <boost/mpl/arithmetic.hpp>     // for boost::mpl::divides,modulus,times
+#include <boost/mpl/size_t.hpp>         // for boost::mpl::size_t
+#include <boost/serialization/nvp.hpp>  // for boost::serialization::make_nvp
+#include <boost/typeof/typeof.hpp>      // for BOOST_AUTO
 
 #include <cstdlib>   // for std::div, div_t
 #include <ios>       // for std::ios_base
@@ -113,7 +114,7 @@ struct md5_constants
     read, not counting how \c std::ios_base::skipws for \p i is set.)
 
     \param i  The input stream to perform the reading.
-    \param n  The \c md5_digest object to store the read.
+    \param d  The \c md5_digest object to store the read.
 
     \return  \p i
 
@@ -123,7 +124,7 @@ struct md5_constants
  */
 template < typename Ch, class Tr >
 std::basic_istream<Ch, Tr> &
-operator >>( std::basic_istream<Ch, Tr> &i, md5_digest &n )
+operator >>( std::basic_istream<Ch, Tr> &i, md5_digest &d )
 {
     typename std::basic_istream<Ch, Tr>::sentry  is( i );
 
@@ -186,7 +187,7 @@ abort_read:
         else
         {
             // Successful read
-            n = temp;
+            d = temp;
         }
     }
 
@@ -206,7 +207,7 @@ abort_read:
     written, not counting how <code><var>o</var>.width()</code> is set.)
 
     \param o  The output stream to perform the writing.
-    \param n  The \c md5_digest object to be written.
+    \param d  The \c md5_digest object to be written.
 
     \return  \p o
 
@@ -216,7 +217,7 @@ abort_read:
  */
 template < typename Ch, class Tr >
 std::basic_ostream<Ch, Tr> &
-operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
+operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &d )
 {
     // The message always has an exact number of characters; plot it out.
     // (Leave an extra character for the NUL terminator.)
@@ -236,7 +237,7 @@ operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
         std::div_t const  nybble_index_parts = std::div( nybble_index,
          detail::md5_constants::nybbles_per_word::value );
 
-        *p++ = digits[ 0x0F & (n.hash[ nybble_index_parts.quot ] >> (
+        *p++ = digits[ 0x0F & (d.hash[ nybble_index_parts.quot ] >> (
          detail::md5_constants::bits_per_nybble::value * ((
          nybble_index_parts.rem ) ^ 0x01) )) ];
     }
@@ -248,6 +249,49 @@ operator <<( std::basic_ostream<Ch, Tr> &o, md5_digest const &n )
 
 
 }  // namespace coding
+
+namespace serialization
+{
+
+
+//  MD5 message-digest structure serialization template function definition  -//
+
+/** \brief  Enables persistence with Boost.Serialization-compatible archives for
+            \c boost::coding::md5_digest, non-member
+
+    Streams a message digest to/from an archive using the Boost.Serialization
+    protocols.  This function is meant to be called only by the
+    Boost.Serialization system, as needed.
+
+    \tparam Archive  The type of \p ar.  It must conform to the requirements
+                     Boost.Serialization expects of archiving classes.
+
+    \param ar       The archiving object that this object's representation will
+                     be streamed to/from.
+    \param d        The \c md5_digest object to be serialized or deserialized.
+    \param version  The version of the persistence format for this object.  (It
+                    should be zero, since this type just got created.)
+
+    \relates  boost::coding::md5_digest
+ */
+template < class Archive >
+inline void
+serialize( Archive &ar, coding::md5_digest &d, const unsigned int version )
+{
+    switch ( version )
+    {
+    default:
+    case 0u:
+        ar & make_nvp( "word-A", d.hash[0] )
+           & make_nvp( "word-B", d.hash[1] )
+           & make_nvp( "word-C", d.hash[2] )
+           & make_nvp( "word-D", d.hash[3] );
+        break;
+    }
+}
+
+
+}  // namespace serialization
 }  // namespace boost
 
 

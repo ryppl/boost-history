@@ -11,8 +11,11 @@
 
 #include <boost/coding/md5.hpp>
 
-#include <boost/lexical_cast.hpp>    // for boost::lexical_cast
-#include <boost/test/unit_test.hpp>  // unit testing framework
+#include <boost/archive/xml_iarchive.hpp>  // for boost::archive::xml_iarchive
+#include <boost/archive/xml_oarchive.hpp>  // for boost::archive::xml_oarchive
+#include <boost/lexical_cast.hpp>          // for boost::lexical_cast
+#include <boost/serialization/nvp.hpp>     // for boost::serialization::make_nvp
+#include <boost/test/unit_test.hpp>        // unit testing framework
 #include <boost/test/output/compiler_log_formatter.hpp>  // for new formatter
 
 #include <cstddef>  // for std::size_t
@@ -20,10 +23,25 @@
 #include <cwchar>   // for WEOF, std::wint_t
 #include <iomanip>  // for std::setfill, setw
 #include <ios>      // for std::left, uppercase
+#include <iostream> // for std::cout
+#include <istream>  // for std::basic_istream
 #include <memory>   // for std::auto_ptr [for xcode_config]
-#include <ostream>  // for std::ostream [for xcode_log_formatter]
+#include <ostream>  // for std::endl, basic_ostream
 #include <sstream>  // for std::[w](o|i)stringstream
 #include <string>   // for std::string, wstring
+
+
+// Control if XML code will be printed conventionally, or just logged.
+#ifndef CONTROL_SHOW_XML
+#define CONTROL_SHOW_XML  0
+#endif
+
+// Logging
+#if CONTROL_SHOW_XML
+#define PRIVATE_SHOW_MESSAGE( m )  std::cout << m << std::endl
+#else
+#define PRIVATE_SHOW_MESSAGE( m )  BOOST_TEST_MESSAGE( m )
+#endif
 
 
 #pragma mark Intro stuff
@@ -85,6 +103,26 @@ wchar_t const  md5_initial_uws[] = L"0123456789ABCDEFFEDCBA9876543210";
 
 char const     zeros_s[] =    "00000000000000000000000000000000";
 wchar_t const  zeros_ws[] =  L"00000000000000000000000000000000";
+
+// Completely read an archive from a stream
+template < typename Ch, class Tr, typename T >
+void  read_xml_archive( std::basic_istream<Ch, Tr> &i, T &target, char const
+ *name )
+{
+    boost::archive::xml_iarchive  ar( i );
+
+    ar >> boost::serialization::make_nvp( name, target );
+}
+
+// Completely write an archive to a stream
+template < typename Ch, class Tr, typename T >
+void  write_xml_archive( std::basic_ostream<Ch, Tr> &o, T const &target, char
+ const *name )
+{
+    boost::archive::xml_oarchive  ar( o );
+
+    ar << boost::serialization::make_nvp( name, target );
+}
 
 }  // unnamed namespace
 
@@ -282,6 +320,31 @@ BOOST_AUTO_TEST_CASE( md5_digest_input_test )
     // Matching input vs. output
     BOOST_CHECK_EQUAL( md5_initial,
      lexical_cast<md5_digest>(lexical_cast<string>( md5_initial )) );
+}
+
+// Archiving test
+BOOST_AUTO_TEST_CASE( md5_digest_serialization_test )
+{
+    // Write to archive
+    std::stringstream  ss;
+    md5_digest         test = md5_initial;
+
+    BOOST_REQUIRE_NE( test, zeros );
+    BOOST_REQUIRE_EQUAL( test, md5_initial );
+    write_xml_archive( ss, test, "test" );
+
+    // Ensure receiving object's value is different
+    test = zeros;
+    BOOST_REQUIRE_NE( test, md5_initial );
+    BOOST_REQUIRE_EQUAL( test, zeros );
+
+    // Read from archive
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+
+    // Confirm the change and proper read-back
+    BOOST_CHECK_NE( test, zeros );
+    BOOST_CHECK_EQUAL( test, md5_initial );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
