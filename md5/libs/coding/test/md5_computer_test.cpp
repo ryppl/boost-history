@@ -680,6 +680,15 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     PRIVATE_SHOW_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c2 );
+
+    // Maybe an unused computer should be tested
+    BOOST_REQUIRE_NE( test, c1 );
+    ss.str( "" );
+    write_xml_archive( ss, c1, "test" );
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+    BOOST_CHECK_EQUAL( test, c1 );
+    BOOST_CHECK_NE( test, c2 );
 }
 
 // Single-call function test

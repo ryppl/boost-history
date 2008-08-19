@@ -23,8 +23,10 @@
 #include <boost/assert.hpp>                 // for BOOST_ASSERT
 #include <boost/bimap.hpp>                  // for boost::bimap
 #include <boost/detail/bit_rotation.hpp>    // for boost::detail::left_rotate
+#include <boost/detail/endian.hpp>          // for BOOST_LITTLE_ENDIAN
 #include <boost/integer/integer_mask.hpp>   // for boost::integer_lo_mask
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
+#include <boost/typeof/typeof.hpp>          // for BOOST_AUTO
 
 #include <algorithm>  // for std::copy, fill
 #include <climits>    // for CHAR_BIT
@@ -34,6 +36,12 @@
 #include <numeric>    // for std::inner_product, partial_sum
 #include <string>     // for std::string
 #include <valarray>   // for std::valarray, etc.
+
+
+// Control macro for octet-optimized byte processing
+#ifndef BOOST_CONTROL_OPTIMIZE_OCTET_BYTES
+#define BOOST_CONTROL_OPTIMIZE_OCTET_BYTES  1
+#endif
 
 
 //  Custom types/functions/templates  ----------------------------------------//
@@ -106,16 +114,6 @@ public:
 // Transfoming rotation constants
 int const  md5_s[4][4] = { {7, 12, 17, 22}, {5, 9, 14, 20}, {4, 11, 16, 23}, {6,
  10, 15, 21} };
-
-// Order of listed bits within a 32-bit word: octets are listed lowest-order
-// first, but the bits within octets are listed highest-order first!  The order
-// is given in the appropriate power-of-two for that bit.
-boost::array<unsigned long, 32> const  order_in_word = { {1ul << 7, 1ul << 6,
- 1ul << 5, 1ul << 4, 1ul << 3, 1ul << 2, 1ul << 1, 1ul << 0, 1ul << 15, 1ul <<
- 14, 1ul << 13, 1ul << 12, 1ul << 11, 1ul << 10, 1ul << 9, 1ul << 8, 1ul << 23,
- 1ul << 22, 1ul << 21, 1ul << 20, 1ul << 19, 1ul << 18, 1ul << 17, 1ul << 16,
- 1ul << 31, 1ul << 30, 1ul << 29, 1ul << 28, 1ul << 27, 1ul << 26, 1ul << 25,
- 1ul << 24} };
 
 // The special operation repeatedly used for hashing
 template < template <typename> class TernaryFuncTmpl, typename Word, int
@@ -336,16 +334,54 @@ void  md5_context::update_hash()
 
     // Convert the queued bit block to a word block
     std::valarray<word_ftype>  words( words_per_block::value ), scratch(words);
-    queue_type const           q = this->expand_queue();
 
-    for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
     {
-        // Use the default inner-product; since "queue" has "bool" elements,
-        // which convert to 0 or 1, multiplication acts as AND; since
-        // "order_in_word" has distinct single-bit values, addition acts as OR.
-        words[ i ] = std::inner_product( order_in_word.begin(),
-         order_in_word.end(), q.begin() + i * bits_per_word::value,
-         word_ftype(0u) );
+#if (CHAR_BIT == 8) && BOOST_CONTROL_OPTIMIZE_OCTET_BYTES
+        for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+        {
+            // Copy each octet to its appropriate place
+            // (four octets per word, lowest-order first)
+            BOOST_AUTO( const &  octets, *reinterpret_cast<unsigned char const
+             (*)[4]>(&this->queue[ 4u * i ]) );
+
+#ifdef BOOST_LITTLE_ENDIAN
+            words[ i ] = *reinterpret_cast<word_ftype const *>( &octets ) &
+             0xFFFFFFFFul;
+//#error "Kewl"
+#else
+            words[ i ] = static_cast<word_ftype>( octets[3] ) << 24 |
+             static_cast<word_ftype>( octets[2] ) << 16 |
+             static_cast<word_ftype>( octets[1] ) << 8 |
+             static_cast<word_ftype>( octets[0] );
+//#error "Hi there"
+#endif
+        }
+#else
+        // Order of listed bits within a 32-bit word: octets are listed
+        // lowest-order first, but the bits within octets are listed
+        // highest-order first!  The order is given in the appropriate
+        // power-of-two for that bit.
+        boost::array<word_ftype, 32> const  order_in_word = { {1ul << 7, 1ul <<
+         6, 1ul << 5, 1ul << 4, 1ul << 3, 1ul << 2, 1ul << 1, 1ul << 0, 1ul <<
+         15, 1ul << 14, 1ul << 13, 1ul << 12, 1ul << 11, 1ul << 10, 1ul << 9,
+         1ul << 8, 1ul << 23, 1ul << 22, 1ul << 21, 1ul << 20, 1ul << 19, 1ul <<
+         18, 1ul << 17, 1ul << 16, 1ul << 31, 1ul << 30, 1ul << 29, 1ul << 28,
+         1ul << 27, 1ul << 26, 1ul << 25, 1ul << 24} };
+
+        queue_type const  q = this->expand_queue();
+
+        for ( size_t  i = 0u ; i < words_per_block::value ; ++i )
+        {
+            // Use the default inner-product; since "q" has "bool" elements,
+            // which convert to 0 or 1, multiplication acts as AND; since
+            // "order_in_word" has distinct single-bit values, addition acts
+            // as OR.
+            words[ i ] = std::inner_product( order_in_word.begin(),
+             order_in_word.end(), q.begin() + i * bits_per_word::value,
+             word_ftype(0u) );
+        }
+//#error "Hello"
+#endif
     }
 
     // Set up rounds
