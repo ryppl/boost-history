@@ -312,15 +312,15 @@ void  md5_context::consume_bit( bool bit )
     unsigned char &      byte = this->queue[ sub_indices.quot ];
     unsigned char const  mask = 1u << ( CHAR_BIT - 1 - sub_indices.rem );
 
-    // Since moving representation of the Boolean queue from an regular "bool"
-    // array to a packed "unsigned char" array, there has been the question of
-    // how the packed bits are arranged in each byte.  We have the next read bit
-    // go into the highest-order spot that isn't already used.  This is manually
-    // kept in sync with "expand_queue", "contract_queue", and
-    // "md5_computer::copy_unbuffered".  The high-order-first order is also how
-    // the bit-oriented MD5 algorithm reads a byte.  There is a bonus that an
-    // optimized byte-consumption routine can copy a byte directly into the
-    // array for quick entry, at least if CHAR_BIT divides index.
+    // Since changing the representation of the Boolean queue from an regular
+    // "bool" array to a packed "unsigned char" array, there has been the
+    // question of how the packed bits are arranged in each byte.  We have the
+    // next read bit go into the highest-order spot that isn't already used.
+    // This is manually kept in sync with "expand_queue" and "contract_queue".
+    // High-order-bit-first is also how the bit-oriented MD5 algorithm reads a
+    // byte.  There is a bonus that an optimized byte-consumption routine can
+    // copy a byte directly into the array for quick entry, at least if CHAR_BIT
+    // divides index.
 
     if ( bit )  byte |=  mask;
     else        byte &= ~mask;

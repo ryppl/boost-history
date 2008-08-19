@@ -148,8 +148,7 @@ public:
 
     \return  How many bits have been submitted, hashed and queued.
  */
-inline md5_computer::length_type
-md5_computer::bits_read() const
+inline md5_computer::length_type  md5_computer::bits_read() const
 {
     return this->context().length &
      boost::integer_lo_mask<md5_context::bits_per_length::value>::value;
@@ -161,8 +160,8 @@ md5_computer::bits_read() const
 
     \return  The current state of the MD buffer, not counting any unhashed bits.
  */
-inline md5_computer::buffer_type
-md5_computer::last_buffer() const  { return this->context().buffer; }
+inline md5_computer::buffer_type  md5_computer::last_buffer() const
+{ return this->context().buffer; }
 
 /** Returns the number of bits that are still in the queue, unhashed.  Hashing
     occurs only after every <code>#bits_per_block :: value</code> bit
@@ -174,8 +173,7 @@ md5_computer::last_buffer() const  { return this->context().buffer; }
     \see  #bits_read()
     \see  #bits_per_block
  */
-inline md5_computer::length_type
-md5_computer::bits_unbuffered() const
+inline md5_computer::length_type  md5_computer::bits_unbuffered() const
 { return this->bits_read() % md5_context::bits_per_block::value; }
 
 /** Copies the last submitted bits that have not yet been hashed starting from
@@ -199,19 +197,14 @@ md5_computer::bits_unbuffered() const
     \see  #bits_per_block
  */
 template < typename OutputIterator >
-OutputIterator
-md5_computer::copy_unbuffered( OutputIterator o ) const
+OutputIterator  md5_computer::copy_unbuffered( OutputIterator o ) const
 {
     // Parameter check
     BOOST_CONCEPT_ASSERT( (boost::OutputIterator<OutputIterator, bool>) );
 
-    int  count = this->bits_unbuffered();
+    md5_context::queue_type const  q = this->context().expand_queue();
 
-    for (unsigned char const *  p = this->context().queue.begin() ; count ; ++p)
-        for ( unsigned char  m = 1u << (CHAR_BIT - 1) ; m && count ; m >>= 1,
-         --count, ++o )
-            *o = *p & m;
-    return o;
+    return std::copy( q.begin(), q.begin() + this->bits_unbuffered(), o );
 }
 
 
@@ -224,7 +217,7 @@ md5_computer::copy_unbuffered( OutputIterator o ) const
            0x10325476 }</code>.
     \post  <code>#copy_unbuffered(<var>o</var>)</code> leaves \p o unused.
  */
-inline void  md5_computer::reset()  { *this = self_type(); }
+inline void  md5_computer::reset()  { this->context() = md5_context(); }
 
 /** Changes an object to be like the given object.  Only the computation
     elements are copied; no function object proxies are reseated.
@@ -251,7 +244,8 @@ inline void  md5_computer::assign( self_type const &c )  { *this = c; }
     \post  <code>*this == <var>old_other</var> &amp;&amp; <var>old_this</var> ==
            <var>other</var></code>.
  */
-inline void  md5_computer::swap( self_type &other ) { std::swap(*this, other); }
+inline void  md5_computer::swap( self_type &other )
+{ std::swap( this->context(), other.context() ); }
 
 
 //  MD5 message-digest computation bit-input member function definitions  ----//
@@ -281,10 +275,9 @@ inline void  md5_computer::swap( self_type &other ) { std::swap(*this, other); }
            the <code><var>old_this</var>.bits_unbuffered() + 8 -
            bits_per_block</code> lowest-order bits of \p octet.
 
-    \see  boost::coding::bit_coding_shell<>::process_bits(unsigned char,size_type)
+    \see  boost::coding::bit_coding_shell::process_bits(unsigned char,size_type)
  */
-inline void
-md5_computer::process_octet( uint_least8_t octet )
+inline void  md5_computer::process_octet( uint_least8_t octet )
 { this->context().consume_octet( octet ); }
 
 /** Submits 32-bit MD-word for computation.  The word is submitted an octet at a
@@ -311,8 +304,7 @@ md5_computer::process_octet( uint_least8_t octet )
 
     \see  #process_octet(uint_least8_t)
  */
-inline void
-md5_computer::process_word( md5_digest::word_type word )
+inline void  md5_computer::process_word( md5_digest::word_type word )
 { this->context().consume_word( word ); }
 
 /** Submits 64-bit MD-length for computation.  The double-word is submitted a
@@ -339,8 +331,7 @@ md5_computer::process_word( md5_digest::word_type word )
 
     \see  #process_word(boost::coding::md5_digest::word_type)
  */
-inline void
-md5_computer::process_double_word( length_type dword )
+inline void  md5_computer::process_double_word( length_type dword )
 { this->context().consume_dword( dword ); }
 
 
