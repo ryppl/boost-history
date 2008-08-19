@@ -136,6 +136,22 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 
 \end{titlepage}
 
+\section*{Proposed Wording}
+\paragraph*{Issues resolved by concepts}
+The following LWG are resolved by concepts. These issues should be
+resolved as NAD following the application of this proposal to the
+wording paper:
+\begin{description}
+\item[Issue 556. Is Compare a BinaryPredicate?] With concepts, we've
+  specified exactly what "convertible to bool" means for predicates,
+  and all Compare objects are predicates (since they refine the
+  Predicate concept). Short-circuiting is taken care of because the
+  Predicate concept forces conversion to bool inside all constrained
+  templates.
+\item[Issue 724. DefaultConstructible is not defined.]
+The concepts proposal provides a \tcode{DefaultConstructible} concept.
+\end{description}
+
 %%--------------------------------------------------
 %% Headers and footers
 \pagestyle{fancy}

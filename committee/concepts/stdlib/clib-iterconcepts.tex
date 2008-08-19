@@ -286,6 +286,31 @@ ambiguity, for example, was initially detected by ConceptGCC.
 \end{titlepage}
 
 \section*{Proposed Wording}
+\paragraph*{Issues resolved by concepts}
+The following LWG are resolved by concepts. These issues should be
+resolved as NAD following the application of this proposal to the
+wording paper:
+\begin{description}
+\item[Issue 299. Incorrect return types for iterator dereference.]
+  Concepts specify precise return types for the iterator 
+  operations, including \tcode{operator[]}.
+\item[Issue 258. 24.1.5 contains unintented limitation for operator-.]
+  Concepts now specify that the difference type of an iterator is a
+  signed integral type.
+\item[Issue 484. Convertible to T.]
+With concepts, the iterator requirements also specify
+"convertible to T", and this conversion will automatically be used
+within constrained templates as necessary, so that the overload that
+will be selected becomes clear from the requirements of the template.
+\item[Issue 742. Enabling swap for proxy iterators.]  The concepts
+  proposal provides a two-parameter swap that is available when
+  \tcode{swap(w, v)} is valid or when the types of \tcode{w} and
+  \tcode{v} are the same and that type is \tcode{MoveAssignable} and
+  \tcode{MoveConstructible}, per the \tcode{std::swap} algorithm. The
+  use of this \tcode{HasSwap} concept in the iterator concepts and in
+  algorithms makes proxy iterators viable throughout the standard
+  library.
+\end{description}
 
 %% --------------------------------------------------
 %% Headers and footers

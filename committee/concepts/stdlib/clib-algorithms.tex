@@ -122,6 +122,22 @@ Andrew Lumsdaine, Indiana University
 
 \end{titlepage}
 
+\section*{Proposed Wording}
+\paragraph*{Issues resolved by concepts}
+The following LWG are resolved by concepts. These issues should be
+resolved as NAD following the application of this proposal to the
+wording paper:
+\begin{description}
+\item[Issue 631. Conflicting requirements for BinaryPredicate.]  The
+  concepts specification for \tcode{lower_bound} and
+  \tcode{upper_bound} specify an exact order for the operands,
+  following the principle that we specify minimal requirements for an
+  algorithm (within reason).
+\item[Issue 779. Resolution of \#283 incomplete.]
+The concepts proposal spells out the exact requirements for the
+\tcode{remove} algorithm.
+\end{description}
+
 %%--------------------------------------------------
 %% Headers and footers
 \pagestyle{fancy}

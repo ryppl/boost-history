@@ -58,6 +58,7 @@ Open Systems Laboratory \\
 Indiana University \\
 Bloomington, IN\ \  47405 \\
 \{\href{mailto:dgregor@osl.iu.edu}{dgregor}, \href{mailto:lums@osl.iu.edu}{lums}\}@osl.iu.edu
+
 \end{center}
 
 \vspace{1in}
@@ -81,6 +82,14 @@ Bloomington, IN\ \  47405 \\
   characterizes the actual requirements for the \tcode{complex} type.
 \end{itemize}
 
+\paragraph*{Issues resolved in this paper}
+The following issue has been applied to this paper and should be resolved as NAD:
+\begin{itemize}
+\item Issue 844: complex pow return type is ambiguous. Rather than add
+  concepts to the \tcode{pow(complex, int)} function, which will be
+  removed by the proposed resolution to issue 844, we have applied the
+  proposed resolution to this document.
+\end{itemize}
 \end{titlepage}
 
 %%--------------------------------------------------
@@ -536,7 +545,7 @@ namespace std {
   template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> log  (const complex<T>&);
   template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> log10(const complex<T>&);
 
-  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>&, int);
+  @\removedConcepts{template<class T> complex<T> pow(const complex<T>\&, int);}@
   template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>&, const T&);
   template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>&, const complex<T>&);
   template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const T&, const complex<T>&);
@@ -1271,7 +1280,7 @@ the complex common (base 10) logarithm of \farg{x}, defined as
 
 \index{pow@\tcode{pow}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>& @\farg{x}@, int @\farg{y}@);
+@\removedConcepts{template<class T> complex<T> pow(const complex<T>\& \mbox{\farg{x}}, int \mbox{\farg{y}});}@
 template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>& @\farg{x}@, const complex<T>& @\farg{y}@);
 template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>& @\farg{x}@, const T& @\farg{y}@);
 template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow  (const T& @\farg{x}@, const complex<T>& @\farg{y}@);
