@@ -155,14 +155,13 @@ template <class Cursor, class Op>
 void for_each_recursive(Cursor s, Op& f)
 {
 	Cursor t = s.end();
-	s.to_begin();
-	do {
+	for (s.to_begin(); s != t; ++s) {
 		f(*s);
 		if (!s.empty())
 			for_each_recursive(s, f);
-		++s;
-	} while (s != t);
+	}
 	
+	// Multiway cursor
 	if (!s.empty())
 		for_each_recursive(s, f);
 }
@@ -181,14 +180,13 @@ template <class Cursor, class Op>
 Op for_each(Cursor s, Op f)
 {
 	Cursor t = s.end();
-	s.to_begin();
-	do {
+	for (s.to_begin(); s != t; ++s) {
 		f(*s);
 		if (!s.empty())
 			for_each_recursive(s, f);
-		++s;
-	} while (s != t);
+	}
 	
+	// Multiway cursor
 	if (!s.empty())
 		for_each_recursive(s, f);
 	
@@ -208,14 +206,13 @@ OutCursor copy (InCursor s, OutCursor t)
 	s.to_begin();
 	t.to_begin();
 	
-	do {
+	for (; s != r; ++s, ++t) {
 		*t = *s;
 		if (!s.empty())
 			copy(s, t);
-		++t;
-		++s;
-	} while (s != r);
+	}
 
+	// Multiway cursor
 	if (!r.empty())
 		copy(r, t);
 
@@ -241,14 +238,13 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
 	InCursor r = s.end();
 	s.to_begin();
 	t.to_begin();
-	do {
+	for (; s != r; ++s, ++t) {
 		*t = op(*s);
 		if (!s.empty())
 			transform(s, t, op);
-		++s;
-		++t;
-	} while (s != r);
+	}
 
+	// Multiway cursor
 	if (!s.empty())
 		transform(s, t, op);
 		

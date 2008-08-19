@@ -137,6 +137,8 @@ void for_each_recursive(MultiwayCursor s, Op& f)
 			for_each_recursive(s, f);
 		f(*s);
 	}
+	
+	// Multiway cursor
 	if (!t.empty())
 		for_each_recursive(t, f);
 }
@@ -162,6 +164,8 @@ Op for_each(MultiwayCursor s, Op f)
 			for_each_recursive(s, f);
 		f(*s);
 	}
+	
+	// Multiway cursor
 	if (!t.empty())
 		for_each_recursive(t, f);
 	return f;
@@ -181,11 +185,13 @@ OutCursor copy (InCursor s, OutCursor t)
 	s.to_begin();
 	t.to_begin();
 	
-	while (s!=r) {
+	for (; s != r; ++s, ++t) {
 		if (!s.empty())
 			copy(s, t);
-		*++t=*++s;
+		*t=*s;
 	}
+	
+	// Multiway cursor
 	if (!r.empty())
 		copy(r, t);
 	return t;
@@ -212,11 +218,13 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
 	s.to_begin();
 	t.to_begin();
 	
-	while (s!=r) {
+	for (; s != r; ++s, ++t) {
 		if (!s.empty())
 			transform(s, t, op);
-		*++t=op(*++s);
+		*t=op(*s);
 	}
+
+	// Multiway cursor
 	if (!r.empty())
 		transform(r, t, op);
 	return t;
