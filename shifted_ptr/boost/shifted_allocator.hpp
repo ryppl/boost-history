@@ -38,6 +38,9 @@ namespace sh
 
 /**
     STL compliant allocator.
+    
+    @note
+    Default object contructor is called inside allocate() to save temporaries.
 */
 
 template <typename T>

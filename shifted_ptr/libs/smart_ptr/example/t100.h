@@ -42,13 +42,25 @@ struct neuron_base
     enum sense_t {sight, sound, touch, smell, taste};
 
     boost::regex exp_;
-    std::vector< std::pair<double, pointer> > sub_;
+    //std::vector< std::pair<double, pointer> > sub_;
+    std::pair<double, pointer> sub_[3];
 
-    neuron_base(std::string const & s) : exp_(s), sub_(exp_.mark_count()) {}
+    neuron_base(std::string const & s) : exp_(s)/*, sub_(exp_.mark_count())*/ {}
     virtual ~neuron_base() {};
 
     virtual double operator () (std::string const & input) {};
 };
+
+
+/**
+    Core brain kernel.
+    
+    @note
+    The brain kernel will have a thread running in the background to sort out 
+    all confused neurons that didn't take any decisions yet.  This should be 
+    linked with the imaginative section of the brain which guesses over and 
+    over (trials & errors) when to many regex occurences are present.
+*/
 
 template <neuron_base::sense_t>
     class neuron : public neuron_base
@@ -58,13 +70,22 @@ template <neuron_base::sense_t>
 
     public:
         typedef boost::shifted<neuron> pointee;
+        
+        /** 
+            The following should be one of these multimap indexed by:
+            - regular expression string
+            - weight
+            - emotional state weight (normal, angry, or scared)
+        */
+        
         typedef std::map<std::string, pointer> map_sn_t;
         
         static map_sn_t search_;
     
         neuron(std::string const & s, pointee * p1 = 0, pointee * p2 = 0, pointee * p3 = 0) : neuron_base(s)
         {
-            search_[s] = reinterpret_cast<pointee *>(this); /// FIXME
+            /// FIXME
+            //search_[s] = (pointee *) (typename pointee::roofof) static_cast<neuron *>(rootof<is_polymorphic<neuron>::value>::get(this));
         
             if (p1) sub_[0].second = p1;
             if (p2) sub_[1].second = p2;
