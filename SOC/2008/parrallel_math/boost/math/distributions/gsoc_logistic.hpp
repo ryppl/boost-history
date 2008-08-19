@@ -159,14 +159,18 @@ namespace boost { namespace math {
       if(false == detail::check_probability(function, p, &result, Policy()))
         return result;
       
-      using boost::math::tools::max_value;
+      
       if(p == 0)
         {
-          return -max_value<RealType>();
+          
+          result=policies::raise_underflow_error<RealType>(function,"probability argument is 0, must be >0 and <1",Policy());
+          return result;
         }
       if(p == 1)
         {
-          return max_value<RealType>();
+          result=policies::raise_overflow_error<RealType>(function,"probability argument is 0, must be >0 and <1",Policy());
+          return result;
+          
         }
        //Expressions to try
        //return location+scale*log(p/(1-p));
@@ -222,13 +226,17 @@ namespace boost { namespace math {
    using boost::math::tools::max_value;
 
 
-      if(q == 0)
-        {
-          return max_value<RealType>();
-        }
       if(q == 1)
         {
-          return -max_value<RealType>();
+          result=policies::raise_underflow_error<RealType>(function,"probability argument is 0, must be >0 and <1",Policy());
+          return result;
+          
+        }
+      if(q == 0)
+        {
+          result=policies::raise_overflow_error<RealType>(function,"probability argument is 0, must be >0 and <1",Policy());
+          return result;
+          
         }
    //Expressions to try 
    return location+scale*log((1-q)/q);
