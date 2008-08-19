@@ -12,6 +12,8 @@ DVIPS		= dvips
 .tex.dvi:
 	@ if test ! -f $*.ind; then echo "" > $*.ind; fi
 	@ $(LATEX) $*
+
+.honk.wibble:
 	@ if ( grep 'Writing index file' $*.log > /dev/null ); \
 	then makeindex $* ; $(LATEX) $* ; fi
 	@ if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \

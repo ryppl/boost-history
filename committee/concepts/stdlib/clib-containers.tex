@@ -1302,17 +1302,17 @@ namespace std {
     void swap(array<T,N>& x, array<T,N>& y);
 
   template <@\changedConcepts{class}{ObjectType}@ T> class tuple_size;
-  template <int I, @\changedConcepts{class}{ObjectType}@ T> 
+  template <size_t I, @\changedConcepts{class}{ObjectType}@ T> 
     class tuple_element;
   template <@\changedConcepts{class}{ObjectType}@ T, size_t N>
     struct tuple_size<array<T, N> >;
-  template <int I, class T, size_t N>
+  template <size_t I, class T, size_t N>
     @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
     struct tuple_element<I, array<T, N> >;
-  template <int I, class T, size_t N>
+  template <size_t I, class T, size_t N>
     @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
     T& get(array<T, N>&); 
-  template <int I, class T, size_t N>
+  template <size_t I, class T, size_t N>
     @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
     const T& get(const array<T, N>&);
 }
@@ -1705,34 +1705,38 @@ tuple_element<I, array<T, N> >::type
 \index{array@\tcode{array}!get@\tcode{get}}%
 \index{get@\tcode{get}!array@\tcode{array}}%
 \begin{itemdecl}
-template <int I, class T, size_t N> 
+template <size_t I, class T, size_t N> 
   @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
   T& get(array<T, N>& a); 
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedConcepts{\mbox{\requires} \mbox{\tcode{0 <= I < N}}. The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+\removedConcepts{\mbox{\requires} \mbox{\tcode{I < N}}. The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
 
 \returns\  A reference to the \tcode{I}th element of \tcode{a}, 
 where indexing is zero-based.
+
+\throws\ nothing.
 \end{itemdescr}
 
 \index{array@\tcode{array}!get@\tcode{get}}%
 \index{get@\tcode{get}!array@\tcode{array}}%
 \begin{itemdecl}
-template <int I, class T, size_t N> 
+template <size_t I, class T, size_t N> 
   @\addedConcepts{requires True<(I > 0 \&\& I < N)>}@
   const T& get(const array<T, N>& a); 
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedConcepts{\mbox{\requires} \mbox{\tcode{0 <= I < N}}. The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
+\removedConcepts{\mbox{\requires} \mbox{\tcode{I < N}}. The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
 
 \pnum
 \returns\ A const reference to the \tcode{I}th element of \tcode{a}, 
 where indexing is zero-based.
+
+\throws\ nothing.
 \end{itemdescr}
 
 \rSec2[deque]{Class template \tcode{deque}}%
