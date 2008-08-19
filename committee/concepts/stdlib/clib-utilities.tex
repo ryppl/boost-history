@@ -76,6 +76,12 @@ Bloomington, IN\ \  47405 \\
 \item Replaced \tcode{HasConstructor} requirements with \tcode{Constructible} requirements.
 \item Constrain \tcode{move} with the \tcode{RvalueOf} concept.
 \item Constrain the \tcode{identity} helper template of \tcode{forward}.
+\item Fixed syntactic errors in the \tcode{mem_fn} signatures.
+\item Constrain \tcode{tuple_element}, \tcode{tuple_size}.
+\item Replace uses of \tcode{ConstructibleAsElement} with
+  \tcode{ConstructibleWithAllocator} in \tcode{pair} and \tcode{tuple}.
+\item Fixed the \tcode{UsesAllocator} concept maps for \tcode{pair},
+  \tcode{tuple}, and \tcode{function}.
 \end{itemize}
 
 \end{titlepage}
@@ -135,7 +141,7 @@ Table~\ref{tab:util.lib.summary}.
 
 \rSec1[utility.concepts]{Concepts}
 
-\editorial{This new section is specified in a separate document, N2621=08-0131.}
+\editorial{This new section is specified in a separate document, ``Foundational Concepts for the C++0x Standard Library''.}
 
 \rSec1[utility]{Utility components}
 
@@ -158,12 +164,12 @@ namespace std {
   }
 
   // \ref{forward}, forward/move:
-  template <class T> struct identity;
+  template <@\changedConcepts{class}{VariableType}@ T> struct identity;
   template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identity<T>::type&&);
   template <@\changedConcepts{class}{RvalueOf}@ T> @\changedConcepts{typename remove_reference<T>::type\&\&}{RvalueOf<T>::type}@ move(T&&);
 
   // \ref{pairs}, pairs:
-  template <@\changedConcepts{class}{ObjectType}@ T1,@\changedConcepts{class}{ObjectType}@ T2> struct pair;
+  template <@\changedConcepts{class}{VariableType}@ T1,@\changedConcepts{class}{ObjectType}@ T2> struct pair;
   template <@\changedConcepts{class}{EqualityComparable}@ T1, @\changedConcepts{class}{EqualityComparable}@ T2>
     bool operator==(const pair<T1,T2>&, const pair<T1,T2>&);
   template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
@@ -183,21 +189,21 @@ namespace std {
   template <@\changedConcepts{class}{Swappable}@ T1, @\changedConcepts{class}{Swappable}@ T2> 
     void swap(pair<T1,T2>&, pair<T1,T2>&&); 
   template <@\changedConcepts{class}{MoveConstructible}@ T1,
-  @\changedConcepts{class}{MoveConstructible}@ T2> pair<V1, V2> make_pair(T1, T2);
+  @\changedConcepts{class}{MoveConstructible}@ T2> pair<V1, V2> make_pair(T1&&, T2&&);
 
   // \ptr\ref{pairs}, tuple-like access to pair:
-  template <class T> class tuple_size;
-  template <int I, class T> class tuple_element;
+  template <@\changedConcepts{class}{ObjectType}@ T> class tuple_size;
+  template <size_t I, @\changedConcepts{class}{ObjectType}@ T> class tuple_element;
 
-  template <class T1, class T2> struct tuple_size<std::pair<T1, T2> >;
-  template <class T1, class T2> struct tuple_element<0, std::pair<T1, T2> >;
-  template <class T1, class T2> struct tuple_element<1, std::pair<T1, T2> >;
+  template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2> struct tuple_size<std::pair<T1, T2> >;
+  template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2> struct tuple_element<0, std::pair<T1, T2> >;
+  template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2> struct tuple_element<1, std::pair<T1, T2> >;
 
-  template<int I, class T1, class T2> 
-    @\addedConcepts{requires True<0 <= I \&\& I < 2>}@
+  template<size_t I, class T1, class T2> 
+    @\addedConcepts{requires True<I < 2>}@
     P& get(std::pair<T1, T2>&);
-  template<int I, class T1, class T2> 
-    @\addedConcepts{requires True<0 <= I \&\& I < 2>}@
+  template<size_t I, class T1, class T2> 
+    @\addedConcepts{requires True<I < 2>}@
     const P& get(const std::pair<T1, T2>&);
 }
 \end{codeblock}
@@ -361,28 +367,28 @@ struct pair {
   
   // allocator-extended constructors
   template<@\changedConcepts{class}{Allocator} Alloc@>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1> \&\& ConstructibleAsElement<Alloc, T2>}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc> \&\& ConstructibleWithAllocator<T2, Alloc>}@ 
     pair(allocator_arg_t, const Alloc& a);
   template<@\changedConcepts{class}{Allocator} Alloc@>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const T1\&>}@
-             @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, const T2\&>}@
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, const T1\&>}@
+             @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, const T2\&>}@
     pair(allocator_arg_t, const Alloc& a, const T1& @\farg{x}@, const T2& @\farg{y}@);
   template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, V\&\&>}@ 
     pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, V&& @\farg{y}@);
   template<@\changedConcepts{class}{Allocator} Alloc@>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, T1\&\&> \&\& ConstructibleAsElement<Alloc, T2, T2\&\&>}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, T1\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, T2\&\&>}@ 
     pair(allocator_arg_t, const Alloc& a, pair&& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const U\&>}@
-             @\addedConcepts{\&\& ConstructibleAsElement<Alloc, <T2, const V\&>}@
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, const U\&>}@
+             @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, const V\&>}@
     pair(allocator_arg_t, const Alloc& a, const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, V\&\&>}@
     pair(allocator_arg_t, const Alloc& a, pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
   template<class @\farg{U}@, class... @\farg{Args}@, @\changedConcepts{class}{Allocator} Alloc@> 
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&>}@
-             @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, Args\&\&...>}@
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&>}@
+             @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, Args\&\&...>}@
     pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, Args&&... @\farg{args}@);
 
   @\addedConcepts{requires MoveAssignable<T1> \&\& MoveAssignable<T2>}@ pair& operator=(pair&& p ); 
@@ -397,7 +403,9 @@ struct pair {
   @\removedConcepts{struct uses_allocator<pair<T1, T2>, Alloc>;}@
 
 @\addedConcepts{template <class T1, class T2, class Alloc>}@
-  @\addedConcepts{concept_map UsesAllocator<pair<T1, T2>, Alloc> \{ \}}@
+  @\addedConcepts{concept_map UsesAllocator<pair<T1, T2>, Alloc> \{}@ 
+    @\addedConcepts{typedef Alloc allocator_type;}@
+  @\addedConcepts{\}}@
 
 @\removedConcepts{template <class T1, class T2>}@
   @\removedConcepts{struct constructible_with_allocator_prefix<pair<T1, T2>{>};}@
@@ -517,28 +525,28 @@ template<class U, class... Args>
 
 \begin{itemdecl}
 template<@\changedConcepts{class}{Allocator} Alloc@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1> \&\& ConstructibleAsElement<Alloc, T2>}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc> \&\& ConstructibleWithAllocator<T2, Alloc>}@ 
   pair(allocator_arg_t, const Alloc& a);
 template<@\changedConcepts{class}{Allocator} Alloc@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const T1\&>}@
-           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, const T2\&>}@
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, const T1\&>}@
+           @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, const T2\&>}@
   pair(allocator_arg_t, const Alloc& a, const T1& @\farg{x}@, const T2& @\farg{y}@);
 template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, V\&\&>}@ 
   pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, V&& @\farg{y}@);
 template<@\changedConcepts{class}{Allocator} Alloc@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, T1\&\&> \&\& ConstructibleAsElement<Alloc, T2, T2\&\&>}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, T1\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, T2\&\&>}@ 
   pair(allocator_arg_t, const Alloc& a, pair&& @\farg{p}@);
 template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, const U\&>}@
-           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, <T2, const V\&>}@
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, const U\&>}@
+           @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, const V\&>}@
   pair(allocator_arg_t, const Alloc& a, const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
 template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&> \&\& ConstructibleAsElement<Alloc, T2, V\&\&>}@
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, V\&\&>}@
   pair(allocator_arg_t, const Alloc& a, pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
 template<class @\farg{U}@, class... @\farg{Args}@, @\changedConcepts{class}{Allocator} Alloc@> 
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T1, U\&\&>}@
-           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, T2, Args\&\&...>}@
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&>}@
+           @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, Args\&\&...>}@
   pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, Args&&... @\farg{args}@);
 \end{itemdecl}
 
@@ -640,7 +648,7 @@ template<class @\farg{T1}@, class @\farg{T2}@>
 \index{make_pair@\tcode{make_pair}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{MoveConstructible}@ T1, @\changedConcepts{class}{MoveConstructible}@ T2>
-  pair<V1, V2> make_pair(T1 @\farg{x}@, T2 @\farg{y}@);
+  pair<V1, V2> make_pair(T1&& @\farg{x}@, T2&& @\farg{y}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -753,21 +761,21 @@ namespace std {
     tuple<TTypes..., UTypes...> tuple_cat(tuple<TTypes...>&&, tuple<UTypes...>&&);
 
   // \ref{tuple.helper}, tuple helper classes:
-  template <class T> class tuple_size;  // \addedD{undefined}
+  template <@\changedConcepts{class}{ObjectType}@ T> class tuple_size;  // \addedD{undefined}
   template <@\changedConcepts{class}{VariableType}@... Types> class tuple_size<tuple<Types...> >;
 
-  template <int I, class T> class tuple_element;    // \addedD{undefined}
-  @\addedD{template <int I, class... Types>}@ 
-    @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@ class tuple_element<I, tuple<Types...> >;
+  template <size_t I, @\changedConcepts{class}{ObjectType}@ T> class tuple_element;    // \addedD{undefined}
+  template <size_t I, @\changedConcepts{class}{VariableType}@... Types>
+    @\addedConcepts{requires True<(I < sizeof...(Types))>}@ class tuple_element<I, tuple<Types...> >;
 
   // \ref{tuple.elem}, element access:
-  template <int I, @\changedConcepts{class}{VariableType}@... Types> 
-    @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
-    @\addedD{typename tuple_element<I, tuple<Types...> >::type\& get(tuple<Types...>\&);}@
+  template <size_t I, @\changedConcepts{class}{VariableType}@... Types> 
+    @\addedConcepts{requires True<(I < sizeof...(Types))>}@
+    typename tuple_element<I, tuple<Types...> >::type& get(tuple<Types...>&);
 
-  template <int I, @\changedConcepts{class}{VariableType}@... Types>
-    @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
-    @\addedD{typename tuple_element<I, tuple<Types...> >::type const\& get(const tuple<Types...>\&);}@
+  template <size_t I, @\changedConcepts{class}{VariableType}@... Types>
+    @\addedConcepts{requires True<(I < sizeof...(Types))>}@
+    typename tuple_element<I, tuple<Types...> >::type const& get(const tuple<Types...>&);
 
   // \ref{tuple.rel}, relational operators:
   template<class... TTypes, class... UTypes>
@@ -830,31 +838,31 @@ public:
 
   // allocator-extended constructors
   template <@\changedConcepts{class}{Allocator}@ Alloc>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types>...}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc>...}@ 
     tuple(allocator_arg_t, const Alloc& a);
   template <@\changedConcepts{class}{Allocator}@ Alloc>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const Types\&>...}@ 
     explicit tuple(allocator_arg_t, const Alloc& a, const Types&...);
   template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
     explicit tuple(allocator_arg_t, const Alloc& a, UTypes&&...);
   template <@\changedConcepts{class}{Allocator}@ Alloc>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const Types\&>...}@ 
     tuple(allocator_arg_t, const Alloc& a, const tuple&);
   template <@\changedConcepts{class}{Allocator}@ Alloc>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, Types\&\&>...}@ 
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, Types\&\&>...}@ 
     tuple(allocator_arg_t, const Alloc& a, tuple&&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
     tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
     tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...>&&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
     tuple(allocator_arg_t, const Alloc& a, const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
     tuple(allocator_arg_t, const Alloc& a, pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 
   @\addedConcepts{requires CopyAssignable<Types>...}@ tuple& operator=(const tuple&);
@@ -876,7 +884,9 @@ public:
 };
 
 @\addedConcepts{template<class... Types, class... Alloc>}@
-  @\addedConcepts{concept_map UsesAllocator<tuple<Types...>, Alloc> \{ \}}@
+  @\addedConcepts{concept_map UsesAllocator<tuple<Types...>, Alloc> \{}@
+    @\addedConcepts{typedef Alloc allocator_type;}@
+  @\addedConcepts{\}}@
 \end{codeblock}
 
 \rSec3[tuple.traits]{\removedConcepts{Tuple traits}}
@@ -1208,31 +1218,31 @@ second element of \mbox{\tcode{*this}}.}
 
 \begin{itemdecl}
 template <@\changedConcepts{class}{Allocator}@ Alloc>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types>...}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc>...}@ 
   tuple(allocator_arg_t, const Alloc& a);
 template <@\changedConcepts{class}{Allocator}@ Alloc>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const Types\&>...}@ 
   explicit tuple(allocator_arg_t, const Alloc& a, const Types&...);
 template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
   explicit tuple(allocator_arg_t, const Alloc& a, UTypes&&...);
 template <@\changedConcepts{class}{Allocator}@ Alloc>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const Types\&>...}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const Types\&>...}@ 
   tuple(allocator_arg_t, const Alloc& a, const tuple&);
 template <@\changedConcepts{class}{Allocator}@ Alloc>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, Types\&\&>...}@ 
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, Types\&\&>...}@ 
   tuple(allocator_arg_t, const Alloc& a, tuple&&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
   tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
   tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...>&&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, const UTypes\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
   tuple(allocator_arg_t, const Alloc& a, const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, Types, UTypes\&\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
   tuple(allocator_arg_t, const Alloc& a, pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 \end{itemdecl}
 
@@ -1338,17 +1348,17 @@ elements of \tcode{u}.
 \setcounter{Paras}{3}
 \index{tuple_element@\tcode{tuple_element}}%
 \begin{itemdecl}
-@\addedD{template <int I, class... Types>}@
-@\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@ 
-@\addedD{class tuple_element<I, tuple<Types...> > \{}@
-@\addedD{public:}@
-  @\addedD{typedef TI type;}@
-@\addedD{\};}@
+template <size_t I, class... Types>
+@\addedConcepts{requires True<(I < sizeof...(Types))>}@
+class tuple_element<I, tuple<Types...> > {
+public:
+  typedef TI type;
+};
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{0 <= I}} and \mbox{\tcode{I < sizeof...(Types)}}.}}
+\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{I < sizeof...(Types)}}.}}
 The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
 
 \pnum
@@ -1363,14 +1373,14 @@ where indexing is zero-based.
 \index{tuple@\tcode{tuple}!get@\tcode{get}}%
 \index{get@\tcode{get}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
-template <int I, @\changedConcepts{class}{VariableType}@... Types> 
-  @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
-  @\addedD{typename tuple_element<I, tuple<Types...> >::type\& get(tuple<Types...>\& t);}@
+template <size_t I, @\changedConcepts{class}{VariableType}@... Types> 
+  @\addedConcepts{requires True<(I < sizeof...(Types))>}@
+  typename tuple_element<I, tuple<Types...> >::type& get(tuple<Types...>& t);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{0 <= I}} and \mbox{\tcode{I < sizeof...(Types)}}.}}
+\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{I < sizeof...(Types)}}.}}
 The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
 
 \pnum
@@ -1387,14 +1397,14 @@ indexing is zero-based.
 \index{tuple@\tcode{tuple}!get@\tcode{get}}%
 \index{get@\tcode{get}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
-template <int I, @\changedConcepts{class}{VariableType}@... Types> 
-  @\addedConcepts{requires True<0 <= I \&\& I < sizeof...(Types)>}@
-  @\addedD{typename tuple_element<I, tuple<Types...> >::type const\& get(const tuple<Types...>\& t);}@
+template <size_t I, @\changedConcepts{class}{VariableType}@... Types> 
+  @\addedConcepts{requires True<(I < sizeof...(Types))>}@
+  typename tuple_element<I, tuple<Types...> >::type const& get(const tuple<Types...>& t);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{0 <= I}} and \mbox{\tcode{I < sizeof...(Types)}}.}}
+\removedConcepts{\mbox{\requires}  \mbox{\addedD{\mbox{\tcode{I < sizeof...(Types)}}.}}
 The program is ill-formed if \mbox{\tcode{I}} is out of bounds.}
 
 \pnum
@@ -1670,13 +1680,13 @@ namespace std {
   // \marktr{}\ref{func.memfn}, member function adaptors:
   template<@\changedConcepts{class}{Returnable}@ R, class T> @\textit{unspecified}@ mem_fn(R T::*);
   @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-    @\addedConcepts{\textit{unspecified} mem_fn(R (T::*)(Args...) pm);}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...));}@
   @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const)(Args...) pm);}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...) const);}@
   @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* volatile)(Args...) pm);}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...) volatile);}@
   @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const volatile)(Args...) pm);}@
+    @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...) const volatile);}@
 
   // \marktr{}\ref{func.wrap} polymorphic function wrappers:
   class bad_function_call;
@@ -2449,13 +2459,13 @@ required for \tcode{f} (if any).
 \begin{itemdecl}
 template<@\changedConcepts{class}{Returnable}@ R, class T> @\textit{unspecified}@ mem_fn(R T::* pm); 
 @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-  @\addedConcepts{\textit{unspecified} mem_fn(R (T::*)(Args...) pm);}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...));}@
 @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const)(Args...) pm);}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...) const);}@
 @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* volatile)(Args...) pm);}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...) volatile);}@
 @\addedConcepts{template<Returnable R, class T, CopyConstructible... Args>}@
-  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* const volatile)(Args...) pm);}@
+  @\addedConcepts{\textit{unspecified} mem_fn(R (T::* pm)(Args...) const volatile);}@
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2579,6 +2589,11 @@ namespace std {
     template<@\addedD{class R2, class... ArgTypes2}@> bool operator==(const function<@\addedD{R2(ArgTypes2...)}@>&);
     template<@\addedD{class R2, class... ArgTypes2}@> bool operator!=(const function<@\addedD{R2(ArgTypes2...)}@>&);
   };
+
+@\addedConcepts{template <class R, class... Args>}@
+  @\addedConcepts{concept_map UsesAllocator<function<R(Args...)>, Alloc> \{}@ 
+    @\addedConcepts{typedef Alloc allocator_type;}@
+  @\addedConcepts{\}}@
 
   // \ref{func.wrap.func.nullptr}, Null pointer comparisons:
   template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
@@ -2775,6 +2790,10 @@ template<@\changedD{class Function}{\changedConcepts{class}{Returnable} R, \chan
 \pnum\effects\ \tcode{f1.swap(f2);}
 \end{itemdescr}
 \index{function objects!wrapper|)}%
+
+\section*{Acknowledgments}
+Daniel Kr\"ugler and Pablo Halpern provided helpful comments and
+corrections to this proposal.
 
 \bibliographystyle{plain}
 \bibliography{local}
