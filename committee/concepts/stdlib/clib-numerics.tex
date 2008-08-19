@@ -76,6 +76,9 @@ Bloomington, IN\ \  47405 \\
   \tcode{inner_product}, \tcode{partial_sum}, and
   \tcode{adjacent_difference} to cope with move semantics and changes
   to the foundational concepts.
+\item The complex transcendentals and other non-member operations
+  require \tcode{FloatingPointType}, which more accurately
+  characterizes the actual requirements for the \tcode{complex} type.
 \end{itemize}
 
 \end{titlepage}
@@ -510,49 +513,39 @@ namespace std {
   template<@\changedConcepts{class}{ArithmeticLike}@ T> T real(const complex<T>&);
   template<@\changedConcepts{class}{ArithmeticLike}@ T> T imag(const complex<T>&);
 
-  template<class T> @\addedConcepts{requires HasSqrt<T>}@ T abs(const complex<T>&);
-  template<class T> @\addedConcepts{requires HasAtan2<T>}@ T arg(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> T abs(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> T arg(const complex<T>&);
   template<@\changedConcepts{class}{ArithmeticLike}@ T> T norm(const complex<T>&);
 
   template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> conj(const complex<T>&);
   @\ptr@template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T>}@ complex<T> polar(const T&, const T& = 0);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> polar(const T&, const T& = 0);
 
   // \ref{complex.transcendentals} transcendentals:
-  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acos(const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asin(const complex<T>&);
-  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atan(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> acos(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> asin(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> atan(const complex<T>&);
 
-  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acosh(const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asinh(const complex<T>&);
-  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atanh(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> acosh(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> asinh(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> atanh(const complex<T>&);
 
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-    complex<T> cos  (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-    complex<T> cosh (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T>}@ 
-    complex<T> exp  (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log  (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log10(const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> cos  (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> cosh (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> exp  (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> log  (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> log10(const complex<T>&);
 
-  template<class T> @\addedConcepts{requires ArithmeticLike<T>}@ complex<T> pow(const complex<T>&, int);
-  template<class T> @\addedConcepts{requires HasPow<T> \&\& HasLog<T> \&\& HasSin<T> \&\& HasCos<T>}@ 
-    complex<T> pow(const complex<T>&, const T&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
-    complex<T> pow(const complex<T>&, const complex<T>&);
-  template<class T> @\addedConcepts{requires HasPow<T> \&\& HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
-    complex<T> pow(const T&, const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>&, int);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>&, const T&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>&, const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const T&, const complex<T>&);
 
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-    complex<T> sin  (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-    complex<T> sinh (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSqrt<T>}@ complex<T> sqrt (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-    complex<T> tan  (const complex<T>&);
-  template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-    complex<T> tanh (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> sin  (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> sinh (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> sqrt (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> tan  (const complex<T>&);
+  template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> tanh (const complex<T>&);
 }
 \end{codeblock}
 
@@ -702,23 +695,6 @@ number.
 \end{codeblock}
 
 \rSec2[complex.members]{\tcode{complex}\ member functions}
-
-\index{complex@\tcode{complex}!\tcode{complex}}%
-\begin{itemdecl}
-template<@\changedConcepts{class}{ArithmeticLike}@ T> @\addedConcepts{requires Constructible<T, X>}@ 
-  complex(const T& @\farg{re}@ = T(), const T& @\farg{im}@ = T());
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\effects\ 
-Constructs an object of class
-\tcode{complex}.
-
-\pnum
-\postcondition\ 
-\tcode{real() == \farg{re}\ \&\& imag() == \farg{im}}.
-\end{itemdescr}
 
 \rSec2[complex.member.ops]{\tcode{complex}\ member operators}
 
@@ -1086,7 +1062,7 @@ template<@\changedConcepts{class}{ArithmeticLike}@ T> T imag(const complex<T>& @
 
 \index{abs@\tcode{abs}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSqrt<T>}@ T abs(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> T abs(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1097,7 +1073,7 @@ the magnitude of \farg{x}.
 
 \index{arg@\tcode{arg}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasAtan2<T>}@ T arg(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> T arg(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1141,8 +1117,7 @@ defined in subclause 7.3.8.1.
 
 \index{polar@\tcode{polar}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T>}@ 
-  complex<T> polar(const T& @\farg{rho}@, const T& @\farg{theta}@ = 0);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> polar(const T& @\farg{rho}@, const T& @\farg{theta}@ = 0);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1160,7 +1135,7 @@ is \farg{theta}.
 \index{acos@\tcode{acos}!\tcode{complex}}%
 \index{cacos@\tcode{cacos}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acos(const complex<T>& @\farg{x}@);
+@\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> acos(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1171,7 +1146,7 @@ defined in subclause 7.3.5.1.
 \index{asin@\tcode{asin}!\tcode{complex}}%
 \index{casin@\tcode{casin}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asin(const complex<T>& @\farg{x}@);
+@\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> asin(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1182,7 +1157,7 @@ defined in subclause 7.3.5.2.
 \index{atan@\tcode{atan}!\tcode{complex}}%
 \index{catan@\tcode{catan}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atan(const complex<T>& @\farg{x}@);
+@\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> atan(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1193,7 +1168,7 @@ defined in subclause 7.3.5.3.
 \index{acosh@\tcode{acosh}!\tcode{complex}}%
 \index{cacosh@\tcode{cacosh}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> acosh(const complex<T>& @\farg{x}@);
+@\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> acosh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1204,7 +1179,7 @@ defined in subclause 7.3.6.1.
 \index{asinh@\tcode{asinh}!\tcode{complex}}%
 \index{casinh@\tcode{casinh}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedConcepts{requires HasSqrt<T> \&\& HasLog<T>}@ complex<T> asinh(const complex<T>& @\farg{x}@);
+@\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> asinh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1215,7 +1190,7 @@ defined in subclause 7.3.6.2.
 \index{atanh@\tcode{atanh}!\tcode{complex}}%
 \index{catanh@\tcode{catanh}!\tcode{complex}}%
 \begin{itemdecl}
-@\ptr@template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasLog<T>}@ complex<T> atanh(const complex<T>& @\farg{x}@);
+@\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> atanh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1225,8 +1200,7 @@ defined in subclause 7.3.6.3.
 
 \index{cos@\tcode{cos}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-  complex<T> cos(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> cos(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1237,8 +1211,7 @@ the complex cosine of \farg{x}.
 
 \index{cosh@\tcode{cosh}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-  complex<T> cosh(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> cosh(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1249,7 +1222,7 @@ the complex hyperbolic cosine of \farg{x}.
 
 \index{exp@\tcode{exp}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T>}@ complex<T> exp(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> exp(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1260,7 +1233,7 @@ the complex base e exponential of \farg{x}.
 
 \index{log@\tcode{log}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> log(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1282,7 +1255,7 @@ is pi.
 
 \index{log10@\tcode{log10}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasAtan2<T> \&\& HasExp<T>}@ complex<T> log10(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> log10(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1298,14 +1271,10 @@ the complex common (base 10) logarithm of \farg{x}, defined as
 
 \index{pow@\tcode{pow}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires ArithmeticLike<T>}@ complex<T> pow(const complex<T>& @\farg{x}@, int @\farg{y}@);
-template<class T>
-  complex<T> @\addedConcepts{requires HasPow<T> \&\& HasLog<T> \&\& HasSin<T> \&\& HasCos<T>}@ 
-  pow(const complex<T>& @\farg{x}@, const complex<T>& @\farg{y}@);
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ complex<T> 
-  pow  (const complex<T>& @\farg{x}@, const T& @\farg{y}@);
-template<class T> @\addedConcepts{requires HasPow<T> \&\& HasSin<T> \&\& HasCos<T> \&\& HasExp<T> \&\& HasAtan2<T>}@ 
-  complex<T> pow  (const T& @\farg{x}@, const complex<T>& @\farg{y}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>& @\farg{x}@, int @\farg{y}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>& @\farg{x}@, const complex<T>& @\farg{y}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow(const complex<T>& @\farg{x}@, const T& @\farg{y}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> pow  (const T& @\farg{x}@, const complex<T>& @\farg{y}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1325,8 +1294,7 @@ is implementation-defined.
 
 \index{sin@\tcode{sin}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-  complex<T> sin  (const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> sin  (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1337,8 +1305,7 @@ the complex sine of \farg{x}.
 
 \index{sinh@\tcode{sinh}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-  complex<T> sinh (const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> sinh (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1349,7 +1316,7 @@ the complex hyperbolic sine of \farg{x}.
 
 \index{sqrt@\tcode{sqrt}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSqrt<T>}@ complex<T> sqrt (const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> sqrt (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1367,8 +1334,7 @@ value returned lies on the positive imaginary axis.
 
 \index{tan@\tcode{tan}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-  complex<T> tan  (const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> tan  (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1379,8 +1345,7 @@ the complex tangent of \farg{x}.
 
 \index{tanh@\tcode{tanh}!\tcode{complex}}%
 \begin{itemdecl}
-template<class T> @\addedConcepts{requires HasSin<T> \&\& HasCos<T> \&\& HasSinh<T> \&\& HasCosh<T>}@ 
-  complex<T> tanh (const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> tanh (const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}

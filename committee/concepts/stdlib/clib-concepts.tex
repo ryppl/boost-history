@@ -126,6 +126,12 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 \item In the \tcode{FreeStoreAllocatable} concept, default the
   implementations of operators \tcode{new[]} and \tcode{delete[]} to
   the use \tcode{new} and \tcode{delete}, respectively.
+
+\item Added the \tcode{ArithmeticType} and \tcode{FloatingPointType}
+  concepts. 
+
+\item Added the \tcode{underlying_type} associated type to the
+  \tcode{EnumerationType} concept.
 \end{itemize}
 
 \end{titlepage}
@@ -207,10 +213,12 @@ namespace std {
   concept StandardLayoutType<typename T> @\textit{see below}@;
   concept LiteralType<typename T> @\textit{see below}@;
   concept ScalarType<typename T> @\textit{see below}@;
+  concept ArithmeticType<typename T> @\textit{see below}@;
   concept NonTypeTemplateParameterType<typename T> @\textit{see below}@;
   concept IntegralConstantExpressionType<typename T> @\textit{see below}@;
   concept IntegralType<typename T> @\textit{see below}@;
   concept EnumerationType<typename T> @\textit{see below}@;
+  concept FloatingPointType<typename T> @\textit{see below}@;
   concept SameType<typename T, typename U> {  }
   concept DerivedFrom<typename Derived, typename Base> { }
 
@@ -540,6 +548,20 @@ concept ScalarType<typename T>
 \end{itemdescr}
 
 \begin{itemdecl}
+concept ArithmeticType<typename T> : ScalarType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes arithmetic types (\mbox{\ref{basic.fundamental}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an arithmetic type, a concept map \mbox{\tcode{ArithmeticType<T>}} shall
+  be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
 concept NonTypeTemplateParameterType<typename T> : VariableType<T> { }
 \end{itemdecl}
 
@@ -574,7 +596,8 @@ can be the type of an integral constant expression ([expr.const]).}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept IntegralType<typename T> : IntegralConstantExpressionType<T> { }
+concept IntegralType<typename T> 
+  : IntegralConstantExpressionType<T>, ArithmeticType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -590,18 +613,37 @@ namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept EnumerationType<typename T> : IntegralConstantExpressionType<T> { }
+concept EnumerationType<typename T> : IntegralConstantExpressionType<T> { 
+  IntegralType underlying_type;
+}
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes enumeration types
-([dcl.enum]).} 
+([dcl.enum]). \mbox{\tcode{underlying_type}} is the underlying type of
+the enumeration type.}
 
 \pnum
 \addedConcepts{\mbox{\requires}
 for every type \mbox{\tcode{T}} that is an enumeration type, a concept map
 \mbox{\tcode{EnumerationType<T>}} shall be implicitly defined in namespace
+\mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept FloatingPointType<typename T> : ArithmeticType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes floating point types
+(\mbox{\ref{basic.fundamental}}).} 
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is a floating point type, a concept map
+\mbox{\tcode{FloatingPointType<T>}} shall be implicitly defined in namespace
 \mbox{\tcode{std}}.}
 \end{itemdescr}
 
