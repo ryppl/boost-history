@@ -273,6 +273,13 @@ ambiguity, for example, was initially detected by ConceptGCC.
   types specified in \tcode{iterator_traits} and allowing us to
   re-instate this user leeway. In [iterator.backward]p2, we clarify
   that we perform this deduction for output iterators.
+\item Added the \tcode{subscript_reference} associated type to the
+  \tcode{RandomAccessIterator} concept, to capture the result of
+  \tcode{operator[]}. This type may need to be a proxy that is
+  different from the \tcode{reference} type, for, e.g., a
+  \tcode{counting_iterator} that meets the \Cpp03
+  \tcode{RandomAccessIterator} requirements. See the reflector thread
+  starting at c++std-lib-22126 for more information.
 \end{itemize}
 
 
@@ -975,6 +982,9 @@ the following expressions are valid as shown in Table~99.}
 \color{addclr}
 \begin{itemdecl}
 concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanComparable<X> {
+  MoveConstructible subscript_reference;
+  requires Convertible<subscript_reference, const value_type&>;
+
   X& operator+=(X&, difference_type);
   X  operator+ (const X& x, difference_type n) { X tmp(x); x += n; return x; }
   X  operator+ (difference_type n, const X& x) { X tmp(x); x += n; return x; }
@@ -982,7 +992,7 @@ concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanCom
   X  operator- (const X& x, difference_type n) { X tmp(x); x -= n; return x; }
 
   difference_type operator-(const X&, const X&);
-  reference operator[](const X& x, difference_type n) { return *(x + n); }
+  subscript_reference operator[](const X& x, difference_type n);
 }
 \end{itemdecl}
 \color{black}
