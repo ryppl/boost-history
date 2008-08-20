@@ -2488,7 +2488,9 @@ equivalent (\mbox{\ref{temp.req}}).}
 declared only in class template specializations in which its
 template requirements (\mbox{\ref{temp.req}}) are satisfied. If there exist multiple
 overloads of the constrained member with identical signatures, ignoring
-  the template requirements, only the most specialized
+  the template requirements,} 
+\addedCC{and identical return types,} 
+\addedConcepts{only the most specialized
   overload, as determined by partial ordering of the template requirements
   (\mbox{\ref{temp.func.order}}), will be declared in the instantiation. If
   partial ordering results in an ambiguity, a deleted function with
@@ -2500,10 +2502,10 @@ auto concept LessThanComparable<typename T> {
   bool operator<(T, T);
 }
 
-concept Radix<T> : LessThanComparable<T> { /* ... */ }
+concept Radix<typename T> : LessThanComparable<T> { /* ... */ }
 
 template<typename T>
-class list {
+struct list {
   requires LessThanComparable<T> void sort(); // \#1
   requires Radix<T> void sort(); // \#2
 };
