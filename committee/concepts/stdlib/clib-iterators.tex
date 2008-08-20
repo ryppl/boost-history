@@ -285,9 +285,17 @@ implementations.
 
 \index{advance@\tcode{advance}}%
 \begin{itemdecl}
-template <class InputIterator, class Distance>
-  void advance(InputIterator& i, Distance n);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@@\removedConcepts{, class Distance}@>
+  void advance(@\changedConcepts{InputIterator}{Iter}@& i, @\changedConcepts{Distance}{Iter::difference_type}@ n);
+@\addedConcepts{template <BidirectionalIterator Iter>}@
+  @\addedConcepts{void advance(Iter\& i, Iter::difference_type n);}@
+@\addedConcepts{template <RandomAccessIterator Iter>}@
+  @\addedConcepts{void advance(Iter\& i, Iter::difference_type n);}@
 \end{itemdecl}
+
+\editorial{Note that we have eliminated the \tcode{Distance} parameter
+  in favor of the \tcode{difference_type} of the iterator, which more
+  accurately reflects how the iterator can move.}
 
 \begin{itemdescr}
 \pnum
@@ -307,9 +315,12 @@ by
 
 \index{distance@\tcode{distance}}%
 \begin{itemdecl}
-  template<class InputIterator>
-      typename iterator_traits<InputIterator>::difference_type
-         distance(InputIterator first, InputIterator last);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\changedConcepts{typename iterator_traits<InputIterator>::difference_type}{Iter::difference_type}@
+  distance(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last);
+@\addedConcepts{template <RandomAccessIterator Iter>}@
+  @\addedConcepts{Iter::difference_type}@
+  @\addedConcepts{distance(Iter first, Iter last);}@
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -329,9 +340,9 @@ shall be reachable from
 
 \index{next@\tcode{next}}%
 \begin{itemdecl}
-template <class InputIterator>
-  InputIterator next(InputIterator x,
-    typename std::iterator_traits<InputIterator>::difference_type n = 1);
+template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
+  @\changedConcepts{InputIterator}{Iter}@ next(@\changedConcepts{InputIterator}{Iter}@ x,
+    @\changedConcepts{typename std::iterator_traits<InputIterator>::difference_type}{Iter::difference_type}@ n = 1);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -341,9 +352,9 @@ template <class InputIterator>
 
 \index{prev@\tcode{prev}}%
 \begin{itemdecl}
-template <class BidirectionalIterator>
-  BidirectionalIterator prev(BidirectionalIterator x,
-    typename std::iterator_traits<BidirectionalIterator>::difference_type n = 1);
+template <@\changedConcepts{class BidirectionalIterator}{BidirectionalIterator Iter}@>
+  @\changedConcepts{BidirectionalIterator}{Iter}@ prev(@\changedConcepts{BidirectionalIterator}{Iter}@ x,
+    @\changedConcepts{typename std::iterator_traits<BidirectionalIterator>::difference_type}{Iter::difference_type}@ n = 1);
 \end{itemdecl}
 
 \begin{itemdescr}
