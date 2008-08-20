@@ -1,0 +1,649 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Polynomial Library</title>
+</head>
+<body>
+<img src="boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86">
+<h1>Polynomial Library</h1>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ol>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#synopsis">Synopsis</a></li>
+  <li><a href="#background">Background</a></li>
+  <li><a href="#interface">Interface</a>
+  <ul>
+    <li><a href="#constructors">Constructors</a></li>
+    <li><a href="#modification">Modification</a></li>
+    <li><a href="#arithmetic_operations">Arithmetic operations</a></li>
+    <li><a href="#gcd">Greates Common Divisor</a></li>
+    <li><a href="#evaluation">Evaluation</a></li>
+    <li><a href="#derivatives_integrals">Derivatives and integrals</a></li>
+    <li><a href="#special_forms">Special forms</a></li>
+    <li><a href="#input_output">Input and Output</a></li>
+  </ul></li>
+  <li><a href="#performance">Performance</a></li>
+  <li><a href="#header_special_functions">Header &lt;boost/math/tools/polynomial/special_functions&gt;</a></li>
+  <li><a href="#credits">Credits</a></li>
+</ol>
+
+<h2><a name="introduction">Introduction</a></h2>
+
+<p>The class and function templates in &lt;boost/math/tools/polynomial.hpp&gt; facilitate manipulation of polynomials. Special algorithms provide fast and faithful calculations that might be useful for many problems related to mathematics.</p>
+
+<h2><a name="synopsis">Synopsis</a></h2>
+
+<pre>
+  namespace boost {
+  namespace math {
+  namespace tools {
+
+    template&lt;typename FieldType&gt;
+    class polynomial {
+    public:
+      // typedefs:
+      typedef typename std::vector&lt;FieldType&gt;::value_type value_type;
+      typedef typename std::vector&lt;FieldType&gt;::size_type size_type;
+
+      // constructors:
+      polynomial();
+      template&lt;typename InputIterator&gt;
+      polynomial(InputIterator first, InputIterator last);
+      template&lt;typename U&gt;
+      polynomial(const U* coef, const size_type n);
+      template&lt;typename U&gt;
+      polynomial(const U&amp; v);
+      template&lt;typename InputIterator&gt;
+      polynomial(InputIterator first1, InputIterator last1, InputIterator first2);
+      polynomial(std::vector&lt;FieldType&gt;&amp; c);
+
+      // copy constructor:
+      template&lt;typename U&gt;
+      polynomial(const polynomial&lt;U&gt;&amp; poly);
+
+      // modification:
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator=(const polynomial&lt;U&gt;&amp; poly);
+      polynomial&lt;FieldType&gt;&amp; operator=(std::vector&lt;FieldType&gt;&amp; c);
+      template&lt;typename InputIterator&gt;
+      void interpolate(InputIterator first1, InputIterator last1, InputIterator first2);
+      void swap(polynomial&lt;FieldType&gt;&amp; poly);
+
+      // access:
+      size_type size() const;
+      size_type degree() const;
+      const value_type&amp; operator[](const size_type i) const;
+      value_type&amp; operator[](const size_type i);
+      typename std::vector&lt;FieldType&gt;::const_iterator begin() const;
+      typename std::vector&lt;FieldType&gt;::iterator begin();
+      typename std::vector&lt;FieldType&gt;::const_iterator end() const;
+      typename std::vector&lt;FieldType&gt;::iterator end();
+
+      // evaluation:
+      FieldType operator()(const FieldType&amp; z) const;
+      FieldType evaluate(const FieldType&amp; z) const;
+      FieldType evaluate_faithfully(const FieldType&amp; z) const;
+      void precondition_coefficients();
+      FieldType evaluate_by_preconditioning(const FieldType&amp; z) const;
+
+      // derivatives and integrals:
+      polynomial&lt;FieldType&gt; derivative() const;
+      polynomial&lt;FieldType&gt; integral(const FieldType&amp; c) const;
+      FieldType definite_integral(const FieldType&amp; a, const FieldType&amp; b) const;
+
+      // operators:
+
+      const polynomial&lt;FieldType&gt;&amp; operator+() const;
+      polynomial&lt;FieldType&gt; operator-() const;
+
+      // addition:
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator+=(const polynomial&lt;U&gt;&amp; poly);
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator+=(const U&amp; v);
+
+      // substraction:
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator-=(const polynomial&lt;U&gt;&amp; poly);
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator-=(const U&amp; v);
+
+      // multiplication:
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator*=(const polynomial&lt;U&gt;&amp; poly);
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator*=(const U&amp; v);
+
+      // division:
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator/=(const polynomial&lt;U&gt;&amp; poly);
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator/=(const U&amp; v);
+
+      // modulo:
+      template&lt;typename U&gt;
+      polynomial&lt;FieldType&gt;&amp; operator%=(const polynomial&lt;U&gt;&amp; poly);
+    };
+
+  } // namespace tools
+  } // namespace math
+  } // namespace boost
+</pre>
+
+<h2><a name="background">Background</a></h2>
+
+<p>In the implementation of the <b>polynomial</b> class std::vector is used to contain the coefficients. You don't have to care about this but in some cases you can attain better performance if you call functions that use nested functions of std::vector. See <a href="#performance">Performance</a> section.</p>
+
+<h2><a name="interface">Interface</a></h2>
+
+<h3><a name="constructors">Constructors</a></h3>
+
+<p>There are 6 constructors provided by <b>polynomial</b> class.</p>
+
+<p>Default constructor
+<pre>
+  polynomial();
+</pre>
+generates zero polynomial.</p>
+<br>
+<p>Constructor from a value type
+
+<pre>
+  template&lt;typename U&gt;
+  polynomial(const U&amp; v);
+</pre>
+
+initializes <b>polynomial</b> class instance to a constant polynomial (of degree 0) with the coefficient equal to v.</p>
+<br>
+<p>The class provides two constructors from prepared coefficients.
+
+<pre>
+  template&lt;typename U&gt;
+  polynomial(const U* coef, const size_type n);
+</pre>
+
+This constructor creates a polynomial of degree <b>n-1</b> where:
+<ul>
+  <li> <b>*coef</b> is the coefficient for <b>x^0</b> term,</li>
+  <li> <b>*(coef+1)</b> is the coefficient for <b>x^1</b> term,</li>
+  <li> ...</li>
+  <li> <b>*(coef+n-1)</b> is the coefficient for <b>x^(n-1)</b> term.</li>
+</ul>
+<br>
+<br>
+The constructor with two iterators
+
+<pre>
+  template&lt;typename InputIterator&gt;
+  polynomial(InputIterator first, InputIterator last);
+</pre>
+
+works same but the prepared coefficients are restricted by two iterator and:
+<ul>
+  <li> <b>*first</b> is the coefficient for <b>x^0</b> term,</li>
+  <li> <b>*(first+1)</b> is the coefficient for <b>x^1</b> term,</li>
+  <li> ...</li>
+  <li> <b>*(last-1)</b> is the coefficient for <b>x(n-1)</b> term where <b>n = std::distance(first, last)</b>.</li>
+</ul>
+</p>
+<br>
+<p>Next constructor
+
+<pre>
+  polynomial(InputIterator first1, InputIterator last1, InputIterator first2);
+</pre>
+
+creates a polynomial of the least possible degree by interpolation where:
+<ul>
+  <li> iterators <b>first1</b> and <b>last1</b> restrict the arguments,</li>
+  <li> iterator <b>first2</b> points at the value for <b>*first1</b> argument,</li>
+  <li> iterator <b>first2+1</b> points at the value for <b>*(first1+1)</b> argument,</li>
+  <li> ...</li>
+</ul>
+</p>
+<br>
+<p>
+The last constructor
+
+<pre>
+  polynomial(std::vector&lt;FieldType&gt;&amp; c);
+</pre>
+
+just uses the std::vector::swap() function to exchange contents of <b>c</b> vector and own vector where the <b>polynomial</b> keeps the coefficients.<br>
+Note that the <b>c</b> will be probably changed if you use this constructor. On the other hand this is the fastest way to initiate the class with many coefficients (more in <a href="#Performance">Performance</a> section).</p>
+
+<h4>Example</h4>
+
+<pre>
+  boost::math::tools::polynomial&lt;int&gt; poly1;  // zero
+  int coefficients[3] = {3, 2, 1};
+  boost::math::tools::polynomial&lt;int&gt; poly2(coefficients, 3);  // x^2 + 2x + 3
+  std::vector&lt;double&gt; v;
+  v.push_back(-1.0);
+  v.push_back(0.0);
+  v.push_back(3.5);
+  boost::math::tools::polynomial&lt;double&gt; poly3(v);  // 3.5x^2 - 1.0
+</pre>
+
+<h3><a name="modification">Modification</a></h3>
+
+<p>You can simply modify your <b>polynomial</b> using the following functions:</p>
+
+<p>Standard modification:
+<pre>
+  template&lt;typename U&gt;
+  polynomial&lt;FieldType&gt;&amp; operator=(const polynomial&lt;U&gt;&amp; poly);
+</pre>
+</p>
+
+<br>
+
+<p>Modification from std::vector:
+<pre>
+  polynomial&lt;FieldType&gt;&amp; operator=(std::vector&lt;FieldType&gt;&amp; c);
+</pre>
+This function uses the nested std::vector::swap() function. The <b>c</b> vector should contain new coefficients.<br>
+</p>
+<br>
+<p>
+You can change the polynomial using interpolation method:
+<pre>
+  template&lt;typename InputIterator&gt;
+  void interpolate(InputIterator first1, InputIterator last1, InputIterator first2);
+</pre>
+This function works similar to the adequate constructor.
+</p>
+<br>
+<p>
+If you want to swap two <b>polynomials</b>, you can use:
+<pre>
+  void swap(polynomial&lt;FieldType&gt;&amp; poly);
+</pre>
+It uses std::vector::swap() function.
+</p>
+
+<h3><a name="arithmetic_operations">Arithmetic operations</a></h3>
+
+<p>The following numeric operators are defined for the <b>polynomial</b> class:</p>
+
+<pre>
+  + (unary)
+  - (unary)
+  +
+  +=
+  -
+  -=
+  *
+  *=
+  /
+  /=
+  %
+  %=
+</pre>
+
+<h3><a name="gcd">Greatest Common Divisor</a></h3>
+
+<p><b>polynomial</b> class provides special function for calculating greatest common divisor.</p>
+
+<pre>
+  namespace boost {
+  namespace math {
+  namespace tools {
+
+    template<typename IntegerType>
+    polynomial<IntegerType> gcd(polynomial<IntegerType> u, polynomial<IntegerType> v);
+
+  } // namespace tools
+  } // namespace math
+  } // namespace boost
+</pre>
+
+However this function to calculate the greatest common divisor faithfully, generates big numbers for big polynomials that are needed for such calculations. It's recommended to use some not built-in types like bigints, then. For smaller polynomials simple built-in types like int are sufficient enough.
+
+<h4>Example</h4>
+
+<pre>
+  int coefficients1[10] = {7, -10, 10, -11, 18, -7, -27, 10, 0, 4};
+  int coefficients2[7] = {-70, 30, 0, 3, 3, 0, 1};
+  boost::math::tools::polynomial&lt;int&gt; poly1(coefficients1, 10);
+  boost::math::tools::polynomial&lt;int&gt; poly2(coefficients2, 7);
+  std::cout &lt;&lt; gcd(poly1, poly2) &lt;&lt; std::endl;
+
+  // Output:
+  // {-7, 3, 0, 1}
+</pre>
+
+<h3><a name="evaluation">Evaluation</a></h3>
+
+<p>Polynomial evaluation can be done in 3 ways. These two functions:
+<pre>
+  FieldType operator()(const FieldType&amp; z) const;
+  FieldType evaluate(const FieldType&amp; z) const;
+</pre>
+use the simple Horner scheme to evaluate and will probably meet your needs in most cases.
+</p>
+<p>
+For programmers that need very faithful calculations on floating-point types the <b>polynomial</b> class provides:
+<pre>
+  FieldType evaluate_faithfully(const FieldType&amp; z) const;
+</pre>
+This functions uses slower algorithms than the Horner scheme but promises better faithfulness.
+</p>
+<p>
+The last way to evaluate a polynomial is provided for speed. Unfortunately it can be used only for polynomials of degree from 4 to 6 and is profitable only with floating-point coefficients. If you want to evaluate same polynomial many times it will be worth considering a use of this method.
+<pre>
+  void precondition_coefficients();
+  FieldType evaluate_by_preconditioning(const FieldType&amp; z) const;
+</pre>
+Before evaluating you should call precondition_coefficients() function once. Then you can evaluate the polynomial using evaluate_by_preconditioning() function many times and it will work probably faster than the simple Horner scheme.
+</p>
+
+<h4>Example</h4>
+
+<pre>
+  double coefficients[5] = {-3.1, 2.5, 0.0, -11.7, 5.9};
+  boost::math::tools::polynomial&lt;&lt;double&gt; poly(coefficients, 5);
+  std::cout &lt;&lt; poly(0.0) &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly.evaluate(1.7) &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly.evaluate(-4.37) &lt;&lt; std::endl;
+  poly.precondition_coefficients();
+  std::cout &lt;&lt; poly.evaluate(3.13) &lt;&lt; std::endl;
+
+  // Output:
+  // -3.1
+  // -7.05471
+  // 3114.06
+  // 212.23
+</pre>
+
+<h3><a name="derivatives_integrals">Derivatives and integrals</a></h3>
+
+<p>Calculating derivatives is very simple. Once you create your polynomial you can use this function:
+<pre>
+  polynomial&lt;FieldType&gt; derivative() const;
+</pre>
+It returns a new polynomial that is equal to the derivative of your polynomial.
+</p>
+<p>
+Two functions for integrals are provided by the <b>polynomial</b> class:
+<pre>
+  polynomial&lt;FieldType&gt; integral(const FieldType&amp; c) const;
+  FieldType definite_integral(const FieldType&amp; a, const FieldType&amp; b) const;
+</pre>
+The first of them returns indefinite integral where <b>c</b> is the coefficient for <b>x^0</b> term.
+The second function returns a definite integral over an interval <b>[a, b]</b>.
+</p>
+
+<h4>Example</h4>
+
+<pre>
+  int coefficients[7] = {2, -1278, 588, 0, -150, 0, 56};
+  boost::math::tools::polynomial&lt;int&gt; poly(coefficients, 7);
+  std::cout &lt;&lt; poly.derivative() &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly.integral() &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly.integral(47) &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly.definite_integral(-1, 1) &lt;&lt; std::endl;
+
+  // Output:
+  // {-1278, 1176, 0, -600, 0, 336}
+  // {0, 2, -639, 196, 0, -30, 0, 8}
+  // {47, 2, -639, 196, 0, -30, 0, 8}
+  // 352
+</pre>
+
+<h3><a name="special_forms">Special forms</a></h3>
+
+<p>
+Sometimes in calculations special polynomial forms are needed. Header &lt;boost/math/tools/polynomial/special_forms&gt; simply includes the headers with functions that can calculate four forms: Chebyshev, Hermite, Laguerre and Legendre. The <b>polynomial</b> class uses these algorithms and make them very easy in use. The following functions are provided:
+<pre>
+  namespace boost {
+  namespace math {
+  namespace tools {
+
+    template<typename FieldType, typename Size>
+    polynomial<FieldType> chebyshev_form(const Size sz);
+
+    template<typename FieldType, typename Size>
+    polynomial<FieldType> hermite_form(const Size sz);
+
+    template<typename FieldType, typename Size>
+    polynomial<FieldType> laguerre_form(const Size sz);
+
+    template<typename FieldType, typename Size>
+    polynomial<FieldType> legendre_form(const Size sz);
+
+  } // namespace tools
+  } // namespace math
+  } // namespace boost
+</pre>
+</p>
+
+<h4>Example</h4>
+
+<pre>
+  boost::math::tools::polynomial&lt;int&gt; poly1 = boost::math::tools::chebyshev_form&lt;int&gt;(8);
+  boost::math::tools::polynomial&lt;int&gt; poly2 = boost::math::tools::hermite_form&lt;int&gt;(5);
+  boost::math::tools::polynomial&lt;double&gt; poly3 = boost::math::tools::laguerre_form&ltdouble&gt;(3);
+  boost::math::tools::polynomial&lt;double&gt; poly4 = boost::math::tools::legendre_form&lt;double&gt;(4);
+  std::cout &lt;&lt; poly1 &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly2 &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly3 &lt;&lt; std::endl;
+  std::cout &lt;&lt; poly4 &lt;&lt; std::endl;
+
+  // Output:
+  // {1, 0, -32, 0, 160, 0, -256, 0, 128}
+  // {0, 120, 0, -160, 0, 32}
+  // {1, -3, 1.5, -0.166667}
+  // {0.375, 0, -3.75, 0, 4.375}
+</pre>
+
+<h3><a name="input_output">Input and Output</a></h3>
+
+<p>No input operator is provided. You should create your polynomials using methods described in <a href="#constructors">Constructors</a> section.</p>
+
+<p>Output operator <tt>&lt;&lt;</tt> is provided.</p>
+
+<h2><a name="performance">Performance</a></h2>
+
+<p>
+Here is a table with summary performance of implemented functions and algorithms.<br>
+<b>n</b> is a degree of a polynomial.
+</p>
+
+
+
+<table>
+  <tr>
+    <th>Function</th>
+    <th>Implementation</th>
+    <th>Notice</th>
+  </tr>
+  <tr>
+    <td>polynomial()</td>
+    <td>O(1)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>polynomial(const U&amp; v</td>
+    <td>O(1)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>polynomial(InputIterator first, InputIterator last);</td>
+    <td>O(n)</td>
+    <td></td>
+ </tr>
+  <tr>
+    <td>polynomial(const U* coef, const size_type n);</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>polynomial(InputIterator first1, InputIterator last1, InputIterator first2)</td>
+    <td>O(n<sup>2</sup>)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>polynomial(std::vector&lt;FieldType&gt;&amp; c)</td>
+    <td>O(1)</td>
+    <td><b>c</b> vector may be changed</td>
+  </tr>
+  <tr>
+    <td>operator=(const polynomial&lt;U&gt;&amp; poly)</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>operator=(std::vector&lt;FieldType&gt;&amp; c)</td>
+    <td>O(1)</td>
+    <td><b>c</b> vector may be changed</td>
+  </tr>
+  <tr>
+    <td>interpolate(InputIterator first1, InputIterator last1, InputIterator first2)</td>
+    <td>O(n<sup>2</sup>)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>swap(polynomial&lt;FieldType&gt;&amp; poly)</td>
+    <td>O(1)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>derivative()</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>integral(const FieldType&amp; c)</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>definite_integral(const FieldType&amp; a, const FieldType&amp; b)</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>+ (unary)</td>
+    <td>O(1)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>- (unary)</td>
+    <td>O(1)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>+, +=</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>-, -=</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>*, *=</td>
+    <td>O(n*lg(n))</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/, /=</td>
+    <td>O(n<sup>2</sup>)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/, /=</td>
+    <td>O(n<sup>2</sup>)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>gcd(polynomial<IntegerType> u, polynomial<IntegerType> v)</td>
+    <td>O(n<sup>3</sup>)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>creating special forms</td>
+    <td>O(n)</td>
+    <td></td>
+  </tr>
+</table>
+
+<h2><a name="header_special_functions">Header &lt;boost/math/tools/polynomial/special_functions&gt;</a></h2>
+
+<pre>
+  namespace boost {
+  namespace math {
+  namespace tools {
+
+    template&lt;typename InputIterator&gt;
+    inline typename std::iterator_traits&lt;InputIterator&gt;::value_type
+    evaluate_polynomial(InputIterator first, InputIterator last, typename std::iterator_traits&lt;InputIterator&gt;::value_type x);
+
+    template&lt;typename InputIterator&gt;
+    typename std::iterator_traits&lt;InputIterator&gt;::value_type
+    evaluate_polynomial_faithfully(InputIterator first, InputIterator last, typename std::iterator_traits&lt;InputIterator&gt;::value_type x);
+
+    template&lt;typename InputIterator, typename OutputIterator&gt;
+    OutputIterator precondition_polynomial_coefficients(InputIterator first, InputIterator last, OutputIterator result);
+
+    template&lt;typename InputIterator, typename ValueType&gt;
+    ValueType evaluate_polynomial_by_preconditioning(InputIterator first, InputIterator last, const ValueType& x);
+
+    template&lt;typename InputIterator, typename OutputIterator&gt;
+    OutputIterator copy_polynomial_derivative(InputIterator first, InputIterator last, OutputIterator result);
+
+    template&lt;typename InputIterator, typename OutputIterator&gt;
+    OutputIterator copy_polynomial_integral(InputIterator first, InputIterator last, OutputIterator result,
+                                            typename std::iterator_traits&lt;OutputIterator&gt;::value_type c
+                                              = (typename std::iterator_traits&lt;OutputIterator&gt;::value_type)(0.0)
+                                           );
+
+    template&lt;typename InputIterator&gt;
+    inline typename std::iterator_traits&lt;InputIterator&gt;::value_type
+    evaluate_polynomial_definite_integral(InputIterator first, InputIterator last,
+                                          typename std::iterator_traits&lt;InputIterator&gt;::value_type a,
+                                          typename std::iterator_traits&lt;InputIterator&gt;::value_type b
+                                         );
+
+    template&lt;typename InputIterator, typename OutputIterator&gt;
+    OutputIterator interpolate_polynomial(InputIterator first1, InputIterator last1, InputIterator first2, OutputIterator result);
+
+  } // namespace tools
+  } // namespace math
+  } // namespace boost
+</pre>
+
+These function were written especially for Polynomial Library but may be used separately as well. Usage of them should be clear but there is one thing that should be explained. If you want to use evaluate_polynomial() or evaluate_polynomial_faithfully() function, you should use the following representation of your coefficients:
+<ul>
+  <li> <b>*first</b> is the coefficient for <b>x(n-1)</b> term where <b>n = std::distance(first, last)</b>,</li>
+  <li> <b>*(first+1)</b> is the coefficient for <b>x^(n-1)</b> term,</li>
+  <li> ...</li>
+  <li> <b>*(last-1)</b> is the coefficient for <b>x^0</b> term.</li>
+</ul>
+For the rest of the functions:
+<ul>
+  <li> <b>*first</b> is the coefficient for <b>x^0</b> term,</li>
+  <li> <b>*(first+1)</b> is the coefficient for <b>x^1</b> term,</li>
+  <li> ...</li>
+  <li> <b>*(last-1)</b> is the coefficient for <b>x(n-1)</b> term where <b>n = std::distance(first, last)</b>,</li>
+  <li> A memory pointed by OutputIterator result (appears in some of functions) should be allocated before you call a function.</li>
+</ul>
+Be careful about this.
+
+<h2><a name="credits">Credits</a></h2>
+
+<p>The author of the library is Pawel Kieliszczyk. It was implemented as a Boost project for Google Summer of Code 2008.</p>
+<p>The mentor of the project was Fernando Cacciola whose notices and suggestions were very helpful.</p>
+<p>The previous version of the polynomial class was written by John Maddock and was a base for the current version.</p>
+<p>The structure of this documentation is based on Boost.Bigint documentation that was written by Arseny Kapoulkine.</p>
+<p>Revised August 15, 2008</p>
+<p>&copy; Copyright Pawel Kieliszczyk 2008. Permission to copy, use, modify, sell and distribute this document is granted provided this copyright notice appears in all copies. This document is provided &quot;as is&quot; without express or implied warranty, and with no claim as to its
+suitability for any purpose.</p>
+
+</body>
+</html>
+
