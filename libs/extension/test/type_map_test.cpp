@@ -38,8 +38,12 @@ BOOST_AUTO_TEST_CASE(intFloatTest) {
 
 BOOST_AUTO_TEST_CASE(constTest) {
   type_map m;
+  BOOST_CHECK(m.empty());
   int& my_int(m.get());
   my_int = 5;
   const int& my_const_int(m.get());
   BOOST_CHECK_EQUAL(my_const_int, 5);
+  // Make sure there is only one element.
+  BOOST_CHECK_EQUAL(m.size(), size_t(1));
+  BOOST_CHECK(!m.empty());
 }
