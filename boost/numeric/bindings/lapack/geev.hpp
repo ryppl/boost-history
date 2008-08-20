@@ -171,7 +171,7 @@ namespace boost { namespace numeric { namespace bindings {
 			      work.storage(), &lwork);
 
 	for (int i = 0; i < n; i++)
-	  w[i] = std::complex<value_type>(wr[i], wi[i]);
+	  traits::vector_storage(w)[i] = std::complex<value_type>(wr[i], wi[i]);
 	return result;
       }
 
@@ -226,14 +226,14 @@ namespace boost { namespace numeric { namespace bindings {
 	
 	for (int i = 0; i < n; i++)
         {
-	  w[i] = std::complex<value_type>(wr[i], wi[i]);
+          traits::vector_storage(w)[i] = std::complex<value_type>(wr[i], wi[i]);
 	  if (wi[i] != 0)
 	  {
 	    assert(i+1 < n);
 	    assert(wr[i+1] == wr[i]);
 	    assert(wi[i+1] == -wi[i]);
 
-	    w[i+1] = std::complex<value_type>(wr[i+1], wi[i+1]);
+            traits::vector_storage(w)[i+1] = std::complex<value_type>(wr[i+1], wi[i+1]);
 	    for (int j = 0; j < n; j++)
 	    {
 	      if (vl)
