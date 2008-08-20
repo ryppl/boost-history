@@ -5534,7 +5534,8 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   specifies or implies concept requirements that use a committed
   archetype is ill-formed. An archetype is committed when:}
 \begin{itemize}
-\additemConcepts{the definition of the archetype is required, or}
+\additemConcepts{the definition of the archetype is required,}
+\additemCC{the completeness of a type archetype might affect the semantics of the program, or}
 \additemConcepts{name lookup finds an associated function with a parameter that uses
   a type that aliases the archetype.}
 \end{itemize}
