@@ -282,6 +282,8 @@ serialize( Archive &ar, coding::md5_digest &d, const unsigned int version )
     {
     default:
     case 0u:
+        BOOST_MPL_ASSERT_RELATION( coding::md5_digest::words_per_digest::value,
+         ==, 4 );
         ar & make_nvp( "word-A", d.hash[0] )
            & make_nvp( "word-B", d.hash[1] )
            & make_nvp( "word-C", d.hash[2] )

@@ -25,6 +25,7 @@
 #include <boost/integer.hpp>  // for boost::sized_integral, fast_integral
 
 #include <boost/mpl/arithmetic.hpp>    // for boost:mpl:times, divides, modulus
+#include <boost/mpl/assert.hpp>        // for BOOST_MPL_ASSERT_RELATION
 #include <boost/mpl/int.hpp>           // for boost:mpl:int_
 #include <boost/mpl/next_prior.hpp>    // for boost:mpl:next
 #include <boost/mpl/not_equal_to.hpp>  // for boost:mpl:not_equal_to
@@ -316,7 +317,10 @@ md5_context::load( Archive &ar, const unsigned int version )
 template < class Archive >
 inline void
 md5_context::serialize( Archive &ar, const unsigned int version )
-{ boost::serialization::split_member( ar, *this, version ); }
+{
+    BOOST_MPL_ASSERT_RELATION( words_per_digest::value, ==, 4 );
+    boost::serialization::split_member( ar, *this, version );
+}
 
 
 }  // namespace coding
