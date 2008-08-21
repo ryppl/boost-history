@@ -1,0 +1,23 @@
+# Boost.Coding build script  -------------------------------------------------//
+
+# (C) Copyright Daryle Walker 2008.  Distributed under the Boost Software
+# License, Version 1.0. (See the accompanying file LICENSE_1_0.txt or a copy
+# at <http://www.boost.org/LICENSE_1_0.txt>.)
+
+# See <http://www.boost.org/libs/coding> for documentation.
+
+# This is based from the Boost.Signal build script.
+# Warning: UNTESTED
+
+project boost/coding
+    : source-location ../src
+    ;
+
+# Base names of the source files for libboost_coding
+SOURCES = md5 ;
+
+lib boost_coding
+    : $(SOURCES).cpp
+    ;
+
+#boost-install boost_coding ;
