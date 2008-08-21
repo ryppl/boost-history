@@ -218,33 +218,50 @@ namespace std {
   @\addedConcepts{template<InsertionContainer Container>}@
     @\addedConcepts{concept_map Iterator<insert_iterator<Container> > \{ \}}@
 
-  template <class Iterator> class move_iterator;
-  template <class Iterator1, class Iterator2>
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@> class move_iterator;
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
     bool operator==(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
     bool operator!=(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter1, Iter2>}@
     bool operator<(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter2, Iter1>}@
     bool operator<=(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter2, Iter1>}@
     bool operator>(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter1, Iter2>}@
     bool operator>=(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
-    typename move_iterator<Iterator>::difference_type operator-(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasMinus<Iter1, Iter2>}@
+    auto operator-(
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, 
+      const move_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(x.base() - y.base());
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
     move_iterator<Iterator> operator+(
-      typename move_iterator<Iterator>::difference_type n, const move_iterator<Iterator>& x);
-  template <class Iterator>
-    move_iterator<Iterator> make_move_iterator(const Iterator& i);
+      @\changedConcepts{typename move_iterator<Iterator>}{Iter}@::difference_type n, const move_iterator<Iterator>& x);
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
+    move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iterator& i);
+  @\addedConcepts{template<InputIterator Iter>}@
+    @\addedConcepts{concept_map InputIterator<move_iterator<Iter> > \{ \}}@
+  @\addedConcepts{template<ForwardIterator Iter>}@
+    @\addedConcepts{concept_map ForwardIterator<move_iterator<Iter> > \{ \}}@
+  @\addedConcepts{template<BidirectionalIterator Iter>}@
+    @\addedConcepts{concept_map BidirectionalIterator<move_iterator<Iter> > \{ \}}@
+  @\addedConcepts{template<RandomAccessIterator Iter>}@
+    @\addedConcepts{concept_map RandomAccessIterator<move_iterator<Iter> > \{ \}}@
 
   // \ref{stream.iterators}, stream iterators:
   template <class T, class charT = char, class traits = char_traits<charT>,
@@ -491,6 +508,8 @@ namespace std {
 \end{codeblock}
 
 \rSec3[reverse.iter.requirements]{\tcode{reverse_iterator}\ requirements}
+
+\editorial{Remove [reverse.iter.requirements]}
 
 \pnum
 \removedConcepts{The template parameter
@@ -1456,20 +1475,24 @@ vector<string> v2(make_move_iterator(s.begin()),
 \index{move_iterator@\tcode{move_iterator}}%
 \begin{codeblock}
 namespace std {
-  template <class Iterator>
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
   class move_iterator {
   public:
     typedef Iterator                                              iterator_type;
-    typedef typename iterator_traits<Iterator>::difference_type   difference_type;
+    typedef @\changedConcepts{typename iterator_traits<Iterator>}{Iter}@::difference_type   difference_type;
     typedef Iterator                                              pointer;
-    typedef typename iterator_traits<Iterator>::value_type        value_type;
-    typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
+    typedef @\changedConcepts{typename iterator_traits<Iterator>}{Iter}@::value_type        value_type;
+    @\removedConcepts{typedef typename iterator_traits<Iterator>::iterator_category iterator_category;}@
     typedef value_type&&                                          reference;
 
     move_iterator();
-    explicit move_iterator(Iterator i);
-    template <class U> move_iterator(const move_iterator<U>& u);
-    template <class U> move_iterator& operator=(const move_iterator<U>& u);
+    explicit move_iterator(Iter@\removedConcepts{ator}@ i);
+    template <class U> 
+      @\addedConcepts{requires HasConstructor<Iter, const U\&>}@ 
+      move_iterator(const move_iterator<U>& u);
+    template <class U> 
+      @\addedConcepts{requires HasAssign<Iter, const U\&>}@ 
+      move_iterator& operator=(const move_iterator<U>& u);
 
     iterator_type base() const;
     reference operator*() const;
@@ -1477,58 +1500,78 @@ namespace std {
 
     move_iterator& operator++();
     move_iterator operator++(int);
-    move_iterator& operator--();
-    move_iterator operator--(int);
+    @\addedConcepts{requires BidirectionalIterator<Iter>}@ move_iterator& operator--();
+    @\addedConcepts{requires BidirectionalIterator<Iter>}@ move_iterator operator--(int);
 
-    move_iterator operator+(difference_type n) const;
-    move_iterator& operator+=(difference_type n);
-    move_iterator operator-(difference_type n) const;
-    move_iterator& operator-=(difference_type n);
-    reference operator[](difference_type n) const;
+    @\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator operator+(difference_type n) const;
+    @\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator& operator+=(difference_type n);
+    @\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator operator-(difference_type n) const;
+    @\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator& operator-=(difference_type n);
+    @\addedConcepts{requires RandomAccessIterator<Iter>}@
+      @\unspec@ operator[](difference_type n) const;
 
   private:
-    Iterator current;   // \expos
+    Iter@\removedConcepts{ator}@ current;   // \expos
   };
 
-  template <class Iterator1, class Iterator2>
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
     bool operator==(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
     bool operator!=(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter1, Iter2>}@
     bool operator<(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter2, Iter1>}@
     bool operator<=(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter2, Iter1>}@
     bool operator>(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator1, class Iterator2>
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter1, Iter2>}@
     bool operator>=(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 
-  template <class Iterator1, class Iterator2>
-    typename move_iterator<Iterator>::difference_type operator-(
-      const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
-  template <class Iterator>
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasMinus<Iter1, Iter2>}@
+    auto operator-(
+      const move_iterator<Iter@\removedConcepts{ator}@1>& x, 
+      const move_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(x.base() - y.base());
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
     move_iterator<Iterator> operator+(
-      typename move_iterator<Iterator>::difference_type n, const move_iterator<Iterator>& x);
-  template <class Iterator>
-    move_iterator<Iterator> make_move_iterator(const Iterator& i);
+      @\changedConcepts{typename move_iterator<Iterator>}{Iter}@::difference_type n, const move_iterator<Iterator>& x);
+  template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
+    move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iterator& i);
+
+  @\addedConcepts{template<InputIterator Iter>}@
+    @\addedConcepts{concept_map InputIterator<move_iterator<Iter> > \{ \}}@
+  @\addedConcepts{template<ForwardIterator Iter>}@
+    @\addedConcepts{concept_map ForwardIterator<move_iterator<Iter> > \{ \}}@
+  @\addedConcepts{template<BidirectionalIterator Iter>}@
+    @\addedConcepts{concept_map BidirectionalIterator<move_iterator<Iter> > \{ \}}@
+  @\addedConcepts{template<RandomAccessIterator Iter>}@
+    @\addedConcepts{concept_map RandomAccessIterator<move_iterator<Iter> > \{ \}}@
 }
 \end{codeblock}
 
 \rSec3[move.iter.requirements]{\tcode{move_iterator}\ requirements}
 
+\editorial{Remove [move.iter.requirements]}
+
 \pnum
-The template parameter \tcode{Iterator} shall meet
-the requirements for an Input Iterator~(\ref{input.iterators}).
+\removedConcepts{The template parameter \mbox{\tcode{Iterator}} shall meet
+the requirements for an Input Iterator~(\mbox{\ref{input.iterators}}).
 Additionally, if any of the bidirectional or random access traversal
 functions are instantiated, the template parameter shall meet the
-requirements for a Bidirectional Iterator~(\ref{bidirectional.iterators})
-or a Random Access Iterator~(\ref{random.access.iterators}), respectively.
+requirements for a Bidirectional Iterator~(\mbox{\ref{bidirectional.iterators}})
+or a Random Access Iterator~(\mbox{\ref{random.access.iterators}}), respectively.}
 
 \rSec3[move.iter.ops]{\tcode{move_iterator}\ operations}
 
@@ -1546,7 +1589,7 @@ initializing \tcode{current}.
 \end{itemdescr}
 
 \begin{itemdecl}
-explicit move_iterator(Iterator i};
+explicit move_iterator(Iter@\removedConcepts{ator}@ i};
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1556,7 +1599,9 @@ explicit move_iterator(Iterator i};
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class U> move_iterator(const move_iterator<U>& u);
+template <class U> 
+  @\addedConcepts{requires HasConstructor<Iter, const U\&>}@ 
+  move_iterator(const move_iterator<U>& u);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1565,14 +1610,16 @@ template <class U> move_iterator(const move_iterator<U>& u);
 \tcode{current} with \tcode{u.base()}.
 
 \pnum
-\requires \tcode{U} shall be convertible to
-\tcode{Iterator}.
+\removedConcepts{\mbox{\requires} \mbox{\tcode{U}} shall be convertible to
+\mbox{\tcode{Iterator}}.}
 \end{itemdescr}
 
 \rSec4[move.iter.op=]{\tcode{move_iterator::operator=}}
 
 \begin{itemdecl}
-template <class U> move_iterator& operator=(const move_iterator<U>& u);
+template <class U> 
+  @\addedConcepts{requires HasAssign<Iter, const U\&>}@ 
+  move_iterator& operator=(const move_iterator<U>& u);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1581,14 +1628,14 @@ template <class U> move_iterator& operator=(const move_iterator<U>& u);
 \tcode{current}.
 
 \pnum
-\requires \tcode{U} shall be convertible to
-\tcode{Iterator}.
+\removedConcepts{\mbox{\requires} \mbox{\tcode{U}} shall be convertible to
+\mbox{\tcode{Iterator}}.}
 \end{itemdescr}
 
 \rSec4[move.iter.op.conv]{\tcode{move_iterator}\ conversion}
 
 \begin{itemdecl}
-Iterator base() const;
+Iter@\removedConcepts{ator}@ base() const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1650,7 +1697,7 @@ return tmp;
 \rSec4[move.iter.op.decr]{\tcode{move_iterator::operator-{-}}}
 
 \begin{itemdecl}
-move_iterator& operator--();
+@\addedConcepts{requires BidirectionalIterator<Iter>}@ move_iterator& operator--();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1662,7 +1709,7 @@ move_iterator& operator--();
 \end{itemdescr}
 
 \begin{itemdecl}
-move_iterator& operator--(int);
+@\addedConcepts{requires BidirectionalIterator<Iter>}@ move_iterator& operator--(int);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1678,7 +1725,7 @@ return tmp;
 \rSec4[move.iter.op.+]{\tcode{move_iterator::operator+}}
 
 \begin{itemdecl}
-move_iterator operator+(difference_type n) const;
+@\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator operator+(difference_type n) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1689,7 +1736,7 @@ move_iterator operator+(difference_type n) const;
 \rSec4[move.iter.op.+=]{\tcode{move_iterator::operator+=}}
 
 \begin{itemdecl}
-move_iterator& operator+=(difference_type n);
+@\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator& operator+=(difference_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1703,7 +1750,7 @@ move_iterator& operator+=(difference_type n);
 \rSec4[move.iter.op.-]{\tcode{move_iterator::operator-}}
 
 \begin{itemdecl}
-move_iterator operator-(difference_type n) const;
+@\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator operator-(difference_type n) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1714,7 +1761,7 @@ move_iterator operator-(difference_type n) const;
 \rSec4[move.iter.op.-=]{\tcode{move_iterator::operator-=}}
 
 \begin{itemdecl}
-move_iterator& operator-=(difference_type n);
+@\addedConcepts{requires RandomAccessIterator<Iter>}@ move_iterator& operator-=(difference_type n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1728,7 +1775,8 @@ move_iterator& operator-=(difference_type n);
 \rSec4[move.iter.op.index]{\tcode{move_iterator::operator[]}}
 
 \begin{itemdecl}
-reference operator[](difference_type n) const;
+@\addedConcepts{requires RandomAccessIterator<Iter>}@ 
+  @\unspec@ operator[](difference_type n) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1740,8 +1788,9 @@ an rvalue reference.
 \rSec4[move.iter.op.comp]{\tcode{move_iterator}\ comparisons}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-bool operator==(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>& y);
+template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
+  bool operator==(const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1750,8 +1799,9 @@ bool operator==(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-bool operator!=(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>& y);
+template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
+  bool operator!=(const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1760,8 +1810,9 @@ bool operator!=(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-bool operator<(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>& y);
+template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasLess<Iter1, Iter2>}@
+  bool operator<(const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1770,8 +1821,9 @@ bool operator<(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>&
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-bool operator<=(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>& y);
+template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasLess<Iter2, Iter1>}@
+  bool operator<=(const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1780,8 +1832,9 @@ bool operator<=(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-bool operator>(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>& y);
+template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasLess<Iter2, Iter1>}@
+  bool operator>(const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1790,8 +1843,9 @@ bool operator>(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>&
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-bool operator>=(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>& y);
+template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasLess<Iter1, Iter2>}@
+  bool operator>=(const move_iterator<Iter@\removedConcepts{ator}@1>& x, const move_iterator<Iter@\removedConcepts{ator}@2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1802,9 +1856,11 @@ bool operator>=(const move_iterator<Iterator1>& x, const move_iterator<Itrator2>
 \rSec4[move.iter.nonmember]{\tcode{move_iterator}\ non-member functions}
 
 \begin{itemdecl}
-template <class Iterator1, class Iterator2>
-  typename move_iterator<Iterator>::difference_type operator-(
-    const move_iterator<Iterator1>& x, const move_iterator<Iterator2>& y);
+template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+  @\addedConcepts{requires HasMinus<Iter1, Iter2>}@
+  auto operator-(
+    const move_iterator<Iter@\removedConcepts{ator}@1>& x, 
+    const move_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(x.base() - y.base());
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1813,9 +1869,9 @@ template <class Iterator1, class Iterator2>
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator>
-  move_iterator<Iterator> operator+(
-    typename move_iterator<Iterator>::difference_type n, const move_iterator<Iterator>& x);
+template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
+  move_iterator<Iter@\removedConcepts{ator}@> operator+(
+    @\changedConcepts{typename move_iterator<Iterator>}{Iter}@::difference_type n, const move_iterator<Iter@\removedConcepts{ator}@>& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1824,13 +1880,56 @@ template <class Iterator>
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class Iterator>
-move_iterator<Iterator> make_move_iterator(const Iterator& i);
+template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
+move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iterator& i);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\returns \tcode{move_iterator<Iterator>(i)}.
+\returns \tcode{move_iterator<Iter\removedConcepts{ator}>(i)}.
+\end{itemdescr}
+
+\rSec4[move.iter.maps]{Concept maps}
+\begin{itemdecl}
+@\addedConcepts{template<InputIterator Iter>}@
+  @\addedConcepts{concept_map InputIterator<move_iterator<Iter> > \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote Declares that a \mbox{\tcode{move_iterator}} is an input iterator.}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{template<ForwardIterator Iter>}@
+  @\addedConcepts{concept_map ForwardIterator<move_iterator<Iter> > \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote Declares that a \mbox{\tcode{move_iterator}} is a forward iterator if its underlying iterator is a forward iterator.}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{template<BidirectionalIterator Iter>}@
+  @\addedConcepts{concept_map BidirectionalIterator<move_iterator<Iter> > \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote Declares that a \mbox{\tcode{move_iterator}} is a bidirectional iterator if its underlying iterator is a bidirectional iterator.}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{template<RandomAccessIterator Iter>}@
+  @\addedConcepts{concept_map RandomAccessIterator<move_iterator<Iter> > \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote Declares that a \mbox{\tcode{move_iterator}} is a random access iterator if its underlying iterator is a random access iterator.}
+\end{itemdescr}
 \end{itemdescr}
 
 \rSec1[stream.iterators]{Stream iterators}
