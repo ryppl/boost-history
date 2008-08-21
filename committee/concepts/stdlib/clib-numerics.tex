@@ -80,6 +80,7 @@ Bloomington, IN\ \  47405 \\
 \item The complex transcendentals and other non-member operations
   require \tcode{FloatingPointType}, which more accurately
   characterizes the actual requirements for the \tcode{complex} type.
+\item Added \tcode{iota}, conceptualized by Daniel Kr\"ugler.
 \end{itemize}
 
 \paragraph*{Issues resolved in this paper}
@@ -3444,6 +3445,10 @@ namespace std {
     OutIter adjacent_difference(InIter @\farg{first}@, InIter @\farg{last}@,
   			        OutIter @\farg{result}@,
     			        BinaryOperation @\farg{binary_op}@);
+
+  template <ForwardIterator Iter, HasPreincrement T>
+    requires OutputIterator<Iter, const T&>
+    void iota(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{value}@);
 \end{codeblock}
 \color{black}
 
@@ -3714,7 +3719,33 @@ applications of
 \tcode{binary_op}.
 \end{itemdescr}
 
+\rSec2[numeric.iota]{Iota}
+\index{iota@\tcode{iota}}%
+\color{addclr}\begin{itemdecl}
+template <ForwardIterator Iter, HasPreincrement T>
+  requires OutputIterator<Iter, const T&>
+  void iota(Iter @\farg{first}@, Iter @\farg{last}@, T @\farg{value}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\requires 
+\mbox{\tcode{T}} shall meet the requirements of \mbox{\tcode{CopyConstructible}} and \mbox{\tcode{Assignable}} types, and shall be convertible to \mbox{\tcode{ForwardIterator}}'s value type. The expression \mbox{\tcode{++val}}, where \mbox{\tcode{val}} has type \mbox{\tcode{T}}, shall be well formed.}
+
+\pnum
+\effects\
+For each element referred to by the iterator \tcode{i} in the range \tcode{[first,last)}, assigns \tcode{*i = value} and increments value as if by \tcode{++value}.
+
+\pnum
+\complexity\
+Exactly \tcode{last - first} increments and assignments.
+\end{itemdescr}
+
 \end{paras}
+
+\section*{Acknowledgments}
+Daniel Kr\"ugler provided conceptualized
+versions of \tcode{iota} in N2666.
 
 \bibliographystyle{plain}
 \bibliography{local}

@@ -118,6 +118,11 @@ Andrew Lumsdaine, Indiana University
   of length greater than two (e.g., \tcode{random_shuffle},
   \tcode{sort}, \tcode{partition}), we specify the
   \tcode{ShuffleIterator} requirement.
+\item Added conceptualized versions of the algorithms in N2666, from
+  Daniel Kr\"ugler: \tcode{all_of}, \tcode{any_of}, \tcode{none_of},
+  \tcode{find_if_not}, \tcode{copy_n}, \tcode{copy_if},
+  \tcode{partition_copy}, \tcode{is_partitioned}, and
+  \tcode{partition_point}.
 \end{itemize}
 
 \end{titlepage}
@@ -189,6 +194,16 @@ as summarized in Table~\ref{tab:algorithms.summary}.
 \begin{codeblock}
 namespace std {
   @\textcolor{black}{// \ref{alg.nonmodifying}, non-modifying sequence operations:}@
+  template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    bool all_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+  template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    bool any_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+  template <InputIterator Iter, Predicate<auto, _Iter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    bool none_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
   template<InputIterator Iter, Callable<auto, Iter::reference> Function>
     requires CopyConstructible<Function>
     Function for_each(Iter @\farg{first}@, Iter @\farg{last}@, Function @\farg{f}@);
@@ -198,6 +213,9 @@ namespace std {
   template<InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
     requires CopyConstructible<Pred>
     Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+  template<InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    Iter find_if_not(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
   template<ForwardIterator Iter1, ForwardIterator Iter2>
     requires HasEqualTo<Iter1::value_type, Iter2::value_type>
     Iter1 find_end(Iter1 @\farg{first1}@, Iter1 @\farg{last1}@,
@@ -279,6 +297,14 @@ namespace std {
   template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
     OutIter copy(InIter @\farg{first}@, InIter @\farg{last}@,
                  OutIter @\farg{result}@);
+  template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
+    OutIter copy_n(InIter @\farg{first}@, InIter::difference_type @\farg{n}@,
+                   OutIter @\farg{result}@);
+  template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter,
+           Predicate<auto, InIter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    OutIter copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
+                    OutIter @\farg{result}@, Pred @\farg{pred}@);
   template<BidirectionalIterator InIter, BidirectionalIterator OutIter>
     requires OutputIterator<OutIter, InIter::reference>
     OutIter copy_backward(InIter @\farg{first}@, InIter @\farg{last}@,
@@ -466,6 +492,10 @@ namespace std {
                         Rand&& @\farg{rand}@);
 
   @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
+  template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    bool is_partitioned(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
   template<BidirectionalIterator Iter, Predicate<auto, Iter::value_type> Pred>
     requires ShuffleIterator<Iter>
           && CopyConstructible<Pred>
@@ -474,6 +504,16 @@ namespace std {
     requires ShuffleIterator<Iter>
           && CopyConstructible<Pred>
     Iter stable_partition(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+  template <InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter1,
+            OutputIterator<auto, InIter::reference> OutIter2, Predicate<auto, InIter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    pair<OutIter1, OutIter2>
+    partition_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                   OutIter1 @\farg{out_true}@, OutIter2 @\farg{out_false}@,
+                   Pred @\farg{pred}@);
+  template<ForwardIterator Iter, Predicate<auto, Iter::value_type> Pred>
+    requires CopyConstructible<Pred>
+    Iter partition_point(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
   @\textcolor{black}{// \ref{alg.sorting}, sorting and related operations:}@
   @\textcolor{black}{// \ref{alg.sort}, sorting:}@
@@ -1062,6 +1102,66 @@ is the same as of
 \end{codeblock}
 
 \rSec1[alg.nonmodifying]{Non-modifying sequence operations}
+\rSec2[alg.all_of]{All of}
+
+\index{all_of@\tcode{all_of}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  bool all_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\
+\tcode{true} if \tcode{pred(*i)} is \tcode{true} for every iterator \tcode{i} in the range \tcode{[first,last)}, and \tcode{false} otherwise.
+
+\pnum
+\complexity\
+At most \tcode{last - first} applications of the predicate.
+\end{itemdescr}
+
+\rSec2[alg.any_of]{Any of}
+\index{any_of@\tcode{any_of}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  bool any_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}  
+\pnum
+\returns\
+\tcode{true} if there exists an iterator \tcode{i} in the range \tcode{[first,last)} such that \tcode{pred(*i)} is \tcode{true}, and \tcode{false} otherwise.
+
+\pnum
+\complexity\
+At most \tcode{last - first} applications of the predicate.
+\end{itemdescr}
+
+\rSec2[alg.none_of]{None of}
+\index{none_of@\tcode{none_of}}%
+\color{addclr}
+\begin{itemdecl}
+template <InputIterator Iter, Predicate<auto, _Iter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  bool none_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\
+\tcode{true} if \tcode{pred(*i)} is \tcode{false} for every iterator \tcode{i} in the range \tcode{[first,last)}, and \tcode{false} otherwise.
+
+\pnum
+\complexity\
+At most \tcode{last - first} applications of the predicate.
+\end{itemdescr}
 
 \rSec2[alg.foreach]{For each}
 
@@ -1121,6 +1221,10 @@ times.
 template<InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
   requires CopyConstructible<Pred>
   Iter find_if(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+
+template<InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  Iter find_if_not(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}\color{black}
 
 \begin{itemdescr}
@@ -1132,7 +1236,7 @@ in the range
 \range{\farg{first}}{\farg{last}}\
 for which the following corresponding
 conditions hold:
-\tcode{*i == \farg{value}, \farg{pred}(*i) != false}.
+\tcode{*i == \farg{value}, \farg{pred}(*i) != false, \farg{pred}(*i) == false}.
 Returns \farg{last}\ if no such iterator is found.
 
 \pnum
@@ -1521,6 +1625,61 @@ shall not be in the range
 Exactly
 \tcode{\farg{last}\ - \farg{first}}
 assignments.
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
+  OutIter copy_n(InIter @\farg{first}@, InIter::difference_type @\farg{n}@,
+                 OutIter @\farg{result}@);
+\end{itemdecl}
+\color{black}
+
+\editorial{As with \tcode{fill_n}, we have eliminated the \tcode{Size}
+  parameter and instead have used the \tcode{difference_type} of the
+  input iterator, which is a better choice for measuring distances
+  within the input iterator sequence.}
+
+\begin{itemdescr}
+\pnum
+\effects\
+For each non-negative integer \tcode{i < n}, performs \tcode{*(result + i)} = \tcode{*(first + i)}.
+
+\pnum
+\returns\
+\tcode{result + n}.
+
+\pnum
+\complexity\
+Exactly \tcode{n} assignments.
+\end{itemdescr}
+
+\color{addclr}
+\begin{itemdecl}
+template<InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter,
+         Predicate<auto, InIter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  OutIter copy_if(InIter @\farg{first}@, InIter @\farg{last}@,
+                  OutIter @\farg{result}@, Pred @\farg{pred});
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\requires\
+The ranges \tcode{[first,last)} and \tcode{[result,result + (last - first))} shall not overlap.
+
+\pnum
+\effects\
+Copies all of the elements referred to by the iterator \tcode{i} in the range \tcode{[first,last)} for which \tcode{pred(*i)} is \tcode{true}.
+
+\pnum
+\complexity\
+Exactly \tcode{last - first} applications of the corresponding predicate.
+
+\pnum
+\notes\
+Stable.
 \end{itemdescr}
 
 \index{copy_backward@\tcode{copy_backward}}%
@@ -2465,6 +2624,27 @@ iterator_traits<RandomAccessIterator>:: difference_type}.
 
 \rSec2[alg.partitions]{Partitions}
 
+\index{is_partitioned@\tcode{is_partitioned}}%
+\color{addclr}\begin{itemdecl}
+template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  bool is_partitioned(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\requires
+\mbox{\tcode{InputIterator}}'s value type shall be convertible to \mbox{\tcode{Predicate}}'s argument type.}
+
+\pnum
+\returns\
+\tcode{true} if \tcode{[first,last)} is partitioned by \tcode{pred}, i.e. if all elements that satisfy \tcode{pred} appear before those that do not.
+
+\pnum
+\complexity\
+Linear. At most \tcode{last - first} applications of \tcode{pred}.
+\end{itemdescr}
+
 \index{partition@\tcode{partition}}%
 \color{addclr}\begin{itemdecl}
 @\textcolor{addclr}{}@template<BidirectionalIterator Iter, Predicate<auto, Iter::value_type> Pred>
@@ -2564,6 +2744,59 @@ swaps, but only linear number of swaps if there is enough extra memory.
 Exactly
 \tcode{\farg{last}\ - \farg{first}}\
 applications of the predicate.
+\end{itemdescr}
+
+\index{partition_copy@\tcode{partition_copy}}%
+\color{addclr}\begin{itemdecl}
+template <InputIterator InIter, OutputIterator<auto, InIter::reference> OutIter1,
+          OutputIterator<auto, InIter::reference> OutIter2, Predicate<auto, InIter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  pair<OutIter1, OutIter2>
+  partition_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                 OutIter1 @\farg{out_true}@, OutIter2 @\farg{out_false}@,
+                 Pred @\farg{pred}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\requires
+\mbox{\tcode{InputIterator}}'s value type shall be \mbox{\tcode{Assignable}}, and shall be writable to the \mbox{\tcode{out_true}} and \mbox{\tcode{out_false}} \mbox{\tcode{OutputIterator}}s, and shall be convertible to \mbox{\tcode{Predicate}}’s argument type. The input range shall not overlap with either of the output ranges.}
+
+\pnum
+\effects\
+For each iterator \tcode{i} in \tcode{[first,last)}, copies \tcode{*i} to the output range beginning with \tcode{out_true} if \tcode{pred(*i)}
+   is \tcode{true}, or to the output range beginning with \tcode{out_false} otherwise.
+
+\pnum
+\returns\
+A pair \tcode{p} such that \tcode{p.first} is the end of the output range beginning at \tcode{out_true} and \tcode{p.second} is the end of the output range beginning at \tcode{out_false}.
+
+\pnum
+\complexity\
+Exactly \tcode{last - first} applications of \tcode{pred}.
+\end{itemdescr}
+
+\index{partition_point@\tcode{partition_point}}%
+\color{addclr}\begin{itemdecl}
+template<ForwardIterator Iter, Predicate<auto, Iter::value_type> Pred>
+  requires CopyConstructible<Pred>
+  Iter partition_point(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
+\end{itemdecl}  
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\requires
+\mbox{\tcode{ForwardIterator}}'s value type shall be convertible to \mbox{\tcode{Predicate}}'s argument type. \mbox{\tcode{[first,last)}} shall be partitioned by \mbox{\tcode{pred}}, i.e. all elements that satisfy \mbox{\tcode{pred}} shall appear before those that do not.}
+
+\pnum
+\returns\
+An iterator \tcode{mid} such that \tcode{all_of(first, mid, pred)} and \tcode{none_of(mid, last, pred)} are both \tcode{true}.
+
+\pnum
+\complexity\
+${\cal O}(log(last - first))$ applications of \tcode{pred}.
 \end{itemdescr}
 
 \rSec1[alg.sorting]{Sorting and related operations}
@@ -4317,7 +4550,8 @@ algorithm. Sean Parent described the view of permutation algorithms as
 cycles of data movement, which gave us an implementation-agnostic way
 to determine which mutating algorithms required
 \tcode{ShuffleIterator} and which required \tcode{HasSwap} on the
-iterator's reference types.
+iterator's reference types. Daniel Kr\"ugler provided conceptualized
+versions of the algorithms in N2666.
 
 \bibliographystyle{plain}
 \bibliography{local}
