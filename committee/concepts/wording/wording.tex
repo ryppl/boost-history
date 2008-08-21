@@ -103,12 +103,23 @@ standard library are discussed in separate documents:
 \item N2654=08-0161: Allocator Concepts (Revision 1)
 \end{itemize}
 
-% To be updated:
-%
-% \section*{Changes from N2710}
-% \begin{itemize}
-% \item
-% \end{itemize}
+\section*{Changes from N2710}
+\begin{itemize}
+\item Made an expression that uses a constrained member in the current
+  instantiation a type-dependent expression
+  (\ref{temp.dep.expr}). This change is required to properly delay
+  type-checking of, e.g., unconstrained templates that have
+  constrained members:
+\begin{codeblock}
+template<typename T>
+struct list {
+  requires C<T> void f(int);
+
+  void g() { f(17); } // ``f'' is type-dependent, because it might or
+                      // might not exist in the instantiation.
+};
+\end{codeblock}
+\end{itemize}
 
 \section*{Typographical conventions}
 Within the proposed wording, text that has been added
@@ -1373,7 +1384,7 @@ constant-initializer:\br
         \terminal{=}\ constant-expression
 \end{bnf}
 
-\noindent\editorial{Add the following new paragraphs to 9 [class]}
+\noindent\editorial{Add the following new paragraphs to 9.2 [class.mem]}
 \setcounter{Paras}{18}
 \pnum
 \addedConcepts{A non-template \mbox{\techterm{member-declaration}}
@@ -3096,6 +3107,43 @@ ill-formed.
   concept instance, name lookup into the corresponding concept
   determines whether the \mbox{\techterm{qualified-id}} refers to a
   type or a value.}
+
+\setcounter{subsection}{1}
+\rSec2[temp.dep]{Dependent names}
+
+\setcounter{subsubsection}{1}
+\rSec3[temp.dep.expr]{Type-dependent expressions}
+
+\setcounter{Paras}{2}
+\pnum
+An
+\techterm{id-expression}\ 
+is type-dependent if it contains:
+
+\begin{itemize}
+\item
+an
+\techterm{identifier}\ 
+that was declared with a dependent type,
+\item
+a
+\techterm{template-id}\ 
+that is dependent,
+\item
+a
+\techterm{conversion-function-id}\ 
+that specifies a dependent type,
+\item
+a
+\techterm{nested-name-specifier}\ 
+or a
+\techterm{qualified-id}\
+that names a member of an unknown specialization.
+
+\additemCC{an \mbox{\techterm{identifier}}, \mbox{\techterm{nested-name-specifier}}, or a \mbox{\techterm{qualified-id}} that names a
+member of the current instantiation that is a constrained member
+(\mbox{\ref{class.mem}}).}
+\end{itemize}
 
 
 \setcounter{subsection}{2}
