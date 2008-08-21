@@ -39,15 +39,29 @@
 #include <string>     // for std::string
 
 
+//  Control-macro definitions  -----------------------------------------------//
+
+// Control macro for whole-byte processing
+#ifndef BOOST_CODING_MD5_CONTROL_OPTIMIZE_BYTE_ENTRY
+/** \brief  Preprocessor control flag for optimized byte entry for MD5.
+
+    Indicates whether \c boost::coding::md5_byte_context should pass on bytes a
+    bit at a time or violate encapsulation by copying bytes whole into its inner
+    \c boost::coding::md5_context object.  Even if active, the optimization will
+    not happen unless the bits-per-byte count, \c CHAR_BIT, is a factor of the
+    MD5 packed-bit array size (512 bits).  If not overriden, it defaults to 1,
+    activating the optimization if possible.
+
+    \see  boost::coding::md5_byte_context
+ */
+#define BOOST_CODING_MD5_CONTROL_OPTIMIZE_BYTE_ENTRY  1
+#endif
+
+
 namespace boost
 {
 namespace coding
 {
-
-
-//  Forward declarations  ----------------------------------------------------//
-
-// None right now
 
 
 //  MD5 message-digest core computation class declaration  -------------------//
@@ -93,6 +107,7 @@ public:
     product_type  operator ()() const;//@}
 
 private:
+    friend class md5_byte_context;
     friend class md5_computer;
 
     // Implementation types and meta-constants
@@ -321,6 +336,119 @@ md5_context::serialize( Archive &ar, const unsigned int version )
     BOOST_MPL_ASSERT_RELATION( words_per_digest::value, ==, 4 );
     boost::serialization::split_member( ar, *this, version );
 }
+
+
+//  MD5 message-digest byte-wise computation class declaration  --------------//
+
+/** \brief  A computer that produces MD5 message digests from consuming bytes.
+
+    This class is a variant of \c boost::coding::md5_context in that it consumes
+    values a byte at a time instead of bit-wise.  It uses the same algorithm,
+    but can optimize entry if \c CHAR_BIT is a factor of the block size (512
+    bits).  Besides computation, it also supports comparisons (equivalence only,
+    not ordering) and serialization.
+
+    \see  boost::coding::md5_digest
+    \see  boost::coding::md5_context
+    \see  BOOST_CODING_MD5_CONTROL_OPTIMIZE_BYTE_ENTRY
+ */
+class md5_byte_context
+{
+    typedef md5_byte_context  self_type;
+
+public:
+    // Types
+    /** \brief  Type of the produced output
+
+        Represents the result type, the checksums from hashing.
+     */
+    typedef md5_digest      product_type;
+    /** \brief  Type of the consumed input
+
+        Represents the argument type, the data to hash.
+     */
+    typedef unsigned char  consumed_type;
+
+    /*! \name Operators */ //@{
+    // Operators (use automatic copy-assignment)
+    //! Application, consumer
+    void          operator ()( consumed_type byte );
+    //! Equals
+    bool          operator ==( self_type const &o ) const;
+    //! Not-equals
+    bool          operator !=( self_type const &o ) const;
+    //! Application, producer
+    product_type  operator ()() const;//@}
+
+private:
+    // Member data
+    md5_context  inner;
+
+    /*! \name Persistence */ //@{
+    // Serialization
+    friend class boost::serialization::access;
+
+    //! Enables persistence with Boost.Serialization-compatible archives
+    template < class Archive >
+    void  serialize( Archive &ar, const unsigned int version );//@}
+
+};  // md5_byte_context
+
+
+//  MD5 message-digest byte-wise computation class member func. defintions  --//
+
+/** Compares computation contexts for equivalence.  Such contexts are equal if
+    their internal states are equal.  (This means that they should both return
+    the same checksum, and continue to do so as long as the same byte sequence
+    is submitted to both contexts.)
+
+    \param o  The right-side operand to be compared.
+
+    \retval true   \c *this and \p o are equivalent.
+    \retval false  \c *this and \p o are not equivalent.
+ */
+inline bool  md5_byte_context::operator ==( self_type const &o ) const
+{ return this->inner == o.inner; }
+
+/** Compares computation contexts for non-equivalence.  Such engines are unequal
+    if their internal states are unequal.  (Usually, the two contexts would
+    return checksums that differ either immediately or after the same byte
+    sequence is submitted to both contexts.  However, it is possible for two
+    contexts with differing input histories to have the same output checksum.
+    Worse, it is possible to deliberately create such a collision.)
+
+    \param o  The right-side operand to be compared.
+
+    \retval true   \c *this and \p o are not equivalent.
+    \retval false  \c *this and \p o are equivalent.
+ */
+inline bool  md5_byte_context::operator !=( self_type const &o ) const
+{ return !this->operator ==( o ); }
+
+/** Provides the computed check-sum of all the submitted bytes (as if the
+    message is complete), through a standard generator interface.
+
+    \return  The check-sum.
+ */
+inline md5_byte_context::product_type  md5_byte_context::operator ()() const
+{ return this->inner(); }
+
+/** Streams a byte-wise core computer to/from an archive using the
+    Boost.Serialization protocols.  This member function is meant to be called
+    only by the Boost.Serialization system, as needed.
+
+    \tparam  Archive  The type of \p ar.  It must conform to the requirements
+                      Boost.Serialization expects of archiving classes.
+
+    \param  ar       The archiving object that this object's representation will
+                     be streamed to/from.
+    \param  version  The version of the persistence format for this object.  (It
+                     should be zero, since this type just got created.)
+ */
+template < class Archive >
+inline void
+md5_byte_context::serialize( Archive &ar, const unsigned int version )
+{ ar & BOOST_SERIALIZATION_NVP( inner ); }
 
 
 }  // namespace coding

@@ -40,13 +40,12 @@
 #define PRIVATE_SHOW_MESSAGE( m )  BOOST_TEST_MESSAGE( m )
 #endif
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE( boost::coding::md5_computer );
-
 
 #pragma mark Intro stuff
 
 // Put any using-ed types & templates, and typedefs here
 using boost::array;
+using boost::coding::md5_byte_context;
 using boost::coding::md5_computer;
 using boost::coding::md5_digest;
 
@@ -91,6 +90,8 @@ void  write_xml_archive( std::basic_ostream<Ch, Tr> &o, T const &target, char
 
 
 // Mark any unprintable tested types here
+BOOST_TEST_DONT_PRINT_LOG_VALUE( boost::coding::md5_byte_context );
+BOOST_TEST_DONT_PRINT_LOG_VALUE( boost::coding::md5_computer );
 
 
 #pragma mark -
@@ -691,12 +692,73 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     BOOST_CHECK_NE( test, c2 );
 }
 
+// Byte-optimized MD5-context object tests
+BOOST_AUTO_TEST_CASE( md5_byte_context_test )
+{
+    using boost::coding::md5_byte_context;
+    using boost::coding::md5_context;
+
+    // Default construction and production
+    md5_byte_context const  c1;
+    md5_computer            scratch;
+
+    BOOST_CHECK_EQUAL( c1(), scratch.context()() );
+
+    // Equality
+    md5_byte_context  c2;
+
+    BOOST_CHECK( c1 == c2 );
+    BOOST_CHECK( !(c2 != c1) );
+
+    // Consumption
+    unsigned char const  test_value = 0x02u;
+
+    c2( test_value );
+    scratch.process_byte( test_value );
+    BOOST_CHECK_EQUAL( c2(), scratch.context()() );
+
+    // Inequality
+    BOOST_CHECK( c1 != c2 );
+    BOOST_CHECK( !(c2 == c1) );
+
+    // Copy construction
+    md5_byte_context  test( c2 );
+
+    BOOST_CHECK_EQUAL( test, c2 );
+    BOOST_REQUIRE_NE( test, c1 );
+
+    // More consumption, but make sure the hash queue turns over
+    int const  test_length = 512 / CHAR_BIT + !!(512 % CHAR_BIT);
+
+    for ( int  i = test_length ; i ; --i )
+        c2( test_value );
+    scratch.process_byte_copies( test_value, test_length );
+    BOOST_CHECK_EQUAL( c2(), scratch.checksum() );
+
+    // Quick S11N check
+    std::stringstream  ss;
+
+    write_xml_archive( ss, c1, "test" );
+    PRIVATE_SHOW_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, "test" );
+    BOOST_CHECK_EQUAL( test, c1 );
+    BOOST_CHECK_NE( test, c2 );
+}
+
 // Single-call function test
 BOOST_AUTO_TEST_CASE( compute_md5_test )
 {
     using boost::coding::compute_md5;
 
+    // Empty check
     BOOST_CHECK_EQUAL( compute_md5(0, 0), md5_empty_data );
+
+    // Check against another component
+    unsigned char const  test_value = 0x6Fu;
+    md5_computer         scratch;
+
+    scratch.process_byte( test_value );
+    BOOST_CHECK_EQUAL( compute_md5(&test_value, 1u), scratch.checksum() );
 
     // How do we get consistent data when we can't count on CHAR_BIT being the
     // same everywhere?  Do we just screw over testers without 8-bit bytes or

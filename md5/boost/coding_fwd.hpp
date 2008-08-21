@@ -50,19 +50,20 @@ struct md5_digest;
 
 //  From <boost/coding/md5_digest.hpp>  --------------------------------------//
 
-// Only has operator free-functions, #includes "md5_digest_core.hpp"
+// Has operator and support free-functions, #includes "md5_digest_core.hpp"
 
 
 //  From <boost/coding/md5_context.hpp>  -------------------------------------//
 
 class md5_context;
+class md5_byte_context;
 
 
 //  From <boost/coding/md5_computer.hpp>  ------------------------------------//
 
 class md5_computer;
 
-// Also has a support free-function
+// Has support free-functions
 
 
 //  From <boost/coding/md5.hpp>  ---------------------------------------------//

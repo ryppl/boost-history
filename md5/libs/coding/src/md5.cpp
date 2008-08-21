@@ -26,6 +26,7 @@
 #include <boost/detail/endian.hpp>          // for BOOST_LITTLE_ENDIAN
 #include <boost/integer/integer_mask.hpp>   // for boost::integer_lo_mask
 #include <boost/math/common_factor_rt.hpp>  // for boost::math::gcd
+#include <boost/mpl/assert.hpp>             // for BOOST_MPL_ASSERT_RELATION
 #include <boost/typeof/typeof.hpp>          // for BOOST_AUTO
 
 #include <algorithm>  // for std::copy, fill
@@ -320,7 +321,8 @@ void  md5_context::consume_bit( bool bit )
     // High-order-bit-first is also how the bit-oriented MD5 algorithm reads a
     // byte.  There is a bonus that an optimized byte-consumption routine can
     // copy a byte directly into the array for quick entry, at least if CHAR_BIT
-    // divides index.
+    // divides index.  See md5_byte_context::operator()(unsigned char) for the
+    // optimized byte-entry code.
 
     if ( bit )  byte |=  mask;
     else        byte &= ~mask;
@@ -567,6 +569,39 @@ void  md5_context::string_to_queue( std::string const &s )
             *i++ = index & mask;
     }
     this->contract_queue( q );
+}
+
+
+//  MD5 message-digest byte-wise computation non-inline member definitions  --//
+
+/** Submits a byte for processing.
+
+    \param byte  The byte value to be submitted.
+
+    \post  Sorry, there is no externally-accessible state.  (However, the byte
+           is queued until enough have been collected to update the internal
+           hash.  If an update occurs, the queue is emptied.)
+ */
+void  md5_byte_context::operator ()( consumed_type byte )
+{
+#if (512 % CHAR_BIT == 0) && BOOST_CODING_MD5_CONTROL_OPTIMIZE_BYTE_ENTRY
+    // Copy the byte in whole.  It is already compatible with the format of the
+    // packed-bit array's packing.  Since the inner md5_context's entry checking
+    // is skipped, we have to redo the logic of md5_context::consume_bit here.
+    BOOST_MPL_ASSERT_RELATION( md5_context::bits_per_block::value, ==, 512 );
+    int const  index = this->inner.length % md5_context::bits_per_block::value;
+    int const  byte_index = index / CHAR_BIT;
+
+    BOOST_ASSERT( index % CHAR_BIT == 0 );
+    this->inner.queue[ byte_index ] = byte;
+    this->inner.length += CHAR_BIT;
+    if ( index + CHAR_BIT == md5_context::bits_per_block::value )
+        this->inner.update_hash();
+#else
+    // Enter each bit in the offical order (highest-order first)
+    for ( unsigned char  m = 1u << (CHAR_BIT - 1) ; m ; m >>= 1 )
+        this->inner( byte & m );
+#endif
 }
 
 

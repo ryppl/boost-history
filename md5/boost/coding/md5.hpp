@@ -19,7 +19,7 @@
 
 #include <boost/coding_fwd.hpp>
 #include <boost/coding/md5_digest.hpp>    // for boost::coding::md5_digest
-#include <boost/coding/md5_context.hpp>   // for b:c:md5_context (for grouping)
+#include <boost/coding/md5_context.hpp>   // for b:c:md5_(byte_)context
 #include <boost/coding/md5_computer.hpp>  // for boost::coding::md5_computer
 
 #include <cstddef>  // for std::size_t
@@ -48,15 +48,16 @@ namespace coding
     \return  The MD5 message digest of the data block.
 
     \see  boost::coding::md5_digest
-    \see  boost::coding::md5_computer
+    \see  boost::coding::md5_byte_context
  */
-inline md5_digest
-compute_md5( void const *buffer, std::size_t byte_count )
+inline md5_digest  compute_md5( void const *buffer, std::size_t byte_count )
 {
-    md5_computer  c;
+    md5_byte_context       c;
+    unsigned char const *  b = static_cast<unsigned char const *>( buffer );
 
-    c.process_bytes( buffer, byte_count );
-    return c.checksum();
+    while ( byte_count-- )
+        c( *b++ );
+    return c();
 }
 
 
