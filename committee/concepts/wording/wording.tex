@@ -594,15 +594,18 @@ is looked up as follows:}
 \additemConcepts{
 If the template argument list of the concept instance references a
 template parameter or associated type of a requirement, and if the name,
-when looked up within the scope of the concept of the concept instance,
-unambiguously refers to an associated type or class template, the result
+when looked up within the scope of the concept}
+\changedCCC{of}{(not}
+\addedConcepts{the concept instance}\addedCC{)}\addedConcepts{,}
+\removedCCC{unambiguously}
+\addedConcepts{refers to an associated type or class template, the result
 of name lookup is the associated type or class template as a member of the
 requirement.
     \mbox{\enternote}\ this implies that, given two distinct type parameters
-    T and U, C<T>::type and C<U>::type are distinct types (though they may
-    refer to the same archetype).  Also, the mere lookup of 'type' within C<T>
-    and C<U> does not require the creation of a concept map archetype for
-    C<T> or C<U>.
+    \mbox{\tcode{T}} and \mbox{\tcode{U}}, \mbox{\tcode{C<T>::type}} and \mbox{\tcode{C<U>::type}} are distinct types (although they may
+    refer to the same archetype).  Also, lookup of 'type' within \mbox{\tcode{C<T>}}
+    and \mbox{\tcode{C<U>}} does not require the creation of a concept map archetype for
+    \mbox{\tcode{C<T>}} or \mbox{\tcode{C<U>}}.
     \mbox{\exitnote}\ }
 \additemConcepts{
 Otherwise, concept map lookup (\mbox{\ref{temp.req.sat}}) first determines
@@ -2773,14 +2776,15 @@ according to the partial ordering rules for function templates.}
 \exitexample\ 
 
 \rSec2[temp.fct]{Function templates}
+\rSec3[temp.over.link]{Function template overloading}
 
-\setcounter{Paras}{6}
+\setcounter{Paras}{5}
 \pnum
 Two function templates are
 \techterm{equivalent}\ 
 if they are declared in the same scope, have the same name, have
 identical template parameter lists, \addedConcepts{have identical
-  template requirements}, and have return types
+  template requirements (if any)}, and have return types
   and parameter 
 lists that are equivalent using the rules described above to compare
 expressions involving
