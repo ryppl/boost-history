@@ -154,40 +154,51 @@ namespace std {
   // \ref{predef.iterators}, predefined iterators:
   template <@\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@> class reverse_iterator;
 
-  template <@\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasEqualTo<Iter1, Iter2>}@
     bool operator==(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasGreater<Iter1, Iter2>}@
     bool operator<(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@>
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{BidirectionalIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasNotEqualTo<Iter1, Iter2>}@
     bool operator!=(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLess<Iter1, Iter2>}@
     bool operator>(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasLessEqual<Iter1, Iter2>}@
     bool operator>=(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasGreaterEqual<Iter1, Iter2>}@
     bool operator<=(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
+    @\addedConcepts{requires HasMinus<Iter2::difference_type, Iter1::difference_type>}@
+    auto operator-(
+      const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.current - x.current);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
+    reverse_iterator<Iter@\removedConcepts{ator}@> operator+(
+      @\changedConcepts{typename reverse_iterator<Iterator>::difference_type}{Iter::difference_type}@ n,
+      const reverse_iterator<Iter@\removedConcepts{ator}@>& x);
 
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
-    @\changedConcepts{typename reverse_iterator<Iterator>::difference_type}{Iter::difference_type}@ operator-(
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
-    reverse_iterator<Iter@\removedConcepts{ator}@>
-      operator+(
-    @\changedConcepts{typename reverse_iterator<Iterator>::difference_type}{Iter::difference_type}@ n,
-    const reverse_iterator<Iter@\removedConcepts{ator}@>& x);
+  @\addedConcepts{template<BidirectionalIterator Iter>}@
+  @\addedConcepts{concept_map BidirectionalIterator<reverse_iterator<Iter> > \{ \}}@
+
+  @\addedConcepts{template<RandomAccessIterator Iter>}@
+  @\addedConcepts{concept_map RandomAccessIterator<reverse_iterator<Iter> > \{ \}}@
 
   template <class Container> class back_insert_iterator;
   template <class Container>
@@ -464,6 +475,12 @@ namespace std {
     reverse_iterator<Iter@\removedConcepts{ator}@> operator+(
       @\changedConcepts{typename reverse_iterator<Iterator>::difference_type}{Iter::difference_type}@ n,
       const reverse_iterator<Iter@\removedConcepts{ator}@>& x);
+
+  @\addedConcepts{template<BidirectionalIterator Iter>}@
+  @\addedConcepts{concept_map BidirectionalIterator<reverse_iterator<Iter> > \{ \}}@
+
+  @\addedConcepts{template<RandomAccessIterator Iter>}@
+  @\addedConcepts{concept_map RandomAccessIterator<reverse_iterator<Iter> > \{ \}}@
 }
 \end{codeblock}
 
@@ -904,6 +921,27 @@ template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
 \pnum
 \returns\ 
 \tcode{reverse_iterator<Iter\removedConcepts{ator}> (x.current - n)}.
+\end{itemdescr}
+
+\rSec3[reverse.iter.maps]{Concept maps}
+\begin{itemdecl}
+@\addedConcepts{template<BidirectionalIterator Iter>}@
+@\addedConcepts{concept_map BidirectionalIterator<reverse_iterator<Iter> > \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote This concept map template states that reverse iterators are themselves bidirectional iterators.}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{template<RandomAccessIterator Iter>}@
+@\addedConcepts{concept_map RandomAccessIterator<reverse_iterator<Iter> > \{ \}}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\reallynote This concept map template states that reverse iterators are themselves random access iterators when the underlying iterator is a random access iterator.}
 \end{itemdescr}
 
 \rSec2[insert.iterators]{Insert iterators}
