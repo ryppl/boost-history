@@ -64,7 +64,7 @@ extension.option irrlicht ppm-writer : enable disable ;
 extension.option irrlicht psd-writer : enable disable ;
 extension.option irrlicht tga-writer : enable disable ;
 
-rule init ( version ? : location : options * )
+rule init ( version ? : location patches ? : options * )
 {
     version ?= default ;
     local requirements =
@@ -74,9 +74,12 @@ rule init ( version ? : location : options * )
         <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
         ;
+    local header-include = $(patches)/include $(location)/include ;
+    local source-include = $(patches)/source $(location)/source $(location)/source/Irrlicht ;
     local common-requirements =
-        <include>$(location)/include
-        <include>$(location)/source
+        <include>$(header-include:J=&&)
+        <include>$(source-include:J=&&)
+        <target-os>windows:<define>_IRR_DONT_DO_MEMORY_DEBUGGING_HERE
         <target-os>windows:<define>WIN32
         <target-os>windows,<address-model>64:<define>WIN64
         [ conditional <target-os>windows :
@@ -268,6 +271,5 @@ rule init ( version ? : location : options * )
         :
         :   $(common-requirements)
             <link>static:<define>_IRR_STATIC_LIB_
-            <include>$(location)/source/Irrlicht
         ;
 }
