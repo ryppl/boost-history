@@ -6617,7 +6617,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
+          @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6631,7 +6632,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+    @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
+          @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6672,7 +6674,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+    @\addedConcepts{requires NothrowDestructible<Value>}@
+          @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6685,7 +6688,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-    @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+    @\addedConcepts{requires NothrowDestructible<Value>}@
+          @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -6743,7 +6747,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+  @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
+        @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -7043,7 +7048,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
-  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+  @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
+        @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -7292,7 +7298,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+  @\addedConcepts{requires NothrowDestructible<Value>}@
+        @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
@@ -7537,7 +7544,8 @@ namespace std {
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
-  @\addedConcepts{requires SameType<Hash::result_type, size_t>}@
+  @\addedConcepts{requires NothrowDestructible<Value>}@
+        @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, const Pred\&>}@
         @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Pred, Pred\&\&>}@
