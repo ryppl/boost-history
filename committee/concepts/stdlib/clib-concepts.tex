@@ -135,6 +135,12 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 
 \item Added the \tcode{IdentityOf} concept, which acts like a simple
   identity metafunction. It is used by \tcode{std::forward}.
+
+\item In~\ref{concept.operator}, require that the concept maps in
+  namespace \tcode{std} for pointer types for \tcode{HasLess},
+  \tcode{HasGreater}, \tcode{HasLessEqual}, and
+  \tcode{HasGreaterEqual} ensure a total order. This is how concepts
+  resolve issue 532 (already closed as NAD NAD).
 \end{itemize}
 
 \end{titlepage}
@@ -880,6 +886,14 @@ auto concept HasGreaterEqual<typename T, typename U> {
 \addedConcepts{\mbox{\reallynote} describes types with an
   \mbox{\tcode{operator>=}}.}
 \end{itemdescr}
+
+\pnum
+\addedConcepts{For the concepts \mbox{\tcode{HasLess}},
+  \mbox{\tcode{HasGreater}}, \mbox{\tcode{HasLessEqual}}, and
+  \mbox{\tcode{HasGreaterEqual}}, the concept maps in namespace
+  \mbox{\tcode{std}} for any pointer type yield a total order, even if
+  the built-in operators \mbox{\tcode{<}}, \mbox{\tcode{>}},
+  \mbox{\tcode{<=}}, \mbox{\tcode{>=}} do not.}
 
 \begin{itemdecl}
 auto concept HasEqualTo<typename T, typename U> {
