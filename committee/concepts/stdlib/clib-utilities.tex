@@ -75,7 +75,9 @@ Bloomington, IN\ \  47405 \\
 \begin{itemize}
 \item Replaced \tcode{HasConstructor} requirements with \tcode{Constructible} requirements.
 \item Constrain \tcode{move} with the \tcode{RvalueOf} concept.
-\item Constrain the \tcode{identity} helper template of \tcode{forward}.
+\item Constrain the \tcode{identity} template, which has been moved
+  to~\ref{function.objects} since it is not used by
+  \tcode{forward}. Instead, we use the \tcode{IdentityOf} concept.
 \item Fixed syntactic errors in the \tcode{mem_fn} signatures.
 \item Constrain \tcode{tuple_element}, \tcode{tuple_size}.
 \item Replace uses of \tcode{ConstructibleAsElement} with
@@ -98,6 +100,7 @@ wording paper:
   mentioned in the discussion of the issue, making \tcode{pair} a
   constrained templates solves the problem of construction from a
   literal 0.
+\item[Issue 823. \tcode{identity<void>} seems broken.] Applied the proposed resolution to \tcode{identity}, which constrains the function call operator with a \tcode{ReferentType} requirement.
 \end{description}
 
 %%--------------------------------------------------
@@ -166,8 +169,8 @@ namespace std {
   }
 
   // \ref{forward}, forward/move:
-  template <@\changedConcepts{class}{VariableType}@ T> struct identity;
-  template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identity<T>::type&&);
+  @\removedConcepts{template <class T> struct identity;}@
+  template <@\changedConcepts{class}{IdentityOf}@ T> T&& forward(@\changedConcepts{typename identity<T>}{IdentityOf<T>}@::type&&);
   template <@\changedConcepts{class}{RvalueOf}@ T> @\changedConcepts{typename remove_reference<T>::type\&\&}{RvalueOf<T>::type}@ move(T&&);
 
   // \ref{pairs}, pairs:
@@ -296,25 +299,23 @@ the requirements and semantics are as specified in this clause.
 applying move semantics to an lvalue and to simplify the implementation
 of forwarding functions.}
 
-\index{identity@\tcode{identity}}%
+\editorial{\tcode{identity} is no longer used to make the argument
+  type non-deduced. Instead, we use the \tcode{IdentityOf} concept and
+  its associated type \tcode{type}, and have moved \tcode{identity}
+  to~\ref{function.objects}.}
+
+\index{forward@\tcode{forward}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{VariableType}@ T> struct identity { typedef T type; };
+template <@\changedConcepts{class}{IdentityOf}@ T> T&& forward(@\changedConcepts{typename identity<T>}{IdentityOf<T>}@::type&& t);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedD{\mbox{\enternote} The use of \mbox{\tcode{identity}} in
+\mbox{\enternote} The use of \changedConcepts{\mbox{\tcode{identity}}}{\mbox{\tcode{IdentityOf}}} in
 \mbox{\tcode{forward}} forces users to explicitly specify the
 template parameter. This is necessary to get the correct forwarding
-semantics.\mbox{\exitnote}}
-\end{itemdescr}
+semantics.\mbox{\exitnote}
 
-\index{forward@\tcode{forward}}%
-\begin{itemdecl}
-template <@\changedConcepts{class}{VariableType}@ T> T&& forward(typename identity<T>::type&& t);
-\end{itemdecl}
-
-\begin{itemdescr}
 \pnum
 \addedD{\mbox{\returns} \mbox{\tcode{t}}.}
 \end{itemdescr}
@@ -1613,31 +1614,34 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<T> ref(reference_wrapper<T>);
   template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cref(reference_wrapper<T>);
 
+  // \ref{identity.operation}, identity operation:
+  @\addedConcepts{template <class T> struct identity;}@
+
   //    \ref{arithmetic.operations}, arithmetic operations:
-  template <class T> struct plus;
-  template <class T> struct minus;
-  template <class T> struct multiplies;
-  template <class T> struct divides;
-  template <class T> struct modulus;
-  template <class T> struct negate;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct plus;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct minus;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct multiplies;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct divides;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct modulus;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct negate;
 
   // \ref{comparisons}, comparisons:
-  template <class T> struct equal_to;
-  template <class T> struct not_equal_to;
-  template <class T> struct greater;
-  template <class T> struct less;
-  template <class T> struct greater_equal;
-  template <class T> struct less_equal;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct equal_to;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct not_equal_to;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct greater;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct less;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct greater_equal;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct less_equal;
 
   // \ref{logical.operations}, logical operations:
-  template <class T> struct logical_and;
-  template <class T> struct logical_or;
-  template <class T> struct logical_not;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct logical_and;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct logical_or;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct logical_not;
 
   // \ref{bitwise.operations}, bitwise operations:
-  template <class T> struct bit_and;
-  template <class T> struct bit_or;
-  template <class T> struct bit_xor;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct bit_and;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct bit_or;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct bit_xor;
 
   // \ref{negators}, negators:
   template <class Predicate> class unary_negate;
@@ -1743,7 +1747,7 @@ namespace std {
     bool operator!=(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
 
   // \marktr{}\ref{unord.hash}, hash function base template:
-  template <class T> struct hash;
+  template <@\changedConcepts{class}{ReferentType}@ T> struct hash;
 
   // Hash function specializations
   template <> struct hash<bool>;
@@ -1766,7 +1770,7 @@ namespace std {
   template <> struct hash<double>;
   template <> struct hash<long double>;
 
-  template<class T> struct hash<T*>;
+  template<@\changedConcepts{class}{PointeeType}@ T> struct hash<T*>;
 
   template <> struct hash<std::string>;
   @\addedD{template <> struct hash<std::u16string>;}@
@@ -1885,6 +1889,29 @@ template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cr
 \pnum\throws\  nothing. 
 \end{itemdescr}
 
+\editorial{Add the following new section [identity.operation]}
+\rSec2[identity.operation]{Identity operation}
+\index{identity@\tcode{identity}}%
+\begin{itemdecl}
+template <@\changedConcepts{class}{IdentityOf}@ T> struct identity { 
+  typedef T type;
+
+  @\addedConcepts{requires ReferentType<T>}@
+    const T& operator()(const T& x) const;
+};
+\end{itemdecl}
+
+\begin{itemdecl}
+@\addedConcepts{requires ReferentType<T>}@
+  const T& operator()(const T& x) const;
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\
+\tcode{x}
+\end{itemdescr}
+
 \rSec2[arithmetic.operations]{Arithmetic operations}
 
 \pnum
@@ -1893,7 +1920,7 @@ operators in the language (\ref{expr.mul}, \ref{expr.add}).
 
 \index{plus@\tcode{plus}}%
 \begin{itemdecl}
-template <class T> struct plus : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct plus : binary_function<T,T,T> {
   @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -1908,7 +1935,7 @@ returns
 
 \index{minus@\tcode{minus}}%
 \begin{itemdecl}
-template <class T> struct minus : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct minus : binary_function<T,T,T> {
   @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -1923,7 +1950,7 @@ returns
 
 \index{multiplies@\tcode{multiplies}}%
 \begin{itemdecl}
-template <class T> struct multiplies : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct multiplies : binary_function<T,T,T> {
   @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -1938,7 +1965,7 @@ returns
 
 \index{divides@\tcode{divides}}%
 \begin{itemdecl}
-template <class T> struct divides : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct divides : binary_function<T,T,T> {
   @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
   T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -1953,7 +1980,7 @@ returns
 
 \index{modulus@\tcode{modulus}}%
 \begin{itemdecl}
-template <class T> struct modulus : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct modulus : binary_function<T,T,T> {
   @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -1966,7 +1993,7 @@ template <class T> struct modulus : binary_function<T,T,T> {
 
 \index{negate@\tcode{negate}}%
 \begin{itemdecl}
-template <class T> struct negate : unary_function<T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct negate : unary_function<T,T> {
   @\addedConcepts{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@) const;
 };
@@ -1985,7 +2012,7 @@ operators in the language (\ref{expr.rel}, \ref{expr.eq}).
 
 \index{equal_to@\tcode{equal_to}}%
 \begin{itemdecl}
-template <class T> struct equal_to : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct equal_to : binary_function<T,T,bool> {
   @\addedConcepts{requires HasEqualTo<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -1998,7 +2025,7 @@ template <class T> struct equal_to : binary_function<T,T,bool> {
 
 \index{not_equal_to@\tcode{not_equal_to}}%
 \begin{itemdecl}
-template <class T> struct not_equal_to : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct not_equal_to : binary_function<T,T,bool> {
   @\addedConcepts{requires HasNotEqualTo<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2011,7 +2038,7 @@ template <class T> struct not_equal_to : binary_function<T,T,bool> {
 
 \index{greater@\tcode{greater}}%
 \begin{itemdecl}
-template <class T> struct greater : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct greater : binary_function<T,T,bool> {
   @\addedConcepts{requires HasGreater<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2024,7 +2051,7 @@ template <class T> struct greater : binary_function<T,T,bool> {
 
 \index{less@\tcode{less}}%
 \begin{itemdecl}
-template <class T> struct less : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct less : binary_function<T,T,bool> {
   @\addedConcepts{requires HasLess<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2037,7 +2064,7 @@ template <class T> struct less : binary_function<T,T,bool> {
 
 \index{greater_equal@\tcode{greater_equal}}%
 \begin{itemdecl}
-template <class T> struct greater_equal : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct greater_equal : binary_function<T,T,bool> {
   @\addedConcepts{requires HasGreaterEqual<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2050,7 +2077,7 @@ template <class T> struct greater_equal : binary_function<T,T,bool> {
 
 \index{less_equal@\tcode{less_equal}}%
 \begin{itemdecl}
-template <class T> struct less_equal : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct less_equal : binary_function<T,T,bool> {
   @\addedConcepts{requires HasLessEqual<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2075,7 +2102,7 @@ operators in the language (\ref{expr.log.and}, \ref{expr.log.or}, \ref{expr.unar
 
 \index{logical_and@\tcode{logical_and}}%
 \begin{itemdecl}
-template <class T> struct logical_and : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct logical_and : binary_function<T,T,bool> {
   @\addedConcepts{requires HasLogicalAnd<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2088,7 +2115,7 @@ template <class T> struct logical_and : binary_function<T,T,bool> {
 
 \index{logical_or@\tcode{logical_or}}%
 \begin{itemdecl}
-template <class T> struct logical_or : binary_function<T,T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct logical_or : binary_function<T,T,bool> {
   @\addedConcepts{requires HasLogicalOr<T, T>}@
     bool operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
@@ -2101,7 +2128,7 @@ template <class T> struct logical_or : binary_function<T,T,bool> {
 
 \index{logical_not@\tcode{logical_not}}%
 \begin{itemdecl}
-template <class T> struct logical_not : unary_function<T,bool> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct logical_not : unary_function<T,bool> {
   @\addedConcepts{requires HasLogicalNot<T>}@
     bool operator()(const T& @\farg{x}@) const;
 };
@@ -2120,7 +2147,7 @@ operators in the language (\ref{expr.bit.and}, \ref{expr.or}, \ref{expr.xor}).
 
 \index{bit_and@\tcode{bit_and}}%
 \begin{itemdecl}
-template <class T> struct bit_and : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct bit_and : binary_function<T,T,T> {
   @\addedConcepts{requires HasBitAnd<T, T>}@
     T operator()(const T& x, const T& y) const;
 };
@@ -2133,7 +2160,7 @@ template <class T> struct bit_and : binary_function<T,T,T> {
 
 \index{bit_or@\tcode{bit_or}}%
 \begin{itemdecl}
-template <class T> struct bit_or : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct bit_or : binary_function<T,T,T> {
   @\addedConcepts{requires HasBitOr<T, T>}@
     T operator()(const T& x, const T& y) const;
 };
@@ -2146,7 +2173,7 @@ template <class T> struct bit_or : binary_function<T,T,T> {
 
 \index{bit_xor@\tcode{bit_xor}}%
 \begin{itemdecl}
-template <class T> struct bit_xor : binary_function<T,T,T> {
+template <@\changedConcepts{class}{ReferentType}@ T> struct bit_xor : binary_function<T,T,T> {
   @\addedConcepts{requires HasBitXor<T, T>}@
     T operator()(const T& x, const T& y) const;
 };

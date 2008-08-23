@@ -132,6 +132,9 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 
 \item Added the \tcode{underlying_type} associated type to the
   \tcode{EnumerationType} concept.
+
+\item Added the \tcode{IdentityOf} concept, which acts like a simple
+  identity metafunction. It is used by \tcode{std::forward}.
 \end{itemize}
 
 \end{titlepage}
@@ -238,7 +241,8 @@ namespace std {
   concept SameType<typename T, typename U> {  }
   concept DerivedFrom<typename Derived, typename Base> { }
 
-  // \ref{concept.rvalue}, rvalue:
+  // \ref{concept.transform}, type transformations:
+  auto concept IdentityOf<typename T> @\textit{see below}@;
   auto concept RvalueOf<typename T> @\textit{see below}@;
   template<typename T> concept_map RvalueOf<T&> @\textit{see below}@;
 
@@ -687,7 +691,19 @@ unambiguously derived from \mbox{\tcode{U}}, a concept map
 \mbox{\tcode{std}}.
 \end{itemdescr}
 
-\rSec2[concept.rvalue]{Rvalue}
+\rSec2[concept.transform]{Type transformations}
+\begin{itemdecl}
+auto concept IdentityOf<typename T> {
+  typename type = T;
+  requires SameType<type, T>;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} concept form of the \mbox{\tcode{identity}} type metafunction (\mbox{\ref{forward}}).} 
+\end{itemdescr}
+
 \begin{itemdecl}
 auto concept RvalueOf<typename T> {
   typename type = T&&;
