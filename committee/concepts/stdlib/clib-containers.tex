@@ -126,11 +126,11 @@ Pablo Halpern,  Bloomberg, L.P.
   necessary for \tcode{priority_queue}'s constructors.
 \item Updated the base wording to reflect the changes in N2691,
   including support for initializer lists and changes to emplace.
-\item Added the \tcode{BackEmplaceContainer} concept, to support the
+\item Added the \tcode{BackEmplacementContainer} concept, to support the
   new \tcode{emplace} operations in the container adaptors, along with
   its \tcode{Member} version and appropriate concept map
-  template. Added \tcode{FrontEmplaceContainer} and
-  \tcode{EmplaceContainer}, their \tcode{Member} versions and concept
+  template. Added \tcode{FrontEmplacementContainer} and
+  \tcode{EmplacementContainer}, their \tcode{Member} versions and concept
   map templates, for symmetry.
 \end{itemize}
 
@@ -907,9 +907,9 @@ namespace std {
   concept BackInsertionContainer<typename C> @\textit{see below}@
   concept InsertionContainer<typename C> @\textit{see below}@
   concept RangeInsertionContainer<typename C, typename Iter> @\textit{see below}@
-  concept FrontEmplaceContainer<typename C, typename... Args> @\textit{see below}@
-  concept BackEmplaceContainer<typename C, typename... Args> @\textit{see below}@
-  concept EmplaceContainer<typename C, typename... Args> @\textit{see below}@
+  concept FrontEmplacementContainer<typename C, typename... Args> @\textit{see below}@
+  concept BackEmplacementContainer<typename C, typename... Args> @\textit{see below}@
+  concept EmplacementContainer<typename C, typename... Args> @\textit{see below}@
 
   // \ref{container.concepts.member}, member container concepts
   auto concept MemberContainer<typename C> @\textit{see below}@
@@ -917,9 +917,9 @@ namespace std {
   auto concept MemberBackInsertionContainer<typename C> @\textit{see below}@
   auto concept MemberInsertionContainer<typename C> @\textit{see below}@
   auto concept MemberRangeInsertionContainer<typename C, typename Iter> @\textit{see below}@
-  auto concept MemberFrontEmplaceContainer<typename C, typename... Args> @\textit{see below}@
-  auto concept MemberBackEmplaceContainer<typename C, typename... Args> @\textit{see below}@
-  auto concept MemberEmplaceContainer<typename C, typename... Args> @\textit{see below}@
+  auto concept MemberFrontEmplacementContainer<typename C, typename... Args> @\textit{see below}@
+  auto concept MemberBackEmplacementContainer<typename C, typename... Args> @\textit{see below}@
+  auto concept MemberEmplacementContainer<typename C, typename... Args> @\textit{see below}@
 
   // \mbox{\ref{container.concepts.maps}}, container concept maps
   template <MemberContainer C>              concept_map Container<C> @\textit{see below}@
@@ -928,12 +928,12 @@ namespace std {
   template <MemberInsertionContainer C>      concept_map InsertionContainer<C> @\textit{see below}@
   template <MemberRangeInsertionContainer C, InputIterator Iter>
     concept_map RangeInsertionContainer<C, Iter> @\textit{see below}@
-  template <MemberFrontEmplaceContainer C, typename... Args> 
-    concept_map FrontEmplaceContainer<C, Args...> @\textit{see below}@
-  template <MemberBackEmplaceContainer C, typename... Args>  
-    concept_map BackEmplaceContainer<C, Args...> @\textit{see below}@
-  template <MemberEmplaceContainer C, typename... Args>
-    concept_map EmplaceContainer<C, Args...> @\textit{see below}@
+  template <MemberFrontEmplacementContainer C, typename... Args> 
+    concept_map FrontEmplacementContainer<C, Args...> @\textit{see below}@
+  template <MemberBackEmplacementContainer C, typename... Args>  
+    concept_map BackEmplacementContainer<C, Args...> @\textit{see below}@
+  template <MemberEmplacementContainer C, typename... Args>
+    concept_map EmplacementContainer<C, Args...> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<E[N]> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<const E[N]> @\textit{see below}@
 }
@@ -1068,7 +1068,7 @@ concept RangeInsertionContainer<typename C, typename Iter> : InsertionContainer<
 \end{itemdescr}
 
 \begin{itemdecl}
-concept FrontEmplaceContainer<typename C, typename... Args> : FrontInsertionContainer<C> {
+concept FrontEmplacementContainer<typename C, typename... Args> : FrontInsertionContainer<C> {
   void emplace_front(C& c, Args... args);
 }
 \end{itemdecl}
@@ -1080,7 +1080,7 @@ concept FrontEmplaceContainer<typename C, typename... Args> : FrontInsertionCont
 \end{itemdescr}
 
 \begin{itemdecl}
-concept BackEmplaceContainer<typename C, typename... Args> : BackInsertionContainer<C> {
+concept BackEmplacementContainer<typename C, typename... Args> : BackInsertionContainer<C> {
   void emplace_back(C& c, Args... args);
 }
 \end{itemdecl}
@@ -1092,7 +1092,7 @@ concept BackEmplaceContainer<typename C, typename... Args> : BackInsertionContai
 \end{itemdescr}
 
 \begin{itemdecl}
-concept EmplaceContainer<typename C, typename... Args> : InsertionContainer<C> {
+concept EmplacementContainer<typename C, typename... Args> : InsertionContainer<C> {
   void emplace(C& c, const_iterator position, Args... args);
 }
 \end{itemdecl}
@@ -1231,7 +1231,7 @@ concept MemberRangeInsertionContainer<typename C, typename Iter> : MemberInserti
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberFrontEmplaceContainer<typename C, typename... Args> : MemberFrontInsertionContainer<C> {
+auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : MemberFrontInsertionContainer<C> {
   void C::emplace_front(Args... args);
 }
 \end{itemdecl}
@@ -1243,7 +1243,7 @@ auto concept MemberFrontEmplaceContainer<typename C, typename... Args> : MemberF
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberBackEmplaceContainer<typename C, typename... Args> : MemberBackInsertionContainer<C> {
+auto concept MemberBackEmplacementContainer<typename C, typename... Args> : MemberBackInsertionContainer<C> {
   void C::emplace_back(Args... args);
 }
 \end{itemdecl}
@@ -1255,7 +1255,7 @@ auto concept MemberBackEmplaceContainer<typename C, typename... Args> : MemberBa
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberEmplaceContainer<typename C, typename... Args> : MemberInsertionContainer<C> {
+auto concept MemberEmplacementContainer<typename C, typename... Args> : MemberInsertionContainer<C> {
   void C::emplace(const_iterator position, Args... args);
 }
 \end{itemdecl}
@@ -1379,8 +1379,8 @@ concept_map RangeInsertionContainer<C, Iter> {
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberFrontEmplaceContainer C, typename... Args> 
-  concept_map FrontEmplaceContainer<C, Args...> {
+template <MemberFrontEmplacementContainer C, typename... Args> 
+  concept_map FrontEmplacementContainer<C, Args...> {
     void emplace_front(C& c, Args... args) 
     { c.emplace_front(std::forward<Args>(args)...); }
   }
@@ -1390,12 +1390,12 @@ template <MemberFrontEmplaceContainer C, typename... Args>
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing front-emplace container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{FrontEmplaceContainer}} concept.}
+  \\\addedConcepts{\mbox{\tcode{FrontEmplacementContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberBackEmplaceContainer C, typename... Args> 
-  concept_map BackEmplaceContainer<C, Args...> {
+template <MemberBackEmplacementContainer C, typename... Args> 
+  concept_map BackEmplacementContainer<C, Args...> {
     void emplace_back(C& c, Args... args) 
     { c.emplace_back(std::forward<Args>(args)...); }
   }
@@ -1405,12 +1405,12 @@ template <MemberBackEmplaceContainer C, typename... Args>
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing back-emplace container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{BackEmplaceContainer}} concept.}
+  \\\addedConcepts{\mbox{\tcode{BackEmplacementContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberEmplaceContainer C, typename... Args> 
-  concept_map EmplaceContainer<C, Args...> {
+template <MemberEmplacementContainer C, typename... Args> 
+  concept_map EmplacementContainer<C, Args...> {
     void emplace(C& c, Container<C>::const_iterator position, Args... args) 
     { c.emplace(position, std::forward<Args>(args)...); }
   }
@@ -1420,7 +1420,7 @@ template <MemberEmplaceContainer C, typename... Args>
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing emplace container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{EmplaceContainer}} concept.}
+  \\\addedConcepts{\mbox{\tcode{EmplacementContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -3780,7 +3780,7 @@ namespace std {
     void push(const value_type& x)      { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x); }
     void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x)); }
     template <class... Args> 
-      @\addedConcepts{requires BackEmplaceContainer<Cont, Args\&\&...>}@
+      @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
       void emplace(Args&&... args)
       { @\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@std::forward<Args>(args)...); }
     void pop()                          { @\removedConcepts{c.}@pop_front(@\addedConcepts{c}@); }    
@@ -3997,7 +3997,7 @@ namespace std {
     void push(const value_type& x);
     void push(value_type&& x);
     template <class... Args> 
-      @\addedConcepts{requires BackEmplaceContainer<Cont, Args\&\&...>}@
+      @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
       void emplace(Args&&... args);
     void pop();
     @\addedConcepts{requires Swappable<Cont>}@
@@ -4114,7 +4114,7 @@ push_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.
 \index{emplace@\tcode{emplace}!\tcode{priority_queue}}%
 \begin{itemdecl}
 template <class... Args> 
-  @\addedConcepts{requires BackEmplaceContainer<Cont, Args\&\&...>}@
+  @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
   void emplace(Args&&... args);
 \end{itemdecl}
 \begin{itemdescr}
@@ -4218,7 +4218,7 @@ namespace std {
     void push(const value_type& x)      { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x); }
     void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x)); }
     template <class... Args> 
-      @\addedConcepts{requires BackEmplaceContainer<Cont, Args\&\&...>}@
+      @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
       void emplace(Args&&... args)
       { @\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@std::forward<Args>(args)...); }
     void pop()                          { @\removedConcepts{c.}@pop_back(@\addedConcepts{c}@); }
