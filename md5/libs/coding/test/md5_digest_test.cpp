@@ -23,25 +23,11 @@
 #include <cwchar>   // for WEOF, std::wint_t
 #include <iomanip>  // for std::setfill, setw
 #include <ios>      // for std::left, uppercase
-#include <iostream> // for std::cout
 #include <istream>  // for std::basic_istream
 #include <memory>   // for std::auto_ptr [for xcode_config]
-#include <ostream>  // for std::endl, basic_ostream
+#include <ostream>  // for std::basic_ostream
 #include <sstream>  // for std::[w](o|i)stringstream
 #include <string>   // for std::string, wstring
-
-
-// Control if XML code will be printed conventionally, or just logged.
-#ifndef CONTROL_SHOW_XML
-#define CONTROL_SHOW_XML  0
-#endif
-
-// Logging
-#if CONTROL_SHOW_XML
-#define PRIVATE_SHOW_MESSAGE( m )  std::cout << m << std::endl
-#else
-#define PRIVATE_SHOW_MESSAGE( m )  BOOST_TEST_MESSAGE( m )
-#endif
 
 
 #pragma mark Intro stuff
@@ -328,10 +314,11 @@ BOOST_AUTO_TEST_CASE( md5_digest_serialization_test )
     // Write to archive
     std::stringstream  ss;
     md5_digest         test = md5_initial;
+    char const         key[] = "test-digest";
 
     BOOST_REQUIRE_NE( test, zeros );
     BOOST_REQUIRE_EQUAL( test, md5_initial );
-    write_xml_archive( ss, test, "test" );
+    write_xml_archive( ss, test, key );
 
     // Ensure receiving object's value is different
     test = zeros;
@@ -339,8 +326,8 @@ BOOST_AUTO_TEST_CASE( md5_digest_serialization_test )
     BOOST_REQUIRE_EQUAL( test, zeros );
 
     // Read from archive
-    PRIVATE_SHOW_MESSAGE( ss.str() );
-    read_xml_archive( ss, test, "test" );
+    BOOST_TEST_MESSAGE( ss.str() );
+    read_xml_archive( ss, test, key );
 
     // Confirm the change and proper read-back
     BOOST_CHECK_NE( test, zeros );

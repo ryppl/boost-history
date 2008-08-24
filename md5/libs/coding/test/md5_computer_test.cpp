@@ -22,23 +22,9 @@
 #include <algorithm>  // for std::reverse, for_each
 #include <climits>    // for CHAR_BIT
 #include <cstddef>    // for std::size_t
-#include <iostream>   // for std::cout
 #include <istream>    // for std::basic_istream
-#include <ostream>    // for std::endl, basic_ostream
+#include <ostream>    // for std::basic_ostream
 #include <sstream>    // for std::stringstream
-
-
-// Control if XML code will be printed conventionally, or just logged.
-#ifndef CONTROL_SHOW_XML
-#define CONTROL_SHOW_XML  0
-#endif
-
-// Logging
-#if CONTROL_SHOW_XML
-#define PRIVATE_SHOW_MESSAGE( m )  std::cout << m << std::endl
-#else
-#define PRIVATE_SHOW_MESSAGE( m )  BOOST_TEST_MESSAGE( m )
-#endif
 
 
 #pragma mark Intro stuff
@@ -612,7 +598,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     BOOST_REQUIRE_NE( test, c2 );
 
     // Read from an archive
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
 
     // Confirm the change and proper read-back
@@ -628,7 +614,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     write_xml_archive( ss, test, "test" );
     test.reset();
     BOOST_REQUIRE_NE( test, c2 );
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c2 );
 
@@ -641,7 +627,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     write_xml_archive( ss, test, "test" );
     test.reset();
     BOOST_REQUIRE_NE( test, c2 );
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c2 );
 
@@ -664,7 +650,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     write_xml_archive( ss, test, "test" );
     test.reset();
     BOOST_REQUIRE_NE( test, c2 );
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c2 );
 
@@ -678,7 +664,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     write_xml_archive( ss, test, "test" );
     test.reset();
     BOOST_REQUIRE_NE( test, c2 );
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c2 );
 
@@ -686,7 +672,7 @@ BOOST_AUTO_TEST_CASE( md5_computer_serialization_test )
     BOOST_REQUIRE_NE( test, c1 );
     ss.str( "" );
     write_xml_archive( ss, c1, "test" );
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c1 );
     BOOST_CHECK_NE( test, c2 );
@@ -739,7 +725,7 @@ BOOST_AUTO_TEST_CASE( md5_byte_context_test )
     std::stringstream  ss;
 
     write_xml_archive( ss, c1, "test" );
-    PRIVATE_SHOW_MESSAGE( ss.str() );
+    BOOST_TEST_MESSAGE( ss.str() );
     read_xml_archive( ss, test, "test" );
     BOOST_CHECK_EQUAL( test, c1 );
     BOOST_CHECK_NE( test, c2 );
