@@ -121,6 +121,13 @@ struct list {
 \end{codeblock}
 
 \item Removed the deprecation of \tcode{late_check}.
+
+\item Clarified the point of declaration of a template requirement
+  (\ref{basic.scope.pdecl}) and its potential scope
+  (\ref{basic.scope.req}). 
+
+\item Clarified that the requirements of a constrained member include
+  the requirements of enclosing constrained templates (\ref{temp.class}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -307,6 +314,18 @@ of declaration for a concept map (\mbox{\ref{concept.map}}) is
 immediately after the \mbox{\techterm{concept-id}} in the
 \mbox{\techterm{concept-map-definition}}.}
 
+\pnum
+\addedCC{The point of declaration for a template requirement
+  (\mbox{\ref{temp.req}}) is immediately after the corresponding
+  \mbox{\techterm{requirement}} in a
+  \mbox{\techterm{requires-clause}} or the
+  \mbox{\techterm{constrained-template-parameter}} in a
+  \mbox{\techterm{template-parameter-list}}. The point of declaration
+  of an implied template requirement (\mbox{\ref{temp.req.impl}}) is
+  the point of declaration of the template requirement from which it
+  was implied or immediately
+  after the declaration of the entity from which the requirement was implied.}
+
 \noindent\editorial{Add the following new sections to 3.3 [basic.scope] after [basic.scope.class]:}
 
 \color{addclr}
@@ -348,6 +367,11 @@ concept map.}
   scope of its concept (as described above).}
 
 \rSec2[basic.scope.req]{Requirements scope}
+\pnum
+\addedCC{A template requirement has \mbox{\techterm{requirements
+      scope}}. Its potential scope begins at its point of declaration
+  and terminates at the end of the constrained template.}
+
 \pnum
 \addedConcepts{In a constrained context (\mbox{\ref{temp.constrained}}),
 the names of all associated functions inside the concepts named 
@@ -1402,7 +1426,8 @@ The \mbox{\techterm{member-declaration}} for a constrained
 A constrained member is
 treated as a constrained template (\mbox{\ref{temp.constrained}})
 whose template requirements include the requirements
-  specified in its \mbox{\techterm{member-requirement}} clause.}
+  specified in its \mbox{\techterm{member-requirement}} clause}
+\addedCC{and the requirements of each enclosing constrained template}\addedConcepts{.}
 \end{paras}
 
 \setcounter{chapter}{11}
@@ -5177,9 +5202,8 @@ void h(float x, int y, int X::* p) {
   formed from the concept of a requirement and its template argument list
   after substitution of template arguments for their corresponding
   template parameters.  There
-  is an associated full concept name} 
-\addedZ{(\mbox{\ref{concept.def}})}
-\addedConcepts{of \mbox{\tcode{I}}; call it
+  is an associated full concept name (\mbox{\ref{concept.def}})
+  of \mbox{\tcode{I}}; call it
   \mbox{\tcode{N}}. Concept map lookup searches an ordered sequence
   \mbox{\tcode{Q}} (defined below) where each element is a set of
   concept maps called
