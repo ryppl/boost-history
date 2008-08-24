@@ -5345,11 +5345,14 @@ ordered sequence:}
     \mbox{\tcode{I}}. Otherwise, \mbox{\tcode{S}} is empty.}
 \end{enumerate}
    
+\pnum
 \addedConcepts{\mbox{\enternote} When concept map lookup is performed
   within a constrained context (\mbox{\ref{temp.constrained}}),
   concept map archetypes, whose names are placed at the same scope as
-  template parameters, can be found by unqualified lookup.
-  \mbox{\exitnote}}
+  template parameters, can be found by unqualified lookup.}
+\addedCC{Concept map lookup does not require the definition of a concept
+  map archetype that it finds.}
+  \addedConcepts{\mbox{\exitnote}}
    
 \pnum 
 \addedConcepts{If concept map lookup finds a matching concept map in a set
@@ -5943,10 +5946,15 @@ requirement is synthesized by
 substituting the archetype of \mbox{\tcode{T}} for each occurrence of
 \mbox{\tcode{T}} within the template arguments of the requirement. The
 concept map archetype acts as a concept
-map, and is used to resolve name 
+map, and its definition is used to resolve name 
 lookup into
 requirements scope (\mbox{\ref{basic.scope.req}}) and satisfy the
 requirements of templates used inside the constrained context.}
+\addedCC{When the definition of a concept map archetype is required,
+  it will be synthesized from the definition of its corresponding
+  concept (\mbox{\ref{concept.map}}). An implementation shall not
+  define a concept map archetype 
+  unless the definition of that concept map archetype is required.}
 %
 \addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
