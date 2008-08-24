@@ -5067,21 +5067,21 @@ which the template can be used.}
 
 \pnum
 \addedConcepts{A concept requirement that refers to the
-\mbox{\tcode{SameType}} concept (\mbox{\ref{concept.support}}) is a
+\mbox{\tcode{std::SameType}} concept (\mbox{\ref{concept.support}}) is a
 \mbox{\techterm{same-type requirement}}. A same-type requirement is satisfied
 when its two template arguments refer to the same type (including the
 same \mbox{\techterm{cv}} qualifiers). In a 
 constrained template (\mbox{\ref{temp.constrained}}), a same-type requirement
-\mbox{\tcode{SameType<T1, T2>}} makes the types \mbox{\tcode{T1}} and \mbox{\tcode{T2}}
+\mbox{\tcode{std::SameType<T1, T2>}} makes the types \mbox{\tcode{T1}} and \mbox{\tcode{T2}}
 equivalent. \mbox{\enternote} type equivalence is a
 congruence relation, thus}
 \begin{itemize}
-\item \addedConcepts{\mbox{\tcode{SameType<T1, T2>}} implies \mbox{\tcode{SameType<T2, T1>}},}
-\item \addedConcepts{\mbox{\tcode{SameType<T1, T2>}} and \mbox{\tcode{SameType<T2, T3>}} implies
-  \mbox{\tcode{SameType<T1, T3>}},}
-\item \addedConcepts{\mbox{\tcode{SameType<T1, T1>}} is trivially true,}
-\item \addedConcepts{\mbox{\tcode{SameType<T1*, T2*>}} implies \mbox{\tcode{SameType<T1, T2>}} and
-  \mbox{\tcode{SameType<T1**, T2**>}}, etc.}
+\item \addedConcepts{\mbox{\tcode{std::SameType<T1, T2>}} implies \mbox{\tcode{std::SameType<T2, T1>}},}
+\item \addedConcepts{\mbox{\tcode{std::SameType<T1, T2>}} and \mbox{\tcode{std::SameType<T2, T3>}} implies
+  \mbox{\tcode{std::SameType<T1, T3>}},}
+\item \addedConcepts{\mbox{\tcode{std::SameType<T1, T1>}} is trivially true,}
+\item \addedConcepts{\mbox{\tcode{std::SameType<T1*, T2*>}} implies \mbox{\tcode{std::SameType<T1, T2>}} and
+  \mbox{\tcode{std::SameType<T1**, T2**>}}, etc.}
 \end{itemize}
 \addedConcepts{\mbox{\exitnote}
 \mbox{\enterexample}}
@@ -5702,31 +5702,37 @@ template <C1 T> class X {
   \mbox{\tcode{T}} is}
 \begin{itemize}
 \additemConcepts{an object type ([intro.object]), if the template
-  contains the requirement \mbox{\tcode{ObjectType<T>}},}
+  contains the requirement \mbox{\tcode{std::ObjectType<T>}},}
 \additemConcepts{a class type (clause~\mbox{\ref{class}}), if the 
   template contains the requirement
-  \mbox{\tcode{ClassType<T>}},}
+  \mbox{\tcode{std::ClassType<T>}},}
 \additemConcepts{a class (clause~\mbox{\ref{class}}), if the 
-  template contains the requirement \mbox{\tcode{Class<T>}},}
+  template contains the requirement \mbox{\tcode{std::Class<T>}},}
 \additemConcepts{a union ([class.union]), if the template contains
-  the requirement \mbox{\tcode{Union<T>}}},
+  the requirement \mbox{\tcode{std::Union<T>}}},
 \additemConcepts{a trivial type (\mbox{\ref{basic.types}}), if the 
   template contains the requirement
-  \mbox{\tcode{TrivialType<T>}},}
+  \mbox{\tcode{std::TrivialType<T>}},}
 \additemConcepts{a standard layout type (\mbox{\ref{basic.types}}), if the
   template contains the requirement
-  \mbox{\tcode{StandardLayoutType<T>}},}
+  \mbox{\tcode{std::StandardLayoutType<T>}},}
 \additemConcepts{a literal type (\mbox{\ref{basic.types}}), if the 
   template contains the requirement
-  \mbox{\tcode{LiteralType<T>}},}
+  \mbox{\tcode{std::LiteralType<T>}},}
 \additemConcepts{a scalar type (\mbox{\ref{basic.types}}), if the 
   template contains the requirement
-  \mbox{\tcode{ScalarType<T>}},}
-\additemConcepts{an integral type ([basic.fundamental]), if the 
+  \mbox{\tcode{std::ScalarType<T>}},}
+\additemCC{an arithmetic type (\mbox{\ref{basic.fundamental}}), if the
   template contains the requirement
-  \mbox{\tcode{IntegralType<T>}}, and}
-\additemConcepts{an enumeration type ([dcl.enum]), if the template
-  contains the requirement \mbox{\tcode{EnumerationType<T>}}.}
+  \mbox{\tcode{std::ArithmeticType<T>}},}
+\additemConcepts{an integral type (\mbox{\ref{basic.fundamental}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::IntegralType<T>}},}
+\additemCC{a floating point type (\mbox{\ref{basic.fundamental}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::FloatingPointType<T>}}, and}
+\additemConcepts{an enumeration type (\mbox{\ref{dcl.enum}}), if the template
+  contains the requirement \mbox{\tcode{std::EnumerationType<T>}}.}
 \end{itemize}
 
 \pnum
@@ -5836,10 +5842,10 @@ corresponding signature from the following list:}
 
 \pnum
 \addedConcepts{If the template requirements contain a requirement
-\mbox{\tcode{DerivedFrom<T, Base>}}, then the archetype of
+\mbox{\tcode{std::DerivedFrom<T, Base>}}, then the archetype of
 \mbox{\tcode{T}} is publicly derived from the archetype of \mbox{\tcode{Base}}. 
-If the same \mbox{\tcode{DerivedFrom<T, Base>}} requirement occurs more than once
-within the template requirements, the repeated \mbox{\tcode{DerivedFrom<T,
+If the same \mbox{\tcode{std::DerivedFrom<T, Base>}} requirement occurs more than once
+within the template requirements, the repeated \mbox{\tcode{std::DerivedFrom<T,
   Base>}} requirements are ignored.}
 
 \pnum
