@@ -75,7 +75,7 @@ namespace boost { namespace numeric { namespace bindings {
       inline 
       void trevc (char const side, char const howmny, const logical_t* select, int const n,
                   traits::complex_d* t, int const ldt, traits::complex_d* vl, int const ldvl, traits::complex_d* vr, int const ldvr,
-		  int const mm, int& m, traits::complex_d* work, int& info) 
+		  int const mm, int& m, traits::complex_d* work, int& info)
       {
         LAPACK_ZTREVC (&side, &howmny, select, &n, traits::complex_ptr(t), &ldt,
       	               traits::complex_ptr(vl), &ldvl, traits::complex_ptr(vr), &ldvr,

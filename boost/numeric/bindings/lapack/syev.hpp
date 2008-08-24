@@ -114,7 +114,7 @@ namespace boost { namespace numeric { namespace bindings {
 
        int const n = traits::matrix_size1 (a);
 
-       traits::detail::array<value_type> work( std::max(1,34*n) );
+       traits::detail::array<value_type> work( std::max<int>(1,34*n) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
 
@@ -127,7 +127,7 @@ namespace boost { namespace numeric { namespace bindings {
 
        int const n = traits::matrix_size1 (a);
 
-       traits::detail::array<value_type> work( std::max(1,3*n-1) );
+       traits::detail::array<value_type> work( std::max<int>(1,3*n-1) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
 
@@ -139,6 +139,13 @@ namespace boost { namespace numeric { namespace bindings {
        typedef typename A::value_type value_type ;
 
        return detail::syev(jobz, uplo, a, w, workspace.w_);
+    } // syev()
+
+	// Function without workarray as argument
+	template <typename A, typename W>
+    inline
+    int syev (char jobz, char uplo, A& a, W& w) {
+       return syev(jobz, uplo, a, w, optimal_workspace());
     } // syev()
 
   }

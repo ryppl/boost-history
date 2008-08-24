@@ -49,7 +49,7 @@ namespace boost { namespace numeric { namespace bindings {
      * diagonal elements, U is an M-by-M orthogonal/unitary matrix, and V 
      * is an N-by-N orthogonal/unitary matrix. The diagonal elements of S
      * are the singular values of A; they are real and non-negative, and 
-     * are returnede in descending  order. The first min(m,n) columns of 
+     * are returned in descending  order. The first min(m,n) columns of 
      * U and V are the left and right singular vectors of A. (Note that 
      * the routine returns V^T or V^H, not V.
      */ 
@@ -275,7 +275,9 @@ namespace boost { namespace numeric { namespace bindings {
 
       int const m = traits::matrix_size1 (a);
       int const n = traits::matrix_size2 (a);
+#ifndef NDEBUG /* this variable is only used in assertions below */
       int const minmn = m < n ? m : n; 
+#endif
 
       assert (minmn == traits::vector_size (s)); 
       assert (!(jobu == 'O' && jobvt == 'O')); 
@@ -340,7 +342,9 @@ namespace boost { namespace numeric { namespace bindings {
 
       int const m = traits::matrix_size1 (a);
       int const n = traits::matrix_size2 (a);
+#ifndef NDEBUG /* this variable is only used in assertions below */
       int const minmn = m < n ? m : n; 
+#endif
 
       assert (minmn == traits::vector_size (s)); 
       assert (!(jobu == 'O' && jobvt == 'O')); 
@@ -405,7 +409,9 @@ namespace boost { namespace numeric { namespace bindings {
 
       int const m = traits::matrix_size1 (a);
       int const n = traits::matrix_size2 (a);
+#ifndef NDEBUG /* this variable is only used in assertions below */
       int const minmn = m < n ? m : n; 
+#endif
 
       assert (minmn == traits::vector_size (s)); 
       assert (!(jobu == 'O' && jobvt == 'O')); 
@@ -490,7 +496,9 @@ namespace boost { namespace numeric { namespace bindings {
 
       int const m = traits::matrix_size1 (a);
       int const n = traits::matrix_size2 (a);
+#ifndef NDEBUG /* this variable is only used in assertions below */
       int const minmn = m < n ? m : n; 
+#endif
 
       assert (minmn == traits::vector_size (s)); 
 
