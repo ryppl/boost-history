@@ -137,6 +137,12 @@ struct list {
 
 \item Specify precisely which built-in candidates get defined when
   archetypes are present (\ref{over.built}).
+
+\item The \tcode{MoveConstructible<T>} requirement is no longer
+  propagated from the types of function parameters
+  (\ref{temp.req.impl}). This change brings concepts in sync with
+  generalized initializer lists (N2672), which permit a function
+  parameter to be direct-initialized.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -5676,7 +5682,7 @@ add(T t, U u) {
 }
 \end{codeblock}
 
-\additemConcepts{For every type archetype \mbox{\tcode{T}} that is the type
+\item \removedCCC{For every type archetype \mbox{\tcode{T}} that is the type
   of a parameter in a function type, the requirement
   \mbox{\tcode{MoveConstructible<T>}} is implied.}
 \addedConcepts{\exitexample}
