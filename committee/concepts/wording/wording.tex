@@ -105,6 +105,15 @@ standard library are discussed in separate documents:
 
 \section*{Changes from N2710}
 \begin{itemize}
+\item Removed the deprecation of \tcode{late_check}.
+
+\item The \tcode{MoveConstructible<T>} requirement is no longer
+  propagated from the types of function parameters
+  (\ref{temp.req.impl}). This change brings concepts in sync with
+  generalized initializer lists (N2672), which permit a function
+  parameter to be direct-initialized. Thanks to Daniel Kr\"ugler for
+  the reminder!
+
 \item Made an expression that uses a constrained member in the current
   instantiation a type-dependent expression
   (\ref{temp.dep.expr}). This change is required to properly delay
@@ -119,8 +128,6 @@ struct list {
                       // might not exist in the instantiation.
 };
 \end{codeblock}
-
-\item Removed the deprecation of \tcode{late_check}.
 
 \item Clarified the point of declaration of a template requirement
   (\ref{basic.scope.pdecl}) and its potential scope
@@ -138,11 +145,9 @@ struct list {
 \item Specify precisely which built-in candidates get defined when
   archetypes are present (\ref{over.built}).
 
-\item The \tcode{MoveConstructible<T>} requirement is no longer
-  propagated from the types of function parameters
-  (\ref{temp.req.impl}). This change brings concepts in sync with
-  generalized initializer lists (N2672), which permit a function
-  parameter to be direct-initialized.
+\item Clarified the template requirements of the default
+  implementations of associated functions (\ref{concept.fct}). Thanks
+  again to Daniel Kr\"ugler.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -3827,9 +3832,8 @@ the enclosing concept; the declaration declares a member function or
 member function template.}
 %
 \addedConcepts{An associated function shall not be
-  \mbox{\tcode{extern}}, inline}
-\addedZ{or \mbox{\tcode{virtual}}}
-\addedConcepts{(\mbox{\ref{dcl.fct.spec}}), explicitly-defaulted or deleted
+  \mbox{\tcode{extern}}, inline or \mbox{\tcode{virtual}}
+(\mbox{\ref{dcl.fct.spec}}), explicitly-defaulted or deleted
 (\mbox{\ref{dcl.fct.def}}), or a friend function (\mbox{\ref{class.friend}}). An 
 associated function shall not contain an
 \mbox{\techterm{exception-specification}} (\mbox{\ref{except.spec}}).}
@@ -3925,7 +3929,10 @@ concept C<typename X> {
 \addedConcepts{Associated functions may have a default implementation. This
 implementation will be instantiated when used. A default implementation of an
 associated function is a constrained template
-(\mbox{\ref{temp.constrained}}). \mbox{\enterexample}}
+(\mbox{\ref{temp.constrained}})} \addedCC{whose template requirements
+include concept requirements for the enclosing concept, its
+refinements, along with its
+associated requirements}\addedConcepts{. \mbox{\enterexample}}
 \begin{codeblock}
 concept EqualityComparable<typename T> {
   bool operator==(T, T);
