@@ -2570,10 +2570,10 @@ void f(list<float> lf, list<int> li, list<X> lX)
 \pnum
 \addedConcepts{A member template of a constrained class template is itself a
   constrained template
-  (\mbox{\ref{temp.constrained}}). \mbox{\enternote} The template
+  (\mbox{\ref{temp.constrained}}). The template
   requirements of the member template are the template requirements of
-its enclosing constrained template and any requirements specified or
-implied by the member template itself. \mbox{\exitnote}}
+each of its enclosing constrained templates and any requirements specified or
+implied by the member template itself.}
 
 \rSec2[temp.variadic]{Variadic templates}
 \pnum
@@ -4813,18 +4813,19 @@ void h(T x) {
 \rSec3[concept.refine.maps]{Implicit concept maps for refined concepts}
 
 \pnum
-\addedConcepts{When a concept map is defined for a concept
-  \mbox{\tcode{C}} that has a refinement clause, concept maps for each
+\addedConcepts{When a concept map} \addedCC{or concept map template}
+\addedConcepts{is defined for a concept
+  \mbox{\tcode{C}} that has a refinement clause, concept maps}
+\addedCC{or concept map templates}
+\addedConcepts{for each
   of the concept instances in the
   refinement clause of
 \mbox{\tcode{C}}
-will be defined
-in the namespace of which the
-concept map is a member.
-If a concept map for a given concept instance in the
-  refinement clause has not be defined in the namespace of the
-  refining concept map, it is defined implicitly.
-\mbox{\enterexample}}
+shall be defined,} \addedCC{implicitly or explicitly,} 
+\addedConcepts{in the namespace of which the
+refining concept map} \addedCC{or concept map template}
+\addedConcepts{is a member.}
+\addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept A<typename T> { }
 concept B<typename T> : A<T> { }
@@ -4834,10 +4835,68 @@ concept_map B<int> { } // implicitly defines concept map A<int>
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{When a concept map is implicitly defined for a refinement,
-definitions in the concept map for the refining concept are
-used to 
-satisfy the requirements of the refined concept (\mbox{\ref{concept.map}}).
+\addedCC{A concept map or concept map template for a refinement
+  (called a \mbox{\techterm{refined}} concept map or concept map
+  template) has been
+  defined if concept map lookup (\mbox{\ref{temp.req.sat}}) finds a
+  concept map for the concept instance \mbox{\tcode{I}} in the
+  namespace of which the refining concept map or concept 
+  map template is a member, where \mbox{\tcode{I}} is 
+  determined by substituting the
+  template arguments of the refining concept map or concept map
+  template into the \mbox{\techterm{refinement-specifier}}
+  corresponding to the refinement. If concept map lookup fails
+  or if it finds a concept map from a different namespace, a suitable
+  concept map shall be defined implicitly, as described below.}
+
+
+\pnum
+\addedCC{Concept map templates (\mbox{\ref{temp.concept.map}})
+  can only be defined for certain refinements. A refined concept map
+  template corresponding to a particular
+  \mbox{\techterm{refinement-specifier}} can be 
+defined if all of the template parameters of the refining
+concept map template are \mbox{\techterm{deducible}}.
+Let \mbox{\tcode{R}} be the 
+\mbox{\techterm{refinement-specifier}} after substitution of the
+refining concept map's template arguments for the corresponding
+template parameters. A template parameter \mbox{\tcode{T}}
+of the refining concept map template
+is \mbox{\techterm{deducible}} if for any template argument
+\mbox{\tcode{P}} in \mbox{\tcode{R}}'s
+\mbox{\techterm{template-argument-list}} there exists a type,
+template, or value \mbox{\tcode{A}} such that template argument
+deduction (\mbox{\ref{temp.deduct}}) performed with that
+\mbox{\tcode{P}/\tcode{A}} pair would determine a value for
+\mbox{\tcode{T}}. If any template parameter of the refining
+concept map template is not deducible, the program is
+ill-formed. Otherwise, a refined concept map template is implicitly
+defined in the namespace of the refining concept map template; its
+\mbox{\techterm{template-parameter-list}} and template
+requirements are the same as the refining concept map template, and
+its \mbox{\techterm{concept-id}} is \mbox{\tcode{R}}.
+\mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> { }
+concept D<typename T, typename U> : C<T> { }
+
+template<typename T> struct A { };
+
+template<typename T> concept_map D<A<T>, T> { }
+// implicitly defines:
+template<typename T> concept_map C<A<T>> { }
+
+template<typename T, typename U> 
+  concept_map D<T, A<U>> { } // ill-formed: cannot deduce template parameter U from C<T>
+                             // and there is no concept map template C<T>
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum
+\addedCC{When a refined concept map or concept map template is
+  implicitly defined, definitions in the refining concept map or
+  concept map template can be
+  used to satisfy the requirements of the refined concept (\mbox{\ref{concept.map}}).
 \mbox{\enternote} a single function definition in a concept
   map can be used to satisfy multiple requirements. \mbox{\exitnote}
 \mbox{\enterexample} in this example, the concept map \mbox{\tcode{D<int>}}
@@ -4859,43 +4918,10 @@ concept_map D<int> {
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
-\pnum
-\addedConcepts{Concept map templates (\mbox{\ref{temp.concept.map}}) are implicitly defined
-only for certain refinements of the concept corresponding to the
-concept map template. A concept map template for a particular refined
-concept is defined}
-\addedConcepts{in the namespace of the concept map}
-\addedConcepts{if all of the template parameters of the refining
-concept map template can be deduced from the
-\mbox{\techterm{template-argument-list}} of
-the \mbox{\techterm{refinement-specifier}}'s
-corresponding concept instance
-(\mbox{\ref{temp.deduct.type}}). If template argument deduction fails, then a
-concept map template corresponding to the refined concept shall
-have been defined}
-\addedConcepts{in the namespace of the concept map}\addedConcepts{.
-\mbox{\enterexample}}
-\begin{codeblock}
-concept C<typename T> { }
-concept D<typename T, typename U> : C<T> { }
-
-template<typename T> struct A { };
-
-template<typename T> concept_map D<A<T>, T> { }
-// implicitly defines:
-template<typename T> concept_map C<A<T>> { }
-
-template<typename T, typename U> 
-  concept_map D<T, A<U>> { } // ill-formed: cannot deduce template parameter U from C<T>
-                             // and there is no concept map template C<T>
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
-
 \pnum 
 \addedConcepts{Each concept map or concept map template shall have satisfiers
 that are compatible with the satisfiers of
-the
-concept map or concept map template named by the refinement. A satisfier of
+its refined concept maps or concept map templates. A satisfier of
 the refining concept map or concept map template is
 compatible with its corresponding satisfier of
 the refined concept
@@ -4913,7 +4939,7 @@ a concept map or concept
 map template that are not compatible with their corresponding satisfiers of
 a refined concept map or concept map template, the
 program is ill-formed.}
-\addedConcepts{if the concept maps or concept map templates with satisfiers
+\addedConcepts{If the concept maps or concept map templates with satisfiers
 that are not compatible occur in different translation
 units, no diagnostic is required. \mbox{\enterexample}}
 \begin{codeblock}
