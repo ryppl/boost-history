@@ -134,6 +134,9 @@ struct list {
   concept maps and concept map templates for refinements
   (\ref{concept.refine.maps}). The semantics have not changed, but the
   resulting wording should be much clearer.
+
+\item Specify precisely which built-in candidates get defined when
+  archetypes are present (\ref{over.built}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -2278,8 +2281,8 @@ defined in clause \ref{expr} are specified in this subclause.
 These candidate
 functions participate in the operator overload resolution process as
 described in \ref{over.match.oper} and are used for no other purpose.
-\addedConcepts{No built-in operators are defined for archetypes
-  (\mbox{\ref{temp.archetype}}), even though 
+\addedConcepts{Built-in operators are not defined,  for archetypes
+  (\mbox{\ref{temp.archetype}}), except as noted, even though 
   template requirements naming compiler-supported concepts
   (\mbox{\ref{concept.support}}) can classify archetypes as non-class
   types.}
@@ -2304,6 +2307,155 @@ candidate with the same name and parameter types as a built-in
 candidate operator function, the built-in operator function
 is hidden and is not included in the set of candidate functions.
 \exitnote\ 
+
+\setcounter{Paras}{4}
+
+\pnum
+For every cv-qualified or cv-unqualified object type
+\textit{T}, \addedCC{including archetypes,}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{T}@&    operator*(@\textit{T}@*);
+\end{codeblock}
+
+\pnum
+For every function type
+\textit{T}, \addedCC{including archetypes,}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{T}@&    operator*(@\textit{T}@*);
+\end{codeblock}
+
+\pnum
+For every type
+\textit{T}, \addedCC{including archetypes for which the template requirements contain \mbox{\tcode{std::PointeeType<T>}},}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{T}@*    operator+(@\textit{T}@*);
+\end{codeblock}
+
+\setcounter{Paras}{12}
+\pnum
+For every cv-qualified or cv-unqualified object type
+\textit{T}, \addedCC{including archetypes,}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{T}@*      operator+(@\textit{T}@*, std::ptrdiff_t);
+@\textit{T}@&      operator[](@\textit{T}@*, std::ptrdiff_t);
+@\textit{T}@*      operator-(@\textit{T}@*, std::ptrdiff_t);
+@\textit{T}@*      operator+(std::ptrdiff_t, @\textit{T}@*);
+@\textit{T}@&      operator[](std::ptrdiff_t, @\textit{T}@*);
+\end{codeblock}
+
+\pnum
+For every 
+\textit{T},\
+where
+\textit{T}\
+is a pointer to object type, \addedCC{including pointers to archetypes,}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+std::ptrdiff_t   operator-(@\textit{T}\addedCC{*}@, @\textit{T}\addedCC{*}@);
+\end{codeblock}
+
+\pnum
+For every pointer or enumeration type
+\textit{T}, \addedCC{including pointers to archetypes,}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+bool    operator<(@\textit{T}@, @\textit{T}@);
+bool    operator>(@\textit{T}@, @\textit{T}@);
+bool    operator<=(@\textit{T}@, @\textit{T}@);
+bool    operator>=(@\textit{T}@, @\textit{T}@);
+bool    operator==(@\textit{T}@, @\textit{T}@);
+bool    operator!=(@\textit{T}@, @\textit{T}@);
+\end{codeblock}
+
+\pnum
+For every pointer to member type
+\textit{T}, \addedCC{including pointer to member types involving archetypes,}
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+bool    operator==(@\textit{T}@, @\textit{T}@);
+bool    operator!=(@\textit{T}@, @\textit{T}@);
+\end{codeblock}
+
+\setcounter{Paras}{18}
+\pnum
+For every pair
+(\textit{T},
+\textit{VQ}),
+where
+\textit{T}\ 
+is any type\addedCC{, including archetypes for which the template
+  requirements contain}\\ \addedCC{\mbox{\tcode{std::PointeeType<T>}},}
+and
+\textit{VQ}\ 
+is either
+\tcode{volatile}
+or empty,
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{T}@*@\textit{VQ}@&   operator=(@\textit{T}@*@\textit{VQ}@&, @\textit{T}@*);
+\end{codeblock}
+
+\pnum
+For every pair
+(\textit{T},
+\textit{VQ}),
+where
+\textit{T}\ 
+is an enumeration or pointer to member type\addedCC{, including
+  pointer to member types that involve archetypes,} and
+\textit{VQ}\ 
+is either
+\tcode{volatile}
+or empty,
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{VQ}\ \textit{T}@&   operator=(@\textit{VQ}\ \textit{T}@&, @\textit{T}@);
+\end{codeblock}
+
+\pnum
+For every pair
+(\textit{T},
+\textit{VQ}),
+where
+\textit{T}\ 
+is a cv-qualified or cv-unqualified object type\addedCC{, including archetypes,} and
+\textit{VQ}\ 
+is either
+\tcode{volatile}
+or empty,
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{T}@*@\textit{VQ}@&   operator+=(@\textit{T}@*@\textit{VQ}@&, std::ptrdiff_t);
+@\textit{T}@*@\textit{VQ}@&   operator-=(@\textit{T}@*@\textit{VQ}@&, std::ptrdiff_t);
+\end{codeblock}
+
+\setcounter{Paras}{24}
+\pnum
+For every type
+\textit{T},
+where
+\textit{T}\ 
+is a pointer or pointer-to-member type, \addedCC{including pointer and
+  pointer-to-member types that involve archetypes,} there exist candidate operator
+functions of the form
+
+\begin{codeblock}
+@\textit{T}@       operator?(bool, @\textit{T}@, @\textit{T}@);
+\end{codeblock}
 
 \rSec0[temp]{Templates}
 \begin{paras}
