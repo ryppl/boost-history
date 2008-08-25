@@ -65,7 +65,7 @@ DVIPS		= dvips
 #
 NAMES		= clib-intro clib-concepts clib-utilities clib-containers \
                   clib-iterconcepts clib-iterators clib-algorithms \
-	          clib-numerics unique_copy
+	          clib-numerics unique_copy collapse_alg_impl
 
 OTHER_TEX	= macros.tex
 

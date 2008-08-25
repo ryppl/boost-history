@@ -1,0 +1,1027 @@
+\documentclass[american,twoside]{book}
+\usepackage{refbib}
+\usepackage{pdfsync}
+\input{macros}
+
+%%--------------------------------------------------%% PDF
+
+\usepackage[pdftex,
+            pdftitle={Unifying Operator and Function-Object Variants of Standard
+  Library Algorithms},
+            pdfsubject={C++ International Standard Proposal},
+            pdfcreator={Douglas Gregor},
+            bookmarks=true,
+            bookmarksnumbered=true,
+            pdfpagelabels=true,
+            pdfpagemode=UseOutlines,
+            pdfstartview=FitH,
+            linktocpage=true,
+            colorlinks=true,
+            linkcolor=blue,
+            plainpages=false
+           ]{hyperref}
+
+\usepackage{makeidx}
+\makeindex
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{2}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor}
+
+% Do not put blank pages after chapters that end on odd-numbered pages.
+\def\cleardoublepage{\clearpage\if@twoside%
+  \ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\begin{center}
+\huge
+Unifying Operator and Function-Object Variants of Standard Library Algorithms
+\normalsize
+\end{center}
+
+\vspace{0.5in}
+\par\noindent Author: Douglas Gregor, Indiana University
+\par\noindent Document number: N2743=08-0252
+\par\noindent Date: \today
+\par\noindent Project: Programming Language C++, Library Working Group
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$
+
+\section*{Introduction}
+This proposal unifies the operator-based and function-object variants
+of Standard Library algorithms, in many cases collapsing two algorithm
+declarations into a single declaration. For example,
+
+\begin{codeblock}
+template<RandomAccessIterator Iter>
+  requires ShuffleIterator<Iter>
+        && LessThanComparable<Iter::value_type> 
+  void sort(Iter @\farg{first}@, Iter @\farg{last}@);
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void sort(Iter @\farg{first}@, Iter @\farg{last}@,
+            Compare @\farg{comp}@);
+\end{codeblock}
+
+becomes 
+
+\begin{codeblock}
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare = less<Iter::value_type>>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void sort(Iter @\farg{first}@, Iter @\farg{last}@,
+            Compare @\farg{comp}@ = Compare());
+\end{codeblock}
+
+When the final argument to \tcode{sort} is omitted, it will receive a
+default of \tcode{std::less} on the iterator's value type. Since
+\tcode{std::less} itself has a function-call operator that uses the
+\tcode{LessThanComparable} concept, we get the same behavior from this
+version of \tcode{sort} that we would get from the original first
+variant of \tcode{sort}.
+
+Some Standard Library implementations already forward the
+operator-based formulations of their algorithm implementations to the
+function-object---based formulations, and this idea is far from
+new. However, it was not possible to unify the declarations in \Cpp03
+for two reasons. First, default arguments of function templates were
+not supported in \Cpp03. Second, it was not clear in \Cpp03 whether
+the \tcode{operator<} used by the first variant of \tcode{sort}
+operated on the iterator's \tcode{value_type} or \tcode{reference}
+type (or a combination of both); concepts tie down these details,
+making it safe to unify the signatures. This unification significantly
+reduces the number of declarations in the algorithms chapter, making
+it easier to read. The result will be an easier-to-digest Standard
+Library specification with a less-verbose implementation.
+
+Note that the changes to the algorithms are not quite as extensive as
+one might hope. In cases where we have type-symmetric operator
+requirements (\tcode{LessThanComparable} and
+\tcode{EqualityComparable}) we can use the standard library's function
+object types (\tcode{std::less} and \tcode{equal_to},
+respectively). However, wherever we have type-asymmetric operator
+requirements (\tcode{HasLess} and \tcode{HasEqualTo}), there is no
+function object type in the standard. However, introducing a new,
+mostly redundant set of function object types to the standard library
+just to simplify the presentation of the algorithms does not seem like
+a reasonable trade-off.
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+\fancyfoot[C]{Draft}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\color{black}
+
+\setcounter{chapter}{24}
+\rSec0[algorithms]{Algorithms library}
+
+\begin{paras}
+\synopsis{Header \tcode{<algorithm>}\ synopsis}
+\index{algorithm@\tcode{<algorithm>}}%
+
+\color{black}
+\begin{codeblock}
+namespace std {
+}
+\end{codeblock}
+\color{black}
+
+\rSec1[alg.nonmodifying]{Non-modifying sequence operations}
+\setcounter{subsection}{7}
+\rSec2[alg.adjacent.find]{Adjacent find}
+
+\index{adjacent_find@\tcode{adjacent_find}}%
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires EqualityComparable<Iter::value_type>}@
+  @\removedConcepts{Iter adjacent_find(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<ForwardIterator Iter,
+         EquivalenceRelation<auto, Iter::value_type> Pred@\addedConcepts{ = equal_to<Iter::value_type>}@>
+  requires CopyConstructible<Pred>
+  Iter adjacent_find(Iter @\farg{first}@, Iter @\farg{last}@, 
+                     Pred @\farg{pred}\addedConcepts{ = Pred()}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+such that both
+\tcode{i}\
+and
+\tcode{i + 1}\
+are in
+the range
+\range{\farg{first}}{\farg{last}}\
+for which
+the following corresponding condition\removedConcepts{s} hold\addedConcepts{s}:
+\removedConcepts{\mbox{\tcode{*i == *(i + 1), }}}
+\tcode{\farg{pred}(*i, *(i + 1)) != false}.
+Returns \farg{last}\
+if no such iterator is found.
+
+\pnum
+\complexity\ 
+For a nonempty range, exactly
+\tcode{min((i - \farg{first}) + 1, (\farg{last}\ - \farg{first}) - 1)}\
+applications of the corresponding predicate, where \tcode{i}\ is
+\tcode{adjacent_find}'s
+return value.
+\end{itemdescr}
+
+\rSec1[alg.modifying.operations]{Mutating sequence operations}
+
+\setcounter{subsection}{8}
+\rSec2[alg.unique]{Unique}
+
+\index{unique@\tcode{unique}}%
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires OutputIterator<Iter, Iter::reference>}@
+        @\removedConcepts{\&\& EqualityComparable<Iter::value_type>}@
+  @\removedConcepts{Iter unique(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<ForwardIterator Iter, 
+         EquivalenceRelation<auto, Iter::value_type> Pred@\addedConcepts{ = equal_to<Iter::value_type>}@>
+  requires OutputIterator<Iter, RvalueOf<Iter::reference>::type>
+        && CopyConstructible<Pred>
+  Iter unique(Iter @\farg{first}@, Iter @\farg{last}@,
+              Pred @\farg{pred}@@\addedConcepts{ = Pred()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+For a nonempty range, eliminates all but the first element from every
+consecutive group of equivalent elements referred to by the iterator
+\tcode{i}\
+in the range
+\range{\farg{first} + 1}{\farg{last}}\
+for which the following condition\removedConcepts{s} hold\addedConcepts{s}:
+\removedConcepts{\mbox{\tcode{*(i - 1) == *i}}
+or}
+\tcode{\farg{pred}(*(i - 1), *i) != false}.
+
+\pnum
+\removedConcepts{\requires
+The comparison function shall be an equivalence relation.}
+
+\pnum
+\returns\ 
+The end of the resulting range.
+
+\pnum
+\complexity\ 
+For nonempty ranges, exactly
+\tcode{(\farg{last} - \farg{first}) - 1}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\index{unique_copy@\tcode{unique_copy}}%
+\begin{itemdecl}
+@\removedConcepts{template<InputIterator InIter, typename OutIter>}@
+  @\removedConcepts{requires OutputIterator<OutIter, InIter::reference>}@
+        @\removedConcepts{\&\& OutputIterator<OutIter, const InIter::value_type\&>}@
+        @\removedConcepts{\&\& EqualityComparable<InIter::value_type>}@
+        @\removedConcepts{\&\& CopyAssignable<InIter::value_type>}@
+        @\removedConcepts{\&\& CopyConstructible<InIter::value_type>}@
+  @\removedConcepts{OutIter unique_copy(InIter \mbox{\farg{first}}, InIter \mbox{\farg{last}},}@
+                      @\removedConcepts{OutIter \mbox{\farg{result}});}@
+
+template<InputIterator InIter, typename OutIter,
+         EquivalenceRelation<auto, InIter::value_type> Pred@\addedConcepts{ = equal_to<Iter::value_type>}@>
+  requires OutputIterator<OutIter, InIter::reference>
+        && OutputIterator<OutIter, const InIter::value_type&>
+        && CopyAssignable<InIter::value_type> 
+        && CopyConstructible<InIter::value_type> 
+        && CopyConstructible<Pred>
+  OutIter unique_copy(InIter @\farg{first}@, InIter @\farg{last}@,
+                      OutIter @\farg{result}@, Pred @\farg{pred}@@\addedConcepts{ = Pred()}@);
+\end{itemdecl}
+
+\editorial{Note that the unification of the \tcode{unique_copy}
+  signatures depends on the simplification to \tcode{unique_copy} in
+  N2742. If that proposal is not accepted, this \tcode{unique_copy}
+  cannot be collapsed.}
+
+\begin{itemdescr}
+\pnum
+\requires\ 
+The ranges
+\range{\farg{first}}{\farg{last}}\
+and
+\range{\farg{result}}{\farg{result}+(\farg{last}-\farg{first})}\
+shall not overlap.
+
+\pnum
+\effects\ 
+Copies only the first element from every consecutive group of equal elements referred to by
+the iterator \color{black}
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+for which the following corresponding condition\removedConcepts{s} hold\addedConcepts{s}:
+\removedConcepts{\mbox{\tcode{*i == *(i - 1)}}
+or}
+\tcode{\farg{pred}(*i, *(i - 1)) != false}.
+
+\pnum
+\returns\ 
+The end of the resulting range.
+
+\pnum
+\complexity\ 
+For nonempty ranges, exactly
+\tcode{\farg{last}\ - \farg{first} - 1}\
+applications of the corresponding predicate.
+\end{itemdescr}
+
+\rSec1[alg.sorting]{Sorting and related operations}
+
+\pnum
+All the operations in~\ref{alg.sorting} have two versions: one that takes a function object of type
+\tcode{Compare}\
+and one that uses an
+\tcode{operator<}. \addedConcepts{\enternote in some cases, the version that uses \mbox{\tcode{operator<}} does so through default function arguments and default template arguments. \exitnote}
+
+\setcounter{Paras}{6}
+\pnum
+In the descriptions of the functions that deal with ordering relationships we frequently use a notion of
+equivalence to describe concepts such as stability.
+The equivalence to which we refer is not necessarily an
+\tcode{operator==},
+but an equivalence relation induced by the strict weak ordering.
+That is, two elements
+\tcode{a}\
+and
+\tcode{b}\
+are considered equivalent if and only if
+\changedConcepts{\mbox{\tcode{!(a < b) \&\& !(b < a)}}}{\mbox{\tcode{!comp(a, b) \&\& !comp(b, a)}}}.
+
+\rSec2[alg.sort]{Sorting}
+
+\rSec3[sort]{\tcode{sort}}
+
+\index{sort@\tcode{sort}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void sort(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void sort(Iter @\farg{first}@, Iter @\farg{last}@,
+            Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Sorts the elements in the range
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\complexity\ 
+Approximately $N \log(N)$
+(where
+\tcode{$N$ == \farg{last} - \farg{first}})
+comparisons on the average.%
+\footnote{
+If the worst case behavior is important
+\tcode{stable_sort()}~(\ref{stable.sort}) or
+\tcode{partial_sort()}~(\ref{partial.sort}) should be used.
+}
+\end{itemdescr}
+
+\rSec3[stable.sort]{\tcode{stable_sort}}
+
+\index{stable_sort@\tcode{stable_sort}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void stable_sort(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void stable_sort(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Sorts the elements in the range \range{\farg{first}}{\farg{last}}.
+
+\pnum
+\complexity\ 
+It does at most $N \log^2(N)$
+(where
+\tcode{$N$ == \farg{last} - \farg{first}})
+comparisons; if enough extra memory is available, it is
+$N \log(N)$.
+
+\pnum
+\notes\ 
+Stable.
+\end{itemdescr}
+
+\rSec3[partial.sort]{\tcode{partial_sort}}
+
+\index{partial_sort@\tcode{partial_sort}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void partial_sort(Iter \mbox{\farg{first}},}@
+                    @\removedConcepts{Iter \mbox{\farg{middle}},}@
+                    @\removedConcepts{Iter \mbox{\farg{last}});}@
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void partial_sort(Iter @\farg{first}@,
+                    Iter @\farg{middle}@,
+                    Iter @\farg{last}@,
+                    Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places the first
+\tcode{\farg{middle}\ - \farg{first}}\
+sorted elements from the range
+\range{\farg{first}}{\farg{last}}
+into the range
+\range{\farg{first}}{\farg{middle}}.
+The rest of the elements in the range
+\range{\farg{middle}}{\farg{last}}\
+are placed in an unspecified order.
+\index{unspecified}%
+
+\pnum
+\complexity\ 
+It takes approximately
+\tcode{(\farg{last}\ - \farg{first}) * log(\farg{middle}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\setcounter{subsubsection}{4}
+\rSec3[is.sorted]{\tcode{is_sorted}}
+
+\index{is_sorted@\tcode{is_sorted}}%
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{bool is_sorted(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\returns} \mbox{\tcode{is_sorted_until(first, last) == last}}}
+\end{itemdescr}
+
+\index{is_sorted@\tcode{is_sorted}}%
+\begin{itemdecl}
+template<ForwardIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  bool is_sorted(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{is_sorted_until(first, last, comp) == last}}}
+\end{itemdescr}
+
+\index{is_sorted_until@\tcode{is_sorted_until}}%
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{Iter is_sorted_until(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+template<ForwardIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  Iter is_sorted_until(Iter @\farg{first}@, Iter @\farg{last}@,
+                       Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} If \mbox{\tcode{distance(first, last) < 2}}, returns
+\mbox{\tcode{last}}. Otherwise, returns
+the last iterator \mbox{\tcode{i}} in \mbox{\crange{first}{last}} for which the
+range \mbox{\range{first}{i}} is sorted.}
+
+\pnum
+\addedD{\mbox{\complexity} Linear.}
+\end{itemdescr}
+
+\rSec2[alg.nth.element]{Nth element}
+
+\index{nth_element@\tcode{nth_element}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void nth_element(Iter \mbox{\farg{first}}, Iter \mbox{\farg{nth}},}@
+                   @\removedConcepts{Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void nth_element(Iter @\farg{first}@, Iter @\farg{nth}@,
+                   Iter @\farg{last}@,  Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+After
+\tcode{nth_element}\
+the element in the position pointed to by \farg{nth}\
+is the element that would be
+in that position if the whole range were sorted.
+Also for any iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{nth}}
+and any iterator
+\tcode{j}\
+in the range
+\range{\farg{nth}}{\farg{last}}\
+it holds that@\removedConcepts{:
+\mbox{\tcode{!(*i > *j)}}
+or}
+\tcode{\farg{comp}(*j, *i) == false}.
+
+\pnum
+\complexity\ 
+Linear on average.
+\end{itemdescr}
+
+\setcounter{subsection}{3}
+\rSec2[alg.merge]{Merge}
+
+\setcounter{Paras}{5}
+
+\index{inplace_merge@\tcode{inplace_merge}}%
+\begin{itemdecl}
+@\removedConcepts{template<BidirectionalIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void inplace_merge(Iter \mbox{\farg{first}},}@
+                     @\removedConcepts{Iter \mbox{\farg{middle}},}@
+                     @\removedConcepts{Iter \mbox{\farg{last}});}@
+
+template<BidirectionalIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void inplace_merge(Iter @\farg{first}@,
+                     Iter @\farg{middle}@,
+                     Iter @\farg{last}@, Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Merges two sorted consecutive ranges
+\range{\farg{first}}{\farg{middle}}\
+and
+\range{\farg{middle}}{\farg{last}},
+putting the result of the merge into the range
+\range{\farg{first}}{\farg{last}}.
+The resulting range will be in non-decreasing order;
+that is, for every iterator
+\tcode{i}\
+in
+\range{\farg{first}}{\farg{last}}\
+other than
+\tcode{\farg{first}},
+the condition
+\removedConcepts{\mbox{\tcode{*i < *(i - 1)}}}
+\removedConcepts{or, respectively,}
+\tcode{\farg{comp}(*i, *(i - 1))}\
+will be false.
+
+\pnum
+\complexity\ 
+When enough additional memory is available,
+\tcode{(\farg{last}\ - \farg{first}) - 1}\
+comparisons.
+If no additional memory is available, an algorithm with complexity
+$N \log(N)$
+(where
+\tcode{N}
+is equal to
+\tcode{\farg{last}\ - \farg{first}})\
+may be used.
+
+\pnum
+\notes\ 
+Stable.
+\end{itemdescr}
+
+\setcounter{subsection}{5}
+\rSec2[alg.heap.operations]{Heap operations}
+
+\pnum
+A
+\techterm{heap}\ 
+is a particular organization of elements in a range between two random access iterators
+\range{a}{b}.
+Its two key properties are:
+
+\begin{description}
+\item{(1)} There is no element greater than
+\tcode{*a}\
+in the range and
+\item{(2)} \tcode{*a}\
+may be removed by
+\tcode{pop_heap()},
+or a new element added by
+\tcode{push_heap()},
+in
+$\mathcal{O}(\log(N))$
+time.
+\end{description}
+
+\pnum
+These properties make heaps useful as priority queues.
+
+\pnum
+\tcode{make_heap()}\
+converts a range into a heap and
+\tcode{sort_heap()}\
+turns a heap into a sorted sequence.
+
+\rSec3[push.heap]{\tcode{push_heap}}
+
+\index{push_heap@\tcode{push_heap}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void push_heap(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void push_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Places the value in the location
+\tcode{\farg{last} - 1}\
+into the resulting heap
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\requires\ 
+The range
+\range{\farg{first}}{\farg{last} - 1}\
+shall be a valid heap.
+
+\pnum
+\complexity\ 
+At most
+\tcode{log(\farg{last}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[pop.heap]{\tcode{pop_heap}}
+
+\index{pop_heap@\tcode{pop_heap}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter> \&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void pop_heap(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void pop_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Swaps the value in the location \farg{first}\
+with the value in the location
+\tcode{\farg{last} - 1}\
+and makes
+\range{\farg{first}}{\farg{last} - 1}\
+into a heap.
+
+\pnum
+\requires\ 
+The range
+\range{\farg{first}}{\farg{last}}\
+shall be a valid heap.
+
+\pnum
+\textcolor{black}{}\complexity\ 
+At most
+\tcode{2 * log(\farg{last}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[make.heap]{\tcode{make_heap}}
+
+\index{make_heap@\tcode{make_heap}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void make_heap(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void make_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Constructs a heap out of the range
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{3 * (\farg{last}\ - \farg{first})}\
+comparisons.
+\end{itemdescr}
+
+\rSec3[sort.heap]{\tcode{sort_heap}}
+
+\index{sort_heap@\tcode{sort_heap}}%
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter> \&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{void sort_heap(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  void sort_heap(Iter @\farg{first}@, Iter @\farg{last}@,
+                 Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Sorts elements in the heap
+\range{\farg{first}}{\farg{last}}.
+
+\pnum
+\complexity\ 
+At most $N \log(N)$
+comparisons (where
+\tcode{N == \farg{last}\ - \farg{first}}).
+\end{itemdescr}
+
+\rSec3[is.heap]{\tcode{is_heap}}
+
+\index{is_heap@\tcode{is_heap}}%
+
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{requires LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{bool is_heap(Iter first, Iter last);}@
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\removedConcepts{\mbox{\returns} \mbox{\tcode{is_heap_until(first, last) == last}}}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  bool is_heap(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} \mbox{\tcode{is_heap_until(first, last, comp) == last}}}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+@\removedConcepts{template<RandomAccessIterator Iter>}@
+  @\removedConcepts{Iter is_heap_until(Iter first, Iter last);}@
+template<RandomAccessIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  Iter is_heap_until(Iter @\farg{first}@, Iter @\farg{last}@,
+                     Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\addedD{\mbox{\returns} If \mbox{\tcode{distance(first, last) < 2}}, returns
+\mbox{\tcode{last}}. Otherwise, returns
+the last iterator \mbox{\tcode{i}} in \mbox{\crange{first}{last}} for which the
+range \mbox{\range{first}{i}} is a heap.}
+
+\pnum
+\addedD{\mbox{\complexity} Linear.}
+\end{itemdescr}
+
+\rSec2[alg.min.max]{Minimum and maximum}
+\setcounter{Paras}{30}
+\index{min_element@\tcode{min_element}}%
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{Iter min_element(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<ForwardIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  Iter min_element(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+the following corresponding condition\removedConcepts{s} hold\addedConcepts{s}:
+\removedConcepts{\mbox{\tcode{!(*j < *i)}}
+or}
+\tcode{\farg{comp}(*j, *i) == false}.
+Returns
+\tcode{\farg{last}}\
+if
+\tcode{\farg{first} == \farg{last}}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{max((\farg{last} - \farg{first}) - 1, 0)}\
+applications of the corresponding comparisons.
+\end{itemdescr}
+
+\index{max_element@\tcode{max_element}}%
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{Iter max_element(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<ForwardIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  Iter max_element(Iter @\farg{first}@, Iter @\farg{last}@,
+                   Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\returns\ 
+The first iterator
+\tcode{i}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+such that for any iterator
+\tcode{j}\
+in the range
+\range{\farg{first}}{\farg{last}}\
+the following corresponding condition\removedConcepts{s} hold\addedConcepts{s}:
+\removedConcepts{\mbox{\tcode{!(*i < *j)}}
+or}
+\tcode{\farg{comp}(*i, *j) == false}.
+Returns
+\tcode{\farg{last}}\
+if
+\tcode{\farg{first} == \farg{last}}.
+
+\pnum
+\complexity\ 
+Exactly
+\tcode{max((\farg{last}\ - \farg{first}) - 1, 0)}\
+applications of the corresponding comparisons.
+\end{itemdescr}
+
+\index{minmax_element@\tcode{minmax_element}}%
+
+\begin{itemdecl}
+@\removedConcepts{template<ForwardIterator Iter>}@
+  @\removedConcepts{requires LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{pair<Iter, Iter>}@
+    @\removedConcepts{minmax_element(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+template<ForwardIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires CopyConstructible<Compare>
+  pair<Iter, Iter>
+    minmax_element(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}
+\color{black}
+
+\begin{itemdescr}
+\pnum
+\mbox{\returns}
+\mbox{\tcode{make_pair(m, M)}}, where \mbox{\tcode{m}} is
+\removedConcepts{\mbox{\tcode{min_element(first, last)}}
+or} \mbox{\tcode{min_element(first, last, comp)}}
+and \mbox{\tcode{M}} is \removedConcepts{\mbox{\tcode{max_element(first, last)}}
+or} \mbox{\tcode{max_element(first, last, comp)}}.
+
+\pnum
+\addedB{\mbox{\complexity}
+At most
+\mbox{\tcode{max(2 * (\farg{last} - \farg{first}) - 2, 0)}}
+applications of the corresponding comparisons.}
+\end{itemdescr}
+
+\setcounter{subsection}{8}
+\rSec2[alg.permutation.generators]{Permutation generators}
+
+\index{next_permutation@\tcode{next_permutation}}%
+\begin{itemdecl}
+@\removedConcepts{template<BidirectionalIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{bool next_permutation(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<BidirectionalIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  bool next_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Takes a sequence defined by the range
+\range{\farg{first}}{\farg{last}}\
+and transforms it into the next permutation.
+The next permutation is found by assuming that the set of all permutations is
+lexicographically sorted with respect to
+\removedConcepts{\mbox{\tcode{operator<}}
+or} \farg{comp}.
+If such a permutation exists, it returns
+\tcode{true}.
+Otherwise, it transforms the sequence into the smallest permutation,
+that is, the ascendingly sorted one, and returns
+\tcode{false}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first})/2}\
+swaps.
+\end{itemdescr}
+
+\index{prev_permutation@\tcode{prev_permutation}}%
+\begin{itemdecl}
+@\removedConcepts{template<BidirectionalIterator Iter>}@
+  @\removedConcepts{requires ShuffleIterator<Iter>}@
+        @\removedConcepts{\&\& LessThanComparable<Iter::value_type>}@
+  @\removedConcepts{bool prev_permutation(Iter \mbox{\farg{first}}, Iter \mbox{\farg{last}});}@
+
+template<BidirectionalIterator Iter, 
+         StrictWeakOrder<auto, Iter::value_type> Compare@\addedConcepts{ = less<Iter::value_type>}@>
+  requires ShuffleIterator<Iter>
+        && CopyConstructible<Compare>
+  bool prev_permutation(Iter @\farg{first}@, Iter @\farg{last}@, Compare @\farg{comp}@@\addedConcepts{ = Compare()}@);
+\end{itemdecl}\color{black}
+
+\begin{itemdescr}
+\pnum
+\effects\ 
+Takes a sequence defined by the range
+\range{\farg{first}}{\farg{last}}\
+and transforms it into the previous permutation.
+The previous permutation is found by assuming that the set of all permutations is
+lexicographically sorted with respect to
+\removedConcepts{\mbox{\tcode{operator<}}
+or} \farg{comp}.
+
+\pnum
+\returns\ 
+\tcode{true}\
+if such a permutation exists.
+Otherwise, it transforms the sequence into the largest permutation,
+that is, the descendingly sorted one, and returns
+\tcode{false}.
+
+\pnum
+\complexity\ 
+At most
+\tcode{(\farg{last}\ - \farg{first})/2}\
+swaps.
+\end{itemdescr}
+
+\end{paras}
+
+\end{document}
