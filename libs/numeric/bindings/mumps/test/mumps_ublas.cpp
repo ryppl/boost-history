@@ -6,31 +6,33 @@
 #include <boost/numeric/bindings/mumps/mumps_driver.hpp>
 #include <iostream>
 #include <fstream>
+#include <complex>
 
-int main() {
+template <typename T>
+int test() {
   namespace ublas = ::boost::numeric::ublas ;
   namespace mumps = ::boost::numeric::bindings::mumps ;
 
 
   int const n = 10 ;
 
-  typedef ublas::coordinate_matrix<double, ublas::column_major, 1, ublas::unbounded_array<int> > coo_type ;
+  typedef ublas::coordinate_matrix<T, ublas::column_major, 1, ublas::unbounded_array<int> > coo_type ;
 
   coo_type coo( n, n, n + 6 ) ;
 
   for (int i=0; i<n; ++i) coo(i,i) = i+1.0 ;
-  coo(2,3) = 1.0 ;
-  coo(2,4) = 1.0 ;
-  coo(5,6) = -1.0 ;
-  coo(2,6) = 1.0 ;
-  coo(9,0) = 1.0 ;
-  coo(2,7) = -1.0 ;
+  coo(2,3) = T(1.0) ;
+  coo(2,4) = T(1.0) ;
+  coo(5,6) = T(-1.0) ;
+  coo(2,6) = T(1.0) ;
+  coo(9,0) = T(1.0) ;
+  coo(2,7) = T(-1.0) ;
 
   coo.sort() ;
   std::cout << "matrix " << coo << std::endl ;
 
-  ublas::vector<double> v( 10 ) ;
-  ublas::vector<double> w( 10 ) ;
+  ublas::vector<T> v( 10 ) ;
+  ublas::vector<T> w( 10 ) ;
 
   std::fill( w.begin(), w.end(), 1.0 ) ;
 
@@ -39,14 +41,15 @@ int main() {
   }
 
   for (int i=0; i<n; ++i) {
-    v(i) = coo(i,i) * w(i) ;
+    v[i] = T(coo(i,i)) * w[i] ;
   }
-  v(2) += coo(2,3) * w(3) ;
-  v(2) += coo(2,4) * w(4) ;
-  v(5) += coo(5,6) * w(6) ;
-  v(2) += coo(2,6) * w(6) ;
-  v(9) += coo(9,0) * w(0) ;
-  v(2) += coo(2,7) * w(7) ;
+  v[2] += T(coo(2,3)) * w[3] ;
+  v[2] += T(coo(2,4)) * w[4] ;
+  v[5] += T(coo(5,6)) * w[6] ;
+  v[2] += T(coo(2,6)) * w[6] ;
+  v[9] += T(coo(9,0)) * w[0] ;
+  v[2] += T(coo(2,7)) * w[7] ;
+  std::cout << "rhs : " << v << std::endl ;
 
   mumps::mumps< coo_type > mumps_coo ;
 
@@ -70,4 +73,15 @@ int main() {
   std::cout << "w : " << w << std::endl ;
   std::cout << "v : " << v << std::endl ;
 
+  if ( norm_2( v - w ) > 1.e-10 * norm_2( v ) ) return 1 ;
+
+  return 0 ;
+}
+
+int main() {
+  if ( test<float>() ) return 1 ;
+  if ( test<double>() ) return 2 ;
+  if ( test< std::complex<float> >() ) return 3 ;
+  if ( test< std::complex<double> >() ) return 4 ;
+  return 0 ;
 }
