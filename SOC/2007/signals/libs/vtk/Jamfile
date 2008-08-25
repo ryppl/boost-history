@@ -38,6 +38,8 @@ project dataflow/vtk
 #      <toolset>darwin:<library>X11
 #      <toolset>darwin:<library>Xt
 	  <toolset>gcc:<library>pthread
+      <toolset>gcc:<include>/usr/local/include/vtk-5.0/
+      <toolset>gcc:<include>/usr/include/vtk-5.0/
 
     ;
     
