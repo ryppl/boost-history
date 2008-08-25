@@ -1,7 +1,7 @@
 // mplgraph.cpp : Defines the entry point for the console application.
 //
 
-#include <boost/metagraph/mpl_graph/mpl_graph.h>
+#include <boost/metagraph/mpl_graph/mpl_graph.hpp>
 #include <boost/mpl/print.hpp>
 
 namespace mpl_graph = boost::metagraph::mpl_graph;
