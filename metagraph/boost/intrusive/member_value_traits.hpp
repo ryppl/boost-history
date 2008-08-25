@@ -15,7 +15,7 @@
 
 #include <boost/intrusive/link_mode.hpp>
 #include <iterator>
-#include <boost/intrusive/detail/parent_from_member.hpp>
+#include <boost/detail/parent_from_member.hpp>
 
 namespace boost {
 namespace intrusive {

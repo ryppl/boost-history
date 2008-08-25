@@ -15,7 +15,7 @@
 
 #include <boost/intrusive/detail/config_begin.hpp>
 #include <boost/intrusive/detail/pointer_to_other.hpp>
-#include <boost/intrusive/detail/parent_from_member.hpp>
+#include <boost/detail/parent_from_member.hpp>
 #include <boost/intrusive/detail/ebo_functor_holder.hpp>
 #include <boost/intrusive/link_mode.hpp>
 #include <boost/intrusive/detail/mpl.hpp>
