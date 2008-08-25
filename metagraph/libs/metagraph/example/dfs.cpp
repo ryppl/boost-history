@@ -1,4 +1,4 @@
-#include <boost/metagraph/mpl_graph/dfs.hpp>
+#include <boost/metagraph/mpl_graph/depth_first_search.hpp>
 #include <boost/mpl/print.hpp>
 
 #include <iostream>
