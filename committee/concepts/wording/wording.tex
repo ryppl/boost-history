@@ -109,6 +109,24 @@ standard library are discussed in separate documents:
 \begin{itemize}
 \item Removed the deprecation of \tcode{late_check}.
 
+\item Clarified how a ``call to an associated function candidate set''
+  actually works in the \techterm{pseudo-destructor-name} and
+  ``initialization of an object'' cases
+  (\ref{temp.constrained.inst}). For example:
+\begin{codeblock}
+auto concept DefaultConstructible<typename T> {
+  T::T();
+}
+
+template<DefaultConstructible T>
+void f() {
+  T t1;   // type-checks as a call to \tcode{DefaultConstructible<T>}'s \tcode{T::T()}
+  T t2{}; // type-checks as a call to \tcode{DefaultConstructible<T>}'s \tcode{T::T()}
+}
+
+template void f<int>(); // \tcode{t1} is not initialized, \tcode{t2} is value-initialized
+\end{codeblock}
+
 \item The \tcode{MoveConstructible<T>} requirement is no longer
   propagated from the types of function parameters
   (\ref{temp.req.impl}). This change brings concepts in sync with
@@ -6262,10 +6280,18 @@ member of the corresponding concept map. \mbox{\exitnote}}
 \addedConcepts{In the instantiation of a constrained template, a call
   to a function that resolves to an associated
   function in a concept map archetype (\mbox{\ref{temp.archetype}})
-  will be instantiated as a call to the associated function candidate set
+  will be instantiated} \changedCCC{as a call to}{using} 
+\addedConcepts{the associated function candidate set
   (\mbox{\ref{temp.constrained.set}}) that satisfies the
   corresponding associated function requirement in the concept map
-  that replaces the concept map archetype. \mbox{\enterexample}} 
+  that replaces the concept map archetype.}
+\addedCC{The instantiated form depends on the seed of the associated
+  function candidate set and the syntactic form that resulted in the
+  call in the constrained template:}
+\begin{itemize}
+\additemCC{if the seed is a function, the instantiated form is a call
+  to the associated function candidate set.}
+\addedConcepts{\mbox{\enterexample}} 
 \begin{codeblock}
 concept F<typename T> {
   T::T();
@@ -6288,7 +6314,31 @@ void h(X const& x) {
   g(x);
 }
 \end{codeblock}
-\exitexample\
+\addedConcepts{\exitexample}
+
+\additemCC{if the seed is a \mbox{\techterm{pseudo-destructor-name}},
+  the instantiated form is a pseudo destructor call
+  (\mbox{\ref{expr.pseudo}}).}
+
+\additemCC{if the seed is the initialization of an object, the
+  instantiated form is the appropriate kind of initialization (or no
+  initialization) based on
+  the syntactic form in the constrained template. \enterexample}
+\begin{codeblock}
+auto concept DefaultConstructible<typename T> {
+  T::T();
+}
+
+template<DefaultConstructible T>
+void f() {
+  T t1;   // type-checks as a call to \tcode{DefaultConstructible<T>}'s \tcode{T::T()}
+  T t2{}; // type-checks as a call to \tcode{DefaultConstructible<T>}'s \tcode{T::T()}
+}
+
+template void f<int>(); // \tcode{t1} is not initialized, \tcode{t2} is value-initialized
+\end{codeblock}
+\addedCC{\exitexample}
+\end{itemize}
 
 \pnum
 \addedConcepts{A function template specialization in a constrained
