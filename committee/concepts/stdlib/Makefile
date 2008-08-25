@@ -41,8 +41,6 @@ DVIPS		= dvips
 
 .tex.pdf:
 	@$(PDFLATEX) $*
-
-.honk.wibble:
 	@if ( grep 'LaTeX Warning: Label(s) may' $*.log > /dev/null ); \
 	then $(PDFLATEX) $* ; else :; fi
 	@ if ( grep 'Writing index file' $*.log > /dev/null ); \

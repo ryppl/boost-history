@@ -131,8 +131,7 @@ template void f<int>(); // \tcode{t1} is not initialized, \tcode{t2} is value-in
   propagated from the types of function parameters
   (\ref{temp.req.impl}). This change brings concepts in sync with
   generalized initializer lists (N2672), which permit a function
-  parameter to be direct-initialized. Thanks to Daniel Kr\"ugler for
-  the reminder!
+  parameter to be initialized without copying or moving. 
 
 \item Made an expression that uses a constrained member in the current
   instantiation a type-dependent expression
@@ -140,14 +139,18 @@ template void f<int>(); // \tcode{t1} is not initialized, \tcode{t2} is value-in
   type-checking of, e.g., unconstrained templates that have
   constrained members:
 \begin{codeblock}
-template<typename T>
-struct list {
+template<typename T> struct list {
   requires C<T> void f(int);
-
   void g() { f(17); } // ``f'' is type-dependent, because it might or
                       // might not exist in the instantiation.
 };
 \end{codeblock}
+
+\item Made default function arguments an unconstrained context
+  (again), due to the realization that this change could cause a large
+  increase in the number of constructors need for, e.g.,
+  \tcode{unordered_map}. Please see c++std-core-13280 and
+  c++std-ext-10456 for additional information.
 
 \item Clarified the point of declaration of a template requirement
   (\ref{basic.scope.pdecl}) and its potential scope
@@ -166,8 +169,11 @@ struct list {
   archetypes are present (\ref{over.built}).
 
 \item Clarified the template requirements of the default
-  implementations of associated functions (\ref{concept.fct}). Thanks
-  again to Daniel Kr\"ugler.
+  implementations of associated functions (\ref{concept.fct}). 
+
+\item Clarified the formation of retain candidate sets
+  (\ref{temp.constrained.inst}) and of candidate sets themselves
+  (\ref{temp.constrained.set}). 
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -4680,8 +4686,8 @@ concept_map Destructible<Y> { } // error: Y's destructor is inaccessible
   determine that the requirement was satisfied.}
 \begin{itemize}
   \additemConcepts{if the evaluation of \mbox{\tcode{E}} involves overload
-    resolution at the top level, the seed is the candidate function 
-    (\mbox{\ref{over.match.funcs}}) determined by the outermost
+    resolution at the top level, the seed is the function 
+    (\mbox{\ref{over.match.funcs}}) selected by the outermost
     application of overload resolution (clause~\mbox{\ref{over}}), or}
   \additemConcepts{if \mbox{\tcode{E}} is a pseudo destructor call
     (\mbox{\ref{expr.pseudo}}), the seed is a
@@ -5211,7 +5217,8 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
 \begin{itemize}
   \additemConcepts{a late-checked block (\mbox{\ref{stmt.late}}),}
   \additemConcepts{a default argument in a
-    \mbox{\techterm{template-parameter}},}
+    \mbox{\techterm{template-parameter}}, and}
+  \additemCC{a default function argument (\mbox{\ref{dcl.fct}}).}
 \end{itemize}
 
 \pnum
@@ -6176,7 +6183,10 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \rSec2[temp.constrained.set]{Candidate sets}
 \pnum
 \addedConcepts{A \mbox{\techterm{candidate set}} is a set containing
-  functions and function templates that is defined in a constrained
+  functions and function templates}
+\addedCC{that is determined by a \mbox{\techterm{seed}} (defined below).}
+\changedCCC{that}{A candidate set} 
+\addedConcepts{is defined in a constrained
   context (a \mbox{\techterm{retained}} \mbox{\techterm{candidate
       set}},~\mbox{\ref{temp.constrained.inst}}) or as the result of
   satisfying an associated function requirement in a concept map (an
@@ -6341,15 +6351,21 @@ template void f<int>(); // \tcode{t1} is not initialized, \tcode{t2} is value-in
 \end{itemize}
 
 \pnum
-\addedConcepts{A function template specialization in a constrained
-  template instantiates to a reference to that function template
-  specialization's retained candidate set. The
+\addedConcepts{A use of a function template} 
+\changedCCC{specialization}{instantiation} 
+\addedConcepts{in a constrained
+  template instantiates to a reference to that function template}
+  \changedCCC{specialization}{instantiation}\addedConcepts{'s retained
+    candidate set. The
   \mbox{\techterm{retained candidate set}} is a candidate set
-  (\mbox{\ref{temp.constrained.set}}) whose seed is determined by the
-  function template specialization from the definition of the
+  (\mbox{\ref{temp.constrained.set}}) whose seed is}
+\removedCCC{determined by} 
+\addedConcepts{the
+  function template} \changedCCC{specialization}{instantiation.}\removedCCC{from the
+  definition of the 
   constrained template, after substitution of the constrained
   template's template arguments for their corresponding template
-  parameters. \mbox{\enterexample}}
+  parameters.} \addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> { 
   typename difference_type;
@@ -6371,7 +6387,7 @@ concept_map RandomAccessIterator<int*> {
 template<RandomAccessIterator Iter> void advance(Iter& i, Iter::difference_type n); // \#3
 
 void g(int* i) {
-  f(i); // in the call to advance(), \#1 is the seed of the retained candidate set, the retained candidate set contains \#1, \#2, 
+  f(i); // in the call to advance(), \#2 is the seed of the retained candidate set, the retained candidate set contains \#1, \#2, 
         // and \#3, and partial ordering of function templates selects \#3.
 }
 \end{codeblock}
