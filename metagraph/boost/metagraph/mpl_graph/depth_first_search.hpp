@@ -1,4 +1,4 @@
-#include <boost/metagraph/mpl_graph/mpl_graph.h>
+#include <boost/metagraph/mpl_graph/mpl_graph.hpp>
 
 #include <boost/mpl/has_key.hpp>
 
@@ -100,6 +100,21 @@ struct dfs_visit {
     typedef mpl::pair<typename Visitor::operations::template finish_vertex<Node, Graph, typename mpl::first<visited_state_and_colors>::type >::type,
                       typename ColorMap::operations::template set_color<Node, dfs_colors::Black, typename mpl::second<visited_state_and_colors>::type>::type> type;
 };
+
+template<typename Graph, typename Visitor,
+         typename FirstVertex = typename mpl::front<typename mpl_graph::vertices<Graph>::type>::type,
+         typename ColorMap = state_and_operations<mpl::map<>, dfs_color_map_operations> >
+struct depth_first_search :
+    mpl::fold<typename mpl_graph::vertices<Graph>::type,
+              typename dfs_visit<Graph, FirstVertex, Visitor, ColorMap>::type,
+              mpl::if_<boost::is_same<typename ColorMap::operations::template get_color<mpl::_2, mpl::second<mpl::_1> >,
+                                      dfs_colors::White>,
+                       dfs_visit<Graph,
+                                 mpl::_2,
+                                 state_and_operations<mpl::first<mpl::_1>, typename Visitor::operations>,
+                                 state_and_operations<mpl::second<mpl::_1>, typename ColorMap::operations> >,
+                       mpl::_1> >   
+{};
 
 } // namespace mpl_graph
 } // namespace metagraph

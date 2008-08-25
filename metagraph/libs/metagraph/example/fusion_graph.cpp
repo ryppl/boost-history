@@ -6,13 +6,15 @@ namespace fusion = boost::fusion;
 namespace mpl_graph = boost::metagraph::mpl_graph;
 namespace mpl = boost::mpl;
 
-struct G : fusion_graph::mapper_vertex<int> {};
-struct N : fusion_graph::mapper_vertex<int> {};
-struct E : fusion_graph::mapper_vertex<int> {};
+struct Happy {}; // sample data tag
 
-struct G_N : fusion_graph::ptr_list_edge<int> {};
-struct N_E : fusion_graph::ptr_list_edge<int> {};
-struct E_N : fusion_graph::ptr_edge<int> {};
+struct G : fusion_graph::vertex_data<mpl::vector<> > {};
+struct N : fusion_graph::vertex_data<mpl::vector<fusion::pair<Happy,bool> > > {};
+struct E : fusion_graph::vertex_data<mpl::vector<> > {};
+
+struct G_N : fusion_graph::ptr_list_edge {};
+struct N_E : fusion_graph::ptr_list_edge {};
+struct E_N : fusion_graph::ptr_edge {};
 struct E_T : E_N {};
 struct E_S : E_N {};
 
@@ -41,13 +43,15 @@ int main(int narg, char *args[]) {
     Node *n1 = new Node, *n2 = new Node;
     Edge *e1 = new Edge;
     
-    fusion::at_key<G_N>(g->edges).link.push_back(n1);
-    fusion::at_key<G_N>(g->edges).link.push_back(n2);
-    fusion::at_key<N_E>(n1->edges).link.push_back(e1);
-    fusion::at_key<E_S>(e1->edges).link = n1;
-    fusion::at_key<E_T>(e1->edges).link = n2;
+    fusion::at_key<Happy>(n1->data) = true;
+    
+    fusion::at_key<G_N>(g->data).push_back(n1);
+    fusion::at_key<G_N>(g->data).push_back(n2);
+    fusion::at_key<N_E>(n1->data).push_back(e1);
+    fusion::at_key<E_S>(e1->data) = n1;
+    fusion::at_key<E_T>(e1->data) = n2;
     
     // NO (generates horribly incomprehensible messages
-    //fusion::at_key<N_E>(g->edges).link.push_back(n1);
+    //fusion::at_key<N_E>(g->edges).push_back(n1);
 
 }

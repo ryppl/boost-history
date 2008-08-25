@@ -15,7 +15,7 @@ namespace mpl = boost::mpl;
 */           
 
 // vertices
-struct A{}; struct B{}; struct C{}; struct D{}; struct E{}; struct F{};
+struct A{}; struct B{}; struct C{}; struct D{}; struct E{}; struct F{}; 
 
 // edges
 struct A_B{}; struct B_C{}; struct C_D{}; struct C_E{}; struct C_F{}; struct B_F{};
@@ -29,14 +29,14 @@ typedef mpl::vector<mpl::vector<A_B,A,B>,
     some_edge_sequence;
 typedef mpl_graph::edgeseq_graph<some_edge_sequence> some_graph;
 
-struct preordering : mpl_graph::dfs_default_visitor_operations {    
+struct preordering_visitor : mpl_graph::dfs_default_visitor_operations {    
     template<typename Node, typename Graph, typename State>
     struct discover_vertex :
         mpl::push_back<State, Node>
     {};
 };
 
-struct postordering : mpl_graph::dfs_default_visitor_operations {    
+struct postordering_visitor : mpl_graph::dfs_default_visitor_operations {    
     template<typename Node, typename Graph, typename State>
     struct finish_vertex :
         mpl::push_back<State, Node>
@@ -46,10 +46,18 @@ struct postordering : mpl_graph::dfs_default_visitor_operations {
 template<typename T> struct incomplete;
 
 int main() {
-    typedef mpl::first<mpl_graph::dfs_visit<some_graph,A,mpl_graph::state_and_operations<mpl::vector<>, preordering > >::type>::type preorder;
+    // preordering, default start node (first)
+    typedef mpl::first<mpl_graph::depth_first_search<some_graph,mpl_graph::state_and_operations<mpl::vector<>, preordering_visitor > >::type>::type preorder;
     BOOST_MPL_ASSERT(( mpl::equal<preorder::type, mpl::vector<A,B,C,D,E,F> > ));
     
-    typedef mpl::first<mpl_graph::dfs_visit<some_graph,A,mpl_graph::state_and_operations<mpl::vector<>, postordering > >::type>::type postorder;
+    // postordering, default start node
+    typedef mpl::first<mpl_graph::depth_first_search<some_graph,mpl_graph::state_and_operations<mpl::vector<>, postordering_visitor > >::type>::type postorder;
     BOOST_MPL_ASSERT(( mpl::equal<postorder::type, mpl::vector<D,E,F,C,B,A> > ));
+    
+    // preordering starting at C
+    typedef mpl::first<mpl_graph::depth_first_search<some_graph,
+                                                     mpl_graph::state_and_operations<mpl::vector<>, preordering_visitor >,
+                                                     C>::type>::type preorder_from_c;
+    BOOST_MPL_ASSERT(( mpl::equal<preorder_from_c::type, mpl::vector<C,D,E,F,A,B> > ));
     return 0;
 }
