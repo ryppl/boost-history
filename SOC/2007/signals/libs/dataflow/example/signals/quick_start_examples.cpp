@@ -73,7 +73,7 @@ public:
 
 // Inheriting from signals::filter or signals::consumer allows us to implement
 // signal consumer ports as overloads of operator() - later you will see that
-// that allows us to access them more easily.
+// this approach allows us to access such ports more easily.
 class consumer_component
     : public signals::consumer<consumer_component>
 {

@@ -1,0 +1,14 @@
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+project dataflow/example/threadpool
+    : requirements
+      <include>../../../..
+      <include>.
+      <library>/boost/signals//boost_signals/<link>static
+      <define>BOOST_ALL_NO_LIB=1
+    ;
+
+exe threadpool_example : threadpool_example.cpp ;

@@ -34,15 +34,16 @@ public:
     void add_component(std::auto_ptr<blueprint::component> c, const std::string &name);
     void register_port_click(blueprint_component_port *port);
 private:
+    static void style_change_handler(glv::Notifier *sender, void *this_);
     void onDraw();
     blueprint::network m_network;
     std::vector<blueprint_component *> m_components;
     blueprint_component_port *m_dragged;
     std::vector<connection> m_connections;
     std::vector<connection>::iterator m_selected;
-    int m_next_created_x;
-    int m_next_created_y;
-    glv::Placer m_layout;
+    glv::LayoutGrid m_layout;
+    glv::Label m_status;
+    glv::Button m_rotate_component_layout;
 };
 
 } } }

@@ -28,7 +28,7 @@ connected to anything that can be pointed to by a [boost_function].
 Here is a simple example that illustrates this:
 [signal_function_connect]
 
-If you are familiar with [BoostSignals], will notice that the [^connect]
+If you are familiar with [BoostSignals], you will notice that the [^connect]
 free function is something new - it is provided by [DataflowSignals].
 [DataflowSignals] offers other utilities that make connection making easier,
 like the [bind_mem_fn] function which binds a member function to an object:

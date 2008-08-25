@@ -15,7 +15,7 @@ class blueprint_invoke_button : public glv::Button
 {
 public:
     blueprint_invoke_button()
-        : glv::Button(glv::Rect(60,60), false)
+        : glv::Button(glv::Rect(95,60), false)
     {}
 private:
     bool onEvent(glv::Event::t e, glv::GLV& glv);
@@ -27,18 +27,20 @@ class blueprint_component : public glv::View
 public:
     blueprint_component(const std::string &name, blueprint::component &c, id_type id);
     void set_component(blueprint::component &c, id_type id);
-    void gui_begin();
-    void gui_end();
     void invoke() {m_component->invoke();}
     id_type id() {return m_id;}
+    void arrange_layout();
+    void layout_style(int style) {m_layout_style = style;}
+    int layout_style() {return m_layout_style;}
 private:
-    static blueprint_component *m_currently_constructed;
     blueprint::component *m_component;
     std::string m_name;
     id_type m_id;
     glv::View m_left_buttons, m_right_buttons;
-    glv::Placer m_layout, m_left_layout, m_right_layout;
-    blueprint_invoke_button m_invoke_button;  
+    glv::Label m_label;
+    blueprint_invoke_button m_invoke_button;
+    std::vector<blueprint_component_port *> m_ports;
+    int m_layout_style;
 };
 
 class blueprint_component_port

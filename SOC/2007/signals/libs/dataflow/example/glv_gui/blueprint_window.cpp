@@ -6,54 +6,74 @@
 #include <glv.h>
 #include "blueprint_window.hpp"
 #include "blueprint_component.hpp"
+#include <boost/foreach.hpp>
 
 namespace boost { namespace dataflow { namespace glv_gui {
 
 blueprint_window::blueprint_window()
     : glv::View(glv::Rect(800, 600))
     , m_dragged(NULL)
-    , m_layout(*this, glv::Direction::E, glv::Place::TL, 5, 5, 5)
+    , m_layout(100, 200, glv::Rect(600, 800), 2, 5)
+    , m_status("Status bar...", 0, 580)
+    , m_rotate_component_layout(glv::Rect(50, 50), false)
 {
+    *this << m_status;
+    m_rotate_component_layout << *new glv::Label("Change\nStyle");
+    m_rotate_component_layout.pos(glv::Place::TL, 520, 550);
+    *this << m_rotate_component_layout;
+    m_rotate_component_layout.attachHandler(style_change_handler, this);
+    m_layout.parent = this;
     this->colors().back.set(0);
-    m_next_created_x = 100;
-    m_next_created_y = 50;
 }
+
+void blueprint_window::style_change_handler(glv::Notifier *sender, void *this__)
+{
+    blueprint_window *this_(reinterpret_cast<blueprint_window *>(this__));
+    
+    BOOST_FOREACH(blueprint_component *c, this_->m_components)
+    {
+        c->layout_style(!c->layout_style());
+        c->arrange_layout();
+        this_->m_status.label("Switched style to " + boost::lexical_cast<std::string>(c->layout_style()));
+    }
+}
+
 
 void blueprint_window::add_component(std::auto_ptr<blueprint::component> c, const std::string &name)
 {
-    std::cout << "Adding component" << name << std::endl;
+    m_status.label("Adding component");
 
     blueprint::component &cr = *c;
     blueprint_component *bc = new blueprint_component(name, cr, m_network.add_component(c));
-    if((m_components.size()%5)==0)
-        m_layout.pos(0, m_components.size()/5 * 220);
     m_components.push_back(bc);
     m_layout << *bc;
+    bc->arrange_layout();
 }
 
 void blueprint_window::register_port_click(blueprint_component_port *port)
 {
     if(m_dragged)
     {
-        std::cout << "Attempting connect..." << std::endl;
         if (m_network.are_connectable(m_dragged->component().id(), m_dragged->id(), port->component().id(), port->id()))
         {
             m_network.add_connection(m_dragged->component().id(), m_dragged->id(), port->component().id(), port->id(), true);
             m_connections.push_back(connection(m_dragged, port));
+            m_status.label("Ports connected...");
         }
         else
-            std::cout << "Ports not connectable" << std::endl;
+            m_status.label("Ports not connectable");
         m_dragged = NULL;
     }
     else
     {
-        std::cout << "Initiating connect - click on destination port to make connection" << std::endl;
+        m_status.label("Initiating connect - click on destination port to make connection");
         m_dragged = port;
     }
 }
 
 void blueprint_window::onDraw()
 {
+    glv::draw::lineWidth(5);
     glv::draw::begin(glv::draw::Lines);
 /*    if(m_dragged)
     {

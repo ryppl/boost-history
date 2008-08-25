@@ -48,8 +48,6 @@ class condition : public
         condition<Signature, OutSignal, SignalArgs>,
         detail::cond_and_mutex, detail::notify_all, Signature, OutSignal, SignalArgs> base_type;
 public:
-    /** Initializes the internal counter to 0.
-    */
     condition(boost::condition &cond, boost::mutex &m)
         : base_type(detail::cond_and_mutex(cond, m))
     {}

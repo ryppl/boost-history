@@ -35,13 +35,11 @@ private:
     boost::variate_generator<mt19937&, boost::normal_distribution<> > generator;
 };
 
-// This will be our data output.  We just need to make a function object,
-// and specify that it is a signals::call_consumer.
-class output
+// This will be our data output.  We just make a function object, and specify
+// that it is a signal consumer by inheriting the signal::consumer class.
+class output : public signals::consumer<output>
 {
 public:
-    typedef dataflow::signals::call_consumer<>  dataflow_traits;
-    
     void operator()(double x)
     {
         std::cout << x << std::endl;

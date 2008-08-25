@@ -8,4 +8,6 @@
 
 [include signals/components.qbk]
 
+[xinclude dataflow_signals_doxygen.xml]
+
 [endsect]

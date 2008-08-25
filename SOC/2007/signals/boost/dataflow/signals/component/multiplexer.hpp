@@ -41,7 +41,7 @@ public:
     */
     multiplexer(int selector=0)
     {   select(selector); }
-    /** Enables the junction (signals will be forwarded).
+    /** Sets the multiplexer to forward the specified input.
     */
     void select(int selector)
     {   multiplexer::member = selector; }

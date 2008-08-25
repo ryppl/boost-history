@@ -14,6 +14,41 @@ local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
 
 xml dataflow_xml : dataflow.qbk ;
 
+doxygen dataflow_signals_doxygen
+   :
+      [ glob ../../../boost/dataflow/signals/component/filter.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/storage.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/counter.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/junction.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/multiplexer.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/mutex.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/condition.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/function.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/socket_sender.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/socket_receiver.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/applicator.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/conditional.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/conditional_modifier.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/instantiator.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/timed_generator.hpp ]
+   :
+        <doxygen:param>TAB_SIZE=4
+        <doxygen:param>EXAMPLE_PATH=../test
+        <doxygen:param>EXAMPLE_PATH=../example
+        <doxygen:param>STRIP_FROM_PATH=$(root)
+        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
+        <doxygen:param>EXTRACT_ALL=NO
+        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+        <doxygen:param>INHERIT_DOCS=YES
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=../../..
+        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_BUILD
+   ;
+
 doxygen dataflow_blueprint_doxygen
    :
       [ glob ../../../boost/dataflow/blueprint/port.hpp ]
@@ -95,6 +130,7 @@ boostbook standalone
       dataflow_utility_doxygen
       dataflow_support_doxygen
       dataflow_blueprint_doxygen
+      dataflow_signals_doxygen
     :
         # pull in the online .css and images
         <xsl:param>project.root=http://dancinghacker.com

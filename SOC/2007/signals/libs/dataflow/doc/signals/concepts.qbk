@@ -1,5 +1,8 @@
 [section Concepts]
 
+This section describes certain concepts used by the [DataflowSignals] layer.
+The section is under development.
+
 [section:signaltraits SignalTraits]
 A [Traits] type `T` is a ['[SignalTraits]] if
 its tag is `dataflow::signals::tag`.
@@ -105,8 +108,8 @@ than those of the refined concepts listed above:
 [section SignalConsumer]
 
 A consumer [Port] type `P` is a ['[SignalConsumer]] if its
-[PortTraits] is a [SignalPortTraits]. A [SignalProducer] must also
-match the concepts modeled by the [boost_signal] class.
+[PortTraits] is a [SignalPortTraits]. A [SignalConsumer] must also
+match the concepts modeled by the [boost_function] class.
 
 [heading Refinement of]
 * consumer [Port]

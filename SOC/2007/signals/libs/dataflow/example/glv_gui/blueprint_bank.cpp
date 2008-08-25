@@ -15,8 +15,9 @@ public:
         : glv::Button(glv::Rect(60, 60), false), m_label(label), m_bank(bank)
     {
         glv::Label *l = new glv::Label(label);
-        l->pos(glv::Place::TL,0,20);
-        l->size(20);
+        l->pos(glv::Place::TL,0,5);
+        l->size(1);
+        l->size(60/l->width());
         *this << *l;
     }
     void spawn()

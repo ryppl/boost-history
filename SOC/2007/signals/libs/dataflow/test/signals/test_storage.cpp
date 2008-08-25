@@ -43,7 +43,9 @@ int test_main(int, char* [])
 
         floater.close();
         floater(1.5f); // change the value in floater
-        invoke(floater); // we can also signal floater directly
+        // we can also signal floater directly, which will again cause it to 
+        // output its stored value:
+        invoke(floater); 
         BOOST_CHECK_EQUAL(collector.at<0>(), 1.5f);
     //]
     }

@@ -49,17 +49,18 @@ code.  Currently, the concepts adress things such as [Component]s and [Port]s,
 as well as the connection and data extraction functionality
 (the [rationale] section discusses why this is the initial focus).
 
-[DataflowSignals] has a (very thin) support layer which makes `boost::signal`
-and `boost::function` model the Dataflow [concepts], and there is an
-[vtk_example example] showing how to do the same for [VTK].  Support layers
-for other dataflow frameworks will be added in the future.
-
-Developing a Dataflow support layer for a dataflow framework allows
+Dataflow frameworks can be made to model the [concepts] of the generic dataflow
+layer by developing a Dataflow support layer for the framework.
+This allows
 anything that is built on top of the generic layer (e.g., [DataflowBlueprint],
 a [gui_example GUI dataflow editor], and operators which can be used
 to connect components in a clean, readable manner) to be used with the
 framework.  See the [link dataflow.future future directions] section
-for an idea of about other things in planning.
+for an idea of about other things in planning.  See [DataflowSignals] 
+for an example of a (very thin) support layer which makes `boost::signal`
+and `boost::function` model the Dataflow [concepts].  There is also a
+[vtk_example example] showing how to do the same for [VTK].  Support layers
+for other dataflow frameworks will be added in the future.
 
 [h5 Dataflow.Signals layer]
 
@@ -88,7 +89,10 @@ components.  Ideally, the Dataflow library should at some point offer a native
 dataflow framework of a different kind - one that allows runtime specification
 of port/component characteristics, offers memory management for the data being
 exchanged between the components, as well as flexible scheduling and optimized
-evaluation.  At this point, however, such a framework is missing.
+evaluation.  At this point, some work in this direction is being done in implementing
+a framework that keeps track of the entire
+network of components and takes care of component invocation scheduling.
+The framework is called Dataflow.Managed, but is currently completely undocumented.
 
 [heading Where to go from here]
 

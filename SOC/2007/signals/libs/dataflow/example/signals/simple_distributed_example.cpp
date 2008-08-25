@@ -31,15 +31,15 @@ asio::io_service io_service;
 // its final signal through the socket.
 void asio_server()
 {
-	// set up the socket
-	asio::ip::tcp::acceptor acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 1097));
-	asio::ip::tcp::socket socket(io_service);
-	{
-		boost::mutex::scoped_lock lock(mutex_);
-		acceptor.listen();
-		cond.notify_all();
-	}
-	acceptor.accept(socket);
+    // set up the socket
+    asio::ip::tcp::acceptor acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 1097));
+    asio::ip::tcp::socket socket(io_service);
+    {
+        boost::mutex::scoped_lock lock(mutex_);
+        acceptor.listen();
+        cond.notify_all();
+    }
+    acceptor.accept(socket);
 
     // For our data source, we will use timed_generator,
     // which creates its own thread and outputs it's stored value
@@ -47,7 +47,7 @@ void asio_server()
     // The signature void(double) specifies that the signal carries a double,
     // and that there is no return value.
     signals::timed_generator<void (double)> input(0);
-	// To have our dataflow network straddle a network connection,
+    // To have our dataflow network straddle a network connection,
     // we need a socket_sender
     signals::socket_sender<void (double)> sender(socket);
 
@@ -74,15 +74,15 @@ void asio_server()
 
 int main(int, char* [])
 {
-	// start the server in a separate thread, and wait until it is listening
-	boost::mutex::scoped_lock lock(mutex_);
-	boost::thread t(asio_server);
-	cond.wait(lock);
+    // start the server in a separate thread, and wait until it is listening
+    boost::mutex::scoped_lock lock(mutex_);
+    boost::thread t(asio_server);
+    cond.wait(lock);
 
-	// set up the socket
-	asio::ip::tcp::endpoint endpoint_recv(asio::ip::address::from_string("127.0.0.1"), 1097);
-	asio::ip::tcp::socket socket(io_service);
-	socket.connect(endpoint_recv);
+    // set up the socket
+    asio::ip::tcp::endpoint endpoint_recv(asio::ip::address::from_string("127.0.0.1"), 1097);
+    asio::ip::tcp::socket socket(io_service);
+    socket.connect(endpoint_recv);
 
     // Setup data processor and output:
     processor proc;
@@ -103,7 +103,7 @@ int main(int, char* [])
     boost::thread receive_thread(boost::bind(&asio::io_service::run, boost::ref(io_service)));
     
     // and wait until the server is done sending
-	t.join();
+    t.join();
     
     io_service.stop();
     receive_thread.join();

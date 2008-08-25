@@ -57,9 +57,9 @@ void View::add(View& newchild)
 	newchild.reanchor(op ? w-op->w : w, op ? h-op->h : h);
 	//if(op) newchild.reanchor(w - op->w, h - op->h);
 
-	newchild.parent = this;
+    newchild.parent = this;
 	newchild.sibling = 0;
-	
+    
 	//newchild.constrainWithinParent();	// keep within the bounds of the parent's rect
 	
 	if (child == 0) // I didn't have any children until now
@@ -69,7 +69,14 @@ void View::add(View& newchild)
 		// I have children already... so go to the end and add there
 		// default behaviour is to add at the end of the list, to be drawn last
 		View * lastChild = child;
-		while (lastChild->sibling != 0) lastChild = lastChild->sibling;
+        if(lastChild==&newchild)
+            return;
+		while (lastChild->sibling != 0)
+        {
+            lastChild = lastChild->sibling;
+            if(lastChild==&newchild)
+                return;
+        }
 		lastChild->sibling = &newchild;
 	}
 }

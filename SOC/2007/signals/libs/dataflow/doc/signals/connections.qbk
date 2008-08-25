@@ -6,7 +6,7 @@
 
 [DataflowSignals] provides a [connect] function in the `boost::signals`
 namespace, which connects a [SignalProducer] and [SignalConsumer]
-which are [Connectable].
+which are [Connectable].  
 
 Given a [SignalProducer] `p` and [Connectable] [SignalConsumer] `c`,
 
@@ -14,12 +14,12 @@ Given a [SignalProducer] `p` and [Connectable] [SignalConsumer] `c`,
     
 will create a connection between the two.
 
-Since [DataflowSignals] [components] provide default ports, they can be used
-with the [connect] function directly.  The default [SignalProducer] is the
+The same function can also connect [components] which provide default ports.
+With [DataflowSignals] [components], the default [SignalProducer] is the
 [boost_signal] provided by each of the [components], and the default [SignalConsumer]
 is the call operator ([^operator()]).
 
-[note The call operator acts as a [KeyedPort] - an appropriate overload will
+[note The call operator ([^operator()]) acts as a [KeyedPort] - an appropriate overload will
 be selected depending on the signature of the signal being connected]
 
 The [link dataflow.signals.introduction.quick_start quick start] section

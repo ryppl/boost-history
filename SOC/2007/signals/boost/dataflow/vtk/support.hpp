@@ -9,12 +9,15 @@
 #include "vtkAlgorithmOutput.h"
 #include "vtkActor.h"
 #include "vtkAlgorithm.h"
+#include "vtkMapper.h"
+#include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
 
 #include <boost/dataflow/support.hpp>
 #include <boost/dataflow/support/port/port_adapter.hpp>
 #include <boost/dataflow/support/fusion_component.hpp>
 #include <boost/dataflow/support/fusion_keyed_port.hpp>
+#include <boost/dataflow/signals/support.hpp>
 
 #include <boost/assert.hpp>
 #include <boost/mpl/and.hpp>
@@ -36,11 +39,14 @@ struct tag : public default_tag {};
 //[  vtk_algorithm_output_producer
 namespace boost { namespace dataflow { namespace vtk {
 
+struct vtk_algorithm_consumer;
+
 // PortTraits for vtkAlgorithmOutput objects, which produce data.
 // We specify the PortCategory (ports::producer) and Tag (vtk::tag).
 
 struct vtk_algorithm_output_producer
-    : public port_traits<ports::producer, tag> {};
+    : public complemented_port_traits<ports::producer,
+        port_adapter<vtkAlgorithm, vtk::vtk_algorithm_consumer, vtk::tag>, tag> {};
     
 } } } // namespace boost::dataflow::vtk
 
@@ -99,7 +105,7 @@ struct binary_operation_impl<vtk::vtk_algorithm_output_producer, vtk::vtk_algori
         get_object(consumer).SetInputConnection(&get_object(producer));
     }
 };
-    
+
 } } } // namespace boost::dataflow::vtk
 
 //]
@@ -119,6 +125,12 @@ namespace detail {
                     <dataflow::args::right>,
                     mpl::int_<1> >
             >::type default_map;
+            
+    typedef mpl::map<
+                mpl::pair<dataflow::default_port_selector
+                    <dataflow::args::right>,
+                    mpl::int_<0> >
+            >::type consumer_only_map;
 
 }
 
@@ -158,20 +170,25 @@ DATAFLOW_TRAITS_ENABLE_IF(
 
 namespace boost { namespace dataflow { namespace vtk {
 
+struct vtk_renderer_consumer;
+
 struct vtk_actor_producer
-    : public port_traits<ports::producer, tag>
+    : public complemented_port_traits<ports::producer,
+        dataflow::port_adapter<vtkRenderer, vtk_renderer_consumer, tag>, tag>
 {};
+
+struct vtk_mapper_producer;
 
 struct vtk_actor_consumer
-    : public port_traits<ports::consumer, tag>
+    : public complemented_port_traits<ports::consumer,
+        port_adapter<vtkMapper, vtk_mapper_producer, tag>, tag>
 {};
 
-template<typename T>
 struct vtk_actor_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
-            dataflow::port_adapter<T, vtk_actor_producer, tag>,
-            dataflow::port_adapter<T, vtk_actor_consumer, tag> >,
+            dataflow::port_adapter<vtkActor, vtk_actor_producer, tag>,
+            dataflow::port_adapter<vtkActor, vtk_actor_consumer, tag> >,
         detail::default_map,
         tag>
 {
@@ -187,7 +204,7 @@ struct vtk_actor_component_traits
 DATAFLOW_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkActor BOOST_PP_COMMA() T>,
-    vtk::vtk_actor_component_traits<T>)
+    vtk::vtk_actor_component_traits)
 
 //]
 
@@ -197,7 +214,8 @@ namespace boost { namespace dataflow { namespace vtk {
 
 // First we need a PortTraits type that we will use for vtkMapper connections.
 struct vtk_mapper_producer
-    : public port_traits<ports::producer, tag> {};
+    : public complemented_port_traits<ports::producer,
+        dataflow::port_adapter<vtkActor, vtk_actor_producer, tag>, tag> {};
 
 // Next, we define a fusion map type to hold the mapping between consumers
 // and Port types.
@@ -273,20 +291,22 @@ struct binary_operation_impl<vtk::vtk_mapper_producer, vtk::vtk_actor_consumer, 
 
 namespace boost { namespace dataflow { namespace vtk {
 
+struct vtk_rendererwindow_consumer;
+
 struct vtk_renderer_producer
-    : public port_traits<ports::producer, tag>
+    : public complemented_port_traits<ports::producer,
+        dataflow::port_adapter<vtkRenderWindow, vtk_rendererwindow_consumer, tag>, tag>
 {};
 
 struct vtk_renderer_consumer
     : public port_traits<ports::consumer, tag>
 {};
 
-template<typename T>
 struct vtk_renderer_component_traits
     : public dataflow::fusion_component_traits<
         fusion::vector<
-            dataflow::port_adapter<T, vtk_renderer_producer, tag>,
-            dataflow::port_adapter<T, vtk_renderer_consumer, tag> >, 
+            dataflow::port_adapter<vtkRenderer, vtk_renderer_producer, tag>,
+            dataflow::port_adapter<vtkRenderer, vtk_renderer_consumer, tag> >, 
         detail::default_map,
         tag>
 {
@@ -298,20 +318,35 @@ struct vtk_renderer_component_traits
 };
 
 struct vtk_rendererwindow_consumer
-    : public port_traits<ports::consumer, tag>
+    : public complemented_port_traits<ports::consumer, 
+        dataflow::port_adapter<vtkRenderer, vtk_renderer_producer, tag>, tag>
 {};
+
+struct vtk_renderer_window_component_traits
+    : public dataflow::fusion_component_traits<
+        fusion::vector<
+            dataflow::port_adapter<vtkRenderWindow, vtk_rendererwindow_consumer, tag> >, 
+        detail::consumer_only_map,
+        tag>
+{
+    template<typename Component>
+    static typename vtk_renderer_window_component_traits::fusion_ports get_ports(Component &c)
+    {
+        return typename vtk_renderer_window_component_traits::fusion_ports(fusion::vector1<Component &>(c));
+    }
+};
 
 } } } // namespace boost::dataflow::vtk
 
 DATAFLOW_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkRenderer BOOST_PP_COMMA() T>,
-    vtk::vtk_renderer_component_traits<T>)
+    vtk::vtk_renderer_component_traits)
 
 DATAFLOW_TRAITS_ENABLE_IF(
     T,
     boost::is_base_of<vtkRenderWindow BOOST_PP_COMMA() T>,
-    vtk::vtk_rendererwindow_consumer)
+    vtk::vtk_renderer_window_component_traits)
 
 namespace boost { namespace dataflow { namespace extension {
 
@@ -336,6 +371,18 @@ struct binary_operation_impl<vtk::vtk_renderer_producer, vtk::vtk_rendererwindow
     void operator()(Producer &producer, Consumer &consumer)
     {
         get_object(consumer).AddRenderer(&get_object(producer));
+    }
+};
+
+template<>
+struct component_operation_impl<vtk::vtk_renderer_window_component_traits, operations::invoke>
+{
+    typedef void result_type;
+
+    template<typename Component>
+    void operator()(Component &component)
+    {
+        get_object(component).Render();
     }
 };
 

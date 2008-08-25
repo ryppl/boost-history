@@ -17,23 +17,21 @@ class Signal2VoidInputs
     : public signals::consumer<Signal2VoidInputs>
 {
 public:
-    typedef void result_type;
-    
-	Signal2VoidInputs() : result(0) {};
-	void operator()()
-	{
-		result++;
-	}
-	void AltInput()
-	{
-		result+=10;
-	}
-	int GetResult()
-	{
-		return result;
-	}
+    Signal2VoidInputs() : result(0) {};
+    void operator()()
+    {
+        result++;
+    }
+    void AltInput()
+    {
+        result+=10;
+    }
+    int GetResult()
+    {
+        return result;
+    }
 private:
-	int result;
+    int result;
 }; // end class Signal2VoidInputs
 
 //]

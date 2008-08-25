@@ -48,7 +48,7 @@ generic layer - like [DataflowBlueprint], or
 the [gui_example GUI editor] currently under development.
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.tag
+[link dataflow.support.examples.new_layer.tag
     Setting up the Tag]
 
 [section:tag Setting up the Tag]
@@ -62,7 +62,7 @@ namespace `boost::dataflow::vtk`.  All we have to do is inherit from
 We can now use it to tag all of our [VTK] support classes.
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.producerconsumer
+[link dataflow.support.examples.new_layer.producerconsumer
     Setting up a producer Port and a consumer Port] 
 [endsect][/mechanism]
 
@@ -95,7 +95,7 @@ so we set up a [PortTraits] class to represent this [Port] functionality:
 
 [heading Next]
 
-[link dataflow.introduction.examples.new_layer.connectable
+[link dataflow.support.examples.new_layer.connectable
     Making things Connectable] 
 
 [endsect][/producerconsumer]
@@ -119,7 +119,7 @@ and operators that will make connections easier.
 [vtk_connect_unforwarded]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.forwarding
+[link dataflow.support.examples.new_layer.forwarding
     Defining forwarding functions and operators] 
 
 [endsect][/connectable]
@@ -149,7 +149,7 @@ namespace.
 [vtk_connect_forwarded]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.component
+[link dataflow.support.examples.new_layer.component
     Setting up a Component] 
 
 [endsect][/forwarding]
@@ -176,7 +176,7 @@ Now, [vtkAlgorithm] is a producer [Port].
 ```
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.filter
+[link dataflow.support.examples.new_layer.filter
     Setting up a filter (ProducerPort+ConsumerPort)] 
 
 [endsect][/component]
@@ -190,7 +190,7 @@ for a [vtkActor] as both a producer [Port] and a consumer [Port]:
 [vtk_actor_filter]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.producermap
+[link dataflow.support.examples.new_layer.producermap
     Setting up a KeyedPort] 
 
 [endsect][/filter]
@@ -210,7 +210,7 @@ determined by the [Port] they are being connected to.
 [vtk_mapper_producer]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.remaining
+[link dataflow.support.examples.new_layer.remaining
     Setting up the remaining components (more of the same)] 
 
 [endsect][/producermap]
@@ -220,7 +220,7 @@ determined by the [Port] they are being connected to.
 [vtk_setup_rest]
 
 [heading Next]
-[link dataflow.introduction.examples.new_layer.using_support_layer
+[link dataflow.support.examples.new_layer.using_support_layer
     Using the VTK support layer] 
 
 [endsect][/remaining]

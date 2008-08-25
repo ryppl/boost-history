@@ -79,7 +79,7 @@ private:
         
         gil::gray8_pixel_t operator()(const gil::gray8_pixel_t& p) const
         {
-			return gil::gray8_pixel_t(p + gil::bits8(generator()));
+            return gil::gray8_pixel_t(p + gil::bits8(generator()));
         }
         
         variate_generator<mt19937&, boost::normal_distribution<> > &generator;

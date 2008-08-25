@@ -32,11 +32,15 @@ double that value and return [^2.0f].
 
 [section:disconnect Disconnecting]
 
-Disconnection capability is not yet fully supported by [DataflowSignals],
-although you can always use disconnection features of [BoostSignals].
-Currently, the only [DataflowSignals] method of disconnecting is the
+There are two ways to disconnect signals in [DataflowSignals].  One is the
 [disconnect_all] function, which can be applied to any component based on
-[filter].  Here is an example:
+[filter], and will disconnect everything connected to the default output signal
+of that component (it will not disconnect anything connected to the consumer
+ports of that component).
+The other way involves storing the [BoostSignals] connection object,
+which is returned by the [connect] function.
+
+Here is an example showing both:
 
 [test_disconnect_unfused]
 
@@ -59,7 +63,7 @@ standard connection operators will work out the correct connection:
 
 [test_multi_type_unfused]
 
-[endsect][/multiple_different]
+[endsect][/disconnect]
 
 [section:multiple_same Multiple inputs of the same signature]
 

@@ -130,6 +130,7 @@ Examples of modifiers:
 [endsect][/generic]
 
 [section:properties Signal Properties]
+
 [section:storage storage]
 [*See also]: [classref boost::signals::storage storage class reference.]
 
@@ -140,6 +141,8 @@ Examples of modifiers:
 
 The [storage] class can store the arguments it receives from a signal,
 as well as transmit the stored argument values through its own signal.
+
+[heading Example]
 
 [test_storage_unfused]
 
@@ -156,6 +159,8 @@ as well as transmit the stored argument values through its own signal.
 The [counter] class counts the number of passing signals.  Each time it
 receives a signal, it will increment an internal
 counter and forward the signal.
+
+[heading Example]
 
 [test_counter_unfused]
 
@@ -174,6 +179,8 @@ counter and forward the signal.
 The [junction] class can be used to bring in multiple signals, and forward
 them all to the same set of output signals.
 
+[heading Example]
+
 [test_junction_unfused]
 
 [endsect][/junction]
@@ -188,6 +195,8 @@ them all to the same set of output signals.
 
 The [multiplexer] class can be used to bring in multiple signals, and forward
 them all to the same set of output signals.
+
+[heading Example]
 
 [test_multiplexer_unfused]
 
@@ -208,12 +217,14 @@ them all to the same set of output signals.
 The [mutex] class locks an internal mutex when it receives a signal, and then forwards the signal.
 [mutex] is an __instantiator__ with the Instantiation boost::mutex::scoped_lock and Member boost::mutex.
 
+[heading Example]
+
 [test_mutex_unfused]
 
 [endsect][/mutex]
 
 [section:condition condition]
-[*See also]: [classref boost::signals::mutex mutex class reference.]
+[*See also]: [classref boost::signals::condition condition class reference.]
 
 [heading Model of]
 * [SignalFilterComponent]
@@ -222,7 +233,9 @@ The [mutex] class locks an internal mutex when it receives a signal, and then fo
 
 The [condition] class signals a threading condition when receiving a signal.
 
-[test_mutex_unfused]
+[heading Example]
+
+[test_socket]
 
 [endsect][/condition]
 
@@ -240,6 +253,8 @@ The [condition] class signals a threading condition when receiving a signal.
 The [function] class can be used to apply a function to an incoming signal and output the result.
 [function] is a __modifier__ with the Modifier set to an adapter for the provided function.
 
+[heading Example]
+
 [test_function_unfused]
 
 [endsect][/function]
@@ -256,6 +271,8 @@ The [function] class can be used to apply a function to an incoming signal and o
 [heading Description]
 
 The [chain] class chains together multiple copies of the same component.
+
+[heading Example]
 
 [test_chain_unfused]
 
@@ -281,7 +298,7 @@ The [socket_sender] class can be used to bridge a signal network across multiple
 network connection.  Any signal going to the [socket_sender] will be serialized and sent over a provided
 socket.  A [socket_receiver] can be used on the other end to unserialize the signal and forward it.
 
-Example:
+[heading Example]
 
 [test_socket]
 
@@ -300,7 +317,7 @@ The [socket_receiver] class can be used to bridge a signal network across multip
 network connection.  Any signal going to the [socket_sender] will be serialized and sent over a provided
 socket.  A [socket_receiver] can be used on the other end to unserialize the signal and forward it.
 
-Example:
+[heading Example]
 
 [test_socket]
 

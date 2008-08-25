@@ -285,7 +285,6 @@ void Window::platformResize(int width, int height){
 void Window::platformShowHide(){ }
 
 void WindowImpl::draw(){
-    std::cout << "draw" << std::endl;
 	if(mWindow->shouldDraw()){
 		mWindow->glv->drawGLV(mWindow->w, mWindow->h);
 		glutSwapBuffers();
