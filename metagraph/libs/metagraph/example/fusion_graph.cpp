@@ -1,4 +1,4 @@
-#include <boost/metagraph/fusion_graph.h>
+#include <boost/metagraph/fusion_graph/fusion_graph.h>
 #include <boost/mpl/print.hpp>
 
 namespace fusion_graph = boost::metagraph::fusion_graph;
