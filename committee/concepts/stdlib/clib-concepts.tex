@@ -141,6 +141,8 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
   \tcode{HasGreater}, \tcode{HasLessEqual}, and
   \tcode{HasGreaterEqual} ensure a total order. This is how concepts
   resolve issue 532 (already closed as NAD).
+
+\item Added the \tcode{FunctionType} concept.
 \end{itemize}
 
 \end{titlepage}
@@ -231,6 +233,7 @@ namespace std {
   concept ReferentType<typename T> { }
   concept VariableType<typename T> { }
   concept ObjectType<typename T> @\textit{see below}@;
+  concept FunctionType<typename T> @\textit{see below}@;
   concept ClassType<typename T> @\textit{see below}@;
   concept Class<typename T> @\textit{see below}@;
   concept Union<typename T> @\textit{see below}@;
@@ -460,7 +463,7 @@ concept ObjectType<typename T> : VariableType<T>@\addedConcepts{, MemberPointeeT
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes object types ([basic.types]),
+\addedConcepts{\mbox{\reallynote} describes object types (\mbox{\ref{basic.types}}),
   for which storage can be allocated.}
 
 \pnum 
@@ -470,6 +473,17 @@ concept ObjectType<typename T> : VariableType<T>@\addedConcepts{, MemberPointeeT
   namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
+\begin{itemdecl}
+concept FunctionType<typename T> : PointeeType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes function types (\mbox{\ref{dcl.fct}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is a function type, a concept map \mbox{\tcode{FunctionType<T>}} shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
 
 \begin{itemdecl}
 concept ClassType<typename T> : ObjectType<T> { }

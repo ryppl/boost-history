@@ -1730,7 +1730,7 @@ namespace std {
   // \marktr{}\ref{func.wrap} polymorphic function wrappers:
   class bad_function_call;
 
-  template<class@\removedD{ Function}@> class function; // \addedD{undefined}
+  template<@\changedConcepts{class}{FunctionType}\removedD{ Function}@> class function; // \addedD{undefined}
   @\addedD{template<\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes>}@
     class function<R(ArgTypes...)>;
 
@@ -2566,7 +2566,7 @@ overloaded function templates.}
 
 \begin{codeblock}
 namespace std {
-  template<class@\removedD{ Function}@> class function; // \addedD{undefined}
+  template<@\changedConcepts{class}{FunctionType}\removedD{ Function}@> class function; // \addedD{undefined}
 
   @\addedD{template<\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes>}@
   class function@\addedD{<R(ArgTypes...)>}@ 
