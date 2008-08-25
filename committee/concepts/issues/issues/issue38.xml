@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="38" status="Open">
+<issue num="38" status="WP">
 <title>Container move constructor/assignment operators don't account for scoped allocators</title>
 <section><sref ref="[containers]"/></section>
 <submitter>Pablo Halpern</submitter>
@@ -15,4 +15,8 @@
   on the normal move constructor and the move assignment operator are
   missing.</p>
 </discussion>
+
+<resolution>
+These problems have been resolved in the latest proposal.
+</resolution>
 </issue>

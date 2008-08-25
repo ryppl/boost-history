@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="21" status="New">
+<issue num="21" status="NAD">
   <title>Iterator <tt>difference_type</tt> requirements</title>
 <section><sref ref="[input.iterators]"/></section>
 <submitter>LWG</submitter>
@@ -24,5 +24,13 @@
   own type that I can use for counting (i.e. an abelian group), then
   why can't I use it for the iterator's difference type?</p>
 </discussion>
+
+<resolution>
+  The LWG has reaffirmed that the <code>difference_type</code> should
+  be a built-in integral type, since this requirement was present in
+  the C++98 library. Moreover, the two concepts cannot be fully
+  combined without some tangling of the compiler-supported concepts
+  and the library-defined concepts.
+</resolution>
 
 </issue>

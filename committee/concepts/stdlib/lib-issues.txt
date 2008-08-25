@@ -421,25 +421,25 @@ y   * Create new FrontEmplaceSequence? / BackEmplaceSequence? concepts (and memb
 
 y   * SequenceContainer? second axiom requires bidirectional iterator.
 
-    * In second axiom in SequenceContainer? --c.end() won't compile when iterator is pointer.
+Y   * In second axiom in SequenceContainer? --c.end() won't compile when iterator is pointer.
 
 Y    * In FrontInsertionSequence? axiom add ", c".
 
-    * General issue using FrontInsertionSequence? as example: push_front(const value_type&) should be push_front(value_type) to support move only value_types. This supports queue push_front of move only types. Or use two signatures: push_front(const value_type&) and push_front(value_type&&). The axiom may accidently require value_type to be CopyConstructible? depending on how the signatures are resolved. Need to watch out for that.
+N   * General issue using FrontInsertionSequence? as example: push_front(const value_type&) should be push_front(value_type) to support move only value_types. This supports queue push_front of move only types. Or use two signatures: push_front(const value_type&) and push_front(value_type&&). The axiom may accidently require value_type to be CopyConstructible? depending on how the signatures are resolved. Need to watch out for that.
 
-    * Need axiom involving front().
+Y   * Need axiom involving front().
 
-    * Same issues in BackInsertionSequence?, InsertionSequence?, etc...
+N   * Same issues in BackInsertionSequence?, InsertionSequence?, etc...
 
-    * Container: iterator should be convertible to const_iterator (missing requirement?).
+y   * Container: iterator should be convertible to const_iterator (missing requirement?).
 
-    * InsertionSequence?: insert iterator isn't in sync with the current working paper. Is there a way to fix insert and/or concept to require const_iterator without breaking backward compatibility?
+Y   * InsertionSequence?: insert iterator isn't in sync with the current working paper. Is there a way to fix insert and/or concept to require const_iterator without breaking backward compatibility?
 
-    * Concepts issue 34 came up
+Y   * Concepts issue 34 came up
 
-    * Missing MoveAssignable? requirement on
+Y   * Missing MoveAssignable? requirement on
       vector::emplace(const_iterator, Args&&...)
 
-    * Missing concept: EquivalenceRelation"
+Y   * Missing concept: EquivalenceRelation"
 
-    * Check for places where we need to use EquivalenceRelation for the predicate form when the simple form uses EqualityComparable
+Y   * Check for places where we need to use EquivalenceRelation for the predicate form when the simple form uses EqualityComparable

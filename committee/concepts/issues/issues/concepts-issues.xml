@@ -1,4 +1,4 @@
-<issueslist revision="C4"
+<issueslist revision="C5"
             maintainer="Douglas Gregor &lt;doug.gregor@gmail.com&gt;"
             active_docno="Dxxxx=xx-xxxx"
             defect_docno="Dxxxx=xx-xxxx"
@@ -103,6 +103,10 @@
 </intros>
 
 <revision_history>
+
+<revision tag="C5">
+Companion to the concepts proposals in the pre-San Francisco mailing. (25 August 2008)
+</revision>
 
 <revision tag="C4">
 Companion to the concepts proposals in the post-Antipolis mailing. (30 June 2008)

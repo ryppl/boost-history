@@ -20,8 +20,10 @@
 <resolution>
   <p>Modify [concept.copymove] paragraphs 1-3 as follows:</p>
   <pre>
-auto concept MoveConstructible&lt;typename T&gt; <del>: HasConstructor&lt;T, T&amp;&amp;&gt;</del> { 
+auto concept MoveConstructible&lt;typename T&gt; : <del>Constructible&lt;T, T&amp;&amp;&gt;</del><ins>NothrowDestructible&lt;T&gt;</ins> { 
+  requires RvalueOf&lt;T&gt;<del> &amp;&amp; Constructible&lt;T, RvalueOf&lt;T&gt;::type&gt;</del>;
   <ins>explicit T::T(T&amp;&amp);</ins>
+  <ins>explicit T::T(RvalueOf&lt;T&gt;::type);</ins>
 }
   </pre>
   <ol>
@@ -30,6 +32,7 @@ auto concept MoveConstructible&lt;typename T&gt; <del>: HasConstructor&lt;T, T&a
   </ol>
   <pre>
 T::T(T&amp;&amp; rv); <del>// note: inherited from HasConstructor&lt;T, T&amp;&amp;&gt;</del>
+<ins>T::T(RvalueOf&lt;T&gt;::type rv);</ins>
   </pre>
   <ol start="2">
     <li><i>Postcondition</i>: the constructed <code>T</code> object is equivalent to the value of <code>rv</code> before the construction. [ <i>Note</i>: there is no 
@@ -37,8 +40,8 @@ T::T(T&amp;&amp; rv); <del>// note: inherited from HasConstructor&lt;T, T&amp;&a
   </ol>
 
   <pre>
-auto concept CopyConstructible&lt;typename T&gt; : MoveConstructible&lt;T&gt;<del>, HasConstructor&lt;T, const T&amp;</del>&gt; { 
-  <ins>T::T(const T&amp;);</ins>
+auto concept CopyConstructible&lt;typename T&gt; : MoveConstructible&lt;T&gt;<del>, Constructible&lt;T, const T&amp;</del>&gt; { 
+  <ins>explicit T::T(const T&amp;);</ins>
 
   axiom CopyPreservation(T x) { 
     T(x) == x; 

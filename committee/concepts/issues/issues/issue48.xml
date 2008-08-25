@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="48" status="New">
+  <title>Missing <code>iterator</code> to <code>const_iterator</code> conversion</title>
+<section><sref ref="[container.concepts]"/></section>
+<submitter>LWG</submitter>
+<date>9 Jun 2008</date>
+
+<discussion>
+  <p>The <code>Container</code> and <code>MemberContainer</code>
+  concepts are missing the conversion from <code>iterator</code>
+  to <code>const_iterator</code>.</p>
+</discussion>
+
+<resolution>
+  <p>In [concept.concepts.free], modify the <code>Container</code> concept as follows:</p>
+  <pre>
+concept Container&lt;typename C&gt; {
+  // ...
+  <ins>requires Convertible&lt;iterator, const_iterator&gt;;</ins>
+}
+  </pre>
+  <p>In [container.concepts.member], modify the <code>MemberContainer</code> concept as follows:</p>
+
+  <pre>
+concept MemberContainer&lt;typename C&gt; {
+  // ...
+  <ins>requires Convertible&lt;iterator, const_iterator&gt;;</ins>
+}
+  </pre>
+</resolution>
+</issue>

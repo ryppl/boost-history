@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='iso-8859-1' standalone='no'?>
+<!DOCTYPE issue SYSTEM "lwg-issue.dtd" [ 
+  <!ENTITY nbsp "&#160;">
+] >
+
+<issue num="47" status="New">
+  <title><code>ArithmeticLike</code> conversions from integral, floating-point types should be <code>explicit</code></title>
+<section><sref ref="[concept.arithmetic]"/></section>
+<submitter>Howard Hinnant</submitter>
+<date>25 Aug 2008</date>
+
+<discussion>
+  <p>We would like to use the <code>ArithmeticLike</code> concept in
+  places where the user types might only have explicit conversions
+  from the built-in arithmetic types, e.g., in
+  class <code>duration</code>. For example, the user may have created
+  an arithmetic emulator type but wanted to keep conversions to a
+  minimum to make the type safer to use.</p>
+</discussion>
+
+<resolution>
+  <p>In [concept.arithmetic], update the three constructor requirements in <code>ArithmeticLike</code> as follows:</p>
+  <pre>
+concept ArithmeticLike&lt;typename T&gt;
+  : ... {
+  <ins>explicit</ins> T::T(intmax_t);
+  <ins>explicit</ins> T::T(uintmax_t);
+  <ins>explicit</ins> T::T(long double); 
+}
+  </pre>
+</resolution>
+</issue>

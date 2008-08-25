@@ -22,6 +22,19 @@
     "types which are normal / sensible". The fact you can't sort
     a <code>Regular</code> type (as it isn't <code>Swappable</code>)
     seems a bit bizarre.</p>
+
+  <p>[<i>Doug</i>: there aren't any algorithms or data structures in the standard library that need a move-equivalent version of <code>Regular</code> or <code>Semiregular</code>, so we shouldn't make up these concepts.]</p>
 </discussion>
+
+<resolution>
+  <p>In [concept.regular], update the definition of <tt>Semiregular</tt>  as follows:</p>
+
+  <pre>
+auto concept Semiregular&lt;typename T&gt; 
+  : CopyConstructible&lt;T&gt;, CopyAssignable&lt;T&gt;, FreeStoreAllocatable&lt;T&gt;<ins>, Swappable&lt;T&gt;</ins> { 
+  requires SameType&lt;CopyAssignable&lt;T&gt;::result_type, T&amp;&gt;; 
+} 
+  </pre>
+</resolution>
 
 </issue>
