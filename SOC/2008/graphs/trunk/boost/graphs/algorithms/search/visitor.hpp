@@ -62,7 +62,7 @@ struct default_search_visitor
     { }
 
     /**
-     * Called for eacch edge that is not a tree edge (i.e., whose target has
+     * Called for each edge that is not a tree edge (i.e., whose target has
      * already been discovered). Specific types of non-tree edges can be
      * classified as back or cross edges depending on the color of the target.
      */

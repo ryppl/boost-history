@@ -15,6 +15,27 @@
 // - search_for (x2)
 
 /**
+ * Prepare a vertex for a search algorithm by coloring it, enqueuing it, and
+ * visiting it.
+ */
+template <
+    typename Graph,
+    typename Vertex,
+    typename ColorMap,
+    typename Buffer,
+    typename Visitor>
+void
+start_vertex(Graph const& g, Vertex v, ColorMap color, Buffer& buf, Visitor vis)
+{
+    typedef color_traits<typename ColorMap::value_type> ColorTraits;
+
+    buf.push(v);
+    color(v, ColorTraits::white());
+    vis.start_vertex(g, v);
+    vis.discover_vertex(v);
+}
+
+/**
  * Examine the edge e rooted at vertex u to determine the search action to be
  * taken (or not) for the opposite vertex.
  *
@@ -171,10 +192,7 @@ search_from_vertex(Graph const& g,
     typedef color_traits<typename ColorMap::value_type> ColorTraits;
 
     // Initialize the start vertex and put it in the buf.
-    color(start, ColorTraits::gray());
-    buf.push(start);
-    vis.start_vertex(g, start);
-    vis.discover_vertex(g, start);
+    start_vertex(g, start, color, buf, vis);
     search_vertices(g, color, buf, vis, strat);
 }
 
@@ -203,10 +221,7 @@ search_from_vertices(Graph const& g,
 
     for( ; first != last; ++first) {
         Vertex v = *first;
-        color(v, ColorTraits::gray());
-        buf.push(v);
-        vis.start_vertex(g, v);
-        vis.discover_vertex(g, v);
+        start_vertex(g, v, color, buf, vis);
     }
     search_vertices(g, color, buf, vis, strat);
 }
