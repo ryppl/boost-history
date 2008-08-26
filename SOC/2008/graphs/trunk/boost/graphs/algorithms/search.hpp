@@ -9,7 +9,6 @@
 #include <boost/graphs/properties.hpp>
 #include <boost/graphs/algorithms/utility.hpp>
 
-// Include the search algorithm.
 #include <boost/graphs/algorithms/search/visitor.hpp>
 #include <boost/graphs/algorithms/search/strategy.hpp>
 #include <boost/graphs/algorithms/search/algorithm.hpp>

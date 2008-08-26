@@ -11,18 +11,25 @@
 
 #include <boost/graphs/algorithms/search.hpp>
 
-// A DFS search visitor is a just a search visitor.
-struct dfs_visitor : search_visitor { };
-
-
-template <typename Graph, typename Visitor, typename ColorMap = optional_vertex_map<Graph, color>>
+/**
+ * Execute a breadth-first search over the graph.
+ */
+template <
+    typename Graph,
+    typename Visitor = default_search_visitor,
+    typename ColorMap = optional_vertex_map<Graph, color>>
 void
-depth_first_search(Graph const& g, Visitor vis, ColorMap color = ColorMap())
+depth_first_search(Graph const& g,
+                   Visitor vis = Visitor(),
+                   ColorMap color = ColorMap())
 {
-    std::stack<typename Graph::vertex_descriptor> buf;
-    detail::optional_prop_init(g, color, color_traits<typename ColorMap::value_type>::white());
-    search(g, vis, buf, color);
-}
+    typedef typename Graph::vertex_descriptor Vertex;
+    typedef std::stack<Vertex> Stack;
+    typedef color_traits<typename ColorMap::value_type> ColorTraits;
 
+    Stack s;
+    initialize(g, color, ColorTraits::white());
+    search_graph(g, color, s, vis);
+}
 
 #endif

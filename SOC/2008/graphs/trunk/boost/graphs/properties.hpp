@@ -249,4 +249,38 @@ struct optional_edge_map
     { }
 };
 
+
+namespace detail
+{
+    // Optionally initialize the container, but not if the map is already
+    // initialized.
+    template <typename Graph, typename Map>
+    void optional_init(Graph const& g, Map& map, typename Map::value_type x)
+    {
+        if(!map.container) {
+            Map tmp(g, x);
+            map.swap(tmp);
+        }
+    }
+}
+
+/**
+ * Delayed initialization of optional property maps. The default solution
+ * is to do nothing (i.e,. the map is already initialized). Specialized
+ * variants simply swap the given map with one that's actually initialized.
+ */
+template <typename Graph, typename Map>
+void initialize(Graph const&, Map&, typename Map::value_type)
+{ }
+
+template <typename Graph, typename Prop>
+void initialize(Graph const& g, optional_vertex_map<Graph, Prop>& map, Prop x)
+{ detail::optional_init(g, map, x); }
+
+template <typename Graph, typename Prop>
+void initialize(Graph const g, optional_edge_map<Graph, Prop>& map, Prop x)
+{ detail::optional_init(g, map, x); }
+
+
+
 #endif
