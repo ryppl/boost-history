@@ -67,26 +67,28 @@ namespace detail {
     template<typename EST> struct fetch_target : 
         mpl::back<EST> {};
 
-    // S->E->T map for out_*, adjacent_vertices
-        /*
+//#define MPL_GRAPH_PRODUCE_OUTMAP_AS_MAP
+#ifdef MPL_GRAPH_PRODUCE_OUTMAP_AS_MAP
         // this implementation didn't work on msvc - anyway not sure if it's more efficient
         // to build all maps at once at the expense of lots of map updates, or to use
         // the many pass, easier-to-read filter-and-build algs below.
+    // S->E->T map for out_*, adjacent_vertices
     template<typename EdgeSeqGraph>
     struct produce_outs_map :
-
-        fold<typename EdgeSeqGraph::est_sequence,
-             map<>,
-             if_<has_key<mpl::_1,fetch_source<mpl::_2> >,
-                 insert<erase_key<mpl::_1,fetch_source<mpl::_2> >,
-                        pair<fetch_source<mpl::_2>,
-                             insert<at<mpl::_1,fetch_source<mpl::_2> >,
-                                    pair<fetch_edge<mpl::_2>, fetch_target<mpl::_2> > > > >,
-                 insert<mpl::_1,pair<fetch_source<mpl::_2>,
-                                map<pair<fetch_edge<mpl::_2>,fetch_target<mpl::_2> > > > >
-                 > >
-     {};
-                 */
+        mpl::fold<typename EdgeSeqGraph::est_sequence,
+                  mpl::map<>,
+                  mpl::insert<mpl::_1,
+                              mpl::pair<fetch_source<mpl::_2>,
+                                        mpl::insert<mpl::if_<mpl::has_key<mpl::_1,fetch_source<mpl::_2> >,
+                                                             mpl::at<mpl::_1,fetch_source<mpl::_2> >,
+                                                             mpl::map<> >,
+                                                    mpl::pair<fetch_edge<mpl::_2>, fetch_target<mpl::_2> > > > > >
+    {};
+    template<typename S, typename EdgeSeqGraph>
+    struct produce_out_map :
+        mpl::at<typename produce_outs_map<EdgeSeqGraph>::type, S>
+    {};
+#else // produce out map via a filtered  
     // E->T map for an S for out_*, adjacent_vertices
     template<typename S, typename EdgeSeqGraph>
     struct produce_out_map :
@@ -94,6 +96,8 @@ namespace detail {
              mpl::map<>,
              mpl::insert<mpl::_1,mpl::pair<fetch_edge<mpl::_2>,fetch_target<mpl::_2> > > >
     {};
+#endif
+
     // E->S map for a T for in_*, degree
     template<typename T, typename EdgeSeqGraph>
     struct produce_in_map :
