@@ -344,6 +344,11 @@ protected:
 
         \return  An index to an element in \c #c, or zero if
                  <code>this-&gt;c.empty()</code>.
+
+        \note  Since this member function may mutate a member object, it is
+               \e not thread-safe even among multiple readers.  This applies to
+               all other \c const member functions that call this one (i.e.
+               \c #pick and \c #top).
      */
     size_type  choice() const
     {
@@ -472,6 +477,9 @@ public:
 
         \post  The R.N.G. engine may change, even with \c const.
 
+        \warning  Since this member function may mutate a member object, it is
+                  \e not thread-safe even among multiple readers.
+
         \see  #choice
         \see  #boost::containers::hat::const_token
      */
@@ -513,6 +521,9 @@ public:
         \return  A \c const reference to an element.
 
         \post  The R.N.G. engine may change, even with \c const.
+
+        \warning  Since this member function may mutate a member object, it is
+                  \e not thread-safe even among multiple readers.
 
         \see  #choice
      */
