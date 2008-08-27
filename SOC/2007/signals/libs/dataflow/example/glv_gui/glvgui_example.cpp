@@ -1,4 +1,4 @@
-//[ cppgui_example
+//[ glv_gui_example
 
 // Copyright 2007 Stjepan Rajko.
 // Distributed under the Boost Software License, Version 1.0. (See
@@ -20,7 +20,7 @@ namespace blueprint=boost::dataflow::blueprint;
 namespace signals=boost::signals;
 namespace df=boost::dataflow;
 
-// A regular Dataflow.Signals component, sends and receives void(int)
+// A regular Dataflow.Signals component, sends and receives void(float)
 class output_valuator : public signals::filter<output_valuator, void(float), boost::mpl::vector<void(float)> >, public glv::Slider
 {
 public:
@@ -37,7 +37,7 @@ public:
     }
 };
 
-// A regular Dataflow.Signals component, receives void(int)
+// A regular Dataflow.Signals component, receives void(float)
 class input_valuator : public boost::signals::filter<input_valuator, void(float)>, public glv::Slider
 {
 public:

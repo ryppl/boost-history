@@ -7,26 +7,32 @@ The capabilities of the editor are fairly limited at the moment - it's purpose
 is mainly to verify that something useful can be built on top of
 [DataflowBlueprint] layer.
 
-The following is a screenshot of the editor:
+The following is a screenshot of an older version of the editor:
 
 [$blueprint_screenshot.png]
 
+You can find videos of a new version of the editor on
+[@http://dancinghacker.blip.tv/posts?view=archive&nsfw=dc blip.tv]
+
 It currently has the following capabilities:
 
-* there is a component bank with 4 hardcoded (but easily extensible) components
+* there is a component bank with hardcoded (but easily extensible) components
 * you can click on a component to add it to the blueprint
 * you can drag the components around
 * you can connect ports that are [Connectable]
 * you can invoke components that are [Invocable]
 * a few of the components have a GUI element which can be interacted with
 
-To build the GUI example, you will need to download [FLTK].  At some point
+The new version of the GUI examples uses the [@http://mat.ucsb.edu/glv/ glv library],
+which is included with dataflow.  You can find the gui examples in the
+example/glv_gui directory.
+
+At some point
 I will probably develop another version for the [cppgui] library being
 developed.
 
-The main part of the code is as follows (the GUI classes can be found in
-the `examples/fltk_gui` directory):
+The main part of the code of one of the examples is as follows:
 
-[fltk_gui_example]
+[glv_gui_example]
 
 [endsect]

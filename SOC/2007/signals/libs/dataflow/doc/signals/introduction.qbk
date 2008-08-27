@@ -212,11 +212,11 @@ components used are library-provided components, the fused and unfused examples
 are identical except for the specifications that the components should be fused
 or unfused.
 
-The biggest differences come into play when the examples
+[/The biggest differences come into play when the examples
 include user-implemented components - implementing a fused component can
 be slightly (or greatly) different from implementing an unfused component.
 In these situations, the documentation should state the differences in code
-when using fused components.
+when using fused components.]
 
 [endsect][/fusion]
 

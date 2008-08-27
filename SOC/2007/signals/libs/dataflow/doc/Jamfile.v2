@@ -26,11 +26,6 @@ doxygen dataflow_signals_doxygen
       [ glob ../../../boost/dataflow/signals/component/function.hpp ]
       [ glob ../../../boost/dataflow/signals/component/socket_sender.hpp ]
       [ glob ../../../boost/dataflow/signals/component/socket_receiver.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/applicator.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/conditional.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/conditional_modifier.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/instantiator.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/timed_generator.hpp ]
    :
         <doxygen:param>TAB_SIZE=4
         <doxygen:param>EXAMPLE_PATH=../test

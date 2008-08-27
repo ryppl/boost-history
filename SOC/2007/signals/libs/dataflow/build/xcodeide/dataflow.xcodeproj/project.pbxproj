@@ -159,6 +159,7 @@
 		08A15D250E290EA0005AE94D /* support.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = support.hpp; sourceTree = "<group>"; };
 		08A15D2B0E29108B005AE94D /* runtime_support.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = runtime_support.hpp; sourceTree = "<group>"; };
 		08A15D6F0E2914C3005AE94D /* test_managed_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_managed_port.cpp; sourceTree = "<group>"; };
+		08A27E210E6480AB00C39828 /* threadpool_example_combiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = threadpool_example_combiner.cpp; sourceTree = "<group>"; };
 		08A2D5040E2A728A00D8FA04 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
 		08A2D5060E2A728A00D8FA04 /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
 		08A2D5070E2A728A00D8FA04 /* glv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glv.h; sourceTree = "<group>"; };
@@ -748,6 +749,7 @@
 		08E228DE0E6207EC00D1C2AF /* threadpool */ = {
 			isa = PBXGroup;
 			children = (
+				08A27E210E6480AB00C39828 /* threadpool_example_combiner.cpp */,
 				08E228DF0E6207EC00D1C2AF /* boost */,
 				08E228FE0E62084100D1C2AF /* Jamfile */,
 				08E229020E6208AC00D1C2AF /* threadpool_example.cpp */,

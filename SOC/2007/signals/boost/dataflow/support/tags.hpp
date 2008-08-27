@@ -41,6 +41,12 @@ namespace ports
     {
         typedef producer complement; ///< complement PortCategory type.
     };
+
+    /// consumer PortCategory.
+    struct producer_consumer
+    {
+        typedef producer_consumer complement; ///< complement PortCategory type.
+    };
 }
 
 /*namespace concepts

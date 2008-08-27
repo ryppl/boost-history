@@ -403,10 +403,12 @@ The latest development version is located in the
 Released versions are located in the
 [@http://www.boost-consulting.com/vault/index.php?&directory=Dataflow Boost Vault].
 
-The Dataflow library uses the trunk version of Boost - it might not work
-perfectly with release versions of boost.
+The Dataflow library has been tested using a recent version of the Boost trunk,
+as well as the 1.35 release.  Tests and examples have been built successfuly
+on OS X (GCC 4.0, 4.2), Linux (GCC 4.2), and Windows (MSVC 8.0 and to some degree
+MinGW GCC 4.2).
 
-Version 0.9.1 (under development)
+Version 0.9.1 \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 
 * Generic Dataflow layer
  * binary operations now propagate the return value
@@ -419,8 +421,21 @@ Version 0.9.1 (under development)
 * Added new Dataflow.Managed framework
  * added a gui example using GLV
  
+Short term to-do list:
+
+* keep working on docs, tests
+* default mechanisms for operations should be specified by the framework [Tag]
+* propagate return values where they should be propagated
+* Key used for [KeyedPort]s should be overridable (not always the [PortTraits])
+* binary_operation should take two [Tag] parameters
+* add support for cross-framework operations (`tag_adapter`?)
+* make dispatching possible on other than just the [PortTraits]
+* `port_adapter` should be renamed to `adapter`
+* [Invocable] should be a part of [UnaryOperable]
+
+See the [future_work] section for more information on what is planned.
+
 Version 0.9.0
- \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 
 * Generic Dataflow layer
  * Revamped [concepts] one more time
@@ -440,22 +455,7 @@ Version 0.9.0
  * added a component bank class
  * added [gui_example an example GUI dataflow editor]
 
-Short term to-do list:
-
-* keep working on docs, tests
-* default mechanisms for operations should be specified by the framework [Tag]
-* propagate return values where they should be propagated
-* Key used for [KeyedPort]s should be overridable (not always the [PortTraits])
-* binary_operation should take two [Tag] parameters
-* add support for cross-framework operations (`tag_adapter`?)
-* make dispatching possible on other than just the [PortTraits]
-* `port_adapter` should be renamed to `adapter`
-* [Invocable] should be a part of [UnaryOperable]
-
-See the [future_work] section for more information on what is planned.
-
 Version 0.8.1
- \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
 
 * Started the [DataflowBlueprint] layer (runtime reflection and network modeling).
 * Expanding the [Component] concept (compile-time reflection of ports).
@@ -467,8 +467,7 @@ Version 0.8.1
   layers over the same types (the original intent of the [Mechanism]
   parameter).
 
-Version 0.8.0 -
- \[[@http://www.boost-consulting.com/vault/index.php?direction=&order=&directory=Dataflow& available in the Boost vault]\]
+Version 0.8.0
 
 * post-GSoC version
 * generic dataflow support layer with tests and examples

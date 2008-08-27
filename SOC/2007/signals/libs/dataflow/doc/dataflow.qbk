@@ -193,7 +193,7 @@
 
 [import ../example/blueprint/blueprint_example.cpp]
 
-[import ../example/fltk_gui/fltk_gui_example.cpp]
+[import ../example/glv_gui/glvgui_example.cpp]
 
 [include introduction/introduction.qbk]
 

@@ -36,3 +36,23 @@ inline typename boost::enable_if<
 >::type
 operator DATAFLOW_TEMPLATE_OPERATOR (OutgoingPort &left, const IncomingPort &right)
 { DATAFLOW_TEMPLATE_BINARY_OPERATION(left, right); return left;}
+
+template<typename OutgoingPort, typename IncomingPort>
+inline typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::args::left, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
+        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::args::right, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
+    >, const OutgoingPort &
+>::type
+operator DATAFLOW_TEMPLATE_OPERATOR (const OutgoingPort &left, IncomingPort &right)
+{ DATAFLOW_TEMPLATE_BINARY_OPERATION(left, right); return left;}
+
+template<typename OutgoingPort, typename IncomingPort>
+inline typename boost::enable_if<
+    boost::mpl::and_<
+        boost::dataflow::has_default_port<OutgoingPort, boost::dataflow::args::left, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>,
+        boost::dataflow::has_default_port<IncomingPort, boost::dataflow::args::right, DATAFLOW_TEMPLATE_MECHANISM, DATAFLOW_TEMPLATE_TAG>
+    >, const OutgoingPort &
+>::type
+operator DATAFLOW_TEMPLATE_OPERATOR (const OutgoingPort &left, const IncomingPort &right)
+{ DATAFLOW_TEMPLATE_BINARY_OPERATION(left, right); return left;}
