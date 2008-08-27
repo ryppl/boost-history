@@ -32,7 +32,7 @@ start_vertex(Graph const& g, Vertex v, ColorMap color, Buffer& buf, Visitor vis)
     buf.push(v);
     color(v, ColorTraits::white());
     vis.start_vertex(g, v);
-    vis.discover_vertex(v);
+    vis.discover_vertex(g, v);
 }
 
 /**

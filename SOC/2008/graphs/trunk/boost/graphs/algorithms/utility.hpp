@@ -1,5 +1,0 @@
-
-#ifndef ALGORITHM_UTILITY_HPP
-#define ALGORITHM_UTILITY_HPP
-
-#endif

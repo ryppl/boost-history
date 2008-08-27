@@ -6,9 +6,6 @@
 #include <boost/graphs/colors.hpp>
 #include <boost/graphs/directional_edge.hpp>
 
-#include <boost/graphs/algorithms/utility.hpp>
-#include <boost/graphs/algorithms/iterator.hpp>
-
 #include <boost/graphs/algorithms/search.hpp>
 
 
