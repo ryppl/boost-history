@@ -65,12 +65,15 @@ namespace boost {
   };
 
   template<>
-  struct last_value<void> {
+  class last_value<void> {
+#ifdef BOOST_NO_VOID_RETURNS
     struct unusable {};
-
   public:
     typedef unusable result_type;
-
+#else
+  public:
+    typedef void result_type;
+#endif // BOOST_NO_VOID_RETURNS
     template<typename InputIterator>
     result_type
     operator()(InputIterator first, InputIterator last) const
