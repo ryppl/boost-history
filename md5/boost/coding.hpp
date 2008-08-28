@@ -30,7 +30,7 @@ using coding::md5_digest;
 using coding::md5_context;
 using coding::md5_byte_context;
 using coding::md5_computer;
-using coding::compute_md5;
+using coding::md5;
 
 
 }  // namespace boost

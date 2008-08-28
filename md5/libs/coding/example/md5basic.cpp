@@ -6,7 +6,7 @@
 
 // See <http://www.boost.org/libs/coding> for the library's home page.
 
-#include <boost/coding/md5.hpp>  // for boost::coding::compute_md5
+#include <boost/coding/md5.hpp>  // for boost::coding::md5
 
 #include <cstring>    // for std::strlen
 #include <cstdlib>    // for EXIT_SUCCESS, EXIT_FAILURE
@@ -27,8 +27,8 @@ try
 {
     // Check-sum each command-line string
     for ( int  i = 1 ; i < argc ; ++i )
-        std::cout << boost::coding::compute_md5( argv[i], std::strlen(argv[
-         i ]) ) << endl;
+        std::cout << boost::coding::md5( argv[i], std::strlen(argv[ i ]) ) <<
+         endl;
 
     return EXIT_SUCCESS;
 }

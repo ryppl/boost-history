@@ -21,7 +21,7 @@
 
 #include <algorithm>  // for std::reverse, for_each
 #include <climits>    // for CHAR_BIT
-#include <cstddef>    // for std::size_t
+#include <cstddef>    // for std::size_t, NULL
 #include <istream>    // for std::basic_istream
 #include <ostream>    // for std::basic_ostream
 #include <sstream>    // for std::stringstream
@@ -471,10 +471,6 @@ BOOST_AUTO_TEST_CASE( md5_computer_checksum_test )
 
     BOOST_CHECK_EQUAL( s1, md5_empty_data );
 
-    // Application operator interface
-    md5_digest const  s2 = c1();
-    BOOST_CHECK_EQUAL( s1, s2 );
-
     // Non-empty message below the limit of padding wrap-around
     c1.process_octet( 0x61u );  // 'a' in ASCII
     BOOST_REQUIRE( c1.bits_unbuffered() > 0u );
@@ -732,19 +728,19 @@ BOOST_AUTO_TEST_CASE( md5_byte_context_test )
 }
 
 // Single-call function test
-BOOST_AUTO_TEST_CASE( compute_md5_test )
+BOOST_AUTO_TEST_CASE( md5_function_test )
 {
-    using boost::coding::compute_md5;
+    using boost::coding::md5;
 
     // Empty check
-    BOOST_CHECK_EQUAL( compute_md5(0, 0), md5_empty_data );
+    BOOST_CHECK_EQUAL( md5(NULL, 0u), md5_empty_data );
 
     // Check against another component
     unsigned char const  test_value = 0x6Fu;
     md5_computer         scratch;
 
     scratch.process_byte( test_value );
-    BOOST_CHECK_EQUAL( compute_md5(&test_value, 1u), scratch.checksum() );
+    BOOST_CHECK_EQUAL( md5(&test_value, 1u), scratch.checksum() );
 
     // How do we get consistent data when we can't count on CHAR_BIT being the
     // same everywhere?  Do we just screw over testers without 8-bit bytes or

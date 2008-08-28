@@ -144,10 +144,7 @@ public:
     //! Equals
     bool  operator ==( self_type const &o ) const;
     //! Not-equals
-    bool  operator !=( self_type const &o ) const;
-
-    //! Application
-    value_type  operator ()() const;//@}  // remove?
+    bool  operator !=( self_type const &o ) const;//@}
 
 };  // byte_coding_shell
 
@@ -313,18 +310,6 @@ template < class ByteProcessor >
 inline bool
 byte_coding_shell<ByteProcessor>::operator !=( self_type const &o ) const
 { return !this->operator ==( o ); }
-
-/** Computes the check-sum of the submitted data, through a standard generator
-    interface.
-
-    \return  The generated check-sum.
-
-    \see  #checksum()const
- */
-template < class ByteProcessor >
-inline typename byte_coding_shell<ByteProcessor>::value_type
-byte_coding_shell<ByteProcessor>::operator ()() const
-{ return this->checksum(); }
 
 
 //  Byte-processing bit-processor wrapper class template declaration  --------//

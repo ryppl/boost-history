@@ -51,7 +51,7 @@ namespace coding
 
     \see  boost::coding::md5_digest
     \see  boost::coding::md5_context
-    \see  boost::coding::compute_md5(void const*,std::size_t)
+    \see  boost::coding::md5(void const*,std::size_t)
  */
 class md5_computer
     : public bit_coding_shell<md5_context, true>

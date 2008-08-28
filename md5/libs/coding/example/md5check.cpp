@@ -13,7 +13,7 @@
 #include <algorithm>  // for std::for_each
 #include <exception>  // for std::exception
 #include <iostream>   // for std::cerr, cout, cin
-#include <iterator>   // for std::istream_iterator
+#include <iterator>   // for std::istreambuf_iterator
 #include <ostream>    // for std::endl
 
 
@@ -44,7 +44,7 @@ try
     using boost::coding::md5_digest;
     using std::cout;
 
-    typedef std::istream_iterator<unsigned char>  byte_read_iterator;
+    typedef std::istreambuf_iterator<char>  byte_read_iterator;
 
     // Perform a MD5 checksum over the bytes read from standard input.
     // (TODO: put code to force std::cin into binary mode)
@@ -53,7 +53,7 @@ try
     checksummer.bytes = std::for_each( byte_read_iterator(std::cin),
      byte_read_iterator(), checksummer.bytes );
 
-    md5_digest const  fingerprint = checksummer();
+    md5_digest const  fingerprint = checksummer.checksum();
 
     // Use the results based on the program's mode
     switch ( argc )

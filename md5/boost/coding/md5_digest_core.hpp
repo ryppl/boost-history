@@ -55,7 +55,7 @@ template < typename Ch, class Tr >
 
     \see  boost::coding::md5_context
     \see  boost::coding::md5_computer
-    \see  boost::coding::compute_md5(void const*,std::size_t)
+    \see  boost::coding::md5(void const*,std::size_t)
  */
 struct md5_digest
 {

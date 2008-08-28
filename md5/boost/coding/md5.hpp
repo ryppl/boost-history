@@ -50,7 +50,7 @@ namespace coding
     \see  boost::coding::md5_digest
     \see  boost::coding::md5_byte_context
  */
-inline md5_digest  compute_md5( void const *buffer, std::size_t byte_count )
+inline md5_digest  md5( void const *buffer, std::size_t byte_count )
 {
     md5_byte_context       c;
     unsigned char const *  b = static_cast<unsigned char const *>( buffer );
