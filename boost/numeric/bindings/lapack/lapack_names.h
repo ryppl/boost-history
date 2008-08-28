@@ -67,6 +67,22 @@
 #define LAPACK_CPOTRI FORTRAN_ID( cpotri )
 #define LAPACK_ZPOTRI FORTRAN_ID( zpotri )
 
+/* symmetric/Hermitian positive definite tridiagonal */
+
+#define LAPACK_SPTSV FORTRAN_ID( sptsv )
+#define LAPACK_DPTSV FORTRAN_ID( dptsv )
+#define LAPACK_CPTSV FORTRAN_ID( cptsv )
+#define LAPACK_ZPTSV FORTRAN_ID( zptsv )
+
+#define LAPACK_SPTTRF FORTRAN_ID( spttrf )
+#define LAPACK_DPTTRF FORTRAN_ID( dpttrf )
+#define LAPACK_CPTTRF FORTRAN_ID( cpttrf )
+#define LAPACK_ZPTTRF FORTRAN_ID( zpttrf )
+
+#define LAPACK_SPTTRS FORTRAN_ID( spttrs )
+#define LAPACK_DPTTRS FORTRAN_ID( dpttrs )
+#define LAPACK_CPTTRS FORTRAN_ID( cpttrs )
+#define LAPACK_ZPTTRS FORTRAN_ID( zpttrs )
 
 /* symmetric/Hermitian positive definite in packed storage */
 

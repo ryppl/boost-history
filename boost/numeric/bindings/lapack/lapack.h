@@ -149,6 +149,40 @@ extern "C" {
   void LAPACK_ZPPTRI (char const* uplo, int const* n, 
                       dcomplex_t* ap, int* info);
 
+  /* symmetric/Hermitian positive definite tridiagonal */
+
+  void LAPACK_SPTSV (int const* N, int const* NRHS, float* D, float* E
+                    , float* B, int const* LDB, int* INFO
+                    );
+  void LAPACK_DPTSV (int const* N, int const* NRHS, double* D, double* E
+                    , double* B, int const* LDB, int* INFO
+                    );
+  void LAPACK_CPTSV (int const* N, int const* NRHS, float* D, fcomplex_t* E
+                    , fcomplex_t* B, int const* LDB, int* INFO
+                    );
+  void LAPACK_ZPTSV (int const* N, int const* NRHS, double* D, dcomplex_t* E
+                    , dcomplex_t* B, int const* LDB, int* INFO
+                    );
+
+  void LAPACK_SPTTRF ( int const* n, float* d, float* e, int* info);
+  void LAPACK_DPTTRF ( int const* n, double* d, double* e, int* info);
+  void LAPACK_CPTTRF ( int const* n, float* d, fcomplex_t* e, int* info);
+  void LAPACK_ZPTTRF ( int const* n, double* d, dcomplex_t* e, int* info);
+
+  void LAPACK_SPTTRS ( int const* n, int const* nrhs, 
+                      float const* d, float const* e,
+                      float* b, int const* ldb, int* info);
+  void LAPACK_DPTTRS ( int const* n, int const* nrhs, 
+                      double const* d, double const* e,
+                      double* b, int const* ldb, int* info);
+  void LAPACK_CPTTRS (char const* uplo, int const* n, int const* nrhs,
+                      float const* d, fcomplex_t const* e,
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZPTTRS (char const* uplo, int const* n, int const* nrhs,
+                      double const* d, dcomplex_t const* e,
+                      dcomplex_t* b, int const* ldb, int* info);
+
+
 
   /* symmetric/Hermitian indefinite and complex symmetric */
 
