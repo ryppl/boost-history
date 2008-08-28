@@ -1,0 +1,62 @@
+/*=================================---------------------------------------------
+    Copyright 2008 Stjepan Rajko
+  
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
+
+#ifndef BOOST__GUIGL__WIDGET__SLIDER_HPP
+#define BOOST__GUIGL__WIDGET__SLIDER_HPP
+
+#include <boost/guigl/view/active_colored.hpp>
+#include <boost/guigl/view/draggable.hpp>
+#include <boost/guigl/view/positioned.hpp>
+#include <boost/guigl/view/solid_background.hpp>
+#include <boost/signal.hpp>
+
+namespace boost { namespace guigl { namespace widget {
+
+class slider;
+
+typedef
+    view::active_colored<
+        view::draggable<slider,
+            view::solid_background<
+                view::positioned<>
+    >   >   > slider_base_type;
+
+class slider : public slider_base_type
+{
+    typedef slider_base_type base_type;
+public:
+    template<typename ArgumentPack>
+    slider(const ArgumentPack &args)
+        : slider_base_type(args)
+        , m_value(0)
+    {}
+
+    boost::signal<void(const double &)> on_value_change;
+    double value()
+    {   return m_value; }
+    void set_value(double value)
+    {
+        m_value = value;
+        on_value_change(value);
+    }
+protected:
+    BOOST_GUIGL_WIDGET_DRAW
+    
+private:
+    double m_value;
+    void draggable_on_drag(const position_type &position);
+    
+    friend class view::draggable<slider,
+        view::solid_background<
+            view::positioned<>
+    >   >;
+};
+
+}}}
+
+#endif // BOOST__GUIGL__WIDGET__SLIDER_HPP

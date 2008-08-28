@@ -10,6 +10,6 @@
 
 using namespace boost;
 
-#define BOOST_PP_ITERATION_PARAMS_1 (3, (0, 20, <libs/guigl/test/test_parameter_dispatch_compilation.hpp>))
+#define BOOST_PP_ITERATION_PARAMS_1 (3, (0, 50, <libs/guigl/test/test_parameter_dispatch_compilation.hpp>))
     #include BOOST_PP_ITERATE()
 

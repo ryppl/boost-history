@@ -41,8 +41,13 @@ public:
 BOOST_AUTO_TEST_CASE( BOOST_PP_CAT(test_multi_param_construction,N) )
 {
     named_constructableN constructed(_labelN = "hello", _sizeN = 1, _volumeN = 1.0);
+    named_constructableN constructed2(_sizeN = 1, _volumeN = 1.0, _labelN = "hello");
+    named_constructableN constructed3(_labelN = "hello", _volumeN = 1.0, _sizeN = 1);
+    named_constructableN constructed4(_volumeN = 1.0, _sizeN = 1, _labelN = "hello");
     BOOST_CHECK_EQUAL(constructed.label, "hello");
     BOOST_CHECK_EQUAL(constructed.size, 1);    
     BOOST_CHECK_EQUAL(constructed.volume, 1.0);    
-
+    BOOST_CHECK_EQUAL(constructed2.label, "hello");
+    BOOST_CHECK_EQUAL(constructed2.size, 1);    
+    BOOST_CHECK_EQUAL(constructed2.volume, 1.0);
 }

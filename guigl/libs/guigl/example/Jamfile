@@ -6,13 +6,9 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #----------------------------------------------===============================*/
 
-
-import testing ;
-
-project guigl/test
+project boost/guigl/test
     : requirements
-      <define>BOOST_ALL_NO_LIB=1
-      <library>/boost/test//boost_unit_test_framework/<link>static
+        <library>$(TOP)/libs/guigl/build//boost_guigl/<link>static
     ;
 
-run test_parameter.cpp ;
+exe window_example : window_example.cpp ;
