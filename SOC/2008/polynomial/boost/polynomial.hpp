@@ -279,7 +279,7 @@ namespace tools {
   template<typename FieldType>
   template<typename U>
   polynomial<FieldType>& polynomial<FieldType>::operator=(const polynomial<U>& poly) {
-    if(reinterpret_cast<void const*>(this) != reinterpret_cast<void const*>(&poly)) {
+    if(static_cast<void const*>(this) != static_cast<void const*>(&poly)) {
       std::vector<FieldType> tmp(poly.size());
       typename std::vector<FieldType>::iterator tmp_it = tmp.begin();
       typename std::vector<U>::const_iterator poly_it = poly.begin();
@@ -335,7 +335,7 @@ namespace tools {
   template<typename FieldType>
   template<typename U>
   polynomial<FieldType>& polynomial<FieldType>::operator-=(const polynomial<U>& poly) {
-    if(reinterpret_cast<void const*>(this) != reinterpret_cast<void const*>(&poly)) {
+    if(static_cast<void const*>(this) != static_cast<void const*>(&poly)) {
       std::vector<FieldType> tmp(std::max(size(), poly.size()));
       boost::math::tools::detail::polynomial_sub_in_place(begin(), end(), poly.begin(), poly.end(), tmp.begin());
       std::swap(coefficients, tmp);
@@ -401,7 +401,7 @@ namespace tools {
   template<typename FieldType>
   template<typename U>
   polynomial<FieldType>& polynomial<FieldType>::operator/=(const polynomial<U>& poly) {
-    if(reinterpret_cast<void const*>(this) != reinterpret_cast<void const*>(&poly)) {
+    if(static_cast<void const*>(this) != static_cast<void const*>(&poly)) {
       std::vector<FieldType> tmp(coefficients);
       if(size() < poly.size()) {
         tmp.clear();
@@ -447,7 +447,7 @@ namespace tools {
   template<typename FieldType>
   template<typename U>
   polynomial<FieldType>& polynomial<FieldType>::operator%=(const polynomial<U>& poly) {
-    if(reinterpret_cast<void const*>(this) != reinterpret_cast<void const*>(&poly)) {
+    if(static_cast<void const*>(this) != static_cast<void const*>(&poly)) {
       if(size() < poly.size()) {
         return *this;
       }
