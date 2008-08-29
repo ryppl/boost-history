@@ -8,7 +8,8 @@
 #include<vector>
 #include<iterator>
 #include<boost/iterator/iterator_traits.hpp>
-#include<boost/dsearch/patricia_iterator.hpp>
+#include<boost/dsearch/details/patricia_iterator.hpp>
+#include<boost/dsearch/details/pat_key_traits.hpp>
 
 
 //note //* has been used where there is an inline comment documenting the code.
@@ -29,7 +30,6 @@ namespace dsearch{
     \warning Test waring
     \todo 
     replace all key assignement operations with key_copy.\n
-    replace all key.size() with key_traits::size().\n
     remove key.size() calculation where not needed.
 
 */
@@ -1637,6 +1637,7 @@ bool operator == (const patricia<Key,Mapped,Key_traits,Alloc> & p1,
 	
 	it_1=p1.begin();
 	it_2=p2.begin();
+	std::cout<<"Hello in checking equal"<<std::endl;
 
 	//* simply check whether all keys and values are equal when enumerated 
 	//* in ascending order
