@@ -620,7 +620,7 @@ Here is a table with summary performance of implemented functions and algorithms
 These function were written especially for Polynomial Library but may be used separately as well. Usage of them should be clear but there is one thing that should be explained. If you want to use evaluate_polynomial() or evaluate_polynomial_faithfully() function, you should use the following representation of your coefficients:
 <ul>
   <li> <b>*first</b> is the coefficient for <b>x(n-1)</b> term where <b>n = std::distance(first, last)</b>,</li>
-  <li> <b>*(first+1)</b> is the coefficient for <b>x^(n-1)</b> term,</li>
+  <li> <b>*(first+1)</b> is the coefficient for <b>x^(n-2)</b> term,</li>
   <li> ...</li>
   <li> <b>*(last-1)</b> is the coefficient for <b>x^0</b> term.</li>
 </ul>
