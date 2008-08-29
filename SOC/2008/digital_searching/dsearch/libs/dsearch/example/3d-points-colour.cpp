@@ -1,12 +1,11 @@
 #include<boost/dsearch/patricia.hpp>
-#include<boost/dsearch/pat_key_traits.hpp>
 #include<iostream>
 #include<vector>
 
 using boost::dsearch::patricia;
 using boost::dsearch::pat_vector_traits;
 
-class colour{
+class colour {
 	public:
 	int R,B,G;
 	colour() : R(0), B(0) ,G(0) 

@@ -1,5 +1,4 @@
 #include<boost/dsearch/patricia.hpp>
-#include<boost/dsearch/pat_key_traits.hpp>
 #include<iostream>
 #include<algorithm>
 #include<string>
@@ -29,7 +28,7 @@ int main(int argc, char** argv)
 	classroom [ "Bharath Ravi" ] = "05co48";
 	classroom [ "Bala Subramanyam" ] = "05co18";
 	classroom [ "S Devika Nair" ] = "05co54";
-	classroom [ "S A Mahima"] = "05co35";
+	classroom [ "S A Mahima" ] = "05co35";
 
 	std::cout << "all of them" <<std::endl;
 	print_range ( classroom.begin() , classroom.end() );
