@@ -19,7 +19,7 @@ namespace tools {
 
   namespace detail {
 
-    template<class InputIterator, class RandomAccessIterator>
+    template<typename InputIterator, typename RandomAccessIterator>
     void bit_reverse_copy(InputIterator first, InputIterator last, RandomAccessIterator out) {
         typedef typename std::iterator_traits<InputIterator>::difference_type difference_type;
         difference_type sz = std::distance(first, last);
@@ -37,50 +37,50 @@ namespace tools {
         }
     }
 
-    template<class Complex>
+    template<typename Complex>
     struct Complex_traits {
       typedef typename Complex::value_type value_type;
     };
 
-    template<class Complex>
+    template<typename Complex>
     inline typename Complex_traits<Complex>::value_type real_part(Complex const& c) {
       return c.real();
     }
 
-    template<class Complex>
+    template<typename Complex>
     inline typename Complex_traits<Complex>::value_type imag_part(Complex const& c) {
       return c.imag();
     }
 
-    template<class Complex, class Real, class Imag>
+    template<typename Complex, typename Real, typename Imag>
     inline Complex create_complex(Real const& r, Imag const& i) {
       return Complex(r, i);
     }
  
-    template<class Complex>
+    template<typename Complex>
     inline Complex complex_add(Complex const& a, Complex const& b) {
       return create_complex<Complex>(real_part(a) + real_part(b), imag_part(a) + imag_part(b));
     }
 
-    template<class Complex>
+    template<typename Complex>
     inline Complex complex_sub(Complex const& a, Complex const& b) {
       return create_complex<Complex>(real_part(a) - real_part(b), imag_part(a) - imag_part(b));
     }
 
-    template<class Complex>
+    template<typename Complex>
     inline Complex complex_mul(Complex const& a, Complex const& b) {
       return create_complex<Complex>(real_part(a) * real_part(b) - imag_part(a) * imag_part(b),
                                      imag_part(a) * real_part(b) + real_part(a) * imag_part(b));
     }
 
-    template<class Complex, class ScalarType>
+    template<typename Complex, typename ScalarType>
     inline Complex complex_div_by_scalar(Complex const& comp, ScalarType const& scal) {
       return create_complex<Complex>(real_part(comp) / scal, imag_part(comp) / scal);
     }
 
   } // namespace detail
 
-  template<class InputIterator, class OutputIterator>
+  template<typename InputIterator, typename OutputIterator>
   void fast_fourier_transform(InputIterator first, InputIterator last, OutputIterator out) {
     using namespace boost::math;
     using namespace boost::math::tools;
@@ -114,7 +114,7 @@ namespace tools {
       *out++ = dft[i];
   }
 
-  template<class InputIterator, class OutputIterator>
+  template<typename InputIterator, typename OutputIterator>
   void inverse_fast_fourier_transform(InputIterator first, InputIterator last, OutputIterator out) {
     using namespace boost::math;
     using namespace boost::math::tools;
