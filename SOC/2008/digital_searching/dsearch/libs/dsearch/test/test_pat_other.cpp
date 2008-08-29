@@ -1,5 +1,5 @@
 #include<boost/dsearch/patricia.hpp>
-#include<boost/dsearch/pat_key_traits.hpp>
+//#include<boost/dsearch/pat_key_traits.hpp>
 #include<boost/test/minimal.hpp>
 #include<vector>
 #include<string>
