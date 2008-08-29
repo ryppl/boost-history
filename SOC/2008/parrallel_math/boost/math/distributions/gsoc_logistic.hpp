@@ -104,7 +104,7 @@ namespace boost { namespace math {
           return result;
         }
       
-      
+      BOOST_MATH_STD_USING
       RealType exp_term=exp((location-x)/scale);
       return ( exp_term )/ ( scale*(1+exp_term)*(1+exp_term ) );
       
@@ -138,7 +138,7 @@ namespace boost { namespace math {
         {
           return result;
         }
-      
+      BOOST_MATH_STD_USING
       RealType power=(location-x)/scale;
       return 1/( 1+exp(power) ); 
     } 
@@ -172,7 +172,8 @@ namespace boost { namespace math {
           return result;
           
         }
-       //Expressions to try
+      BOOST_MATH_STD_USING
+      //Expressions to try
        //return location+scale*log(p/(1-p));
        //return location+scale*log1p((2*p-1)/(1-p));
       
@@ -204,7 +205,7 @@ namespace boost { namespace math {
         return result;
       if(false == detail::check_x(function, x, &result, Policy()))
         return result;
-      
+      BOOST_MATH_STD_USING
       RealType power=(x-location)/scale;
       return 1/( 1+exp(power) ); 
       
@@ -239,8 +240,9 @@ namespace boost { namespace math {
           
         }
    //Expressions to try 
-   return location+scale*log((1-q)/q);
-   //return location+scale*log1p((1-2*q)/(q));
+   BOOST_MATH_STD_USING
+     //return location+scale*log((1-q)/q);
+   return location+scale*log1p((1-2*q)/(q));
    
    //return location-scale*log(q/(1-q));
    //return location-scale*log1p((2*q-1)/(1-q));
@@ -291,4 +293,15 @@ namespace boost { namespace math {
       
       return static_cast<RealType>(6)/5; 
     } // RealType kurtosis_excess(const logistic_distribution<RealType, Policy>& dist)
+
+    template <class RealType, class Policy>
+    inline RealType kurtosis(const logistic_distribution<RealType, Policy>& dist)
+    {
+      return kurtosis_excess(dist) + 3;
+    } // RealType kurtosis_excess(const logistic_distribution<RealType, Policy>& dist)
   }}
+
+
+// Must come at the end:
+#include <boost/math/distributions/detail/derived_accessors.hpp>
+
