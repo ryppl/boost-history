@@ -11,7 +11,8 @@
 
 
 
-
+#define BOOST_MATH_UNDERFLOW_ERROR_POLICY throw_on_error
+#define BOOST_MATH_OVERFLOW_ERROR_POLICY throw_on_error
 #include <boost/math/concepts/real_concept.hpp> // for real_concept
 #include <boost/math/distributions/gsoc_logistic.hpp>
     using boost::math::logistic_distribution;
@@ -69,8 +70,10 @@ void test_spots(RealType T)
    // 50 eps as a percentage, up to a maximum of double precision
    // Test data taken from Mathematica 6
    RealType tolerance = (std::max)(
-      static_cast<RealType>(boost::math::tools::epsilon<double>()),
+      static_cast<RealType>(1e-33L),
       boost::math::tools::epsilon<RealType>());
+   cout<<"Absolute tolerance:"<<tolerance<<endl;
+   
    tolerance *= 50 * 100; 
    // #  pragma warning(disable: 4100) // unreferenced formal parameter.
    // prevent his spurious warning.
@@ -108,7 +111,7 @@ void test_spots(RealType T)
     //High probability
     test_spot(
       static_cast<RealType>(1), // location
-      static_cast<RealType>(0.5), // scale
+      static_cast<RealType>(0.5L), // scale
       static_cast<RealType>(10), // x
       static_cast<RealType>(0.99999998477002048723965105559179L), // p  
 
@@ -120,7 +123,7 @@ void test_spots(RealType T)
    test_spot(
       static_cast<RealType>(5), // location
       static_cast<RealType>(2), // scale
-      static_cast<RealType>(-0.1), // scale
+      static_cast<RealType>(-0.1L), // scale
       static_cast<RealType>(0.0724264853615177178439235061476928L), // p
       static_cast<RealType>(0.927573514638482282156076493852307L), //q
       tolerance);
@@ -148,7 +151,7 @@ void test_spots(RealType T)
       static_cast<RealType>(-0.00125796420642514024493852425918807L),//x
       static_cast<RealType>(0.7L), // p
       static_cast<RealType>(0.3L), //q
-      100*tolerance);   
+      80*tolerance);   
 
   test_spot(
       static_cast<RealType>(1.2345L), // location
@@ -156,18 +159,18 @@ void test_spots(RealType T)
       static_cast<RealType>(0.0012345L), // x
       static_cast<RealType>(0.0000458541039469413343331170952855318L), // p
       static_cast<RealType>(0.999954145896053058665666882904714L), //q
-      100*tolerance);
+      80*tolerance);
  
 
   
    test_spot(
-      static_cast<RealType>(5), // location
-      static_cast<RealType>(2), // scale
+      static_cast<RealType>(5L), // location
+      static_cast<RealType>(2L), // scale
       static_cast<RealType>(0.0012345L), // x
       static_cast<RealType>(0.0759014628704232983512906076564256L), // p
       static_cast<RealType>(0.924098537129576701648709392343574L), //q
-      100*tolerance);
- 
+        80*tolerance);
+  
    //negative location
    test_spot(
       static_cast<RealType>(-123.123123L), // location
@@ -186,7 +189,7 @@ void test_spots(RealType T)
 
    BOOST_CHECK_CLOSE(
       ::boost::math::pdf(
-         logistic_distribution<RealType>(1.2345,0.12345),      
+         logistic_distribution<RealType>(1.2345L,0.12345L),      
          static_cast<RealType>(0.0012345L) ),//x
          static_cast<RealType>(0.000371421639109700748742498671686243L),              // probability
          tolerance); // %
@@ -224,7 +227,7 @@ void test_spots(RealType T)
    // Things that are errors:
    //1. domain errors for scale and location
    //2. x being NAN
-   //3. Probabilies being outside [0,1]
+   //3. Probabilies being outside (0,1)
 
    
   
@@ -261,9 +264,17 @@ void test_spots(RealType T)
         BOOST_CHECK_THROW(quantile(complement(dist, +std::numeric_limits<RealType>::quiet_NaN())), std::domain_error); // p = + infinity
       }
 
-    //p can't be outside 0 and 1
+    //p can't be outside (0,1)
     BOOST_CHECK_THROW(quantile(dist, static_cast<RealType>(1.1)), std::domain_error); 
-    BOOST_CHECK_THROW(quantile(dist, static_cast<RealType>(-0.1)), std::domain_error); 
+    BOOST_CHECK_THROW(quantile(dist, static_cast<RealType>(-0.1)), std::domain_error);
+    BOOST_CHECK_THROW(quantile(dist, static_cast<RealType>(1)), std::overflow_error); 
+    BOOST_CHECK_THROW(quantile(dist, static_cast<RealType>(0)), std::underflow_error);
+
+    BOOST_CHECK_THROW(quantile(complement(dist, static_cast<RealType>(1.1))), std::domain_error); 
+    BOOST_CHECK_THROW(quantile(complement(dist, static_cast<RealType>(-0.1))), std::domain_error);
+    BOOST_CHECK_THROW(quantile(complement(dist, static_cast<RealType>(1))), std::underflow_error); 
+    BOOST_CHECK_THROW(quantile(complement(dist, static_cast<RealType>(0))), std::overflow_error); 
+    
     
     //Tests for mean,mode,median,variance,skewness,kurtosis
     
@@ -294,7 +305,7 @@ void test_spots(RealType T)
          ::boost::math::variance(
          logistic_distribution<RealType>(2,1)      
          ),//x
-         static_cast<RealType>(3.28986813369645287294483033329205),              // probability
+         static_cast<RealType>(3.28986813369645287294483033329205L),              // probability
          tolerance);
     //skewness
     BOOST_CHECK_CLOSE(
@@ -339,3 +350,4 @@ int test_main(int, char* [])
 
    return 0;
 } // int test_main(int, char* [])
+
