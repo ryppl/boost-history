@@ -396,23 +396,23 @@ The second function returns a definite integral over an interval <b>[a, b]</b>.
 <h3><a name="special_forms">Special forms</a></h3>
 
 <p>
-Sometimes in calculations special polynomial forms are needed. Header &lt;boost/math/tools/polynomial/special_forms&gt; simply includes the headers with functions that can calculate four forms: Chebyshev, Hermite, Laguerre and Legendre. The <b>polynomial</b> class uses these algorithms and make them very easy in use. The following functions are provided:
+Sometimes in calculations special polynomial forms are needed. Header &lt;boost/math/tools/polynomial/special_forms&gt; simply includes the headers with functions that can calculate four forms: Chebyshev, Hermite, Laguerre and Legendre. The <b>polynomial</b> class utilizes these algorithms and make them very easy in use. The following functions are provided:
 <pre>
   namespace boost {
   namespace math {
   namespace tools {
 
-    template<typename FieldType, typename Size>
-    polynomial<FieldType> chebyshev_form(const Size sz);
+    template&lt;typename FieldType, typename Size&gt;
+    polynomial&lt;FieldType&gt; chebyshev_form(const Size sz);
 
-    template<typename FieldType, typename Size>
-    polynomial<FieldType> hermite_form(const Size sz);
+    template&lt;typename FieldType, typename Size&gt;
+    polynomial&lt;FieldType&gt; hermite_form(const Size sz);
 
-    template<typename FieldType, typename Size>
-    polynomial<FieldType> laguerre_form(const Size sz);
+    template&lt;typename FieldType, typename Size&gt;
+    polynomial&lt;FieldType&gt; laguerre_form(const Size sz);
 
-    template<typename FieldType, typename Size>
-    polynomial<FieldType> legendre_form(const Size sz);
+    template&lt;typename FieldType, typename Size&gt;
+    polynomial&lt;FieldType&gt; legendre_form(const Size sz);
 
   } // namespace tools
   } // namespace math
