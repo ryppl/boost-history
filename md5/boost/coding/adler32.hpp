@@ -140,7 +140,7 @@ private:
     // and the initial threshold goes up to 380,368,696 with the reset threshold
     // being 380,368,439.
 #else
-    typedef mpl::size_t<1u>  initial_threshold, reset_threshold;  // no queuing
+    typedef mpl::size_t<0u>  initial_threshold, reset_threshold;  // no queuing
 #endif
 
     // Member data
@@ -458,6 +458,8 @@ public:
     // Assignment
     //! Sets state back to initial conditions
     void  reset();
+    //! Sets state to restart from a given checksum
+    void  configure( sum_type checksum );
     //! Changes the current state to a copy of another object's
     void  assign( self_type const &c );
 
@@ -526,6 +528,20 @@ inline adler32_computer::sum_type  adler32_computer::sum_of_byte_sums() const
     \post  <code>#sum_of_byte_sums() == 0</code>.
  */
 inline void  adler32_computer::reset()  { this->context() = adler32_context(); }
+
+/** Changes an object to be like it was (re)started from a given checksum.
+
+    \pre  <code>(<var>checksum</var> &amp; 0xFFFF) &lt; 65,521 &amp;&amp;
+          (<var>checksum</var> &gt;&gt; 16) &lt; 65,521</code>.  (This implies
+          that \p checksum is less than 2<sup>32</sup>.)
+
+    \param checksum  The checksum of the conditions to restart from.
+
+    \post  <code>#augmented_byte_sum() == <var>checksum</var> &amp; FFFF</code>.
+    \post  <code>#sum_of_byte_sums() == <var>checksum</var> &gt;&gt; 16</code>.
+ */
+inline void  adler32_computer::configure( sum_type checksum )
+{ this->context() = adler32_context( checksum ); }
 
 /** Changes an object to be like the given object.  Only the computation
     elements are copied; no function object proxies are reseated.

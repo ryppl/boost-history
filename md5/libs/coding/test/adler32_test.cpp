@@ -260,33 +260,38 @@ BOOST_AUTO_TEST_CASE( adler32_computer_copy_constructor_status_test )
     // Copy constructor
     adler32_computer  c2, c3( c1 );
 
-    BOOST_CHECK( c3 == c1 );
-    BOOST_CHECK( c3 != c2 );
+    BOOST_CHECK_EQUAL( c3, c1 );
+    BOOST_CHECK_NE( c3, c2 );
 
     // Assignment operator
     c3 = c2;
-    BOOST_CHECK( c3 == c2 );
-    BOOST_CHECK( c3 != c1 );
+    BOOST_CHECK_EQUAL( c3, c2 );
+    BOOST_CHECK_NE( c3, c1 );
 
     // Assignment method
     c3.assign( c1 );
-    BOOST_CHECK( c3 == c1 );
-    BOOST_CHECK( c3 != c2 );
+    BOOST_CHECK_EQUAL( c3, c1 );
+    BOOST_CHECK_NE( c3, c2 );
 
     // Reset to default
     c3.reset();
-    BOOST_CHECK( c3 == c2 );
-    BOOST_CHECK( c3 != c1 );
+    BOOST_CHECK_EQUAL( c3, c2 );
+    BOOST_CHECK_NE( c3, c1 );
 
     // Swap
     c3.swap( c1 );
-    BOOST_CHECK( c3 != c2 );
-    BOOST_CHECK( c1 == c2 );
+    BOOST_CHECK_NE( c3, c2 );
+    BOOST_CHECK_EQUAL( c1, c2 );
 
     // Free-function swap
     boost::coding::swap( c1, c3 );
-    BOOST_CHECK( c3 == c2 );
-    BOOST_CHECK( c1 != c2 );
+    BOOST_CHECK_EQUAL( c3, c2 );
+    BOOST_CHECK_NE( c1, c2 );
+
+    // Set to new checksum
+    c3.configure( c1.checksum() );
+    BOOST_CHECK_EQUAL( c3, c1 );
+    BOOST_CHECK_NE( c3, c2 );
 }
 
 // Threshold(s) test
@@ -338,28 +343,28 @@ BOOST_AUTO_TEST_CASE( adler32_computer_byte_input_test )
     c1.process_bytes( values, 3 );
     BOOST_FOREACH( unsigned char b, values )
         c2.bytes( b );
-    BOOST_CHECK( c1 == c2 );
+    BOOST_CHECK_EQUAL( c1, c2 );
 
     // Use with algorithms
     adler32_computer  c3, c4;
 
-    BOOST_CHECK( c3 == c4 );
+    BOOST_CHECK_EQUAL( c3, c4 );
     for_each( values, values + 3, c3.bytes );
-    BOOST_CHECK( c3 == c4 );
-    BOOST_CHECK( c3 != c2 );
+    BOOST_CHECK_EQUAL( c3, c4 );
+    BOOST_CHECK_NE( c3, c2 );
     c3.bytes = for_each( values, values + 3, c3.bytes );
-    BOOST_CHECK( c3 != c4 );
-    BOOST_CHECK( c3 == c2 );
+    BOOST_CHECK_NE( c3, c4 );
+    BOOST_CHECK_EQUAL( c3, c2 );
 
     // Assignment
     c4.bytes = c3.bytes;
-    BOOST_CHECK( c4 == c3 );
+    BOOST_CHECK_EQUAL( c4, c3 );
 
     // Re-do
     c4.reset();
-    BOOST_CHECK( c4 != c3 );
+    BOOST_CHECK_NE( c4, c3 );
     c4.bytes = for_each( values, values + 3, c4.bytes );
-    BOOST_CHECK( c4 == c3 );
+    BOOST_CHECK_EQUAL( c4, c3 );
 }
 
 // Archiving test
