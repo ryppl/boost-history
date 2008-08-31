@@ -29,6 +29,15 @@ namespace coding
 {
 
 
+//  From <boost/coding/adler32.hpp>  -----------------------------------------//
+
+class adler32_context;
+
+class adler32_computer;
+
+// Also has support and other free-functions
+
+
 //  From <boost/coding/coding_shell.hpp>  ------------------------------------//
 
 template < class ByteProcessor >

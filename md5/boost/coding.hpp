@@ -16,6 +16,7 @@
 
 #include <boost/coding_fwd.hpp>
 
+#include <boost/coding/adler32.hpp>
 #include <boost/coding/md5.hpp>
 
 
@@ -24,6 +25,11 @@ namespace boost
 
 
 //  Namespace promotions  ----------------------------------------------------//
+
+// From <boost/coding/adler32.hpp>
+using coding::adler32_context;
+using coding::adler32_computer;
+using coding::adler32;
 
 // Ultimately from <boost/coding/md5.hpp>
 using coding::md5_digest;

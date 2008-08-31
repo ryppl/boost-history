@@ -24,3 +24,8 @@ unit-test md5
     : md5_digest_test.cpp md5_computer_test.cpp md5_bugs_test.cpp
       boost_test
     ;
+
+unit-test adler32
+    : adler32_test.cpp
+      boost_test
+    ;
