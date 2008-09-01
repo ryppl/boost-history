@@ -8,11 +8,11 @@
 <link rel="start" href="../index.html">
 <link rel="prev" href="locking.html">
 <link rel="up" href="index.html">
-<link rel="next" href="../examples.html">
+<link rel="next" href="../performance.html">
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight
 Tracking policies reference</h1>
 
@@ -22,13 +22,11 @@ Locking policies
 <div class="up_link"><a href="index.html"><img src="../up.gif" alt="Boost.Flyweight reference" border="0"><br>
 Boost.Flyweight reference
 </a></div>
-<div class="next_link"><a href="../examples.html"><img src="../next.gif" alt="examples" border="0"><br>
-Examples
+<div class="next_link"><a href="../performance.html"><img src="../next.gif" alt="performance" border="0"><br>
+Performance
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
-
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
 
 <h2>Contents</h2>
 
@@ -88,7 +86,7 @@ type <code>Checker</code> with argument of type <code>Factory::handle_type</code
 </tr>
 <tr>
   <td><code>TrackingHelper::entry(h);</code></td>
-  <td><code>const Entry&</code></td>
+  <td><code>const Entry&amp;</code></td>
   <td>Returns <code>f.entry(h)</code>.</td>
 </tr>
 <tr class="odd_tr">
@@ -131,11 +129,13 @@ A type <code>Tracking</code> is a tracking policy if:
   <li>The expression <code>Tracking::entry_type</code> (or 
     <code>Tracking'::entry_type</code> if (b) applies) is an 
     <a href="../../../mpl/doc/refmanual/lambda-expression.html"><code>MPL Lambda
-    Expression</code></a> that resolves, when invoked with an
-    <a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>    
-    type  <code>Value</code>, to an
+    Expression</code></a> that resolves, when invoked with different types 
+    (<code>Value</code>,<code>Key</code>) such that <code>Value</code> is
     <a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
-    type <code>Entry</code> implicitly convertible to <code>const Value&amp;</code>.
+    and implicitly convertible to <code>const Key&amp;</code>, to an
+    <a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
+    type <code>Entry</code> implicitly convertible to both <code>const Value&amp;</code>
+    and <code>const Key&amp;</code>.
   </li>
   <li>The expression <code>Tracking::handle_type</code> (or 
     <code>Tracking'::handle_type</code> if (b) applies) is an 
@@ -181,7 +181,7 @@ tracking policy. This factory's associated entry and handle types are the types
 <span class=special>}</span> <span class=comment>// namespace boost</span>
 </pre></blockquote>
 
-<h3><a name="is_tracking">Class template <code>is_tracking</code></h3>
+<h3><a name="is_tracking">Class template <code>is_tracking</code></a></h3>
 
 <p>
 Unless specialized by the user, <code>is_tracking&lt;T&gt;::type</code> is
@@ -191,7 +191,7 @@ if <code>T</code> is derived from <code>tracking_marker</code>, and it is
 otherwise.
 </p>
 
-<h3><a name="tracking_construct">Class template <code>tracking</code></h3>
+<h3><a name="tracking_construct">Class template <code>tracking</code></a></h3>
 
 <p>
 <code>tracking&lt;T&gt;</code> is a syntactic construct meant to indicate
@@ -272,13 +272,13 @@ Locking policies
 <div class="up_link"><a href="index.html"><img src="../up.gif" alt="Boost.Flyweight reference" border="0"><br>
 Boost.Flyweight reference
 </a></div>
-<div class="next_link"><a href="../examples.html"><img src="../next.gif" alt="examples" border="0"><br>
-Examples
+<div class="next_link"><a href="../performance.html"><img src="../next.gif" alt="performance" border="0"><br>
+Performance
 </a></div><br clear="all" style="clear: all;">
 
 <br>
 
-<p>Revised January 8th 2008</p>
+<p>Revised August 18th 2008</p>
 
 <p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

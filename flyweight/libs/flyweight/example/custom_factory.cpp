@@ -1,6 +1,6 @@
 /* Boost.Flyweight example of custom factory.
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -33,14 +33,14 @@ using namespace boost::flyweights;
  * that for simplicity.
  */
 
-template<typename Entry,typename Value>
+template<typename Entry,typename Key>
 class verbose_factory_class
 { 
-  /* Entry store. Since Entry is implicitly convertible to const Value&,
-   * we can directly use std::less<Value> as the comparer for std::set.
+  /* Entry store. Since Entry is implicitly convertible to const Key&,
+   * we can directly use std::less<Key> as the comparer for std::set.
    */
 
-  typedef std::set<Entry,std::less<Value> > store_type;
+  typedef std::set<Entry,std::less<Key> > store_type;
 
   store_type store;
 
@@ -53,17 +53,17 @@ public:
 
     std::pair<handle_type, bool> p=store.insert(x);
     if(p.second){ /* new entry */
-      std::cout<<"new: "<<(const Value&)x<<std::endl;
+      std::cout<<"new: "<<(const Key&)x<<std::endl;
     }
     else{         /* existing entry */
-      std::cout<<"hit: "<<(const Value&)x<<std::endl;
+      std::cout<<"hit: "<<(const Key&)x<<std::endl;
     }
     return p.first;
   }
 
   void erase(handle_type h)
   {
-    std::cout<<"del: "<<(const Value&)*h<<std::endl;
+    std::cout<<"del: "<<(const Key&)*h<<std::endl;
     store.erase(h);
   }
 
@@ -81,10 +81,10 @@ public:
 
 struct verbose_factory: factory_marker
 {
-  template<typename Entry,typename Value>
+  template<typename Entry,typename Key>
   struct apply
   {
-    typedef verbose_factory_class<Entry,Value> type;
+    typedef verbose_factory_class<Entry,Key> type;
   } ;
 };
 

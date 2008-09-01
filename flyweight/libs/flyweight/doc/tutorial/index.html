@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight Tutorial</h1>
 
 <div class="prev_link"><a href="../index.html"><img src="../prev.gif" alt="index" border="0"><br>
@@ -27,14 +27,14 @@ Basics
 
 <hr>
 
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
-
 <h2>Contents</h2>
 
 <ul>
   <li><a href="#rationale">Rationale</a></li>
   <li><a href="#namespace">Namespace</a></li>
+  <li><a href="#guide">Guide to the reader</a></li>
   <li><a href="basics.html">Basics</a></li>
+  <li><a href="key_value.html">Key-value flyweights</a></li>
   <li><a href="configuration.html">Configuring Boost.Flyweight</a></li>
   <li><a href="extension.html">Extending Boost.Flyweight</a></li>
   <li><a href="technical.html">Technical issues</a></li>
@@ -88,7 +88,7 @@ externally. This separation analysis can have some merit from the point of
 view of application design, but when it comes to implementation extrinsic
 information has no impact on the overall flyweight scheme. So,
 Boost.Flyweight assumes that the type onto which the library operates
-entirely consists of intrinsic information: this enables a particularly
+entirely consists of intrinsic information: this allows for a particularly
 appealing realization of the idiom in C++ in which
 <code>flyweight&lt;T&gt;</code> is an opaque type convertible to
 <code>const T&amp;</code>.
@@ -125,6 +125,24 @@ directives were in effect:
 <span class=keyword>using</span> <span class=keyword>namespace</span> <span class=special>::</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>flyweights</span><span class=special>;</span>
 </pre></blockquote>
 
+<h2><a name="guide">Guide to the reader</a></h2>
+
+<p>
+Although Boost.Flyweight features an extensive customization
+framework controlling many internal implementation aspects, the library is designed
+in such a way that most users need not be concerned about or
+even aware of the underlying complexity. Learning to use Boost.Flyweight
+as an off-the-shelf component can be acomplished merely by reading
+the <a href="basics.html">basics</a> section and skimming through the
+part on <a href="key_value.html">key-value flyweights</a>, the section on flyweight type
+<a href="configuration.html#tagging">tagging</a>  and the discussion of some
+<a href="technical.html">technical issues</a>. The
+<a href="configuration.html">configuration</a> section teaches how to fine tune the
+different internal components of the library. Only very advanced usage
+scenarios will require implementing user-provided pluggable components:
+this is covered on the <a href="extension.html">extension</a> section.
+</p>
+
 <hr>
 
 <div class="prev_link"><a href="../index.html"><img src="../prev.gif" alt="index" border="0"><br>
@@ -139,9 +157,9 @@ Basics
 
 <br>
 
-<p>Revised November 26th 2007</p>
+<p>Revised August 13th 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

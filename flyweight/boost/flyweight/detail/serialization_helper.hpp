@@ -1,4 +1,4 @@
-/* Copyright 2006-2007 Joaquín M López Muñoz.
+/* Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -20,6 +20,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/serialization/extended_type_info.hpp>
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace boost{
 
@@ -27,7 +28,7 @@ namespace flyweights{
 
 namespace detail{
 
-/* The serialization helper for flyweight<T> maps numerical IDs to
+/* The serialization helpers for flyweight<T> map numerical IDs to
  * flyweight exemplars --an exemplar is the flyweight object
  * associated to a given value that appears first on the serialization
  * stream, so that subsequent equivalent flyweight objects will be made
@@ -43,7 +44,7 @@ struct flyweight_value_address
 };
 
 template<typename Flyweight>
-class serialization_helper:private noncopyable
+class save_helper:private noncopyable
 {
   typedef multi_index::multi_index_container<
     Flyweight,
@@ -59,36 +60,51 @@ public:
 
   size_type size()const{return t.size();}
 
-  Flyweight operator[](size_type n)const{return t[n];}
-
   size_type find(const Flyweight& x)const
   {
     return multi_index::project<0>(t,multi_index::get<1>(t).find(&x.get()))
              -t.begin();
   }
 
-  bool push_back(const Flyweight& x){return t.push_back(x).second;}
+  void push_back(const Flyweight& x){t.push_back(x);}
   
 private:
   table t;
 };
 
-template<typename Flyweight,class Archive>
-serialization_helper<Flyweight>& get_serialization_helper(
-  Archive & ar
-  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Flyweight))
+template<typename Flyweight>
+class load_helper:private noncopyable
 {
-  typedef serialization_helper<Flyweight> helper;
+  typedef std::vector<Flyweight> table;
 
+public:
+
+  typedef typename table::size_type size_type;
+
+  size_type size()const{return t.size();}
+
+  Flyweight operator[](size_type n)const{return t[n];}
+
+  void push_back(const Flyweight& x){t.push_back(x);}
+  
+private:
+  table t;
+};
+
+template<typename Helper,class Archive>
+Helper& get_serialization_helper(
+  Archive& ar
+  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Helper))
+{
   serialization::extended_type_info* eti=
-    serialization::type_info_implementation<helper>::type::get_instance();
+    serialization::type_info_implementation<Helper>::type::get_instance();
   shared_ptr<void>                   sph;
   ar.lookup_helper(eti,sph);
   if(!sph.get()){
-      sph=shared_ptr<helper>(new helper);
+      sph=shared_ptr<Helper>(new Helper);
       ar.insert_helper(eti, sph);
   }
-  return *static_cast<helper*>(sph.get());
+  return *static_cast<Helper*>(sph.get());
 }
 
 } /* namespace flyweights::detail */

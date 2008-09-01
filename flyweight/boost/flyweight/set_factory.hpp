@@ -1,4 +1,4 @@
-/* Copyright 2006-2007 Joaquín M López Muñoz.
+/* Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -30,7 +30,7 @@ namespace boost{
 namespace flyweights{
 
 template<
-  typename Entry,typename Value,
+  typename Entry,typename Key,
   typename Compare,typename Allocator
 >
 class set_factory_class:
@@ -39,7 +39,7 @@ class set_factory_class:
       Entry,
       typename boost::mpl::if_<
         mpl::is_na<Compare>,
-        std::less<Value>,
+        std::less<Key>,
         Compare
       >::type,
       typename boost::mpl::if_<
@@ -53,27 +53,10 @@ class set_factory_class:
 public:
   typedef set_factory_class type;
   BOOST_MPL_AUX_LAMBDA_SUPPORT(
-    4,set_factory_class,(Entry,Value,Compare,Allocator))
+    4,set_factory_class,(Entry,Key,Compare,Allocator))
 };
 
 /* set_factory_class specifier */
-
-namespace detail{
-
-/* MSVC 6.0 gets choked on MPL apply code if this level of indirection
- * is not used.
- */
-
-template<typename Entry,typename Value,typename Compare,typename Allocator>
-struct set_factory_class_fwd
-{
-  typedef set_factory_class<Entry,Value,Compare,Allocator> type;
-
-  BOOST_MPL_AUX_LAMBDA_SUPPORT(
-    4,set_factory_class_fwd,(Entry,Value,Compare,Allocator))
-};
-
-} /* namespace flyweights::detail */
 
 template<
   typename Compare,typename Allocator
@@ -81,13 +64,13 @@ template<
 >
 struct set_factory:factory_marker
 {
-  template<typename Entry,typename Value>
+  template<typename Entry,typename Key>
   struct apply:
     mpl::apply2<
-      detail::set_factory_class_fwd<
+      set_factory_class<
         boost::mpl::_1,boost::mpl::_2,Compare,Allocator
       >,
-      Entry,Value
+      Entry,Key
     >
   {};
 };

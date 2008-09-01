@@ -1,6 +1,6 @@
 /* Boost.Flyweight test suite.
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -27,11 +27,7 @@ int main()
   test_basic();
   test_custom_factory();
   test_init();
-
-#if !defined(BOOST_MSVC)||!(BOOST_MSVC<1300)
   test_intermodule_holder();
-#endif
-
   test_multictor();
   test_no_locking();
   test_no_tracking();

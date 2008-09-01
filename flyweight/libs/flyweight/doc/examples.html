@@ -6,39 +6,39 @@
 <title>Boost.Flyweight Documentation - Examples</title>
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="start" href="index.html">
-<link rel="prev" href="reference/tracking.html">
+<link rel="prev" href="performance.html">
 <link rel="up" href="index.html">
-<link rel="next" href="future_work.html">
+<link rel="next" href="tests.html">
 </head>
 
 <body>
-<h1><img src="../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight Examples</h1>
 
-<div class="prev_link"><a href="reference/tracking.html"><img src="prev.gif" alt="tracking policies" border="0"><br>
-Tracking policies
+<div class="prev_link"><a href="performance.html"><img src="prev.gif" alt="performance" border="0"><br>
+Performance
 </a></div>
 <div class="up_link"><a href="index.html"><img src="up.gif" alt="index" border="0"><br>
 Index
 </a></div>
-<div class="next_link"><a href="future_work.html"><img src="next.gif" alt="future work" border="0"><br>
-Future work
+<div class="next_link"><a href="tests.html"><img src="next.gif" alt="tests" border="0"><br>
+Tests
 </a></div><br clear="all" style="clear: all;">
 <br clear="all" style="clear: all;">
 
 <hr>
 
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
-
 <h2>Contents</h2>
 
 <ul>
   <li><a href="#example1">Example 1: basic usage</a></li>
-  <li><a href="#example2">Example 2: flyweights and the composite pattern</a></li>
-  <li><a href="#example3">Example 3: formatted text processing</a></li>
-  <li><a href="#example4">Example 4: serialization</a></li>
-  <li><a href="#example5">Example 5: performance comparison</a></li>
-  <li><a href="#example6">Example 6: custom factory</a></li>
+  <li><a href="#example2">Example 2: key-value flyweights</a></li>
+  <li><a href="#example3">Example 3: flyweights and the composite pattern</a></li>
+  <li><a href="#example4">Example 4: formatted text processing</a></li>
+  <li><a href="#example5">Example 5: flyweight-based memoization</a></li>
+  <li><a href="#example6">Example 6: serialization</a></li>
+  <li><a href="#example7">Example 7: performance comparison</a></li>
+  <li><a href="#example8">Example 8: custom factory</a></li>
 </ul>
 
 <h2><a name="example1">Example 1: basic usage</a></h2>
@@ -52,7 +52,25 @@ Dummy program showing the basic capabilities of <code>flyweight</code>
 explained at the <a href="tutorial/basics.html">tutorial</a>.
 </p>
 
-<h2><a name="example2">Example 2: flyweights and the composite pattern</a></h2>
+<h2><a name="example2">Example 2: key-value flyweights</a></h2>
+
+<p>
+See <a href="../example/key_value.cpp">source code</a>.
+</p>
+
+<p>
+The program simulates the scenario described at the tutorial section on
+<a href="tutorial/key_value.html">key-value flyweights</a>: The class
+<code>texture</code> manages some texture rendering data stored in
+a file whose location is given at construction time. The program
+handles large quantities of objects of this class by encapsulating
+them into key-value flyweights keyed by filename. Observe how the
+execution of the program results in no extra constructions or copies
+of objects of type <code>texture</code> except those absolutely
+necessary.
+</p>
+
+<h2><a name="example3">Example 3: flyweights and the composite pattern</a></h2>
 
 <p>
 See <a href="../example/composite.cpp">source code</a>.
@@ -91,7 +109,7 @@ occurrences of <code>+</code>, <code>x</code>, <code>y</code>,
 <code>tan</code>, <code>(tan x)</code> and <code>(tan y)</code>.
 </p>
 
-<h2><a name="example3">Example 3: formatted text processing</a></h2>
+<h2><a name="example4">Example 4: formatted text processing</a></h2>
 
 <p>
 See <a href="../example/html.cpp">source code</a>.
@@ -137,12 +155,53 @@ characters varies.
 
 <p>
 For the sake of brevity, the HTML parsing capabilities of this program
-are coarse: for instance, elements without end-tag (like &lt;BR&gt), character
+are coarse: for instance, elements without end-tag (like &lt;BR&gt;), character
 enconding and HTML entities (e.g. "&amp;copy;" for &copy;) are not properly
 handled. Improving the parsing code is left as an exercise to the reader.
 </p>
 
-<h2><a name="example4">Example 4: serialization</a></h2>
+<h2><a name="example5">Example 5: flyweight-based memoization</a></h2>
+
+<p>
+See <a href="../example/fibonacci.cpp">source code</a>.
+</p>
+
+<p>
+<a href="http://en.wikipedia.org/wiki/Memoization">Memoization</a>
+is an optimization technique consisting in caching
+the results of a computation for later reuse; this can dramatically
+improve performance when calculating recursive numerical functions,
+for instance. <a href="tutorial/key_value.html">Key-value flyweights</a>
+can be used to implement memoization for a numerical function <i>f</i>
+by modeling a memoized invocation of the function as a value of
+type <code>flyweight&lt;key_value&lt;int,compute_f&gt; &gt;</code>, where
+<code>compute_f</code> is a type that does the computation of
+<i>f</i>(<i>n</i>) at its <code>compute_f::compute_f(int)</code> constructor.
+For instance, the <a href="http://mathworld.wolfram.com/FibonacciNumber.html">Fibonacci
+numbers</a> can be computed with memoization like this:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>flyweight</span><span class=special>&lt;</span><span class=identifier>key_value</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>,</span><span class=identifier>compute_fibonacci</span><span class=special>&gt;,</span><span class=identifier>no_tracking</span><span class=special>&gt;</span> <span class=identifier>fibonacci</span><span class=special>;</span>
+
+<span class=keyword>struct</span> <span class=identifier>compute_fibonacci</span>
+<span class=special>{</span>
+  <span class=identifier>compute_fibonacci</span><span class=special>(</span><span class=keyword>int</span> <span class=identifier>n</span><span class=special>):</span>
+    <span class=identifier>result</span><span class=special>(</span><span class=identifier>n</span><span class=special>==</span><span class=number>0</span><span class=special>?</span><span class=number>0</span><span class=special>:</span><span class=identifier>n</span><span class=special>==</span><span class=number>1</span><span class=special>?</span><span class=number>1</span><span class=special>:</span><span class=identifier>fibonacci</span><span class=special>(</span><span class=identifier>n</span><span class=special>-</span><span class=number>2</span><span class=special>).</span><span class=identifier>get</span><span class=special>()+</span><span class=identifier>fibonacci</span><span class=special>(</span><span class=identifier>n</span><span class=special>-</span><span class=number>1</span><span class=special>).</span><span class=identifier>get</span><span class=special>())</span>
+  <span class=special>{}</span>
+
+  <span class=keyword>operator</span> <span class=keyword>int</span><span class=special>()</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>result</span><span class=special>;}</span>
+  <span class=keyword>int</span> <span class=identifier>result</span><span class=special>;</span>
+<span class=special>};</span>
+</pre></blockquote>
+
+<p>
+The <a href="tutorial/configuration.html#no_tracking"><code>no_tracking</code></a>
+policy is used so that the memoized computations persist for future
+use throughout the program. The provided program develops this example in full.
+</p>
+
+<h2><a name="example6">Example 6: serialization</a></h2>
 
 <p>
 See <a href="../example/serialization.cpp">source code</a>.
@@ -168,7 +227,7 @@ machinery that avoids duplicating output information when saving equal
 <code>flyweight</code> objects.
 </p>
 
-<h2><a name="example5">Example 5: performance comparison</a></h2>
+<h2><a name="example7">Example 7: performance comparison</a></h2>
 
 <p>
 See <a href="../example/perf.cpp">source code</a>.
@@ -182,9 +241,11 @@ doing some manipulations on the parsed text.
 Memory consumption is computed by instrumenting the relevant
 components (the string type itself, flyweight factories, etc.) with custom
 allocators that keep track of the allocations and deallocations requested.
+The program has been used to produce the experimental results given
+at the <a href="performance.html#results">performance section</a>.
 </p>
 
-<h2><a name="example6">Example 6: custom factory</a></h2>
+<h2><a name="example8">Example 8: custom factory</a></h2>
 
 <p>
 See <a href="../example/custom_factory.cpp">source code</a>.
@@ -198,20 +259,20 @@ by Boost.Flyweight, so helping the user visualize factory usage patterns.
 
 <hr>
 
-<div class="prev_link"><a href="reference/tracking.html"><img src="prev.gif" alt="tracking policies" border="0"><br>
-Tracking policies
+<div class="prev_link"><a href="performance.html"><img src="prev.gif" alt="performance" border="0"><br>
+Performance
 </a></div>
 <div class="up_link"><a href="index.html"><img src="up.gif" alt="index" border="0"><br>
 Index
 </a></div>
-<div class="next_link"><a href="future_work.html"><img src="next.gif" alt="future work" border="0"><br>
-Future work
+<div class="next_link"><a href="tests.html"><img src="next.gif" alt="tests" border="0"><br>
+Tests
 </a></div><br clear="all" style="clear: all;">
 <br clear="all" style="clear: all;">
 
 <br>
 
-<p>Revised January 16th 2008</p>
+<p>Revised August 26th 2008</p>
 
 <p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

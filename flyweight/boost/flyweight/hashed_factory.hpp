@@ -1,4 +1,4 @@
-/* Copyright 2006-2007 Joaquín M López Muñoz.
+/* Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -31,7 +31,7 @@ namespace boost{
 namespace flyweights{
 
 template<
-  typename Entry,typename Value,
+  typename Entry,typename Key,
   typename Hash,typename Pred,typename Allocator
 >
 class hashed_factory_class:public factory_marker
@@ -42,12 +42,12 @@ class hashed_factory_class:public factory_marker
         multi_index::identity<Entry>,
         typename boost::mpl::if_<
           mpl::is_na<Hash>,
-          hash<Value>,
+          hash<Key>,
           Hash
         >::type,
         typename boost::mpl::if_<
           mpl::is_na<Pred>,
-          std::equal_to<Value>,
+          std::equal_to<Key>,
           Pred
         >::type
       >
@@ -77,7 +77,7 @@ public:
     cont.erase(cont.iterator_to(*h));
   }
 
-  const Entry& entry(handle_type h){return *h;}
+  static const Entry& entry(handle_type h){return *h;}
 
 private:  
   container_type cont;
@@ -85,29 +85,10 @@ private:
 public:
   typedef hashed_factory_class type;
   BOOST_MPL_AUX_LAMBDA_SUPPORT(
-    5,hashed_factory_class,(Entry,Value,Hash,Pred,Allocator))
+    5,hashed_factory_class,(Entry,Key,Hash,Pred,Allocator))
 };
 
 /* hashed_factory_class specifier */
-
-namespace detail{
-
-/* MSVC 6.0 gets choked on MPL apply code if this level of indirection
- * is not used.
- */
-
-template<
-  typename Entry,typename Value,typename Hash,typename Pred,typename Allocator
->
-struct hashed_factory_class_fwd
-{
-  typedef hashed_factory_class<Entry,Value,Hash,Pred,Allocator> type;
-
-  BOOST_MPL_AUX_LAMBDA_SUPPORT(
-    5,hashed_factory_class_fwd,(Entry,Value,Hash,Pred,Allocator))
-};
-
-} /* namespace flyweights::detail */
 
 template<
   typename Hash,typename Pred,typename Allocator
@@ -115,13 +96,13 @@ template<
 >
 struct hashed_factory:factory_marker
 {
-  template<typename Entry,typename Value>
+  template<typename Entry,typename Key>
   struct apply:
     mpl::apply2<
-      detail::hashed_factory_class_fwd<
+      hashed_factory_class<
         boost::mpl::_1,boost::mpl::_2,Hash,Pred,Allocator
       >,
-      Entry,Value
+      Entry,Key
     >
   {};
 };

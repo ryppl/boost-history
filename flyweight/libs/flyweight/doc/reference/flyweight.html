@@ -8,11 +8,11 @@
 <link rel="start" href="../index.html">
 <link rel="prev" href="index.html">
 <link rel="up" href="index.html">
-<link rel="next" href="tags.html">
+<link rel="next" href="key_value.html">
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight
 <code>flyweight</code> reference</h1>
 
@@ -22,13 +22,11 @@ Boost.Flyweight reference
 <div class="up_link"><a href="index.html"><img src="../up.gif" alt="Boost.Flyweight reference" border="0"><br>
 Boost.Flyweight reference
 </a></div>
-<div class="next_link"><a href="tags.html"><img src="../next.gif" alt="tags" border="0"><br>
-Tags
+<div class="next_link"><a href="key_value.html"><img src="../next.gif" alt="key-value flyweights" border="0"><br>
+Key-value flyweights
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
-
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
 
 <h2>Contents</h2>
 
@@ -43,7 +41,7 @@ Tags
           <li><a href="#instantiation_types">Instantiation types</a></li>
           <li><a href="#static_init">Static data initialization</a></li>
           <li><a href="#constructors">Constructors, copy and assignment</a></li>
-          <li><a href="#convertibility">Convertibility to the underlying type</a></li>
+          <li><a href="#convertibility">Convertibility to the underlying types</a></li>
           <li><a href="#modifiers">Modifiers</a></li>
           <li><a href="#comparison">Comparison operators</a></li>
           <li><a href="#specialized">Specialized algorithms</a></li>
@@ -61,7 +59,7 @@ Tags
 </ul>
 
 <h2>
-<a name="#flyweight_fwd_synopsis">Header
+<a name="flyweight_fwd_synopsis">Header
 <a href="../../../../boost/flyweight/flyweight_fwd.hpp"><code>"boost/flyweight/flyweight_fwd.hpp"</code></a>
 synopsis</a>
 </h2>
@@ -150,26 +148,34 @@ Class template <code>flyweight</code>
 </a></h3>
 
 <p>
-Objects of type <code>flyweight&lt;T,...&gt;</code> provide access to immutable
-values of type <code>T</code>, with the following advantages over using
-plain <code>T</code> objects:
+Objects of type <code>flyweight&lt;...&gt;</code> provide access to immutable
+values of type <code>flyweight&lt;...&gt;::value_type</code>, with the following advantages over using
+plain <code>value_type</code> objects:
 <ul>
   <li>Flyweight objects with equivalent value share the same representation
-    (the associated <code>T</code> object).
+    (the associated <code>value_type</code> object).
   </li>
   <li>The size of flyweights is typically that of a pointer, which is in general
-    smaller than <code>sizeof(T)</code>.
+    smaller than <code>sizeof(value_type)</code>.
   </li>
 </ul>
 
 So, if the level of redundancy (ratio of total objects to different values)
-is high enough, substituting <code>flyweight&lt;T,...&gt;</code> for
-<code>T</code> results in a reduction in memory usage.
+is high enough, substituting a suitable instantiation of <code>flyweight</code>
+for <code>value_type</code> results in a reduction in memory usage.
 </p>
 
 <p>
 <code>flyweight</code> is parameterized according to some aspects:
 <ul>
+  <li>Types <code>key_value</code> and <code>value_type</code>
+    (possibly equal), where <code>key_type</code> serves as a
+    key type to lookup and construct internal shared instances of
+    objects of <code>value_type</code>.
+  </li>
+  <li>An optional <a href="tags.html#tag">tag</a> type meant to syntactically
+     differentiate between otherwise identical instantiations.
+  </li>
   <li>The <a href="factories.html#factory">factory class</a> used to store
     and retrieve the shared value objects.
   </li>
@@ -196,9 +202,10 @@ of the <code>flyweight</code> instantiation in the following manner:
   </li>
   <li>The flyweight factory stores elements of an undisclosed type
     <code>Entry</code> that is implicitly convertible to
-    <code>const T&amp;</code>. Every flyweight object is associated
-    to a <code>const T</code> reference resulting from the conversion
-    from some <code>Entry</code> stored in the factory.
+    <code>const key_type&amp;</code> and also stores a subobject of
+    <code>value_type</code>. Every flyweight object is associated
+    to a <code>value_type</code> subobject of some <code>Entry</code>
+    stored in the factory.
   </li>
   <li>The associated mutex object is used to protect all invocations
     to the insertion and deletion functions of the internal flyweight
@@ -211,8 +218,11 @@ of the <code>flyweight</code> instantiation in the following manner:
     manner described for this concept.
   </li>
 </ul>
-In what follows, we implicitly assume that <code>T</code> equivalence
+In what follows, we implicitly assume that <code>key_type</code> equivalence
 refers to the equivalence relationship induced by the factory class used.
+Also, two values of <code>value_type</code> are considered equivalent
+if they are constructed from equivalent keys, or are copies of
+objects constructed from equivalent keys.
 </p>
 
 <blockquote><pre>
@@ -223,7 +233,8 @@ refers to the equivalence relationship induced by the factory class used.
 <span class=keyword>class</span> <span class=identifier>flyweight</span>
 <span class=special>{</span>
 <span class=keyword>public</span><span class=special>:</span>
-  <span class=keyword>typedef</span> <span class=identifier>T</span> <span class=identifier>value_type</span><span class=special>;</span>
+  <span class=keyword>typedef</span> <span class=identifier><b>dependent on T</b></span> <span class=identifier>key_type</span><span class=special>;</span>
+  <span class=keyword>typedef</span> <span class=identifier><b>dependent on T</b></span> <span class=identifier>value_type</span><span class=special>;</span>
 
   <span class=comment>// static data initialization:</span>
 
@@ -249,13 +260,14 @@ refers to the equivalence relationship induced by the factory class used.
   <span class=identifier>flyweight</span><span class=special>([</span><span class=keyword>const</span><span class=special>]</span> <span class=identifier>T0</span><span class=special>&amp;</span> <span class=identifier>t0</span><span class=special>,...,[</span><span class=keyword>const</span><span class=special>]</span> <span class=identifier>Tn</span><span class=special>-</span><span class=number>1</span><span class=special>&amp;</span> <span class=identifier>tn</span><span class=special>-</span><span class=number>1</span><span class=special>);</span>
 
   <span class=identifier>flyweight</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>=(</span><span class=keyword>const</span> <span class=identifier>flyweight</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>);</span>  
-  <span class=identifier>flyweight</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>=(</span><span class=keyword>const</span> <span class=identifier>T</span><span class=special>&amp;</span> <span class=identifier>t</span><span class=special>);</span>
+  <span class=identifier>flyweight</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>=(</span><span class=keyword>const</span> <span class=identifier>value_type</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>);</span>
 
   <span class=comment>// convertibility to underlying type:</span>
-  
-  <span class=keyword>const</span> <span class=identifier>T</span><span class=special>&amp;</span> <span class=identifier>get</span><span class=special>()</span><span class=keyword>const</span><span class=special>;</span>
-  <span class=keyword>operator</span> <span class=keyword>const</span> <span class=identifier>T</span><span class=special>&amp;()</span><span class=keyword>const</span><span class=special>;</span>
-  
+
+  <span class=keyword>const</span> <span class=identifier>key_type</span><span class=special>&amp;</span>   <span class=identifier>get_key</span><span class=special>()</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>const</span> <span class=identifier>value_type</span><span class=special>&amp;</span> <span class=identifier>get</span><span class=special>()</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>operator</span> <span class=keyword>const</span>    <span class=identifier>value_type</span><span class=special>&amp;()</span><span class=keyword>const</span><span class=special>;</span>  
+
   <span class=comment>// modifiers:</span>
 
   <span class=keyword>void</span> <span class=identifier>swap</span><span class=special>(</span><span class=identifier>flyweight</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>);</span>
@@ -265,12 +277,33 @@ refers to the equivalence relationship induced by the factory class used.
 <h4><a name="instantiation_types">Instantiation types</a></h4>
 
 <p>
-<code>T</code> is the type of the values flyweight objects give access to.
-<code>T</code> must be
+<code>T</code> can be either:
+<ul>
+  <li>An arbitrary type,</li>
+  <li>a type of the form 
+    <a href="key_value.html#key_value_construct"><code>key_value&lt;Key,Value[,KeyFromValue]&gt;</code></a>.</li>
+</ul>
+In the first case, the nested types <code>key_type</code> and <code>value_type</code>
+are both equal to <code>T</code>. In the second case, <code>key_type</code>=<code>Key</code>,
+<code>value_type</code>=<code>Value</code>; we say then that the instantiation
+of <code>flyweight</code> is a <i>key-value</i> flyweight.
+<code>value_type</code> is the type of the values flyweight objects give access to,
+while value lookup is based on associated <code>key_type</code> values.
+<code>key_value</code> must be
 <a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
-and conform to any extra requirements imposed by the type of factory used. The types
-<code>Arg1</code>, ... , <code>Arg5</code>, if provided, must be any of the
-following, in no particular order:
+and <code>value_type</code> must be constructible from <code>key_type</code>;
+additionally, <code>key_value</code> must
+conform to any extra requirements imposed by the type of factory used.
+For key-value flyweights, it is guaranteed that the creation or assignment of a flyweight
+object results in at most one construction (or copy construction in some
+particular cases) of an object
+of <code>value_type</code>, and this construction only occurs in the case that no
+equivalent value existed previously in the flyweight factory.
+</p>
+
+<p>
+The types <code>Arg1</code>, ... , <code>Arg5</code>, if provided, must be any
+of the following, in no particular order:
 <ul>
   <li>A <a href="tags.html#tag">tag</a>,</li>
   <li>a <a href="factories.html#factory">factory specifier</a>,</li>
@@ -298,8 +331,8 @@ The default configuration arguments are:
 <p>
 The static data internal to a given <code>flyweight</code> instantiation
 (factory instance, etc.) is constructed during the dynamic initialization
-phase of the program or just before the first program-wide use of the
-instantiated class, whichever comes first. The following utilities can be
+phase of the program and always before the first program-wide use of the
+instantiated class. The following utilities can be
 used when more control about the moment of construction is required.
 </p>
 
@@ -323,11 +356,11 @@ constructed.<br>
 <code>flyweight();</code>
 
 <blockquote>
-<b>Requires:</b> <code>T</code> is
+<b>Requires:</b> <code>key_type</code> is
 <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html"><code>Default
 Constructible</code></a>.<br>
 <b>Effects:</b> Constructs a <code>flyweight</code> object associated
-to the default value of <code>T</code>.
+with value <code>value_type(key_type())</code>.
 </blockquote>
 
 <code>flyweight(const flyweight&amp; x);<br>
@@ -339,7 +372,7 @@ flyweight(flyweight&amp; x);</code>
 <b>Exception safety:</b> <code>nothrow</code>.
 </blockquote>
 
-<a name="#fwd_ctors">
+<a name="fwd_ctors">
 <code>template&lt;typename T0&gt;<br>
 explicit flyweight([const] T0&amp; t0);<br>
 template&lt;typename T0,typename T1&gt;<br>
@@ -350,7 +383,7 @@ flyweight([const] T0&amp; t0,...,[const] Tn-1&amp; tn-1);</code></a>
 
 <blockquote>
 <b>Effects:</b> Constructs a <code>flyweight</code> object with value
-<code>T(t0,...,ti)</code>, up to an implementation defined number
+<code>value_type(key_type(t0,...,ti))</code>, up to an implementation defined number
 of arguments.<br>
 <b>Note:</b> In this implementation, the maximum number of arguments
 can be globally <a href="#limit_num_ctor_args">configured</a> by the user.
@@ -365,18 +398,38 @@ as <code>x</code>.<br>
 <b>Exception safety:</b> <code>nothrow</code>.
 </blockquote>
 
-<code>flyweight&amp; operator=(const T&amp; t);</code>
+<code>flyweight&amp; operator=(const value_type&amp; x);</code>
 
 <blockquote>
-<b>Effects:</b> Associates the <code>flyweight</code> object with value
-<code>t</code>.<br>
+<b>Requires:</b> If <code>flyweight</code> is key-value,
+<code>value_type</code> is
+<a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
+and the
+<a href="key_value.html#key_extractor"><code>Key Extractor</code></a>
+<code>KeyFromValue</code> must have been supplied as part of the
+<code>key_value&lt;&gt;</code> construct.<br>
+<b>Effects:</b> Associates the <code>flyweight</code> object with a
+copy of <code>x</code> or with a <code>value_type</code> constructed
+from a key equivalent to that associated to <code>x</code>. For non-key-value
+flyweights, <code>x</code> is its own key; for key-value flyweights,
+the key is extracted through use of an object of type <code>KeyFromValue</code>.<br>
 <b>Returns:</b> <code>*this</code>.<br>
 </blockquote>
 
-<h4><a name="convertibility">Convertibility to the underlying type</a></h4>
+<h4><a name="convertibility">Convertibility to the underlying types</a></h4>
 
-<code>const T&amp; get()const;<br>
-operator const T&amp;()const;</code>
+<code>const key_type&amp; get_key()const;</code>
+
+<blockquote>
+<b>Return:</b> A copy of the key used to construct the
+<code>value_type</code> associated to the <code>flyweight</code>
+object.<br>
+<b>Exception safety:</b> If <code>flyweight</code> is not key-value or
+if <code>KeyFromValue</code> was not provided, <code>nothrow</code>.
+</blockquote>
+
+<code>const value_type&amp; get()const;<br>
+	operator const value_type&amp;()const;</code>
 
 <blockquote>
 <b>Return:</b> The value associated to the <code>flyweight</code>
@@ -389,8 +442,9 @@ object.<br>
 <code>void swap(flyweight&amp; x);</code>
 
 <blockquote>
-<b>Effects:</b> Swaps the associations to <code>T</code> values each
-flyweight object has. No swapping of <code>T</code> objects is done.<br>
+<b>Effects:</b> Swaps the associations to <code>value_type</code>s each
+flyweight object has. No swapping of <code>key_type</code> or
+<code>value_type</code> objects is done.<br>
 <b>Exception safety:</b> <code>nothrow</code>.
 </blockquote>
 
@@ -531,7 +585,14 @@ inline std::basic_ostream&lt;ElemType,Traits&gt;&amp; operator&gt;&gt;(<br>
 &nbsp;&nbsp;flyweight&lt;T,Arg1,...,Arg5&gt;&amp; x);</code>
 
 <blockquote>
-<b>Effects:</b> Reads an object of type <code>T</code> from <code>in</code>
+<b>Requires:</b> If <code>flyweight</code> is key-value,
+<code>value_type</code> is
+<a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
+and the
+<a href="key_value.html#key_extractor"><code>Key Extractor</code></a>
+<code>KeyFromValue</code> must have been supplied as part of the
+<code>key_value&lt;&gt;</code> construct.<br>
+<b>Effects:</b> Reads an object of type <code>value_type</code> from <code>in</code>
 and assigns it to <code>x</code>.<br>
 <b>Returns:</b> <code>in</code>.
 </blockquote>
@@ -539,7 +600,7 @@ and assigns it to <code>x</code>.<br>
 <h4><a name="config_macros">Configuration macros</a></h4>
 
 <a name="limit_num_ctor_args">
-<code>BOOST_FLYWEIGHT_LIMIT_NUM_CTOR_ARGS</code></a>
+<code>BOOST_FLYWEIGHT_LIMIT_PERFECT_FWD_ARGS</code></a>
 
 <blockquote>
 <b>Effects:</b> Globally define this macro to set the maximum number of
@@ -567,8 +628,8 @@ of <code>flyweight</code> with
 <a href="../../../serialization/index.html">Boost.Serialization</a>. Regular as well
 as XML archives are supported.
 Serialization is done in an efficient manner so that saving equivalent <code>flyweight</code>s
-result in their common value being stored only once, regardless of whether the
-underlying type is 
+result in their common <code>key_type</code> value being stored only once, regardless
+of whether <code>key_type</code> is 
 <a href="../../../serialization/doc/traits.html#tracking">tracked</a> by
 Boost.Serialization or not.
 </p>
@@ -577,10 +638,10 @@ Operation: saving of a <code>flyweight</code> object <code>x</code> to an
 output archive (XML archive) <code>ar</code>.
 
 <blockquote>
-<b>Requires:</b> The underlying type <code>T</code> is serializable (XML-serializable).<br>
-<b>Effects:</b> The value <code>t=x.get()</code> is saved into <code>ar</code> as
+<b>Requires:</b> <code>key_type</code> is serializable (XML-serializable).<br>
+<b>Effects:</b> The value <code>k=x.get_key()</code> is saved into <code>ar</code> as
 part of this operation or of a previous saving operation of a <code>flyweight</code>
-object with the same value.<br>
+object with the same key.<br>
 <b>Exception safety:</b> Strong with respect to <code>x</code>. If an exception
 is thrown, <code>ar</code> may be left in an inconsistent state.
 </blockquote>
@@ -589,9 +650,10 @@ Operation: loading of a <code>flyweight</code> <code>x'</code> from an
 input archive (XML archive) <code>ar</code>.
 
 <blockquote>
-<b>Requires:</b> The underlying type <code>T</code> is serializable (XML-serializable).<br>
-<b>Effects:</b> <code>x'</code> is associated to a value equivalent to
-<code>t'</code>, a restored copy of the value <code>t</code> defined above.<br>
+<b>Requires:</b> <code>key_type</code> is serializable (XML-serializable).<br>
+<b>Effects:</b> <code>x'</code> is associated to a value constructed from a key
+equivalent to <code>k'</code>, a restored copy of the value <code>k</code>
+defined above.<br>
 <b>Exception safety:</b> Strong with respect to <code>x'</code>. If an exception
 is thrown, <code>ar</code> may be left in an inconsistent state.
 </blockquote>
@@ -604,15 +666,15 @@ Boost.Flyweight reference
 <div class="up_link"><a href="index.html"><img src="../up.gif" alt="Boost.Flyweight reference" border="0"><br>
 Boost.Flyweight reference
 </a></div>
-<div class="next_link"><a href="tags.html"><img src="../next.gif" alt="tags" border="0"><br>
-Tags
+<div class="next_link"><a href="key_value.html"><img src="../next.gif" alt="key-value flyweights" border="0"><br>
+Key-value flyweights
 </a></div><br clear="all" style="clear: all;">
 
 <br>
 
-<p>Revised December 17th 2007</p>
+<p>Revised August 13th 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

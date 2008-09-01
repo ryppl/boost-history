@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight
 Locking policies reference</h1>
 
@@ -28,18 +28,16 @@ Tracking policies
 
 <hr>
 
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
-
 <h2>Contents</h2>
 
 <ul>
   <li><a href="#preliminary">Preliminary concepts</a></li>
   <li><a href="#locking">Locking policies</a></li>
-  <li><a href="#tracking_tag_synopsis">Header
-    <code>"boost/flyweight/tracking_tag.hpp"</code> synopsis</a>
+  <li><a href="#locking_tag_synopsis">Header
+    <code>"boost/flyweight/locking_tag.hpp"</code> synopsis</a>
     <ul>
-      <li><a href="#is_tracking">Class template <code>is_tracking</code></a></li>
-      <li><a href="#tracking_construct">Class template <code>tracking</code></a></li>
+      <li><a href="#is_locking">Class template <code>is_locking</code></a></li>
+      <li><a href="#locking_construct">Class template <code>locking</code></a></li>
     </ul>    
   </li>
   <li><a href="#simple_locking_fwd_synopsis">Header
@@ -99,7 +97,7 @@ associated to <code>Mutex</code> and <code>lk</code> is a value of
   </td>
 </tr>
 <tr class="odd_tr">
-  <td><code>(&m)->~Mutex();</td>
+  <td><code>(&amp;m)->~Mutex();</code></td>
   <td><code>void</code></td>
   <td>Pre: <code>m</code> is unlocked.</td>
 </tr>
@@ -109,7 +107,7 @@ associated to <code>Mutex</code> and <code>lk</code> is a value of
   <td>Associates <code>m</code> to <code>lk</code> and locks <code>m</code>.</td>
 </tr>
 <tr class="odd_tr">
-  <td><code>(&lk)->~Lock();</td>
+  <td><code>(&amp;lk)->~Lock();</code></td>
   <td><code>void</code></td>
   <td>Unlocks the mutex associated to <code>lk</code>.</td>
 </tr>
@@ -178,7 +176,7 @@ A type <code>Locking</code> is a locking policy if:
 <span class=special>}</span> <span class=comment>// namespace boost</span>
 </pre></blockquote>
 
-<h3><a name="is_locking">Class template <code>is_locking</code></h3>
+<h3><a name="is_locking">Class template <code>is_locking</code></a></h3>
 
 <p>
 Unless specialized by the user, <code>is_locking&lt;T&gt;::type</code> is
@@ -188,7 +186,7 @@ if <code>T</code> is derived from <code>locking_marker</code>, and it is
 otherwise.
 </p>
 
-<h3><a name="locking_construct">Class template <code>locking</code></h3>
+<h3><a name="locking_construct">Class template <code>locking</code></a></h3>
 
 <p>
 <code>locking&lt;T&gt;</code> is a syntactic construct meant to indicate
@@ -276,7 +274,7 @@ Tracking policies
 
 <br>
 
-<p>Revised January 16th 2008</p>
+<p>Revised August 13th 2008</p>
 
 <p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 

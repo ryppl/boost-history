@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight
 Factories reference</h1>
 
@@ -27,8 +27,6 @@ Holders
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
-
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
 
 <h2>Contents</h2>
 
@@ -76,16 +74,16 @@ Holders
 <h2><a name="factory">Factories and factory specifiers</a></h2>
 
 <p>
-Given a type <code>Value</code> and an
+Given a type <code>Key</code> and an
 <a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
-type <code>Entry</code> implicitly convertible to <code>const Value&amp;</code>, a
+type <code>Entry</code> implicitly convertible to <code>const Key&amp;</code>, a
 <i>factory of <code>Entry</code> elements</i> (implicitly associated to
-<code>Value</code>) is a
+<code>Key</code>) is a
 <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html"><code>Default
 Constructible</code></a> entity able to store and retrieve immutable elements of
 type <code>Entry</code>. A factory is governed by an associated equivalence
-relation defined on <code>Value</code> so that no two
-<code>Entry</code> objects convertible to equivalent <code>Value</code>s
+relation defined on <code>Key</code> so that no two
+<code>Entry</code> objects convertible to equivalent <code>Key</code>s
 can be stored simultaneously in the factory. Different factory types can
 use different equivalence relations.
 </p>
@@ -126,12 +124,16 @@ value of <code>Factory::handle_type</code>.
 <tr>
   <td><code>f.erase(h);</code></td>
   <td><code>void</code></td>
-  <td>Erases the element associated to <code>h</code>.</td>
+  <td>Erases the element associated to <code>h</code>.<br>
+   This operation does not throw.
+  </td>
 </tr>
 <tr class="odd_tr">
   <td><code>f.entry(h);</code></td>
-  <td><code>const Entry&</code></td>
-  <td>Returns a reference to the element associated to <code>h</code>.</td>
+  <td><code>const Entry&amp;</code></td>
+  <td>Returns a reference to the element associated to <code>h</code>.<br>
+    This operation does not throw.
+  </td>
 </tr>
 </table>
 </p>
@@ -159,8 +161,8 @@ A type <code>S</code> is said to be a <i>factory specifier</i> if:
   <li><code>S</code>, or <code>S'</code> if (b) applies, is an
     <a href="../../../mpl/doc/refmanual/lambda-expression.html"><code>MPL Lambda
     Expression</code></a> such that invoking it with types (<code>Entry</code>,
-    <code>Value</code>) resolves to a factory type of <code>Entry</code> elements
-    (implicitly associated to <code>Value</code>).
+    <code>Key</code>) resolves to a factory type of <code>Entry</code> elements
+    (implicitly associated to <code>Key</code>).
   </li>
 </ol>
 </p>
@@ -186,7 +188,7 @@ A type <code>S</code> is said to be a <i>factory specifier</i> if:
 <span class=special>}</span> <span class=comment>// namespace boost</span>
 </pre></blockquote>
 
-<h3><a name="is_factory">Class template <code>is_factory</code></h3>
+<h3><a name="is_factory">Class template <code>is_factory</code></a></h3>
 
 <p>
 Unless specialized by the user, <code>is_factory&lt;T&gt;::type</code> is
@@ -196,7 +198,7 @@ if <code>T</code> is derived from <code>factory_marker</code>, and it is
 otherwise.
 </p>
 
-<h3><a name="factory_construct">Class template <code>factory</code></h3>
+<h3><a name="factory_construct">Class template <code>factory</code></a></h3>
 
 <p>
 <code>factory&lt;T&gt;</code> is a syntactic construct meant to indicate
@@ -213,7 +215,7 @@ mechanisms provided by the <code>is_factory</code> class template.
 <span class=keyword>namespace</span> <span class=identifier>flyweights</span><span class=special>{</span>
 
 <span class=keyword>template</span><span class=special>&lt;</span>
-  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>,</span>
+  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Key</span><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Hash</span><span class=special>=</span><b>implementation defined</b><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Pred</span><span class=special>=</span><b>implementation defined</b><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Allocator</span><span class=special>=</span><b>implementation defined</b>
@@ -250,7 +252,7 @@ implemented with a hashed container.
 
 <blockquote><pre>
 <span class=keyword>template</span><span class=special>&lt;</span>
-  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>,</span>
+  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Key</span><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Hash</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Pred</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Allocator</span>
 <span class=special>&gt;</span>
 <span class=keyword>class</span> <span class=identifier>hashed_factory_class</span>
@@ -269,7 +271,7 @@ implemented with a hashed container.
 <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html"><code>Default
 Constructible</code></a>
 <a href="http://www.sgi.com/tech/stl/UnaryFunction.html"><code>Unary Function</code></a>
-taking a single argument of type <code>Value</code> and returning a
+taking a single argument of type <code>Key</code> and returning a
 value of type <code>std::size_t</code> in the range
 <code>[0, std::numeric_limits&lt;std::size_t&gt;::max())</code>.
 <code>Pred</code> is a
@@ -277,14 +279,14 @@ value of type <code>std::size_t</code> in the range
 Constructible</code></a> 
 <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">
 <code>Binary Predicate</code></a> inducing an equivalence relation
-on elements of <code>Value</code>. It is required that
+on elements of <code>Key</code>. It is required that
 a <code>Hash</code> object return the same value for objects
 equivalent under <code>Pred</code>.
-The equivalence relation on <code>Value</code> associated to the factory is
+The equivalence relation on <code>Key</code> associated to the factory is
 that induced by <code>Pred</code>.
 The default arguments for <code>Hash</code> and <code>Pred</code> are
-<a href="../../../functional/hash/index.html"><code>boost::hash&lt;Value&gt;</code></a>
-and <code>std::equal_to&lt;Value&gt;</code>, respectively. 
+<a href="../../../functional/hash/index.html"><code>boost::hash&lt;Key&gt;</code></a>
+and <code>std::equal_to&lt;Key&gt;</code>, respectively. 
 <code>Allocator</code> must be an allocator of <code>Entry</code> objects
 satisfying the associated C++ requirements at <b>[lib.allocator.requirements]</b>. 
 The default argument is <code>std::allocator&lt;Entry&gt;</code>. The internal
@@ -313,7 +315,7 @@ Class</code></a> such that the type
 <blockquote><pre>
 <span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>apply</span><span class=special>&lt;</span>
   <span class=identifier>hashed_factory</span><span class=special>&lt;</span><span class=identifier>Hash</span><span class=special>,</span><span class=identifier>Pred</span><span class=special>,</span><span class=identifier>Allocator</span><span class=special>&gt;,</span>
-  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span>
+  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span>
 <span class=special>&gt;::</span><span class=identifier>type</span>
 </pre></blockquote>
 
@@ -324,7 +326,7 @@ is the same as
 <blockquote><pre>
 <span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>apply</span><span class=special>&lt;</span>
   <span class=identifier>hashed_factory_class</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_2</span><span class=special>,</span><span class=identifier>Hash</span><span class=special>,</span><span class=identifier>Pred</span><span class=special>,</span><span class=identifier>Allocator</span><span class=special>&gt;,</span>
-  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span>
+  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span>
 <span class=special>&gt;::</span><span class=identifier>type</span>
 </pre></blockquote>
 
@@ -345,7 +347,7 @@ Placeholder Expressions</code></a> resolving to the actual types used by
 <span class=keyword>namespace</span> <span class=identifier>flyweights</span><span class=special>{</span>
 
 <span class=keyword>template</span><span class=special>&lt;</span>
-  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>,</span>
+  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Key</span><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Compare</span><span class=special>=</span><b>implementation defined</b><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Allocator</span><span class=special>=</span><b>implementation defined</b>
 <span class=special>&gt;</span>
@@ -380,7 +382,7 @@ implemented on top of an orderded associative container.
 
 <blockquote><pre>
 <span class=keyword>template</span><span class=special>&lt;</span>
-  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>,</span>
+  <span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Key</span><span class=special>,</span>
   <span class=keyword>typename</span> <span class=identifier>Compare</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Allocator</span>
 <span class=special>&gt;</span>
 <span class=keyword>class</span> <span class=identifier>set_factory_class</span>
@@ -399,10 +401,10 @@ implemented on top of an orderded associative container.
 <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html"><code>Default
 Constructible</code></a>
 <a href="http://www.sgi.com/tech/stl/StrictWeakOrdering.html">
-<code>Strict Weak Ordering</code></a> on <code>Value</code>. Two <code>Value</code>s
+<code>Strict Weak Ordering</code></a> on <code>Key</code>. Two <code>Key</code>s
 <code>x</code> and <code>y</code> are considered equivalent if
-<code>!c(x,y)&&!c(y,x)</code> for <code>c</code> of type <code>Compare</code>.
-The default argument of <code>Compare</code> is <code>std::less&lt;Value&gt;</code>
+<code>!c(x,y)&amp;&amp;!c(y,x)</code> for <code>c</code> of type <code>Compare</code>.
+The default argument of <code>Compare</code> is <code>std::less&lt;Key&gt;</code>
 <code>Allocator</code> must be an allocator of <code>Entry</code> objects
 satisfying the associated C++ requirements at <b>[lib.allocator.requirements]</b>. 
 The default argument is <code>std::allocator&lt;Entry&gt;</code>. The internal
@@ -431,7 +433,7 @@ Class</code></a> such that the type
 <blockquote><pre>
 <span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>apply</span><span class=special>&lt;</span>
   <span class=identifier>set_factory</span><span class=special>&lt;</span><span class=identifier>Compare</span><span class=special>,</span><span class=identifier>Allocator</span><span class=special>&gt;,</span>
-  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span>
+  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span>
 <span class=special>&gt;::</span><span class=identifier>type</span>
 </pre></blockquote>
 
@@ -442,7 +444,7 @@ is the same as
 <blockquote><pre>
 <span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>apply</span><span class=special>&lt;</span>
   <span class=identifier>set_factory_class</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_2</span><span class=special>,</span><span class=identifier>Compare</span><span class=special>,</span><span class=identifier>Allocator</span><span class=special>&gt;,</span>
-  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span>
+  <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span>
 <span class=special>&gt;::</span><span class=identifier>type</span>
 </pre></blockquote>
 
@@ -549,9 +551,9 @@ is a factory of <code>derived</code> elements implicitly associated to
 <code>ContainerSpecifier</code> must be an 
 <a href="../../../mpl/doc/refmanual/lambda-expression.html"><code>MPL Lambda
 Expression</code></a> resolving, when invoked with (<code>Entry</code>,
-<code>Value</code>), to a type <code>Container</code> such that
+<code>Key</code>), to a type <code>Container</code> such that
 <code>assoc_container_factory_class&lt;Container&gt;</code> is a factory
-of <code>Entry</code> elements implicitly associated to <code>Value</code>.
+of <code>Entry</code> elements implicitly associated to <code>Key</code>.
 </p>
 
 <hr>
@@ -568,9 +570,9 @@ Holders
 
 <br>
 
-<p>Revised November 26th 2007</p>
+<p>Revised August 13th 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

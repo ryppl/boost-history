@@ -1,6 +1,6 @@
 /* Boost.Flyweight example of performance comparison.
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -15,6 +15,7 @@
 #include <boost/flyweight/simple_locking.hpp>
 #include <boost/flyweight/refcounted.hpp>
 #include <boost/flyweight/no_tracking.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/tokenizer.hpp>
 #include <algorithm>
 #include <cstddef>
@@ -22,6 +23,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -69,18 +71,6 @@ public:
     return p;
   }
 
-  /* Dinkumware stdlib implementation for MSVC++ 6.0/7.0 relies in this
-   * non standard extension to the allocator interface to cope with
-   * rebinding problems.
-   */
-
-  char* _Charalloc(size_type n)
-  {
-    char* p=new char[n];
-    count_allocator_mem+=n;
-    return p;
-  }
-
   void deallocate(void* p,size_type n)
   {
     count_allocator_mem-=n*sizeof(T);
@@ -118,52 +108,53 @@ typedef std::basic_string<
   char,std::char_traits<char>,count_allocator<char>
 > count_string;
 
-#if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 typedef hashed_factory<
-  boost::hash<count_string>,
-  std::equal_to<count_string>,
-  count_allocator<count_string>
+  boost::hash<boost::mpl::_2>,
+  std::equal_to<boost::mpl::_2>,
+  count_allocator<boost::mpl::_1>
 > count_hashed_factory;
 
 typedef set_factory<
-  std::less<count_string>,
-  count_allocator<count_string>
+  std::less<boost::mpl::_2>,
+  count_allocator<boost::mpl::_1>
 > count_set_factory;
-#else
-/* Compilers without proper Boost.MPL lambda support (most notably,
- * MSVC++ 6.0/7.0) can't handle the types count_hashed_factory and
- * count_set_factory defined above because of a clash of the
- * nested symbol rebind in count_allocator with Boost.MPL internal
- * machinery. Instead, we can define the types as factory specifiers.
- */
 
-struct count_hashed_factory:factory_marker
+/* Some additional utilities used by the test routine */
+
+class timer
 {
-  template<typename Entry,typename Value>
-  struct apply
+public:
+  timer(){restart();}
+
+  void restart(){t=std::clock();}
+
+  void time(const char* str)
   {
-    typedef hashed_factory_class<
-      Entry,Value,
-      boost::hash<Value>,
-      std::equal_to<Value>,
-      count_allocator<Entry>
-    > type;
-  };
+    std::cout<<str<<": "<<(double)(std::clock()-t)/CLOCKS_PER_SEC<<" s\n";
+  }
+
+private:
+  std::clock_t t;
 };
 
-struct count_set_factory:factory_marker
+template<typename T>
+struct is_flyweight:
+  boost::mpl::false_{};
+
+template<
+  typename T,
+  typename Arg1,typename Arg2,typename Arg3,typename Arg4,typename Arg5
+>
+struct is_flyweight<flyweight<T,Arg1,Arg2,Arg3,Arg4,Arg5> >:
+  boost::mpl::true_{};
+
+struct length_adder
 {
-  template<typename Entry,typename Value>
-  struct apply
+  std::size_t operator()(std::size_t n,const count_string& x)const
   {
-    typedef set_factory_class<
-      Entry,Value,
-      std::less<Value>,
-      count_allocator<Entry>
-    > type;
-  };
+    return n+x.size();
+  }
 };
-#endif
 
 /* Measure time and memory performance for a String, which is assumed
  * to be either a plain string type or a string flyweight.
@@ -190,12 +181,12 @@ struct test
       std::exit(EXIT_FAILURE);
     }
 
-    std::clock_t start=std::clock();
-  
-    /* Tokenize using space and common punctuaction as separators, and
-     * keeping the separators.
+    /* Initialization; tokenize using space and common punctuaction as
+     * separators, and keeping the separators.
      */
-   
+
+    timer t;
+
     tokenizer tok=tokenizer(
       char_iterator(ifs),char_iterator(),
       boost::char_separator<char>(
@@ -206,14 +197,48 @@ struct test
       txt.push_back(String(it->c_str()));
     }
 
-    /* Do some text handling */
+    t.time("initialization time");
 
-    std::sort(txt.begin(),txt.end());
-    std::random_shuffle(txt.begin(),txt.end());
+    /* Assignment */
 
-    std::cout<<"Time used:  "<<(double)(std::clock()-start)/CLOCKS_PER_SEC
-             <<" s\n";
-    std::cout<<"Bytes used: "<<count_allocator_mem<<"\n";
+    t.restart();
+
+    count_vector txt2;
+    for(int i=0;i<10;++i){
+      txt2.insert(txt2.end(),txt.begin(),txt.end());
+    }
+
+    t.time("assignment time");
+
+    /* Equality comparison */
+
+    t.restart();
+
+    std::size_t c=0;
+    for(int i=0;i<100;++i){
+      c+=std::count(txt.begin(),txt.end(),txt[c%txt.size()]);
+    }
+
+    t.time("equality comparison time");
+
+    /* Value access */
+
+    t.restart();
+
+    std::size_t s=0;
+    for(int i=0;i<20;++i){
+      s=std::accumulate(txt2.begin(),txt2.end(),s,length_adder());
+    }
+
+    t.time("value access time");
+
+    std::cout<<"bytes used: "<<count_allocator_mem;
+    if(is_flyweight<String>::value){
+      std::size_t flyweight_mem=(txt.capacity()+txt2.capacity())*sizeof(String);
+      std::cout<<"= flyweights("<<flyweight_mem
+               <<")+values("<<count_allocator_mem-flyweight_mem<<")";
+    }
+    std::cout<<"\n";
   }
 };
 
@@ -225,15 +250,6 @@ struct test_case
   const char* name;
   void (*test)(const std::string&);
 };
-
-/* MSVC++ 6.0/7.0 needs the following explicit instantiations for test<...>
- * to compile correctly.
- */
-
-flyweight<count_string,count_hashed_factory>             dummy1;
-flyweight<count_string,count_hashed_factory,no_tracking> dummy2;
-flyweight<count_string,count_set_factory>                dummy3;
-flyweight<count_string,count_set_factory,no_tracking>    dummy4;
 
 test_case test_table[]=
 {
@@ -259,7 +275,7 @@ test_case test_table[]=
   }
 };
 
-enum{num_test_cases=sizeof(test_table)/sizeof(test_case)};
+const int num_test_cases=sizeof(test_table)/sizeof(test_case);
 
 int main()
 {

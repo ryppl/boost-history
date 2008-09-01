@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight
 Holders reference</h1>
 
@@ -27,8 +27,6 @@ Locking policies
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
-
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
 
 <h2>Contents</h2>
 
@@ -69,7 +67,9 @@ Locking policies
 Given a type <code>C</code>, a type <code>Holder</code> is said to be a <i>holder
 of <code>C</code></i> if the expression <code>Holder::get()</code> returns
 a reference to a default initialized <code>C</code> object unique to
-<code>Holder</code>. <a href="flyweight.html#flyweight"><code>flyweight</code></a>
+<code>Holder</code>. No invocation of <code>Holder::get()</code>, except possibly
+the first one in the program, does throw.
+<a href="flyweight.html#flyweight"><code>flyweight</code></a>
 privately uses a holder to instantiate a <a href="factories.html#factory">factory</a>
 and some additional data (like a <a href="locking.html#preliminary">mutex</a> for
 internal synchronization) unique to each instantiation type of the class template.
@@ -114,7 +114,7 @@ A type <code>S</code> is a <i>holder specifier</i> if:
 <span class=special>}</span> <span class=comment>// namespace boost</span>
 </pre></blockquote>
 
-<h3><a name="is_holder">Class template <code>is_holder</code></h3>
+<h3><a name="is_holder">Class template <code>is_holder</code></a></h3>
 
 <p>
 Unless specialized by the user, <code>is_holder&lt;T&gt;::type</code> is
@@ -124,7 +124,7 @@ if <code>T</code> is derived from <code>holder_marker</code>, and it is
 otherwise.
 </p>
 
-<h3><a name="holder_construct">Class template <code>holder</code></h3>
+<h3><a name="holder_construct">Class template <code>holder</code></a></h3>
 
 <p>
 <code>holder&lt;T&gt;</code> is a syntactic construct meant to indicate
@@ -230,9 +230,9 @@ Locking policies
 
 <br>
 
-<p>Revised September 27th 2007</p>
+<p>Revised August 11th 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

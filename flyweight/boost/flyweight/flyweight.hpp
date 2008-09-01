@@ -1,6 +1,6 @@
 /* Flyweight class. 
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -18,9 +18,8 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/detail/workaround.hpp>
+#include <boost/flyweight/detail/default_value_policy.hpp>
 #include <boost/flyweight/detail/flyweight_core.hpp>
-#include <boost/flyweight/detail/prevent_eti.hpp>
-#include <boost/flyweight/detail/template_ctors_def.hpp>
 #include <boost/flyweight/factory_tag.hpp>
 #include <boost/flyweight/flyweight_fwd.hpp>
 #include <boost/flyweight/locking_tag.hpp>
@@ -31,11 +30,14 @@
 #include <boost/flyweight/refcounted_fwd.hpp>
 #include <boost/flyweight/tag.hpp>
 #include <boost/flyweight/tracking_tag.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/parameter/binding.hpp>
-#include <boost/static_assert.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/utility/swap.hpp>
 
 #if BOOST_WORKAROUND(BOOST_MSVC,BOOST_TESTED_AT(1400))
 #pragma warning(push)
@@ -63,6 +65,11 @@ template<
 class flyweight
 {
 private:
+  typedef typename mpl::if_<
+    detail::is_value<T>,
+    T,
+    detail::default_value_policy<T>
+  >::type                                      value_policy;
   typedef parameter::parameters<
     parameter::optional<
       parameter::deduced<tag<> >,
@@ -127,21 +134,25 @@ private:
     unmatched_args,detail::unmatched_arg,
     detail::unmatched_arg
   >::type                                      unmatched_arg_detected;
-  BOOST_STATIC_ASSERT((
-    /* You have passed a type in the specification of a flyweight type that
-     * could not be interpreted as a valid argument.
-     */
-    is_same<unmatched_arg_detected,detail::unmatched_arg>::value));
+
+  /* You have passed a type in the specification of a flyweight type that
+   * could not be interpreted as a valid argument.
+   */
+  BOOST_MPL_ASSERT_MSG(
+  (is_same<unmatched_arg_detected,detail::unmatched_arg>::value),
+  INVALID_ARGUMENT_TO_FLYWEIGHT,
+  (flyweight));
 
   typedef detail::flyweight_core<
-    T,tag_type,tracking_policy,
+    value_policy,tag_type,tracking_policy,
     factory_specifier,locking_policy,
     holder_specifier
   >                                            core;
   typedef typename core::handle_type           handle_type;
 
 public:
-  typedef T                                    value_type;
+  typedef typename value_policy::key_type      key_type;
+  typedef typename value_policy::value_type    value_type;
 
   /* static data initialization */
 
@@ -157,19 +168,25 @@ public:
 
   /* construct/copy/destroy */
   
-  flyweight():h(core::insert(T())){}
+  flyweight():h(core::insert(key_type())){}
   flyweight(const flyweight& x):h(x.h){}
   flyweight(flyweight& x):h(x.h){}
 
-  BOOST_FLYWEIGHT_CTORS
-  
-  flyweight& operator=(const T& t){return operator=(flyweight(t));}
+  /* template ctors */
+
+#define BOOST_FLYWEIGHT_PERFECT_FWD_NAME explicit flyweight
+#define BOOST_FLYWEIGHT_PERFECT_FWD_BODY(n)    \
+  :h(core::insert(BOOST_PP_ENUM_PARAMS(n,t))){}
+#include <boost/flyweight/detail/perfect_fwd.hpp>
+
+  flyweight& operator=(const flyweight x){h=x.h;return *this;}
+  flyweight& operator=(const value_type& x){return operator=(flyweight(x));}
 
   /* convertibility to underlying type */
   
-  const T& get()const{return core::value(h);}
-  
-  operator const T&()const{return get();}
+  const key_type&   get_key()const{return core::key(h);}
+  const value_type& get()const{return core::value(h);}
+  operator const    value_type&()const{return get();}
   
   /* exact type equality  */
     
@@ -180,7 +197,7 @@ public:
 
   /* modifiers */
 
-  void swap(flyweight& x){std::swap(h,x.h);}
+  void swap(flyweight& x){boost::swap(h,x.h);}
   
 private:
   handle_type h;
@@ -350,7 +367,12 @@ BOOST_TEMPLATED_STREAM(istream,ElemType,Traits)& operator>>(
   BOOST_TEMPLATED_STREAM(istream,ElemType,Traits)& in,
   flyweight<T,BOOST_FLYWEIGHT_TEMPL_ARGS(_)>& x)
 {
-  T t(x.get()); /* T need not be default ctble but must be copy ctble */
+  typedef typename flyweight<
+    T,BOOST_FLYWEIGHT_TEMPL_ARGS(_)
+  >::value_type                     value_type;
+
+  /* value_type need not be default ctble but must be copy ctble */
+  value_type t(x.get());
   in>>t;
   x=t;
   return in;
@@ -363,7 +385,6 @@ BOOST_TEMPLATED_STREAM(istream,ElemType,Traits)& operator>>(
 #undef BOOST_FLYWEIGHT_COMPLETE_COMP_OPS
 #undef BOOST_FLYWEIGHT_TEMPL_ARGS
 #undef BOOST_FLYWEIGHT_TYPENAME_TEMPL_ARGS
-#include <boost/flyweight/detail/template_ctors_undef.hpp>
 
 #if BOOST_WORKAROUND(BOOST_MSVC,BOOST_TESTED_AT(1400))
 #pragma warning(pop)

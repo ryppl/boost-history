@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight Tutorial Annex: MPL lambda expressions</h1>
 
 <div class="prev_link"><a href="technical.html"><img src="../prev.gif" alt="technical issues" border="0"><br>
@@ -27,12 +27,10 @@ Boost.Flyweight reference
 
 <hr>
 
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
-
 <p>This short introduction to lambda expressions is meant for readers unfamiliar
 with the <a href="../../../mpl/doc/index.html">Boost MPL Library</a> who
 want to rapidly acquire a working knowledge of the basic concepts for the purposes
-of using them in Boost.Flyweight. Please refer to Boost.MPL documentation
+of using them in Boost.Flyweight. Please refer to the Boost.MPL documentation
 for further information beyond these introductory notes.
 </p>
 
@@ -86,7 +84,7 @@ can be implemented in two ways
 <span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_2</span><span class=special>&gt;</span> <span class=identifier>foo_specifier</span><span class=special>;</span>
 </pre></blockquote>
     Note that, in this case, <code>foo_specifier</code> is a concrete type, much
-    as <code>int</code> or <code>std::set&lt;std::string&gt</code> are; yet,
+    as <code>int</code> or <code>std::set&lt;std::string&gt;</code> are; yet,
     MPL internal mechanisms are able to detect that this type has been gotten
     from instantiating a class template with placeholders <code>boost::mpl::_1</code>
     and <code>boost::mpl::_2</code> and take these placeholders as slots to
@@ -117,17 +115,20 @@ like, for instance, switching their places:
 </pre></blockquote>
 
 <p>
-trasforming them:
+passing placeholder subexpressions as arguments to the overall expression:
 </p>
 
 <blockquote><pre>
 <span class=keyword>struct</span> <span class=identifier>foo_specifier</span>
 <span class=special>{</span>
   <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Arg1</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Arg2</span><span class=special>&gt;</span>
-  <span class=keyword>struct</span> <span class=identifier>apply</span><span class=special>{</span><span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>Arg1</span><span class=special>*,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>Arg2</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;};</span>
+  <span class=keyword>struct</span> <span class=identifier>apply</span><span class=special>{</span><span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>shared_ptr</span><span class=special>&lt;</span><span class=identifier>Arg1</span><span class=special>&gt;,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>Arg2</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;};</span>
 <span class=special>};</span>
 
-<span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>*,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_2</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>foo_specifier</span><span class=special>;</span>
+<span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span>
+  <span class=identifier>boost</span><span class=special>::</span><span class=identifier>shared_ptr</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&gt;,</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_2</span><span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>foo_specifier</span><span class=special>;</span>
 </pre></blockquote>
 
 <p>
@@ -139,10 +140,10 @@ or accepting less or more arguments than the class template itself
 <span class=keyword>struct</span> <span class=identifier>foo_specifier</span>
 <span class=special>{</span>
   <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Arg1</span><span class=special>&gt;</span>
-  <span class=keyword>struct</span> <span class=identifier>apply</span><span class=special>{</span><span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>Arg1</span><span class=special>,</span><span class=identifier>Arg1</span><span class=special>*&gt;</span> <span class=identifier>type</span><span class=special>;};</span>
+  <span class=keyword>struct</span> <span class=identifier>apply</span><span class=special>{</span><span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>Arg1</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>Arg1</span><span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;};</span>
 <span class=special>};</span>
 
-<span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>*&gt;</span> <span class=special>&gt;</span> <span class=identifier>foo_specifier</span><span class=special>;</span>
+<span class=keyword>typedef</span> <span class=identifier>foo</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>foo_specifier</span><span class=special>;</span>
 
 <span class=keyword>struct</span> <span class=identifier>foo_specifier</span>
 <span class=special>{</span>
@@ -167,9 +168,9 @@ Boost.Flyweight reference
 
 <br>
 
-<p>Revised November 27th 2007</p>
+<p>Revised August 13th 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

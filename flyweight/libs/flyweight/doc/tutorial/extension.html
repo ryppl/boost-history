@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight Tutorial: Extending Boost.Flyweight</h1>
 
 <div class="prev_link"><a href="configuration.html"><img src="../prev.gif" alt="configuring Boost.Flyweight" border="0"><br>
@@ -26,8 +26,6 @@ Technical issues
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
-
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
 
 <h2>Contents</h2>
 
@@ -82,7 +80,7 @@ though their expected interface is much more concise:
 <blockquote><pre>
 <span class=comment>// example of a possible factory class template</span>
 
-<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>&gt;</span>
+<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Key</span><span class=special>&gt;</span>
 <span class=keyword>class</span> <span class=identifier>custom_factory_class</span>
 <span class=special>{</span>
 <span class=keyword>public</span><span class=special>:</span>
@@ -95,18 +93,19 @@ though their expected interface is much more concise:
 </pre></blockquote>
 
 <p>
-Factories are parameterized by <code>Entry</code> and <code>Value</code>:
+Factories are parameterized by <code>Entry</code> and <code>Key</code>:
 the first is the type of the objects stored, while the second is the public
-type on which <code>flyweight</code> operates (e.g. the <code>std::string</code>
-in <code>flyweight&lt;std::string&gt;</code>). An entry holds a member of type
-<code>Value</code> as well as internal bookkeeping information, but from the
+key type on which <code>flyweight</code> operates (e.g. the <code>std::string</code>
+in <code>flyweight&lt;std::string&gt;</code> or
+<code>flyweight&lt;key_value&lt;std::string,texture&gt; &gt;</code>). An entry holds a
+shared value to which flyweight objects are associated as well as internal bookkeeping information, but from the
 point of view of the factory, though, the only fact known about <code>Entry</code>
-is that it is implicitly convertible to <code>const Value&</code>, and it is
-based on their associated <code>Value</code> that entries are to be considered
+is that it is implicitly convertible to <code>const Key&amp;</code>, and it is
+based on their associated <code>Key</code> that entries are to be considered
 equivalent or not. The factory <code>insert()</code>
 member function locates a previously stored entry whose
-associated <code>Value</code> is equivalent to that of the <code>Entry</code>
-object being passed (for some equivalence relation on <code>Value</code> germane to
+associated <code>Key</code> is equivalent to that of the <code>Entry</code>
+object being passed (for some equivalence relation on <code>Key</code> germane to
 the factory), or stores the new entry if no equivalent one is found. A
 <code>handle_type</code> to the equivalent or newly inserted entry is returned;
 this <code>handle_type</code> is a token for further access to an entry via
@@ -124,10 +123,10 @@ to the program console. We base the implementation of the repository
 functionality on a regular <code>std::set</code>:
 
 <blockquote><pre>
-<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Value</span><span class=special>&gt;</span>
+<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>Key</span><span class=special>&gt;</span>
 <span class=keyword>class</span> <span class=identifier>verbose_factory_class</span>
 <span class=special>{</span> 
-  <span class=keyword>typedef</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>set</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>Value</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>store_type</span><span class=special>;</span>
+  <span class=keyword>typedef</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>set</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>less</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>store_type</span><span class=special>;</span>
 
   <span class=identifier>store_type</span> <span class=identifier>store</span><span class=special>;</span>
 
@@ -138,17 +137,17 @@ functionality on a regular <code>std::set</code>:
   <span class=special>{</span>
     <span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>handle_type</span><span class=special>,</span> <span class=keyword>bool</span><span class=special>&gt;</span> <span class=identifier>p</span><span class=special>=</span><span class=identifier>store</span><span class=special>.</span><span class=identifier>insert</span><span class=special>(</span><span class=identifier>x</span><span class=special>);</span>
     <span class=keyword>if</span><span class=special>(</span><span class=identifier>p</span><span class=special>.</span><span class=identifier>second</span><span class=special>){</span> <span class=comment>/* new entry */</span>
-      <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;new: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Value</span><span class=special>&amp;)</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+      <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;new: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Key</span><span class=special>&amp;)</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
     <span class=special>}</span>
     <span class=keyword>else</span><span class=special>{</span>         <span class=comment>/* existing entry */</span>
-      <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;hit: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Value</span><span class=special>&amp;)</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+      <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;hit: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Key</span><span class=special>&amp;)</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
     <span class=special>}</span>
     <span class=keyword>return</span> <span class=identifier>p</span><span class=special>.</span><span class=identifier>first</span><span class=special>;</span>
   <span class=special>}</span>
 
   <span class=keyword>void</span> <span class=identifier>erase</span><span class=special>(</span><span class=identifier>handle_type</span> <span class=identifier>h</span><span class=special>)</span>
   <span class=special>{</span>
-    <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;del: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Value</span><span class=special>&amp;)*</span><span class=identifier>h</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+    <span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>&lt;&lt;</span><span class=string>&quot;del: &quot;</span><span class=special>&lt;&lt;(</span><span class=keyword>const</span> <span class=identifier>Key</span><span class=special>&amp;)*</span><span class=identifier>h</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
     <span class=identifier>store</span><span class=special>.</span><span class=identifier>erase</span><span class=special>(</span><span class=identifier>h</span><span class=special>);</span>
   <span class=special>}</span>
 
@@ -164,18 +163,18 @@ The code deserves some commentaries:
 <ul>
   <li>
     Note that the factory is parameterized by <code>Entry</code>
-    and <code>Value</code>, as these types are provided internally by Boost.Flyweight
+    and <code>Key</code>, as these types are provided internally by Boost.Flyweight
     when the factory is instantiated as part of the machinery of <code>flyeight</code>;
-    but     there is nothing to prevent us from having more template parameters for
+    but there is nothing to prevent us from having more template parameters for
     finer configuration of the factory type: for instance, we could extend
     <code>verbose_factory_class</code> to accept some comparison predicate rather than
-    the default <code>std::less&lt;Value&gt;</code>, or to specify the allocator
+    the default <code>std::less&lt;Key&gt;</code>, or to specify the allocator
     used by the internal <code>std::set</code>.
   </li>
   <li>
-    The fact that <code>Entry</code> is convertible to <code>const Value&</code>
+    The fact that <code>Entry</code> is convertible to <code>const Key&amp;</code>
     (which is about the only property known about <code>Entry</code>) is
-    exploited in the specification of <code>std::less&lt;Value&gt</code> as
+    exploited in the specification of <code>std::less&lt;Key&gt;</code> as
     the comparison predicate for the <code>std::set</code> of <code>Entry</code>s
     used as the internal repository.
   </li>
@@ -192,7 +191,7 @@ type, we need an associated construct called the <i>factory specifier</i>.
 A factory specifier is a 
 <a href="lambda_expressions.html"><code>Lambda
 Expression</code></a> accepting the two argument types <code>Entry</code>
-and <code>Value</code> and returning the corresponding factory class:
+and <code>Key</code> and returning the corresponding factory class:
 </p>
 
 <blockquote><pre>
@@ -200,10 +199,10 @@ and <code>Value</code> and returning the corresponding factory class:
 
 <span class=keyword>struct</span> <span class=identifier>custom_factory_specifier</span>
 <span class=special>{</span>
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span><span class=special>&gt;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span><span class=special>&gt;</span>
   <span class=keyword>struct</span> <span class=identifier>apply</span>
   <span class=special>{</span>
-    <span class=keyword>typedef</span> <span class=identifier>custom_factory_class</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span><span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;</span>
+    <span class=keyword>typedef</span> <span class=identifier>custom_factory_class</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span><span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;</span>
   <span class=special>}</span> 
 <span class=special>};</span>
 
@@ -230,10 +229,10 @@ to do this tagging:
 
 <span class=keyword>struct</span> <span class=identifier>custom_factory_specifier</span><span class=special>:</span> <span class=identifier><b>factory_marker</b></span>
 <span class=special>{</span>
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span><span class=special>&gt;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span><span class=special>&gt;</span>
   <span class=keyword>struct</span> <span class=identifier>apply</span>
   <span class=special>{</span>
-    <span class=keyword>typedef</span> <span class=identifier>custom_factory_class</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Value</span><span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;</span>
+    <span class=keyword>typedef</span> <span class=identifier>custom_factory_class</span><span class=special>&lt;</span><span class=identifier>Entry</span><span class=special>,</span><span class=identifier>Key</span><span class=special>&gt;</span> <span class=identifier>type</span><span class=special>;</span>
   <span class=special>}</span> 
 <span class=special>};</span>
 </pre></blockquote>
@@ -271,7 +270,7 @@ to do this tagging:
 </p>
 
 <p>
-<a href="../examples.html#example6">Example 6</a> in the examples section develops
+<a href="../examples.html#example8">Example 8</a> in the examples section develops
 in full the <code>verbose_factory_class</code> case sketched above.
 </p>
 
@@ -373,7 +372,7 @@ A custom locking policy presents the following simple interface:
 
 <p>
 where <code>lock_type</code> is used to acquire/release mutexes according to
-the <code>scoped lock</code> idiom:
+the <i>scoped lock</i> idiom:
 </p>
 
 <blockquote><pre>
@@ -448,14 +447,22 @@ element into the following:
 <ul>
   <li><code>Tracking::entry_type</code> is a
     <a href="lambda_expressions.html"><code>Lambda
-    Expression</code></a> accepting a type <code>Value</code> and returning
-    a type implicitly convertible to <code>const Value&amp;</code>.
-    We saw when reviewing the <a href="#factories">factory</a> requirements that
-    the entries stored internally by <code>flyweight&lt;T&gt;</code>
-    are not <code>T</code> objects, but rather some undisclosed type
-    convertible to <code>const T&amp;</code>: a tracking policy can make
-    use of this leeway to store internal tracking information, or if this
-    is not needed it can just return <code>Value</code>.
+    Expression</code></a> accepting two different types named
+    <code>Value</code> and <code>Key</code> such that
+    <code>Value</code> is implicitly convertible to
+    <code>const Key&amp;</code>. The expression is expected
+    to return
+    a type implicitly convertible to both <code>const Value&amp;</code>
+    and <code>const Key&amp;</code>.
+    <code>Tracking::entry_type</code> corresponds to the actual
+    type of the entries stored into the
+    <a href="configuration.html#factory_types">flyweight factory</a>:
+    by allowing the tracking policy to take part on the definition
+    of this type it is possible for the policy to add internal
+    tracking information to the entry data in case this is needed.
+    If no additional information is required,
+    the tracking policy can simply return <code>Value</code> as its
+    <code>Tracking::entry_type</code> type.
   </li>
   <li>
     The binary <a href="lambda_expressions.html"><code>Lambda
@@ -470,9 +477,12 @@ element into the following:
   </li>
 </ul>
 So, in order to define the factory of some instantiation
-<code>flyweight&lt;Value,...&gt;</code>, <code>Tracking::entry_type</code>
-is invoked with <code>Value</code> to obtain the entry type for the factory,
-and then <code>Tracking::handle_type</code> is fed an internal handle
+<code>fw_t</code> of <code>flyweight</code>, <code>Tracking::entry_type</code>
+is invoked with an internal type <code>Value</code> implicitly convertible
+to <code>const fw_t::key_type&amp;</code> to obtain the entry type for the factory,
+which must be convertible to both <code>const Value&amp;</code> and
+<code>const fw_t::key_type&amp;</code>.
+Then, <code>Tracking::handle_type</code> is fed an internal handle
 type and a tracking policy helper to produce the factory handle type.
 The observant reader might have detected an apparent circularity: 
 <code>Tracking::handle_type</code> produces the handle type of
@@ -480,7 +490,7 @@ the flyweight factory, and at the same time is passed a tracking helper
 that grants access to the factory being defined!
 The solution to this riddle comes from the realization of the fact that
 <code>TrackingHandler</code> is an <i>incomplete
-types</i> by the time it is passed to <code>Tracking::handle_type</code>:
+type</i> by the time it is passed to <code>Tracking::handle_type</code>:
 only when <code>Handle</code> is instantiated at a later stage will this
 type be complete.
 </p>
@@ -539,9 +549,9 @@ Technical issues
 
 <br>
 
-<p>Revised November 29th 2007</p>
+<p>Revised September 1st 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

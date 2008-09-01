@@ -1,6 +1,6 @@
 /* Boost.Flyweight test of intermodule_holder.
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -26,7 +26,7 @@ struct intermodule_holder_flyweight_specifier1
 
 void test_intermodule_holder()
 {
-  BOOST_FLYWEIGHT_TEST_BASIC(intermodule_holder_flyweight_specifier1)
+  test_basic_template<intermodule_holder_flyweight_specifier1>();
 
   intermodule_flyweight_string str=
     create_intermodule_flyweight_string("boost");

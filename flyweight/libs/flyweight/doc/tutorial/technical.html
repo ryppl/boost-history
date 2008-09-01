@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<h1><img src="../../../../boost.png" alt="boost.png (6897 bytes)" align=
+<h1><img src="../../../../boost.png" alt="Boost logo" align=
 "middle" width="277" height="86">Boost.Flyweight Tutorial: Technical issues</h1>
 
 <div class="prev_link"><a href="extension.html"><img src="../prev.gif" alt="extending Boost.Flyweight" border="0"><br>
@@ -26,8 +26,6 @@ Annex: MPL lambda expressions
 </a></div><br clear="all" style="clear: all;">
 
 <hr>
-
-<h3 align="center">Disclaimer: Boost.Flyweight is not a Boost library</h3>
 
 <h2>Contents</h2>
 
@@ -56,7 +54,7 @@ before <code>main()</code> or before the first pre-<code>main()</code>
 usage of the class, for instance if we declare a global
 <code>static flyweight&lt;T&gt;</code> object. This covers the vast
 majority of usage cases in a transparent manner, but there are
-exotic scenarios where the automatic static data initialization
+some scenarios where the automatic static data initialization
 policy of Boost.Flyweight can fail:
 </p>
 
@@ -118,21 +116,54 @@ mechanisms of her own.
 </p>
 
 <p>
-In some settings, particularly when defining global objects, calling
-the function <code>flyweight&lt;T&gt;::init</code> can be a little
-cumbersome. <code>flyweight&lt;T&gt;</code> provides a nested type
-<code>initializer</code> to do that job for us:
+The following is another example where the default static initialization
+provided by Boost.Flyweight can fail:
 </p>
 
 <blockquote><pre>
-<span class=keyword>class</span> <span class=identifier>thread_pool</span>
-<span class=special>{</span>
-  <span class=special>...</span>
-<span class=special>};</span>
+<span class=keyword>static</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>vector</span><span class=special>&lt;</span><span class=identifier>flyweight</span><span class=special>&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>v</span><span class=special>;</span>
 
+<span class=keyword>int</span> <span class=identifier>main</span><span class=special>()</span>
+<span class=special>{</span>
+  <span class=comment>// use v</span>
+<span class=special>}</span>
+</pre></blockquote>
+
+<p>
+In some environments, the program above fails at termination time with something
+like the following:
+</p>
+
+<blockquote><pre>
+Assertion failed: count()==0, file c:\boost\flyweight\refcounted.hpp, line 55
+</pre></blockquote>
+
+<p>
+What is the problem? Although the type of <code>v</code> involves
+<code>flyweight&lt;std::string&gt;</code>, constructing <code>v</code> as an empty vector
+need not create any flyweight object proper; so,
+it is perfectly possible that the static initialization of
+<code>flyweight&lt;std::string&gt;</code> happens <i>after</i> the construction
+of <code>v</code>; when this is the case, the static destruction of
+the associated factory will occur <i>before</i> <code>v</code>'s
+destruction, leaving the vector with dangling flyweights.
+Again, the solution consists in explicitly forcing the static instantiation
+of <code>flyweight&lt;std::string&gt;</code> before <code>v</code> is
+created. Here, calling
+the function <code>flyweight&lt;std::string&gt;::init</code> is a little
+cumbersome, so we can resort to the utility type
+<code>flyweight&lt;std::string&gt;::initializer</code> to do that job for us:
+</p>
+
+<blockquote><pre>
 <span class=comment>// equivalent to calling flyweight&lt;std::string&gt;::init()</span>
-<b><span class=keyword>static</span> <span class=identifier>flyweight</span><span class=special>&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&gt;::</span><span class=identifier>initializer</span> <span class=identifier>fwinit</span><span class=special>;</span></b>
-<span class=keyword>static</span> <span class=identifier>thread_pool</span> <span class=identifier>thpool</span><span class=special>;</span>
+<b><span class=keyword>static</span> <span class=identifier>flyweight</span><span class=special>&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&gt;::</span><span class=identifier>initializer</span>  <span class=identifier>fwinit</span><span class=special>;</span></b>
+<span class=keyword>static</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>vector</span><span class=special>&lt;</span><span class=identifier>flyweight</span><span class=special>&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=identifier>v</span><span class=special>;</span>
+
+<span class=keyword>int</span> <span class=identifier>main</span><span class=special>()</span>
+<span class=special>{</span>
+  <span class=comment>// use v; no dangling flyweights at termination now</span>
+<span class=special>}</span>
 </pre></blockquote>
 
 <hr>
@@ -149,9 +180,9 @@ Annex: MPL lambda expressions
 
 <br>
 
-<p>Revised November 27th 2007</p>
+<p>Revised August 11th 2008</p>
 
-<p>&copy; Copyright 2006-2007 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>&copy; Copyright 2006-2008 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Distributed under the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

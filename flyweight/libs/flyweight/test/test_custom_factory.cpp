@@ -1,6 +1,6 @@
 /* Boost.Flyweight test of a custom factory.
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -25,7 +25,7 @@ using namespace boost::flyweights;
  * http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/lu_based_containers.html
  */
 
-template<typename Entry,typename Value>
+template<typename Entry,typename Key>
 class lu_factory_class:public factory_marker
 {
   struct entry_type
@@ -45,7 +45,7 @@ public:
   {
     handle_type h;
     for(h=cont.begin();h!=cont.end();++h){
-      if(static_cast<const Value&>(h->x)==static_cast<const Value&>(x)){
+      if(static_cast<const Key&>(h->x)==static_cast<const Key&>(x)){
         if(++(h->count)==10){
           h->count=0;
           cont.splice(cont.begin(),cont,h); /* move to front */
@@ -71,15 +71,15 @@ private:
 
 public:
   typedef lu_factory_class type;
-  BOOST_MPL_AUX_LAMBDA_SUPPORT(2,lu_factory_class,(Entry,Value))
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(2,lu_factory_class,(Entry,Key))
 };
 
 struct lu_factory:factory_marker
 {
-  template<typename Entry,typename Value>
+  template<typename Entry,typename Key>
   struct apply
   {
-    typedef lu_factory_class<Entry,Value> type;
+    typedef lu_factory_class<Entry,Key> type;
   };
 };
 
@@ -106,6 +106,6 @@ struct custom_factory_flyweight_specifier2
 
 void test_custom_factory()
 {
-  BOOST_FLYWEIGHT_TEST_BASIC(custom_factory_flyweight_specifier1)
-  BOOST_FLYWEIGHT_TEST_BASIC(custom_factory_flyweight_specifier2)
+  test_basic_template<custom_factory_flyweight_specifier1>();
+  test_basic_template<custom_factory_flyweight_specifier2>();
 }

@@ -1,6 +1,6 @@
 /* Boost.Flyweight test of assoc_container_factory.
  *
- * Copyright 2006-2007 Joaquín M López Muñoz.
+ * Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -16,18 +16,18 @@
 #include <boost/flyweight/refcounted.hpp>
 #include <boost/flyweight/simple_locking.hpp>
 #include <boost/flyweight/static_holder.hpp>
-#include <boost/mpl/aux_/lambda_support.hpp>
-#include "lambda_components.hpp"
+#include <functional>
+#include <set>
 #include "test_basic_template.hpp"
 
 using namespace boost::flyweights;
 
 struct reverse_set_specifier
 {
-  template<typename Entry,typename Value>
+  template<typename Entry,typename Key>
   struct apply
   {
-    typedef std::set<Entry,std::greater<Value> > type;
+    typedef std::set<Entry,std::greater<Key> > type;
   };
 };
 
@@ -51,13 +51,10 @@ struct assoc_container_factory_flyweight_specifier2
     typedef flyweight<
       T,
       assoc_container_factory_class<
-        lambda_set<
+        std::set<
           boost::mpl::_1,
-          lambda_greater<boost::mpl::_2>
-
-#if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
-          ,std::allocator<boost::mpl::_1>
-#endif
+          std::greater<boost::mpl::_2>,
+          std::allocator<boost::mpl::_1>
         >
       >
     > type;
@@ -66,6 +63,6 @@ struct assoc_container_factory_flyweight_specifier2
 
 void test_assoc_container_factory()
 {
-  BOOST_FLYWEIGHT_TEST_BASIC(assoc_container_factory_flyweight_specifier1)
-  BOOST_FLYWEIGHT_TEST_BASIC(assoc_container_factory_flyweight_specifier2)
+  test_basic_template<assoc_container_factory_flyweight_specifier1>();
+  test_basic_template<assoc_container_factory_flyweight_specifier2>();
 }

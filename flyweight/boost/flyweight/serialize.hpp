@@ -1,4 +1,4 @@
-/* Copyright 2006-2007 Joaquín M López Muñoz.
+/* Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -48,13 +48,12 @@ void save(
   Archive& ar,const ::boost::flyweights::flyweight<T,Arg1,Arg2,Arg3>& f,
   const unsigned int version)
 {
-  typedef ::boost::flyweights::flyweight<T,Arg1,Arg2,Arg3>   flyweight;
-  typedef ::boost::flyweights::detail::serialization_helper<
-    flyweight>                                               helper;
-  typedef typename helper::size_type                         size_type;
+  typedef ::boost::flyweights::flyweight<T,Arg1,Arg2,Arg3>    flyweight;
+  typedef ::boost::flyweights::detail::save_helper<flyweight> helper;
+  typedef typename helper::size_type                          size_type;
 
   helper& hlp=
-    ::boost::flyweights::detail::get_serialization_helper<flyweight>(ar);
+    ::boost::flyweights::detail::get_serialization_helper<helper>(ar);
 
   size_type n=hlp.find(f);
   ar<<make_nvp("item",n);
@@ -72,13 +71,12 @@ void load(
   Archive& ar,::boost::flyweights::flyweight<T,Arg1,Arg2,Arg3>& f,
   const unsigned int version)
 {
-  typedef ::boost::flyweights::flyweight<T,Arg1,Arg2,Arg3>   flyweight;
-  typedef ::boost::flyweights::detail::serialization_helper<
-    flyweight>                                               helper;
-  typedef typename helper::size_type                         size_type;
+  typedef ::boost::flyweights::flyweight<T,Arg1,Arg2,Arg3>    flyweight;
+  typedef ::boost::flyweights::detail::load_helper<flyweight> helper;
+  typedef typename helper::size_type                          size_type;
 
   helper& hlp=
-    ::boost::flyweights::detail::get_serialization_helper<flyweight>(ar);
+    ::boost::flyweights::detail::get_serialization_helper<helper>(ar);
 
   size_type n=0;
   ar>>make_nvp("item",n);

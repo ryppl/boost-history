@@ -1,4 +1,4 @@
-/* Copyright 2006-2007 Joaquín M López Muñoz.
+/* Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -14,10 +14,12 @@
 #endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
+#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/flyweight/detail/handle_factory_adaptor.hpp>
-#include <boost/flyweight/detail/prevent_eti.hpp>
+#include <boost/flyweight/detail/has_static_entry.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 
 #if BOOST_WORKAROUND(BOOST_MSVC,BOOST_TESTED_AT(1400))
 #pragma warning(push)
@@ -25,8 +27,8 @@
 #endif
 
 /* flyweight_core provides the inner implementation of flyweight<> by
- * weaving together a flyweight factory, a holder for the factory,
- * a tracking policy and a locking policy.
+ * weaving together a value policy, a flyweight factory, a holder for the
+ * factory,a tracking policy and a locking policy.
  */
 
 namespace boost{
@@ -36,20 +38,20 @@ namespace flyweights{
 namespace detail{
 
 template<
-  typename Value,typename Tag,typename TrackingPolicy,
+  typename ValuePolicy,typename Tag,typename TrackingPolicy,
   typename FactorySpecifier,typename LockingPolicy,typename HolderSpecifier
 >
 class flyweight_core;
 
 template<
-  typename Value,typename Tag,typename TrackingPolicy,
+  typename ValuePolicy,typename Tag,typename TrackingPolicy,
   typename FactorySpecifier,typename LockingPolicy,typename HolderSpecifier
 >
 struct flyweight_core_tracking_helper
 {
 private:
   typedef flyweight_core<
-    Value,Tag,TrackingPolicy,
+    ValuePolicy,Tag,TrackingPolicy,
     FactorySpecifier,LockingPolicy,
     HolderSpecifier
   >                                   core;
@@ -59,7 +61,7 @@ private:
 public:
   static const entry_type& entry(const handle_type& h)
   {
-    return core::factory().entry(h);
+    return core::entry(h);
   }
 
   template<typename Checker>
@@ -72,39 +74,34 @@ public:
 };
 
 template<
-  typename Value,typename Tag,typename TrackingPolicy,
+  typename ValuePolicy,typename Tag,typename TrackingPolicy,
   typename FactorySpecifier,typename LockingPolicy,typename HolderSpecifier
 >
 class flyweight_core
 {
 public:
-  typedef typename detail::prevent_eti<
-    TrackingPolicy,
-    typename mpl::apply1<
-      typename TrackingPolicy::entry_type,
-      Value
-    >::type 
+  typedef typename ValuePolicy::key_type       key_type;
+  typedef typename ValuePolicy::value_type     value_type;
+  typedef typename ValuePolicy::rep_type       rep_type;
+  typedef typename mpl::apply2<
+    typename TrackingPolicy::entry_type,
+    rep_type,
+    key_type
   >::type                                      entry_type;
-  typedef typename detail::prevent_eti<
+  typedef typename mpl::apply2<
     FactorySpecifier,
-    typename mpl::apply2<
-      FactorySpecifier,
-      entry_type,
-      Value
-    >::type 
+    entry_type,
+    key_type
   >::type                                      base_factory_type;
-  typedef typename detail::prevent_eti<
-    TrackingPolicy,
-    typename mpl::apply2<
-      typename TrackingPolicy::handle_type,
-      typename base_factory_type::handle_type,
-      flyweight_core_tracking_helper<
-        Value,Tag,TrackingPolicy,
-        FactorySpecifier,LockingPolicy,
-        HolderSpecifier
-      >
-    >::type
-  >::type                                      handle_type;  
+  typedef typename mpl::apply2<
+    typename TrackingPolicy::handle_type,
+    typename base_factory_type::handle_type,
+    flyweight_core_tracking_helper<
+      ValuePolicy,Tag,TrackingPolicy,
+      FactorySpecifier,LockingPolicy,
+      HolderSpecifier
+    >
+  >::type                                      handle_type;
   typedef handle_factory_adaptor<
     base_factory_type,
     handle_type,entry_type
@@ -114,15 +111,32 @@ public:
 
   static bool init(){return &(factory())!=0;}
 
-  static handle_type insert(const Value& x)
+  /* insert overloads*/
+
+#define BOOST_FLYWEIGHT_PERFECT_FWD_NAME static handle_type insert
+#define BOOST_FLYWEIGHT_PERFECT_FWD_BODY(n)                \
+{                                                          \
+  return insert_rep(rep_type(BOOST_PP_ENUM_PARAMS(n,t))); \
+}
+#include <boost/flyweight/detail/perfect_fwd.hpp>
+
+  static handle_type insert(const value_type& x){return insert_value(x);}
+  static handle_type insert(value_type& x){return insert_value(x);}
+
+  static const entry_type& entry(const handle_type& h)
   {
-    lock_type lock(mutex());
-    return handle_type(factory().insert(entry_type(x)));
+    return entry_impl(
+      h,detail::has_static_entry<base_factory_type,entry_type>());
   }
-    
-  static const Value& value(const handle_type& h)
+
+  static const value_type& value(const handle_type& h)
   {
-    return factory().entry(h);
+    return static_cast<const rep_type&>(entry(h));
+  }
+
+  static const key_type& key(const handle_type& h)
+  {
+    return static_cast<const rep_type&>(entry(h));
   }
 
   static factory_type& factory()
@@ -138,31 +152,72 @@ public:
   }
   
 private:
-  struct                                holder_arg
+  struct                        holder_arg
   {
     factory_type factory;
     mutex_type   mutex;
   };
-  typedef typename detail::prevent_eti<
+  typedef typename mpl::apply1<
     HolderSpecifier,
-    typename mpl::apply1<
-      HolderSpecifier,
-      holder_arg
-    >::type
-  >::type                               holder_type;
+    holder_arg
+  >::type                       holder_type;
+
+  static const entry_type& entry_impl(const handle_type& h,boost::mpl::true_)
+  {
+    return factory_type::entry(h);
+  }
+
+  static const entry_type& entry_impl(const handle_type& h,boost::mpl::false_)
+  {
+    return factory().entry(h);
+  }
+
+  static handle_type insert_rep(const rep_type& x)
+  {
+    entry_type  e(x);
+    lock_type   lock(mutex());
+    handle_type h(factory().insert(e));
+    BOOST_TRY{
+      ValuePolicy::construct_value(
+        static_cast<const rep_type&>(entry(h)));
+    }
+    BOOST_CATCH(...){
+      factory().erase(h);
+      BOOST_RETHROW;
+    }
+    BOOST_CATCH_END
+    return h;
+  }
+
+  static handle_type insert_value(const value_type& x)
+  {
+    entry_type  e=entry_type(rep_type(x));
+    lock_type   lock(mutex());
+    handle_type h(factory().insert(e));
+    BOOST_TRY{
+      ValuePolicy::copy_value(
+        static_cast<const rep_type&>(entry(h)));
+    }
+    BOOST_CATCH(...){
+      factory().erase(h);
+      BOOST_RETHROW;
+    }
+    BOOST_CATCH_END
+    return h;
+  }
 
   static bool static_force_holder_get;
 };
 
 template<
-  typename Value,typename Tag,typename TrackingPolicy,
+  typename ValuePolicy,typename Tag,typename TrackingPolicy,
   typename FactorySpecifier,typename LockingPolicy,typename HolderSpecifier
 >
 bool flyweight_core<
-  Value,Tag,TrackingPolicy,
+  ValuePolicy,Tag,TrackingPolicy,
   FactorySpecifier,LockingPolicy,HolderSpecifier>::static_force_holder_get=
   &(flyweight_core<
-    Value,Tag,TrackingPolicy,
+    ValuePolicy,Tag,TrackingPolicy,
     FactorySpecifier,LockingPolicy,HolderSpecifier>::holder_type::get())!=0;
 
 } /* namespace flyweights::detail */

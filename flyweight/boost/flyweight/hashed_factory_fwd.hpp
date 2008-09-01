@@ -1,4 +1,4 @@
-/* Copyright 2006-2007 Joaquín M López Muñoz.
+/* Copyright 2006-2008 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -22,7 +22,7 @@ namespace boost{
 namespace flyweights{
 
 template<
-  typename Entry,typename Value,
+  typename Entry,typename Key,
   typename Hash=mpl::na,typename Pred=mpl::na,typename Allocator=mpl::na
 >
 class hashed_factory_class;
