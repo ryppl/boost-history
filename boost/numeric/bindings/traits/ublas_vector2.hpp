@@ -56,10 +56,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::generate_const<V,ArrT>::type array_type;
       return vector_traits<array_type>::storage (v.data()); 
     }
-    static int size1 (matrix_type& v) { return v.size(); } 
-    static int size2 (matrix_type&) { return 1; }
-    static int storage_size (matrix_type& v) { return v.size(); }
-    static int leading_dimension (matrix_type& v) { return v.size(); }
+    static std::ptrdiff_t size1 (matrix_type& v) { return v.size(); } 
+    static std::ptrdiff_t size2 (matrix_type&) { return 1; }
+    static std::ptrdiff_t storage_size (matrix_type& v) { return v.size(); }
+    static std::ptrdiff_t leading_dimension (matrix_type& v) { return v.size(); }
   }; 
 
 
@@ -86,10 +86,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (matrix_type& v) {
       return vector_traits<V>::storage (v); 
     }
-    static int size1 (matrix_type& v) { return v.size(); } 
-    static int size2 (matrix_type&) { return 1; }
-    static int storage_size (matrix_type& v) { return v.size(); }
-    static int leading_dimension (matrix_type& v) { return v.size(); }
+    static std::ptrdiff_t size1 (matrix_type& v) { return v.size(); } 
+    static std::ptrdiff_t size2 (matrix_type&) { return 1; }
+    static std::ptrdiff_t storage_size (matrix_type& v) { return v.size(); }
+    static std::ptrdiff_t leading_dimension (matrix_type& v) { return v.size(); }
   }; 
 
 
@@ -116,10 +116,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::generate_const<V,T>::type* pointer; 
 
     static pointer storage (matrix_type& v) { return v.data(); }
-    static int size1 (matrix_type&) { return 1; } 
-    static int size2 (matrix_type& v) { return v.size(); }
-    static int storage_size (matrix_type&) { return N; }
-    static int leading_dimension (matrix_type&) { return N; }
+    static std::ptrdiff_t size1 (matrix_type&) { return 1; } 
+    static std::ptrdiff_t size2 (matrix_type& v) { return v.size(); }
+    static std::ptrdiff_t storage_size (matrix_type&) { return N; }
+    static std::ptrdiff_t leading_dimension (matrix_type&) { return N; }
   }; 
 
 #endif // BOOST_NUMERIC_BINDINGS_FORTRAN 

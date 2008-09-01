@@ -138,9 +138,9 @@ struct cls1 {
 template <typename F, typename M>
 void init_m (M& m, F f = F()) {
   size_t sz1 
-    = boost::numeric::bindings::traits::matrix_traits<M>::size1 (m);
+    = boost::numeric::bindings::traits::matrix_traits<M>::num_rows (m);
   size_t sz2
-    = boost::numeric::bindings::traits::matrix_traits<M>::size2 (m);
+    = boost::numeric::bindings::traits::matrix_traits<M>::num_columns (m);
   for (std::size_t i = 0; i < sz1; ++i) 
     for (std::size_t j = 0; j < sz2; ++j) 
       elem_m (m, i, j) = f (i, j); 
@@ -149,7 +149,7 @@ void init_m (M& m, F f = F()) {
 template <typename M>
 void init_symm (M& m, char uplo = 'f') {
   size_t n 
-    = boost::numeric::bindings::traits::matrix_traits<M>::size1 (m);
+    = boost::numeric::bindings::traits::matrix_traits<M>::num_rows (m);
   for (size_t i = 0; i < n; ++i) {
     elem_m (m, i, i) = n;
     for (size_t j = i + 1; j < n; ++j) {
@@ -169,9 +169,9 @@ void print_m (M const& m, char const* ch = 0) {
   if (ch)
     std::cout << ch << ":\n"; 
   size_t sz1 
-    = boost::numeric::bindings::traits::matrix_traits<M const>::size1 (m);
+    = boost::numeric::bindings::traits::matrix_traits<M const>::num_rows (m);
   size_t sz2
-    = boost::numeric::bindings::traits::matrix_traits<M const>::size2 (m);
+    = boost::numeric::bindings::traits::matrix_traits<M const>::num_columns (m);
   for (std::size_t i = 0 ; i < sz1 ; ++i) {
     for (std::size_t j = 0 ; j < sz2 ; ++j) 
       std::cout << elem_m (m, i, j) << " ";

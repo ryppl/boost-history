@@ -37,8 +37,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::generate_const<V,value_type>::type* pointer;      // if V is const, pointer will be a const value_type*
 
     static pointer storage (V& v) { return &v[0]; }
-    static int size (V& v) { return static_cast<int>(v.size()); } 
-    static int stride (V&) { return 1; } 
+    static std::ptrdiff_t size (V& v) { return static_cast<std::ptrdiff_t>(v.size()); } 
+    static std::ptrdiff_t stride (V&) { return 1; } 
   }; 
 
   // vector_detail_traits is used to implement specializations of vector_traits.
@@ -73,13 +73,13 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   template <typename V>
   inline
-  int vector_size (V& v) { 
+  std::ptrdiff_t vector_size (V& v) { 
     return vector_traits<V>::size (v); 
   }
 
   template <typename V>
   inline
-  int vector_stride (V& v) { 
+  std::ptrdiff_t vector_stride (V& v) { 
     return vector_traits<V>::stride (v); 
   }
 

@@ -57,22 +57,22 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::generate_const<M,A>::type array_type ;
       return vector_traits<array_type>::storage (hm.data()); 
     }
-    static int size1 (matrix_type& hm) { return hm.size1(); } 
-    static int size2 (matrix_type& hm) { return hm.size2(); }
-    static int storage_size (matrix_type& hm) { 
-      return (size1 (hm) + 1) * size2 (hm) / 2; 
+    static std::ptrdiff_t num_rows (matrix_type& hm) { return hm.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& hm) { return hm.size2(); }
+    static std::ptrdiff_t storage_size (matrix_type& hm) { 
+      return (num_rows (hm) + 1) * num_columns (hm) / 2; 
     }
   }; 
 
 
   namespace detail {
      template <typename M>
-     int matrix_bandwidth( M const& m, upper_t ) {
+     std::ptrdiff_t matrix_bandwidth( M const& m, upper_t ) {
         return matrix_traits<M const>::upper_bandwidth( m ) ;
      }
 
      template <typename M>
-     int matrix_bandwidth( M const& m, lower_t ) {
+     std::ptrdiff_t matrix_bandwidth( M const& m, lower_t ) {
         // When the lower triangular band matrix is stored the
 	// upper bandwidth must be zero
 	assert( 0 == matrix_traits<M const>::upper_bandwidth( m ) ) ;
@@ -104,19 +104,19 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (matrix_type& hm) {
       return matrix_traits<m_type>::storage (hm.data());
     }
-    static int size1 (matrix_type& hm) { return hm.size1(); } 
-    static int size2 (matrix_type& hm) { return hm.size2(); }
-    static int storage_size (matrix_type& hm) { 
-      return size1 (hm) * size2 (hm); 
+    static std::ptrdiff_t num_rows (matrix_type& hm) { return hm.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& hm) { return hm.size2(); }
+    static std::ptrdiff_t storage_size (matrix_type& hm) { 
+      return num_rows (hm) * num_columns (hm); 
     }
-    static int leading_dimension (matrix_type& hm) {
+    static std::ptrdiff_t leading_dimension (matrix_type& hm) {
       return matrix_traits<m_type>::leading_dimension (hm.data()); 
     }
     // For banded M
-    static int upper_bandwidth(matrix_type& hm) {
+    static std::ptrdiff_t upper_bandwidth(matrix_type& hm) {
        return detail::matrix_bandwidth( hm.data(), uplo_type() );
     }
-    static int lower_bandwidth(matrix_type& hm) {
+    static std::ptrdiff_t lower_bandwidth(matrix_type& hm) {
        return detail::matrix_bandwidth( hm.data(), uplo_type() );
     }
   }; 

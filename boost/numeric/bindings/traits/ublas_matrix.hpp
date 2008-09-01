@@ -66,10 +66,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::generate_const<M,ArrT>::type array_type ;
       return vector_traits<array_type>::storage (m.data()); 
     }
-    static int size1 (matrix_type& m) { return m.size1(); } 
-    static int size2 (matrix_type& m) { return m.size2(); }
-    static int storage_size (matrix_type& m) { return size1 (m) * size2 (m); }
-    static int leading_dimension (matrix_type& m) {
+    static std::ptrdiff_t num_rows (matrix_type& m) { return m.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& m) { return m.size2(); }
+    static std::ptrdiff_t storage_size (matrix_type& m) { return size1 (m) * size2 (m); }
+    static std::ptrdiff_t leading_dimension (matrix_type& m) {
       // g++ 2.95.4 and 3.0.4 (with -pedantic) dislike 
       //   identifier_type::functor_type::size2()
       //return functor_t::size_m (m.size1(), m.size2());
@@ -77,12 +77,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
 
     // stride1 == distance (m (i, j), m (i+1, j)) 
-    static int stride1 (matrix_type& m) { 
+    static std::ptrdiff_t stride1 (matrix_type& m) { 
       //return functor_t::one1 (m.size1(), m.size2());
       return detail::ublas_ordering<orientation_category>::stride1( m ) ;
     } 
     // stride2 == distance (m (i, j), m (i, j+1)) 
-    static int stride2 (matrix_type& m) { 
+    static std::ptrdiff_t stride2 (matrix_type& m) { 
       //return functor_t::one2 (m.size1(), m.size2());
       return detail::ublas_ordering<orientation_category>::stride2( m ) ;
     }
@@ -113,23 +113,23 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return matrix_traits<m_type>::storage (mr.expression());
     }
 
-    static int size1 (matrix_type& mr) { return mr.size1(); } 
-    static int size2 (matrix_type& mr) { return mr.size2(); }
-    static int leading_dimension (matrix_type& mr) {
+    static std::ptrdiff_t num_rows (matrix_type& mr) { return mr.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& mr) { return mr.size2(); }
+    static std::ptrdiff_t leading_dimension (matrix_type& mr) {
       return matrix_traits<m_type>::leading_dimension (mr.expression()); 
     }
 
-    static int stride1 (matrix_type& mr) { 
+    static std::ptrdiff_t stride1 (matrix_type& mr) { 
       return matrix_traits<m_type>::stride1 (mr.expression()); 
     } 
-    static int stride2 (matrix_type& mr) { 
+    static std::ptrdiff_t stride2 (matrix_type& mr) { 
       return matrix_traits<m_type>::stride2 (mr.expression()); 
     }
     // Only for banded matrices
-    static int upper_bandwidth(matrix_type& mr) {
+    static std::ptrdiff_t upper_bandwidth(matrix_type& mr) {
       return matrix_traits<m_type>::upper_bandwidth(mr.expression());
     }
-    static int lower_bandwidth(matrix_type& mr) {
+    static std::ptrdiff_t lower_bandwidth(matrix_type& mr) {
       return matrix_traits<m_type>::lower_bandwidth(mr.expression());
     }
   }; 
@@ -164,23 +164,23 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return ptr; 
     }
 
-    static int size1 (matrix_type& mr) { return mr.size1(); } 
-    static int size2 (matrix_type& mr) { return mr.size2(); }
-    static int leading_dimension (matrix_type& mr) {
+    static std::ptrdiff_t num_rows (matrix_type& mr) { return mr.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& mr) { return mr.size2(); }
+    static std::ptrdiff_t leading_dimension (matrix_type& mr) {
       return matrix_traits<m_type>::leading_dimension (mr.data()); 
     }
 
-    static int stride1 (matrix_type& mr) { 
+    static std::ptrdiff_t stride1 (matrix_type& mr) { 
       return matrix_traits<m_type>::stride1 (mr.data()); 
     } 
-    static int stride2 (matrix_type& mr) { 
+    static std::ptrdiff_t stride2 (matrix_type& mr) { 
       return matrix_traits<m_type>::stride2 (mr.data()); 
     }
     // For band matrices only
-    static int upper_bandwidth (matrix_type& mr) {
+    static std::ptrdiff_t upper_bandwidth (matrix_type& mr) {
        return matrix_traits<m_type>::upper_bandwidth(mr.data());
     }
-    static int lower_bandwidth (matrix_type& mr) {
+    static std::ptrdiff_t lower_bandwidth (matrix_type& mr) {
        return matrix_traits<m_type>::lower_bandwidth(mr.data());
     }
   }; 
@@ -214,27 +214,27 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return ptr; 
     }
 
-    static int size1 (matrix_type& ms) { return ms.size1(); } 
-    static int size2 (matrix_type& ms) { return ms.size2(); }
+    static std::ptrdiff_t num_rows (matrix_type& ms) { return ms.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& ms) { return ms.size2(); }
 
   private:
-    static int ld (int s1, int s2, boost::numeric::ublas::row_major_tag) {
+    static std::ptrdiff_t ld (std::ptrdiff_t s1, std::ptrdiff_t s2, boost::numeric::ublas::row_major_tag) {
       return s1; 
     }
-    static int ld (int s1, int s2, boost::numeric::ublas::column_major_tag) {
+    static std::ptrdiff_t ld (std::ptrdiff_t s1, std::ptrdiff_t s2, boost::numeric::ublas::column_major_tag) {
       return s2; 
     }
   public:
-    static int leading_dimension (matrix_type& ms) {
+    static std::ptrdiff_t leading_dimension (matrix_type& ms) {
       typedef typename identifier_type::orientation_category oc_t; 
       return ld (ms.stride1(), ms.stride2(), oc_t())
 	* matrix_traits<m_type>::leading_dimension (ms.data()); 
     }
 
-    static int stride1 (matrix_type& ms) { 
+    static std::ptrdiff_t stride1 (matrix_type& ms) { 
       return ms.stride1() * matrix_traits<m_type>::stride1 (ms.data()); 
     } 
-    static int stride2 (matrix_type& ms) { 
+    static std::ptrdiff_t stride2 (matrix_type& ms) { 
       return ms.stride2() * matrix_traits<m_type>::stride2 (ms.data()); 
     }
 
@@ -267,7 +267,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       ptr += mr.index() * matrix_traits<m_type>::stride1 (mt);
       return ptr; 
     }
-    static int stride (vector_type& mr) { 
+    static std::ptrdiff_t stride (vector_type& mr) { 
       return matrix_traits<m_type>::stride2 (mr.data());
     } 
   }; 
@@ -297,7 +297,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       ptr += mc.index() * matrix_traits<m_type>::stride2 (mt);
       return ptr; 
     }
-    static int stride (vector_type& mc) { 
+    static std::ptrdiff_t stride (vector_type& mc) { 
       return matrix_traits<m_type>::stride1 (mc.data());
     } 
   }; 
@@ -322,15 +322,15 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::generate_const<Matr,T>::type* pointer; 
 
     static pointer storage (matrix_type& m) { return m.data(); }
-    static int size1 (matrix_type& m) { return m.size1(); } 
-    static int size2 (matrix_type& m) { return m.size2(); }
-    static int storage_size (matrix_type& m) { return M * N; }
-    static int leading_dimension (matrix_type& m) { return N; }
+    static std::ptrdiff_t num_rows (matrix_type& m) { return m.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& m) { return m.size2(); }
+    static std::ptrdiff_t storage_size (matrix_type& m) { return M * N; }
+    static std::ptrdiff_t leading_dimension (matrix_type& m) { return N; }
 
     // stride1 == distance (m (i, j), m (i+1, j)) 
-    static int stride1 (matrix_type& m) { return N; }
+    static std::ptrdiff_t stride1 (matrix_type& m) { return N; }
     // stride2 == distance (m (i, j), m (i, j+1)) 
-    static int stride2 (matrix_type& m) { return 1; }
+    static std::ptrdiff_t stride2 (matrix_type& m) { return 1; }
   }; 
 
 #endif // BOOST_NUMERIC_BINDINGS_FORTRAN 

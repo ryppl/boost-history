@@ -59,9 +59,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     //     - coordinate, row major: column indices of nonzeros
     //   value_pointer value_storage()
     //     - array of nonzeros 
-    //   int size1()
-    //   int size2()
-    //   int num_nonzeros() 
+    //   std::ptrdiff_t num_rows()
+    //   std::ptrdiff_t num_columns()
+    //   std::ptrdiff_t num_nonzeros() 
   }; 
 
 
@@ -95,20 +95,28 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   spmatrix_value_storage (M& m) { 
     return sparse_matrix_traits<M>::value_storage (m); 
   }
-  
+
   template <typename M>
   inline
-  int spmatrix_size1 (M& m) { return sparse_matrix_traits<M>::size1 (m); }
+  std::ptrdiff_t spmatrix_num_rows (M& m) { return sparse_matrix_traits<M>::num_rows (m); }
   template <typename M>
   inline
-  int spmatrix_size2 (M& m) { return sparse_matrix_traits<M>::size2 (m); }
-  
+  std::ptrdiff_t spmatrix_num_columns (M& m) { return sparse_matrix_traits<M>::num_columns (m); }
+
   template <typename M>
   inline
-  int spmatrix_num_nonzeros (M& m) { 
+  std::ptrdiff_t spmatrix_num_nonzeros (M& m) { 
     return sparse_matrix_traits<M>::num_nonzeros (m); 
   }
-  
+
+  // Retain for older codes
+
+  template <typename M>
+  inline
+  std::ptrdiff_t spmatrix_size1 (M& m) { return sparse_matrix_traits<M>::num_rows (m); }
+  template <typename M>
+  inline
+  std::ptrdiff_t spmatrix_size2 (M& m) { return sparse_matrix_traits<M>::num_columns (m); }
   
 }}}}  
 

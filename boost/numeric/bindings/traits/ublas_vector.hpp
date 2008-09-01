@@ -65,7 +65,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (vector_type& v) {
       return vector_traits<vct_t>::storage (v.expression()); 
     }
-    static int stride (vector_type& v) {
+    static std::ptrdiff_t stride (vector_type& v) {
       return vector_traits<vct_t>::stride (v.expression()); 
     }
   }; 
@@ -93,7 +93,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       ptr += vr.start() * vector_traits<v_type>::stride (vr.data());
       return ptr; 
     }
-    static int stride (vector_type& vr) {
+    static std::ptrdiff_t stride (vector_type& vr) {
       return vector_traits<v_type>::stride (vr.data()); 
     }
   }; 
@@ -122,7 +122,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       ptr += vs.start() * vector_traits<v_type>::stride (vs.data());
       return ptr; 
     }
-    static int stride (vector_type& vs) {
+    static std::ptrdiff_t stride (vector_type& vs) {
       return vs.stride() * vector_traits<v_type>::stride (vs.data()); 
     }
   }; 

@@ -79,10 +79,10 @@ namespace boost { namespace numeric { namespace bindings {
     inline int ptsv( D& d, E& e, B& b ) {
       int const n = traits::vector_size(d) ;
       assert( n==traits::vector_size(e)+1 ) ;
-      assert( n==traits::matrix_size1(b) ) ;
+      assert( n==traits::matrix_num_rows(b) ) ;
 
       int info ;
-      detail::ptsv( n, traits::matrix_size2 (b)
+      detail::ptsv( n, traits::matrix_num_columns (b)
                   , traits::vector_storage(d)
                   , traits::vector_storage(e)
                   , traits::matrix_storage(b)
@@ -190,10 +190,10 @@ namespace boost { namespace numeric { namespace bindings {
     int pttrs (char uplo, D const& d, E const& e, MatrB& b) {
       int const n = traits::vector_size (d);
       assert (n == traits::vector_size (e) + 1);
-      assert (n == traits::matrix_size1 (b));
+      assert (n == traits::matrix_num_rows (b));
       
       int info; 
-      detail::pttrs (uplo, n, traits::matrix_size2 (b),
+      detail::pttrs (uplo, n, traits::matrix_num_columns (b),
                      traits::vector_storage (d), 
                      traits::vector_storage (e), 
                      traits::matrix_storage (b), 

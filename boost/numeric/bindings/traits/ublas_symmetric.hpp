@@ -57,10 +57,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::generate_const<M,A>::type array_type ;
       return vector_traits<array_type>::storage (sm.data()); 
     }
-    static int size1 (matrix_type& sm) { return sm.size1(); } 
-    static int size2 (matrix_type& sm) { return sm.size2(); }
-    static int storage_size (matrix_type& sm) { 
-      return (size1 (sm) + 1) * size2 (sm) / 2; 
+    static std::ptrdiff_t num_rows (matrix_type& sm) { return sm.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& sm) { return sm.size2(); }
+    static std::ptrdiff_t storage_size (matrix_type& sm) { 
+      return (num_rows (sm) + 1) * num_columns (sm) / 2; 
     }
   }; 
 
@@ -89,12 +89,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (matrix_type& sm) {
       return matrix_traits<m_type>::storage (sm.data());
     }
-    static int size1 (matrix_type& sm) { return sm.size1(); } 
-    static int size2 (matrix_type& sm) { return sm.size2(); }
-    static int storage_size (matrix_type& sm) { 
-      return size1 (sm) * size2 (sm); 
+    static std::ptrdiff_t num_rows (matrix_type& sm) { return sm.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& sm) { return sm.size2(); }
+    static std::ptrdiff_t storage_size (matrix_type& sm) { 
+      return num_rows (sm) * num_columns (sm); 
     }
-    static int leading_dimension (matrix_type& sm) {
+    static std::ptrdiff_t leading_dimension (matrix_type& sm) {
       return matrix_traits<m_type>::leading_dimension (sm.data()); 
     }
   }; 
