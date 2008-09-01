@@ -20,26 +20,36 @@ namespace boost { namespace dataflow { namespace utility {
 
 namespace detail {
         
-    template<typename MemFn, typename T, int Arity>
+    template<typename MemFn, int Arity>
     struct bind_mem_fn_impl;
 
 #   define BOOST_PP_ITERATION_PARAMS_1 (3,(0,9,<boost/dataflow/utility/bind_mem_fn.hpp>))
 #   include BOOST_PP_ITERATE()
     
-    template<typename MemFn, typename T>
-    struct bind_mem_fn : public bind_mem_fn_impl<MemFn, T, boost::function_types::function_arity<MemFn>::value-1>
+    template<typename MemFn>
+    struct bind_mem_fn : public bind_mem_fn_impl<MemFn, boost::function_types::function_arity<MemFn>::value-1>
     {};
 
 } // namespace detail
 
-/// Binds a class member function to a class object.
+/// Binds a class member function to a class object (stored by reference).
 /** \returns boost::function type with the bound member function.
 */
 template<typename MemFn, typename T>
 boost::function<typename member_function_signature<MemFn>::type>
     bind_mem_fn(MemFn mem_fn, T &object)
 {
-	return detail::bind_mem_fn<MemFn, T>()(mem_fn, object);
+	return detail::bind_mem_fn<MemFn>()(mem_fn, boost::ref(object));
+}
+
+/// Binds a class member function to a class object.
+/** \returns boost::function type with the bound member function.
+*/
+template<typename MemFn, typename T>
+boost::function<typename member_function_signature<MemFn>::type>
+    bind_mem_fn_flexible(MemFn mem_fn, const T &object)
+{
+	return detail::bind_mem_fn<MemFn>()(mem_fn, object);
 }
 
 } } } // namespace boost::dataflow::utility
@@ -47,13 +57,14 @@ boost::function<typename member_function_signature<MemFn>::type>
 #define BOOST_DATAFLOW_UTILITY_BIND_MEM_FN_HPP
 #else // defined(BOOST_PP_IS_ITERATING)
 
-template<typename MemFn, typename T>
-struct bind_mem_fn_impl<MemFn, T, BOOST_PP_ITERATION()>
+template<typename MemFn>
+struct bind_mem_fn_impl<MemFn, BOOST_PP_ITERATION()>
 {
+    template<typename T>
     boost::function<typename member_function_signature<MemFn>::type>
-        operator()(MemFn mem_fn, T &object)
+        operator()(MemFn mem_fn, const T &object)
     {
-        return boost::bind(mem_fn, boost::ref(object)
+        return boost::bind(mem_fn, object
                         BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
                         BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_));
     }

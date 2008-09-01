@@ -7,7 +7,7 @@ project dataflow/example/threadpool
     : requirements
       <include>../../../..
       <include>.
-      <library>/boost/signals//boost_signals/<link>static
+#      <library>/boost/signals//boost_signals/<link>static
       <library>/boost/thread//boost_thread/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;

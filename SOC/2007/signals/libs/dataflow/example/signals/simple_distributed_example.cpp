@@ -24,6 +24,7 @@ using namespace boost;
 
 mutex mutex_;
 condition cond;
+bool server_thread_ready = false;
 asio::io_service io_service;
 
 // This function will set up an asio acceptor, and wait for a connection.
@@ -37,6 +38,7 @@ void asio_server()
     {
         boost::mutex::scoped_lock lock(mutex_);
         acceptor.listen();
+        server_thread_ready  = true;
         cond.notify_all();
     }
     acceptor.accept(socket);
@@ -75,9 +77,12 @@ void asio_server()
 int main(int, char* [])
 {
     // start the server in a separate thread, and wait until it is listening
-    boost::mutex::scoped_lock lock(mutex_);
     boost::thread t(asio_server);
-    cond.wait(lock);
+    {
+        boost::mutex::scoped_lock lock(mutex_);
+        while(!server_thread_ready)
+            cond.wait(lock);
+    }
 
     // set up the socket
     asio::ip::tcp::endpoint endpoint_recv(asio::ip::address::from_string("127.0.0.1"), 1097);
