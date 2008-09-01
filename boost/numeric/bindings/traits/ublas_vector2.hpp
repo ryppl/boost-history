@@ -56,8 +56,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::generate_const<V,ArrT>::type array_type;
       return vector_traits<array_type>::storage (v.data()); 
     }
-    static std::ptrdiff_t size1 (matrix_type& v) { return v.size(); } 
-    static std::ptrdiff_t size2 (matrix_type&) { return 1; }
+    static std::ptrdiff_t num_rows (matrix_type& v) { return v.size(); } 
+    static std::ptrdiff_t num_columns (matrix_type&) { return 1; }
     static std::ptrdiff_t storage_size (matrix_type& v) { return v.size(); }
     static std::ptrdiff_t leading_dimension (matrix_type& v) { return v.size(); }
   }; 
@@ -86,8 +86,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (matrix_type& v) {
       return vector_traits<V>::storage (v); 
     }
-    static std::ptrdiff_t size1 (matrix_type& v) { return v.size(); } 
-    static std::ptrdiff_t size2 (matrix_type&) { return 1; }
+    static std::ptrdiff_t num_rows (matrix_type& v) { return v.size(); } 
+    static std::ptrdiff_t num_columns (matrix_type&) { return 1; }
     static std::ptrdiff_t storage_size (matrix_type& v) { return v.size(); }
     static std::ptrdiff_t leading_dimension (matrix_type& v) { return v.size(); }
   }; 
@@ -116,8 +116,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::generate_const<V,T>::type* pointer; 
 
     static pointer storage (matrix_type& v) { return v.data(); }
-    static std::ptrdiff_t size1 (matrix_type&) { return 1; } 
-    static std::ptrdiff_t size2 (matrix_type& v) { return v.size(); }
+    static std::ptrdiff_t num_rows (matrix_type&) { return 1; } 
+    static std::ptrdiff_t num_columns (matrix_type& v) { return v.size(); }
     static std::ptrdiff_t storage_size (matrix_type&) { return N; }
     static std::ptrdiff_t leading_dimension (matrix_type&) { return N; }
   }; 

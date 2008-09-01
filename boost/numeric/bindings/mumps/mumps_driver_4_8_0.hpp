@@ -9,10 +9,10 @@
 #ifndef BOOST_NUMERIC_BINDINGS_MUMPS_MUMPS_DRIVER_4_6_4_HPP
 #define BOOST_NUMERIC_BINDINGS_MUMPS_MUMPS_DRIVER_4_6_4_HPP
 
-#include <smumps_c.hpp>
-#include <cmumps_c.hpp>
-#include <dmumps_c.hpp>
-#include <4.6.4/zmumps_c.hpp>
+#include <smumps_c.h>
+#include <cmumps_c.h>
+#include <dmumps_c.h>
+#include <zmumps_c.h>
 #include <boost/numeric/bindings/traits/sparse_traits.hpp>
 #include <boost/numeric/bindings/traits/matrix_traits.hpp>
 #include <boost/numeric/bindings/traits/type_traits.hpp>

@@ -67,7 +67,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     BOOST_STATIC_CONSTANT (std::size_t, index_base = IB);
 
     static index_pointer index1_storage (matrix_type& cm) {
-      //assert (cm.filled1() == layout_type::size1 (cm.size1(), cm.size2()) + 1);
+      //assert (cm.filled1() == layout_type::num_rows (cm.size1(), cm.size2()) + 1);
       return vector_traits<idx_array_t>::storage (cm.index1_data()); 
     }
     static index_pointer index2_storage (matrix_type& cm) {
@@ -77,8 +77,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return vector_traits<val_array_t>::storage (cm.value_data()); 
     }
 
-    static std::ptrdiff_t size1 (matrix_type& cm) { return cm.size1(); } 
-    static std::ptrdiff_t size2 (matrix_type& cm) { return cm.size2(); }
+    static std::ptrdiff_t num_rows (matrix_type& cm) { return cm.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& cm) { return cm.size2(); }
     static std::ptrdiff_t num_nonzeros (matrix_type& cm) { 
       return cm.nnz(); 
       // Joerg, this isn't very intuitive :o(
@@ -137,8 +137,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return vector_traits<val_array_t>::storage (cm.value_data()); 
     }
 
-    static int size1 (matrix_type& cm) { return cm.size1(); } 
-    static int size2 (matrix_type& cm) { return cm.size2(); }
+    static int num_rows (matrix_type& cm) { return cm.size1(); } 
+    static int num_columns (matrix_type& cm) { return cm.size2(); }
     static int num_nonzeros (matrix_type& cm) { 
       return cm.nnz(); 
       // Joerg, this isn't very intuitive :o(
