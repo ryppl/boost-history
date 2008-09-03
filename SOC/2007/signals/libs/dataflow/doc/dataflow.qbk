@@ -15,6 +15,7 @@
 [template concepts[] [link dataflow.support.concepts concepts]]
 [template Tag[] [link dataflow.support.concepts.general.tag [^Tag]]]
 [template Traits[] [link dataflow.support.concepts.general.entity [^Traits]]]
+[template Side[] [link dataflow.support.concepts.general.side [^Side]]]
 [template Entity[] [link dataflow.support.concepts.general.entity [^Entity]]]
 [template PortCategory[] [link dataflow.support.concepts.port_related.portcategory [^PortCategory]]]
 [template Mechanism[] [link dataflow.support.concepts.port_related.mechanism [^Mechanism]]]
@@ -24,8 +25,8 @@
 [template ConsumerPort[] [link dataflow.support.concepts.port_related.port [^ConsumerPort]]]
 [template ComplementedPort[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPort]]]
 [template ComplementedPortTraits[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPortTraits]]]
-[template PortVector[] [link dataflow.support.concepts.component.portvector [^PortVector]]]
-[template PortVectorTraits[] [link dataflow.support.concepts.component.portvector [^PortVectorTraits]]]
+[template PortVector[] [link dataflow.support.concepts.component_related.portvector [^PortVector]]]
+[template PortVectorTraits[] [link dataflow.support.concepts.component_related.portvector [^PortVectorTraits]]]
 [template VectorPort[] [link dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
 [template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
 [template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
@@ -194,6 +195,7 @@
 [import ../example/blueprint/blueprint_example.cpp]
 
 [import ../example/glv_gui/glvgui_example.cpp]
+[import ../example/glv_gui/glvgui_graph.cpp]
 
 [include introduction/introduction.qbk]
 

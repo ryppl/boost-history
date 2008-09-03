@@ -2,4 +2,15 @@
 
 [include examples/vtk_example.qbk]
 
+[section:graph Implementing support for a new framework (BGL)]
+
+There is a support layer implemented for a simple framework based on a [BoostGraph]
+graph as a part of a GUI editor example.
+
+It is not documented, but you can see the source below:
+
+[glvgui_graph]
+
+[endsect]
+
 [endsect][/examples]

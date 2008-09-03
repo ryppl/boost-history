@@ -188,4 +188,45 @@ With the above registrations, the following tests pass:
 
 [endsect][/entity]
 
+
+[section Side]
+
+A [Side] type is used to specify the side on which an object appears in a
+binary expression or in the parameter list of a binary function.
+It can be one of the following two types:
+
+* `boost::dataflow::args::left`, and
+* `boost::dataflow::args::right`.
+
+In the Dataflow library, it is used to access the default port of a [Port]
+or [Component]
+for the underlying operation (but note that the default port of a [Port] object
+is always the port itself).  For example, in an expression such as
+[^connect(a,b)], the operation would connect the default port of `a` keyed
+by `boost::dataflow::args::left` and the default port of `b` keyed by
+`boost::dataflow::args::right`.  See [Port] and [Component] documentation
+for more details.
+
+[heading Notation]
+
+[variablelist
+    [[S] [A [Side] type.]]
+]
+
+[heading Requirements]
+
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Type]
+        [`or<is_same<S, boost::dataflow::args::left>::type, is_same<S, boost::dataflow::args::right> >::type` ]
+        [ [true] ]
+        [
+            These are the only two types allowed for [Side].
+        ]
+    ]
+]
+
+[endsect]
+
 [endsect]

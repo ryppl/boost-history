@@ -43,7 +43,7 @@ or even more concisely and clearly,
 Once we have the [VTK] support layer built, we can include it in any
 [VTK] application and start using the Dataflow library with [VTK] objects.
 In addition to
-the simpler syntax, this also allows us to use anything build on top of the
+the simpler syntax, this also allows us to use anything built on top of the
 generic layer - like [DataflowBlueprint], or
 the [gui_example GUI editor] currently under development.
 
@@ -68,7 +68,7 @@ We can now use it to tag all of our [VTK] support classes.
 
 [section:producerconsumer Setting up a producer Port and a consumer Port]
 
-Now that we have the mechanism, let's cover the basic data pipeline,
+Now that we have the tag, let's cover the basic data pipeline,
 which is implemented using the
 [vtkAlgorithm] class.  This class provides input and output ports. Output ports
 are accessible via `GetOuptutPort` member functions, which return a proxy
@@ -93,6 +93,15 @@ so we set up a [PortTraits] class to represent this [Port] functionality:
 
 [vtk_algorithm_consumer]
 
+Note that for the consumer traits, we inherited `complemented_port_traits`
+rather than `port_traits`.  In doing so, we made `vtk_algorithm_consumer`
+a [ComplementedPortTraits].  This basically states that any [Port] with
+`vtk_algorithm_consumer` traits is intended for connections with `vtkAlgorithmOutput`
+[Port]s.  This piece of information can make things easier for the Dataflow
+library in certain cases (e.g., the prototype [DataflowBlueprint] layer currently
+only knows how to connect two blueprint ports if at least one of them is a
+[ComplementedPort]).
+
 [heading Next]
 
 [link dataflow.support.examples.new_layer.connectable
@@ -110,8 +119,9 @@ All we need to do is specialize the implementation for the appropriate
 [vtk_connect_impl_algorithm]
 
 Connections are done through the `boost::dataflow::binary_operation` function
-with either `operation::connect` or `operation::connect_only` operation tag,
-and the specified mechanism. In the next step, we'll set up forwarding functions
+with either `operation::connect` or `operation::connect_only` operation, and
+a specified framework tag.
+In the next step, we'll set up forwarding functions
 and operators that will make connections easier.
 
 [heading What we can do with what we have so far]
@@ -129,7 +139,7 @@ and operators that will make connections easier.
 To make connecting
 easier, we'll add forwarding connect and connect_only
 functions in the global namespace (where vtk classes live) specific
-to the vtk mechanism. The Dataflow library provides inlcude file templates
+to the vtk framework. The Dataflow library provides include file templates
 for this purpose.
 
 Including `<boost/dataflow/templates/binary_operation.hpp>` with `#define`d

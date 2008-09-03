@@ -17,26 +17,26 @@
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [PortVector Traits]
-        [`traits_of<>::type`]
+        [`traits_of<PV>::type`]
         [`PVT`]
         [
-            The [ComponentTraits] of the component.
+            The [PortVectorTraits] of the [PortVector].
         ]
     ]
     [
         [ GetPort ]
-        [`get_port_c<M, I>(c)`]
+        [`get_port_c<I,T>(pv)`]
         []
         [
-            Returns the I'th [PortVectorTraits] exposed by `C`
+            Returns the I'th [Port] exposed by `pv`.
         ]
     ]
     [
         [ GetPort ]
-        [`get_port<M, IC>(c)`]
+        [`get_port<IC,T>(pv)`]
         []
         [
-            Returns the IC'th [PortVectorTraits] exposed by `C`
+            Returns the IC'th [Port] exposed by `pv`
         ]
     ]
 ]
@@ -80,16 +80,21 @@ for a [Component] (see examples below).
 [variablelist
     [[C] [A [Component] type.]]
     [[CT] [The [ComponentTraits] type of `C`.]]
-    [[I] [An MPL Integral Constant in the range \[0, number of ports exposed by C).]]
     [[c] [An object of type C.]]
+    [[`S`] [A [Side] type.]]
+    [[`M`] [A [Mechanism] type.]]
 ]
+
+[heading Refines]
+
+* [PortVector]
 
 [heading Component Requirements]
 [table
     [[Name] [Expression] [Result Type] [Semantics]]
     [
         [Component Traits]
-        [`traits_of<M, C>::type`]
+        [`traits_of<C, T>::type`]
         [`CT`]
         [
             The [ComponentTraits] of the component.
@@ -97,7 +102,7 @@ for a [Component] (see examples below).
     ]
     [
         [IsComponent Trait]
-        [`is_component<M, C>::type`]
+        [`is_component<C, T>::type`]
         [Boolean metafunction that evaluates to true]
         [
             A trait encapsulating adherence to the Component
@@ -105,11 +110,21 @@ for a [Component] (see examples below).
         ]
     ]
     [
-        [ GetComponentPort ]
-        [`get_port<M, I>(c)`]
-        []
+        [Has Default Port]
+        [`has_default_port<C,S,M,T>::type`]
+        [ Boolean MPL Metafunction ]
         [
-            Returns the I'th [Port] exposed by `C`
+            Specifies whether the component has a default port for the provided
+            [Side] and [Mechanism].
+        ]
+    ]
+    [
+        [Get Default Port]
+        [`get_default_port<S,M,T>(c)`]
+        [A [Port] type]
+        [
+            Returns the component's default port for the provided
+            [Side] and [Mechanism], if the component has one.
         ]
     ]
 ]
@@ -146,20 +161,20 @@ for a [Component] (see examples below).
 
 [section:componentoperable ComponentOperable (Invocable) ]
 
-A [Component] `P` is /ComponentOperable/
-for a component operation `O`, and mechanism `M`, if the implementation of
-the component operation `O` has been specialized for `M` and `P`
+A [Component] `C` of [Tag] `T` is /ComponentOperable/
+for a component operation `O`, if the implementation of
+the component operation `O` has been specialized for `C`
 
 In this case,
 
-* If `O` is operations::invoke, `P` is [Invocable]
+* If `O` is operations::invoke, `C` is [Invocable]
 
 [heading Notation]
 The following expressions are used in this document:
 
 [variablelist
     [[C] [A [Component] type.]]
-    [[c] [An object of type P.]]
+    [[c] [An object of type C.]]
 ]
 
 [heading Requirements]
@@ -167,7 +182,7 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Invoke]
-        [`component_operation<operations::invoke, M>(p)`]
+        [`component_operation<operations::invoke, T>(c)`]
         [Any type]
         [
             Invokes `c` - this typically causes a component to consume its

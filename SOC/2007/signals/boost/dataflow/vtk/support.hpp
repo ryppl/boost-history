@@ -39,14 +39,11 @@ struct tag : public default_tag {};
 //[  vtk_algorithm_output_producer
 namespace boost { namespace dataflow { namespace vtk {
 
-struct vtk_algorithm_consumer;
-
 // PortTraits for vtkAlgorithmOutput objects, which produce data.
 // We specify the PortCategory (ports::producer) and Tag (vtk::tag).
 
 struct vtk_algorithm_output_producer
-    : public complemented_port_traits<ports::producer,
-        port_adapter<vtkAlgorithm, vtk::vtk_algorithm_consumer, vtk::tag>, tag> {};
+    : public port_traits<ports::producer, vtk::tag> {};
     
 } } } // namespace boost::dataflow::vtk
 
@@ -62,7 +59,7 @@ DATAFLOW_TRAITS(vtkAlgorithmOutput, vtk::vtk_algorithm_output_producer)
 namespace boost { namespace dataflow { namespace vtk {
 
 struct vtk_algorithm_consumer
-    : public port_traits<ports::consumer, vtk::tag> {};
+    : public complemented_port_traits<ports::consumer, vtkAlgorithmOutput, vtk::tag> {};
     
 typedef port_adapter<vtkAlgorithm, vtk::vtk_algorithm_consumer, vtk::tag>
     vtk_algorithm_consumer_adapter;

@@ -1,10 +1,11 @@
 [section PortCategory]
 
 A [PortCategory] designates a category of [Port] in the Dataflow library.
-The library currently defines two [PortCategory]s:
+The library currently defines three [PortCategory]s:
 
-* `boost::dataflow::ports::producer`, and
-* `boost::dataflow::ports::consumer`.
+* `boost::dataflow::ports::producer`,
+* `boost::dataflow::ports::consumer`, and
+* `boost::dataflow::ports::producer_consumer`, and
 
 [heading Notation]
 The following expressions are used in this document:
@@ -52,7 +53,11 @@ files:
 
 [section:mechanism Mechanism]
 
-A [Mechanism] type is used to select a default port.  
+A [Mechanism] type is used together with a [Side] type to select a default port
+for an operation.  Typically, each operation (e.g., connect or extract)
+will have a specific [Mechanism] associated with it.  Multiple operations can
+share the same [Mechanism], which implies they will access the same default
+ports.  See the [Port] and [Component] documentation for more information.
 
 [heading Notation]
 
@@ -105,6 +110,7 @@ The following expressions are used in this document:
 [variablelist
     [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
     [[`PC`] [A [PortCategory] type.]]
+    [[`S`] [A [Side] type.]]
     [[`M`] [A [Mechanism] type.]]
     [[`P`] [A Port type, for [Tag] `T`.]]
     [[`PT`] [[PortTraits] of `P` for `T`.]]
@@ -134,11 +140,21 @@ requirements.
         ]
     ]
     [
+        [Has Default Port]
+        [`has_default_port<P,S,M,T>::type`]
+        [ [true] ]
+        [
+            A [Port] has a default port for any [Side] and [Mechanism] (it is 
+            the port object itself).
+        ]
+    ]
+    [
         [Get Default Port]
-        [`get_default_port<D,M,T>(p)`]
+        [`get_default_port<S,M,T>(p)`]
         [p]
         [
-            Returns the port object.
+            Returns the port object (the default port of a [Port] object is
+            the object itself).
         ]
     ]
 ]
@@ -205,7 +221,6 @@ The following expressions are used in this document:
 
 [variablelist
     [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
-    [[`PC`] [A [PortCategory] type.]]
     [[`P`] [A [ComplementedPort] type, for [Tag] `T`.]]
     [[`PT`] [[ComplementedPortTraits] of `P` for `T`.]]
 ]

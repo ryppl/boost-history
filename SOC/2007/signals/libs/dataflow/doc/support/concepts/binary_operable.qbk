@@ -1,8 +1,8 @@
 [section:binaryoperable BinaryOperable (Connectable, OnlyConnectable, Disconnectable, Extractable) ]
 
-A producer [Port] `P` and consumer [Port] `C` are /BinaryOperable/
-for a binary operation `O`, and mechanism `M`, if the implementation of
-the binary operation `O` has been specialized for `M`, `P`, and `C`.
+[Port]s `P` and `C` of [Tag] `T` are /BinaryOperable/
+for a binary operation `O` if the implementation of
+the binary operation `O` has been specialized for `P`, and `C`.
 
 In this case,
 
@@ -15,11 +15,12 @@ In this case,
 The following expressions are used in this document:
 
 [variablelist
-    [[P] [A producer [Port] type.]]
-    [[C_C] [A consumer [Port] [Connectable] with `P`]]
-    [[C_O] [A consumer [Port] [OnlyConnectable] with `P`]]
-    [[C_D] [A consumer [Port] [Disconnectable] with `P`]]
-    [[C_E] [A consumer [Port] [Extractable] with `P`]]
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[P] [A [Port] type.]]
+    [[C_C] [A [Port] [Connectable] with `P`]]
+    [[C_O] [A [Port] [OnlyConnectable] with `P`]]
+    [[C_D] [A [Port] [Disconnectable] with `P`]]
+    [[C_E] [A [Port] [Extractable] with `P`]]
     [[p] [An object of type P.]]
     [[c_c] [An object of type C_C.]]
     [[c_o] [An object of type C_O.]]
@@ -32,37 +33,37 @@ The following expressions are used in this document:
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Connect]
-        [`binary_operation<operations::connect, M>(p,c_c)`]
+        [`binary_operation<operations::connect, T>(p,c_c)`]
         [void]
         [
-            Creates a lasting connection between the `p` and `c`.
+            Creates a lasting connection between the `p` and `c_c`.
         ]
     ]
     [
         [OnlyConnect]
-        [`binary_operation<operations::connect_only, M>(p,c_o)`]
+        [`binary_operation<operations::connect_only, T>(p,c_o)`]
         [void]
         [
-            Discards any lasting connections stored by `p` or `c`,
-            and creates a lasting connection between `p` and `c`.
-            Note that `p` or `c` could still be connected to other ports,
-            as long as these connections are not stored in `p` or `c`.
+            Discards any lasting connections stored by `p` or `c_o`,
+            and creates a lasting connection between `p` and `c_o`.
+            Note that `p` or `c_o` could still be connected to other ports,
+            as long as these connections are not stored in `p` or `c_o`.
         ]
     ]
     [
         [Disconnect]
-        [`binary_operation<operations::disconnect, M>(p,c_d)`]
+        [`binary_operation<operations::disconnect, T>(p,c_d)`]
         [void]
         [
-            Discards any existing connection between `p` and `c`.
+            Discards any existing connection between `p` and `c_d`.
         ]
     ]
     [
         [Extract]
-        [`binary_operation<operations::extract, M>(p,c_e)`]
+        [`binary_operation<operations::extract, T>(p,c_e)`]
         [void]
         [
-            Perfoms a one time transfer of data from `p` to `c`.
+            Perfoms a one time transfer of data from `p` to `c_e`.
         ]
     ]
 ]
