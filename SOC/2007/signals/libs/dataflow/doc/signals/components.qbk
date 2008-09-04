@@ -71,6 +71,14 @@ Examples of applicators:
 
 * [counter]
 
+[heading Example]
+
+Here is an example of a logging counter - a counter which can be used with
+any signal signature, and will record the number of passing signals as well
+as display a message each time:
+
+[applicator_example]
+
 [endsect][/applicator]
 
 [section:conditional conditional]
@@ -88,6 +96,12 @@ The signal is forwarded if the function object returns true.
 Examples of conditionals:
 
 * [junction]
+
+[heading Example]
+
+Here is a simple implementation of a gate which can be used with any signature:
+
+[conditional_example]
 
 [endsect][/conditional]
 
@@ -107,6 +121,43 @@ Examples of applicators:
 
 * [mutex]
 
+[heading Example]
+
+The following example shows how a mutex component can be built (it is just
+an instantiator that instantiates a scoped_lock over a mutex whenever
+a signal passes).
+
+[instantiator_example]
+
+A sample run of this example produces:
+
+[pre
+
+With mutex:
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+Without mutex:
+#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8##09##10##21##32##43##54##65##76##87##98##09#
+1#2#3#4#5#6#7#8#9#0#1##20##31##42##53##64##75##86##97
+#8##09##10##21##32##43##54##65##76##87##98##09##10##21##32##43##54##65##76##87##98##09#
+1##20##31##42##53##64##75##86##97
+#8##9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+0##10#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#1#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+#2#3#4#5#6#7#8##09##10##21##32##43##54##65##76##87##98##09##10##21##32##43##54##65##76##87##98##09#
+1##20##31##42##53##64##75##86##97
+#8#9#0#1#2#3#4#5#6#7#8#9#0#1#2#3#4#5#6#7#8#9
+
+]
+
 [endsect][/instantiator]
 
 [section:modifier modifier]
@@ -124,6 +175,15 @@ to each incoming signal, and sends the returned value.
 Examples of modifiers:
 
 * [function]
+
+[heading Example]
+
+The following example shows how to implement a generic multiplier component.
+This one can be used with any signature with non-reference arguments (it isn't
+hard to make it allow reference arguments, but it would take away from the
+clarity of the example).
+
+[modifier_example]
 
 [endsect][/modifier]
 

@@ -188,6 +188,10 @@
 [import ../example/signals/intro_example.cpp]
 [import ../example/signals/gil_example.cpp]
 [import ../example/signals/quick_start_examples.cpp]
+[import ../example/signals/applicator_example.cpp]
+[import ../example/signals/conditional_example.cpp]
+[import ../example/signals/instantiator_example.cpp]
+[import ../example/signals/modifier_example.cpp]
 
 [import ../../../boost/dataflow/vtk/support.hpp]
 [import ../example/VTK/Cone.cxx]

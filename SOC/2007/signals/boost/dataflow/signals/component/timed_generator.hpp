@@ -22,13 +22,13 @@ class timed_generator : public storage<Signature, OutSignal, SignalArgs>
     typedef storage<Signature, OutSignal, SignalArgs> base_type;
 public:    
 	/// Default constructor.  Starts the thread, but signals won't be sent until the enable() function is called.
-	timed_generator() : terminating(false), enabled(false)
+	timed_generator() : terminating(false), enabled(false), m_completed(false)
 	{
 		thread_object = new boost::thread(boost::bind(&timed_generator::thread_function, boost::ref(*this)));
 	}
     /// Forwarding constructor for underlying storage
     template<typename T>
-	timed_generator(const T &t) : base_type(t), terminating(false), enabled(false)
+	timed_generator(const T &t) : base_type(t), terminating(false), enabled(false), m_completed(false)
     {
 		thread_object = new boost::thread(boost::bind(&timed_generator::thread_function, boost::ref(*this)));
     }
@@ -46,6 +46,7 @@ public:
 		boost::xtime_get(&xt, boost::TIME_UTC);
 		count = signal_count;
 		enabled = true;
+        m_completed = false;
 		cond.notify_all();
 	};
 	///	Stops the sending of signals and suspends the thread.
@@ -69,6 +70,18 @@ public:
 		cond.notify_all();
 		delete thread_object;
 	}
+    void wait_until_completed()
+    {
+        boost::mutex::scoped_lock lock(m_completion_mutex);
+        while(!m_completed)
+            m_completion_condition.wait(m_completion_mutex);        
+    }
+    boost::mutex &completion_mutex()
+    {   return m_completion_mutex; }
+    boost::condition &completion_condition()
+    {   return m_completion_condition; }
+    bool completed()
+    {   return m_completed; }
 private:
 	void thread_function()
 	{
@@ -76,7 +89,7 @@ private:
 		{
 			{
 				boost::mutex::scoped_lock lock(mutex_);
-				if (!enabled)
+				while(!enabled && !terminating)
 					cond.wait(lock);
 			}
 			if (terminating) break;
@@ -95,20 +108,28 @@ private:
 			base_type::send();
 			if (count)
 				if (--count==0)
+                {
 					disable();
+                    boost::mutex::scoped_lock lock(m_completion_mutex);
+                    m_completed = true;
+                    m_completion_condition.notify_all();
+                }
 		}
 		cond.notify_all();
 	}
 	///	Class mutex.
 	boost::mutex mutex_;
 	boost::condition cond;
-	boost::xtime xinterval;
+    boost::xtime xinterval;
 	volatile bool terminating;
 	boost::xtime xt;
 	int count;
 
 	boost::thread *thread_object;
 	volatile bool enabled;
+    bool m_completed;
+	boost::mutex m_completion_mutex;
+	boost::condition m_completion_condition;
 };
 
 } } // namespace boost::signals

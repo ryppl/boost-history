@@ -257,6 +257,10 @@
 		08E228FE0E62084100D1C2AF /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08E229020E6208AC00D1C2AF /* threadpool_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = threadpool_example.cpp; sourceTree = "<group>"; };
 		08EBA7590CFF8B6D0080E225 /* example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = example.cpp; sourceTree = "<group>"; };
+		08ED261F0E6F23C4007B95D9 /* conditional_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = conditional_example.cpp; sourceTree = "<group>"; };
+		08ED26400E6F2946007B95D9 /* applicator_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = applicator_example.cpp; sourceTree = "<group>"; };
+		08ED264D0E6F2A5E007B95D9 /* instantiator_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = instantiator_example.cpp; sourceTree = "<group>"; };
+		08ED264E0E6F2A74007B95D9 /* modifier_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modifier_example.cpp; sourceTree = "<group>"; };
 		08EF045E0CEBF1AD002ABBBC /* port_t.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port_t.hpp; sourceTree = "<group>"; };
 		08EF9B220C5D506A00D4D206 /* applicator.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = applicator.hpp; sourceTree = "<group>"; };
 		08EF9B230C5D506A00D4D206 /* chain.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = chain.hpp; sourceTree = "<group>"; };
@@ -1149,6 +1153,10 @@
 				08A0E54C0D7A7674009B11DD /* quick_start_examples.cpp */,
 				083F151E0D8A356500D0F8B7 /* tracking_consumer_example.cpp */,
 				08998BA10D8B2094006ED577 /* specific_tracking_consumer_example.cpp */,
+				08ED261F0E6F23C4007B95D9 /* conditional_example.cpp */,
+				08ED26400E6F2946007B95D9 /* applicator_example.cpp */,
+				08ED264D0E6F2A5E007B95D9 /* instantiator_example.cpp */,
+				08ED264E0E6F2A74007B95D9 /* modifier_example.cpp */,
 			);
 			path = signals;
 			sourceTree = "<group>";
