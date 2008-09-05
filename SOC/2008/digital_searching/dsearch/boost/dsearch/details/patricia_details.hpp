@@ -1,3 +1,6 @@
+//  (C) Copyright Chintan Rao H 2008. Distributed under the Boost
+//  Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 ///Has a pair of node pointers. usually has firt element as node found
 ///and second element as the node from which the upward edge goes.
@@ -569,7 +572,10 @@ void copy_patricia(const patricia_node *other_root)
 			//std::cout<<"copy:here1"<<std::endl;
 			continue;
 		}
-		std::cout<<"copy:here2"<<std::endl;
+		
+		#ifdef PAT_DEBUG
+			std::cout<<"copy:here2"<<std::endl;
+		#endif
 		
 		//*when we come here we know that the edge is iether null or point upwards
 		//*copy_patricia_find_par returns null is edge points to null.

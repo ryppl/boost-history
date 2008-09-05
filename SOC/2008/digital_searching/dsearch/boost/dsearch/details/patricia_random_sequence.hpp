@@ -1,3 +1,6 @@
+//  (C) Copyright Chintan Rao H 2008. Distributed under the Boost
+//  Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 
 ///gets node pair b/w which a key is to inserted also returns a pair of index and bit value of the key at that index
