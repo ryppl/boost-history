@@ -11,7 +11,7 @@
 #include <boost/dataflow/support/port/port_adapter.hpp>
 
 #include <boost/signal.hpp>
-
+#include <boost/mpl/vector.hpp>
 
 namespace boost {  namespace signals {
 
@@ -136,7 +136,7 @@ struct filter_component_traits<Filter, void, InSignatures>
     };
 };
 
-template<typename Filter, typename Signals, typename InSignatures>
+template<typename Filter, typename Signals, typename InSignatures = mpl::vector<> >
 class filter_base : public dataflow::component<filter_component_traits<Filter, Signals, InSignatures> >
 {
 public:

@@ -13,3 +13,4 @@ project dataflow/example/threadpool
     ;
 
 exe threadpool_example : threadpool_example.cpp ;
+exe threadpool_component_example : threadpool_component_example.cpp ;

@@ -143,6 +143,7 @@
 		089C098C0E0B11FF00397123 /* test_network.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_network.cpp; sourceTree = "<group>"; };
 		089CDA940D832AD200731C70 /* tutorial.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tutorial.qbk; sourceTree = "<group>"; };
 		089CDAA90D8333CC00731C70 /* unary_operation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = unary_operation.hpp; sourceTree = "<group>"; };
+		089DE1580E730C100038115E /* bind_functor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = bind_functor.hpp; sourceTree = "<group>"; };
 		089E78C20E132E220008C0BB /* dynamic_multi_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_multi_port.hpp; sourceTree = "<group>"; };
 		089F845A0E2CFAB900F6B668 /* lazy_sequence.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lazy_sequence.hpp; sourceTree = "<group>"; };
 		089F845E0E2D032E00F6B668 /* test_lazy_sequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_lazy_sequence.cpp; sourceTree = "<group>"; };
@@ -200,6 +201,7 @@
 		08A364C10E129DC7001E6002 /* test_dynamic_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_dynamic_port.cpp; sourceTree = "<group>"; };
 		08A438900E295AE7009845FD /* component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component.cpp; sourceTree = "<group>"; };
 		08A439B80E295B8B009845FD /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
+		08A6948E0E71D7100065ECFD /* threadpool_component_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = threadpool_component_example.cpp; sourceTree = "<group>"; };
 		08A6B2650E25A566005539F2 /* blueprint_bank.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blueprint_bank.cpp; sourceTree = "<group>"; };
 		08A6B2660E25A566005539F2 /* blueprint_bank.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = blueprint_bank.hpp; sourceTree = "<group>"; };
 		08A6B2670E25A566005539F2 /* blueprint_component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blueprint_component.cpp; sourceTree = "<group>"; };
@@ -757,6 +759,7 @@
 				08E228DF0E6207EC00D1C2AF /* boost */,
 				08E228FE0E62084100D1C2AF /* Jamfile */,
 				08E229020E6208AC00D1C2AF /* threadpool_example.cpp */,
+				08A6948E0E71D7100065ECFD /* threadpool_component_example.cpp */,
 			);
 			path = threadpool;
 			sourceTree = "<group>";
@@ -1052,6 +1055,7 @@
 				089AE6390D79D95C00AB9DA8 /* member_function_signature.hpp */,
 				08C9D7DA0D83C5EB00354FF8 /* bind_mem_fn_overload.hpp */,
 				08AD8AC40D84E3A9008A9764 /* has_call_operator.hpp */,
+				089DE1580E730C100038115E /* bind_functor.hpp */,
 			);
 			path = utility;
 			sourceTree = "<group>";
