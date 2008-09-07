@@ -23,6 +23,7 @@ doxygen dataflow_signals_doxygen
       [ glob ../../../boost/dataflow/signals/component/multiplexer.hpp ]
       [ glob ../../../boost/dataflow/signals/component/mutex.hpp ]
       [ glob ../../../boost/dataflow/signals/component/condition.hpp ]
+      [ glob ../../../boost/dataflow/signals/component/timed_generator.hpp ]
       [ glob ../../../boost/dataflow/signals/component/function.hpp ]
       [ glob ../../../boost/dataflow/signals/component/socket_sender.hpp ]
       [ glob ../../../boost/dataflow/signals/component/socket_receiver.hpp ]

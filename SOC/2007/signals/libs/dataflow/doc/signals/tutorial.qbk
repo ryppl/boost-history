@@ -132,5 +132,141 @@ appropriate network.  Here is an example which uses the class defined above:
 
 [endsect]
 
+[section Threading]
+
+[DataflowSignals] can be used in multi-threaded environments.  If you do so,
+it is recommended you use [ThreadSafeSignals] rather than
+[BoostSignals]. [ThreadSafeSignals] can be installed as a drop-in replacement
+for [BoostSignals], but to use it with [DataflowSignals], you currently
+need to use the following `#define`s before including any [DataflowSignals]
+or [ThreadSafeSignals]/[BoostSignals] headers:
+
+    #define signalslib signals
+    #define signals signals
+
+This will cause [ThreadSafeSignals] to use the `boost::signals` namespace, rather
+than the `boost::signalslib` namespace it uses by default.
+
+[heading Provided components]
+
+[DataflowSignals] provides some components specifically intended for
+multi-threaded applications.  These are:
+
+* [mutex] (provides mutexing locking on incoming signals)
+* [condition] (notifies a threading condition whenever a signal is received)
+* [timed_generator] (periodically generates signals in its own thread)
+
+The documentation pages for each of these components provide more information.
+
+[heading Example of Creating a New Threadpool Component]
+
+Here is an example of developing a new component specifically intended for
+threading.  The component makes use of the [Threadpool] library by
+Oliver Kowalke.  We will call it `async_component`.
+
+The purpose of the component is to make a signal call asynchronous.  Instead
+of the consumer component processing the signal immediately, the signal call
+will be added to a thread pool and processed later.  `async_component` is
+a class template, templated on the threadpool type, and the type of the
+underlying component that will process the asynchronous signal.
+
+Let's begin with the use code that this component will allow us to use.  The
+three examples provided are:
+
+* mixing synchronous and asynchronous signals
+* assigning priorities to tasks / signals
+* using asynchronous signals for cyclic networks
+
+[heading mixing synchronous and asynchronous signals]
+
+Our
+first example will be just a simple network that involves both synchronous
+and asynchronous filters.  The filters will use a simple function that
+performs an increment:
+
+[threadpool_component_example_use_inc_fn]
+
+Here is the simple example:
+
+[threadpool_component_example_use_simple]
+
+And a sample output of a run (output contains `adding task` whenever a new
+task has been added to the pool):
+
+[pre
+adding task
+adding task
+filter: 1
+filter: 2
+filter: 3
+filter: 1
+adding task
+filter: 2
+]
+
+[heading assigning priorities to tasks / signals]
+
+The second example involves a priority pool that allows us to specify the
+priority of a task.  This example and the next will use the following filter
+component, which just prints some texts, waits a little, and forwards the signal.
+This example only uses the text printing capability of the component:
+
+[threadpool_component_example_use_printer]
+
+The example uses the priorities to enforce an order of execution that prints
+a particular message:
+
+[threadpool_component_example_use_priority]
+
+The output is:
+
+[pre
+adding task
+adding task
+adding task
+adding task
+Hello
+<>
+World
+!
+]
+
+[heading using asynchronous signals for cyclic networks]
+
+The final example demonstrates the use of a threadpool and asynchronous signals
+to allow cyclic networks.  The following example induces a cycle consisting
+of `ticker1`, `ticker2`, and `ticker3`.
+
+[threadpool_component_example_use_cyclic]
+
+[pre
+adding task
+tick 1...
+adding task
+tick 2...
+adding task
+tick 3...
+adding task
+tick 1...
+adding task
+tick 2...
+adding task
+]
+
+[heading async_component implementation]
+
+Finally, for those interested, here is the implementation of the
+`async_component` class template.  Since it operates on an underlying
+component, the implementation is not trivial.  Nonetheless, the [DataflowSignals]
+building blocks still allow the implementation to be rather concise, considering
+that:
+
+* `async_component` can be used on a numer of underlying components, regardless
+    of signal signature.
+* `async_component` works with both priority and non-priority thread pools.
+
+[threadpool_component_example_implementation]
+
+[endsect]
 
 [endsect][/tutorial]

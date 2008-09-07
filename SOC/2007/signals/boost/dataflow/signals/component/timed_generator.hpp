@@ -70,6 +70,8 @@ public:
 		cond.notify_all();
 		delete thread_object;
 	}
+	///	If the timed_generator was enabled with a signal count, this function
+    /// will wait until the specified number of signals was emitted.
     void wait_until_completed()
     {
         boost::mutex::scoped_lock lock(m_completion_mutex);

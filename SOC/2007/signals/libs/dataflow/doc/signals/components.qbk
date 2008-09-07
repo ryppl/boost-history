@@ -12,8 +12,9 @@ and their use.
     [[[counter]][Counts the number of signals passing through.]]
     [[[junction]][Convenient when multiple producers need to be connected to the same set of consumers.  Also has gate functionality.]]
     [[[multiplexer]][Allows selection of which of the input ports is forwarded]]
-    [[[mutex]][Provides mutexing on incoming signals for multithreaded environments]]
+    [[[mutex]][Provides mutex locking on incoming signals for multithreaded environments]]
     [[[condition]][Signals a threading condition whenever a signal is received]]
+    [[[timed_generator]][Periodically generates signals in its own thread]]
     [[[function]][Allows any Boost.Function object to be applied to a passing signal]]
     [[[chain]][Chains a number of components together into a new component]]
     [[[socket_sender] and [socket_receiver]][Allow a signal dataflow network to
@@ -298,6 +299,28 @@ The [condition] class signals a threading condition when receiving a signal.
 [test_socket]
 
 [endsect][/condition]
+
+[section timed_generator]
+[*See also]: [classref boost::signals::timed_generator timed_generator class reference.]
+
+[heading Model of]
+* [SignalFilterComponent]
+
+[heading Inherits]
+* [storage]
+
+[heading Description]
+
+The [timed_generator] class periodically emits stored values through a signal,
+and in its own thread.
+
+[heading Example]
+
+See the example provided for the [instantiator] component for an example
+of using [timed_generator].
+
+[endsect][/timed_generator]
+
 
 [endsect][/threading]
 
