@@ -212,7 +212,6 @@
 #define LAPACK_CTREXC FORTRAN_ID( ctrexc )
 #define LAPACK_ZTREXC FORTRAN_ID( ztrexc )
 
-
 /********************************************/
 /* eigenproblems for Hessenberg matrices */ 
 
@@ -234,13 +233,11 @@
 #define LAPACK_CHBEVX FORTRAN_ID( chbevx )
 #define LAPACK_ZHBEVX FORTRAN_ID( zhbevx )
 
-
 /********************************************/
 /* eigenproblems for tridiagonal matrices */ 
 
 #define LAPACK_SSTEQR FORTRAN_ID( ssteqr )
 #define LAPACK_DSTEQR FORTRAN_ID( dsteqr )
-
 
 /********************************************/
 /* generalized eigenvalue/eigenvector */
@@ -288,6 +285,24 @@
 #define LAPACK_CGESDD FORTRAN_ID( cgesdd )
 #define LAPACK_ZGESDD FORTRAN_ID( zgesdd )
 
+
+/********************************************/
+/* Least Squares */ 
+
+#define LAPACK_SGELS FORTRAN_ID( sgels )
+#define LAPACK_DGELS FORTRAN_ID( dgels )
+#define LAPACK_CGELS FORTRAN_ID( cgels )
+#define LAPACK_ZGELS FORTRAN_ID( zgels )
+
+#define LAPACK_SGELSS FORTRAN_ID( sgelss )
+#define LAPACK_DGELSS FORTRAN_ID( dgelss )
+#define LAPACK_CGELSS FORTRAN_ID( cgelss )
+#define LAPACK_ZGELSS FORTRAN_ID( zgelss )
+
+#define LAPACK_SGELSD FORTRAN_ID( sgelsd )
+#define LAPACK_DGELSD FORTRAN_ID( dgelsd )
+#define LAPACK_CGELSD FORTRAN_ID( cgelsd )
+#define LAPACK_ZGELSD FORTRAN_ID( zgelsd )
 
 /********************************************/
 /* auxiliary */ 
