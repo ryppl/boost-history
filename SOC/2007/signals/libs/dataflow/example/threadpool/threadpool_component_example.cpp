@@ -22,6 +22,7 @@
 #include <boost/dataflow/utility/bind_mem_fn.hpp>
 #include <boost/dataflow/utility/bind_functor.hpp>
 
+#include <boost/tp/info.hpp>
 #include "boost/tp/fifo.hpp"
 #include "boost/tp/lazy.hpp"
 #include "boost/tp/pool.hpp"
@@ -38,7 +39,7 @@ class async_component;
 namespace detail {
 
     template<typename Threadpool, typename Component>
-    class async_component_impl
+    class async_component_impl_base
     // filter_base is like filter, but it doesn't come with it's own signal.
     // instead, the derived class must provide a default_signal member function
     // that refers to the default signal.  We will use this to return the
@@ -51,8 +52,39 @@ namespace detail {
         typedef void result_type;
         
         template<typename T0>
-        async_component_impl(Threadpool &threadpool, const T0 &t0)
+        async_component_impl_base(Threadpool &threadpool, const T0 &t0)
             : m_component(t0), m_threadpool(threadpool)
+        {
+            init_m_component_function();
+        }
+
+        template<typename T0, typename T1>
+        async_component_impl_base(Threadpool &threadpool, const T0 &t0, const T1 &t1)
+            : m_component(t0, t1), m_threadpool(threadpool)
+        {
+            init_m_component_function();
+        }
+        
+        // with the following, anything that connects to the async_component's default
+        // signal will actually connect to the default signal of the underlying
+        // component
+        typename Component::signal_type &default_signal()
+        {
+            namespace dataflow = boost::dataflow;
+            return dataflow::get_default_port<
+                    dataflow::args::left,
+                    dataflow::signals::connect_mechanism, 
+                    dataflow::signals::tag
+                > (m_component);
+        }
+
+    protected:
+        Component m_component;
+        Threadpool &m_threadpool;
+        boost::function<signature_type> m_component_function;
+        
+    private:
+        void init_m_component_function()
         {
             // record the appropriate operator() overload of Component into m_component_function,
             // so we can submit it as a task later
@@ -61,6 +93,26 @@ namespace detail {
             m_component_function = boost::dataflow::utility::bind_mem_fn<mem_fn_type, Component>
                 (static_cast<mem_fn_type>(&Component::operator()), m_component);
         }
+    };
+    
+    template<typename Threadpool, typename Component, typename Enable=void>
+    class async_component_impl;
+    
+    template<typename Threadpool, typename Component>
+    class async_component_impl<Threadpool, Component,
+        typename boost::disable_if<tp::has_priority<Threadpool> >::type>
+        : public async_component_impl_base<Threadpool, Component>
+    {
+    public:
+        template<typename T0>
+        async_component_impl(Threadpool &threadpool, const T0 &t0)
+            : async_component_impl_base<Threadpool, Component>(threadpool, t0)
+        {}
+
+        template<typename T0, typename T1>
+        async_component_impl(Threadpool &threadpool, const T0 &t0, const T1 &t1)
+            : async_component_impl_base<Threadpool, Component>(threadpool, t0, t1)
+        {}
         
         template <class Seq>
         void operator()(const Seq &vec_par) const
@@ -74,32 +126,55 @@ namespace detail {
             // submit the task (the first parameter to bind is the function,
             // and the rest are the bound function arguments).
             boost::tp::task< void > t(
-                m_threadpool.submit(
+                async_component_impl::m_threadpool.submit(
                     fused_bind(
                         boost::fusion::join(
-                            boost::fusion::make_vector(m_component_function),
+                            boost::fusion::make_vector(async_component_impl::m_component_function),
                             vec_par
                     )   )
                     ));
         }
-        // with this, anything that connects to the async_component's default
-        // signal will actually connect to the default signal of the underlying
-        // component
-        typename Component::signal_type &default_signal()
-        {
-            namespace dataflow = boost::dataflow;
-            return dataflow::get_default_port<
-                    dataflow::args::left,
-                    dataflow::signals::connect_mechanism, 
-                    dataflow::signals::tag
-                > (m_component);
-        }
 
-    private:
-        Component m_component;
-        Threadpool &m_threadpool;
-        boost::function<signature_type> m_component_function;
     };
+
+    template<typename Threadpool, typename Component>
+    class async_component_impl<Threadpool, Component,
+        typename boost::enable_if<tp::has_priority<Threadpool> >::type>
+        : public async_component_impl_base<Threadpool, Component>
+    {
+        typedef typename tp::priority_type<Threadpool>::type priority_type;
+    public:
+        template<typename T0>
+        async_component_impl(Threadpool &threadpool, const priority_type &priority, const T0 &t0)
+            : async_component_impl_base<Threadpool, Component>(threadpool, t0)
+            , m_priority(priority)
+        {}
+        
+        template <class Seq>
+        void operator()(const Seq &vec_par) const
+        {
+            // add the next function as a task in the pool
+            std::cout << "adding task" << std::endl;
+            // bind_functor is just a function object that calls bind
+            // we create a fused version so we can call it with a fusion sequence
+            boost::fusion::fused<boost::dataflow::utility::bind_functor> fused_bind;
+            
+            // submit the task (the first parameter to bind is the function,
+            // and the rest are the bound function arguments).
+            boost::tp::task< void > t(
+                async_component_impl::m_threadpool.submit(
+                    fused_bind(
+                        boost::fusion::join(
+                            boost::fusion::make_vector(async_component_impl::m_component_function),
+                            vec_par
+                    )   ),
+                    m_priority
+                    ));
+        }
+    private:
+        priority_type m_priority;
+    };
+
 }
 
 
@@ -119,7 +194,32 @@ public:
     async_component(Threadpool &threadpool, const T0 &t0)
         : base_type(threadpool, t0)
     {}
+    template<typename T0, typename T1>
+    async_component(Threadpool &threadpool, const T0 &t0, const T1 &t1)
+        : base_type(threadpool, t0, t1)
+    {}
 };
+
+// a function to submit the first task
+template<typename Threadpool, typename Component>
+void submit(Threadpool &threadpool, Component &component)
+{
+    tp::task< void > task(
+        threadpool.submit(
+            boost::bind(&Component::send, boost::ref(component))));
+}
+
+// a function to submit the first task with a priority
+template<typename Threadpool, typename Component>
+void submit(
+    Threadpool &threadpool,
+    const typename tp::priority_type<Threadpool>::type priority,
+    Component &component)
+{
+    tp::task< void > task(
+        threadpool.submit(
+            boost::bind(&Component::send, boost::ref(component)), priority));
+}
 
 // just an operation to work with
 int inc_fn(int x)
@@ -128,31 +228,23 @@ int inc_fn(int x)
     return x+1;
 }
 
-// a component that displays text, waits a second, and then sends a signal
+// a component that displays text, waits an optional period, and then sends a signal
 class printer : public boost::signals::filter<printer, void()>
 {
 public:
-    printer(const std::string &text)
-        : m_text(text)
+    printer(const std::string &text, unsigned wait_milliseconds=0)
+        : m_text(text), m_wait_milliseconds(wait_milliseconds)
     {}
     void operator()()
     {
         std::cout << m_text << std::endl;
-        boost::this_thread::sleep(boost::posix_time::seconds(1));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(m_wait_milliseconds));
         out();
     }
 private:
     std::string m_text;
+    unsigned m_wait_milliseconds;
 };
-
-// a function to submit the first task
-template<typename Threadpool, typename Next>
-void submit(Threadpool &threadpool, Next &next)
-{
-    tp::task< void > task(
-        threadpool.submit(
-            boost::bind(&Next::send, boost::ref(next))));
-}
 
 int main( int argc, char *argv[])
 {
@@ -178,11 +270,17 @@ int main( int argc, char *argv[])
     
     // our network
     //  increase1 >>= increase2 >>= increase3 will be in its own thread
-    //  increase3 will be in its own thread
     //  increase4 will be in its own thread
+    //  increase5 will be in its own thread
     source
         | (increase1 >>= increase2 >>= increase3)
         | (increase4 >>= increase5);
+    // this was equivalent to:
+    // connect(source, increase1);
+    // connect(increase1, increase2);
+    // connect(increase2, increase3);
+    // connect(source, increase4);
+    // connect(increase4, increase5);
 
     // submit the first task
     submit(pool, source);
@@ -191,49 +289,63 @@ int main( int argc, char *argv[])
     boost::this_thread::sleep(boost::posix_time::seconds(1));
 
     // --------------------------------------------------------------
+    std::cout << "------------------------------------" << std::endl;
 
-/*
-   typedef 
+    typedef 
         tp::pool<
             tp::fixed,
             tp::unbounded_channel< tp::priority< int > >
         > priority_threadpool_type;
         
-    priority_threadpool_type priority_pool(tp::max_poolsize(5));
+    priority_threadpool_type priority_pool(tp::max_poolsize(1));
     
     typedef boost::signals::storage<void()> print_starter_type;
     typedef async_component<priority_threadpool_type, printer> async_printer_type;
     
     print_starter_type print_starter;
-    async_printer_type print1(priority_pool, "World");
-    async_printer_type print2(priority_pool, " ");
-    async_printer_type print3(priority_pool, "Hello");
-    async_printer_type print4(priority_pool, "!");
+    async_printer_type print1(priority_pool, 3, "World");
+    async_printer_type print2(priority_pool, 2, "<>");
+    async_printer_type print3(priority_pool, 1, "Hello");
+    async_printer_type print4(priority_pool, 4, "!");
     
     print_starter
         | print1
         | print2
         | print3
         | print4;
+    // this was equivalent to:
+    // connect(print_starter, print1);
+    // connect(print_starter, print2);
+    // connect(print_starter, print3);
+    // connect(print_starter, print4);
+
         
     // submit the first task
-    submit(priority_pool, print_starter);
+    submit(priority_pool, 1, print_starter);
 
     // wait a little
     boost::this_thread::sleep(boost::posix_time::seconds(1));
-*/
         
     // --------------------------------------------------------------
+    std::cout << "------------------------------------" << std::endl;
 
     typedef boost::signals::storage<void()> tick_starter_type;
     typedef async_component<threadpool_type, printer> ticker_type;
     
     // our components
     tick_starter_type tick_starter;
-    ticker_type ticker1(pool, "tick 1..."), ticker2(pool, "tick 2..."), ticker3(pool, "tick 3...");
+    ticker_type
+        ticker1(pool, "tick 1...", 1000),
+        ticker2(pool, "tick 2...", 1000),
+        ticker3(pool, "tick 3...", 1000);
 
     // our network
     tick_starter >>= ticker1 >>= ticker2 >>= ticker3 >>= ticker1;
+    // this was equivalent to:
+    // connect(tick_starter, ticker1);
+    // connect(ticker1, ticker2);
+    // connect(ticker2, ticker3);
+    // connect(ticker3, ticker1);
     
     // submit the first task
     submit(pool, tick_starter);

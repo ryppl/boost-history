@@ -28,6 +28,10 @@ template<
 struct pool
 : public Strategy::template impl< Channel >
 {
+	typedef Strategy							strategy_type;
+	typedef Channel								channel_type;
+	typedef typename channel_type::queue_type	queue_type;
+
 #define BOOST_TP_CTOR(z, n, A)											\
 	template< BOOST_PP_ENUM_PARAMS(n, typename A) >			\
 	pool(BOOST_ENUM_TP_CTOR_ARGS(n, A))									\

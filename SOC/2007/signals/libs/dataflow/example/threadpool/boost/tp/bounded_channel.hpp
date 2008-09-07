@@ -39,6 +39,7 @@ private:
 public:
 	typedef typename queue::item		item;
 	typedef typename queue::iterator	iterator;
+	typedef queueing_policy				queue_type;
 
 private:
 	bool			active_;

@@ -300,6 +300,7 @@ private:
 public:
 	typedef typename producer_queue::item		item;
 	typedef typename producer_queue::iterator	iterator;
+	typedef queueing_policy						queue_type;
 
 private:
 	bool			active_;

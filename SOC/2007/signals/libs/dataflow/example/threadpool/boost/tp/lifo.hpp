@@ -13,12 +13,15 @@
 #include <boost/function.hpp>
 #include <boost/future/future.hpp>
 
+#include <boost/tp/detail/info.hpp>
 #include <boost/tp/detail/interrupter.hpp>
 
 namespace boost { namespace tp
 {
 struct lifo
 {
+	typedef detail::has_no_priority	priority_tag_type;
+
 	template< typename Callable >
 	class impl
 	{

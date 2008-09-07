@@ -15,6 +15,7 @@
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
+#include <boost/tp/detail/info.hpp>
 #include <boost/tp/detail/interrupter.hpp>
 
 namespace boost { namespace tp
@@ -25,6 +26,9 @@ template<
 >
 struct priority
 {
+	typedef Attr					attribute_type;
+	typedef detail::has_priority	priority_tag_type;
+
 	template< typename Callable >
 	class impl
 	{

@@ -99,7 +99,17 @@ namespace boost { namespace fusion
             unfused_inherited(T1 &t1, T2 &t2)
             : Function(t1, t2)
         { }
-        
+
+        template<typename T1, typename T2, typename T3>
+            unfused_inherited(const T1 &t1, const T2 &t2, const T3 &t3)
+            : Function(t1, t2, t3)
+        { }
+
+        template<typename T1, typename T2, typename T3>
+            unfused_inherited(T1 &t1, const T2 &t2, const T3 &t3)
+            : Function(t1, t2, t3)
+        { }
+
         template<typename F>
         struct result
             : public Function::template result<F> {};
