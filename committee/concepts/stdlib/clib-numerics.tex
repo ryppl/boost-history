@@ -75,6 +75,9 @@ Bloomington, IN\ \  47405 \\
 \begin{itemize}
 \item Finished description of \tcode{HasAcons}.
 \item Clean up \tcode{Has*} requirements in \tcode{valarray}.
+\item Added \tcode{DefaultConstructible} requirement to \tcode{valarray}.
+\item Synchronized the complex numbers section with the latest C++0x
+  working paper.
 \end{itemize}
 
 \paragraph*{Issues resolved in this paper}
@@ -455,7 +458,9 @@ and numerous functions for representing and manipulating complex numbers.
 \pnum
 The effect of instantiating the template
 \tcode{complex}\
-for any type other than float, double or long double is unspecified.
+for any type other than \tcode{float}, \tcode{double} or \tcode{long double} is unspecified.
+The specializations \tcode{complex<float>}, \tcode{complex<double>}, and \tcode{complex<long double>} are 
+literal types (\ref{basic.types}).
 
 \pnum
 If the result of a function is not mathematically defined or not in
@@ -522,7 +527,7 @@ namespace std {
   template<@\changedConcepts{class}{ArithmeticLike}@ T> T norm(const complex<T>&);
 
   template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> conj(const complex<T>&);
-  @\ptr@template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>&);
+  @\ptr@template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> proj(const complex<T>&);
   template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> polar(const T&, const T& = 0);
 
   // \ref{complex.transcendentals} transcendentals:
@@ -569,7 +574,9 @@ namespace std {
       complex(const complex<X>&);
 
     T real() const;
+    void real(T);
     T imag() const;
+    void imag(T);
 
     complex<T>& operator= (const T&);
     complex<T>& operator+=(const T&);
@@ -1108,15 +1115,15 @@ template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> conj(const comp
 the complex conjugate of \farg{x}.
 \end{itemdescr}
 
-\index{fabs@\tcode{fabs}!\tcode{complex}}%
+\index{proj@\tcode{proj}!\tcode{complex}}%
 \index{cabs@\tcode{cabs}!\tcode{complex}}%
 \begin{itemdecl}
-template<@\changedConcepts{class}{ArithmeticLike}@ T> complex<T> fabs(const complex<T>& @\farg{x}@);
+template<@\changedConcepts{class}{FloatingPointType}@ T> complex<T> proj(const complex<T>& @\farg{x}@);
 \end{itemdecl}
 
 \begin{itemdescr}
-\pnum\effects\  Behaves the same as C99 function \tcode{cabs},
-defined in subclause 7.3.8.1.
+\pnum\effects\  Behaves the same as C99 function \tcode{cproj},
+defined in subclause 7.3.9.4.
 \end{itemdescr}
 
 \index{polar@\tcode{polar}!\tcode{complex}}%
@@ -1423,7 +1430,8 @@ function and type names declared or defined in the neader \tcode{<complex>}.
 \index{valarray@\tcode{<valarray>}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedConcepts{class}{Semiregular}@ T> class valarray;         // An array of type \tcode{T}
+  template<@\changedConcepts{class}{Semiregular}@ T> @\addedConcepts{requires DefaultConstructible<T>}@
+    class valarray;         // An array of type \tcode{T}
   class slice;                              // a BLAS-like slice out of an array
   template<@\changedConcepts{class}{Semiregular}@ T> class slice_array;
   class gslice;                             // a generalized slice out of an array
@@ -1616,10 +1624,10 @@ namespace std {
   template<@\changedConcepts{class}{HasAsin}@ T> valarray<T> asin (const valarray<T>&);
   template<@\changedConcepts{class}{HasAtan}@ T> valarray<T> atan (const valarray<T>&);
 
-  template<@\changedConcepts{class}{Atan2}@ T> valarray<T> atan2
+  template<@\changedConcepts{class}{HasAtan2}@ T> valarray<T> atan2
     (const valarray<T>&, const valarray<T>&);
-  template<@\changedConcepts{class}{Atan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
-  template<@\changedConcepts{class}{Atan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
+  template<@\changedConcepts{class}{HasAtan2}@ T> valarray<T> atan2(const valarray<T>&, const T&);
+  template<@\changedConcepts{class}{HasAtan2}@ T> valarray<T> atan2(const T&, const valarray<T>&);
 
   template<@\changedConcepts{class}{HasCos}@ T> valarray<T> cos  (const valarray<T>&);
   template<@\changedConcepts{class}{HasCosh}@ T> valarray<T> cosh (const valarray<T>&);
@@ -1723,7 +1731,8 @@ Note that the exception is not mandated.
 \index{valarray@\tcode{valarray}}%
 \begin{codeblock}
 namespace std {
-  template<@\changedConcepts{class}{Semiregular}@ @\farg{T}@> class valarray {
+  template<@\changedConcepts{class}{Semiregular}@ @\farg{T}@> @\addedConcepts{requires DefaultConstructible<T>}@
+  class valarray {
   public:
     typedef T value_type;
 
