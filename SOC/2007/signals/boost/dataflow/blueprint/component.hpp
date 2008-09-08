@@ -107,6 +107,8 @@ public:
     component_t(const T0 &t0) : c(t0) {component_t_();}
     template<typename T0>
     component_t(T0 &t0) : c(t0) {component_t_();}
+    template<typename T0, typename T1>
+    component_t(const T0 &t0, const T1 &t1) : c(t0, t1) {component_t_();}
     component_t(const component_t &rhs) : c(rhs.c)
     {   component_t_(); }
     

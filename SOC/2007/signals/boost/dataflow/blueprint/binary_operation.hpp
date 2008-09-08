@@ -60,6 +60,10 @@ inline void extract(port & producer, port & consumer)
     get_binary_operation<operations::extract>(producer, consumer)->invoke(producer, consumer);
 }
 
+inline void connect(port & producer, port & consumer)
+{
+    get_binary_operation<operations::connect>(producer, consumer)->invoke(producer, consumer);
+}
 
 
 } } } // namespace boost::dataflow::blueprint

@@ -205,6 +205,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="threadpool"
+			>
+			<File
+				RelativePath="..\..\example\threadpool\threadpool_component_example.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="extension"
+			>
+			<File
+				RelativePath="..\..\example\extension\component_add.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\extension\extension_example.cpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\example\edit_distance.cpp"
 			>

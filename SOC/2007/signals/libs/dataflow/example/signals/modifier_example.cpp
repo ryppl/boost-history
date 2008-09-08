@@ -34,7 +34,7 @@ struct multiply
     template<typename T>
     T operator()(T t) const
     {
-        return t * m_factor;
+        return static_cast<T>(t * m_factor);
     }
     
     double m_factor;
