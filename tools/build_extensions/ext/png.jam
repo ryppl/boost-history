@@ -13,6 +13,7 @@ import property ;
 import project ;
 import feature ;
 import common ;
+import set ;
 
 extension.declare png ;
 
@@ -22,7 +23,7 @@ rule init ( version ? : location : options * )
     local requirements = [ extension.define png $(version) : $(location) : $(options) ] ;
     
     lib png
-        :   [ glob $(location)/png*.c ]
+        :   [ set.difference [ glob $(location)/png*.c ] : [ glob $(location)/pngtest.c ] ]
             /ext/zlib//z
         :   $(requirements)
             <png-version>$(version)
