@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Foundational Concepts for the C++0x Standard Library\\
-(Revision 4)
+(Revision 5)
 \vspace{0.25in}
 \end{center}
 
@@ -64,8 +64,8 @@ Thomas Witt, Zephyr Associates, Inc.\\
 Andrew Lumsdaine, Indiana University
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number: N2737=08-0247\vspace{-6pt}
-\par\noindent Revises document number: N2677=08-0187\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2737=08-0247\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -88,61 +88,19 @@ presented \textcolor{remclr}{in red},\removedConcepts{with
 \editorial{Purely editorial comments will be written in a separate,
   shaded box.}
 
-\section*{Changes from N2677}
+\section*{Changes from N2737}
 \begin{itemize}
-\item Added the \tcode{Constructible} concept, which refines the
-  syntactic \tcode{HasConstructor} concept and
-  \tcode{NothrowDestructible}. In Sophia-Antipolis, LWG removed
-  \tcode{Destructible} from \tcode{HasConstructor} to decouple the
-  semantic coupling within \tcode{HasConstructor}, with the
-  understanding that, if \tcode{Destructible} requirements cropped up
-  in too many places, we would bring the \tcode{Destructible}
-  requirement back. The concepts drafting group realized that (1)
-  \tcode{Destructible} was used in many places, and all of those were
-  actually uses of \tcode{NothrowDestructible}, and (2) that
-  \tcode{HasConstructor} still should not imply any semantics, and
-  thus should not refine from any destruction concept. Hence, the
-  addition of the new \tcode{Constructible} concept that implies some
-  semantics by refining \tcode{NothrowDestructible}, and will be used
-  throughout most of the standard library.
-
-\item Added the \tcode{RvalueOf} concept, which is needed to constrain
-  and use \tcode{std::move} within the standard library. This concept
-  replaces the \tcode{HasStdMove} concept that was part of the
-  iterator concepts proposal.
-
-\item In \tcode{MoveConstructible} and \tcode{MoveAssignable}, added a
-  constructor and copy-assignment operator requirement, respectively,
-  that accept an \tcode{RvalueOf<T>::type} on the right-hand side, to
-  account for uses of \tcode{std::move}.
-
-\item Added some introductory text describing the naming conventions
-  used for concepts (\ref{utility.concepts}).
-
-\item Added a new concept \tcode{EquivalenceRelation}.
-
-\item Added a new concept \tcode{HasVirtualDestructor}.
-
-\item In the \tcode{FreeStoreAllocatable} concept, default the
-  implementations of operators \tcode{new[]} and \tcode{delete[]} to
-  the use \tcode{new} and \tcode{delete}, respectively.
-
-\item Added the \tcode{ArithmeticType} and \tcode{FloatingPointType}
-  concepts. 
-
-\item Added the \tcode{underlying_type} associated type to the
-  \tcode{EnumerationType} concept.
-
-\item Added the \tcode{IdentityOf} concept, which acts like a simple
-  identity metafunction. It is used by \tcode{std::forward}.
-
-\item In~\ref{concept.operator}, require that the concept maps in
-  namespace \tcode{std} for pointer types for \tcode{HasLess},
-  \tcode{HasGreater}, \tcode{HasLessEqual}, and
-  \tcode{HasGreaterEqual} ensure a total order. This is how concepts
-  resolve issue 532 (already closed as NAD).
-
-\item Added the \tcode{FunctionType} concept.
+\item Changed the \tcode{operator*} associated function in \tcode{HasDereference} from:
+\begin{codeblock}
+result_type operator*(const T&);
+\end{codeblock}
+to
+\begin{codeblock}
+result_type operator*(T&&);
+\end{codeblock}
+to better match with the dereference operator in \tcode{Iterator}. See
+Daniel Kr\"ugler's message c++std-lib-22198 on the reflector for
+rationale.
 \end{itemize}
 
 \end{titlepage}
@@ -1042,7 +1000,7 @@ auto concept HasRightShift<typename T, typename U> {
 \begin{itemdecl}
 auto concept HasDereference<typename T> {
   typename result_type;
-  result_type operator*(const T&);
+  result_type operator*(T&&);
 }
 \end{itemdecl}
 
