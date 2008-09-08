@@ -10,6 +10,7 @@ build-project blueprint ;
 build-project glv_gui ;
 #build-project cppgui_gui ;
 build-project threadpool ;
+build-project extension ;
 
 project dataflow/example
     : requirements

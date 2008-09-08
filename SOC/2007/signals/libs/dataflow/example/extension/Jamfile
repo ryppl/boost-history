@@ -1,0 +1,18 @@
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import type : change-generated-target-suffix ;
+import type : change-generated-target-prefix ;
+type.change-generated-target-suffix SHARED_LIB : : extension ;
+type.change-generated-target-prefix SHARED_LIB : : lib ;
+
+project 
+    : requirements
+      <include>.
+      <library>/boost/signals//boost_signals/<link>static
+    ;
+
+lib component_add : component_add.cpp : <link>shared ;
+exe extension_example : extension_example.cpp ;
