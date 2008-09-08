@@ -48,7 +48,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Numerics\\
-(Revision 3)
+(Revision 4)
 
 \vspace{0.5in}
 
@@ -62,8 +62,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2736=08-0246\vspace{-6pt}
-\par\noindent Revises document number: N2626=08-0136\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2736=08-0246\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -71,16 +71,10 @@ Bloomington, IN\ \  47405 \\
 \section*{Introduction}
 \libintrotext{Chapter 26}
 
-\paragraph*{Changes from N2626}
+\paragraph*{Changes from N2736}
 \begin{itemize}
-\item Updated requirements for \tcode{accumulate},
-  \tcode{inner_product}, \tcode{partial_sum}, and
-  \tcode{adjacent_difference} to cope with move semantics and changes
-  to the foundational concepts.
-\item The complex transcendentals and other non-member operations
-  require \tcode{FloatingPointType}, which more accurately
-  characterizes the actual requirements for the \tcode{complex} type.
-\item Added \tcode{iota}, conceptualized by Daniel Kr\"ugler.
+\item Finished description of \tcode{HasAcons}.
+\item Clean up \tcode{Has*} requirements in \tcode{valarray}.
 \end{itemize}
 
 \paragraph*{Issues resolved in this paper}
@@ -289,7 +283,7 @@ auto concept HasAcos<typename T> {
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes types for which an arc cosine.}
+\addedConcepts{\mbox{\reallynote} describes types for which an arc cosine can be computed.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1442,123 +1436,123 @@ namespace std {
   template<@\changedConcepts{class}{Semiregular}@ T> void swap(valarray<T>&, valarray<T>&&);
 
   template<class T> 
-    @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMultiply<T, T> \&\& Convertible<HasMultiply<T, T>::result_type, T>}@
     valarray<T> operator* (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMultiply<T, T> \&\& Convertible<HasMultiply<T, T>::result_type, T>}@
     valarray<T> operator* (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMultiply<T, T> \&\& Convertible<HasMultiply<T, T>::result_type, T>}@
     valarray<T> operator* (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasDivide<T, T> \&\& Convertible<HasDivide<T, T>::result_type, T>}@
     valarray<T> operator/ (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasDivide<T, T> \&\& Convertible<HasDivide<T, T>::result_type, T>}@
     valarray<T> operator/ (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasDivide<T, T> \&\& Convertible<HasDivide<T, T>::result_type, T>}@
     valarray<T> operator/ (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasModulus<T, T> \&\& Convertible<HasModulus<T, T>::result_type, T>}@
     valarray<T> operator% (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasModulus<T, T> \&\& Convertible<HasModulus<T, T>::result_type, T>}@
     valarray<T> operator% (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasModulus<T, T> \&\& Convertible<HasModulus<T, T>::result_type, T>}@
     valarray<T> operator% (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<HasPlus<T, T>::result_type, T>}@
     valarray<T> operator+ (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<HasPlus<T, T>::result_type, T>}@
     valarray<T> operator+ (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<HasPlus<T, T>::result_type, T>}@
     valarray<T> operator+ (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMinus<T, T> \&\& Convertible<HasMinus<T, T>::result_type, T>}@
     valarray<T> operator- (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMinus<T, T> \&\& Convertible<HasMinus<T, T>::result_type, T>}@
     valarray<T> operator- (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasMinus<T, T> \&\& Convertible<HasMinus<T, T>::result_type, T>}@
     valarray<T> operator- (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<HasBitXor<T, T>::result_type, T>}@
     valarray<T> operator^ (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<HasBitXor<T, T>::result_type, T>}@
     valarray<T> operator^ (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<HasBitXor<T, T>::result_type, T>}@
     valarray<T> operator^ (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<HasBitAnd<T, T>::result_type, T>}@
     valarray<T> operator& (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<HasBitAnd<T, T>::result_type, T>}@
     valarray<T> operator& (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<HasBitAnd<T, T>::result_type, T>}@
     valarray<T> operator& (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<HasBitOr<T, T>::result_type, T>}@
     valarray<T> operator| (const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<HasBitOr<T, T>::result_type, T>}@
     valarray<T> operator| (const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<HasBitOr<T, T>::result_type, T>}@
     valarray<T> operator| (const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasLeftShift<T, T> \&\& Convertible<HasLeftShift<T, T>::result_type, T>}@
     valarray<T> operator<<(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasLeftShift<T, T> \&\& Convertible<HasLeftShift<T, T>::result_type, T>}@
     valarray<T> operator<<(const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasLeftShift<T, T> \&\& Convertible<HasLeftShift<T, T>::result_type, T>}@
     valarray<T> operator<<(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasRightShift<T, T> \&\& Convertible<HasRightShift<T, T>::result_type, T>}@
     valarray<T> operator>>(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasRightShift<T, T> \&\& Convertible<HasRightShift<T, T>::result_type, T>}@
     valarray<T> operator>>(const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+    @\addedConcepts{requires HasRightShift<T, T> \&\& Convertible<HasRightShift<T, T>::result_type, T>}@
     valarray<T> operator>>(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasLogicalAnd<T>}@
+    @\addedConcepts{requires HasLogicalAnd<T, T>}@
     valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasLogicalAnd<T>}@
+    @\addedConcepts{requires HasLogicalAnd<T, T>}@
     valarray<bool> operator&&(const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasLogicalAnd<T>}@
+    @\addedConcepts{requires HasLogicalAnd<T, T>}@
     valarray<bool> operator&&(const T&, const valarray<T>&);
 
   template<class T> 
-    @\addedConcepts{requires HasLogicalOr<T>}@
+    @\addedConcepts{requires HasLogicalOr<T, T>}@
     valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
   template<class T> 
-    @\addedConcepts{requires HasLogicalOr<T>}@
+    @\addedConcepts{requires HasLogicalOr<T, T>}@
     valarray<bool> operator||(const valarray<T>&, const T&);
   template<class T> 
-    @\addedConcepts{requires HasLogicalOr<T>}@
+    @\addedConcepts{requires HasLogicalOr<T, T>}@
     valarray<bool> operator||(const T&, const valarray<T>&);
 
   template<class T>
@@ -1770,43 +1764,43 @@ namespace std {
     indirect_array<T> operator[](const valarray<size_t>&);
 
     // \ref{valarray.unary} unary operators:
-    @\addedConcepts{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
+    @\addedConcepts{requires HasUnaryPlus<T> \&\& Convertible<HasUnaryPlus<T>::result_type, T>}@ 
       valarray<T> operator+() const;
-    @\addedConcepts{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
+    @\addedConcepts{requires HasNegate<T> \&\& Convertible<HasNegate<T>::result_type, T>}@ 
       valarray<T> operator-() const;
-    @\addedConcepts{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
+    @\addedConcepts{requires HasComplement<T> \&\& Convertible<HasComplement<T>::result_type, T>}@ 
       valarray<T> operator~() const;
     @\addedConcepts{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 
     // \ref{valarray.cassign} computed assignment:
-    @\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
-    @\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
-    @\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
-    @\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
-    @\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
-    @\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
-    @\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
-    @\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
-    @\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
-    @\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
+    @\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   valarray<T>& operator*= (const T&);
+    @\addedConcepts{requires HasDivideAssign<T, const T\&>}@     valarray<T>& operator/= (const T&);
+    @\addedConcepts{requires HasModulusAssign<T, const T\&>}@    valarray<T>& operator%= (const T&);
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@       valarray<T>& operator+= (const T&);
+    @\addedConcepts{requires HasMinusAssign<T, const T\&>}@      valarray<T>& operator-= (const T&);
+    @\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     valarray<T>& operator^= (const T&);
+    @\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     valarray<T>& operator&= (const T&);
+    @\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      valarray<T>& operator|= (const T&);
+    @\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  valarray<T>& operator<<=(const T&);
+    @\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ valarray<T>& operator>>=(const T&);
 
-    @\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
-    @\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
-    @\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
-    @\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
-    @\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
-    @\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
-    @\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
-    @\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
-    @\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
-    @\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
+    @\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   valarray<T>& operator*= (const valarray<T>&);
+    @\addedConcepts{requires HasDivideAssign<T, const T\&>}@     valarray<T>& operator/= (const valarray<T>&);
+    @\addedConcepts{requires HasModulusAssign<T, const T\&>}@    valarray<T>& operator%= (const valarray<T>&);
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@       valarray<T>& operator+= (const valarray<T>&);
+    @\addedConcepts{requires HasMinusAssign<T, const T\&>}@      valarray<T>& operator-= (const valarray<T>&);
+    @\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     valarray<T>& operator^= (const valarray<T>&);
+    @\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      valarray<T>& operator|= (const valarray<T>&);
+    @\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     valarray<T>& operator&= (const valarray<T>&);
+    @\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  valarray<T>& operator<<=(const valarray<T>&);
+    @\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ valarray<T>& operator>>=(const valarray<T>&);
 
     // \ref{valarray.members} member functions:
     @\addedD{void swap(valarray\&\&);}@
 
     size_t size() const;
 
-    @\addedConcepts{requires HasPlusAssign<T>}@      T    sum() const;
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@      T    sum() const;
     @\addedConcepts{requires LessThanComparable<T>}@ T    min() const;
     @\addedConcepts{requires LessThanComparable<T>}@ T    max() const;
 
@@ -2179,11 +2173,11 @@ class template object which has reference semantics to the original array.
 \index{operator\~{}@\tcode{operator\~{}}!\tcode{valarray}}%
 \index{operator"!@\tcode{operator"!}!\tcode{valarray}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasUnaryPlus<T> \&\& Convertible<T::result_type, T>}@ 
+@\addedConcepts{requires HasUnaryPlus<T> \&\& Convertible<HasUnaryPlus<T>::result_type, T>}@ 
   valarray<T> operator+() const;
-@\addedConcepts{requires HasNegate<T> \&\& Convertible<T::result_type, T>}@ 
+@\addedConcepts{requires HasNegate<T> \&\& Convertible<HasNegate<T>::result_type, T>}@ 
   valarray<T> operator-() const;
-@\addedConcepts{requires HasComplement<T> \&\& Convertible<T::result_type, T>}@ 
+@\addedConcepts{requires HasComplement<T> \&\& Convertible<HasComplement<T>::result_type, T>}@ 
   valarray<T> operator~() const;
 @\addedConcepts{requires HasLogicalNot<T>}@ valarray<bool> operator!() const;
 \end{itemdecl}
@@ -2216,16 +2210,16 @@ applying the indicated operator to the corresponding element of the array.
 \index{operator<<=@\tcode{operator\shl=}!valarray@\tcode{valarray}}%
 \index{operator>>=@\tcode{operator\shr=}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const valarray<T>&);
-@\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const valarray<T>&);
-@\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const valarray<T>&);
-@\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const valarray<T>&);
-@\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const valarray<T>&);
-@\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const valarray<T>&);
-@\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const valarray<T>&);
-@\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const valarray<T>&);
-@\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const valarray<T>&);
-@\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const valarray<T>&);
+@\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   valarray<T>& operator*= (const valarray<T>&);
+@\addedConcepts{requires HasDivideAssign<T, const T\&>}@     valarray<T>& operator/= (const valarray<T>&);
+@\addedConcepts{requires HasModulusAssign<T, const T\&>}@    valarray<T>& operator%= (const valarray<T>&);
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@       valarray<T>& operator+= (const valarray<T>&);
+@\addedConcepts{requires HasMinusAssign<T, const T\&>}@      valarray<T>& operator-= (const valarray<T>&);
+@\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     valarray<T>& operator^= (const valarray<T>&);
+@\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     valarray<T>& operator&= (const valarray<T>&);
+@\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      valarray<T>& operator|= (const valarray<T>&);
+@\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  valarray<T>& operator<<=(const valarray<T>&);
+@\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ valarray<T>& operator>>=(const valarray<T>&);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2253,16 +2247,16 @@ hand side, the resulting behavior is undefined.
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{requires HasMultiplyAssign<T>}@   valarray<T>& operator*= (const T&);
-@\addedConcepts{requires HasDivideAssign<T>}@     valarray<T>& operator/= (const T&);
-@\addedConcepts{requires HasModulusAssign<T>}@    valarray<T>& operator%= (const T&);
-@\addedConcepts{requires HasPlusAssign<T>}@       valarray<T>& operator+= (const T&);
-@\addedConcepts{requires HasMinusAssign<T>}@      valarray<T>& operator-= (const T&);
-@\addedConcepts{requires HasBitXorAssign<T>}@     valarray<T>& operator^= (const T&);
-@\addedConcepts{requires HasBitAndAssign<T>}@     valarray<T>& operator&= (const T&);
-@\addedConcepts{requires HasBitOrAssign<T>}@      valarray<T>& operator|= (const T&);
-@\addedConcepts{requires HasLeftShiftAssign<T>}@  valarray<T>& operator<<=(const T&);
-@\addedConcepts{requires HasRightShiftAssign<T>}@ valarray<T>& operator>>=(const T&);
+@\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   valarray<T>& operator*= (const T&);
+@\addedConcepts{requires HasDivideAssign<T, const T\&>}@     valarray<T>& operator/= (const T&);
+@\addedConcepts{requires HasModulusAssign<T, const T\&>}@    valarray<T>& operator%= (const T&);
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@       valarray<T>& operator+= (const T&);
+@\addedConcepts{requires HasMinusAssign<T, const T\&>}@      valarray<T>& operator-= (const T&);
+@\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     valarray<T>& operator^= (const T&);
+@\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     valarray<T>& operator&= (const T&);
+@\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      valarray<T>& operator|= (const T&);
+@\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  valarray<T>& operator<<=(const T&);
+@\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ valarray<T>& operator>>=(const T&);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2314,7 +2308,7 @@ This function returns the number of elements in the array.
 
 \index{sum@\tcode{sum}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasPlusAssign<T>}@ T sum() const;
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@ T sum() const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2466,34 +2460,34 @@ Resizing invalidates all pointers and references to elements in the array.
 \index{operator||@\tcode{operator||}!valarray@\tcode{valarray}}%
 \begin{itemdecl}
 template<class T> 
-  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T, T> \&\& Convertible<HasMultiply<T, T>::result_type, T>}@
   valarray<T> operator*(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T, T> \&\& Convertible<HasDivide<T, T>::result_type, T>}@
   valarray<T> operator/(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T, T> \&\& Convertible<HasModulus<T, T>::result_type, T>}@
   valarray<T> operator%(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<HasPlus<T, T>::result_type, T>}@
   valarray<T> operator+(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T, T> \&\& Convertible<HasMinus<T, T>::result_type, T>}@
   valarray<T> operator-(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<HasBitXor<T, T>::result_type, T>}@
   valarray<T> operator^(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<HasBitAnd<T, T>::result_type, T>}@
   valarray<T> operator&(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<HasBitOr<T, T>::result_type, T>}@
   valarray<T> operator|(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasLeftShift<T, T> \&\& Convertible<HasLeftShift<T, T>::result_type, T>}@
   valarray<T> operator<<(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasRightShift<T, T> \&\& Convertible<HasRightShift<T, T>::result_type, T>}@
   valarray<T> operator>>(const valarray<T>&, const valarray<T>&);
 \end{itemdecl}
 
@@ -2518,64 +2512,64 @@ If the argument arrays do not have the same length, the behavior is undefined.%
 
 \begin{itemdecl}
 template<class T> 
-  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T, T> \&\& Convertible<HasMultiply<T, T>::result_type, T>}@
   valarray<T> operator* (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T, T> \&\& Convertible<HasMultiply<T, T>::result_type, T>}@
   valarray<T> operator* (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T, T> \&\& Convertible<HasDivide<T, T>::result_type, T>}@
   valarray<T> operator/ (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T, T> \&\& Convertible<HasDivide<T, T>::result_type, T>}@
   valarray<T> operator/ (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T, T> \&\& Convertible<HasModulus<T, T>::result_type, T>}@
   valarray<T> operator% (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T, T> \&\& Convertible<HasModulus<T, T>::result_type, T>}@
   valarray<T> operator% (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<HasPlus<T, T>::result_type, T>}@
   valarray<T> operator+ (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<HasPlus<T, T>::result_type, T>}@
   valarray<T> operator+ (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T, T> \&\& Convertible<HasMinus<T, T>::result_type, T>}@
   valarray<T> operator- (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T, T> \&\& Convertible<HasMinus<T, T>::result_type, T>}@
   valarray<T> operator- (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<HasBitXor<T, T>::result_type, T>}@
   valarray<T> operator^ (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasBitXor<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<HasBitXor<T, T>::result_type, T>}@
   valarray<T> operator^ (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<HasBitAnd<T, T>::result_type, T>}@
   valarray<T> operator& (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasBitAnd<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<HasBitAnd<T, T>::result_type, T>}@
   valarray<T> operator& (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<HasBitOr<T, T>::result_type, T>}@
   valarray<T> operator| (const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasBitOr<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<HasBitOr<T, T>::result_type, T>}@
   valarray<T> operator| (const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasLeftShift<T, T> \&\& Convertible<HasLeftShift<T, T>::result_type, T>}@
   valarray<T> operator<<(const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasLeftShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasLeftShift<T, T> \&\& Convertible<HasLeftShift<T, T>::result_type, T>}@
   valarray<T> operator<<(const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasRightShift<T, T> \&\& Convertible<HasRightShift<T, T>::result_type, T>}@
   valarray<T> operator>>(const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasRightShift<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasRightShift<T, T> \&\& Convertible<HasRightShift<T, T>::result_type, T>}@
   valarray<T> operator>>(const T&, const valarray<T>&);
 \end{itemdecl}
 
@@ -2624,10 +2618,10 @@ template<class T>
   @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator>=(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasLogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T, T>}@
   valarray<bool> operator&&(const valarray<T>&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasLogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T, T>}@
   valarray<bool> operator||(const valarray<T>&, const valarray<T>&);
 \end{itemdecl}
 
@@ -2689,16 +2683,16 @@ template<class T>
   @\addedConcepts{requires LessThanComparable<T>}@
   valarray<bool> operator>=(const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasLogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T, T>}@
   valarray<bool> operator&&(const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasLogicalAnd<T>}@
+  @\addedConcepts{requires HasLogicalAnd<T, T>}@
   valarray<bool> operator&&(const T&, const valarray<T>&);
 template<class T> 
-  @\addedConcepts{requires HasLogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T, T>}@
   valarray<bool> operator||(const valarray<T>&, const T&);
 template<class T> 
-  @\addedConcepts{requires HasLogicalOr<T>}@
+  @\addedConcepts{requires HasLogicalOr<T, T>}@
   valarray<bool> operator||(const T&, const valarray<T>&);
 \end{itemdecl}
 
@@ -2797,16 +2791,16 @@ namespace std {
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 
     slice_array(const slice_array&);
    ~slice_array();
@@ -2892,16 +2886,16 @@ object refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{slice_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{slice_array}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2944,16 +2938,16 @@ namespace std {
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 
     gslice_array(const gslice_array&);
    ~gslice_array();
@@ -3036,16 +3030,16 @@ refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{gslice_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{gslice_array}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3086,16 +3080,16 @@ namespace std {
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 
     mask_array(const mask_array&);
    ~mask_array();
@@ -3173,16 +3167,16 @@ object to which it refers.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{mask_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{mask_array}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3221,16 +3215,16 @@ namespace std {
     typedef T value_type;
 
     void operator=  (const valarray<T>&) const;
-    @\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-    @\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-    @\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-    @\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-    @\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-    @\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-    @\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-    @\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+    @\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+    @\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+    @\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+    @\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+    @\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+    @\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+    @\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+    @\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 
     indirect_array(const indirect_array&);
    ~indirect_array();
@@ -3327,16 +3321,16 @@ indirection.
 \index{operator<<=@\tcode{operator\shl=}!\tcode{indirect_array}}%
 \index{operator>>=@\tcode{operator\shr=}!\tcode{indirect_array}}%
 \begin{itemdecl}
-@\addedConcepts{requires HasMultiplyAssign<T>}@   void operator*= (const valarray<T>&) const;
-@\addedConcepts{requires HasDivideAssign<T>}@     void operator/= (const valarray<T>&) const;
-@\addedConcepts{requires HasModulusAssign<T>}@    void operator%= (const valarray<T>&) const;
-@\addedConcepts{requires HasPlusAssign<T>}@       void operator+= (const valarray<T>&) const;
-@\addedConcepts{requires HasMinusAssign<T>}@      void operator-= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitXorAssign<T>}@     void operator^= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitAndAssign<T>}@     void operator&= (const valarray<T>&) const;
-@\addedConcepts{requires HasBitOrAssign<T>}@      void operator|= (const valarray<T>&) const;
-@\addedConcepts{requires HasLeftShiftAssign<T>}@  void operator<<=(const valarray<T>&) const;
-@\addedConcepts{requires HasRightShiftAssign<T>}@ void operator>>=(const valarray<T>&) const;
+@\addedConcepts{requires HasMultiplyAssign<T, const T\&>}@   void operator*= (const valarray<T>&) const;
+@\addedConcepts{requires HasDivideAssign<T, const T\&>}@     void operator/= (const valarray<T>&) const;
+@\addedConcepts{requires HasModulusAssign<T, const T\&>}@    void operator%= (const valarray<T>&) const;
+@\addedConcepts{requires HasPlusAssign<T, const T\&>}@       void operator+= (const valarray<T>&) const;
+@\addedConcepts{requires HasMinusAssign<T, const T\&>}@      void operator-= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitXorAssign<T, const T\&>}@     void operator^= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitAndAssign<T, const T\&>}@     void operator&= (const valarray<T>&) const;
+@\addedConcepts{requires HasBitOrAssign<T, const T\&>}@      void operator|= (const valarray<T>&) const;
+@\addedConcepts{requires HasLeftShiftAssign<T, const T\&>}@  void operator<<=(const valarray<T>&) const;
+@\addedConcepts{requires HasRightShiftAssign<T, const T\&>}@ void operator>>=(const valarray<T>&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -3416,10 +3410,10 @@ namespace std {
   		    BinaryOperation1 @\farg{binary_op1}@,
   		    BinaryOperation2 @\farg{binary_op2}@);
   template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter>
-    requires HasPlus<InIter::value_type, _InIter::reference>
+    requires HasPlus<InIter::value_type, InIter::reference>
           && HasAssign<InIter::value_type, 
-                       HasPlus<InIter::value_type, _InIter::reference>::result_type>
-          && Constructible<InIter::value_type, _InIter::reference>
+                       HasPlus<InIter::value_type, InIter::reference>::result_type>
+          && Constructible<InIter::value_type, InIter::reference>
     OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
   	  	        OutIter @\farg{result}@);
   template<InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
@@ -3438,7 +3432,7 @@ namespace std {
      			        OutIter @\farg{result}@);
   template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
             Callable<auto, const InIter::value_type&, const InIter::value_type&> BinaryOperation>
-    requires Constructible<_InIter::value_type, _InIter::reference>
+    requires Constructible<InIter::value_type, InIter::reference>
           && OutputIterator<OutIter, BinaryOperation::result_type>
           && MoveAssignable<InIter::value_type>
           && CopyConstructible<BinaryOperation>
@@ -3577,10 +3571,10 @@ shall neither modify elements nor invalidate iterators or subranges.%
 \color{addclr}
 \begin{itemdecl}
 template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter>
-  requires HasPlus<InIter::value_type, _InIter::reference>
+  requires HasPlus<InIter::value_type, InIter::reference>
         && HasAssign<InIter::value_type, 
-                     HasPlus<InIter::value_type, _InIter::reference>::result_type>
-        && Constructible<InIter::value_type, _InIter::reference>
+                     HasPlus<InIter::value_type, InIter::reference>::result_type>
+        && Constructible<InIter::value_type, InIter::reference>
   OutIter partial_sum(InIter @\farg{first}@, InIter @\farg{last}@,
 	  	      OutIter @\farg{result}@);
 template<InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
@@ -3657,7 +3651,7 @@ template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> 
    			      OutIter @\farg{result}@);
 template <InputIterator InIter, OutputIterator<auto, const InIter::value_type&> OutIter, 
           Callable<auto, const InIter::value_type&, const InIter::value_type&> BinaryOperation>
-  requires Constructible<_InIter::value_type, _InIter::reference>
+  requires Constructible<InIter::value_type, InIter::reference>
         && OutputIterator<OutIter, BinaryOperation::result_type>
         && MoveAssignable<InIter::value_type>
         && CopyConstructible<BinaryOperation>
@@ -3745,7 +3739,7 @@ Exactly \tcode{last - first} increments and assignments.
 
 \section*{Acknowledgments}
 Daniel Kr\"ugler provided conceptualized
-versions of \tcode{iota} in N2666.
+versions of \tcode{iota} in N2666
 
 \bibliographystyle{plain}
 \bibliography{local}
