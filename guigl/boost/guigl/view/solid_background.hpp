@@ -15,6 +15,7 @@
 
 namespace boost { namespace guigl { namespace view {
 
+/// Behavior adding a solid background color over the area of the view.
 template<typename BaseView=base>
 class solid_background : public BaseView
 {
@@ -27,11 +28,16 @@ public:
         , m_background_color(args[_background])
     {}
     
+    /** Returns the bacground color. */
     const color_type &background_color() const
     {   return m_background_color; }
 
+    /** Sets the background color. */
+    void set_background_color(const color_type &color)
+    {   m_background_color = color; }
+
 protected:
-    BOOST_GUIGL_DRAW
+    void draw_prologue();
     
 private:
     color_type m_background_color;

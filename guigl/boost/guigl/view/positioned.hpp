@@ -23,6 +23,11 @@ template<>
 struct is_positioned<base> : public mpl::false_
 {};
 
+/// Behavior adding a position to the view.
+/** positioned adds a position to the inheriting view.  Since it is intended for
+    views that are positioned inside other views, it also has a pointer to
+    a possible parent view.
+*/
 template<typename BaseView=base>
 class positioned : public BaseView
 {
@@ -35,9 +40,12 @@ public:
         , m_parent(0)
     {}
     
+    /** Returns the position */
     const position_type &position() const
     {   return m_position; }
 
+    /** Returns the topmost ancestor, as defined by following the parent pointer
+        as long as the parent is also a positioned<> view. */
     const base *root() const
     {
         const base *root = this;
@@ -48,7 +56,8 @@ public:
     }
 
 protected:
-    BOOST_GUIGL_DRAW
+    void draw_prologue();
+    void draw_epilogue();
 
     friend class access;
     void parent(base &parent)

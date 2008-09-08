@@ -21,12 +21,6 @@ inline void colored<BaseView>::draw_prologue()
     BaseView::draw_prologue();
     glColor3d(m_color[0], m_color[1], m_color[2]);
 }
-    
-template<typename BaseView>
-inline void colored<BaseView>::draw_epilogue()
-{
-    BaseView::draw_epilogue();
-}
 
 }}}
 

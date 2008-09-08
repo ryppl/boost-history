@@ -21,6 +21,10 @@ namespace detail {
 
 }
 
+/// Behavior capturing dragging.
+/** Behavior capturing dragging (moving the mouse over the view with the button
+    held down).
+*/
 template<typename Derived, typename BaseView=base>
 class draggable : public mouse_tracking<BaseView>
 {
@@ -32,8 +36,6 @@ public:
     {}
 
 protected:
-    BOOST_GUIGL_DRAW
-
     bool on_event(const event_type &event_info);
 
 private:

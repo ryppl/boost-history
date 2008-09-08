@@ -46,7 +46,7 @@ public:
     {   return m_children; }
     
 protected:
-    BOOST_GUIGL_DRAW
+    void draw_prologue();
 
     ptr_vector<positioned<> > &children()
     {   return m_children; }

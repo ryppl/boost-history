@@ -32,12 +32,6 @@ inline void window<BaseView>::draw_prologue()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-template<typename BaseView>
-inline void window<BaseView>::draw_epilogue()
-{
-    BaseView::draw_epilogue();
-}
-
 }}}
 
 #endif // BOOST__GUIGL__VIEW__IMPL__WINDOW_HPP

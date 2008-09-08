@@ -20,6 +20,11 @@ namespace detail {
 
 }
 
+/// Behavior capturing clicking.
+/** clickable adds clicking behavior to the view.
+    The Derived class must have the method clickable_on_click(), which
+    will be called when the user completes a click in the view.
+*/
 template<typename Derived, typename BaseView=base>
 class clickable : public BaseView
 {

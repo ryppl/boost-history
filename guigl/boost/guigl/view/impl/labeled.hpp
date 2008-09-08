@@ -25,12 +25,6 @@ inline void labeled<BaseView>::draw_prologue()
     for (std::string::const_iterator it=m_label.begin(); it!=m_label.end(); it++)
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *it);
 }
-    
-template<typename BaseView>
-inline void labeled<BaseView>::draw_epilogue()
-{
-    BaseView::draw_epilogue();
-}
 
 }}}
 

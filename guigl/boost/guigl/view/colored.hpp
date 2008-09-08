@@ -28,8 +28,9 @@ public:
     {   return m_color; }
     const void set_color(const color_type &color)
     {   m_color = color; }
+    
 protected:
-    BOOST_GUIGL_DRAW
+    void draw_prologue();
 
 private:
     color_type m_color;

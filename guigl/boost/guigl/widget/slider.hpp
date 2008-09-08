@@ -26,6 +26,7 @@ typedef
                 view::positioned<>
     >   >   > slider_base_type;
 
+/// A slider storing a floating point value, changable by dragging in the GUI.
 class slider : public slider_base_type
 {
     typedef slider_base_type base_type;
@@ -36,9 +37,14 @@ public:
         , m_value(0)
     {}
 
+    /// Signal emitting changed values.
     boost::signal<void(const double &)> on_value_change;
+
+    /// Returns the value of the slider.
     double value()
     {   return m_value; }
+    
+    /// Sets the value of the slider.
     void set_value(double value)
     {
         m_value = value;

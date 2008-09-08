@@ -50,9 +50,6 @@ protected:
 
 }}}
 
-#define BOOST_GUIGL_DRAW                    \
-    void draw_prologue();                   \
-    void draw_epilogue();                   \
 
 #define BOOST_GUIGL_WIDGET_DRAW             \
     friend class ::boost::guigl::access;    \

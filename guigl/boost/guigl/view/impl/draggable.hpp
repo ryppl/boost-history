@@ -16,18 +16,6 @@
 
 namespace boost { namespace guigl { namespace view {
 
-template<typename Derived, typename BaseView>
-inline void draggable<Derived, BaseView>::draw_prologue()
-{
-    BaseView::draw_prologue();
-}
-
-template<typename Derived, typename BaseView>
-inline void draggable<Derived, BaseView>::draw_epilogue()
-{
-    BaseView::draw_epilogue();
-}
-
 namespace detail {
 
     template<typename Derived, typename BaseView>

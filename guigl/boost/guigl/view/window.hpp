@@ -29,7 +29,7 @@ public:
     {   return m_background_color; }
     
 protected:
-    BOOST_GUIGL_DRAW
+    void draw_prologue();
 
 private:
     color_type m_background_color;

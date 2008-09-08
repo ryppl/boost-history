@@ -25,12 +25,6 @@ inline void solid_background<BaseView>::draw_prologue()
     glRectd(0.0, 0.0, solid_background::size().x, solid_background::size().y);
 }
 
-template<typename BaseView>
-inline void solid_background<BaseView>::draw_epilogue()
-{
-    BaseView::draw_epilogue();
-}
-
 }}}
 
 #endif // BOOST__GUIGL__VIEW__IMPL__SOLID_BACKGROUND_HPP

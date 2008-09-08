@@ -26,11 +26,6 @@ inline void compound<BaseView>::draw_prologue()
         access::draw(*it);
 }
 
-template<typename BaseView>
-inline void compound<BaseView>::draw_epilogue()
-{
-    BaseView::draw_epilogue();
-}
 
 namespace detail {
 

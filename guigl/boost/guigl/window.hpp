@@ -22,13 +22,17 @@
 
 namespace boost { namespace guigl {
 
+/// A window placed on the user's desktop.
 class window : public guigl::widget::window, boost::noncopyable
 {
     typedef argument_pack<tag::label, tag::size, tag::position, tag::background>::type
         argument_pack_type;
 
 public:
-    window(const argument_pack_type &map);
+    /// Constructor taking named parameters.
+    /** \param args A pack of named parameters (accepts _label, _size, _position, _background).
+    */
+    window(const argument_pack_type &args);
     ~window();
 
     static void redraw(const view::positioned<> &v);

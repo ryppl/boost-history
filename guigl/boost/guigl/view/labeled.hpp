@@ -28,7 +28,7 @@ public:
     {   return m_label; }
 
 protected:
-    BOOST_GUIGL_DRAW
+    void draw_prologue();
 
 private:
     std::string m_label;

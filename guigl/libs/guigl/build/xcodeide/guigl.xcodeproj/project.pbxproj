@@ -96,6 +96,8 @@
 		081B078D0E5FF94A00EF7F91 /* draggable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = draggable.hpp; sourceTree = "<group>"; };
 		081B07900E5FF9B000EF7F91 /* draggable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = draggable.hpp; sourceTree = "<group>"; };
 		081B07930E5FFBEC00EF7F91 /* mouse_tracking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouse_tracking.hpp; sourceTree = "<group>"; };
+		088513240E689E650089DAD3 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
+		0885132B0E68AEC70089DAD3 /* guigl.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = guigl.qbk; sourceTree = "<group>"; };
 		0885D4290E539AF600DFFA5D /* test_field_map_compilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_field_map_compilation.cpp; sourceTree = "<group>"; };
 		0885D4300E539B5F00DFFA5D /* test_parameter_compilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_parameter_compilation.cpp; sourceTree = "<group>"; };
 		0885D46A0E539F7000DFFA5D /* test_parameter_dispatch_compilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_parameter_dispatch_compilation.cpp; sourceTree = "<group>"; };
@@ -357,6 +359,8 @@
 		08FD5DE40C1BA60700F00877 /* doc */ = {
 			isa = PBXGroup;
 			children = (
+				088513240E689E650089DAD3 /* Jamfile */,
+				0885132B0E68AEC70089DAD3 /* guigl.qbk */,
 			);
 			name = doc;
 			path = ../../doc;
@@ -462,7 +466,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "style=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \ncd ../../doc\nbjam --v2 --toolset=darwin $style";
+			shellScript = "style=`echo $BUILD_STYLE | sed 'y/DR/dr/'`  \ncd ../../doc\nbjam $style";
 		};
 		08FD5E6E0C1BA8BC00F00877 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

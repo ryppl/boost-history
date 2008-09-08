@@ -26,6 +26,7 @@ typedef
                 view::positioned<>
     >   >   > button_base_type;
 
+/// A button which sends a signal when clicked.
 class button : public button_base_type
 {
     typedef button_base_type base_type;
