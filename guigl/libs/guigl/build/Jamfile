@@ -1,0 +1,27 @@
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
+
+project boost/guigl 
+    : source-location ../src
+    : requirements
+        <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+    : usage-requirements
+        <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <library>/boost/signals//boost_signals
+    ;
+
+SOURCES =
+    window application
+    widget/button widget/labeled_button widget/slider ;
+#    view/positioned view/compound view/solid_background ;
+
+lib boost_guigl
+    : $(SOURCES).cpp
+    [ obj widget_window_obj : widget/window.cpp ]
+#    [ obj view_window_obj : view/window.cpp ]
+    ;
