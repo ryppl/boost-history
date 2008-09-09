@@ -16,9 +16,12 @@
 
 namespace component {
 
+// a regular Dataflow.Signals component
 class add : public boost::signals::filter<
     add,
+    // output signature
     void (int),
+    // input signature (must be listed to be accessible at runtime)
     void (int, int)>
 {
 public:
@@ -35,6 +38,11 @@ extension_export_components(boost::extensions::factory_map & fm)
 {
     using namespace boost::extensions;
     namespace blueprint = boost::dataflow::blueprint;
-    fm.get<blueprint::component, std::string>()["add"].set<blueprint::component_t<component::add, boost::dataflow::signals::tag> >();
-    std::cout << "hello!" << std::endl;
+    using boost::dataflow::signals::tag;
+
+    // "add" is the string key for this component
+    // blueprint::component is a polymorphic base class for components
+    fm.get<blueprint::component, std::string>()["add"]
+    // component_t inherits blueprint::component
+        .set<blueprint::component_t<component::add, tag> >();
 }
