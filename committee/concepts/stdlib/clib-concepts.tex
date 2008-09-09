@@ -101,6 +101,21 @@ result_type operator*(T&&);
 to better match with the dereference operator in \tcode{Iterator}. See
 Daniel Kr\"ugler's message c++std-lib-22198 on the reflector for
 rationale.
+
+\item Several updates to properly cope with abstract classes, thanks
+  to Daniel Kr\"ugler:
+  \begin{itemize}
+  \item Don't implicitly define \tcode{Returnable} concept maps for
+  abstract classes.
+  \item \tcode{HasDestructor} does not refine \tcode{VariableType},
+    since abstract classes can have destructors (but aren't
+    \tcode{VariableType}s). Similarly for
+    \tcode{ExplicitlyConvertible}.
+  \item Add a restriction to [concept.transform] that prohibits users
+    from adding concept maps for these concepts.
+  \end{itemize}
+  \item Implicitly define \tcode{TriviallyEqualityComparable} concept
+    maps for enumeration types.
 \end{itemize}
 
 \end{titlepage}
@@ -316,12 +331,12 @@ namespace std {
 
 \rSec2[concept.support]{Support concepts}
 \pnum
-The concepts in [concept.support] provide the ability to state
+\addedConcepts{The concepts in [concept.support] provide the ability to state
 template requirements for C++ type classifications ([basic.types]) and
 type relationships that cannot be expressed directly with concepts
 ([concept]). Concept maps for these concepts are implicitly defined.
 A program shall not provide concept maps for any concept in
-[concept.support].
+[concept.support].}
 
 \begin{itemdecl}
 concept Returnable<typename T> { }
@@ -338,7 +353,8 @@ concept Returnable<typename T> { }
 \addedConcepts{type \mbox{\tcode{T}} that is
   \mbox{\techterm{cv}} \mbox{\tcode{void}} or that meets the
   requirement \mbox{\tcode{MoveConstructible<T>}}
-  (\mbox{\ref{concept.copymove}}), the concept map
+  (\mbox{\ref{concept.copymove}}) and is not an abstract class,
+  the concept map 
   \mbox{\tcode{Returnable<T>}} shall be implicitly defined in
   namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
@@ -670,6 +686,10 @@ unambiguously derived from \mbox{\tcode{U}}, a concept map
 \end{itemdescr}
 
 \rSec2[concept.transform]{Type transformations}
+\pnum
+\addedConcepts{A program shall not provide concept maps for any concept in
+[concept.support].}
+
 \begin{itemdecl}
 auto concept IdentityOf<typename T> {
   typename type = T;
@@ -1329,8 +1349,8 @@ elements. If padding exists, the comparison may provide false
 negatives, but never false positives. \mbox{\exitnote}}
 
 \pnum
-\addedConcepts{\mbox{\requires} for every integral type
-  \mbox{\tcode{T}} and pointer type, a concept map
+\addedConcepts{\mbox{\requires} for every integral, pointer, or enumeration type
+  \mbox{\tcode{T}}, a concept map
   \mbox{\tcode{TriviallyEqualityComparable<T>}} shall be 
   defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
@@ -1437,7 +1457,7 @@ concept TriviallyDefaultConstructible<typename T> : DefaultConstructible<T> { }
 
 \rSec2[concept.destruct]{Destruction}
 \begin{itemdecl}
-auto concept HasDestructor<typename T> : VariableType<T> {
+auto concept HasDestructor<typename T> {
   T::~T();
 }
 \end{itemdecl}
@@ -1729,7 +1749,7 @@ constructible and have equality comparison operators.}
 \rSec2[concept.convertible]{Convertibility}
 
 \begin{itemdecl}
-auto concept ExplicitlyConvertible<typename T, typename U> : VariableType<T> {
+auto concept ExplicitlyConvertible<typename T, typename U> {
   explicit operator U(const T&);
 }
 \end{itemdecl}

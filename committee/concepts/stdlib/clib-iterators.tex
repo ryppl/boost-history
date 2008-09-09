@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Iterators \\
-(Revision 3)
+(Revision 4)
 \vspace{0.5in}
 
 \normalsize
@@ -59,14 +59,24 @@ Douglas Gregor and Andrew Lumsdaine \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2734=08-0244 \vspace{-6pt}
-\par\noindent Revises document number: N2323=07-0183 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2734=08-0244 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
 
 \section*{Introduction}
 \libintrotext{24}
+
+\paragraph*{Changes from N2734}
+\begin{itemize}
+\item Fixed the \tcode{HasMinus} requirement on
+  \tcode{reverse_iterator}'s \tcode{operator-}.
+\item When using \tcode{decltype} in the return type of one of the
+  iterator adaptors' \tcode{operator-} operations, use the
+  \tcode{base()} function rather than \tcode{current} to retrieve the
+  underlying iterator.
+\end{itemize}
 \end{titlepage}
 
 %% --------------------------------------------------
@@ -185,10 +195,10 @@ namespace std {
       const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
       const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
   template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
-    @\addedConcepts{requires HasMinus<Iter2::difference_type, Iter1::difference_type>}@
+    @\addedConcepts{requires HasMinus<Iter2, Iter1>}@
     auto operator-(
       const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.current - x.current);
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.base() - x.base());
   template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
     reverse_iterator<Iter@\removedConcepts{ator}@> operator+(
       @\changedConcepts{typename reverse_iterator<Iterator>::difference_type}{Iter::difference_type}@ n,
@@ -214,7 +224,7 @@ namespace std {
 
   template <@\changedConcepts{class}{InsertionContainer}@ Container> class insert_iterator;
   template <@\changedConcepts{class}{InsertionContainer}@ Container>
-    insert_iterator<Container> inserter(Container& x, typename Container::iterator i);
+    insert_iterator<Container> inserter(Container& x, Container::iterator i);
   @\addedConcepts{template<InsertionContainer Container>}@
     @\addedConcepts{concept_map Iterator<insert_iterator<Container> > \{ \}}@
 
@@ -490,10 +500,10 @@ namespace std {
       const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
       const reverse_iterator<Iter@\removedConcepts{ator}@2>& y);
   template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
-    @\addedConcepts{requires HasMinus<Iter2::difference_type, Iter1::difference_type>}@
+    @\addedConcepts{requires HasMinus<Iter2, Iter1>}@
     auto operator-(
       const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
-      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.current - x.current);
+      const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.base() - x.base());
   template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
     reverse_iterator<Iter@\removedConcepts{ator}@> operator+(
       @\changedConcepts{typename reverse_iterator<Iterator>::difference_type}{Iter::difference_type}@ n,
@@ -920,10 +930,10 @@ template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{
 \index{operator-@\tcode{operator-}!\tcode{reverse_iterator}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@2>
-  @\addedConcepts{requires HasMinus<Iter2::difference_type, Iter1::difference_type>}@
+  @\addedConcepts{requires HasMinus<Iter2, Iter1>}@
   auto operator-(
     const reverse_iterator<Iter@\removedConcepts{ator}@1>& x,
-    const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.current - x.current);
+    const reverse_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(y.base() - x.base());
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1329,7 +1339,7 @@ namespace std {
   };
 
   template <@\changedConcepts{class}{InsertionContainer}@ Container>
-    insert_iterator<Container> inserter(Container& x, typename Container::iterator i);
+    insert_iterator<Container> inserter(Container& x, Container::iterator i);
 
   @\addedConcepts{template<InsertionContainer Container>}@
     @\addedConcepts{concept_map Iterator<insert_iterator<Container> > \{ \}}@
@@ -1379,7 +1389,7 @@ iter = @\removedConcepts{container->}@insert(@\addedConcepts{*container, }@iter,
 \index{operator=@\tcode{operator=}!\tcode{insert_iterator}}%
 \begin{itemdecl}
 insert_iterator<Container>&
-  operator=(typename Container::value_type&& value);
+  operator=(Container::value_type&& value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1589,7 +1599,7 @@ initializing \tcode{current}.
 \end{itemdescr}
 
 \begin{itemdecl}
-explicit move_iterator(Iter@\removedConcepts{ator}@ i};
+explicit move_iterator(Iter@\removedConcepts{ator}@ i);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1931,6 +1941,9 @@ move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iterator& i
 \end{itemdescr}
 
 \end{paras}
+
+\section*{Acknowledgments}
+Thanks to Daniel Kr\"ugler for many helpful comments and corrections.
 
 \bibliographystyle{plain}
 \bibliography{../local}
