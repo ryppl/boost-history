@@ -50,7 +50,7 @@
 \begin{center}
 \huge
 Iterator Concepts for the C++0x Standard Library\\
-(Revision 4)
+(Revision 5)
 \vspace{0.5in}
 
 \normalsize
@@ -59,8 +59,8 @@ Douglas Gregor, Jeremy Siek and Andrew Lumsdaine \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2739=08-0249 \vspace{-6pt}
-\par\noindent Revises document number: N2695=08-0205 \vspace{-6pt}
+\par\noindent Document number: DRAFT \vspace{-6pt}
+\par\noindent Revises document number: N2739=08-0249 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -251,6 +251,19 @@ full libstdc++ test suite to ensure backward compatibility with
 existing iterators. Indeed, many of the observations that drove this
 refactoring came from implementation experience: the \tcode{operator*}
 ambiguity, for example, was initially detected by ConceptGCC. 
+
+\paragraph*{Changes from N2739}
+\begin{itemize}
+\item Moved the dereferenceability requirement on \tcode{operator*}
+  from the \tcode{InputIterator} concept to the \tcode{Iterator}
+  concept, since it applies to all iterators.
+\item Translated the \tcode{BackwardTraversal} axiom of the
+  \tcode{BidirectionalIterator} concept back into normative text,
+  since we can't easily express the preconditions of the operations
+  used.
+\item Fixed the associated function default implementations in
+  \tcode{RandomAccessIterator}.
+\end{itemize}
 
 \paragraph*{Changes from N2695}
 \begin{itemize}
@@ -641,9 +654,20 @@ concept Iterator<typename X> : Semiregular<X> {
   non-const copy of the iterator to dereference. We have verified this
   change with ConceptGCC and found no ill effects.}
 
+\color{addclr}
+\begin{itemdecl}
+reference operator*(X&& @\farg{a}@);
+\end{itemdecl}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+\mbox{\tcode{\farg{a}}}
+is dereferenceable.}
+
 \begin{itemdecl}
 postincrement_result operator++(X& r, int);
 \end{itemdecl}
+\color{black}
 
 \pnum
 \effects\
@@ -736,11 +760,6 @@ class.
 \begin{itemdecl}
 reference operator*(X&& @\farg{a}@); // inherited from Iterator<X>
 \end{itemdecl}
-
-\pnum
-\addedConcepts{\mbox{\requires}
-\mbox{\tcode{\farg{a}}}
-is dereferenceable.}
 
 \pnum
 \addedConcepts{\mbox{\returns}
@@ -950,11 +969,6 @@ concept BidirectionalIterator<typename X> : ForwardIterator<X> {
 
   X& operator--(X&);
   postdecrement_result operator--(X&, int);
-
-  axiom BackwardTraversal(X a, X b) {
-    --(++a) == a;
-    if (--a == --b) a == b;
-  }
 }
 \end{itemdecl}
 \color{black}
@@ -972,6 +986,12 @@ X& operator--(X& r);
 \pnum
 \addedConcepts{\mbox{\precondition}
 there exists \mbox{\tcode{s}} such that \mbox{\tcode{r == ++s}}.}
+
+\pnum
+\addedConcepts{\mbox{\requires} 
+\mbox{\tcode{-{}-(++r) == r}} and, 
+given lvalues \mbox{\tcode{a}} and \mbox{\tcode{b}} of type \mbox{\tcode{X}},
+\mbox{\tcode{-{}-a == -{}-b}} implies \mbox{\tcode{a == b}}}
 
 \pnum
 \addedConcepts{\mbox{\postcondition}
@@ -1011,10 +1031,10 @@ concept RandomAccessIterator<typename X> : BidirectionalIterator<X>, LessThanCom
   requires Convertible<subscript_reference, const value_type&>;
 
   X& operator+=(X&, difference_type);
-  X  operator+ (const X& x, difference_type n) { X tmp(x); x += n; return x; }
-  X  operator+ (difference_type n, const X& x) { X tmp(x); x += n; return x; }
+  X  operator+ (const X& x, difference_type n) { X tmp(x); tmp += n; return tmp; }
+  X  operator+ (difference_type n, const X& x) { X tmp(x); tmp += n; return tmp; }
   X& operator-=(X&, difference_type);
-  X  operator- (const X& x, difference_type n) { X tmp(x); x -= n; return x; }
+  X  operator- (const X& x, difference_type n) { X tmp(x); tmp -= n; return tmp; }
 
   difference_type operator-(const X&, const X&);
   subscript_reference operator[](const X& x, difference_type n);
@@ -1249,6 +1269,8 @@ iterator_traits<Iterator>::pointer
 \end{codeblock}
 
 may be defined as \tcode{void}.
+
+\editorial{Paragraphs 2--5 of this section are unchanged.}
 
 \setcounter{Paras}{5}
 \pnum
