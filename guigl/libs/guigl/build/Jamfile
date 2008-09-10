@@ -17,11 +17,9 @@ project boost/guigl
 
 SOURCES =
     window application
-    widget/button widget/labeled_button widget/slider ;
-#    view/positioned view/compound view/solid_background ;
+    widget/button widget/labeled_button widget/slider widget/compound ;
 
 lib boost_guigl
     : $(SOURCES).cpp
     [ obj widget_window_obj : widget/window.cpp ]
-#    [ obj view_window_obj : view/window.cpp ]
     ;

@@ -128,6 +128,8 @@
 		0897912F0E5DBB0F00C79062 /* labeled_button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = labeled_button.hpp; sourceTree = "<group>"; };
 		0897913B0E5DBC1000C79062 /* glut.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = glut.hpp; sourceTree = "<group>"; };
 		089791BA0E5DC06400C79062 /* event.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event.hpp; sourceTree = "<group>"; };
+		089926680E7865B500285958 /* compound.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compound.hpp; sourceTree = "<group>"; };
+		0899266B0E78664900285958 /* compound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compound.cpp; sourceTree = "<group>"; };
 		08998DDF0E528C1F00F583A2 /* window.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = window.hpp; sourceTree = "<group>"; };
 		089B15050E5302870033B2D8 /* test_field_map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_field_map.cpp; sourceTree = "<group>"; };
 		089B15410E5304660033B2D8 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = types.hpp; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				08978E1F0E5D9E1900C79062 /* window.cpp */,
 				081B06720E5FD90300EF7F91 /* labeled_button.cpp */,
 				081B07890E5FF8D100EF7F91 /* slider.cpp */,
+				0899266B0E78664900285958 /* compound.cpp */,
 			);
 			path = widget;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 				08978E0C0E5D9C2200C79062 /* window.hpp */,
 				0897912F0E5DBB0F00C79062 /* labeled_button.hpp */,
 				081B076E0E5FF2DC00EF7F91 /* slider.hpp */,
+				089926680E7865B500285958 /* compound.hpp */,
 			);
 			path = widget;
 			sourceTree = "<group>";
