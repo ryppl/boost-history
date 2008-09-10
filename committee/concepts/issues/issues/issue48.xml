@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="48" status="New">
+<issue num="48" status="WP">
   <title>Missing <code>iterator</code> to <code>const_iterator</code> conversion</title>
 <section><sref ref="[container.concepts]"/></section>
 <submitter>LWG</submitter>

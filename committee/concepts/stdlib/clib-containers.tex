@@ -91,6 +91,7 @@ Pablo Halpern,  Bloomberg, L.P.
   value inserted is the value now stored at the place of
   insertion. Also, added *\tcode{Insertion} axioms to the emplace
   concepts (all thanks to Alisdair Meredith).
+\item Convertibility requirement from \tcode{iterator} to \tcode{const_iterator} in the container concepts. Resolves concepts issue \#48.
 \end{itemize}
 
 \end{titlepage}
@@ -949,8 +950,9 @@ concept Container<typename C> {
   ForwardIterator iterator;
   ForwardIterator const_iterator;
 
-  requires SameType<ForwardIterator<iterator>::value_type, value_type> 
-           && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
+  requires Convertible<iterator, const_iterator>
+        && SameType<ForwardIterator<iterator>::value_type, value_type> 
+        && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
   bool           empty(const C& c) { return begin(c) == end(c); }
   size_type      size(const C& c)  { return std::distance(begin(c), end(c)); }
@@ -1125,8 +1127,9 @@ auto concept MemberContainer<typename C> {
 
   ForwardIterator iterator;
   ForwardIterator const_iterator;
-  requires SameType<ForwardIterator<iterator>::value_type, value_type> 
-           && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
+  requires Convertible<iterator, const_iterator>
+        && SameType<ForwardIterator<iterator>::value_type, value_type> 
+        && SameType<ForwardIterator<const_iterator>::value_type, value_type>;
 
   bool           C::empty() const { return  this->begin() == this->end(); }
   size_type      C::size() const  { return std::distance(this->begin(), this->end()); }
