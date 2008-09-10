@@ -138,6 +138,8 @@
 		089E34A60E5BB90900D9AD51 /* typed_keyword.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_keyword.hpp; sourceTree = "<group>"; };
 		089E34AB0E5C865400D9AD51 /* typed_name.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_name.hpp; sourceTree = "<group>"; };
 		089E86720E5A80E500DA4902 /* test_parameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_parameter.cpp; sourceTree = "<group>"; };
+		08A048C40E77A1B70034FD11 /* navigable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = navigable.hpp; sourceTree = "<group>"; };
+		08A048CF0E77A2E70034FD11 /* navigable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = navigable.hpp; sourceTree = "<group>"; };
 		08A13C090E535040008C8A10 /* field_map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = field_map.hpp; sourceTree = "<group>"; };
 		08A77AB30E4F91AA00B8793E /* Jamroot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Jamroot; path = ../../../../Jamroot; sourceTree = SOURCE_ROOT; };
 		08A77AB40E4F91AB00B8793E /* LICENSE_1_0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE_1_0.txt; path = ../../../../LICENSE_1_0.txt; sourceTree = SOURCE_ROOT; };
@@ -214,6 +216,7 @@
 				081B07930E5FFBEC00EF7F91 /* mouse_tracking.hpp */,
 				08D0F2550E6712E90026C6DF /* active_colored.hpp */,
 				08E17F600E76DE81008EAE5E /* three_dimensional.hpp */,
+				08A048C40E77A1B70034FD11 /* navigable.hpp */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				08E225F00E65D5C700C3319B /* mouse_tracking.hpp */,
 				08D0F25D0E67139E0026C6DF /* active_colored.hpp */,
 				08E17F660E76E062008EAE5E /* three_dimensional.hpp */,
+				08A048CF0E77A2E70034FD11 /* navigable.hpp */,
 			);
 			path = impl;
 			sourceTree = "<group>";

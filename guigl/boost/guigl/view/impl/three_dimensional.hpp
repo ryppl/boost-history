@@ -19,17 +19,14 @@ template<typename BaseView>
 inline void three_dimensional<BaseView>::draw_prologue()
 {
     BaseView::draw_prologue();
+    glMatrixMode(GL_PROJECTION);
     glPushMatrix();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	double xy_aspect = BaseView::size().x / BaseView::size().y;
 
-	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glFrustum(xy_aspect*-0.5, xy_aspect*0.5, -0.5, 0.5, 0.5, 5000);
-
-	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0, 0, -500);
 }
     
 template<typename BaseView>

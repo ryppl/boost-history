@@ -6,32 +6,38 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-#ifndef BOOST__GUIGL__VIEW__THREE_DIMENSIONAL_HPP
-#define BOOST__GUIGL__VIEW__THREE_DIMENSIONAL_HPP
+#ifndef BOOST__GUIGL__VIEW__NAVIGABLE_HPP
+#define BOOST__GUIGL__VIEW__NAVIGABLE_HPP
 
 #include <boost/guigl/view/base.hpp>
+#include <boost/guigl/view/draggable.hpp>
 
 namespace boost { namespace guigl { namespace view {
 
-/// Behavior adding three-dimensionality to the view.
-/** three_dimensional adds support for three-dimensional graphics in a view.
-*/
 template<typename BaseView=base>
-class three_dimensional : public BaseView
+class navigable : public draggable<navigable<BaseView>, BaseView>
 {
 public:
-    typedef BaseView base_type;
+    typedef draggable<navigable<BaseView>, BaseView> base_type;
 
     template<typename ArgumentPack>
-    three_dimensional(const ArgumentPack &args)
+    navigable(const ArgumentPack &args)
         : base_type(args)
+        , m_angle(0)
     {}
 
 protected:
     void draw_prologue();
     void draw_epilogue();
+    
+    void draggable_on_drag(const position_type &position);
+
+    friend class draggable<navigable<BaseView>, BaseView>;
+
+private:
+    double m_angle;
 };
 
 }}}
 
-#endif // BOOST__GUIGL__VIEW__THREE_DIMENSIONAL_HPP
+#endif // BOOST__GUIGL__VIEW__NAVIGABLE_HPP

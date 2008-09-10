@@ -9,6 +9,7 @@
 #include "two_spheres.hpp"
 
 #include <boost/guigl/view/impl/colored.hpp>
+#include <boost/guigl/view/impl/navigable.hpp>
 #include <boost/guigl/view/impl/positioned.hpp>
 #include <boost/guigl/view/impl/solid_background.hpp>
 #include <boost/guigl/view/impl/three_dimensional.hpp>
@@ -17,11 +18,12 @@
 void two_spheres::draw_prologue()
 {
     base_type::draw_prologue();
-    glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     gluSphere(static_cast<GLUquadric *>(sphere()), 10, 4, 4);
+    glLoadIdentity();
     glTranslatef(50,50,50);
     gluSphere(static_cast<GLUquadric *>(sphere()), 10, 4, 4);
-    glPopMatrix();
 }
 
 void two_spheres::draw()

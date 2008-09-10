@@ -37,6 +37,10 @@ public:
 
 protected:
     bool on_event(const event_type &event_info);
+    const position_type &drag_origin() const
+    {   return m_drag_origin; }
+    void set_drag_origin(const position_type &origin)
+    {   m_drag_origin = origin; }
 
 private:
     void draggable_on_drag(const position_type &position)
@@ -45,6 +49,8 @@ private:
     }
 
     friend struct detail::draggable_static_visitor<Derived,BaseView>;
+    
+    position_type m_drag_origin;
 };
 
 }}}

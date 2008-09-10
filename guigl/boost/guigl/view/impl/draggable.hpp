@@ -38,7 +38,10 @@ namespace detail {
         bool operator()(const button_event &event_info) const
         {
             if(event_info.direction == direction::down)
+            {
+                m_draggable.m_drag_origin = m_draggable.mouse_state().get().position;
                 m_draggable.draggable_on_drag(m_draggable.mouse_state().get().position);
+            }
             return true;
         }
         

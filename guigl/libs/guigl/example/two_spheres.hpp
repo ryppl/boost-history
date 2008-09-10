@@ -12,16 +12,17 @@
 #include <boost/guigl/view/colored.hpp>
 #include <boost/guigl/view/positioned.hpp>
 #include <boost/guigl/view/solid_background.hpp>
+#include <boost/guigl/view/navigable.hpp>
 #include <boost/guigl/view/three_dimensional.hpp>
 
 typedef
     boost::guigl::view::colored<
-        boost::guigl::view::three_dimensional<
-            boost::guigl::view::solid_background<
-                boost::guigl::view::positioned<>
-    >   >   >   two_spheres_base_type;
+        boost::guigl::view::navigable<
+            boost::guigl::view::three_dimensional<
+                boost::guigl::view::solid_background<
+                    boost::guigl::view::positioned<>
+    >   >   >   >   two_spheres_base_type;
 
-/// A slider storing a floating point value, changable by dragging in the GUI.
 class two_spheres : public two_spheres_base_type
 {
     typedef two_spheres_base_type base_type;
