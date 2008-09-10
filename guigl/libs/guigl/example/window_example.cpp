@@ -17,12 +17,15 @@
 #include <boost/bind.hpp>
 #include <boost/bind/placeholders.hpp>
 
+#include "two_spheres.hpp"
+
 using namespace boost::guigl;
 
 color_type make_grey(double value)
 {
     return color_type(value, value, value);
 }
+
 
 int main()
 {
@@ -63,6 +66,9 @@ int main()
     layout::grid grid_layout(( _grid_size=test_window3.size(), _horizontal=3, _vertical=3 ));
     for(int i=1; i<=9; i++)
         test_window3 << grid_layout.create<widget::button>(( _background=color_type(1.0/i,1.0/i,1.0/i) ));
+    
+    window test_window_3d(( _depth = true, _label="3D", _color=make_grey(1) ));
+    test_window_3d << new two_spheres(default_parameters());
     
     application::run();
 }

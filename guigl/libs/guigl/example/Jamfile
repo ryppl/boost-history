@@ -6,9 +6,9 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #----------------------------------------------===============================*/
 
-project boost/guigl/test
+project boost/guigl/example
     : requirements
         <library>$(TOP)/libs/guigl/build//boost_guigl/<link>static
     ;
 
-exe window_example : window_example.cpp ;
+exe window_example : window_example.cpp two_spheres.cpp ;

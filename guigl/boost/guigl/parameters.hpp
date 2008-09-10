@@ -21,6 +21,7 @@ namespace keywords {
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(background,const color_type,(color_type(0,0,0)))
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(color,const color_type,(color_type(1,1,1)))
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(active_color,const color_type,(color_type(1,0,0)))
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(depth,const bool,false)
     
     typedef boost::parameter::aux::empty_typed_arg_list default_parameters;
 }

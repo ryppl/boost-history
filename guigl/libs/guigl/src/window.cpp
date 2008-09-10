@@ -26,11 +26,15 @@ public:
         glutInit(&argc,0);
     }
     
-    int create_window(const size_type &size, const std::string &label, window::impl *impl)
+    int create_window(const size_type &size, const std::string &label, bool depth, window::impl *impl)
     {
         glutInitWindowSize(size.x, size.y);
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA );
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | (depth?GLUT_DEPTH:0));
         int id = glutCreateWindow(label.c_str());
+        if(depth)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
         s_windows[id] = impl;
         
        	glutDisplayFunc(display);
@@ -66,7 +70,7 @@ public:
         if(!s_glut)
             s_glut = new glut();
         m_label = map[_label];
-        m_id = s_glut->create_window(map[_size], m_label, this);
+        m_id = s_glut->create_window(map[_size], m_label, map[_depth], this);
     }
     void display()
     {

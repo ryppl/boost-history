@@ -151,6 +151,11 @@
 		08D560D70E5299E6005A2391 /* window_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window_example.cpp; sourceTree = "<group>"; };
 		08D5614B0E529DF1005A2391 /* application.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = application.hpp; sourceTree = "<group>"; };
 		08D561500E529E3E005A2391 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
+		08E17F600E76DE81008EAE5E /* three_dimensional.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = three_dimensional.hpp; sourceTree = "<group>"; };
+		08E17F660E76E062008EAE5E /* three_dimensional.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = three_dimensional.hpp; sourceTree = "<group>"; };
+		08E17F6E0E773D25008EAE5E /* two_spheres.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = two_spheres.cpp; sourceTree = "<group>"; };
+		08E17F6F0E773D30008EAE5E /* two_spheres.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = two_spheres.hpp; sourceTree = "<group>"; };
+		08E17FC10E774298008EAE5E /* glu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = glu.hpp; sourceTree = "<group>"; };
 		08E225F00E65D5C700C3319B /* mouse_tracking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouse_tracking.hpp; sourceTree = "<group>"; };
 		08F506AB0E5B41AD0020D95E /* typed_tagged_argument.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_tagged_argument.hpp; sourceTree = "<group>"; };
 		08F506AF0E5B42930020D95E /* typed_arg_list.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_arg_list.hpp; sourceTree = "<group>"; };
@@ -186,6 +191,8 @@
 			children = (
 				08D560D20E529971005A2391 /* Jamfile */,
 				08D560D70E5299E6005A2391 /* window_example.cpp */,
+				08E17F6E0E773D25008EAE5E /* two_spheres.cpp */,
+				08E17F6F0E773D30008EAE5E /* two_spheres.hpp */,
 			);
 			name = example;
 			path = ../../example;
@@ -206,6 +213,7 @@
 				081B078D0E5FF94A00EF7F91 /* draggable.hpp */,
 				081B07930E5FFBEC00EF7F91 /* mouse_tracking.hpp */,
 				08D0F2550E6712E90026C6DF /* active_colored.hpp */,
+				08E17F600E76DE81008EAE5E /* three_dimensional.hpp */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -234,6 +242,7 @@
 				081B07900E5FF9B000EF7F91 /* draggable.hpp */,
 				08E225F00E65D5C700C3319B /* mouse_tracking.hpp */,
 				08D0F25D0E67139E0026C6DF /* active_colored.hpp */,
+				08E17F660E76E062008EAE5E /* three_dimensional.hpp */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -301,6 +310,7 @@
 			children = (
 				08AD8F620E5CD63400BFB2C8 /* opengl.hpp */,
 				0897913B0E5DBC1000C79062 /* glut.hpp */,
+				08E17FC10E774298008EAE5E /* glu.hpp */,
 			);
 			path = platform;
 			sourceTree = "<group>";
