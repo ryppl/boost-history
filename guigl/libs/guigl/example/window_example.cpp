@@ -19,6 +19,9 @@
 
 #include "two_spheres.hpp"
 
+#include <iostream>
+
+
 using namespace boost::guigl;
 
 color_type make_grey(double value)
@@ -26,6 +29,11 @@ color_type make_grey(double value)
     return color_type(value, value, value);
 }
 
+void idle()
+{
+    std::cout << "Idle called once." << std::endl;
+    application::on_idle().disconnect_all_slots();
+}
 
 int main()
 {
@@ -70,5 +78,6 @@ int main()
     window test_window_3d(( _depth = true, _label="3D", _color=make_grey(1) ));
     test_window_3d << new two_spheres(default_parameters());
     
+    application::on_idle().connect(&idle);
     application::run();
 }

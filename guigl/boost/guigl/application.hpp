@@ -10,14 +10,14 @@
 #define BOOST__GUIGL__APPLICATION_HPP
 
 
-#include <GLUT/glut.h>
-
+#include <boost/signals.hpp>
 
 namespace boost { namespace guigl {
 
 class application {
 public:
     static void run();
+    static boost::signal<void()> &on_idle();
 };
 
 }}
