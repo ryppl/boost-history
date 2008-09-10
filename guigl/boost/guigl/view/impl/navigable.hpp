@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__VIEW__IMPL__NAVIGABLE_HPP
 #define BOOST__GUIGL__VIEW__IMPL__NAVIGABLE_HPP
 
+#include <boost/guigl/view/navigable.hpp>
 #include <boost/guigl/view/impl/draggable.hpp>
 #include <boost/guigl/window.hpp>
 
