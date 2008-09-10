@@ -120,6 +120,13 @@ rationale.
     \tcode{LessThanComparable} rather than \tcode{HasLess},
     \tcode{HasGreater}, \tcode{HasLessEqual}, and
     \tcode{HasGreatEqual}. 
+  \item Added the \tcode{HasSubscript} 
+    concept, from Daniel Kr\"ugler, to finish providing concepts for
+    all overloadable operators.
+  \item Based on the resolution to library issue 402 (and the
+    follow-on issue 866), there is no longer a need for the
+    \tcode{HasPlacementNew} concept in the Standard Library, so it has
+    been removed.
 \end{itemize}
 
 \end{titlepage}
@@ -261,6 +268,7 @@ namespace std {
   auto concept HasRightShift<typename T, typename U> @\textit{see below}@;
   auto concept HasDereference<typename T> @\textit{see below}@;
   auto concept HasAddressOf<typename T> @\textit{see below}@;
+  auto concept HasSubscript<typename T, typename U> @\textit{see below}@;
   auto concept Callable<typename F, typename... Args> @\textit{see below}@;
   auto concept HasAssign<typename T, typename U> @\textit{see below}@;
   auto concept HasPlusAssign<typename T, typename U> @\textit{see below}@;
@@ -312,7 +320,6 @@ namespace std {
   auto concept Swappable<typename T> @\textit{see below}@;
 
   // \ref{concept.memory}, memory allocation:
-  auto concept HasPlacementNew<typename T> @\textit{see below}@;
   auto concept FreeStoreAllocatable<typename T> @\textit{see below}@;
 
   // \ref{concept.regular}, regular types:
@@ -1050,6 +1057,18 @@ auto concept HasAddressOf<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
+auto concept HasSubscript<typename T, typename U> {
+  typename result_type;
+  result_type operator[](T&&, const U&);
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes types with a subscript \mbox{\tcode{operator[].}}}
+\end{itemdescr}
+
+\begin{itemdecl}
 auto concept Callable<typename F, typename... Args> {
   typename result_type;
   result_type operator()(F&&, Args...);
@@ -1671,17 +1690,6 @@ and \mbox{\tcode{u}} has the value originally held by \mbox{\tcode{t}}.}
 \end{itemdescr}
 
 \rSec2[concept.memory]{Memory allocation}
-\begin{itemdecl}
-auto concept HasPlacementNew<typename T> {
-  void* T::operator new(size_t size, void*);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} Describes types that have a placement new.}
-\end{itemdescr}
-
 \begin{itemdecl}
 auto concept FreeStoreAllocatable<typename T> {
   void* T::operator new(size_t size);
