@@ -24,7 +24,7 @@ inline void slider::draw_prologue()
     base_type::draw_prologue();
 
     use_active_color();
-    glRectd(0,0,m_value * size().x, size().y);
+    glRectd(0,0,(m_value-m_min) * size().x / (m_max-m_min), size().y);
 }
 
 inline void slider::draw_epilogue()
@@ -34,9 +34,22 @@ inline void slider::draw_epilogue()
 
 void slider::draggable_on_drag(const position_type &position)
 {
-    m_value = position.x / size().x;
-    guigl::window::redraw(*this);
-    on_value_change(m_value);
+    double new_value = (position.x / size().x) * (m_max-m_min);
+    if(m_step!=0.0)
+        new_value = round(new_value / m_step) * m_step;
+    new_value += m_min;
+    set_value(new_value);
 }
+
+void slider::set_value(double value)
+{
+    if(m_value != value)
+    {
+        m_value = value;
+        on_value_change(value);
+        guigl::window::redraw(*this);
+    }
+}
+
 
 }}}

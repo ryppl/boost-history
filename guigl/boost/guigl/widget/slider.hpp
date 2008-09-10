@@ -34,7 +34,8 @@ public:
     template<typename ArgumentPack>
     slider(const ArgumentPack &args)
         : slider_base_type(args)
-        , m_value(0)
+        , m_value(args[_min])
+        , m_min(args[_min]), m_max(args[_max]), m_step(args[_step])
     {}
 
     /// Signal emitting changed values.
@@ -45,16 +46,14 @@ public:
     {   return m_value; }
     
     /// Sets the value of the slider.
-    void set_value(double value)
-    {
-        m_value = value;
-        on_value_change(value);
-    }
+    void set_value(double value);
 protected:
     BOOST_GUIGL_WIDGET_DRAW
     
 private:
     double m_value;
+    double m_min, m_max, m_step;
+    
     void draggable_on_drag(const position_type &position);
     
     friend class view::draggable<slider,
