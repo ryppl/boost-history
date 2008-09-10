@@ -21,7 +21,8 @@ void navigable<BaseView>::draw_prologue()
     base_type::draw_prologue();
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
-    glRotated(m_angle, 0, 1, 0);
+    glRotated(m_angle.x, 0, 1, 0);
+    glRotated(m_angle.y, 1, 0, 0);
 	glTranslatef(0, 0, -500);
 }
 
@@ -36,7 +37,7 @@ void navigable<BaseView>::draw_epilogue()
 template<typename BaseView>
 void navigable<BaseView>::draggable_on_drag(const position_type &position)
 {
-    m_angle += position.x - base_type::drag_origin().x;
+    m_angle += position - base_type::drag_origin();
     base_type::set_drag_origin(position);
     guigl::window::redraw(*this);
 }

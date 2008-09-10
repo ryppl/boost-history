@@ -23,7 +23,7 @@ public:
     template<typename ArgumentPack>
     navigable(const ArgumentPack &args)
         : base_type(args)
-        , m_angle(0)
+        , m_angle(0,0)
     {}
 
 protected:
@@ -35,7 +35,7 @@ protected:
     friend class draggable<navigable<BaseView>, BaseView>;
 
 private:
-    double m_angle;
+    position_type m_angle;
 };
 
 }}}
