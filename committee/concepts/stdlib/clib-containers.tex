@@ -97,6 +97,9 @@ Pablo Halpern,  Bloomberg, L.P.
   \tcode{reference} types of a container's iterators to the
   \tcode{reference} and \tcode{const_reference} types of the
   container.
+\item Use the new \tcode{ValueType} concept, rather than
+  \tcode{ObjectType}, to constrain the container's element types, to
+  properly exclude abstract classes.
 \end{itemize}
 
 \end{titlepage}
@@ -947,7 +950,7 @@ concept maps adapting member to free syntax follow in
 
 \begin{itemdecl}
 concept Container<typename C> {
-  ObjectType           value_type      = typename C::value_type;
+  ValueType           value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1127,7 +1130,7 @@ concept EmplacementContainer<typename C, typename... Args> : InsertionContainer<
 \color{addclr}
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
-  ObjectType           value_type      = typename C::value_type;
+  ValueType           value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1502,7 +1505,7 @@ Headers \tcode{<array>}, \tcode{<deque>}, \tcode{<forward_list>}, \tcode{<list>}
 \index{array@\tcode{<array>}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, size_t N > 
+  template <@\changedConcepts{class}{ValueType}@ T, size_t N > 
     @\addedConcepts{requires NothrowDestructible<T>}@
     struct array;
   template <@\changedConcepts{class}{EqualityComparable}@ T, size_t N>
@@ -1542,7 +1545,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
     @\addedConcepts{requires NothrowDestructible<T>}@
     class deque;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@>
@@ -1557,11 +1560,11 @@ namespace std {
     bool operator>=(const deque<T,Alloc@\removedConcepts{ator}@>& x, const deque<T,Alloc@\removedConcepts{ator}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const deque<T,Alloc@\removedConcepts{ator}@>& x, const deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>&& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>&& y);
 }
 \end{codeblock}
@@ -1571,7 +1574,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
     @\addedConcepts{requires NothrowDestructible<T>}@
     class forward_list; 
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@> 
@@ -1586,7 +1589,7 @@ namespace std {
     bool operator>=(const forward_list<T,Alloc@\removedConcepts{ator}@>& x, const forward_list<T,Alloc@\removedConcepts{ator}@>& y); 
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Alloc@\removedConcepts{ator}@> 
     bool operator<=(const forward_list<T,Alloc@\removedConcepts{ator}@>& x, const forward_list<T,Alloc@\removedConcepts{ator}@>& y); 
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@> 
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@> 
     void swap(forward_list<T,Alloc@\removedConcepts{ator}@>& x, forward_list<T,Alloc@\removedConcepts{ator}@>& y); 
 }
 \end{codeblock}
@@ -1596,7 +1599,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
     @\addedConcepts{requires NothrowDestructible<T>}@
     class list;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@>
@@ -1611,11 +1614,11 @@ namespace std {
     bool operator>=(const list<T,Alloc@\removedConcepts{ator}@>& x, const list<T,Alloc@\removedConcepts{ator}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const list<T,Alloc@\removedConcepts{ator}@>& x, const list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(list<T,Alloc@\removedConcepts{ator}@>& x, list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(list<T,Alloc@\removedConcepts{ator}@>&& x, list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(list<T,Alloc@\removedConcepts{ator}@>& x, list<T,Alloc@\removedConcepts{ator}@>&& y);
 }
 \end{codeblock}
@@ -1625,7 +1628,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
     @\addedConcepts{requires FrontInsertionContainer<Cont> \&\& BackInsertionContainer<Cont>}@
           @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
@@ -1642,24 +1645,24 @@ namespace std {
     bool operator>=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>&& x, queue<T,Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>&& y);
 
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{{class}}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
           @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue;
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 }
 \end{codeblock}
@@ -1669,7 +1672,7 @@ namespace std {
 
 \begin{codeblock} 
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
     @\addedConcepts{requires SameType<Cont::value_type, T>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class stack;
@@ -1685,11 +1688,11 @@ namespace std {
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T,@\changedConcepts{Allocator}{Cont}@>& x, stack<T, @\changedConcepts{Allocator}{Cont}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 }
 \end{codeblock}
@@ -1699,7 +1702,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
     @\addedConcepts{requires MoveConstructible<T>}@
     class vector;
   template <@\changedConcepts{class}{EqualityComparable}@ T, class Alloc@\removedConcepts{ator}@>
@@ -1714,11 +1717,11 @@ namespace std {
     bool operator>=(const vector<T,Alloc@\removedConcepts{ator}@>& x,const vector<T,Alloc@\removedConcepts{ator}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const vector<T,Alloc@\removedConcepts{ator}@>& x,const vector<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(vector<T,Alloc@\removedConcepts{ator}@>& x, vector<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(vector<T,Alloc@\removedConcepts{ator}@>&& x, vector<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(vector<T,Alloc@\removedConcepts{ator}@>& x, vector<T,Alloc@\removedConcepts{ator}@>&& y);
 
   template <@\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@> class vector<bool,Alloc@\removedConcepts{ator}@>;
@@ -1766,7 +1769,7 @@ or for operations where there is additional semantic information.
 \index{max_size@\tcode{max_size}!array@\tcode{array}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, size_t N >
+  template <@\changedConcepts{class}{ValueType}@ T, size_t N >
   @\addedConcepts{requires NothrowDestructible<T>}@
   struct array {
     //  types:
@@ -1986,7 +1989,7 @@ or for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
   @\addedConcepts{requires NothrowDestructible<T>}@
   class deque {
   public:
@@ -2122,11 +2125,11 @@ namespace std {
     bool operator<=(const deque<T,Alloc@\removedConcepts{ator}@>& x, const deque<T,Alloc@\removedConcepts{ator}@>& y);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>&& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>&& y);
 
   @\removedConcepts{template <class T, class Alloc}@
@@ -2376,11 +2379,11 @@ Nothing unless an exception is thrown by the copy constructor or assignment oper
 \rSec3[deque.special]{\tcode{deque}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(deque<T,Alloc@\removedConcepts{ator}@>&& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
 
@@ -2402,7 +2405,7 @@ A \tcode{forward_list} satisfies all of the requirements of a container (table~\
 
 \begin{codeblock}
 namespace std { 
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> > 
   @\addedConcepts{requires NothrowDestructible<T>}@
   class forward_list { 
   public: 
@@ -2542,11 +2545,11 @@ namespace std {
     bool operator<=(const forward_list<T,Alloc@\removedConcepts{ator}@>& x, const forward_list<T,Alloc@\removedConcepts{ator}@>& y); 
 
   // \ref{forwardlist.spec} specialized algorithms: 
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@> 
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@> 
     void swap(forward_list<T,Alloc@\removedConcepts{ator}@>& x, forward_list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@> 
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@> 
     void swap(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, forward_list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@> 
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@> 
     void swap(forward_list<T,Alloc@\removedConcepts{ator}@>& x, forward_list<T,Alloc@\removedConcepts{ator}@>&& y); 
 }
 \end{codeblock}
@@ -2950,11 +2953,11 @@ void reverse();
 \rSec3[forwardlist.spec]{\tcode{forward_list} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(forward_list<T,Alloc@\removedConcepts{ator}@>& x, forward_list<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(forward_list<T,Alloc@\removedConcepts{ator}@>&& x, forward_list<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(forward_list<T,Alloc@\removedConcepts{ator}@>& x, forward_list<T,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
 
@@ -2998,7 +3001,7 @@ or for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
   @\addedConcepts{requires NothrowDestructible<T>}@
   class list {
   public:
@@ -3149,11 +3152,11 @@ namespace std {
     bool operator<=(const list<T,Alloc@\removedConcepts{ator}@>& @\farg{x}@, const list<T,Alloc@\removedConcepts{ator}@>& @\farg{y}@);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(list<T,Alloc@\removedConcepts{ator}@>& x, list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(list<T,Alloc@\removedConcepts{ator}@>&& x, list<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(list<T,Alloc@\removedConcepts{ator}@>& x, list<T,Alloc@\removedConcepts{ator}@>&& y);
 
   @\removedConcepts{template <class T, class Alloc>}@
@@ -3714,11 +3717,11 @@ comparisons, where
 \rSec3[list.special]{\tcode{list}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(list<T,Alloc@\removedConcepts{ator}@>& x, list<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(list<T,Alloc@\removedConcepts{ator}@>&& x, list<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(list<T,Alloc@\removedConcepts{ator}@>& x, list<T,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
 
@@ -3761,7 +3764,7 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires FrontInsertionContainer<Cont> \&\& BackInsertionContainer<Cont>}@
         @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
@@ -3824,11 +3827,11 @@ namespace std {
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
 
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Alloc>}@
@@ -3928,11 +3931,11 @@ template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedCo
 \rSec4[queue.special]{\tcode{queue} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
@@ -3968,7 +3971,7 @@ object defines a strict weak ordering (\ref{alg.sorting}).
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
             @\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
         @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
@@ -4027,11 +4030,11 @@ namespace std {
       void swap(priority_queue&&);
   };
                 // no equality is provided
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Compare, class Alloc>}@
@@ -4205,7 +4208,7 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires SameType<Cont::value_type, T>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class stack {
@@ -4261,11 +4264,11 @@ namespace std {
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Alloc>}@
@@ -4365,11 +4368,11 @@ template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedCo
 \rSec4[stack.special]{\tcode{stack} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
@@ -4408,7 +4411,7 @@ A \tcode{vector}\ satisfies all of the requirements of a container and of a reve
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{RandomAccessAllocator}@ Alloc@\removedConcepts{ator}@ = allocator<T> >
   @\addedConcepts{requires MoveConstructible<T>}@
   class vector {
   public:
@@ -4545,11 +4548,11 @@ namespace std {
     bool operator<=(const vector<T,Alloc@\removedConcepts{ator}@>& x, const vector<T,Alloc@\removedConcepts{ator}@>& y);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(vector<T,Alloc@\removedConcepts{ator}@>& x, vector<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(vector<T,Alloc@\removedConcepts{ator}@>&& x, vector<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(vector<T,Alloc@\removedConcepts{ator}@>& x, vector<T,Alloc@\removedConcepts{ator}@>&& y);
 
   @\removedConcepts{template <class T, class Alloc>}@
@@ -4913,11 +4916,11 @@ copy constructor or assignment operator of
 \rSec3[vector.special]{\tcode{vector}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(vector<T,Alloc@\removedConcepts{ator}@>& x, vector<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(vector<T,Alloc@\removedConcepts{ator}@>&& x, vector<T,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
   void swap(vector<T,Alloc@\removedConcepts{ator}@>& x, vector<T,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
 
@@ -5085,7 +5088,7 @@ Headers \tcode{<map>}\ and \tcode{<set>}:
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
@@ -5110,17 +5113,17 @@ namespace std {
   template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
                     const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
               map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@&& x,
               map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@& x,
               map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
@@ -5145,13 +5148,13 @@ namespace std {
   template <@\changedConcepts{class}{LessThanComparable}@ Key, @\changedConcepts{class}{LessThanComparable}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
                     const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
               multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@&& x,
               multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@& x,
               multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 }
@@ -5162,7 +5165,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
@@ -5186,17 +5189,17 @@ namespace std {
   template <@\changedConcepts{class}{LessThanComparable}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const set<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
                     const set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
               set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(set<Key,T,Compare,Alloc@\removedConcepts{ator}@&& x,
               set<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(set<Key,T,Compare,Alloc@\removedConcepts{ator}@& x,
               set<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
              @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
@@ -5220,13 +5223,13 @@ namespace std {
   template <@\changedConcepts{class}{LessThanComparable}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
                     const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
               multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multiset<Key,T,Compare,Alloc@\removedConcepts{ator}@&& x,
               multiset<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multiset<Key,T,Compare,Alloc@\removedConcepts{ator}@& x,
               multiset<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 }
@@ -5276,7 +5279,7 @@ or for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
   @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
@@ -5445,13 +5448,13 @@ namespace std {
                     const map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
               map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@&& x,
               map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@& x,
               map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 
@@ -5675,13 +5678,13 @@ and the non-const version an
 \rSec3[map.special]{\tcode{map}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
             map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x,
             map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(map<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
             map<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
@@ -5745,7 +5748,7 @@ or for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, 
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, 
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<pair<const Key, T> > >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T> \&\& CopyConstructible<Compare>}@
@@ -5904,13 +5907,13 @@ namespace std {
                     const multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
               multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@&& x,
               multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@& x,
               multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 
@@ -6046,13 +6049,13 @@ and the non-const version an
 \rSec3[multimap.special]{\tcode{multimap}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
             multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& x,
             multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>& x,
             multimap<Key,T,Compare,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
@@ -6110,7 +6113,7 @@ and for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
   @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
@@ -6253,13 +6256,13 @@ namespace std {
                     const set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
               set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@&& x,
               set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@& x,
               set<Key,Compare,Alloc@\removedConcepts{ator}@>&& y);
 
@@ -6324,13 +6327,13 @@ where $N$\ is
 \rSec3[set.special]{\tcode{set}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
             set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@>&& x,
             set<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(set<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
             set<Key,Compare,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
@@ -6389,7 +6392,7 @@ and for operations where there is additional semantic information.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Compare = less<Key>,
             @\changedConcepts{class}{Allocator}@ Alloc@\removedConcepts{ator}@ = allocator<Key> >
   @\addedConcepts{requires NothrowDestructible<Key> \&\& CopyConstructible<Compare>}@
            @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Compare, const Compare\&>}@
@@ -6531,13 +6534,13 @@ namespace std {
                     const multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
 
   // specialized algorithms:
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
               multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@&& x,
               multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
     void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@& x,
               multiset<Key,Compare,Alloc@\removedConcepts{ator}@>&& y);
 
@@ -6603,13 +6606,13 @@ where $N$ is
 \rSec3[multiset.special]{\tcode{multiset}\ specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
             multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>&& x,
             multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& y);
-template <@\changedConcepts{class}{ObjectType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
+template <@\changedConcepts{class}{ValueType}@ Key, class Compare, class Alloc@\removedConcepts{ator}@>
   void swap(multiset<Key,Compare,Alloc@\removedConcepts{ator}@>& x,
             multiset<Key,Compare,Alloc@\removedConcepts{ator}@>&& y);
 \end{itemdecl}
@@ -6634,8 +6637,8 @@ Headers \tcode{<unordered_map>}\ and \tcode{<unordered_set>}:
 \begin{codeblock}
 namespace std {
   // \ref{unord.map}, class template unordered_map:
-  template <@\changedConcepts{class}{ObjectType}@ Key,
-            @\changedConcepts{class}{ObjectType}@ T,
+  template <@\changedConcepts{class}{ValueType}@ Key,
+            @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
@@ -6649,8 +6652,8 @@ namespace std {
     class unordered_map;
 
   // \ref{unord.multimap}, class template unordered_multimap:
-  template <@\changedConcepts{class}{ObjectType}@ Key,
-            @\changedConcepts{class}{ObjectType}@ T,
+  template <@\changedConcepts{class}{ValueType}@ Key,
+            @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
@@ -6663,23 +6666,23 @@ namespace std {
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Hash, Hash\&\&>}@
     class unordered_multimap;
 
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Hash, class Pred, class Alloc>
     void swap(unordered_map<Key, T, Hash, Pred, Alloc>& x,
               unordered_map<Key, T, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_map<Key, T, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_map<Key, T, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_map<Key, T, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_map<Key, T, Hash, Pred, Alloc>\& y);}@
 
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Hash, class Pred, class Alloc>
     void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>& x,
               unordered_multimap<Key, T, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_multimap<Key, T, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_multimap<Key, T, Hash, Pred, Alloc>\& y);}@
 } // namespace std
@@ -6692,7 +6695,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   // \ref{unord.set}, class template unordered_set:
-  template <@\changedConcepts{class}{ObjectType}@ Value,
+  template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
@@ -6706,7 +6709,7 @@ namespace std {
     class unordered_set;
 
   // \ref{unord.multiset}, class template unordered_multiset:
-  template <@\changedConcepts{class}{ObjectType}@ Value,
+  template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
@@ -6719,23 +6722,23 @@ namespace std {
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, Hash, Hash\&\&>}@
     class unordered_multiset;
 
-  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Value, class Hash, class Pred, class Alloc>
     void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
               unordered_set<Value, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_set<Value, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_set<Value, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_set<Value, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_set<Value, Hash, Pred, Alloc>\& y);}@
 
-  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Value, class Hash, class Pred, class Alloc>
     void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
               unordered_multiset<Value, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multiset<Value, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_multiset<Value, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multiset<Value, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_multiset<Value, Hash, Pred, Alloc>\& y);}@
 } // namespace std
@@ -6764,8 +6767,8 @@ is additional semantic information.
 \index{unordered_map@\tcode{unordered_map}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key,
-            @\changedConcepts{class}{ObjectType}@ T,
+  template <@\changedConcepts{class}{ValueType}@ Key,
+            @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
@@ -6915,13 +6918,13 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Hash, class Pred, class Alloc>
     void swap(unordered_map<Key, T, Hash, Pred, Alloc>& x,
               unordered_map<Key, T, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_map<Key, T, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_map<Key, T, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_map<Key, T, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_map<Key, T, Hash, Pred, Alloc>\& y);}@
 
@@ -7027,13 +7030,13 @@ const mapped_type& at(const key_type& k) const;
 \index{unordered_map@\tcode{unordered_map}!swap@\tcode{swap}}%
 \index{swap@\tcode{swap}!unordered_map@\tcode{unordered_map}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Hash, class Pred, class Alloc>
   void swap(unordered_map<Key, T, Hash, Pred, Alloc>& x,
             unordered_map<Key, T, Hash, Pred, Alloc>& y);
-@\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_map<Key, T, Hash, Pred, Alloc>\& x,}@
             @\addedConcepts{unordered_map<Key, T, Hash, Pred, Alloc>\&\& y);}@
-@\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_map<Key, T, Hash, Pred, Alloc>\&\& x,}@
             @\addedConcepts{unordered_map<Key, T, Hash, Pred, Alloc>\& y);}@
 \end{itemdecl}
@@ -7065,8 +7068,8 @@ there is additional semantic information.
 \index{unordered_multimap@\tcode{unordered_multimap}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Key,
-            @\changedConcepts{class}{ObjectType}@ T,
+  template <@\changedConcepts{class}{ValueType}@ Key,
+            @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
             @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
@@ -7208,13 +7211,13 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
-  template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Hash, class Pred, class Alloc>
     void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>& x,
               unordered_multimap<Key, T, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_multimap<Key, T, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_multimap<Key, T, Hash, Pred, Alloc>\& y);}@
 
@@ -7277,13 +7280,13 @@ inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
 \index{unordered_multimap@\tcode{unordered_multimap}!swap@\tcode{swap}}%
 \index{swap@\tcode{swap}!unordered_multimap@\tcode{unordered_multimap}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Key, @\changedConcepts{class}{ObjectType}@ T, class Hash, class Pred, class Alloc>
+template <@\changedConcepts{class}{ValueType}@ Key, @\changedConcepts{class}{ValueType}@ T, class Hash, class Pred, class Alloc>
   void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>& x,
             unordered_multimap<Key, T, Hash, Pred, Alloc>& y);
-@\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>\& x,}@
             @\addedConcepts{unordered_multimap<Key, T, Hash, Pred, Alloc>\&\& y);}@
-@\addedConcepts{template <ObjectType Key, ObjectType T, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Key, ValueType T, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_multimap<Key, T, Hash, Pred, Alloc>\&\& x,}@
             @\addedConcepts{unordered_multimap<Key, T, Hash, Pred, Alloc>\& y);}@
 \end{itemdecl}
@@ -7316,7 +7319,7 @@ is additional semantic information.
 \index{allocator}
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Value,
+  template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
@@ -7455,13 +7458,13 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
-  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Value, class Hash, class Pred, class Alloc>
     void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
               unordered_set<Value, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_set<Value, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_set<Value, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_set<Value, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_set<Value, Hash, Pred, Alloc>\& y);}@
 
@@ -7524,13 +7527,13 @@ inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
 \index{unordered_set@\tcode{unordered_set}!swap@\tcode{swap}}%
 \index{swap@\tcode{swap}!unordered_set@\tcode{unordered_set}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+template <@\changedConcepts{class}{ValueType}@ Value, class Hash, class Pred, class Alloc>
   void swap(unordered_set<Value, Hash, Pred, Alloc>& x,
             unordered_set<Value, Hash, Pred, Alloc>& y);
-@\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_set<Value, Hash, Pred, Alloc>\& x,}@
             @\addedConcepts{unordered_set<Value, Hash, Pred, Alloc>\&\& y);}@
-@\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_set<Value, Hash, Pred, Alloc>\&\& x,}@
             @\addedConcepts{unordered_set<Value, Hash, Pred, Alloc>\& y);}@
 \end{itemdecl}
@@ -7562,7 +7565,7 @@ is additional semantic information.
 \index{unordered_multiset@\tcode{unordered_multiset}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ObjectType}@ Value,
+  template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
             @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
             @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
@@ -7701,13 +7704,13 @@ namespace std {
     @\addedConcepts{requires MoveConstructible<value_type>}@ void rehash(size_type n);
   };
 
-  template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+  template <@\changedConcepts{class}{ValueType}@ Value, class Hash, class Pred, class Alloc>
     void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
               unordered_multiset<Value, Hash, Pred, Alloc>& y);
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multiset<Value, Hash, Pred, Alloc>\& x,}@
               @\addedConcepts{unordered_multiset<Value, Hash, Pred, Alloc>\&\& y);}@
-  @\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+  @\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
     @\addedConcepts{void swap(unordered_multiset<Value, Hash, Pred, Alloc>\&\& x,}@
               @\addedConcepts{unordered_multiset<Value, Hash, Pred, Alloc>\& y);}@
 
@@ -7769,13 +7772,13 @@ inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
 \index{unordered_multiset@\tcode{unordered_multiset}!swap@\tcode{swap}}%
 \index{swap@\tcode{swap}!unordered_multiset@\tcode{unordered_multiset}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{ObjectType}@ Value, class Hash, class Pred, class Alloc>
+template <@\changedConcepts{class}{ValueType}@ Value, class Hash, class Pred, class Alloc>
   void swap(unordered_multiset<Value, Hash, Pred, Alloc>& x,
             unordered_multiset<Value, Hash, Pred, Alloc>& y);
-@\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_multiset<Value, Hash, Pred, Alloc>\& x,}@
             @\addedConcepts{unordered_multiset<Value, Hash, Pred, Alloc>\&\& y);}@
-@\addedConcepts{template <ObjectType Value, class Hash, class Pred, class Alloc>}@
+@\addedConcepts{template <ValueType Value, class Hash, class Pred, class Alloc>}@
   @\addedConcepts{void swap(unordered_multiset<Value, Hash, Pred, Alloc>\&\& x,}@
             @\addedConcepts{unordered_multiset<Value, Hash, Pred, Alloc>\& y);}@
 \end{itemdecl}

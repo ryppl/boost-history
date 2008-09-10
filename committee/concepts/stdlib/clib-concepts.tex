@@ -105,12 +105,6 @@ rationale.
 \item Several updates to properly cope with abstract classes, thanks
   to Daniel Kr\"ugler:
   \begin{itemize}
-  \item Don't implicitly define \tcode{Returnable} concept maps for
-  abstract classes.
-  \item \tcode{HasDestructor} does not refine \tcode{VariableType},
-    since abstract classes can have destructors (but aren't
-    \tcode{VariableType}s). Similarly for
-    \tcode{ExplicitlyConvertible}.
   \item Add a restriction to [concept.transform] that prohibits users
     from adding concept maps for these concepts.
   \end{itemize}
@@ -138,7 +132,24 @@ rationale.
     \tcode{ReferentType} are restricted to \emph{cv-qualified}
     function types. Thanks to
     Peter Dimov for the acute observation!
-\end{itemize}
+  \item Fixed the requirements when dealing with abstract classes:
+    \begin{itemize}
+    \item Abstract classes aren't \tcode{VariableType}s (concepts
+      issue \#28) or \tcode{Returnable}.
+    \item \tcode{ObjectType} is not a \tcode{VariableType}, because
+      you can't have a variable with abstract class type. However, an
+      \tcode{ObjectType} is a \tcode{ReferentType} and a
+      \tcode{PointeeType}. 
+    \item \tcode{HasDestructor} does not refine \tcode{VariableType},
+      since abstract classes can have destructors (but aren't
+      \tcode{VariableType}s). Similarly for
+      \tcode{ExplicitlyConvertible}.
+    \end{itemize}
+  \item Added \tcode{ValueType} concept; see c++std-lib-22195. The
+    concepts \tcode{Union}, \tcode{TrivialType},
+    \tcode{StandardLayoutType}, \tcode{LiteralType}, and
+    \tcode{NonTypeTemplateParameterType} all refine this new concept.
+  \end{itemize}
 
 \end{titlepage}
 
@@ -229,6 +240,7 @@ namespace std {
   concept VariableType<typename T> { }
   concept ObjectType<typename T> @\textit{see below}@;
   concept FunctionType<typename T> @\textit{see below}@;
+  concept ValueType<typename T> @\textit{see below}@;
   concept ClassType<typename T> @\textit{see below}@;
   concept Class<typename T> @\textit{see below}@;
   concept Union<typename T> @\textit{see below}@;
@@ -432,7 +444,7 @@ created, including reference types (since references to
 \pnum 
 \mbox{\requires}
 for every type \mbox{\tcode{T}} that is an object type, a
-  cv-qualified function type, or a reference type, a
+  cv-unqualified function type, or a reference type, a
   concept map \mbox{\tcode{ReferentType}} shall be implicitly defined
   in namespace \mbox{\tcode{std}}.
 \end{itemdescr}
@@ -448,13 +460,13 @@ concept VariableType<typename T> { }
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
-  is an object type or reference type, a concept map
+  is an object type or reference type, but not an abstract class, a concept map
   \mbox{\tcode{VariableType<T>}} shall be implicitly defined in 
 namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept ObjectType<typename T> : VariableType<T>@\addedConcepts{, MemberPointeeType<T>} { }
+concept ObjectType<typename T> : ReferentType<T>, PointeeType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -479,6 +491,23 @@ concept FunctionType<typename T> : MemberPointeeType<T> { }
 
 \pnum
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is a function type, a concept map \mbox{\tcode{FunctionType<T>}} shall be implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ValueType<typename T> : ObjectType<T>, VariableType<T>, MemberPointeeType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes value types, for which
+  objects, variables, references, pointers, and pointers-to-members
+  can be created.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an object type but not an abstract class, a concept map
+  \mbox{\tcode{ValueType<T>}} shall be implicitly defined in namespace
+  \mbox{\tcode{std}}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -512,7 +541,7 @@ concept Class<typename T> : ClassType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept Union<typename T> : ClassType<T> { }
+concept Union<typename T> : ClassType<T>, ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -526,7 +555,7 @@ concept Union<typename T> : ClassType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TrivialType<typename T> : ObjectType<T> { }
+concept TrivialType<typename T> : ObjectType<T>, ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -540,7 +569,7 @@ concept TrivialType<typename T> : ObjectType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept StandardLayoutType<typename T> : ObjectType<T> { }
+concept StandardLayoutType<typename T> : ObjectType<T>, ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -555,7 +584,7 @@ namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept LiteralType<typename T> : ObjectType<T> { }
+concept LiteralType<typename T> : ObjectType<T>, ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -598,7 +627,7 @@ concept ArithmeticType<typename T> : ScalarType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept NonTypeTemplateParameterType<typename T> : VariableType<T> { }
+concept NonTypeTemplateParameterType<typename T> : ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
