@@ -84,6 +84,13 @@ Pablo Halpern,  Bloomberg, L.P.
   \ref{associative.reqmts}, \ref{unord.req},
   \ref{vector.cons}). Thanks to Alisdair Meredith for pointing out
   this inconsistency!
+\item Fixed the \tcode{AccessBack} axiom in
+  \tcode{BackInsertionContainer} and
+  \tcode{MemberBackInsertionContainer}. Added an additional
+  requirement to the *\tcode{Insertion} axioms that states that the
+  value inserted is the value now stored at the place of
+  insertion. Also, added *\tcode{Insertion} axioms to the emplace
+  concepts (all thanks to Alisdair Meredith).
 \end{itemize}
 
 \end{titlepage}
@@ -987,6 +994,7 @@ concept FrontInsertionContainer<typename C> : Container<C> {
 
   axiom FrontInsertion(C c, value_type x) {
     c == (push_front(c, x), pop_front(c), c);
+    x == (push_front(c, x), front(c));
   }
 }
 \end{itemdecl}
@@ -1007,12 +1015,13 @@ concept BackInsertionContainer<typename C> : Container<C> {
   void push_back(C&, const value_type&);
   void pop_back(C&);
 
-  axiom AccessBack(C c) {
+  requires BidirectionalIterator<iterator> axiom AccessBack(C c) {
     if (begin(c) != end(c)) back(c) == *(--end(c));
   }
 
   axiom BackInsertion(C c, value_type x) {
     c == (push_back(c, x), pop_back(c), c);
+    x == (push_back(c), back(c));
   }
 }
 \end{itemdecl}
@@ -1054,6 +1063,10 @@ concept RangeInsertionContainer<typename C, typename Iter> : InsertionContainer<
 \begin{itemdecl}
 concept FrontEmplacementContainer<typename C, typename... Args> : FrontInsertionContainer<C> {
   void emplace_front(C& c, Args... args);
+
+  axiom FrontEmplacement(C c, Args... args) {
+    c == (emplace_front(c, args...), pop_front(c), c);
+  }
 }
 \end{itemdecl}
 
@@ -1066,6 +1079,10 @@ concept FrontEmplacementContainer<typename C, typename... Args> : FrontInsertion
 \begin{itemdecl}
 concept BackEmplacementContainer<typename C, typename... Args> : BackInsertionContainer<C> {
   void emplace_back(C& c, Args... args);
+
+  axiom BackEmplacement(C c, Args... args) {
+    c == (emplace_back(c, args...), pop_back(c), c);
+  }
 }
 \end{itemdecl}
 
@@ -1150,7 +1167,8 @@ auto concept MemberFrontInsertionContainer<typename C> : MemberContainer<C> {
   }  
 
   axiom MemberFrontInsertion(C c, value_type x) {
-    c == (c.push_front(x), c.pop_front(), c);
+    c == (c.push_front(x), c.pop_front(), c); 
+    x == (c.push_front(x), c.front());
   }
 }
 \end{itemdecl}
@@ -1171,12 +1189,13 @@ auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
   void C::push_back(const value_type&);
   void C::pop_back();
 
-  axiom MemberAccessBack(C c) {
+  requires BidirectionalIterator<iterator> axiom MemberAccessBack(C c) {
     if (c.begin() != c.end()) c.back() == *(--c.end());
   }
 
   axiom MemberBackInsertion(C c, value_type x) {
     c == (c.push_back(x), c.pop_back(), c);
+    x == (c.push_back(x), c.back());
   }
 }
 \end{itemdecl}
@@ -1217,6 +1236,10 @@ concept MemberRangeInsertionContainer<typename C, typename Iter> : MemberInserti
 \begin{itemdecl}
 auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : MemberFrontInsertionContainer<C> {
   void C::emplace_front(Args... args);
+
+  axiom MemberFrontEmplacement(C c, Args... args) {
+    c == (c.emplace_front(args...), c.pop_front(), c);
+  }
 }
 \end{itemdecl}
 
@@ -1229,6 +1252,10 @@ auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : Mem
 \begin{itemdecl}
 auto concept MemberBackEmplacementContainer<typename C, typename... Args> : MemberBackInsertionContainer<C> {
   void C::emplace_back(Args... args);
+
+  axiom MemberFrontEmplacement(C c, Args... args) {
+    c == (c.emplace_back(args...), c.pop_back(), c);
+  }
 }
 \end{itemdecl}
 
@@ -1359,7 +1386,7 @@ concept_map RangeInsertionContainer<C, Iter> {
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing range-insertion container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{RangeInsertionContainer}} concept.}
+  \addedConcepts{\mbox{\tcode{RangeInsertionContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1374,7 +1401,7 @@ template <MemberFrontEmplacementContainer C, typename... Args>
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing front-emplace container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{FrontEmplacementContainer}} concept.}
+  \addedConcepts{\mbox{\tcode{FrontEmplacementContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1389,7 +1416,7 @@ template <MemberBackEmplacementContainer C, typename... Args>
 \pnum 
 \addedConcepts{\mbox{\reallynote} Adapts an existing back-emplace container, which uses
   member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{BackEmplacementContainer}} concept.}
+  \addedConcepts{\mbox{\tcode{BackEmplacementContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
