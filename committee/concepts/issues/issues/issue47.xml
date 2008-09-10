@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="47" status="New">
+<issue num="47" status="WP">
   <title><code>ArithmeticLike</code> conversions from integral, floating-point types should be <code>explicit</code></title>
 <section><sref ref="[concept.arithmetic]"/></section>
 <submitter>Howard Hinnant</submitter>

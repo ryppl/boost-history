@@ -127,6 +127,9 @@ rationale.
     follow-on issue 866), there is no longer a need for the
     \tcode{HasPlacementNew} concept in the Standard Library, so it has
     been removed.
+    \item Made the \tcode{intmax_t}, \tcode{uintmax_t}, and
+      \tcode{long double} constructors in the arithmetic concept
+      \tcode{explicit}, resolving concepts issue \#47.
 \end{itemize}
 
 \end{titlepage}
@@ -1797,9 +1800,9 @@ concept ArithmeticLike<typename T>
     HasPreincrement<T>, HasPostincrement<T>, HasPredecrement<T>, HasPostdecrement<T>,
     HasPlusAssign<T, const T&>, HasMinusAssign<T, const T&>,
     HasMultiplyAssign<T, const T&>, HasDivideAssign<T, const T&> {
-  T::T(intmax_t);
-  T::T(uintmax_t);
-  T::T(long double);
+  explicit T::T(intmax_t);
+  explicit T::T(uintmax_t);
+  explicit T::T(long double);
 
   requires Convertible<HasUnaryPlus<T>::result_type, T>
         && Convertible<HasNegate<T>::result_type, T>
