@@ -52,7 +52,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Containers\\
-(Revision 3)
+(Revision 4)
 \end{center}
 
 \normalsize
@@ -64,8 +64,8 @@ Douglas Gregor, Indiana University \\
 Mat Marcus, Adobe Systems, Inc.\\
 Pablo Halpern,  Bloomberg, L.P.
 \end{tabular}\vspace{-6pt}
-\par\noindent Document number: N2738=08-0248\vspace{-6pt}
-\par\noindent Revises document number: N2694=08-0204\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2738=08-0248\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -73,65 +73,17 @@ Pablo Halpern,  Bloomberg, L.P.
 \section*{Introduction}
 \libintrotext{Chapter 23}
 
-\section*{Changes from N2694}
+\section*{Changes from N2738}
 \begin{itemize}
-\item Added the \tcode{NothrowDestructible<Cont>} requirement to each
-  of the container adaptors (\tcode{queue}, \tcode{priority_queue},
-  \tcode{stack}).
-\item Changed all of the \tcode{HasConstructible} requirements to
-  \tcode{Constructible} requirements, since we always need a no-throw
-  destructor.
-\item Use the \tcode{EquivalenceRelation} concept instead of
-  \tcode{Predicate} for the \tcode{unique} member in \tcode{forward_list}.
-\item Changed the \tcode{Callable} requirements on the hash functions
-  to accept their value by reference-to-const.
-\item Added the \tcode{ConstructibleAsElement<Alloc, value_type,
-    value_type\&\&>} requirement to the move constructors for all of
-  the associative containers.
-\item Added the \tcode{CopyAssignable<value_type>} requirement to the
-  copy-assignment operators of all of the associative containers.
-\item Added the \tcode{MoveConstructible<value_type>} requirement to
-  the range-insertion functions and range constructors of the
-  associative containers, to account for the move-construction one
-  must perform to actually insert the value into the container (if an
-  equivalent value isn't already there).
-\item Fixed the requirements on \tcode{operator[]} for \tcode{map} and
-  \tcode{unordered_map}.
-\item The \tcode{rehash} member of the unordered associative
-  containers now requires the value type to be
-  \tcode{MoveConstructible}, rather than using the
-  \tcode{ConstructibleAsElement} form, because \tcode{rehash} is only
-  dealing with values already constructed with the container's
-  allocator.
-\item The value type of a \tcode{vector} must now be
-  \tcode{MoveConstructible}. Previously, only those member functions
-  that could cause reallocation required
-  \tcode{MoveConstructible}. However, the concepts drafting group
-  determined that, since nearly every interesting member of
-  \tcode{vector} required \tcode{MoveConstructible<T>}, this approach
-  was far simpler and better represented the behavior and expectations
-  of \tcode{vector}.
-\item Removed the \tcode{SequenceContainer} and
-  \tcode{MemberSequenceContainer} concepts, which weren't useful in
-  classifying containers because they excluded
-  \tcode{forward_list}. The members and axioms have been redistributed
-  to \tcode{FrontInsertionSequence} and \tcode{BackInsertionSequence}.
-\item Renamed \tcode{FrontInsertionSequence},
-  \tcode{BackInsertionSequence}, and \tcode{InsertionSequence} to
-  \tcode{FrontInsertionContainer}, \tcode{BackInsertionContainer}, and
-  \tcode{InsertionContainer}, respectively.
-\item Added the \tcode{RangeInsertionContainer} and
-  \tcode{MemberRangeInsertionContainer} concepts, along with a concept
-  map to adapt from member- to free-function syntax, which is
-  necessary for \tcode{priority_queue}'s constructors.
-\item Updated the base wording to reflect the changes in N2691,
-  including support for initializer lists and changes to emplace.
-\item Added the \tcode{BackEmplacementContainer} concept, to support the
-  new \tcode{emplace} operations in the container adaptors, along with
-  its \tcode{Member} version and appropriate concept map
-  template. Added \tcode{FrontEmplacementContainer} and
-  \tcode{EmplacementContainer}, their \tcode{Member} versions and concept
-  map templates, for symmetry.
+\item Fix definition of \tcode{push_front} in the
+  \tcode{FrontInsertionContainer} concept map
+  (\ref{container.concepts.maps}).
+\item Removed all uses of the term ``iterator category'', in favor of
+  explicit mentions of iterator concept names
+  (\ref{container.requirements.general}, \ref{sequence.reqmts},
+  \ref{associative.reqmts}, \ref{unord.req},
+  \ref{vector.cons}). Thanks to Alisdair Meredith for pointing out
+  this inconsistency!
 \end{itemize}
 
 \end{titlepage}
@@ -317,14 +269,14 @@ denotes a non-const rvalue of type \tcode{X}.
 \tcode{X::iterator}         &
  iterator type whose value type is \tcode{T} &
                             &
- any iterator category except output iterator.
+ \changedConcepts{any iterator category except output iterator}{meets the requirements of the \mbox{\tcode{InputIterator}} concept}.
  convertible to \tcode{X::const_iterator}. &
  compile time               \\ \rowsep
 
 \tcode{X::const_iterator}  &   
  constant iterator type whose value type is \tcode{T} &
                             &
- any iterator category except output iterator &
+\changedConcepts{any iterator category except output iterator}{meets the requirements of the \mbox{\tcode{InputIterator}} concept} &
  compile time               \\ \rowsep
 
 \tcode{X::dif\-ference_type}   &
@@ -526,6 +478,14 @@ all container types defined in this clause, the member
 \tcode{get_allocator()} returns a copy of the \tcode{Allocator} object
 used to construct the container, or to replace the allocator. 
 
+\setcounter{Paras}{10}
+\pnum
+If the iterator type of a container \changedConcepts{belongs to the
+  bidirectional or random access iterator categories (24.1)}{meets the
+  requirements of the \mbox{\tcode{BidirectionalIterator}} concept}, 
+the container is called reversible and satisfies the additional
+requirements in Table 91. 
+
 \rSec2[sequence.reqmts]{Sequence containers}
 \setcounter{Paras}{3}
 \pnum
@@ -636,6 +596,13 @@ Equivalent to \tcode{X(il.begin(), il.end())} \\ \rowsep
  Replaces elements in \tcode{a}\ with \tcode{n}\ copies of \tcode{t}.   \\
 \end{libreqtab3}
 
+\setcounter{Paras}{4}
+\pnum
+\tcode{iterator} and \tcode{const_iterator} types for sequence
+containers shall \changedConcepts{be at least of the forward iterator
+  category}{meet the requirements of the
+  \mbox{\tcode{ForwardIterator}} concept}. 
+
 \setcounter{Paras}{11}
 
 \pnum
@@ -732,7 +699,16 @@ time.
 \end{libreqtab4a}
 
 \rSec2[associative.reqmts]{Associative containers}
-\setcounter{Paras}{6}
+\setcounter{Paras}{5}
+\pnum
+\tcode{iterator} of an associative container \changedConcepts{is of
+  the bidirectional iterator category}{meets the requirements of the
+  \mbox{\tcode{BidirectionalIterator}} concept}. For associative
+containers where 
+the value type is the same as the key type, both \tcode{iterator} and
+\tcode{const_iterator} are constant iterators. It 
+is unspecified whether or not \tcode{iterator} and
+\tcode{const_iterator} are the same type. 
 
 \pnum
 In Table~\ref{tab:containers.associative.requirements},
@@ -883,6 +859,13 @@ type \tcode{float}.
 \\ \rowsep
 \multicolumn{4}{c}{\editorial{No additional changes to this table.}} \\ \rowsep
 \end{libreqtab4d}
+
+\setcounter{Paras}{10}
+\pnum
+The iterator types \tcode{iterator} and \tcode{const_iterator} of an unordered associative container \changedConcepts{are of at least the 
+forward iterator category}{meet the requirements of the
+\mbox{\tcode{ForwardIterator}} concept}. For unordered associative containers where the key type and value type are the 
+same, both \tcode{iterator} and \tcode{const_iterator} are const\addedConcepts{ant} iterators. 
 
 \editorial{Add the following new section [container.concepts]}
 \color{addclr}
@@ -1316,7 +1299,7 @@ concept_map FrontInsertionContainer<C> {
   reference       front(C& c)        { return c.front(); }
   const_reference front(const C& c)  { return c.front(); }
 
-  void push_front(C& c, const Container<C>::value_type &v)   { c.front(v); }
+  void push_front(C& c, const Container<C>::value_type &v)   { c.push_front(v); }
   void pop_front(C& c)                                       { c.pop_front(); }
 }			
 \end{itemdecl}
@@ -4614,7 +4597,7 @@ is the distance between
 \tcode{first}\
 and
 \tcode{last})
-and no reallocations if iterators first and last are of forward, bidirectional, or random access categories.
+and no reallocations if \changedConcepts{iterators first and last are of forward, bidirectional, or random access categories}{\mbox{\tcode{Iter}} meets the requirements of the \mbox{\tcode{ForwardIterator}} concept}.
 It makes order
 \tcode{N}\
 calls to the copy constructor of

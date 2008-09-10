@@ -263,39 +263,11 @@ ambiguity, for example, was initially detected by ConceptGCC.
   used.
 \item Fixed the associated function default implementations in
   \tcode{RandomAccessIterator}.
+\item Defined the term ``iterator category'' within the (deprecated)
+  iterator traits section, so that others of these deprecated
+  constructs can refer to iterator categories. Thanks to Alisdair
+  Meredith for noting this omission.
 \end{itemize}
-
-\paragraph*{Changes from N2695}
-\begin{itemize}
-\item Replaced the \tcode{HasStdMove} concept (and its uses) with
-  \tcode{RvalueOf}, which is now part of the foundational concepts.
-\item In the \tcode{ShuffleIterator} concept, the
-  \tcode{HasConstructor} requirement on the \tcode{value_type} has
-  been replaced with the equivalent \tcode{Constructible} requirement;
-  the explicit \tcode{NothrowDestructible} requirement has
-  subsequently been removed.
-\item Added move-constructibility of the value type into the
-  \tcode{ShuffleIterator} concept.
-\item We permit the \tcode{iterator_traits} typedefs for output
-  iterators to be \tcode{void}. This behavior is permitted by
-  \Cpp{}03, and was previously thought to cause problems with the
-  backward-compatibility concept maps for output iterators (which
-  relied on non-\tcode{void} typedefs even for output
-  iterators). However, we determined that the concepts mechanism can
-  deduce these types for output iterators, therefore ignoring the
-  types specified in \tcode{iterator_traits} and allowing us to
-  re-instate this user leeway. In [iterator.backward]p2, we clarify
-  that we perform this deduction for output iterators.
-\item Added the \tcode{subscript_reference} associated type to the
-  \tcode{RandomAccessIterator} concept, to capture the result of
-  \tcode{operator[]}. This type may need to be a proxy that is
-  different from the \tcode{reference} type, for, e.g., a
-  \tcode{counting_iterator} that meets the \Cpp03
-  \tcode{RandomAccessIterator} requirements. See the reflector thread
-  starting at c++std-lib-22126 for more information.
-\end{itemize}
-
-
 \end{titlepage}
 
 \section*{Proposed Wording}
@@ -615,7 +587,7 @@ T,
 o
 denotes a value of some type that is writable to the output iterator.}
 
-\color{ccadd}
+\color{addclr}
 \begin{codeblock}
 concept Iterator<typename X> : Semiregular<X> {
   MoveConstructible reference = typename X::reference;  
@@ -1176,7 +1148,7 @@ an implementation may define}
   requirements of a shuffle iterator if it meets the syntactic and
   semantic requirements of the \mbox{\tcode{ShuffleIterator}} concept.}
 
-\color{ccadd}
+\color{addclr}
 \begin{codeblock}
 auto concept ShuffleIterator<typename X> {
   requires InputIterator<X>
@@ -1249,7 +1221,7 @@ iterator_traits<Iterator>::iterator_category
 \end{codeblock}
 
 \addedConcepts{shall} be defined as the iterator's difference type, value type and iterator
-category \addedConcepts{(24.3.3)}, respectively.
+category \addedConcepts{(described below)}, respectively.
 In addition, the types
 
 \begin{codeblock}
@@ -1270,18 +1242,30 @@ iterator_traits<Iterator>::pointer
 
 may be defined as \tcode{void}.
 
-\editorial{Paragraphs 2--5 of this section are unchanged.}
-
-\setcounter{Paras}{5}
+\editorial{Add the following new paragraph}
 \pnum
-\addedConcepts{For each iterator category, a partial specializations of the
+\addedConcepts{The \mbox{\techterm{category}} of an iterator roughly
+  describes which of the iterator concepts
+  (\mbox{\ref{iterator.concepts}}) the iterator satisfies. Iterator
+  categories refer to iterators as defined by ISO/IEC
+  14882:2003, and can be one of \mbox{\techterm{input iterator}},
+  \mbox{\techterm{output iterator}}, \mbox{\techterm{forward
+      iterator}}, \mbox{\techterm{bidirectional iterator}}, or
+  \mbox{\techterm{random access iterator}}.}
+
+\editorial{The existing paragraphs 2--5 of this section are
+  unchanged. Add a new paragraph at the end of this section:}
+
+\setcounter{Paras}{6}
+\pnum
+\addedConcepts{For each iterator category, a partial specialization of the
   \mbox{\tcode{iterator_traits}} class template provide appropriate
   type definitions for programs that use the deprecated iterator
   traits mechanism. These partial specializations provide backward
   compatibility for unconstrained templates using iterators as
   specified by the corresponding requirements tables of ISO/IEC
   14882:2003.}
-\color{ccadd}
+\color{addclr}
 \begin{codeblock}
 concept IsReference<typename T> { } // exposition only
 template<typename T> concept_map IsReference<T&> { }
@@ -1302,7 +1286,7 @@ template<InputIterator Iter> struct iterator_traits<Iter> {
   typedef Iter::value_type                 value_type;
   typedef Iter::pointer                    pointer;
   typedef Iter::reference                  reference;
-  typedef input_iterator_tag                   iterator_category;
+  typedef input_iterator_tag               iterator_category;
 };
 
 template<ForwardIterator Iter> 
@@ -1312,7 +1296,7 @@ template<ForwardIterator Iter>
     typedef Iter::value_type                 value_type;
     typedef Iter::pointer                    pointer;
     typedef Iter::reference                  reference;
-    typedef forward_iterator_tag                 iterator_category;
+    typedef forward_iterator_tag             iterator_category;
   };
 
 template<BidirectionalIterator Iter> 

@@ -52,7 +52,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Algorithms \\
-(Revision 4)
+(Revision 5)
 \normalsize
 \end{center}
 
@@ -64,65 +64,20 @@ Mat Marcus, Adobe Systems, Inc.\\
 Thomas Witt, Zephyr Associates, Inc.\\
 Andrew Lumsdaine, Indiana University
 \end{tabular}\vspace{-6pt}
-\par\noindent Document number: N2740=08-0250\vspace{-6pt}
-\par\noindent Revises document number: N2696=08-0206\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2740=08-0250\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
 
 \section*{Introduction}
 \libintrotext{Chapter 25}
-\section*{Changes from N2696}
+\section*{Changes from N2740}
 \begin{itemize}
-\item Fixed requirements for \tcode{partial_sort_copy}.
-\item Replaced uses of the \tcode{HasStdMove} concept with uses of
-  \tcode{RvalueOf}, and reverted back to using \tcode{std::move} (that
-  than \tcode{std_move}) for semantic descriptions.
-\item Use the \tcode{EquivalenceRelation} concept in
-  \tcode{adjacent_find}, \tcode{unique}, and \tcode{unique_copy}.
-\item Removed the \tcode{NothrowDestructible} requirement from
-  \tcode{swap}, since it is now implied by \tcode{MoveConstructible}
-  (again).
-\item Updated the requirements on \tcode{remove}, \tcode{remove_if},
-  and \tcode{unique} to support move semantics.
-\item Removed the erroneous \tcode{CopyConstructible<Rand>}
-  requirement from \tcode{random_shuffle}.
-\item Removed the \tcode{UniformRandomNumberGenerator} variant of
-  \tcode{random_shuffle}, because it is (and has always been)
-  ambiguous with the second variant.
-\item Remove the ``extra''
-  \tcode{LessThanComparable}/\tcode{StrictWeakOrder} requirements on
-  the algorithms \tcode{merge}, \tcode{includes}, \tcode{set_union},
-  \tcode{set_intersection}, \tcode{set_difference}, and
-  \tcode{set_symmetric_difference}. These requirements were only used
-  to enable standard library ``debug modes'', but we have found an
-  alternative solution that does not push additional requirements into
-  the specification.
-\item The algorithms \tcode{random_shuffle}, \tcode{partition},
-  \tcode{rotate}, \tcode{next_permutation}, and
-  \tcode{prev_permutation} now use the \tcode{ShuffleIterator} concept
-  rather than \tcode{HasSwap}. We applied the following reasoning to
-  determine when to use \tcode{ShuffleIterator<Iter>} rather than
-  \tcode{HasSwap<Iter::reference, Iter::reference>}: the requirement
-  occurs when the algorithm is performing a permutation on the
-  elements of the sequence. One can view the permutation of the
-  elements as a cycle along which the elements move, e.g., the element
-  at index 1 moves to index 3, the element at index 3 moves to index
-  7, the element at index 7 moves to index 9, and finally the element
-  at index 9 moves to index 1. Any cycle can be implemented via swaps,
-  but with cycles of length greater than two the cycle can be more
-  efficiently implemented via a series of move operations. Thus, for
-  algorithms with only cycles of length two (e.g., \tcode{reverse},
-  \tcode{swap_ranges}) we specify the \tcode{HasSwap<Iter::reference,
-    Iter::reference>} requirement; for algorithms that may have cycles
-  of length greater than two (e.g., \tcode{random_shuffle},
-  \tcode{sort}, \tcode{partition}), we specify the
-  \tcode{ShuffleIterator} requirement.
-\item Added conceptualized versions of the algorithms in N2666, from
-  Daniel Kr\"ugler: \tcode{all_of}, \tcode{any_of}, \tcode{none_of},
-  \tcode{find_if_not}, \tcode{copy_n}, \tcode{copy_if},
-  \tcode{partition_copy}, \tcode{is_partitioned}, and
-  \tcode{partition_point}.
+\item Eliminate the use of the term ``iterator category'', instead
+  referring to the appropriate iterator concept
+  (Clause~\ref{alg.algorithms}). Thanks to Alisdair Meredith for
+  pointing out the inconsistency.
 \end{itemize}
 
 \end{titlepage}
@@ -554,18 +509,18 @@ namespace std {
                       Iter @\farg{last}@,
                       Compare @\farg{comp}@);
   template<InputIterator InIter, RandomAccessIterator RAIter>
-    requires @\changedCCC{HasAssign<RAIter::reference, InIter::reference>}{ShuffleIterator<RAIter>}@
-          && @\changedCCC{Swappable<RAIter::reference>}{OutputIterator<RAIter, InIter::reference>}@
+    requires ShuffleIterator<RAIter>
+          && OutputIterator<RAIter, InIter::reference>
           && HasLess<InIter::value_type, RAIter::value_type>
-          && @\changedCCC{HasLess}{LessThanComparable}@<RAIter::value_type>
+          && LessThanComparable<RAIter::value_type>
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
   template<InputIterator InIter, RandomAccessIterator RAIter, class Compare>
-    requires @\changedCCC{HasAssign<RAIter::reference, InIter::reference>}{ShuffleIterator<RAIter>}@
-          && @\changedCCC{Swappable<RAIter::reference>}{OutputIterator<RAIter, InIter::reference>}@
+    requires ShuffleIterator<RAIter>
+          && OutputIterator<RAIter, InIter::reference>
           && Predicate<Compare, InIter::value_type, RAIter::value_type>
           && StrictWeakOrder<Compare, RAIter::value_type>}
-          @\addedCC{\&\& CopyConstructible<Compare>}@
+          && CopyConstructible<Compare>
     RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                              RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
                              Compare @\farg{comp}@);
@@ -1080,8 +1035,8 @@ In the description of the algorithms operators
 \tcode{+}\
 and
 \tcode{-}\
-are used for some of the iterator categories for which
-they do not have to be defined.
+are used \changedConcepts{for some of the iterator categories for which
+they do not have to be defined}{with iterators that do not necessarily define these operators}.
 In these cases the semantics of
 \tcode{a+n}\
 is the same as that of
@@ -2947,19 +2902,19 @@ comparisons.
 \index{partial_sort_copy@\tcode{partial_sort_copy}}%
 \color{addclr}\begin{itemdecl}
 template<InputIterator InIter, RandomAccessIterator RAIter>
-  requires @\changedCCC{HasAssign<RAIter::reference, InIter::reference>}{ShuffleIterator<RAIter>}@
-        && @\changedCCC{Swappable<RAIter::reference>}{OutputIterator<RAIter, InIter::reference>}@
+  requires ShuffleIterator<RAIter>
+        && OutputIterator<RAIter, InIter::reference>
         && HasLess<InIter::value_type, RAIter::value_type>
-        && @\changedCCC{HasLess}{LessThanComparable}@<RAIter::value_type>
+        && LessThanComparable<RAIter::value_type>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@);
 
 template<InputIterator InIter, RandomAccessIterator RAIter, class Compare>
-  requires @\changedCCC{HasAssign<RAIter::reference, InIter::reference>}{ShuffleIterator<RAIter>}@
-        && @\changedCCC{Swappable<RAIter::reference>}{OutputIterator<RAIter, InIter::reference>}@
+  requires ShuffleIterator<RAIter>
+        && OutputIterator<RAIter, InIter::reference>
         && Predicate<Compare, InIter::value_type, RAIter::value_type>
         && StrictWeakOrder<Compare, RAIter::value_type>}
-        @\addedCC{\&\& CopyConstructible<Compare>}@
+        && CopyConstructible<Compare>
   RAIter partial_sort_copy(InIter @\farg{first}@, InIter @\farg{last}@,
                            RAIter @\farg{result_first}@, RAIter @\farg{result_last}@,
                            Compare @\farg{comp}@);
