@@ -116,6 +116,10 @@ rationale.
   \end{itemize}
   \item Implicitly define \tcode{TriviallyEqualityComparable} concept
     maps for enumeration types.
+  \item Change \tcode{ArithmeticLike} to refine from
+    \tcode{LessThanComparable} rather than \tcode{HasLess},
+    \tcode{HasGreater}, \tcode{HasLessEqual}, and
+    \tcode{HasGreatEqual}. 
 \end{itemize}
 
 \end{titlepage}
@@ -687,8 +691,12 @@ unambiguously derived from \mbox{\tcode{U}}, a concept map
 
 \rSec2[concept.transform]{Type transformations}
 \pnum
+\addedConcepts{The concepts in [concept.transform] provide simple type
+  transformations that can be used within constrained templates.}
+
+\pnum
 \addedConcepts{A program shall not provide concept maps for any concept in
-[concept.support].}
+[concept.transform].}
 
 \begin{itemdecl}
 auto concept IdentityOf<typename T> {
@@ -1776,9 +1784,8 @@ auto concept Convertible<typename T, typename U> : ExplicitlyConvertible<T, U> {
 
 \begin{itemdecl}
 concept ArithmeticLike<typename T> 
-  : Regular<T>, HasUnaryPlus<T>, HasNegate<T>,
+  : Regular<T>, LessThanComparable<T>, HasUnaryPlus<T>, HasNegate<T>,
     HasPlus<T, T>, HasMinus<T, T>, HasMultiply<T, T>, HasDivide<T, T>, 
-    HasLess<T, T>, HasGreater<T, T>, HasLessEqual<T, T>, HasGreaterEqual<T, T>,
     HasPreincrement<T>, HasPostincrement<T>, HasPredecrement<T>, HasPostdecrement<T>,
     HasPlusAssign<T, const T&>, HasMinusAssign<T, const T&>,
     HasMultiplyAssign<T, const T&>, HasDivideAssign<T, const T&> {
