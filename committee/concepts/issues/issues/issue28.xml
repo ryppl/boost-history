@@ -3,7 +3,7 @@
   <!ENTITY nbsp "&#160;">
 ] >
 
-<issue num="28" status="New">
+<issue num="28" status="WP">
   <title>Abstract classes should not be <code>VariableType</code>s</title>
 <section><sref ref="[concept.support]"/></section>
 <submitter>Thomas Witt</submitter>
