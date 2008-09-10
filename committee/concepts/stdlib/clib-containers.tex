@@ -4394,7 +4394,7 @@ namespace std {
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ 
       vector(size_type n, const T& value, const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+      @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& MoveConstructible<T>}@
       vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
              const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
     @\addedConcepts{requires ConstructibleAsElement<Alloc, T, const T\&>}@ vector(const vector<T,Alloc@\removedConcepts{ator}@>& x);
@@ -4576,7 +4576,7 @@ copies of \tcode{value}, using the specified allocator.
 \index{vector@\tcode{vector}!\tcode{vector}}
 \begin{itemdecl}
 template <@\changedConcepts{class InputIterator}{InputIterator Iter}@>
-  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference>}@
+  @\addedConcepts{requires ConstructibleAsElement<Alloc, T, Iter::reference> \&\& MoveConstructible<T>}@
   vector(@\changedConcepts{InputIterator}{Iter}@ first, @\changedConcepts{InputIterator}{Iter}@ last,
          const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
 \end{itemdecl}
