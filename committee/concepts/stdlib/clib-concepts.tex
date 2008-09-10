@@ -127,9 +127,17 @@ rationale.
     follow-on issue 866), there is no longer a need for the
     \tcode{HasPlacementNew} concept in the Standard Library, so it has
     been removed.
-    \item Made the \tcode{intmax_t}, \tcode{uintmax_t}, and
-      \tcode{long double} constructors in the arithmetic concept
-      \tcode{explicit}, resolving concepts issue \#47.
+  \item Made the \tcode{intmax_t}, \tcode{uintmax_t}, and
+    \tcode{long double} constructors in the arithmetic concept
+    \tcode{explicit}, resolving concepts issue \#47.
+  \item \tcode{MemberPointeeType} not longer refines
+    \tcode{PointeeType}, because \tcode{void() const} is a
+    \tcode{MemberPointeeType} but not a \tcode{PointeeType}. Also,
+    \tcode{FunctionType} refines \tcode{MemberPointeeType} (not
+    \tcode{PointeeType}), and both \tcode{PointeeType} and
+    \tcode{ReferentType} are restricted to \emph{cv-qualified}
+    function types. Thanks to
+    Peter Dimov for the acute observation!
 \end{itemize}
 
 \end{titlepage}
@@ -216,7 +224,7 @@ namespace std {
   // \ref{concept.support}, support concepts:
   concept Returnable<typename T> { }
   concept PointeeType<typename T> { }
-  @\addedConcepts{concept MemberPointeeType<typename T> \mbox{\textit{see below}};}@
+  concept MemberPointeeType<typename T> { }
   concept ReferentType<typename T> { }
   concept VariableType<typename T> { }
   concept ObjectType<typename T> @\textit{see below}@;
@@ -386,13 +394,13 @@ created.}
 \pnum 
 \addedConcepts{\mbox{\requires}
 for every type \mbox{\tcode{T}} that is an object type,
-  function type, or \mbox{\techterm{cv}} \mbox{\tcode{void}}, a
+  cv-unqualified function type, or \mbox{\techterm{cv}} \mbox{\tcode{void}}, a
   concept map \mbox{\tcode{PointeeType}} shall be implicitly defined
   in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-@\addedConcepts{concept MemberPointeeType<typename T> : PointeeType<T> \{ \}}@
+concept MemberPointeeType<typename T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -424,7 +432,7 @@ created, including reference types (since references to
 \pnum 
 \mbox{\requires}
 for every type \mbox{\tcode{T}} that is an object type, a
-  function type, or a reference type, a
+  cv-qualified function type, or a reference type, a
   concept map \mbox{\tcode{ReferentType}} shall be implicitly defined
   in namespace \mbox{\tcode{std}}.
 \end{itemdescr}
@@ -462,7 +470,7 @@ concept ObjectType<typename T> : VariableType<T>@\addedConcepts{, MemberPointeeT
 \end{itemdescr}
 
 \begin{itemdecl}
-concept FunctionType<typename T> : PointeeType<T> { }
+concept FunctionType<typename T> : MemberPointeeType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
