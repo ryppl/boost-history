@@ -4,7 +4,7 @@
 
 #include <boost/operators.hpp>
 
-#include <boost/move.hpp>
+#include <boost/move/move.hpp>
 
 using std::swap;
 

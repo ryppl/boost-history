@@ -14,7 +14,7 @@
 #include <iterator>
 #include <vector>
 
-#include <boost/move.hpp>
+#include <boost/move/move.hpp>
 #include "./vector.hpp"
 
 #include <memory>

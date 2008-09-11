@@ -14,7 +14,7 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#include <boost/move.hpp>
+#include <boost/move/move.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/utility.hpp> // for boost::noncopyable
 

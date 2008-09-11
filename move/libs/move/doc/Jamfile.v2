@@ -6,7 +6,7 @@ import doxygen ;
 
 doxygen autodoc
     :
-        [ glob ../../../boost/move.hpp ]
+        [ glob ../../../boost/move/move.hpp ]
     :
         <xsl:param>boost.doxygen.detailns=move_detail
     ;

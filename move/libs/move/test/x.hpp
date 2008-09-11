@@ -4,14 +4,14 @@
 #ifndef X_DWA2004410_HPP
 # define X_DWA2004410_HPP
 
-# include <boost/move.hpp>
+# include <boost/move/move.hpp>
 # include <boost/assert.hpp>
 # include "say.hpp"
 
 //
 // A sample movable class.
 //
-class X : public boost::movable<X>
+class X
 {
  public: // "Ordinary" stuff
     X() : resource(++cnt)
@@ -19,48 +19,39 @@ class X : public boost::movable<X>
         SAY("X() #" << resource);
     }
 
-    // non-const lvalue - copy ctor
-    BOOST_LVALUE_COPY_CTOR(
-        X, (rhs)(: resource(++cnt)),
+    X(X const& rhs) : resource(++cnt)
     {
         copy(rhs);
-    })
+    }
 
     ~X()
     {
         release();
     }
 
-    BOOST_LVALUE_ASSIGN(
-        X, (rhs), 
-    {
-        release();
-        this->resource = ++cnt;
-        copy(rhs);
-        return *this;
-    })
+    // Assign is declared in the move stuff
     
  public: // Move stuff
-    // non-const rvalue - move ctor
+    // move constructor
     X(boost::move_from<X> rhs)
-      : resource(rhs->resource)
+      : resource(rhs.source.resource)
     {
-        BOOST_ASSERT(rhs->resource <= cnt); // check for garbage
+        BOOST_ASSERT(rhs.source.resource <= cnt); // check for garbage
         SAY("MOVE #" << resource);
         BOOST_ASSERT(move_expected);
-        rhs->resource = 0;
+        rhs.source.resource = 0;
         BOOST_ASSERT(resource);
     }
 
-    // non-const rvalue - move assignment
-    X& operator=(boost::move_from<X> rhs)
+    // move assignment
+    X& operator=(X rhs)
     {
-        BOOST_ASSERT(rhs->resource <= cnt); // check for garbage
+        BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         release();
-        resource = rhs->resource;
+        resource = rhs.resource;
         SAY("MOVE #" << resource);
         BOOST_ASSERT(move_expected);
-        rhs->resource = 0;
+        rhs.resource = 0;
         BOOST_ASSERT(resource);
         return *this;
     }

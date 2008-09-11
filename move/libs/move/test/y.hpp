@@ -5,7 +5,7 @@
 #ifndef Y_DWA2004410_HPP
 # define Y_DWA2004410_HPP
 
-# include <boost/move.hpp>
+# include <boost/move/move.hpp>
 # include <boost/assert.hpp>
 # include "say.hpp"
 

@@ -9,7 +9,7 @@
 //
 // Is this worth supporting?
 
-#include <boost/move.hpp>
+#include <boost/move/move.hpp>
 #include <boost/test/minimal.hpp>
 #include "./vector.hpp"
 
