@@ -52,13 +52,13 @@ to destory the local remote part and consume the remote part of the operand is t
 contents with the operand. This is similar to the copy-ctor and swap idiom for implementing
 assignment.
 	
-'''<xref linkend="listing1"/>''' shows an example movable class that implements a typical pointer-to-implementation
+'''<xref linkend="movable_example"/>''' shows an example movable class that implements a typical pointer-to-implementation
 (PiPl) idiom and shows that it can be used as any regular type.
 
 [import listing1.cpp]
-'''<example id="listing1">
+'''<example id="movable_example">
 <title>Movable class</title>
-'''[listing1]'''
+'''[movable_example]'''
 <simpara>Output:</simpara>
 <screen>
 copy remote part: 10
@@ -69,9 +69,9 @@ copy remote part: 10
 
 [section Move Only]
 
-'''<example id="listing1.1">
+'''<example id="move_only_example">
 <title>Movable class</title>
-'''[move_only]'''
+'''[move_only_example]'''
 <simpara>Output:</simpara>
 <screen>
 </screen>
@@ -86,10 +86,9 @@ copy remote part: 10
 We can return a movable type from a function by value and unnessary copies will be avoided as
 the following example illustrates:
 
-[import listing2.cpp]
-'''<example id="listing2">
+'''<example id="return_example">
 <title>Return a movable type</title>
-'''[listing2]'''
+'''[return_example]'''
 <simpara>Output:</simpara>
 <screen>
 
@@ -109,13 +108,12 @@ A /sink/ is any function that copies it's argument, usually for the purpose of s
 A sink is often a constructor or an insert function on a container. The `operator=()` on a movable
 type is a form of a sink function. To implement a sink function pass the argument by value and then
 use `boost::move()` to move the argument into place. Note that this technique cannot be used to
-implement `operator=()` on because it relies on assignment. '''<xref linkend="listing3"/>''' implements an example sink 
+implement `operator=()` on because it relies on assignment. '''<xref linkend="sink_example"/>''' implements an example sink 
 function.
 
-[import listing3.cpp]
-'''<example id="listing3">
+'''<example id="sink_example">
 <title>Sink Function</title>
-'''[listing3]'''
+'''[sink_example]'''
 <simpara>Output:</simpara>
 <screen>
 copy remote part: 50

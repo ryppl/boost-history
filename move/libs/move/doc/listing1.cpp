@@ -1,4 +1,4 @@
-//[listing1
+//[movable_example
 #include <iostream>
 #include <algorithm>
 
@@ -58,14 +58,14 @@ class movable : public boost::equality_comparable<movable>
     implementation* member;
 };
 
-void example1()
+void movable_example()
 {
     movable x(10);
     movable y = x;
 }
 //]
 
-//[move_only
+//[move_only_example
 class move_only : public boost::equality_comparable<move_only>
 {
     move_only(move_only&);
@@ -98,16 +98,53 @@ class move_only : public boost::equality_comparable<move_only>
     implementation* member;
 };
 
-void example2()
+void move_only_example()
 {
     move_only x(20);
     move_only y = boost::move(x);
 }
 //]
 
+//[return_example
+//...
+move_only f(int x, int y)
+{ return move_only(x * y); }
+
+void return_example()
+{
+    move_only x = f(10, 5);
+    move_only y;
+    y = f(4,3);
+}
+//]
+
+//[sink_example
+//...
+movable g(int x, int y)
+{ return movable(x * y); }
+
+struct sink
+{
+    explicit sink(movable x) : member(boost::move(x)) { }
+    
+    movable member;
+};
+
+void example4()
+{
+    movable x = g(10, 5);
+    sink y(x);          // must copy.
+    sink z(g(20, 2));   // no copy.
+}
+//]
+
 int main() {
-    std::cout<<"Example 1:\n\n";
-    example1();
-    std::cout<<"\nExample 2:\n\n";
-    example2();
+    std::cout<<"Movable Example:\n\n";
+    movable_example();
+    std::cout<<"\nMove Only Example:\n\n";
+    move_only_example();
+    std::cout<<"\nReturn Example:\n\n";
+    return_example();
+    std::cout<<"\nSink Example:\n\n";
+    sink_example();
 }
