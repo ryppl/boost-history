@@ -28,29 +28,29 @@ namespace test {
 	{
 		static int b1;
 		int b2;
-		B(void):b2(4){ }
+		B(void):b2(5){ }
 	};
-	int B::b1 = 0;
+	int B::b1 = 4;
 
 	struct C : virtual A
 	{
 		mutable double c1;
 		double c2;
-		C(void):c1(5.0),c2(6.0){ }
+		C(void):c1(6.0),c2(7.0){ }
 	};
 
 	struct D : virtual A
 	{
 		const short d1;
 		volatile short d2;
-		D(void):d1(7), d2(8){ }
+		D(void):d1(8), d2(9){ }
 	};
 
 	struct E : B, C, D
 	{
 		static const float e;
 	};
-	const float E::e = 1.0f;
+	const float E::e = 10.0f;
 
 	struct F : virtual E
 	{

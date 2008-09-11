@@ -10,11 +10,21 @@
 #ifndef BOOST_MIRROR_META_ATTRIBUTES_HPP
 #define BOOST_MIRROR_META_ATTRIBUTES_HPP
 
+#include <boost/mirror/traits/reflects_virtual_inheritance.hpp>
 // macros for declaration of simple meta attributes
 #include <boost/mirror/detail/meta_attribs_base.hpp>
 //
+#include <boost/char_type_switch/string.hpp>
+//
 #include <boost/typeof/typeof.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/remove_if.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/insert_range.hpp>
+#include <boost/mpl/accumulate.hpp>
+#include <boost/mpl/contains.hpp>
+#include <boost/mpl/less.hpp>
+#include <boost/mpl/lambda.hpp>
 
 namespace boost {
 namespace mirror {

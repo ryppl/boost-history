@@ -1,5 +1,5 @@
 /**
- * \file test/classes_ct_04.cpp
+ * \file test/classes_rt_01.cpp
  *
  * This file is part of the Mirror library testsuite.
  *

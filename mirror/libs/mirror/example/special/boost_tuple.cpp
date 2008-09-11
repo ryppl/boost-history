@@ -27,6 +27,7 @@
 #include <boost/mirror/meta_types/std_set.hpp>
 
 #include <boost/mirror/meta_classes/boost_tuple.hpp>
+#include <boost/mirror/meta_classes/boost_fusion_vector.hpp>
 
 template <class Class>
 class attrib_value_printer
@@ -117,7 +118,7 @@ int main(void)
 	assert(meta_T1::all_attributes::get(t1, mpl::int_<1>()) == tuples::get<1>(t1));
 	//
 	//
-	tuple<int, int, int, int, int, int, int, int, int, int> x(0,1,2,3,4,5,6,7,8,9);
+	fusion::vector<int, int, int, int, int, int, int, int, int, int> x(0,1,2,3,4,5,6,7,8,9);
 	typedef BOOST_MIRRORED_CLASS(BOOST_TYPEOF(x)) meta_X;
 	attrib_value_printer<meta_X::reflected_type> p(x);
 	//

@@ -18,6 +18,7 @@
 #include <boost/mirror/detail/meta_attribs_outline.hpp>
 //
 #include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/mpl/vector.hpp>
 // 
 // necessary type traits
 #include <boost/call_traits.hpp>
@@ -35,7 +36,7 @@ struct meta_class_attributes;
 template <class Class, class VariantTag>
 struct meta_class_attributes
 {
-	typedef mpl::vector<> type_list;
+	typedef mpl::vector0<> type_list;
 };
 
 /** Possible class attribute storage specifiers 

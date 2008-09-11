@@ -18,6 +18,8 @@
 #include <boost/mirror/inherit_spec.hpp>
 // class 'kind' specifiers
 #include <boost/mirror/class_kind_spec.hpp>
+//
+#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace mirror {
@@ -140,7 +142,7 @@ template <
 >
 struct meta_base_classes
 {
-	typedef mpl::vector<> list;
+	typedef mpl::vector0<> list;
 };
 
 
