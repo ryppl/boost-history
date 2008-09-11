@@ -93,11 +93,11 @@ Pablo Halpern,  Bloomberg, L.P.
   concepts (all thanks to Alisdair Meredith).
 \item Convertibility requirement from \tcode{iterator} to
   \tcode{const_iterator} in the container concepts. Resolves concepts
-  issue \#48. Also, added same-type requirements tying the
-  \tcode{reference} types of a container's iterators to the
-  \tcode{reference} and \tcode{const_reference} types of the
-  container, and convertibility from the \tcode{difference_type} of a
-  container's iterators to its \tcode{size_type}.
+  issue \#48. Also, added convertibility from the container's
+  iterators \tcode{reference} types to its \tcode{reference} and
+  \tcode{const_reference} types along with convertibility from the
+  \tcode{difference_type} of a container's iterators to its
+  \tcode{size_type}.
 \item Use the new \tcode{ValueType} concept, rather than
   \tcode{ObjectType}, to constrain the container's element types, to
   properly exclude abstract classes.
@@ -962,8 +962,8 @@ concept Container<typename C> {
   requires Convertible<iterator, const_iterator>
         && SameType<ForwardIterator<iterator>::value_type, value_type> 
         && SameType<ForwardIterator<const_iterator>::value_type, value_type>
-        && SameType<ForwardIterator<iterator>::reference, reference>
-        && SameType<ForwardIterator<const_iterator>::reference, const_reference>
+        && Convertible<ForwardIterator<iterator>::reference, reference>
+        && Convertible<ForwardIterator<const_iterator>::reference, const_reference>
         && SameType<ForwardIterator<iterator>::difference_type,
                     ForwardIterator<const_iterator>::difference_type>
         && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
@@ -1144,8 +1144,8 @@ auto concept MemberContainer<typename C> {
   requires Convertible<iterator, const_iterator>
         && SameType<ForwardIterator<iterator>::value_type, value_type> 
         && SameType<ForwardIterator<const_iterator>::value_type, value_type>
-        && SameType<ForwardIterator<iterator>::reference, reference>
-        && SameType<ForwardIterator<const_iterator>::reference, const_reference>
+        && Convertible<ForwardIterator<iterator>::reference, reference>
+        && Convertible<ForwardIterator<const_iterator>::reference, const_reference>
         && SameType<ForwardIterator<iterator>::difference_type,
                     ForwardIterator<const_iterator>::difference_type>
         && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
