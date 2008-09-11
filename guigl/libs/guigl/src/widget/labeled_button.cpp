@@ -15,14 +15,4 @@ namespace boost { namespace guigl { namespace widget {
 
 BOOST_GUIGL_WIDGET_DRAW_IMPL(labeled_button)
 
-inline void labeled_button::draw_prologue()
-{
-    base_type::draw_prologue();
-}
-
-inline void labeled_button::draw_epilogue()
-{
-    base_type::draw_epilogue();
-}
-
 }}}

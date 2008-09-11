@@ -18,7 +18,7 @@ namespace boost { namespace guigl { namespace widget {
 
 BOOST_GUIGL_WIDGET_DRAW_IMPL(button)
 
-inline void button::draw_prologue()
+void button::draw_prologue()
 {
     base_type::draw_prologue();
     if(button_down())
@@ -28,7 +28,7 @@ inline void button::draw_prologue()
     }
 }
 
-inline void button::draw_epilogue()
+void button::draw_epilogue()
 {
     base_type::draw_epilogue();
 }

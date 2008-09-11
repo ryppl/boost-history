@@ -30,7 +30,7 @@ public:
     {}
 
 protected:
-    BOOST_GUIGL_WIDGET_DRAW
+    void draw();
 };
 
 }}}
