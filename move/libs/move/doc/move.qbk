@@ -32,11 +32,17 @@ can be moved to elide copying in such situations as well as utilities to assist 
 
 [section Implementing a Movable Type]
 
+Boost.Move provides two methods to implement a movable, one for types that are both copyable and movable, and one for types that are movable but not copyable ('move only' types).
+
+[section Movable and Copyable]
+
+[/
 A movable type models __concept_movable__. There are three components of a movable type:
 
 * Satisfy the requirements of concept __concept_regular_type__.
 * Implement a move-ctor using `move_from<>`.
 * Modify the assignment operator to take the operand by value and consume it.
+]
 	
 A typical implementation of the move-ctor will simply extract the remote part, leaving the
 source in a destructible state.
@@ -58,6 +64,20 @@ assignment.
 copy remote part: 10
 </screen>
 </example>'''
+
+[endsect]
+
+[section Move Only]
+
+'''<example id="listing1.1">
+<title>Movable class</title>
+'''[move_only]'''
+<simpara>Output:</simpara>
+<screen>
+</screen>
+</example>'''
+
+[endsect]
 
 [endsect]
 
