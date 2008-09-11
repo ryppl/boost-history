@@ -96,7 +96,8 @@ Pablo Halpern,  Bloomberg, L.P.
   issue \#48. Also, added same-type requirements tying the
   \tcode{reference} types of a container's iterators to the
   \tcode{reference} and \tcode{const_reference} types of the
-  container.
+  container, and convertibility from the \tcode{difference_type} of a
+  container's iterators to its \tcode{size_type}.
 \item Use the new \tcode{ValueType} concept, rather than
   \tcode{ObjectType}, to constrain the container's element types, to
   properly exclude abstract classes.
@@ -950,7 +951,7 @@ concept maps adapting member to free syntax follow in
 
 \begin{itemdecl}
 concept Container<typename C> {
-  ValueType           value_type      = typename C::value_type;
+  ValueType            value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -962,7 +963,10 @@ concept Container<typename C> {
         && SameType<ForwardIterator<iterator>::value_type, value_type> 
         && SameType<ForwardIterator<const_iterator>::value_type, value_type>
         && SameType<ForwardIterator<iterator>::reference, reference>
-        && SameType<ForwardIterator<const_iterator>::reference, const_reference>;
+        && SameType<ForwardIterator<const_iterator>::reference, const_reference>
+        && SameType<ForwardIterator<iterator>::difference_type,
+                    ForwardIterator<const_iterator>::difference_type>
+        && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
 
   bool           empty(const C& c) { return begin(c) == end(c); }
   size_type      size(const C& c)  { return std::distance(begin(c), end(c)); }
@@ -1130,7 +1134,7 @@ concept EmplacementContainer<typename C, typename... Args> : InsertionContainer<
 \color{addclr}
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
-  ValueType           value_type      = typename C::value_type;
+  ValueType            value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1141,7 +1145,10 @@ auto concept MemberContainer<typename C> {
         && SameType<ForwardIterator<iterator>::value_type, value_type> 
         && SameType<ForwardIterator<const_iterator>::value_type, value_type>
         && SameType<ForwardIterator<iterator>::reference, reference>
-        && SameType<ForwardIterator<const_iterator>::reference, const_reference>;
+        && SameType<ForwardIterator<const_iterator>::reference, const_reference>
+        && SameType<ForwardIterator<iterator>::difference_type,
+                    ForwardIterator<const_iterator>::difference_type>
+        && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
 
   bool           C::empty() const { return  this->begin() == this->end(); }
   size_type      C::size() const  { return std::distance(this->begin(), this->end()); }

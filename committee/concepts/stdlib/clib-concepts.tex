@@ -149,6 +149,7 @@ rationale.
     concepts \tcode{Union}, \tcode{TrivialType},
     \tcode{StandardLayoutType}, \tcode{LiteralType}, and
     \tcode{NonTypeTemplateParameterType} all refine this new concept.
+  \item \tcode{VariableType} refines \tcode{ReferentType}.
   \end{itemize}
 
 \end{titlepage}
@@ -450,7 +451,7 @@ for every type \mbox{\tcode{T}} that is an object type, a
 \end{itemdescr}
 
 \begin{itemdecl}
-concept VariableType<typename T> { }
+concept VariableType<typename T> : ReferentType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -555,7 +556,7 @@ concept Union<typename T> : ClassType<T>, ValueType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TrivialType<typename T> : ObjectType<T>, ValueType<T> { }
+concept TrivialType<typename T> : ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -569,7 +570,7 @@ concept TrivialType<typename T> : ObjectType<T>, ValueType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept StandardLayoutType<typename T> : ObjectType<T>, ValueType<T> { }
+concept StandardLayoutType<typename T> : ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -584,7 +585,7 @@ namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept LiteralType<typename T> : ObjectType<T>, ValueType<T> { }
+concept LiteralType<typename T> : ValueType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
