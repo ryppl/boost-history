@@ -3,7 +3,7 @@ import modules ;
 import path ;
 
 # Import a newer version of g++ and configure it for C++0x support.
-using gcc : 4.4 : g++-4.4 : <cxxflags>-std=c++0x ;
+using gcc : 4.4 : g++-4.4 : <cxxflags>--`std=c++0x ;
 
 # Define the boost root for this and nested projects. This shouold try to pull
 # a specification from the build.
@@ -29,11 +29,3 @@ if ! $(boost-root)
         ECHO "Warning: couldn't find BOOST_ROOT in" $(boost-root) ;
     }
 }
-
-# Build all subrojects using g++-4.4
-project graphs
-    : requirements
-        <toolset>gcc-4.4
-        <include>$(boost-root)
-        <include>../..
-    ;
