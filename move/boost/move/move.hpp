@@ -154,12 +154,21 @@ struct swap_tag {};
 struct boost_move_tag {};
 struct custom_move_tag {};
 
+/*!
+\ingroup move_related
+\brief The move_type trait is used to identify which move technique should be
+used for this type.
+*/
 template <typename T, class Enable = void>
 struct move_type :
     boost::mpl::if_<is_boost_movable<T>, boost_move_tag,
         typename boost::mpl::if_<boost::detail::has_swap_overload<T>,
             swap_tag, copy_tag>::type > {};
 
+/*!
+\ingroup move_related
+\brief Set the move technique for std::auto_ptr.
+*/
 template <class T>
 struct move_type<std::auto_ptr<T> > {
     typedef custom_move_tag type;
@@ -410,6 +419,11 @@ template <typename C> // C models Container
 inline back_move_iterator<C> back_mover(C& x) { return back_move_iterator<C>(x); }
 
 /*************************************************************************************************/
+
+/*!
+\ingroup move_related
+\brief Placement move construction for std::auto_ptr.
+*/
 
 template <class T>
 inline void move_construct(std::auto_ptr<T>* p, std::auto_ptr<T>& x) {
