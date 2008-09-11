@@ -117,32 +117,6 @@ struct move_from
 
 /*************************************************************************************************/
 
-/*!
-\ingroup move_related
-\brief swap_from is used for move_ctors.
-*/
-
-template <typename T>
-struct swap_from
-{
-    swap_from(T& x)
-        : m(x)
-    {}
-
-    operator T() const
-    {
-        T x;
-        using std::swap;
-        swap(this->m, x);
-        return x;
-    }
-
-    T& m;
-};
-
-
-/*************************************************************************************************/
-
 #if !defined(BOOST_MOVE_NO_HAS_MOVE_ASSIGN)
 
 /*************************************************************************************************/
@@ -296,7 +270,14 @@ T& move(T& x, typename move_type_sink<copy_tag, T>::type = 0) { return x; }
 \brief This version of move is selected when T is swappable.
 */
 template <typename T>
-T move(T& x, typename move_type_sink<swap_tag, T>::type = 0) { return T(swap_from<T>(x)); }
+T move(T& x, typename move_type_sink<swap_tag, T>::type = 0)
+{
+    T y;
+    using std::swap;
+    swap(x, y);
+    return y;
+}
+
 
 /*************************************************************************************************/
 
