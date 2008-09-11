@@ -507,7 +507,7 @@ concept ValueType<typename T> : ObjectType<T>, VariableType<T>, MemberPointeeTyp
 \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
   is an object type but not an abstract class, a concept map
   \mbox{\tcode{ValueType<T>}} shall be implicitly defined in namespace
-  \mbox{\tcode{std}}.
+  \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1485,7 +1485,7 @@ auto concept HasConstructor<typename T, typename... Args> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept Constructible<typename T, typename... Args> 
+auto concept Constructible<typename T, typename... Args> {
   : HasConstructor<T, Args...>, NothrowDestructible<T> { }
 }
 \end{itemdecl}
