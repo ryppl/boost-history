@@ -147,9 +147,12 @@ rationale.
     \end{itemize}
   \item Added \tcode{ValueType} concept; see c++std-lib-22195. The
     concepts \tcode{Union}, \tcode{TrivialType},
-    \tcode{StandardLayoutType}, \tcode{LiteralType}, and
-    \tcode{NonTypeTemplateParameterType} all refine this new concept.
+    \tcode{StandardLayoutType}, and \tcode{LiteralType} all refine
+    this new concept. 
   \item \tcode{VariableType} refines \tcode{ReferentType}.
+  \item Added the \tcode{PolymorphicClass} concept (concepts issue
+    \#27), which refines \tcode{Class} and is further refined by
+    \tcode{HasVirtualDestructor}.
   \end{itemize}
 
 \end{titlepage}
@@ -244,6 +247,7 @@ namespace std {
   concept ValueType<typename T> @\textit{see below}@;
   concept ClassType<typename T> @\textit{see below}@;
   concept Class<typename T> @\textit{see below}@;
+  concept PolymorphicClass<typename T> @\textit{see below}@;
   concept Union<typename T> @\textit{see below}@;
   concept TrivialType<typename T> @\textit{see below}@;
   concept StandardLayoutType<typename T> @\textit{see below}@;
@@ -542,6 +546,21 @@ concept Class<typename T> : ClassType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
+concept PolymorphicClass<typename T> : Class<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes polymorphic class types (\mbox{\ref{class.virtual}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a polymorphic class, a concept map
+  \mbox{\tcode{PolymorphicClass<T>}} shall be implicitly defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
 concept Union<typename T> : ClassType<T>, ValueType<T> { }
 \end{itemdecl}
 
@@ -628,7 +647,7 @@ concept ArithmeticType<typename T> : ScalarType<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept NonTypeTemplateParameterType<typename T> : ValueType<T> { }
+concept NonTypeTemplateParameterType<typename T> : VariableType<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1536,7 +1555,7 @@ auto concept HasDestructor<typename T> {
 \end{itemdescr}
 
 \begin{itemdecl}
-concept HasVirtualDestructor<typename T> : HasDestructor<T> { }
+concept HasVirtualDestructor<typename T> : HasDestructor<T>, PolymorphicClass<T> { }
 \end{itemdecl}
 
 \begin{itemdescr}
