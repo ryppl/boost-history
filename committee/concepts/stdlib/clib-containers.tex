@@ -959,13 +959,17 @@ concept Container<typename C> {
   ForwardIterator iterator;
   ForwardIterator const_iterator;
 
-  requires Convertible<iterator, const_iterator>
+  requires Convertible<reference, const_reference>
+        && Convertible<reference, const value_type&>
+        && Convertible<const_reference, const _value_type&>;
+        && Convertible<iterator, const_iterator>
         && SameType<ForwardIterator<iterator>::value_type, value_type> 
         && SameType<ForwardIterator<const_iterator>::value_type, value_type>
         && Convertible<ForwardIterator<iterator>::reference, reference>
         && Convertible<ForwardIterator<const_iterator>::reference, const_reference>
         && SameType<ForwardIterator<iterator>::difference_type,
                     ForwardIterator<const_iterator>::difference_type>
+        && IntegralType<size_type>
         && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
 
   bool           empty(const C& c) { return begin(c) == end(c); }
@@ -1141,13 +1145,18 @@ auto concept MemberContainer<typename C> {
 
   ForwardIterator iterator;
   ForwardIterator const_iterator;
-  requires Convertible<iterator, const_iterator>
+
+  requires Convertible<reference, const_reference>
+        && Convertible<reference, const value_type&>
+        && Convertible<const_reference, const _value_type&>;
+        && Convertible<iterator, const_iterator>
         && SameType<ForwardIterator<iterator>::value_type, value_type> 
         && SameType<ForwardIterator<const_iterator>::value_type, value_type>
         && Convertible<ForwardIterator<iterator>::reference, reference>
         && Convertible<ForwardIterator<const_iterator>::reference, const_reference>
         && SameType<ForwardIterator<iterator>::difference_type,
                     ForwardIterator<const_iterator>::difference_type>
+        && IntegralType<size_type>
         && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
 
   bool           C::empty() const { return  this->begin() == this->end(); }

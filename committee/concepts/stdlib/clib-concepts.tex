@@ -411,7 +411,7 @@ created.}
 \pnum 
 \addedConcepts{\mbox{\requires}
 for every type \mbox{\tcode{T}} that is an object type,
-  cv-unqualified function type, or \mbox{\techterm{cv}} \mbox{\tcode{void}}, a
+  a function type that does not have cv-qualifiers, or \mbox{\techterm{cv}} \mbox{\tcode{void}}, a
   concept map \mbox{\tcode{PointeeType}} shall be implicitly defined
   in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
@@ -449,7 +449,7 @@ created, including reference types (since references to
 \pnum 
 \mbox{\requires}
 for every type \mbox{\tcode{T}} that is an object type, a
-  cv-unqualified function type, or a reference type, a
+  function type that does not have cv-qualifiers, or a reference type, a
   concept map \mbox{\tcode{ReferentType}} shall be implicitly defined
   in namespace \mbox{\tcode{std}}.
 \end{itemdescr}
@@ -1505,9 +1505,8 @@ auto concept HasConstructor<typename T, typename... Args> {
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept Constructible<typename T, typename... Args> {
+auto concept Constructible<typename T, typename... Args>
   : HasConstructor<T, Args...>, NothrowDestructible<T> { }
-}
 \end{itemdecl}
 
 \begin{itemdescr}
