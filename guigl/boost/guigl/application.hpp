@@ -18,6 +18,7 @@ class application {
 public:
     static void run();
     static boost::signal<void()> &on_idle();
+    static void timeout(const boost::function<void()> &, unsigned milliseconds);
 };
 
 }}

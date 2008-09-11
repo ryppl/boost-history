@@ -35,6 +35,11 @@ void idle()
     application::on_idle().disconnect_all_slots();
 }
 
+void timer()
+{
+    std::cout << "5 seconds have elapsed." << std::endl;
+}
+
 int main()
 {
     window test_window1(( _label = "window example 1", _size=size_type(300,300) ));
@@ -81,5 +86,6 @@ int main()
     test_window_3d << new two_spheres(default_parameters());
     
     application::on_idle().connect(&idle);
+    application::timeout(&timer, 5000);
     application::run();
 }

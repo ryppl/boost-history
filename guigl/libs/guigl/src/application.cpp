@@ -18,6 +18,18 @@ namespace {
     {
         application::on_idle()();
     }
+    
+    static std::map<int, boost::function<void()> > &outstanding_timers()
+    {
+        static std::map<int, boost::function<void()> > outstanding;
+        return outstanding;
+    }
+    
+    void timer_func(int id)
+    {
+        outstanding_timers()[id]();
+        outstanding_timers().erase(id);
+    }
 }
 
 void application::run()
@@ -31,5 +43,17 @@ boost::signal<void()> &application::on_idle()
     static boost::signal<void()> signal;
     return signal;
 }
+
+void application::timeout(const boost::function<void()> &func, unsigned milliseconds)
+{
+    
+    int id=0;
+    while(outstanding_timers().find(id) != outstanding_timers().end())
+        id++;
+        
+    outstanding_timers()[id] = func;
+    glutTimerFunc(milliseconds, timer_func, id);
+}
+
 
 }}
