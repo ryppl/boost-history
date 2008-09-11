@@ -1860,7 +1860,7 @@ member of its class.
 \addedConcepts{An implicitly-declared copy assignment operator for
   class \mbox{\tcode{X}} is deleted if \mbox{\tcode{X}} has:}
 \begin{itemize}
-\additemConcepts{a variant member with a non-trivial copy constructor and
+\additemConcepts{a variant member with a non-trivial copy assignment operator and
   \mbox{\tcode{X}} is a union-like class,}
 \additemConcepts{a non-static data member of \mbox{\tcode{const}} non-class
   type (or array thereof), or}
@@ -5222,7 +5222,7 @@ template<typename T, typename... Rest>
 requires OutputStreamable<T> && OutputStreamable<Rest>...
 void print(const T& t, const Rest&... rest) {
   std::cout << t;
-  print(rest);
+  print(rest...);
 }
 
 template<typename T>
