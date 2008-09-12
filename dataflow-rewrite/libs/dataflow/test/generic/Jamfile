@@ -10,3 +10,4 @@
 run test_framework.cpp ;
 run test_framework_entity.cpp ;
 run test_framework_entity_traits.cpp ;
+run test_default_framework.cpp ;

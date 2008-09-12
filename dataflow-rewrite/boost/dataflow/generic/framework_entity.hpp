@@ -10,6 +10,7 @@
 #define BOOST__DATAFLOW__GENERIC__FRAMEWORK_ENTITY_HPP
 
 
+#include <boost/dataflow/generic/framework_entity/default_framework.hpp>
 #include <boost/dataflow/generic/framework_entity/traits.hpp>
 #include <boost/dataflow/utility/enable_if_type.hpp>
 
@@ -22,7 +23,7 @@ namespace detail {
 }
 
 /// Boolean Metafunction determining whether a type has traits.
-template<typename T, typename Framework=default_framework, typename Enable=detail::enable_guard>
+template<typename T, typename Framework=typename default_framework_of<T>::type, typename Enable=detail::enable_guard>
 struct is_framework_entity : public mpl::false_
 {
 #ifdef DOXYGEN_DOCS_BUILD

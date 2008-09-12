@@ -15,9 +15,18 @@
 
 namespace df = boost::dataflow;
 
-typedef df::traits<df::default_framework> my_traits;
+struct my_framework : public df::framework
+{};
 
-struct framework_entity
+typedef df::traits<df::default_framework> default_traits;
+typedef df::traits<my_framework> my_traits;
+
+struct default_entity
+{
+    typedef default_traits dataflow_traits;
+};
+
+struct my_entity
 {
     typedef my_traits dataflow_traits;
 };
@@ -25,5 +34,10 @@ struct framework_entity
 BOOST_AUTO_TEST_CASE( test ) 
 {
     BOOST_CHECK(df::is_traits<my_traits>::value);
-    BOOST_CHECK(df::is_framework_entity<framework_entity>::value);
+    BOOST_CHECK((df::is_framework_entity<default_entity, df::default_framework>::value));
+    BOOST_CHECK((df::is_framework_entity<my_entity, my_framework>::value));
+    BOOST_CHECK((!df::is_framework_entity<default_entity, my_framework>::value));
+    BOOST_CHECK((!df::is_framework_entity<my_entity, df::default_framework>::value));
+    BOOST_CHECK(df::is_framework_entity<default_entity>::value);
+    BOOST_CHECK(df::is_framework_entity<my_entity>::value);
 }

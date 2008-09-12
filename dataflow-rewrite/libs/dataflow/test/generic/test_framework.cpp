@@ -12,11 +12,18 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-
 namespace df = boost::dataflow;
+
+struct not_framework
+{};
+
+struct my_framework : public df::framework
+{};
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
+    BOOST_CHECK((df::is_framework<my_framework>::value));
+    BOOST_CHECK((!df::is_framework<not_framework>::value));
 }
 
 
