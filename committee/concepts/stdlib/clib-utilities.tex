@@ -76,6 +76,8 @@ Bloomington, IN\ \  47405 \\
 \item Applied the resolution of library issue 769.
 \item Added missing \tcode{Convertible} constraints to
   \tcode{HasBitAnd}, \tcode{HasBitOr}, \tcode{HasBitXor}.
+\item Fixed the requirements of some \tcode{pair} and \tcode{tuple}
+  constructors, mainly for consistent use of \tcode{RvalueOf}.
 \end{itemize}
 
 \end{titlepage}
@@ -350,10 +352,10 @@ struct pair {
     pair(U&& @\farg{x}@, V&& @\farg{y}@);
   @\removedConcepts{pair(pair\&\& \mbox{\farg{p}});}@
   template<class @\farg{U}@, class @\farg{V}@> 
-    @\addedConcepts{requires Constructible<T1, U> \&\& Constructible<T2, V>}@
+    @\addedConcepts{requires Constructible<T1, const U\&> \&\& Constructible<T2, const V\&>}@
     pair(const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@> 
-    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@
+    @\addedConcepts{requires Constructible<T1, RvalueOf<U>::type> \&\& Constructible<T2, RvalueOf<V>::type>}@
     pair(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
   template<class @\farg{U}@, class... @\farg{Args}@> 
     @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, Args\&\&...>}@
@@ -374,8 +376,8 @@ struct pair {
           @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, const V\&>}@
     pair(allocator_arg_t, const Alloc& a, const pair<@\farg{U}@, @\farg{V}@>& @\farg{p}@);
   template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
-    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&>}@
-          @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, V\&\&>}@
+    @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, RvalueOf<U>::type>}@
+          @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, RvalueOf<V>::type>}@
     pair(allocator_arg_t, const Alloc& a, pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
   template<class @\farg{U}@, class... @\farg{Args}@, @\changedConcepts{class}{Allocator} Alloc@> 
     @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&>}@
@@ -475,7 +477,7 @@ and \mbox{\tcode{second}} with
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@> 
-  @\addedConcepts{requires Constructible<T1, U> \&\& Constructible<T2, V>}@
+  @\addedConcepts{requires Constructible<T1, const U\&> \&\& Constructible<T2, const V\&>}@
   pair(const pair<@\farg{U}@, @\farg{V}@> &@\farg{p}@);
 \end{itemdecl}
 
@@ -488,7 +490,7 @@ performing implicit conversions as needed.
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@> 
-  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@
+  @\addedConcepts{requires Constructible<T1, RvalueOf<U>::type> \&\& Constructible<T2, RvalueOf<V>::type>}@
   pair(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);
 \end{itemdecl}
 
@@ -562,7 +564,7 @@ template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator}
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@, @\changedConcepts{class}{Allocator} Alloc@> 
-  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, U\&\&> \&\& ConstructibleWithAllocator<T2, Alloc, V\&\&>}@
+  @\addedConcepts{requires ConstructibleWithAllocator<T1, Alloc, RvalueOf<U> \&\& ConstructibleWithAllocator<T2, Alloc, RvalueOf<V>::type>}@
   pair(allocator_arg_t, const Alloc& a, pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);  
 \end{itemdecl}
 
@@ -857,17 +859,17 @@ public:
   @\removedConcepts{tuple(tuple\&\&);}@
 
   template <class... UTypes>
-    @\addedConcepts{requires Constructible<Types, UTypes>...}@
+    @\addedConcepts{requires Constructible<Types, const UTypes\&>...}@
     tuple(const tuple<UTypes...>&);
   template <class... UTypes>
-    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+    @\addedConcepts{requires Constructible<Types, RvalueOf<UTypes>::type>...}@
     tuple(tuple<UTypes...>&&);
 
   template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires Constructible<Types, UTypes>...}@
+    @\addedConcepts{requires Constructible<Types, const UTypes\&>...}@
     tuple(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);      @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
   template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+    @\addedConcepts{requires Constructible<Types, RvalueOf<UTypes>::type>...}@
     tuple(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);           @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
 
   // allocator-extended constructors
@@ -887,13 +889,13 @@ public:
     @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
     tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, RvalueOf<UTypes>::type>...}@
     tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...>&&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
     @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
     tuple(allocator_arg_t, const Alloc& a, const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
   template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
-    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
+    @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, RvalueOf<UTypes>::type>...}@
     tuple(allocator_arg_t, const Alloc& a, pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 
   @\addedConcepts{requires CopyAssignable<Types>...}@ tuple& operator=(const tuple&);
@@ -1005,8 +1007,8 @@ with the corresponding element of \mbox{\tcode{u}}.}
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <@\addedD{class... UTypes}@> 
-  @\addedConcepts{requires Constructible<Types, UTypes>...}@
-  tuple(const tuple<@\addedD{UTypes...}@>& u);
+  @\addedConcepts{requires Constructible<Types, const UTypes\&>...}@
+  tuple(const tuple<UTypes...>& u);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1031,7 +1033,7 @@ element of \tcode{u}.
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <class... UTypes> 
-  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires Constructible<Types, RvalueOf<UTypes>::type>...}@
   tuple(tuple<UTypes...>&& u);
 \end{itemdecl}
 
@@ -1055,7 +1057,7 @@ the source and target have the same number of elements. \mbox{\exitnote}}
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
 template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires Constructible<Types, UTypes>...}@
+  @\addedConcepts{requires Constructible<Types, const UTypes\&>...}@
   tuple(const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
 \end{itemdecl}
 
@@ -1076,7 +1078,7 @@ second element with \tcode{u.second}.
 \index{pair@\tcode{pair}}%
 \begin{itemdecl}
 template <@\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires Constructible<Types, UTypes\&\&>...}@
+  @\addedConcepts{requires Constructible<Types, RvalueOf<UTypes>::type>...}@
   tuple(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 \end{itemdecl}
 
@@ -1259,13 +1261,13 @@ template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
   @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
   tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, class... UTypes>
-  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, RvalueOf<UTypes>::type>...}@
   tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...>&&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
   @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, const UTypes\&>...}@
   tuple(allocator_arg_t, const Alloc& a, const pair<@\changedConcepts{U1, U2}{UTypes...}@>&);
 template <@\changedConcepts{class}{Allocator}@ Alloc, @\changedConcepts{class U1, class U2}{class... UTypes}@>
-  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, UTypes\&\&>...}@
+  @\addedConcepts{requires ConstructibleWithAllocator<Types, Alloc, RvalueOf<UTypes>::type>...}@
   tuple(allocator_arg_t, const Alloc& a, pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);
 \end{itemdecl}
 
