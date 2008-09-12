@@ -10,8 +10,9 @@
 #define BOOST__DATAFLOW__GENERIC__FRAMEWORK_ENTITY_HPP
 
 
-#include <boost/dataflow/generic/framework_entity/default_framework.hpp>
+#include <boost/dataflow/generic/framework_entity/default_framework_of.hpp>
 #include <boost/dataflow/generic/framework_entity/traits.hpp>
+#include <boost/dataflow/generic/framework_entity/traits_of.hpp>
 #include <boost/dataflow/utility/enable_if_type.hpp>
 
 #include <boost/mpl/bool.hpp>
