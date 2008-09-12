@@ -49,7 +49,7 @@
 \begin{center}
 \huge
 Concepts for the C++0x Standard Library: Utilities\\
-(Revision 4)
+(Revision 5)
 
 \vspace{0.5in}
 
@@ -62,8 +62,8 @@ Bloomington, IN\ \  47405 \\
 \end{center}
 
 \vspace{1in}
-\par\noindent Document number: N2735=08-0245\vspace{-6pt}
-\par\noindent Revises document number: N2622=08-0132\vspace{-6pt}
+\par\noindent Document number: DRAFT\vspace{-6pt}
+\par\noindent Revises document number: N2735=08-0245\vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Library Working Group\vspace{-6pt}
 \par\noindent Reply-to: Douglas Gregor $<$\href{mailto:dgregor@osl.iu.edu}{dgregor@osl.iu.edu}$>$\vspace{-6pt}
@@ -71,21 +71,11 @@ Bloomington, IN\ \  47405 \\
 \section*{Introduction}
 \libintrotext{Chapter 20}.
 
-\section*{Changes since N2622}
+\section*{Changes since N2735}
 \begin{itemize}
-\item Replaced \tcode{HasConstructor} requirements with \tcode{Constructible} requirements.
-\item Constrain \tcode{move} with the \tcode{RvalueOf} concept.
-\item Constrain the \tcode{identity} template, which has been moved
-  to~\ref{function.objects} since it is not used by
-  \tcode{forward}. Instead, we use the \tcode{IdentityOf} concept.
-\item Fixed syntactic errors in the \tcode{mem_fn} signatures.
-\item Constrain \tcode{tuple_element}, \tcode{tuple_size}.
-\item Replace uses of \tcode{ConstructibleAsElement} with
-  \tcode{ConstructibleWithAllocator} in \tcode{pair} and \tcode{tuple}.
-\item Fixed the \tcode{UsesAllocator} concept maps for \tcode{pair},
-  \tcode{tuple}, and \tcode{function}.
-\item Clarified and updates \tcode{pair} and \tcode{tuple}'s allocator
-  constructors.
+\item Applied the resolution of library issue 769.
+\item Added missing \tcode{Convertible} constraints to
+  \tcode{HasBitAnd}, \tcode{HasBitOr}, \tcode{HasBitXor}.
 \end{itemize}
 
 \end{titlepage}
@@ -96,6 +86,7 @@ The following LWG are resolved by concepts. These issues should be
 resolved as NAD following the application of this proposal to the
 wording paper:
 \begin{description}
+\item[Issue 769. std::function should use nullptr_t instead of "unspecified-null-pointer-type".] Applied the proposed resolution to \tcode{function}.
 \item[Issue 811. Pair of pointers no longer works with literal 0.]  As
   mentioned in the discussion of the issue, making \tcode{pair} a
   constrained templates solves the problem of construction from a
@@ -174,7 +165,7 @@ namespace std {
   template <@\changedConcepts{class}{RvalueOf}@ T> @\changedConcepts{typename remove_reference<T>::type\&\&}{RvalueOf<T>::type}@ move(T&&);
 
   // \ref{pairs}, pairs:
-  template <@\changedConcepts{class}{VariableType}@ T1,@\changedConcepts{class}{ObjectType}@ T2> struct pair;
+  template <@\changedConcepts{class}{VariableType}@ T1,@\changedConcepts{class}{VariableType}@ T2> struct pair;
   template <@\changedConcepts{class}{EqualityComparable}@ T1, @\changedConcepts{class}{EqualityComparable}@ T2>
     bool operator==(const pair<T1,T2>&, const pair<T1,T2>&);
   template <@\changedConcepts{class}{LessThanComparable}@ T1, @\changedConcepts{class}{LessThanComparable}@ T2>
@@ -393,7 +384,7 @@ struct pair {
 
   @\addedConcepts{requires MoveAssignable<T1> \&\& MoveAssignable<T2>}@ pair& operator=(pair&& p ); 
   template<class U , class V> 
-    @\addedConcepts{requires MoveAssignable<T1, U> \&\& MoveAssignable<T2, V>}@
+    @\addedConcepts{requires HasAssign<T1, RvalueOf<U>::type> \&\& HasAssign<T2, RvalueOf<V>::type>}@
     pair& operator=(pair<U , V>&& p );
 
   @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@ void swap(pair&& p ); 
@@ -616,7 +607,7 @@ and to \mbox{\tcode{second}} with \mbox{\tcode{std::move(\farg{p}.second)}}.
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@> 
-  @\addedConcepts{requires MoveAssignable<T1, U> \&\& MoveAssignable<T2, V>}@
+  @\addedConcepts{requires HasAssign<T1, RvalueOf<U>::type> \&\& MoveAssignable<T2, RvalueOf<V>::type>}@
   pair& operator=(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);
 \end{itemdecl}
 
@@ -765,6 +756,7 @@ tuple_element<0, pair<T1, T2> >::type
   returns \tcode{p.second}.
 \end{itemdescr}
 
+\setcounter{section}{3}
 \rSec1[tuple]{Tuples}
 
 \pnum
@@ -922,7 +914,7 @@ public:
     tuple& operator=(pair<@\changedConcepts{U1, U2}{UTypes...}@>&&);       @\removedConcepts{// iff \mbox{\tcode{sizeof...(Types) == 2}}}@
 };
 
-@\addedConcepts{template<class... Types, class... Alloc>}@
+@\addedConcepts{template<class... Types, class Alloc>}@
   @\addedConcepts{concept_map UsesAllocator<tuple<Types...>, Alloc> \{}@
     @\addedConcepts{typedef Alloc allocator_type;}@
   @\addedConcepts{\}}@
@@ -957,8 +949,8 @@ public:
 shall be copy constructible.}
 
 \pnum
-\effects\  Copy initializes each element with the value of the
-corresponding parameter.
+\removedConcepts{\mbox{\effects}  Copy initializes each element with the value of the
+corresponding parameter.}
 \end{itemdescr}
 
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
@@ -1029,16 +1021,11 @@ in \mbox{\tcode{UTypes}}.
 element of \tcode{u}.
 
 \pnum
-\enternote\ \removedD{In an implementation where one template definition
-  serves for many different values for \mbox{\tcode{N}},}
-  \tcode{enable_if} can be used to
+\removedConcepts{\mbox{\enternote}
+  \mbox{\tcode{enable_if}} can be used to
   make the converting constructor and assignment operator exist only
   in the cases where the source and target have the same number of
-  elements.\removedD{  Another way of achieving this is adding an extra integral
-  template parameter which defaults to \mbox{\tcode{N}} (more precisely, a
-  metafunction that computes \mbox{\tcode{N}}), and then defining the converting
-  copy constructor and assignment only for tuples where the extra
-  parameter in the source is \mbox{\tcode{N}}.}  \exitnote\
+  elements.  \mbox{\exitnote}}
 \end{itemdescr}
 
 \index{tuple@\tcode{tuple}!tuple@\tcode{tuple}}%
@@ -1579,7 +1566,7 @@ constructible. Also, all comparison operators are short circuited;
 they do not perform element accesses beyond what is required to determine the
 result of the comparison. \exitnote\
 
-\setcounter{section}{4}
+\setcounter{section}{5}
 \rSec1[function.objects]{Function objects}
 
 \pnum
@@ -1615,7 +1602,7 @@ namespace std {
   template <@\changedConcepts{class}{ObjectType}@ T> reference_wrapper<const T> cref(reference_wrapper<T>);
 
   // \ref{identity.operation}, identity operation:
-  @\addedConcepts{template <class T> struct identity;}@
+  @\addedConcepts{template <IdentityOf T> struct identity;}@
 
   //    \ref{arithmetic.operations}, arithmetic operations:
   template <@\changedConcepts{class}{ReferentType}@ T> struct plus;
@@ -1738,13 +1725,13 @@ namespace std {
     void swap(function<@\addedD{R(ArgTypes...)}@>&, function<@\addedD{R(ArgTypes...)}@>&);
 
   template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
-    bool operator==(const function<@\addedD{R(ArgTypes...)}@>&, @\unspecnull@);
+    bool operator==(const function<@\addedD{R(ArgTypes...)}@>&, @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
   template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
-    bool operator==(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
+    bool operator==(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@, const function<@\addedD{R(ArgTypes...)}@>&);
   template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
-    bool operator!=(const function<@\addedD{R(ArgTypes...)}@>&, @\unspecnull@);
+    bool operator!=(const function<@\addedD{R(ArgTypes...)}@>&, @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
   template<@\addedD{\changedConcepts{class}{Returnable} R, \changedConcepts{class}{CopyConstructible}... ArgTypes}@>
-    bool operator!=(@\unspecnull@, const function<@\addedD{R(ArgTypes...)}@>&);
+    bool operator!=(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@, const function<@\addedD{R(ArgTypes...)}@>&);
 
   // \marktr{}\ref{unord.hash}, hash function base template:
   template <@\changedConcepts{class}{ReferentType}@ T> struct hash;
@@ -2148,7 +2135,7 @@ operators in the language (\ref{expr.bit.and}, \ref{expr.or}, \ref{expr.xor}).
 \index{bit_and@\tcode{bit_and}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct bit_and : binary_function<T,T,T> {
-  @\addedConcepts{requires HasBitAnd<T, T>}@
+  @\addedConcepts{requires HasBitAnd<T, T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& x, const T& y) const;
 };
 \end{itemdecl}
@@ -2161,7 +2148,7 @@ template <@\changedConcepts{class}{ReferentType}@ T> struct bit_and : binary_fun
 \index{bit_or@\tcode{bit_or}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct bit_or : binary_function<T,T,T> {
-  @\addedConcepts{requires HasBitOr<T, T>}@
+  @\addedConcepts{requires HasBitOr<T, T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& x, const T& y) const;
 };
 \end{itemdecl}
@@ -2174,7 +2161,7 @@ template <@\changedConcepts{class}{ReferentType}@ T> struct bit_or : binary_func
 \index{bit_xor@\tcode{bit_xor}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct bit_xor : binary_function<T,T,T> {
-  @\addedConcepts{requires HasBitXor<T, T>}@
+  @\addedConcepts{requires HasBitXor<T, T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& x, const T& y) const;
 };
 \end{itemdecl}
@@ -2578,7 +2565,7 @@ namespace std {
 
     // \ref{func.wrap.func.con}, construct/copy/destroy:
     explicit function();
-    function(@\unspecnull@);
+    function(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
     function(const function&);
     @\addedD{function(function\&\&);}@
     template<class F> 
@@ -2592,7 +2579,7 @@ namespace std {
     template<@\changedConcepts{class}{Allocator}@ A> 
       function(allocator_arg_t, const A&);
     template<@\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&,
-      @\unspecnull@);
+      @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
     template<@\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&,
       const function&);
     template<@\changedConcepts{class}{Allocator}@ A> function(allocator_arg_t, const A&,
@@ -2602,7 +2589,7 @@ namespace std {
 
     function& operator=(const function&);
     @\addedD{function\& operator=(function\&\&);}@
-    function& operator=(@\unspecnull@);
+    function& operator=(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
     template<class F> 
       @\addedConcepts{requires CopyConstructible<F> \&\& Callable<F, ArgTypes..>}@ 
             @\addedConcepts{\&\& Convertible<Callable<F, ArgTypes...>::result_type}@
@@ -2626,7 +2613,7 @@ namespace std {
       void assign(F, const A&);
 
     // \ref{func.wrap.func.cap}, function capacity:
-    operator @\unspecbool@() const;
+    explicit operator bool() const;
 
     // deleted overloads close possible hole in the type system
     template<class R2, class... ArgTypes2>
@@ -2659,16 +2646,16 @@ namespace std {
 
   // \ref{func.wrap.func.nullptr}, Null pointer comparisons:
   template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-    bool operator==(const function<@\changedD{Function}{R(ArgTypes...)}@>&, @\unspecnull@);
+    bool operator==(const function<@\changedD{Function}{R(ArgTypes...)}@>&, @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
 
   template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-    bool operator==(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>&);
+    bool operator==(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@, const function<@\changedD{Function}{R(ArgTypes...)}@>&);
 
   template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-    bool operator!=(const function<@\changedD{Function}{R(ArgTypes...)}@>&, @\unspecnull@);
+    bool operator!=(const function<@\changedD{Function}{R(ArgTypes...)}@>&, @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
 
   template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-    bool operator!=(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>&);
+    bool operator!=(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@, const function<@\changedD{Function}{R(ArgTypes...)}@>&);
 
   // \ref{func.wrap.func.alg}, specialized algorithms:
   template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
@@ -2813,10 +2800,10 @@ and return type \mbox{\tcode{R}}.}
 
 \begin{itemdecl}
 template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-  bool operator==(const function<@\changedD{Function}{R(ArgTypes...)}@>& f, @\unspecnull@);
+  bool operator==(const function<@\changedD{Function}{R(ArgTypes...)}@>& f, @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
 
 template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-  bool operator==(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>& f);
+  bool operator==(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@, const function<@\changedD{Function}{R(ArgTypes...)}@>& f);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -2827,10 +2814,10 @@ template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} 
 
 \begin{itemdecl}
 template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-  bool operator!=(const function<@\changedD{Function}{R(ArgTypes...)}@>& f, @\unspecnull@);
+  bool operator!=(const function<@\changedD{Function}{R(ArgTypes...)}@>& f, @\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@);
 
 template <@\changedD{class Function}{\changedConcepts{class}{MoveConstructible} R, \changedConcepts{class}{MoveConstructible}... ArgTypes}@>
-  bool operator!=(@\unspecnull@, const function<@\changedD{Function}{R(ArgTypes...)}@>& f);
+  bool operator!=(@\changedConcepts{\mbox{\unspecnull}}{nullptr_t}@, const function<@\changedD{Function}{R(ArgTypes...)}@>& f);
 \end{itemdecl}
 
 \begin{itemdescr}

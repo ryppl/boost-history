@@ -1885,7 +1885,7 @@ concept ArithmeticLike<typename T>
 
 \begin{itemdecl}
 concept IntegralLike<typename T> 
-  : ArithmeticLike<T>, LessThanComparable<T>,
+  : ArithmeticLike<T>, 
     HasComplement<T>, HasModulus<T, T>, HasBitAnd<T, T>, HasBitXor<T, T>, HasBitOr<T, T>,
     HasLeftShift<T, T>, HasRightShift<T, T> 
     HasModulusAssign<T, const T&>, HasLeftShiftAssign<T, const T&>, HasRightShiftAssign<T, const T&>
