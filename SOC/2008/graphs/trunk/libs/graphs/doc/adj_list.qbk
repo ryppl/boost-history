@@ -1,0 +1,38 @@
+
+[section Adjacency List]
+An adjacency list is a family of data structures that can is used to implement
+undirected, unidirectional, and bidirectional graphs. In general, an adjacency list
+is implemented as a set of vertices, each of which is associated with one or two
+lists of incident edges. The nature of the graph (undirected, directed) determines
+the structure lists.
+
+The dominating structural feature of adjacency lists are their /stores/. A store
+is a repository for storing some component of a graph such as vertices, edges, or
+properties. The term /store/ is used in place of /set/ to avoid confusion with the
+semantics of the term. A store can be implemented by nearly any container. The particular
+type of store used in a graph is selected by a /storage selector/.
+
+The adjacency lists in this library, like those in the BGL, allow a programmer to
+select the storage mechanism at compile time. The previous library used the symbolic
+types `vecS`, `listS`, etc. to determine the storage mechanism. This library extends
+that concept and defines storage selectors as metafunctions that generate the types
+required to implement an adjacency list. Storage selectors are currently specific
+to the graph type and are described along with its interface.
+
+One of the other distinguishing properties of these adjacency list implementations is
+that they do not contain edge objects. In these implementations, edges are represented
+as a tuple of containg the endpoint vertex descriptors and a descriptor to the edge's
+property (if given).
+
+[note The adjacency list implementations rely on template template parameters to
+allow the user to specify units of functionality without knowing the types on which
+those functions operate. The definition of template parameters is often not included
+in the documentation. If a template parameter is described as a /type/ then it
+is a type parameter. If the parameter is described as a /name/ then it is defined a
+template template parameter.]
+
+
+[include adj_list/undirected.qbk]
+[include adj_list/directed.qbk]
+
+[endsect]

@@ -1,0 +1,58 @@
+
+
+[section Descriptors]
+The vertices and edges of the graph are accessible via descriptor objects. A
+descriptor is a lightweight, opaque reference to an object. All operations on
+these graphs are defined in terms of these descriptors. Methods for getting
+and using descriptors will be shown throughout this manual.
+
+Unlike iterators, descriptors cannot be used to access their referenced elements
+by themselves. They must be used in conjunction with the containers that return
+them to the program (i.e., the graph). However, descriptors are initialized to a
+`null` state when default cosntructed, and are implicitly castable to `bool`,
+allowing convenient pointer-like tests for existence.
+
+Descriptors are also [LessThanComparable] and [Hashable], allowing them to be
+used in sets and maps and their unordered variants.
+
+[note Pointers (to vertices or edges) are not generally used because a) it is not
+always possible to convert them to and from iterators in constant time, b) pointers
+generally assume a uniform, non-distributed address space, and c) some of the graph
+types do not actually have edge objects.]
+
+[heading Perspective]
+Descriptors can cause problems for programmers who expect a significant class
+interface for returned vertices and descriptors. In fact, most graph libraries
+prefer to return heavyweight vertex objects (or pointers to them) that define
+their own interfaces. This approach is not feasible when combined with the
+amount of genericism offered by this library.
+
+[heading Internals]
+Descriptors are an abstraction over iterators that do two things. First, they
+provide greater degrees of stability over insertions (especially with vectors).
+Second, they are entirely decoupled from the types of the containers that they
+reference into. Without this decoupling, it would be nearly impossible to define
+graph types because of mutual and cyclic type dependencies.
+
+As mentioned, descriptors can't be used without their originating containers.
+There are two functions that can be used to translate between a container's
+iterators and its descriptors: `make_descriptor` and `make_iterator`.
+
+``
+Descriptor make_descriptor(Container& cont, Iterator iter);
+``
+
+Given a container and a valid iterator into the container, return a descriptor
+over the referenced element. If `iter` is past the end, the returned descriptor
+is null.
+
+``
+Iterator make_iterator(Container& cont, Descriptor desc);
+``
+
+Given a container and a valid descriptor into the container, return an iterator
+to the described element. If `desc` is null, then the returned iterator is past
+the end of the container.
+
+[endsect]
+

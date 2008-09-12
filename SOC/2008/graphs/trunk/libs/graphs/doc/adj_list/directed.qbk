@@ -1,0 +1,21 @@
+
+[section `directed_graph`]
+
+ #include <boost/graphs/adjacency_list/undirected_graph.hpp>
+
+ namespace boost {
+ namespace graphs {
+ namespace adjacency_list {
+
+     template <
+        typename VertexLabel = none,
+        typename EdgeLabel = none,
+        typename VertexStore = vertex_list<>,
+        typename EdgeStore = edge_list<>>
+    directed_graph;
+
+ } } }
+
+[$graph/directed.png]
+
+[endsect]

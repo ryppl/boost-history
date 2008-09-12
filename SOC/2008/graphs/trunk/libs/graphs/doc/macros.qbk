@@ -1,0 +1,23 @@
+
+[/
+    Implements a centered figure with a caption. This is pretty lightweight and
+    needs some assistance from CSS. The caption can be matched with the selector
+    "div.caption p".
+
+    For right now, I'm just centering the caption, and making forcing it to be
+    bold within the template call. I think that this allows a wider range of
+    flexibility for formatting within the caption (although I could be wrong).
+    Unfortunately, I don't have anything that links here.
+/]
+[template figure[id path caption]
+'''
+<mediaobject id="'''[id]'''">
+    <imageobject>
+        <imagedata fileref="'''[path]'''" align="center"/>
+    </imageobject>
+    <caption>
+        <para>'''[caption]'''</para>
+    </caption>
+</mediaobject>
+'''
+]
