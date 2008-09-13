@@ -78,6 +78,10 @@ Bloomington, IN\ \  47405 \\
   \tcode{HasBitAnd}, \tcode{HasBitOr}, \tcode{HasBitXor}.
 \item Fixed the requirements of some \tcode{pair} and \tcode{tuple}
   constructors, mainly for consistent use of \tcode{RvalueOf}.
+\item Add a missing pair assignment operator, \tcode{operator=(const
+    pair<U, V>\&)}. The operator is not present in the current working
+  paper, which means that one could end up moving from pair lvalues
+  (thanks to Alisdair Meredith for reporting this issue).
 \end{itemize}
 
 \end{titlepage}
@@ -384,10 +388,13 @@ struct pair {
           @\addedConcepts{\&\& ConstructibleWithAllocator<T2, Alloc, Args\&\&...>}@
     pair(allocator_arg_t, const Alloc& a, U&& @\farg{x}@, Args&&... @\farg{args}@);
 
+  @\addedConcepts{template<class U , class V>}@
+    @\addedConcepts{requires HasAssign<T1, const U\&> \&\& HasAssign<T2, const V\&>}@
+    @\addedConcepts{pair\& operator=(const pair<U , V>\& p);}@
   @\addedConcepts{requires MoveAssignable<T1> \&\& MoveAssignable<T2>}@ pair& operator=(pair&& p ); 
   template<class U , class V> 
     @\addedConcepts{requires HasAssign<T1, RvalueOf<U>::type> \&\& HasAssign<T2, RvalueOf<V>::type>}@
-    pair& operator=(pair<U , V>&& p );
+    pair& operator=(pair<U , V>&& p);
 
   @\addedConcepts{requires Swappable<T1> \&\& Swappable<T2>}@ void swap(pair&& p ); 
 };
@@ -591,6 +598,22 @@ template<class @\farg{U}@, class... @\farg{Args}@, @\changedConcepts{class}{Allo
   \mbox{\tcode{ConstructibleWithAllocator}} objects with constructor
   arguments \mbox{\tcode{(allocator_arg_t(), a, std::forward<U>(x))}} and \mbox{\tcode{(allocator_arg_t(), a,}}}\\
 \addedConcepts{\mbox{\tcode{std::forward<Args>(args)...)}}, respectively.}
+\end{itemdescr}
+
+\begin{itemdecl}
+@\addedConcepts{template<class U , class V>}@
+  @\addedConcepts{requires HasAssign<T1, const U\&> \&\& HasAssign<T2, const V\&>}@
+  @\addedConcepts{pair\& operator=(const pair<U , V>\& p);}@
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\effects}
+Assigns to \mbox{\tcode{first}} with \mbox{\tcode{\farg{p}.first}}
+and to \mbox{\tcode{second}} with \mbox{\tcode{\farg{p}.second}}.}
+
+\pnum
+\addedConcepts{\mbox{\returns} \mbox{\tcode{*this}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1910,7 +1933,7 @@ operators in the language (\ref{expr.mul}, \ref{expr.add}).
 \index{plus@\tcode{plus}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct plus : binary_function<T,T,T> {
-  @\addedConcepts{requires HasPlus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasPlus<T, T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -2843,10 +2866,10 @@ template<@\changedD{class Function}{\changedConcepts{class}{Returnable} R, \chan
 \index{function objects!wrapper|)}%
 
 \section*{Acknowledgments}
-Daniel Kr\"ugler provided helpful comments and corrections to this
-proposal. Pablo Halpern provided simplifications to the \tcode{pair}
-and \tcode{tuple} constructors along with other helpful comments and
-corrections.
+Daniel Kr\"ugler and Alisdair Meredith provided helpful comments and
+corrections to this proposal. Pablo Halpern, Howard Hinnat, and Alan
+Talbot all provided simplifications to the \tcode{pair} and
+\tcode{tuple} constructors.
 
 \bibliographystyle{plain}
 \bibliography{local}
