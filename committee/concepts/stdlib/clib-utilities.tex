@@ -198,10 +198,10 @@ namespace std {
   template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2> struct tuple_element<1, std::pair<T1, T2> >;
 
   template<size_t I, class T1, class T2> 
-    @\addedConcepts{requires True<I < 2>}@
+    @\addedConcepts{requires True<(I < 2)>}@
     P& get(std::pair<T1, T2>&);
   template<size_t I, class T1, class T2> 
-    @\addedConcepts{requires True<I < 2>}@
+    @\addedConcepts{requires True<(I < 2)>}@
     const P& get(const std::pair<T1, T2>&);
 }
 \end{codeblock}
@@ -742,11 +742,11 @@ tuple_element<0, pair<T1, T2> >::type
 \index{get@\tcode{get}!pair@\tcode{pair}}%
 \begin{itemdecl}
 @\ptr@template<int I, class T1, class T2>
-  @\addedConcepts{requires True<I < 2>}@
+  @\addedConcepts{requires True<(I < 2)>}@
   P& get(pair<T1, T2>&);
 
 @\ptr@template<int I, class T1, class T2>
-  @\addedConcepts{requires True<I < 2>}@
+  @\addedConcepts{requires True<(I < 2)>}@
   const P& get(const pair<T1, T2>&);
 \end{itemdecl}
 \begin{itemdescr}
