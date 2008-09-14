@@ -65,7 +65,9 @@ public:
                 continue;
             // if we are sending an event to a child view, it must be active
             set_mouse_focus(*it);
-            if(access::on_event(*it, this->event_info))
+            button_event translated_event_info(event_info);
+            translated_event_info.position -= it->position();
+            if(access::on_event(*it, translated_event_info))
                 return true;
         }
         return false;

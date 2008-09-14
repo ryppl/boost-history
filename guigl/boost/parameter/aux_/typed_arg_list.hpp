@@ -35,7 +35,7 @@
 namespace boost { namespace parameter { 
 
 // Forward declaration for aux::arg_list, below.
-template<class T> struct typed_keyword;
+template<class T> struct keyword_base;
 
 namespace aux {
 
@@ -127,7 +127,7 @@ struct empty_typed_arg_list
     // in the list that matches the supplied keyword. Just return
     // the default value.
     template <class Tag>
-    const typename Tag::value_type &operator[](const typed_keyword<Tag>&) const
+    const typename Tag::value_type &operator[](const keyword_base<Tag>&) const
     {
         return Tag::default_value();
     }
@@ -171,7 +171,7 @@ no_tag operator*(empty_typed_arg_list, KW*);
 #endif
 
 // Forward declaration for typed_arg_list::operator,
-template <class KW>
+template <class KW, class Arg>
 struct typed_tagged_argument;
 
 // A tuple of tagged arguments, terminated with empty_typed_arg_list.
@@ -216,7 +216,7 @@ struct typed_arg_list : Next
     template<typename CTaggedArg, typename CNext>
     typed_arg_list(const typed_arg_list<CTaggedArg, CNext> &args)
       : Next(args)
-      , arg(args[typed_keyword<key_type>()])
+      , arg(args[keyword_base<key_type>()])
     {}
 
     // Create a new list by prepending arg to a copy of tail.  Used
@@ -242,19 +242,8 @@ struct typed_arg_list : Next
           >::type type;
         };
     };
-
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564)) && !BOOST_WORKAROUND(__GNUC__, == 2)
-# if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-    friend yes_tag operator*(typed_arg_list, key_type*);
-#  define BOOST_PARAMETER_CALL_HAS_KEY(next, key) (*(next*)0 * (key*)0)
-# else
-    // Overload for key_type, so the assert below will fire if the
-    // same keyword is used again
-    static yes_tag has_key(key_type*);
-    using Next::has_key;
     
 #  define BOOST_PARAMETER_CALL_HAS_KEY(next, key) next::has_key((key*)0)  
-# endif
 
     BOOST_MPL_ASSERT_MSG(
         sizeof(BOOST_PARAMETER_CALL_HAS_KEY(Next,key_type)) == sizeof(no_tag)
@@ -262,7 +251,6 @@ struct typed_arg_list : Next
     );
 
 # undef BOOST_PARAMETER_CALL_HAS_KEY
-#endif
     //
     // Begin implementation of indexing operators for looking up
     // specific arguments by name
@@ -282,88 +270,12 @@ struct typed_arg_list : Next
         return arg.value ? arg.value.get() : arg.value.construct(d.value);
     }
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) \
-    || BOOST_WORKAROUND(__GNUC__, < 3) \
-    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-    // These older compilers don't support the overload set creation
-    // idiom well, so we need to do all the return type calculation
-    // for the compiler and dispatch through an outer function template
-
-    // A metafunction class that, given a keyword, returns the base
-    // sublist whose get() function can produce the value for that
-    // key.
-    struct key_owner
-    {
-        template<class KW>
-        struct apply
-        {
-          typedef typename mpl::eval_if<
-                boost::is_same<KW, key_type>
-              , mpl::identity<typed_arg_list<TaggedArg,Next> >
-              , mpl::apply_wrap1<typename Next::key_owner,KW>
-          >::type type;
-        };
-    };
-
-    // Outer indexing operators that dispatch to the right node's
-    // get() function.
-    template <class KW>
-    typename mpl::apply_wrap3<binding, KW, void_, mpl::true_>::type
-    operator[](keyword<KW> const& x) const
-    {
-        typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
-        return sublist.get(x);
-    }
-
-    template <class KW, class Default>
-    typename mpl::apply_wrap3<binding, KW, Default&, mpl::true_>::type
-    operator[](default_<KW, Default> x) const
-    {
-        typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
-        return sublist.get(x);
-    }
-
-    template <class KW, class F>
-    typename mpl::apply_wrap3<
-        binding,KW
-      , typename result_of0<F>::type
-      , mpl::true_
-    >::type
-    operator[](lazy_default<KW,F> x) const
-    {
-        typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
-        return sublist.get(x);
-    }
-
-    // These just return the stored value; when empty_typed_arg_list is
-    // reached, indicating no matching argument was passed, the
-    // default is returned, or if no default_ or lazy_default was
-    // passed, compilation fails.
-    reference get(keyword<key_type> const&) const
+    reference operator[](keyword_base<key_type> const&) const
     {
         BOOST_MPL_ASSERT_NOT((holds_maybe));
         return arg.value;
     }
 
-    template <class Default>
-    reference get(default_<key_type,Default> const& d) const
-    {
-        return get_default(d, holds_maybe());        
-    }
-
-    template <class Default>
-    reference get(lazy_default<key_type, Default>) const
-    {
-        return arg.value;
-    }
-    
-#else
-
-    reference operator[](typed_keyword<key_type> const&) const
-    {
-        BOOST_MPL_ASSERT_NOT((holds_maybe));
-        return arg.value;
-    }
 /*
     template <class Default>
     reference operator[](default_<key_type, Default> const& d) const
@@ -406,15 +318,14 @@ struct typed_arg_list : Next
     // Builds an overload set including satisfies functions defined
     // in base classes.
     using Next::satisfies;
-#endif
 
     // Comma operator to compose argument list without using parameters<>.
     // Useful for argument lists with undetermined length.
-    template <class KW>
-    typed_arg_list<typed_tagged_argument<KW>, self> 
-    operator,(typed_tagged_argument<KW> x) const
+    template <class KW, class Arg>
+    typed_arg_list<typed_tagged_argument<KW, Arg>, self> 
+    operator,(typed_tagged_argument<KW, Arg> x) const
     {
-        return typed_arg_list<typed_tagged_argument<KW>, self>(x, *this);
+        return typed_arg_list<typed_tagged_argument<KW, Arg>, self>(x, *this);
     }
 
     // MPL sequence support

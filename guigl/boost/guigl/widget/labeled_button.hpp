@@ -31,6 +31,7 @@ public:
 
 protected:
     void draw();
+    friend class guigl::access;
 };
 
 }}}

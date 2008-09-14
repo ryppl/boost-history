@@ -27,6 +27,10 @@ public:
         : base_type(args)
         , m_background_color(args[_background])
     {}
+    solid_background(const solid_background &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_background_color(rhs.m_background_color)
+    {}
     
     /** Returns the bacground color. */
     const color_type &background_color() const

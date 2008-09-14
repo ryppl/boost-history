@@ -11,4 +11,4 @@ project boost/guigl/example
         <library>$(TOP)/libs/guigl/build//boost_guigl/<link>static
     ;
 
-exe window_example : window_example.cpp two_spheres.cpp ;
+exe window_example : window_example.cpp two_spheres.cpp two_buttons.cpp ;

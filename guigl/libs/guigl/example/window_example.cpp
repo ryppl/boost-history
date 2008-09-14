@@ -18,6 +18,7 @@
 #include <boost/bind/placeholders.hpp>
 
 #include "two_spheres.hpp"
+#include "two_buttons.hpp"
 
 #include <iostream>
 
@@ -70,13 +71,9 @@ int main()
     s->on_value_change.connect(boost::bind(&widget::labeled_button::set_color, b1, boost::bind(make_grey, _1)));
     
     test_window2
-        << new widget::labeled_button((
-            _size=size_type(100,30),
-            _position=position_type(50, 5),
-            _background=color_type(0.5,0.5,0.5),
-            _active_color=color_type(0,1,0),
-            _color=color_type(1,1,1),
-            _label="Button 2"));
+        << new two_buttons((
+            _size=size_type(100,50),
+            _position=position_type(50, 5) ));
     
     layout::grid grid_layout(( _grid_size=test_window3.size(), _horizontal=3, _vertical=3 ));
     for(int i=1; i<=9; i++)

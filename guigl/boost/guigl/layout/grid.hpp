@@ -12,6 +12,7 @@
 
 #include <boost/guigl/view/base.hpp>
 #include <boost/guigl/types.hpp>
+#include <boost/fusion/include/for_each.hpp>
 #include <memory>
 
 
@@ -38,6 +39,24 @@ namespace keywords {
 
 namespace layout {
 
+namespace detail {
+
+    template<typename Layout>
+    struct apply_layout
+    {
+        apply_layout(Layout &layout)
+            : layout(layout)
+        {}
+        template<typename View>
+        void operator()(View &view) const
+        {
+            view.set_position(layout.next_position());
+            view.set_size(layout.next_size());
+        }
+        Layout &layout;
+    };
+}
+
 class grid
 {
 public:
@@ -51,21 +70,34 @@ public:
         m_dimensions[1] = args[_vertical];
         m_next[0] = m_next[1] = 0;
     }
-    
-    template<typename T, typename ArgumentPack>
-    T *create(const ArgumentPack &args)
+    position_type next_position()
     {
-        T *element(new T((
-            args,
-            _size = m_element_size,
-            _position = position_type(m_element_size.x * m_next[0], m_element_size.y * m_next[1])
-        )) );
-        
+        position_type result(m_element_size.x * m_next[0], m_element_size.y * m_next[1]);
         if(++m_next[m_direction] >= m_dimensions[m_direction])
         {
             m_next[m_direction] = 0;
             m_next[!m_direction]++;
         }
+        return result;
+    }
+    const size_type &next_size()
+    {
+        return m_element_size;
+    }
+    
+    template<typename ViewSequence>
+    void apply_layout(ViewSequence &views)
+    {
+        boost::fusion::for_each(views, detail::apply_layout<grid>(*this));
+    }
+    template<typename T, typename ArgumentPack>
+    T *create(const ArgumentPack &args)
+    {
+        T *element(new T((
+            args,
+            _size = next_size(),
+            _position = next_position()
+        )) );
         return element;
     }
 private:

@@ -25,6 +25,10 @@ public:
         : base_type(args)
         , m_active_color(args[_active_color])
     {}
+    active_colored(const active_colored &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_active_color(rhs.m_active_color)
+    {}
     
     /** Returns the active color. */
     const color_type &active_color() const

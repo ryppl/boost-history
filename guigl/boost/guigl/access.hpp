@@ -10,6 +10,9 @@
 #define BOOST__GUIGL__ACCESS_HPP
 
 
+#include <boost/guigl/event.hpp>
+
+
 namespace boost { namespace guigl {
 
 namespace view {
@@ -17,10 +20,16 @@ namespace view {
 template<typename BaseView>
 class compound;
 
+template<typename ChildrenSequence, typename BaseView>
+class static_compound;
+
 namespace detail {
 
     template<typename BaseView>
     class compound_event_visitor;
+
+    template<typename ChildrenSequence, typename BaseView>
+    class static_compound_event_visitor;
 
 }
 
@@ -35,16 +44,16 @@ private:
         t.draw();
     }
 
-    template<typename T, typename E>
-    static bool on_event(T &t, const E& e)
+    template<typename T>
+    static bool on_event(T &t, const event_type& e)
     {
         return t.on_event(e);
     }
     
     template<typename Child, typename Parent>
-    static void parent(Child &child, Parent &parent)
+    static void set_parent(Child &child, Parent &parent)
     {
-        child.parent(parent);
+        child.set_parent(parent);
     }
 
     friend class window;
@@ -52,6 +61,11 @@ private:
     friend class view::compound;
     template<typename BaseType>
     friend class view::detail::compound_event_visitor;
+    
+    template<typename ChildrenSequence, typename BaseView>
+    friend class view::static_compound;
+    template<typename ChildrenSequence, typename BaseType>
+    friend class view::detail::static_compound_event_visitor;
 };
 
 }}

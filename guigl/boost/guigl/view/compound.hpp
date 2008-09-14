@@ -36,7 +36,7 @@ public:
     compound & operator << (positioned<> *v)
     {
         m_children.push_back(v);
-        access::parent(*v, *this);
+        access::set_parent(*v, *this);
         return *this;
     }
     

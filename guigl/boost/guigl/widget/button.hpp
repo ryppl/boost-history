@@ -35,7 +35,15 @@ public:
     button(const ArgumentPack &args)
         : button_base_type(args)
     {}
-
+    button(const button &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+    {}
+    
+    button &operator=(const button &rhs)
+    {
+        base_type::operator=(static_cast<const base_type &>(rhs));
+        return *this;
+    }
     boost::signal<void()> on_click;
 protected:
     BOOST_GUIGL_WIDGET_DRAW

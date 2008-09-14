@@ -11,6 +11,7 @@
 # define BOOST_PARAMETER_TYPED_NAME_060806_HPP
 
 # include <boost/parameter/typed_keyword.hpp>
+# include <boost/parameter/untyped_keyword.hpp>
 # include <boost/parameter/name.hpp>
 # include <boost/detail/workaround.hpp>
 # include <boost/preprocessor/cat.hpp>
@@ -67,17 +68,38 @@ struct lambda<
 
 
 # if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-#  define BOOST_PARAMETER_TYPED_NAME_OBJECT(tag, name)                    \
-    static ::boost::parameter::typed_keyword<tag> const& name             \
-       = ::boost::parameter::typed_keyword<tag>::instance;
+#  define BOOST_PARAMETER_TYPED_NAME_OBJECT(tag, name, keyword)     \
+    static ::boost::parameter::keyword<tag> const& name             \
+       = ::boost::parameter::keyword<tag>::instance;
 # else
-#  define BOOST_PARAMETER_TYPED_NAME_OBJECT(tag, name)                    \
+#  define BOOST_PARAMETER_TYPED_NAME_OBJECT(tag, name, keyword)     \
     namespace                                                       \
     {                                                               \
-       ::boost::parameter::typed_keyword<tag> const& name                 \
-       = ::boost::parameter::typed_keyword<tag>::instance;                \
+       ::boost::parameter::keyword<tag> const& name                 \
+       = ::boost::parameter::keyword<tag>::instance;                \
     }
 # endif
+
+# define BOOST_PARAMETER_BASIC_UNTYPED_NAME(tag_namespace, tag, name)       \
+    namespace tag_namespace                                         \
+    {                                                               \
+      struct tag                                                    \
+      {                                                             \
+          static char const* keyword_name()                         \
+          {                                                         \
+              return BOOST_PP_STRINGIZE(tag);                       \
+          }                                                         \
+                                                                    \
+          typedef boost::parameter::value_type<                     \
+              boost::mpl::_2, tag, boost::parameter::void_          \
+          > _;                                                      \
+                                                                    \
+          typedef boost::parameter::value_type<                     \
+              boost::mpl::_2, tag, boost::parameter::void_          \
+          > _1;                                                     \
+      };                                                            \
+    }                                                               \
+    BOOST_PARAMETER_TYPED_NAME_OBJECT(tag_namespace::tag, name, untyped_keyword)
 
 # define BOOST_PARAMETER_BASIC_TYPED_NAME(tag_namespace, tag, name, type)       \
     namespace tag_namespace                                         \
@@ -97,10 +119,10 @@ struct lambda<
               boost::mpl::_2, tag, boost::parameter::void_          \
           > _1;                                                     \
                                                                     \
-          typedef type value_type;                                                          \
+          typedef type value_type;                                  \
       };                                                            \
     }                                                               \
-    BOOST_PARAMETER_TYPED_NAME_OBJECT(tag_namespace::tag, name)
+    BOOST_PARAMETER_TYPED_NAME_OBJECT(tag_namespace::tag, name, typed_keyword)
 
 # define BOOST_PARAMETER_BASIC_TYPED_NAME_WDEFAULT(tag_namespace, tag, name, type, default_v)       \
     namespace tag_namespace                                         \
@@ -130,8 +152,11 @@ struct lambda<
                                                                     \
       };                                                            \
     }                                                               \
-    BOOST_PARAMETER_TYPED_NAME_OBJECT(tag_namespace::tag, name)
+    BOOST_PARAMETER_TYPED_NAME_OBJECT(tag_namespace::tag, name, typed_keyword)
 
+
+# define BOOST_PARAMETER_UNTYPED_NAME(name)                          \
+    BOOST_PARAMETER_BASIC_UNTYPED_NAME(tag, name, BOOST_PP_CAT(_, name))
 
 # define BOOST_PARAMETER_TYPED_NAME(name,type)                          \
     BOOST_PARAMETER_BASIC_TYPED_NAME(tag, name, BOOST_PP_CAT(_, name), type)

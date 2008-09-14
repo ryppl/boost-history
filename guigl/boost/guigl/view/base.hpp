@@ -32,6 +32,9 @@ public:
     
     const size_type &size() const
     {   return m_size; }
+
+    void set_size(const size_type &size)
+    {   m_size = size; }
     
 protected:
     virtual void draw()=0;

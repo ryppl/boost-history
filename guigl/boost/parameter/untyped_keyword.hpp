@@ -7,8 +7,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-#ifndef TYPED_KEYWORD_050328_HPP
-#define TYPED_KEYWORD_050328_HPP
+#ifndef UNTYPED_KEYWORD_050328_HPP
+#define UNTYPED_KEYWORD_050328_HPP
 
 #include <boost/parameter/keyword_base.hpp>
 
@@ -30,14 +30,20 @@ namespace boost { namespace parameter {
 //    f(rate = 1, skew = 2.4);
 //
 template <class Tag>
-struct typed_keyword : public keyword_base<Tag>
-{
-    typedef aux::typed_tagged_argument<Tag, typename Tag::value_type> typed_tagged_argument_type;
-    
-    typed_tagged_argument_type const
-    operator=(typename Tag::value_type& x) const
+struct untyped_keyword : public keyword_base<Tag>
+{    
+    template<typename T>
+    aux::typed_tagged_argument<Tag, T> const
+    operator=(T& x) const
     {
-        return typed_tagged_argument_type(x);
+        return aux::typed_tagged_argument<Tag, T>(x);
+    }
+
+    template<typename T>
+    aux::typed_tagged_argument<Tag, const T> const
+    operator=(const T& x) const
+    {
+        return aux::typed_tagged_argument<Tag, const T>(x);
     }
 
  public: // Insurance against ODR violations
@@ -47,19 +53,19 @@ struct typed_keyword : public keyword_base<Tag>
     // every instantiation of a function template is the same object.
     // We provide a reference to a common instance of each keyword
     // object and prevent construction by users.
-    static typed_keyword<Tag> const instance;
+    static untyped_keyword<Tag> const instance;
 
     // This interface is deprecated
-    static typed_keyword<Tag>& get()
+    static untyped_keyword<Tag>& get()
     {
         return const_cast<typed_keyword<Tag>&>(instance);
     }
 };
 
 template <class Tag>
-typed_keyword<Tag> const typed_keyword<Tag>::instance = typed_keyword<Tag>();
+untyped_keyword<Tag> const untyped_keyword<Tag>::instance = untyped_keyword<Tag>();
 
 }} // namespace boost::parameter
 
-#endif // TYPED_KEYWORD_050328_HPP
+#endif // UNTYPED_KEYWORD_050328_HPP
 

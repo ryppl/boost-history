@@ -44,6 +44,10 @@ public:
     const position_type &position() const
     {   return m_position; }
 
+    /** Returns the position */
+    void set_position(const position_type &position)
+    {   m_position = position; }
+
     /** Returns the topmost ancestor, as defined by following the parent pointer
         as long as the parent is also a positioned<> view. */
     const base *root() const
@@ -60,7 +64,7 @@ protected:
     void draw_epilogue();
 
     friend class access;
-    void parent(base &parent)
+    void set_parent(base &parent)
     {   m_parent = &parent; }
 private:
 

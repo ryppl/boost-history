@@ -25,6 +25,7 @@ namespace keywords {
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(min,const double,0.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(max,const double,1.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(step,const double,0.0)
+    BOOST_PARAMETER_UNTYPED_NAME(children)
     
     typedef boost::parameter::aux::empty_typed_arg_list default_parameters;
 }
@@ -40,7 +41,7 @@ struct argument_pack
 {
     typedef
         boost::parameter::aux::typed_arg_list<
-            boost::parameter::aux::typed_tagged_argument<T0>,
+            boost::parameter::aux::typed_tagged_argument<T0, typename T0::value_type>,
             typename argument_pack<T1, T2, T3, T4, T5, T6, T7>::type
         > type;
 };
