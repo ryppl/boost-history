@@ -445,6 +445,10 @@ namespace std {
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
                         Rand&& @\farg{rand}@);
+  @\removedConcepts{template<class RandomAccessIterator, class UniformRandomNumberGenerator>}@
+    @\removedConcepts{void random_shuffle(RandomAccessIterator \mbox{\farg{first}},}@
+                        @\removedConcepts{RandomAccessIterator \mbox{\farg{last}},}@
+                        @\removedConcepts{UniformRandomNumberGenerator\& \mbox{\farg{rand}});}@
 
   @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
   template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
@@ -2534,7 +2538,16 @@ template<RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
   void random_shuffle(Iter @\farg{first}@,
                       Iter @\farg{last}@,
                       Rand&& @\farg{rand}@);
+
+  @\removedConcepts{template<class RandomAccessIterator, class UniformRandomNumberGenerator>}@
+    @\removedConcepts{void random_shuffle(RandomAccessIterator \mbox{\farg{first}},}@
+                        @\removedConcepts{RandomAccessIterator \mbox{\farg{last}},}@
+                        @\removedConcepts{UniformRandomNumberGenerator\& \mbox{\farg{rand}});}@
 \end{itemdecl}\color{black}
+
+\editorial{The third overload of \tcode{random_shuffle} has been
+  removed, since it is ambiguous with the second and we do not have
+  concept constraints for it.}
 
 \begin{itemdescr}
 \pnum

@@ -1948,7 +1948,7 @@ returns
 \index{minus@\tcode{minus}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct minus : binary_function<T,T,T> {
-  @\addedConcepts{requires HasMinus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMinus<T,T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1963,7 +1963,7 @@ returns
 \index{multiplies@\tcode{multiplies}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct multiplies : binary_function<T,T,T> {
-  @\addedConcepts{requires HasMultiply<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasMultiply<T,T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1978,7 +1978,7 @@ returns
 \index{divides@\tcode{divides}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct divides : binary_function<T,T,T> {
-  @\addedConcepts{requires HasDivide<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasDivide<T,T> \&\& Convertible<T::result_type, T>}@
   T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}
@@ -1993,7 +1993,7 @@ returns
 \index{modulus@\tcode{modulus}}%
 \begin{itemdecl}
 template <@\changedConcepts{class}{ReferentType}@ T> struct modulus : binary_function<T,T,T> {
-  @\addedConcepts{requires HasModulus<T> \&\& Convertible<T::result_type, T>}@
+  @\addedConcepts{requires HasModulus<T,T> \&\& Convertible<T::result_type, T>}@
     T operator()(const T& @\farg{x}@, const T& @\farg{y}@) const;
 };
 \end{itemdecl}

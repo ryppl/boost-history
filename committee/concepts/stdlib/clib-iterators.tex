@@ -436,7 +436,7 @@ namespace std {
         @\removedConcepts{typename iterator_traits<Iterator>::pointer,}@
         @\removedConcepts{typename iterator_traits<Iterator>::reference>}@ {
   protected:
-    Iterator current;
+    Iter@\removedConcepts{ator}@ current;
   public:
     typedef Iter@\removedConcepts{ator}@ iterator_type;
     @\addedConcepts{typedef Iter::value_type value_type;}@
@@ -1488,7 +1488,7 @@ namespace std {
   template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
   class move_iterator {
   public:
-    typedef Iterator                                              iterator_type;
+    typedef Iter@\removedConcepts{ator}@                                              iterator_type;
     typedef @\changedConcepts{typename iterator_traits<Iterator>}{Iter}@::difference_type   difference_type;
     typedef Iterator                                              pointer;
     typedef @\changedConcepts{typename iterator_traits<Iterator>}{Iter}@::value_type        value_type;
@@ -1554,11 +1554,11 @@ namespace std {
     auto operator-(
       const move_iterator<Iter@\removedConcepts{ator}@1>& x, 
       const move_iterator<Iter@\removedConcepts{ator}@2>& y) -> decltype(x.base() - y.base());
-  template <@\changedConcepts{class}{RandomAccessIterator}@ Iterator>
-    move_iterator<Iterator> operator+(
-      @\changedConcepts{typename move_iterator<Iterator>}{Iter}@::difference_type n, const move_iterator<Iterator>& x);
+  template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{ator}@>
+    move_iterator<Iter@\removedConcepts{ator}@> operator+(
+      @\changedConcepts{typename move_iterator<Iterator>}{Iter}@::difference_type n, const move_iterator<Iter@\removedConcepts{ator}@>& x);
   template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
-    move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iterator& i);
+    move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iter@\removedConcepts{ator}@& i);
 
   @\addedConcepts{template<InputIterator Iter>}@
     @\addedConcepts{concept_map InputIterator<move_iterator<Iter> > \{ \}}@
@@ -1891,7 +1891,7 @@ template <@\changedConcepts{class}{RandomAccessIterator}@ Iter@\removedConcepts{
 
 \begin{itemdecl}
 template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@>
-move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iterator& i);
+move_iterator<Iter@\removedConcepts{ator}@> make_move_iterator(const Iter@\removedConcepts{ator}@& i);
 \end{itemdecl}
 
 \begin{itemdescr}
