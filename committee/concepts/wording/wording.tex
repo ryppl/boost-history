@@ -107,7 +107,8 @@ standard library are discussed in separate documents:
 
 \section*{Changes from N2741}
 \begin{itemize}
-\item Nothing yet.
+\item In [over.built], clarify wording regarding the kinds of
+  archetypes for which candidate operator functions will be built.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -2254,7 +2255,7 @@ is hidden and is not included in the set of candidate functions.
 
 \pnum
 For every cv-qualified or cv-unqualified object type
-\textit{T}, \addedConcepts{including archetypes,}
+\textit{T}, \addedConcepts{including archetypes that are object types,}
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2263,7 +2264,7 @@ there exist candidate operator functions of the form
 
 \pnum
 For every function type
-\textit{T}, \addedConcepts{including archetypes,}
+\textit{T}, \addedConcepts{including archetypes that are function types,}
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2282,7 +2283,7 @@ there exist candidate operator functions of the form
 \setcounter{Paras}{12}
 \pnum
 For every cv-qualified or cv-unqualified object type
-\textit{T}, \addedConcepts{including archetypes,}
+\textit{T}, \addedConcepts{including archetypes that are object types,}
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2298,7 +2299,7 @@ For every
 \textit{T},\
 where
 \textit{T}\
-is a pointer to object type, \addedConcepts{including pointers to archetypes,}
+is a pointer to object type, \addedConcepts{including pointers to archetypes that are object types,}
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2307,7 +2308,7 @@ std::ptrdiff_t   operator-(@\textit{T}\addedConcepts{*}@, @\textit{T}\addedConce
 
 \pnum
 For every pointer or enumeration type
-\textit{T}, \addedConcepts{including pointers to archetypes,}
+\textit{T}, \addedConcepts{including pointers to archetypes that are object types,}
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2373,7 +2374,7 @@ For every pair
 \textit{VQ}),
 where
 \textit{T}\ 
-is a cv-qualified or cv-unqualified object type\addedConcepts{, including archetypes,} and
+is a cv-qualified or cv-unqualified object type\addedConcepts{, including archetypes that are object types,} and
 \textit{VQ}\ 
 is either
 \tcode{volatile}
