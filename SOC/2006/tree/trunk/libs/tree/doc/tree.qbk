@@ -12,7 +12,7 @@
  /]
 
 [library Boost.Tree
-    [quickbook 1.3]
+    [quickbook 1.4]
     [authors [Reiter, Bernhard]]
     [copyright 2006 Bernhard Reiter]
     [purpose Generic tree framework]
@@ -54,7 +54,8 @@ This library's current state is only available via [@http://subversion.tigris.or
 Boost Sandbox repository at [@https://svn.boost.org/svn/boost/sandbox/SOC/2006/tree]
 (This obsoletes the old Boost Consulting repository for Google Summer of Code 2006(tm) at
 https://www.boost-consulting.com/svn/main/boost/soc/2006.) The source code can be 
-browsed online at [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2006/tree]. \n
+browsed online at [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2006/tree].
+
 A [@http://boost-consulting.com/vault/index.php?action=downloadfile&filename=tree-soc2006.zip&directory=Containers& snapshot]
  of the final GSoC 2006 state (kindly provided by René Rivera) can be found at the 
 [@http://boost-consulting.com/vault/ Boost Vault].
@@ -71,7 +72,8 @@ TR2 Proposal text: [@n2101.html Tree Structures and Related Concepts for the C++
 This library originated in [@http://code.google.com/soc/2006/boost/appinfo.html?csaid=E17EA7C7C537C131 one]
 out of [@http://code.google.com/soc/2006/boost/about.html ten] [@http://www.boost.org/ Boost] projects 
 sponsored by [@http://www.google.com Google] during their [@http://code.google.com/soc/2006 Summer of Code 2006]. 
-It was mentored by [@http://www.boost.org/people/rene_rivera.htm René Rivera]. \n
+It was mentored by [@http://www.boost.org/people/rene_rivera.htm René Rivera].
+
 Kudos to DHL for forwarding my second check from rainy Vienna airport, Austria (30 minutes ride from 
 my place) on to Dubai, UAE, so it could catch some sun first.
 
@@ -95,8 +97,10 @@ Einführung (Oldenbourg, 2004) (German translation of Introduction to Algorithms
 
 [include overview.qbk]
 [include tutorial.qbk]
+
 [include concepts.qbk]
+[include algorithms.qbk]
+
 [include glossary.qbk]
 [include ../../../TODO]
-[xinclude autodoc.boostbook]
-
+[xinclude autodoc.xml]

@@ -15,6 +15,9 @@
 
 General:
 
+* Look into SOC 2008 projects dsearch (already using concepts from Boost.Tree) and 
+  spacial_indexing (with tree classes of its own)
+* Can't we really do without inorder_erase()?
 * Remove the word "recursive" from *order subtree algorithms context, as we might
   implement these using iterative versions. Rename *_recursive algorithms to 
   *_with_references or so; and use something like #ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
@@ -40,7 +43,7 @@ General:
     (Compare this again to container vs sequence; also look into graph concepts.)
     Finally, mind the implications for internal/external adaptation; they might be
     generalised, if the above assumption is true.
-* Revisit binary_tree. Can it be usable for both balanced and forest trees and still be
+* Revisit binary_tree . Can it be usable for both balanced and forest trees and still be
   "light-weight" at the same time?
 * Re-organize traversal tests:
   * Verify recursive algorithms to work
@@ -55,7 +58,7 @@ General:
 * Also test copy with two trees (not just one tree and a container/output iterator)
 * Rename parity() (which looks somewhat binary-related) to index (more general for forest
   trees etc)?
-* _Possibly_ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
+* /Possibly/ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
   detail/cursor/ (same for iterator).
 * Make *order iterators work with empty subtrees; same for cursor algorithms.
   (Not necessarily! If that means a check for empty(), it's better to leave it to
@@ -88,13 +91,13 @@ General:
 
 Ask on the mailing list:
 
-* [iterator] Can we get rid of the need to declare iterator_core_access a friend (as we're already 
+* (iterator) Can we get rid of the need to declare iterator_core_access a friend (as we're already 
   doing so with cursor_core_access, this should be enough).
-* [property_map]: any need for an extract_property_map?
+* (property_map): any need for an extract_property_map?
 
 Proposal:
 
-* Change complexity requirements for *order end() to constant? We're using root(), and
+* Change complexity requirements for * order end() to constant? We're using root(), and
   for postorder begin() - which is also root() - it's already constant. Then again, how much
   do we cater for "pathological" implementations (and not so pathological ones, like 
   threaded trees)?
@@ -135,8 +138,12 @@ Implementation:
 
 Documentation:
 
+* Add a tree visualisation of the documentation structure (as some kind of frontispiece)
+  to the docs!
+* Add FAQ
+  * How can I visualise a tree, eg as SVG image?
 * Take a look at BGL docs; they seem to be really well structured and written.
-* Add some illustrations
+* Add some illustrations (also for mapping how concepts relate to each other)
 * Overview: develop hierarchy/cursor concept step by step, using illustrations that 
   depict what is introduced at what step (nodes with pointers to their siblings, children, parents,
   a frame around a given cursor [and possibly additionally required information stated]
