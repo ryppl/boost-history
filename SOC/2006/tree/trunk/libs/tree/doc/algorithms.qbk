@@ -21,6 +21,14 @@ Contrarily to iterator-based algorithms that normally just traverse a range give
 iterators starting at the first element linearly and terminating past the last element,
 there is no one such "natural" traversal for subtrees.
 
+There are, conversely, several different methods how to traverse a (sub)tree - one 
+has to choose eg whether to "visit" an element before, between or after its descendants.
+
+These three types of traversal are called pre- in- and postorder, and consequently, an
+algorithm can come in each out of these three flavors (and many algorithms will come in 
+all three). For clarity, all the algorithms of one such traversal type are bundled in a
+namespace of the corresponding name (ie, `preorder`, `inorder`, and `postorder`).
+
 [section Pre-, In-, and Postorder Algorithms]
 [endsect] [/ Pre-, In-, and Postorder Algorithms]
 
