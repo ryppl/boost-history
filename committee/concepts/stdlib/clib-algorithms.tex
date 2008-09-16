@@ -78,6 +78,10 @@ Andrew Lumsdaine, Indiana University
   referring to the appropriate iterator concept
   (Clause~\ref{alg.algorithms}). Thanks to Alisdair Meredith for
   pointing out the inconsistency.
+\item Added a placeholder \tcode{UniformRandomNumberGenerator}
+  concept, which is used to constrain the third \tcode{random_shuffle}
+  overload. Made the third \tcode{random_shuffle} accept its random
+  number generator by rvalue reference.
 \end{itemize}
 
 \end{titlepage}
@@ -155,7 +159,7 @@ namespace std {
   template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
     requires CopyConstructible<Pred>
     bool any_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
-  template <InputIterator Iter, Predicate<auto, _Iter::value_type> Pred>
+  template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
     requires CopyConstructible<Pred>
     bool none_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 
@@ -445,10 +449,12 @@ namespace std {
     void random_shuffle(Iter @\farg{first}@,
                         Iter @\farg{last}@,
                         Rand&& @\farg{rand}@);
-  @\removedConcepts{template<class RandomAccessIterator, class UniformRandomNumberGenerator>}@
-    @\removedConcepts{void random_shuffle(RandomAccessIterator \mbox{\farg{first}},}@
-                        @\removedConcepts{RandomAccessIterator \mbox{\farg{last}},}@
-                        @\removedConcepts{UniformRandomNumberGenerator\& \mbox{\farg{rand}});}@
+
+  concept UniformRandomNumberGenerator<typename Rand> { }
+  template<RandomAccessIterator Iter, UniformRandomNumberGenerator Rand>
+    void random_shuffle(Iter @\farg{first}@,
+                        Iter @\farg{last}@,
+                        Rand&& @\farg{g}@);
 
   @\textcolor{black}{// \ref{alg.partitions}, partitions:}@
   template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
@@ -1106,7 +1112,7 @@ At most \tcode{last - first} applications of the predicate.
 \index{none_of@\tcode{none_of}}%
 \color{addclr}
 \begin{itemdecl}
-template <InputIterator Iter, Predicate<auto, _Iter::value_type> Pred>
+template <InputIterator Iter, Predicate<auto, Iter::value_type> Pred>
   requires CopyConstructible<Pred>
   bool none_of(Iter @\farg{first}@, Iter @\farg{last}@, Pred @\farg{pred}@);
 \end{itemdecl}
@@ -2539,55 +2545,39 @@ template<RandomAccessIterator Iter, Callable<auto, Iter::difference_type> Rand>
                       Iter @\farg{last}@,
                       Rand&& @\farg{rand}@);
 
-  @\removedConcepts{template<class RandomAccessIterator, class UniformRandomNumberGenerator>}@
-    @\removedConcepts{void random_shuffle(RandomAccessIterator \mbox{\farg{first}},}@
-                        @\removedConcepts{RandomAccessIterator \mbox{\farg{last}},}@
-                        @\removedConcepts{UniformRandomNumberGenerator\& \mbox{\farg{rand}});}@
+concept UniformRandomNumberGenerator<typename Rand> { }
+
+template<RandomAccessIterator Iter, UniformRandomNumberGenerator Rand>
+  void random_shuffle(Iter @\farg{first}@,
+                      Iter @\farg{last}@,
+                      Rand&& @\farg{g}@);
 \end{itemdecl}\color{black}
 
-\editorial{The third overload of \tcode{random_shuffle} has been
-  removed, since it is ambiguous with the second and we do not have
-  concept constraints for it.}
+\editorial{In the third overload of \tcode{random_shuffle}, we use the
+  placeholder concept \tcode{UniformRandomNumberGenerator}. When
+  concepts are provided for this concept, the placeholder above will
+  be removed and the third \tcode{random_shuffle} will refer to that
+  \tcode{UniformRandomNumberGenerator}. Additionally, we have opted to
+  make the third argument an rvalue reference rather than an lvalue
+  reference, to synchronize it with the second
+  \tcode{random_shuffle}.}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
-Shuffles the elements in the range
+Permutes the elements in the range
 \range{\farg{first}}{\farg{last}}\
-with uniform distribution.
+such that each possible permutation of those elements has equal
+probability of appearance. 
 
 \pnum
 \removedConcepts{Requires: 
 The type of *first shall satisfy the
-Swappable requirements (20.1.4).}
+Swappable requirements (Table 37).} \changedConcepts{The random 
+number generating function object \mbox{\tcode{rand}} shall have a return type that is convertible to \mbox{\tcode{iterator_traits<RandomAccessIterator>::difference_type}}, and the}{The} call \tcode{rand(n)} shall return a randomly 
+chosen value in the interval \tcode{[0,n)}, for \tcode{n > 0}\removedConcepts{ of type \mbox{\tcode{iterator_traits<RandomAccessIterator>::difference_type}}}. \removedConcepts{The function object \mbox{\tcode{g}} shall meet the requirements of uniform random number generator (\mbox{\ref{rand.req.urng}}).}
 
-\pnum
-\complexity\ 
-Exactly
-\tcode{(\farg{last}\ - \farg{first}) - 1}\
-swaps.
-
-\pnum
-\notes\ 
-The underlying source of random numbers for the first form of the function
-is implementation-defined. An implementation may use the
-\tcode{rand}\
-function from the standard C library.
-The second form of the function
-takes a random number generating function object
-\farg{rand}
-such that
-if
-\tcode{n} 
-is an argument for rand, with a positive value, that has
-type
-\changedConcepts{\mbox{\tcode{iterator_traits<RandomAccessIterator>::difference_type}}}{\mbox{\tcode{Iter::difference_type}}},
-then
-\tcode{rand(n)}
-returns a randomly chosen value,
-which lies in the interval \tcode{(0,n]}\removedConcepts{,
-and which has a type that is convertible to
-iterator_traits<RandomAccessIterator>:: difference_type}.
+\editorial{Paragraphs 3 and 4 are unchanged.}
 \end{itemdescr}
 
 \rSec2[alg.partitions]{Partitions}

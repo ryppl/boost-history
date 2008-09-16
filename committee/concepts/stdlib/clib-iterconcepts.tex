@@ -275,6 +275,7 @@ ambiguity, for example, was initially detected by ConceptGCC.
   types that don't have all of the nested types, e.g., the
   instantiation of \tcode{iterator_traits<int>} should produce an
   empty class, not an error.
+\item Made a \tcode{ShuffleIterator} a \tcode{ForwardIterator}, and its value type both \tcode{MoveAssignable} and \tcode{Swappable}. 
 \end{itemize}
 \end{titlepage}
 
@@ -1159,15 +1160,17 @@ an implementation may define}
 \color{addclr}
 \begin{codeblock}
 auto concept ShuffleIterator<typename X> {
-  requires InputIterator<X>
-        && OutputIterator<X, RvalueOf<InputIterator<X>::value_type>::type>
-        && OutputIterator<X, RvalueOf<InputIterator<X>::reference>::type>
-        && Constructible<InputIterator<X>::value_type, 
-                         RvalueOf<InputIterator<X>::reference>::type>
-        && MoveConstructible<InputIterator<X>::value_type>
-        && HasAssign<InputIterator<X>::value_type, 
-                     RvalueOf<InputIterator<X>::reference>::type>
-        && HasSwap<InputIterator<X>::reference, InputIterator<X>::reference>;
+  requires ForwardIterator<X>
+        && OutputIterator<X, RvalueOf<ForwardIterator<X>::value_type>::type>
+        && OutputIterator<X, RvalueOf<ForwardIterator<X>::reference>::type>
+        && Constructible<ForwardIterator<X>::value_type, 
+                         RvalueOf<ForwardIterator<X>::reference>::type>
+        && MoveConstructible<ForwardIterator<X>::value_type>
+        && MoveAssignable<ForwardIterator<X>::value_type>
+        && Swappable<ForwardIterator<X>::value_type>
+        && HasAssign<ForwardIterator<X>::value_type, 
+                     RvalueOf<ForwardIterator<X>::reference>::type>
+        && HasSwap<ForwardIterator<X>::reference, ForwardIterator<X>::reference>;
 }
 \end{codeblock}
 \color{black}
@@ -1218,14 +1221,14 @@ difference types that correspond to a particular iterator type.
 Accordingly, it is required that if}
 {Iterator traits provide an auxiliary mechanism for
 accessing the associated types of an iterator. If}
-\tcode{Iterator}\
+\tcode{Iter\removedConcepts{ator}}\
 is the type of an iterator,
 the types
 
 \begin{codeblock}
-iterator_traits<Iterator>::difference_type
-iterator_traits<Iterator>::value_type
-iterator_traits<Iterator>::iterator_category
+iterator_traits<Iter@\removedConcepts{ator}@>::difference_type
+iterator_traits<Iter@\removedConcepts{ator}@>::value_type
+iterator_traits<Iter@\removedConcepts{ator}@>::iterator_category
 \end{codeblock}
 
 \addedConcepts{shall} be defined as the iterator's difference type, value type and iterator
@@ -1233,8 +1236,8 @@ category \addedConcepts{(described below)}, respectively.
 In addition, the types
 
 \begin{codeblock}
-iterator_traits<Iterator>::reference
-iterator_traits<Iterator>::pointer
+iterator_traits<Iter@\removedConcepts{ator}@>::reference
+iterator_traits<Iter@\removedConcepts{ator}@>::pointer
 \end{codeblock}
 
 shall be defined as the iterator's reference and pointer types, that is, for an
@@ -1242,10 +1245,10 @@ iterator object \tcode{a}, the same type as the type of \tcode{*a} and \tcode{a-
 respectively. In the case of an output iterator, the types
 
 \begin{codeblock}
-iterator_traits<Iterator>::difference_type
-iterator_traits<Iterator>::value_type
-iterator_traits<Iterator>::reference
-iterator_traits<Iterator>::pointer
+iterator_traits<Iter@\removedConcepts{ator}@>::difference_type
+iterator_traits<Iter@\removedConcepts{ator}@>::value_type
+iterator_traits<Iter@\removedConcepts{ator}@>::reference
+iterator_traits<Iter@\removedConcepts{ator}@>::pointer
 \end{codeblock}
 
 may be defined as \tcode{void}.
@@ -1267,15 +1270,15 @@ may be defined as \tcode{void}.
   \mbox{\tcode{difference_type}}, \mbox{\tcode{value_type}},
   \mbox{\tcode{pointer}}, \mbox{\tcode{reference}}, and
   \mbox{\tcode{iterator_category}}, then the}
-template \tcode{iterator_traits<Iterator>} is defined as 
+template \tcode{iterator_traits<Iter\removedConcepts{ator}>} is defined as 
 \begin{itemdecl}
 namespace std { 
-  template<class Iterator> struct iterator_traits { 
-    typedef typename Iterator::difference_type   difference_type; 
-    typedef typename Iterator::value_type        value_type; 
-    typedef typename Iterator::pointer           pointer; 
-    typedef typename Iterator::reference         reference; 
-    typedef typename Iterator::iterator_category iterator_category; 
+  template<class Iter@\removedConcepts{ator}@> struct iterator_traits { 
+    typedef typename Iter@\removedConcepts{ator}@::difference_type   difference_type; 
+    typedef typename Iter@\removedConcepts{ator}@::value_type        value_type; 
+    typedef typename Iter@\removedConcepts{ator}@::pointer           pointer; 
+    typedef typename Iter@\removedConcepts{ator}@::reference         reference; 
+    typedef typename Iter@\removedConcepts{ator}@::iterator_category iterator_category; 
   }; 
 } 
 \end{itemdecl}
@@ -1283,7 +1286,7 @@ namespace std {
 \color{addclr}
 \begin{itemdecl}
 namespace std { 
-  template<class Iterator> struct iterator_traits { };
+  template<class Iter@\removedConcepts{ator}@> struct iterator_traits { };
 }
 \end{itemdecl}
 \color{black}
@@ -1413,8 +1416,8 @@ They are:
 and
 \tcode{random_access_iterator_tag}.
 For every iterator of type
-\tcode{Iterator},
-\tcode{iterator_traits<Iterator>::it\-er\-a\-tor_ca\-te\-go\-ry}
+\tcode{Iter@\removedConcepts{ator}@},
+\tcode{iterator_traits<Iter@\removedConcepts{ator}@>::it\-er\-a\-tor_ca\-te\-go\-ry}
 shall be defined to be the most specific category tag that describes the
 iterator's behavior.
 
