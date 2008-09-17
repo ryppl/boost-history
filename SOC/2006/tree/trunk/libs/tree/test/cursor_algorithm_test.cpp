@@ -38,26 +38,26 @@ using namespace boost::tree;
 
 int test_main(int, char* [])
 {
-	using boost::forward_traversal_tag;
-	
-	binary_tree<int> test_tree, test_tree2;
-	create_test_data_tree(test_tree);
-	create_test_data_tree(test_tree2);
-		
-	binary_tree<int>::cursor c = test_tree.root();
-	binary_tree<int>::cursor d = test_tree2.root();
+    using boost::forward_traversal_tag;
+    
+    binary_tree<int> test_tree, test_tree2;
+    create_test_data_tree(test_tree);
+    create_test_data_tree(test_tree2);
+        
+    binary_tree<int>::cursor c = test_tree.root();
+    binary_tree<int>::cursor d = test_tree2.root();
 
-	// Just to make sure we won't be getting any false positives when 
-	// copying test_tree1 to test_tree2, we'll change one of test_tree2's
-	// values.
-	d = d.begin().end().begin().begin();
-	++*d;
-	BOOST_CHECK(test_tree != test_tree2);
-	d = test_tree2.root();
+    // Just to make sure we won't be getting any false positives when 
+    // copying test_tree1 to test_tree2, we'll change one of test_tree2's
+    // values.
+    d = d.begin().end().begin().begin();
+    ++*d;
+    BOOST_CHECK(test_tree != test_tree2);
+    d = test_tree2.root();
 
-	test::preorder::algorithms (test_tree.root(), test_tree2.root());
-	test::inorder::algorithms  (test_tree.root(), test_tree2.root());
-	test::postorder::algorithms(test_tree.root(), test_tree2.root());
+    test::preorder::algorithms (test_tree.root(), test_tree2.root());
+    test::inorder::algorithms  (test_tree.root(), test_tree2.root());
+    test::postorder::algorithms(test_tree.root(), test_tree2.root());
 
-	return 0;
+    return 0;
 }

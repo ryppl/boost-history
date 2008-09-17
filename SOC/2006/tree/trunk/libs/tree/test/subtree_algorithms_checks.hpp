@@ -24,79 +24,79 @@ namespace ORDER {
 template <class Cursor, class Container>
 void test_for_each(Cursor c, Container& cont)
 {
-	boost::tree::ORDER::for_each(
-		c, 
-		boost::lambda::bind(&Container::push_back, &cont, boost::lambda::_1)
-	);
-	test::ORDER::traversal(cont.begin(), cont.end());
+    boost::tree::ORDER::for_each(
+        c, 
+        boost::lambda::bind(&Container::push_back, &cont, boost::lambda::_1)
+    );
+    test::ORDER::traversal(cont.begin(), cont.end());
 }
 
 template <class Cursor, class OutCursor, class Container>
 void test_copy(Cursor c, OutCursor& o, Container& cont)
-{	
-	boost::tree::ORDER::copy(c, o);
-	test::ORDER::traversal(cont.begin(), cont.end());
+{    
+    boost::tree::ORDER::copy(c, o);
+    test::ORDER::traversal(cont.begin(), cont.end());
 }
 
 template <class Cursor, class OutCursor, class Container>
 void test_transform(Cursor c, Cursor d, OutCursor& o, Container& cont)
 {
-	// First copy test_tree to test_tree2, by adding 1 to each element,
-	// then copy test_tree2 to test_list, by subtracting 1 - so 
-	// test_list should hold test_tree's original elements in ORDER.
-	boost::tree::ORDER::transform(c, d, std::bind2nd(std::plus<int>(),1));
-	boost::tree::ORDER::transform(d, o, std::bind2nd(std::minus<int>(),1));
-	test::ORDER::traversal(cont.begin(), cont.end());
+    // First copy test_tree to test_tree2, by adding 1 to each element,
+    // then copy test_tree2 to test_list, by subtracting 1 - so 
+    // test_list should hold test_tree's original elements in ORDER.
+    boost::tree::ORDER::transform(c, d, std::bind2nd(std::plus<int>(),1));
+    boost::tree::ORDER::transform(d, o, std::bind2nd(std::minus<int>(),1));
+    test::ORDER::traversal(cont.begin(), cont.end());
 }
 
 template <class Cursor>
 void algorithms(Cursor c, Cursor d)
 {
-	std::list<int> test_list;
-	typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-	typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
-	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
-	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
-	
-	test_for_each(c, test_list);
-	
-	test_list.clear();
-	test_copy(c, oc_test_list, test_list);
-	
-	test_list.clear();
-	test_transform(c, d, oc_test_list, test_list);
+    std::list<int> test_list;
+    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
+    typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
+    back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
+    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
+    
+    test_for_each(c, test_list);
+    
+    test_list.clear();
+    test_copy(c, oc_test_list, test_list);
+    
+    test_list.clear();
+    test_transform(c, d, oc_test_list, test_list);
 }
 
 template <class Cursor>
-void compare_cursor_to_iterator_traversal(Cursor cur) {	
-	std::list<int> test_list;
-	typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-	typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
-	back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
-	oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
-	
-	boost::tree::ORDER::copy(cur, oc_test_list);
-	
-	// Are the elements accessed in the correct order?
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::begin(cur),
-							boost::tree::ORDER::end(cur),
-							test_list.begin()
-							));
+void compare_cursor_to_iterator_traversal(Cursor cur) {    
+    std::list<int> test_list;
+    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
+    typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
+    back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
+    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
+    
+    boost::tree::ORDER::copy(cur, oc_test_list);
+    
+    // Are the elements accessed in the correct order?
+    BOOST_CHECK(std::equal(    boost::tree::ORDER::begin(cur),
+                            boost::tree::ORDER::end(cur),
+                            test_list.begin()
+                            ));
 
-	// Does end() mark the right element? 
-	BOOST_CHECK(std::distance(boost::tree::ORDER::begin(cur),
-							  boost::tree::ORDER::end(cur)) == 
-				std::distance(test_list.begin(), test_list.end()));
+    // Does end() mark the right element? 
+    BOOST_CHECK(std::distance(boost::tree::ORDER::begin(cur),
+                              boost::tree::ORDER::end(cur)) == 
+                std::distance(test_list.begin(), test_list.end()));
 
-	// Reverse order.
-	BOOST_CHECK(std::equal(	boost::tree::ORDER::rbegin(cur),
-							boost::tree::ORDER::rend(cur),
-							test_list.rbegin()
-							));
+    // Reverse order.
+    BOOST_CHECK(std::equal(    boost::tree::ORDER::rbegin(cur),
+                            boost::tree::ORDER::rend(cur),
+                            test_list.rbegin()
+                            ));
 
-	BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(cur),
-							  boost::tree::ORDER::rend(cur)) == 
-				std::distance(test_list.rbegin(), test_list.rend()));					
+    BOOST_CHECK(std::distance(boost::tree::ORDER::rbegin(cur),
+                              boost::tree::ORDER::rend(cur)) == 
+                std::distance(test_list.rbegin(), test_list.rend()));                    
 
 }
 

@@ -11,6 +11,8 @@
  / Algorithms documentation file.
  /]
 
+[import ../../../boost/tree/detail/algorithm/cursor/preorder.hpp]
+[import ../../../boost/tree/detail/algorithm/cursor/inorder.hpp]
 [import ../../../boost/tree/detail/algorithm/cursor/postorder.hpp]
 [import ../example/for_each.cpp]
 
@@ -43,7 +45,11 @@ TODO: Include illustration of example data tree.
 
 [section for_each]
 
+[preorder_for_each]
+[inorder_for_each]
 [postorder_for_each]
+
+[funcref boost::tree:preorder::for_each]
 
 [section Example]
 [for_each]

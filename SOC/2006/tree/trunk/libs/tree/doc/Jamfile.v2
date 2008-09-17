@@ -15,10 +15,12 @@ if ! $(BOOST_ROOT)
 doxygen autodoc
 	:
 		[ glob ../../../boost/tree/*.hpp ]
-		[ glob ../../../boost/tree/algorithm/*.hpp ]
-		[ glob ../../../boost/tree/augmentors/*.hpp ]
-		[ glob ../../../boost/tree/balancers/*.hpp ]
-		[ glob ../../../boost/tree/comparators/*.hpp ]
+		[ glob ../../../boost/tree/detail/algorithm/*.hpp ]
+		[ glob ../../../boost/tree/detail/algorithm/cursor/*.hpp ]
+		[ glob ../../../boost/tree/detail/algorithm/iterator/*.hpp ]
+		[ glob ../../../boost/tree/detail/augmentors/*.hpp ]
+		[ glob ../../../boost/tree/detail/balancers/*.hpp ]
+		[ glob ../../../boost/tree/detail/comparators/*.hpp ]
 		[ glob ../../../boost/tree/detail/cursor/*.hpp ]
 		[ glob ../../../boost/tree/detail/iterator/*.hpp ]
 		[ glob ../../../boost/tree/detail/node/*.hpp ]

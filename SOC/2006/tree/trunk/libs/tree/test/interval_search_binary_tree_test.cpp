@@ -29,42 +29,42 @@ using boost::numeric::interval;
 
 template <typename T>
 struct cerless {
-	inline bool operator() (T const& a, T const& b)
-	{
-		return boost::numeric::interval_lib::cerlt(a,b);
-	}
+    inline bool operator() (T const& a, T const& b)
+    {
+        return boost::numeric::interval_lib::cerlt(a,b);
+    }
 };
 
 void test_interval_search_binary_tree()
 {
-	using boost::tree::searcher;
-	using boost::tree::binary_tree;
-	
-	using boost::multi_index::identity;
-	
-	typedef searcher<false, binary_tree<interval<int> >, identity<interval<int> >,
-					 cerless<interval<int> > > searcher_t;
-	searcher_t my_tree;
-	
-	my_tree.insert(interval<int>(20,36));	
-	my_tree.insert(interval<int>( 3,41));
-	my_tree.insert(interval<int>(10,15));	
-	my_tree.insert(interval<int>( 0, 1));	
-	my_tree.insert(interval<int>(29,99));	
+    using boost::tree::searcher;
+    using boost::tree::binary_tree;
+    
+    using boost::multi_index::identity;
+    
+    typedef searcher<false, binary_tree<interval<int> >, identity<interval<int> >,
+                     cerless<interval<int> > > searcher_t;
+    searcher_t my_tree;
+    
+    my_tree.insert(interval<int>(20,36));    
+    my_tree.insert(interval<int>( 3,41));
+    my_tree.insert(interval<int>(10,15));    
+    my_tree.insert(interval<int>( 0, 1));    
+    my_tree.insert(interval<int>(29,99));    
 
-	searcher_t::iterator ci = my_tree.begin(); 
-	BOOST_CHECK(*ci++ == interval<int>( 0, 1));
-//	BOOST_CHECK(*ci++ == interval<int>( 3,41));
-	BOOST_CHECK(*ci++ == interval<int>(10,15));
-//	BOOST_CHECK(*ci++ == interval<int>(20,36));
-//	BOOST_CHECK(*ci++ == interval<int>(29,99));
-//	BOOST_CHECK(ci == my_tree.end());
-	
+    searcher_t::iterator ci = my_tree.begin(); 
+    BOOST_CHECK(*ci++ == interval<int>( 0, 1));
+//    BOOST_CHECK(*ci++ == interval<int>( 3,41));
+    BOOST_CHECK(*ci++ == interval<int>(10,15));
+//    BOOST_CHECK(*ci++ == interval<int>(20,36));
+//    BOOST_CHECK(*ci++ == interval<int>(29,99));
+//    BOOST_CHECK(ci == my_tree.end());
+    
 }
 
 
 int test_main(int, char* [])
 {
-	test_interval_search_binary_tree();
-	return 0;
+    test_interval_search_binary_tree();
+    return 0;
 }

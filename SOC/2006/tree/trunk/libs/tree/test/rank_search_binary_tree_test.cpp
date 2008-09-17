@@ -21,27 +21,27 @@
 
 void test_rank_search_binary_tree()
 {
-	using namespace boost::tree;
-//	
-//	typedef binary_tree<int, balancers::unbalanced, augmentors::rank<> > tree_t;
-//	typedef searcher<false, tree_t> searcher_t;
-//	searcher_t my_searcher;
-//	
-//	create_test_data_searcher(my_searcher);
-//	tree_t& my_tree = my_searcher.container();
-//	
-//	tree_t::cursor c = select(my_tree, 3);
-//	BOOST_CHECK(*c < 14);
+    using namespace boost::tree;
+//    
+//    typedef binary_tree<int, balancers::unbalanced, augmentors::rank<> > tree_t;
+//    typedef searcher<false, tree_t> searcher_t;
+//    searcher_t my_searcher;
+//    
+//    create_test_data_searcher(my_searcher);
+//    tree_t& my_tree = my_searcher.container();
+//    
+//    tree_t::cursor c = select(my_tree, 3);
+//    BOOST_CHECK(*c < 14);
 
-//	typedef binary_tree<int, balancers::unbalanced, augmentors::rank<> > tree_t;
-//	typedef test_searcher<false, tree_t> searcher_t;
-//	searcher_t my_searcher;
-//	
-//	create_test_data_searcher(my_searcher);
-//	tree_t& my_tree = my_searcher.container();
+//    typedef binary_tree<int, balancers::unbalanced, augmentors::rank<> > tree_t;
+//    typedef test_searcher<false, tree_t> searcher_t;
+//    searcher_t my_searcher;
+//    
+//    create_test_data_searcher(my_searcher);
+//    tree_t& my_tree = my_searcher.container();
 //
-//	tree_t::cursor c = select_rank(my_tree, 3);
-	//BOOST_CHECK(*c < 14);
+//    tree_t::cursor c = select_rank(my_tree, 3);
+    //BOOST_CHECK(*c < 14);
 
 }
 
@@ -49,7 +49,7 @@ void test_rank_search_binary_tree()
 //init_unit_test_suite( int argc, char* argv[] )
 //{
 //    boost::unit_test::test_suite* rank_search_test = 
-//    		BOOST_TEST_SUITE( "Key search binary vector test" );
+//            BOOST_TEST_SUITE( "Key search binary vector test" );
 //
 //    rank_search_test->add( BOOST_TEST_CASE( &rank_search_binary_tree_test ) );
 //
@@ -58,7 +58,7 @@ void test_rank_search_binary_tree()
 
 int test_main(int, char* [])
 {
-	test_rank_search_binary_tree();
+    test_rank_search_binary_tree();
 
-	return 0;
+    return 0;
 }

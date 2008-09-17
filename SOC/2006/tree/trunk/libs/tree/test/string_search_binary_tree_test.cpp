@@ -27,59 +27,59 @@
 // TODO: get timings. that makes that no testcase anymore, right?
 void test_normal_string_search_binary_tree()
 {
-	using namespace boost::tree;
-	
-	typedef searcher<false, balanced_tree<binary_tree<std::string>, balancers::unbalanced > > searcher_t;
-	searcher_t my_tree;
-	
-	my_tree.insert("anthology");
-	my_tree.insert("anagram");
-	my_tree.insert("anodyne");
-	my_tree.insert("anthrax");
-	my_tree.insert("anteater");	
-	
-	//FIXME: const_iterator doesn't work properly yet
-	searcher_t::iterator ci = my_tree.begin(); 
-	BOOST_CHECK(*ci++ == "anagram");
-	BOOST_CHECK(*ci++ == "anodyne");
-	BOOST_CHECK(*ci++ == "anteater");
-	BOOST_CHECK(*ci++ == "anthology");
-	BOOST_CHECK(*ci++ == "anthrax");
-	BOOST_CHECK(ci == my_tree.end());
+    using namespace boost::tree;
+    
+    typedef searcher<false, balanced_tree<binary_tree<std::string>, balancers::unbalanced > > searcher_t;
+    searcher_t my_tree;
+    
+    my_tree.insert("anthology");
+    my_tree.insert("anagram");
+    my_tree.insert("anodyne");
+    my_tree.insert("anthrax");
+    my_tree.insert("anteater");    
+    
+    //FIXME: const_iterator doesn't work properly yet
+    searcher_t::iterator ci = my_tree.begin(); 
+    BOOST_CHECK(*ci++ == "anagram");
+    BOOST_CHECK(*ci++ == "anodyne");
+    BOOST_CHECK(*ci++ == "anteater");
+    BOOST_CHECK(*ci++ == "anthology");
+    BOOST_CHECK(*ci++ == "anthrax");
+    BOOST_CHECK(ci == my_tree.end());
 }
 
 void test_optimized_string_search_binary_tree()
 {
-	
-	using namespace boost::tree;
-	using boost::multi_index::identity;
+    
+    using namespace boost::tree;
+    using boost::multi_index::identity;
 
-	typedef searcher<false, balanced_tree<binary_tree<std::string>, balancers::unbalanced>, 
-					 identity<std::string>,
-					 container_lexicographical_compare<std::string, std::string>
-					> searcher_t;
-	searcher_t my_tree;
-	
-	my_tree.insert("anthology");
-	my_tree.insert("anagram");
-	my_tree.insert("anodyne");
-	my_tree.insert("anthrax");
-	my_tree.insert("anteater");
-	
-	//FIXME: const_iterator doesn't work properly yet
-	searcher_t::iterator ci = my_tree.begin(); 
-	BOOST_CHECK(*ci++ == "anagram");
-	BOOST_CHECK(*ci++ == "anodyne");
-	BOOST_CHECK(*ci++ == "anteater");
-	BOOST_CHECK(*ci++ == "anthology");
-	BOOST_CHECK(*ci++ == "anthrax");
-	BOOST_CHECK(ci == my_tree.end());
+    typedef searcher<false, balanced_tree<binary_tree<std::string>, balancers::unbalanced>, 
+                     identity<std::string>,
+                     container_lexicographical_compare<std::string, std::string>
+                    > searcher_t;
+    searcher_t my_tree;
+    
+    my_tree.insert("anthology");
+    my_tree.insert("anagram");
+    my_tree.insert("anodyne");
+    my_tree.insert("anthrax");
+    my_tree.insert("anteater");
+    
+    //FIXME: const_iterator doesn't work properly yet
+    searcher_t::iterator ci = my_tree.begin(); 
+    BOOST_CHECK(*ci++ == "anagram");
+    BOOST_CHECK(*ci++ == "anodyne");
+    BOOST_CHECK(*ci++ == "anteater");
+    BOOST_CHECK(*ci++ == "anthology");
+    BOOST_CHECK(*ci++ == "anthrax");
+    BOOST_CHECK(ci == my_tree.end());
 }
 
 
 int test_main(int, char* [])
 {
-	test_normal_string_search_binary_tree();
-	test_optimized_string_search_binary_tree();
-	return 0;
+    test_normal_string_search_binary_tree();
+    test_optimized_string_search_binary_tree();
+    return 0;
 }

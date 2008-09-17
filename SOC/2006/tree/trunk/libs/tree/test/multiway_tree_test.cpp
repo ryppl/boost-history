@@ -12,17 +12,17 @@
 
 void test_multiway_tree()
 {
-	using namespace boost::tree;
-	
-	typedef multiway_tree<int> tree_type;
-	tree_type mytree;
+    using namespace boost::tree;
+    
+    typedef multiway_tree<int> tree_type;
+    tree_type mytree;
 
-	//tree_type::cursor c = 
-	//mytree.insert(mytree.root(), 3);
+    //tree_type::cursor c = 
+    //mytree.insert(mytree.root(), 3);
 }
 
 int test_main(int, char* [])
 {
-	test_multiway_tree();
-	return 0;
+    test_multiway_tree();
+    return 0;
 }
