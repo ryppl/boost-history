@@ -35,15 +35,15 @@ namespace tree {
 template <class Cursor>
 class out_edge_iterator
  : public iterator_facade<out_edge_iterator<Cursor>
- 						, std::pair<Cursor, Cursor>
- 						, typename cursor_horizontal_traversal<Cursor>::type
- 						/*, Reference, Difference*/> {
+                         , std::pair<Cursor, Cursor>
+                         , typename cursor_horizontal_traversal<Cursor>::type
+                         /*, Reference, Difference*/> {
 
-	struct enabler {};
+    struct enabler {};
 public:
-	out_edge_iterator() : m_edge() {}
-	
-	explicit out_edge_iterator(Cursor u, Cursor v) : m_edge(u, v) {}
+    out_edge_iterator() : m_edge() {}
+    
+    explicit out_edge_iterator(Cursor u, Cursor v) : m_edge(u, v) {}
 
     template <class OtherCursor>
     out_edge_iterator(
@@ -55,9 +55,9 @@ public:
     )
       : m_edge(other.m_edge) {}
 
-	
+    
 private:
-	friend class boost::iterator_core_access;
+    friend class boost::iterator_core_access;
 
     template <class OtherCursor>
     bool equal(out_edge_iterator<OtherCursor> const& other) const
@@ -67,27 +67,27 @@ private:
 
     void increment()
     {
-    	// We also need to account for the cursor's end()!
-    	if (m_edge.second == m_edge.first.end()) { 
-    		m_edge.second = m_edge.first;
-    		return;
-    	}
-    	++m_edge.second; 
+        // We also need to account for the cursor's end()!
+        if (m_edge.second == m_edge.first.end()) { 
+            m_edge.second = m_edge.first;
+            return;
+        }
+        ++m_edge.second; 
     }
 
     void decrement()
     { 
-       	if (m_edge.second == m_edge.first) { 
-    		m_edge.second = m_edge.first.end();
-    		return;
-    	}
-    	--m_edge.second;
+           if (m_edge.second == m_edge.first) { 
+            m_edge.second = m_edge.first.end();
+            return;
+        }
+        --m_edge.second;
     }
 
     std::pair<Cursor, Cursor>& dereference() const
     { return const_cast<std::pair<Cursor, Cursor>&>(m_edge); }
 
-	std::pair<Cursor, Cursor> m_edge; 
+    std::pair<Cursor, Cursor> m_edge; 
 };
 
 } // namespace tree
@@ -101,22 +101,22 @@ template <class Tp, class Alloc>
 struct graph_traits< binary_tree<Tp, Alloc> > {
     typedef typename binary_tree<Tp, Alloc>::cursor vertex_descriptor;
     typedef std::pair<vertex_descriptor
-    				, vertex_descriptor> edge_descriptor; // Might be tunable...
+                    , vertex_descriptor> edge_descriptor; // Might be tunable...
 
-	typedef boost::tree::out_edge_iterator<vertex_descriptor> out_edge_iterator;
+    typedef boost::tree::out_edge_iterator<vertex_descriptor> out_edge_iterator;
 
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
-	typedef incidence_graph_tag traversal_category;
+    typedef incidence_graph_tag traversal_category;
     typedef 
-    	typename cursor_size<vertex_descriptor>::type 
-    	vertices_size_type;
+        typename cursor_size<vertex_descriptor>::type 
+        vertices_size_type;
     typedef
-    	typename cursor_size<vertex_descriptor>::type
-    	edges_size_type;
+        typename cursor_size<vertex_descriptor>::type
+        edges_size_type;
     typedef
-    	typename cursor_size<vertex_descriptor>::type
-    	degree_size_type;
+        typename cursor_size<vertex_descriptor>::type
+        degree_size_type;
 };
 
 //template <class Tp, class Alloc>
@@ -146,8 +146,8 @@ out_edges(
     const binary_tree<Tp, Alloc>& g)
 {
     typedef
-    	typename graph_traits< binary_tree<Tp, Alloc> >::out_edge_iterator
-    	Iter;
+        typename graph_traits< binary_tree<Tp, Alloc> >::out_edge_iterator
+        Iter;
     return std::make_pair(Iter(u, u.begin()), Iter(u, u));
 }
 
@@ -161,15 +161,15 @@ out_degree(
 }
 
 template <
-	class Cursor, 
-	class Op //= typename identity<typename boost::tree::cursor_value<Cursor>::type>
+    class Cursor, 
+    class Op //= typename identity<typename boost::tree::cursor_value<Cursor>::type>
 >
 struct extract_property_map;
 
 template <class Cursor, class Op>
 class extract_property_map
 : public boost::put_get_helper<typename Op::result_type&
-							 , extract_property_map<Cursor, Op> >
+                             , extract_property_map<Cursor, Op> >
 {
 public:
     typedef Cursor key_type;
@@ -177,11 +177,11 @@ public:
     typedef value_type& reference;
     typedef boost::lvalue_property_map_tag category;
 
-	extract_property_map(Op op = Op()) : m_op(op) {}
+    extract_property_map(Op op = Op()) : m_op(op) {}
 
     inline reference operator[](key_type v) const
     {
-    	return m_op(*v.to_begin());
+        return m_op(*v.to_begin());
     }
     
 private:
@@ -191,7 +191,7 @@ private:
 template <class Tree>
 bool empty_cursor(typename Tree::cursor u, Tree)
 {
-	return u.empty();
+    return u.empty();
 }
 
 } // namespace boost
