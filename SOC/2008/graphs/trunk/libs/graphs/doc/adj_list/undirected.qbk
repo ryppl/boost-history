@@ -140,7 +140,7 @@ graphs:
     [[`vertex_unordered_multiset<>`] [ Not implememnted]]
     [[`vertex_unordered_multimap<>`] [ Not implememnted]]
 ]
-The choice of vertex storage selector determines the how your program can add and/or
+The choice of vertex storage selector determines the how your program can add and\/or
 remove vertices from the graph. A selector that chooses a __Sequence__ container can be
 used to implement graphs whose VertexLabel does not (necessarily) uniquely identify
 the vertex. Selectors that choose __UniqueAssociativeContainer__ containers can be used to
@@ -272,25 +272,59 @@ The following section is a list of member functions of the graph.
 
 [heading Constructors and Destructor]
 
- undirected_graph::undirected_graph()
+ undirected_graph()
+ undirected_graph(undirected_graph const& g)
+ undirected_graph(undirected_graph&& g)
+ ~undirected_graph()
 
- undirected_graph::undirected_graph(undirected_graph const& g)
+The usual cadre of constructors and descructors that make graphs __Regular__. The
+undirected graph class supports default, copy, and move construction.
 
- undirected_graph::~undirected_graph()
+[heading Operators]
+
+ undirected_graph& operator=(undirected_graph const& g)
+ undirected_graph& operator=(undirected_graph&& g)
+
+Copy or move assign the vertices and edges of the graph `g` to this graph.
+
+ vertex_label& operator[](vertex_descriptor v)
+ vertex_label const& operator(vertex_descriptor v) const
+
+Return the label associated with the given vertex. This operation is only available
+for graphs with labeled vertices.
+
+ edge_label& operator[](edge_descriptor e)
+ edge_label const& operator[](edge_descriptor e) const
+
+Return the label associated with the given edge. This operation is only available
+for graphs with labeled edges.
 
 [heading Adding Vertices]
 
  vertex_descriptor add_vertex()
 
-Add an unlabeled vertex to the graph, returning the descriptor.
+Add an unlabeled vertex to the graph, returning the descriptor. This operation is
+only available for graphs with unlabeled vertices or whose labels are default constructible.
+
+/Complexity/: For vertex stores that model a __Sequence__ or __HashedAssociativeContainer__,
+ this operation is /O(1)/. For __SortedAssociativeContainer__, this operation is
+/O(lg V)/.
 
  vertex_descriptor add_vertex(vertex_label const& l)
 
-Add a vertex with the label `l` to the graph, returning the descriptor.
+Add a vertex with the label `l` to the graph, returning the descriptor. This operation
+is only available for graphs with labeled vertices (but not pair associative labels).
+
+/Complexity/: For vertex stores that model a __Sequence__ or __HashedAssociativeContainer__
+this is /O(1)/. For __SortedAssociativeContainer__, this is /O(lg V)/.
 
  vertex_descriptor add_vertex(vertex_key const& k, vertex_label const& l)
 
-Add a vertex to the map with the label `l` and associate it with the key `k`.
+Add a vertex to the map with the label `l` and associate it with the key `k`. This
+operation is only avaialable for graphs with pair associative vertex labels.
+
+/Complexity/: For vertex stores that model a __HashedAssociativeContainer__, this
+is /O(1)/. For __SortedAssociativeContainer__, this is /O(lg V)/.
 
 [heading Accessing Vertices]
 
