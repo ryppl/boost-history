@@ -636,7 +636,7 @@ and to \mbox{\tcode{second}} with \mbox{\tcode{std::move(\farg{p}.second)}}.
 
 \begin{itemdecl}
 template<class @\farg{U}@, class @\farg{V}@> 
-  @\addedConcepts{requires HasAssign<T1, RvalueOf<U>::type> \&\& MoveAssignable<T2, RvalueOf<V>::type>}@
+  @\addedConcepts{requires HasAssign<T1, RvalueOf<U>::type> \&\& HasAssign<T2, RvalueOf<V>::type>}@
   pair& operator=(pair<@\farg{U}@, @\farg{V}@>&& @\farg{p}@);
 \end{itemdecl}
 
@@ -1164,7 +1164,7 @@ the corresponding element of \mbox{\tcode{*this}}.}
 \index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 template <@\addedD{class... UTypes}@>
-  @\addedConcepts{requires CopyAssignable<Types, UTypes>...}@ 
+  @\addedConcepts{requires HasAssign<Types, const UTypes\&>...}@ 
   tuple& operator=(const tuple<@\addedD{UTypes...}@>& u);
 \end{itemdecl}
 
@@ -1186,7 +1186,7 @@ of \tcode{*this}.
 \index{operator=@\tcode{operator=}!tuple@\tcode{tuple}}%
 \begin{itemdecl}
 @\addedD{template <class... UTypes>}@
-  @\addedConcepts{requires MoveAssignable<Types, UTypes>...}@ 
+  @\addedConcepts{requires HasMoveAssign<Types, RvalueOf<UTypes>::type>...}@ 
   @\addedD{tuple\& operator=(tuple<UTypes...>\&\& u);}@
 \end{itemdecl}
 

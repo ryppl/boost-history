@@ -82,6 +82,9 @@ Andrew Lumsdaine, Indiana University
   concept, which is used to constrain the third \tcode{random_shuffle}
   overload. Made the third \tcode{random_shuffle} accept its random
   number generator by rvalue reference.
+\item Now that \tcode{ShuffleIterator} requires
+  \tcode{ForwardIterator}, simplified the \tcode{rotate} algorithm to
+  only directly require \tcode{ShuffleIterator}.
 \end{itemize}
 
 \end{titlepage}
@@ -431,8 +434,7 @@ namespace std {
   template<BidirectionalIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
     OutIter reverse_copy(InIter @\farg{first}@, InIter @\farg{last}@, OutIter @\farg{result}@);
 
-  template<ForwardIterator Iter>
-    requires ShuffleIterator<Iter>
+  template<ShuffleIterator Iter>
     Iter rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
                 Iter @\farg{last}@);
   template<ForwardIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
@@ -2450,8 +2452,7 @@ assignments.
 
 \index{rotate@\tcode{rotate}}%
 \color{addclr}\begin{itemdecl}
-template<ForwardIterator Iter>
-  requires ShuffleIterator<Iter>
+template<ShuffleIterator Iter>
   Iter rotate(Iter @\farg{first}@, Iter @\farg{middle}@,
               Iter @\farg{last}@);
 \end{itemdecl}\color{black}
