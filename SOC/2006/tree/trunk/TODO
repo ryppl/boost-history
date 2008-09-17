@@ -15,6 +15,9 @@
 
 General:
 
+* Think of a couple good examples (draw inspiration eg from Wikipedia: Tree traversal
+  or CRLS) and include them in the docs. Maybe move some files from libs/test to
+  example.
 * Migrate to using Jamfile.v2 from Intrusive.
 * Add performance checks (to a libs/perf/ directory).
 * Look into SOC 2008 projects dsearch (already using concepts from Boost.Tree) and 
@@ -22,8 +25,9 @@ General:
 * Can't we really do without inorder_erase()?
 * Remove the word "recursive" from *order subtree algorithms context, as we might
   implement these using iterative versions. Rename *_recursive algorithms to 
-  *_with_references or so; and use something like #ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
-* Check if Cursor(balanced_tree_iterator) rellay has no is_root member()!
+  *_with_references or so; and use something like #ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS.
+  Overload then for root_tracking_cursor.
+* Check if Cursor(balanced_tree_iterator) really has no is_root member()!
 * Revisit binary_tree (inorder::)iterator functions
 * Possibly sort out some more concepts, like trees with "downwards" or "upwards" insertion
   (insert()/insert_above()), trees with values only at the leaves (makes sense in combination

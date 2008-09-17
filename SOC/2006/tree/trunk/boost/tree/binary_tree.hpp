@@ -9,7 +9,6 @@
  * Binary tree implementation
  */
 
-
 #ifndef BOOST_TREE_BINARY_TREE_HPP
 #define BOOST_TREE_BINARY_TREE_HPP
 
@@ -19,8 +18,6 @@
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
-
-#include <boost/test/minimal.hpp>
 
 #include <memory>
 

@@ -11,6 +11,9 @@
  / Algorithms documentation file.
  /]
 
+[import ../../../boost/tree/detail/algorithm/cursor/postorder.hpp]
+[import ../example/for_each.cpp]
+
 [section Algorithms]
 
 While STL algorithms operate on (at least a pair of) iterators, for hierarchic structures
@@ -24,12 +27,29 @@ there is no one such "natural" traversal for subtrees.
 There are, conversely, several different methods how to traverse a (sub)tree - one 
 has to choose eg whether to "visit" an element before, between or after its descendants.
 
-These three types of traversal are called pre- in- and postorder, and consequently, an
-algorithm can come in each out of these three flavors (and many algorithms will come in 
-all three). For clarity, all the algorithms of one such traversal type are bundled in a
-namespace of the corresponding name (ie, `preorder`, `inorder`, and `postorder`).
+These three types of traversal are called /preorder/, /inorder/ and /postorder/, and 
+consequently, an algorithm can come in each out of these three flavors 
+(and many algorithms will come in all three). For clarity, all the algorithms 
+of one such traversal type are bundled in a namespace of the corresponding 
+name (ie, `preorder`, `inorder`, and `postorder`).
+
+Algorithms can be used via
+
+[for_each_include_algorithm]
+
+TODO: Include illustration of example data tree.
 
 [section Pre-, In-, and Postorder Algorithms]
+
+[section for_each]
+
+[postorder_for_each]
+
+[section Example]
+[for_each]
+[endsect] [/Example]
+[endsect] [/for_each]
+
 [endsect] [/ Pre-, In-, and Postorder Algorithms]
 
 [endsect] [/ Algorithms]
