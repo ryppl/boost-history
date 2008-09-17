@@ -18,7 +18,7 @@ General:
 * Think of a couple good examples (draw inspiration eg from Wikipedia: Tree traversal
   or CRLS) and include them in the docs. Maybe move some files from libs/test to
   example.
-* Migrate to using Jamfile.v2 from Intrusive.
+* Migrate to using Jamfile.v2 from Intrusive (already used in our libs/example dir)
 * Add performance checks (to a libs/perf/ directory).
 * Look into SOC 2008 projects dsearch (already using concepts from Boost.Tree) and 
   spacial_indexing (with tree classes of its own)
