@@ -22,11 +22,11 @@ namespace augmentors {
 //TODO: concept checks...
 //use boost bind or lambda instead!!!
 template<typename T, class Interval = std::pair<T,T>, 
-		 class ExtractLeft = &std::pair<T,T>::first, 
-		 class ExtractRight = &std::pair<T,T>::second,
-		 class Left = member<Interval,T,ExtractLeft>, 
-		 class Right = member<Interval,T,ExtractRight>
-		>
+         class ExtractLeft = &std::pair<T,T>::first, 
+         class ExtractRight = &std::pair<T,T>::second,
+         class Left = member<Interval,T,ExtractLeft>, 
+         class Right = member<Interval,T,ExtractRight>
+        >
 struct interval_extract : public composite_key<Interval, Left, Right> {};
 
 
@@ -34,19 +34,19 @@ template <typename T>
 struct interval_search
 {
  public:
-	typedef T value_type;
-	value_type const& largest_endpoint() { return m_largest_endpoint; }
+    typedef T value_type;
+    value_type const& largest_endpoint() { return m_largest_endpoint; }
  protected:
-	//update etc.
+    //update etc.
  private:
-	value_type m_largest_endpoint;
+    value_type m_largest_endpoint;
 };
 
 template <class Cursor>
 bool overlaps(Cursor c, typename Cursor::value_type val)
 {
-	//FIXME: implement.
-	return true;
+    //FIXME: implement.
+    return true;
 }
 
 } // namespace augmentors

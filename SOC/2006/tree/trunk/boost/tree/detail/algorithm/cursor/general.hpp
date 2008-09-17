@@ -26,10 +26,10 @@ namespace tree {
 
 // What about the subtree shapes?
 /**
- *  @brief		Checks two subtrees for element-wise equality.
- *  @param c1	An input cursor.
- *  @param c2	An input cursor.
- *  @return		A boolean true or false.
+ *  @brief        Checks two subtrees for element-wise equality.
+ *  @param c1    An input cursor.
+ *  @param c2    An input cursor.
+ *  @return        A boolean true or false.
  *
  *  Compares the elements of two subtrees using @c ==. Returns true if
  *  all the corresponding elements of the subtrees are equal; otherwise,
@@ -38,27 +38,27 @@ namespace tree {
 template <class InCursor1, class InCursor2>
 bool equal(InCursor1 c1, InCursor2 c2)
 {
-	InCursor1 d1 = c1.end();
-	c1.to_begin();
-	c2.to_begin();
-	if (!(*c1 == *c2))
-		return false;
-	do {
-		if (!c1.empty())
-			if (!equal(c1, c2))
-				return false;
-		++c2;
-	} while (c1++ != d1);
-	
-	return true;
+    InCursor1 d1 = c1.end();
+    c1.to_begin();
+    c2.to_begin();
+    if (!(*c1 == *c2))
+        return false;
+    do {
+        if (!c1.empty())
+            if (!equal(c1, c2))
+                return false;
+        ++c2;
+    } while (c1++ != d1);
+    
+    return true;
 }
 
 /**
- *  @brief		Checks two subtrees for element-wise equality.
- *  @param c1	An input cursor.
- *  @param c2	An input cursor.
- *  @param p	A binary predicate.
- *  @return		A boolean true or false.
+ *  @brief        Checks two subtrees for element-wise equality.
+ *  @param c1    An input cursor.
+ *  @param c2    An input cursor.
+ *  @param p    A binary predicate.
+ *  @return        A boolean true or false.
  *
  *  Compares the elements of two subtrees using the p parameter. 
  *  Returns true if all the corresponding elements of the 
@@ -67,58 +67,58 @@ bool equal(InCursor1 c1, InCursor2 c2)
 template <class InCursor1, class InCursor2, class BinPred>
 bool equal(InCursor1 c1, InCursor2 c2, BinPred p)
 {
-	InCursor1 d1 = c1.end();
-	c1.to_begin();
-	c2.to_begin();
-	if (!p(*c1,*c2))
-		return false;
-	do {
-		if (!c1.empty())
-			if (!equal(c1, c2))
-				return false;
-		++c2;
-	} while (c1++ != d1);
-	
-	return true;
+    InCursor1 d1 = c1.end();
+    c1.to_begin();
+    c2.to_begin();
+    if (!p(*c1,*c2))
+        return false;
+    do {
+        if (!c1.empty())
+            if (!equal(c1, c2))
+                return false;
+        ++c2;
+    } while (c1++ != d1);
+    
+    return true;
 }
 
 /**
- *  @brief		Calculates the number of elements in a subtree.
- *  @param c	An input cursor.
- *  @param s	The size type of @c c1.
+ *  @brief        Calculates the number of elements in a subtree.
+ *  @param c    An input cursor.
+ *  @param s    The size type of @c c1.
  * 
- * After finishing, s will have been increased by the number of elements in c. 		
+ * After finishing, s will have been increased by the number of elements in c.         
  */
 template <class InCursor>
 void size(InCursor c, typename InCursor::size_type& s)
 {
-	InCursor d = c.end();
-	c.to_begin();
-	++s;
-	do
-		if (!c.empty())
-			size(c, s);
-	while (c++ != d);
+    InCursor d = c.end();
+    c.to_begin();
+    ++s;
+    do
+        if (!c.empty())
+            size(c, s);
+    while (c++ != d);
 }
 
 /**
- *  @brief		Returns the number of elements in a subtree.
- *  @param c	An input cursor.
- *  @return		The size type of @c c1.
+ *  @brief        Returns the number of elements in a subtree.
+ *  @param c    An input cursor.
+ *  @return        The size type of @c c1.
  */
 template <class InCursor>
 typename InCursor::size_type size(InCursor c)
 {
-	typename InCursor::size_type s = 0;
-	InCursor d = c.end();
-	c.to_begin();
-	++s;
-	do
-		if (!c.empty())
-			size(c, s);
-	while (c++ != d);
-	
-	return s;
+    typename InCursor::size_type s = 0;
+    InCursor d = c.end();
+    c.to_begin();
+    ++s;
+    do
+        if (!c.empty())
+            size(c, s);
+    while (c++ != d);
+    
+    return s;
 }
 
 

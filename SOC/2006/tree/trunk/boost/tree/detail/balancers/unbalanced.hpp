@@ -16,29 +16,29 @@ namespace balancers {
 
 class unbalanced {
  public:
-	unbalanced() {}
+    unbalanced() {}
 
-	struct metadata_type {};
-	//metadata_type metadata;
+    struct metadata_type {};
+    //metadata_type metadata;
 
-// protected:	
-	template <class Tree>
-	static void add(Tree&, typename Tree::cursor& c)
-	{ }
-	  
-	template <class Tree>
-	static typename Tree::cursor remove(Tree& t, typename Tree::cursor& x)
-	{
-		//typename Tree::cursor y = x;
-		if (x.begin().empty() || x.end().empty())
- 			return x;
- 		//inorder::forward(x);
- 		return inorder::next(x);
-	}
-		
-	template <class Tree>
-	static void touch(Tree&, typename Tree::cursor&)
-	{ }
+// protected:    
+    template <class Tree>
+    static void add(Tree&, typename Tree::cursor& c)
+    { }
+      
+    template <class Tree>
+    static typename Tree::cursor remove(Tree& t, typename Tree::cursor& x)
+    {
+        //typename Tree::cursor y = x;
+        if (x.begin().empty() || x.end().empty())
+             return x;
+         //inorder::forward(x);
+         return inorder::next(x);
+    }
+        
+    template <class Tree>
+    static void touch(Tree&, typename Tree::cursor&)
+    { }
 };
 
 } // namespace balancers

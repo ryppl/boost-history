@@ -23,7 +23,7 @@
 
 namespace boost {
 namespace tree {
-	
+    
 namespace ascending {
 
 template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
@@ -56,16 +56,16 @@ class iterator<Cursor, bidirectional_traversal_tag>
     )
       : iterator::iterator_adaptor_(other.base()) {}
 
-	operator Cursor()
-	{
-		return this->base();
-	}
+    operator Cursor()
+    {
+        return this->base();
+    }
  private:
     friend class boost::iterator_core_access;
     
     void increment()
     {
-		forward(this->base_reference());
+        forward(this->base_reference());
     }
     
 };

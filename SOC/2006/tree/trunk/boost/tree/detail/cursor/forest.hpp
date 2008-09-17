@@ -44,22 +44,22 @@ private:
     struct enabler {};
 
 public:
- 	//TODO: Tidy up typedefs
+     //TODO: Tidy up typedefs
 
-	typedef Cursor base_cursor;
-	
- 	typedef forest_cursor<Cursor> cursor;
- 	//typedef const_forest_cursor<Cursor> const_cursor;
+    typedef Cursor base_cursor;
+    
+     typedef forest_cursor<Cursor> cursor;
+     //typedef const_forest_cursor<Cursor> const_cursor;
 
-	//typedef typename cursor_size<base_cursor>::type size_type;
+    //typedef typename cursor_size<base_cursor>::type size_type;
 
-	//typedef bidirectional_traversal_tag cursor_category;
-		
-	// Container-specific:
-	typedef cursor iterator;  // For (range) concepts' sake, mainly
-//	typedef const_cursor const_iterator;
-	
- 	// Common iterator facade stuff
+    //typedef bidirectional_traversal_tag cursor_category;
+        
+    // Container-specific:
+    typedef cursor iterator;  // For (range) concepts' sake, mainly
+//    typedef const_cursor const_iterator;
+    
+     // Common iterator facade stuff
     forest_cursor()
      : forest_cursor::cursor_adaptor_() {}
 
@@ -71,58 +71,58 @@ public:
         forest_cursor<OtherCursor> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherCursor*, 
-           	typename Cursor::base_pointer>  // is that correct?
+               typename Cursor::base_pointer>  // is that correct?
           , enabler
         >::type = enabler()
     )
       : forest_cursor::cursor_adaptor_(other.base()) {}
 
-	operator base_cursor()
-	{
-		return this->base();
-	}
-	
+    operator base_cursor()
+    {
+        return this->base();
+    }
+    
 private:
-	
+    
     friend class cursor_core_access;
     friend class iterator_core_access;
 
-//	bool empty_() const
-//	{
-//		if (this->base().parity())
-//			return true;
-//		return this->base().empty();
-//	}
+//    bool empty_() const
+//    {
+//        if (this->base().parity())
+//            return true;
+//        return this->base().empty();
+//    }
 
-	void increment()
+    void increment()
     {
-		 if (!(++this->base_reference()).empty())
-		 	this->base_reference().to_begin();
+         if (!(++this->base_reference()).empty())
+             this->base_reference().to_begin();
     }
     
     void decrement()
     {
-    	if (!this->base().parity())
-			this->base_reference().to_parent();
-    	--this->base_reference();
+        if (!this->base().parity())
+            this->base_reference().to_parent();
+        --this->base_reference();
     }
-	
-	// Range stuff.
-	
-	// left() remains unchanged, so no need to re-implement it.
+    
+    // Range stuff.
+    
+    // left() remains unchanged, so no need to re-implement it.
 
-	void right()
-	{
-		while (!this->base_reference().to_end().empty());
-	}
-	
-	// Cursor stuff. 
-	
-	void up()
-	{
-		if (!this->base().parity())
-			this->base_reference().to_parent();
-	}
+    void right()
+    {
+        while (!this->base_reference().to_end().empty());
+    }
+    
+    // Cursor stuff. 
+    
+    void up()
+    {
+        if (!this->base().parity())
+            this->base_reference().to_parent();
+    }
 };
 
 } // namespace detail

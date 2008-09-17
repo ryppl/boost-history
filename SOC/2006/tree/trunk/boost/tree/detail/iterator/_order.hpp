@@ -4,7 +4,7 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-/** @file	_order.hpp
+/** @file    _order.hpp
  * 
  * Some definitions that are identical for all *order cursors (as we are just
  * calling the appropriate traversal function that are defined in the 
@@ -18,9 +18,9 @@
 //#include <boost/tree/cursor.hpp>
 
 /**
- * @brief	Traversal order iterator adaptor
+ * @brief    Traversal order iterator adaptor
  * 
- *			Only works with ascending cursors.
+ *            Only works with ascending cursors.
  */
  
 template <class Cursor>
@@ -50,22 +50,22 @@ class iterator
     )
       : iterator::iterator_adaptor_(other.base()) {}
 
-	operator Cursor()
-	{
-		return this->base();
-	}
+    operator Cursor()
+    {
+        return this->base();
+    }
  private:
     friend class boost::iterator_core_access;
     
     void increment()
     {
-		forward(this->base_reference());
-		//BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
+        forward(this->base_reference());
+        //BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
     }
     
     void decrement()
     {
-    	back(this->base_reference());
-		//BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
+        back(this->base_reference());
+        //BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
     }
 };

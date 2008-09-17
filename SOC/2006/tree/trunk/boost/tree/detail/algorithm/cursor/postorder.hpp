@@ -17,133 +17,133 @@
 
 namespace boost {
 namespace tree {
-	
+    
 namespace postorder {
 
 /** \addtogroup traversal */
 /*\@{*/
 
 /**
- * @brief	Postorder successor
- * @param c	Cursor to be set to its postorder successor
+ * @brief    Postorder successor
+ * @param c    Cursor to be set to its postorder successor
  */
 template <class Cursor>
 inline void forward(Cursor& c)
 {
-	c.to_parent();
+    c.to_parent();
 
-	if (c.is_root())
-		return;
+    if (c.is_root())
+        return;
 
-	if (c.parity()) { // Right child? Return parent.
-		--c;
-		return;
-	}
-		
-	// Left child.
-	++c;
-	while (!c.empty()) {
-		c.to_begin();
-		if (c.empty())
-			++c;
-	}
-	if (c.parity())
-		--c;
-	return;
+    if (c.parity()) { // Right child? Return parent.
+        --c;
+        return;
+    }
+        
+    // Left child.
+    ++c;
+    while (!c.empty()) {
+        c.to_begin();
+        if (c.empty())
+            ++c;
+    }
+    if (c.parity())
+        --c;
+    return;
 }
 
 /**
- * @brief	Postorder successor
- * @param c	A cursor
- * @param n	Optional parameter to indicate how many steps to move forward
- * @return	Postorder successor of @a c
+ * @brief    Postorder successor
+ * @param c    A cursor
+ * @param n    Optional parameter to indicate how many steps to move forward
+ * @return    Postorder successor of @a c
  */
 template <class Cursor>
 inline Cursor next(Cursor c
-				 , typename Cursor::difference_type n = 1)
+                 , typename Cursor::difference_type n = 1)
 {
-	for (; n!=0; --n)
-		forward(c);
-	return c;
+    for (; n!=0; --n)
+        forward(c);
+    return c;
 }
 
 /**
- * @brief	Postorder predecessor
- * @param c	Cursor to be set to its postorder predecessor
+ * @brief    Postorder predecessor
+ * @param c    Cursor to be set to its postorder predecessor
  */
 template <class Cursor>
 inline void back(Cursor& c)
 {
-	if (c.is_root()) { // Root?
-		c.to_begin();
-		return;
-	}
-	
-	if (!(++c).empty()) { // Right
-		c.to_begin();
-		return;
-	}
-	if (!(--c).empty()) { // Left
-		c.to_begin();
-		return;
-	}
-	
-	// Move up in the hierarchy until we find a descendant that has a right
-	// child (which is what we'll return) or we land at root.
-	while (!c.is_root()) {
-		c.to_parent();
-		if (c.parity())
-			if (!(--c).empty()) {
-				c.to_begin();
-				return;
-			}
-	}
-	return;
+    if (c.is_root()) { // Root?
+        c.to_begin();
+        return;
+    }
+    
+    if (!(++c).empty()) { // Right
+        c.to_begin();
+        return;
+    }
+    if (!(--c).empty()) { // Left
+        c.to_begin();
+        return;
+    }
+    
+    // Move up in the hierarchy until we find a descendant that has a right
+    // child (which is what we'll return) or we land at root.
+    while (!c.is_root()) {
+        c.to_parent();
+        if (c.parity())
+            if (!(--c).empty()) {
+                c.to_begin();
+                return;
+            }
+    }
+    return;
 }
 
 /**
- * @brief	Postorder predecessor
- * @param c	A cursor
- * @param n	Optional parameter to indicate how many steps to move back
- * @return	Postorder predecessor of @a c
+ * @brief    Postorder predecessor
+ * @param c    A cursor
+ * @param n    Optional parameter to indicate how many steps to move back
+ * @return    Postorder predecessor of @a c
  */
 template <class Cursor>
 inline Cursor prior(Cursor c
-				  , typename Cursor::difference_type n = 1)
+                  , typename Cursor::difference_type n = 1)
 {
-	for (; n!=0; --n)
-		back(c);
-	return c;
+    for (; n!=0; --n)
+        back(c);
+    return c;
 }
 
 /**
- * @brief	First element of a subtree in postorder traversal
- * @param c	A cursor
- * @return	Cursor to the first element of @a c in postorder traversal
+ * @brief    First element of a subtree in postorder traversal
+ * @param c    A cursor
+ * @return    Cursor to the first element of @a c in postorder traversal
  */
 template <class Cursor>
 Cursor first(Cursor c)
 {
-	while (true)
-		if (!c.empty())
-			c.to_begin();
-		else if (!(++c).empty())
-			c.to_begin();
-		else
-			return --c;
+    while (true)
+        if (!c.empty())
+            c.to_begin();
+        else if (!(++c).empty())
+            c.to_begin();
+        else
+            return --c;
 }
 
 /**
- * @brief	One position past the last element of a subtree in postorder 
- * 			traversal
- * @param c	A cursor
- * @return	Cursor one position past the last element of @a c in 
- * 			postorder traversal
+ * @brief    One position past the last element of a subtree in postorder 
+ *             traversal
+ * @param c    A cursor
+ * @return    Cursor one position past the last element of @a c in 
+ *             postorder traversal
  */
 template <class Cursor>
 Cursor last(Cursor c)
 {
-	return c;
+    return c;
 }
 
 /*\@}*/
@@ -157,23 +157,23 @@ Cursor last(Cursor c)
 template <class Cursor, class Op>
 void for_each_recursive(Cursor s, Op& f)
 {
-	Cursor t = s;
-	for (s.to_begin(); s != t.end(); ++s)
-		if (!s.empty())
-			for_each_recursive(s, f);
+    Cursor t = s;
+    for (s.to_begin(); s != t.end(); ++s)
+        if (!s.empty())
+            for_each_recursive(s, f);
 
-	// Multiway cursor
-	if (!s.empty())
-		for_each_recursive(s, f);
+    // Multiway cursor
+    if (!s.empty())
+        for_each_recursive(s, f);
 
-	f(*t.to_begin());
+    f(*t.to_begin());
 }
 
 /**
- * @brief	Apply a function to every element of a subtree, in postorder.
- * @param s	A cursor.
- * @param f	A unary function object.
- * @return	@p f
+ * @brief    Apply a function to every element of a subtree, in postorder.
+ * @param s    A cursor.
+ * @param f    A unary function object.
+ * @return    @p f
  *
  * Applies the function object @p f to each element in the subtree @p s, using 
  * postorder. @p f must not modify the order of the sequence.
@@ -182,57 +182,57 @@ void for_each_recursive(Cursor s, Op& f)
 //[ postorder_for_each
 template <class Cursor, class Op>
 Op for_each(Cursor s, Op f)
-{
-	Cursor t = s;
-	for (s.to_begin(); s != t.end(); ++s)
-		if (!s.empty())
-			for_each_recursive(s, f);
-
-	// Multiway cursor
-	if (!s.empty())
-		for_each_recursive(s, f);
-
-	f(*t.to_begin());
-
-	return f;
-}
 //]
+{
+    Cursor t = s;
+    for (s.to_begin(); s != t.end(); ++s)
+        if (!s.empty())
+            for_each_recursive(s, f);
+
+    // Multiway cursor
+    if (!s.empty())
+        for_each_recursive(s, f);
+
+    f(*t.to_begin());
+
+    return f;
+}
 
 /**
- * @brief	Copies the subtree s into t, by traversing s in postorder.
- * @param s	An input cursor.
+ * @brief    Copies the subtree s into t, by traversing s in postorder.
+ * @param s    An input cursor.
  * @param t An output cursor.
- * @result	A cursor past t's postorder end, after the copying operation.
+ * @result    A cursor past t's postorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
-	InCursor r = s;
-	s.to_begin();
-	t.to_begin();
-	
-	for (; s != r.end(); ++s, ++t) {
-		if (!s.empty())
-			copy(s, t);
-//		else
-//			*t = *s;
-	}
-	
-	// Multiway cursor
-	if (!s.empty())
-		copy(s, t);
+    InCursor r = s;
+    s.to_begin();
+    t.to_begin();
+    
+    for (; s != r.end(); ++s, ++t) {
+        if (!s.empty())
+            copy(s, t);
+//        else
+//            *t = *s;
+    }
+    
+    // Multiway cursor
+    if (!s.empty())
+        copy(s, t);
 
-	*t = *r.to_begin();
-	return t;
+    *t = *r.to_begin();
+    return t;
 }
 
 /**
- * @brief	 Performs an operation on a subtree, by traversing it in postorder.
+ * @brief     Performs an operation on a subtree, by traversing it in postorder.
  * @param s  An input cursor.
  * @param t  An output cursor.
  * @param op A unary operation.
- * @result	 A cursor past t's postorder end, after the transforming has
- * 			 finished.
+ * @result     A cursor past t's postorder end, after the transforming has
+ *              finished.
  * 
  * By traversing the input subtree s in postorder, apply the operation op 
  * to each element and write the result to the output subtree t.
@@ -242,20 +242,20 @@ OutCursor copy (InCursor s, OutCursor t)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
-	InCursor r = s;
-	s.to_begin();
-	t.to_begin();
-	
-	for (; s != r.end(); ++s, ++t)
-		if (!s.empty())
-			transform(s, t, op);
+    InCursor r = s;
+    s.to_begin();
+    t.to_begin();
+    
+    for (; s != r.end(); ++s, ++t)
+        if (!s.empty())
+            transform(s, t, op);
 
-	// Multiway cursor
-	if (!s.empty())
-		transform(s, t, op);
-	
-	*t = op(*r.to_begin());
-	return t;
+    // Multiway cursor
+    if (!s.empty())
+        transform(s, t, op);
+    
+    *t = op(*r.to_begin());
+    return t;
 }
 
 } // namespace postorder

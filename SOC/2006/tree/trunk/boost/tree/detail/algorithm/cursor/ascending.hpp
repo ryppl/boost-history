@@ -25,28 +25,28 @@ namespace ascending {
 /*\@{*/
 
 /**
- * @brief	Ascending successor
- * @param c	MultiwayCursor to be set to its ascending successor
- * @ingroup	traversal
+ * @brief    Ascending successor
+ * @param c    MultiwayCursor to be set to its ascending successor
+ * @ingroup    traversal
  */
 template <class MultiwayCursor>
 inline void forward(MultiwayCursor& c)
 {
-	c.to_parent();
-	return;
+    c.to_parent();
+    return;
 }
 
 /**
- * @brief	Ascending successor
- * @param c	A cursor
- * @return	Ascending successor of @a c
- * @ingroup	traversal
+ * @brief    Ascending successor
+ * @param c    A cursor
+ * @return    Ascending successor of @a c
+ * @ingroup    traversal
  */
 template <class MultiwayCursor>
 inline MultiwayCursor next(MultiwayCursor c)
 {
-	forward(c);
-	return c;
+    forward(c);
+    return c;
 }
 
 /*\@}*/

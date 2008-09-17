@@ -23,19 +23,19 @@ namespace tree {
 template <class Cntnr1, class Cntnr2>
 class container_lexicographical_compare : public std::binary_function<Cntnr1, Cntnr2, bool> {
 public:
-	container_lexicographical_compare(typename Cntnr1::size_type pos = 0) : m_pos(pos) {}
-	bool operator() (Cntnr1 const& x, Cntnr2 const& y)
-	{
-		typename Cntnr1::const_iterator it1 = x.begin();
-		typename Cntnr2::const_iterator it2 = y.begin();
-		std::advance(it1, m_pos);
-		std::advance(it2, m_pos);
-		bool ret = std::lexicographical_compare(it1, x.end(), it2, y.end());
-		m_pos = std::distance(x.begin(), it1);
-		return ret;
-	}
+    container_lexicographical_compare(typename Cntnr1::size_type pos = 0) : m_pos(pos) {}
+    bool operator() (Cntnr1 const& x, Cntnr2 const& y)
+    {
+        typename Cntnr1::const_iterator it1 = x.begin();
+        typename Cntnr2::const_iterator it2 = y.begin();
+        std::advance(it1, m_pos);
+        std::advance(it2, m_pos);
+        bool ret = std::lexicographical_compare(it1, x.end(), it2, y.end());
+        m_pos = std::distance(x.begin(), it1);
+        return ret;
+    }
 private:
- 	typename Cntnr1::size_type m_pos;
+     typename Cntnr1::size_type m_pos;
 };
 
 //TODO: even more efficient version for strings (using their compare members)

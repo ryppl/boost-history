@@ -19,7 +19,7 @@
 
 namespace boost {
 namespace tree {
-	
+    
 namespace preorder {
 
 #include <boost/tree/detail/algorithm/iterator/_order.hpp>

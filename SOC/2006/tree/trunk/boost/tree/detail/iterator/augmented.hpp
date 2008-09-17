@@ -29,11 +29,11 @@ namespace detail {
 using boost::multi_index::identity;
 
 //TODO: Add extractor as 2nd ctor parameter?
-//		Possibly use boost::transform_iterator?
+//        Possibly use boost::transform_iterator?
 template <class InorderIter, 
-		  class Extract = identity<typename InorderIter::value_type>,
-		  class Tag = typename std::iterator_traits<InorderIter>::iterator_category
-		 >
+          class Extract = identity<typename InorderIter::value_type>,
+          class Tag = typename std::iterator_traits<InorderIter>::iterator_category
+         >
 class augmented_iterator;
 
 template <class InorderIter, class Extract>
@@ -65,19 +65,19 @@ class augmented_iterator<InorderIter, Extract, bidirectional_traversal_tag>
     )
       : augmented_iterator::iterator_adaptor_(other.base()) {}
 
-	operator InorderIter()
-	{
-		return this->base();
-	}
-	
+    operator InorderIter()
+    {
+        return this->base();
+    }
+    
  private:
     friend class boost::iterator_core_access;
     
-	typename augmented_iterator::iterator_adaptor_::reference
-	dereference() const
-	{
-		return Extract()(this->base());
-	}	
+    typename augmented_iterator::iterator_adaptor_::reference
+    dereference() const
+    {
+        return Extract()(this->base());
+    }    
 };
 
 

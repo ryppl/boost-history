@@ -25,8 +25,8 @@
 
 #include <boost/range.hpp>
 
-#include <algorithm>		// lower_bound, upper_bound etc.
-#include <functional>	// ptr_fun, not1, tr1::bind
+#include <algorithm>        // lower_bound, upper_bound etc.
+#include <functional>    // ptr_fun, not1, tr1::bind
 
 
 namespace boost {
@@ -36,58 +36,58 @@ namespace tree {
 
 /** 
  * @brief \c lower_bound substitute for (efficient) \b binary tree search.
- * @param first	Iterator
- * @param last	Iterator
- * @param val	Search key
- * @param cmp	Comparison functor
- * @return		An iterator to the first element "not less than" @a val,
- *	 			or @a last if every element is less than @a val.
+ * @param first    Iterator
+ * @param last    Iterator
+ * @param val    Search key
+ * @param cmp    Comparison functor
+ * @return        An iterator to the first element "not less than" @a val,
+ *                 or @a last if every element is less than @a val.
  * 
  * Compares only @a first's value to @a val
 */
 template<class ForwardIterator, typename T, typename Compare>
 ForwardIterator
 binary_lower_bound(ForwardIterator first, ForwardIterator last, 
-				 	T const& val, Compare cmp)
+                     T const& val, Compare cmp)
 {
-	return cmp(*first, val) ? last : first;	
+    return cmp(*first, val) ? last : first;    
 }
 
 
 /** 
  * @brief \c upper_bound substitute for (efficient) \b binary tree search.
- * @param first	Iterator
- * @param last	Iterator
- * @param val	Search key
- * @param cmp	Comparison functor
- * @return		An iterator to the first element "greater than" @a val,
- *	 			or @a last if no element is greater than @a val.
+ * @param first    Iterator
+ * @param last    Iterator
+ * @param val    Search key
+ * @param cmp    Comparison functor
+ * @return        An iterator to the first element "greater than" @a val,
+ *                 or @a last if no element is greater than @a val.
  * 
  * Compares only @a first's value to @a val. 
 */
 template<class ForwardIterator, typename T, typename Compare>
 ForwardIterator
 binary_upper_bound(ForwardIterator first, ForwardIterator last, 
-				   T const& val, Compare cmp)
+                   T const& val, Compare cmp)
 {
-	return cmp(val, *first) ? first : last;
+    return cmp(val, *first) ? first : last;
 }
 
 
 template<class InputIterator, typename T, typename Compare>
 inline InputIterator
 linear_lower_bound(InputIterator first, InputIterator last, 
-				   T const& val, Compare cmp)
+                   T const& val, Compare cmp)
 {
-	return std::find_if(first, last, !bind(cmp, _1, val));
+    return std::find_if(first, last, !bind(cmp, _1, val));
 }
 
 template<class InputIterator, typename T, typename Compare>
 inline InputIterator
 linear_upper_bound(InputIterator first, InputIterator last, 
-				   T const& val, Compare cmp)
+                   T const& val, Compare cmp)
 {
-	return std::find_if(first, last, bind(cmp, val, _1));
+    return std::find_if(first, last, bind(cmp, val, _1));
 }
 
 //template< class ForwardReadableRange, class T >
@@ -109,14 +109,14 @@ template <class ForwardReadableRange, class T, class Cmp>
 inline typename boost::range_iterator<ForwardReadableRange>::type
 lower_bound(ForwardReadableRange r, T const& val, Cmp cmp)
 {
-	return std::lower_bound(boost::begin(r), boost::end(r), val, cmp);
+    return std::lower_bound(boost::begin(r), boost::end(r), val, cmp);
 }
 
 template <class ForwardReadableRange, class T, class Cmp>
 inline typename boost::range_const_iterator<ForwardReadableRange>::type
 lower_bound(ForwardReadableRange r, T const& val, Cmp cmp)
 {
-	return std::lower_bound(boost::begin(r), boost::end(r), val, cmp);
+    return std::lower_bound(boost::begin(r), boost::end(r), val, cmp);
 }
 
 

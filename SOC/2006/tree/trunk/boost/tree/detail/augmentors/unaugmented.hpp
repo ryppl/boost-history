@@ -21,23 +21,23 @@ namespace augmentors {
  */
 class unaugmented {
  public:
- 	struct metadata_type {};
+     struct metadata_type {};
  protected:
-	template <class Tree>
- 	void pre_rotate(Tree&, typename Tree::cursor&)
- 	{ }
- 	
- 	template <class Tree>
- 	void pre_detach(Tree&, typename Tree::cursor&)
- 	{ }
- 	
- 	template <class Tree>
- 	void pre_detach(Tree&, typename Tree::cursor&, typename Tree::cursor&)
- 	{ }
- 	
- 	template <class Tree>
- 	void descend(Tree&, typename Tree::cursor&)
- 	{ }
+    template <class Tree>
+     void pre_rotate(Tree&, typename Tree::cursor&)
+     { }
+     
+     template <class Tree>
+     void pre_detach(Tree&, typename Tree::cursor&)
+     { }
+     
+     template <class Tree>
+     void pre_detach(Tree&, typename Tree::cursor&, typename Tree::cursor&)
+     { }
+     
+     template <class Tree>
+     void descend(Tree&, typename Tree::cursor&)
+     { }
 };
 
 } // namespace augmentors
