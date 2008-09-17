@@ -83,14 +83,13 @@ Pablo Halpern,  Bloomberg, L.P.
   (\ref{container.requirements.general}, \ref{sequence.reqmts},
   \ref{associative.reqmts}, \ref{unord.req},
   \ref{vector.cons}). Thanks to Alisdair Meredith for pointing out
-  this inconsistency!
+  this inconsistency, and for detailed review work.
 \item Fixed the \tcode{AccessBack} axiom in
   \tcode{BackInsertionContainer} and
   \tcode{MemberBackInsertionContainer}. Added an additional
   requirement to the *\tcode{Insertion} axioms that states that the
   value inserted is the value now stored at the place of
-  insertion. Also, added *\tcode{Insertion} axioms to the emplace
-  concepts (all thanks to Alisdair Meredith).
+  insertion (thanks to Alisdair Meredith).
 \item Convertibility requirement from \tcode{iterator} to
   \tcode{const_iterator} in the container concepts. Resolves concepts
   issue \#48. Also, added convertibility from the container's
@@ -101,6 +100,24 @@ Pablo Halpern,  Bloomberg, L.P.
 \item Use the new \tcode{ValueType} concept, rather than
   \tcode{ObjectType}, to constrain the container's element types, to
   properly exclude abstract classes.
+\item{Moved \tcode{front()} operations and axioms from
+    \tcode{BackInsertionContainer} to \tcode{Container} and provided
+    default implementation in terms of \tcode{begin}. Moved
+    \tcode{pop_back()} and corresponding axioms out of
+    \tcode{BackInsertionContainer} into the (new) refined concept
+    \tcode{StackLikeContainer}. Moved \tcode{pop_front()} and
+    corresponding axioms into the (new) refined concept
+    \tcode{QueueLikeContainer()}. Similar changes were made to the
+    Member versions of these concepts. Update constraints for
+    \tcode{stack}, \tcode{queue}, and \tcode{priority_queue} to make
+    use of these new concepts, avoiding \tcode{queue} overconstraint
+    in the previous version of this document.}
+\item{Replaced \tcode{Emplace} concepts, Member concepts, and concept
+    maps with \tcode{HasEmplaceBack}, \tcode{HasEmplaceFront}, and
+    \tcode{HasEmplace}, etc. Guarded optional \tcode{emplace}
+    operations in \tcode{stack}, \tcode{queue}, and
+    \tcode{priority_queue} with \tcode{HasEmplaceBack}.}
+\item{Removed all qualification by \tcode{std::}}
 \end{itemize}
 
 \end{titlepage}
@@ -906,35 +923,41 @@ namespace std {
   concept Container<typename C> @\textit{see below}@
   concept FrontInsertionContainer<typename C> @\textit{see below}@
   concept BackInsertionContainer<typename C> @\textit{see below}@
+  concept StackLikeContainer<typename C> @\textit{see below}@
+  concept QueueLikeContainer<typename C> @\textit{see below}@
   concept InsertionContainer<typename C> @\textit{see below}@
   concept RangeInsertionContainer<typename C, typename Iter> @\textit{see below}@
-  concept FrontEmplacementContainer<typename C, typename... Args> @\textit{see below}@
-  concept BackEmplacementContainer<typename C, typename... Args> @\textit{see below}@
-  concept EmplacementContainer<typename C, typename... Args> @\textit{see below}@
+  concept HasEmplaceBack<typename C, typename... Args> @\textit{see below}@
+  concept HasEmplaceFront<typename C, typename... Args> @\textit{see below}@
+  concept HasEmplace<typename C, typename... Args> @\textit{see below}@
 
   // \ref{container.concepts.member}, member container concepts
   auto concept MemberContainer<typename C> @\textit{see below}@
   auto concept MemberFrontInsertionContainer<typename C> @\textit{see below}@
   auto concept MemberBackInsertionContainer<typename C> @\textit{see below}@
+  auto concept MemberStackLikeContainer<typename C> @\textit{see below}@
+  auto concept MemberQueueLikeContainer<typename C> @\textit{see below}@
   auto concept MemberInsertionContainer<typename C> @\textit{see below}@
   auto concept MemberRangeInsertionContainer<typename C, typename Iter> @\textit{see below}@
-  auto concept MemberFrontEmplacementContainer<typename C, typename... Args> @\textit{see below}@
-  auto concept MemberBackEmplacementContainer<typename C, typename... Args> @\textit{see below}@
-  auto concept MemberEmplacementContainer<typename C, typename... Args> @\textit{see below}@
+  auto concept MemberHasEmplaceBack<typename C, typename... Args> @\textit{see below}@
+  auto concept MemberHasEmplaceFront<typename C, typename... Args> @\textit{see below}@
+  auto concept MemberHasEmplace<typename C, typename... Args> @\textit{see below}@
 
   // \mbox{\ref{container.concepts.maps}}, container concept maps
   template <MemberContainer C>              concept_map Container<C> @\textit{see below}@
   template <MemberFrontInsertionContainer C> concept_map FrontInsertionContainer<C> @\textit{see below}@
   template <MemberBackInsertionContainer C>  concept_map BackInsertionContainer<C> @\textit{see below}@
+  template <MemberStackLikeContainer C>  concept_map StackLikeContainer<C> @\textit{see below}@
+  template <MemberQueueLikeContainer C>  concept_map QueueLikeContainer<C> @\textit{see below}@
   template <MemberInsertionContainer C>      concept_map InsertionContainer<C> @\textit{see below}@
   template <MemberRangeInsertionContainer C, InputIterator Iter>
     concept_map RangeInsertionContainer<C, Iter> @\textit{see below}@
-  template <MemberFrontEmplacementContainer C, typename... Args> 
-    concept_map FrontEmplacementContainer<C, Args...> @\textit{see below}@
-  template <MemberBackEmplacementContainer C, typename... Args>  
-    concept_map BackEmplacementContainer<C, Args...> @\textit{see below}@
-  template <MemberEmplacementContainer C, typename... Args>
-    concept_map EmplacementContainer<C, Args...> @\textit{see below}@
+  template <MemberHasEmplaceFront C, typename... Args> 
+    concept_map HasEmplaceFront<C, Args...> @\textit{see below}@
+  template <MemberHasEmplaceBack C, typename... Args>  
+    concept_map HasEmplaceBack<C, Args...> @\textit{see below}@
+  template <MemberHasEmplace C, typename... Args>
+    concept_map HasEmplace<C, Args...> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<E[N]> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<const E[N]> @\textit{see below}@
 }
@@ -972,13 +995,19 @@ concept Container<typename C> {
         && IntegralType<size_type>
         && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
 
-  bool           empty(const C& c) { return begin(c) == end(c); }
-  size_type      size(const C& c)  { return std::distance(begin(c), end(c)); }
+  bool            empty(const C& c) { return begin(c) == end(c); }
+  size_type       size(const C& c)  { return distance(begin(c), end(c)); }
 
-  iterator       begin(C&);
-  const_iterator begin(const C&);
-  iterator       end(C&);
-  const_iterator end(const C&);
+  iterator        begin(C&);
+  const_iterator  begin(const C&);
+  iterator        end(C&);
+  const_iterator  end(const C&);
+  reference       front(C& c) { return *begin(c); } 
+  const_reference front(const C& c) { return *begin(c); }
+
+  axiom AccessFront(C c) {
+    if (begin(c) != end(c)) front(c) == *begin(c);
+  }  
 
   axiom ContainerSize(C c) {
     (begin(c) == end(c)) == empty(c);
@@ -1002,18 +1031,9 @@ concept Container<typename C> {
 
 \begin{itemdecl}
 concept FrontInsertionContainer<typename C> : Container<C> {
-  reference       front(C&); 
-  const_reference front(const C&);
-
   void push_front(C&, const value_type&);
-  void pop_front(C&);
-
-  axiom AccessFront(C c) {
-    if (begin(c) != end(c)) front(c) == *begin(c);
-  }  
 
   axiom FrontInsertion(C c, value_type x) {
-    c == (push_front(c, x), pop_front(c), c);
     x == (push_front(c, x), front(c));
   }
 }
@@ -1023,7 +1043,7 @@ concept FrontInsertionContainer<typename C> : Container<C> {
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by adding or removing elements from the front of the
+  modified by adding elements to the front of the
   sequence.}
 \end{itemdescr}
 
@@ -1033,15 +1053,32 @@ concept BackInsertionContainer<typename C> : Container<C> {
   const_reference back(const C&);
 
   void push_back(C&, const value_type&);
-  void pop_back(C&);
 
   requires BidirectionalIterator<iterator> axiom AccessBack(C c) {
     if (begin(c) != end(c)) back(c) == *(--end(c));
   }
 
   axiom BackInsertion(C c, value_type x) {
+    x == (push_back(c, x), back(c));
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding to the back of the
+  sequence.}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+concept StackLikeContainer<typename C> : BackInsertionContainer<C> {
+  void pop_back(C&);
+
+  axiom BackRemoval(C c, value_type x) {
     c == (push_back(c, x), pop_back(c), c);
-    x == (push_back(c), back(c));
   }
 }
 \end{itemdecl}
@@ -1054,6 +1091,20 @@ concept BackInsertionContainer<typename C> : Container<C> {
   sequence.}
 \end{itemdescr}
 
+
+\begin{itemdecl}
+concept QueueLikeContainer<typename C> : BackInsertionContainer<C> {
+  void pop_front(C&);
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container that can be
+  modified by adding elements to the back or removing elements from the front of the
+  sequence.}
+\end{itemdescr}
 
 \begin{itemdecl}
 concept InsertionContainer<typename C> : Container<C> {
@@ -1081,48 +1132,36 @@ concept RangeInsertionContainer<typename C, typename Iter> : InsertionContainer<
 \end{itemdescr}
 
 \begin{itemdecl}
-concept FrontEmplacementContainer<typename C, typename... Args> : FrontInsertionContainer<C> {
+concept HasEmplaceFront< C, typename... Args> {
   void emplace_front(C& c, Args... args);
-
-  axiom FrontEmplacement(C c, Args... args) {
-    c == (emplace_front(c, args...), pop_front(c), c);
-  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by placing a newly-constructed object at the front of the sequence.} 
+\addedConcepts{\mbox{\reallynote} describes types with an emplace_front operation } 
 \end{itemdescr}
 
 \begin{itemdecl}
-concept BackEmplacementContainer<typename C, typename... Args> : BackInsertionContainer<C> {
+concept HasEmplaceBack<typename C, typename... Args> {
   void emplace_back(C& c, Args... args);
-
-  axiom BackEmplacement(C c, Args... args) {
-    c == (emplace_back(c, args...), pop_back(c), c);
-  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by placing a newly-constructed object at the back of the sequence.} 
+\addedConcepts{\mbox{\reallynote} describes types with an emplace_back operation } 
 \end{itemdescr}
 
 \begin{itemdecl}
-concept EmplacementContainer<typename C, typename... Args> : InsertionContainer<C> {
+concept HasEmplace<typename C, typename... Args> {
   void emplace(C& c, const_iterator position, Args... args);
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container that can be
-  modified by placing a newly-constructed object at any position within 
-  the sequence.}
+\addedConcepts{\mbox{\reallynote} describes types with an emplace operation } 
 \end{itemdescr}
 
 \rSec3[container.concepts.member]{Member container concepts} 
@@ -1159,13 +1198,19 @@ auto concept MemberContainer<typename C> {
         && IntegralType<size_type>
         && Convertible<ForwardIterator<iterator>::difference_type, size_type>;
 
-  bool           C::empty() const { return  this->begin() == this->end(); }
-  size_type      C::size() const  { return std::distance(this->begin(), this->end()); }
+  bool            C::empty() const { return  this->begin() == this->end(); }
+  size_type       C::size() const  { return  distance(this->begin(), this->end()); }
 
-  iterator       C::begin();
-  const_iterator C::begin() const;
-  iterator       C::end();
-  const_iterator C::end() const;
+  iterator        C::begin();
+  const_iterator  C::begin() const;
+  iterator        C::end();
+  const_iterator  C::end() const;
+  reference       C::front() { return *this->begin(); }
+  const_reference C::front() const { return *this->begin(); }
+
+  axiom MemberAccessFront(C c) {
+    if (c.begin() != c.end()) c.front() == *c.begin();
+  }  
 
   axiom MemberContainerSize(C c) {
     (c.begin() == c.end()) == c.empty();
@@ -1187,18 +1232,9 @@ auto concept MemberContainer<typename C> {
 
 \begin{itemdecl}
 auto concept MemberFrontInsertionContainer<typename C> : MemberContainer<C> {
-  reference       C::front();
-  const_reference C::front() const;
-
   void C::push_front(const value_type&);
-  void C::pop_front();
-
-  axiom MemberAccessFront(C c) {
-    if (c.begin() != c.end()) c.front() == *c.begin();
-  }  
 
   axiom MemberFrontInsertion(C c, value_type x) {
-    c == (c.push_front(x), c.pop_front(), c); 
     x == (c.push_front(x), c.front());
   }
 }
@@ -1208,7 +1244,7 @@ auto concept MemberFrontInsertionContainer<typename C> : MemberContainer<C> {
 \pnum
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of
   member functions, that can be
-  modified by adding or removing elements from the front of the
+  modified by adding elements to the front of the
   container.}
 \end{itemdescr}
 
@@ -1218,14 +1254,12 @@ auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
   const_reference C::back() const;
 
   void C::push_back(const value_type&);
-  void C::pop_back();
 
   requires BidirectionalIterator<iterator> axiom MemberAccessBack(C c) {
     if (c.begin() != c.end()) c.back() == *(--c.end());
   }
 
   axiom MemberBackInsertion(C c, value_type x) {
-    c == (c.push_back(x), c.pop_back(), c);
     x == (c.push_back(x), c.back());
   }
 }
@@ -1235,7 +1269,40 @@ auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+  modified by adding elements to the back of the
+  container.}
+\end{itemdescr}
+
+\begin{itemdecl}
+auto concept MemberStackLikeContainer<typename C> : MemberBackInsertionContainer<C> {
+  void C::pop_back();
+
+  axiom MemberBackRemoval(C c, value_type x) {
+    c == (c.push_back(x), c.pop_back(), c);
+  }
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by adding or removing elements from the back of the
+  container.}
+\end{itemdescr}
+
+
+\begin{itemdecl}
+auto concept MemberQueueLikeContainer<typename C> : MemberBackInsertionContainer<C> {
+  void C::pop_front();
+}
+\end{itemdecl}
+
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
+  modified by adding elements to the back or removing elements from the front of the
   container.}
 \end{itemdescr}
 
@@ -1265,48 +1332,39 @@ concept MemberRangeInsertionContainer<typename C, typename Iter> : MemberInserti
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : MemberFrontInsertionContainer<C> {
+auto concept MemberHasEmplaceFront<typename C, typename... Args> {
   void C::emplace_front(Args... args);
-
-  axiom MemberFrontEmplacement(C c, Args... args) {
-    c == (c.emplace_front(args...), c.pop_front(), c);
-  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
-  modified by placing a newly-constructed object at the front of the sequence.} 
+\addedConcepts{\mbox{\reallynote} describes a type that has a member
+  function named emplace_front } 
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberBackEmplacementContainer<typename C, typename... Args> : MemberBackInsertionContainer<C> {
+auto concept MemberHasEmplaceBack<typename C, typename... Args> {
   void C::emplace_back(Args... args);
-
-  axiom MemberFrontEmplacement(C c, Args... args) {
-    c == (c.emplace_back(args...), c.pop_back(), c);
-  }
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
-  modified by placing a newly-constructed object at the back of the sequence.} 
+\addedConcepts{\mbox{\reallynote} describes a type that has a member
+  function named emplace_back } 
 \end{itemdescr}
 
 \begin{itemdecl}
-auto concept MemberEmplacementContainer<typename C, typename... Args> : MemberInsertionContainer<C> {
+auto concept MemberHasEmplace<typename C, typename... Args> {
   void C::emplace(const_iterator position, Args... args);
 }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
-  modified by placing a newly-constructed object at any position within 
-  the sequence.}
+\addedConcepts{\mbox{\reallynote} describes a type that has a member
+  function named emplace } 
 \end{itemdescr}
 
 \rSec3[container.concepts.maps]{Container concept maps}
@@ -1331,13 +1389,15 @@ concept_map Container<C> {
   typedef C::iterator        iterator;
   typedef C::const_iterator  const_iterator;
 
-  bool           empty(const C& c) { return c.empty(); }
-  size_type      size(const C& c)  { return c.size(); }
+  bool            empty(const C& c) { return c.empty(); }
+  size_type       size(const C& c)  { return c.size(); }
 
-  iterator       begin(C& c)       { return c.begin(); }
-  const_iterator begin(const C& c) { return c.begin(); }
-  iterator       end(C& c)         { return c.end(); }
-  const_iterator end(const C& c)   { return c.end(); }
+  iterator        begin(C& c)       { return c.begin(); }
+  const_iterator  begin(const C& c) { return c.begin(); }
+  iterator        end(C& c)         { return c.end(); }
+  const_iterator  end(const C& c)   { return c.end(); }
+  reference       front(C& c)       { return c.front(); }
+  const_reference front(const C& c) { return c.front(); }
 }
 \end{itemdecl}
 
@@ -1351,14 +1411,7 @@ concept_map Container<C> {
 \begin{itemdecl}
 template <MemberFrontInsertionContainer C> 
 concept_map FrontInsertionContainer<C> {
-  typedef Container<C>::reference       reference;
-  typedef Container<C>::const_reference const_reference;
-
-  reference       front(C& c)        { return c.front(); }
-  const_reference front(const C& c)  { return c.front(); }
-
   void push_front(C& c, const Container<C>::value_type &v)   { c.push_front(v); }
-  void pop_front(C& c)                                       { c.pop_front(); }
 }			
 \end{itemdecl}
 
@@ -1379,7 +1432,6 @@ concept_map BackInsertionContainer<C> {
   const_reference back(const C& c)  { return c.back(); }
 
   void push_back(C& c, const Container<C>::value_type &v)    { c.push_back(v); }
-  void pop_back(C& c)                                        { c.pop_back(); }
 }			
 \end{itemdecl}
 
@@ -1388,6 +1440,34 @@ concept_map BackInsertionContainer<C> {
 \addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
   member function syntax for each of its operations, to the}
   \\\addedConcepts{\mbox{\tcode{BackInsertionContainer}} concept.}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <MemberStackLikeContainer C> 
+concept_map StackLikeContainer<C> {
+    void pop_back(C& c)  { c.pop_back(); }
+}			
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
+  member function syntax for each of its operations, to the}
+  \\\addedConcepts{\mbox{\tcode{StackLikeContainer}} concept.}
+\end{itemdescr}
+
+\begin{itemdecl}
+template <MemberQueueLikeContainer C> 
+concept_map QueueLikeContainer<C> {
+    void pop_front(C& c)  { c.pop_front(); }
+}			
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} Adapts an existing container, which uses
+  member function syntax for each of its operations, to the}
+  \\\addedConcepts{\mbox{\tcode{QueueLikeContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1421,49 +1501,50 @@ concept_map RangeInsertionContainer<C, Iter> {
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberFrontEmplacementContainer C, typename... Args> 
-  concept_map FrontEmplacementContainer<C, Args...> {
+template <MemberHasEmplaceFront C, typename... Args> 
+  concept_map HasEmplaceFront<C, Args...> {
     void emplace_front(C& c, Args... args) 
-    { c.emplace_front(std::forward<Args>(args)...); }
+    { c.emplace_front(forward<Args>(args)...); }
   }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\reallynote} Adapts an existing front-emplace container, which uses
-  member function syntax for each of its operations, to the}
-  \addedConcepts{\mbox{\tcode{FrontEmplacementContainer}} concept.}
+\addedConcepts{\mbox{\reallynote} Adapts an existing type with an
+  \mbox{\tcode{emplace_front}} member function to model the}
+  \addedConcepts{\mbox{\tcode{HasEmplaceFront}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberBackEmplacementContainer C, typename... Args> 
-  concept_map BackEmplacementContainer<C, Args...> {
+template <MemberHasEmplaceBack C, typename... Args> 
+  concept_map HasEmplaceBack<C, Args...> {
     void emplace_back(C& c, Args... args) 
-    { c.emplace_back(std::forward<Args>(args)...); }
+    { c.emplace_back(forward<Args>(args)...); }
   }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\reallynote} Adapts an existing back-emplace container, which uses
-  member function syntax for each of its operations, to the}
-  \addedConcepts{\mbox{\tcode{BackEmplacementContainer}} concept.}
+\addedConcepts{\mbox{\reallynote} Adapts an existing type with an
+  \mbox{\tcode{emplace_back}} member function to model the}
+  \addedConcepts{\mbox{\tcode{HasEmplaceBack}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
-template <MemberEmplacementContainer C, typename... Args> 
-  concept_map EmplacementContainer<C, Args...> {
+template <MemberHasEmplace C, typename... Args> 
+  concept_map HasEmplace<C, Args...> {
     void emplace(C& c, Container<C>::const_iterator position, Args... args) 
-    { c.emplace(position, std::forward<Args>(args)...); }
+    { c.emplace(position, forward<Args>(args)...); }
   }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
-\addedConcepts{\mbox{\reallynote} Adapts an existing emplace container, which uses
-  member function syntax for each of its operations, to the}
-  \\\addedConcepts{\mbox{\tcode{EmplacementContainer}} concept.}
+\addedConcepts{\mbox{\reallynote} Adapts an existing type with an
+  \mbox{\tcode{emplace}} member function to model the}
+  \addedConcepts{\mbox{\tcode{HasEmplace}} concept.}
 \end{itemdescr}
+
 
 \begin{itemdecl}
 template <typename E, size_t N>
@@ -1645,7 +1726,7 @@ namespace std {
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ValueType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
-    @\addedConcepts{requires FrontInsertionContainer<Cont> \&\& BackInsertionContainer<Cont>}@
+    @\addedConcepts{requires QueueLikeContainer<Cont>}@
           @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class queue;
@@ -1668,7 +1749,7 @@ namespace std {
   template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>&& y);
 
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{{class}}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
           @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
@@ -1688,7 +1769,7 @@ namespace std {
 
 \begin{codeblock} 
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
     @\addedConcepts{requires SameType<Cont::value_type, T>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class stack;
@@ -1796,8 +1877,8 @@ namespace std {
     typedef size_t                                size_type;
     typedef ptrdiff_t                             difference_type;
     typedef T                                     value_type;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     T       elems[N];           // \expos
 
@@ -2020,8 +2101,8 @@ namespace std {
     typedef Alloc@\removedConcepts{ator}@                             allocator_type;
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     // \ref{deque.cons} construct/copy/destroy:
     explicit deque(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
@@ -2692,7 +2773,7 @@ template <class... Args>
 
 \begin{itemdescr}
 \pnum
-\effects Inserts an object of type \tcode{value_type} constructed with \tcode{value_type(std::forward<Args>(args)...)} at the beginning of the list.
+\effects Inserts an object of type \tcode{value_type} constructed with \tcode{value_type(forward<Args>(args)...)} at the beginning of the list.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -2780,7 +2861,7 @@ template <class... Args>
 \requires \tcode{position} is dereferenceable or equal to \tcode{before_begin()}.
 
 \pnum
-\effects Inserts an object of type \tcode{value_type} constructed with \tcode{value_type(std::forward<Args>(args)...)} after \tcode{position}.
+\effects Inserts an object of type \tcode{value_type} constructed with \tcode{value_type(forward<Args>(args)...)} after \tcode{position}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -3032,8 +3113,8 @@ namespace std {
     typedef Alloc@\removedConcepts{ator}@                             allocator_type;
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     // \ref{list.cons} construct/copy/destroy:
     explicit list(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
@@ -3781,7 +3862,7 @@ can be used.
 \begin{codeblock}
 namespace std {
   template <@\changedConcepts{class}{ValueType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
-  @\addedConcepts{requires FrontInsertionContainer<Cont> \&\& BackInsertionContainer<Cont>}@
+  @\addedConcepts{requires QueueLikeContainer<Cont>}@
         @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class queue {
@@ -3797,7 +3878,7 @@ namespace std {
   public:
     @\addedConcepts{requires CopyConstructible<Cont>}@ explicit queue(const Cont@\removedConcepts{ainer}@&);
     @\addedConcepts{requires MoveConstructible<Cont>}@ explicit queue(Cont@\removedConcepts{ainer}@&& = Cont@\removedConcepts{ainer}@());
-    @\addedConcepts{requires MoveConstructible<Cont>}@ queue(queue&& q) : c(std::move(q.c)) {}
+    @\addedConcepts{requires MoveConstructible<Cont>}@ queue(queue&& q) : c(move(q.c)) {}
     template <class Alloc> 
       @\addedConcepts{requires Constructible<Cont, const Alloc\&>}@
       explicit queue(const Alloc&);
@@ -3811,7 +3892,7 @@ namespace std {
       @\addedConcepts{requires Constructible<Cont, Cont\&\&, const Alloc\&>}@
       queue(queue&&, const Alloc&);
     @\addedConcepts{requires MoveAssignable<Cont>}@ queue& operator=(queue&& q)
-                                        { c = std::move(q.c); return *this; }
+                                        { c = move(q.c); return *this; }
 
     bool              empty() const     { return @\removedConcepts{c.}@empty(@\addedConcepts{c}@); }
     size_type         size()  const     { return @\removedConcepts{c.}@size(@\addedConcepts{c}@); }
@@ -3820,11 +3901,11 @@ namespace std {
     reference         back()            { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
     const_reference   back() const      { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
     void push(const value_type& x)      { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x); }
-    void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x)); }
+    void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@move(x)); }
     template <class... Args> 
-      @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
+      @\addedConcepts{requires HasEmplaceBack<Cont, Args\&\&...>}@
       void emplace(Args&&... args)
-      { @\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@std::forward<Args>(args)...); }
+      { @\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@forward<Args>(args)...); }
     void pop()                          { @\removedConcepts{c.}@pop_front(@\addedConcepts{c}@); }    
     @\addedConcepts{requires Swappable<Cont>}@
       void swap(queue&& q)              { @\removedConcepts{c.}@swap(@\addedConcepts{c, }@q.c); }
@@ -3987,7 +4068,7 @@ object defines a strict weak ordering (\ref{alg.sorting}).
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
             @\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
         @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
@@ -4039,7 +4120,7 @@ namespace std {
     void push(const value_type& x);
     void push(value_type&& x);
     template <class... Args> 
-      @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
+      @\addedConcepts{requires HasEmplaceBack<Cont, Args\&\&...>}@
       void emplace(Args&&... args);
     void pop();
     @\addedConcepts{requires Swappable<Cont>}@
@@ -4148,7 +4229,7 @@ void push(value_type&& x);
 \pnum
 \effects
 \begin{codeblock}
-@\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x));
+@\removedConcepts{c.}@push_back(@\addedConcepts{c, }@move(x));
 push_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.}@end(@\addedConcepts{c}@), comp);
 \end{codeblock}
 \end{itemdescr}
@@ -4156,14 +4237,14 @@ push_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.
 \index{emplace@\tcode{emplace}!\tcode{priority_queue}}%
 \begin{itemdecl}
 template <class... Args> 
-  @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
+  @\addedConcepts{requires HasEmplaceBack<Cont, Args\&\&...>}@
   void emplace(Args&&... args);
 \end{itemdecl}
 \begin{itemdescr}
 \pnum
 \effects
 \begin{codeblock}
-@\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@std::forward<Args>(args)...);
+@\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@forward<Args>(args)...);
 push_heap(@\removedConcepts{c.}@begin(@\addedConcepts{c}@), @\removedConcepts{c.}@end(@\addedConcepts{c}@), comp);
 \end{codeblock}
 \end{itemdescr}
@@ -4224,7 +4305,7 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires SameType<Cont::value_type, T>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class stack {
@@ -4258,11 +4339,11 @@ namespace std {
     reference         top()             { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
     const_reference   top() const       { return @\removedConcepts{c.}@back(@\addedConcepts{c}@); }
     void push(const value_type& x)      { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@x); }
-    void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@std::move(x)); }
+    void push(value_type&& x)           { @\removedConcepts{c.}@push_back(@\addedConcepts{c, }@move(x)); }
     template <class... Args> 
-      @\addedConcepts{requires BackEmplacementContainer<Cont, Args\&\&...>}@
+      @\addedConcepts{requires HasEmplaceBack<Cont, Args\&\&...>}@
       void emplace(Args&&... args)
-      { @\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@std::forward<Args>(args)...); }
+      { @\removedConcepts{c.}@emplace_back(@\addedConcepts{c, }@forward<Args>(args)...); }
     void pop()                          { @\removedConcepts{c.}@pop_back(@\addedConcepts{c}@); }
     @\addedConcepts{requires Swappable<Cont>}@
       void swap(stack&& s)              { @\removedConcepts{c.}@swap(@\addedConcepts{c, }@s.c); }
@@ -4442,8 +4523,8 @@ namespace std {
     typedef Alloc@\removedConcepts{ator}@                             allocator_type;
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     // \ref{vector.cons} construct/copy/destroy:
     explicit vector(const Alloc@\removedConcepts{ator}@& = Alloc@\removedConcepts{ator}@());
@@ -4970,8 +5051,8 @@ namespace std {
     typedef Alloc@\removedConcepts{ator}@                             allocator_type;
     typedef @\impdef@                pointer;
     typedef @\impdef@                const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     // bit reference:
     class reference {
@@ -5317,8 +5398,8 @@ namespace std {
     typedef @\impdef@                difference_type;// See \ref{container.requirements}
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     class value_compare
       : public binary_function<value_type,value_type,bool> {
@@ -5579,7 +5660,7 @@ logarithmic.
 \pnum
 \effects
 If there is no key equivalent to \tcode{x} in the map, inserts
-\tcode{value_type(std::move(x), T())}
+\tcode{value_type(move(x), T())}
 into the map.
 
 \pnum
@@ -5786,8 +5867,8 @@ namespace std {
     typedef @\impdef@                difference_type;// See \ref{container.requirements}
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     class value_compare
       : public binary_function<value_type,value_type,bool> {
@@ -6150,8 +6231,8 @@ namespace std {
     typedef @\impdef@                difference_type;// See \ref{container.requirements}
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     // \ref{set.cons} construct/copy/destroy:
     explicit set(const Compare& comp = Compare(),
@@ -6429,8 +6510,8 @@ namespace std {
     typedef @\impdef@                difference_type;// See \ref{container.requirements}
     typedef typename Alloc@\removedConcepts{ator}@::pointer           pointer;
     typedef typename Alloc@\removedConcepts{ator}@::const_pointer     const_pointer;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef reverse_iterator<iterator>       reverse_iterator;
+    typedef reverse_iterator<const_iterator> const_reverse_iterator;
 
     // construct/copy/destroy:
     explicit multiset(const Compare& comp = Compare(),
@@ -6656,8 +6737,8 @@ namespace std {
   template <@\changedConcepts{class}{ValueType}@ Key,
             @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
-            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = equal_to<Key>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<pair<const Key, T> > >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
           @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -6671,8 +6752,8 @@ namespace std {
   template <@\changedConcepts{class}{ValueType}@ Key,
             @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
-            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = equal_to<Key>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<pair<const Key, T> > >
     @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
           @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -6713,8 +6794,8 @@ namespace std {
   // \ref{unord.set}, class template unordered_set:
   template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
-            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = equal_to<Value>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<Value> >
     @\addedConcepts{requires NothrowDestructible<Value>}@
           @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -6727,8 +6808,8 @@ namespace std {
   // \ref{unord.multiset}, class template unordered_multiset:
   template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
-            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = equal_to<Value>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<Value> >
     @\addedConcepts{requires NothrowDestructible<Value>}@
           @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
           @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -6773,7 +6854,7 @@ key value) and that associates values of another type
 \tcode{mapped_type} with the keys.
 
 \pnum
-An \tcode{unordered_map} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for unique keys; that is, an \tcode{unordered_map} supports the \tcode{a_uniq} operations in that table, not the \tcode{a_eq} operations. For an \tcode{unordered_map<Key, T>} the \tcode{key type} is \tcode{Key}, the mapped type is \tcode{T}, and the value type is \tcode{std::pair<const Key, T>}.
+An \tcode{unordered_map} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for unique keys; that is, an \tcode{unordered_map} supports the \tcode{a_uniq} operations in that table, not the \tcode{a_eq} operations. For an \tcode{unordered_map<Key, T>} the \tcode{key type} is \tcode{Key}, the mapped type is \tcode{T}, and the value type is \tcode{pair<const Key, T>}.
 
 \pnum
 This section only describes operations on \tcode{unordered_map} that
@@ -6786,8 +6867,8 @@ namespace std {
   template <@\changedConcepts{class}{ValueType}@ Key,
             @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
-            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = equal_to<Key>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<pair<const Key, T> > >
   @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
         @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -6800,7 +6881,7 @@ namespace std {
   public:
     // types
     typedef Key                                      key_type;
-    typedef std::pair<const Key, T>                  value_type;
+    typedef pair<const Key, T>                  value_type;
     typedef T                                        mapped_type;
     typedef Hash                                     hasher;
     typedef Pred                                     key_equal;
@@ -6875,7 +6956,7 @@ namespace std {
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace_hint(const_iterator position, Args&&... args);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@
-      @\removedConcepts{std::}@pair<iterator, bool> insert(const value_type& obj);
+      @\removedConcepts{}@pair<iterator, bool> insert(const value_type& obj);
     @\addedConcepts{template <class P>}@
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, P\&\&> \&\& MoveConstructible<value_type>}@
       @\addedConcepts{pair<iterator, bool> insert(P\&\& obj);}@
@@ -6905,8 +6986,8 @@ namespace std {
     iterator       find(const key_type& k);
     const_iterator find(const key_type& k) const;
     size_type count(const key_type& k) const;
-    std::pair<iterator, iterator>             equal_range(const key_type& k);
-    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+    pair<iterator, iterator>             equal_range(const key_type& k);
+    pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const key_type\&, mapped_type\&\&>}@
           @\addedConcepts{\&\& ConstructibleAsElement<Alloc, mapped_type>}@
@@ -7018,10 +7099,10 @@ inserts elements from the range \tcode{[\textit{f}, \textit{l})}.
 \effects\ If the \tcode{unordered_map} does not already contain
 an element whose key is equivalent to \tcode{\textit{k}}, inserts 
 the value
-\tcode{std::pair<const key_type, mapped_type>(k, mapped_type())}
+\tcode{pair<const key_type, mapped_type>(k, mapped_type())}
 \addedConcepts{or
-\mbox{\tcode{std::pair<const key_type,}}}\\
-\addedConcepts{\mbox{\tcode{mapped_type>(std::move(k), mapped_type())}}, respectively}.
+\mbox{\tcode{pair<const key_type,}}}\\
+\addedConcepts{\mbox{\tcode{mapped_type>(move(k), mapped_type())}}, respectively}.
 
 \pnum
 \returns\ A reference to \tcode{x.second}, where \tcode{x}
@@ -7074,7 +7155,7 @@ multiple copies of each key value) and that associates values of
 another type \tcode{mapped_type} with the keys.
 
 \pnum
-An \tcode{unordered_multimap} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for equivalent keys; that is, an \tcode{unordered_multimap} supports the \tcode{a_eq} operations in that table, not the \tcode{a_uniq} operations. For an \tcode{unordered_multimap<Key, T>} the \tcode{key type} is \tcode{Key}, the mapped type is \tcode{T}, and the value type is \tcode{std::pair<const Key, T>}.
+An \tcode{unordered_multimap} satisfies all of the requirements of a container, of an unordered associative container, and of an allocator-aware container (Table~\ref{tab:containers.allocatoraware}). It provides the operations described in the preceding requirements table for equivalent keys; that is, an \tcode{unordered_multimap} supports the \tcode{a_eq} operations in that table, not the \tcode{a_uniq} operations. For an \tcode{unordered_multimap<Key, T>} the \tcode{key type} is \tcode{Key}, the mapped type is \tcode{T}, and the value type is \tcode{pair<const Key, T>}.
 
 \pnum
 This section only describes operations on \tcode{unordered_multimap}
@@ -7087,8 +7168,8 @@ namespace std {
   template <@\changedConcepts{class}{ValueType}@ Key,
             @\changedConcepts{class}{ValueType}@ T,
             @\changedConcepts{class}{Callable<auto, const Key\&>}@ Hash = hash<Key>,
-            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = std::equal_to<Key>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<std::pair<const Key, T> > >
+            @\changedConcepts{class}{Predicate<auto, Key, Key>}@ Pred = equal_to<Key>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<pair<const Key, T> > >
   @\addedConcepts{requires NothrowDestructible<Key> \&\& NothrowDestructible<T>}@
         @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -7101,7 +7182,7 @@ namespace std {
   public:
     // types
     typedef Key                                      key_type;
-    typedef std::pair<const Key, T>                  value_type;
+    typedef pair<const Key, T>                  value_type;
     typedef T                                        mapped_type;
     typedef Hash                                     hasher;
     typedef Pred                                     key_equal;
@@ -7207,8 +7288,8 @@ namespace std {
     iterator       find(const key_type& k);
     const_iterator find(const key_type& k) const;
     size_type count(const key_type& k) const;
-    std::pair<iterator, iterator>             equal_range(const key_type& k);
-    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+    pair<iterator, iterator>             equal_range(const key_type& k);
+    pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 
     // bucket interface
     size_type bucket_count() const;
@@ -7337,8 +7418,8 @@ is additional semantic information.
 namespace std {
   template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
-            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = equal_to<Value>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<Value> >
   @\addedConcepts{requires NothrowDestructible<Value>}@
         @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -7425,7 +7506,7 @@ namespace std {
       @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, Args\&\&...>}@
       iterator emplace_hint(const_iterator position, Args&&... args);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
-      @\removedConcepts{std::}@pair<iterator, bool> insert(const value_type& obj);
+      @\removedConcepts{}@pair<iterator, bool> insert(const value_type& obj);
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, value_type\&\&>}@ 
       @\addedConcepts{pair<iterator, bool> insert(value_type\&\& obj);}@
     @\addedConcepts{requires ConstructibleAsElement<Alloc, value_type, const value_type\&>}@ 
@@ -7454,8 +7535,8 @@ namespace std {
     iterator       find(const key_type& k);
     const_iterator find(const key_type& k) const;
     size_type count(const key_type& k) const;
-    std::pair<iterator, iterator>             equal_range(const key_type& k);
-    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+    pair<iterator, iterator>             equal_range(const key_type& k);
+    pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 
     // bucket interface
     size_type bucket_count() const;
@@ -7583,8 +7664,8 @@ is additional semantic information.
 namespace std {
   template <@\changedConcepts{class}{ValueType}@ Value,
             @\changedConcepts{class}{Callable<auto, const Value\&>}@ Hash = hash<Value>,
-            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = std::equal_to<Value>,
-            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = std::allocator<Value> >
+            @\changedConcepts{class}{Predicate<auto, Value, Value>}@ class Pred = equal_to<Value>,
+            @\changedConcepts{class}{RandomAccessAllocator}@ Alloc = allocator<Value> >
   @\addedConcepts{requires NothrowDestructible<Value>}@
         @\addedConcepts{\&\& SameType<Hash::result_type, size_t>}@
         @\addedConcepts{\&\& CopyConstructible<Hash> \&\& CopyConstructible<Pred>}@
@@ -7700,8 +7781,8 @@ namespace std {
     iterator       find(const key_type& k);
     const_iterator find(const key_type& k) const;
     size_type count(const key_type& k) const;
-    std::pair<iterator, iterator>             equal_range(const key_type& k);
-    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+    pair<iterator, iterator>             equal_range(const key_type& k);
+    pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 
     // bucket interface
     size_type bucket_count() const;
