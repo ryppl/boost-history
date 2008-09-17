@@ -36,7 +36,7 @@ class ascending_cursor;
 template <class Cursor>
 typename ascending::iterator< ascending_cursor<Cursor> >::difference_type
 distance(ascending::iterator< ascending_cursor<Cursor> > iter1
-	   , ascending::iterator< ascending_cursor<Cursor> > iter2);
+       , ascending::iterator< ascending_cursor<Cursor> > iter2);
 
 template <class DescendingCursor> 
 class ascending_cursor
@@ -47,32 +47,32 @@ class ascending_cursor
     > {
  private:
     struct enabler {};
-	typedef ascending_cursor<DescendingCursor> self_type;
+    typedef ascending_cursor<DescendingCursor> self_type;
  public:
-  	typedef typename DescendingCursor::value_type value_type;
+      typedef typename DescendingCursor::value_type value_type;
 
-	// Container-specific:
-	typedef typename DescendingCursor::size_type size_type;
+    // Container-specific:
+    typedef typename DescendingCursor::size_type size_type;
 
-	// DescendingCursor-specific
- 	typedef ascending_cursor<DescendingCursor> cursor;
- 	typedef ascending_cursor<typename DescendingCursor::const_cursor> const_cursor;
-	
-	// Container-specific:
-	typedef cursor iterator;
-	typedef const_cursor const_iterator;
-	
-	template <class OtherCursor>
-	struct rebind {
-		typedef ascending_cursor<OtherCursor> other;
-	};
-	
+    // DescendingCursor-specific
+     typedef ascending_cursor<DescendingCursor> cursor;
+     typedef ascending_cursor<typename DescendingCursor::const_cursor> const_cursor;
+    
+    // Container-specific:
+    typedef cursor iterator;
+    typedef const_cursor const_iterator;
+    
+    template <class OtherCursor>
+    struct rebind {
+        typedef ascending_cursor<OtherCursor> other;
+    };
+    
     ascending_cursor()
       : m_s() {}
 
     explicit ascending_cursor(DescendingCursor c)
     {
-    	m_s.push(c); // Subtree root.
+        m_s.push(c); // Subtree root.
     }
 
     template <class OtherCursor>
@@ -85,44 +85,44 @@ class ascending_cursor
     )
       : m_s(other.m_s) {}
 
-	struct root_tracker {
-		root_tracker() {}
-		root_tracker& operator++()
-		{
-			return *this;
-		}
-		
-		root_tracker& operator--()
-		{
-			return *this;
-		}
-		
-		bool is_root(cursor c)
-		{
-			return (c.is_root());
-		} 
-	};
+    struct root_tracker {
+        root_tracker() {}
+        root_tracker& operator++()
+        {
+            return *this;
+        }
+        
+        root_tracker& operator--()
+        {
+            return *this;
+        }
+        
+        bool is_root(cursor c)
+        {
+            return (c.is_root());
+        } 
+    };
 
  private: 
 
- 	friend class boost::iterator_core_access;
+     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
     
     friend class root_tracking_cursor<self_type>;
     
 //    friend 
-//    	typename ascending::iterator<self_type>::difference_type 
-//    	boost::tree::distance<>(
-//    		boost::tree::ascending::iterator<self_type> 
-//	      , boost::tree::ascending::iterator<self_type>);
+//        typename ascending::iterator<self_type>::difference_type 
+//        boost::tree::distance<>(
+//            boost::tree::ascending::iterator<self_type> 
+//          , boost::tree::ascending::iterator<self_type>);
     
- 	std::stack<DescendingCursor> m_s; // pimpl?
- 	
+     std::stack<DescendingCursor> m_s; // pimpl?
+     
     value_type& dereference() const
-	{
-		return *m_s.top();
-	}
-	
+    {
+        return *m_s.top();
+    }
+    
     bool equal(cursor const& other) const
     {
         return (this->m_s == other.m_s);
@@ -130,123 +130,123 @@ class ascending_cursor
     
     void increment()
     {
-		++m_s.top();
+        ++m_s.top();
     }
     
     void decrement()
     {
-		--m_s.top();
+        --m_s.top();
     }    
     
-	void advance(typename ascending_cursor::cursor_facade_::difference_type n)
+    void advance(typename ascending_cursor::cursor_facade_::difference_type n)
     {
-    		m_s.top() += n;
+            m_s.top() += n;
     }
     
     typename ascending_cursor::cursor_facade_::difference_type
     distance_to(ascending_cursor z) const //FIXME: convertible to instead of ascending_cursor
     {
-    		return (z.m_s.top() - this->m_s.top());
+            return (z.m_s.top() - this->m_s.top());
     }
     
-	// Container specific
-	bool const empty_() const
-	{
-		return m_s.top().empty();
-	}
-	
-	size_type size_()
-	{
-		return m_s.top().size();
-	}
-	
-	size_type max_size_()
-	{
-		return m_s.top().max_size();
-	}
-	
-	size_type const par() const
-	{
-		return m_s.top().parity();
-	}
+    // Container specific
+    bool const empty_() const
+    {
+        return m_s.top().empty();
+    }
+    
+    size_type size_()
+    {
+        return m_s.top().size();
+    }
+    
+    size_type max_size_()
+    {
+        return m_s.top().max_size();
+    }
+    
+    size_type const par() const
+    {
+        return m_s.top().parity();
+    }
 
-	void left()
-	{
-		m_s.push(m_s.top().begin());
-	}
+    void left()
+    {
+        m_s.push(m_s.top().begin());
+    }
 
-	void right()
-	{
-		m_s.push(m_s.top().end());
-	}
+    void right()
+    {
+        m_s.push(m_s.top().end());
+    }
 
-	// This is what actually makes it an AscendingCursor
-	void up()
-	{
-		m_s.pop();
-	}
+    // This is what actually makes it an AscendingCursor
+    void up()
+    {
+        m_s.pop();
+    }
 };
 
 template <class Cursor>
 inline ascending_cursor<Cursor> make_ascending_cursor(Cursor c)
 {
-	return ascending_cursor<Cursor>(c);
+    return ascending_cursor<Cursor>(c);
 }
 
 /// Specialization
 template <class Cursor>
 typename ascending::iterator< ascending_cursor<Cursor> >::difference_type
 distance(ascending::iterator< ascending_cursor<Cursor> > iter1
-	   , ascending::iterator< ascending_cursor<Cursor> > iter2)
+       , ascending::iterator< ascending_cursor<Cursor> > iter2)
 {
-	return ascending_cursor<Cursor>(iter2).m_s.size() 
-		 - ascending_cursor<Cursor>(iter1).m_s.size();
+    return ascending_cursor<Cursor>(iter2).m_s.size() 
+         - ascending_cursor<Cursor>(iter1).m_s.size();
 }
 
 template <class Cursor> 
 class root_tracking_cursor< ascending_cursor<Cursor> >
 : public cursor_adaptor<root_tracking_cursor< ascending_cursor<Cursor> >
-					  , ascending_cursor<Cursor> 
-					  , boost::use_default
-					  , typename cursor_horizontal_traversal<
-					  		ascending_cursor<Cursor> >::type
-					  , bidirectional_traversal_tag
+                      , ascending_cursor<Cursor> 
+                      , boost::use_default
+                      , typename cursor_horizontal_traversal<
+                              ascending_cursor<Cursor> >::type
+                      , bidirectional_traversal_tag
     > {
  private:
     struct enabler {};
-	typedef root_tracking_cursor< ascending_cursor<Cursor> > self_type;
+    typedef root_tracking_cursor< ascending_cursor<Cursor> > self_type;
  public:
-  	typedef typename ascending_cursor<Cursor>::value_type value_type;
+      typedef typename ascending_cursor<Cursor>::value_type value_type;
 
-	// Container-specific:
-	typedef typename ascending_cursor<Cursor>::size_type size_type;
+    // Container-specific:
+    typedef typename ascending_cursor<Cursor>::size_type size_type;
 
-	// Cursor-specific
- 	typedef root_tracking_cursor< ascending_cursor<Cursor> > cursor;
- 	typedef root_tracking_cursor< 
- 		typename ascending_cursor<Cursor>::const_cursor > const_cursor;
-	
-	// Container-specific:
-	typedef cursor iterator;
-	typedef const_cursor const_iterator;
-	
-	template <class OtherCursor>
-	struct rebind {
-		typedef root_tracking_cursor< ascending_cursor<OtherCursor> > other;
-	};
-	
+    // Cursor-specific
+     typedef root_tracking_cursor< ascending_cursor<Cursor> > cursor;
+     typedef root_tracking_cursor< 
+         typename ascending_cursor<Cursor>::const_cursor > const_cursor;
+    
+    // Container-specific:
+    typedef cursor iterator;
+    typedef const_cursor const_iterator;
+    
+    template <class OtherCursor>
+    struct rebind {
+        typedef root_tracking_cursor< ascending_cursor<OtherCursor> > other;
+    };
+    
     root_tracking_cursor()
     : root_tracking_cursor::cursor_adaptor_(), m_root_depth(1) {}
 
     explicit root_tracking_cursor(ascending_cursor<Cursor> c)
-	: root_tracking_cursor::cursor_adaptor_(c), m_root_depth(c.m_s.size()) {}
+    : root_tracking_cursor::cursor_adaptor_(c), m_root_depth(c.m_s.size()) {}
 
     template <class OtherCursor>
     root_tracking_cursor(
         root_tracking_cursor< ascending_cursor<OtherCursor> > const& other
       , typename boost::enable_if<
             boost::is_convertible<ascending_cursor<OtherCursor>*
-            					, ascending_cursor<Cursor>*>
+                                , ascending_cursor<Cursor>*>
           , enabler
         >::type = enabler()
     )
@@ -254,20 +254,20 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
     , m_root_depth(other.base().m_s.size()) {}
 
  private: 
- 	std::size_t const m_root_depth;
- 	
- 	friend class boost::iterator_core_access;
+     std::size_t const m_root_depth;
+     
+     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
- 		
+         
 //    bool equal(cursor const& other) const
 //    {
 //    }
 
 public:
-	bool is_root() const
-	{
-		return this->base().m_s.size() == m_root_depth;
-	}
+    bool is_root() const
+    {
+        return this->base().m_s.size() == m_root_depth;
+    }
 };
 
 

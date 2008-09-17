@@ -29,7 +29,7 @@
 template <class AscendingCursor>
 typename AscendingCursor::size_type parity(AscendingCursor& cur)
 {
-	return std::distance(cur.parent().begin(), cur);
+    return std::distance(cur.parent().begin(), cur);
 }
 
 #endif // BOOST_TREE_ALGORITHM_HPP
