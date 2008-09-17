@@ -82,6 +82,12 @@ Bloomington, IN\ \  47405 \\
     pair<U, V>\&)}. The operator is not present in the current working
   paper, which means that one could end up moving from pair lvalues
   (thanks to Alisdair Meredith for reporting this issue).
+\item Removed the redundant \tcode{pair} constructor \tcode{pair(U\&\&, V\&\&)}.
+\item Removed note in [tuple.cnstr]p15 about using \tcode{enable_if}.
+\item Changed the concept constraint on the \tcode{tuple_element} and
+  \tcode{tuple_size} primary class templates from \tcode{ObjectType}
+  to \tcode{IdentityOf}, to allow for non-object types to act like
+  tuples.
 \end{itemize}
 
 \end{titlepage}
@@ -194,8 +200,8 @@ namespace std {
     pair<V1, V2> make_pair(T1&&, T2&&);
 
   // \ptr\ref{pairs}, tuple-like access to pair:
-  template <@\changedConcepts{class}{ObjectType}@ T> class tuple_size;
-  template <size_t I, @\changedConcepts{class}{ObjectType}@ T> class tuple_element;
+  template <@\changedConcepts{class}{IdentityOf}@ T> class tuple_size;
+  template <size_t I, @\changedConcepts{class}{IdentityOf}@ T> class tuple_element;
 
   template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2> struct tuple_size<std::pair<T1, T2> >;
   template <@\changedConcepts{class}{VariableType}@ T1, @\changedConcepts{class}{VariableType}@ T2> struct tuple_element<0, std::pair<T1, T2> >;
@@ -351,9 +357,8 @@ struct pair {
   T2 second;
   @\addedConcepts{requires DefaultConstructible<T1> \&\& DefaultConstructible<T2>}@ pair();
   @\addedConcepts{requires CopyConstructible<T1> \&\& CopyConstructible<T2>}@ pair(const T1& @\farg{x}@, const T2& @\farg{y}@);
-  template<class @\farg{U}@, class @\farg{V}@>
-    @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
-    pair(U&& @\farg{x}@, V&& @\farg{y}@);
+  @\removedConcepts{template<class \mbox{\farg{U}}, class \mbox{\farg{V}}>}@
+    @\removedConcepts{pair(U\&\& \mbox{\farg{x}}, V\&\& \mbox{\farg{y}});}@
   @\removedConcepts{pair(pair\&\& \mbox{\farg{p}});}@
   template<class @\farg{U}@, class @\farg{V}@> 
     @\addedConcepts{requires Constructible<T1, const U\&> \&\& Constructible<T2, const V\&>}@
@@ -456,17 +461,16 @@ with \farg{y}.
 \end{itemdescr}
 
 \begin{itemdecl}
-template<class @\farg{U}@, class @\farg{V}@>
-  @\addedConcepts{requires Constructible<T1, U\&\&> \&\& Constructible<T2, V\&\&>}@ 
-  pair(U&& @\farg{x}@, V&& @\farg{y}@);
+@\removedConcepts{template<class \mbox{\farg{U}}, class \mbox{\farg{V}}>}@
+  @\removedConcepts{pair(U\&\& \mbox{\farg{x}}, V\&\& \mbox{\farg{y}});}@
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
-\mbox{\effects}
+\removedConcepts{\mbox{\effects}
 The constructor initializes \mbox{\tcode{first}} with
 \mbox{\tcode{std::forward<U>(\farg{x})}} and \mbox{\tcode{second}}
-with \mbox{\tcode{std::forward<V>(\farg{y})}}.
+with \mbox{\tcode{std::forward<V>(\farg{y})}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -820,10 +824,10 @@ namespace std {
     tuple<TTypes..., UTypes...> tuple_cat(tuple<TTypes...>&&, tuple<UTypes...>&&);
 
   // \ref{tuple.helper}, tuple helper classes:
-  template <@\changedConcepts{class}{ObjectType}@ T> class tuple_size;  // \addedD{undefined}
+  template <@\changedConcepts{class}{IdentityOf}@ T> class tuple_size;  // \addedD{undefined}
   template <@\changedConcepts{class}{VariableType}@... Types> class tuple_size<tuple<Types...> >;
 
-  template <size_t I, @\changedConcepts{class}{ObjectType}@ T> class tuple_element;    // \addedD{undefined}
+  template <size_t I, @\changedConcepts{class}{IdentityOf}@ T> class tuple_element;    // \addedD{undefined}
   template <size_t I, @\changedConcepts{class}{VariableType}@... Types>
     @\addedConcepts{requires True<(I < sizeof...(Types))>}@ class tuple_element<I, tuple<Types...> >;
 
@@ -1071,7 +1075,7 @@ move-constructible from the corresponding type in \mbox{\tcode{UTypes}}.
 \addedD{\mbox{\effects} Move-constructs each element of \mbox{\tcode{*this}}
 with the corresponding element of \mbox{\tcode{u}}.}
 
-\addedD{\mbox{\enternote} \mbox{\tcode{enable_if}} can be used to make the
+\removedConcepts{\mbox{\enternote} \mbox{\tcode{enable_if}} can be used to make the
 converting constructor and assignment operator exist only in the cases where
 the source and target have the same number of elements. \mbox{\exitnote}}
 \end{itemdescr}
