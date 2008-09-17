@@ -1,4 +1,17 @@
 
+# Import a newer version of g++ and configure it for C++0x support.
+# This cannot affect the doc directory or it will try to recompile quickbook
+# with gcc-4.4 - which will absolutely not work at this time.
+using gcc : 4.4 : g++-4.4 : <cxxflags>--std=c++0x ;
+
+# Build all subrojects using g++-4.4
+project graphs
+    : requirements
+        <toolset>gcc-4.4
+        <include>$(boost-root)
+        <include>../../..
+    ;
+
 # exe set : set.cpp : <include>../../ <include>/usr/local/include ;
 # exe map : map.cpp : <include>../../ <include>/usr/local/include ;
 # exe props : props.cpp : <include>../../ <include>/usr/local/include ;

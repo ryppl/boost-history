@@ -1,9 +1,8 @@
+# (C) Copyright 2008 Andrew Sutton
+# Distributed under the Boost Software License, Version 1.0.
 
 import modules ;
 import path ;
-
-# Import a newer version of g++ and configure it for C++0x support.
-using gcc : 4.4 : g++-4.4 : <cxxflags>--`std=c++0x ;
 
 # Define the boost root for this and nested projects. This shouold try to pull
 # a specification from the build.
