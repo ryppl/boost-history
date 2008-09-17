@@ -10,6 +10,7 @@
 #define BOOST__GUIGL__VIEW__LABELED_HPP
 
 #include <boost/guigl/view/base.hpp>
+#include <boost/guigl/window.hpp>
 
 namespace boost { namespace guigl { namespace view {
 
@@ -27,6 +28,11 @@ public:
     const std::string &label() const
     {   return m_label; }
 
+    void set_label(const std::string &label)
+    {
+        m_label = label;
+        guigl::window::redraw(*this);
+    }
 protected:
     void draw_prologue();
 

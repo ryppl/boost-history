@@ -55,6 +55,7 @@ private:
     double m_min, m_max, m_step;
     
     void draggable_on_drag(const position_type &position);
+    void draggable_on_end_drag(const position_type &position) {};
     
     friend class view::draggable<slider,
         view::solid_background<

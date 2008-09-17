@@ -28,8 +28,9 @@ namespace detail {
 template<typename Derived, typename BaseView=base>
 class draggable : public mouse_tracking<BaseView>
 {
-    typedef mouse_tracking<BaseView> base_type;
 public:
+    typedef mouse_tracking<BaseView> base_type;
+
     template<typename ArgumentPack>
     draggable(const ArgumentPack &args)
         : base_type(args)
@@ -43,9 +44,13 @@ protected:
     {   m_drag_origin = origin; }
 
 private:
-    void draggable_on_drag(const position_type &position)
+    void call_draggable_on_drag(const position_type &position)
     {
         static_cast<Derived *>(this)->draggable_on_drag(position);
+    }
+    void call_draggable_on_end_drag(const position_type &position)
+    {
+        static_cast<Derived *>(this)->draggable_on_end_drag(position);
     }
 
     friend struct detail::draggable_static_visitor<Derived,BaseView>;

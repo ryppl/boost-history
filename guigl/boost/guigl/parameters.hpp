@@ -25,6 +25,7 @@ namespace keywords {
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(min,const double,0.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(max,const double,1.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(step,const double,0.0)
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(period,const double,0.0)
     BOOST_PARAMETER_UNTYPED_NAME(children)
     
     typedef boost::parameter::aux::empty_typed_arg_list default_parameters;

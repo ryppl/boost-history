@@ -11,8 +11,9 @@
 #include <boost/guigl/layout/grid.hpp>
 #include <boost/guigl/window.hpp>
 #include <boost/guigl/widget/button.hpp>
+#include <boost/guigl/widget/label.hpp>
 #include <boost/guigl/widget/labeled_button.hpp>
-#include <boost/guigl/widget/slider.hpp>
+#include <boost/guigl/widget/labeled_slider.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/bind/placeholders.hpp>
@@ -47,16 +48,23 @@ int main()
     window test_window2(( _size=size_type(300,100), _label = "window example 2" ));
     window test_window3(( _label = "window example 3" ));
     
+    test_window1 << new widget::label((
+        _label = "Label",
+        _size=size_type(100,30),
+        _background=color_type(1,1,1),
+        _color=color_type(0,0,0) ));
+
     widget::labeled_button *b1 = new widget::labeled_button((
         _size=size_type(100,30),
         _position=position_type(50, 50),
         _background=color_type(1,1,1),
         _active_color=color_type(1,0,0),
         _color=color_type(0,0,0),
-        _label="Button 1"));
-        
+        _label="Button"));
     test_window1 << b1;
-    widget::slider *s = new widget::slider((
+    
+    widget::labeled_slider *s = new widget::labeled_slider((
+        _label="Slider",
         _size=size_type(100,30),
         _position=position_type(50,80),
         _background=color_type(0.5,0.5,0.5),
@@ -64,6 +72,7 @@ int main()
         _min=0.1,_max=0.9,
         _step=0.1 ));
     test_window1 << s;
+    
 
     // clicking the button changes the slider value to 0.5
     b1->on_click.connect(boost::bind(&widget::slider::set_value, s, 0.5));
@@ -80,7 +89,7 @@ int main()
         test_window3 << grid_layout.create<widget::button>(( _background=color_type(1.0/i,1.0/i,1.0/i) ));
     
     window test_window_3d(( _depth = true, _label="3D", _color=make_grey(1) ));
-    test_window_3d << new two_spheres(default_parameters());
+    test_window_3d << new two_spheres(_period = 0.01);
     
     application::on_idle().connect(&idle);
     application::timeout(&timer, 5000);

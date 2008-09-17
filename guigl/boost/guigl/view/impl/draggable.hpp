@@ -40,15 +40,17 @@ namespace detail {
             if(event_info.direction == direction::down)
             {
                 m_draggable.m_drag_origin = m_draggable.mouse_state().get().position;
-                m_draggable.draggable_on_drag(m_draggable.mouse_state().get().position);
+                m_draggable.call_draggable_on_drag(m_draggable.mouse_state().get().position);
             }
+            else
+                m_draggable.call_draggable_on_end_drag(m_draggable.mouse_state().get().position);
             return true;
         }
         
         bool operator()(const movement_event &event_info) const
         {
             if(m_draggable.mouse_state().get().button_down)
-                m_draggable.draggable_on_drag(event_info.position);
+                m_draggable.call_draggable_on_drag(event_info.position);
             return true;
         }
         

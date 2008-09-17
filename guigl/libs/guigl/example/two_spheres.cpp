@@ -11,9 +11,12 @@
 #include <boost/guigl/view/impl/colored.hpp>
 #include <boost/guigl/view/impl/navigable.hpp>
 #include <boost/guigl/view/impl/positioned.hpp>
+#include <boost/guigl/view/impl/periodic.hpp>
 #include <boost/guigl/view/impl/solid_background.hpp>
 #include <boost/guigl/view/impl/three_dimensional.hpp>
 #include <boost/guigl/platform/glu.hpp>
+
+#include <iostream>
 
 void two_spheres::draw_prologue()
 {
@@ -30,6 +33,13 @@ void two_spheres::draw()
 {
     draw_prologue();
     draw_epilogue();
+}
+
+void two_spheres::periodic_callback()
+{
+    if(distance()<300 || distance()>500)
+        m_closer = distance()>400;
+    set_distance(distance() + 1 - m_closer*2);
 }
 
 void *two_spheres::sphere()

@@ -21,7 +21,7 @@ path-constant TOP : . ;
 use-project boost
    : $(BOOST_ROOT)
    ;
-   
+
 use-project guigl : libs/guigl/build ;
 
 # the Dataflow project and anything using it needs Dataflow and Boost headers
