@@ -276,6 +276,7 @@ ambiguity, for example, was initially detected by ConceptGCC.
   instantiation of \tcode{iterator_traits<int>} should produce an
   empty class, not an error.
 \item Made a \tcode{ShuffleIterator} a \tcode{ForwardIterator}, and its value type both \tcode{MoveAssignable} and \tcode{Swappable}. 
+\item Fixed the precondition for \tcode{RandomAccessIterator}'s \tcode{operator-}, from \tcode{a + n == b} to \tcode{a == b + n}.
 \end{itemize}
 \end{titlepage}
 
@@ -446,8 +447,8 @@ as shown in Table~\ref{tab:iterators.relations}.
 \topline
 \textbf{Random Access}                  &       $\rightarrow$ \textbf{Bidirectional}    &
 $\rightarrow$ \textbf{Forward}  &       $\rightarrow$ \textbf{Input}  & \addedConcepts{\mbox{$\rightarrow$} \mbox{\textbf{Iterator}}}                   \\ 
- &  &  & \addedConcepts{\mbox{$\uparrow$}} & \addedConcepts{\mbox{$\uparrow$}} \\
-   &        &     & \addedConcepts{\mbox{\textbf{Shuffle}}} &   \addedConcepts{\mbox{$\rightarrow$}} \textbf{Output}                   \\
+ &  & \addedConcepts{\mbox{$\uparrow$}} &  & \addedConcepts{\mbox{$\uparrow$}} \\
+   &        &   \addedConcepts{\mbox{\textbf{Shuffle}}}  & \addedConcepts{\mbox{$\rightarrow$}} &  \textbf{Output}                   \\
 \end{floattable}
 
 \pnum
@@ -1084,7 +1085,7 @@ difference_type operator-(const X& a, const X& b);
 \pnum
 \addedConcepts{\mbox{\precondition}
 there exists a value \mbox{\tcode{n}} of \mbox{\tcode{difference_type}}
-  such that \mbox{\tcode{a + n == b}}.}
+  such that \mbox{\tcode{a == b + n}}.}
 
 \pnum
 \addedConcepts{\mbox{\effects}
@@ -1176,7 +1177,7 @@ auto concept ShuffleIterator<typename X> {
 \color{black}
 
 \pnum
-\addedConcepts{A shuffle iterator is a form of input and output iterator
+\addedConcepts{A shuffle iterator is a form of forward and output iterator
   that allows values to be moved into or out of a sequence, along with
   permitting efficient swapping of values within the sequence. Shuffle
   iterators are typically used in algorithms that need to rearrange
@@ -1266,7 +1267,7 @@ may be defined as \tcode{void}.
 
 \setcounter{Paras}{1}
 \pnum
-\changedConcepts{The}{If the type \mbox{\tcode{Iterator}} has nested types
+\changedConcepts{The}{If the type \mbox{\tcode{Iter}} has nested types
   \mbox{\tcode{difference_type}}, \mbox{\tcode{value_type}},
   \mbox{\tcode{pointer}}, \mbox{\tcode{reference}}, and
   \mbox{\tcode{iterator_category}}, then the}
