@@ -271,6 +271,10 @@ namespace std {
   concept True<bool> { }
   concept_map True<true> { }
 
+  // \ref{concept.trait}, trait:
+  concept Trait<template<typename X> class Trait, typename T> {}
+
+
   // \ref{concept.operator}, operator concepts:
   auto concept HasPlus<typename T, typename U> @\textit{see below}@;
   auto concept HasMinus<typename T, typename U> @\textit{see below}@;
@@ -819,6 +823,24 @@ concept_map True<true> { }
 \pnum
 \addedConcepts{\mbox{\requires} a program shall not provide a concept map for the
 \mbox{\tcode{True}} concept.}
+\end{itemdescr}
+
+\rSec2[concept.trait]{Trait}
+
+\begin{itemdecl}
+auto concept Trait<template<typename X> class Tr, typename T>
+{
+  typename tr = Tr<T>;
+  requires DerivedFrom<tr, true_type>;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} used to apply the unconstrained type
+  trait template Tr to the type T, in constrained context. This
+  ignores concept_maps and is safe only when the only constraints
+  that T carries are non-remappble}
 \end{itemdescr}
 
 \rSec2[concept.operator]{Operator concepts}
@@ -1422,7 +1444,13 @@ equivalence relation.}
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TriviallyEqualityComparable<typename T> : EqualityComparable<T> { }
+concept TriviallyEqualityComparable<typename T> { }
+
+template <EqualityComparable T>
+concept_map TriviallyEqualityComparable<T>
+requires Trait<is_trivial, T> 
+{ }
+
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1434,12 +1462,6 @@ concept TriviallyEqualityComparable<typename T> : EqualityComparable<T> { }
 padding, i.e. the size of the type is the sum of the sizes of its
 elements. If padding exists, the comparison may provide false
 negatives, but never false positives. \mbox{\exitnote}}
-
-\pnum
-\addedConcepts{\mbox{\requires} for every integral, pointer, or enumeration type
-  \mbox{\tcode{T}}, a concept map
-  \mbox{\tcode{TriviallyEqualityComparable<T>}} shall be 
-  defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1527,18 +1549,17 @@ auto concept DefaultConstructible<typename T> : Constructible<T> { }
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TriviallyDefaultConstructible<typename T> : DefaultConstructible<T> { }
+concept TriviallyDefaultConstructible<typename T> { }
+
+template <DefaultConstructible T>
+concept_map TriviallyDefaultConstructible<T>
+requires Trait<is_trivial, T> 
+{ }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes types whose default constructor is trivial.}
-
-\pnum \addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is
-  a trivial type (\mbox{\ref{basic.types}}) or a class type with a
-  trivial default constructor (\mbox{\ref{class.ctor}}), a concept map
-  \mbox{\tcode{TriviallyDefaultConstructible<T>}} shall be implicitly
-  defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \rSec2[concept.destruct]{Destruction}
@@ -1578,20 +1599,18 @@ T::~T() // inherited from HasDestructor<T>
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TriviallyDestructible<typename T> : NothrowDestructible<T> { }
+concept TriviallyDestructible<typename T> { }
+
+template <NoThrowDestructible T>
+concept_map TriviallyDestructible<T>
+requires Trait<is_trivial, T> 
+{ }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes types whose
 destructors do not need to be executed when the object is destroyed.}
-
-\pnum
-\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
-  is a trivial type ([basic.types]), reference, or class type with a
-  trivial destructor ([class.dtor]), a concept map
-  \mbox{\tcode{TriviallyDestructible<T>}} shall be implicitly 
-  defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \rSec2[concept.copymove]{Copy and move}
@@ -1636,20 +1655,19 @@ auto concept CopyConstructible<typename T> : MoveConstructible<T>, Constructible
 \end{itemdescr}
 
 \begin{itemdecl}
-concept TriviallyCopyConstructible<typename T> : CopyConstructible<T> { }
+concept TriviallyCopyConstructible<typename T> { }
+
+
+template <CopyConstructible T>
+concept_map TriviallyCopyConstructible<T>
+requires Trait<is_trivial, T> 
+{ }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum 
 \addedConcepts{\mbox{\reallynote} describes types whose copy
 constructor is equivalent to \mbox{\tcode{memcpy}}.}
-
-\pnum
-\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
-  is a trivial type ([basic.types]), a reference, or a class type with
-  a trivial copy constructor ([class.copy]), a concept map
-  \mbox{\tcode{TriviallyCopyConstructible<T>}} 
-shall be implicitly defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1700,20 +1718,18 @@ object.}
   requirement. See, e.g., the \tcode{IntegralLike} concept.}}
 
 \begin{itemdecl}
-concept TriviallyCopyAssignable<typename T> : CopyAssignable<T> { }
+concept TriviallyCopyAssignable<typename T> {}
+
+template <CopyAssignable T>
+concept_map TriviallyCopyAssignable<T>
+requires Trait<is_trivial, T> 
+{ }
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \addedConcepts{\mbox{\reallynote} describes types whose copy-assignment
   operator is equivalent to \mbox{\tcode{memcpy}}.}
-
-\pnum
-\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
-  is a trivial type ([basic.types]) or a 
-class type with a trivial copy assignment operator ([class.copy]), a
-concept map \mbox{\tcode{TriviallyCopyAssignable<T>}} shall be implicitly
-defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
