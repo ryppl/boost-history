@@ -210,23 +210,23 @@ namespace std {
   @\addedConcepts{template<RandomAccessIterator Iter>}@
   @\addedConcepts{concept_map RandomAccessIterator<reverse_iterator<Iter> > \{ \}}@
 
-  template <@\changedConcepts{class}{BackInsertionContainer}@ Container> class back_insert_iterator;
-  template <@\changedConcepts{class}{BackInsertionContainer}@ Container>
-    back_insert_iterator<Container> back_inserter(Container& x);
-  @\addedConcepts{template<BackInsertionContainer Container>}@
-    @\addedConcepts{concept_map Iterator<back_insert_iterator<Container> > \{ \}}@
+  template <@\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@> class back_insert_iterator;
+  template <@\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@>
+    back_insert_iterator<Cont@\removedConcepts{ainer}@> back_inserter(Cont@\removedConcepts{ainer}@& x);
+  @\addedConcepts{template<BackInsertionContainer Cont>}@
+    @\addedConcepts{concept_map Iterator<back_insert_iterator<Cont> > \{ \}}@
 
-  template <@\changedConcepts{class}{FrontInsertionContainer}@ Container> class front_insert_iterator;
-  template <@\changedConcepts{class}{FrontInsertionContainer}@ Container>
-    front_insert_iterator<Container> front_inserter(Container& x);
-  @\addedConcepts{template<FrontInsertionContainer Container>}@
-    @\addedConcepts{concept_map Iterator<front_insert_iterator<Container> > \{ \}}@
+  template <@\changedConcepts{class}{FrontInsertionContainer}@ Cont@\removedConcepts{ainer}@> class front_insert_iterator;
+  template <@\changedConcepts{class}{FrontInsertionContainer}@ Cont@\removedConcepts{ainer}@>
+    front_insert_iterator<Cont@\removedConcepts{ainer}@> front_inserter(Cont@\removedConcepts{ainer}@& x);
+  @\addedConcepts{template<FrontInsertionContainer Cont>}@
+    @\addedConcepts{concept_map Iterator<front_insert_iterator<Cont> > \{ \}}@
 
-  template <@\changedConcepts{class}{InsertionContainer}@ Container> class insert_iterator;
-  template <@\changedConcepts{class}{InsertionContainer}@ Container>
-    insert_iterator<Container> inserter(Container& x, Container::iterator i);
-  @\addedConcepts{template<InsertionContainer Container>}@
-    @\addedConcepts{concept_map Iterator<insert_iterator<Container> > \{ \}}@
+  template <@\changedConcepts{class}{InsertionContainer}@ Cont@\removedConcepts{ainer}@> class insert_iterator;
+  template <@\changedConcepts{class}{InsertionContainer}@ Cont@\removedConcepts{ainer}@>
+    insert_iterator<Cont@\removedConcepts{ainer}@> inserter(Cont@\removedConcepts{ainer}@& x, Cont@\removedConcepts{ainer}@::iterator i);
+  @\addedConcepts{template<InsertionContainer Cont>}@
+    @\addedConcepts{concept_map Iterator<insert_iterator<Cont> > \{ \}}@
 
   template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@> class move_iterator;
   template <@\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@1, @\changedConcepts{class}{InputIterator}@ Iter@\removedConcepts{ator}@2>
@@ -1033,35 +1033,35 @@ functions making the insert iterators out of a container.
 \index{back_insert_iterator@\tcode{back_insert_iterator}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{BackInsertionContainer}@ Container>
+  template <@\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@>
   class back_insert_iterator @\removedConcepts{:}@
     @\removedConcepts{public iterator<output_iterator_tag,void,void,void,void>}@ {
   protected:
-    Container* container;
+    Cont@\removedConcepts{ainer}@* container;
 
   public:
-    typedef Container container_type;
+    typedef Cont@\removedConcepts{ainer}@ container_type;
     @\addedConcepts{typedef void                             value_type;}@
     @\addedConcepts{typedef void                             difference_type;}@
-    @\addedConcepts{typedef back_insert_iterator<Container>\& reference;}@
+    @\addedConcepts{typedef back_insert_iterator<Cont>\&      reference;}@
     @\addedConcepts{typedef void                             pointer;}@
 
-    explicit back_insert_iterator(Container& x);
-    back_insert_iterator<Container>&
-      operator=(@\changedConcepts{typename}{const}@ Container::@\changedConcepts{const_reference}{value_type\&}@ value);
-    back_insert_iterator<Container>&
-      operator=(@\removedConcepts{typename }@Container::value_type&& value);
+    explicit back_insert_iterator(Cont@\removedConcepts{ainer}@& x);
+    back_insert_iterator<Cont@\removedConcepts{ainer}@>&
+      operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+    back_insert_iterator<Cont@\removedConcepts{ainer}@>&
+      operator=(@\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::value_type&& value);
 
-    back_insert_iterator<Container>& operator*();
-    back_insert_iterator<Container>& operator++();
-    back_insert_iterator<Container>  operator++(int);
+    back_insert_iterator<Cont@\removedConcepts{ainer}@>& operator*();
+    back_insert_iterator<Cont@\removedConcepts{ainer}@>& operator++();
+    back_insert_iterator<Cont@\removedConcepts{ainer}@>  operator++(int);
   };
 
-  template <@\changedConcepts{class}{BackInsertionContainer}@ Container>
-    back_insert_iterator<Container> back_inserter(Container& x);
+  template <@\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@>
+    back_insert_iterator<Cont@\removedConcepts{ainer}@> back_inserter(Cont@\removedConcepts{ainer}@& x);
 
-  @\addedConcepts{template<BackInsertionContainer Container>}@
-    @\addedConcepts{concept_map Iterator<back_insert_iterator<Container> > \{ \}}@
+  @\addedConcepts{template<BackInsertionContainer Cont>}@
+    @\addedConcepts{concept_map Iterator<back_insert_iterator<Cont> > \{ \}}@
 }
 \end{codeblock}
 
@@ -1071,7 +1071,7 @@ namespace std {
 
 \index{back_insert_iterator@\tcode{back_insert_iterator}!\tcode{back_insert_iterator}}%
 \begin{itemdecl}
-explicit back_insert_iterator(Container& x);
+explicit back_insert_iterator(Cont@\removedConcepts{ainer}@& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1086,8 +1086,8 @@ with \tcode{\&\farg{x}}.
 
 \index{operator=@\tcode{operator=}!\tcode{back_insert_iterator}}%
 \begin{itemdecl}
-back_insert_iterator<Container>&
-  operator=(@\changedConcepts{typename}{const}@ Container::@\changedConcepts{const_reference}{value_type\&}@ value);
+back_insert_iterator<Cont@\removedConcepts{ainer}@>&
+  operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1102,8 +1102,8 @@ back_insert_iterator<Container>&
 
 \index{operator=@\tcode{operator=}!\tcode{back_insert_iterator}}%
 \begin{itemdecl}
-back_insert_iterator<Container>&
-  operator=(@\removedConcepts{typename }@Container::value_type&& value);
+back_insert_iterator<Cont@\removedConcepts{ainer}@>&
+  operator=(@\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::value_type&& value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1120,7 +1120,7 @@ back_insert_iterator<Container>&
 
 \index{operator*@\tcode{operator*}!\tcode{back_insert_iterator}}%
 \begin{itemdecl}
-back_insert_iterator<Container>& operator*();
+back_insert_iterator<Cont@\removedConcepts{ainer}@>& operator*();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1133,8 +1133,8 @@ back_insert_iterator<Container>& operator*();
 
 \index{operator++@\tcode{operator++}!\tcode{back_insert_iterator}}%
 \begin{itemdecl}
-back_insert_iterator<Container>& operator++();
-back_insert_iterator<Container>  operator++(int);
+back_insert_iterator<Cont@\removedConcepts{ainer}@>& operator++();
+back_insert_iterator<Cont@\removedConcepts{ainer}@>  operator++(int);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1147,20 +1147,20 @@ back_insert_iterator<Container>  operator++(int);
 
 \index{back_inserter@\tcode{back_inserter}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{BackInsertionContainer}@ Container>
-  back_insert_iterator<Container> back_inserter(Container& x);
+template <@\changedConcepts{class}{BackInsertionContainer}@ Cont@\removedConcepts{ainer}@>
+  back_insert_iterator<Cont@\removedConcepts{ainer}@> back_inserter(Cont@\removedConcepts{ainer}@& x);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \returns\ 
-\tcode{back_insert_iterator<Container>(x)}.
+\tcode{back_insert_iterator<Cont@\removedConcepts{ainer}@>(x)}.
 \end{itemdescr}
 
 \rSec4[back.insert.iter.maps]{Concept maps}
 \begin{itemdecl}
-@\addedConcepts{template<BackInsertionContainer Container>}@
-  @\addedConcepts{concept_map Iterator<back_insert_iterator<Container> > \{ \}}@
+@\addedConcepts{template<BackInsertionContainer Cont>}@
+  @\addedConcepts{concept_map Iterator<back_insert_iterator<Cont> > \{ \}}@
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1173,35 +1173,35 @@ template <@\changedConcepts{class}{BackInsertionContainer}@ Container>
 \index{front_insert_iterator@\tcode{front_insert_iterator}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{FrontInsertionContainer}@ Container>
+  template <@\changedConcepts{class}{FrontInsertionContainer}@ Cont@\removedConcepts{ainer}@>
   class front_insert_iterator @\removedConcepts{:}@
     @\removedConcepts{public iterator<output_iterator_tag,void,void,void,void>}@ {
   protected:
-    Container* container;
+    Cont@\removedConcepts{ainer}@* container;
 
   public:
-    typedef Container container_type;
+    typedef Cont@\removedConcepts{ainer}@ container_type;
     @\addedConcepts{typedef void                              value_type;}@
     @\addedConcepts{typedef void                              difference_type;}@
-    @\addedConcepts{typedef front_insert_iterator<Container>\& reference;}@
+    @\addedConcepts{typedef front_insert_iterator<Cont>\&      reference;}@
     @\addedConcepts{typedef void                              pointer;}@
 
-    explicit front_insert_iterator(Container& x);
-    front_insert_iterator<Container>&
-      operator=(@\changedConcepts{typename}{const}@ Container::@\changedConcepts{const_reference}{value_type\&}@ value);
-    front_insert_iterator<Container>&
-      operator=(@\removedConcepts{typename}@ Container::value_type&& value);
+    explicit front_insert_iterator(Cont@\removedConcepts{ainer}@& x);
+    front_insert_iterator<Cont@\removedConcepts{ainer}@>&
+      operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+    front_insert_iterator<Cont@\removedConcepts{ainer}@>&
+      operator=(@\removedConcepts{typename}@ Cont@\removedConcepts{ainer}@::value_type&& value);
 
-    front_insert_iterator<Container>& operator*();
-    front_insert_iterator<Container>& operator++();
-    front_insert_iterator<Container>  operator++(int);
+    front_insert_iterator<Cont@\removedConcepts{ainer}@>& operator*();
+    front_insert_iterator<Cont@\removedConcepts{ainer}@>& operator++();
+    front_insert_iterator<Cont@\removedConcepts{ainer}@>  operator++(int);
   };
 
-  template <@\changedConcepts{class}{FrontInsertionContainer}@ Container>
-    front_insert_iterator<Container> front_inserter(Container& x);
+  template <@\changedConcepts{class}{FrontInsertionContainer}@ Cont@\removedConcepts{ainer}@>
+    front_insert_iterator<Cont@\removedConcepts{ainer}@> front_inserter(Cont@\removedConcepts{ainer}@& x);
 
-  @\addedConcepts{template<FrontInsertionContainer Container>}@
-    @\addedConcepts{concept_map Iterator<front_insert_iterator<Container> > \{ \}}@
+  @\addedConcepts{template<FrontInsertionContainer Cont>}@
+    @\addedConcepts{concept_map Iterator<front_insert_iterator<Cont> > \{ \}}@
 }
 \end{codeblock}
 
@@ -1211,7 +1211,7 @@ namespace std {
 
 \index{front_insert_iterator@\tcode{front_insert_iterator}!\tcode{front_insert_iterator}}%
 \begin{itemdecl}
-explicit front_insert_iterator(Container& x);
+explicit front_insert_iterator(Cont@\removedConcepts{ainer}@& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1226,8 +1226,8 @@ with \tcode{\&}\farg{x}.
 
 \index{operator=@\tcode{operator=}!\tcode{front_insert_iterator}}%
 \begin{itemdecl}
-front_insert_iterator<Container>&
-  operator=(@\changedConcepts{typename}{const}@ Container::@\changedConcepts{const_reference}{value_type\&}@ value);
+front_insert_iterator<Cont@\removedConcepts{ainer}@>&
+  operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1242,8 +1242,8 @@ front_insert_iterator<Container>&
 
 \index{operator=@\tcode{operator=}!\tcode{front_insert_iterator}}%
 \begin{itemdecl}
-front_insert_iterator<Container>&
-  operator=(@\removedConcepts{typename }@Container::value_type&& value);
+front_insert_iterator<Cont@\removedConcepts{ainer}@>&
+  operator=(@\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::value_type&& value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1260,7 +1260,7 @@ front_insert_iterator<Container>&
 
 \index{operator*@\tcode{operator*}!\tcode{front_insert_iterator}}%
 \begin{itemdecl}
-front_insert_iterator<Container>& operator*();
+front_insert_iterator<Cont@\removedConcepts{ainer}@>& operator*();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1273,8 +1273,8 @@ front_insert_iterator<Container>& operator*();
 
 \index{operator++@\tcode{operator++}!\tcode{front_insert_iterator}}%
 \begin{itemdecl}
-front_insert_iterator<Container>& operator++();
-front_insert_iterator<Container>  operator++(int);
+front_insert_iterator<Cont@\removedConcepts{ainer}@>& operator++();
+front_insert_iterator<Cont@\removedConcepts{ainer}@>  operator++(int);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1287,20 +1287,20 @@ front_insert_iterator<Container>  operator++(int);
 
 \index{front_inserter@\tcode{front_inserter}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{FrontInsertionContainer}@ Container>
-  front_insert_iterator<Container> front_inserter(Container& x);
+template <@\changedConcepts{class}{FrontInsertionContainer}@ Cont@\removedConcepts{ainer}@>
+  front_insert_iterator<Cont@\removedConcepts{ainer}@> front_inserter(Cont@\removedConcepts{ainer}@& x);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \returns\ 
-\tcode{front_insert_iterator<Container>(x)}.
+\tcode{front_insert_iterator<Cont@\removedConcepts{ainer}@>(x)}.
 \end{itemdescr}
 
 \rSec4[front.insert.iter.maps]{Concept maps}
 \begin{itemdecl}
-@\addedConcepts{template<FrontInsertionContainer Container>}@
-  @\addedConcepts{concept_map Iterator<front_insert_iterator<Container> > \{ \}}@
+@\addedConcepts{template<FrontInsertionContainer Cont>}@
+  @\addedConcepts{concept_map Iterator<front_insert_iterator<Cont> > \{ \}}@
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1313,36 +1313,36 @@ template <@\changedConcepts{class}{FrontInsertionContainer}@ Container>
 \index{insert_iterator@\tcode{insert_iterator}}%
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{InsertionContainer}@ Container>
+  template <@\changedConcepts{class}{InsertionContainer}@ Cont@\removedConcepts{ainer}@>
   class insert_iterator @\removedConcepts{:}@
     @\removedConcepts{public iterator<output_iterator_tag,void,void,void,void>}@ {
   protected:
-    Container* container;
-    @\removedConcepts{typename }@Container::iterator iter;
+    Cont@\removedConcepts{ainer}@* container;
+    @\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::iterator iter;
 
   public:
-    typedef Container container_type;
+    typedef Cont@\removedConcepts{ainer}@ container_type;
     @\addedConcepts{typedef void                        value_type;}@
     @\addedConcepts{typedef void                        difference_type;}@
-    @\addedConcepts{typedef insert_iterator<Container>\& reference;}@
+    @\addedConcepts{typedef insert_iterator<Cont>\&      reference;}@
     @\addedConcepts{typedef void                        pointer;}@
 
-    insert_iterator(Container& x, @\removedConcepts{typename }@Container::iterator i);
-    insert_iterator<Container>&
-      operator=(@\changedConcepts{typename}{const}@ Container::@\changedConcepts{const_reference}{value_type\&}@ value);
-    insert_iterator<Container>&
-      operator=(@\removedConcepts{typename }@Container::value_type&& value);
+    insert_iterator(Cont@\removedConcepts{ainer}@& x, @\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::iterator i);
+    insert_iterator<Cont@\removedConcepts{ainer}@>&
+      operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+    insert_iterator<Cont@\removedConcepts{ainer}@>&
+      operator=(@\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::value_type&& value);
 
-    insert_iterator<Container>& operator*();
-    insert_iterator<Container>& operator++();
-    insert_iterator<Container>& operator++(int);
+    insert_iterator<Cont@\removedConcepts{ainer}@>& operator*();
+    insert_iterator<Cont@\removedConcepts{ainer}@>& operator++();
+    insert_iterator<Cont@\removedConcepts{ainer}@>& operator++(int);
   };
 
-  template <@\changedConcepts{class}{InsertionContainer}@ Container>
-    insert_iterator<Container> inserter(Container& x, Container::iterator i);
+  template <@\changedConcepts{class}{InsertionContainer}@ Cont@\removedConcepts{ainer}@>
+    insert_iterator<Cont@\removedConcepts{ainer}@> inserter(Cont@\removedConcepts{ainer}@& x, Cont@\removedConcepts{ainer}@::iterator i);
 
-  @\addedConcepts{template<InsertionContainer Container>}@
-    @\addedConcepts{concept_map Iterator<insert_iterator<Container> > \{ \}}@
+  @\addedConcepts{template<InsertionContainer Cont>}@
+    @\addedConcepts{concept_map Iterator<insert_iterator<Cont> > \{ \}}@
 }
 \end{codeblock}
 
@@ -1352,7 +1352,7 @@ namespace std {
 
 \index{insert_iterator@\tcode{insert_iterator}!\tcode{insert_iterator}}%
 \begin{itemdecl}
-insert_iterator(Container& x, @\removedConcepts{typename}@ Container::iterator i);
+insert_iterator(Cont@\removedConcepts{ainer}@& x, @\removedConcepts{typename}@ Cont@\removedConcepts{ainer}@::iterator i);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1369,8 +1369,8 @@ with \farg{i}.
 
 \index{operator=@\tcode{operator=}!\tcode{insert_iterator}}%
 \begin{itemdecl}
-insert_iterator<Container>&
-  operator=(@\changedConcepts{typename}{const}@ Container::@\changedConcepts{const_reference}{value_type\&}@ value);
+insert_iterator<Cont@\removedConcepts{ainer}@>&
+  operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1388,8 +1388,8 @@ iter = @\removedConcepts{container->}@insert(@\addedConcepts{*container, }@iter,
 
 \index{operator=@\tcode{operator=}!\tcode{insert_iterator}}%
 \begin{itemdecl}
-insert_iterator<Container>&
-  operator=(Container::value_type&& value);
+insert_iterator<Cont@\removedConcepts{ainer}@>&
+  operator=(Cont@\removedConcepts{ainer}@::value_type&& value);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1409,7 +1409,7 @@ iter = @\removedConcepts{container->}@insert(@\addedConcepts{*container, }@iter,
 
 \index{operator*@\tcode{operator*}!\tcode{insert_iterator}}%
 \begin{itemdecl}
-insert_iterator<Container>& operator*();
+insert_iterator<Cont@\removedConcepts{ainer}@>& operator*();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1422,8 +1422,8 @@ insert_iterator<Container>& operator*();
 
 \index{operator++@\tcode{operator++}!\tcode{insert_iterator}}%
 \begin{itemdecl}
-insert_iterator<Container>& operator++();
-insert_iterator<Container>& operator++(int);
+insert_iterator<Cont@\removedConcepts{ainer}@>& operator++();
+insert_iterator<Cont@\removedConcepts{ainer}@>& operator++(int);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1436,20 +1436,20 @@ insert_iterator<Container>& operator++(int);
 
 \index{inserter@\tcode{inserter}}%
 \begin{itemdecl}
-template <@\changedConcepts{class}{InsertionContainer}@ Container>
-  insert_iterator<Container> inserter(Container& x, @\removedConcepts{typename }@Container::iterator i);
+template <@\changedConcepts{class}{InsertionContainer}@ Cont@\removedConcepts{ainer}@>
+  insert_iterator<Cont@\removedConcepts{ainer}@> inserter(Cont@\removedConcepts{ainer}@& x, @\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::iterator i);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \returns\ 
-\tcode{insert_iterator<Container>(x, i)}.
+\tcode{insert_iterator<Cont@\removedConcepts{ainer}@>(x, i)}.
 \end{itemdescr}
 
 \rSec4[insert.iter.maps]{Concept maps}
 \begin{itemdecl}
-@\addedConcepts{template<InsertionContainer Container>}@
-  @\addedConcepts{concept_map Iterator<insert_iterator<Container> > \{ \}}@
+@\addedConcepts{template<InsertionContainer Cont>}@
+  @\addedConcepts{concept_map Iterator<insert_iterator<Cont> > \{ \}}@
 \end{itemdecl}
 
 \begin{itemdescr}
