@@ -1448,7 +1448,7 @@ concept TriviallyEqualityComparable<typename T> { }
 
 template <EqualityComparable T>
 concept_map TriviallyEqualityComparable<T>
-requires Trait<is_trivial, T> 
+requires Trait<has_trivial_compare, T> 
 { }
 
 \end{itemdecl}
@@ -1553,7 +1553,7 @@ concept TriviallyDefaultConstructible<typename T> { }
 
 template <DefaultConstructible T>
 concept_map TriviallyDefaultConstructible<T>
-requires Trait<is_trivial, T> 
+requires Trait<has_trivial_default_constructor, T> 
 { }
 \end{itemdecl}
 
@@ -1603,7 +1603,7 @@ concept TriviallyDestructible<typename T> { }
 
 template <NoThrowDestructible T>
 concept_map TriviallyDestructible<T>
-requires Trait<is_trivial, T> 
+requires Trait<has_trivial_destructor, T> 
 { }
 \end{itemdecl}
 
@@ -1660,7 +1660,7 @@ concept TriviallyCopyConstructible<typename T> { }
 
 template <CopyConstructible T>
 concept_map TriviallyCopyConstructible<T>
-requires Trait<is_trivial, T> 
+requires Trait<has_trivial_copy_constructor, T> 
 { }
 \end{itemdecl}
 
@@ -1722,7 +1722,7 @@ concept TriviallyCopyAssignable<typename T> {}
 
 template <CopyAssignable T>
 concept_map TriviallyCopyAssignable<T>
-requires Trait<is_trivial, T> 
+requires Trait<has_trivial_assign, T> 
 { }
 \end{itemdecl}
 
