@@ -51,16 +51,9 @@ class Y
         return *this;
     }
 
-    //operator boost::move_from<Y>()
-    //{
-    //    return boost::move_from<Y>(*this);
-    //}
-    
-    // TODO: Is this case desirable?
-    operator boost::move_from<Y>() const
+    operator boost::move_from<Y>()
     {
-        return boost::move_from<Y>(*const_cast<Y*>(this));
-
+        return boost::move_from<Y>(*this);
     }
     
     static int copies;  // count the number of copies
