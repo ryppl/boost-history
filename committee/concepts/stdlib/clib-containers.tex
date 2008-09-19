@@ -119,6 +119,7 @@ Pablo Halpern,  Bloomberg, L.P.
   the requirements of the \tcode{ForwardIterator} concept, rather than
   the \tcode{InputIterator} concept.
 \item Renamed uses of \tcode{ConstructibleAsElement} to \tcode{AllocatableElement}.
+\item Moved the \tcode{back()} requirement from \tcode{BackInsertionContainer} to \tcode{StackLikeContainer}.
 \end{itemize}
 
 \end{titlepage}
@@ -1012,18 +1013,7 @@ concept FrontInsertionContainer<typename C> : Container<C> {
 
 \begin{itemdecl}
 concept BackInsertionContainer<typename C> : Container<C> {
-  reference       back(C&);
-  const_reference back(const C&);
-
   void push_back(C&, value_type&&);
-
-  requires BidirectionalIterator<iterator> axiom AccessBack(C c) {
-    if (begin(c) != end(c)) back(c) == *(--end(c));
-  }
-
-  axiom BackInsertion(C c, value_type x) {
-    x == (push_back(c, x), back(c));
-  }
 }
 \end{itemdecl}
 
@@ -1038,7 +1028,18 @@ concept BackInsertionContainer<typename C> : Container<C> {
 
 \begin{itemdecl}
 concept StackLikeContainer<typename C> : BackInsertionContainer<C> {
+  reference       back(C&);
+  const_reference back(const C&);
+
   void pop_back(C&);
+
+  requires BidirectionalIterator<iterator> axiom AccessBack(C c) {
+    if (begin(c) != end(c)) back(c) == *(--end(c));
+  }
+
+  axiom BackInsertion(C c, value_type x) {
+    x == (push_back(c, x), back(c));
+  }
 
   axiom BackRemoval(C c, value_type x) {
     c == (push_back(c, x), pop_back(c), c);
@@ -1124,12 +1125,12 @@ concept FrontEmplacementContainer<typename C, typename... Args> : Container<C> {
 concept BackEmplacementContainer<typename C, typename... Args> : Container<C> {
   void emplace_back(C& c, Args&&... args);
 
-  requires Constructible<value_type, Args...>
+  requires StackLikeContainer<C> && Constructible<value_type, Args...>
     axiom BackEmplacement(C c, Args... args) {
       value_type(args...) == (emplace_back(c, args...), back(c));
     }
 
-  requires BackInsertionContainer<C> && Constructible<value_type, Args...>
+  requires StackLikeContainer<C> && Constructible<value_type, Args...>
     axiom BackEmplacementPushEquivalence(C c, Args... args) {
       (emplace_back(c, args...), back(c)) == (push_back(c, value_type(args...)), back(c));
     }
@@ -1253,18 +1254,7 @@ auto concept MemberFrontInsertionContainer<typename C> : MemberContainer<C> {
 
 \begin{itemdecl}
 auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
-  reference       C::back();
-  const_reference C::back() const;
-
   void C::push_back(value_type&&);
-
-  requires BidirectionalIterator<iterator> axiom MemberAccessBack(C c) {
-    if (c.begin() != c.end()) c.back() == *(--c.end());
-  }
-
-  axiom MemberBackInsertion(C c, value_type x) {
-    x == (c.push_back(x), c.back());
-  }
 }
 \end{itemdecl}
 
@@ -1278,7 +1268,18 @@ auto concept MemberBackInsertionContainer<typename C> : MemberContainer<C> {
 
 \begin{itemdecl}
 auto concept MemberStackLikeContainer<typename C> : MemberBackInsertionContainer<C> {
+  reference       C::back();
+  const_reference C::back() const;
+
   void C::pop_back();
+
+  requires BidirectionalIterator<iterator> axiom MemberAccessBack(C c) {
+    if (c.begin() != c.end()) c.back() == *(--c.end());
+  }
+
+  axiom MemberBackInsertion(C c, value_type x) {
+    x == (c.push_back(x), c.back());
+  }
 
   axiom MemberBackRemoval(C c, value_type x) {
     c == (c.push_back(x), c.pop_back(), c);
@@ -1344,7 +1345,7 @@ auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : Mem
 
   requires Constructible<value_type, Args...>
     axiom MemberFrontEmplacement(C c, Args... args) {
-      value_type(args...) == (c.emplace_front(args...), front(c));
+      value_type(args...) == (c.emplace_front(args...), c.front());
     }
 
   requires MemberFrontInsertionContainer<C> && Constructible<value_type, Args...>
@@ -1364,12 +1365,12 @@ auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : Mem
 auto concept MemberBackEmplacementContainer<typename C, typename... Args> : MemberBackInsertionContainer<C> {
   void C::emplace_back(Args&&... args);
 
-  requires Constructible<value_type, Args...>
+  requires MemberStackLikeContainer<C> && Constructible<value_type, Args...>
     axiom MemberBackEmplacement(C c, Args... args) {
-      value_type(args...) == (c.emplace_back(args...), back(c));
+      value_type(args...) == (c.emplace_back(args...), c.back());
     }
 
-  requires BackInsertionContainer<C> && Constructible<value_type, Args...>
+  requires MemberStackLikeContainer<C> && Constructible<value_type, Args...>
     axiom MemberBackEmplacementPushEquivalence(C c, Args... args) {
       (c.emplace_back(args...), c.back()) == (c.push_back(value_type(args...)), c.back());
     }
@@ -1469,11 +1470,6 @@ concept_map FrontInsertionContainer<C> {
 template <MemberBackInsertionContainer C> 
 concept_map BackInsertionContainer<C> {
   typedef Container<C>::value_type      value_type;
-  typedef Container<C>::reference       reference;
-  typedef Container<C>::const_reference const_reference;
-
-  reference       back(C& c)        { return c.back(); }
-  const_reference back(const C& c)  { return c.back(); }
 
   void push_back(C& c, value_type&& v) { c.push_back(static_cast<value_type&&>(v)); }
 }			
@@ -1489,7 +1485,12 @@ concept_map BackInsertionContainer<C> {
 \begin{itemdecl}
 template <MemberStackLikeContainer C> 
 concept_map StackLikeContainer<C> {
-    void pop_back(C& c)  { c.pop_back(); }
+  typedef Container<C>::reference       reference;
+  typedef Container<C>::const_reference const_reference;
+
+  reference       back(C& c)        { return c.back(); }
+  const_reference back(const C& c)  { return c.back(); }
+  void            pop_back(C& c)    { c.pop_back(); }
 }			
 \end{itemdecl}
 
