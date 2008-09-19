@@ -97,6 +97,7 @@ standard library are discussed in separate documents.
 \item Removed the compiler-supported concept \tcode{std::FunctionType}, because it was found to be unnecessary as a compile built-in.
 \item Introduced the model of archetypes as class types, and adjusted certain other types (e.g., ``object type'') to allow for archetypes that are meant to stand in for those types. For example, \tcode{T} where the requirement \tcode{std::ObjectType<T>} is in scope.
 \item Move the text describing how to build an archetype from concept requirements into its own section (\ref{temp.archetype.assemble}).
+\item Use more-refined/less-refined terminology throughout.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -366,7 +367,7 @@ void f( T & x, U & y ) {
 \index{name~hiding}%
 \index{hiding;~see~name~hiding}%
 A name can be hidden by an explicit declaration of that same name
-in a nested declarative region\addedConcepts{, refining concept
+in a nested declarative region\addedConcepts{, more refined concept
   (\mbox{\ref{concept.refine}}),} or derived class
 (\ref{class.member.lookup}).
 
@@ -425,7 +426,7 @@ ways:}
 \begin{itemize}
 \item %
 \addedConcepts{before its use in the concept or concept map
-\mbox{\tcode{X}} or be a member of a refined concept of
+\mbox{\tcode{X}} or be a member of a less refined concept of
 \mbox{\tcode{X}}, or}
 \item %
 \addedConcepts{if
@@ -467,7 +468,7 @@ enclosing block (\mbox{\ref{stmt.block}}), or}
 \item %
 \addedConcepts{shall be a member of concept or concept map
 \mbox{\tcode{X}}\ 
-or be a member of a refined concept of
+or be a member of a less refined concept of
 \mbox{\tcode{X}}, or}
 \item %
 \addedConcepts{if
@@ -601,7 +602,7 @@ which concept map is referred to by the \mbox{\techterm{nested-name-specifier}}.
 concept member lookup (\mbox{\ref{concept.member.lookup}}) is used to find
 the name within the scope of the concept map.  The name shall represent
 one or more members of that concept map or the concept maps corresponding
-to the concept refinements.
+to the concept's less refined concepts.
     \mbox{\enternote}\ 
     this lookup requires a concept map definition, so if the template
     argument list of the concept instance}
@@ -643,7 +644,7 @@ C<F, T1>::result_type g(F& f, const T1& t1) {
 \pnum
 \addedConcepts{A concept map member name hidden by a name in a nested
   declarative region}
-\addedConcepts{or by the name of a refining concept member}
+\addedConcepts{or by the name of a more refined concept's member}
 \addedConcepts{can still be found
 if qualified by the name of its concept map followed by the
 \mbox{\tcode{::}}
@@ -4508,7 +4509,7 @@ implementation is instantiated}
 associated function is a constrained template
 (\mbox{\ref{temp.constrained}})} \addedConcepts{whose template requirements
 include concept requirements for the enclosing concept, its
-refinements,} \changedCCC{along with}{and}
+less refined concepts,} \changedCCC{along with}{and}
 \addedConcepts{its
 associated requirements}\addedConcepts{. \mbox{\enterexample}}
 \begin{codeblock}
@@ -4679,7 +4680,7 @@ concept CopyConstructible<typename T> {
 \addedConcepts{Name lookup within an axiom will only find the implicitly-declared
 \mbox{\tcode{==}} and \mbox{\tcode{!=}} operators if the corresponding operation is
 not declared as an associated function (\mbox{\ref{concept.fct}}) in
-the concept, one of the concepts it refines
+the concept, one of it's less refined concepts
 (\mbox{\ref{concept.refine}}), or in an associated requirement
 (\mbox{\ref{concept.req}}). \mbox{\enterexample}}
 \begin{codeblock}
@@ -4823,9 +4824,10 @@ f(student_record()); // okay, have concept_map EqualityComparable<student_record
     A concept map may contain two kinds of members:
     \mbox{\techterm{requirement members}} and members that satisfy
 requirement members.  The latter may be explicitly declared within the
-concept, explicitly declared within a refinement, or generated implicitly
-from a default implementation from the concept or refinement of the
-concept.}
+concept map, explicitly declared within a} 
+\changedCCC{refinement}{concept map for a more refined concept}\addedConcepts{, or generated implicitly
+from a default implementation from the concept or}
+\changedCCC{refinement of the concept}{one of its more refined concepts}\addedConcepts{.}
     
 \pnum 
 \changedCCC{A requirement member represents a requirement to satisfy (as
@@ -4871,7 +4873,7 @@ concept.}
 \addedConcepts{Concept maps shall satisfy every associated function (\mbox{\ref{concept.fct}}),
 associated type and associated class template requirement
 (\mbox{\ref{concept.assoc}}) of its concept instance and
-all of the requirements inherited from its refined
+all of the requirements inherited from its less refined
 concept instances (\mbox{\ref{concept.refine}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T, typename U> { T f(T); U f(U); }
@@ -4884,7 +4886,7 @@ concept_map C<int, int> {
 
 \pnum
 \addedConcepts{Concept maps shall not contain declarations that do not satisfy any
-requirement in their corresponding concept or its refined
+requirement in their corresponding concept or its less refined
 concepts. \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { }
@@ -4898,7 +4900,7 @@ concept_map C<int> {
 \pnum 
 \addedConcepts{At the point of definition of a concept map, all associated
 requirements (\mbox{\ref{concept.req}}) of the corresponding
-concept and its refined concepts (\mbox{\ref{concept.refine}}) shall be
+concept and its less refined concepts (\mbox{\ref{concept.refine}}) shall be
 satisfied (\mbox{\ref{temp.req.sat}}). \mbox{\enterexample}}
 \begin{codeblock}
 concept C<typename T> { /* ... */ }
@@ -4927,7 +4929,7 @@ concept_map D<X> {
 \addedCC{(\mbox{\ref{concept.def}})}
 \addedConcepts{is implicitly defined when it is
 needed} \addedConcepts{by concept map lookup (\mbox{\ref{temp.req.sat}})}\addedConcepts{.}
-\addedConcepts{If any requirement of the concept or its refinements} 
+\addedConcepts{If any requirement of the concept or its less refined concepts} 
 \changedCCC{is not}{would not be}
 \addedConcepts{satisfied by the implicitly-defined concept map, the concept map is not
   implicitly defined.
@@ -5001,7 +5003,7 @@ instantiated if doing so would affect the semantics of the program.}
 \pnum
 \addedConcepts{The implicit or explicit definition of a concept map asserts that the
 axioms (\mbox{\ref{concept.axiom}}) stated in its corresponding concept (and
-the refinements of that concept) hold, permitting an
+the concepts that it refines) hold, permitting an
   implementation to perform the transformations described in~\mbox{\ref{concept.axiom}}. If an axiom is violated, the behavior of
   the program is undefined.}
 
@@ -5415,13 +5417,13 @@ void g(X x) {
 relationship among concepts. }
 %
 \addedConcepts{A concept \mbox{\tcode{B}} named in a \mbox{\techterm{refinement-specifier}} of
-concept \mbox{\tcode{D}} is a \mbox{\techterm{refined concept}} of \mbox{\tcode{D}} and
-\mbox{\tcode{D}} is a \mbox{\techterm{refining concept}} of \mbox{\tcode{B}}.}
+concept \mbox{\tcode{D}} is a \mbox{\techterm{less refined concept}} of \mbox{\tcode{D}} and
+\mbox{\tcode{D}} is a \mbox{\techterm{more refined concept}} of \mbox{\tcode{B}}.}
 %
 \addedConcepts{A concept refinement inherits all
 requirements in the body of a concept (\mbox{\ref{concept.def}}), such that
-the requirements of the refining concept are a superset of the
-requirements of the refined concept.}
+the requirements of the more refined  concept are a superset of the
+requirements of the less refined concept.}
 %
 \addedConcepts{\mbox{\enternote}\ 
 when a concept \mbox{\tcode{D}} refines
@@ -5529,7 +5531,7 @@ void f(T x)
 
 \pnum
 \addedConcepts{If the name \mbox{\tcode{f}} is not declared in \mbox{\tcode{C}}, name lookup
-searches for \mbox{\tcode{f}} in the scopes of each of the refined concepts
+searches for \mbox{\tcode{f}} in the scopes of each of the less refined concepts
 (\mbox{\tcode{C$_R$}}). If name lookup of \mbox{\tcode{f}} is ambiguous in any
 concept scope \mbox{\tcode{C$_R$}}, name lookup of \mbox{\tcode{f}} in \mbox{\tcode{C}} is
 ambiguous. Otherwise, the set of concept scopes \mbox{\tcode{C$_{R'}$}} is a
@@ -5617,7 +5619,7 @@ or concept map templates for each
 \mbox{\tcode{C}}
 shall be defined, implicitly or explicitly,
 in the namespace of which the
-refining concept map or concept map template
+more refined concept map or concept map template
 is a member.
 \mbox{\enterexample}}
 \begin{codeblock}
@@ -5630,14 +5632,14 @@ concept_map B<int> { } // implicitly defines concept map A<int>
 
 \pnum
 \addedConcepts{A concept map or concept map template for a refinement
-  (called a \mbox{\techterm{refined}} concept map or concept map
+  (called a \mbox{\techterm{less refined}} concept map or concept map
   template) has been
   defined if concept map lookup (\mbox{\ref{temp.req.sat}}) finds a
   concept map for the concept instance \mbox{\tcode{I}} in the
-  namespace of which the refining concept map or concept 
+  namespace of which the more refined concept map or concept 
   map template is a member, where \mbox{\tcode{I}} is 
   determined by substituting the
-  template arguments of the refining concept map or concept map
+  template arguments of the more refined concept map or concept map
   template into the \mbox{\techterm{refinement-specifier}}
   corresponding to the refinement. If concept map lookup fails}\addedCC{, if it finds an implicitly generated concept map for an \mbox{\tcode{auto}} concept,}
   \addedConcepts{or if it finds a concept map from a different namespace, a suitable
@@ -5659,17 +5661,17 @@ concept_map D<T*> { } // okay: \#1 defines the concept map corresponding to the 
   can only be} \addedCC{implicitly}
 \addedConcepts{defined for certain}
 \changedCCC{refinements}{less refined concepts from the concept map
-  templates of more refined concepts}\addedConcepts{. A refined concept map
+  templates of more refined concepts}\addedConcepts{. A less refined concept map
   template corresponding to a particular
   \mbox{\techterm{refinement-specifier}} can be 
-defined if all of the template parameters of the refining
+defined if all of the template parameters of the more refined
 concept map template}
 \changedCCC{are \mbox{\techterm{deducible}}}{can be deduced}\addedConcepts{.
 Let \mbox{\tcode{R}} be the 
 \mbox{\techterm{refinement-specifier}} after substitution of the
-refining concept map's template arguments for the corresponding
+more refined concept map's template arguments for the corresponding
 template parameters. A template parameter \mbox{\tcode{T}}
-of the refining concept map template}
+of the more refined concept map template}
 \changedCCC{is \mbox{\techterm{deducible}}}{can be deduced}
 \addedConcepts{if for any template argument
 \mbox{\tcode{P}} in \mbox{\tcode{R}}'s
@@ -5677,12 +5679,12 @@ of the refining concept map template}
 template, or value \mbox{\tcode{A}} such that template argument
 deduction (\mbox{\ref{temp.deduct}}) performed with that
 \mbox{\tcode{P}/\tcode{A}} pair would determine a value for
-\mbox{\tcode{T}}. If any template parameter of the refining
+\mbox{\tcode{T}}. If any template parameter of the more refined
 concept map template} \changedCCC{is not deducible}{can not be deduced}\addedConcepts{, the program is
-ill-formed. Otherwise, a refined concept map template is implicitly
-defined in the namespace of the refining concept map template; its
+ill-formed. Otherwise, a less refined concept map template is implicitly
+defined in the namespace of the more refined concept map template; its
 \mbox{\techterm{template-parameter-list}} and template
-requirements are the same as the refining concept map template, and
+requirements are the same as the more refined concept map template, and
 its \mbox{\techterm{concept-id}} is \mbox{\tcode{R}}.
 \mbox{\enterexample}}
 \begin{codeblock}
@@ -5702,10 +5704,10 @@ template<typename T, typename U>
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{When a refined concept map or concept map template is
-  implicitly defined, definitions in the refining concept map or
+\addedConcepts{When a less refined concept map or concept map template is
+  implicitly defined, definitions in the more refined concept map or
   concept map template can be
-  used to satisfy the requirements of the refined concept (\mbox{\ref{concept.map}}).
+  used to satisfy the requirements of the less refined concept (\mbox{\ref{concept.map}}).
 \mbox{\enternote} a single function definition in a concept
   map can be used to satisfy multiple requirements. \mbox{\exitnote}
 \mbox{\enterexample} in this example, the concept map \mbox{\tcode{D<int>}}
@@ -5730,10 +5732,10 @@ concept_map D<int> {
 \pnum 
 \addedConcepts{Each concept map or concept map template shall have satisfiers
 that are compatible with the satisfiers of
-its refined concept maps or concept map templates. A satisfier of
-the refining concept map or concept map template is
+its less refined concept maps or concept map templates. A satisfier of
+the more refined concept map or concept map template is
 compatible with its corresponding satisfier of
-the refined concept
+the less refined concept
 map or concept map template if}
 \begin{itemize}
 \additemConcepts{the satisfiers correspond to an associated function
@@ -5746,7 +5748,7 @@ both satisfiers name the same type or template, respectively.}
 \addedConcepts{If a program contains satisfiers of
 a concept map or concept
 map template that are not compatible with their corresponding satisfiers of
-a refined concept map or concept map template, the
+a less refined concept map or concept map template, the
 program is ill-formed.}
 \addedConcepts{If the concept maps or concept map templates with satisfiers
 that are not compatible occur in different translation
