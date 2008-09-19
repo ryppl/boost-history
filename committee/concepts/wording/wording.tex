@@ -117,6 +117,8 @@ standard library are discussed in separate documents:
 \item Moved the support concepts from library clause 20 into
   clause~\ref{concept.support}.
 \item Replaced the term \techterm{late-check-block} with \techterm{late-checked-block}.
+\item Removed the compiler-supported concept \tcode{std::FunctionType}, because it was found to be unnecessary as a compile built-in.
+\item Introduced the model of archetypes as class types, and adjusted certain other types (e.g., ``object type'') to allow for archetypes that are meant to stand in for those types. For example, \tcode{T} where the requirement \tcode{std::ObjectType<T>} is in scope.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -503,7 +505,22 @@ enclosing namespaces.}
 \end{itemize}
 \color{black}
 
-\setcounter{subsection}{2}
+
+\rSec2[basic.lookup.argdep]{Argument-dependent name lookup}
+\setcounter{Paras}{1}
+\pnum
+For each argument type \tcode{T} in the function call[...]
+
+\begin{itemize}
+\item{If \tcode{T} is a fundamental type, its associated sets of
+namespaces and classes are both empty.}
+\item{If \tcode{T} is a 
+    \addedCC{non-archetype}
+    class type (including unions), its associated classes are: the class
+    itself; the class of which it is a member, if any; and its direct and
+    indirect base classes.[...]}
+\end{itemize}
+
 \rSec2[basic.lookup.qual]{Qualified name lookup}
 
 \pnum
@@ -669,13 +686,150 @@ Types describe objects (\ref{intro.object}),
 references (\ref{dcl.ref}),
 or functions (\ref{dcl.fct}).
 \addedConcepts{In a constrained context (\mbox{\ref{temp.constrained}}),
-  type archetypes can behave like various kinds of types, e.g.,
-  object types, scalar types, literal types, etc.}
+  type archetypes }
+  \changedCCC{can behave like various kinds of types, e.g.,
+  object types, scalar types, literal types, etc.}{are class types;
+  however, a type archetype from a compiler-supported requirement (i.e., a
+  type archetype T' in a context where some requirement C<T> is in scope) may be
+  used in certain contexts where a class type is normallly not permitted
+  or may be disallowed in certain contexts where a class type is normally
+  permitted.  Such contexts are explicitly noted in this International
+  Standard.}
+  \exitnote
+
+\setcounter{Paras}{8}
+\pnum
+Arithmetic types~(\ref{basic.fundamental}), enumeration types, pointer
+types, pointer to member types~(\ref{basic.compound}),
+and \tcode{std::nullptr_t},
+and
+\techterm{cv-qualified} versions of these
+types~(\ref{basic.type.qualifier}) are collectively called
+\index{scalar~type}%
+\techterm{scalar} \techterm{types}. Scalar types,
+POD classes (clause~\ref{class}), arrays of such types and
+\techterm{cv-qualified} versions of these
+types~(\ref{basic.type.qualifier}) are collectively called
+\index{type!POD}%
+\techterm{POD} \techterm{types}.
+Scalar types, trivial class types (clause~\ref{class}),
+arrays of such types and cv-qualified versions of these
+types~(\ref{basic.type.qualifier}) are collectively called
+\techterm{trivial} \techterm{types}. Scalar types, standard-layout class
+types (clause~\ref{class}), arrays of such types and
+cv-qualified versions of these types~(\ref{basic.type.qualifier})
+are collectively called \techterm{standard-layout} \techterm{types}.
+
+\pnum
+\addedCC{An \emph{effective trivial type} T is a trivial type
+or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
+from \mbox{\tcode{std::TrivialType<T>}}.}
+
+\pnum
+A type is a \techterm{literal type} if it is:
+
+\begin{itemize}
+\item{a scalar type; or}
+\item{a class type (clause~\ref{class}) with}
+\begin{itemize}
+\item{a trivial copy constructor,}
+\item{a trivial destructor,}
+\item{at least one constexpr constructor other than
+the copy constructor,}
+\item{no virtual base classes, and}
+\item{all non-static data members and base classes
+of literal types; or}
+\end{itemize}
+\item{an array of literal type.}
+\end{itemize}
+
+\pnum
+\addedCC{An \emph{effective literal type} T is a object type
+or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
+from \mbox{\tcode{std::LiteralType<T>}}.}
+
 \exitnote\ 
+
+\setcounter{Paras}{7}
+\pnum
+An \emph{object type} is a (possibly cv-qualified) type that is not a
+function type, not a reference type, and not a void type. 
+\addedCC{An \emph{effective object type} T is a non-archetype object type
+or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
+from \mbox{\tcode{std::OjectType<T>}}.}
+
+\rSec2[basic.fundamental]{Fundamental types}
+\setcounter{Paras}{6}
+\pnum
+Types \tcode{bool}, \tcode{char}, \tcode{char16_t}, \tcode{char32_t},
+\tcode{wchar_t}, and the signed and unsigned integer types are
+collectively called
+\index{integral~type}%
+\techterm{integral} types.%
+\footnote{
+Therefore, enumerations~(\ref{dcl.enum}) are not integral; however,
+enumerations can be promoted to integral types as specified
+in~\ref{conv.prom}.%
+}
+A synonym for integral type is
+\index{integer~type}%
+\techterm{integer type}. The representations of integral types shall
+define values by use of  a pure binary numeration system.%
+\footnote{
+A positional representation for integers that uses the binary digits 0
+and 1, in which the values represented by successive bits are additive,
+begin with 1, and are multiplied by successive integral power of 2,
+except perhaps for the bit with the highest position. (Adapted from the
+\techterm{American} \techterm{National} \techterm{Dictionary}
+\techterm{for} \techterm{Information} \techterm{Processing}
+\techterm{Systems}.)%
+}
+
+\pnum
+\addedCC{An \emph{effective integral type} T is an integral type
+or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
+from \mbox{\tcode{std::IntegralType<T>}}.}
+
 
 \end{paras}
 
-\setcounter{chapter}{4}
+\rSec0[conv]{Standard conversions}
+\begin{paras}
+\setcounter{section}{0}
+\rSec1[conv.lval]{Lvalue-to-rvalue conversion}
+\pnum
+An lvalue~(\ref{basic.lval}) of a non-function, non-array type \tcode{T}
+can be converted to an rvalue. If \tcode{T} is an incomplete type, a
+program that necessitates this conversion is ill-formed. If the object
+to which the lvalue refers is not an object of type \tcode{T} and is not
+an object of a type derived from \tcode{T}, or if the object is
+uninitialized, a program that necessitates this conversion has undefined
+behavior. If \tcode{T} is 
+\changedCC{a non-class type}{not an effective class type},
+the type of the rvalue is
+the cv-unqualified version of \tcode{T}. Otherwise, the type of the
+rvalue is \tcode{T}.
+
+
+\setcounter{section}{9}
+\rSec1[conv.ptr]{Pointer conversions}
+\setcounter{Paras}{1}
+\pnum
+An rvalue of type ``pointer to \emph{cv} T,'' where T is an
+\addedCC{effective}
+object type can be converted to an rvalue of type ``pointer to \emph{cv}
+void''.  The result of converting a ``pointer to \emph{cv} T'' to a
+``pointer to \emph{cv} void'' points to the start of the storage location
+where the object of type T resides, as if the object is a most derived
+object (\ref{intro.object}) of type T (that is, not a base class
+subobject). The null pointer value is converted to the null pointer value
+of the destination type. 
+
+
+\end{paras}
+
+
+
 \rSec0[expr]{Expressions}
 \begin{paras}
 
@@ -741,13 +895,174 @@ nested-name-specifier:\br
 \end{paras}
 
 \rSec1[expr.post]{Postfix expressions}
-\setcounter{subsection}{1}
+
+\rSec2[expr.sub]{Subscripting}
+\pnum
+A postfix expression followed by an expression in square brackets is a
+postfix expression. One of the expressions shall have the type ``pointer
+to T'' and the other shall have enumeration or integral type. The result
+is an lvalue of type ``T.'' The type ``T'' shall be a completely-defined
+\addedCC{effective}
+object type.
+
 \rSec2[expr.call]{Function call}
+\setcounter{Paras}{2}
+\pnum
+The type of the function call expression is the return type of the
+statically chosen function (i.e., ignoring the \mbox{\tcode{virtual}}
+keyword), even if the type of the function actually called is different.
+This type shall be a complete
+\addedCC{effective}
+object type, a reference type or the type void.
+
+\pnum
+[...]When a function is called, the parameters that have 
+\addedCC{effective}
+object type shall have completely-defined object type.[...]
+
+\setcounter{Paras}{6}
+\pnum
+[..]After these conversions, if the argument does not have arithmetic,
+enumeration, pointer, pointer to member, or
+\addedCC{effective}
+class type, the program is ill-formed.[...]
+
+\rSec2[expr.type.conv]{Explicit type conversion (functional notation)}
+\setcounter{Paras}{1}
+\pnum
+The expression \mbox{\tcode{T()}}, where T is a simple-type-specifier
+(\ref{dcl.type.simple}) for a non-array complete
+\addedCC{effective}
+object type or the (possibly cv-qualified) void type, creates an rvalue of
+the specified type, which is value-initialized (\ref{dcl.init}; no
+initialization is done for the \mbox{\tcode{void()}} case).
+
+\setcounter{subsection}{5}
+\rSec2[expr.post.incr]{Increment and decrement}
+\pnum
+The value of a postfix ++ expression is the value of its operand.
+\enternote\
+the value obtained is a copy of the original value 
+\exitnote\ 
+The operand shall be a modifiable lvalue. The type of the operand shall be
+an arithmetic type or a pointer to a complete
+\addedCC{effective}
+object type.[...]
+
+\rSec2[expr.dynamic.cast]{Dynamic cast}
+\pnum
+\index{cast!dynamic}%
+The result of the expression \tcode{dynamic_cast<T>(v)} is the result of
+converting the expression \tcode{v} to type \tcode{T}.
+\index{type!incomplete}%
+\tcode{T} shall be a pointer or reference to a complete
+\addedCC{effective}
+class type, or
+``pointer to \cvqual{cv} \tcode{void}.'' Types shall not be defined in a
+\tcode{dynamic_cast}. The \tcode{dynamic_cast} operator shall not cast
+away constness~(\ref{expr.const.cast}).
+
+\pnum
+If \tcode{T} is a pointer type, \tcode{v} shall be an rvalue of a
+pointer to complete
+\addedCC{effective}
+class type, and the result is an rvalue of type
+\tcode{T}. If \tcode{T} is an lvalue reference type, \tcode{v} shall be
+an lvalue of a complete
+\addedCC{effective}
+class type, and the result is an lvalue of the
+type referred to by \tcode{T}. If \tcode{T} is an rvalue reference type,
+\tcode{v} shall be an expression having a complete
+\addedCC{effective}
+class type, and the
+result is an rvalue of the type referred to by \tcode{T}.
+
+
+\rSec2[expr.reinterpret.cast]{Reinterpret cast}
+\setcounter{Paras}{6}
+\pnum
+A pointer to an
+\addedCC{effective}
+object can be explicitly converted to a pointer to an
+object of different type. Except that converting an rvalue of type
+``pointer to \mbox{\tcode{T1}}'' to the type ``pointer to
+\mbox{\tcode{T2}}'' (where \mbox{\tcode{T1}} and \mbox{\tcode{T2}} are
+object types and where the alignment requirements of \mbox{\tcode{T2}} are
+no stricter than those of \mbox{\tcode{T1}}) and back to its original type
+yields the original pointer value, the result of such a pointer conversion
+is unspecified. 
+
+\setcounter{Paras}{9}
+\pnum
+An rvalue of type ``pointer to member of \mbox{\tcode{X}} of type
+\mbox{\tcode{T1}}'' can be explicitly converted to an rvalue of type
+``pointer to member of Y of type \mbox{\tcode{T2}}'' if \mbox{\tcode{T1}}
+and \mbox{\tcode{T2}} are both function types or both \addedCC{effective}
+object types.
+
+\rSec2[expr.const.cast]{Const cast}
+\setcounter{Paras}{2}
+
+\pnum
+For two pointer types \tcode{T1} and \tcode{T2} where
+
+\begin{indented}
+\term{T1} is $\mathit{cv}_{1,0}$ pointer to $\mathit{cv}_{1,1}$ pointer
+to $\cdots \mathit{cv}_{1,n-1}$ pointer to $\mathit{cv}_{1,n}$ \term{T}
+\end{indented}
+
+and
+
+\begin{indented}
+\term{T2} is $\mathit{cv}_{2,0}$ pointer to $\mathit{cv}_{2,1}$ pointer
+to $\cdots \mathit{cv}_{2,n-1}$ pointer to $\mathit{cv}_{2,n}$ \term{T}
+\end{indented}
+
+where
+\tcode{T} is any
+\addedCC{effective}
+object type or the \tcode{void} type and where
+$\mathit{cv}_{1,k}$ and $\mathit{cv}_{2,k}$ may be different
+cv-qualifications, an rvalue of type \tcode{T1} may be explicitly
+converted to the type \tcode{T2} using a \tcode{const_cast}. The result
+of a pointer \tcode{const_cast} refers to the original object.
+
+\pnum
+An lvalue of type \tcode{T1} can be explicitly converted to an lvalue of
+type \tcode{T2} using the cast \tcode{const_cast<T2\&>} (where
+\tcode{T1} and \tcode{T2} are
+\addedCC{effective}
+object types) if a pointer to \tcode{T1}
+can be explicitly converted to the type ``pointer to \tcode{T2}'' using
+a \tcode{const_cast}. Similarly, for two
+\addedCC{effective}
+object types \tcode{T1} and
+\tcode{T2}, an expression of type \tcode{T1} can be explicitly converted
+to an rvalue of type \tcode{T2} using the cast
+\tcode{const_cast<T2\&\&>} if a pointer to \tcode{T1} can be explicitly
+converted to the type ``pointer to \tcode{T2}'' using a
+\tcode{const_cast}. The result of a reference \tcode{const_cast} refers
+to the original object.
 
 \rSec1[expr.unary]{Unary expressions}
 
 \rSec2[expr.unary.op]{Unary operators}
-\setcounter{Paras}{1}
+\pnum
+The unary \mbox{\tcode{*}} operator performs indirection: the expression
+to which it is applied shall be a pointer to an 
+\addedCC{effective}
+object type, or a pointer
+to a function type and the result is an lvalue referring to the object or
+function to which the expression points.  If the type of the expression is
+``pointer to \mbox{\tcode{T}},'' the type of the result is
+``\mbox{\tcode{T}}.''
+\enternote\
+a pointer to an
+incomplete type (other than cv void) can be dereferenced. The lvalue thus
+obtained can be used in limited ways (to initialize a reference, for
+example); this lvalue must not be converted to an rvalue, see 4.1.
+\exitnote\
+
 \pnum
 \index{name!address~of cv-qualified}%
 \index{expression!pointer~to~member constant}%
@@ -801,10 +1116,127 @@ non-static data member (\ref{dcl.stc}) does not reflect the
 specifier associated with the non-static data member.
 \exitnote\ 
 
+\rSec2 [expr.pre.incr]{Increment and decrement}
+\pnum
+The operand of prefix \mbox{\tcode{++}} is modified by adding
+\mbox{\tcode{1}}, or set to \mbox{\tcode{true}} if it is
+\mbox{\tcode{bool}} (this use is deprecated). The operand shall be a
+modifiable lvalue.  The type of the operand shall be an arithmetic type or
+a pointer to a completely-defined 
+\addedCC{effective}
+object type. The result is the updated
+operand; it is an lvalue, and it is a bit-field if the operand is a
+bit-field. If \mbox{\tcode{x}} is not of type \mbox{\tcode{bool}}, the
+expression ++\mbox{\tcode{x}} is equivalent to
+\mbox{\tcode{x+=1}}.
+
+\setcounter{subsection}{5}
+\rSec2[expr.alignof]{Alignof}
+An \tcode{alignof} expression yields the alignment requirement of its
+operand type.  The operand shall be a \emph{type-id} representing a
+complete
+\addedCC{effective}
+object type. 
+
+\setcounter{section}{4}
+\rSec1[expr.mptr.oper]{Pointer-to-member operators}
+\setcounter{Paras}{1}
+\pnum
+The binary operator \tcode{.*} binds its second operand, which shall be
+of type ``pointer to member of \tcode{T}'' (where \tcode{T} is a
+completely-defined
+\addedCC{effective}
+class type) to its first operand, which shall be of
+class \tcode{T} or of a class of which \tcode{T} is an unambiguous and
+accessible base class. The result is an object or a function of the type
+specified by the second operand.
+
+\pnum
+The binary operator \tcode{->*} binds its second operand, which shall be
+of type ``pointer to member of \tcode{T}'' (where \tcode{T} is a
+completely-defined
+\addedCC{effective}
+class type) to its first operand, which shall be of
+type ``pointer to \tcode{T}'' or ``pointer to a class of which \tcode{T}
+is an unambiguous and accessible base class.'' The result is an object
+or a function of the type specified by the second operand.
+
+
+
+\setcounter{section}{6}
+\rSec1[expr.add]{Additive operators}
+\pnum
+[...]For addition, either both operands shall have arithmetic or
+enumeration type, or one operand shall be a pointer to a completely defined
+\addedCC{effective}
+object type and the other shall have integral or enumeration type. 
+
+\pnum
+For subtraction, one of the following shall hold: 
+\begin{itemize}
+    \item both operands have arithmetic or enumeration type; or 
+    \item both operands are pointers to cv-qualified or cv-unqualified
+        versions of the same completely defined
+        \addedCC{effective}
+         object type; or 
+    \item the left operand is a pointer to a completely defined
+        \addedCC{effective}
+        object type and the right operand has integral or enumeration type. 
+\end{itemize}
+
+
+\setcounter{section}{16}
+\rSec1[expr.ass]{Assignment and compound assignment operators}
+\setcounter{Paras}{6}
+\pnum
+The behavior of an expression of the form E1 \emph{op} = E2 is equivalent
+to E1 = E1 \emph{op} E2 except that E1 is evaluated only once. In += and
+-=, E1 shall either have arithmetic type or be a pointer to a possibly
+cv-qualified completely defined
+\addedCC{effective}
+object type. In all other cases, E1 shall have arithmetic type. 
+
+
 \setcounter{section}{18}
 \rSec1[expr.const]{Constant expressions}
+\setcounter{Paras}{1}
 
-\setcounter{Paras}{2}
+\pnum
+A \techterm{conditional-expression} is a constant expression
+unless it involves one  of the following as a potentially evaluated
+subexpression (\ref{basic.def.odr}), but 
+subexpressions of logical AND (\ref{expr.log.and}),
+logical OR (\ref{expr.log.or}), and conditional (\ref{expr.cond})
+operations that are not evaluated are not considered 
+\enternote an overloaded operator invokes a function\exitnote:
+
+\begin{itemize}
+\item{an lvalue-to-rvalue conversion~(\ref{conv.lval}) unless
+it is applied to}
+\begin{itemize}
+\item{an lvalue of
+\addedCC{effective}
+integral type that refers to a non-volatile const
+variable or static data member initialized with constant expressions, or}
+\item{an lvalue of
+\addedCC{effective}
+literal type that refers to a non-volatile object
+defined with \tcode{constexpr}, or that refers to a sub-object
+of such an object;}
+\end{itemize}
+\item{a class member access~(\ref{expr.ref}) unless its
+\techterm{postfix-expression} is of
+\addedCC{effective}
+trivial or
+\addedCC{effective}
+literal type or of
+pointer to
+\addedCC{effective}
+trivial or
+\addedCC{effective}
+literal type;}
+\end{itemize}
+
 \pnum
 A constant expression is an \techterm{integral constant expression} if
 it is of integral or enumeration type\addedConcepts{, or, in a
@@ -817,6 +1249,14 @@ expressions may be used as array bounds (8.3.4, 5.3.4), as case
 expressions (6.4.2), as bit-field lengths (9.6), as enumerator
 initializers (7.2), as static member initializers (9.4.2), and as
 integral or enumeration non-type template arguments (14.3). \exitnote\
+
+\pnum
+If an expression of
+\addedCC{effective}
+literal class type is used in a context where an 
+integral constant expression is required, then that class type shall 
+have a single non-explicit conversion function to an integral or enumeration type 
+and that conversion function shall be constexpr.
 
 
 \rSec0[stmt.stmt]{Statements}
@@ -841,6 +1281,26 @@ statement:\br
     try-block\br
     \addedConcepts{late-checked-block}
 \end{bnf}
+
+\setcounter{section}{6}
+\rSec1[stmt.dcl]{Declaration statement}
+\setcounter{Paras}{2}
+\pnum
+\index{initialization!jump~past}%
+\index{goto@\tcode{goto}!initialization~and}%
+It is possible to transfer into a block, but not in a way that bypasses
+declarations with initialization. A program that jumps%
+\footnote{%
+The transfer from the condition of a \tcode{switch} statement to a
+\tcode{case} label is considered a jump in this respect.%
+}
+from a point where a local variable with automatic storage duration is
+not in scope to a point where it is in scope is ill-formed unless the
+variable has
+\addedCC{effective}
+trivial type~(\ref{basic.types}) and is declared without an
+\techterm{initializer}~(\ref{dcl.init}).
+
 
 \color{addclr}
 \setcounter{section}{8}
@@ -1035,6 +1495,46 @@ declaration or subcomponent thereof refer only to those components of the
 declaration that are
 \textit{not}\ 
 nested within scopes nested within the declaration.
+
+
+\setcounter{section}{1}
+\setcounter{subsection}{4}
+
+\rSec2[dcl.constexpr]{The \tcode{constexpr} specifier}
+\pnum
+The \tcode{constexpr} specifier shall be applied only to the definition of
+an object, function, or function template, or to the declaration of a static
+data member of an
+\addedCC{effective}
+literal type~(\ref{basic.types}). 
+
+\setcounter{Paras}{2}
+\pnum
+The definition of a constexpr function shall satisfy the following
+constraints:
+
+\begin{itemize}
+\item{its return type shall be an
+\addedCC{effective}
+ literal type}
+\item{each of its parameter types shall be an
+\addedCC{effective}
+literal type}
+\item{its \techterm{function-body} shall be a
+\techterm{compound-statement} of the form
+\begin{codeblock}
+{ return @\techterm{expression}@; }
+\end{codeblock}
+where \techterm{expression} is a potential constant
+expression~(\ref{expr.const})
+\item{every implicit conversion used in converting
+\techterm{expression} to the function return type~(\ref{dcl.init})
+shall be one of those allowed in a constant
+expression~(\ref{expr.const}).}
+}
+\end{itemize}
+
+
 
 \setcounter{section}{3}
 \setcounter{subsection}{2}
@@ -1243,7 +1743,17 @@ There is no ``reference-to-member'' type in \Cpp.
 \exitnote\ 
 
 \rSec2[dcl.array]{Arrays}
-\setcounter{Paras}{1}
+\setcounter{Paras}{0}
+\pnum
+[...]
+If the constant expression is omitted, the type of the identifier of
+\tcode{D}
+is ``\nonterminal{derived-declarator-type-list}\ array of unknown bound of
+\tcode{T},''
+an incomplete 
+\addedCC{effective}
+object type.
+
 \pnum
 An array can be constructed from one of the fundamental types
 (except
@@ -1299,6 +1809,26 @@ defined within the class).
 \setcounter{chapter}{8}
 \rSec0[class]{Classes}
 \begin{paras}
+
+
+\setcounter{Paras}{3}
+\pnum
+\index{struct@\tcode{struct}!\tcode{class}~versus}%
+\index{structure}%
+\index{union@\tcode{union}!\tcode{class}~versus}%
+A \techterm{union} is a class defined with the \techterm{class-key}
+\tcode{union};
+\index{access!\tcode{union} default member}%
+it holds only one data member at a time~(\ref{class.union}).
+\enternote
+aggregates of class type are described in~\ref{dcl.init.aggr}.
+\exitnote
+
+\pnum
+\addedCC{An \emph{effective class} T is a non-archetype class
+or a type archetype (\mbox{\ref{temp.archetype}}) from
+\mbox{\tcode{std::ClassType<T>}}.}
+
 \setcounter{section}{1}
 \rSec1[class.mem]{Class members}
 
@@ -1360,6 +1890,28 @@ constant-initializer:\br
         \terminal{=}\ constant-expression
 \end{bnf}
 
+\noindent\editorial{Insert the following in 9.2 [class.mem] p2}
+\setcounter{Paras}{1}
+\pnum
+A 
+\addedCC{non-archetype}
+class is considered a completely-defined object
+type~(\ref{basic.types}) (or complete type) at the closing \tcode{\}} of
+the \techterm{class-specifier}.
+\addedCC{
+ \mbox{\enternote}
+    Each type archetype \mbox{\ref{temp.archetype}} is considered to be a
+    unique generated class type and is considered to be defined when it is
+    established.
+ \mbox{\exitnote}
+}
+Within the class
+\techterm{member-specification}, the class is regarded as complete
+within function bodies, default arguments,
+\techterm{exception-specification}{s} (including such things in nested
+classes).  Otherwise it is regarded as incomplete within its own class
+\techterm{member-specification}.
+
 \noindent\editorial{Add the following new paragraphs to 9.2 [class.mem]}
 \setcounter{Paras}{18}
 \pnum
@@ -1375,6 +1927,30 @@ treated as a constrained template (\mbox{\ref{temp.constrained}})
 whose template requirements include the requirements
   specified in its \mbox{\techterm{member-requirement}} clause
 and the requirements of each enclosing constrained template.}
+
+
+\setcounter{section}{4}
+\setcounter{subsection}{1}
+\rSec2[class.static.data]{Static data members}
+\setcounter{Paras}{2}
+\pnum
+If a \tcode{static} data member is of \tcode{const}
+\addedCC{effective}
+literal type, its declaration in the class definition
+can specify a \techterm{constant-initializer}. A \tcode{static} data
+member of
+\addedCC{effective}
+literal type can be declared in the class definition with the
+\tcode{constexpr} specifier; if so, its declaration shall specify a
+\techterm{constant-initializer}.
+In both these cases, the member may appear in
+integral constant expressions. The member shall still be defined in a
+namespace scope if it is used in the program and the namespace scope
+definition shall not contain an \techterm{initializer}.
+
+
+
+
 \end{paras}
 
 \setcounter{chapter}{11}
@@ -2249,8 +2825,10 @@ is hidden and is not included in the set of candidate functions.
 \setcounter{Paras}{4}
 
 \pnum
-For every cv-qualified or cv-unqualified object type
-\textit{T}, \addedConcepts{including archetypes that are object types,}
+For every cv-qualified or cv-unqualified
+\addedCC{effective}
+ object type
+\textit{T}, 
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2258,8 +2836,10 @@ there exist candidate operator functions of the form
 \end{codeblock}
 
 \pnum
-For every function type
-\textit{T}, \addedConcepts{including archetypes that are function types,}
+For every 
+\addedCC{effective}
+function type
+\textit{T},
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2275,10 +2855,48 @@ there exist candidate operator functions of the form
 @\textit{T}@*    operator+(@\textit{T}@*);
 \end{codeblock}
 
+\setcounter{Paras}{10}
+\pnum
+For every quintuple
+(\textit{C1},
+\textit{C2},
+\textit{T},
+\textit{CV1},
+\textit{CV2}),
+where
+\textit{C2}\ 
+is a class type,
+\textit{C1}\ 
+is the same type as C2 or is a derived class of C2,
+\textit{T}\ 
+is an
+\addedCC{effective}
+object type or a function type,
+and
+\textit{CV1}\ 
+and
+\textit{CV2}\ 
+are
+\techterm{cv-qualifier-seq}{s},
+there exist candidate operator functions of the form
+
+\begin{codeblock}
+@\textit{CV12 T}@& operator->*(@\textit{CV1 C1}@*, @\textit{CV2 T C2}@::*);
+\end{codeblock}
+
+where
+\textit{CV12}\ 
+is the union of
+\textit{CV1}\ 
+and
+\textit{CV2}.
+
 \setcounter{Paras}{12}
 \pnum
-For every cv-qualified or cv-unqualified object type
-\textit{T}, \addedConcepts{including archetypes that are object types,}
+For every cv-qualified or cv-unqualified
+\addedCC{effective}
+object type
+\textit{T},
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2294,7 +2912,9 @@ For every
 \textit{T},\
 where
 \textit{T}\
-is a pointer to object type, \addedConcepts{including pointers to archetypes that are object types,}
+is a pointer to
+\addedCC{effective}
+object type,
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2302,8 +2922,10 @@ std::ptrdiff_t   operator-(@\textit{T}\addedConcepts{*}@, @\textit{T}\addedConce
 \end{codeblock}
 
 \pnum
-For every pointer or enumeration type
-\textit{T}, \addedConcepts{including pointers to archetypes that are object types,}
+For every pointer 
+\addedCC{to effective object type}
+or enumeration type
+\textit{T}, 
 there exist candidate operator functions of the form
 
 \begin{codeblock}
@@ -2369,7 +2991,9 @@ For every pair
 \textit{VQ}),
 where
 \textit{T}\ 
-is a cv-qualified or cv-unqualified object type\addedConcepts{, including archetypes that are object types,} and
+is a cv-qualified or cv-unqualified
+\addedCC{effective}
+object type and
 \textit{VQ}\ 
 is either
 \tcode{volatile}
@@ -3282,6 +3906,29 @@ that names a member of an unknown specialization.
 \additemConcepts{an \mbox{\techterm{identifier}}, \mbox{\techterm{nested-name-specifier}}, or a \mbox{\techterm{qualified-id}} that names a
 member of the current instantiation that is a constrained member
 (\mbox{\ref{class.mem}}).}
+\end{itemize}
+
+\rSec3[temp.dep.constexpr]{Value-dependent expressions}
+
+\pnum
+Except as described below, a constant expression is value-dependent if any
+subexpression is value-dependent.
+
+\pnum
+An
+\techterm{identifier}\ 
+is value-dependent if it is:
+
+\begin{itemize}
+\item
+a name declared with a dependent type,
+\item
+the name of a non-type template parameter,
+\item
+a constant with
+\addedCC{effective}
+literal type and is initialized with an
+expression that is value-dependent.
 \end{itemize}
 
 
@@ -6339,44 +6986,70 @@ template <C1 T> class X {
 \color{addclr}
 
 \pnum
-\addedConcepts{An archetype \mbox{\tcode{T$'$}} for a type
+\removedCCC{An archetype \mbox{\tcode{T$'$}} for a type
   \mbox{\tcode{T}}} \addedCC{is all of the following that apply:}
 \begin{itemize}
-\additemConcepts{an object type ([intro.object]), if the template
+\remitemCCC{an object type ([intro.object]), if the template
   contains the requirement \mbox{\tcode{std::ObjectType<T>}},}
-\additemConcepts{a function type (\mbox{\ref{dcl.fct}}), if the template
+\remitemCCC{a function type (\mbox{\ref{dcl.fct}}), if the template
   contains the requirement \mbox{\tcode{std::FunctionType<T>}},}
-\additemConcepts{a class type (clause~\mbox{\ref{class}}), if the 
+\remitemCCC{a class type (clause~\mbox{\ref{class}}), if the 
   template contains the requirement
   \mbox{\tcode{std::ClassType<T>}},}
-\additemConcepts{a class (clause~\mbox{\ref{class}}), if the 
+\remitemCCC{a class (clause~\mbox{\ref{class}}), if the 
   template contains the requirement \mbox{\tcode{std::Class<T>}},}
-\additemConcepts{a union ([class.union]), if the template contains
+\remitemCCC{a union ([class.union]), if the template contains
   the requirement \mbox{\tcode{std::Union<T>}}},
-\additemConcepts{a trivial type (\mbox{\ref{basic.types}}), if the 
+\remitemCCC{a trivial type (\mbox{\ref{basic.types}}), if the 
   template contains the requirement
   \mbox{\tcode{std::TrivialType<T>}},}
-\additemConcepts{a standard layout type (\mbox{\ref{basic.types}}), if the
+\remitemCCC{a standard layout type (\mbox{\ref{basic.types}}), if the
   template contains the requirement
   \mbox{\tcode{std::StandardLayoutType<T>}},}
-\additemConcepts{a literal type (\mbox{\ref{basic.types}}), if the 
+\remitemCCC{a literal type (\mbox{\ref{basic.types}}), if the 
   template contains the requirement
   \mbox{\tcode{std::LiteralType<T>}},}
-\additemConcepts{a scalar type (\mbox{\ref{basic.types}}), if the 
+\remitemCCC{a scalar type (\mbox{\ref{basic.types}}), if the 
   template contains the requirement
   \mbox{\tcode{std::ScalarType<T>}},}
-\additemConcepts{an arithmetic type (\mbox{\ref{basic.fundamental}}), if the
+\remitemCCC{an arithmetic type (\mbox{\ref{basic.fundamental}}), if the
   template contains the requirement
   \mbox{\tcode{std::ArithmeticType<T>}},}
-\additemConcepts{an integral type (\mbox{\ref{basic.fundamental}}), if the 
+\remitemCCC{an integral type (\mbox{\ref{basic.fundamental}}), if the 
   template contains the requirement
   \mbox{\tcode{std::IntegralType<T>}},}
-\additemConcepts{a floating point type (\mbox{\ref{basic.fundamental}}), if the 
+\remitemCCC{a floating point type (\mbox{\ref{basic.fundamental}}), if the 
   template contains the requirement
   \mbox{\tcode{std::FloatingPointType<T>}}, and}
-\additemConcepts{an enumeration type (\mbox{\ref{dcl.enum}}), if the template
+\remitemCCC{an enumeration type (\mbox{\ref{dcl.enum}}), if the template
   contains the requirement \mbox{\tcode{std::EnumerationType<T>}}.}
 \end{itemize}
+
+\pnum
+\addedCC{
+A type archetype is a unique generated class type whose special member
+functions are each either user-provided or deleted (depending on template
+requirements) and whose other members are given entirely by the template
+requirements that are in scope where an archetype is used.  A type
+archetype is considered to be completely defined when it is established
+(although it may later acquire additional members as a result of additional
+requirements).
+}
+
+\pnum
+\addedCC{
+    An archetype T is said to be \emph{from} a given concept instance if T
+    appears in the template argument list of the concept instance when that
+    concept instance appears in a requirement whose potential scope
+    encloses a region where the archetype T is used.  
+    \enterexample}
+    \begin{codeblock}
+    concept C<typename T> {}
+    template <C T> void f( T ) {}
+    \end{codeblock} \addedCC{ Beginning at the declaration of T until the
+    closing curly brace of the definition of f(T) above, we say that T ``is
+    from C<T>''.  \exitexample
+}
 
 \pnum
 \addedConcepts{The archetype \mbox{\tcode{T$'$}} of \mbox{\tcode{T}} contains a public member

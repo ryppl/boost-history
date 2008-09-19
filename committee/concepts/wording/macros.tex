@@ -21,6 +21,7 @@
 \usepackage{amsmath}    % additional math symbols
 \usepackage{mathrsfs}
 \usepackage{multicol}
+\usepackage{xspace}
 
 \usepackage[T1]{fontenc}
 \usepackage{ae}
@@ -99,6 +100,12 @@
 %% Concepts changes since the last revision
 \definecolor{ccadd}{rgb}{0,.6,0}
 \newcommand{\addedCC}[1]{\textcolor{ccadd}{\ul{#1}}}
+
+% The 'rem.*CC' macros should be used for a new deletion of text that is
+% currently in the WP.  The 'rem.*CCC' macros should be used for a new
+% deletion of text that was previously in \addedConcepts{} (i.e., that was
+% new Concepts wording).
+
 \newcommand{\removedCC}[1]{\textcolor{remclr}{\st{#1}}}
 \newcommand{\changedCC}[2]{\removedCC{#1}\addedCC{#2}}
 \newcommand{\remitemCC}[1]{\remitem{#1}}
@@ -326,8 +333,15 @@
 \newcommand{\howwide}{\diffdef{How widely used}}
 
 %% Miscellaneous
-\newcommand{\uniquens}{\textrm{\textit{\textbf{unique}}}}
-\newcommand{\stage}[1]{\item{\textbf{Stage #1:}}}
+\newcommand{\uniquens}{\textrm{\textit{\textbf{unique}}} }
+\newcommand{\stage}[1]{\item{\textbf{Stage #1:}}\xspace}
+\newcommand{\doccite}[1]{\textit{#1}\xspace}
+\newcommand{\cvqual}[1]{\textit{#1}}
+\newcommand{\cv}{\cvqual{cv}}
+\renewcommand{\emph}[1]{\textit{#1}\xspace}
+\newcommand{\term}[1]{\textit{#1}\xspace}
+\newcommand{\numconst}[1]{\textsl{#1}\xspace}
+\newcommand{\logop}[1]{{\footnotesize #1}\xspace}
 
 %%--------------------------------------------------
 %% Adjust markers
