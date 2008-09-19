@@ -80,30 +80,7 @@ document.
 %
 This document
 provides wording for changes to the core language. Changes to the
-standard library are discussed in separate documents:
-
-\begin{itemize}
-\item N2618=08-0128: Concepts for the C++0x Standard Library: Introduction (Revision 1)
-\item N2619=08-0129: Concepts for the \Cpp{}0x Standard Library:
-  Language Support Library
-\item N2620=08-0130: Concepts for the C++0x Standard Library:
-  Diagnostics library
-\item N2737=08-0247: Foundational Concepts for the C++0x Standard Library
-  (Revision 3)
-\item N2735=08-0245: Concepts for the C++0x Standard Library:
-  Utilities (Revision 3)
-\item N2738=08-0248: Concepts for the C++0x Standard Library:
-  Containers (Revision 2)
-\item N2739=08-0249: Iterator Concepts for the C++0x Standard Library
-  (Revision 3)
-\item N2734=08-0244: Concepts for the C++0x Standard Library:
-  Iterators (Revision 3)
-\item N2740=08-0250: Concepts for the C++0x Standard Library:
-  Algorithms (Revision 3)
-\item N2736=08-0246: Concepts for the C++0x Standard Library: Numerics
-  (Revision 2)
-\item N2654=08-0161: Allocator Concepts (Revision 1)
-\end{itemize}
+standard library are discussed in separate documents.
 
 \section*{Changes from N2741}
 \begin{itemize}
@@ -119,6 +96,7 @@ standard library are discussed in separate documents:
 \item Replaced the term \techterm{late-check-block} with \techterm{late-checked-block}.
 \item Removed the compiler-supported concept \tcode{std::FunctionType}, because it was found to be unnecessary as a compile built-in.
 \item Introduced the model of archetypes as class types, and adjusted certain other types (e.g., ``object type'') to allow for archetypes that are meant to stand in for those types. For example, \tcode{T} where the requirement \tcode{std::ObjectType<T>} is in scope.
+\item Move the text describing how to build an archetype from concept requirements into its own section (\ref{temp.archetype.assemble}).
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -2528,7 +2506,7 @@ overloaded.
 \index{static@\tcode{static}!overloading~and}%
 Member function declarations with the same name\changedConcepts{ and}{,} the same
 \techterm{parameter-type-list}\addedConcepts{ and the same template requirements (if
-  any)}, the same  cannot be overloaded if any of them is a 
+  any)}\removedConcepts{,} cannot be overloaded if any of them is a 
 \tcode{static}
 member function declaration (\ref{class.static}).
 Likewise, member function template declarations with the same name,
@@ -2835,16 +2813,7 @@ there exist candidate operator functions of the form
 @\textit{T}@&    operator*(@\textit{T}@*);
 \end{codeblock}
 
-\pnum
-For every 
-\addedCC{effective}
-function type
-\textit{T},
-there exist candidate operator functions of the form
-
-\begin{codeblock}
-@\textit{T}@&    operator*(@\textit{T}@*);
-\end{codeblock}
+\setcounter{Paras}{6}
 
 \pnum
 For every type
@@ -5833,7 +5802,6 @@ namespace std {
   concept ReferentType<typename T> { }
   concept VariableType<typename T> { }
   concept ObjectType<typename T> @\textit{see below}@;
-  concept FunctionType<typename T> @\textit{see below}@;
   concept ValueType<typename T> @\textit{see below}@;
   concept ClassType<typename T> @\textit{see below}@;
   concept Class<typename T> @\textit{see below}@;
@@ -5959,18 +5927,6 @@ concept ObjectType<typename T> : ReferentType<T>, PointeeType<T> { }
   is an object type, a concept map
   \mbox{\tcode{ObjectType<T>}} is implicitly defined in
   namespace \mbox{\tcode{std}}.}
-\end{itemdescr}
-
-\begin{itemdecl}
-concept FunctionType<typename T> : MemberPointeeType<T> { }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes function types (\mbox{\ref{dcl.fct}}).}
-
-\pnum
-\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is a function type, a concept map \mbox{\tcode{FunctionType<T>}} is implicitly defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -6986,183 +6942,22 @@ template <C1 T> class X {
 \color{addclr}
 
 \pnum
-\removedCCC{An archetype \mbox{\tcode{T$'$}} for a type
-  \mbox{\tcode{T}}} \addedCC{is all of the following that apply:}
-\begin{itemize}
-\remitemCCC{an object type ([intro.object]), if the template
-  contains the requirement \mbox{\tcode{std::ObjectType<T>}},}
-\remitemCCC{a function type (\mbox{\ref{dcl.fct}}), if the template
-  contains the requirement \mbox{\tcode{std::FunctionType<T>}},}
-\remitemCCC{a class type (clause~\mbox{\ref{class}}), if the 
-  template contains the requirement
-  \mbox{\tcode{std::ClassType<T>}},}
-\remitemCCC{a class (clause~\mbox{\ref{class}}), if the 
-  template contains the requirement \mbox{\tcode{std::Class<T>}},}
-\remitemCCC{a union ([class.union]), if the template contains
-  the requirement \mbox{\tcode{std::Union<T>}}},
-\remitemCCC{a trivial type (\mbox{\ref{basic.types}}), if the 
-  template contains the requirement
-  \mbox{\tcode{std::TrivialType<T>}},}
-\remitemCCC{a standard layout type (\mbox{\ref{basic.types}}), if the
-  template contains the requirement
-  \mbox{\tcode{std::StandardLayoutType<T>}},}
-\remitemCCC{a literal type (\mbox{\ref{basic.types}}), if the 
-  template contains the requirement
-  \mbox{\tcode{std::LiteralType<T>}},}
-\remitemCCC{a scalar type (\mbox{\ref{basic.types}}), if the 
-  template contains the requirement
-  \mbox{\tcode{std::ScalarType<T>}},}
-\remitemCCC{an arithmetic type (\mbox{\ref{basic.fundamental}}), if the
-  template contains the requirement
-  \mbox{\tcode{std::ArithmeticType<T>}},}
-\remitemCCC{an integral type (\mbox{\ref{basic.fundamental}}), if the 
-  template contains the requirement
-  \mbox{\tcode{std::IntegralType<T>}},}
-\remitemCCC{a floating point type (\mbox{\ref{basic.fundamental}}), if the 
-  template contains the requirement
-  \mbox{\tcode{std::FloatingPointType<T>}}, and}
-\remitemCCC{an enumeration type (\mbox{\ref{dcl.enum}}), if the template
-  contains the requirement \mbox{\tcode{std::EnumerationType<T>}}.}
-\end{itemize}
-
-\pnum
 \addedCC{
-A type archetype is a unique generated class type whose special member
-functions are each either user-provided or deleted (depending on template
-requirements) and whose other members are given entirely by the template
-requirements that are in scope where an archetype is used.  A type
-archetype is considered to be completely defined when it is established
-(although it may later acquire additional members as a result of additional
-requirements).
-}
-
-\pnum
-\addedCC{
-    An archetype T is said to be \emph{from} a given concept instance if T
+    An archetype \mbox{\tcode{T}} is said to be \mbox{\techterm{from}} a given concept instance if \mbox{\tcode{T}}
     appears in the template argument list of the concept instance when that
     concept instance appears in a requirement whose potential scope
-    encloses a region where the archetype T is used.  
+    encloses a region where the archetype \mbox{\tcode{T}} is used.  
     \enterexample}
     \begin{codeblock}
     concept C<typename T> {}
     template <C T> void f( T ) {}
-    \end{codeblock} \addedCC{ Beginning at the declaration of T until the
-    closing curly brace of the definition of f(T) above, we say that T ``is
-    from C<T>''.  \exitexample
+    \end{codeblock} \addedCC{ Beginning at the declaration of \mbox{\tcode{T}} until the
+    closing curly brace of the definition of \mbox{\tcode{f(T)}} above, we say that \mbox{\tcode{T}} ``is
+    from \mbox{\tcode{C<T>}}''.  \exitexample
 }
 
 \pnum
-\addedConcepts{The archetype \mbox{\tcode{T$'$}} of \mbox{\tcode{T}} contains a public member
-function or member function template
-corresponding to each member function or member function template of
-each concept map archetype corresponding
-to a concept 
-requirement that names \mbox{\tcode{T}} (\mbox{\ref{temp.req}}).
-\mbox{\enterexample}}
-\begin{codeblock}
-concept CopyConstructible<typename T> {
-  T::T(const T&);
-}
-
-concept MemSwappable<typename T> {
-  void T::swap(T&);
-}
-
-template<typename T>
-requires CopyConstructible<T> && MemSwappable<T>
-void foo(T& x) {
-  // archetype T$'$ of $T$ contains a copy constructor T$'$::T$'$(const T$'$\&) from CopyConstructible<T>
-  // and a member function void swap(T$'$\&) from MemSwappable<T>
-  T y(x);
-  y.swap(x);
-}
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
-
-\pnum
-\addedConcepts{If no requirement specifies a copy constructor for a type
-\mbox{\tcode{T}}, a copy constructor is implicitly declared
-(\mbox{\ref{class.copy}}) in the archetype of \mbox{\tcode{T}} with the following
-signature:}
-\begin{codeblock}
-  T(const T&) = delete;
-\end{codeblock}
-\addedConcepts{\mbox{\enterexample}}
-\begin{codeblock}
-concept DefaultConstructible<typename T> {
-  T::T();
-}
-
-concept MoveConstructible<typename T> {
-  T::T(T&&);
-}
-
-template<typename T>
-requires DefaultConstructible<T> && MoveConstructible<T>
-void f(T x) {
-  T y = T(); // okay: move-constructs y from default-constructed T
-  T z(x); // error: overload resolution selects implicitly-declared
-          // copy constructor, which is deleted
-}
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
-
-\pnum
-\addedConcepts{If no requirement specifies a copy assignment operator for a type
-\mbox{\tcode{T}}, a copy assignment operator is implicitly
-declared (\mbox{\ref{class.copy}}) in the archetype of \mbox{\tcode{T}} with the
-following signature:}
-\begin{codeblock}
-  T& T::operator=(const T&) = delete;
-\end{codeblock}
-
-\pnum
-\addedConcepts{If no requirement specifies a destructor for a type \mbox{\tcode{T}},
-a destructor is implicitly declared (\mbox{\ref{class.dtor}})
-in the archetype of \mbox{\tcode{T}} with the following signature:}
-\begin{codeblock}
-  ~T() = delete;
-\end{codeblock}
-
-\pnum
-\addedConcepts{If no requirement specifies a unary \mbox{\tcode{\&}} operator for a type
-\mbox{\tcode{T}}, a unary member operator \mbox{\tcode{\&}} is implicitly declared in the
-archetype of \mbox{\tcode{T}} for each \mbox{\techterm{cv}} that is a valid
-\mbox{\techterm{cv-qualifier-seq}}:}
-\begin{codeblock}
-  @\techterm{cv}@ T* operator&() @\techterm{cv}@ = delete;
-\end{codeblock}
-
-\pnum 
-\addedConcepts{For each of the allocation functions \mbox{\tcode{new}}, \mbox{\tcode{new[]}},
-\mbox{\tcode{delete}}, and \mbox{\tcode{delete[]}} (\mbox{\ref{class.free}}), if no requirement
-specifies the corresponding operator with a signature below, that
-allocation function is
-implicitly declared as a member function in the archetype \mbox{\tcode{T$'$}}
-of \mbox{\tcode{T}} with the
-corresponding signature from the following list:}
-\begin{codeblock}
-  static void* T@$'$@::operator new(std::size_t) = delete;
-  static void* T@$'$@::operator new(std::size_t, void*) = delete;
-  static void* T@$'$@::operator new(std::size_t, const std::nothrow_t&) throw() = delete;
-  static void* T@$'$@::operator new[](std::size_t) = delete;
-  static void* T@$'$@::operator new[](std::size_t, void*) = delete;
-  static void* T@$'$@::operator new[](std::size_t, const std::nothrow_t&) throw() = delete;
-  static void T@$'$@::operator delete(void*) = delete;
-  static void T@$'$@::operator delete(void*, void*) = delete;
-  static void T@$'$@::operator delete(void*, const std::nothrow_t&) throw() = delete;
-  static void T@$'$@::operator delete[](void*) = delete;
-  static void T@$'$@::operator delete[](void*, void*) = delete;
-  static void T@$'$@::operator delete[](void*, const std::nothrow_t&) throw() = delete; 
-\end{codeblock}
-
-\pnum
-\addedConcepts{If the template requirements contain a requirement
-\mbox{\tcode{std::DerivedFrom<T, Base>}}, then the archetype of
-\mbox{\tcode{T}} is publicly derived from the archetype of \mbox{\tcode{Base}}. 
-If the same \mbox{\tcode{std::DerivedFrom<T, Base>}} requirement occurs more than once
-within the template requirements, the repeated \mbox{\tcode{std::DerivedFrom<T,
-  Base>}} requirements are ignored.}
+\addedCC{Archetypes are synthesized from the template requirements of the constrained template in which it is defined; see~\mbox{\ref{temp.archetype.assemble}}.}
 
 \pnum
 \addedConcepts{If two associated member function or member function template
@@ -7301,6 +7096,171 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
                        // where D$'$ is the archetype of D}
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
+
+\rSec3[temp.archetype.assemble]{Assembling archetypes}
+\pnum
+\removedCCC{An archetype \mbox{\tcode{T$'$}} for a type
+  \mbox{\tcode{T}}} \addedCC{is all of the following that apply:}
+\begin{itemize}
+\remitemCCC{an object type ([intro.object]), if the template
+  contains the requirement \mbox{\tcode{std::ObjectType<T>}},}
+\remitemCCC{a function type (\mbox{\ref{dcl.fct}}), if the template
+  contains the requirement \mbox{\tcode{std::FunctionType<T>}},}
+\remitemCCC{a class type (clause~\mbox{\ref{class}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::ClassType<T>}},}
+\remitemCCC{a class (clause~\mbox{\ref{class}}), if the 
+  template contains the requirement \mbox{\tcode{std::Class<T>}},}
+\remitemCCC{a union ([class.union]), if the template contains
+  the requirement \mbox{\tcode{std::Union<T>}}},
+\remitemCCC{a trivial type (\mbox{\ref{basic.types}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::TrivialType<T>}},}
+\remitemCCC{a standard layout type (\mbox{\ref{basic.types}}), if the
+  template contains the requirement
+  \mbox{\tcode{std::StandardLayoutType<T>}},}
+\remitemCCC{a literal type (\mbox{\ref{basic.types}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::LiteralType<T>}},}
+\remitemCCC{a scalar type (\mbox{\ref{basic.types}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::ScalarType<T>}},}
+\remitemCCC{an arithmetic type (\mbox{\ref{basic.fundamental}}), if the
+  template contains the requirement
+  \mbox{\tcode{std::ArithmeticType<T>}},}
+\remitemCCC{an integral type (\mbox{\ref{basic.fundamental}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::IntegralType<T>}},}
+\remitemCCC{a floating point type (\mbox{\ref{basic.fundamental}}), if the 
+  template contains the requirement
+  \mbox{\tcode{std::FloatingPointType<T>}}, and}
+\remitemCCC{an enumeration type (\mbox{\ref{dcl.enum}}), if the template
+  contains the requirement \mbox{\tcode{std::EnumerationType<T>}}.}
+\end{itemize}
+
+\pnum
+\addedCC{
+A type archetype is a unique generated class type whose special member
+functions are each either user-provided or deleted (depending on template
+requirements) and whose other members are given entirely by the template
+requirements that are in scope where an archetype is used.  A type
+archetype is considered to be completely defined when it is established
+(although it may later acquire additional members as a result of additional
+requirements).
+}
+
+\pnum
+\addedConcepts{The archetype \mbox{\tcode{T$'$}} of \mbox{\tcode{T}} contains a public member
+function or member function template
+corresponding to each member function or member function template of
+each concept map archetype corresponding
+to a concept 
+requirement that names \mbox{\tcode{T}} (\mbox{\ref{temp.req}}).
+\mbox{\enterexample}}
+\begin{codeblock}
+concept CopyConstructible<typename T> {
+  T::T(const T&);
+}
+
+concept MemSwappable<typename T> {
+  void T::swap(T&);
+}
+
+template<typename T>
+requires CopyConstructible<T> && MemSwappable<T>
+void foo(T& x) {
+  // archetype T$'$ of $T$ contains a copy constructor T$'$::T$'$(const T$'$\&) from CopyConstructible<T>
+  // and a member function void swap(T$'$\&) from MemSwappable<T>
+  T y(x);
+  y.swap(x);
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum
+\addedConcepts{If no requirement specifies a copy constructor for a type
+\mbox{\tcode{T}}, a copy constructor is implicitly declared
+(\mbox{\ref{class.copy}}) in the archetype of \mbox{\tcode{T}} with the following
+signature:}
+\begin{codeblock}
+  T(const T&) = delete;
+\end{codeblock}
+\addedConcepts{\mbox{\enterexample}}
+\begin{codeblock}
+concept DefaultConstructible<typename T> {
+  T::T();
+}
+
+concept MoveConstructible<typename T> {
+  T::T(T&&);
+}
+
+template<typename T>
+requires DefaultConstructible<T> && MoveConstructible<T>
+void f(T x) {
+  T y = T(); // okay: move-constructs y from default-constructed T
+  T z(x); // error: overload resolution selects implicitly-declared
+          // copy constructor, which is deleted
+}
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
+
+\pnum
+\addedConcepts{If no requirement specifies a copy assignment operator for a type
+\mbox{\tcode{T}}, a copy assignment operator is implicitly
+declared (\mbox{\ref{class.copy}}) in the archetype of \mbox{\tcode{T}} with the
+following signature:}
+\begin{codeblock}
+  T& T::operator=(const T&) = delete;
+\end{codeblock}
+
+\pnum
+\addedConcepts{If no requirement specifies a destructor for a type \mbox{\tcode{T}},
+a destructor is implicitly declared (\mbox{\ref{class.dtor}})
+in the archetype of \mbox{\tcode{T}} with the following signature:}
+\begin{codeblock}
+  ~T() = delete;
+\end{codeblock}
+
+\pnum
+\addedConcepts{If no requirement specifies a unary \mbox{\tcode{\&}} operator for a type
+\mbox{\tcode{T}}, a unary member operator \mbox{\tcode{\&}} is implicitly declared in the
+archetype of \mbox{\tcode{T}} for each \mbox{\techterm{cv}} that is a valid
+\mbox{\techterm{cv-qualifier-seq}}:}
+\begin{codeblock}
+  @\techterm{cv}@ T* operator&() @\techterm{cv}@ = delete;
+\end{codeblock}
+
+\pnum 
+\addedConcepts{For each of the allocation functions \mbox{\tcode{new}}, \mbox{\tcode{new[]}},
+\mbox{\tcode{delete}}, and \mbox{\tcode{delete[]}} (\mbox{\ref{class.free}}), if no requirement
+specifies the corresponding operator with a signature below, that
+allocation function is
+implicitly declared as a member function in the archetype \mbox{\tcode{T$'$}}
+of \mbox{\tcode{T}} with the
+corresponding signature from the following list:}
+\begin{codeblock}
+  static void* T@$'$@::operator new(std::size_t) = delete;
+  static void* T@$'$@::operator new(std::size_t, void*) = delete;
+  static void* T@$'$@::operator new(std::size_t, const std::nothrow_t&) throw() = delete;
+  static void* T@$'$@::operator new[](std::size_t) = delete;
+  static void* T@$'$@::operator new[](std::size_t, void*) = delete;
+  static void* T@$'$@::operator new[](std::size_t, const std::nothrow_t&) throw() = delete;
+  static void T@$'$@::operator delete(void*) = delete;
+  static void T@$'$@::operator delete(void*, void*) = delete;
+  static void T@$'$@::operator delete(void*, const std::nothrow_t&) throw() = delete;
+  static void T@$'$@::operator delete[](void*) = delete;
+  static void T@$'$@::operator delete[](void*, void*) = delete;
+  static void T@$'$@::operator delete[](void*, const std::nothrow_t&) throw() = delete; 
+\end{codeblock}
+
+\pnum
+\addedConcepts{If the template requirements contain a requirement
+\mbox{\tcode{std::DerivedFrom<T, Base>}}, then the archetype of
+\mbox{\tcode{T}} is publicly derived from the archetype of \mbox{\tcode{Base}}. 
+If the same \mbox{\tcode{std::DerivedFrom<T, Base>}} requirement occurs more than once
+within the template requirements, the repeated \mbox{\tcode{std::DerivedFrom<T,
+  Base>}} requirements are ignored.}
 
 \rSec2[temp.constrained.set]{Candidate sets}
 \pnum
