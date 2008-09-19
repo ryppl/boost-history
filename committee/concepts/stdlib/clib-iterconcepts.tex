@@ -1095,6 +1095,15 @@ there exists a value \mbox{\tcode{n}} of \mbox{\tcode{difference_type}}
 \addedConcepts{\mbox{\returns}
 \mbox{\tcode{(a < b) ? distance(a,b) : -distance(b,a)}}}
 
+\begin{itemdecl}
+subscript_reference operator[](const X& x, difference_type n);
+\end{itemdecl}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+\mbox{\tcode{(const value_type&)x[n]}} is equivalent to
+\mbox{\tcode{*(x + n)}}.}
+
 \pnum
 \addedConcepts{Pointers are random access iterators with the following
 concept map}
