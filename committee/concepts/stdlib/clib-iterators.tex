@@ -76,6 +76,7 @@ Douglas Gregor and Andrew Lumsdaine \\
   iterator adaptors' \tcode{operator-} operations, use the
   \tcode{base()} function rather than \tcode{current} to retrieve the
   underlying iterator.
+\item Fixed support for move-only types in \tcode{back_insert_iterator}, \tcode{front_insert_iterator}, and \tcode{insert_iterator}.
 \end{itemize}
 \end{titlepage}
 
@@ -1047,8 +1048,9 @@ namespace std {
     @\addedConcepts{typedef void                             pointer;}@
 
     explicit back_insert_iterator(Cont@\removedConcepts{ainer}@& x);
-    back_insert_iterator<Cont@\removedConcepts{ainer}@>&
-      operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+    @\addedConcepts{requires CopyConstructible<Cont::value_type>}@
+      back_insert_iterator<Cont@\removedConcepts{ainer}@>&
+        operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
     back_insert_iterator<Cont@\removedConcepts{ainer}@>&
       operator=(@\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::value_type&& value);
 
@@ -1086,14 +1088,15 @@ with \tcode{\&\farg{x}}.
 
 \index{operator=@\tcode{operator=}!\tcode{back_insert_iterator}}%
 \begin{itemdecl}
-back_insert_iterator<Cont@\removedConcepts{ainer}@>&
-  operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+@\addedConcepts{requires CopyConstructible<Cont::value_type>}@
+  back_insert_iterator<Cont@\removedConcepts{ainer}@>&
+    operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
-\tcode{\removedConcepts{container->}push_back(\addedConcepts{*container, }value);}\
+\tcode{\removedConcepts{container->}push_back(\addedConcepts{*container, Cont::value_type(}value\addedConcepts{)});}\
 
 \pnum
 \returns\ 
@@ -1187,8 +1190,9 @@ namespace std {
     @\addedConcepts{typedef void                              pointer;}@
 
     explicit front_insert_iterator(Cont@\removedConcepts{ainer}@& x);
-    front_insert_iterator<Cont@\removedConcepts{ainer}@>&
-      operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+    @\addedConcepts{requires CopyConstructible<Cont::value_type>}@
+      front_insert_iterator<Cont@\removedConcepts{ainer}@>&
+        operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
     front_insert_iterator<Cont@\removedConcepts{ainer}@>&
       operator=(@\removedConcepts{typename}@ Cont@\removedConcepts{ainer}@::value_type&& value);
 
@@ -1226,14 +1230,15 @@ with \tcode{\&}\farg{x}.
 
 \index{operator=@\tcode{operator=}!\tcode{front_insert_iterator}}%
 \begin{itemdecl}
-front_insert_iterator<Cont@\removedConcepts{ainer}@>&
-  operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+@\addedConcepts{requires CopyConstructible<Cont::value_type>}@
+  front_insert_iterator<Cont@\removedConcepts{ainer}@>&
+    operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
-\tcode{\removedConcepts{container->}push_front(\addedConcepts{*container, }value);}\
+\tcode{\removedConcepts{container->}push_front(\addedConcepts{*container, Cont::value_type(}value\addedConcepts{)});}\
 
 \pnum
 \returns\ 
@@ -1328,8 +1333,9 @@ namespace std {
     @\addedConcepts{typedef void                        pointer;}@
 
     insert_iterator(Cont@\removedConcepts{ainer}@& x, @\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::iterator i);
-    insert_iterator<Cont@\removedConcepts{ainer}@>&
-      operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+    @\addedConcepts{requires CopyConstructible<Cont::value_type>}@
+      insert_iterator<Cont@\removedConcepts{ainer}@>&
+        operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
     insert_iterator<Cont@\removedConcepts{ainer}@>&
       operator=(@\removedConcepts{typename }@Cont@\removedConcepts{ainer}@::value_type&& value);
 
@@ -1369,15 +1375,16 @@ with \farg{i}.
 
 \index{operator=@\tcode{operator=}!\tcode{insert_iterator}}%
 \begin{itemdecl}
-insert_iterator<Cont@\removedConcepts{ainer}@>&
-  operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
+@\addedConcepts{requires CopyConstructible<Cont::value_type>}@
+  insert_iterator<Cont@\removedConcepts{ainer}@>&
+    operator=(@\changedConcepts{typename}{const}@ Cont@\removedConcepts{ainer}@::@\changedConcepts{const_reference}{value_type\&}@ value);
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \effects\ 
 \begin{codeblock}
-iter = @\removedConcepts{container->}@insert(@\addedConcepts{*container, }@iter, value);
+iter = @\removedConcepts{container->}@insert(@\addedConcepts{*container, }@iter, @\addedConcepts{Cont::value_type(}@value@\addedConcepts{)}@);
 ++iter;
 \end{codeblock}
 
