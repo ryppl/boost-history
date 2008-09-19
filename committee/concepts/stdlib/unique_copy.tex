@@ -229,6 +229,7 @@ literate={-}{{\text{-}}}1
 \maketitle
 \vspace{-0.5in}
 \par\noindent Author: Douglas Gregor, Indiana University
+\par\noindent Author: David Abrahams, BoostPro Consulting
 \par\noindent Document number: N2742=08-0252
 \par\noindent Date: \today
 \par\noindent Project: Programming Language C++, Library Working Group
@@ -314,61 +315,24 @@ but the common practice was to provide all six implementations. The
 resolution to DR 241 introduced the language that mandated six
 implementations. 
 
-\subsection{The Solution}
-This proposal eliminates the requirement for the
-\tcode{ForwardIterator} variants of this algorithm. Instead, the
-algorithm requires \tcode{CopyConstructible} and
-\tcode{CopyAssignable} value types (always). Implementers are, of
-course, free to add more-specialized overloads that optimize away the
-copy assignment and copy constructions when a forward iterator is
-available.
-
-\subsection{Move-Only Types}
-The side effect of the simpler specification is that it no longer
-permits the use of move-only types in \tcode{unique_copy}, since
-\tcode{unique_copy} always requires \tcode{CopyConstructible} and
-\tcode{CopyAssignable}. I believe this is a reasonable trade-off for
-several reasons:
-
-\begin{enumerate}
-\item Minimizing specification complexity is extremely important,
-  especially with the introduction of concepts. Users will look to the
-  standard for advice on how to use concepts, and we do not want them
-  following the lead of \tcode{unique_copy} as it is currently
-  written.
-\item It's not a backward-compatibility problem: we didn't have
-  move-only types in \Cpp98, so no conforming \Cpp98 or \Cpp03 code
-  will be broken by this change.
-\item \tcode{unique_copy} doesn't make sense for move-only types. The
-  algorithm requires \tcode{EqualityComparable}, which itself implies
-  that you can have multiple copies of a single value. Move-only
-  types, on the other hand, generally represent handles to resources
-  that are uniquely held, and hence will not have particularly
-  meaningful \tcode{operator==}. The prototypical example of a
-  move-only type, \tcode{unique_ptr}, has an \tcode{operator==} that
-  is only true when both pointers are NULL. Thus, \tcode{unique_copy}
-  on \tcode{unique_ptr}s merely removes duplicate NULL pointers: this
-  isn't a strong case when weighed against the specification complexity.
-\end{enumerate}
-
 \section{Proposed Resolution}
 In the concepts-based standard library, replace the six overloads of
-\tcode{unique_copy} with the following two signatures:
+\tcode{unique_copy} with the following two signatures. These
+signatures work with move-only types, alleviating the need to specify
+ForwardIterator constraints:
 
 \begin{lstlisting}
 template<InputIterator InIter, typename OutIter>
-  requires OutputIterator<OutIter, InIter::reference>
-        && OutputIterator<OutIter, const InIter::value_type&>
-        && EqualityComparable<InIter::value_type> 
-        && CopyAssignable<InIter::value_type>
-        && CopyConstructible<InIter::value_type> 
+  requires OutputIterator<OutIter, RvalueOf<InIter::value_type>::type>
+        && EqualityComparable<InIter::value_type>
+        && HasAssign<InIter::value_type, InIter::reference>
+        && Constructible<InIter::value_type, InIter::reference>
   OutIter unique_copy(InIter first, InIter last, OutIter result);
 template<InputIterator InIter, typename OutIter,
          EquivalenceRelation<auto, InIter::value_type> Pred>
-  requires OutputIterator<OutIter, InIter::reference>
-        && OutputIterator<OutIter, const InIter::value_type&>
-        && CopyAssignable<InIter::value_type> 
-        && CopyConstructible<InIter::value_type> 
+  requires OutputIterator<OutIter, RvalueOf<InIter::value_type>::type>
+        && HasAssign<InIter::value_type, InIter::reference>
+        && Constructible<InIter::value_type, InIter::reference>
         && CopyConstructible<Pred>
   OutIter unique_copy(InIter first, InIter last, OutIter result, Pred pred);
 \end{lstlisting}

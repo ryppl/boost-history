@@ -108,8 +108,8 @@ rationale.
   \item Add a restriction to [concept.transform] that prohibits users
     from adding concept maps for these concepts.
   \end{itemize}
-  \item Implicitly define \tcode{TriviallyEqualityComparable} concept
-    maps for enumeration types.
+  \item Remove \tcode{TriviallyEqualityComparable} concept
+    to be renamed and moved to atomics
   \item Change \tcode{ArithmeticLike} to refine from
     \tcode{LessThanComparable} rather than \tcode{HasLess},
     \tcode{HasGreater}, \tcode{HasLessEqual}, and
@@ -321,7 +321,6 @@ namespace std {
   // \ref{concept.comparison}, comparisons:
   auto concept LessThanComparable<typename T> @\textit{see below}@;
   auto concept EqualityComparable<typename T> @\textit{see below}@;
-  concept TriviallyEqualityComparable<typename T> @\textit{see below}@;
   auto concept StrictWeakOrder<typename F, typename T> @\textit{see below}@;
   auto concept EquivalenceRelation<typename F, typename T> @\textit{see below}@;
 
@@ -1419,27 +1418,6 @@ auto concept EqualityComparable<typename T> : HasEqualTo<T, T> {
 \addedConcepts{\mbox{\reallynote} describes types whose values can be
 compared for equality with \mbox{\tcode{operator==}}, which is an
 equivalence relation.}
-\end{itemdescr}
-
-\begin{itemdecl}
-concept TriviallyEqualityComparable<typename T> : EqualityComparable<T> { }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} describes types whose equality comparison
-  operators (\mbox{\tcode{==}}, \mbox{\tcode{!=}}) can be implemented
-  via a bitwise equality comparison, as with \mbox{\tcode{memcmp}}.
-\mbox{\enternote} such types should not have
-padding, i.e. the size of the type is the sum of the sizes of its
-elements. If padding exists, the comparison may provide false
-negatives, but never false positives. \mbox{\exitnote}}
-
-\pnum
-\addedConcepts{\mbox{\requires} for every integral, pointer, or enumeration type
-  \mbox{\tcode{T}}, a concept map
-  \mbox{\tcode{TriviallyEqualityComparable<T>}} shall be 
-  defined in namespace \mbox{\tcode{std}}.}
 \end{itemdescr}
 
 \begin{itemdecl}
