@@ -3202,7 +3202,7 @@ template<typename... Args> requires C<Args>... void g(Args const&...);
 \pnum
 \addedConcepts{In a constrained context
 (\mbox{\ref{temp.constrained}}), two types are the
-same type if some same-type requirement makes them
+same type if some same-type requirement (\mbox{\ref{temp.req}}) makes them
 equivalent (\mbox{\ref{temp.req}}).}
 
 \rSec1[temp.decls]{Template declarations}
@@ -3216,7 +3216,7 @@ equivalent (\mbox{\ref{temp.req}}).}
 \pnum
 \addedConcepts{A constrained member (\mbox{\ref{class.mem}}) in a class template is
 declared only in class template specializations in which its
-template requirements (\mbox{\ref{temp.req}}) are satisfied. If there exist multiple
+template requirements (\mbox{\ref{temp.req}}) are satisfied (\mbox{\ref{temp.req.sat}}). If there exist multiple
 overloads of the constrained member with identical signatures, ignoring
   the template requirements, and identical return types,
 only the most specialized
@@ -3541,9 +3541,10 @@ specialized than the other by transforming each template in turn
 using the function parameter types, or in the case of a conversion
 function the return type. 
 \addedConcepts{\mbox{\enternote}}
-\addedConcepts{if template argument deduction succeeds, the deduced
+\addedConcepts{if template argument deduction succeeds,}
+\changedCCC{the deduced
   arguments were used to determine if the requirements of the template
-  are satisfied.}
+  are satisfied.}{then the template requirements (if any) have all been satisfied (\mbox{\ref{temp.req.sat}}) by the deducted template arguments.}
 \addedConcepts{\mbox{\exitnote}}
 The deduction process determines whether
 one of the templates is more specialized than the other. If so, the
@@ -3870,7 +3871,7 @@ a
 \techterm{nested-name-specifier}\ 
 or a
 \techterm{qualified-id}\
-that names a member of an unknown specialization.
+that names a member of an unknown specialization\changedCCC{.}{, or}
 
 \additemConcepts{an \mbox{\techterm{identifier}}, \mbox{\techterm{nested-name-specifier}}, or a \mbox{\techterm{qualified-id}} that names a
 member of the current instantiation that is a constrained member
@@ -7434,12 +7435,12 @@ template void f<int>(); // \tcode{t1} is not initialized, \tcode{t2} is value-in
 \end{itemize}
 
 \pnum
-\addedConcepts{A use of a function template instantiation in a constrained
+\addedConcepts{A use of a function template specialization in a constrained
   template instantiates to a reference to that function template
-  instantiation's retained candidate set. The
+  specialization's retained candidate set. The
   \mbox{\techterm{retained candidate set}} is a candidate set
   (\mbox{\ref{temp.constrained.set}}) whose seed is the
-  function template instantiation. \mbox{\enterexample}}
+  function template specialization. \mbox{\enterexample}}
 \begin{codeblock}
 concept InputIterator<typename Iter> { 
   typename difference_type;
@@ -7466,6 +7467,41 @@ void g(int* i) {
 }
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}\mbox{\exitnote}}
+
+\pnum
+\addedCC{When a function call in the instantiation of a constrained
+  template is instantiated as a call to a candidate set
+  (\mbox{\ref{temp.constrained.set}}), the user-defined conversions
+  applied to the function call arguments in the call to the seed are
+  applied in the call to the candidate set in the instantiation. When
+  such a user-defined conversion is applied to an instantiated
+  function call argument, it acts as the user-defined conversion
+  sequence (\mbox{\ref{over.ics.user}}) for that
+  argument. \mbox{\enternote} the user-defined conversion sequence may
+still be preceded and followed by a standard conversion
+sequence. \mbox{\exitnote} \mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> {
+  operator int(const T&);
+};
+
+class A { };
+
+concept_map C<A> {
+  operator int(const A&) { return 0; }
+}
+
+void f(int);
+
+template<C T> void f(const T& x) {
+  f(x); // okay: implicit, user-defined conversion from T to int
+}
+
+template void f<A>(const A&); // okay: call f(x) applies the implicit, user-defined
+                              // conversion from the template definition using C<A>::operator int.
+
+\end{codeblock}
+\addedCC{\exitexample}
 
 \pnum
 \addedConcepts{In the instantiation of a constrained template, a template
