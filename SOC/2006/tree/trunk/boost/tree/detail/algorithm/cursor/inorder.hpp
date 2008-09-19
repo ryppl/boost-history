@@ -14,6 +14,8 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 
+#include <boost/tree/root_tracking_cursor.hpp>
+
 #include <algorithm>
 
 namespace boost {
@@ -121,6 +123,7 @@ MultiwayCursor last(MultiwayCursor c)
 
 /*\@}*/
 
+#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 /**
  * @if maint
  * Helper function for for_each, using a reference parameter in order to
@@ -172,6 +175,10 @@ Op for_each(MultiwayCursor s, Op f)
         for_each_recursive(t, f);
     return f;
 }
+
+#else
+#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
+#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @brief    Copies the subtree s into t, by traversing s in inorder.

@@ -14,6 +14,7 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 
+#include <boost/tree/root_tracking_cursor.hpp>
 
 namespace boost {
 namespace tree {
@@ -145,6 +146,7 @@ Cursor last(Cursor c)
 
 /*\@}*/
 
+#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 /**
  * @if maint
  * Helper function for for_each, using a reference parameter in order to
@@ -176,7 +178,7 @@ void for_each_recursive(Cursor s, Op& f)
  * preorder. @p f must not modify the order of the sequence.
  * If @p f has a return value it is ignored.
  */
- //[ preorder_for_each
+//[ preorder_for_each
 template <class Cursor, class Op>
 Op for_each(Cursor s, Op f)
 //]
@@ -194,6 +196,10 @@ Op for_each(Cursor s, Op f)
     
     return f;
 }
+
+#else
+#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
+#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @brief    Copies the subtree s into t, by traversing s in preorder.

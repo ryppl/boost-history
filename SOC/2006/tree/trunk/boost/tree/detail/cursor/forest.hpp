@@ -49,7 +49,7 @@ public:
     typedef Cursor base_cursor;
     
      typedef forest_cursor<Cursor> cursor;
-     //typedef const_forest_cursor<Cursor> const_cursor;
+     typedef forest_cursor<Cursor const> const_cursor; //FIXME (?)
 
     //typedef typename cursor_size<base_cursor>::type size_type;
 
