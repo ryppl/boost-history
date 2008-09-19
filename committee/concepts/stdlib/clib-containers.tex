@@ -97,9 +97,6 @@ Pablo Halpern,  Bloomberg, L.P.
   \tcode{const_reference} types along with convertibility from the
   \tcode{difference_type} of a container's iterators to its
   \tcode{size_type}.
-\item Use the new \tcode{ValueType} concept, rather than
-  \tcode{ObjectType}, to constrain the container's element types, to
-  properly exclude abstract classes.
 \item{Moved \tcode{front()} operations and axioms from
     \tcode{BackInsertionContainer} to \tcode{Container} and provided
     default implementation in terms of \tcode{begin}. Moved
@@ -123,6 +120,10 @@ Pablo Halpern,  Bloomberg, L.P.
 \item{Renamed \tcode{RandomAccessAllocator} to \tcode{Allocator}}
 \item{Added \tcode{cbegin} and \tcode{cend} operations and default implementations to
     \tcode{Container}-related concepts}
+\item The Container requirements table now states that the
+  \tcode{X::iterator} and \tcode{X::const_iterator} types must meet
+  the requirements of the \tcode{ForwardIterator} concept, rather than
+  the \tcode{InputIterator} concept.
 \end{itemize}
 
 \end{titlepage}
@@ -308,14 +309,14 @@ denotes a non-const rvalue of type \tcode{X}.
 \tcode{X::iterator}         &
  iterator type whose value type is \tcode{T} &
                             &
- \changedConcepts{any iterator category except output iterator}{meets the requirements of the \mbox{\tcode{InputIterator}} concept}.
+ \changedConcepts{any iterator category except output iterator}{meets the requirements of the \mbox{\tcode{ForwardIterator}} concept}.
  convertible to \tcode{X::const_iterator}. &
  compile time               \\ \rowsep
 
 \tcode{X::const_iterator}  &   
  constant iterator type whose value type is \tcode{T} &
                             &
-\changedConcepts{any iterator category except output iterator}{meets the requirements of the \mbox{\tcode{InputIterator}} concept} &
+\changedConcepts{any iterator category except output iterator}{meets the requirements of the \mbox{\tcode{ForwardIterator}} concept} &
  compile time               \\ \rowsep
 
 \tcode{X::dif\-ference_type}   &
@@ -991,7 +992,7 @@ concept maps adapting member to free syntax follow in
 
 \begin{itemdecl}
 concept Container<typename C> {
-  ValueType            value_type      = typename C::value_type;
+  ObjectType            value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1261,7 +1262,7 @@ concept HasInsert<Container C> {
 \color{addclr}
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
-  ValueType            value_type      = typename C::value_type;
+  ObjectType            value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1899,11 +1900,11 @@ namespace std {
     bool operator>=(const deque<T,Alloc@\removedConcepts{ator}@>& x, const deque<T,Alloc@\removedConcepts{ator}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Alloc@\removedConcepts{ator}@>
     bool operator<=(const deque<T,Alloc@\removedConcepts{ator}@>& x, const deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>&& x, deque<T,Alloc@\removedConcepts{ator}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, class Alloc@\removedConcepts{ator}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, class Alloc@\removedConcepts{ator}@>
     void swap(deque<T,Alloc@\removedConcepts{ator}@>& x, deque<T,Alloc@\removedConcepts{ator}@>&& y);
 }
 \end{codeblock}
@@ -1967,7 +1968,7 @@ namespace std {
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
     @\addedConcepts{requires QueueLikeContainer<Cont>}@
           @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
@@ -1984,24 +1985,24 @@ namespace std {
     bool operator>=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x,const queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>&& x, queue<T,Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T,Cont@\removedConcepts{ainer}@>& x, queue<T,Cont@\removedConcepts{ainer}@>&& y);
 
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
         @\changedConcepts{{class}}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
     @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
           @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class priority_queue;
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\changedConcepts{class}{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 }
 \end{codeblock}
@@ -2011,7 +2012,7 @@ namespace std {
 
 \begin{codeblock} 
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> > 
     @\addedConcepts{requires SameType<Cont::value_type, T>}@
           @\addedConcepts{\&\& NothrowDestructible<Cont>}@
     class stack;
@@ -2027,11 +2028,11 @@ namespace std {
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x,const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T,@\changedConcepts{Allocator}{Cont}@>& x, stack<T, @\changedConcepts{Allocator}{Cont}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 }
 \end{codeblock}
@@ -4103,7 +4104,7 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ObjectType}@ T, class Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires QueueLikeContainer<Cont>}@
         @\addedConcepts{\&\& SameType<T, Cont::value_type>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
@@ -4166,11 +4167,11 @@ namespace std {
   template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedConcepts{ainer}@>
     bool operator<=(const queue<T, Cont@\removedConcepts{ainer}@>& x, const queue<T, Cont@\removedConcepts{ainer}@>& y);
 
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Alloc>}@
@@ -4270,11 +4271,11 @@ template <class T, @\changedConcepts{class}{LessThanComparable}@ Cont@\removedCo
 \rSec4[queue.special]{\tcode{queue} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>&& x, queue<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(queue<T, Cont@\removedConcepts{ainer}@>& x, queue<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
@@ -4310,7 +4311,7 @@ object defines a strict weak ordering (\ref{alg.sorting}).
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = vector<T>,
             @\changedConcepts{class}{StrictWeakOrder<auto, T>}@ Compare = less<typename Cont@\removedConcepts{ainer}@::value_type> >
   @\addedConcepts{requires SameType<Cont::value_type, T> \&\& RandomAccessIterator<Cont::iterator>}@
         @\addedConcepts{\&\& ShuffleIterator<Cont::iterator> \&\& CopyConstructible<Compare>}@
@@ -4369,11 +4370,11 @@ namespace std {
       void swap(priority_queue&&);
   };
                 // no equality is provided
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@, @\addedConcepts{Swappable}@ Compare>
     void swap(priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>& x, priority_queue<T, Cont@\removedConcepts{ainer}@, Compare>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Compare, class Alloc>}@
@@ -4547,7 +4548,7 @@ can be used.
 
 \begin{codeblock}
 namespace std {
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{StackLikeContainer}@ Cont@\removedConcepts{ainer}@ = deque<T> >
   @\addedConcepts{requires SameType<Cont::value_type, T>}@
         @\addedConcepts{\&\& NothrowDestructible<Cont>}@
   class stack {
@@ -4603,11 +4604,11 @@ namespace std {
     bool operator>=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
   template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedConcepts{ainer}@>
     bool operator<=(const stack<T, Cont@\removedConcepts{ainer}@>& x, const stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-  template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+  template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
     void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 
   @\addedConcepts{template <class T, class Cont, class Alloc>}@
@@ -4707,11 +4708,11 @@ template <@\changedConcepts{class}{LessThanComparable}@ T, class Cont@\removedCo
 \rSec4[stack.special]{\tcode{stack} specialized algorithms}
 
 \begin{itemdecl}
-template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>&& x, stack<T, Cont@\removedConcepts{ainer}@>& y);
-template <@\changedConcepts{class}{ValueType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
+template <@\changedConcepts{class}{ObjectType}@ T, @\changedConcepts{class}{Swappable}@ Cont@\removedConcepts{ainer}@>
   void swap(stack<T, Cont@\removedConcepts{ainer}@>& x, stack<T, Cont@\removedConcepts{ainer}@>&& y);
 \end{itemdecl}
 
