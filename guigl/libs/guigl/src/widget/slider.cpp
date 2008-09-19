@@ -19,7 +19,7 @@ namespace boost { namespace guigl { namespace widget {
 
 BOOST_GUIGL_WIDGET_DRAW_IMPL(slider)
 
-inline void slider::draw_prologue()
+void slider::draw_prologue()
 {
     base_type::draw_prologue();
 
@@ -27,7 +27,7 @@ inline void slider::draw_prologue()
     glRectd(0,0,(m_value-m_min) * size().x / (m_max-m_min), size().y);
 }
 
-inline void slider::draw_epilogue()
+void slider::draw_epilogue()
 {
     base_type::draw_epilogue();
 }
