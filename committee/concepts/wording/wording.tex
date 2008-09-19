@@ -114,6 +114,9 @@ standard library are discussed in separate documents:
   template aliases, not by class templates defined within a concept
   map (\ref{concept.map.assoc}).
 \item ``Implicit concepts'' are now called ``\tcode{auto} concepts'' in the wording.
+\item Moved the support concepts from library clause 20 into
+  clause~\ref{concept.support}.
+\item Replaced the term \techterm{late-check-block} with \techterm{late-checked-block}.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -836,7 +839,7 @@ statement:\br
     jump-statement\br
     declaration-statement\br
     try-block\br
-    \addedConcepts{late-check-block}
+    \addedConcepts{late-checked-block}
 \end{bnf}
 
 \color{addclr}
@@ -845,7 +848,7 @@ statement:\br
 
 \pnum
 \addedConcepts{In a constrained context 
-  (\mbox{\ref{temp.constrained}}), a late-checked block treats the
+  (\mbox{\ref{temp.constrained}}), a \mbox{\techterm{late-checked block}} treats the
   enclosed statements as if they were in an unconstrained
 context. Outside of a constrained context, the late-checked block
   has no effect. \mbox{\enternote} in a late-checked block, template
@@ -859,7 +862,7 @@ context. Outside of a constrained context, the late-checked block
 \addedConcepts{ \mbox{\exitnote}} 
   
 \begin{bnf}
-late-check-block:\br
+late-checked-block:\br
     \terminal{late_check} compound-statement
 \end{bnf}
 
@@ -1252,7 +1255,7 @@ or from another array.
 \addedConcepts{In a constrained context (\mbox{\ref{temp.constrained}}), an
   array shall only be constructed from a type archetype \mbox{\techterm{cv}
     \tcode{T}} if the template has a concept
-  requirement \mbox{\tcode{ObjectType<T>}}.}
+  requirement} \changedCCC{\mbox{\tcode{ObjectType<T>}}}{\mbox{\tcode{ValueType<T>}}}\addedConcepts{.}
 
 \rSec2[dcl.fct]{Functions}
 
@@ -5162,6 +5165,426 @@ concept_map E<int> {
 \end{codeblock}
 \addedConcepts{\mbox{\exitexample}}
 
+\rSec2[concept.support]{Support concepts}
+
+\pnum
+\addedConcepts{The concepts in [concept.support] provide the ability to state
+template requirements for C++ type classifications (\mbox{\ref{basic.types}}) and
+type relationships that cannot be expressed directly with concepts. Concept 
+maps for these concepts are implicitly defined.
+A program shall not provide concept maps for any concept in
+[concept.support].}
+
+\pnum
+\addedConcepts{The following concepts are implicitly defined in a translation unit:}
+
+\begin{codeblock}
+namespace std {
+  concept Returnable<typename T> { }
+  concept PointeeType<typename T> { }
+  concept MemberPointeeType<typename T> { }
+  concept ReferentType<typename T> { }
+  concept VariableType<typename T> { }
+  concept ObjectType<typename T> @\textit{see below}@;
+  concept FunctionType<typename T> @\textit{see below}@;
+  concept ValueType<typename T> @\textit{see below}@;
+  concept ClassType<typename T> @\textit{see below}@;
+  concept Class<typename T> @\textit{see below}@;
+  concept PolymorphicClass<typename T> @\textit{see below}@;
+  concept Union<typename T> @\textit{see below}@;
+  concept TrivialType<typename T> @\textit{see below}@;
+  concept StandardLayoutType<typename T> @\textit{see below}@;
+  concept LiteralType<typename T> @\textit{see below}@;
+  concept ScalarType<typename T> @\textit{see below}@;
+  concept ArithmeticType<typename T> @\textit{see below}@;
+  concept NonTypeTemplateParameterType<typename T> @\textit{see below}@;
+  concept IntegralConstantExpressionType<typename T> @\textit{see below}@;
+  concept IntegralType<typename T> @\textit{see below}@;
+  concept EnumerationType<typename T> @\textit{see below}@;
+  concept FloatingPointType<typename T> @\textit{see below}@;
+  concept SameType<typename T, typename U> {  }
+  concept DerivedFrom<typename Derived, typename Base> { }
+}
+\end{codeblock}
+
+\begin{itemdecl}
+concept Returnable<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} Describes types that can be used as the
+  return type of a function.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every}
+\addedConcepts{non-array}
+\addedConcepts{type \mbox{\tcode{T}} that is
+  \mbox{\techterm{cv}} \mbox{\tcode{void}} or that provides a copy operation suitable for use in a return statement (\mbox{\ref{stmt.return}}) and is not an abstract class,
+  the concept map 
+  \mbox{\tcode{Returnable<T>}} is implicitly defined in
+  namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept PointeeType<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote}
+describes types to which a pointer can be
+created.}
+
+\pnum 
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an object type,
+  a function type that does not have cv-qualifiers, or \mbox{\techterm{cv}} \mbox{\tcode{void}}, a
+  concept map \mbox{\tcode{PointeeType<T>}} is implicitly defined
+  in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept MemberPointeeType<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote}
+describes types to which a pointer-to-member can be
+created.}
+
+\pnum 
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an object type or
+  function type, a
+  concept map \mbox{\tcode{MemberPointeeType<T>}} is implicitly defined
+  in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ReferentType<typename T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\mbox{\reallynote}
+\addedConcepts{describes types to which a reference can be
+created, including reference types (since references to
+  references can be formed during substitution of template
+  arguments).}
+
+\pnum 
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an object type, a
+  function type that does not have cv-qualifiers, or a reference type, a
+  concept map \mbox{\tcode{ReferentType<T>}} is implicitly defined
+  in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept VariableType<typename T> : ReferentType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes types that can be used to
+  declare a variable.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an object type or reference type, but not an abstract class, a concept map
+  \mbox{\tcode{VariableType<T>}} is implicitly defined in 
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ObjectType<typename T> : ReferentType<T>, PointeeType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes object types (\mbox{\ref{basic.types}}),
+  for which storage can be allocated.}
+
+\pnum 
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an object type, a concept map
+  \mbox{\tcode{ObjectType<T>}} is implicitly defined in
+  namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept FunctionType<typename T> : MemberPointeeType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes function types (\mbox{\ref{dcl.fct}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that is a function type, a concept map \mbox{\tcode{FunctionType<T>}} is implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ValueType<typename T> : ObjectType<T>, VariableType<T>, MemberPointeeType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes value types, for which
+  objects, variables, references, pointers, and pointers-to-members
+  can be created.}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an object type but not an abstract class, a concept map
+  \mbox{\tcode{ValueType<T>}} is implicitly defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ClassType<typename T> : ObjectType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes class types (i.e., unions,
+  classes, and structs).}
+
+\pnum 
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a class type (Clause~\mbox{\ref{class}}), a concept map \mbox{\tcode{ClassType<T>}}
+  is implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept Class<typename T> : ClassType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes classes and structs (Clause~\mbox{\ref{class}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a class or struct, a concept map
+  \mbox{\tcode{Class<T>}} is implicitly defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept PolymorphicClass<typename T> : Class<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes polymorphic class types (\mbox{\ref{class.virtual}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a polymorphic class, a concept map
+  \mbox{\tcode{PolymorphicClass<T>}} is implicitly defined in namespace
+  \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept Union<typename T> : ClassType<T>, ValueType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes union types (\mbox{\ref{class.union}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a union, a concept map \mbox{\tcode{Union<T>}}
+  is implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept TrivialType<typename T> : ValueType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes trivial types (\mbox{\ref{basic.types}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a trivial type, a concept map \mbox{\tcode{TrivialType<T>}} is
+  implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept StandardLayoutType<typename T> : ValueType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes standard-layout types (\mbox{\ref{basic.types}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a standard-layout type, a concept map
+  \mbox{\tcode{StandardLayoutType<T>}} is implicitly defined in 
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept LiteralType<typename T> : ValueType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes literal types (\mbox{\ref{basic.types}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a literal type, a concept map \mbox{\tcode{LiteralType<T>}} is
+  implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ScalarType<typename T> 
+  : TrivialType<T>, LiteralType<T>, StandardLayoutType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes scalar types (\mbox{\ref{basic.types}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is a scalar type, a concept map \mbox{\tcode{ScalarType<T>}} is
+  implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept ArithmeticType<typename T> : ScalarType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes arithmetic types (\mbox{\ref{basic.fundamental}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an arithmetic type, a concept map \mbox{\tcode{ArithmeticType<T>}} is
+  implicitly defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept NonTypeTemplateParameterType<typename T> : VariableType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum 
+\addedConcepts{\mbox{\reallynote} describes type that can
+be used as the type of a non-type template parameter (\mbox{\ref{temp.param}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that can be the type of a non-type
+\mbox{\techterm{template-parameter}} (\mbox{\ref{temp.param}}), a concept map}
+\\
+\addedConcepts{\mbox{\tcode{NonTypeTemplateParameterType<T>}} is implicitly defined in
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept IntegralConstantExpressionType<typename T> 
+  : ScalarType<T>, NonTypeTemplateParameterType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes types that
+can be the type of an integral constant expression (\mbox{\ref{expr.const}}).} 
+
+\pnum
+\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
+  is an integral type or enumeration type, a concept map}\\
+  \addedConcepts{\mbox{\tcode{IntegralConstantExpressionType<T>}} is implicitly
+  defined in namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept IntegralType<typename T> 
+  : IntegralConstantExpressionType<T>, ArithmeticType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes integral types
+(\mbox{\ref{basic.fundamental}}).}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an integral type, a concept map
+\mbox{\tcode{IntegralType<T>}} is implicitly defined in
+namespace \mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept EnumerationType<typename T> : IntegralConstantExpressionType<T> { 
+  IntegralType underlying_type;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes enumeration types
+(\mbox{\ref{dcl.enum}}). \mbox{\tcode{underlying_type}} is the underlying type of
+the enumeration type.}
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is an enumeration type, a concept map
+\mbox{\tcode{EnumerationType<T>}} is implicitly defined in namespace
+\mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept FloatingPointType<typename T> : ArithmeticType<T> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes floating point types
+(\mbox{\ref{basic.fundamental}}).} 
+
+\pnum
+\addedConcepts{\mbox{\requires}
+for every type \mbox{\tcode{T}} that is a floating point type, a concept map
+\mbox{\tcode{FloatingPointType<T>}} is implicitly defined in namespace
+\mbox{\tcode{std}}.}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept SameType<typename T, typename U> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\reallynote} describes a same-type requirement
+  (\mbox{\ref{temp.req}}).}
+\end{itemdescr}
+
+\begin{itemdecl}
+concept DerivedFrom<typename Derived, typename Base> { }
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\addedConcepts{\mbox{\requires}
+for every pair of class types (\mbox{\tcode{T}}, \mbox{\tcode{U}}),
+such that \mbox{\tcode{T}} is either the same as or publicly and
+unambiguously derived from \mbox{\tcode{U}}, a concept map
+\mbox{\tcode{DerivedFrom<T, U>}} is implicitly defined in namespace
+\mbox{\tcode{std}}.}
+\end{itemdescr}
+
 \rSec1[temp.constrained]{Constrained templates}
 
 \pnum
@@ -5695,7 +6118,7 @@ void maybe_add_to_set(std::set<T>& s, const T& value);
   \item \addedCC{If \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{MemberPointeeType<T>}} is implied.}
 \end{itemize}
 
-\item \addedCC{For every type ``array of unknown bound of \mbox{\tcode{T}}'' or ``array of \mbox{\tcode{N}} \mbox{\tcode{T}}'' where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{ObjectType<T>}} is implied.}
+\item \addedCC{For every type ``array of unknown bound of \mbox{\tcode{T}}'' or ``array of \mbox{\tcode{N}} \mbox{\tcode{T}}'' where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{ValueType<T>}} is implied.}
 
 \item \addedCC{If a type \mbox{\techterm{cv} \tcode{T}} occurs as the return type of a function, the concept requirement \mbox{\tcode{Returnable<T>}} is implied.}
 
