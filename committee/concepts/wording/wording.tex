@@ -5616,10 +5616,11 @@ S<int> s; // ill-formed, two different concept maps for A<int>, \#1 and \#2
 \rSec3[temp.req.impl]{Requirement implication}
 \pnum
 \addedConcepts{The declaration of a constrained template implies additional template
-requirements that are available within the body of the template. A
+requirements that are available within the body of the template.}
+\removedCCC{A
 requirement is \mbox{\techterm{implied}} if the absence of that requirement
-would render the constrained template declaration ill-formed. Template
-requirements are implied from:}
+would render the constrained template declaration ill-formed.}
+\addedConcepts{Template requirements are implied from:}
 \begin{itemize}
 \additemConcepts{the type of a constrained function template,}
 \additemConcepts{the template arguments of a constrained class template partial
@@ -5666,20 +5667,32 @@ void maybe_add_to_set(std::set<T>& s, const T& value);
 \end{codeblock}
 \exitexample\
 
-\additemConcepts{If the formation of a type containing an archetype
+\item \addedCC{If a type \mbox{\techterm{cv} \tcode{T}} that alias an archetype is used as the type of a variable, the concept requirement \mbox{\tcode{VariableType<T>}} is implied.}
+
+\item \addedCC{For every type ``pointer to \mbox{\techterm{cv} \tcode{T}}'', where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{PointeeType<T>}} is implied.}
+
+\item \addedCC{For every type ``reference to \mbox{\techterm{cv} \tcode{T}}'', where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{ReferentType<T>}} is implied.}
+
+\item \addedCC{For every type ``pointer to member of \mbox{\tcode{X}} of type \mbox{\techterm{cv} \tcode{T}}'':}
+\begin{itemize}
+  \item \addedCC{If \mbox{\tcode{X}} aliases a type archetype, the concept requirement \mbox{\tcode{ClassType<X>}} is implied.}
+  \item \addedCC{If \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{MemberPointeeType<T>}} is implied.}
+\end{itemize}
+
+\item \addedCC{For every type ``array of unknown bound of \mbox{\tcode{T}}'' or ``array of \mbox{\tcode{N}} \mbox{\tcode{T}}'' where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{ObjectType<T>}} is implied.}
+
+\item \addedCC{If a type \mbox{\techterm{cv} \tcode{T}} occurs as the return type of a function, the concept requirement \mbox{\tcode{Returnable<T>}} is implied.}
+
+\item \addedCC{If a type \mbox{\tcode{T}} is used as the type of a non-type template parameter, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{NonTypeTemplateParameterType<T>}} is implied.}
+
+\item \addedCC{If type \mbox{\tcode{T}} is a parameter type or return type of a \mbox{\tcode{constexpr}} function, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{LiteralType<T>}} is implied.}
+
+\item
+\removedCCC{If the formation of a type containing an archetype
   \mbox{\tcode{T}} would be ill-formed due to a missing requirement
   \mbox{\tcode{C<T>}}, where \mbox{\tcode{C}} is a compiler-supported
   concept (\mbox{\ref{concept.support}}), the requirement \mbox{\tcode{C<T>}} is
-  implied. \mbox{\enterexample}}
-\begin{codeblock}
-concept C<typename T> { typename assoc; }
-
-template<typename T>
-requires C<T>
-C<T>::assoc  // implies Returnable<C<T>::assoc>
-f(T*, T&); // implies PointeeType<T> and ReferentType<T>
-\end{codeblock}
-\addedConcepts{\mbox{\exitexample}}
+  implied.}
 
 \additemConcepts{For every \mbox{\techterm{qualified-id}} that names
   an associated type or class template, a concept requirement for the
@@ -5701,6 +5714,17 @@ add(T t, U u) {
 \addedConcepts{\exitexample}
 
 \end{itemize}
+
+\addedConcepts{\mbox{\enterexample}}
+\begin{codeblock}
+concept C<typename T> { typename assoc; }
+
+template<typename T>
+requires C<T>
+C<T>::assoc  // implies Returnable<C<T>::assoc>
+f(T*, T&); // implies PointeeType<T> and ReferentType<T>
+\end{codeblock}
+\addedConcepts{\mbox{\exitexample}}
 
 \pnum
 \addedConcepts{In the definition of a}
@@ -5746,7 +5770,7 @@ were its archetype. \mbox{\enternote} this substitution of
 archetypes (which are not dependent) for their corresponding
 types, templates, or values (which would be dependent in an
 unconstrained template)
-effectively treats all types and templates (and therefore both
+effectively treats all types}\changedCCC{ and}{,}\addedConcepts{ templates}\addedCC{, and values} \addedConcepts{(and therefore both
 expressions and names) 
 in a constrained context as ``non-dependent''. \mbox{\exitnote}}
 
@@ -5775,6 +5799,7 @@ a value is a value. }
 \addedConcepts{A value in a constrained context aliases an archetype if it is a
   \mbox{\techterm{constant-expression}} (\mbox{\ref{expr.const}})
   whose value depends on a template parameter.} 
+\addedCC{Two values that alias archetypes are the same if their expressions are equivalent (\mbox{\ref{temp.over.link}}). If the translation of the program requires comparison of two values that alias archetypes and are functionally equivalent but not equivalent, the program is ill-formed.}
 
 \pnum 
 \addedConcepts{If two types, \mbox{\tcode{T1}} and \mbox{\tcode{T2}},
@@ -5793,16 +5818,18 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   An archetype becomes established under the
   following circumstances:}
 \begin{itemize}
-\additemConcepts{a type that aliases the archetype has been used in the
+\item 
+\addedConcepts{a type that aliases the archetype has been used in the
     template argument list of a class template specialization or
     concept instance whose definition is required,}
-\additemConcepts{a type that aliases the archetype is provided as an argument to a
+\item \removedCCC{a type that aliases the archetype is provided as an argument to a
   \mbox{\tcode{sizeof}} or \mbox{\tcode{alignof}} expression
   (\mbox{\ref{expr.sizeof}}, \mbox{\ref{expr.alignof}}),}
 \additemConcepts{at the end of the function declarator in a function
   declaration in which one or more
   parameters use a type that aliases the archetype, or}
-\additemConcepts{the archetype has been committed (described below).}
+\item 
+\changedCCC{the archetype has been committed (described below)}{the archetype is used in a context where a complete type is required}\addedConcepts{.}
 \end{itemize}
 
 \pnum
@@ -5811,16 +5838,16 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   same archetype, the program is ill-formed.}
 
 \pnum 
-\addedConcepts{A type archetype that has been \mbox{\techterm{committed}} has
+\removedCCC{A type archetype that has been \mbox{\techterm{committed}} has
   been defined as described below. Once an archetype has been
   committed, its definition can no longer be changed by the
   introduction of additional concept requirements. A program that
   specifies or implies concept requirements that use a committed
   archetype is ill-formed. An archetype is committed when:}
 \begin{itemize}
-\additemConcepts{the definition of the archetype is required,}
-\additemConcepts{the completeness of a type archetype might affect the semantics of the program, or}
-\additemConcepts{name lookup finds an associated function with a parameter that uses
+\item \removedCCC{the definition of the archetype is required,}
+\item \removedCCC{the completeness of a type archetype might affect the semantics of the program, or}
+\item \removedCCC{name lookup finds an associated function with a parameter that uses
   a type that aliases the archetype.}
 \end{itemize}
 
