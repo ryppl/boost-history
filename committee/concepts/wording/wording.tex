@@ -3435,7 +3435,7 @@ template<> void f<int>(int); // ill-formed: no concept map satisfies the require
 \rSec2[temp.deduct]{Template argument deduction}
 \setcounter{Paras}{1}
 \pnum
-\addedConcepts{
+\removedCCC{
 If the reference to the template occurs within a constrained context
 (\mbox{\ref{temp.constrained}}) and the template is an unconstrained
 template, type deduction fails.
@@ -4097,7 +4097,7 @@ concept EqualityComparable2<typename T, typename U = T> {
   bool operator==(T, U);
   bool operator!=(T, U);
 
-  requires SameType<T, U> axiom Reflexivity(T x) {
+  requires std::SameType<T, U> axiom Reflexivity(T x) {
       x == x; // okay: T and U have the same type
     }
 }
@@ -5199,8 +5199,9 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
 \end{itemize}
 
 \pnum
-\addedConcepts{Within a constrained context, a program shall not refer to an
-  unconstrained template.}
+\addedConcepts{Within a constrained context, a program shall not}
+\changedCCC{refer to an
+  unconstrained template}{require a template specialization of a unconstrained template for which the template arguments of the specialization depend on a template parameter}\addedConcepts{.}
 
 \rSec2[temp.req]{Template requirements}
 \pnum
@@ -5266,7 +5267,7 @@ concept D<typename T> {
 }
 
 template<typename T, typename U>
-requires C<T> && C<U> && SameType<C<T>::assoc, C<U>::assoc> && D<C<T>::assoc>
+requires C<T> && C<U> && std::SameType<C<T>::assoc, C<U>::assoc> && D<C<T>::assoc>
 C<T>::assoc f(T t, U u) {
   return a(t) + a(u); // okay: C<T>::assoc and C<U>::assoc are the same type
 }
@@ -5305,7 +5306,8 @@ void f(int x, float y) {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{If the requirements of a template are inconsistent, such that
+\addedConcepts{If the requirements of a template are} \removedCCC{inconsistent,}
+\addedConcepts{such that
 no set of template arguments can satisfy all of the requirements, the
 program is ill-formed, no diagnostic required. \mbox{\enterexample}}
 \begin{codeblock}
@@ -5456,9 +5458,9 @@ void h(float x, int y, int X::* p) {
       are members and in the associated namespaces
       of those namespaces (\mbox{\ref{namespace.def}});
       \mbox{\techterm{using-directives}} in those namespaces are not
-      followed during this search. Only those concept maps in (1) that
+      followed during this search.} \changedCCC{Only those concept maps in (1) that
     were explicitly defined or were instantiated from concept map
-    templates are considered when determining which namespaces to search.}
+    templates are}{Concept maps in (1) that were implicitly generated from an implicit concept are not} \addedConcepts{considered when determining which namespaces to search.}
 
   \additemConcepts{If a concept map for \mbox{\tcode{I}} can be implicitly
     defined from an implicit concept
@@ -6218,9 +6220,11 @@ A candidate set is defined in a constrained
 \pnum
 \addedConcepts{A function template is consistent with the seed if: }
 \begin{itemize}
-\additemConcepts{it has the same name as the seed, and}
+\additemConcepts{it has the same name as the seed, }
 \additemConcepts{its enclosing namespace is the same as the enclosing
-    namespace of the seed.}
+    namespace of the seed, and}
+\item
+\addedCC{if the candidate set containing the seed is a retained candidate set, the function template is a constrained function template.}
 \end{itemize}
 
 \pnum
