@@ -254,14 +254,20 @@ the following requirement in [alg.unique]p5:
   CopyConstructible is not required.
 \end{quote}
 
-This requirement actually mandates three different implementations of
-\tcode{unique_copy}: one for (input, output), one for (forward,
-output), and one for (input, forward). With the
-predicate/\tcode{operator==} distinction, we end up with six
-implementations hidden behind the two \tcode{unique_copy} signatures
-shown in the specification. With concepts, however, we need to show
-each signature because the requirements differ from one signature to
-another, leading to the current concepts specification:
+When these requirements were written, it was not known that \tcode{unique_copy}
+could be implemented without either element copiability or an available lvalue
+referenced by either the \tcode{InputIterator} or \tcode{OutputIterator}
+arguments, thus the special CopyConstructible and CopyAssignable requirements.
+We now know that \tcode{unique_copy} can be implemented for move-only value
+types regardless of iterator category.
+
+This formulation actually mandates three different implementations of
+\tcode{unique_copy}: one for (input, output), one for (forward, output), and one
+for (input, forward). With the predicate/\tcode{operator==} distinction, we end
+up with six implementations hidden behind the two \tcode{unique_copy} signatures
+shown in the specification. With concepts, however, we need to show each
+signature because the requirements differ from one signature to another, leading
+to the current concepts specification:
 
 \begin{lstlisting}
 template<InputIterator InIter, typename OutIter>
@@ -273,14 +279,17 @@ template<InputIterator InIter, typename OutIter>
         && !ForwardIterator<InIter> 
         && !ForwardIterator<OutIter>
   OutIter unique_copy(InIter first, InIter last, OutIter result);
+
 template<ForwardIterator InIter, OutputIterator<auto, InIter::reference> OutIter>
   requires EqualityComparable<InIter::value_type>
   OutIter unique_copy(InIter first, InIter last, OutIter result);
+
 template<InputIterator InIter, ForwardIterator OutIter>
   requires OutputIterator<OutIter, InIter::reference> 
         && HasEqualTo<OutIter::value_type, InIter::value_type>
         && !ForwardIterator<InIter>
   OutIter unique_copy(InIter first, InIter last, OutIter result);
+
 template<InputIterator InIter, typename OutIter,
          EquivalenceRelation<auto, InIter::value_type> Pred>
   requires OutputIterator<OutIter, InIter::reference>
@@ -291,10 +300,12 @@ template<InputIterator InIter, typename OutIter,
         && !ForwardIterator<InIter> 
         && !ForwardIterator<OutIter>
   OutIter unique_copy(InIter first, InIter last, OutIter result, Pred pred);
+
 template<ForwardIterator InIter, OutputIterator<auto, InIter::reference> OutIter,
          EquivalenceRelation<auto, InIter::value_type> Pred>
   requires CopyConstructible<Pred>
   OutIter unique_copy(InIter first, InIter last, OutIter result, Pred pred);
+
 template<InputIterator InIter, ForwardIterator OutIter,
          Predicate<auto, OutIter::value_type, InIter::value_type> Pred>
   requires OutputIterator<OutIter, InIter::reference> 
@@ -303,10 +314,8 @@ template<InputIterator InIter, ForwardIterator OutIter,
   OutIter unique_copy(InIter first, InIter last, OutIter result, Pred pred);
 \end{lstlisting}
 
-The concept requirements specified here state the actual operations
-needed to implement the various forms of the \tcode{unique_copy}
-algorithm. The negative requirements are needed to direct overload
-resolution, since there is no natural ordering among these overloads.
+The negative requirements above were needed to direct overload resolution, since
+there is no natural ordering among these overloads.
 
 \subsection{A Brief History}
 In \Cpp98, the \tcode{unique_copy} algorithm was underspecified (it
@@ -317,9 +326,7 @@ implementations.
 
 \section{Proposed Resolution}
 In the concepts-based standard library, replace the six overloads of
-\tcode{unique_copy} with the following two signatures. These
-signatures work with move-only types, alleviating the need to specify
-ForwardIterator constraints:
+\tcode{unique_copy} with the following two signatures:
 
 \begin{lstlisting}
 template<InputIterator InIter, typename OutIter>
@@ -328,6 +335,7 @@ template<InputIterator InIter, typename OutIter>
         && HasAssign<InIter::value_type, InIter::reference>
         && Constructible<InIter::value_type, InIter::reference>
   OutIter unique_copy(InIter first, InIter last, OutIter result);
+
 template<InputIterator InIter, typename OutIter,
          EquivalenceRelation<auto, InIter::value_type> Pred>
   requires OutputIterator<OutIter, RvalueOf<InIter::value_type>::type>
@@ -337,17 +345,17 @@ template<InputIterator InIter, typename OutIter,
   OutIter unique_copy(InIter first, InIter last, OutIter result, Pred pred);
 \end{lstlisting}
 
-\noindent
-In the pre-concepts standard library, modify [alg.unique]p5 as
-follows:
-
-\begin{quote}
-\textit{Requires}: The ranges \tcode{[first,last)} and \tcode{[result,result+(last-first))} shall not overlap. The expression 
-\tcode{*result = *first} shall be valid. \changed{If neither \mbox{\tcode{InputIterator}} nor \mbox{\tcode{OutputIterator}} meets the requirements 
-of forward iterator then the}{The} value type of \tcode{InputIterator} shall be \tcode{CopyConstructible} (34) and \tcode{CopyAssignable}
-(table 36). \removed{Otherwise \mbox{\tcode{CopyConstructible}} is not required.}
-\end{quote}
-
+%% \noindent
+%% In the pre-concepts standard library, modify [alg.unique]p5 as
+%% follows:
+%% 
+%% \begin{quote}
+%% \textit{Requires}: The ranges \tcode{[first,last)} and \tcode{[result,result+(last-first))} shall not overlap. The expression 
+%% \tcode{*result = *first} shall be valid. \changed{If neither \mbox{\tcode{InputIterator}} nor \mbox{\tcode{OutputIterator}} meets the requirements 
+%% of forward iterator then the}{The} value type of \tcode{InputIterator} shall be \tcode{CopyConstructible} (34) and \tcode{CopyAssignable}
+%% (table 36). \removed{Otherwise \mbox{\tcode{CopyConstructible}} is not required.}
+%% \end{quote}
+%% 
 
 \end{document}
 
