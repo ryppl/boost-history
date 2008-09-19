@@ -109,14 +109,8 @@ Pablo Halpern,  Bloomberg, L.P.
     \tcode{stack}, \tcode{queue}, and \tcode{priority_queue} to make
     use of these new concepts, avoiding \tcode{queue} overconstraint
     in the previous version of this document.}
-\item{Replaced \tcode{Emplace} concepts, Member concepts, and concept
-    maps with \tcode{HasEmplaceBack}, \tcode{HasEmplaceFront}, and
-    \tcode{HasEmplace}, etc. Guarded optional \tcode{emplace}
-    operations in \tcode{stack}, \tcode{queue}, and
-    \tcode{priority_queue} with \tcode{HasEmplaceBack}.}
 \item{Removed all qualification by \tcode{std::}}
-\item{Backed out Emplace changes above. Added axioms to Emplacement concepts. Added \tcode{HasPushFront}, \tcode{HasPushBack},
-\tcode{HasInsert}. Added concept maps to model insertion by emplacement.}
+\item{Added axioms to Emplacement concepts.}
 \item{Renamed \tcode{RandomAccessAllocator} to \tcode{Allocator}}
 \item{Added \tcode{cbegin} and \tcode{cend} operations and default implementations to
     \tcode{Container}-related concepts}
@@ -897,9 +891,6 @@ namespace std {
   concept FrontEmplacementContainer<typename C, typename... Args> @\textit{see below}@
   concept BackEmplacementContainer<typename C, typename... Args> @\textit{see below}@
   concept EmplacementContainer<typename C, typename... Args> @\textit{see below}@
-  concept HasPushFront<Container C> @\textit{see below}@
-  concept HasPushBack<Container C> @\textit{see below}@
-  concept HasInsert<Container C> @\textit{see below}@
 
   // \ref{container.concepts.member}, member container concepts
   auto concept MemberContainer<typename C> @\textit{see below}@
@@ -912,9 +903,6 @@ namespace std {
   auto concept MemberFrontEmplacementContainer<typename C, typename... Args> @\textit{see below}@
   auto concept MemberBackEmplacementContainer<typename C, typename... Args> @\textit{see below}@
   auto concept MemberEmplacementContainer<typename C, typename... Args> @\textit{see below}@
-  auto concept MemberHasPushFront<MemberContainer C> @\textit{see below}@
-  auto concept MemberHasPushBack<MemberContainer C> @\textit{see below}@
-  auto concept MemberHasInsert<MemberContainer C> @\textit{see below}@
 
   // \mbox{\ref{container.concepts.maps}}, container concept maps
   template <MemberContainer C>              concept_map Container<C> @\textit{see below}@
@@ -931,12 +919,6 @@ namespace std {
     concept_map BackEmplacementContainer<C, Args...> @\textit{see below}@
   template <MemberEmplacementContainer C, typename... Args>
     concept_map EmplacementContainer<C, Args...> @\textit{see below}@
-  template <MemberHasPushFront C> 
-    concept_map HasPushFront<C> @\textit{see below}@
-  template <MemberHasPushBack C>  
-    concept_map HasPushBack<C> @\textit{see below}@
-  template <MemberHasInsert C>
-    concept_map HasInsert<C> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<E[N]> @\textit{see below}@
   template <typename E, size_t N>           concept_map Container<const E[N]> @\textit{see below}@
 }
@@ -953,7 +935,7 @@ concept maps adapting member to free syntax follow in
 
 \begin{itemdecl}
 concept Container<typename C> {
-  ObjectType            value_type      = typename C::value_type;
+  ObjectType           value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1120,13 +1102,15 @@ concept RangeInsertionContainer<typename C, typename Iter> : InsertionContainer<
 concept FrontEmplacementContainer<typename C, typename... Args> : Container<C> {
   void emplace_front(C& c, Args&&... args);
 
-  axiom FrontEmplacement(C c, Args... args) {
-    value_type(args...) == (emplace_front(c, args...), front(c));
-  }
+  reqiures Constructible<value_type, Args...>
+    axiom FrontEmplacement(C c, Args... args) {
+      value_type(args...) == (emplace_front(c, args...), front(c));
+    }
 
-  requires HasPushFront<C> axiom FrontEmplacementPushEquivalence(C c, Args... args) {
-    (emplace_front(c, args...), front(c)) == (push_front(c, value_type(args...)), front(c));
-  }
+  requires FrontInsertionContainer<C> && Constructible<value_type, Args...> 
+    axiom FrontEmplacementPushEquivalence(C c, Args... args) {
+      (emplace_front(c, args...), front(c)) == (push_front(c, value_type(args...)), front(c));
+    }
 }
 \end{itemdecl}
 
@@ -1140,13 +1124,15 @@ concept FrontEmplacementContainer<typename C, typename... Args> : Container<C> {
 concept BackEmplacementContainer<typename C, typename... Args> : Container<C> {
   void emplace_back(C& c, Args&&... args);
 
-  axiom BackEmplacement(C c, Args... args) {
-    value_type(args...) == (emplace_back(c, args...), back(c));
-  }
+  requires Constructible<value_type, Args...>
+    axiom BackEmplacement(C c, Args... args) {
+      value_type(args...) == (emplace_back(c, args...), back(c));
+    }
 
-  requires HasPushBack<C> axiom BackEmplacementPushEquivalence(C c, Args... args) {
-    (emplace_back(c, args...), back(c)) == (push_back(c, value_type(args...)), back(c));
-  }
+  requires BackInsertionContainer<C> && Constructible<value_type, Args...>
+    axiom BackEmplacementPushEquivalence(C c, Args... args) {
+      (emplace_back(c, args...), back(c)) == (push_back(c, value_type(args...)), back(c));
+    }
 }
 \end{itemdecl}
 
@@ -1160,13 +1146,15 @@ concept BackEmplacementContainer<typename C, typename... Args> : Container<C> {
 concept EmplacementContainer<typename C, typename... Args> : Container<C> {
   iterator emplace(C& c, const_iterator position, Args&&... args);
 
-  axiom Emplacement(C c, const_iterator position, Args... args) {
-    value_type(args...) == *emplace(c, position, args...);
-  }
+  requires Constructible<value_type, Args...>
+    axiom Emplacement(C c, const_iterator position, Args... args) {
+      value_type(args...) == *emplace(c, position, args...);
+    }
 
-  requires HasInsert<C> axiom EmplacementPushEquivalence(C c, const_iterator position, Args... args) {
-    *emplace(c, position, args...) == *insert(c, position, value_type(args...));
-  }
+  requires InsertionContainer<C> && Constructible<value_type, Args...> 
+    axiom EmplacementPushEquivalence(C c, const_iterator position, Args... args) {
+      *emplace(c, position, args...) == *insert(c, position, value_type(args...));
+    }
 }
 \end{itemdecl}
 
@@ -1175,39 +1163,6 @@ concept EmplacementContainer<typename C, typename... Args> : Container<C> {
 \addedConcepts{\mbox{\reallynote} describes a container that can be
   modified by constructing elements at any position within 
   the sequence.}
-\end{itemdescr}
-
-\begin{itemdecl}
-concept HasPushFront<Container C> {
-  void push_front(C&, value_type&&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes types with a push_front operation } 
-\end{itemdescr}
-
-\begin{itemdecl}
-concept HasPushBack<Container C> {
-  void push_back(C&, value_type&&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes types with a push_back operation } 
-\end{itemdescr}
-
-\begin{itemdecl}
-concept HasInsert<Container C> {
-  iterator insert(C&, const_iterator, value_type&&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes types with an insert operation } 
 \end{itemdescr}
 
 \rSec3[container.concepts.member]{Member container concepts} 
@@ -1223,7 +1178,7 @@ concept HasInsert<Container C> {
 \color{addclr}
 \begin{itemdecl}
 auto concept MemberContainer<typename C> {
-  ObjectType            value_type      = typename C::value_type;
+  ObjectType           value_type      = typename C::value_type;
   typename             reference       = typename C::reference;
   typename             const_reference = typename C::const_reference;
   UnsignedIntegralLike size_type       = typename C::size_type;
@@ -1387,13 +1342,15 @@ auto concept MemberRangeInsertionContainer<typename C, typename Iter> : MemberIn
 auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : MemberContainer<C> {
   void C::emplace_front(Args&&... args);
 
-  axiom MemberFrontEmplacement(C c, Args... args) {
-    value_type(args...) == (c.emplace_front(args...), front(c));
-  }
+  requires Constructible<value_type, Args...>
+    axiom MemberFrontEmplacement(C c, Args... args) {
+      value_type(args...) == (c.emplace_front(args...), front(c));
+    }
 
-  requires HasPushFront<C> axiom MemberFrontEmplacementPushEquivalence(C c, Args... args) {
-    (c.emplace_front(args...), c.front()) == (c.push_front(value_type(args...)), c.front());
-  }
+  requires MemberFrontInsertionContainer<C> && Constructible<value_type, Args...>
+    axiom MemberFrontEmplacementPushEquivalence(C c, Args... args) {
+      (c.emplace_front(args...), c.front()) == (c.push_front(value_type(args...)), c.front());
+    }
 }
 \end{itemdecl}
 
@@ -1407,13 +1364,15 @@ auto concept MemberFrontEmplacementContainer<typename C, typename... Args> : Mem
 auto concept MemberBackEmplacementContainer<typename C, typename... Args> : MemberBackInsertionContainer<C> {
   void C::emplace_back(Args&&... args);
 
-  axiom MemberBackEmplacement(C c, Args... args) {
-    value_type(args...) == (c.emplace_back(args...), back(c));
-  }
+  requires Constructible<value_type, Args...>
+    axiom MemberBackEmplacement(C c, Args... args) {
+      value_type(args...) == (c.emplace_back(args...), back(c));
+    }
 
-  requires HasPushBack<C> axiom MemberBackEmplacementPushEquivalence(C c, Args... args) {
-    (c.emplace_back(args...), c.back()) == (c.push_back(value_type(args...)), c.back());
-  }
+  requires BackInsertionContainer<C> && Constructible<value_type, Args...>
+    axiom MemberBackEmplacementPushEquivalence(C c, Args... args) {
+      (c.emplace_back(args...), c.back()) == (c.push_back(value_type(args...)), c.back());
+    }
 }
 \end{itemdecl}
 
@@ -1427,13 +1386,15 @@ auto concept MemberBackEmplacementContainer<typename C, typename... Args> : Memb
 auto concept MemberEmplacementContainer<typename C, typename... Args> : MemberInsertionContainer<C> {
   void C::emplace(const_iterator position, Args&&... args);
 
-  axiom MemberEmplacement(C c, const_iterator position, Args... args) {
-    value_type(args...) == *c.emplace(position, args...);
-  }
+  require Constructible<value_type, Args...>
+    axiom MemberEmplacement(C c, const_iterator position, Args... args) {
+      value_type(args...) == *c.emplace(position, args...);
+    }
 
-  requires HasInsert<C> axiom MemberEmplacementPushEquivalence(C c, const_iterator position, Args... args) {
-    *c.emplace(position, args...) == *c.insert(position, value_type(args...));
-  }
+  requires MemberInsertionContainer<C> && Constructible<value_type, Args...>
+    axiom MemberEmplacementPushEquivalence(C c, const_iterator position, Args... args) {
+      *c.emplace(position, args...) == *c.insert(position, value_type(args...));
+    }
 }
 \end{itemdecl}
 
@@ -1442,42 +1403,6 @@ auto concept MemberEmplacementContainer<typename C, typename... Args> : MemberIn
 \addedConcepts{\mbox{\reallynote} describes a container, in terms of member functions, that can be
   modified by constructing elements at any position within 
   the sequence.}
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept MemberHasPushFront<MemberContainer C> {
-  void C::push_front(value_type&&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a type that has a member
-  function named push_front } 
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept MemberHasPushBack<MemberContainer C> {
-  void C::push_back(value_type&&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a type that has a member
-  function named push_back } 
-\end{itemdescr}
-
-\begin{itemdecl}
-auto concept MemberHasInsert<MemberContainer C> {
-  void C::insert(const_iterator, value_type&&);
-}
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\addedConcepts{\mbox{\reallynote} describes a type that has a member
-  function named insert } 
 \end{itemdescr}
 
 \rSec3[container.concepts.maps]{Container concept maps}
@@ -1503,15 +1428,17 @@ concept_map Container<C> {
   typedef C::iterator        iterator;
   typedef C::const_iterator  const_iterator;
 
-  bool            empty(const C& c) { return c.empty(); }
-  size_type       size(const C& c)  { return c.size(); }
+  bool            empty(const C& c)   { return c.empty(); }
+  size_type       size(const C& c)    { return c.size(); }
 
-  iterator        begin(C& c)       { return c.begin(); }
-  const_iterator  begin(const C& c) { return c.begin(); }
-  iterator        end(C& c)         { return c.end(); }
-  const_iterator  end(const C& c)   { return c.end(); }
-  reference       front(C& c)       { return c.front(); }
-  const_reference front(const C& c) { return c.front(); }
+  iterator        begin(C& c)         { return c.begin(); }
+  const_iterator  begin(const C& c)   { return c.begin(); }
+  iterator        end(C& c)           { return c.end(); }
+  const_iterator  end(const C& c)     { return c.end(); }
+  const_iterator  cbegin(const C& c)  { return c.cbegin(); }
+  const_iterator  cend(const C& c)    { return c.cend(); }
+  reference       front(C& c)         { return c.front(); }
+  const_reference front(const C& c)   { return c.front(); }
 }
 \end{itemdecl}
 
@@ -1525,7 +1452,9 @@ concept_map Container<C> {
 \begin{itemdecl}
 template <MemberFrontInsertionContainer C> 
 concept_map FrontInsertionContainer<C> {
-  void push_front(C& c, Container<C>::value_type&& v)   { c.push_front(v); }
+  typedef Container<C>::value_type value_type;
+
+  void push_front(C& c, value_type&& v) { c.push_front(static_cast<value_type&&>(v)); }
 }			
 \end{itemdecl}
 
@@ -1539,13 +1468,14 @@ concept_map FrontInsertionContainer<C> {
 \begin{itemdecl}
 template <MemberBackInsertionContainer C> 
 concept_map BackInsertionContainer<C> {
+  typedef Container<C>::value_type      value_type;
   typedef Container<C>::reference       reference;
   typedef Container<C>::const_reference const_reference;
 
   reference       back(C& c)        { return c.back(); }
   const_reference back(const C& c)  { return c.back(); }
 
-  void push_back(C& c, Container<C>::value_type&& v)    { c.push_back(v); }
+  void push_back(C& c, value_type&& v) { c.push_back(static_cast<value_type&&>(v)); }
 }			
 \end{itemdecl}
 
@@ -1587,8 +1517,9 @@ concept_map QueueLikeContainer<C> {
 \begin{itemdecl}
 template <MemberInsertionContainer C> 
 concept_map InsertionContainer<C> {
-  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, Container<C>::value_type&& v)    
-  { return c.insert(i, v); }
+  typedef Container<C>::value_type value_type;
+  Container<C>::iterator insert(C& c, Container<C>::const_iterator i, value_type&& v)    
+  { return c.insert(i, static_cast<value_type&&>(v)); }
 }			
 \end{itemdecl}
 
@@ -1630,21 +1561,6 @@ template <MemberFrontEmplacementContainer C, typename... Args>
 \end{itemdescr}
 
 \begin{itemdecl}
-template <FrontEmplacementContainer C>
-  requires !HasPushFront<C>
-  concept_map FrontInsertionContainer<C> {
-    void push_front(C& c, Container<C>::value_type&& v)
-    { emplace_front(c, forward<Container<C>::value_type>(v)); }
-  }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts a front-emplacement container that does not have a push_front to the}
-  \addedConcepts{\mbox{\tcode{FrontInsertionContainer}} concept.}
-\end{itemdescr}
-
-\begin{itemdecl}
 template <MemberBackEmplacementContainer C, typename... Args> 
   concept_map BackEmplacementContainer<C, Args...> {
     void emplace_back(C& c, Args&&... args) 
@@ -1657,21 +1573,6 @@ template <MemberBackEmplacementContainer C, typename... Args>
 \addedConcepts{\mbox{\reallynote} Adapts an existing back-emplace container, which uses
   member function syntax for each of its operations, to the}
   \addedConcepts{\mbox{\tcode{BackEmplacementContainer}} concept.}
-\end{itemdescr}
-
-\begin{itemdecl}
-template <BackEmplacementContainer C>
-  requires !HasPushBack<C>
-  concept_map BackInsertionContainer<C> {
-    void push_back(C& c, Container<C>::value_type&& v)
-    { emplace_back(c, forward<Container<C>::value_type>(v)); }
-  }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts a back-emplacement container that does not have a push_back to the}
-  \addedConcepts{\mbox{\tcode{BackInsertionContainer}} concept.}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1688,67 +1589,6 @@ template <MemberEmplacementContainer C, typename... Args>
   member function syntax for each of its operations, to the}
   \\\addedConcepts{\mbox{\tcode{EmplacementContainer}} concept.}
 \end{itemdescr}
-
-\begin{itemdecl}
-template <EmplacementContainer C>
-  requires !HasInsert<C>
-  concept_map InsertionContainer<C> {
-    Container<C>::iterator insert(C& c, Container<C>::const_iterator position, Container<C>::value_type&& v)
-    { return emplace(c, position, forward<Container<C>::value_type>(v)); }
-  }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts a emplacement container that does not have an insert to the}
-  \addedConcepts{\mbox{\tcode{InsertionContainer}} concept.}
-\end{itemdescr}
-
-\begin{itemdecl}
-template <MemberHasPushFront C> 
-  concept_map HasPushFront<C> {
-    void push_front(C& c, Container<C>::value_type&& v)
-    { c.push_front(v); }
-  }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts an existing type with a
-  \mbox{\tcode{push_front}} member function to model the}
-  \addedConcepts{\mbox{\tcode{HasPushFront}} concept.}
-\end{itemdescr}
-
-\begin{itemdecl}
-template <MemberHasPushBack C> 
-  concept_map HasPushBack<C> {
-    void push_back(C& c, Container<C>::value_type&& v)
-    { c.push_back(v); }
-  }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts an existing type with an
-  \mbox{\tcode{push_back}} member function to model the}
-  \addedConcepts{\mbox{\tcode{HasPushBack}} concept.}
-\end{itemdescr}
-
-\begin{itemdecl}
-template <MemberHasInsert C> 
-  concept_map HasInsert<C> {
-    Container<C>::iterator insert(C& c, Container<C>::const_iterator position, Container<C>::value_type&& v) 
-    { return c.insert(position, v); }
-  }
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum 
-\addedConcepts{\mbox{\reallynote} Adapts an existing type with an
-  \mbox{\tcode{insert}} member function to model the}
-  \addedConcepts{\mbox{\tcode{HasInsert}} concept.}
-\end{itemdescr}
-
 
 \begin{itemdecl}
 template <typename E, size_t N>
