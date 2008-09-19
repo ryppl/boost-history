@@ -4689,7 +4689,7 @@ concept EqualityComparable<typename T> {
   bool operator!=(T, T);
 
   axiom Reflexivity(T x) {
-    x == x; // okay: refers to EqualityComparable<T>::operator==
+    x == x; // refers to EqualityComparable<T>::operator==
   }
 }
 \end{codeblock}
