@@ -2666,6 +2666,19 @@ void f(A<float> lf, A<int> li, A<X> lX)
   requirements of the member template are the template requirements of
 each of its enclosing constrained templates and any requirements specified or
 implied by the member template itself.}
+\addedCC{\enterexample}
+\begin{codeblock}
+concept C<typename T> { void f(const T&); }
+concept D<typename T> { void g(const T&); }
+
+template<C T> class A {
+  requires D<T> void h(const T& x) {
+    f(x); // okay: C<T>::f
+    g(x); // okay: D<T>::g
+  }
+};
+\end{codeblock}
+\addedCC{\exitexample}
 
 \rSec2[temp.variadic]{Variadic templates}
 \pnum
@@ -5636,6 +5649,9 @@ would render the constrained template declaration ill-formed.}
 \end{itemize}
 
 \pnum
+\addedCC{A requirement is only implied if that requirement is not already present in the template requirements.}
+
+\pnum
 \addedConcepts{For every concept requirement in a template's
 requirements (including implied requirements), requirements for the 
 refinements and associated requirements of the concept named by the
@@ -5819,7 +5835,8 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
   following circumstances:}
 \begin{itemize}
 \item 
-\addedConcepts{a type that aliases the archetype has been used in the
+\changedCCC{a type that aliases the archetype has been used}{when it is used}
+\addedConcepts{in the
     template argument list of a class template specialization or
     concept instance whose definition is required,}
 \item \removedCCC{a type that aliases the archetype is provided as an argument to a
@@ -5853,8 +5870,11 @@ archetype \mbox{\tcode{T$'$}}. \mbox{\enternote} there is no
 
 \pnum
 \addedConcepts{In the declaration of a constrained member,  member
-  template, or nested class, archetypes are established and committed
-  as if it were the only member of its class. \mbox{\enternote} This
+  template, or nested class, archetypes are established} 
+\removedCCC{and committed}
+  \addedConcepts{as if} 
+\changedCCC{it}{the member}
+\addedConcepts{were the only member of its class. \mbox{\enternote} This
   means that members that come before the constrained member, member
   template, or nested class cannot prevent the expression of
   additional requirements on template parameters from enclosing
@@ -5875,7 +5895,7 @@ template <C1 T> class X {
 \end{codeblock}
 
 \noindent
-\addedConcepts{\mbox{\tcode{X::g}} is evaluated as if in the context}
+\addedConcepts{\mbox{\tcode{X::g}} is evaluated as if in the context:}
 
 \begin{codeblock}
 template <C1 T> class X {
@@ -5884,7 +5904,7 @@ template <C1 T> class X {
 \end{codeblock}
 
 \noindent
-\addedConcepts{and \mbox{\tcode{X::B::g}} is evaluated as if in the context}
+\addedConcepts{and \mbox{\tcode{X::B::g}} is evaluated as if in the context:}
 
 \begin{codeblock}
 template <C1 T> class X {
@@ -5897,7 +5917,7 @@ template <C1 T> class X {
 
 \pnum
 \addedConcepts{An archetype \mbox{\tcode{T$'$}} for a type
-  \mbox{\tcode{T}} is}
+  \mbox{\tcode{T}}} \addedCC{is all of the following that apply:}
 \begin{itemize}
 \additemConcepts{an object type ([intro.object]), if the template
   contains the requirement \mbox{\tcode{std::ObjectType<T>}},}
@@ -6219,7 +6239,7 @@ A candidate set is defined in a constrained
 \end{itemize}
 
 \pnum 
-\addedConcepts{A function is \mbox{\techterm{consistent with}} the seed if}
+\addedConcepts{A function is \mbox{\techterm{consistent with}} the seed if} \addedCC{all of the following apply:}
 \begin{itemize}
 \item \addedConcepts{it has the same name as the seed,}
 \item \addedConcepts{its enclosing namespace is the same as the enclosing
@@ -6251,7 +6271,7 @@ A candidate set is defined in a constrained
   with itself. \exitnote}
 
 \pnum
-\addedConcepts{A function template is consistent with the seed if: }
+\addedConcepts{A function template is consistent with the seed if} \addedCC{all of the following apply:}
 \begin{itemize}
 \additemConcepts{it has the same name as the seed, }
 \additemConcepts{its enclosing namespace is the same as the enclosing
