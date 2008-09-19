@@ -6,7 +6,7 @@
 
 /** @file    _order.hpp
  * 
- * Some "linear" algorithms that are identical for all *order cursors 
+ * Some iterative algorithm versions that are identical for all *order cursors 
  * (as we are just calling the appropriate traversal function that are 
  * defined in the respective *order.hpp files).
  */
