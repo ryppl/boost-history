@@ -1,0 +1,62 @@
+[section:introduction Introduction]
+
+The [DataflowGeneric] layer provides [concepts] which are applicable to
+different dataflow frameworks, and can be used to develop generic dataflow
+code.  Generic dataflow code [/(such as [DataflowBlueprint])] can be
+built on top of these concepts, and then work with any dataflow framework
+whose elements model the concepts [/(such as [DataflowSignals])].
+
+Following is a gentle introduction to the various concepts addressed.
+More detail can be found in the [concepts] documentation, as well as the
+[@dataflow/generic/s03.html reference] for implemented
+templates, classes and functions.
+
+[heading Frameworks]
+
+A dataflow /framework/ is a collection of types and functions which can
+be used to move and process data in a dataflow network.  Diffirent frameworks
+work in different ways, and use different mechanisms to transport data.
+[/For example, [BoostSignals] offers transfer of data through function calls,
+while [VTK] offers a number of classes which are meant to be connected in
+a pipline (e.g., starting with the data source, manipulating it, and
+finally displaying it on the screen).]
+
+In the [BoostDataflow]
+library, a framework typically has an associated [Framework] type, which is then
+used to tag its [FrameworkEntity]s.
+
+[/[heading Ports]
+
+A point of data production or consumption in a dataflow framework
+is called a /port/.  
+Two complementary ports that produce / consume the same type of data using
+the same mechanism can typically be connected/disconnected, or data
+can be extracted from one port to another.
+
+Ports are captured more formally by the [Port] concept.
+
+[heading Components]
+
+A /component/ is the fundamental data processing element of a dataflow
+network.  It can have multiple ports, for example a video filter component
+might have one consumer port (consuming video to be processed) and one
+producer port (producing filtered video).
+
+Components are captured more formally by the [Component] concept.
+
+[heading Operations]
+
+To establish a flow of data in a dataflow program, we typically /connect/
+producers and consumers using some type of /connection/. In C++, this is usually
+done through a pointer-like mechanism.  For example, a boost::signal can be used
+by a producer to dissiminate data to multiple consumers which have been
+connected to the signal. Or, a consumer class might have a pointer to a variable
+which it collects data from.
+
+Operations between two ports such as /connect/, /connect_only/, /disconnect/,
+and /extract/ are captured by the [BinaryOperable] concept.  Operations
+on a single port such as /disconnect_all/ are covered by the [UnaryOperable]
+concept.  Operations on components are covered by the [ComponentOperable]
+concept.]
+
+[endsect]

@@ -1,0 +1,251 @@
+[section:new_layer Implementing support for a new framework (VTK)]
+
+This example shows how to implement support for a particular dataflow framework.
+Our victim is [VTK], a 3D visualization toolkit, which uses a data pipeline
+to move data from a source to the display (with possible transformations,
+scene construction etc. on the way).  For example, here is an excerpt from
+a VTK tutorial that sets up a whole source->render window pipeline:
+
+```
+    // allocate components
+    vtkConeSource *cone = vtkConeSource::New();
+    vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+    vtkActor *coneActor = vtkActor::New();
+    vtkRenderer *ren1= vtkRenderer::New();
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
+
+    // make the connections
+    coneMapper->SetInputConnection( cone->GetOutputPort() );
+    coneActor->SetMapper( coneMapper );
+    ren1->AddActor( coneActor );
+    renWin->AddRenderer( ren1 );
+```
+
+Our goal will be to simplify the connection-making code by providing
+Dataflow support for VTK.  With that in place, we will be able to use the
+following connection code:
+
+```
+    // make the connections
+    connect(*cone, *coneMapper);
+    connect(*coneMapper, *coneActor);
+    connect(*coneActor, *ren1);
+    connect(*ren1, *renWin);
+```
+
+or even more concisely and clearly,
+
+```
+    // make the connections
+    *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
+```
+
+Once we have the [VTK] support layer built, we can include it in any
+[VTK] application and start using the Dataflow library with [VTK] objects.
+In addition to
+the simpler syntax, this also allows us to use anything built on top of the
+generic layer - like [DataflowBlueprint], or
+the [gui_example GUI editor] currently under development.
+
+[heading Next]
+[link dataflow.support.examples.new_layer.tag
+    Setting up the Tag]
+
+[section:tag Setting up the Tag]
+
+The first thing we'll do is create a [Tag] for the VTK framework, in
+namespace `boost::dataflow::vtk`.  All we have to do is inherit from
+`default_tag`:
+
+[vtk_tag]
+
+We can now use it to tag all of our [VTK] support classes.
+
+[heading Next]
+[link dataflow.support.examples.new_layer.producerconsumer
+    Setting up a producer Port and a consumer Port] 
+[endsect][/mechanism]
+
+[section:producerconsumer Setting up a producer Port and a consumer Port]
+
+Now that we have the tag, let's cover the basic data pipeline,
+which is implemented using the
+[vtkAlgorithm] class.  This class provides input and output ports. Output ports
+are accessible via `GetOuptutPort` member functions, which return a proxy
+object ([vtkAlgorithmOutput] `*`) for an actual output port.
+
+In Dataflow concepts, [vtkAlgorithmOutput] can be made a producer [Port]
+- it corresponds to a single data output point. We support it as such by
+defining a [PortTraits] type, and associating it with
+[vtkAlgorithmOutput]:
+
+[vtk_algorithm_output_producer]
+
+[note More details about registering [PortTraits] for a [Port]
+can be found on the [Traits] documentation page.]
+
+Now that we have a producer [Port], we need a consumer [Port].
+[vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
+and `SetInputConnection` member functions.  Since we will make [vtkAlgorithm]
+a [Component], we can't make it a [Port] directly - but we can use 
+the [port_adapter] class to refer to the [Port] functionality of [vtkAlgorithm],
+so we set up a [PortTraits] class to represent this [Port] functionality:
+
+[vtk_algorithm_consumer]
+
+Note that for the consumer traits, we inherited `complemented_port_traits`
+rather than `port_traits`.  In doing so, we made `vtk_algorithm_consumer`
+a [ComplementedPortTraits].  This basically states that any [Port] with
+`vtk_algorithm_consumer` traits is intended for connections with `vtkAlgorithmOutput`
+[Port]s.  This piece of information can make things easier for the Dataflow
+library in certain cases (e.g., the prototype [DataflowBlueprint] layer currently
+only knows how to connect two blueprint ports if at least one of them is a
+[ComplementedPort]).
+
+[heading Next]
+
+[link dataflow.support.examples.new_layer.connectable
+    Making things Connectable] 
+
+[endsect][/producerconsumer]
+
+[section:connectable Making things Connectable]
+
+With the pair of producer [Port] and consumer [Port] registered, we
+can make them [Connectable] and/or [OnlyConnectable].
+All we need to do is specialize the implementation for the appropriate
+[PortTraits]:
+
+[vtk_connect_impl_algorithm]
+
+Connections are done through the `boost::dataflow::binary_operation` function
+with either `operation::connect` or `operation::connect_only` operation, and
+a specified framework tag.
+In the next step, we'll set up forwarding functions
+and operators that will make connections easier.
+
+[heading What we can do with what we have so far]
+
+[vtk_connect_unforwarded]
+
+[heading Next]
+[link dataflow.support.examples.new_layer.forwarding
+    Defining forwarding functions and operators] 
+
+[endsect][/connectable]
+
+[section:forwarding Defining forwarding functions and operators]
+
+To make connecting
+easier, we'll add forwarding connect and connect_only
+functions in the global namespace (where vtk classes live) specific
+to the vtk framework. The Dataflow library provides include file templates
+for this purpose.
+
+Including `<boost/dataflow/templates/binary_operation.hpp>` with `#define`d
+`DATAFLOW_TEMPLATE_TAG` and `DATAFLOW_TEMPLATE_BINARY_OPERATION` will
+define a forwarding function `DATAFLOW_TEMPLATE_BINARY_OPERATION` in the
+current namespace.
+
+Including `<boost/dataflow/templates/operator.hpp>`  with `#define`d
+`DATAFLOW_TEMPLATE_TAG`, `DATAFLOW_TEMPLATE_BINARY_OPERATION`, and
+`DATAFLOW_TEMPLATE_OPERATOR` will define a forwarding operator in the current
+namespace.
+
+[vtk_specialize_connect]
+
+[heading What we can do with what we have so far]
+
+[vtk_connect_forwarded]
+
+[heading Next]
+[link dataflow.support.examples.new_layer.component
+    Setting up a Component] 
+
+[endsect][/forwarding]
+
+[section:component Setting up a Component]
+
+In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
+inherit [vtkAlgorithm].  We've set up [Port]s that we can get to, and
+connect.  However, we would like to be able to connect the two components
+directly, with something like `connect(*cone, *coneMapper)`.
+
+To do that,
+we need to make [vtkAlgorithm] a [Component], which allows us to
+designate default ports to be used when, e.g., connecting:
+
+[vtk_algorithm_component]
+
+Now, [vtkAlgorithm] is a producer [Port].
+
+[heading What we can do with what we have so far]
+
+```
+    connect(*cone, *coneMapper)
+```
+
+[heading Next]
+[link dataflow.support.examples.new_layer.filter
+    Setting up a filter (ProducerPort+ConsumerPort)] 
+
+[endsect][/component]
+
+[section:filter Setting up another Component]
+
+In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
+data for a [vtkRenderer].  In this case, we can provide Dataflow support
+for a [vtkActor] as both a producer [Port] and a consumer [Port]:
+
+[vtk_actor_filter]
+
+[heading Next]
+[link dataflow.support.examples.new_layer.producermap
+    Setting up a KeyedPort] 
+
+[endsect][/filter]
+
+[section:producermap Setting up a KeyedPort]
+
+Sometimes, components can produce (or consume) multiple types of data.
+For example, [vtkMapper] objects can produce data for [vtkActor] objects,
+or (since [vtkMapper] inherits [vtkAlgorithm]) for other [vtkAlgorithm]
+objects.  Correspondingly, connecting a [vtkMapper] to a [vtkActor] is not
+the same as connecting a [vtkMapper] to another [vtkAlgorithm].
+
+To accomodate such situations, the Dataflow library provides
+[KeyedPort]s, which delegate fuctionality to a [Port]
+determined by the [Port] they are being connected to.
+
+[vtk_mapper_producer]
+
+[heading Next]
+[link dataflow.support.examples.new_layer.remaining
+    Setting up the remaining components (more of the same)] 
+
+[endsect][/producermap]
+
+[section:remaining Setting up the remaining Components (more of the same)]
+
+[vtk_setup_rest]
+
+[heading Next]
+[link dataflow.support.examples.new_layer.using_support_layer
+    Using the VTK support layer] 
+
+[endsect][/remaining]
+
+
+[section:using_support_layer Using the VTK support layer]
+
+Now that we have developed a support layer for VTK, what do we get?
+
+Well, at the moment, one of the largest practical benefits is a small
+improvement to the connection syntax.  Here is a full VTK example which
+has been modified to use the Dataflow library for making connections:
+
+[vtk_example_Cone_cxx]
+
+[endsect]
+
+[endsect][/new_layer]

@@ -1,0 +1,34 @@
+
+[section:unaryoperable UnnaryOperable (AllDisconnectable) ]
+
+A [Port] `P` of [Tag] `T` is /UnaryOperable/
+for a unary operation `O`, if the implementation of
+the unnary operation `O` has been specialized for `P`
+
+In this case,
+
+* If `O` is operations::disconnect_all, `P` is [AllDisconnectable]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[P] [A [Port] type.]]
+    [[p] [An object of type P.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Disconnect All]
+        [`unary_operation<operations::disconnect_all, T>(p)`]
+        [void]
+        [
+            Destroys any connections stored by `p`.  
+        ]
+    ]
+]
+
+[endsect][/unaryoperable]

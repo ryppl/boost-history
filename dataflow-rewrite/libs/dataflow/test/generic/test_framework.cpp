@@ -17,7 +17,7 @@ namespace df = boost::dataflow;
 struct not_framework
 {};
 
-struct my_framework : public df::framework
+struct my_framework : public df::framework_base
 {};
 
 BOOST_AUTO_TEST_CASE( test ) 

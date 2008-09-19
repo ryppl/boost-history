@@ -15,15 +15,15 @@
 namespace boost { namespace dataflow {
 
 /// Base class for Framework types.
-struct framework {};
+struct framework_base {};
 
 /// The default Framework argument for Dataflow templates.
-struct default_framework : framework {};
+struct default_framework : framework_base {};
 
 /// Boolean metafunction determining whether a type is a Framework.
 template<typename T>
 struct is_framework
-    : public is_base_of<framework, T> {};
+    : public is_base_of<framework_base, T> {};
 
 
 } } // namespace boost::dataflow

@@ -1,0 +1,71 @@
+[section:binaryoperable BinaryOperable (Connectable, OnlyConnectable, Disconnectable, Extractable) ]
+
+[Port]s `P` and `C` of [Tag] `T` are /BinaryOperable/
+for a binary operation `O` if the implementation of
+the binary operation `O` has been specialized for `P`, and `C`.
+
+In this case,
+
+* If `O` is operations::connect, `P` and `C` are [Connectable]
+* If `O` is operations::connect_only, `P` and `C` are [OnlyConnectable]
+* If `O` is operations::disconnect, `P` and `C` are [Disconnectable]
+* If `O` is operations::extract, `P` and `C` are [Extractable]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[P] [A [Port] type.]]
+    [[C_C] [A [Port] [Connectable] with `P`]]
+    [[C_O] [A [Port] [OnlyConnectable] with `P`]]
+    [[C_D] [A [Port] [Disconnectable] with `P`]]
+    [[C_E] [A [Port] [Extractable] with `P`]]
+    [[p] [An object of type P.]]
+    [[c_c] [An object of type C_C.]]
+    [[c_o] [An object of type C_O.]]
+    [[c_d] [An object of type C_D.]]
+    [[c_e] [An object of type C_E.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Connect]
+        [`binary_operation<operations::connect, T>(p,c_c)`]
+        [void]
+        [
+            Creates a lasting connection between the `p` and `c_c`.
+        ]
+    ]
+    [
+        [OnlyConnect]
+        [`binary_operation<operations::connect_only, T>(p,c_o)`]
+        [void]
+        [
+            Discards any lasting connections stored by `p` or `c_o`,
+            and creates a lasting connection between `p` and `c_o`.
+            Note that `p` or `c_o` could still be connected to other ports,
+            as long as these connections are not stored in `p` or `c_o`.
+        ]
+    ]
+    [
+        [Disconnect]
+        [`binary_operation<operations::disconnect, T>(p,c_d)`]
+        [void]
+        [
+            Discards any existing connection between `p` and `c_d`.
+        ]
+    ]
+    [
+        [Extract]
+        [`binary_operation<operations::extract, T>(p,c_e)`]
+        [void]
+        [
+            Perfoms a one time transfer of data from `p` to `c_e`.
+        ]
+    ]
+]
+
+[endsect][/binaryoperable]

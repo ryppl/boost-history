@@ -23,10 +23,10 @@ namespace boost { namespace dataflow {
 
 namespace detail {
 
-    template<typename Tag, typename T, int N>
+    template<typename Framework, typename T, int N>
     struct lazy_is_same_traits_tag
     {
-        typedef typename is_same<Tag, typename mpl::at_c<typename T::dataflow_traits, N>::type::tag>::type type;
+        typedef typename is_same<Framework, typename mpl::at_c<typename T::dataflow_traits, N>::type::tag>::type type;
     };
     
 }
@@ -43,10 +43,10 @@ namespace detail {
 namespace boost { namespace dataflow {
 
 
-template<typename T, typename Tag>
+template<typename T, typename Framework>
 struct traits_of<
     T,
-    Tag,
+    Framework,
     typename enable_if<
         mpl::and_<
             mpl::is_sequence<typename T::dataflow_traits>,
@@ -54,7 +54,7 @@ struct traits_of<
                 mpl::int_<BOOST_PP_ITERATION()>,
                 typename mpl::size<typename T::dataflow_traits>::type
             >::type,
-            detail::lazy_is_same_traits_tag<Tag, T, BOOST_PP_ITERATION()>
+            detail::lazy_is_same_traits_tag<Framework, T, BOOST_PP_ITERATION()>
         >
     >::type
 >

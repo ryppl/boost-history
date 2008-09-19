@@ -12,3 +12,6 @@ run test_framework_entity.cpp ;
 run test_framework_entity_traits.cpp ;
 run test_framework_entity_traits_of.cpp ;
 run test_default_framework_of.cpp ;
+
+run test_port_categories.cpp ;
+run test_port.cpp ;

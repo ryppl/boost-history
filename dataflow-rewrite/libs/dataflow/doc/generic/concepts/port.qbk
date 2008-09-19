@@ -1,0 +1,362 @@
+[section PortCategory]
+
+A [PortCategory] designates a category of [Port] in the Dataflow library.
+The library currently defines three [PortCategory]s:
+
+* `boost::dataflow::ports::producer`,
+* `boost::dataflow::ports::consumer`, and
+* `boost::dataflow::ports::producer_consumer`, and
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[PC] [A [PortCategory] type.]]
+]
+
+[heading Requirements]
+
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Complementing PortCategory]
+        [`PC::complement`]
+        [[PortCategory] type]
+        [
+            The complementing [PortCategory] of `PC`, meaning that it
+            is possible to make connections between [Port]s of
+            [PortCategory] `PC` and [Port]s of
+            [PortCategory] `PC::complement`.
+        ]
+    ]
+    [
+        [PortCategory Concept Check]
+        [[^[is_port_category]<T>::type]]
+        [[true]]
+        [
+            Concept check for the [PortCategory] concept.
+        ]
+    ]
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support/port.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[endsect][/portcategory]
+
+[section:mechanism Mechanism]
+
+A [Mechanism] type is used together with a [Side] type to select a default port
+for an operation.  Typically, each operation (e.g., connect or extract)
+will have a specific [Mechanism] associated with it.  Multiple operations can
+share the same [Mechanism], which implies they will access the same default
+ports.  See the [Port] and [Component] documentation for more information.
+
+[heading Notation]
+
+[variablelist
+    [[M] [A [Mechanism] type.]]
+]
+
+[heading Requirements]
+
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [default_mechanism Inheritance]
+        [`is_base<default_mechanism, M>::type`]
+        [ [true] ]
+        [
+            To allow concept checking on [Mechanism] types, all [Mechanism] types
+            must be derived from default_mechanism.
+        ]
+    ]
+    [
+        [Mechanism Concept Check]
+        [[^[is_mechanism]<T>::type]]
+        [ [true] ]
+        [
+            Concept check for the [Mechanism] concept.
+        ]
+    ]
+]
+
+[endsect]
+
+
+[section:port Port, PortTraits]
+
+A ['[Port]] is the fundamental point of data production or consumption.
+
+[heading Refinement of]
+* [Entity], [Traits]
+
+[heading Refinements]
+
+* [ComplementedPort]
+* [VectorPort]
+* [KeyedPort]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`PC`] [A [PortCategory] type.]]
+    [[`S`] [A [Side] type.]]
+    [[`M`] [A [Mechanism] type.]]
+    [[`P`] [A Port type, for [Tag] `T`.]]
+    [[`PT`] [[PortTraits] of `P` for `T`.]]
+    [[`p`] [An object of type `P`]]
+]
+
+[heading Port Requirements]
+The requirements are listed only when different or in addition to [Entity]
+requirements.
+
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [[^[traits_of]<P, T>::type]]
+        [`PT`]
+        [
+            The [PortTraits] of the [Port].
+        ]
+    ]
+    [
+        [Port Concept Check]
+        [[^[is_port]<P, T>::type]]
+        [[true]]
+        [
+            Concept check for the [Port] concept.
+        ]
+    ]
+    [
+        [Has Default Port]
+        [`has_default_port<P,S,M,T>::type`]
+        [ [true] ]
+        [
+            A [Port] has a default port for any [Side] and [Mechanism] (it is 
+            the port object itself).
+        ]
+    ]
+    [
+        [Get Default Port]
+        [`get_default_port<S,M,T>(p)`]
+        [p]
+        [
+            Returns the port object (the default port of a [Port] object is
+            the object itself).
+        ]
+    ]
+]
+
+[heading PortTraits Requirements]
+
+The requirements are listed only when different or in addition to [Traits]
+requirements.
+
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Category]
+        [`PT::category`]
+        [[PortCategory] type]
+        [The category of the port]
+    ]
+]
+
+[heading Header]
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support/port.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Models]
+* [port]
+* [port_traits]
+
+[endsect][/port]
+
+
+[section:complementedport ComplementedPort, ComplementedPortTraits]
+
+A ComplementedPort `P` is a [Port] s.t. whenever it is
+[BinaryOperable] with another [Port] `P2`, `P2` is
+a particular type - either `P`'s complement type, or a [KeyedPort]
+that delegates to `P`'s complement type in a binary operation with `P`.
+
+[ComplementedPort]s are useful in situations where [Port] types
+are [BinaryOperable] in a one-to-one fashion (a pair of [Port] types
+are each other's port complements), or in a one-to-many fashion (a number
+of [Port] types have the same complement port).  An example of the
+latter is [DataflowSignals], where any `signal` of signature `T` has
+a complement port of type `function<T>`, and can therefore model
+[ComplementedPort], but `function<T>` cannot because there are many `signal`
+types to which it can be connected.
+
+The traits of a [ComplementedPort] are captured by the
+[ComplementedPortTraits], which refines the [PortTraits] with
+an additional member type specifying the complement port type.
+
+[heading ComplementedPort Refines]
+* [Port]
+
+[heading ComplementedPortTraits Refines]
+* [PortTraits]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`P`] [A [ComplementedPort] type, for [Tag] `T`.]]
+    [[`PT`] [[ComplementedPortTraits] of `P` for `T`.]]
+]
+
+[heading ComplementedPort Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`traits_of<P, T>::type`]
+        [`PT`]
+        [
+            The [ComplementedPortTraits] of the port.
+        ]
+    ]
+]
+
+[heading ComplementedPortTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Complement Port Type]
+        [`PT::complement_port_type`]
+        [Any [Port] type]
+        [
+            The complement port type of `P`.  If `P` is 
+            [BinaryOperable] with another port type `P2`, then `P2` must
+            be either `PT::complement_port_type`, , or a [KeyedPort]
+            that delegates to `PT::complement_port_type` in a binary operation
+            with `P`.
+        ]
+    ]
+]
+
+[heading Models]
+
+* [complemented_port_traits]
+
+[endsect]
+
+[section:vectorport VectorPort, VectorPortTraits]
+
+A [VectorPort] type `VP` is a [Port] that is composed of a number of
+sub-[Port]s.
+
+[heading VectorPort Refines]
+* [Port]
+* [PortVector]
+
+[heading VectorPortTraits Refines]
+* [PortTraits]
+* [PortVectorTraits]
+
+
+[endsect][/vectorport]
+
+[section:keyedport KeyedPort, KeyedPortTraits]
+
+A [KeyedPort] type `KP` is a [VectorPort] whose sub-[Port]s are accessible
+by key.  Whenever a binary operation is performed between a [Port] of type `P`
+and `KP`, it is forwarded to the binary operation between `P` and the 
+sub-[Port] in `KP` keyed by the [PortTraits] of `P`.
+
+[heading KeyedPort Refines]
+* [VectorPort]
+
+[heading VectorPortTraits Refines]
+* [VectorPortTraits]
+
+[endsect][/keyed_port]
+
+[section:dynamicport DynamicPort, DynamicPortTraits]
+
+A DynamicPort `P` is a [Port] that has a number of subports, where
+the number is determined at run-time.
+
+[heading DynamicPort Refines]
+* [Port]
+
+[heading DynamicPortTraits Refines]
+* [PortTraits]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`P`] [A [DynamicPort] type, for [Tag] `T`.]]
+    [[`PT`] [[DynamicPortTraits] of `P` for `T`.]]
+    [[`p`] [An object of type `P`.]]
+    [[`n`] [An object convertible to `size_t`.]]    
+]
+
+[heading DynamicPort Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`traits_of<P, T>::type`]
+        [`PT`]
+        [
+            The [DynamicPortTraits] of the port.
+        ]
+    ]
+    [
+        [Number of Subports]
+        [`get_dynamic_port_size<T>(p)`]
+        [`size_t`]
+        [
+            Returns the number of subports accessible through `p`.
+        ]
+    ]
+    [
+        [Subport]
+        [`get_subport<T>(p, n)`]
+        [`result_of::get_subport<P,T>::type`]
+        [
+            Returns the `n`-th subport accessible through `p`.
+        ]
+    ]
+]
+
+[heading DynamicPortTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Subport type]
+        [`PT::subport_type`]
+        [Any [Port] type]
+        [
+            The type of subport accessible through objects of type `P`.
+        ]
+    ]
+]
+
+[endsect]
+
+ 
+

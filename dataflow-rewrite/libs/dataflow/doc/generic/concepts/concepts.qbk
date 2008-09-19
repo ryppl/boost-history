@@ -1,0 +1,28 @@
+[section Concepts]
+
+[section:general General]
+
+[include framework.qbk]
+
+[include framework_entity.qbk]
+
+[endsect]
+
+[/
+[section Port related]
+
+[include port.qbk]
+
+[include binary_operable.qbk]
+
+[include unary_operable.qbk]
+
+[endsect] [/port related]
+
+[section Component related]
+
+[include component.qbk]
+
+[endsect][/component related]]
+
+[endsect][/concepts]

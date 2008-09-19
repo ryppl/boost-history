@@ -1,0 +1,331 @@
+[article Dataflow
+    [quickbook 1.4]
+    [version 0.9.1]
+    [authors [Rajko, Stjepan]]
+    [copyright 2007 2008 Stjepan Rajko]
+    [purpose Generic dataflow lirary providing support for data producers,
+        consumers, and connections.]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[template concepts[] [link dataflow.support.concepts concepts]]
+[template Tag[] [link dataflow.support.concepts.general.tag [^Tag]]]
+[template Traits[] [link dataflow.support.concepts.general.entity [^Traits]]]
+[template Side[] [link dataflow.support.concepts.general.side [^Side]]]
+[template Entity[] [link dataflow.support.concepts.general.entity [^Entity]]]
+[template PortCategory[] [link dataflow.support.concepts.port_related.portcategory [^PortCategory]]]
+[template Mechanism[] [link dataflow.support.concepts.port_related.mechanism [^Mechanism]]]
+[template PortTraits[] [link dataflow.support.concepts.port_related.port [^PortTraits]]]
+[template Port[] [link dataflow.support.concepts.port_related.port [^Port]]]
+[template ProducerPort[] [link dataflow.support.concepts.port_related.port [^ProducerPort]]]
+[template ConsumerPort[] [link dataflow.support.concepts.port_related.port [^ConsumerPort]]]
+[template ComplementedPort[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPort]]]
+[template ComplementedPortTraits[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPortTraits]]]
+[template PortVector[] [link dataflow.support.concepts.component_related.portvector [^PortVector]]]
+[template PortVectorTraits[] [link dataflow.support.concepts.component_related.portvector [^PortVectorTraits]]]
+[template VectorPort[] [link dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
+[template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
+[template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
+[template KeyedPortTraits[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPortTraits]]]
+[template DynamicPort[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPort]]]
+[template DynamicPortTraits[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPortTraits]]]
+
+[template ProxyPortTraits[] [link dataflow.support.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
+[template ProxyPort[] [link dataflow.support.concepts.port_related.proxyport [^ProxyPort]]]
+
+[template BinaryOperable[] [link dataflow.support.concepts.port_related.binaryoperable [^BinaryOperable]]]
+[template Connectable[] [link dataflow.support.concepts.port_related.binaryoperable [^Connectable]]]
+[template OnlyConnectable[] [link dataflow.support.concepts.port_related.binaryoperable [^OnlyConnectable]]]
+[template Disconnectable[] [link dataflow.support.concepts.port_related.binaryoperable [^Disconnectable]]]
+[template Extractable[] [link dataflow.support.concepts.port_related.binaryoperable [^Extractable]]]
+
+[template UnaryOperable[] [link dataflow.support.concepts.port_related.unaryoperable [^UnaryOperable]]]
+[template AllDisconnectable[] [link dataflow.support.concepts.port_related.unaryoperable [^AllDisconnectable]]]
+
+[template ComponentTraits[] [link dataflow.support.concepts.component_related.component [^ComponentTraits]]]
+[template Component[] [link dataflow.support.concepts.component_related.component [^Component]]]
+
+[template ComponentOperable[] [link dataflow.support.concepts.component_related.componentoperable [^ComponentOperable]]]
+[template Invocable[] [link dataflow.support.concepts.component_related.componentoperable [^Invocable]]]
+
+[template SignalTraits[] [link dataflow.signals.concepts.signaltraits [^SignalTraits]]]
+[template SignalPortTraits[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
+[template SignalProducer[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
+[template SignalConsumer[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
+[template SignalFilterComponent[] [link dataflow.signals.concepts.signalfiltercomponent [^SignalFilterComponent]]]
+[template SignalConsumerComponent[] [link dataflow.signals.concepts.signalconsumercomponent [^SignalConsumerComponent]]]
+
+[template PhoenixProducer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
+[template PhoenixConsumer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
+
+[template vtk_example[text] [link dataflow.support.examples.new_layer [text]]]
+[template gui_example[text] [link dataflow.blueprint.examples.fltk_gui [text]]]
+[template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
+
+[template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
+[template DataflowBlueprint[] [link dataflow.blueprint Dataflow.Blueprint]]
+[template DataflowPhoenix[] [link dataflow.phoenix Dataflow.Phoenix]]
+
+[template producer_group[] [link dataflow.components.producer_group producer_group]]
+[template consumer_group[] [link dataflow.components.consumer_group consumer_group]]
+[template consumer_map[] [link dataflow.components.consumer_map consumer_map]]
+
+[template signals_quickstart[] [link dataflow.signals.introduction.quick_start quick start]]
+[template signals_freefunctions[] [link dataflow.signals.connections free functions and operators]]
+[template connect[] [link dataflow.signals.connections.connect connect]]
+[template invoke[] [link dataflow.signals.connections.invoke invoke]]
+[template disconnect_all[] [link dataflow.signals.connections.disconnect_all disconnect_all]]
+[template signals_tutorial[] [link dataflow.signals.introduction.tutorial tutorial]]
+[template components[] [link dataflow.signals.components components]]
+[template component[] [link dataflow.signals.component component]]
+[template operators[] [link dataflow.signals.connections.operators operators]]
+
+[template slot_selector[] [link dataflow.signals.connections.classes.slot_selector slot_selector]]
+
+[template consumer[] [link dataflow.signals.components.generic.consumer consumer]]
+[template filter[] [link dataflow.signals.components.generic.filter filter]]
+[template applicator[] [link dataflow.signals.components.generic.applicator applicator]]
+[template conditional[] [link dataflow.signals.components.generic.conditional conditional]]
+[template instantiator[] [link dataflow.signals.components.generic.instantiator instantiator]]
+[template modifier[] [link dataflow.signals.components.generic.modifier modifier]]
+[template storage[] [link dataflow.signals.components.properties.storage storage]]
+[template counter[] [link dataflow.signals.components.properties.counter counter]]
+[template junction[] [link dataflow.signals.components.flow.junction junction]]
+[template multiplexer[] [link dataflow.signals.components.flow.multiplexer multiplexer]]
+[template mutex[] [link dataflow.signals.components.threading.mutex mutex]]
+[template condition[] [link dataflow.signals.components.threading.condition condition]]
+[template timed_generator[] [link dataflow.signals.components.threading.timed_generator timed_generator]]
+[template function[] [link dataflow.signals.components.adapters.function function]]
+[template socket_sender[] [link dataflow.signals.components.network.socket_sender socket_sender]]
+[template socket_receiver[] [link dataflow.signals.components.network.socket_receiver socket_receiver]]
+[template chain[] [link dataflow.signals.components.topologies.chain chain]]
+
+[template bind_mem_fn[] [link dataflow.utility.bind_mem_fn bind_mem_fn]]
+[template bind_mem_fn_overload[] [link dataflow.utility.bind_mem_fn_overload bind_mem_fn_overload]]
+
+[template boost_signal[] [@http://www.boost.org/doc/html/boost/signal.html [^boost::signal]]]
+[template boost_function[] [@http://www.boost.org/doc/html/boost/function.html [^boost::function]]]
+
+[template fusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
+[template BoostFusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
+[template BoostIostreams[] [@http://www.boost.org/libs/iostreams/doc/index.html]]
+[template BoostSignals[] [@http://www.boost.org/doc/html/signals.html Boost.Signals]]
+[template ThreadSafeSignals[] [@http://www.comedi.org/projects/thread_safe_signals/libs/thread_safe_signals/doc/html/index.html thread_safe_signals]]
+[template Threadpool[] [@http://www.boostpro.com/vault/index.php?&direction=0&order=&directory=Concurrent%20Programming Threadpool]]
+[template BoostThread[] [@http://www.boost.org/doc/html/thread.html Boost.Thread]]
+[template BoostPhoenix2[] [@http://spirit.sourceforge.net/ Boost.Phoenix2]]
+[template BoostPhoenix[] [@http://spirit.sourceforge.net/ Boost.Phoenix]]
+[template BoostGraph[] [@http://www.boost.org/libs/graph/doc/index.html Boost Graph Library]]
+[template BoostAsio[] [@http://asio.sourceforge.net/boost_asio_0_3_8/libs/asio/doc/html/index.html Boost.Asio]]
+[template BoostSerialization[] [@http://www.boost.org/libs/serialization/doc/index.html Boost.Serialization]]
+[template BoostGIL[] [@http://opensource.adobe.com/gil/ Boost.GIL]]
+
+[template GNURadio[] [@http://www.gnu.org/software/gnuradio/ GNU Radio]]
+[template FLTK[] [@http://fltk.org/ FLTK2]]
+[template cppgui[] [@http://sourceforge.net/projects/cppgui cppgui]]
+[template WikiDataflow[] [@http://en.wikipedia.org/wiki/Dataflow_programming dataflow]]
+[template VTK[] [@http://www.vtk.org/ VTK]]
+[template vtkAlgorithm[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkAlgorithm]]]
+[template vtkAlgorithmOutput[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithmOutput.html ['vtkAlgorithmOutput]]]
+[template vtkMapper[] [@http://www.vtk.org/doc/nightly/html/classvtkMapper.html ['vtkMapper]]]
+[template vtkActor[] [@http://www.vtk.org/doc/nightly/html/classvtkActor.html ['vtkActor]]]
+[template vtkRenderer[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkRenderer]]]
+
+[template future_work[] [link dataflow.future future_work]]
+[template blueprint[] [link dataflow.future.blueprint blueprint]]
+[template FuturePin[] [link dataflow.future.pin pin]]
+[template rationale[] [link dataflow.development.rationale rationale]]
+
+[template is_tag[] [classref boost::dataflow::is_tag is_tag]]
+[template is_mechanism[] [classref boost::dataflow::is_mechanism is_mechanism]]
+[template is_port_category[] [classref boost::dataflow::is_port_category is_port_category]]
+[template port_traits[] [classref boost::dataflow::port_traits [^port_traits]]]
+[template traits_of[] [classref boost::dataflow::traits_of traits_of]]
+[template register_traits[] [classref boost::dataflow::register_traits register_traits]]
+[template is_entity[] [classref boost::dataflow::is_entity [^is_entity]]]
+[template is_port[] [classref boost::dataflow::is_port [^is_port]]]
+[template port[] [classref boost::dataflow::port [^port]]]
+[template port_adapter[] [classref boost::dataflow::port_adapter [^port_adapter]]]
+[template complemented_port_traits[] [classref boost::dataflow::complemented_port_traits [^complemented_port_traits]]]
+[template is_complemented_port[] [classref boost::dataflow::is_complemented_port [^is_complemented_port]]]
+
+[template DATAFLOW_TRAITS[] [macroref DATAFLOW_TRAITS DATAFLOW_TRAITS]]
+[template DATAFLOW_TRAITS_ENABLE_IF[] [macroref DATAFLOW_TRAITS_ENABLE_IF DATAFLOW_TRAITS_ENABLE_IF]]
+[template default_tag[] [classref boost::dataflow::default_tag [^default_tag]]]
+
+[template true[] Boolean MPL Metafunction that evaulates to true]
+
+[import ../test/test_port.cpp]
+
+[import ../test/signals/test_connect.cpp]
+[import ../test/signals/test_branching.cpp]
+[import ../test/signals/test_pull.cpp]
+[import ../test/signals/test_disconnect.cpp]
+[import ../test/signals/test_multi_type.cpp]
+[import ../test/signals/test_multi_args.cpp]
+[import ../test/signals/test_same_type.cpp]
+[import ../test/signals/test_multi_out.cpp]
+
+[import ../test/signals/test_filter.cpp]
+[import ../test/signals/test_storage.cpp]
+[import ../test/signals/test_counter.cpp]
+[import ../test/signals/test_function.cpp]
+[import ../test/signals/test_chain.cpp]
+[import ../test/signals/test_socket.cpp]
+[import ../test/signals/test_multiplexer.cpp]
+
+[import ../test/signals/test_junction.cpp]
+[import ../test/signals/test_mutex.cpp]
+
+[import ../test/utility/test_bind_mem_fn.cpp]
+
+[import ../example/fibonacci.cpp]
+[import ../example/signals/simple_example_components.hpp]
+[import ../example/signals/simple_example.cpp]
+[import ../example/signals/simple_distributed_example.cpp]
+[import ../example/signals/intro_example.cpp]
+[import ../example/signals/gil_example.cpp]
+[import ../example/signals/quick_start_examples.cpp]
+[import ../example/signals/applicator_example.cpp]
+[import ../example/signals/conditional_example.cpp]
+[import ../example/signals/instantiator_example.cpp]
+[import ../example/signals/modifier_example.cpp]
+[import ../example/threadpool/threadpool_component_example.cpp]
+
+[import ../../../boost/dataflow/vtk/support.hpp]
+[import ../example/VTK/Cone.cxx]
+
+[import ../example/blueprint/blueprint_example.cpp]
+
+[import ../example/glv_gui/glvgui_example.cpp]
+[import ../example/glv_gui/glvgui_graph.cpp]
+
+[include introduction/introduction.qbk]
+
+[include support/support.qbk]
+
+[/[include components.qbk]]
+
+[include signals.qbk]
+
+[include blueprint/blueprint.qbk]
+
+[/[include phoenix.qbk]]
+
+[include utility/utility.qbk]
+
+[section Development]
+
+[include rationale.qbk]
+
+[section:discussion Discussion on Boost Community Feedback]
+
+The following summarizes some of the suggestions / comments given by the Boost
+community, and what has been done to incorporate this feedback.
+
+[* Douglas Gregor has suggested the dataflow library could be applied to
+   [VTK] and [BoostIostreams], gave helpful suggestions on how deal with
+   fused/unfused issues in the [DataflowSignals] documentation and the code,
+   and suggested making the examples more connected to the introductory
+   examples and including visual diagrams for the dataflow networks.]
+
+* I have added an [link dataflow.introduction.examples.new_layer example]
+  of [VTK] support, but the library is not quite ready for [BoostIostreams].
+* As per Doug's suggestion, I have made the documentation focus on the
+  unfused components, and made the unfused components default in the
+  implementation.
+* I have started ASCII visual diagrams in the documentation.
+* Examples still need to be expanded and integrated more.
+
+[* Jake Voytko suggested having master table of [DataflowSignals] components
+   describing their use, adding instructions on linking with the library,
+   and other suggestions on improving the documentation.]
+
+* A master table has been added to the [components] page.
+* I have started a [link dataflow.introduction.download Downloading and Linking]
+  instruction page.
+
+[* Tobias Schwinger indicated that the library could be used for pulling rather than pushing data.]
+
+* [link dataflow.signals.introduction.examples.pull An example] which illustrates this has been addded.
+
+[* James Jones suggested that a ||-like operator could be used for branching, and >> for chaining.]
+
+* `operator >=` which was orignally used for branching has been replaced with `operator |`.
+* Since the most straightforward way for me to implement chaining/branching is using a left-to-right
+operator for one and a right-to-left operator for the other, I decided to stay with >>= as the chaining
+operator.
+
+[* Paolo Coletta suggested a "video_generator >>= ( effect1 && effect2 ) >>= image_sum" - like syntax that
+  would allow parallel processing of signals (identified as the "join" pattern by Yigong Liu)]
+
+* I have started to implement thread-related components in [timed_storage], [mutex] and [condition].
+More sophisticated threading components, control and syntax to follow.
+
+[* Yigong Liu suggested enhanced support for common network topologies, such as mesh. ]
+
+* I have implemented a prototype
+[chain] topology
+to get a start on this concept.
+
+[* Braddock Gaskill pointed out the relationship with the "pipes and filters" pattern, and suggested
+   the possibility of using functions as filters.  He also suggested the library would me more useful
+   if different functions executed in parallel threads, or were queued to specific worker threads,
+   if the library would provide functionality to control and schedule the execution of the invoked functions,
+   or traverse the call graph.]
+
+* In light of the possible connection with the "pipes and filters" pattern, the base
+  object for signal network components which receive a signal and send a signal has
+  been changed to [filter].
+  I was not successful in finding a formal definition
+  of what "pipes and filters" semantics should be, so I am not sure whether this is appropriate.
+* [function]
+  now offers the proposed functionality of converting functions into filters.
+* Threading and scheduling of the invoked functions is something I plan to address.
+* Providing a call graph would be a great feature, but I am not sure what the best
+  way to address that is, since each component might be of a different type.  Perhaps a graph
+  in which only the edges are labeled (with connection objects) would be doable and useful.
+
+[endsect]
+
+[endsect]
+
+[include future.qbk]
+
+[section:acknowledgements Acknowledgements]
+
+* Thanks to the [@http://ame.asu.edu Arts, Media and Engineering Program] of
+  Arizona State University for
+  allowing the release of a prototype implementation of a boost::signal based
+  dataflow library for the purposes of proposing a Google Summer of
+  Code project.
+* Thanks to Google for funding and Boost for accepting the Dataflow library
+  as a GSoC project,
+  during which the library has been completely rewritten (several times) to
+  produce a much cleaner, more maintainable and more useful library.
+* Thanks to Douglas Gregor for making himself available as a mentor for the GSoC
+  project, and for his support, suggestions and feedback.
+* Thanks to all the members of the Boost community who have expressed an
+  interest in this library and contributed
+  [link dataflow.discussion valuable feedback], in particular Douglas Gregor and
+  Jake Voytko for in-depth reviews of the library.
+* Thanks to Tobias Schwinger for a most valuable discussion on various
+  dataflow-oriented approaches and ideas.
+
+[endsect]
+
+[section:license License]
+
+Copyright 2007 Stjepan Rajko.
+Distributed under the Boost Software License, Version 1.0. (See
+accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+
+
+[endsect]
+
+[/[xinclude dataflow_doxygen.xml]]

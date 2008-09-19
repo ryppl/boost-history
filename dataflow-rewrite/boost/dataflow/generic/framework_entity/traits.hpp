@@ -19,11 +19,11 @@
 
 namespace boost { namespace dataflow {
 
-/// Convenience class for Traits types.
+/// Convenience base class for FrameworkEntityTraits types.
 template<typename Framework>
 struct traits
 {
-    /// The Framework of the port.
+    /// The Framework of the FrameworkEntityTraits.
     typedef Framework framework;
     /// INTERNAL ONLY
     BOOST_MPL_ASSERT(( is_framework<Framework> ));
@@ -33,7 +33,7 @@ namespace detail {
     struct enable_guard;
 }
 
-/// Boolean Metafunction determining whether a type is a Traits.
+/// Boolean Metafunction determining whether a type is a FrameworkEntityTraits.
 template<typename Traits, typename Enable=detail::enable_guard>
 struct is_traits : public mpl::false_
 {

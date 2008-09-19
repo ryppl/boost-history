@@ -1,0 +1,191 @@
+[section:general General]
+
+[section:tag Tag]
+
+A [Tag] type is typically used as a template parameter in (most) generic support
+layer templates to specify a particular dataflow framework.  This
+allows different dataflow frameworks to be defined on the same types without
+clashing.  If clashing is not a concern when developing a support layer
+for a framework, the [Tag] can be omitted in which case it defaults to
+[default_tag].
+
+[heading Notation]
+
+[variablelist
+    [[T] [A [Tag] type.]]
+]
+
+[heading Requirements]
+
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [ default_tag Inheritance]
+        [`is_base<default_tag, T>::type`]
+        [ [true] ]
+        [
+            To allow concept checking on [Tag] types, all [Tag] types
+            must be derived from [default_tag].
+        ]
+    ]
+    [
+        [Tag Concept Check]
+        [[^[is_tag]<T>::type]]
+        [ [true] ]
+        [
+            Concept check for the [Tag] concept.
+        ]
+    ]
+]
+
+[heading Examples]
+
+The following code declares the [VTK] framework [Tag] - it is a part of
+the [vtk_example example showing how to provide a VTK support layer].
+
+[vtk_tag]
+
+[endsect]
+
+
+[section:entity Entity,Traits]
+
+[Entity] is a base concept for [Port]s and [Component]s.  Every [Entity]
+has an associated [Traits] type which describes it's dataflow properties.
+The examples below show how [Traits] can be registered for an [Entity].
+
+The registration of an [Entity] with a [Traits] is always for a specific [Tag].
+Hence, a type is an [Entity] only relative to a [Tag], and can have different
+[Traits] for different [Tag]s.
+
+[heading Refinements]
+
+* [Port], [PortTraits]
+* [Component], [ComponentTraits]
+
+[heading Notation]
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[`E`] [An [Entity] type, for [Tag] `T`.]]
+    [[`ET`] [[Traits] of `E` for [Tag] `T`.]]
+    [[`e`] [An object of type `E`]]
+]
+
+[heading Entity Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Entity Traits]
+        [[^[traits_of]<E, T>::type]]
+        [`ET`]
+        [
+            The [Traits] of [Entity] `E` for [Tag] `T`.
+        ]
+    ]
+    [
+        [Entity Concept Check]
+        [[^[is_entity]<E, T>::type]]
+        [[true]]
+        [
+            Concept check for the [Entity] concept.
+        ]
+    ]
+]
+
+[heading Traits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Tag]
+        [`ET::tag`]
+        [`T`]
+        [
+            The [Tag] for `ET`.
+[/ Although this currently must be `T`,
+            in the future this might be permitted to be any [Tag] type
+            (and used only in some forms of registration of [Traits]
+            for [Entity]s).]
+        ]
+    ]
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Notes]
+
+There is an intrusive as well as a non-intrusive way to register the
+[Traits] of a type `E`, thereby making it an [Entity].
+
+Non-intrusive registration is typically done by providing a specialization of
+the [register_traits] template (either directly, or through the provided
+macros [DATAFLOW_TRAITS] and [DATAFLOW_TRAITS_ENABLE_IF]).  This will
+specialize [traits_of] for all cv-qualified versions of type `E`.
+If cv-qualified versions of type `E` should have different [Traits],
+[traits_of] should be specialized directly.
+
+Intrusive registration can be done by providing
+a `E::dataflow_traits` member type, which can be either a [Traits]
+type, or an MPL sequence of [Traits] types. Alternatively,
+the Dataflow library provides a convenience class
+`entity` which you can inherit instead of declaring the member type.  This
+provides the additional benefit of being able to access free functions in the
+`boost::dataflow` namespace using ADL.
+
+The below examples illustrate the avaliable registration methods.
+
+[heading Examples]
+
+All of the below examples use the following [Tag] and
+[Traits] types:
+
+[port_registration_example_prep]
+
+[heading Intrusive registration]
+
+Intrusive registration is the easiest, but assumes you can modify the
+[Entity]:
+
+[port_registration_example_intrusive]
+
+[heading Non-intrusive registration]
+
+Non-intrusive registration is done by specializing the `register_traits`
+template.  Since the `register_traits` template is keyed by [Tag],
+this is rather verbose:
+
+[port_registration_example_non_intrusive]
+
+To make things simpler, the Dataflow library provides a macro for non-intrusive
+registration (the macro also performs a static concept check on the
+[Traits]).
+
+[port_registration_example_non_intrusive_macro]
+
+[heading Non-intrusive mass registration]
+
+The [register_traits] template has an Enable template parameter for use with
+`boost::enable_if`.  Hence, we can register a number of types at the same time:
+
+[port_registration_example_non_intrusive_enable_if]
+
+And again, there is a convenient macro:
+
+[port_registration_example_non_intrusive_enable_if_macro]
+
+[heading Tests]
+
+With the above registrations, the following tests pass:
+
+[port_registration_check_example]
+
+[endsect][/entity]
+
+[endsect]

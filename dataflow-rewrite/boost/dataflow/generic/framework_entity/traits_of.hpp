@@ -24,7 +24,7 @@
 
 namespace boost { namespace dataflow {
 
-/// Metafunction returning the Traits of a type.
+/// Metafunction returning the FrameworkEntityTraits of a type.
 template<typename T, typename Framework=typename default_framework_of<T>::type, typename Enable=void>
 struct traits_of
 {

@@ -23,7 +23,7 @@ namespace detail {
     struct enable_guard;
 }
 
-/// Boolean Metafunction determining whether a type has traits.
+/// Boolean Metafunction determining whether a type is a FrameworkEntity.
 template<typename T, typename Framework=typename default_framework_of<T>::type, typename Enable=detail::enable_guard>
 struct is_framework_entity : public mpl::false_
 {
@@ -50,6 +50,14 @@ struct is_framework_entity<
     >::type>
     : public mpl::true_
 {};
+
+/// Convenience base class for FrameworkEntity types.
+template<typename Traits>
+struct framework_entity
+{
+    /// The FrameworkEntityTraits of the framework_entity.
+    typedef Traits dataflow_traits;
+};
 
 } } // namespace boost::dataflow
 

@@ -1,0 +1,194 @@
+
+[section:portvector PortVector, PortVectorTraits]
+
+[heading Notation]
+
+[variablelist
+    [[`T`] [A [Tag] type. If omitted, `T` defaults to [default_tag].]]
+    [[PV] [A [PortVector] type.]]
+    [[PVT] [[PortVectorTraits] of `PV` for `T`.]]
+    [[pv] [An object of type `PV`.]]
+    [[I] [An integer in the range \[0, # of [Port]s exposed by `PV`)]]
+    [[IC] [An IntegralConstant with value in the range \[0, # of [Port]s exposed by `PV`)]]
+]
+
+[heading PortVector Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [PortVector Traits]
+        [`traits_of<PV>::type`]
+        [`PVT`]
+        [
+            The [PortVectorTraits] of the [PortVector].
+        ]
+    ]
+    [
+        [ GetPort ]
+        [`get_port_c<I,T>(pv)`]
+        []
+        [
+            Returns the I'th [Port] exposed by `pv`.
+        ]
+    ]
+    [
+        [ GetPort ]
+        [`get_port<IC,T>(pv)`]
+        []
+        [
+            Returns the IC'th [Port] exposed by `pv`
+        ]
+    ]
+]
+
+[heading PortVectorTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`PVT::ports`]
+        [MPL Sequence of [PortTraits] types]
+        [
+            An enumeration of the [PortTraits] of the exposed
+            [Port]s.
+        ]
+    ]
+]
+
+[heading Header]
+
+The types, templates, and functions shown here are declared in the following
+files:
+
+```
+    #include <boost/dataflow/support.hpp>
+```
+
+[endsect][/portvector]
+
+
+[section:component Component, ComponentTraits]
+
+A ['[Component]] is the fundamental data processing element.  It can
+have a number of [Port]s, and can also be [Invocable].
+
+The traits of a component are held in a ['[ComponentTraits]] type.
+There are multiple ways of registering the [ComponentTraits]
+for a [Component] (see examples below).
+
+[heading Notation]
+[variablelist
+    [[C] [A [Component] type.]]
+    [[CT] [The [ComponentTraits] type of `C`.]]
+    [[c] [An object of type C.]]
+    [[`S`] [A [Side] type.]]
+    [[`M`] [A [Mechanism] type.]]
+]
+
+[heading Refines]
+
+* [PortVector]
+
+[heading Component Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Component Traits]
+        [`traits_of<C, T>::type`]
+        [`CT`]
+        [
+            The [ComponentTraits] of the component.
+        ]
+    ]
+    [
+        [IsComponent Trait]
+        [`is_component<C, T>::type`]
+        [Boolean metafunction that evaluates to true]
+        [
+            A trait encapsulating adherence to the Component
+            concept.
+        ]
+    ]
+    [
+        [Has Default Port]
+        [`has_default_port<C,S,M,T>::type`]
+        [ Boolean MPL Metafunction ]
+        [
+            Specifies whether the component has a default port for the provided
+            [Side] and [Mechanism].
+        ]
+    ]
+    [
+        [Get Default Port]
+        [`get_default_port<S,M,T>(c)`]
+        [A [Port] type]
+        [
+            Returns the component's default port for the provided
+            [Side] and [Mechanism], if the component has one.
+        ]
+    ]
+]
+
+[heading ComponentTraits Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Port Traits]
+        [`CT::ports`]
+        [MPL Sequence of [PortTraits] types]
+        [
+            An enumeration of the [PortTraits] of the exposed
+            [Port]s.
+        ]
+    ]
+]
+
+[heading Header]
+
+```
+    #include <boost/dataflow/support/component.hpp> // or
+    #include <boost/dataflow/support.hpp>
+```
+
+[heading Notes]
+
+[heading Examples]
+
+... to come ...
+
+[endsect][/componenttraits]
+
+
+[section:componentoperable ComponentOperable (Invocable) ]
+
+A [Component] `C` of [Tag] `T` is /ComponentOperable/
+for a component operation `O`, if the implementation of
+the component operation `O` has been specialized for `C`
+
+In this case,
+
+* If `O` is operations::invoke, `C` is [Invocable]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A [Component] type.]]
+    [[c] [An object of type C.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Invoke]
+        [`component_operation<operations::invoke, T>(c)`]
+        [Any type]
+        [
+            Invokes `c` - this typically causes a component to consume its
+            input data and produce its output data as appropriate.  
+        ]
+    ]
+]
+
+[endsect][/componentoperable]

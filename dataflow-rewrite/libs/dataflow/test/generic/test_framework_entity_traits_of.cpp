@@ -15,7 +15,7 @@
 
 namespace df = boost::dataflow;
 
-struct my_framework : public df::framework
+struct my_framework : public df::framework_base
 {};
 
 typedef df::traits<df::default_framework> default_traits;
