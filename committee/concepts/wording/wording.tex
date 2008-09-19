@@ -4726,8 +4726,8 @@ concept TotalOrder<typename Op, typename T> {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{An axiom containing a \mbox{\techterm{requires-clause}} only applies when the
-specified template requirements are satisfied. \mbox{\enterexample}}
+\changedCCC{An axiom containing a \mbox{\techterm{requires-clause}} only applies when the
+specified template requirements are satisfied.}{In a concept map where the requires clause of an \mbox{\techterm{axiom-definition}} is not satisfied, an implementation shall behave as if the axiom weere not defined.} \addedConcepts{\mbox{\enterexample}}
 \begin{codeblock}
 concept EqualityComparable2<typename T, typename U = T> {
   bool operator==(T, U);
@@ -4925,9 +4925,9 @@ concept_map D<X> {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{A concept map for an \mbox{\tcode{auto}} concept}
+\addedConcepts{A concept map for an \mbox{\tcode{auto}} concept is implicitly defined }
 \addedCC{(\mbox{\ref{concept.def}})}
-\addedConcepts{is implicitly defined when it is
+\addedConcepts{when it is
 needed} \addedConcepts{by concept map lookup (\mbox{\ref{temp.req.sat}})}\addedConcepts{.}
 \addedConcepts{If any requirement of the concept or its less refined concepts} 
 \changedCCC{is not}{would not be}
