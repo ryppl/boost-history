@@ -113,6 +113,7 @@ standard library are discussed in separate documents:
 \item Associated template requirements can now only be satisfied by
   template aliases, not by class templates defined within a concept
   map (\ref{concept.map.assoc}).
+\item ``Implicit concepts'' are now called ``\tcode{auto} concepts'' in the wording.
 \end{itemize}
 
 \section*{Typographical conventions}
@@ -335,8 +336,9 @@ concept map.}
 \rSec2[basic.scope.req]{Requirements scope}
 \pnum
 \addedConcepts{A template requirement has \mbox{\techterm{requirements
-      scope}}. Its potential scope begins at its point of declaration
-  and terminates at the end of the constrained template.}
+      scope}}. Its potential scope begins}
+\changedCCC{at its point of declaration}{immediately after its \mbox{\techterm{concept-id}}} \addedConcepts{and terminates at the end of the constrained template (\mbox{\ref{temp.constrained}})}
+\addedCC{or constrained member (\mbox{\ref{class.mem}})}\addedConcepts{.}
 
 \pnum
 \addedConcepts{In a constrained context (\mbox{\ref{temp.constrained}}),
@@ -3711,8 +3713,8 @@ composed of the concept name and the sequence of its enclosing namespaces.}
 \addedConcepts{Concepts shall only be defined at namespace scope.}
 
 \pnum
-\addedConcepts{A \mbox{\techterm{concept-definition}} that starts with \mbox{\tcode{auto}} defines an \mbox{\techterm{implicit concept}}, otherwise it defines an
-\mbox{\techterm{explicit concept}}.}
+\addedConcepts{A \mbox{\techterm{concept-definition}} that starts with \mbox{\tcode{auto}} defines an \mbox{\techterm{\mbox{\tcode{auto}} concept}}}\removedCCC{, otherwise it defines an
+\mbox{\techterm{explicit concept}}}\addedConcepts{.}
 
 \pnum 
 \addedConcepts{The \mbox{\techterm{template-parameter-list}} of a
@@ -4288,7 +4290,7 @@ concept_map D<X> {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{A concept map for an implicit concept}
+\addedConcepts{A concept map for an \mbox{\tcode{auto}} concept}
 \addedCC{(\mbox{\ref{concept.def}})}
 \addedConcepts{is implicitly defined when it is
 needed} \addedConcepts{by concept map lookup (\mbox{\ref{temp.req.sat}})}\addedConcepts{.}
@@ -5004,8 +5006,8 @@ concept_map B<int> { } // implicitly defines concept map A<int>
   determined by substituting the
   template arguments of the refining concept map or concept map
   template into the \mbox{\techterm{refinement-specifier}}
-  corresponding to the refinement. If concept map lookup fails
-  or if it finds a concept map from a different namespace, a suitable
+  corresponding to the refinement. If concept map lookup fails}\addedCC{, if it finds an implicitly generated concept map for an \mbox{\tcode{auto}} concept,}
+  \addedConcepts{or if it finds a concept map from a different namespace, a suitable
   concept map} \changedCCC{shall be}{is} \addedConcepts{defined implicitly, as described below.}
 \addedCC{\enterexample}
 \begin{codeblock}
@@ -5399,7 +5401,9 @@ void h(float x, int y, int X::* p) {
 \addedConcepts{\mbox{\exitexample}}
 
 \pnum
-\addedConcepts{\mbox{\techterm{Concept map lookup}} attempts to find a
+\addedConcepts{\mbox{\techterm{Concept map lookup}}}
+\addedCC{is a mechanism that} 
+\addedConcepts{attempts to find a
   concept map that corresponds to the concept instance (call it
   \mbox{\tcode{I}}) 
   formed from the concept of a requirement and its template argument list
@@ -5460,12 +5464,12 @@ void h(float x, int y, int X::* p) {
       \mbox{\techterm{using-directives}} in those namespaces are not
       followed during this search.} \changedCCC{Only those concept maps in (1) that
     were explicitly defined or were instantiated from concept map
-    templates are}{Concept maps in (1) that were implicitly generated from an implicit concept are not} \addedConcepts{considered when determining which namespaces to search.}
+    templates are}{Concept maps in (1) that were implicitly generated from an \mbox{\tcode{auto}} concept are not} \addedConcepts{considered when determining which namespaces to search.}
 
   \additemConcepts{If a concept map for \mbox{\tcode{I}} can be implicitly
-    defined from an implicit concept
+    defined from an \mbox{\tcode{auto}} concept
   (\mbox{\ref{concept.map}}), \mbox{\tcode{S}}
-    contains the concept map generated from the implicit
+    contains the concept map generated from the \mbox{\tcode{auto}}
     concept. Otherwise, \mbox{\tcode{S}} is empty.}
 \end{enumerate}
 
@@ -5494,7 +5498,7 @@ namespace N2 {
 \exitexample\
      
 \pnum
-\addedConcepts{In all other cases, \mbox{\tcode{Q}} is defined as the
+\addedConcepts{In all other cases} \addedCC{(excluding during the instantiation of a constrained template and template argument deduction during partial ordering)}\addedConcepts{, \mbox{\tcode{Q}} is defined as the
 ordered sequence:}
 
 \begin{enumerate}
@@ -5578,7 +5582,9 @@ or are different from the concept map that would be
   determined by concept map lookup
 (\mbox{\ref{temp.req.sat}}),
 then the template arguments do not
-  satisfy the requirements of the template. \mbox{\enterexample}}
+  satisfy the requirements of the template.}
+\addedCC{\enternote This does not necessarily imply that the program is ill-formed. \exitnote}
+\addedConcepts{\mbox{\enterexample}}
 \color{addclr}
 \begin{codeblock}
 concept A<typename T> { }
