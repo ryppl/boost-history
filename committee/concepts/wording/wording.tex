@@ -62,7 +62,7 @@ James Widman, Gimpel Software \\
 Jeremy Siek, University of Colorado at Boulder
 \end{tabular}\vspace{-6pt}
 
-\par\noindent Document number: D2773=08-0283 \vspace{-6pt}
+\par\noindent Document number: N2773=08-0283 \vspace{-6pt}
 \par\noindent Revises document number: N2741=08-0251 \vspace{-6pt}
 \par\noindent Date: \today\vspace{-6pt}
 \par\noindent Project: Programming Language \Cpp{}, Core Working Group\vspace{-6pt}
@@ -135,6 +135,7 @@ strike-through when possible}. Wording new to this revision will be
 \setcounter{section}{2}
 \rSec1[intro.defs]{Definitions}
 \setcounter{Paras}{10}
+\setcounter{subsection}{10}
 \index{signature}%
 \definition{signature}{defns.signature}
 the name and the \techterm{parameter-type-list}
@@ -333,8 +334,7 @@ declaration}{declared in the same scope as the constrained template's
 template parameters}\addedConcepts{.}
 \addedCC{Each of these names refers to one or more members of the
   concept map archetypes (\mbox{\ref{temp.archetype}}) that correspond
-to the concept requirements where the associated functions
-reside. \enternote\ The declaration of these
+to the concept requirements. \enternote\ The declaration of these
 names in the scope of the template parameters does not establish
 archetypes unless name lookup finds these declarations. \exitnote}
 \addedConcepts{\mbox{\enterexample}}
@@ -346,7 +346,7 @@ concept A<class B> {
 template< class T, class U >
 requires A<U>
 void f( T & x, U & y ) {
-   g( y ); // finds to A<U'>'::g( const U' \& )
+   g( y ); // binds to A<U'>'::g( const U' \& )
    g( x ); // error: no overload of g takes T' values.
 }
 \end{codeblock}
@@ -543,7 +543,7 @@ found shall refer to the same type.  Otherwise, if the reference to the
 name occurs within a constrained context, the name is looked up within the
 scope of the archetype associated with T (and no special restriction on
 name visibility is in effect for this lookup).}
-\removedConcepts{\mbox{\enternote}\
+\removedCCC{\mbox{\enternote}\
 Otherwise, the name is a member of an unknown specialization
 \mbox{\ref{temp.dep.type}} \mbox{\exitnote}}
 \addedConcepts{\mbox{\enterexample}}
@@ -584,12 +584,7 @@ when looked up within the scope of the concept (not the concept instance),
 refers to an associated type or class template, the result
 of name lookup is}
 \changedCCC{the associated type or class template as a member of the
-requirement}{a \mbox{\techterm{typename-specifier}} or
-\mbox{\techterm{qualified-id}} whose
-\mbox{\techterm{nested-name-specifier}} nominates the concept instance
-and whose \mbox{\techterm{identifier}} or
-\mbox{\techterm{unqualified-id}} refers to the associated type or
-class template, respectively}\addedConcepts{.
+requirement}{a dependent type composed of the concept instance and the associated type or class template}\addedConcepts{.
     \mbox{\enternote}\ this implies that, given two distinct type parameters
     \mbox{\tcode{T}} and \mbox{\tcode{U}}, \mbox{\tcode{C<T>::type}} and \mbox{\tcode{C<U>::type}} are distinct types (although they may}
 \changedCCC{refer to}{alias}
@@ -607,9 +602,9 @@ to the concept's less refined concepts.
     this lookup requires a concept map definition, so if the template
     argument list of the concept instance}
 \changedCCC{references a template parameter
-    or associated type of a requirement}{a template parameter (and,
+    or associated type of a requirement}{is dependent on a template parameter (and,
     therefore, the
-  name does not refer to an associated type or class template)}\addedConcepts{, a concept map archetype
+  name does not refer to an associated type or class template---a case which would have been handled by the previous bullet)}\addedConcepts{, a concept map archetype
     definition is required.
     \mbox{\exitnote}\ 
 }
@@ -668,7 +663,7 @@ or functions (\ref{dcl.fct}).
   type archetypes }
   \changedCCC{can behave like various kinds of types, e.g.,
   object types, scalar types, literal types, etc.}{are class types;
-  however, a type archetype from a compiler-supported requirement (i.e., a
+  however, a type archetype has a compiler-supported requirement (i.e., a
   type archetype T' in a context where some requirement C<T> is in scope) may be
   used in certain contexts where a class type is normallly not permitted
   or may be disallowed in certain contexts where a class type is normally
@@ -702,7 +697,7 @@ are collectively called \techterm{standard-layout} \techterm{types}.
 \pnum
 \addedCC{An \emph{effective trivial type} T is a trivial type
 or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
-from \mbox{\tcode{std::TrivialType<T>}}.}
+has the requirement \mbox{\tcode{std::TrivialType<T>}}.}
 
 \pnum
 A type is a \techterm{literal type} if it is:
@@ -723,9 +718,9 @@ of literal types; or}
 \end{itemize}
 
 \pnum
-\addedCC{An \emph{effective literal type} T is a object type
+\addedCC{An \emph{effective literal type} T is a non-archetype literal type
 or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
-from \mbox{\tcode{std::LiteralType<T>}}.}
+has the requirement \mbox{\tcode{std::LiteralType<T>}}.}
 
 \exitnote\ 
 
@@ -735,7 +730,7 @@ An \emph{object type} is a (possibly cv-qualified) type that is not a
 function type, not a reference type, and not a void type. 
 \addedCC{An \emph{effective object type} T is a non-archetype object type
 or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
-from \mbox{\tcode{std::OjectType<T>}}.}
+has the requirement \mbox{\tcode{std::ObjectType<T>}}.}
 
 \rSec2[basic.fundamental]{Fundamental types}
 \setcounter{Paras}{6}
@@ -767,7 +762,7 @@ except perhaps for the bit with the highest position. (Adapted from the
 \pnum
 \addedCC{An \emph{effective integral type} T is an integral type
 or a (possibly cv-qualified) type archetype (\mbox{\ref{temp.archetype}})
-from \mbox{\tcode{std::IntegralType<T>}}.}
+has the requirement \mbox{\tcode{std::IntegralType<T>}}.}
 
 
 \end{paras}
@@ -1218,12 +1213,9 @@ literal type;}
 
 \pnum
 A constant expression is an \techterm{integral constant expression} if
-it is of integral or enumeration type\addedConcepts{, or, in a
-  constrained template (\mbox{\ref{temp.constrained}}), if it is of
-  a type \mbox{\techterm{cv}} \mbox{\tcode{T}} that is an archetype
-  and if the concept requirement
-  \mbox{\tcode{IntegralConstantExpressionType<T>}} (\mbox{\ref{concept.support}})
-  is part of the template's requirements.}  \enternote\ such
+it is of integral or enumeration type\addedConcepts{, or if it is an archetype
+  has the concept requirement
+  \mbox{\tcode{std::IntegralConstantExpressionType<T>}} (\mbox{\ref{concept.support}})}.  \enternote\ such
 expressions may be used as array bounds (8.3.4, 5.3.4), as case
 expressions (6.4.2), as bit-field lengths (9.6), as enumerator
 initializers (7.2), as static member initializers (9.4.2), and as
@@ -1805,7 +1797,7 @@ aggregates of class type are described in~\ref{dcl.init.aggr}.
 
 \pnum
 \addedCC{An \emph{effective class} T is a non-archetype class
-or a type archetype (\mbox{\ref{temp.archetype}}) from
+or a type archetype (\mbox{\ref{temp.archetype}}) has the requirement
 \mbox{\tcode{std::ClassType<T>}}.}
 
 \setcounter{section}{1}
@@ -5787,15 +5779,15 @@ concept_map E<int> {
 \rSec2[concept.support]{Support concepts}
 
 \pnum
-\addedConcepts{The concepts in [concept.support] provide the ability to state
+\addedCC{The concepts in [concept.support] provide the ability to state
 template requirements for C++ type classifications (\mbox{\ref{basic.types}}) and
 type relationships that cannot be expressed directly with concepts. Concept 
 maps for these concepts are implicitly defined.
-A program shall not provide concept maps for any concept in
-[concept.support].}
+A program shall not provide a concept map or concept map template for any concept in
+[concept.support] nor shall it provide a definition for any of these concepts.}
 
 \pnum
-\addedConcepts{The following concepts are implicitly defined in a translation unit:}
+\addedConcepts{The following concepts are implicitly defined at the beginning of each translation unit. \enternote This implies that the namespace \mbox{\tcode{std}} is always visible at global scope. \exitnote}
 
 \begin{codeblock}
 namespace std {
@@ -5970,11 +5962,10 @@ concept Class<typename T> : ClassType<T> { }
 
 \begin{itemdescr}
 \pnum
-\addedConcepts{\mbox{\reallynote} describes classes and structs (Clause~\mbox{\ref{class}}).}
+\addedConcepts{\mbox{\reallynote} describes non-union classes (Clause~\mbox{\ref{class}}).}
 
 \pnum
-\addedConcepts{\mbox{\requires} for every type \mbox{\tcode{T}} that
-  is a class or struct, a concept map
+\addedConcepts{\mbox{\requires} for every non-union class \mbox{\tcode{T}}, a concept map
   \mbox{\tcode{Class<T>}} is implicitly defined in namespace
   \mbox{\tcode{std}}.}
 \end{itemdescr}
@@ -6245,7 +6236,7 @@ likely to result in a well-formed instantiation. \mbox{\exitnote}}
 \pnum
 \addedConcepts{Within a constrained context, a program shall not}
 \changedCCC{refer to an
-  unconstrained template}{require a template specialization of a unconstrained template for which the template arguments of the specialization depend on a template parameter}\addedConcepts{.}
+  unconstrained template}{require a template specialization of an unconstrained template for which the template arguments of the specialization depend on a template parameter}\addedConcepts{.}
 
 \rSec2[temp.req]{Template requirements}
 \pnum
@@ -6712,7 +6703,7 @@ void maybe_add_to_set(std::set<T>& s, const T& value);
 \end{codeblock}
 \exitexample\
 
-\item \addedCC{If a type \mbox{\techterm{cv} \tcode{T}} that alias an archetype is used as the type of a variable, the concept requirement \mbox{\tcode{VariableType<T>}} is implied.}
+\item \addedCC{For every type \mbox{\techterm{cv} \tcode{T}} that is used as the type of a variable, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{VariableType<T>}} is implied.}
 
 \item \addedCC{For every type ``pointer to \mbox{\techterm{cv} \tcode{T}}'', where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{PointeeType<T>}} is implied.}
 
@@ -6726,11 +6717,11 @@ void maybe_add_to_set(std::set<T>& s, const T& value);
 
 \item \addedCC{For every type ``array of unknown bound of \mbox{\tcode{T}}'' or ``array of \mbox{\tcode{N}} \mbox{\tcode{T}}'' where \mbox{\tcode{T}} aliases a type archetype, the concept requirement \mbox{\tcode{ValueType<T>}} is implied.}
 
-\item \addedCC{If a type \mbox{\techterm{cv} \tcode{T}} occurs as the return type of a function, the concept requirement \mbox{\tcode{Returnable<T>}} is implied.}
+\item \addedCC{For every type \mbox{\techterm{cv} \tcode{T}} that occurs as the return type of a function, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{Returnable<T>}} is implied.}
 
-\item \addedCC{If a type \mbox{\tcode{T}} is used as the type of a non-type template parameter, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{NonTypeTemplateParameterType<T>}} is implied.}
+\item \addedCC{For every type \mbox{\tcode{T}} that is used as the type of a non-type template parameter, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{NonTypeTemplateParameterType<T>}} is implied.}
 
-\item \addedCC{If type \mbox{\tcode{T}} is a parameter type or return type of a \mbox{\tcode{constexpr}} function, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{LiteralType<T>}} is implied.}
+\item \addedCC{For every type \mbox{\tcode{T}} that is a parameter type or return type of a \mbox{\tcode{constexpr}} function, where \mbox{\tcode{T}} aliases an archetype, the concept requirement \mbox{\tcode{LiteralType<T>}} is implied.}
 
 \item
 \removedCCC{If the formation of a type containing an archetype
@@ -6844,7 +6835,7 @@ a value is a value. }
 \addedConcepts{A value in a constrained context aliases an archetype if it is a
   \mbox{\techterm{constant-expression}} (\mbox{\ref{expr.const}})
   whose value depends on a template parameter.} 
-\addedCC{Two values that alias archetypes are the same if their expressions are equivalent (\mbox{\ref{temp.over.link}}). If the translation of the program requires comparison of two values that alias archetypes and are functionally equivalent but not equivalent, the program is ill-formed.}
+\addedCC{Two values that alias archetypes are the same if their expressions are equivalent (\mbox{\ref{temp.over.link}}). If the translation of the program requires comparison of two values that alias archetypes and are functionally equivalent but not equivalent, the program is ill-formed, no diagnostic required.}
 
 \pnum 
 \addedConcepts{If two types, \mbox{\tcode{T1}} and \mbox{\tcode{T2}},
@@ -6946,7 +6937,7 @@ template <C1 T> class X {
 
 \pnum
 \addedCC{
-    An archetype \mbox{\tcode{T}} is said to be \mbox{\techterm{from}} a given concept instance if \mbox{\tcode{T}}
+    An archetype \mbox{\tcode{T}} \mbox{\techterm{has the requirement}} of a given concept instance if \mbox{\tcode{T}}
     appears in the template argument list of the concept instance when that
     concept instance appears in a requirement whose potential scope
     encloses a region where the archetype \mbox{\tcode{T}} is used.  
@@ -6955,12 +6946,12 @@ template <C1 T> class X {
     concept C<typename T> {}
     template <C T> void f( T ) {}
     \end{codeblock} \addedCC{ Beginning at the declaration of \mbox{\tcode{T}} until the
-    closing curly brace of the definition of \mbox{\tcode{f(T)}} above, we say that \mbox{\tcode{T}} ``is
-    from \mbox{\tcode{C<T>}}''.  \exitexample
+    closing curly brace of the definition of \mbox{\tcode{f(T)}} above, we say that \mbox{\tcode{T}} ``
+    has the requirement \mbox{\tcode{C<T>}}''.  \exitexample
 }
 
 \pnum
-\addedCC{Archetypes are synthesized from the template requirements of the constrained template in which it is defined; see~\mbox{\ref{temp.archetype.assemble}}.}
+\addedCC{An archetype is synthesized from the template requirements of the constrained template in which it is defined; see~\mbox{\ref{temp.archetype.assemble}}.}
 
 \pnum
 \addedConcepts{If two associated member function or member function template
@@ -7103,7 +7094,7 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \rSec3[temp.archetype.assemble]{Assembling archetypes}
 \pnum
 \removedCCC{An archetype \mbox{\tcode{T$'$}} for a type
-  \mbox{\tcode{T}}} \addedCC{is all of the following that apply:}
+  \mbox{\tcode{T}}} \removedCCC{is all of the following that apply:}
 \begin{itemize}
 \remitemCCC{an object type ([intro.object]), if the template
   contains the requirement \mbox{\tcode{std::ObjectType<T>}},}
@@ -7145,8 +7136,8 @@ RandomAccessIterator<Iter>::difference_type distance(Iter f, Iter l) {
 \addedCC{
 A type archetype is a unique generated class type whose special member
 functions are each either user-provided or deleted (depending on template
-requirements) and whose other members are given entirely by the template
-requirements that are in scope where an archetype is used.  A type
+requirements) and whose other members are given entirely by its template
+requirements.  A type
 archetype is considered to be completely defined when it is established
 (although it may later acquire additional members as a result of additional
 requirements).
@@ -7417,7 +7408,7 @@ void h(X const& x) {
 
 \item
 \addedCC{Otherwise,} \addedConcepts{if the seed is the initialization of an object, the
-  instantiated form is the appropriate kind of initialization (or no
+  instantiated form is the appropriate kind of initialization (zero-initialization, default-initialization, value-initialization, or no
   initialization) based on
   the syntactic form in the constrained template. \enterexample}
 \begin{codeblock}
