@@ -1,5 +1,5 @@
 #include <boost/metagraph/fusion_graph/fusion_graph.hpp>
-#include <boost/mpl/print.hpp>
+#include <boost/metagraph/mpl_graph/incidence_list_graph.hpp>
 
 namespace fusion_graph = boost::metagraph::fusion_graph;
 namespace fusion = boost::fusion;
@@ -27,7 +27,7 @@ struct graph_desc :
         >
 {};
 struct graph_desc_graph :
-    mpl_graph::edgeseq_graph<graph_desc>
+    mpl_graph::incidence_list_graph<graph_desc>
 {};
 
 typedef fusion_graph::make_fusion_graph<graph_desc_graph>::type graphy;
@@ -35,8 +35,6 @@ typedef fusion_graph::make_fusion_graph<graph_desc_graph>::type graphy;
 typedef graphy::vertex_impl<G>::type Graph;
 typedef graphy::vertex_impl<N>::type Node;
 typedef graphy::vertex_impl<E>::type Edge;
-
-mpl::print<Graph>::type foo;
 
 int main(int narg, char *args[]) {
     Graph *g = new Graph;

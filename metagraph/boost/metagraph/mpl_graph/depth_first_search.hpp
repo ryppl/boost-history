@@ -1,5 +1,12 @@
+#ifndef BOOST_METAGRAPH_MPL_GRAPH_DEPTH_FIRST_SEARCH_HPP_INCLUDED
+#define BOOST_METAGRAPH_MPL_GRAPH_DEPTH_FIRST_SEARCH_HPP_INCLUDED
+
 #include <boost/metagraph/mpl_graph/mpl_graph.hpp>
 
+#include <boost/mpl/has_key.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/pair.hpp>
+#include <boost/mpl/map.hpp>
 #include <boost/mpl/has_key.hpp>
 
 namespace boost {
@@ -121,3 +128,4 @@ struct depth_first_search :
 } // namespace boost
 
 
+#endif // BOOST_METAGRAPH_MPL_GRAPH_DEPTH_FIRST_SEARCH_HPP_INCLUDED
