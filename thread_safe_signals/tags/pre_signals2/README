@@ -1,0 +1,32 @@
+This is an implementation of Boost.signals which is intended to be
+thread-safe.  There have been some changes to the API to support
+thread-safety.  See the html documentation in the 
+"libs/thread_safe_signals/doc/html" subdirectory for more information.
+
+This implementation is header-only.  It should be useable by simply adding
+this directory to your include path when compiling.  However, it does depend
+on the Boost.thread library if you use the multi_threaded ThreadingModel for
+your signals.  Be sure to place this directory before the path to your 
+full boost headers.
+
+The web page for thread_safe_signals is at:
+
+http://www.comedi.org/projects/thread_safe_signals/libs/thread_safe_signals/doc/html/index.html
+
+Releases should also contain the html documentation, under the 
+subdirectory libs/thread_safe_signals/doc/html/
+
+The latest version of this library should be available from the
+boost sandbox svn:
+
+http://svn.boost.org/trac/boost/wiki/BoostSubversion
+
+The files for thread_safe_signals are in the thread_safe_signals
+subdirectory of the sandbox.  You can check out a copy of the files with the
+following command:
+
+svn co http://svn.boost.org/svn/boost/sandbox/thread_safe_signals thread_safe_signals
+
+2007-09-25
+Frank Mori Hess <fmhess@users.sourceforge.net>
+
