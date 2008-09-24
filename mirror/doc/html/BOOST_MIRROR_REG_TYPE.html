@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro BOOST_MIRROR_REG_TYPE</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="The Mirror library documentation">
+<link rel="up" href="mirror/reference.html#header.boost.mirror.meta_type.hpp" title="Header &lt;boost/mirror/meta_type.hpp&gt;">
+<link rel="prev" href="boost/mirror/meta_type.html" title="Class template meta_type">
+<link rel="next" href="BOOST_MIRROR_REG_TYPE_GS.html" title="Macro BOOST_MIRROR_REG_TYPE_GS">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/mirror/meta_type.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_MIRROR_REG_TYPE_GS.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="BOOST_MIRROR_REG_TYPE"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_MIRROR_REG_TYPE</span></h2>
+<p>BOOST_MIRROR_REG_TYPE &#8212; This macro is used to register a type, that is defined inside of a namespace, with <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a>.
+		After successful registration the type can be reflected.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRROR_REG_TYPE(NAMESPACE, TYPE)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2637129"></a><h2>Description</h2>
+<p>The <code class="computeroutput"><a class="link" href="BOOST_MIRROR_REG_TYPE.html" title="Macro BOOST_MIRROR_REG_TYPE">BOOST_MIRROR_REG_TYPE</a></code> macro registers a type with 
+		the <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library. To register a type defined in the global scope
+		use the <code class="computeroutput"><a class="link" href="BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE.html" title="Macro BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE">BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</a></code> or the 
+		<code class="computeroutput"><a class="link" href="BOOST_MIRROR_REG_TYPE_GS.html" title="Macro BOOST_MIRROR_REG_TYPE_GS">BOOST_MIRROR_REG_TYPE_GS</a></code> macro. To register a <code class="computeroutput">typedef</code>ined
+		type use one of the <code class="computeroutput">BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</code>, 
+		<code class="computeroutput">BOOST_MIRROR_REG_TYPEDEF_GS</code> or <code class="computeroutput"><a class="link" href="BOOST_MIRROR_REG_TYPEDEF.html" title="Macro BOOST_MIRROR_REG_TYPEDEF">BOOST_MIRROR_REG_TYPEDEF</a></code>
+		macros. To register a type that is defined inside of a class use either the 
+		<code class="computeroutput">BOOST_MIRROR_REG_TYPE_EMBEDDED</code> or the <code class="computeroutput">BOOST_MIRROR_REG_TYPE_EMB</code>
+		macro.
+		</p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">The registering must be done in the <code class="computeroutput">::boost::mirror</code> namespace.</td></tr>
+</table></div>
+<p>
+		The first parameter is the full name (including the leading double colon) of the namespace where the type is defined.
+		The second parameter is the name of the type (without the namespace name).
+		</p>
+<p>
+		To register a type <code class="computeroutput">bar</code> defined in a named namespace <code class="computeroutput">foo</code>, 
+		</p>
+<pre class="programlisting">
+namespace foo {
+  struct bar { };
+} // namespace foo
+</pre>
+<p>do this:</p>
+<pre class="programlisting">
+// note that the registering must be done
+// in the boost::mirror namespace
+
+namespace boost {
+namespace mirror {
+
+// registers ::foo
+<a class="link" href="BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((foo))
+// note that the full namespace name including the leading 
+// double colon must be passed as the first argument
+<a class="link" href="BOOST_MIRROR_REG_TYPE.html" title="Macro BOOST_MIRROR_REG_TYPE">BOOST_MIRROR_REG_TYPE</a>(::foo, bar)
+
+} //namespace mirror
+} //namespace boost
+</pre>
+<p>
+	Afterwards the types can be reflected with the 
+	<code class="computeroutput"><a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code> macro:</p>
+<pre class="programlisting">
+BOOST_MPL_ASSERT((
+	<a class="link" href="boost/mirror/reflects_type.html" title="Class template reflects_type">reflects_type</a>&lt; <a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::foo::bar) &gt;
+));
+BOOST_MPL_ASSERT((
+	<a class="link" href="boost/mirror/reflects_namespace.html" title="Class template reflects_namespace">reflects_namespace</a>&lt; <a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::foo::bar)::scope &gt;
+));
+BOOST_MPL_ASSERT((
+	<a class="link" href="boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a>&lt; <a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::foo::bar)::scope::scope &gt;
+));
+</pre>
+<p>The <a class="link" href="mirror.html" title="Chapter 1. Mirror">Mirror</a> library has several preregistered types:</p>
+<pre class="programlisting">
+namespace boost {
+namespace mirror {
+
+<a class="link" href="BOOST_MIRROR_REG_TYPE.html" title="Macro BOOST_MIRROR_REG_TYPE">BOOST_MIRROR_REG_TYPE</a>(::std, string)
+<a class="link" href="BOOST_MIRROR_REG_TYPE.html" title="Macro BOOST_MIRROR_REG_TYPE">BOOST_MIRROR_REG_TYPE</a>(::std, wstring)
+<a class="link" href="BOOST_MIRROR_REG_TYPE.html" title="Macro BOOST_MIRROR_REG_TYPE">BOOST_MIRROR_REG_TYPE</a>(::boost::tuples, tuple)
+
+} //namespace mirror
+} //namespace boost
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/mirror/meta_type.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_MIRROR_REG_TYPE_GS.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
