@@ -10,7 +10,7 @@
 	<purpose>
 		<para>This macro is a variation of the 
 		<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro, which
-		takes the name of the type split into two arguments the full namespace
+		takes the name of the type split into two arguments; the full namespace
 		name and the base type name.
 		</para>
 	</purpose>

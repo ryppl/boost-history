@@ -42,6 +42,21 @@
 				<entry>Registers a type defined inside of a named namespace</entry> 
 				<entry></entry> 
 			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code></entry> 
+				<entry>Registers a type defined in the global scope</entry> 
+				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code>.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code></entry> 
+				<entry>Registers a type defined in the global scope</entry> 
+				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code>.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPEDEF</macroname></code></entry> 
+				<entry>Registers a <code>typedef</code> defined inside of a named namespace</entry> 
+				<entry></entry> 
+			</row>
 		</tbody>
 		</tgroup>
 		</table>

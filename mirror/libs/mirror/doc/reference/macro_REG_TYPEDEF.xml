@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRROR_REG_TYPEDEF" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<macro-parameter name="NAMESPACE">
+	</macro-parameter>
+	<macro-parameter name="TYPEDEF">
+	</macro-parameter>
+	<purpose>
+		<para>This macro is used to register a <code>typedef</code>, that is defined inside of a namespace, with the <libraryname>Mirror</libraryname> library.
+		After successful registration the typedef can be reflected with <libraryname>Mirror</libraryname>.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRROR_REG_TYPEDEF</macroname></code> macro registers a <code>typedef</code>
+		defined in a namespace with the <libraryname>Mirror</libraryname> library.
+		To register a <code>typedef</code> from the global scope
+		use one of the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code> or
+		<code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> macros. 
+		To register a type defined in the global scope use the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code> or the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code> macro. 	
+		To register a type defined in a namespace use the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE</macroname></code> macro. 	
+	
+		To register a type that is defined inside of a class use either the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_EMBEDDED</macroname></code> or the <code><macroname>BOOST_MIRROR_REG_TYPE_EMB</macroname></code>
+		macro.
+		</para>
+		<note>The registering must be done in the <code>::boost::mirror</code> namespace.</note>
+		<para>
+		The first parameter is the full name (including the leading double colon) of the namespace where the type is defined.
+		The second parameter is the <code>typedef</code>ined name of the type (without the namespace name).
+		</para>
+		<para>
+		To register a <code>typedef</code>ined type <code>bar</code> defined in a named namespace <code>foo</code>, 
+		</para>
+<programlisting>
+namespace foo {
+  typedef double bar;
+  
+} // namespace foo
+</programlisting>
+		<para>do the following:</para>
+<programlisting>
+// note that the registering must be done
+// in the boost::mirror namespace
+
+namespace boost {
+namespace mirror {
+
+// registers ::foo
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo))
+// note that the full namespace name including the leading 
+// double colon must be passed as the first argument
+<macroname>BOOST_MIRROR_REG_TYPEDEF</macroname>(::foo, bar)
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+	<para>
+	Afterwards the type can be reflected with the 
+	<code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code> macro:</para>
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_type</classname>&lt; <macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::foo, bar) &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_namespace</classname>&lt; <macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::foo, bar)::scope &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::foo, bar)::scope::scope &gt;
+));
+</programlisting>
+	<para><libraryname>Mirror</libraryname> distinguishes between types and <code>typedef</code>s, thus the <code><classname>meta_type</classname></code>
+	reflecting a <code>typedef</code>ined type is different from the <code><classname>meta_type</classname></code> reflecting
+	the aliased type:
+	</para>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	::boost::is_same&lt;
+		 <macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::foo, bar),
+		 <macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::foo, bar) 
+	&gt;
+));
+</programlisting>
+		<para>The name getters of the <code><classname>meta_type</classname></code> reflecting the <code>typedef</code> 
+		return the <code>typedef</code>ined name instead of the name of the aliased type:
+		</para>
+<programlisting>
+	// the typedef'd name
+	assert(
+		<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::foo, bar)::base_name() == 
+		<macroname>BOOST_CTS_LIT</macroname>("bar")
+	);
+	// the name of the aliased type
+	assert(
+		<macroname>BOOST_MIRRORED_TYPE_NS</macroname>(::foo, bar)::base_name() == 
+		<macroname>BOOST_CTS_LIT</macroname>("double")
+	);
+	// full names
+	assert(
+		<macroname>BOOST_MIRRORED_TYPEDEF</macroname>(::foo, bar)::full_name() == 
+		<macroname>BOOST_CTS_LIT</macroname>("::foo::bar")
+	);
+	assert(
+		<macroname>BOOST_MIRRORED_TYPE</macroname>(::foo::bar)::full_name() == 
+		<macroname>BOOST_CTS_LIT</macroname>("double")
+	);
+</programlisting>
+		<para>The <libraryname>Mirror</libraryname> library has several preregistered <code>typedef</code>s, for example:</para>
+<programlisting>
+namespace boost {
+namespace mirror {
+
+<macroname>BOOST_MIRROR_REG_TYPEDEF</macroname>(::boost::cts, <classname>bchar</classname>)
+<macroname>BOOST_MIRROR_REG_TYPEDEF</macroname>(::boost::cts, <classname>bstring</classname>)
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+
+	</description>
+</macro>

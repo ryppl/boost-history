@@ -10,7 +10,7 @@
 	<macro-parameter name="TYPE">
 	</macro-parameter>
 	<purpose>
-		<para>This macro is used to register a type that is defined inside of a namespace with <libraryname>Mirror</libraryname>.
+		<para>This macro is used to register a type, that is defined inside of a namespace, with <libraryname>Mirror</libraryname>.
 		After successful registration the type can be reflected.
 		</para>
 	</purpose>
@@ -24,7 +24,13 @@
 		macros. To register a type that is defined inside of a class use either the 
 		<code><macroname>BOOST_MIRROR_REG_TYPE_EMBEDDED</macroname></code> or the <code><macroname>BOOST_MIRROR_REG_TYPE_EMB</macroname></code>
 		macro.
+		</para>
 		<note>The registering must be done in the <code>::boost::mirror</code> namespace.</note>
+		<para>
+		The first parameter is the full name (including the leading double colon) of the namespace where the type is defined.
+		The second parameter is the name of the type (without the namespace name).
+		</para>
+		<para>
 		To register a type <code>bar</code> defined in a named namespace <code>foo</code>, 
 		</para>
 <programlisting>
@@ -32,7 +38,7 @@ namespace foo {
   struct bar { };
 } // namespace foo
 </programlisting>
-		do this:
+		<para>do this:</para>
 <programlisting>
 // note that the registering must be done
 // in the boost::mirror namespace
@@ -49,8 +55,9 @@ namespace mirror {
 } //namespace mirror
 } //namespace boost
 </programlisting>
+	<para>
 	Afterwards the types can be reflected with the 
-	<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro:
+	<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro:</para>
 <programlisting>
 BOOST_MPL_ASSERT((
 	<classname>reflects_type</classname>&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::foo::bar) &gt;
@@ -62,7 +69,7 @@ BOOST_MPL_ASSERT((
 	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::foo::bar)::scope::scope &gt;
 ));
 </programlisting>
-		The <libraryname>Mirror</libraryname> has several preregistered types: 
+		<para>The <libraryname>Mirror</libraryname> library has several preregistered types:</para>
 <programlisting>
 namespace boost {
 namespace mirror {
@@ -74,15 +81,6 @@ namespace mirror {
 } //namespace mirror
 } //namespace boost
 </programlisting>
-		</para>
-
-		<section id="mirror.REG_TYPE.reference.samples">
-			<title>Examples</title>
-			<para>This example shows the registering and reflection of namespaces
-			and basic usage of the <code><classname>meta_namespace</classname></code>
-			template class and its members.
-			</para>
-		</section>
 
 	</description>
 </macro>

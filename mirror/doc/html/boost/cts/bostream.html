@@ -34,13 +34,13 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">
 <span class="bold"><strong>typedef</strong></span> ::std::basic_ostream&lt;<a class="link" href="bchar.html" title="Type definition bchar">bchar</a>, <a class="link" href="bchar_traits.html" title="Type definition bchar_traits">bchar_traits</a>&gt; bostream;</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2644080"></a><h2>Description</h2>
+<a name="id2645437"></a><h2>Description</h2>
 <p>The <code class="computeroutput"><a class="link" href="bostream.html" title="Type definition bostream">bostream</a></code> type is defined as an abbreviation for 
 		<code class="computeroutput">::std::basic_ostream&lt;<a class="link" href="bchar.html" title="Type definition bchar">bchar</a>, <a class="link" href="bchar_traits.html" title="Type definition bchar_traits">bchar_traits</a>&gt;</code>.
 		</p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
-<a name="id2644120"></a>Examples</h6></div></div></div>
+<a name="id2645477"></a>Examples</h6></div></div></div>
 <pre class="programlisting">
 #include &lt;assert.h&gt;
 #include &lt;boost/char_type_switch/string.hpp&gt;
@@ -50,8 +50,8 @@ int main(void)
 {
 	using namespace ::std;
 	using namespace ::boost::cts;
-	<a class="link" href="bistream.html" title="Type definition bistream">bistream</a>&amp; in  = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcin_id2405249">bcin</a>();
-	<a class="link" href="bostream.html" title="Type definition bostream">bostream</a>&amp; out = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2405214">bcout</a>();
+	<a class="link" href="bistream.html" title="Type definition bistream">bistream</a>&amp; in  = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcin_id2487416">bcin</a>();
+	<a class="link" href="bostream.html" title="Type definition bostream">bostream</a>&amp; out = <a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2474461">bcout</a>();
 
 	bstring str;
 	out &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("Enter a string: ") &lt;&lt; flush;
