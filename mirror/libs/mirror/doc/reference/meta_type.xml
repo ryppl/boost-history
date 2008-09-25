@@ -20,9 +20,12 @@
 	<xi:include href="macro_REG_TYPE_GS.xml"/>
 	<xi:include href="macro_REG_TYPE_GLOBAL_SCOPE.xml"/>
 	<xi:include href="macro_REG_TYPEDEF.xml"/>
+	<xi:include href="macro_REG_TYPEDEF_GS.xml"/>
+	<xi:include href="macro_REG_TYPEDEF_GLOBAL_SCOPE.xml"/>
 	<!-- reflection -->
 	<xi:include href="macro_RFL_TYPE.xml"/>
 	<xi:include href="macro_RFL_TYPE_NS.xml"/>
 	<xi:include href="macro_RFL_TYPEDEF.xml"/>
+	<xi:include href="macro_RFL_TYPEDEF_GS.xml"/>
 	<xi:include href="macro_RFL_TYPEOF.xml"/>
 </header>

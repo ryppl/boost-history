@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<macro-parameter name="TYPEDEF">
+	</macro-parameter>
+	<purpose>
+		<para>This macro is used to register a type, that is defined in the global scope, with <libraryname>Mirror</libraryname>.
+		After successful registration the type can be reflected. This macro is equivalent to the 
+		<code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> macro. 
+		</para>
+	</purpose>
+	<description>
+		<para>See the documentation for the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> 
+		macro for more details.
+		</para>
+	</description>
+</macro>

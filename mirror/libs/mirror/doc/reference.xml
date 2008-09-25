@@ -57,6 +57,16 @@
 				<entry>Registers a <code>typedef</code> defined inside of a named namespace</entry> 
 				<entry></entry> 
 			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code></entry> 
+				<entry>Registers a typedef from the global scope</entry> 
+				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code>.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code></entry> 
+				<entry>Registers a typedef from the global scope</entry> 
+				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code>.</entry> 
+			</row>
 		</tbody>
 		</tgroup>
 		</table>
@@ -99,6 +109,11 @@
 				<entry><code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code></entry> 
 				<entry>Reflects a <code>typedef</code>ined type</entry> 
 				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a (nested) typedef.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname></code></entry> 
+				<entry>Reflects a global-scope <code>typedef</code></entry> 
+				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a typedef defined in the global scope.</entry> 
 			</row>
 			<row> 
 				<entry><code><macroname>BOOST_MIRRORED_TYPEOF</macroname></code></entry> 

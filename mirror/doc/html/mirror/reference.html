@@ -30,7 +30,7 @@
 <dt><span class="section"><a href="reference.html#mirror.reference.reflecting">Reflecting</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.meta_objects">Meta Objects</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.traits">Traits</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2632715">Header files</a></span></dt>
+<dt><span class="section"><a href="reference.html#id2632827">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
@@ -93,6 +93,16 @@
 <td>Registers a <code class="computeroutput">typedef</code> defined inside of a named namespace</td>
 <td> </td>
 </tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GS.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GS">BOOST_MIRROR_REG_TYPEDEF_GS</a></code></td>
+<td>Registers a typedef from the global scope</td>
+<td>This macro is equivalent to the <code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE">BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</a></code>.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE">BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</a></code></td>
+<td>Registers a typedef from the global scope</td>
+<td>This macro is equivalent to the <code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GS.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GS">BOOST_MIRROR_REG_TYPEDEF_GS</a></code>.</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -107,7 +117,7 @@
 		the individual macros.
 		</p>
 <div class="table">
-<a name="id2632395"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
+<a name="id2632466"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
 <div class="table-contents"><table class="table" summary="Reflection macros">
 <colgroup>
 <col>
@@ -146,6 +156,12 @@
 <td>Expands into a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> specialization providing meta-data about a (nested) typedef.</td>
 </tr>
 <tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEDEF_GS.html" title="Macro BOOST_MIRRORED_TYPEDEF_GS">BOOST_MIRRORED_TYPEDEF_GS</a></code></td>
+<td>Reflects a global-scope <code class="computeroutput">typedef</code>
+</td>
+<td>Expands into a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> specialization providing meta-data about a typedef defined in the global scope.</td>
+</tr>
+<tr>
 <td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code></td>
 <td>Reflects the type of an expression</td>
 <td>Expands into a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> specialization providing meta-data about the type of the expression given as an argument.</td>
@@ -166,7 +182,7 @@
 <a name="mirror.reference.traits"></a>Traits</h3></div></div></div></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2632715"></a>Header files</h3></div></div></div>
+<a name="id2632827"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
@@ -202,9 +218,12 @@
 <a class="link" href="../BOOST_MIRROR_REG_TYPE_GS.html" title="Macro BOOST_MIRROR_REG_TYPE_GS">BOOST_MIRROR_REG_TYPE_GS</a>(TYPE)
 <a class="link" href="../BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE.html" title="Macro BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE">BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</a>(TYPE)
 <a class="link" href="../BOOST_MIRROR_REG_TYPEDEF.html" title="Macro BOOST_MIRROR_REG_TYPEDEF">BOOST_MIRROR_REG_TYPEDEF</a>(NAMESPACE, TYPEDEF)
+<a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GS.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GS">BOOST_MIRROR_REG_TYPEDEF_GS</a>(TYPEDEF)
+<a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE">BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</a>(TYPEDEF)
 <a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(TYPE)
 <a class="link" href="../BOOST_MIRRORED_TYPE_NS.html" title="Macro BOOST_MIRRORED_TYPE_NS">BOOST_MIRRORED_TYPE_NS</a>(FULL_NAMESPACE_NAME, TYPE)
 <a class="link" href="../BOOST_MIRRORED_TYPEDEF.html" title="Macro BOOST_MIRRORED_TYPEDEF">BOOST_MIRRORED_TYPEDEF</a>(FULL_NAMESPACE_NAME, TYPEDEF)
+<a class="link" href="../BOOST_MIRRORED_TYPEDEF_GS.html" title="Macro BOOST_MIRRORED_TYPEDEF_GS">BOOST_MIRRORED_TYPEDEF_GS</a>(TYPEDEF)
 <a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a>(EXPRESSION)</pre>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {

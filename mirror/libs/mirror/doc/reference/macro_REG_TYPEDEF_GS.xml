@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRROR_REG_TYPEDEF_GS" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<macro-parameter name="TYPEDEF">
+	</macro-parameter>
+	<purpose>
+		<para>This macro is used to register a <code>typedef</code>, which is defined in the global scope, 
+		with the <libraryname>Mirror</libraryname> library.
+		After successful registration the type can be reflected. This macro is equivalent to the 
+		<code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code> macro. 
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> macro registers a global scope <code>typedef</code> with 
+		the <libraryname>Mirror</libraryname> library. To register a <code>typedef</code> defined in a named namespace
+		use the <code><macroname>BOOST_MIRROR_REG_TYPEDEF</macroname></code>.
+		To register a (regular i.e. not <code>typedef</code>'d) type, use one of the <code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code>, 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code> or <code><macroname>BOOST_MIRROR_REG_TYPE</macroname></code>
+		macros. To register a type which is defined inside of a class use either the 
+		<code><macroname>BOOST_MIRROR_REG_TYPE_EMBEDDED</macroname></code> or the <code><macroname>BOOST_MIRROR_REG_TYPE_EMB</macroname></code>
+		macro.
+		</para>
+		<note>The registering must be done in the <code>::boost::mirror</code> namespace.</note>
+		<para>
+		The only argument is the name of the typedef to be registered.
+		</para>
+		<para>
+		To register a <code>typedef</code>ined type <code>foo</code> defined in the global scope,
+		</para>
+<programlisting>
+typedef float foo;
+</programlisting>
+		<para>do this:</para>
+<programlisting>
+// note that the registering must be done
+// in the boost::mirror namespace
+
+namespace boost {
+namespace mirror {
+
+<macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname>(foo)
+// or use the shorter version
+<macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname>(foo)
+
+} //namespace mirror
+} //namespace boost
+</programlisting>
+	<para>
+	Afterwards the <code>typedef</code>'d type can be reflected with the 
+	<code><macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname></code> macro:</para>
+<programlisting>
+BOOST_MPL_ASSERT((
+	<classname>reflects_type</classname>&lt; <macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname>(foo) &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_namespace</classname>&lt; <macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname>(foo)::scope &gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>reflects_global_scope</classname>&lt; <macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname>(foo)::scope &gt;
+));
+</programlisting>
+
+	</description>
+</macro>
