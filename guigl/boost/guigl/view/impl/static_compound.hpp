@@ -13,32 +13,18 @@
 #include <boost/guigl/access.hpp>
 #include <boost/guigl/event.hpp>
 #include <boost/guigl/view/static_compound.hpp>
+#include <boost/guigl/view/impl/detail/compound_event_processing.hpp>
 
 #include <boost/fusion/include/accumulate.hpp>
-#include <boost/fusion/include/for_each.hpp>
 
 
 namespace boost { namespace guigl { namespace view {
-
-namespace detail {
-    
-    template<typename StaticCompound>
-    struct draw
-    {
-        template<typename View>
-        void operator()(View &view) const
-        {
-            StaticCompound::draw(view);
-        }
-    };
-    
-}
 
 template<typename ChildrenSequence, typename BaseView>
 inline void static_compound<ChildrenSequence, BaseView>::draw_prologue()
 {
     BaseView::draw_prologue();
-    fusion::for_each(m_children, detail::draw<static_compound>());
+    detail::for_each(m_children, detail::draw<static_compound>());
 }
 
 
@@ -77,7 +63,11 @@ struct propagate_button_event
         button_event translated_event_info(event_info);
         translated_event_info.position -= child_view.position();
         if(visitor.on_event(child_view, translated_event_info))
+        {
+            if(event_info.direction == direction::down)
+                visitor.set_button_focus(child_view);
             return true;
+        }
         return false;
     }
     
@@ -99,6 +89,10 @@ struct propagate_movement_event
     {
         if(handled)
             return true;
+
+        movement_event translated_event_info(event_info);
+        translated_event_info.position -= child_view.position();
+
         if(!inside(event_info.position, child_view))
         {
             if(&child_view == visitor.mouse_focus_child())
@@ -107,6 +101,8 @@ struct propagate_movement_event
                 visitor.no_mouse_focus();
                 visitor.on_event(child_view, entry_exit_event(region::exit));
             }
+            if(&child_view == visitor.button_focus_child())
+                visitor.on_event(child_view, translated_event_info);
             return false;
         }
         else
@@ -114,8 +110,6 @@ struct propagate_movement_event
             visitor.set_mouse_focus(child_view);
             // only the mouse focus child gets movement events
             // forward the movement event
-            movement_event translated_event_info(event_info);
-            translated_event_info.position -= child_view.position();
             visitor.on_event(child_view, translated_event_info);
             return true;
         }
@@ -162,15 +156,29 @@ public:
             access::on_event(*view.m_mouse_focus_child, entry_exit_event(region::entry));
         }
     }
-    
+    positioned<> *button_focus_child() const
+    {
+        return view.m_button_focus_child;
+    }
+    void set_button_focus(positioned<> &child) const
+    {
+        view.m_button_focus_child = &child;
+    }
     bool operator()(const button_event &event_info) const
     {
-        return boost::fusion::accumulate(view.children(), false, propagate_button_event<static_compound_event_visitor>(*this, event_info));
+        if(view.m_button_focus_child && event_info.direction == direction::up)
+        {
+            button_event translated_event_info(event_info);
+            translated_event_info.position -= view.m_button_focus_child->position();
+
+            access::on_event(*view.m_button_focus_child, translated_event_info);
+        }
+        return detail::accumulate(view.children(), false, propagate_button_event<static_compound_event_visitor>(*this, event_info));
     }
     
     bool operator()(const movement_event &event_info) const
     {
-        boost::fusion::accumulate(view.children(), false, propagate_movement_event<static_compound_event_visitor>(*this, event_info));
+        detail::accumulate(view.children(), false, propagate_movement_event<static_compound_event_visitor>(*this, event_info));
         return true;
     }
 

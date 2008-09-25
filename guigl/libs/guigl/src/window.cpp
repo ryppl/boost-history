@@ -78,9 +78,7 @@ public:
     }
     void mouse(int button, int state, int x, int y)
     {
-        if (!m_window->mouse_state())
-            return;
-
+        movement(x,y);
         button_event event_info;
         switch(button)
         {
@@ -103,8 +101,6 @@ public:
     }
     void movement(int x, int y)
     {
-        if (!m_window->mouse_state())
-            return;
         movement_event event_info;
         event_info.position = position_type(x, y);
         m_window->on_event(event_info);

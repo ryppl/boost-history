@@ -34,6 +34,7 @@ public:
     template<typename ArgumentPack>
     draggable(const ArgumentPack &args)
         : base_type(args)
+        , m_dragging(false)
     {}
 
 protected:
@@ -56,6 +57,7 @@ private:
     friend struct detail::draggable_static_visitor<Derived,BaseView>;
     
     position_type m_drag_origin;
+    bool m_dragging;
 };
 
 }}}

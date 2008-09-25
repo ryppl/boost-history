@@ -10,7 +10,7 @@
 #define BOOST__GUIGL__VIEW__COMPOUND_HPP
 
 
-#include <boost/guigl/view/positioned.hpp>
+#include <boost/guigl/view/static_compound.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
 namespace boost { namespace guigl { namespace view {
@@ -22,40 +22,23 @@ namespace detail
 }
 
 template<typename BaseView=base>
-class compound : public BaseView
+class compound : public static_compound<ptr_vector<positioned<> >, BaseView>
 {    
 public:
-    typedef BaseView base_type;
+    typedef static_compound<ptr_vector<positioned<> >, BaseView> base_type;
 
     template<typename ArgumentPack>
     compound(const ArgumentPack &args)
-        : base_type(args)
-        , m_mouse_focus_child(0) 
+        : base_type(( args, _children=0 ))
     {}
     
     compound & operator << (positioned<> *v)
     {
-        m_children.push_back(v);
+        base_type::m_children.push_back(v);
         access::set_parent(*v, *this);
         return *this;
     }
-    
-    bool on_event(const event_type &event_info);
 
-    const ptr_vector<positioned<> > &children() const
-    {   return m_children; }
-    
-protected:
-    void draw_prologue();
-
-    ptr_vector<positioned<> > &children()
-    {   return m_children; }
-
-private:
-    ptr_vector<positioned<> > m_children;
-    positioned<> * m_mouse_focus_child;
-
-    friend class detail::compound_event_visitor<BaseView>;
 };
 
 }}}

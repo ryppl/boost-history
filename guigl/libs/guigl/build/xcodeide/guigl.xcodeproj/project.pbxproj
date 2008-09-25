@@ -130,6 +130,8 @@
 		0897912F0E5DBB0F00C79062 /* labeled_button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = labeled_button.hpp; sourceTree = "<group>"; };
 		0897913B0E5DBC1000C79062 /* glut.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = glut.hpp; sourceTree = "<group>"; };
 		089791BA0E5DC06400C79062 /* event.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event.hpp; sourceTree = "<group>"; };
+		0898B3AE0E83CC85004F3E91 /* compound_event_processing.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compound_event_processing.hpp; sourceTree = "<group>"; };
+		0898B3D90E83D2DD004F3E91 /* algorithm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = algorithm.hpp; sourceTree = "<group>"; };
 		089926680E7865B500285958 /* compound.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compound.hpp; sourceTree = "<group>"; };
 		0899266B0E78664900285958 /* compound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compound.cpp; sourceTree = "<group>"; };
 		08998DDF0E528C1F00F583A2 /* window.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = window.hpp; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 		08978EC60E5DA49D00C79062 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				0898B3AD0E83CC75004F3E91 /* detail */,
 				08978EC80E5DA4CD00C79062 /* positioned.hpp */,
 				08978ECC0E5DA55800C79062 /* compound.hpp */,
 				08978ECF0E5DA5B100C79062 /* solid_background.hpp */,
@@ -285,6 +288,15 @@
 				08978F590E5DAC3000C79062 /* window.cpp */,
 			);
 			path = view;
+			sourceTree = "<group>";
+		};
+		0898B3AD0E83CC75004F3E91 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				0898B3AE0E83CC85004F3E91 /* compound_event_processing.hpp */,
+				0898B3D90E83D2DD004F3E91 /* algorithm.hpp */,
+			);
+			path = detail;
 			sourceTree = "<group>";
 		};
 		089E06FA0E5D0F2A00C425FE /* widget */ = {

@@ -38,6 +38,8 @@ void slider::draggable_on_drag(const position_type &position)
     if(m_step!=0.0)
         new_value = round(new_value / m_step) * m_step;
     new_value += m_min;
+    new_value = (std::max)(m_min, new_value);
+    new_value = (std::min)(m_max, new_value);
     set_value(new_value);
 }
 

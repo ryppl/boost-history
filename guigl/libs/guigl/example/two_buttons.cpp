@@ -9,6 +9,7 @@
 
 #include "two_buttons.hpp"
 #include <boost/guigl/view/impl/static_compound.hpp>
+#include <boost/guigl/view/impl/positioned.hpp>
 
 
 void two_buttons::draw()

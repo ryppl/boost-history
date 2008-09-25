@@ -10,10 +10,11 @@
 #define BOOST__GUIGL__VIEW__IMPL__COMPOUND_HPP
 
 
-#include <boost/guigl/access.hpp>
+/*#include <boost/guigl/access.hpp>
 #include <boost/guigl/event.hpp>
-#include <boost/guigl/view/compound.hpp>
-
+#include <boost/guigl/view/compound.hpp>*/
+#include <boost/guigl/view/impl/static_compound.hpp>
+/*
 #include <iostream>
 
 namespace boost { namespace guigl { namespace view {
@@ -135,6 +136,6 @@ inline bool compound<BaseView>::on_event(const event_type &event_info)
         return boost::apply_visitor( detail::compound_event_visitor<BaseView>(*this, event_info), event_info);
 }
 
-}}}
+}}}*/
 
 #endif // BOOST__GUIGL__VIEW__IMPL__COMPOUND_HPP

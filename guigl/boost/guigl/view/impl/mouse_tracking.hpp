@@ -34,7 +34,7 @@ namespace detail {
         static bool is_down(mouse_tracking<BaseView> &view)
         {
             const widget::window *window = dynamic_cast<const widget::window *> (view.root());
-            return window->mouse_state() ? window->mouse_state().get().button_down : false;
+            return window->mouse_state().button_down;
         }
     };
 
@@ -57,24 +57,23 @@ namespace detail {
 
         bool operator()(const movement_event &event_info) const
         {
-            m_mouse_tracking.m_mouse_state.get().position = event_info.position;
+            m_mouse_tracking.m_mouse_state.position = event_info.position;
             return false;
         }
 
         bool operator()(const button_event &event_info) const
         {
-            m_mouse_tracking.m_mouse_state.get().button_down = (event_info.direction == direction::down);
+            m_mouse_tracking.m_mouse_state.button_down = (event_info.direction == direction::down);
             return false;
         }
         
         bool operator()(const entry_exit_event &event_info) const
         {
             if(event_info.region == region::exit)
-                m_mouse_tracking.m_mouse_state = none_t();
+                m_mouse_tracking.m_mouse_state.inside = false;
             else
             {
-                m_mouse_tracking.m_mouse_state = mouse_state();
-                m_mouse_tracking.m_mouse_state.get().button_down = get_button_state<BaseView>::is_down(m_mouse_tracking);
+                m_mouse_tracking.m_mouse_state.button_down = get_button_state<BaseView>::is_down(m_mouse_tracking);
             }
             return false;
         }

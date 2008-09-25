@@ -11,7 +11,7 @@
 
 
 #include <boost/guigl/view/positioned.hpp>
-#include <boost/fusion/include/for_each.hpp>
+#include <boost/guigl/view/impl/detail/algorithm.hpp>
 
 namespace boost { namespace guigl { namespace view {
 
@@ -49,9 +49,10 @@ public:
     static_compound(const ArgumentPack &args)
         : base_type(args)
         , m_children(args[_children])
-        , m_mouse_focus_child(0) 
+        , m_mouse_focus_child(0)
+        , m_button_focus_child(0)
     {
-        fusion::for_each(m_children, detail::set_parent<static_compound>(*this));
+        detail::for_each(m_children, detail::set_parent<static_compound>(*this));
     }
     
     bool on_event(const event_type &event_info);
@@ -65,9 +66,9 @@ protected:
     ChildrenSequence &children()
     {   return m_children; }
 
-private:
     ChildrenSequence m_children;
-    positioned<> * m_mouse_focus_child;
+private:
+    positioned<> *m_mouse_focus_child, *m_button_focus_child;
 
     template<typename View>
     static void draw(View &view)
