@@ -1,0 +1,90 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template meta_inheritance</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="The Mirror library documentation">
+<link rel="up" href="../../mirror/reference.html#header.boost.mirror.meta_inheritance.hpp" title="Header &lt;boost/mirror/meta_inheritance.hpp&gt;">
+<link rel="prev" href="meta_class_all_attributes.html" title="Class template meta_class_all_attributes">
+<link rel="next" href="reflects_namespace.html" title="Class template reflects_namespace">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="meta_class_all_attributes.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_inheritance.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.mirror.meta_inheritance"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template meta_inheritance</span></h2>
+<p>boost::mirror::meta_inheritance &#8212; This class template reflects the inheritance of one individual base class of a class. The
+		<code class="computeroutput"><a class="link" href="meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a></code> template should not be instantiated
+		directly, MetaInheritances are obtained only as results of introspection operations on
+		<code class="computeroutput">meta_base_classes</code>.
+		</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="meta_inheritance.html#id2428813-bbtypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> mpl::int_&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a class="link" href="meta_inheritance.html#boost.mirror.meta_inheritance.position">position</a>;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="meta_inheritance.html#boost.mirror.meta_inheritance.base_class">base_class</a>;
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt; base_class &gt; <a class="link" href="meta_inheritance.html#boost.mirror.meta_inheritance.meta_base_class">meta_base_class</a>;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2643783"></a><h2>Description</h2>
+<p>This template allows to get compile-time meta-data about
+		the inheritance of a base class of a class. 
+		</p>
+<div class="refsect2" lang="en">
+<a name="id2643794"></a><h3>
+<a name="id2428813-bbtypes"></a><code class="computeroutput">meta_inheritance</code> public types</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> mpl::int_&lt;<span class="emphasis"><em>unspecified</em></span>&gt; <a name="boost.mirror.meta_inheritance.position"></a>position;</p>
+<p>This member is an instantiation of the <code class="computeroutput">::boost::mpl::int_&lt;N&gt;</code>
+			template and specifies the position of the <code class="computeroutput"><a class="link" href="meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a></code>
+			in the <code class="computeroutput">container</code> and thus also the order of this base class in the list of base classes.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.meta_inheritance.base_class"></a>base_class;</p>
+<p>The base class type.
+			</p>
+</li>
+<li>
+<p>
+<span class="bold"><strong>typedef</strong></span> <a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a>&lt; base_class &gt; <a name="boost.mirror.meta_inheritance.meta_base_class"></a>meta_base_class;</p>
+<p>The <code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code> reflecting the inherited base class.
+			</p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="meta_class_all_attributes.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.meta_inheritance.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reflects_namespace.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

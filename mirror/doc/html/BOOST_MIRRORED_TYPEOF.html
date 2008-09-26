@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="The Mirror library documentation">
 <link rel="up" href="mirror/reference.html#header.boost.mirror.meta_type.hpp" title="Header &lt;boost/mirror/meta_type.hpp&gt;">
-<link rel="prev" href="BOOST_MIRRORED_TYPEDEF_GS.html" title="Macro BOOST_MIRRORED_TYPEDEF_GS">
+<link rel="prev" href="BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE">
 <link rel="next" href="boost/mirror/meta_class.html" title="Class template meta_class">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="BOOST_MIRRORED_TYPEDEF_GS.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="boost/mirror/meta_class.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="boost/mirror/meta_class.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry" lang="en">
 <a name="BOOST_MIRRORED_TYPEOF"></a><div class="titlepage"></div>
@@ -32,7 +32,7 @@
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis">BOOST_MIRRORED_TYPEOF(EXPRESSION)</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2639810"></a><h2>Description</h2>
+<a name="id2640883"></a><h2>Description</h2>
 		This macro is basically just a shorter form of 
 <pre class="programlisting">
 	<a class="link" href="BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(BOOST_TYPEOF(EXPRESSION))
@@ -50,6 +50,22 @@ BOOST_MPL_ASSERT((
 	&gt;
 ));
 </pre>
+<pre class="programlisting">
+BOOST_MPL_ASSERT((
+	::boost::is_same&lt;
+		<a class="link" href="BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a>(::std::string("a") + ::std::string("b"))::scope,
+		<a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::std)
+	&gt;
+));
+</pre>
+<pre class="programlisting">
+BOOST_MPL_ASSERT_NOT((
+	::boost::is_same&lt;
+		<a class="link" href="BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a>(::std::string("a") + ::std::string("b"))::scope,
+		<a class="link" href="BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost)
+	&gt;
+));
+</pre>
 </div>
 </div>
 </div>
@@ -63,7 +79,7 @@ BOOST_MPL_ASSERT((
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="BOOST_MIRRORED_TYPEDEF_GS.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="boost/mirror/meta_class.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE.html"><img src="../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="mirror/reference.html#header.boost.mirror.meta_type.hpp"><img src="../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="boost/mirror/meta_class.html"><img src="../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

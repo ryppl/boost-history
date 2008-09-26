@@ -16,7 +16,10 @@
 	</purpose>
 	<description>
 		<para>The <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> macro registers a global scope <code>typedef</code> with 
-		the <libraryname>Mirror</libraryname> library. To register a <code>typedef</code> defined in a named namespace
+		the <libraryname>Mirror</libraryname> library. 
+		</para>
+		<para>
+		To register a <code>typedef</code> defined in a named namespace
 		use the <code><macroname>BOOST_MIRROR_REG_TYPEDEF</macroname></code>.
 		To register a (regular i.e. not <code>typedef</code>'d) type, use one of the <code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code>, 
 		<code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code> or <code><macroname>BOOST_MIRROR_REG_TYPE</macroname></code>

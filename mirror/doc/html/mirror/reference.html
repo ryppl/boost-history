@@ -30,7 +30,7 @@
 <dt><span class="section"><a href="reference.html#mirror.reference.reflecting">Reflecting</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.meta_objects">Meta Objects</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.traits">Traits</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2632827">Header files</a></span></dt>
+<dt><span class="section"><a href="reference.html#id2633198">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
@@ -64,7 +64,7 @@
 </colgroup>
 <thead><tr>
 <th>Macro</th>
-<th>Usage</th>
+<th>Purpose</th>
 <th>Notes</th>
 </tr></thead>
 <tbody>
@@ -103,6 +103,16 @@
 <td>Registers a typedef from the global scope</td>
 <td>This macro is equivalent to the <code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GS.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GS">BOOST_MIRROR_REG_TYPEDEF_GS</a></code>.</td>
 </tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPE_EMB.html" title="Macro BOOST_MIRROR_REG_TYPE_EMB">BOOST_MIRROR_REG_TYPE_EMB</a></code></td>
+<td>Registers a type nested inside of a class</td>
+<td>This macro is equivalent to the <code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPE_EMBEDDED.html" title="Macro BOOST_MIRROR_REG_TYPE_EMBEDDED">BOOST_MIRROR_REG_TYPE_EMBEDDED</a></code>.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPE_EMBEDDED.html" title="Macro BOOST_MIRROR_REG_TYPE_EMBEDDED">BOOST_MIRROR_REG_TYPE_EMBEDDED</a></code></td>
+<td>Registers a type nested inside of a class</td>
+<td>This macro is equivalent to the <code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_TYPE_EMB.html" title="Macro BOOST_MIRROR_REG_TYPE_EMB">BOOST_MIRROR_REG_TYPE_EMB</a></code>.</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -117,7 +127,7 @@
 		the individual macros.
 		</p>
 <div class="table">
-<a name="id2632466"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
+<a name="id2632537"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
 <div class="table-contents"><table class="table" summary="Reflection macros">
 <colgroup>
 <col>
@@ -126,7 +136,7 @@
 </colgroup>
 <thead><tr>
 <th>Macro</th>
-<th>Usage</th>
+<th>Purpose</th>
 <th>Notes</th>
 </tr></thead>
 <tbody>
@@ -162,6 +172,12 @@
 <td>Expands into a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> specialization providing meta-data about a typedef defined in the global scope.</td>
 </tr>
 <tr>
+<td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE">BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE</a></code></td>
+<td>Reflects a global-scope <code class="computeroutput">typedef</code>
+</td>
+<td>Expands into a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> specialization providing meta-data about a typedef defined in the global scope. This macro is equivalent to <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEDEF_GS.html" title="Macro BOOST_MIRRORED_TYPEDEF_GS">BOOST_MIRRORED_TYPEDEF_GS</a></code>.</td>
+</tr>
+<tr>
 <td><code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code></td>
 <td>Reflects the type of an expression</td>
 <td>Expands into a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> specialization providing meta-data about the type of the expression given as an argument.</td>
@@ -176,18 +192,77 @@
 </div>
 <br class="table-break">
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="mirror.reference.meta_objects"></a>Meta Objects</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.meta_objects"></a>Meta Objects</h3></div></div></div>
+<p>The reflection macros listed above, expand into template class instantiations that provide meta-data about the reflected namespaces, types, classes, etc. These 
+		template instantiations are commonly referred to as MetaObjects. Some other MetaObjects can be accessed by applying the intrinsic meta-functions on other MetaObjects.
+		</p>
+<div class="table">
+<a name="id2632946"></a><p class="title"><b>Table 1.3. Meta objects</b></p>
+<div class="table-contents"><table class="table" summary="Meta objects">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Meta Object</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code></td>
+<td>Reflects a namespace</td>
+<td>Provides information about the scope of the namespace and its name.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code></td>
+<td>Reflects a type</td>
+<td>Provides information about the scope of the type and its name.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_class.html" title="Class template meta_class">meta_class</a></code></td>
+<td>Reflects a class</td>
+<td>Provides information about the inheritance of the class and about its member attributes.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a></code></td>
+<td>Reflects the inheritance of a single base class of another class</td>
+<td>Provides information about the access specifier, the type of inheritance (virtual vs. regular) and about the base class.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code></td>
+<td>Reflects a single member attribute of a class</td>
+<td>Provides information about the type and position of the attribute, its name and allows to get and set values of the attribute.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_attributes.html" title="Class template meta_class_attributes">meta_class_attributes</a></code></td>
+<td>Reflects own member attributes of a class</td>
+<td>Instantiations of <code class="computeroutput">meta_class_attributes</code> are models of the MetaObjectSequence concept and contain <code class="computeroutput"><a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>s reflecting own member attributes of a class, i.e. those defined by the class, not including the inherited ones.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_all_attributes.html" title="Class template meta_class_all_attributes">meta_class_all_attributes</a></code></td>
+<td>Reflects all member attributes of a class</td>
+<td>Instantiations of <code class="computeroutput">meta_class_all_attributes</code> are models of the MetaObjectSequence concept and contain <code class="computeroutput"><a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>s reflecting all member attributes of a class, including the inherited ones.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
 <a name="mirror.reference.traits"></a>Traits</h3></div></div></div></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2632827"></a>Header files</h3></div></div></div>
+<a name="id2633198"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_class.hpp">Header &lt;boost/mirror/meta_class.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_attributes.hpp">Header &lt;boost/mirror/meta_attributes.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.meta_inheritance.hpp">Header &lt;boost/mirror/meta_inheritance.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_namespace.hpp">Header &lt;boost/mirror/traits/reflects_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_global_scope.hpp">Header &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_type.hpp">Header &lt;boost/mirror/traits/reflects_type.hpp&gt;</a></span></dt>
@@ -220,10 +295,13 @@
 <a class="link" href="../BOOST_MIRROR_REG_TYPEDEF.html" title="Macro BOOST_MIRROR_REG_TYPEDEF">BOOST_MIRROR_REG_TYPEDEF</a>(NAMESPACE, TYPEDEF)
 <a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GS.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GS">BOOST_MIRROR_REG_TYPEDEF_GS</a>(TYPEDEF)
 <a class="link" href="../BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE">BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</a>(TYPEDEF)
+<a class="link" href="../BOOST_MIRROR_REG_TYPE_EMB.html" title="Macro BOOST_MIRROR_REG_TYPE_EMB">BOOST_MIRROR_REG_TYPE_EMB</a>(WRAPPER, TYPE)
+<a class="link" href="../BOOST_MIRROR_REG_TYPE_EMBEDDED.html" title="Macro BOOST_MIRROR_REG_TYPE_EMBEDDED">BOOST_MIRROR_REG_TYPE_EMBEDDED</a>(WRAPPER, TYPE)
 <a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(TYPE)
 <a class="link" href="../BOOST_MIRRORED_TYPE_NS.html" title="Macro BOOST_MIRRORED_TYPE_NS">BOOST_MIRRORED_TYPE_NS</a>(FULL_NAMESPACE_NAME, TYPE)
 <a class="link" href="../BOOST_MIRRORED_TYPEDEF.html" title="Macro BOOST_MIRRORED_TYPEDEF">BOOST_MIRRORED_TYPEDEF</a>(FULL_NAMESPACE_NAME, TYPEDEF)
 <a class="link" href="../BOOST_MIRRORED_TYPEDEF_GS.html" title="Macro BOOST_MIRRORED_TYPEDEF_GS">BOOST_MIRRORED_TYPEDEF_GS</a>(TYPEDEF)
+<a class="link" href="../BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE">BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE</a>(TYPEDEF)
 <a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a>(EXPRESSION)</pre>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
@@ -251,6 +329,15 @@
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a>;
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_class_attributes.html" title="Class template meta_class_attributes">meta_class_attributes</a>;
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_class_all_attributes.html" title="Class template meta_class_all_attributes">meta_class_all_attributes</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.meta_inheritance.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_inheritance.hpp" target="_top">boost/mirror/meta_inheritance.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a>;
   }
 }</pre>
 </div>

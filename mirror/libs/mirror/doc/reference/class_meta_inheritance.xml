@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<class name="meta_inheritance"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<template>
+		<template-type-parameter name="unspecified"/>
+	</template>
+	<purpose>
+		<para>This class template reflects the inheritance of one individual base class of a class. The
+		<code><classname>meta_inheritance</classname></code> template should not be instantiated
+		directly, MetaInheritances are obtained only as results of introspection operations on
+		<code><classname>meta_base_classes</classname></code>.
+		</para>
+	</purpose>
+	<description>
+		<para>This template allows to get compile-time meta-data about
+		the inheritance of a base class of a class. 
+		</para>
+<!--
+		<section id="mirror.meta_attribute.reference.samples">
+		<section id="mirror.meta_attribute.reference.sample01">
+			<title>Example - Basic usage</title>
+			<para>
+			</para>
+		</section>
+		</section>
+-->
+	</description>
+
+	<access name="public">
+<!--
+	<typedef name="container">
+		<type><classname>meta_class_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;-or-<classname>meta_class_all_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>The meta-attribute-sequence containing this <code><classname>meta_attribute</classname></code>.
+			It is the container that the <code><classname>meta_attribute</classname></code> belongs to.
+			It can be either the "own" class' attributes - 
+			<code><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;::attributes</code> 
+			or all class attributes including the inherited ones - 
+			<code><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;::all_attributes</code>.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="meta_attributes">
+		<type>container</type>
+		<description>
+			<para>This is an alias for the <code>container</code> typedef.
+			</para>
+		</description>
+	</typedef>
+-->
+	<typedef name="position">
+		<type>mpl::int_&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>This member is an instantiation of the <code>::boost::mpl::int_&lt;N&gt;</code>
+			template and specifies the position of the <code><classname>meta_inheritance</classname></code>
+			in the <code>container</code> and thus also the order of this base class in the list of base classes.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="base_class">
+		<type><emphasis>unspecified</emphasis></type>
+		<description>
+			<para>The base class type.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="meta_base_class">
+		<type><classname>meta_class</classname>&lt; base_class &gt;</type>
+		<description>
+			<para>The <code><classname>meta_class</classname></code> reflecting the inherited base class.
+			</para>
+		</description>
+	</typedef>
+	</access>
+</class>
+

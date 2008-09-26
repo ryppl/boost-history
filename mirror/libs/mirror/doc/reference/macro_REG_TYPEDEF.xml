@@ -17,6 +17,8 @@
 	<description>
 		<para>The <code><macroname>BOOST_MIRROR_REG_TYPEDEF</macroname></code> macro registers a <code>typedef</code>
 		defined in a namespace with the <libraryname>Mirror</libraryname> library.
+		</para>
+		<para>
 		To register a <code>typedef</code> from the global scope
 		use one of the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code> or
 		<code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code> macros. 

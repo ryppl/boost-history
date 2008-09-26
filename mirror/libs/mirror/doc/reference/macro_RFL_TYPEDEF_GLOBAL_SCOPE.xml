@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<macro name="BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE" 
+	kind="functionlike"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<macro-parameter name="TYPEDEF"/>
+	<purpose>
+		<para>This macro is used to reflect a <code>typedef</code> from the global scope, and expands into a specialization
+		of the <code><classname>meta_type</classname></code> template, which provides
+		meta-data about the reflected type. 
+		To reflect a <code>typedef</code> from a namespace use the <code><macroname>BOOST_MIRRORED_TYPEDEF</macroname></code> macro.
+		To reflect a base type (not a <code>typedef</code>-ined) use the 
+		<code><macroname>BOOST_MIRRORED_TYPE</macroname></code> macro.
+		To reflect the type of an expression use the 
+		<code><macroname>BOOST_MIRRORED_TYPEOF</macroname></code> macro.
+		</para>
+	</purpose>
+	<description>
+		<para>The <code><macroname>BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE</macroname></code> macro reflects a type
+		that is registered with the <libraryname>Mirror</libraryname> library as a global-scope <code>typedef</code>-ined
+		type. 
+		</para>
+		<para>This macro is equivalent to <code><macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname></code>. See the documentation
+		of <code><macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname></code> for more details.
+		</para>
+	</description>
+</macro>

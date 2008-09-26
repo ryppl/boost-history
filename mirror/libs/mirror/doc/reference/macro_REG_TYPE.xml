@@ -16,7 +16,10 @@
 	</purpose>
 	<description>
 		<para>The <code><macroname>BOOST_MIRROR_REG_TYPE</macroname></code> macro registers a type with 
-		the <libraryname>Mirror</libraryname> library. To register a type defined in the global scope
+		the <libraryname>Mirror</libraryname> library. 
+		</para>
+		<para>
+		To register a type defined in the global scope
 		use the <code><macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname></code> or the 
 		<code><macroname>BOOST_MIRROR_REG_TYPE_GS</macroname></code> macro. To register a <code>typedef</code>ined
 		type use one of the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE</macroname></code>, 

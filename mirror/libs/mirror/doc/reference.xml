@@ -29,7 +29,7 @@
 		<table frame="all"><title>Registering macros</title>
 		<tgroup cols="3">
 		<thead>
-			<row> <entry>Macro</entry> <entry>Usage</entry> <entry>Notes</entry> </row>
+			<row> <entry>Macro</entry> <entry>Purpose</entry> <entry>Notes</entry> </row>
 		</thead>
 		<tbody>
 			<row> 
@@ -67,6 +67,16 @@
 				<entry>Registers a typedef from the global scope</entry> 
 				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPEDEF_GS</macroname></code>.</entry> 
 			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPE_EMB</macroname></code></entry> 
+				<entry>Registers a type nested inside of a class</entry> 
+				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPE_EMBEDDED</macroname></code>.</entry> 
+			</row>
+			<row> 
+				<entry><code><macroname>BOOST_MIRROR_REG_TYPE_EMBEDDED</macroname></code></entry> 
+				<entry>Registers a type nested inside of a class</entry> 
+				<entry>This macro is equivalent to the <code><macroname>BOOST_MIRROR_REG_TYPE_EMB</macroname></code>.</entry> 
+			</row>
 		</tbody>
 		</tgroup>
 		</table>
@@ -82,7 +92,7 @@
 		<table frame="all"><title>Reflection macros</title>
 		<tgroup cols="3">
 		<thead>
-			<row> <entry>Macro</entry> <entry>Usage</entry> <entry>Notes</entry> </row>
+			<row> <entry>Macro</entry> <entry>Purpose</entry> <entry>Notes</entry> </row>
 		</thead>
 		<tbody>
 			<row> 
@@ -116,6 +126,11 @@
 				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a typedef defined in the global scope.</entry> 
 			</row>
 			<row> 
+				<entry><code><macroname>BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE</macroname></code></entry> 
+				<entry>Reflects a global-scope <code>typedef</code></entry> 
+				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about a typedef defined in the global scope. This macro is equivalent to <code><macroname>BOOST_MIRRORED_TYPEDEF_GS</macroname></code>.</entry> 
+			</row>
+			<row> 
 				<entry><code><macroname>BOOST_MIRRORED_TYPEOF</macroname></code></entry> 
 				<entry>Reflects the type of an expression</entry> 
 				<entry>Expands into a <code><classname>meta_type</classname></code> specialization providing meta-data about the type of the expression given as an argument.</entry> 
@@ -130,7 +145,55 @@
 		</table>
 	</section>
 	<section id="mirror.reference.meta_objects">
+		<using-namespace name="boost::mirror"/>
 		<title>Meta Objects</title>
+		<para>The reflection macros listed above, expand into template class instantiations that provide meta-data about the reflected namespaces, types, classes, etc. These 
+		template instantiations are commonly referred to as MetaObjects. Some other MetaObjects can be accessed by applying the intrinsic meta-functions on other MetaObjects.
+		</para>
+		<table frame="all"><title>Meta objects</title>
+		<tgroup cols="3">
+		<thead>
+			<row> <entry>Meta Object</entry> <entry>Purpose</entry> <entry>Notes</entry> </row>
+		</thead>
+		<tbody>
+			<row> 
+				<entry><code><classname>meta_namespace</classname></code></entry> 
+				<entry>Reflects a namespace</entry> 
+				<entry>Provides information about the scope of the namespace and its name.</entry> 
+			</row>
+			<row> 
+				<entry><code><classname>meta_type</classname></code></entry> 
+				<entry>Reflects a type</entry> 
+				<entry>Provides information about the scope of the type and its name.</entry> 
+			</row>
+			<row> 
+				<entry><code><classname>meta_class</classname></code></entry> 
+				<entry>Reflects a class</entry> 
+				<entry>Provides information about the inheritance of the class and about its member attributes.</entry> 
+			</row>
+			<row> 
+				<entry><code><classname>meta_inheritance</classname></code></entry> 
+				<entry>Reflects the inheritance of a single base class of another class</entry> 
+				<entry>Provides information about the access specifier, the type of inheritance (virtual vs. regular) and about the base class.</entry> 
+			</row>
+			<row> 
+				<entry><code><classname>meta_attribute</classname></code></entry> 
+				<entry>Reflects a single member attribute of a class</entry> 
+				<entry>Provides information about the type and position of the attribute, its name and allows to get and set values of the attribute.</entry> 
+			</row>
+			<row> 
+				<entry><code><classname>meta_class_attributes</classname></code></entry> 
+				<entry>Reflects own member attributes of a class</entry> 
+				<entry>Instantiations of <code>meta_class_attributes</code> are models of the MetaObjectSequence concept and contain <code><classname>meta_attribute</classname></code>s reflecting own member attributes of a class, i.e. those defined by the class, not including the inherited ones.</entry> 
+			</row>
+			<row> 
+				<entry><code><classname>meta_class_all_attributes</classname></code></entry> 
+				<entry>Reflects all member attributes of a class</entry> 
+				<entry>Instantiations of <code>meta_class_all_attributes</code> are models of the MetaObjectSequence concept and contain <code><classname>meta_attribute</classname></code>s reflecting all member attributes of a class, including the inherited ones.</entry> 
+			</row>
+		</tbody>
+		</tgroup>
+		</table>
 	</section>
 	<section id="mirror.reference.traits">
 		<title>Traits</title>
@@ -142,6 +205,8 @@
 		<xi:include href="reference/meta_class.xml"/>
 
 		<xi:include href="reference/meta_attributes.xml"/>
+	
+		<xi:include href="reference/meta_inheritance.xml"/>
 	
 		<xi:include href="reference/traits/reflects_namespace.xml"/>
 		<xi:include href="reference/traits/reflects_global_scope.xml"/>

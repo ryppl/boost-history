@@ -27,6 +27,22 @@ BOOST_MPL_ASSERT((
 	&gt;
 ));
 </programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	::boost::<classname>is_same</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPEOF</macroname>(::std::string("a") + ::std::string("b"))::scope,
+		<macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std)
+	&gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	::boost::<classname>is_same</classname>&lt;
+		<macroname>BOOST_MIRRORED_TYPEOF</macroname>(::std::string("a") + ::std::string("b"))::scope,
+		<macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost)
+	&gt;
+));
+</programlisting>
 	</section>
 	</description>
 </macro>
