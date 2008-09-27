@@ -216,7 +216,7 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
     struct enabler {};
     typedef root_tracking_cursor< ascending_cursor<Cursor> > self_type;
  public:
-      typedef typename ascending_cursor<Cursor>::value_type value_type;
+    typedef typename ascending_cursor<Cursor>::value_type value_type;
 
     // Container-specific:
     typedef typename ascending_cursor<Cursor>::size_type size_type;
@@ -245,18 +245,30 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
     root_tracking_cursor(
         root_tracking_cursor< ascending_cursor<OtherCursor> > const& other
       , typename boost::enable_if<
-            boost::is_convertible<ascending_cursor<OtherCursor>*
-                                , ascending_cursor<Cursor>*>
+            boost::is_convertible<OtherCursor*
+                                , Cursor*>
           , enabler
         >::type = enabler()
     )
     : root_tracking_cursor::cursor_adaptor_(other.base())
-    , m_root_depth(other.base().m_s.size()) {}
+    , m_root_depth(other.m_root_depth) {}
+//
+//    template <class OtherCursor>
+//    root_tracking_cursor(
+//        root_tracking_cursor<OtherCursor> const& other
+//      , typename boost::enable_if<
+//            boost::is_convertible<OtherCursor*
+//                                , ascending_cursor<Cursor>*>
+//          , enabler
+//        >::type = enabler()
+//    )
+//    : root_tracking_cursor::cursor_adaptor_(other.base())
+//    , m_root_depth(other.base().m_s.size()) {}
 
  private: 
-     std::size_t const m_root_depth;
+    std::size_t const m_root_depth;
      
-     friend class boost::iterator_core_access;
+    friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
          
 //    bool equal(cursor const& other) const

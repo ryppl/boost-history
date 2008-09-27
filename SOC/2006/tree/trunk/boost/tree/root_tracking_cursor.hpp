@@ -60,22 +60,22 @@ class root_tracking_cursor
     explicit root_tracking_cursor(Cursor c)
     : root_tracking_cursor::cursor_adaptor_(c), m_depth(0) {}
 
-    template <class OtherCursor>
-    root_tracking_cursor(
-        root_tracking_cursor<OtherCursor> const& other
-      , typename boost::enable_if<
-            boost::is_convertible<OtherCursor*, Cursor*>
-          , enabler
-        >::type = enabler()
-    )
-    : root_tracking_cursor::cursor_adaptor_(other.base())
-    , m_depth(other.m_depth) {}
+//    template <class OtherCursor>
+//    root_tracking_cursor(
+//        root_tracking_cursor<OtherCursor> const& other
+//      , typename boost::enable_if<
+//            boost::is_convertible<OtherCursor*, Cursor*>
+//          , enabler
+//        >::type = enabler()
+//    )
+//    : root_tracking_cursor::cursor_adaptor_(other.base())
+//    , m_depth(other.m_depth) {}
 
  private: 
-     friend class boost::iterator_core_access;
+    friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
      
-     std::size_t m_depth;
+    std::size_t m_depth;
          
 //    bool equal(cursor const& other) const
 //    {

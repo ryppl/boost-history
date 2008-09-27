@@ -15,6 +15,7 @@
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
 
 #include <boost/tree/root_tracking_cursor.hpp>
+#include <boost/tree/ascending_cursor.hpp>
 
 namespace boost {
 namespace tree {
@@ -54,21 +55,6 @@ inline void forward(Cursor& c)
 }
 
 /**
- * @brief    Postorder successor
- * @param c    A cursor
- * @param n    Optional parameter to indicate how many steps to move forward
- * @return    Postorder successor of @a c
- */
-template <class Cursor>
-inline Cursor next(Cursor c
-                 , typename Cursor::difference_type n = 1)
-{
-    for (; n!=0; --n)
-        forward(c);
-    return c;
-}
-
-/**
  * @brief    Postorder predecessor
  * @param c    Cursor to be set to its postorder predecessor
  */
@@ -103,53 +89,42 @@ inline void back(Cursor& c)
 }
 
 /**
- * @brief    Postorder predecessor
- * @param c    A cursor
- * @param n    Optional parameter to indicate how many steps to move back
- * @return    Postorder predecessor of @a c
+ * @brief   First element of a subtree in postorder traversal
+ * @param c Subtree root cursor that will be set to the first postorder 
+ *          position in the subtree.
  */
 template <class Cursor>
-inline Cursor prior(Cursor c
-                  , typename Cursor::difference_type n = 1)
-{
-    for (; n!=0; --n)
-        back(c);
-    return c;
-}
-
-/**
- * @brief    First element of a subtree in postorder traversal
- * @param c    A cursor
- * @return    Cursor to the first element of @a c in postorder traversal
- */
-template <class Cursor>
-Cursor first(Cursor c)
+void to_first(Cursor& c)
 {
     while (true)
         if (!c.empty())
             c.to_begin();
         else if (!(++c).empty())
             c.to_begin();
-        else
-            return --c;
+        else {
+            --c;
+            return;
+        }
 }
 
 /**
- * @brief    One position past the last element of a subtree in postorder 
- *             traversal
- * @param c    A cursor
- * @return    Cursor one position past the last element of @a c in 
- *             postorder traversal
+ * @brief   One position past the last element of a subtree in postorder 
+ *          traversal
+ * @param c Subtree root cursor that will be set to the last postorder 
+ *          position in the subtree.
  */
 template <class Cursor>
-Cursor last(Cursor c)
-{
-    return c;
-}
+void to_last(Cursor& c)
+{ }
+
+#include <boost/tree/detail/algorithm/cursor/_order.hpp>
 
 /*\@}*/
 
-#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
+//#else
+
 /**
  * @if maint
  * Helper function for for_each, using a reference parameter in order to
@@ -199,10 +174,6 @@ Op for_each(Cursor s, Op f)
 
     return f;
 }
-
-#else
-#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
-#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @brief    Copies the subtree s into t, by traversing s in postorder.
@@ -263,6 +234,8 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
     *t = op(*r.to_begin());
     return t;
 }
+
+//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 } // namespace postorder
 

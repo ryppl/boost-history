@@ -15,6 +15,7 @@
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 
 #include <boost/tree/root_tracking_cursor.hpp>
+#include <boost/tree/ascending_cursor.hpp>
 
 namespace boost {
 namespace tree {
@@ -61,21 +62,6 @@ inline void forward(Cursor& c)
 }
 
 /**
- * @brief    Preorder successor
- * @param c    A cursor
- * @param n    Optional parameter to indicate how many steps to move forward
- * @return    Preorder successor of @a c
- */
-template <class Cursor>
-inline Cursor next(Cursor c
-                 , typename Cursor::difference_type n = 1)
-{
-    for (; n!=0; --n)
-        forward(c);
-    return c;
-}
-
-/**
  * @brief    Preorder predecessor
  * @param c    Cursor to be set to its preorder predecessor
  */
@@ -106,47 +92,34 @@ inline void back(Cursor& c)
 }
 
 /**
- * @brief    Preorder predecessor
- * @param c    A cursor
- * @param n    Optional parameter to indicate how many steps to move back
- * @return    Preorder predecessor of @a c
+ * @brief   First element of a subtree in preorder traversal
+ * @param c Subtree root cursor that will be set to the first preorder 
+ *          position in the subtree.
  */
 template <class Cursor>
-inline Cursor prior(Cursor c
-                  , typename Cursor::difference_type n = 1)
+void to_first(Cursor& c)
 {
-    for (; n!=0; --n)
-        back(c);
-    return c;
+    c.to_begin();
 }
 
 /**
- * @brief    First element of a subtree in preorder traversal
- * @param c    A cursor
- * @return    Cursor to the first element of @a c in preorder traversal
+ * @brief   One position past the last element of a subtree in preorder 
+ *          traversal
+ * @param c Subtree root cursor that will be set to the last preorder 
+ *          position in the subtree.
  */
 template <class Cursor>
-Cursor first(Cursor c)
-{
-    return c.begin();
-}
+void to_last(Cursor& c)
+{ }
 
-/**
- * @brief    One position past the last element of a subtree in preorder 
- *             traversal
- * @param c    A cursor
- * @return    Cursor one position past the last element of @a c in preorder
- *             traversal
- */
-template <class Cursor>
-Cursor last(Cursor c)
-{
-    return c;
-}
+#include <boost/tree/detail/algorithm/cursor/_order.hpp>
 
 /*\@}*/
 
-#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
+//#else
+
 /**
  * @if maint
  * Helper function for for_each, using a reference parameter in order to
@@ -196,10 +169,6 @@ Op for_each(Cursor s, Op f)
     
     return f;
 }
-
-#else
-#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
-#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @brief    Copies the subtree s into t, by traversing s in preorder.
@@ -258,6 +227,8 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
         
     return t;
 }
+
+//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 } // namespace preorder
 

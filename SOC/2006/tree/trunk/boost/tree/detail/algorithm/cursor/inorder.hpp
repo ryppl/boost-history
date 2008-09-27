@@ -15,6 +15,7 @@
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 
 #include <boost/tree/root_tracking_cursor.hpp>
+#include <boost/tree/ascending_cursor.hpp>
 
 #include <algorithm>
 
@@ -45,22 +46,6 @@ inline void forward(MultiwayCursor& c)
 }
 
 /**
- * @brief    Inorder successor
- * @param c    A cursor
- * @param n    Optional parameter to indicate how many steps to move forward
- * @return    Inorder successor of @a c
- * @ingroup    traversal
- */
-template <class MultiwayCursor>
-inline MultiwayCursor next(MultiwayCursor c
-                         , typename MultiwayCursor::difference_type n = 1)
-{
-    for (; n!=0; --n)
-        forward(c);
-    return c;
-}
-
-/**
  * @brief    Inorder predecessor
  * @param c    MultiwayCursor to be set to its inorder predecessor
  */
@@ -81,49 +66,35 @@ inline void back(MultiwayCursor& c)
 }
 
 /**
- * @brief    Inorder predecessor
- * @param c    MultiwayCursor
- * @param n    Optional parameter to indicate how many steps to move back
- * @return    Inorder predecessor of @a c
+ * @brief   First element of a subtree in inorder traversal
+ * @param c Subtree root cursor that will be set to the first inorder 
+ *          position in the subtree.
  */
-template <class MultiwayCursor>
-inline MultiwayCursor prior(MultiwayCursor c
-                          , typename MultiwayCursor::difference_type n = 1)
-{
-    for (; n!=0; --n)
-        back(c);
-    return c;
-}
-
-/**
- * @brief    First element of a Multiway subtree in inorder traversal
- * @param c    A MultiwayCursor
- * @return    Cursor to the first element of @a c in inorder traversal
- */
-template <class MultiwayCursor>
-MultiwayCursor first(MultiwayCursor c)
+template <class Cursor>
+void to_first(Cursor& c)
 {
     while (!c.empty())
         c.to_begin();
-    return c;
 }
 
 /**
- * @brief    One position past the last element of a Multiway subtree in 
- *             inorder traversal
- * @param c    A MultiwayCursor
- * @return    Cursor one position past the last element of @a c in inorder
- *             traversal
+ * @brief   One position past the last element of a subtree in inorder 
+ *          traversal
+ * @param c Subtree root cursor that will be set to the last inorder 
+ *          position in the subtree.
  */
-template <class MultiwayCursor>
-MultiwayCursor last(MultiwayCursor c)
-{
-    return c;
-}
+template <class Cursor>
+void to_last(Cursor& c)
+{ }
+
+#include <boost/tree/detail/algorithm/cursor/_order.hpp>
 
 /*\@}*/
 
-#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
+//#else
+
 /**
  * @if maint
  * Helper function for for_each, using a reference parameter in order to
@@ -175,10 +146,6 @@ Op for_each(MultiwayCursor s, Op f)
         for_each_recursive(t, f);
     return f;
 }
-
-#else
-#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
-#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @brief    Copies the subtree s into t, by traversing s in inorder.
@@ -238,6 +205,8 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
         transform(r, t, op);
     return t;
 }
+
+//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /// Search
 
