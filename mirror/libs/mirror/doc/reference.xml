@@ -177,26 +177,85 @@
 				<entry>Provides information about the access specifier, the type of inheritance (virtual vs. regular) and about the base class.</entry> 
 			</row>
 			<row> 
-				<entry><code><classname>meta_attribute</classname></code></entry> 
+				<entry><code><classname>meta_class_attribute</classname></code></entry> 
 				<entry>Reflects a single member attribute of a class</entry> 
 				<entry>Provides information about the type and position of the attribute, its name and allows to get and set values of the attribute.</entry> 
 			</row>
 			<row> 
 				<entry><code><classname>meta_class_attributes</classname></code></entry> 
 				<entry>Reflects own member attributes of a class</entry> 
-				<entry>Instantiations of <code>meta_class_attributes</code> are models of the MetaObjectSequence concept and contain <code><classname>meta_attribute</classname></code>s reflecting own member attributes of a class, i.e. those defined by the class, not including the inherited ones.</entry> 
+				<entry>Instantiations of <code>meta_class_attributes</code> are models of the MetaObjectSequence concept and contain <code><classname>meta_class_attribute</classname></code>s reflecting own member attributes of a class, i.e. those defined by the class, not including the inherited ones.</entry> 
 			</row>
 			<row> 
 				<entry><code><classname>meta_class_all_attributes</classname></code></entry> 
 				<entry>Reflects all member attributes of a class</entry> 
-				<entry>Instantiations of <code>meta_class_all_attributes</code> are models of the MetaObjectSequence concept and contain <code><classname>meta_attribute</classname></code>s reflecting all member attributes of a class, including the inherited ones.</entry> 
+				<entry>Instantiations of <code>meta_class_all_attributes</code> are models of the MetaObjectSequence concept and contain <code><classname>meta_class_attribute</classname></code>s reflecting all member attributes of a class, including the inherited ones.</entry> 
 			</row>
 		</tbody>
 		</tgroup>
 		</table>
 	</section>
 	<section id="mirror.reference.traits">
+		<using-namespace name="boost"/>
+		<using-namespace name="boost::mirror"/>
 		<title>Traits</title>
+		<para>The trait templates can be used to query the properties of the MetaObjects. Each trait template inherits either from the 
+		<code>::boost::<classname>true_type</classname></code> or  <code>::boost::<classname>false_type</classname></code> to
+		indicate whether the inspected MetaObject has or has not the trait.  
+		</para>
+		<table frame="all"><title>Traits</title>
+		<tgroup cols="2">
+		<thead>
+			<row> <entry>Trait template</entry> <entry>Purpose</entry> </row>
+		</thead>
+		<tbody>
+			<row> 
+				<entry><code><classname>reflects_namespace</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects a namespace, i.e. whether it is a <code><classname>meta_namespace</classname></code>. </entry> 
+			</row>
+			<row> 
+				<entry><code><classname>reflects_global_scope</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects the global scope, i.e. whether it is a <code><classname>meta_namespace</classname></code> specialization providing meta-information about the global scope. </entry> 
+			</row>
+			<row> 
+				<entry><code><classname>reflects_type</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects a type, i.e. whether it is a <code><classname>meta_type</classname></code>. </entry> 
+			</row>
+			<row> 
+				<entry><code><classname>reflects_class</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects a class, i.e. whether it is a <code><classname>meta_class</classname></code>. </entry> 
+			</row>
+			<row> 
+				<entry><code><classname>reflects_attribute</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects a class member attribute, i.e. whether it is a <code><classname>meta_class_attribute</classname></code>. </entry> 
+			</row>
+			<row> 
+				<entry><code><classname>reflects_inheritance</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects a base class inheritance, i.e. whether it is a <code><classname>meta_inheritance</classname></code>. </entry> 
+			</row>
+			<row> 
+				<entry><code><classname>reflects_virtual_inheritance</classname></code></entry> 
+				<entry>Checks whether the given MetaObject reflects a virtual class inheritance, i.e. whether it is a <code><classname>meta_inheritance</classname></code> specialization providing meta-information about a base class that is inherited virtually. </entry> 
+			</row>
+		</tbody>
+		</tgroup>
+		</table>
+
+	</section>
+	<section id="mirror.reference.intrinsic">
+		<title>Intrinsic Metafunctions</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.reference.algorithms">
+		<title>Algorithms</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.reference.traversals">
+		<title>Traversals</title>
+		<para>
+		</para>
 	</section>
 	<section>
 		<title>Header files</title>
@@ -212,6 +271,8 @@
 		<xi:include href="reference/traits/reflects_global_scope.xml"/>
 		<xi:include href="reference/traits/reflects_type.xml"/>
 		<xi:include href="reference/traits/reflects_class.xml"/>
+
+		<xi:include href="reference/traits/reflects_attribute.xml"/>
 
 		<xi:include href="reference/traits/reflects_inheritance.xml"/>
 		<xi:include href="reference/traits/reflects_virtual_inheritance.xml"/>

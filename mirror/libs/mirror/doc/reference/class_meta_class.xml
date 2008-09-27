@@ -43,7 +43,7 @@
 	<typedef name="attributes">
 		<type><classname>meta_class_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
 		<description>
-			<para>The container of <code><classname>meta_attribute</classname></code>s reflecting the
+			<para>The container of <code><classname>meta_class_attribute</classname></code>s reflecting the
 			"own" attributes of a class. These are the attributes that are defined directly
 			in the class reflected by this <code><classname>meta_class</classname></code>, not including
 			the attributes inherited from the base classes.
@@ -53,7 +53,7 @@
 	<typedef name="all_attributes">
 		<type><classname>meta_class_all_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
 		<description>
-			<para>The container of <code><classname>meta_attribute</classname></code>s reflecting 
+			<para>The container of <code><classname>meta_class_attribute</classname></code>s reflecting 
 			all attributes of a class including the ones inherited from base classes.
 			</para>
 		</description>

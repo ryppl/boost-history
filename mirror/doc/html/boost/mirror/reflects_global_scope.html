@@ -38,7 +38,7 @@
 <span class="bold"><strong>class</strong></span> <a class="link" href="reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a> : <span class="bold"><strong>public</strong></span> <span class="type">false_type-or-true_type</span> {
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2644342"></a><h2>Description</h2>
+<a name="id2612757"></a><h2>Description</h2>
 <p>This template can be used to distinguish whether the opaque <code class="computeroutput">MetaObject</code> type reflects the global scope
 				and thus is an instantiation of <code class="computeroutput"><a class="link" href="meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> for the global scope.
 				</p>
@@ -47,33 +47,97 @@
 <a name="mirror.reflects_global_scope.reference.samples"></a>Examples</h6></div></div></div>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	reflects_global_scope&lt; BOOST_MIRRORED_GLOBAL_SCOPE() &gt;::value
+	reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a>() &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	!reflects_global_scope&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) &gt;::value
+	!reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror) &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	!reflects_global_scope&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;::value
+	!reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string) &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT((
-	reflects_global_scope&lt; BOOST_MIRRORED_TYPE(int)::scope &gt;
+	reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(int)::scope &gt;
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT((
-	reflects_global_scope&lt; BOOST_MIRRORED_TYPE(::std::string)::scope::scope &gt;
+	reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string)::scope::scope &gt;
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT_NOT((
-	reflects_global_scope&lt; BOOST_MIRRORED_TYPE(::std::string)::scope &gt;
+	reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string)::scope &gt;
 ));
+</pre>
+<p>The following code sample shows the registering and reflection of namespaces,
+        and the use of the <code class="computeroutput"><a class="link" href="reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a></code> trait template.
+        </p>
+<pre class="programlisting">
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+#include &lt;boost/mpl/assert.hpp&gt;
+
+
+// define some namespaces
+namespace foo {
+namespace bar {
+} // namespace bar
+} // namespace foo
+
+namespace baz {
+} // namespace baz
+
+// register them with mirror
+namespace boost {
+  namespace mirror {
+    // ::foo
+    <a class="link" href="../../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((foo))
+    // ::foo::bar
+    <a class="link" href="../../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((foo)(bar))
+    // ::baz
+    <a class="link" href="../../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a>((baz))
+} // namespace mirror
+} // namespace boost
+
+
+int main(void)
+{
+  using ::boost::mirror::reflects_global_scope;
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror) &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror)::scope::scope &gt;
+  ));
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo) &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo)::scope &gt;
+  ));
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo::bar) &gt;
+  ));
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo::bar)::scope &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::foo::bar)::scope::scope &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::baz)::scope &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <a class="link" href="../../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a>() &gt;
+  ));
+  return 0;
+}
 </pre>
 </div>
 </div>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="mirror.concepts"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<title>Concepts</title>
+
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::mirror"/>
+
+	<para>
+	</para>
+
+	<section id="mirror.concepts.meta_object">
+	<title>MetaObject</title>
+	<para>
+	</para>
+	</section>
+
+</section>

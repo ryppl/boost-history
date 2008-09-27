@@ -41,7 +41,9 @@
 
 	<xi:include href="introduction.xml"/>
 	<xi:include href="tutorial.xml"/>
+	<xi:include href="concepts.xml"/>
 	<xi:include href="reference.xml"/>
+	<xi:include href="examples.xml"/>
 	<xi:include href="rationale.xml"/>
 
 </library>

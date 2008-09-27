@@ -8,7 +8,7 @@
 		<template-type-parameter name="unspecified"/>
 	</template>
 	<purpose>
-		<para>This class template contains the <code><classname>meta_attribute</classname></code>s
+		<para>This class template contains the <code><classname>meta_class_attribute</classname></code>s
 		reflecting the individual attributes of a class. More precisely, only those attributes,
 		that are defined in the reflected class, not including the inherited member attributes. 
 		To inspect all attributes of a class use the specializations of the <code><classname>meta_class_all_attributes</classname></code>
@@ -18,7 +18,7 @@
 		directly, <code><classname>meta_class_attributes</classname></code> are obtained only as result
 	       	of introspection operations on <code><classname>meta_class</classname></code>.
 		</para>
-		<para>The individual <code><classname>meta_attribute</classname></code>s and 
+		<para>The individual <code><classname>meta_class_attribute</classname></code>s and 
 		iterators pointing to them should be obtained as results
 		of the meta-object-sequence algoritms. See the examples for more details on usage of 
 		<code><classname>meta_class_attributes</classname></code>.

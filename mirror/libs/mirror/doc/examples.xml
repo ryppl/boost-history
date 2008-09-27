@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="mirror.examples"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<title>Examples</title>
+
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::mirror"/>
+
+	<para>This section contains most of the examples that are scattered around the docs, in an organized fashion. The following subsections focus on the distinct tasks, like registering, reflection, meta object usage, etc., and provide links with short descriptions for quick access to the examples.
+	</para>
+	<section id="mirror.examples.registering">
+		<title>Registering</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.examples.reflection">
+		<title>Reflection</title>
+		<para>The following table shows the list of examples showing the use of the <link linkend="mirror.reference.reflecting">reflection macros</link>.
+		</para>
+                <table frame="all"><title>Reflection examples</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Example</entry> <entry>Notes</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><link linkend="mirror.examples.refl_namespaces_01">Namespace reflection - 1</link></entry>
+                                <entry>Simple example showing reflection of the pre-registered namespaces. </entry>
+                        </row>
+		</tbody>
+		</tgroup>
+		</table>
+
+	</section>
+	<section id="mirror.examples.meta_objects">
+		<title>Meta object usage</title>
+		<para>Examples listed in the following table are related to the usage of the templates modelling the <link linkend="mirror.concepts.meta_object">MetaObject</link> concept.
+		</para>
+                <table frame="all"><title>Reflection examples</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Example</entry> <entry>Notes</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><link linkend="mirror.examples.refl_namespaces_01">Namespace reflection - 1</link></entry>
+                                <entry>Simple example showing the use of <code><classname>meta_namespace</classname></code>'s name getters. </entry>
+                        </row>
+                </tbody>
+                </tgroup>
+       	        </table>
+	</section>
+	<section id="mirror.examples.traits">
+		<title>Trait templates usage</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.examples.meta_object_containers">
+		<title>Meta object containers</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.examples.algorithms">
+		<title>Algorithms</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.examples.traversals">
+		<title>Traversals</title>
+		<para>
+		</para>
+	</section>
+	<section id="mirror.examples.all">
+		<title>All examples</title>
+		<para>
+		</para>
+	<xi:include href="examples/refl_namespaces_01.xml"/>
+	</section>
+
+</section>

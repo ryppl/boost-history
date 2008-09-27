@@ -3,6 +3,7 @@ about.html
 libraries.html
 mirror.html
 mirror/tutorial.html
+mirror/concepts.html
 mirror/reference.html
 boost/mirror/meta_namespace.html
 BOOST_MIRROR_REG_NAMESPACE.html
@@ -25,7 +26,7 @@ BOOST_MIRRORED_TYPEDEF_GLOBAL_SCOPE.html
 BOOST_MIRRORED_TYPEOF.html
 boost/mirror/meta_class.html
 BOOST_MIRRORED_CLASS.html
-boost/mirror/meta_attribute.html
+boost/mirror/meta_class_attribute.html
 boost/mirror/meta_class_attributes.html
 boost/mirror/meta_class_all_attributes.html
 boost/mirror/meta_inheritance.html
@@ -33,8 +34,10 @@ boost/mirror/reflects_namespace.html
 boost/mirror/reflects_global_scope.html
 boost/mirror/reflects_type.html
 boost/mirror/reflects_class.html
+boost/mirror/reflects_attribute.html
 boost/mirror/reflects_inheritance.html
 boost/mirror/reflects_virtual_inheritance.html
+mirror/examples.html
 mirror/rationale.html
 char_type_switch.html
 char_type_switch/reference.html

@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="../index.html" title="The Mirror library documentation">
 <link rel="up" href="../mirror.html" title="Chapter 1. Mirror">
-<link rel="prev" href="tutorial.html" title="Tutorial">
+<link rel="prev" href="concepts.html" title="Concepts">
 <link rel="next" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/mirror/meta_namespace.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="concepts.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/mirror/meta_namespace.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -30,7 +30,10 @@
 <dt><span class="section"><a href="reference.html#mirror.reference.reflecting">Reflecting</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.meta_objects">Meta Objects</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.traits">Traits</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2633198">Header files</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.intrinsic">Intrinsic Metafunctions</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.algorithms">Algorithms</a></span></dt>
+<dt><span class="section"><a href="reference.html#mirror.reference.traversals">Traversals</a></span></dt>
+<dt><span class="section"><a href="reference.html#id2601426">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
@@ -55,7 +58,7 @@
 		As a general rule of the thumb these macros should be used in the <code class="computeroutput">boost::mirror</code> namespace.
 		</p>
 <div class="table">
-<a name="id2585542"></a><p class="title"><b>Table 1.1. Registering macros</b></p>
+<a name="id2553429"></a><p class="title"><b>Table 1.1. Registering macros</b></p>
 <div class="table-contents"><table class="table" summary="Registering macros">
 <colgroup>
 <col>
@@ -127,7 +130,7 @@
 		the individual macros.
 		</p>
 <div class="table">
-<a name="id2632537"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
+<a name="id2600446"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
 <div class="table-contents"><table class="table" summary="Reflection macros">
 <colgroup>
 <col>
@@ -199,7 +202,7 @@
 		template instantiations are commonly referred to as MetaObjects. Some other MetaObjects can be accessed by applying the intrinsic meta-functions on other MetaObjects.
 		</p>
 <div class="table">
-<a name="id2632946"></a><p class="title"><b>Table 1.3. Meta objects</b></p>
+<a name="id2600855"></a><p class="title"><b>Table 1.3. Meta objects</b></p>
 <div class="table-contents"><table class="table" summary="Meta objects">
 <colgroup>
 <col>
@@ -233,30 +236,98 @@
 <td>Provides information about the access specifier, the type of inheritance (virtual vs. regular) and about the base class.</td>
 </tr>
 <tr>
-<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code></td>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_attribute.html" title="Class template meta_class_attribute">meta_class_attribute</a></code></td>
 <td>Reflects a single member attribute of a class</td>
 <td>Provides information about the type and position of the attribute, its name and allows to get and set values of the attribute.</td>
 </tr>
 <tr>
 <td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_attributes.html" title="Class template meta_class_attributes">meta_class_attributes</a></code></td>
 <td>Reflects own member attributes of a class</td>
-<td>Instantiations of <code class="computeroutput">meta_class_attributes</code> are models of the MetaObjectSequence concept and contain <code class="computeroutput"><a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>s reflecting own member attributes of a class, i.e. those defined by the class, not including the inherited ones.</td>
+<td>Instantiations of <code class="computeroutput">meta_class_attributes</code> are models of the MetaObjectSequence concept and contain <code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_attribute.html" title="Class template meta_class_attribute">meta_class_attribute</a></code>s reflecting own member attributes of a class, i.e. those defined by the class, not including the inherited ones.</td>
 </tr>
 <tr>
 <td><code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_all_attributes.html" title="Class template meta_class_all_attributes">meta_class_all_attributes</a></code></td>
 <td>Reflects all member attributes of a class</td>
-<td>Instantiations of <code class="computeroutput">meta_class_all_attributes</code> are models of the MetaObjectSequence concept and contain <code class="computeroutput"><a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a></code>s reflecting all member attributes of a class, including the inherited ones.</td>
+<td>Instantiations of <code class="computeroutput">meta_class_all_attributes</code> are models of the MetaObjectSequence concept and contain <code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_attribute.html" title="Class template meta_class_attribute">meta_class_attribute</a></code>s reflecting all member attributes of a class, including the inherited ones.</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <br class="table-break">
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
-<a name="mirror.reference.traits"></a>Traits</h3></div></div></div></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2633198"></a>Header files</h3></div></div></div>
+<a name="mirror.reference.traits"></a>Traits</h3></div></div></div>
+<p>The trait templates can be used to query the properties of the MetaObjects. Each trait template inherits either from the 
+		<code class="computeroutput">::boost::true_type</code> or  <code class="computeroutput">::boost::false_type</code> to
+		indicate whether the inspected MetaObject has or has not the trait.  
+		</p>
+<div class="table">
+<a name="id2601127"></a><p class="title"><b>Table 1.4. Traits</b></p>
+<div class="table-contents"><table class="table" summary="Traits">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Trait template</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_namespace.html" title="Class template reflects_namespace">reflects_namespace</a></code></td>
+<td>Checks whether the given MetaObject reflects a namespace, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>. </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a></code></td>
+<td>Checks whether the given MetaObject reflects the global scope, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> specialization providing meta-information about the global scope. </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_type.html" title="Class template reflects_type">reflects_type</a></code></td>
+<td>Checks whether the given MetaObject reflects a type, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code>. </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_class.html" title="Class template reflects_class">reflects_class</a></code></td>
+<td>Checks whether the given MetaObject reflects a class, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_class.html" title="Class template meta_class">meta_class</a></code>. </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_attribute.html" title="Class template reflects_attribute">reflects_attribute</a></code></td>
+<td>Checks whether the given MetaObject reflects a class member attribute, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_class_attribute.html" title="Class template meta_class_attribute">meta_class_attribute</a></code>. </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_inheritance.html" title="Class template reflects_inheritance">reflects_inheritance</a></code></td>
+<td>Checks whether the given MetaObject reflects a base class inheritance, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a></code>. </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reflects_virtual_inheritance.html" title="Class template reflects_virtual_inheritance">reflects_virtual_inheritance</a></code></td>
+<td>Checks whether the given MetaObject reflects a virtual class inheritance, i.e. whether it is a <code class="computeroutput"><a class="link" href="../boost/mirror/meta_inheritance.html" title="Class template meta_inheritance">meta_inheritance</a></code> specialization providing meta-information about a base class that is inherited virtually. </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.intrinsic"></a>Intrinsic Metafunctions</h3></div></div></div>
+<p>
+		</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.algorithms"></a>Algorithms</h3></div></div></div>
+<p>
+		</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.reference.traversals"></a>Traversals</h3></div></div></div>
+<p>
+		</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id2601426"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
@@ -267,6 +338,7 @@
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_global_scope.hpp">Header &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_type.hpp">Header &lt;boost/mirror/traits/reflects_type.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_class.hpp">Header &lt;boost/mirror/traits/reflects_class.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_attribute.hpp">Header &lt;boost/mirror/traits/reflects_attribute.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_inheritance.hpp">Header &lt;boost/mirror/traits/reflects_inheritance.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_virtual_inheritance.hpp">Header &lt;boost/mirror/traits/reflects_virtual_inheritance.hpp&gt;</a></span></dt>
 </dl></div>
@@ -326,7 +398,7 @@
 <a name="header.boost.mirror.meta_attributes.hpp"></a>Header &lt;<a href="../../../boost/mirror/meta_attributes.hpp" target="_top">boost/mirror/meta_attributes.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_attribute.html" title="Class template meta_attribute">meta_attribute</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_class_attribute.html" title="Class template meta_class_attribute">meta_class_attribute</a>;
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_class_attributes.html" title="Class template meta_class_attributes">meta_class_attributes</a>;
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> unspecified&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/meta_class_all_attributes.html" title="Class template meta_class_all_attributes">meta_class_all_attributes</a>;
   }
@@ -379,6 +451,15 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traits.reflects_attribute.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_attribute.hpp" target="_top">boost/mirror/traits/reflects_attribute.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_attribute.html" title="Class template reflects_attribute">reflects_attribute</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="header.boost.mirror.traits.reflects_inheritance.hpp"></a>Header &lt;<a href="../../../boost/mirror/traits/reflects_inheritance.hpp" target="_top">boost/mirror/traits/reflects_inheritance.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
@@ -407,7 +488,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/mirror/meta_namespace.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="concepts.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/mirror/meta_namespace.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

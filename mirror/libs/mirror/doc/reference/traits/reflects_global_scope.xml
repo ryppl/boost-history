@@ -27,34 +27,100 @@
 					<title>Examples</title>
 <programlisting>
 BOOST_STATIC_ASSERT((
-	reflects_global_scope&lt; BOOST_MIRRORED_GLOBAL_SCOPE() &gt;::value
+	reflects_global_scope&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() &gt;::value
 ));
 </programlisting>
 <programlisting>
 BOOST_STATIC_ASSERT((
-	!reflects_global_scope&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) &gt;::value
+	!reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) &gt;::value
 ));
 </programlisting>
 <programlisting>
 BOOST_STATIC_ASSERT((
-	!reflects_global_scope&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;::value
+	!reflects_global_scope&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string) &gt;::value
 ));
 </programlisting>
 <programlisting>
 BOOST_MPL_ASSERT((
-	reflects_global_scope&lt; BOOST_MIRRORED_TYPE(int)::scope &gt;
+	reflects_global_scope&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(int)::scope &gt;
 ));
 </programlisting>
 <programlisting>
 BOOST_MPL_ASSERT((
-	reflects_global_scope&lt; BOOST_MIRRORED_TYPE(::std::string)::scope::scope &gt;
+	reflects_global_scope&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string)::scope::scope &gt;
 ));
 </programlisting>
 <programlisting>
 BOOST_MPL_ASSERT_NOT((
-	reflects_global_scope&lt; BOOST_MIRRORED_TYPE(::std::string)::scope &gt;
+	reflects_global_scope&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string)::scope &gt;
 ));
 </programlisting>
+        <para>The following code sample shows the registering and reflection of namespaces,
+        and the use of the <code><classname>reflects_global_scope</classname></code> trait template.
+        </para>
+
+<programlisting>
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+#include &lt;boost/mpl/assert.hpp&gt;
+
+
+// define some namespaces
+namespace foo {
+namespace bar {
+} // namespace bar
+} // namespace foo
+
+namespace baz {
+} // namespace baz
+
+// register them with mirror
+namespace boost {
+  namespace mirror {
+    // ::foo
+    <macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo))
+    // ::foo::bar
+    <macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((foo)(bar))
+    // ::baz
+    <macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((baz))
+} // namespace mirror
+} // namespace boost
+
+
+int main(void)
+{
+  using ::boost::mirror::reflects_global_scope;
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror) &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror)::scope::scope &gt;
+  ));
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo) &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo)::scope &gt;
+  ));
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo::bar) &gt;
+  ));
+  BOOST_MPL_ASSERT_NOT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo::bar)::scope &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::foo::bar)::scope::scope &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::baz)::scope &gt;
+  ));
+  BOOST_MPL_ASSERT((
+    reflects_global_scope&lt; <macroname>BOOST_MIRRORED_GLOBAL_SCOPE</macroname>() &gt;
+  ));
+  return 0;
+}
+</programlisting>
+
 				</section>
 			</description>
 		</class>
