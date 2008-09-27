@@ -16,8 +16,9 @@
 template <class Cursor, class Op>
 Op for_each(root_tracking_cursor<Cursor> s, Op f)
 {
-    root_tracking_cursor<Cursor> s2 = last(s);
-    s = first(s);
+    root_tracking_cursor<Cursor> s2(s);
+    to_first(s);
+    to_last(s2);
     while (s!=s2) {
         f(*s);
         forward(s);
@@ -46,8 +47,9 @@ Op for_each(Cursor s, Op f)
 template <class InCursor, class OutCursor>
 OutCursor copy (root_tracking_cursor<InCursor> s, OutCursor t)
 {
-    root_tracking_cursor<InCursor> s2(last(s));
-    s = first(s);
+    root_tracking_cursor<InCursor> s2(s);
+    to_first(s);
+    to_last(s2);
     while (s!=s2) {
         *t = *s;
         forward(s);
@@ -70,8 +72,9 @@ OutCursor copy (InCursor s, OutCursor t)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (root_tracking_cursor<InCursor> s, OutCursor t, Op op)
 {
-    root_tracking_cursor<InCursor> s2(last(s));
-    s = first(s);
+    root_tracking_cursor<InCursor> s2(s);
+    to_first(s);
+    to_last(s2);
     while (s!=s2) {
         *t = op(*s);
         forward(s);
