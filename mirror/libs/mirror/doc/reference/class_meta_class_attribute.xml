@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<class name="meta_class_attribute"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<template>
+		<template-type-parameter name="unspecified"/>
+	</template>
+	<purpose>
+		<para>This class template reflects one individual attribute of a class. The
+		<code><classname>meta_class_attribute</classname></code> template should not be instantiated
+		directly, meta-attributes are obtained only as results of introspection operations on
+		<code><classname>meta_class_attributes</classname></code> and
+		<code><classname>meta_class_all_attributes</classname></code>.
+		</para>
+	</purpose>
+	<description>
+		<para>This template allows to get both compile-time and run-time meta-data about
+		the member attribute of a class. At compile time the scope, position, type and several other traits of the attribute
+		can be inspected. At run-time one can get the base and full name of the attribute and to generically get and set its value.
+		</para>
+		<section id="mirror.meta_class_attribute.reference.samples">
+		<section id="mirror.meta_class_attribute.reference.sample01">
+			<title>Example - Basic usage</title>
+			<para>
+			</para>
+			<!--
+			<xi:include href="../samples/usage_meta_class_attribute_01.xml"/>
+			-->
+		</section>
+		</section>
+	</description>
+
+	<access name="public">
+	<typedef name="scope">
+		<type><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>Meta-class describing the scope where the reflected attribute is defined.
+			The scope is the class that the reflected attribute belongs to. 
+			</para>
+		</description>
+	</typedef>
+	<typedef name="container">
+		<type><classname>meta_class_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;-or-<classname>meta_class_all_attributes</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>The meta-attribute-sequence containing this <code><classname>meta_class_attribute</classname></code>.
+			It is the container that the <code><classname>meta_class_attribute</classname></code> belongs to.
+			It can be either the "own" class' attributes - 
+			<code><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;::attributes</code> 
+			or all class attributes including the inherited ones - 
+			<code><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;::all_attributes</code>.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="meta_attributes">
+		<type>container</type>
+		<description>
+			<para>This is an alias for the <code>container</code> typedef.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="position">
+		<type>mpl::int_&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>This member is an instantiation of the <code>::boost::mpl::int_&lt;N&gt;</code>
+			template and specifies the position of the <code><classname>meta_class_attribute</classname></code>
+			in the <code>container</code>.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="type">
+		<type><emphasis>unspecified</emphasis></type>
+		<description>
+			<para>The type of the reflected attribute.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="typedef_or_type">
+		<type><emphasis>unspecified</emphasis></type>
+		<description>
+			<para>This type should be used to reflect the type of the attribute (to get a <code><classname>meta_type</classname></code>
+			or a <code><classname>meta_class</classname></code> that reflects the type of the attribute), because it allows
+			to distinguish <code>typedef</code>ined types.
+			</para>
+		</description>
+	</typedef>
+	<typedef name="traits">
+		<type><classname>meta_attribute_traits</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+		<description>
+			<para>Additional traits of the attribute, like storage class specifiers, etc.
+			See the documentation of <code><classname>meta_attribute_traits</classname></code> for more details.
+			</para>
+		</description>
+	</typedef>
+	<method name="base_name">
+		<type>const cts::<classname>bstring</classname>&amp;</type>
+		<purpose>
+			<para>This static member function returns the base name of the 
+			attribute reflected by the <code><classname>meta_class_attribute</classname></code>.
+			When a full attribute name 
+			<emphasis role="bold">including</emphasis> the class name, that the
+			reflected member attribute belongs to,
+			is needed use the <methodname>full_name</methodname> member function
+			instead.</para>
+		</purpose>
+	</method>
+	<method name="full_name">
+		<type>const cts::<classname>bstring</classname>&amp;</type>
+		<purpose>
+			<para>This static member function returns the full name of the 
+			attribute reflected by the <code><classname>meta_class_attribute</classname></code>
+			including the full name of the class that the attribute belongs to. For example:
+<programlisting>
+typedef ::std::pair&lt;int, double&gt; pair;
+// reflect the class
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+// get the full name
+meta_pair_first::full_name();
+</programlisting>
+			returns <code>"::std::pair&lt; int, double &gt;::first"</code>. When the base attribute name 
+			<emphasis role="bold">without</emphasis> the full class name 
+			is needed use the <methodname>base_name</methodname> member function
+			instead.</para>
+		</purpose>
+		<notes>
+			<para>The first call to this function can be expensive 
+			for attributes of deeply nested classes, because the name needs to be properly composed from 
+			the class name and namespace names, which may 
+			lead to multiple string concatenations. Subsequent calls to this member function
+			for a concrete specialization of <classname>meta_class_attribute</classname>
+			are usually much faster.
+			</para>
+		</notes>
+	</method>
+	<method name="get_name">
+		<template>
+			<template-nontype-parameter name="FullName">
+				<type>bool</type>
+			</template-nontype-parameter>
+			<template-type-parameter name="CharT"/>
+		</template>
+		<type>const ::std::basic_string&lt;CharT&gt;&amp;</type>
+		<parameter name="full">
+			<paramtype>::boost::mpl::bool_&lt;FullName&gt;</paramtype>
+		</parameter>
+		<parameter name="cht">
+			<paramtype>::std::char_traits&lt;CharT&gt;</paramtype>
+		</parameter>
+		<purpose>
+			<para>This static member template function returns either the base name 
+			or the full name of the attribute reflected by this
+			<code><classname>meta_class_attribute</classname></code>,
+			depending on the value of the template argument <code>FullName</code>.
+			Furthermore it allows to choose whether the return value type is 
+			<code>::std::string</code> or <code>::std::wstring</code> based
+			on the type of the second argument.
+			</para>
+		</purpose>
+	</method>
+	<method name="get">
+		<type><emphasis>unspecified</emphasis></type>
+		<parameter name="instance">
+			<paramtype>const typename scope::reflected_type&amp;</paramtype>
+		</parameter>
+		<purpose>
+			<para>This static member function returns the value of the attribute reflected
+			by this <code><classname>meta_class_attribute</classname></code> when given 
+			an <code>instance</code> of the class that the attribute belongs to:
+<programlisting>
+typedef ::std::pair&lt;int, double&gt; pair;
+// reflect the class
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;1&gt; &gt;::type meta_pair_second;
+//
+// create an instance of the pair
+pair p(10, 20.0);
+assert(meta_pair_first::<methodname>get</methodname>(p) == p.first);
+assert(meta_pair_second::<methodname>get</methodname>(p) == p.second);
+</programlisting>
+			</para>
+		</purpose>
+	</method>
+	<method name="query">
+		<template>
+			<template-type-parameter name="DestType"/>
+		</template>
+		<type>DestType&amp;</type>
+		<parameter name="instance">
+			<paramtype>const typename scope::reflected_type&amp;</paramtype>
+		</parameter>
+		<parameter name="destination">
+			<paramtype>DestType&amp;</paramtype>
+		</parameter>
+		<purpose>
+			<para>This static member function assigns the value of the attribute reflected
+			by this <code><classname>meta_class_attribute</classname></code> (when given 
+			an <code>instance</code> of the class that the attribute belongs to),
+			to <code>destination</code> and returns <code>destination</code>. The <code>DestType</code>
+			type must be assignable with the <code>type</code> of the attribute:
+<programlisting>
+typedef ::std::pair&lt;int, float&gt; pair;
+// reflect the class
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;1&gt; &gt;::type meta_pair_second;
+//
+// create an instance of the pair
+pair p(10, 20.0f);
+// and two other variables
+long first = 30;
+float second = 40.0f;
+// query the values and check them
+assert(meta_pair_first::<methodname>query</methodname>(p, first) == 10);
+assert(meta_pair_second::<methodname>query</methodname>(p, second) == 20.0f);
+// and double check the variables
+assert(first == p.first);
+assert(second == p.second);
+</programlisting>
+			</para>
+		</purpose>
+	</method>
+	<method name="set">
+		<type>void</type>
+		<parameter name="instance">
+			<paramtype>const typename scope::reflected_type&amp;</paramtype>
+		</parameter>
+		<parameter name="value">
+			<paramtype>type</paramtype>
+		</parameter>
+		<purpose>
+			<para>This static member function assigns the given value to the attribute reflected
+			by this <code><classname>meta_class_attribute</classname></code> when given 
+			an <code>instance</code> of the class that the attribute belongs to:
+<programlisting>
+typedef ::std::pair&lt;int, float&gt; pair;
+// reflect the class
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(pair) meta_pair;
+// get the attributes container
+typedef meta_pair::attributes meta_pair_attribs;
+// get the individual meta-attributes
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;0&gt; &gt;::type meta_pair_first;
+typedef <classname>at</classname>&lt;meta_pair_attribs, mpl::int_&lt;1&gt; &gt;::type meta_pair_second;
+//
+// create an instance of the pair
+pair p(10, 20.0f);
+pair r(30, 40.0f);
+// 
+assert(meta_pair_first::<methodname>get</methodname>(p) != meta_pair_first::<methodname>get</methodname>(r));
+assert(meta_pair_second::<methodname>get</methodname>(p) != meta_pair_second::<methodname>get</methodname>(r));
+// set new values
+meta_pair_first::<methodname>set</methodname>(p, meta_pair_first::<methodname>get</methodname>(r));
+meta_pair_second::<methodname>set</methodname>(p, meta_pair_second::<methodname>get</methodname>(r));
+// and check the values 
+assert(meta_pair_first::<methodname>get</methodname>(p) == meta_pair_first::<methodname>get</methodname>(r));
+assert(meta_pair_second::<methodname>get</methodname>(p) == meta_pair_second::<methodname>get</methodname>(r));
+// and double check them
+assert(p.first == r.first);
+assert(p.second == r.second);
+</programlisting>
+			</para>
+		</purpose>
+	</method>
+	</access>
+</class>
+
