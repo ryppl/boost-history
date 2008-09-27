@@ -1,4 +1,0 @@
-
-test-suite disjoint_sets : 
-    [ run  disjoint_set_test.cpp ]
-    ;
