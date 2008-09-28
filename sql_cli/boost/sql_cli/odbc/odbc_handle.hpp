@@ -114,7 +114,7 @@ state handle<TypeT, KindV>::error_code() const
 template <typename TypeT, SQLSMALLINT KindV>
 state handle<TypeT, KindV>::check_return(SQLRETURN ret, std::string * msg) const
 {
-    if ( ret != SQL_SUCCESS && ret == SQL_SUCCESS_WITH_INFO )
+    if ( ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO )
     {
         if ( msg != 0 )
             throw error(*msg);
