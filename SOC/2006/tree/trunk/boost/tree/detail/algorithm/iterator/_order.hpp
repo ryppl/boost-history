@@ -29,7 +29,8 @@ template <class Cursor>
 iterator<Cursor> 
 begin(Cursor c)
 {
-    return iterator<Cursor>(first(c));
+    to_first(c);
+    return iterator<Cursor>(c);
 }
 
 /**
@@ -42,7 +43,8 @@ template <class Cursor>
 iterator<Cursor>
 end(Cursor c)
 {
-    return iterator<Cursor>(last(c));
+    to_last(c);
+    return iterator<Cursor>(c);
 }
 
 /// Reverse iterators
