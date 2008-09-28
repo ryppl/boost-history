@@ -1,8 +1,15 @@
+[/ 
+  Copyright 2007 John Maddock.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
 [section:credits Credits]
 
 This documentation was pulled together by John Maddock, using 
-[@../../tools/quickbook/doc/html/index.html Boost.Quickbook]
-and [@boostbook.html Boost.DocBook].
+[@../../../../doc/html/quickbook.html Boost.Quickbook]
+and [@../../../../doc/html/boostbook.html Boost.DocBook].
  
 The original version of this library was created by Steve Cleary, 
 Beman Dawes, Howard Hinnant, and John Maddock.  John Maddock is the
@@ -31,3 +38,4 @@ should be directed to boost@lists.boost.org
 www.boost.org/more/mailing_lists.htm#main] for subscription details).
 
 [endsect]
+
