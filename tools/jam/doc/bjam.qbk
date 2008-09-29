@@ -1,6 +1,6 @@
 [article Boost.Jam
     [quickbook 1.3]
-    [version: 3.1.16]
+    [version: 3.1.17]
     [authors [Rivera, Rene], [Abrahams, David], [Prus, Vladimir]]
     [copyright 2003 2004 2005 2006 2007 Rene Rivera, David Abrahams, Vladimir Prus]
     [category tool-build]
@@ -21,7 +21,7 @@
 
 [/ Shortcuts ]
 
-[def :version: 3.1.16]
+[def :version: 3.1.17]
 
 [/ Images ]
 
@@ -116,7 +116,7 @@ If the scripts fail to detect an appropriate toolset to build with your particul
 The toolset used to build Boost.Jam is independent of the toolsets used for Boost.Build. Only one version of Boost.Jam is needed to use Boost.Build.
 ]
 
-The supported toolsets, and wether they are auto-detected, are:
+The supported toolsets, and whether they are auto-detected, are:
 
 [table Supported Toolsets
 
@@ -124,7 +124,7 @@ The supported toolsets, and wether they are auto-detected, are:
 
 [   [=build.bat=] [Windows NT, 2000, and XP]
     [[lines
-        [line [@http://www.borland.com/bcppbuilder/freecompiler =borland=]]
+        [line [@http://www.codegear.com/downloads/free/cppbuilder =borland=]]
         [line [@http://www.borland.com/ Borland] C++Builder (BCC 5.5)]
         ]]
     [[list
@@ -217,12 +217,14 @@ The supported toolsets, and wether they are auto-detected, are:
 
 [   [] []
     [[lines
-        [line [@http://msdn.microsoft.com/visualc/ =vc8=]]
-        [line Microsoft Visual C++ 8.x]
+        [line [@http://msdn.microsoft.com/visualc/ =vc8= and =vc9=]]
+        [line Microsoft Visual C++ 8.x and 9.x]
         ]]
     [Detection:
         [list
             [li =VCVARSALL.BAT= already configured]
+            [li =%VS90COMNTOOLS%= is present in environment]
+            [li Common install location: "=%ProgramFiles%\Microsoft Visual Studio 9="]
             [li =%VS80COMNTOOLS%= is present in environment]
             [li Common install location: "=%ProgramFiles%\Microsoft Visual Studio 8="]
             [li =CL.EXE= in =PATH=]
@@ -289,7 +291,7 @@ The supported toolsets, and wether they are auto-detected, are:
 
 [   [] []
     [[lines
-        [line [@http://www.borland.com/bcppbuilder/freecompiler =kylix=]]
+        [line [@http://www.codegear.com/downloads/free/cppbuilder =kylix=]]
         [line [@http://www.borland.com/ Borland] C++Builder]
         ]]
     [[list
@@ -339,7 +341,7 @@ The supported toolsets, and wether they are auto-detected, are:
 
 [   [] []
     [[lines
-        [line [@http://www-3.ibm.com/software/ad/vacpp/ =vacpp=]]
+        [line [@http://www.ibm.com/software/awdtools/vacpp/ =vacpp=]]
         [line IBM VisualAge C++]
         ]]
     [[list
@@ -756,7 +758,7 @@ If you omit the list of formal arguments, all checking is bypassed as in "classi
 rule DEPENDS ( /targets1/ * : /targets2/ * )
 ]
 
-Builds a direct dependency: makes each of /targets1/ depend on each of /targets2/. Generally, /targets1/ will be rebuilt if /targets2/ are themselves rebuilt are or are newer than /targets1/.
+Builds a direct dependency: makes each of /targets1/ depend on each of /targets2/. Generally, /targets1/ will be rebuilt if /targets2/ are themselves rebuilt or are newer than /targets1/.
 
 [endsect]
 
@@ -851,7 +853,12 @@ Marks /targets/ as temporary, allowing them to be removed after other targets th
 rule FAIL_EXPECTED ( /targets/ * )
 ]
 
-For handling targets whose build actions are expected to fail (e.g. when testing that assertions or compile-time type checkin work properly), Boost Jam supplies the =FAIL_EXPECTED= rule in the same style as =NOCARE=, et. al. During target updating, the return code of the build actions for arguments to =FAIL_EXPECTED= is inverted: if it fails, building of dependent targets continues as though it succeeded. If it succeeds, dependent targets are skipped.
+For handling targets whose build actions are expected to fail (e.g. when testing
+that assertions or compile-time type checking work properly), Boost Jam supplies
+the =FAIL_EXPECTED= rule in the same style as =NOCARE=, et. al. During target
+updating, the return code of the build actions for arguments to =FAIL_EXPECTED=
+is inverted: if it fails, building of dependent targets continues as though it
+succeeded. If it succeeds, dependent targets are skipped.
 
 [endsect]
 
@@ -952,7 +959,7 @@ Classic jam treats any non-option element of command line as a name of target to
 # It clears the list of targets to update, and
 # Causes the specified targets to be updated.
 
-If no target was specified with the =UPDATE= rule, no targets will be updated. To support changing of the update list in more usefull ways, the rule also returns the targets previously in the update list. This makes it possible to add targets as such:
+If no target was specified with the =UPDATE= rule, no targets will be updated. To support changing of the update list in more useful ways, the rule also returns the targets previously in the update list. This makes it possible to add targets as such:
 
 [pre
 local previous-updates = \[ UPDATE \] ;
@@ -1253,6 +1260,14 @@ A variable element's string value can be parsed into grist and filename-related 
 [[[^:L]]
  [Replace uppercase characters with lowercase.]]
 
+[[[^:T]]
+ [Converts all back-slashes ("\\") to forward slashes ("/"). For example
+`` 
+ x = "C:\\Program Files\\Borland" ; ECHO $(x:T) ;
+``
+prints [^"C:/Program Files/Borland"]
+]]
+
 [[[^:W]]
  [When invoking Windows-based tools from [@http://www.cygwin.com/ Cygwin] 
   it can be important to pass them true windows-style paths. The =:W= 
@@ -1312,6 +1327,17 @@ for *local* y in $(x)
 }
 ECHO $(y) ;     # prints "4 5 6"
 ]
+
+[endsect]
+
+[section:atfile Generated File Expansion]
+
+During expansion of expressions =bjam= also looks for subexpressions of the form
+=@(filename:E=filecontents)= and replaces the expression with =filename= after
+creating the given file with the contents set to =filecontents=. This is useful
+for creating compiler response files, and other "internal" files. The expansion
+works both during parsing and action execution. Hence it is possible to create
+files during any of the three build phases.
 
 [endsect]
 
@@ -1387,7 +1413,7 @@ A number of Jam built-in variables can be used to identify runtime platform:
 [section Jam Version]
 
 [variablelist
-[[=JAMDATE=]                [Time and date at =bjam= start-up.]]
+[[=JAMDATE=]                [Time and date at =bjam= start-up as an ISO-8601 UTC value.]]
 [[=JAMUNAME=]               [Ouput of uname(1) command (Unix only)]]
 [[=JAMVERSION=]             [=bjam= version, currently ":version:"]]
 [[=JAM_VERSION=]            [A predefined global variable with two elements indicates the version number of Boost Jam. Boost Jam versions start at "=03=" "=00=". Earlier versions of =Jam= do not automatically define =JAM_VERSION=.]]
@@ -1429,6 +1455,52 @@ case $1 in
 *) eval "$2";;
 esac
 ]
+
+[endsect]
+
+[section:actionrule =__TIMING_RULE__= and =__ACTION_RULE__=]
+
+The =__TIMING_RULE__= and =__ACTION_RULE__= can be set to the name of a rule
+for =bjam= to call *after* an action completes for a target. They both give
+diagnostic information about the action that completed. For =__TIMING_RULE__=
+the rule is called as:
+
+    rule timing-rule ( args * : target : start end user system )
+
+And =__ACTION_RULE__= is called as:
+
+    rule action-rule ( args * : target : command status start end user system : output ? )
+
+The arguments for both are:
+
+[variablelist
+    [[[^args]]
+        [Any values following the rule name in the =__TIMING_RULE__= or =__ACTION_RULE__=
+        are passed along here.]]
+    [[[^target]]
+        [The =bjam= target that was built.]]
+    [[[^command]]
+        [The text of the executed command in the action body.]]
+    [[[^status]]
+        [The integer result of the executed command.]]
+    [[[^start]]
+        [The starting timestamp of the executed command as a ISO-8601 UTC value.]]
+    [[[^end]]
+        [The completion timestamp of the executed command as a ISO-8601 UTC value.]]
+    [[[^user]]
+        [The number of user CPU seconds the executed command spent as a floating
+        point value.]]
+    [[[^system]]
+        [The number of system CPU seconds the executed command spent as a floating
+        point value.]]
+    [[[^output]]
+        [The output of the command as a single string. The content of the output
+        reflects the use of the =-pX= option.]]
+]
+
+[note
+    If both variables are set for a target both are called, first =__TIMING_RULE__=
+    then =__ACTION_RULE__=. ]
 
 [endsect]
 
@@ -1714,7 +1786,7 @@ This section is derived from the official Jam documentation and from experience 
 * "Grist" is just a string prefix of the form </characters/>. It is used in Jam to create unique target names based on simpler names. For example, the file name "=test.exe=" may be used by targets in separate subprojects, or for the debug and release variants of the "same" abstract target. Each distinct target bound to a file called "test.exe" has its own unique grist prefix. The Boost build system also takes full advantage of Jam's ability to divide strings on grist boundaries, sometimes concatenating multiple gristed elements at the beginning of a string. Grist is used instead of identifying targets with absolute paths for two reasons:
 
    # The location of targets cannot always be derived solely from what the user puts in a Jamfile, but sometimes depends also on the binding process. Some mechanism to distinctly identify targets with the same name is still needed.
-   # Grist allows us to use a uniform abstract identifier for each built target, regardless of target file location (as allowed by setting ALL_LOCATE_TARGET.
+   # Grist allows us to use a uniform abstract identifier for each built target, regardless of target file location (as allowed by setting ALL_LOCATE_TARGET).
 
 * When grist is extracted from a name with $(var:G), the result includes the leading and trailing angle brackets. When grist is added to a name with $(var:G=expr), existing grist is first stripped. Then, if expr is non-empty, leading <s and trailing >s are added if necessary to form an expression of the form <expr2>; <expr2> is then prepended.
 
