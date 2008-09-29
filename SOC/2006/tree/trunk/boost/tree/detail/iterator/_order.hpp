@@ -4,25 +4,30 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-/** @file    _order.hpp
+/** @file   iterator.hpp
  * 
  * Some definitions that are identical for all *order cursors (as we are just
  * calling the appropriate traversal function that are defined in the 
  * respective *order.hpp files).
  */
 
-// TODO: concept checks.
-
-// NO guards, as this is context-included!
+#ifndef BOOST_TREE_DETAIL_ITERATOR_ITERATOR_HPP
+#define BOOST_TREE_DETAIL_ITERATOR_ITERATOR_HPP
 
 //#include <boost/tree/cursor.hpp>
 
+#include <boost/iterator/iterator_adaptor.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
+
+namespace boost {
+namespace tree {
+
 /**
- * @brief    Traversal order iterator adaptor
+ * @brief   Traversal order iterator adaptor
  * 
- *            Only works with ascending cursors.
+ *          Only works with ascending cursors.
  */
- 
 template <class Order, class Cursor>
 class iterator
  : public boost::iterator_adaptor<iterator<Order, Cursor>
@@ -69,3 +74,8 @@ class iterator
         //BOOST_ASSERT(!this->base_reference().parity() || this->base_reference().is_root());
     }
 };
+
+} // namespace tree
+} // namespace boost
+
+#endif //BOOST_TREE_DETAIL_ITERATOR_ITERATOR_HPP

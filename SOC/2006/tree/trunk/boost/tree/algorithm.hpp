@@ -20,9 +20,9 @@
 #include <boost/tree/detail/algorithm/cursor/preorder.hpp>
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 
-#include <boost/tree/detail/algorithm/iterator/inorder.hpp>
-#include <boost/tree/detail/algorithm/iterator/preorder.hpp>
-#include <boost/tree/detail/algorithm/iterator/postorder.hpp>
+#include <boost/tree/detail/algorithm/iterator.hpp>
+#include <boost/tree/detail/algorithm/iterator.hpp>
+#include <boost/tree/detail/algorithm/iterator.hpp>
 
 #include <algorithm>
 
