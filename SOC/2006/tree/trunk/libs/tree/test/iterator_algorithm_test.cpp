@@ -152,7 +152,7 @@ int test_main(int, char* [])
 //        boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
 //    );
 //    BOOST_CHECK(test_list.empty());
-    
+
     create_test_data_tree(test_tree);
 
     //Preorder    

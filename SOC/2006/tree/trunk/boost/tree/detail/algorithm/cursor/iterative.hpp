@@ -35,7 +35,8 @@ Op for_each(Order, root_tracking_cursor<Cursor> s, Op f)
 }
 
 /**
- * @brief   Apply a function to every element of a subtree, in the given order.
+ * @brief   Apply a function to every element of a subtree, 
+ *          in the order specified by the first parameter.
  * @param s A cursor.
  * @param f A unary function object.
  * @return  @p f
@@ -69,7 +70,8 @@ root_tracking_cursor<OutCursor> copy (Order, root_tracking_cursor<InCursor> s
 }
 
 /**
- * @brief   Copies the subtree s into t, by traversing s in the given order.
+ * @brief   Copies the subtree s into t, by traversing s
+ *          in the order specified by the first parameter.
  * @param s An input cursor.
  * @param t An output cursor.
  * @result  A cursor past t's *order end, after the copying operation.
@@ -102,8 +104,8 @@ root_tracking_cursor<OutCursor> transform (Order
 }
 
 /**
- * @brief       Performs an operation on a subtree, by traversing it in 
- *              the given order.
+ * @brief       Performs an operation on a subtree, by traversing it  
+ *              in the order specified by the first parameter.
  * @param s     An input cursor.
  * @param t     An output cursor.
  * @param op    A unary operation.

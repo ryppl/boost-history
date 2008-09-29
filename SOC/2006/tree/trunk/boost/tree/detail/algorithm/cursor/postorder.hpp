@@ -9,14 +9,8 @@
  * Subtree postorder traversal algorithms
  */
 
-// TODO: concept checks.
-
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
-
-//#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/algorithm/cursor/common.hpp>
-//#endif
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
@@ -132,7 +126,7 @@ void to_last(postorder, Cursor& c)
  * @endif
  */
 template <class Cursor, class Op>
-void for_each_recursive(postorder(), Cursor s, Op& f)
+void for_each_recursive(postorder, Cursor s, Op& f)
 {
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
@@ -158,7 +152,7 @@ void for_each_recursive(postorder(), Cursor s, Op& f)
  */
 //[ postorder_for_each
 template <class Cursor, class Op>
-Op for_each(postorder(), Cursor s, Op f)
+Op for_each(postorder, Cursor s, Op f)
 //]
 {
     Cursor t = s;
@@ -182,7 +176,7 @@ Op for_each(postorder(), Cursor s, Op f)
  * @result    A cursor past t's postorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy(postorder(), InCursor s, OutCursor t)
+OutCursor copy(postorder, InCursor s, OutCursor t)
 {
     InCursor r = s;
     s.to_begin();
@@ -217,7 +211,7 @@ OutCursor copy(postorder(), InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform(postorder(), InCursor s, OutCursor t, Op op)
+OutCursor transform(postorder, InCursor s, OutCursor t, Op op)
 {
     InCursor r = s;
     s.to_begin();

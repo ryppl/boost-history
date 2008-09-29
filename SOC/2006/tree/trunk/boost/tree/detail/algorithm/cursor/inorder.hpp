@@ -9,14 +9,8 @@
  * Subtree intorder traversal and search algorithms
  */
 
-// TODO: concept checks.
-
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
-
-//#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/algorithm/cursor/common.hpp>
-//#endif
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>

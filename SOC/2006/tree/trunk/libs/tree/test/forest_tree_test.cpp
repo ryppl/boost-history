@@ -107,5 +107,6 @@ int test_main(int, char* [])
 {
     test_forest_tree();
     test_natural_correspondence();
+
     return 0;
 }

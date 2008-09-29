@@ -17,10 +17,6 @@
 #include <boost/tree/detail/iterator/iterator.hpp>
 #include <boost/tree/detail/algorithm/cursor.hpp>
 
-//#include <boost/iterator/iterator_adaptor.hpp>
-//#include <boost/type_traits/is_convertible.hpp>
-//#include <boost/utility/enable_if.hpp>
-
 namespace boost {
 namespace tree {
 
