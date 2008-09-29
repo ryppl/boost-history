@@ -5,13 +5,13 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file augmented.hpp
+ * @file augmented_iterator.hpp
  * Augmented iterator implementation
  */
 
 
-#ifndef BOOST_TREE_DETAIL_ITERATOR_AUGMENTED_HPP
-#define BOOST_TREE_DETAIL_ITERATOR_AUGMENTED_HPP
+#ifndef BOOST_TREE_DETAIL_AUGMENTED_ITERATOR_HPP
+#define BOOST_TREE_DETAIL_AUGMENTED_ITERATOR_HPP
 
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
@@ -85,4 +85,4 @@ class augmented_iterator<InorderIter, Extract, bidirectional_traversal_tag>
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ITERATOR_AUGMENTED_HPP
+#endif // BOOST_TREE_DETAIL_AUGMENTED_ITERATOR_HPP

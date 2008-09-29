@@ -20,7 +20,7 @@
 #include <boost/tree/detail/augmentors/unaugmented.hpp>
 
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
-#include <boost/tree/detail/iterator/augmented.hpp>
+#include <boost/tree/detail/augmented_iterator.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/multi_index/member.hpp>
