@@ -24,8 +24,6 @@ namespace tree {
 
 struct inorder {};
 
-namespace inorder {
-
 /** \addtogroup traversal */
 /*\@{*/
 
@@ -35,7 +33,7 @@ namespace inorder {
  * @ingroup    traversal
  */
 template <class MultiwayCursor>
-inline void forward(MultiwayCursor& c)
+inline void forward<inorder>(MultiwayCursor& c)
 {
     if (!(++c).empty()) {
         while (!c.to_begin().empty());
@@ -52,7 +50,7 @@ inline void forward(MultiwayCursor& c)
  * @param c    MultiwayCursor to be set to its inorder predecessor
  */
 template <class MultiwayCursor>
-inline void back(MultiwayCursor& c)
+inline void back<inorder>(MultiwayCursor& c)
 {
     if (!c.empty()) {
         while (!c.to_end().empty());
@@ -73,7 +71,7 @@ inline void back(MultiwayCursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_first(Cursor& c)
+void to_first<inorder>(Cursor& c)
 {
     while (!c.empty())
         c.to_begin();
@@ -86,10 +84,8 @@ void to_first(Cursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_last(Cursor& c)
+void to_last<inorder>(Cursor& c)
 { }
-
-#include <boost/tree/detail/algorithm/cursor/_order.hpp>
 
 /*\@}*/
 
@@ -104,7 +100,7 @@ void to_last(Cursor& c)
  * @endif
  */
 template <class MultiwayCursor, class Op>
-void for_each_recursive(MultiwayCursor s, Op& f)
+void for_each_recursive<inorder>(MultiwayCursor s, Op& f)
 {
     MultiwayCursor t = s.end();
 
@@ -132,20 +128,20 @@ void for_each_recursive(MultiwayCursor s, Op& f)
  */
  //[ inorder_for_each
 template <class MultiwayCursor, class Op>
-Op for_each(MultiwayCursor s, Op f)
+Op for_each<inorder>(MultiwayCursor s, Op f)
 //]
 {
     MultiwayCursor t = s.end();
 
     for (s.to_begin(); s!=t; ++s) {
         if (!s.empty())
-            for_each_recursive(s, f);
+            for_each_recursive<inorder>(s, f);
         f(*s);
     }
     
     // Multiway cursor
     if (!t.empty())
-        for_each_recursive(t, f);
+        for_each_recursive<inorder>(t, f);
     return f;
 }
 
@@ -158,7 +154,7 @@ Op for_each(MultiwayCursor s, Op f)
  * @result    A cursor past t's inorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy (InCursor s, OutCursor t)
+OutCursor copy<inorder>(InCursor s, OutCursor t)
 {
     InCursor r = s.end();
 
@@ -167,13 +163,13 @@ OutCursor copy (InCursor s, OutCursor t)
     
     for (; s != r; ++s, ++t) {
         if (!s.empty())
-            copy(s, t);
+            copy<inorder>(s, t);
         *t=*s;
     }
     
     // Multiway cursor
     if (!r.empty())
-        copy(r, t);
+        copy<inorder>(r, t);
     return t;
 }
 
@@ -191,7 +187,7 @@ OutCursor copy (InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform (InCursor s, OutCursor t, Op op)
+OutCursor transform<inorder>(InCursor s, OutCursor t, Op op)
 {
     InCursor r = s.end();
 
@@ -200,13 +196,13 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
     
     for (; s != r; ++s, ++t) {
         if (!s.empty())
-            transform(s, t, op);
+            transform<inorder>(s, t, op);
         *t=op(*s);
     }
 
     // Multiway cursor
     if (!r.empty())
-        transform(r, t, op);
+        transform<inorder>(r, t, op);
     return t;
 }
 
@@ -307,8 +303,6 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
 // Implement equal_range? Maybe not, if it'd only return a pair 
 // consisting of cursors calculated by calling lower_bound and upper_bound.
 // This might be a bit more subtle for non-binary multiway trees. 
-
-} // namespace inorder
 
 } // namespace tree
 } // namespace boost

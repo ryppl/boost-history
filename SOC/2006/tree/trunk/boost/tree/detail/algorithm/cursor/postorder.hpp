@@ -17,8 +17,6 @@
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
 
-namespace postorder {
-
 namespace boost {
 namespace tree {
 
@@ -32,7 +30,7 @@ struct postorder {};
  * @param c    Cursor to be set to its postorder successor
  */
 template <class Cursor>
-inline void forward(Cursor& c)
+inline void forward<postorder>(Cursor& c)
 {
     c.to_parent();
 
@@ -61,7 +59,7 @@ inline void forward(Cursor& c)
  * @param c    Cursor to be set to its postorder predecessor
  */
 template <class Cursor>
-inline void back(Cursor& c)
+inline void back<postorder>(Cursor& c)
 {
     if (c.is_root()) { // Root?
         c.to_begin();
@@ -96,7 +94,7 @@ inline void back(Cursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_first(Cursor& c)
+void to_first<postorder>(Cursor& c)
 {
     while (true)
         if (!c.empty())
@@ -116,10 +114,8 @@ void to_first(Cursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_last(Cursor& c)
+void to_last<postorder>(Cursor& c)
 { }
-
-#include <boost/tree/detail/algorithm/cursor/_order.hpp>
 
 /*\@}*/
 
@@ -134,16 +130,16 @@ void to_last(Cursor& c)
  * @endif
  */
 template <class Cursor, class Op>
-void for_each_recursive(Cursor s, Op& f)
+void for_each_recursive<postorder>(Cursor s, Op& f)
 {
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
         if (!s.empty())
-            for_each_recursive(s, f);
+            for_each_recursive<postorder>(s, f);
 
     // Multiway cursor
     if (!s.empty())
-        for_each_recursive(s, f);
+        for_each_recursive<postorder>(s, f);
 
     f(*t.to_begin());
 }
@@ -160,17 +156,17 @@ void for_each_recursive(Cursor s, Op& f)
  */
 //[ postorder_for_each
 template <class Cursor, class Op>
-Op for_each(Cursor s, Op f)
+Op for_each<postorder>(Cursor s, Op f)
 //]
 {
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
         if (!s.empty())
-            for_each_recursive(s, f);
+            for_each_recursive<postorder>(s, f);
 
     // Multiway cursor
     if (!s.empty())
-        for_each_recursive(s, f);
+        for_each_recursive<postorder>(s, f);
 
     f(*t.to_begin());
 
@@ -186,7 +182,7 @@ Op for_each(Cursor s, Op f)
  * @result    A cursor past t's postorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy (InCursor s, OutCursor t)
+OutCursor copy<postorder>(InCursor s, OutCursor t)
 {
     InCursor r = s;
     s.to_begin();
@@ -194,14 +190,14 @@ OutCursor copy (InCursor s, OutCursor t)
     
     for (; s != r.end(); ++s, ++t) {
         if (!s.empty())
-            copy(s, t);
+            copy<postorder>(s, t);
 //        else
 //            *t = *s;
     }
     
     // Multiway cursor
     if (!s.empty())
-        copy(s, t);
+        copy<postorder>(s, t);
 
     *t = *r.to_begin();
     return t;
@@ -221,7 +217,7 @@ OutCursor copy (InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform (InCursor s, OutCursor t, Op op)
+OutCursor transform<postorder>(InCursor s, OutCursor t, Op op)
 {
     InCursor r = s;
     s.to_begin();
@@ -229,19 +225,17 @@ OutCursor transform (InCursor s, OutCursor t, Op op)
     
     for (; s != r.end(); ++s, ++t)
         if (!s.empty())
-            transform(s, t, op);
+            transform<postorder>(s, t, op);
 
     // Multiway cursor
     if (!s.empty())
-        transform(s, t, op);
+        transform<postorder>(s, t, op);
     
     *t = op(*r.to_begin());
     return t;
 }
 
 #endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
-
-} // namespace postorder
 
 } // namespace tree
 } // namespace boost
