@@ -15,6 +15,7 @@
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/cursor_facade.hpp>
+#include <boost/tree/iterator.hpp>
 #include <boost/tree/root_tracking_cursor.hpp>
 
 #include <boost/tree/detail/algorithm/ascending.hpp>
@@ -85,33 +86,14 @@ public:
     )
       : m_s(other.m_s) {}
 
-    struct root_tracker {
-        root_tracker() {}
-        root_tracker& operator++()
-        {
-            return *this;
-        }
-        
-        root_tracker& operator--()
-        {
-            return *this;
-        }
-        
-        bool is_root(cursor c)
-        {
-            return (c.is_root());
-        } 
-    };
-
- private: 
-
+private:
     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
     
     friend class root_tracking_cursor<self_type>;
     
 //    friend 
-//        typename iterator<ascending, self_type>::difference_type 
+//        typename boost::tree::iterator<ascending, self_type>::difference_type
 //        boost::tree::distance<>(
 //            boost::tree::iterator<ascending, self_type> 
 //          , boost::tree::iterator<ascending, self_type>);
