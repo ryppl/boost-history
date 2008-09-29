@@ -17,10 +17,12 @@
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
 
+namespace postorder {
+
 namespace boost {
 namespace tree {
-    
-namespace postorder {
+
+struct postorder {};
 
 /** \addtogroup traversal */
 /*\@{*/

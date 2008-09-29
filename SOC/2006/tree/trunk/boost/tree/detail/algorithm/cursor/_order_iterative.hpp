@@ -44,17 +44,6 @@ Op for_each(Cursor s, Op f)
     return for_each(root_tracking_cursor<Cursor>(s), f);
 }
 
-// Iterative algorithms involving OutCursors are significantly more complicated,
-// as we need to navigate the OutCursor (say, t) in a fashion parallel to the Incursor
-// (s), eg:
-//
-// forward(s)
-// forward(t)
-//
-// But forward() is a quite complicated algorithm involving checks of parity() or
-// or moving to_parent() -- things that aren't implemented for output cursor 
-// adaptors (yet?). 
-
 template <class InCursor, class OutCursor>
 root_tracking_cursor<OutCursor> copy (root_tracking_cursor<InCursor> s
                                     , root_tracking_cursor<OutCursor> t)

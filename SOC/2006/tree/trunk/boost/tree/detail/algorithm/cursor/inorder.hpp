@@ -22,6 +22,8 @@
 namespace boost {
 namespace tree {
 
+struct inorder {};
+
 namespace inorder {
 
 /** \addtogroup traversal */

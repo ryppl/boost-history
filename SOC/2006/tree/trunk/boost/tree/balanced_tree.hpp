@@ -97,13 +97,13 @@ public:
 
 template <class Cursor>
 class balanced_tree_iterator
-: public inorder::iterator< is_on_top_cursor<Cursor> > {
+: public iterator<inorder, , is_on_top_cursor<Cursor> > {
 public:
     balanced_tree_iterator()
-    : inorder::iterator< is_on_top_cursor<Cursor> >() {}
+    : iterator<inorder, , is_on_top_cursor<Cursor> >() {}
     
     explicit balanced_tree_iterator(Cursor p)
-    : inorder::iterator< is_on_top_cursor<Cursor> >(p) {}
+    : iterator<inorder, , is_on_top_cursor<Cursor> >(p) {}
     
     operator Cursor()
     {
@@ -513,7 +513,7 @@ class balanced_tree {
     
     void rotate(iterator& i)
     {
-        cursor c = cursor(inorder::iterator<cursor>(i));
+        cursor c = cursor(iterator<inorder, , cursor>(i));
         h.rotate(c);
     }
 };

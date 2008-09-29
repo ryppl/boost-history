@@ -52,8 +52,8 @@ class multiway_tree {
     typedef multiway_tree_cursor<base_cursor> cursor;
     typedef const_multiway_tree_cursor<base_const_cursor> const_cursor;
 
-//    typedef inorder::iterator<cursor> iterator;
-//    typedef inorder::iterator<const_cursor> const_iterator;
+//    typedef iterator<inorder, , cursor> iterator;
+//    typedef iterator<inorder, , const_cursor> const_iterator;
 //    
 //    typedef std::reverse_iterator<iterator> reverse_iterator;
 //    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;

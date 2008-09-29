@@ -4,14 +4,15 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-/** @file    _order.hpp
+/** @file    iterator.hpp
  * 
  * Some definitions that are identical for all *order cursors (as we are just
  * calling the appropriate traversal function that are defined in the 
  * respective *order.hpp files).
  */
 
-// NO guards, as this is context-included!
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP
 
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
@@ -25,12 +26,12 @@
  * @param c    A cursor
  * @return    Iterator to the first element of @a c
  */
-template <class Cursor>
-iterator<Cursor> 
+template <class Order, class Cursor>
+iterator<Order, Cursor> 
 begin(Cursor c)
 {
     to_first(c);
-    return iterator<Cursor>(c);
+    return iterator<Order, Cursor>(c);
 }
 
 /**
@@ -39,26 +40,28 @@ begin(Cursor c)
  * @param c    A cursor
  * @return    Iterator one position past the last element of @a c 
  */
-template <class Cursor>
-iterator<Cursor>
+template <class Order, class Cursor>
+iterator<Order, Cursor>
 end(Cursor c)
 {
     to_last(c);
-    return iterator<Cursor>(c);
+    return iterator<Order, Cursor>(c);
 }
 
 /// Reverse iterators
 
-template <class Cursor>
-std::reverse_iterator< iterator<Cursor> >
+template <class Order, class Cursor>
+std::reverse_iterator< iterator<Order, Cursor> >
 rbegin(Cursor c)
 {
-    return std::reverse_iterator< iterator<Cursor> >(end(c));
+    return std::reverse_iterator< iterator<Order, Cursor> >(end(c));
 }
 
-template <class Cursor>
-std::reverse_iterator< iterator<Cursor> >
+template <class Order, class Cursor>
+std::reverse_iterator< iterator<Order, Cursor> >
 rend(Cursor c)
 {
-    return std::reverse_iterator< iterator<Cursor> >(begin(c));
+    return std::reverse_iterator< iterator<Order, Cursor> >(begin(c));
 }
+
+#endif BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP

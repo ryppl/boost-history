@@ -99,9 +99,9 @@ void test_natural_correspondence()
 
     //test::preorder::algorithms(ft.root(), ft.root()); // FIXME: Fix algorithms for use in here.
     
-    //boost::tree::postorder::copy(ft.root(), oc_test_list);
-    //test::inorder::traversal(test_list.begin(), test_list.end());
-    //BOOST_CHECK(test_list.size() == 11);
+    boost::tree::postorder::copy(ft.root(), oc_test_list);
+    test::inorder::traversal(test_list.begin(), test_list.end());
+    BOOST_CHECK(test_list.size() == 11);
 }
 
 int test_main(int, char* [])

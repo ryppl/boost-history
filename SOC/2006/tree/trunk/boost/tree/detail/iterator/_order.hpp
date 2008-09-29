@@ -23,9 +23,9 @@
  *            Only works with ascending cursors.
  */
  
-template <class Cursor>
+template <class Order, class Cursor>
 class iterator
- : public boost::iterator_adaptor<iterator<Cursor>
+ : public boost::iterator_adaptor<iterator<Order, Cursor>
       , Cursor
       , boost::use_default
       , bidirectional_traversal_tag
@@ -42,7 +42,7 @@ class iterator
 
     template <class OtherCursor>
     iterator(
-        iterator<OtherCursor> const& other
+        iterator<Order, OtherCursor> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherCursor, Cursor>
           , enabler
