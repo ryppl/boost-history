@@ -1,5 +1,5 @@
-#ifndef BOOST_DETAIL_LWM_NOP_HPP_INCLUDED
-#define BOOST_DETAIL_LWM_NOP_HPP_INCLUDED
+#ifndef BOOST_SIGNALS2_LWM_NOP_HPP_INCLUDED
+#define BOOST_SIGNALS2_LWM_NOP_HPP_INCLUDED
 
 // MS compatible compilers support #pragma once
 
@@ -8,30 +8,30 @@
 #endif
 
 //
-//  boost/detail/lwm_nop.hpp
+//  boost/signals2/detail/lwm_nop.hpp
 //
 //  Copyright (c) 2002 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2008 Frank Mori Hess
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
+#include <boost/signals2/dummy_mutex.hpp>
+
 namespace boost
 {
 
-namespace detail
+namespace signals2
 {
 
-class lightweight_mutex
+class mutex: public dummy_mutex
 {
-public:
-
-    typedef lightweight_mutex scoped_lock;
 };
 
-} // namespace detail
+} // namespace signals2
 
 } // namespace boost
 
-#endif // #ifndef BOOST_DETAIL_LWM_NOP_HPP_INCLUDED
+#endif // #ifndef BOOST_SIGNALS2_LWM_NOP_HPP_INCLUDED

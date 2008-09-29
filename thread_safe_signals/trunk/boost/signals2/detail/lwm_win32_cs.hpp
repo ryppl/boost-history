@@ -1,5 +1,5 @@
-#ifndef BOOST_DETAIL_LWM_WIN32_CS_HPP_INCLUDED
-#define BOOST_DETAIL_LWM_WIN32_CS_HPP_INCLUDED
+#ifndef BOOST_SIGNALS2_LWM_WIN32_CS_HPP_INCLUDED
+#define BOOST_SIGNALS2_LWM_WIN32_CS_HPP_INCLUDED
 
 // MS compatible compilers support #pragma once
 
@@ -8,9 +8,10 @@
 #endif
 
 //
-//  boost/detail/lwm_win32_cs.hpp
+//  boost/signals2/detail/lwm_win32_cs.hpp
 //
 //  Copyright (c) 2002, 2003 Peter Dimov
+//  Copyright (c) 2008 Frank Mori Hess
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -24,7 +25,7 @@
 namespace boost
 {
 
-namespace detail
+namespace signals2
 {
 
 #ifndef BOOST_USE_WINDOWS_H
@@ -54,55 +55,45 @@ typedef ::CRITICAL_SECTION critical_section;
 
 #endif // #ifndef BOOST_USE_WINDOWS_H
 
-class lightweight_mutex
+class mutex
 {
 private:
 
     critical_section cs_;
 
-    lightweight_mutex(lightweight_mutex const &);
-    lightweight_mutex & operator=(lightweight_mutex const &);
+    mutex(mutex const &);
+    mutex & operator=(mutex const &);
 
 public:
 
-    lightweight_mutex()
+    mutex()
     {
         InitializeCriticalSection(&cs_);
     }
 
-    ~lightweight_mutex()
+    ~mutex()
     {
         DeleteCriticalSection(&cs_);
     }
 
-    class scoped_lock;
-    friend class scoped_lock;
-
-    class scoped_lock
+    void lock()
     {
-    private:
+        EnterCriticalSection(&cs_);
+    }
 
-        lightweight_mutex & m_;
+    bool try_lock()
+    {
+        return TryEnterCriticalSection(&cs_);
+    }
 
-        scoped_lock(scoped_lock const &);
-        scoped_lock & operator=(scoped_lock const &);
-
-    public:
-
-        explicit scoped_lock(lightweight_mutex & m): m_(m)
-        {
-            EnterCriticalSection(&m_.cs_);
-        }
-
-        ~scoped_lock()
-        {
-            LeaveCriticalSection(&m_.cs_);
-        }
-    };
+    void unlock()
+    {
+        LeaveCriticalSection(&cs_);
+    }
 };
 
-} // namespace detail
+} // namespace signals2
 
 } // namespace boost
 
-#endif // #ifndef BOOST_DETAIL_LWM_WIN32_CS_HPP_INCLUDED
+#endif // #ifndef BOOST_SIGNALS2_LWM_WIN32_CS_HPP_INCLUDED

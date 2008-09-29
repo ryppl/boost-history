@@ -1,5 +1,5 @@
-#ifndef BOOST_DETAIL_LWM_PTHREADS_HPP_INCLUDED
-#define BOOST_DETAIL_LWM_PTHREADS_HPP_INCLUDED
+#ifndef BOOST_SIGNALS2_LWM_PTHREADS_HPP_INCLUDED
+#define BOOST_SIGNALS2_LWM_PTHREADS_HPP_INCLUDED
 
 // MS compatible compilers support #pragma once
 
@@ -8,9 +8,10 @@
 #endif
 
 //
-//  boost/detail/lwm_pthreads.hpp
+//  boost/signals2/detail/lwm_pthreads.hpp
 //
 //  Copyright (c) 2002 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2008 Frank Mori Hess
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -22,21 +23,21 @@
 namespace boost
 {
 
-namespace detail
+namespace signals2
 {
 
-class lightweight_mutex
+class mutex
 {
 private:
 
     pthread_mutex_t m_;
 
-    lightweight_mutex(lightweight_mutex const &);
-    lightweight_mutex & operator=(lightweight_mutex const &);
+    mutex(mutex const &);
+    mutex & operator=(mutex const &);
 
 public:
 
-    lightweight_mutex()
+    mutex()
     {
 
 // HPUX 10.20 / DCE has a nonstandard pthread_mutex_init
@@ -48,39 +49,29 @@ public:
 #endif
     }
 
-    ~lightweight_mutex()
+    ~mutex()
     {
         pthread_mutex_destroy(&m_);
     }
 
-    class scoped_lock;
-    friend class scoped_lock;
-
-    class scoped_lock
+    void lock()
     {
-    private:
+        pthread_mutex_lock(&m_);
+    }
 
-        pthread_mutex_t & m_;
+    bool try_lock()
+    {
+        return pthread_mutex_trylock(&m_) == 0;
+    }
 
-        scoped_lock(scoped_lock const &);
-        scoped_lock & operator=(scoped_lock const &);
-
-    public:
-
-        scoped_lock(lightweight_mutex & m): m_(m.m_)
-        {
-            pthread_mutex_lock(&m_);
-        }
-
-        ~scoped_lock()
-        {
-            pthread_mutex_unlock(&m_);
-        }
-    };
+    void unlock()
+    {
+        pthread_mutex_unlock(&m_);
+    }
 };
 
-} // namespace detail
+} // namespace signals2
 
 } // namespace boost
 
-#endif // #ifndef BOOST_DETAIL_LWM_PTHREADS_HPP_INCLUDED
+#endif // #ifndef BOOST_SIGNALS2_LWM_PTHREADS_HPP_INCLUDED
