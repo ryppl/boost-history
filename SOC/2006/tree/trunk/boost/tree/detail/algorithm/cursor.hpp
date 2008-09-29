@@ -14,6 +14,14 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_HPP
 
+#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/postorder.hpp>
+
+#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
+#include <boost/tree/detail/algorithm/cursor/iterative.hpp>
+#endif
+
 namespace boost {
 namespace tree {
 

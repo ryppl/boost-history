@@ -89,9 +89,7 @@ void to_last<inorder>(Cursor& c)
 
 /*\@}*/
 
-#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
-#else
+#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @if maint
@@ -144,8 +142,6 @@ Op for_each<inorder>(MultiwayCursor s, Op f)
         for_each_recursive<inorder>(t, f);
     return f;
 }
-
-//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @brief    Copies the subtree s into t, by traversing s in inorder.

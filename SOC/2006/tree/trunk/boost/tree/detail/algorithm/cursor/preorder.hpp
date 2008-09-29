@@ -114,9 +114,7 @@ void to_last<preorder>(Cursor& c)
 
 /*\@}*/
 
-#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/algorithm/cursor/_order_iterative.hpp>
-#else
+#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @if maint
