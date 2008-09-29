@@ -65,8 +65,8 @@ struct vector {
     vector() { ++count; }
     ~vector() { --count; }
     vector(const vector& other) : elements(other.elements) { ++count; }
-    std::vector<shifted_ptr<vector> > elements;
-    //std::list<shifted_ptr<vector>, shifted_allocator< shifted_ptr<vector> > > elements; //! works fine
+    //std::vector<shifted_ptr<vector> > elements;
+    std::list<shifted_ptr<vector>, shifted_allocator< shifted_ptr<vector> > > elements; //! works fine
 };
 
 struct create_type {

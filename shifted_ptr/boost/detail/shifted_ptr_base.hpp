@@ -41,15 +41,28 @@ namespace sh
 template <typename T>
 	class shifted_ptr_base
 	{
-		typedef T element_type;
+		typedef T value_type;
+		typedef shifted<value_type> element_type;
+
 		template <typename> friend class shifted_ptr_base;
 
+        // Borland 5.5.1 specific workaround
+        typedef shifted_ptr_base<value_type> this_type;
+
 	protected:
-		element_type * po_;
+		value_type * po_;
 
 	public:
 		shifted_ptr_base() : po_(0)
 		{
+		}
+
+        ~shifted_ptr_base()
+		{
+			if (po_)
+			{
+				header()->release();
+			}
 		}
 
 		template <typename V>
@@ -62,7 +75,7 @@ template <typename T>
 			{
 			}
 
-			shifted_ptr_base(shifted_ptr_base<element_type> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : po_(p.share())
 			{
 			}
 
@@ -84,27 +97,27 @@ template <typename T>
 				return * this;
 			}
 
-			shifted_ptr_base & operator = (shifted_ptr_base<element_type> const & p)
+			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
 			{
-				return operator = <element_type>(p);
+				return operator = <value_type>(p);
 			}
 
-		element_type & operator * () const
+		value_type & operator * () const
 		{
 			return * po_;
 		}
 
-		element_type * operator -> () const
+		value_type * operator -> () const
 		{
 			return po_;
 		}
 
-		element_type * get() const
+		value_type * get() const
 		{
 			return po_;
 		}
 
-		element_type * share() const
+		value_type * share() const
 		{
 			if (po_)
 			{
@@ -113,13 +126,90 @@ template <typename T>
 			return po_;
 		}
 
-		void reset(element_type * p = 0)
+		void reset(value_type * p = 0)
 		{
 			if (po_)
 			{
 				header()->release();
 			}
 			po_ = p;
+		}
+
+#if ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, < 0x570) ) || defined(__CINT__)
+        operator bool () const
+        {
+            return po_ != 0;
+        }
+#elif defined( _MANAGED )
+        static void unspecified_bool( this_type*** )
+        {
+        }
+
+        typedef void (*unspecified_bool_type)( this_type*** );
+
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: unspecified_bool;
+        }
+#elif \
+        ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
+        ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) ) || \
+        ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590) )
+
+        typedef value_type * (this_type::*unspecified_bool_type)() const;
+        
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: &this_type::get;
+        }
+#else 
+        typedef value_type * this_type::*unspecified_bool_type;
+
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: &this_type::po_;
+        }
+#endif
+
+        // operator! is redundant, but some compilers need it
+
+        bool operator! () const // never throws
+        {
+            return po_ == 0;
+        }
+
+        long use_count() const // never throws
+        {
+            return header()->use_count();
+        }
+
+	protected:
+		detail::sh::owned_base * header() const
+		{
+			detail::sh::owned_base * p = (shifted<value_type> *) (typename shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
+			return p;
+		}
+	};
+
+
+#if !defined(_MSC_VER)
+template <typename T, size_t N>
+	class shifted_ptr_base<T [N]>
+	{
+		typedef T value_type[N];
+		typedef shifted<value_type> element_type;
+
+		template <typename> friend class shifted_ptr_base;
+
+        // Borland 5.5.1 specific workaround
+        typedef shifted_ptr_base<value_type> this_type;
+
+	protected:
+		value_type * po_;
+
+	public:
+		shifted_ptr_base() : po_(0)
+		{
 		}
 
 		~shifted_ptr_base()
@@ -130,31 +220,6 @@ template <typename T>
 			}
 		}
 
-
-	protected:
-		detail::sh::owned_base * header() const
-		{
-			detail::sh::owned_base * p = (shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
-			return p;
-		}
-	};
-
-
-#if !defined(_MSC_VER)
-template <typename T, size_t N>
-	class shifted_ptr_base<T [N]>
-	{
-		typedef T element_type[N];
-		template <typename> friend class shifted_ptr_base;
-
-	protected:
-		element_type * po_;
-
-	public:
-		shifted_ptr_base() : po_(0)
-		{
-		}
-
 		template <typename V>
 			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
 			{
@@ -165,7 +230,7 @@ template <typename T, size_t N>
 			{
 			}
 
-			shifted_ptr_base(shifted_ptr_base<element_type> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : po_(p.share())
 			{
 			}
 
@@ -187,9 +252,9 @@ template <typename T, size_t N>
 				return * this;
 			}
 
-			shifted_ptr_base & operator = (shifted_ptr_base<element_type> const & p)
+			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
 			{
-				return operator = <element_type>(p);
+				return operator = <value_type>(p);
 			}
 
 		T & operator [] (std::size_t n)
@@ -202,12 +267,12 @@ template <typename T, size_t N>
 			return ** (po_ + n);
 		}
 
-		element_type * get() const
+		value_type * get() const
 		{
 			return po_;
 		}
 
-		element_type * share() const
+		value_type * share() const
 		{
 			if (po_)
 			{
@@ -216,7 +281,7 @@ template <typename T, size_t N>
 			return po_;
 		}
 
-		void reset(element_type * p = 0)
+		void reset(value_type * p = 0)
 		{
 			if (po_)
 			{
@@ -225,19 +290,58 @@ template <typename T, size_t N>
 			po_ = p;
 		}
 
-		~shifted_ptr_base()
-		{
-			if (po_)
-			{
-				header()->release();
-			}
-		}
+#if ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, < 0x570) ) || defined(__CINT__)
+        operator bool () const
+        {
+            return po_ != 0;
+        }
+#elif defined( _MANAGED )
+        static void unspecified_bool( this_type*** )
+        {
+        }
 
+        typedef void (*unspecified_bool_type)( this_type*** );
+
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: unspecified_bool;
+        }
+#elif \
+        ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
+        ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) ) || \
+        ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590) )
+
+        typedef value_type * (this_type::*unspecified_bool_type)() const;
+        
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: &this_type::get;
+        }
+#else 
+        typedef value_type * this_type::*unspecified_bool_type;
+
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: &this_type::po_;
+        }
+#endif
+
+        // operator! is redundant, but some compilers need it
+
+        bool operator! () const // never throws
+        {
+            return po_ == 0;
+        }
+
+        long use_count() const // never throws
+        {
+            return header()->use_count();
+        }
 
 	protected:
 		detail::sh::owned_base * header() const
 		{
-			return (shifted<element_type> *) (typename shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
+			return (shifted<value_type> *) (typename shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
 		}
 	};
 #endif
@@ -246,15 +350,28 @@ template <typename T, size_t N>
 template <>
 	class shifted_ptr_base<void>
 	{
-		typedef void element_type;
+		typedef void value_type;
+		typedef shifted<value_type> element_type;
+
 		template <typename> friend class shifted_ptr_base;
 
+        // Borland 5.5.1 specific workaround
+        typedef shifted_ptr_base<value_type> this_type;
+
 	protected:
-		element_type * po_;
+		value_type * po_;
 
 	public:
 		shifted_ptr_base() : po_(0)
 		{
+		}
+
+		~shifted_ptr_base()
+		{
+			if (po_)
+			{
+				header()->release();
+			}
 		}
 
 		template <typename V>
@@ -267,7 +384,7 @@ template <>
 			{
 			}
 
-			shifted_ptr_base(shifted_ptr_base<element_type> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : po_(p.share())
 			{
 			}
 
@@ -289,17 +406,17 @@ template <>
 				return * this;
 			}
 
-			shifted_ptr_base & operator = (shifted_ptr_base<element_type> const & p)
+			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
 			{
-				return operator = <element_type>(p);
+				return operator = <value_type>(p);
 			}
 
-		element_type * get() const
+		value_type * get() const
 		{
 			return po_;
 		}
 
-		element_type * share() const
+		value_type * share() const
 		{
 			if (po_)
 			{
@@ -308,7 +425,7 @@ template <>
 			return po_;
 		}
 
-		void reset(element_type * p = 0)
+		void reset(value_type * p = 0)
 		{
 			if (po_)
 			{
@@ -317,19 +434,58 @@ template <>
 			po_ = p;
 		}
 
-		~shifted_ptr_base()
-		{
-			if (po_)
-			{
-				header()->release();
-			}
-		}
+#if ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, < 0x570) ) || defined(__CINT__)
+        operator bool () const
+        {
+            return po_ != 0;
+        }
+#elif defined( _MANAGED )
+        static void unspecified_bool( this_type*** )
+        {
+        }
 
+        typedef void (*unspecified_bool_type)( this_type*** );
+
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: unspecified_bool;
+        }
+#elif \
+        ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
+        ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) ) || \
+        ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590) )
+
+        typedef value_type * (this_type::*unspecified_bool_type)() const;
+        
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: &this_type::get;
+        }
+#else 
+        typedef value_type * this_type::*unspecified_bool_type;
+
+        operator unspecified_bool_type() const // never throws
+        {
+            return po_ == 0? 0: &this_type::po_;
+        }
+#endif
+
+        // operator! is redundant, but some compilers need it
+
+        bool operator! () const // never throws
+        {
+            return po_ == 0;
+        }
+
+        long use_count() const // never throws
+        {
+            return header()->use_count();
+        }
 
 	protected:
 		detail::sh::owned_base * header() const
 		{
-			return (shifted<element_type> *) (shifted<element_type>::roofof) static_cast<element_type *>(rootof<is_polymorphic<element_type>::value>::get(po_));
+			return (shifted<value_type> *) (shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
 		}
 	};
 

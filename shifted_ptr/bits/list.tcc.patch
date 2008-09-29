@@ -1,6 +1,6 @@
 --- /local/include/c++/3.4.5/bits/list.tcc	Wed Jan 18 11:06:46 2006
-+++ list.tcc	Tue Aug 12 02:58:56 2008
-@@ -61,25 +61,51 @@
++++ list.tcc	Mon Sep 29 02:41:26 2008
+@@ -61,23 +61,45 @@
  #ifndef _LIST_TCC
  #define _LIST_TCC 1
  
@@ -14,11 +14,6 @@
 +        static_cast<_List_node_base &>(*__position)._M_prev = this->_M_prev;
 +        this->_M_prev->_M_next = __position;
 +        this->_M_prev = __position;
-+
-+//        this->_M_next = __position;
-+//        this->_M_prev = __position->_M_prev;
-+//        __position->_M_prev->_M_next = this;
-+//        __position->_M_prev = this;
 +    }
 +
 +  template<typename _Alloc>
@@ -44,24 +39,22 @@
 -        __cur = static_cast<_Node*>(__cur->_M_next);
 -        std::_Destroy(&__tmp->_M_data);
 -        _M_put_node(__tmp);
--      }
-+/*      typedef _List_node<_Tp,_Alloc>  _Node;
++      typedef _List_node<_Tp,_Alloc>  _Node;
 +      typedef _List_node_base<_Alloc>  _Node_base;
 +      typename _Node_base::pointer* __cur = & this->_M_impl._M_node->_M_next;
-+      while (__cur != & this->_M_impl._M_node)
++      while (__cur != (typename _Node_base::pointer*) & this->_M_impl._M_node)
 +      {
-+        typename _Node_base::pointer* __tmp = __cur;
-+        __cur = & (*__cur)->_M_next;
-+        _M_impl._Node_Alloc_type::destroy(*(typename _Node::pointer*) __tmp);
-+        _M_put_node(*(typename _Node::pointer*) __tmp);
++          typename _Node_base::pointer* __next = & (*__cur)->_M_next;
++          _M_impl._Node_Alloc_type::destroy(*(typename _Node::pointer*) __cur);
++          _M_put_node(*(typename _Node::pointer*) __cur);
++          if (! *__cur) break;
++          __cur = __next;
+       }
      }
-+*/    }
  
    template<typename _Tp, typename _Alloc>
      typename list<_Tp,_Alloc>::iterator
-     list<_Tp,_Alloc>::
-     insert(iterator __position, const value_type& __x)
-@@ -235,12 +261,12 @@
+@@ -235,12 +257,12 @@
      void
      list<_Tp,_Alloc>::
      sort()
@@ -76,7 +69,7 @@
          list __tmp[64];
          list * __fill = &__tmp[0];
          list * __counter;
-@@ -339,12 +365,12 @@
+@@ -339,12 +361,12 @@
        void
        list<_Tp,_Alloc>::
        sort(_StrictWeakOrdering __comp)

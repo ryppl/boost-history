@@ -162,7 +162,8 @@ template <typename T>
         };
 
     public:
-        typedef T element_type;
+        typedef T                       value_type;
+        typedef shifted<value_type>     element_type;
 
 
         shifted_ptr() : ps_(0)

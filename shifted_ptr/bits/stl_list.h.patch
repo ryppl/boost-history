@@ -1,5 +1,5 @@
 --- /local/include/c++/3.4.5/bits/stl_list.h	Wed Jan 18 11:06:54 2006
-+++ stl_list.h	Tue Aug 12 02:58:50 2008
++++ stl_list.h	Mon Sep 29 02:26:16 2008
 @@ -69,62 +69,82 @@
    // latter publicly inherits from the former in an effort to reduce code
    // duplication.  This results in some "needless" static_cast'ing later on,
@@ -431,7 +431,7 @@
         *  @brief  Sort the elements.
         *
         *  Sorts the elements of this list in NlogN time.  Equivalent
-@@ -1158,12 +1180,13 @@
+@@ -1158,12 +1180,11 @@
  
        // Inserts new element at position given and with value given.
        void
@@ -440,8 +440,6 @@
 -        _Node* __tmp = _M_create_node(__x);
 -        __tmp->hook(__position._M_node);
 +        __position._M_node->hook(reinterpret_cast<typename _List_node_base<_Alloc>::value_type*>(_M_create_node(__x)));
-+        //typename _Base::_Node_Alloc_type::value_type* __tmp = _M_create_node(__x);
-+        //static_cast<_Node &>(*__tmp).hook(__position._M_node);
        }
  
        // Erases element at position given.

@@ -1183,8 +1183,6 @@ namespace _GLIBCXX_STD
       _M_insert(iterator __position, const value_type& __x)
       {
         __position._M_node->hook(reinterpret_cast<typename _List_node_base<_Alloc>::value_type*>(_M_create_node(__x)));
-        //typename _Base::_Node_Alloc_type::value_type* __tmp = _M_create_node(__x);
-        //static_cast<_Node &>(*__tmp).hook(__position._M_node);
       }
 
       // Erases element at position given.

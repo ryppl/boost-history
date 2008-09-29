@@ -46,14 +46,16 @@ namespace sh
 template <typename T>
     class shifted_allocator
     {
+        typedef T                       element_type;
+
     public:
         typedef shifted<T>              value_type;
         typedef size_t                  size_type;
         typedef ptrdiff_t               difference_type;
         typedef shifted_ptr<T>          pointer;
         typedef shifted_ptr<const T>    const_pointer;
-        typedef value_type &            reference;
-        typedef const value_type &      const_reference;
+        typedef element_type &          reference;
+        typedef const element_type &    const_reference;
 
         template <typename U>
             struct rebind
@@ -70,21 +72,17 @@ template <typename T>
         pointer address(reference x) const                          { return & x; }
         const_pointer address(const_reference x) const              { return & x; }
 
+        size_type max_size() const throw()
+        {
+            return size_t(-1) / sizeof(T);
+        }
+
         value_type * allocate(size_type s, const void * = 0)
         {
             //value_type * p = (value_type *) value_type::operator new(sizeof(value_type));
             value_type * p = new value_type();
 
             return p;
-        }
-
-        void deallocate(pointer & p, size_type)
-        {
-        }
-
-        size_type max_size() const throw()
-        {
-            return size_t(-1) / sizeof(T);
         }
 
         void construct(value_type * p, const T & x)
@@ -96,6 +94,10 @@ template <typename T>
         void destroy(pointer & p)
         {
             p.reset();
+        }
+
+        void deallocate(pointer & p, size_type)
+        {
         }
     };
 
