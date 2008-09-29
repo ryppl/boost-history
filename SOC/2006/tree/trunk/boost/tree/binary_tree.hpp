@@ -13,8 +13,8 @@
 #define BOOST_TREE_BINARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/detail/algorithm/cursor/general.hpp>
-#include <boost/tree/detail/algorithm/iterator.hpp>
+#include <boost/tree/iterator.hpp>
+#include <boost/tree/algorithm.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
