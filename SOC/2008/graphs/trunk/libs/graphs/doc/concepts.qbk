@@ -1,0 +1,980 @@
+
+[section Graph Concepts]
+
+Despite the fact that this library has only two generic data structures and only
+one generic algorithm, it is has warranted the definition of a concept hierarchy
+that describes the generic interface of all the graph kinds this library should
+support. This hierarchy is not (currently) derived from emergent patterns that
+occur frequently in generic algorithms (which is generally where concepts come
+from). It is derived from the need to document the interfaces with respect to the
+constraints and refinements that imposed upon these data structures when instantiating
+them with certain types.
+
+If the concept hierarchy seems extensive - it is. A graph (in the general sense)
+has many, many different ways of being specified and implemented, and many of these
+options are relatively independent of others. In this sense, there aren't many
+graphs that fall into broad classifications for which we can easily create concepts.
+A graph, within the context of an algorithm or documentation, is a collection of
+features that can be reduced and constrained individually. Hence the size of this
+hierarchy.
+
+[important This is a work in progress.]
+
+[section Graph]
+The __Graph__ concept describes common requirements of all kinds of graphs.
+
+ concept __Graph__<typename G>
+ {
+     __Descriptor__ vertex_descriptor;
+     __Descriptor__ edge_descriptor;
+
+     static vertex_descriptor G::null_vertex();
+     static edge_descriptor G::null_edge();
+     static edge_descriptor G::make_ends(vertex_descriptor u, vertex_descriptor v);
+     static pair<vertex_descriptor, vertex_descriptor> G::get_ends(edge_descriptor e);
+ };
+
+The `null_vertex` operation returns a null vertex for the graph. This is mostly
+provided for parity with the BGL, but isn't truly needed since default-constructed
+descriptors are guaranteed to be null.
+
+The `null_edge` operation returns a null edge for the graph. As with vertex descriptors,
+default-constructed edges are null, so this function is provided only for parity
+with the `null_vertex` function.
+
+The `make_ends` operation creates a descriptor over the given endpoints of the graph.
+This does not add an edge to the graph, and the endpoints can denote edges that do
+not exist in the graph. The `make_ends` function will return a null descriptor if the
+requested endpoints do not satisfy all static properties of edges in the graph such
+as loops and dangling edges.
+
+The `get_ends` function retrieves the endpoints of an edge descriptor as `pair`.
+The ordering of the vertex descriptors depends on the implementation of the graph.
+
+[note *Design* The `make_ends` function demonstrates the fact that edge descriptors
+aren't really descriptors since you can make edges that do not exist. This is still
+a useful function, however.]
+[endsect]
+
+[section Vertex Kinds]
+Vertices in graphs distiguished by their labels and the meaning of those labels
+within the graph. For example, we could talk about graphs with unlabeled vertices,
+which are generally used for small examples about graphs. Most useful examples
+tend to include some kind of name or data associated with each vertex. For example,
+this could be names of cities in a road map, or names of airports in a flight plan.
+In many cases, the labels attached to these vertices are unique within the graph.
+For example, there are no two airports named LAX.
+
+[section UnlabeledVertexGraph]
+The __UnlabeledVertexGraph__ concept describes graphs whose vertices have no labels.
+This concept does not describe any syntactic or semantic requirements, but is only
+provided to express the particular state of the vertices in `G`.
+
+ concept __UnlabeledVertexGraph__<typename G>
+ {
+     typename vertex_label;
+     requires SameType<vertex_label, none>;
+ };
+
+[note *Design:* This is included because writing `!__LabeledVertexGraph__<G>` would
+seem to also imply `!__Graph__<G>` because of the refinement. This is definitely not
+what is intended. For many concepts and constraints, we can simply say that we
+require `__UnlabeledVertexGraph__<G>`.]
+
+[note *Implementation* This is probably not the optimal means of specifying this
+since it would require that unlabeled graphs actually expose a vertex label type.
+However, it does constrain that type to be unusable...]
+[endsect]
+
+[section LabelVertexGraph]
+The __LabeledVertexGraph__ concept applies to graphs labeled vertices.
+
+ concept __LabeledVertexGraph__<typename G> : __Graph__<G>
+ {
+     __ObjectType__ vertex_label;
+     requires !SameType<vertex_label, none>;
+
+     vertex_label& operator[](G&, vertex_descriptor v);
+     vertex_label const& operator[](G const&, vertex_descriptor v);
+
+     vertex_descriptor G::vertex(vertex_label const& l) const;
+ };
+
+The `operator[]` overload provides `const` and non-`const` access to the properties
+of the vertex represented by the descriptor `v`.
+
+The `vertex` function returns the first vertex associated with the label `l`. If no such
+vertex can be found, a null descriptor is returned.
+[endsect]
+
+[section MappedVertexGraph]
+The __MappedVertexGraph__ concept applies to graphs whose vertices and vertex labels
+associated with a key. This refines the __LabeledVertexGraph__<G> concept because
+keys must be mapped to data.
+
+ concept __MappedVertexGraph__<typename G> : __Graph__<G>
+ {
+     __ObjectType__ vertex_label;
+     __ObjectType__ vertex_key;
+     requires !SameType<vertex_label, none>;
+
+     vertex_label& operator[](G&, vertex_descriptor v);
+     vertex_label const& operator[](G const&, vertex_descriptor v);
+
+     vertex_descriptor G::vertex(vertex_key const& k) const;
+     vertex_key const& G::key(vertex_descriptor v) const;
+ };
+
+The `operator[]` overload provides `const` and non-`const` access to the properties
+of the vertex represented by the descriptor `v`.
+
+The `key` operation returns the key associated with each vertex represented by the
+descriptor `v`.
+
+The `vertex` function returns the first vertex associated with the label `l`. If no such
+vertex can be found, a null descriptor is returned.
+
+[note *Design*: This concept is distinct from the __LabeledVertexGraph__ because
+the a number of other concepts will require one or the other. Writing this concept in
+terms of __LabeledVertexGraph__ makes it nearly impossible to distinguish the two
+later on.]
+[endsect]
+
+[section UniqueLabeledVertexGraph]
+The __UniqueLabeledVertexGraph__ concept refines the __LabeledVertexGraph__ concept
+by adding the requirement that each label uniquely identifies a single vertex.
+
+ concept __UniqueLabeledVertexGraph__<typename G> : __LabeledVertexGraph__<G>
+ { };
+
+The `vertex` function runs in /O(lg V)/ on average. Note that hash tables have /O(1)/
+performance on average.
+
+[note *Design:* The uniqueness of vertices is typically accomplished using ordered
+(sorted) or unordered (hashed) sets. Each of these imposes its own requirements on
+the `label` via some ordering or hashing function, but those requirements are outside
+the scope of these concepts since they are internal to the data structures. These
+interfaces could, however, be expanded to expose the vertex comparator or hash
+function and could be made part of the graph interface.]
+[endsect]
+
+[section UniqueMappedVertexGraph]
+The __UniqueMappedVertexGraph__ concept refines the __MappedVertexGraph__ concept
+by adding the requirement that each key is uniquely associated with a single vertex.
+
+ concept __UniqueMappedVertexGraph__<typename G> : __MappedVertexGraph__<G>
+ { };
+
+The `vertex` function runs in /O(lg V))/ on average. Note that hash tables have /O(1)/
+performance on average.
+
+[note *Design:* The uniqueness of vertices is typically accomplished using ordered
+(sorted) or unordered (hashed) sets. Each of these imposes its own requirements on
+the `key` via some ordering or hashing function, but those requirements are outside
+the scope of these concepts since they are internal to the data structures. These
+interfaces could, however, be expanded to expose the vertex comparator or hash
+function and could be made part of the graph interface.]
+[endsect]
+
+[section Vertex Associativity]
+These concepts are for consideration, and have not been implemented. They refine
+the mechanism by which uniqueness is guarnanteed. In general, the /Sorted/ concepts
+result in many functions vertex operatoins in logarithmic time, while the hashed
+functions operate in constant time (on average) and assuming the underlying hash
+tables have good load factors.
+
+Note that these can also be used to describe the means by which multiplicity is
+/efficiently/ guaranteed, but since I can find no examples of applications that
+use multisets of or multimaps, they are excluded.
+
+ concept __HasSortedLabels__<typename G>
+ {
+     requires __LabeledVertexGraph__<G>;
+     __StrictWeakOrder__<auto, __LabeledVertexGraph__<G>::vertex_label> vertex_compare;
+     vertex_compare vertex_compare_function(G const& g)
+ };
+
+ concept __HasSortedKeys__<typename G>
+ {
+     requires __MappedVertexGraph__<G>;
+     __StrictWeakOrder__<auto, __MappedVertexGraph__<G>::vertex_key> vertex_compare;
+     vertex_compare vertex_compare_function(G const&) const;
+ };
+
+ concept __HasHashedLabels__<typename G>
+ {
+     requires __LabeledVertexGraph__<G>;
+     __HashFunction__<auto, __LabeledVertexGraph__<G>::vertex_label> vertex_hash;
+     vertex_hash vertex_hash_function(G const& g) const;
+ };
+
+ concept __HasHashedKeys__<typename G>
+ {
+     requires __MappedVertexGraph__<G>;
+     __HashFunction__<auto, __MappedVertexGraph__<G>::vertex_key> vertex_hash;
+     vertex_hash vertex_hash_function(G const& g) const;
+ };
+
+Each of these concepts describes a mechanism by which the associativity of vertex labels or
+keys is maintained. The `vertex_compare_function` returns the __StrictWeakOrder__ used
+to compare vertex labels or keys. The `vertex_hash_function` returns the __HashFunction__
+used to generate hash keys from the same labels or keys. Any kind of graph only
+ever models one of these concepts.
+
+[warning If your hash table implementations invalidate iterators on insertion or
+multiple iterators on removal, then you should definitely /not/ use hashed storage
+schemes for your graphs.]
+[endsect]
+[endsect]
+
+[section Edge Kinds]
+Just as there are several kinds of vertices, graphs can also have different kinds
+of edges. Edges are different than vertices in that they essentially defined by their
+endpoints. Because of this, it we cannot attribute the same kinds of uniqueness or
+mapping to edges that we would for vertices.
+
+Edges can have data (a label) associated with them, or not. Common examples of
+labels for edges include distance, resistance, and flow. Edges can also be unique
+within a graph. If a unique edge has endpoints /(u, v)/, then that is the only
+edge with those endpoints. Some graphs can also disallow some kinds of edges such
+as loops.
+
+Although all edge types (in this library) behave as __Descriptors__, they also
+have semantics beyond that of simple references. Specifically, edges have either
+undirected or directed semantics (__UndirectedEdge__ and __DirectedEdge__,
+respectively). These should be legitimate concepts in their own right because every
+graph data structure can be cast as either directed or undirected based primarily
+on the semantics of their edges.
+
+[section UnlabeledEdgeGraph]
+This concept denotes graphs that do not have labeled edges.
+
+ concept __UnlabeledEdgeGraph__<typename G> : Graph<G>
+ {
+     __ObjectType__ edge_label;
+     requires SameType<edge_label, none>;
+ };
+
+[note *Design:* See the note in __UnlabeledVertexGraph__.]
+[endsect]
+
+[section LabeledEdgeGraph]
+The __LabeledEdgeGraph__ concept applies to graphs with labeled edges.
+
+ concept __LabeledEdgeGraph__ : __Graph__<G>
+ {
+     __ObjectType__ edge_label;
+     requires !SameType<edge_label, none>;
+
+     edge_label& operator[](G&, edge_descriptor);
+     edge_label const& operator[](G const&, edge_descriptor);
+ };
+
+[note This library currently precludes the unique labeling and mapping of edges
+since edge uniqueness is determined by their endpoints and not their label.]
+[endsect]
+
+[section HasUniqueEdges]
+The __HasUniqueEdges__ concept applies to graphs that allow only a single edge
+to connect two vertices. Said otherwise, the endpoints `(u, v)` will always denote
+a unique edge label (if given) if it exists in the graph.
+
+ concept __HasUniqueEdges__<typename G>
+ {
+     requires Graph<G>;
+     axiom UniquenessOfEdges(G const& g, G::edge_descriptor e, G::edge_descriptor f)
+     {
+         if(G::get_ends(e) == G::get_ends(f)) {
+             e == f;
+         }
+     }
+ };
+
+The `UniquenessOfEdges` axiom states that if the end points of two edge descriptors
+are equivalent then their labels are the same object.
+
+[note The name __HasUniqueEdges__ is preferred over its inverse `Multigraph` in
+this case because writing `!HasUniqueEdges<G>` implies that `G` is a /multigraph/,
+but writing `!Multigraph<G>` does not necessarily imply that `G` is /simple/. An
+alternative writing migth be `AllowsMultipleEdges`.]
+[endsect]
+
+[section HasMultiEdges]
+The __HasMultiEdges__ concept applies to graphs that allow any number of edges to
+connect two vertices. This concept is mostly descriptive and is essentially shorthand
+for `!__HasUniqueEdges__<G>`.
+
+ concept __HasMultiEdges__<typename G>
+ {
+     requires !__HasUniqueEdges__<G>;
+ };
+
+[endsect]
+
+[section HasLoopEdges]
+The __HasLoopEdges__ concept applies to any graph that allows loops to exist in
+the graph.
+
+ concept __HasLoopEdges__<typename G>
+ {
+     requires Graph<G>;
+     axiom ReflexivityOfEdges(G::vertex_descriptor v)
+     { G::make_ends(v, v) != G::null_edge(); }
+ };
+
+The `ReflexivityOfEdges` allows the creation of end points that create edges from
+a vertex to itself.
+
+[note This could probably be used in conjunction to describe a `SimpleGraph` as
+one requiring  `HasUniqueEdges<G> && !HasLoopEdges<G>`. This concept could also be
+named written `AllowsLoopEdges`.]
+[endsect]
+
+[section HasUndirectedEdges]
+The endpoints of an undirected edge impart no notion of directionality. Note that
+the interface required by these edge kinds is not part of the interface of the `G`.
+
+ concept __HasUndirectedEdges__<typename G>
+ {
+     requires Graph<G>;
+
+     G::vertex_descriptor first(G::edge_descriptor e);
+     G::vertex_descriptor second(G::edge_descriptor e);
+
+     axiom EndpointEquivalence(G::vertex_descriptor v, G::vertex_descriptor u)
+     { G::make_ends(u, v) == G::make_ends(v, u); }
+ };
+
+The `first` function returns the first endpoint of the edge descriptor `e`.
+
+The `second` function returns the second endpoint of the edge descriptor `e`.
+
+The `EndpointEquivalence` axiom guarantees that the endpoints `(u, v)` are the same
+as the endpoints `(v, u)`.
+
+[note *Design:* This concept can make the development and use of algorithms somewhat
+tricky. In many cases, algorithms traverse edges and notify their visitors about the
+edges being traversed. In this case, the notions of source and target are important,
+but undirected edges have no notion of directionality. The solution taken in this
+implementation is to wrap the undirected edge in a directed edge by duplicating the
+storage of one endpoint as the source.]
+[endsect]
+
+[section HasDirectedEdges]
+The endpoints of an directed edge indicate the source and target vertices of that
+edge. Note that the interface required by these edge kinds is not part of the interface
+of the `G`.
+
+ concept __HasDirectedEdges__<typename G>
+ {
+     requires Graph<G>;
+
+     G::vertex_descriptor source(G::edge_descriptor e);
+     G::vertex_descriptor target(G::edge_descriptor e);
+
+     axiom EndpointInequivalence(G>::vertex_descriptor v, Gvertex_descriptor u)
+     {
+         if(u != v) {
+             G::make_ends(u, v) != G::make_ends(v, u);
+         }
+     }
+ };
+
+The `source` function returns the source endpoint of the edge descriptor `e`.
+
+The `target` function returns the second endpoint of the edge descriptor `e`.
+
+The `EndpointInequivalence` axiom guarantees that, if `(u, v)` does not describe
+a loop, then the edge with the endpoints `(u, v)` is distinct from an edge with
+the endpoints `(v, u)`.
+[endsect]
+[endsect]
+
+[section Edge Operations]
+There are a number of different concepts related to the addition and removal
+of edges.
+
+[section HasFindEdge]
+The __HasFindEdge__ concept applies to graphs that can be queried for the existence
+of an edge by its endpoints.
+
+ concept __HasFindEdge__<typename G>
+ {
+     requires Graph<G>;
+     G::edge_descriptor G::edge(G::vertex_descriptor u, G::vertex_descriptor v);
+ };
+
+The `edge` function returns the first edge found that connects vertices `u` and `v`.
+If no such edge is found, the returned descriptor is null.
+[endsect]
+
+[section HasAddEdge]
+The __HasAddEdge__ concept is a base concept that describes any graph to which
+edges may be added after construction. The ability to dynamically add edges does
+not necessarily imply the allocation of more memory (as opposed to adding to a `list`).
+The addition of edges is best thought of as the connecting of two vertices, which
+may or may not have some data associated with it.
+
+ concept __HasAddEdge__<typename G> { };
+
+[note *Design:* There are many ways to add edges, and each specific method is
+defined by a new concept. This is a generalization of all of them.]
+[endsect]
+
+[section HasAddUnlabledEdge]
+The __HasAddUnulabledEdge__ concept applies to any graph to which edges can be added after
+construction.
+
+ concept __HasAddUnlabeledEdge__<typename G> : __HasAddEdge__<G>
+ {
+     requires __UnlabeledEdgeGraph__<G>;
+     G::edge_descriptor add_edge(G::vertex_descriptor u, G::vertex_descriptor v)
+ }
+
+This concept requires that that target graph have unlabeled edges.
+
+The `add_edge` operation will connect the vertex `u` to the vertex `v` and return
+a descriptor to the new edge.
+
+The samantics vary if `__HasUniqueEdges__<G>`. If the edge `(u, v)` denotes an existing
+edge in the graph, then no action is taken. The returned descriptor represents the
+existing edge, not a new one. See __HasAddUniqueUnlabeledEdge__ for a means of
+determining the success of edge addition.
+[endsect]
+
+[section HasAddLabeledEdge]
+The __HasAddLabeledEdge__ concept applies to any graph to which labeled edges
+can be added after construction. This concept also refines the __LabeledEdgeGraph__
+concept.
+
+ concept __HasAddLabeledEdge__<typename G> : __HasAddEdge__<G>
+ {
+     requires __LabeledEdgeGraph__<G>;
+     G::edge_descriptor G::add_edge(G::vertex_descriptor u,
+                                    G::vertex_descriptor v,
+                                    G::edge_label const& l)
+ }
+
+The `add_edge` operation adds a new edge connecting the vertex `u` to the vertex `v`,
+and assigning the label `l` to the edge. A descriptor to the new edge is returned.
+
+The samantics vary if `__HasUniqueEdges__<G>`. If the edge `(u, v)` denotes an existing
+edge in the graph, then no action is taken. The label `l` is /not/ assigned to the
+edge, and the returned descriptor represents the existing edge, not a new one. See
+__HasAddUniqueLabeledEdge__ for a means of determining the success of edge addition.
+
+The semantics vary if `!__HasLoopEdges__<G>`. If `u == v`, then no action is taken
+and the returned descriptor is null.
+[endsect]
+
+[section HasAddUniqueUnlabeledEdge]
+The __HasAddUniqueUnlabeledEdge__ concept is a refinement of __HasAddUnlabeledEdge__ that
+provides an operation that reports the success of the edge addition.
+
+ concept __HasAddUniqueUnlabeledEdge__ : __HasUniqueEdges__<G>, __HasAddUnlabeledEdge__<G>
+ {
+     std::pair<G::edge_descriptor, bool> G::insert_edge(G::vertex_descriptor u,
+                                                        G::vertex_descriptor v);
+ };
+
+The `insert_edge` operation attempts to connct the vertex `u` to the vertex `v` and
+returns a pair containing the resulting edge descriptor and a boolean value indicating
+whether or not a new edge was added to the graph. If the boolean value is `false`
+after completion, a new edge was not added, and the descriptor references an existing
+edge.
+
+The semantics vary if `!__HasLoopEdges__<G>`. If `u == v`, then the boolean value
+is false, indicating no edge addition, and edge descriptor is null.
+[endsect]
+
+[section HasAddUniqueLabeledEdge]
+The __HasAddUniqueLabeledEdge__ concept is a refinement of the __HasAddLabeledEdge__
+concept that provides a that reports the result of the edge addition.
+
+ concept __HasAddUniqueLabeledEdge__<typename G> : __HasUniqueEdges__<G>, __HasAddLabeledEdge__<G>
+ {
+     std::pair<G::edge_descriptor, bool> G::insert_edge(G::vertex_descriptor u,
+                                                        G::vertex_descriptor v,
+                                                        G::edge_label const& l);
+ };
+ 
+The `insert_edge` operation attempts to connct the vertex `u` to the vertex `v`, assiging
+the label `l` to the new edge, and returns a pair containing the resulting edge
+descriptor and a boolean value indicating whether or not a new edge was added to
+the graph. If the boolean value is `false` after completion, a new edge was not added,
+the label was not assigned, and the descriptor references an existing edge.
+
+The semantics vary if `!__HasLoopEdges__<G>`. If `u == v`, then the boolean value
+is false, indicating no edge addition, and edge descriptor is null.
+[endsect]
+
+[section HasRemoveEdge]
+The __HasRemoveEdge__ concept applies to any graph from which edges may be removed
+after construction.  This is a refinement of the __HasAddEdge__ concept because
+any graph that allows the dynamic removal of edges should also allow their addition.
+Note that the converse is not true - not all graphs that modelt the __HasAddEdge__
+concept also model the __HasRemoveEdge__ concept.
+
+ concept HasRemoveEdge<typename G> : __HasAddEdge__<G>
+ {
+     requires Graph<G>;
+     void G::remove_edge(G::edge_descriptor e);
+     void G::remove_edges(G::vertex_descriptor u, G::vertex_descriptor v);
+     void G::remove_edges(G::vertex_descriptor v);
+ };
+
+The `remove_edge` operation removes only the edge represented by the descriptor `e`.
+
+The first `remove_edges` operation removes all edges connecting with `u` and `v` as
+endpoints. If `__HasUniqueEdges__<G>`, then `remove_edges` will remove at most one edge.
+
+The second `remove_edges` operation removes all edges incident to the vertex `v`
+so that its its degreee will be 0 after completion.
+[endsect]
+[endsect]
+
+[section Vertex Operations]
+[section HasAddVertex]
+The __HasAddVertex__ applies to any graph that defines any method for adding
+vertices to a graph after constrution.
+
+ concept __HasAddVertex__<typename G> { };
+
+[note *Design:* There are many ways to add edges, and each specific method is
+defined by a new concept. This is a generalization of all of them.]
+[endsect]
+
+[section HasAddUnlabeledVertex]
+The __HasAddUnalbeledVertex__ applies to graphs that allow the addition of unlabeled
+vertices.
+
+ cocnept __HasAddUnlabeledVertex__<typename G> : __HasAddVertex__<G>
+ {
+     requires __UnlabeledVertexGraph__<G>;
+     G::vertex_descriptor G::add_vertex();
+ };
+
+The `add_vertex` operation adds a new, unlabeled vertex to the graph and returns
+a descriptor to the new vertex.
+[endsect]
+
+[section HasAddLabeledVertex]
+The __HasAddVertex__ applies to any graph that defines any method for adding
+vertices to a graph after constrution.
+
+ concept __HasAddLabeledVertex__<typename G> :  __HasAddVertex__<G>
+ {
+     reuqires __LabeledVertexGraph__<G>;
+     G::vertex_descriptor G::add_vertex(G::vertex_label const& l);
+ };
+
+The `add_vertex` operation adds a new vertex with the label `l` to the graph.
+
+The semantics vary if `__UniqueLabeledVertexGraph__<G>`. If a vertex in the graph
+is already associated with the label `l`, then a new vertex is not added, the label
+is not assigned, and the returned descriptor represents the existing vertex.
+[endsect]
+
+[section HasAddMappedVertex]
+The __HasAddVertex__ applies to any graph that defines any method for adding
+vertices to a graph after constrution.
+
+ concept __HasAddMappedVertex__<typename G> : __HasAddVertex__<G>
+ {
+     requires __MappedVertexGraph__<G>;
+     G::vertex_descriptor G::add_vertex(G::vertex_key const& k, G::vertex_label const& l);
+ };
+
+The `add_vertex` operation adds a new vertex to the graph associated with the key `k`
+and the label `l`.
+
+The semantics vary if `__UniqueMappedVertexGraph__<G>`. If a vertex in the graph
+is already associated with the key `k`, then a new vertex is not added, the label
+is not assigned, and the returned descriptor represents the existing vertex.
+[endsect]
+
+[section HasAddUniqueLabeledVertex]
+The __HasAddVertex__ applies to any graph that defines any method for adding
+vertices to a graph after constrution.
+
+ concept __HasAddUniqueLabeledVertex__<typename G> : __HasAddLabeledVertex__<G>
+ {
+      std::pair<G::vertex_descriptor, bool> G::insert_vertex(G::vertex_label const& l);
+ };
+
+Try to add the vertex to the graph, returning a descriptor a vertex and a boolean
+value that denotes the success of the operation. If the boolean value is returned
+as `false`, then a new vertex was not added and the descriptor references an existing
+vertex with the label `l`.
+[endsect]
+
+[section HasAddUniqueMappedVertex]
+The __HasAddVertex__ applies to any graph that defines any method for adding
+vertices to a graph after constrution.
+
+ concept __HasAddUniqueMappedVertex__<typename G> : __HasAddMappedVertex__<G>
+ {
+      std::pair<G::vertex_descriptor, bool> G::insert_vertex(G::vertex_key const& k,
+                                                             G::vertex_label const& l);
+ };
+
+Try to add the vertex to the graph, returning a descriptor a vertex and a boolean
+value that denotes the success of the operation. If the boolean value is returned
+as `false`, then a new vertex was not added and the descriptor references an existing
+vertex with the key `k`.
+[endsect]
+
+[section HasRemoveVertex]
+The __HasRemoveVertex__ applies to any graph that defines any method for removing
+vertices from a graph after construction. This concept refines the __HasAddVertex__
+concept. Graphs that support the dynamic removal of vertices must also support their
+addition. The converse is not necessarily true. A graph that supports vertex addition
+need not support removal.
+
+ concept __HasRemoveVertex__<typename G> : __HasAddVertex__<G>
+ {
+     requires Graph<G>;
+     void G::remove_vertex(G::vertex_descriptor v);
+ };
+
+The `remove_vertex()` operation removes the vertex `v` from the graph. All incident
+edges of `v` are removed prior to the removal of the vertex.
+[endsect]
+[endsect]
+
+[section Graph Kinds]
+This section enumerates structural requirements on kinds of graphs.
+
+The directed graph hierarchy has been re-composed to specifically name the direction
+of edges supported by the graph. This admits the ability to create graph data structures
+that support only out edges or only in edges, and (most commonly), both. This also
+allows algorithms that only operate on the in edges of graphs (there are probably a
+few) to only require that concept, rather than a fully directed graph.
+
+There are several different sub-hiearchies in this set of concepts:
+
+[table Kinds of Graphs
+[[Kind] [Related Concepts]]
+[
+    [
+        /Components/ - These concepts relate to the major components of the graph,
+        specifically access to the vertex and sets.
+    ]
+    [__VertexListGraph__, __EdgeListGraph__]
+]
+[
+    [
+        /Mutability/ - These concepts relate to the dynamic setup and teardown of graphs
+        after construction. These concepts are more taxonomic than anything since they
+        can't specify /how/ types are constructible or mutable. They are sometimes
+        useful to describe graphs that are constructible or fully mutable.
+
+        Unfortunately, these don't actually tell you you anything useful a graph
+        since they only require refinements of `Has*` concepts. These will probably
+        go away since they aren't that useful.
+    ]
+    [
+        __ConstructibleVertexGraph__, __MutableVertexGraph__, __ConstructibleEdgeGraph__,
+        __MutableEdgeGraph__, __ConstructibleGraph__, __MutableGraph__
+    ]
+]
+[
+    [
+        /Directionality/ - These concepts relate to the directionality of edges with
+        respect to graphs.
+    ]
+    [__UndirectedGraph__, __OutDirectedGraph__, __InDirectedGraph__, __DirectedGraph__]
+]
+[
+    [
+        /Incidence/ - Concepts related to the /generic/ notion of incidence of edges
+        and adjacency of vertices.
+    ]
+    [__IncidenceGraph__, __AdjacencyGraph__, __Multigraph__]
+]
+[
+    [
+        /Implementation/ - Concepts related to the data structures that implement
+        graph types. These concepts refine other graph concepts to describe efficient
+        operations, rather than just their syntactic presence.
+    ]
+    [__AdjacencyMatrix__, __IncidenceMatrix__]
+]
+]
+
+[section VertexListGraph]
+The __VertexListGraph__ describes the requirements of graphs that expose an iterable
+sequence of their vertices.
+
+ concept __VertexListGraph__<typename G> : __Graph__<G>
+ {
+     __ForwardIterator__ vertex_iterator;
+     __ForwardRange__ vertex_range;
+     __UnsignedIntegralLike__ vertices_size_type;
+
+     vertex_iterator begin_vertices() const;
+     vertex_iterator end_vertices() const;
+     vertex_range vertices() const;
+
+     vertices_size_type num_vertices() const;
+ };
+
+[endsect]
+
+[section EdgeListGraph]
+The __EdgeListGraph__ describes the requirements of graphs that expose an iterable
+sequence of their edges.
+
+ concept __EdgeListGraph__ : <typename G> : __Graph__<G>
+ {
+     __ForwardIterator__ edge_iterator;
+     __ForwardRange__ edge_range;
+     __UnsignedIntegralLike__ edges_size_type;
+
+     edge_iterator begin_edges() const;
+     edge_iterator end_edges() const;
+     edge_range edges() const;
+
+     edges_size_type num_edges() const;
+ };
+
+[endsect]
+
+[section ConstructibleVertexGraph]
+
+ concept __ConstructibleVertexGraph__<typename G> : __Graph__<G>
+ {
+     requires __HasAddVertex__<G>;
+ };
+
+[endsect]
+
+[section MutableVertexGraph]
+
+ concept __MutableVertexGraph__<typename G> : __ConstructibleVertexGraph__<G>
+ {
+     requires HasRemoveVertex<G>;
+ };
+
+[endsect]
+
+[section ConstructibleEdgeGraph]
+
+ concept __ConstructibleEdgeGraph__<typename G> : __Graph__<G>
+ {
+     requires __HasAddEdge__<G>;
+ };
+
+[endsect]
+
+[section MutableEdgeGraph]
+
+ concept __MutableEdgeGraph__<typename G> : __ConstructibleEdgeGraph__<G>
+ {
+     HasRemoveEdge<G>
+ };
+
+[endsect]
+
+[section ConstructibleGraph]
+
+ concept __ConstructibleGraph__<typename G>
+     : __ConstructibleVertexGraph__<G>, __ConstructibleEdgeGraph__<G>
+ { };
+
+[endsect]
+
+[section MutableGraph]
+
+ concept __MutableGraph__<typename G>
+    : __MutableVertexGraph__<G>, __MutableEdgeGraph__<G>
+ { }
+
+[endsect]
+
+[section UndirectedGraph]
+The __UndirectedGraph__ concept describes the requirements of undirected graphs,
+specifically, that the graph has undirected edges, and provides access to the incident
+edges of each vertex.
+
+ concept __UndirectedGraph__<typename G> : __Graph__<G>
+ {
+     requires __HasUndirectedEdges__<G>;
+
+     __ForwardIterator__ incident_edge_iterator;
+     __ForwardRange__ incident_edge_range;
+     __UnsignedIntegralLike__ incident_edges_size_type;
+
+     incident_edge_iterator G::begin_incident_edges(vertex_descriptor v) const;
+     incident_edge_iterator G::end_incident_edges(vertex_descriptor v) const;
+     incident_edge_range G::incident_edges(vertex_descriptor v) const;
+
+     incident_edges_size_type G::degree(vertex_descriptor v) const;
+ };
+
+[note *Design* This is not the same as __IncidenceGraph__. This concept describes
+requirements only for undirected graphs, whereas the __IncidenceGraph__ defines
+incidence as an abstract concept that can be satisfied differently by undirected
+and directed graphs.]
+[endsect]
+
+[section OutDirectedGraph]
+The __OutDirectedGraph__ concept defines requirements for graphs that provide
+directional access to the out-edges of a vertex.
+
+ concept __OutDirectedGraph__<typename G> : __Graph__<G>
+ {
+     requires __HasDirectedEdges__<G>;
+
+     __ForwardIterator__ out_edge_iterator;
+     __ForwardRange__ out_edge_range;
+     __UnsignedIntegralLike__ out_edges_size_type;
+
+     out_edge_iterator G::begin_out_edges(vertex_descriptor v) const;
+     out_edge_iterator G::end_out_edges(vertex_descriptor v) const;
+     out_edge_range G::out_edges(vertex_descriptor v) const;
+
+     out_edges_size_type G::out_degree(vertex_descriptor v) const;
+ };
+
+[note This replaces the `DirectedGraph` concept in the BGL, and makes it a little
+more explicit about what is being directed.]
+[endsect]
+
+[section InDirectedGraph]
+The __InDirectedGraph__ concept describes requirements for graphs that provide
+directional access to the in-edges of a vertex.
+
+ concept __InDirectedGraph__<typename G> : __Graph__<G>
+ {
+     requires __HasDirectedEdges__<G>;
+
+     __ForwardIterator__ in_edge_iterator;
+     __ForwardRange__ in_edge_range;
+     __UnsignedIntegralLike__ in_edges_size_type;
+
+     in_edge_iterator G::begin_in_edges(vertex_descriptor v) const;
+     in_edge_iterator G::end_in_edges(vertex_descriptor v) const;
+     in_edge_range G::in_edges(vertex_descriptor v) const;
+
+     in_edges_size_type G::in_degree(vertex_descriptor v) const;
+ };
+
+[note This concept does not exist by itself in the BGL, but was part of the
+`BidirectionalGraph` concept. It is conceivable that some algorithms operate only
+on the in-edges of a fully directed graph.]
+[endsect]
+
+[section DirectedGraph]
+The __DirectedGraph__ concept refines both __OutDirectedGraph__ and __InDirectedGraph__,
+providing directional access to both the in and out edges of a graph.
+
+ concept __DirectedGraph__<typename G> : __OutDirectedGraph__<G>, __InDirectedGraph__<G>
+ {
+     __UnsignedIntegralLike__ incident_edges_size_type = out_edges_size_type;
+     incident_edges_size_type G::degree(vertex_descriptor v) const;
+ };
+
+The `degree` of a vertex in a __DirectedGraph__ is the sum of the in and out degree.
+[endsect]
+
+[section IncidenceGraph]
+The __IncidenceGraph__ concept describes a generic interface for accessing the incident
+edges of a graph. Incidence is variably defined for the __UndirectedGraph__ and
+__DirectedGraph__ concepts. The former defines incidence directly, whereas the latter
+typically denotes outgoing edges as incident.
+
+ concept __IncidenceGraph__<typename G> : __Graph__<G>
+ {
+      __ForwardIterator__ incident_edge_iterator;
+      __ForwardRange__ incident_edge_range;
+      __UnsignedIntegralLike__ incident_edges_size_type;
+
+      incident_edge_iterator begin_incident_edges(G const& g, vertex_descriptor v);
+      incident_edge_interator end_incident_edges(G const& g, vertex_descriptor v);
+      incident_edge_range incident_edges(G const& g, vertex_descriptor v);
+
+      incident_edges_size_type num_incident_edges(G const& g);
+ };
+
+The `num_incident_edges` function returns the number of edges incident to vertex `v`
+of graph `g`. This number is counted along the edges considered incident by the graph.
+For an __UndirectedGraph__, this would be the same as its degree. For a __DirectedGraph__,
+however, it could be its out-degree or in-degree, depending on how the graph type
+satisfies these requirements, but not its cumulative degree.
+[endsect]
+
+[section AdjacencyGraph]
+The __AdjacencyGraph__ concept describes a generic interface for accessing the
+adjacent vertices of a graph. This is related to the __IncidenceGraph__ in that
+a vertex's adjacent vertices are the opposite endpoints of their incident edges.
+
+ concept __AdjacencyGraph__<typename G> : __IncidenceGraph__<G>
+ {
+      __ForwardIterator__ adjacent_vertex_iterator;
+      __ForwardRange__ adjacent_vertex_range;
+      __UnsignedIntegralLike__ adjacent_vertices_size_type;
+
+      adjacent_vertex_iterator begin_adjacent_vertices(G const& g, vertex_descriptor v);
+      adjacent_vertex_interator end_adjacent_vertices(G const& g, vertex_descriptor v);
+      adjacent_vertex_range adjacent_vertices(G const& g, vertex_descriptor v);
+
+      adjacent_vertices_size_type num_adjacenct_vertices(G const& g);
+ };
+
+[note *Question* If __Multigraph__<G>, how many times should a vertex `v` be considered
+adjacent to `u` if there are /n/ edges connecting them? From an implementation
+perspective, it would seem easy to say that `v` is adjacent /n/ times. From a common
+sense perspective, a vertex is either adjacent or it isn't - `v` should only be
+adjacent once. This is easier to implement with `multisets` than sequences.]
+[endsect]
+
+[section Multigraph]
+The __Multigraph__ concept defienes interface requirements for graphs that allow
+multiple edges connecting two distinct endpoints. Specifically, multigraphs must
+not have unique edges and provide a view of multiple edges connecting two vertices.
+This view is an abstraction over the incident edges of a graph, but may be implemented
+more efficiently (as in a `multiset` or `unordered_multiset`).
+
+ concept __Multigraph__<typename G> : __IncidenceGraph__<G>
+ {
+     requires HasMultiEdges<G>;
+
+     __ForwardIterator__ multi_edge_iterator;
+     __ForwardRange__ multi_edge_range;
+     __UnsignedIntegralLike__ multi_edges_size_type;
+
+     multi_edge_iterator begin_multi_edges(G const&, vertex_descriptor u, vertex_descriptor v);
+     multi_edge_iterator end_multi_edges(G const&, vertex_descriptor u, vertex_descriptor v);
+     multi_edge_range multi_edges(G const&, vertex_descriptor u, vertex_descriptor v);
+
+     multi_edges_size_type num_multi_edges(G const&, vertex_descriptor u, vertex_descriptor v);
+ };
+
+[note *Design* Ideally, this should constrain the access of multi edges to graphs
+that can provide this feature in time linear to the degree of both vertices. This
+basically restricts implementations to adjacency lists. Note that efficient implementations
+can supply supply these iterators in logarithmic or even constant time.]
+[endsect]
+
+[section AdjacencyMatrix]
+The __AdjacencyMatrix__ concept describes a refinement of a graph type that
+provides fast (constant-time) access to the edges connecting two vertices.
+
+ concept __AdjacencyMatrix__<typename G> : Graph<G>
+ {
+     requires HasEdge<G>;   // But constant time.
+ };
+
+This concept requires that the `edge` function return in constant time.
+[endsect]
+
+[section IncidenceMatrix]
+I'm not entirely sure what this does yet...
+
+ concept __IncidenceMatrix__<typename G> { };
+
+[endsect]
+[endsect]
+
+[endsect] [/ Graph Concepts /]

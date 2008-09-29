@@ -43,7 +43,7 @@ boostbook standalone : bin/gcc-4.2.3/debug/graphs.xml
         <xsl:param>chunk.section.depth=10
         <xsl:param>chunk.first.sections=1
         <xsl:param>toc.section.depth=10
-        <xsl:param>toc.max.depth=4
+        <xsl:param>toc.max.depth=2
         <xsl:param>generate.section.toc.level=10
 
 #         <xsl:param>boost.libraries=$(boost-root)/libs/libraries.htm

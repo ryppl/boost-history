@@ -1,4 +1,9 @@
 
+[def __VertexStoreSelector__ [^VertexStoreSelector]]
+[def __EdgeStoreSelector__ [^EdgeStoreSelector]]
+[def __HasAdd__ [^HasAdd]]
+[def __HasRemove__ [^HasRemove]]
+
 [section Adjacency List]
 An adjacency list is a family of data structures that can is used to implement
 undirected, unidirectional, and bidirectional graphs. In general, an adjacency list
@@ -35,4 +40,206 @@ template template parameter.]
 [include adj_list/undirected.qbk]
 [include adj_list/directed.qbk]
 
+[section Storage Selectors]
+The vertex storage selector is responsible for determining the type of the vertex
+descriptor, a vertex key (if used), and the the vertex store itself.
+
+[*TODO] Write more about storage selectors here.
+
+[section Vertex Store Selectors]
+The selection of a vertex store determines the implementation of the vertex set
+within an adjacencly lists and how vertices are added and removed from that set
+at runtime.
+
+Vertex store selectors are almost always templates that allow parameterization over
+allocation, comparison function, or hash function. The parameters for each vertex
+store selector are specific to that implementation.
+
+[note *Implementation* Note that many of these storage selectors reference standard
+containers. However, the actual types that implement these stores are wrappers around
+those containers that expose a shared interface.]
+
+[heading Vertex Vector]
+
+ template <template <typename> class Alloc >
+ struct vertex_vector;
+
+Vertices is implemented using a `std::vector`. Vertex vectors allow vertices to be added
+in constant time but do not allow removal. If a VertexLabel is given, vertices can
+be searched in linear time. The `vertex_vector` selector has the following parameters.
+
+[table
+ [[Parameter] [Description]]
+ [[[^Alloc]]
+  [The name of an __Allocator__ template used to allocate vertices in the vertex
+   store. /Default/: `std::allocator`.]]
+]
+
+Selecting an adjacency list with `vertex_vector` will cause
+the following concept maps to be defined for the instantiated graph type.
+
+ concept_map __ConstructibleGraph__<G> { };
+
+Graphs using vertex storage are runtime-constructilbe using either __HasAddUnlabeledVertex__
+or __HasAddLabeledVertex__, depending on the choice of `VertexLabel`. Adding vertices
+to the graph is always a /O(1)/ and always add new vertices. Vertex removal is not
+supported due to the invalidation semantics of `std::vector`.
+
+[heading Vertex List]
+
+[heading Vertex Set]
+
+[heading Vertex Map]
+
+[heading Vertex Hash Set]
+Not implemented.
+
+[heading Vertex Hash Map]
+Not implemented.
+
+[heading Compressed Vertex Set]
+Not implemented.
+
+[heading Details]
+A vertex store selector is described (roughly) by the following concept. Here, the
+`VertexStoreSelector` requires the definition of associated types for a `vertex_descriptor`,
+a `vertex_key` and a metafunction that resolves the the underlying type of vertex store,
+given a vertex type.
+
+ concept VertexStoreSelector<typename Selector>
+ {
+     typename vertex_descriptor;
+     typename vertex_key = unused;
+
+     template <typename Vertex>
+     struct vertex_store { typedef ``['unspecified]`` type; };
+ };
+
+The `vertex_desciptor`...
+
+The `vertex_key` is `ununsed` (a simple empty type like `none`) unless `vertex_store<V>::type`
+models __PairAssociativeContainer__.
+
 [endsect]
+
+[section Edge Store Selectors]
+The edge selector determines the type of property and incidence store for the
+undirected_graph class. The type of container implementing the property store
+depends on the type of incident edge store.
+
+ template <...>
+ struct undirected_edge_store_selector
+ {
+     typedef ... property_descriptor;
+     typedef ... incidence_descriptor;
+
+     template <typename VertexDesc, EdgeLabel>
+     struct property_store { typedef ... type; }
+
+     template <typename VertexDesc>
+     struct incidence_store { typedef ... type; }
+ };
+
+As with the vertex storage selector, the template parameters to the edge storage
+selector are determined by the types of container being constructed. This library
+currently provides the following types of edge storage selectors:
+
+For directed graphs, we have:
+
+ template <...>
+ struct directed_edge_store_selector
+ {
+     typedef ... out_edge_descriptor;
+     typedef ... in_edge_descriptor;
+
+     template <typename VertexDesc, EdgeLabel>
+     struct out_edge_store { typedef ... type; }
+
+     template <typename VertexDesc>
+     struct in_edge_store { typedef ... type; }
+ };
+
+Or something like that... It's subject to change.
+
+[table Edge Storage Selectors
+[[Selector] [Description]]
+    [
+        [`edge_vector<PropAlloc,IncAlloc>`]
+        [The property and incident edge store are both implemented using `std::vector`s.
+         Edges can be added to the graph in constant time, but not removed.
+
+         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
+         /Default/: `std::allocator`.
+
+         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
+         /Default/: `std::allocator`.
+        ]
+    ]
+    [
+        [`edge_list<PropAlloc,IncAlloc>`]
+        [
+         The property and incident edge store are `std::list`s. Edges can be added
+         and removed in constant time.
+
+         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
+         /Default/: `std::allocator`.
+
+         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
+         /Default/: `std::allocator`.
+        ]
+    ]
+    [
+        [`edge_set<Comp,PropAlloc,IncAlloc>`]
+        [
+         The property store is implemented as a `std::list`, and the incident edge
+         store is implemented as a `std::map`, mapping the endpoint vertex descriptor
+         to the edge's property descriptor (effectively a set of edges). Edges can
+         be added and removed in time logarithmic to the degree of the endpoints.
+
+         [*[^Comp]] - The name of a __StrictWeakOrder__ used to compare the endpoints of
+         edges. /Default/: `std::less`.
+
+         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
+         /Default/: `std::allocator`.
+
+         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
+         /Default/: `std::allocator`.
+        ]
+    ]
+    [
+        [`edge_multiset<Comp,PropAlloc,IncAlloc>`]
+        [
+         The property store is implemented as a `std::list`, and the incident edge
+         store is implemented as a `std::multimap`, multimapping the endpoint vertex
+         descriptor to the edge's property descriptor (effectively a multiset of edges).
+
+        [*[^Comp]] - The name of a __StrictWeakOrder__ used to compare the endpoints of
+         edges. /Default/: `std::less`.
+
+         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
+         /Default/: `std::allocator`.
+
+         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
+         /Default/: `std::allocator`.
+        ]
+    ]
+    [[`edge_unordered_set<>`] [Not implemented.]]
+    [[`edge_unordered_multiset<>`] [Not implemented.]]
+]
+The choice of edge set essentially determines whether the graph will be a __SimpleGraph__
+or __Multigraph__. If the selector chooses a __Sequence__ or __MultipleAssociativeContainer__,
+then the graph is a __Multigraph__, meaning that it can contain multiple edges connecting
+two vertices (i.e., having the same endpoints). If the selector chooses a
+__UniqueAssociativeContainer__ then the graph will be a __SimpleGraph__, having unique
+vertices identified by a particular label.
+[endsect] [/ Edge Store Selectors /]
+
+[heading Concepts]
+
+There are a couple of concepts associated with the storage compents of :
+
+ concept __HasAdd__<
+
+
+[endsect] [/ Storage Selectors /]
+[endsect] [/ Adjacency Lists /]

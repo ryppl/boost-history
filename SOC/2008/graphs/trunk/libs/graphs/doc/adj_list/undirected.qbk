@@ -1,9 +1,9 @@
 
-[def undirected_graph [^undirected_graph]]
-[def VertexLabel [^VertexLabel]]
-[def EdgeLabel [^EdgeLabel]]
-[def VertexStore [^VertexStore]]
-[def EdgeStore [^EdgeStore]]
+[def __undirected_graph__ [^undirected_graph]]
+[def __VertexLabel__ [^VertexLabel]]
+[def __EdgeLabel__ [^EdgeLabel]]
+[def __VertexStore__ [^VertexStore]]
+[def __EdgeStore__ [^EdgeStore]]
 
 [section `undirected_graph`]
 
@@ -14,250 +14,80 @@
  namespace adjacency_list {
 
      template <
-        typename VertexLabel = none,
-        typename EdgeLabel = none,
-        typename VertexStore = vertex_list<>,
-        typename EdgeStore = edge_list<>>
+        __ObjectType__ __VertexLabel__ = none,
+        __ObjectType__ __EdgeLabel__ = none,
+        __VertexStoreSelector__ __VertexStore__ = vertex_list<>,
+        __EdgeStoreSelector__ __EdgeStore__ = edge_list<>>
+    requires __MoveConstructible__<__VertexLabel__>
+          && __MoveConstructible__<__EdgeLabel__>
     undirected_graph;
 
  } } }
 
-The undirected_graph data structure is an adjacency list that implements undirected
-graph and is comprised of a number of types of objects. Its basic structure is
-shown in [link fig_1 Figure 1].
+The __undirected_graph__ data structure is an adjacency list implementation of undirected
+graphs. Its basic structure is shown in [link fig_1 Figure 1].
 
 [figure fig_1 images/graph/undirected.png
     [*Figure 1. Components of an undirected graph]
 ]
 
-* The VertexStore is a container that stores vertices (VertexLabel and incident edges)
-of the graph.
-* The `PropertyStore` is a container that stores the `EdgeLabel`s of edges in graph
-and descriptors to the endpoint vertices of the edge corresponding to the property.
-The type of the `PropertyStore` is determined by the type of the VertexStore.
-* The EdgeStore is a container associated with each vertex that stores descriptors
-to the corresponding endpoint and the property associated with the edge. The EdgeStore
-is referred to the `IncidenceStore` within the graph.
+* The /vertex store/ is a container that stores vertices (vertex labels and incident
+edges) of the graph.
+* The /property store/ is a container that stores edge labels and the edges endpoints.
+The type of the property store's implementation is determined entirely by the type of
+the vertex store.
+* The /incidence store/ is a per-vertex container that stores "edge pairs" a descriptor
+to the opposite endpoint and the edge label.
 
-[note *Impementation* The reason that the `PropertyStore` references the endpoints is to provide
-constant-time access to the endpoints of an edge during edge iteration. It is
-possible to create a simpler version of the undirected_graph who's property store
-does not contain back references, but neither would it provide edge iteration.]
+[note *Impementation* The reason that the `PropertyStore` references the endpoints is
+to provide constant-time access to the endpoints of an edge during edge iteration. It
+is possible (and feasible) to create a simpler version of the __undirected_graph__ who's
+property store does not contain back references, but neither would it provide edge
+iteration.]
 
-[note *Implementation* When the edge property is none, the property store should be compressed,
-eliminating the required storage space. Property descriptors can be transacted as
-integer values (or GUID's if the graph is expected to exceed 2^32 edges. This has
-specialization has not been implemented.]
+[note *Implementation* When the edge property is none, the property store should be
+compressed, eliminating the required storage space. Property descriptors could probably
+be `typedef`'d as integer values (or GUID's if the graph is expected to exceed 2^32
+edges. This has specialization has not been implemented.]
 
-[heading Template Parameters]
-The following base requirements apply to the template parameters of the undirected_graph.
+[heading Template Parameters and Requirements]
+The following base requirements apply to the template parameters of the __undirected_graph__.
 
-[table Template Parameters
+[table
 [[Parameter] [Description]]
-[[VertexLabel] [Data associated with each vertex. This defaults to `none`. This must be Semiregular.]]
-[[EdgeLabel] [Data associated with each edge. This defaults to `none`. This must be Semiregular]]
-[[VertexStore] [The vertex store selector. This defaults to `vertex_list<>`.]]
-[[EdgeStore] [The edge store selector. This defaults to `edge_list<>`.]]
+[[__ObjectType__ __VertexLabel__]
+ [Data associated with each vertex. This defaults to `none`.]]
+[[__ObjectType__ __EdgeLabel__]
+ [Data associated with each edge. This defaults to `none`.]]
+[[__VertexStoreSelector__ __VertexStore__]
+ [The vertex store selector. This defaults to `vertex_list<>`.]]
+[[__EdgeStoreSelector__ __EdgeStore__]
+ [The edge store selector. This defaults to `edge_list<>`.]]
 ]
-[heading Storage Selectors]
-The vertex storage selector is responsible for determining the type of the vertex
-descriptor, a vertex key (if used), and the the vertex store itself.
 
- template <...>
- struct vertex_store_selector
- {
-     typedef ... vertex_descriptor;
-     typedef ... vertex_key;
+The default __undirected_graph__ type defines a very basic graph with unlabeled
+vertices and edges that supports efficient, runtime setup and teardown - the
+addition and removal of vertices after construction.
 
-     template <typename Vertex>
-     struct vertex_store { typedef ... type; };
- };
+The __VertexLabel__ and __EdgeLabel__ are required to be __MoveConstructible__,
+which is a common requirement for the types contained by standard containers.
 
-The template parameters to a vertex store selector can be nearly anything. For example,
-in the default selectors, they are used to pass `allocator` types, and comparision
-or hash fucntions to the vertex store.
-
-[note Unless the `vertex_store<...>::type` results in a PairAssociativeContainer, the
-vertex_key is typically defined as `unused`.]
-
-The library currently defines the  following vertex storage selectors for undirected
-graphs:
-
-[table Vertex Storage Selectors
-[[Selector] [Description]]
-    [
-        [`vertex_vector<Alloc>`]
-        [Vertices are stored in a `std::vector`. Vertex vectors allow vertices to
-         be added in constant time but do not allow removal. If a VertexLabel is
-         given, vertices can be searched in linear time.
-
-         [*[^Alloc]] - The name of an __Allocator__ template used to allocate vertices
-         in the vertex store. /Default/: `std::allocator`.
-        ]
-    ]
-    [
-        [`vertex_list<Alloc>`]
-        [Vertices are stored in a `std::list`. Vertex lists allow vertices to be
-         added and removed in constant time, and if a VertexLable is given, searched
-         in linear time.
-
-         [*[^Alloc]] - The name of an __Allocator__ used to allocate vertex objects.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [
-        [`vertex_set<Comp,Alloc>`]
-        [Vertices are stored in a `std::set`. Vertex sets allow vertices to be added,
-         removed and found (by their VertexLabel) in logarithmic time.
-
-         [*[^Comp]] - The name of a __StrictWeakOrder__ template used to compare the labels
-         of vertices in the vertex store. /Default/: `std::less`.
-
-         [*[^Alloc]] - The name of an __Allocator__ used to allocate vertex objects.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [
-        [`vertex_map<Key,Comp,Alloc>`]
-        [Vertices are stored in a `std::map` and mapped to a key of type `Key`. Vertex
-         maps allow vertices to be added, removed and found (by their VertexLabel)
-         in logarithmic time.
-
-         [*[^Key]] - The type of key objects that are uniquely mapped to each vertex.
-         There is not default key type, it must be provided when the graph type is defined.
-
-         [*[^Comp]] - The name of a __StrictWeakOrder__ template used to compare the keys
-         of vertices in the vertex store. /Default/: `std::less`.
-
-         [*[^Alloc]] - The name of an __Allocator__ used to allocate vertex objects.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [[`vertex_multiset<>`] [Not implemented.]]
-    [[`vertex_multimap<>`] [Not implemented.]]
-    [[`vertex_unordered_set<>`] [ Not implememnted]]
-    [[`vertex_unordered_map<>`] [ Not implememnted]]
-    [[`vertex_unordered_multiset<>`] [ Not implememnted]]
-    [[`vertex_unordered_multimap<>`] [ Not implememnted]]
-]
-The choice of vertex storage selector determines the how your program can add and\/or
-remove vertices from the graph. A selector that chooses a __Sequence__ container can be
-used to implement graphs whose VertexLabel does not (necessarily) uniquely identify
-the vertex. Selectors that choose __UniqueAssociativeContainer__ containers can be used to
-associate unique labels with each vertex. In the case of __PairAssociativeContainer__
-containers, a key is mapped to each vertex in the graph. In this case, the `Key`
-parameter of the storage selector /must not be the same type/ as the VertexLabel.
-
-[note Selectors that choose __MultipleAssociativeContainer__ containers describe an
-interesting class of graphs with sets of "equivalent" vertices. I don't know of any
-obvious applications of this kind of graph, but they may be out there.]
-
-[important If the VertexStore selects an __AssociativeContainer__ then the VertexLabel
-must not be `none`.]
-
-The edge selector determines the type of property and incidence store for the
-undirected_graph class. The type of container implementing the property store
-depends on the type of incident edge store.
-
- template <...>
- struct undirected_edge_store_selector
- {
-     typedef ... property_descriptor;
-     typedef ... incidence_descriptor;
-
-     template <typename VertexDesc, EdgeLabel>
-     struct property_store { typedef ... type; }
-
-     template <typename VertexDesc>
-     struct incidence_store { typedef ... type; }
- };
-
-As with the vertex storage selector, the template parameters to the edge storage
-selector are determined by the types of container being constructed. This library
-currently provides the following types of edge storage selectors:
-
-[table Edge Storage Selectors
-[[Selector] [Description]]
-    [
-        [`edge_vector<PropAlloc,IncAlloc>`]
-        [The property and incident edge store are both implemented using `std::vector`s.
-         Edges can be added to the graph in constant time, but not removed.
-
-         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
-         /Default/: `std::allocator`.
-
-         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [
-        [`edge_list<PropAlloc,IncAlloc>`]
-        [
-         The property and incident edge store are `std::list`s. Edges can be added
-         and removed in constant time.
-
-         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
-         /Default/: `std::allocator`.
-
-         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [
-        [`edge_set<Comp,PropAlloc,IncAlloc>`]
-        [
-         The property store is implemented as a `std::list`, and the incident edge
-         store is implemented as a `std::map`, mapping the endpoint vertex descriptor
-         to the edge's property descriptor (effectively a set of edges). Edges can
-         be added and removed in time logarithmic to the degree of the endpoints.
-
-         [*[^Comp]] - The name of a __StrictWeakOrder__ used to compare the endpoints of
-         edges. /Default/: `std::less`.
-
-         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
-         /Default/: `std::allocator`.
-
-         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [
-        [`edge_multiset<Comp,PropAlloc,IncAlloc>`]
-        [
-         The property store is implemented as a `std::list`, and the incident edge
-         store is implemented as a `std::multimap`, multimapping the endpoint vertex
-         descriptor to the edge's property descriptor (effectively a multiset of edges).
-
-        [*[^Comp]] - The name of a __StrictWeakOrder__ used to compare the endpoints of
-         edges. /Default/: `std::less`.
-
-         [*[^PropAlloc]] - The name of an __Allocator__ used to allocate edge labels.
-         /Default/: `std::allocator`.
-
-         [*[^IncAlloc]] - The name of an __Allocator__ used to allocate incident edges.
-         /Default/: `std::allocator`.
-        ]
-    ]
-    [[`edge_unordered_set<>`] [Not implemented.]]
-    [[`edge_unordered_multiset<>`] [Not implemented.]]
-]
-The choice of edge set essentially determines whether the graph will be a __SimpleGraph__
-or __Multigraph__. If the selector chooses a __Sequence__ or __MultipleAssociativeContainer__,
-then the graph is a __Multigraph__, meaning that it can contain multiple edges connecting
-two vertices (i.e., having the same endpoints). If the selector chooses a
-__UniqueAssociativeContainer__ then the graph will be a __SimpleGraph__, having unique
-vertices identified by a particular label.
+[note *Design* Are these not also required to be __DefaultConstructible__?]
 
 [heading Associated Types]
-[table Associated Types
-[[Typename] [Description]]
-[[`G::vertex_label`] [The same as VertexLabel.]]
-[[`G::edge_label`] [The same as EdgeLabel.]]
+The __undirected_graph__ defines the following associated types as part of its
+public interface.
+
+[table
+[[Type name] [Description]]
+[[`G::vertex_label`] [The same as `VertexLabel`.]]
+[[`G::edge_label`] [The same as `EdgeLabel`.]]
 [[`G::vertex_descriptor`] [The representative type of vertices.]]
 [[`G::edge_descriptor`] [The representative type of edges.]]
 [[`G::vertices_size_type`] [The unsigned integral type of the number of vertices.]]
 [[`G::edges_size_type`] [The unsigned integral type of the total number of edges.]]
-[[`G::incident_edges_size_type`] [The unsigned integral type of the number of edges incident to a vertex.]]
+[[`G::incident_edges_size_type`]
+ [The unsigned integral type of the number of edges incident to a vertex.]]
 
 [[`G::vertex_iterator`] [An iterator type for the vertices in the graph.]]
 [[`G::vertex_range`] [A range of vertex iterators.]]
@@ -268,71 +98,173 @@ vertices identified by a particular label.
 [[`G::adjacent_vertex_iterator`] [An iterator type for the vertices adjacent to a given vertex.]]
 [[`G::adjacent_vertex_range`] [A range of adjacent vertex iterators.]]
 ]
-The following section is a list of member functions of the graph.
+
+The following associated types define the types of the components selected by
+the __VertexStore__ and __EdgeStore__ template parameters. These types are provided
+only for documentary purposes. They are not (currently) part of the public interface
+of the __undirected_graph__ class.
+
+[table
+[[Type name] [Description]]
+[[`G::vertex_store`] [The type of the vertex container.]]
+[[`G::proeprty_store`] [The type of the property container.]]
+[[`G::incidence_store`] [The type of the incident edge container for each vertex.]]
+]
 
 [heading Constructors and Destructor]
 
- undirected_graph()
- undirected_graph(undirected_graph const& g)
- undirected_graph(undirected_graph&& g)
- ~undirected_graph()
+ undirected_graph::undirected_graph()
+ undirected_graph::undirected_graph(undirected_graph const& g)
+ undirected_graph::undirected_graph(undirected_graph&& g)
+ ~undirected_graph::undirected_graph()
 
 The usual cadre of constructors and descructors that make graphs __Regular__. The
 undirected graph class supports default, copy, and move construction.
 
+[table
+[[Parameters] [Description]]
+[[`undirected_graph const& g`] [The graph being copied.]]
+[[`undirected_graph&& g`] [The graph being moved.]]
+]
+
+[variablelist
+[[Complexity]
+ [Default and move construction is O(1). Copy assignment is O(V + E) for all
+  kinds of graphs.]]
+ [[Notes]
+  [After moving, the graph `g` will be empty, having been cleared during the
+   `move` operation.]]
+]
+
 [heading Operators]
 
- undirected_graph& operator=(undirected_graph const& g)
- undirected_graph& operator=(undirected_graph&& g)
+ undirected_graph& undirected_graph::operator=(undirected_graph const& g)
+ undirected_graph& undirected_graph::operator=(undirected_graph&& g)
 
 Copy or move assign the vertices and edges of the graph `g` to this graph.
 
- vertex_label& operator[](vertex_descriptor v)
- vertex_label const& operator(vertex_descriptor v) const
+[table
+[[Parameters] [Description]]
+[[`undirected_graph const& g`] [The graph being copied.]]
+[[`undirected_graph&& g`] [The graph being moved.]]
+[[`return`] [The object being assigned (i.e., `*this`).]]
+]
+
+[variablelist
+[[Complexity]
+ [Move assignment is O(1). Copy assignment is O(V + E) for all kinds of graphs.]]
+]
+
+ vertex_label&          undirected_graph::operator[](vertex_descriptor v)
+ vertex_label const&    undirected_graph::operator[](vertex_descriptor v) const
 
 Return the label associated with the given vertex. This operation is only available
 for graphs with labeled vertices.
 
- edge_label& operator[](edge_descriptor e)
- edge_label const& operator[](edge_descriptor e) const
+[table
+[[Parameters] [Description]]
+[[`vertex_descriptor v`] [The vertex whose label is being accessed.]]
+[[`return`] [The label associated with the vertex described by `v`.]]
+]
+
+[variablelist
+[[Constraints] [Only available for `__LabeledVertexGraph__<G>` or `__MappedVertexGraph__<G>`.]]
+[[Complexity] [Property access is O(1).]]
+]
+
+ edge_label&        undirected_graph::operator[](edge_descriptor e)
+ edge_label const&  undirected_graph::operator[](edge_descriptor e) const
 
 Return the label associated with the given edge. This operation is only available
 for graphs with labeled edges.
+
+[table
+[[Parameters] [Description]]
+[[`edge_descriptor e`] [The edge whose label is being accessed.]]
+[[`return`]  [The label associated with the edge described by `e`.]]
+]
+
+[variablelist
+[[Constraints] [Only available for `__LabeledEdgeGraph__<G>`.]]
+[[Complexity] [Property access is O(1).]]
+]
 
 [heading Adding Vertices]
 
  vertex_descriptor add_vertex()
 
-Add an unlabeled vertex to the graph, returning the descriptor. This operation is
-only available for graphs with unlabeled vertices or whose labels are default constructible.
+Add an unlabeled vertex to the graph, returning the descriptor.
 
-/Complexity/: For vertex stores that model a __Sequence__ or __HashedAssociativeContainer__,
- this operation is /O(1)/. For __SortedAssociativeContainer__, this operation is
-/O(lg V)/.
+[variablelist
+[[Constraints]
+ [This operation is defined only if this graph models `__UnlabeledEdgeGraph__<G>`.]]
+[[Complexity] [Unlabeled vertex addition is O(1).]]
+]
 
  vertex_descriptor add_vertex(vertex_label const& l)
 
-Add a vertex with the label `l` to the graph, returning the descriptor. This operation
-is only available for graphs with labeled vertices (but not pair associative labels).
+Add a vertex with the label `l` to the graph, returning the descriptor.
 
-/Complexity/: For vertex stores that model a __Sequence__ or __HashedAssociativeContainer__
-this is /O(1)/. For __SortedAssociativeContainer__, this is /O(lg V)/.
+[variablelist
+[[Constraints]
+ [This operation is defined only if this graph models`__LabeledEdgeGraph__<G>`.]]
+[[Specializations]
+ [If `__UniqueAssociativeContainer__<G::vertex_store>` and the graph already contains
+  a vertex associated with the label `l`, a new vertex is not added and the returned
+  descriptor references the existing vertex.]]
+[[Complexity]
+ [For `__Sequence__<G::vertex_store>` and `__HashedAssociativeContainer__<G::vertex_store>`,
+  vertex addition is O(1). For `__SortedAssociativeContainer__<G::vertex_store>`, this
+  operation is O(lg V).]]
+]
 
  vertex_descriptor add_vertex(vertex_key const& k, vertex_label const& l)
 
-Add a vertex to the map with the label `l` and associate it with the key `k`. This
-operation is only avaialable for graphs with pair associative vertex labels.
+Add a vertex to the map with the label `l` and associate it with the key `k`, returning
+the descriptor.
 
-/Complexity/: For vertex stores that model a __HashedAssociativeContainer__, this
-is /O(1)/. For __SortedAssociativeContainer__, this is /O(lg V)/.
+[variablelist
+[[Constraints] [Only available for `__LabeledEdgeGraph__<G>`.]]
+[[Specializations]
+ [If `__UniqueAssociativeContainer__<G::vertex_store>` and the graph already contains
+  a vertex associated with the key `k`, a new vertex is not added and the  returned
+  descriptor references the existing vertex.]]
+[[Complexity]
+ [For `__Sequence__<G::vertex_store>` and `__HashedAssociativeContainer__<G::vertex_store>`,
+  vertex addition is /O(1)/. For `__SortedAssociativeContainer__<G::vertex_store>`, this
+  operation is /O(lg V)/.]]
+]
 
 [heading Accessing Vertices]
 
  vertex_descriptor vertex(vertex_label const& l) const
- vertex_descriptor vertex(verte_key const& k) const
 
-Return a vertex descriptor for the vertex identified by the given vertex label or
-key.
+Return a descriptor for a vertex with the label `l`. If no such vertex exists, return
+a null descriptor.
+
+[variablelist
+[[Constraints] [Only available for `__LabeledVertexGraph__<G>`.]]
+[[Specializations]
+ [If `__HasMultiEdges__<G>`, this will return a descriptor to the first vertex found
+  with the label `l`.]]
+[[Complexity for `__HashedAssociativeContainer__<G::vertex_store>`] [O(1)]]
+]
+
+ vertex_descriptor vertex(vertex_key const& k) const
+
+Return a descriptor for a vertex associated with the key `k`. If no such vertex exists,
+return a null descriptor.
+
+[variablelist
+[[Constraints] [Only available for `__MappedVertexGraph__<G>`.]]
+[[Specializations]
+ [If `__HasMultiEdges__<G>`, this will return a descriptor to the first vertex found
+  with the key `k`.]]
+[[Complexity]
+ [For `__HashedAssociativeContainer__<G::vertex_store>`, this operations is O(1).
+  For `__SortedAssociativeContainer__<G::vertex_store>`, this operation is O(lg V).
+  For `__Sequence__<G::vertex_store>`, this operation is O(V)]]
+]
 
 [heading Removing Vertices]
 
@@ -342,13 +274,21 @@ key.
 
 Remove the given vertex or the vertex uniquely identified by the given label or
 key. All edges incident to the vertex are removed prior to the removal of the
-vertex.
+vertex.  The label and key overloads are equivalent to `remove_vertex(vertex(x))`
+where `x` is either the label or the key.
+
+/Restrictions:/ This operation not supported by vertex stores with unstable remove
+operations (i.e., `vertex_vector`).
+
+/Complexity:/
 
 [heading Adding Edges]
 
  void add_edge(vertex_descriptor u, vertex_descriptor v)
  void add_edge(vertex_label const& p, vertex_label const& q)
  void add_edge(vertex_key const& x, vertex_key const& y)
+
+ 
 
 [heading Accessing Edges]
 
@@ -406,5 +346,15 @@ Return iterators or an iterator range over the edges of the graph.
  incident_edge_iterator begin_incident_edges(vertex_descriptor v) const
  incident_edge_iterator end_incident_edges(vertex_descriptor v) const
  incident_edge_range incident_edges(vertex_descriptor v) const
+
+[heading Miscellaneous]
+
+ undirected_graph& swap(undirected_graph&& g)
+
+Swap this graph with `g` in constant time. Return a reference to this graph.
+
+ undirected_graph& clear()
+
+Remove all edges and verties from the graph in O(V + E
 
 [endsect]
