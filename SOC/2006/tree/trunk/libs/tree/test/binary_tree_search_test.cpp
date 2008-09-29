@@ -24,8 +24,8 @@ using namespace boost::tree;
 void search_single_element(binary_tree<int>::const_cursor r, int v)
 {
     binary_tree<int>::const_cursor c, d;
-    c = inorder::lower_bound(r, v);
-    d = inorder::upper_bound(r, v); 
+    c = lower_bound(r, v);
+    d = upper_bound(r, v); 
     
     BOOST_CHECK(*c == v);
     //BOOST_CHECK(inorder::next(c) == d);
@@ -43,18 +43,18 @@ int test_main(int, char* [])
     search_single_element(test_tree.root(), 6); // Non-Leaf
     search_single_element(test_tree.root(), 8); // root().begin()
 
-    c = inorder::lower_bound(test_tree.root(), 5); // Not in tree
-    d = inorder::lower_bound(test_tree.root(), 5);
+    c = lower_bound(test_tree.root(), 5); // Not in tree
+    d = lower_bound(test_tree.root(), 5);
     BOOST_CHECK(*c == 6);
     BOOST_CHECK(*d == 6);
     
     *c = 4;
     
-    c = inorder::lower_bound(test_tree.root(), 5); // Not in tree
+    c = lower_bound(test_tree.root(), 5); // Not in tree
     BOOST_CHECK(*c == 7);
 
-    c = inorder::lower_bound(test_tree.root(), 4); // Twice in tree
-    d = inorder::upper_bound(test_tree.root(), 4);
+    c = lower_bound(test_tree.root(), 4); // Twice in tree
+    d = upper_bound(test_tree.root(), 4);
     BOOST_CHECK(*c == 4);
     BOOST_CHECK(*d == 7);
     BOOST_CHECK(*c.parent() == 4);
