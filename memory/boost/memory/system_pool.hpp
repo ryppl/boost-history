@@ -24,6 +24,10 @@
 #include <boost/detail/winapi/winbase.h>
 #endif
 
+#ifndef BOOST_DETAIL_THREADMODEL_HPP
+#include <boost/detail/threadmodel.hpp>
+#endif
+
 #if 1 // defined(BOOST_DETAIL_NO_TAGGED_COMPARE_AND_SWAP_POINTER)
 #define BOOST_MEMORY_NO_LOCKFREE
 #else
