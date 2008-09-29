@@ -21,8 +21,6 @@
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
 
 #include <boost/tree/detail/algorithm/iterator.hpp>
-#include <boost/tree/detail/algorithm/iterator.hpp>
-#include <boost/tree/detail/algorithm/iterator.hpp>
 
 #include <algorithm>
 
