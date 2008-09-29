@@ -9,8 +9,8 @@
  * Subtree intorder traversal and search algorithms
  */
 
-#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
-#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_INORDER_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_INORDER_HPP
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
@@ -301,4 +301,4 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ALGORITHM_CURSOR_INORDER_HPP
+#endif // BOOST_TREE_DETAIL_ALGORITHM_INORDER_HPP

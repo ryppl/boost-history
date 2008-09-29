@@ -8,11 +8,10 @@
  * @file general.hpp
  * General algorithms for cursors
  */
-//TODO:
-// Concept checks
 
-#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_GENERAL_HPP
-#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_GENERAL_HPP
+
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_GENERAL_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_GENERAL_HPP
 
 
 namespace boost {
@@ -125,4 +124,4 @@ typename InCursor::size_type size(InCursor c)
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ALGORITHM_CURSOR_GENERAL_HPP
+#endif // BOOST_TREE_DETAIL_ALGORITHM_GENERAL_HPP

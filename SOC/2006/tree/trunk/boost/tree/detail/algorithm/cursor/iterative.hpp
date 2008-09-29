@@ -11,8 +11,8 @@
  * defined in the respective *order.hpp files).
  */
 
-#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ITERATIVE_HPP
-#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ITERATIVE_HPP
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP
 
 #include <boost/tree/detail/algorithm/cursor/preorder.hpp>
 #include <boost/tree/detail/algorithm/cursor/inorder.hpp>
@@ -129,4 +129,4 @@ OutCursor transform (Order, InCursor s, OutCursor t, Op op)
 } // namespace tree
 } // namespace boost
 
-#endif //BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ITERATIVE_HPP
+#endif //BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP

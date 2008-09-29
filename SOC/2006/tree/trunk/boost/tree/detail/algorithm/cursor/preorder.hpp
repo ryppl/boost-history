@@ -11,8 +11,8 @@
 
 // TODO: concept checks.
 
-#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
-#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_PREORDER_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_PREORDER_HPP
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
@@ -231,4 +231,4 @@ OutCursor transform(preorder, InCursor s, OutCursor t, Op op)
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
+#endif // BOOST_TREE_DETAIL_ALGORITHM_PREORDER_HPP

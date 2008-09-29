@@ -8,12 +8,10 @@
  * @file ascending.hpp
  * Ascending traversal algorithms for cursors
  */
-//TODO:
-// Concept checks: MultiwayTree, parent?
-// Optimise for trees such as binary_tree with their own ascending begin() members!
 
-#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ASCENDING_HPP
-#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ASCENDING_HPP
+
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_ASCENDING_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_ASCENDING_HPP
 
 
 namespace boost {
@@ -41,4 +39,4 @@ inline void forward(ascending, MultiwayCursor& c)
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ASCENDING_HPP
+#endif // BOOST_TREE_DETAIL_ALGORITHM_ASCENDING_HPP

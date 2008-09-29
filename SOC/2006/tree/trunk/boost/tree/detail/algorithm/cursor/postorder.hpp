@@ -9,8 +9,8 @@
  * Subtree postorder traversal algorithms
  */
 
-#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
-#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_POSTORDER_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_POSTORDER_HPP
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
@@ -234,4 +234,4 @@ OutCursor transform(postorder, InCursor s, OutCursor t, Op op)
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ALGORITHM_CURSOR_POSTORDER_HPP
+#endif // BOOST_TREE_DETAIL_ALGORITHM_POSTORDER_HPP
