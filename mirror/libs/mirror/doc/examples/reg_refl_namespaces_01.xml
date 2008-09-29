@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="mirror.examples.reg_refl_namespaces_01"
+	 xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+<using-namespace name="boost::mirror"/>
+<using-namespace name="boost::cts"/>
+
+<title>Namespace registering and reflection - example 1</title>
+<para>
+</para>
+<xi:include href="../samples/usage_namespaces_01.xml"/>
+</section>
+

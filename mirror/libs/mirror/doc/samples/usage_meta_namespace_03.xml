@@ -29,7 +29,7 @@ int main(void)
 	//
 	cout &lt;&lt; mns &lt;&lt; endl;
 	wcout &lt;&lt; mns &lt;&lt; endl;
-
+	
 	return 0;
 }
 </programlisting>

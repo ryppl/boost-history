@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.meta_namespace.usage04">
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/meta_namespaces/boost_tuples.hpp&gt;
+#include &lt;boost/mirror/meta_namespaces/boost_cts.hpp&gt;
+
+
+template &lt; typename CharT, typename NsPlaceholder &gt;
+::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
+operator &lt;&lt; (
+	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
+	::boost::mirror::<classname>meta_namespace</classname>&lt; NsPlaceholder &gt; _mn
+)
+{
+	return _s &lt;&lt;_mn.get_name(
+		::boost::mpl::false_(), 
+		::std::char_traits&lt; CharT &gt;()
+	); 
+}
+
+
+int main(void)
+{
+	using namespace ::std;
+	//
+	cout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::std)() &lt;&lt; endl;
+	wcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost)() &lt;&lt; endl;
+	cout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror)() &lt;&lt; endl;
+	wcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::mirror)() &lt;&lt; endl;
+	cout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::cts)() &lt;&lt; endl;
+	wcout &lt;&lt; <macroname>BOOST_MIRRORED_NAMESPACE</macroname>(::boost::tuples)() &lt;&lt; endl;
+	
+	return 0;
+}
+</programlisting>
+

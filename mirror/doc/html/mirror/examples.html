@@ -42,15 +42,9 @@
 <a name="mirror.examples.registering"></a>Registering</h3></div></div></div>
 <p>
 		</p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="mirror.examples.reflection"></a>Reflection</h3></div></div></div>
-<p>The following table shows the list of examples showing the use of the <a class="link" href="reference.html#mirror.reference.reflecting" title="Reflecting">reflection macros</a>.
-		</p>
 <div class="table">
-<a name="id2614070"></a><p class="title"><b>Table 1.5. Reflection examples</b></p>
-<div class="table-contents"><table class="table" summary="Reflection examples">
+<a name="id2614048"></a><p class="title"><b>Table 1.5. Registering examples</b></p>
+<div class="table-contents"><table class="table" summary="Registering examples">
 <colgroup>
 <col>
 <col>
@@ -60,9 +54,47 @@
 <th>Notes</th>
 </tr></thead>
 <tbody><tr>
-<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_01" title="Reflecting namespaces - example 1">Namespace reflection - 1</a></td>
-<td>Simple example showing reflection of the pre-registered namespaces. </td>
+<td><a class="link" href="examples.html#mirror.examples.reg_refl_namespaces_01" title="Namespace registering and reflection - example 1">Namespace reflection and registering - example 1</a></td>
+<td>A complete example showing the registering and reflection of namespaces and the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template. </td>
 </tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.examples.reflection"></a>Reflection</h3></div></div></div>
+<p>The following table contains a list of examples showing the use of the <a class="link" href="reference.html#mirror.reference.reflecting" title="Reflecting">reflection macros</a>.
+		</p>
+<div class="table">
+<a name="id2614131"></a><p class="title"><b>Table 1.6. Reflection examples</b></p>
+<div class="table-contents"><table class="table" summary="Reflection examples">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Example</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_01" title="Reflecting namespaces - example 1">Namespace reflection - example 1</a></td>
+<td>Simple example showing reflection of the pre-registered namespaces. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.reg_refl_namespaces_01" title="Namespace registering and reflection - example 1">Namespace reflection and registering - example 1</a></td>
+<td>A complete example showing the registering and reflection of namespaces and the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_types_01" title="Reflecting complex types - example 1">Derived type reflection - example 1</a></td>
+<td>A simple example showing the reflection of types and the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template's name getters. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_types_02" title="Reflecting types and use of meta_type - example 1">Type reflection and <code class="computeroutput">meta_type</code> usage - example 1</a></td>
+<td>An example showing the reflection of types and the usage of the member functions and typedefs provided by the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template. </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break">
@@ -73,7 +105,7 @@
 <p>Examples listed in the following table are related to the usage of the templates modelling the <a class="link" href="concepts.html#mirror.concepts.meta_object" title="MetaObject">MetaObject</a> concept.
 		</p>
 <div class="table">
-<a name="id2614142"></a><p class="title"><b>Table 1.6. Reflection examples</b></p>
+<a name="id2614295"></a><p class="title"><b>Table 1.7. Reflection examples</b></p>
 <div class="table-contents"><table class="table" summary="Reflection examples">
 <colgroup>
 <col>
@@ -83,10 +115,36 @@
 <th>Example</th>
 <th>Notes</th>
 </tr></thead>
-<tbody><tr>
-<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_01" title="Reflecting namespaces - example 1">Namespace reflection - 1</a></td>
+<tbody>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_01" title="Reflecting namespaces - example 1">Simple meta namespace usage</a></td>
 <td>Simple example showing the use of <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>'s name getters. </td>
-</tr></tbody>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_02" title="Usage of meta_namespace - example 1">Meta namespace name getters - example 1</a></td>
+<td>Example showing the use of <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>'s name getters and the use of the <code class="computeroutput">scope</code> and <code class="computeroutput">ancestors</code> typedefs. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_03" title="Usage of meta_namespace's generic name getter - example 1">Meta namespace generic name getter - example 1</a></td>
+<td>Example showing the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>'s generic name getter member function <code class="computeroutput">get_name</code>. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_namespaces_04" title="Usage of meta_namespace's generic name getter - example 2">Meta namespace generic name getter - example 2</a></td>
+<td>This example is a variation of the <a class="link" href="examples.html#mirror.examples.refl_namespaces_03" title="Usage of meta_namespace's generic name getter - example 1">Meta namespace generic name getter - 1</a> and shows the use of the <code class="computeroutput">get_name</code> generic namespace name getter member function. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.reg_refl_namespaces_01" title="Namespace registering and reflection - example 1">Namespace reflection and registering - example 1</a></td>
+<td>A complete example showing the registering and reflection of namespaces and the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_types_01" title="Reflecting complex types - example 1">Meta type name getters - example 1</a></td>
+<td>A simple example showing the reflection of types and the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template's name getters. </td>
+</tr>
+<tr>
+<td><a class="link" href="examples.html#mirror.examples.refl_types_02" title="Reflecting types and use of meta_type - example 1">Type reflection and <code class="computeroutput">meta_type</code> usage - example 1</a></td>
+<td>An example showing the reflection of types and the usage of the member functions and typedefs provided by the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template. </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break">
@@ -118,7 +176,15 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="mirror.examples.all"></a>All examples</h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="examples.html#mirror.examples.refl_namespaces_01">Reflecting namespaces - example 1</a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="examples.html#mirror.examples.refl_namespaces_01">Reflecting namespaces - example 1</a></span></dt>
+<dt><span class="section"><a href="examples.html#mirror.examples.refl_namespaces_02">Usage of meta_namespace - example 1</a></span></dt>
+<dt><span class="section"><a href="examples.html#mirror.examples.refl_namespaces_03">Usage of meta_namespace's generic name getter - example 1</a></span></dt>
+<dt><span class="section"><a href="examples.html#mirror.examples.refl_namespaces_04">Usage of meta_namespace's generic name getter - example 2</a></span></dt>
+<dt><span class="section"><a href="examples.html#mirror.examples.reg_refl_namespaces_01">Namespace registering and reflection - example 1</a></span></dt>
+<dt><span class="section"><a href="examples.html#mirror.examples.refl_types_01">Reflecting complex types - example 1</a></span></dt>
+<dt><span class="section"><a href="examples.html#mirror.examples.refl_types_02">Reflecting types and use of <code class="computeroutput">meta_type</code> - example 1</a></span></dt>
+</dl></div>
 <p>
 		</p>
 <div class="section" lang="en">
@@ -140,7 +206,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2426269">bcout</a></code>();
+	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>();
 
 	// several namespaces are pre-registered
 	bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a></code>() ::base_name() &lt;&lt; endl;
@@ -152,6 +218,399 @@ int main(void)
 	bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::std) ::full_name() &lt;&lt; endl;
 	bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost) ::full_name() &lt;&lt; endl;
 	bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) ::full_name() &lt;&lt; endl;
+
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.examples.refl_namespaces_02"></a>Usage of <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> - example 1</h4></div></div></div>
+<p>This example shows how to use the namespace <a class="link" href="reference.html#mirror.reference.reflecting" title="Reflecting">reflection macros</a> 
+and the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template.
+In particular it shows the usage of the <code class="computeroutput">base_name</code> and <code class="computeroutput">full_name</code> namespace name getters and
+the use of the <code class="computeroutput">scope</code> and <code class="computeroutput">ancestors</code> typedefs.
+</p>
+<p>
+In this example only the namespaces that are pre-registered by <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> are reflected. 
+See <a class="xref" href="examples.html#mirror.examples.registering" title="Registering">the section called &#8220;Registering&#8221;</a> if you would like to find out more about namespace registering.
+</p>
+<pre class="programlisting">
+#include &lt;boost/mpl/for_each.hpp&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+class printer
+{
+public:
+	template &lt;class MetaNamespace&gt;
+	void operator()(MetaNamespace mn)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>();
+		bcout &lt;&lt; 
+			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("ancestor ") &lt;&lt;
+			ctr++ &lt;&lt;
+			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(": '") &lt;&lt;
+			MetaNamespace::base_name() &lt;&lt;
+			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("'") &lt;&lt;
+		endl;
+	}
+
+	printer(void):ctr(0){ }
+private:
+	int ctr;
+};
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>();
+	//
+	typedef <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) meta_boost_mirror;
+	//
+	// get the full name of the parent scope of the reflected namespace
+	bcout &lt;&lt; meta_boost_mirror::scope::full_name() &lt;&lt; endl;
+	//
+	// check whether the grandparent namespace is the global scope
+	if(<code class="computeroutput"><a class="link" href="../boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a></code>&lt;meta_boost_mirror::scope::scope&gt; :: value)
+		bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("OK") &lt;&lt; endl;
+	else 
+		bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("Error") &lt;&lt; endl;
+
+	// the ancestors typedef is an mpl vector of meta_namespaces
+	printer p;
+	mpl::for_each&lt;meta_boost_mirror::ancestors&gt;(p);
+
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.examples.refl_namespaces_03"></a>Usage of <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>'s generic name getter - example 1</h4></div></div></div>
+<p>This example shows the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template,
+in particular it shows the usage of the generic namespace name getter function <code class="computeroutput">get_name</code>.
+</p>
+<p>
+In this example only the namespaces that are pre-registered by <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> are reflected. 
+See <a class="xref" href="examples.html#mirror.examples.registering" title="Registering">the section called &#8220;Registering&#8221;</a> if you want to find out more about namespace registering.
+</p>
+<pre class="programlisting">
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+
+
+template &lt; typename CharT, typename NsPlaceholder &gt;
+::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
+operator &lt;&lt; (
+	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
+	::boost::mirror::<code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>&lt; NsPlaceholder &gt; _mn
+)
+{
+	return _s &lt;&lt;_mn.get_name(
+		::boost::mpl::true_(), 
+		::std::char_traits&lt; CharT &gt;()
+	); 
+}
+
+
+int main(void)
+{
+	using namespace ::std;
+	//
+	typedef <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) meta_Ns;
+	meta_Ns mns;
+	//
+	cout &lt;&lt; mns &lt;&lt; endl;
+	wcout &lt;&lt; mns &lt;&lt; endl;
+	
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.examples.refl_namespaces_04"></a>Usage of <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>'s generic name getter - example 2</h4></div></div></div>
+<p>This example shows the usage of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code> template,
+in particular it shows the usage of the generic namespace name getter function <code class="computeroutput">get_name</code>.
+</p>
+<pre class="programlisting">
+#include &lt;iostream&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/meta_namespaces/boost_tuples.hpp&gt;
+#include &lt;boost/mirror/meta_namespaces/boost_cts.hpp&gt;
+
+
+template &lt; typename CharT, typename NsPlaceholder &gt;
+::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp;
+operator &lt;&lt; (
+	::std::basic_ostream&lt; CharT, ::std::char_traits&lt; CharT &gt; &gt;&amp; _s, 
+	::boost::mirror::<code class="computeroutput"><a class="link" href="../boost/mirror/meta_namespace.html" title="Class template meta_namespace">meta_namespace</a></code>&lt; NsPlaceholder &gt; _mn
+)
+{
+	return _s &lt;&lt;_mn.get_name(
+		::boost::mpl::false_(), 
+		::std::char_traits&lt; CharT &gt;()
+	); 
+}
+
+
+int main(void)
+{
+	using namespace ::std;
+	//
+	cout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::std)() &lt;&lt; endl;
+	wcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost)() &lt;&lt; endl;
+	cout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror)() &lt;&lt; endl;
+	wcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror)() &lt;&lt; endl;
+	cout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::cts)() &lt;&lt; endl;
+	wcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::tuples)() &lt;&lt; endl;
+	
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.examples.reg_refl_namespaces_01"></a>Namespace registering and reflection - example 1</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting">
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_namespace.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+#include &lt;boost/mpl/assert.hpp&gt;
+
+namespace foo {
+namespace bar {
+namespace baz {
+
+} //namespace baz
+} //namespace bar
+} //namespace foo
+
+// the registering must be done in the boost::mirror namespace
+namespace boost {
+namespace mirror {
+
+// register foo
+<code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a></code>((foo))
+// register foo::bar
+<code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a></code>((foo)(bar))
+// register foo::bar::baz
+<code class="computeroutput"><a class="link" href="../BOOST_MIRROR_REG_NAMESPACE.html" title="Macro BOOST_MIRROR_REG_NAMESPACE">BOOST_MIRROR_REG_NAMESPACE</a></code>((foo)(bar)(baz))
+
+} // namespace mirror
+} // namespace boost
+
+
+// prints meta-info about the global scope
+template &lt; class MetaNamespace &gt;
+void do_print_meta_data(::boost::true_type)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>();
+	bcout &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("This is the global scope") &lt;&lt; 
+	endl &lt;&lt;
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("------------------------------------") &lt;&lt; 
+	endl;
+}
+
+// prints meta-info about named namespaces
+template &lt; class MetaNamespace &gt;
+void do_print_meta_data(::boost::false_type)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>();
+
+	bcout &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("Namespace '") &lt;&lt; 
+		MetaNamespace::base_name() &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("': ") &lt;&lt; 
+	endl &lt;&lt;
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(" - the full name is '") &lt;&lt; 
+		MetaNamespace::full_name() &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("'") &lt;&lt; 
+	endl &lt;&lt;
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(" - it's defined "); 
+
+	if(<code class="computeroutput"><a class="link" href="../boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a></code>&lt;typename MetaNamespace::scope&gt;::value)
+		bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(" - on the global scope "); 
+	else
+		bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(" - in the '") &lt;&lt;
+			MetaNamespace::scope::full_name() &lt;&lt;
+			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("' namespace"); 
+
+	bcout &lt;&lt; endl &lt;&lt;
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("------------------------------------") &lt;&lt; 
+	endl;
+}
+
+
+
+template &lt; class MetaNamespace &gt;
+void print_meta_data(void)
+{
+	using namespace ::boost::mirror;
+	// check the template argument
+	<code class="computeroutput">BOOST_MPL_ASSERT</code>((
+		<code class="computeroutput"><a class="link" href="../boost/mirror/reflects_namespace.html" title="Class template reflects_namespace">reflects_namespace</a></code>&lt; MetaNamespace &gt;	
+	));
+
+	// call the specialized printer based on whether
+	// the passed meta-namespace reflects the global
+	// scope or not
+	typename <code class="computeroutput"><a class="link" href="../boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a></code>&lt;MetaNamespace&gt;::type 
+		selector;
+
+	do_print_meta_data&lt;MetaNamespace&gt;(selector);
+}
+
+
+int main(void)
+{
+	// reflect and print meta-info about the pre-registered namespaces
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a></code>() &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::std) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) &gt;();
+
+	// reflect and print meta-info about the namespaces registered here
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::foo) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::foo::bar) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::foo::bar::baz) &gt;();
+	
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.examples.refl_types_01"></a>Reflecting complex types - example 1</h4></div></div></div>
+<p>This example shows how to use the type <a class="link" href="reference.html#mirror.reference.reflecting" title="Reflecting">reflection macro</a> - 
+<code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>,
+to get an instantiation of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template, that provides meta-information
+about a type. 
+Furthermore it shows the basic usage of the type name getter function <code class="computeroutput">full_name</code> defined by this template.
+</p>
+<p>
+In this example only types which are derived from the types that are pre-registered by <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> are reflected. 
+See <a class="xref" href="examples.html#mirror.examples.registering" title="Registering">the section called &#8220;Registering&#8221;</a> to find out more about registering types with <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a>.
+
+</p>
+<pre class="programlisting">
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+#include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// define a little more complex type
+	typedef pair&lt;const int*, double [654][321]&gt; T1;
+	typedef pair&lt;float, const ::std::string&amp;&gt; T2;
+	typedef pair&lt;T1 const volatile, T2 volatile const&gt; T3;
+	typedef pair&lt;T2, T1 volatile&gt; T4;
+	typedef T4 (T)(const T1&amp;, T2, volatile T3*);
+	
+	// reflect it using mirror
+	typedef <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(T) meta_T;
+
+	// print out the full type name
+	cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>() &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("The full type name is: ") &lt;&lt; 
+		meta_T::full_name() &lt;&lt; 
+	endl;
+
+	return 0;
+}
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.examples.refl_types_02"></a>Reflecting types and use of <code class="computeroutput">meta_type</code> - example 1</h4></div></div></div>
+<p>This example shows how to use the type <a class="link" href="reference.html#mirror.reference.reflecting" title="Reflecting">reflection macros</a>  
+and the use of the <code class="computeroutput"><a class="link" href="../boost/mirror/meta_type.html" title="Class template meta_type">meta_type</a></code> template.
+</p>
+<p>
+In this example only types which are derived from the types that are pre-registered by <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> are reflected. 
+See <a class="xref" href="examples.html#mirror.examples.registering" title="Registering">the section called &#8220;Registering&#8221;</a> to find out more about registering types with <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a>.
+
+</p>
+<pre class="programlisting">
+#include &lt;string&gt;
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/typeof/typeof.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+#include &lt;boost/mirror/meta_types/std_pair.hpp&gt;
+#include &lt;boost/mirror/traits/reflects_global_scope.hpp&gt;
+
+template &lt;class MetaType&gt;
+void print_meta_data(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a></code>(); 
+	// print out the base type name
+	bcout &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("The type name is: ") &lt;&lt; 
+		MetaType::base_name() &lt;&lt; 
+	endl;
+	// 
+	if(<code class="computeroutput"><a class="link" href="../boost/mirror/reflects_global_scope.html" title="Class template reflects_global_scope">reflects_global_scope</a></code>&lt;typename MetaType::scope&gt;::value)
+	{
+		bcout &lt;&lt; 
+		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("It's defined on the global scope") &lt;&lt; 
+		endl;
+	}
+	else 
+	{
+		bcout &lt;&lt; 
+			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("It's defined in the ") &lt;&lt; 
+			MetaType::scope::full_name() &lt;&lt; 
+			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(" namespace") &lt;&lt; 
+		endl;
+		bcout &lt;&lt; 
+		BOOST_CTS_LIT("--------------------------------------") &lt;&lt; 
+		endl;
+	}
+}
+
+int main(void)
+{
+	using namespace ::std;
+	using namespace ::boost;
+	using namespace ::boost::mirror;
+
+	// reflect the type of an expression
+	// and print the meta-data
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code>(1+2) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code>(1.0+2.0) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code>("1" "+" "2") &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPEOF.html" title="Macro BOOST_MIRRORED_TYPEOF">BOOST_MIRRORED_TYPEOF</a></code>(string("1")+string("2")) &gt;();
+
+	// BOOST_MIRRORED_TYPEOF is actually a shorter form of this:
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(
+		<code class="computeroutput">BOOST_TYPEOF</code>(L"1" L"+" L"2")
+	) &gt;();
+	print_meta_data&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(
+		<code class="computeroutput">BOOST_TYPEOF</code>(wstring(L"1")+wstring(L"2"))
+	) &gt;();
 
 	return 0;
 }

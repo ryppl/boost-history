@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="mirror.examples.refl_namespaces_02"
+	 xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+<using-namespace name="boost::mirror"/>
+<using-namespace name="boost::cts"/>
+
+<title>Usage of <code><classname>meta_namespace</classname></code> - example 1</title>
+<para>This example shows how to use the namespace <link linkend="mirror.reference.reflecting">reflection macros</link> 
+and the usage of the <code><classname>meta_namespace</classname></code> template.
+In particular it shows the usage of the <code>base_name</code> and <code>full_name</code> namespace name getters and
+the use of the <code>scope</code> and <code>ancestors</code> typedefs.
+</para>
+<para>
+In this example only the namespaces that are pre-registered by <libraryname>Mirror</libraryname> are reflected. 
+See <xref linkend="mirror.examples.registering"/> if you would like to find out more about namespace registering.
+</para>
+<xi:include href="../samples/usage_meta_namespace_02.xml"/>
+</section>
+
