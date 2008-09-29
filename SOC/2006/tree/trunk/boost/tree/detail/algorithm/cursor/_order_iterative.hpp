@@ -44,15 +44,29 @@ Op for_each(Cursor s, Op f)
     return for_each(root_tracking_cursor<Cursor>(s), f);
 }
 
+// Iterative algorithms involving OutCursors are significantly more complicated,
+// as we need to navigate the OutCursor (say, t) in a fashion parallel to the Incursor
+// (s), eg:
+//
+// forward(s)
+// forward(t)
+//
+// But forward() is a quite complicated algorithm involving checks of parity() or
+// or moving to_parent() -- things that aren't implemented for output cursor 
+// adaptors (yet?). 
+
 template <class InCursor, class OutCursor>
-OutCursor copy (root_tracking_cursor<InCursor> s, OutCursor t)
+root_tracking_cursor<OutCursor> copy (root_tracking_cursor<InCursor> s
+                                    , root_tracking_cursor<OutCursor> t)
 {
     root_tracking_cursor<InCursor> s2(s);
     to_first(s);
     to_last(s2);
+    to_first(t);
     while (s!=s2) {
         *t = *s;
         forward(s);
+        forward(t);
     }
     return t;
 }
@@ -66,18 +80,24 @@ OutCursor copy (root_tracking_cursor<InCursor> s, OutCursor t)
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
-    return copy(root_tracking_cursor<InCursor>(s), t);
+    root_tracking_cursor<OutCursor> u 
+        = copy(root_tracking_cursor<InCursor>(s)
+             , root_tracking_cursor<OutCursor>(t));
+    return u.base();
 }
 
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform (root_tracking_cursor<InCursor> s, OutCursor t, Op op)
+root_tracking_cursor<OutCursor> transform (root_tracking_cursor<InCursor> s
+                                         , root_tracking_cursor<OutCursor> t, Op op)
 {
     root_tracking_cursor<InCursor> s2(s);
     to_first(s);
     to_last(s2);
+    to_first(t);
     while (s!=s2) {
         *t = op(*s);
         forward(s);
+        forward(t);
     }
     return t;
 }
@@ -99,5 +119,8 @@ OutCursor transform (root_tracking_cursor<InCursor> s, OutCursor t, Op op)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (InCursor s, OutCursor t, Op op)
 {
-    return transform(root_tracking_cursor<InCursor>(s), t, op);
+    root_tracking_cursor<OutCursor> u 
+        = transform(root_tracking_cursor<InCursor>(s)
+                  , root_tracking_cursor<OutCursor>(t), op);
+    return u.base();
 }

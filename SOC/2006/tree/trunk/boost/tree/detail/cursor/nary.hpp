@@ -54,12 +54,12 @@ class nary_tree_cursor
       
     struct enabler {};
      
-     typedef Node node_type;
+    typedef Node node_type;
     typedef node_type* node_pointer;
     
 public:
 
-      typedef typename mpl::eval_if<
+    typedef typename mpl::eval_if<
                         is_const<Node>
                        , add_const<typename Node::value_type>
                        , mpl::identity<typename Node::value_type>
@@ -69,8 +69,8 @@ public:
     typedef typename node_type::size_type size_type;
 
     // Cursor-specific
-     typedef nary_tree_cursor<node_type> cursor;
-     typedef nary_tree_cursor<node_type const> const_cursor;
+    typedef nary_tree_cursor<node_type> cursor;
+    typedef nary_tree_cursor<node_type const> const_cursor;
     
     // Container-specific:
     typedef cursor iterator;
@@ -102,11 +102,11 @@ public:
 
  private: 
 
-     friend class iterator_core_access;
+    friend class iterator_core_access;
     friend class cursor_core_access;
     
     friend class access_detach;
-     
+    
     value_type& dereference() const
     {
         return **static_cast<node_type*>(m_node);

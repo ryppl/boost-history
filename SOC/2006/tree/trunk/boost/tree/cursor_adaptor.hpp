@@ -32,36 +32,36 @@ using boost::iterator_core_access;
 template <
     class Derived
   , class Base
-  , class Value                           = use_default
+  , class Value                         = use_default
   , class HorizontalTraversalOrCategory = use_default
-  , class VerticalTraversalOrCategory    = use_default
-  , class Reference                       = use_default
-  , class Difference                      = use_default
-  , class Size                            = use_default
+  , class VerticalTraversalOrCategory   = use_default
+  , class Reference                     = use_default
+  , class Difference                    = use_default
+  , class Size                          = use_default
 >
 class cursor_adaptor_base
 : private iterator_adaptor<Derived 
-                          , Base
-                          , Value
-                        , HorizontalTraversalOrCategory
-                        , Reference
-                        , Difference>
+                         , Base
+                         , Value
+                         , HorizontalTraversalOrCategory
+                         , Reference
+                         , Difference>
 , private iterator_adaptor<Derived 
-                          , Base
-                          , Value
-                        , VerticalTraversalOrCategory
-                        , Reference
-                        , Difference>
+                         , Base
+                         , Value
+                         , VerticalTraversalOrCategory
+                         , Reference
+                         , Difference>
 {
 private:
     cursor_adaptor_base() {} // This class is used for typedefs only.
     
     typedef typename iterator_adaptor<Derived, Base, Value
-                                , HorizontalTraversalOrCategory, Reference
-                                , Difference>::super_t h_super_t;
+                                    , HorizontalTraversalOrCategory, Reference
+                                    , Difference>::super_t h_super_t;
     typedef typename iterator_adaptor<Derived, Base, Value
-                                , VerticalTraversalOrCategory, Reference
-                                , Difference>::super_t v_super_t;
+                                    , VerticalTraversalOrCategory, Reference
+                                    , Difference>::super_t v_super_t;
 public:
     typedef typename h_super_t::value_type value_type;    
     typedef typename h_super_t::reference reference;
@@ -90,12 +90,12 @@ public:
 template <
     class Derived
   , class Base
-  , class Value                           = use_default
+  , class Value                         = use_default
   , class HorizontalTraversalOrCategory = use_default
-  , class VerticalTraversalOrCategory    = use_default
-  , class Reference                       = use_default
-  , class Difference                      = use_default
-  , class Size                            = use_default
+  , class VerticalTraversalOrCategory   = use_default
+  , class Reference                     = use_default
+  , class Difference                    = use_default
+  , class Size                          = use_default
 >
 class cursor_adaptor 
 : public cursor_adaptor_base< Derived
@@ -126,15 +126,15 @@ protected:
     { return m_cursor; }
     
 private:
-    Base m_cursor;
+    mutable Base m_cursor; // mutable for use with output cursors.
     
     friend class iterator_core_access;
     friend class cursor_core_access;
 
-public:
-     typedef Base base_type;
+public: 
+    typedef Base base_type;
      
-     typedef typename cursor_facade_::iterator_category iterator_category;
+    typedef typename cursor_facade_::iterator_category iterator_category;
 
     typedef typename cursor_facade_::horizontal_traversal horizontal_traversal;
     typedef typename cursor_facade_::vertical_traversal cursor_category;
@@ -149,38 +149,38 @@ public:
     Base const& base() const
     { return m_cursor; }
     
-     typename cursor_facade_::reference dereference() const
-     {
-         return *m_cursor;
-     }
+    typename cursor_facade_::reference dereference() const
+    {
+        return *m_cursor;
+    }
      
-     void increment()
-     {
-         ++m_cursor;
-     }
+    void increment()
+    {
+        ++m_cursor;
+    }
      
-     void decrement()
-     {
-         --m_cursor;
-     }
+    void decrement()
+    {
+        --m_cursor;
+    }
      
-     template <class OtherDerived, class OtherCursor, class V, class C, 
-               class R, class D, class S>
-     bool equal(cursor_adaptor<OtherDerived, OtherCursor, 
-                               V, C, R, D, S> const& x) const
-     {
-         return m_cursor == x.base();
-     }
+    template <class OtherDerived, class OtherCursor, class V, class C, 
+              class R, class D, class S>
+    bool equal(cursor_adaptor<OtherDerived, OtherCursor, 
+                              V, C, R, D, S> const& x) const
+    {
+        return m_cursor == x.base();
+    }
      
-     template <class OtherDerived, class OtherCursor, class V, class C, 
-               class R, class D, class S>
-     Difference distance_to(cursor_adaptor<OtherDerived, OtherCursor, 
-                                             V, C, R, D, S> const& x) const
+    template <class OtherDerived, class OtherCursor, class V, class C, 
+              class R, class D, class S>
+    Difference distance_to(cursor_adaptor<OtherDerived, OtherCursor, 
+                                          V, C, R, D, S> const& x) const
     {
         return x.base() - m_cursor;
     }
      
-     bool const empty_() const
+    bool const empty_() const
     {
         return m_cursor.empty();
     }
@@ -215,7 +215,6 @@ public:
         m_cursor.to_parent();
     }
 };
-
 
 } // namespace tree
 } // namespace boost

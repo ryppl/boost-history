@@ -30,17 +30,17 @@ namespace tree {
 using boost::iterator_core_access;
 
 class cursor_core_access {
- public:
- 
-     friend class iterator_core_access;
+public:
+
+    friend class iterator_core_access;
      
-      template <class Facade>
+    template <class Facade>
     static bool empty_(Facade const& f)
     {
         return f.empty_();
     }
     
-     template <class Facade>
+    template <class Facade>
     static typename Facade::size_type size_(Facade const& f)
     {
         return f.size_();
@@ -93,7 +93,7 @@ template <
 class cursor_facade 
  : public iterator_facade<Derived, Value, HorizontalCategoryOrTraversal, 
                           Reference, Difference> {
- private:
+private:
     // Curiously Recurring Template interface.
 
     Derived& derived()
@@ -108,12 +108,12 @@ class cursor_facade
 
     typedef typename cursor_facade::iterator_facade_ iterator_facade_;
 
- protected:
-     // For use by derived classes
+protected:
+    // For use by derived classes
     typedef cursor_facade<Derived, Value, HorizontalCategoryOrTraversal,
                           VerticalCategoryOrTraversal, Reference, Difference> 
             cursor_facade_;
- public:
+public:
     typedef typename iterator_facade_::value_type value_type;
     typedef Reference reference;
     typedef Difference difference_type;
@@ -150,41 +150,41 @@ class cursor_facade
         return cursor_core_access::par(this->derived());
     }
 
-     Derived& to_begin()
-     {
+    Derived& to_begin()
+    {
         cursor_core_access::left(this->derived());
         return this->derived();
-     }
+    }
                   
-     Derived begin()
-     {
-         Derived tmp(this->derived());
-         return tmp.to_begin();
-     }
+    Derived begin()
+    {
+        Derived tmp(this->derived());
+        return tmp.to_begin();
+    }
 
-     Derived& to_end()
-     {
+    Derived& to_end()
+    {
         cursor_core_access::right(this->derived());
         return this->derived();
-     }
+    }
      
-     Derived end()
-     {
-         Derived tmp(this->derived());
-         return tmp.to_end();
-      }
+    Derived end()
+    {
+        Derived tmp(this->derived());
+        return tmp.to_end();
+    }
      
-     Derived& to_parent()
-     {
-         cursor_core_access::up(this->derived());
-         return this->derived();
-     }
+    Derived& to_parent()
+    {
+        cursor_core_access::up(this->derived());
+        return this->derived();
+    }
      
-     Derived parent()
-     {
-         Derived tmp(this->derived());
-         return tmp.to_parent();
-     }
+    Derived parent()
+    {
+        Derived tmp(this->derived());
+        return tmp.to_parent();
+    }
 };
 
 //TODO: Put somewhere else?

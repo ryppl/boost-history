@@ -32,18 +32,18 @@ class root_tracking_cursor
                       , typename cursor_horizontal_traversal<Cursor>::type
                       , typename cursor_vertical_traversal<Cursor>::type
     > {
- private:
+private:
     struct enabler {};
     typedef root_tracking_cursor<Cursor> self_type;
- public:
-      typedef typename Cursor::value_type value_type;
+public:
+    typedef typename Cursor::value_type value_type;
 
     // Container-specific:
     typedef typename Cursor::size_type size_type;
 
     // Cursor-specific
-     typedef root_tracking_cursor<Cursor> cursor;
-     typedef root_tracking_cursor<typename Cursor::const_cursor> const_cursor;
+    typedef root_tracking_cursor<Cursor> cursor;
+    typedef root_tracking_cursor<typename Cursor::const_cursor> const_cursor;
     
     // Container-specific:
     typedef cursor iterator;
@@ -71,7 +71,7 @@ class root_tracking_cursor
 //    : root_tracking_cursor::cursor_adaptor_(other.base())
 //    , m_depth(other.m_depth) {}
 
- private: 
+private: 
     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
      
@@ -112,6 +112,101 @@ inline root_tracking_cursor<Cursor> make_root_tracking_cursor(Cursor c)
     return root_tracking_cursor<Cursor>(c);
 }
 
+//template <class OutputIterator> 
+//class root_tracking_cursor< output_cursor_iterator_wrapper<OutputIterator> >
+//: public cursor_adaptor<root_tracking_cursor< output_cursor_iterator_wrapper<OutputIterator> >
+//                      , output_cursor_iterator_wrapper<OutputIterator>
+//                      , boost::use_default
+//                      , forward_traversal_tag
+//                      , bidirectional_traversal_tag
+//    > {
+// private:
+//    struct enabler {};
+//    typedef root_tracking_cursor< output_cursor_iterator_wrapper<OutputIterator> > self_type;
+// public:
+//    //typedef typename ascending_cursor<Cursor>::value_type value_type;
+//
+//    // Container-specific:
+//    //typedef typename ascending_cursor<Cursor>::size_type size_type;
+//
+//    // Cursor-specific
+//     //typedef root_tracking_cursor< ascending_cursor<Cursor> > cursor;
+//     //typedef root_tracking_cursor< 
+//     //    typename ascending_cursor<Cursor>::const_cursor > const_cursor;
+//    
+//    // Container-specific:
+//    //typedef cursor iterator;
+//    //typedef const_cursor const_iterator;
+//    
+////    template <class OtherCursor>
+////    struct rebind {
+////        typedef root_tracking_cursor< ascending_cursor<OtherCursor> > other;
+////    };
+//    
+//    root_tracking_cursor()
+//    : root_tracking_cursor::cursor_adaptor_(), m_depth(0) {}
+//
+//    explicit root_tracking_cursor(output_cursor_iterator_wrapper<OutputIterator> c)
+//    : root_tracking_cursor::cursor_adaptor_(c), m_depth(0) {}
+//
+////    template <class OtherCursor>
+////    root_tracking_cursor(
+////        root_tracking_cursor< ascending_cursor<OtherCursor> > const& other
+////      , typename boost::enable_if<
+////            boost::is_convertible<OtherCursor*
+////                                , Cursor*>
+////          , enabler
+////        >::type = enabler()
+////    )
+////    : root_tracking_cursor::cursor_adaptor_(other.base())
+////    , m_root_depth(other.m_root_depth) {}
+////
+////    template <class OtherCursor>
+////    root_tracking_cursor(
+////        root_tracking_cursor<OtherCursor> const& other
+////      , typename boost::enable_if<
+////            boost::is_convertible<OtherCursor*
+////                                , ascending_cursor<Cursor>*>
+////          , enabler
+////        >::type = enabler()
+////    )
+////    : root_tracking_cursor::cursor_adaptor_(other.base())
+////    , m_root_depth(other.base().m_s.size()) {}
+//
+// private: 
+//    std::size_t m_depth;
+//     
+//    friend class boost::iterator_core_access;
+//    friend class boost::tree::cursor_core_access;
+//         
+////    bool equal(cursor const& other) const
+////    {
+////    }
+//
+//    void left()
+//    {
+//        ++m_depth;
+//        this->base_reference().to_begin();
+//    }
+//
+//    void right()
+//    {
+//        ++m_depth;
+//        this->base_reference().to_end();
+//    }
+//
+//    void up()
+//    {
+//        --m_depth;
+//        this->base_reference().to_parent();
+//    }
+//
+//public:
+//    bool is_root() const
+//    {
+//        return !m_depth;
+//    }
+//};
 
 } // namespace tree
 } // namespace boost

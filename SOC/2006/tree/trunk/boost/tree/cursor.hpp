@@ -12,6 +12,9 @@
 #ifndef BOOST_TREE_CURSOR_HPP
 #define BOOST_TREE_CURSOR_HPP
 
+#include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/iterator_adaptor.hpp>
+
 #include <stddef.h>
 #include <iterator>
 
@@ -115,6 +118,19 @@ struct produce_cursor_category<> {
 };
 */
 
+//define freestanding begin, end, size, empty using cursor's member fns?
+
+template <
+    class OutputIterator
+//  , class Value                         
+//  , class HorizontalTraversalOrCategory 
+//  , class VerticalTraversalOrCategory
+//  , class Reference                     
+//  , class Difference                
+//  , class Size                          
+>
+class output_cursor_iterator_wrapper;
+
 /**
  * @brief Output cursor wrapper around an output iterator.
  * 
@@ -127,14 +143,40 @@ struct produce_cursor_category<> {
  */
 // TODO: Complete this.
 // Shouldn't we be using cursor_facade?
-template<class OutputIterator>
+template <
+    class OutputIterator
+//  , class Value                         = use_default
+//  , class HorizontalTraversalOrCategory = use_default
+//  , class VerticalTraversalOrCategory   = bidirectional_traversal_tag
+//  , class Reference                     = use_default
+//  , class Difference                    = use_default
+//  , class Size                          = use_default
+>
 class output_cursor_iterator_wrapper {
 protected:
     OutputIterator* iter;
+//private:
+//    typedef iterator_adaptor<output_cursor_iterator_wrapper<OutputIterator> 
+//                         , OutputIterator
+//                         , Value
+//                         , HorizontalTraversalOrCategory
+//                         , Reference
+//                         , Difference> ia_type;
 public:
     /// Make the iterator type publicly accessible.
     typedef OutputIterator iterator;
-    
+
+    // FIXME: Very adhoc.
+    typedef output_cursor_iterator_wrapper<OutputIterator> value_type;
+    typedef std::size_t size_type;
+    typedef output_cursor_iterator_wrapper<OutputIterator> const_cursor;
+    typedef forward_traversal_tag horizontal_traversal;
+    typedef bidirectional_traversal_tag vertical_traversal;
+    typedef forward_traversal_tag iterator_category;
+    typedef std::ptrdiff_t difference_type;
+    typedef value_type* pointer;
+    typedef value_type& reference;
+        
     /**
      * For construction, we obviously need an Output Iterator to work on (i.e., write to).
      */
@@ -169,8 +211,30 @@ public:
     output_cursor_iterator_wrapper operator++(int) { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
+    output_cursor_iterator_wrapper& operator--() { return *this; }
+
+    /// Returns *this, as this %cursor doesn't "move".
+    output_cursor_iterator_wrapper operator--(int) { return *this; }
+    
+    /// Returns *this, as this %cursor doesn't "move".
     output_cursor_iterator_wrapper& to_begin() { return *this; }
     output_cursor_iterator_wrapper& begin() { return *this; }
+
+    /// Returns *this, as this %cursor doesn't "move".
+    output_cursor_iterator_wrapper& to_end() { return *this; }
+    output_cursor_iterator_wrapper& end() { return *this; }
+
+    /// Returns *this, as this %cursor doesn't "move".
+    output_cursor_iterator_wrapper& to_parent() { return *this; }
+    output_cursor_iterator_wrapper& parent() { return *this; }
+    
+    /// Returns true, in case an algorithm has a loop only terminating at root.
+    bool is_root() const { return true; }
+    
+    /// Returns true, in case an algorithm has a loop only terminating at a leaf.
+    bool empty() const { return true; }
+    
+    std::size_t const parity() const { return 0; }
 };
 
 /** 
@@ -185,8 +249,6 @@ outputter_cursor_iterator_wrapper(OutputIterator o)
 {
     return output_cursor_iterator_wrapper<OutputIterator>(o);
 }
-
-//define freestanding begin, end, size, empty using cursor's member fns?
 
 } // namespace tree
 } // namespace boost
