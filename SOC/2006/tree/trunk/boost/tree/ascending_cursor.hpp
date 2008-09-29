@@ -17,7 +17,7 @@
 #include <boost/tree/cursor_facade.hpp>
 #include <boost/tree/root_tracking_cursor.hpp>
 
-#include <boost/tree/detail/algorithm/cursor/ascending.hpp>
+#include <boost/tree/detail/algorithm/ascending.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

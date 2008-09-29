@@ -12,15 +12,15 @@
 #ifndef BOOST_TREE_ALGORITHM_HPP
 #define BOOST_TREE_ALGORITHM_HPP
 
-#include <boost/tree/detail/algorithm/cursor/general.hpp>
-#include <boost/tree/detail/algorithm/cursor/ascending.hpp>
+#include <boost/tree/detail/algorithm/general.hpp>
+#include <boost/tree/detail/algorithm/ascending.hpp>
 
-#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/postorder.hpp>
+#include <boost/tree/detail/algorithm/preorder.hpp>
+#include <boost/tree/detail/algorithm/inorder.hpp>
+#include <boost/tree/detail/algorithm/postorder.hpp>
 
 #ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/algorithm/cursor/iterative.hpp>
+#include <boost/tree/detail/algorithm/iterative.hpp>
 #endif
 
 namespace boost {

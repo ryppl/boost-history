@@ -14,9 +14,9 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP
 
-#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/postorder.hpp>
+#include <boost/tree/detail/algorithm/preorder.hpp>
+#include <boost/tree/detail/algorithm/inorder.hpp>
+#include <boost/tree/detail/algorithm/postorder.hpp>
 
 namespace boost {
 namespace tree {
