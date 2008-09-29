@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="test"
+	ProjectGUID="{3402e7c7-5fab-45bc-8408-5ab3bf74aa4a}"
+	>
+    <Platforms>
+        <Platform
+			Name="Win32"
+		/>
+    </Platforms>
+    <ToolFiles>
+    </ToolFiles>
+    <Configurations>
+        <Configuration
+			Name="debug|Win32"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+            <Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
+				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
+				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
+
+				Output=""
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+        </Configuration>
+        <Configuration
+			Name="release|Win32"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+            <Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
+				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
+				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
+
+				Output=""
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+        </Configuration>
+    </Configurations>
+    <References>
+    </References>
+    <Files>
+		<File
+			RelativePath="..\../test/Jamfile"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_field_map.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_field_map_compilation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_field_map_compilation.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter_compilation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter_compilation.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter_dispatch_compilation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter_dispatch_compilation.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter_map_compilation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\../test/test_parameter_map_compilation.hpp"
+			>
+		</File>
+    </Files>
+    <Globals>
+    </Globals>
+</VisualStudioProject>
