@@ -4,14 +4,18 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-/** @file    _order.hpp
+/** @file    cursor.hpp
  * 
  * Some algorithm versions that are identical for all *order cursors 
  * (as we are just calling the appropriate traversal function that are 
  * defined in the respective *order.hpp files).
  */
 
-// NO guards, as this is context-included!
+#ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_HPP
+#define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_HPP
+
+namespace boost {
+namespace tree {
 
 /**
  * @brief   Successor
@@ -19,12 +23,12 @@
  * @param n Optional parameter to indicate how many steps to move forward
  * @return  Successor of @a c
  */
-template <class Cursor>
+template <class Order, class Cursor>
 inline Cursor next(Cursor c
                  , typename Cursor::difference_type n = 1)
 {
     for (; n!=0; --n)
-        forward(c);
+        forward<Order>(c);
     return c;
 }
 
@@ -34,12 +38,12 @@ inline Cursor next(Cursor c
  * @param n Optional parameter to indicate how many steps to move back
  * @return  Predecessor of @a c
  */
-template <class Cursor>
+template <class Order, class Cursor>
 inline Cursor prior(Cursor c
                   , typename Cursor::difference_type n = 1)
 {
     for (; n!=0; --n)
-        back(c);
+        back<Order>(c);
     return c;
 }
 
@@ -48,10 +52,10 @@ inline Cursor prior(Cursor c
  * @param c A cursor
  * @return  Cursor to the first element of @a c in preorder traversal
  */
-template <class Cursor>
+template <class Order, class Cursor>
 Cursor first(Cursor c)
 {
-    to_first(c);
+    to_first<Order>(c);
     return c;
 }
 
@@ -62,9 +66,14 @@ Cursor first(Cursor c)
  * @return  Cursor one position past the last element of @a c in preorder
  *          traversal
  */
-template <class Cursor>
+template <class Order, class Cursor>
 Cursor last(Cursor c)
 {
-    to_last(c);
+    to_last<Order>(c);
     return c;
 }
+
+} // namespace tree
+} // namespace boost
+
+#endif //BOOST_TREE_DETAIL_ALGORITHM_CURSOR_HPP
