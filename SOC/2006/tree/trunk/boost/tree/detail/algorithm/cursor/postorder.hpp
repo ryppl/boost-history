@@ -18,10 +18,10 @@
 namespace boost {
 namespace tree {
 
-struct postorder {};
-
 /** \addtogroup traversal */
 /*\@{*/
+
+struct postorder {};
 
 /**
  * @brief    Postorder successor

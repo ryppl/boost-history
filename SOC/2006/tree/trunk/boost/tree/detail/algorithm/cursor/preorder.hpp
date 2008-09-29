@@ -20,10 +20,10 @@
 namespace boost {
 namespace tree {
 
-struct preorder {};
-
 /** \addtogroup traversal */
 /*\@{*/
+
+struct preorder {};
 
 /**
  * @brief    Preorder successor

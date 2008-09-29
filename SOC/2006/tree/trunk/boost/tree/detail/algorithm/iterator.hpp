@@ -14,7 +14,7 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP
 
-#include <boost/tree/detail/iterator/iterator.hpp>
+#include <boost/tree/iterator.hpp>
 #include <boost/tree/detail/algorithm/cursor.hpp>
 
 namespace boost {

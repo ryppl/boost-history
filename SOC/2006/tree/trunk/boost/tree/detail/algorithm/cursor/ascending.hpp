@@ -19,10 +19,10 @@
 namespace boost {
 namespace tree {
 
-namespace ascending {
-
 /** \addtogroup traversal */
 /*\@{*/
+
+struct ascending {};
 
 /**
  * @brief    Ascending successor
@@ -30,28 +30,13 @@ namespace ascending {
  * @ingroup    traversal
  */
 template <class MultiwayCursor>
-inline void forward(MultiwayCursor& c)
+inline void forward(ascending, MultiwayCursor& c)
 {
     c.to_parent();
     return;
 }
 
-/**
- * @brief    Ascending successor
- * @param c    A cursor
- * @return    Ascending successor of @a c
- * @ingroup    traversal
- */
-template <class MultiwayCursor>
-inline MultiwayCursor next(MultiwayCursor c)
-{
-    forward(c);
-    return c;
-}
-
 /*\@}*/
-
-} // namespace ascending
 
 } // namespace tree
 } // namespace boost

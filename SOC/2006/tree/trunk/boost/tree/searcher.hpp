@@ -17,7 +17,7 @@
 #ifndef BOOST_TREE_SEARCHER_HPP
 #define BOOST_TREE_SEARCHER_HPP
 
-#include <boost/tree/detail/iterator/iterator.hpp>
+#include <boost/tree/iterator.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/multi_index/identity.hpp>

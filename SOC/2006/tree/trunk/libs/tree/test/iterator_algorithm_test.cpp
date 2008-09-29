@@ -205,11 +205,11 @@ int test_main(int, char* [])
 
     //Ascending iterator.
     binary_tree<int>::cursor c = test_tree.root();
-    boost::tree::ascending::iterator<binary_tree<int>::cursor> ai_root(c);
+    boost::tree::iterator<ascending, binary_tree<int>::cursor> ai_root(c);
     c = c.begin().end().begin().begin();
     BOOST_CHECK(*c == 4);
 
-    boost::tree::ascending::iterator<binary_tree<int>::cursor> ais(c);
+    boost::tree::iterator<ascending, binary_tree<int>::cursor> ais(c);
     test_traversal_from_leaf4(ais, ai_root);
 
     //Now the advanced stuff
