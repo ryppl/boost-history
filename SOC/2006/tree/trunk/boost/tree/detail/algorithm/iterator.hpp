@@ -14,15 +14,12 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_ITERATOR_HPP
 
-#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/postorder.hpp>
+#include <boost/tree/detail/iterator/iterator.hpp>
+#include <boost/tree/detail/algorithm/cursor.hpp>
 
-#include <boost/iterator/iterator_adaptor.hpp>
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/utility/enable_if.hpp>
-
-// TODO: concept checks.
+//#include <boost/iterator/iterator_adaptor.hpp>
+//#include <boost/type_traits/is_convertible.hpp>
+//#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace tree {
@@ -35,9 +32,9 @@ namespace tree {
  */
 template <class Order, class Cursor>
 iterator<Order, Cursor>
-begin(Cursor c)
+begin(Order, Cursor c)
 {
-    to_first(c);
+    to_first(Order(), c);
     return iterator<Order, Cursor>(c);
 }
 
@@ -49,9 +46,9 @@ begin(Cursor c)
  */
 template <class Order, class Cursor>
 iterator<Order, Cursor>
-end(Cursor c)
+end(Order, Cursor c)
 {
-    to_last(c);
+    to_last(Order(), c);
     return iterator<Order, Cursor>(c);
 }
 
@@ -59,16 +56,16 @@ end(Cursor c)
 
 template <class Order, class Cursor>
 std::reverse_iterator< iterator<Order, Cursor> >
-rbegin(Cursor c)
+rbegin(Order, Cursor c)
 {
-    return std::reverse_iterator< iterator<Order, Cursor> >(end(c));
+    return std::reverse_iterator< iterator<Order, Cursor> >(end(Order(), c));
 }
 
 template <class Order, class Cursor>
 std::reverse_iterator< iterator<Order, Cursor> >
-rend(Cursor c)
+rend(Order, Cursor c)
 {
-    return std::reverse_iterator< iterator<Order, Cursor> >(begin(c));
+    return std::reverse_iterator< iterator<Order, Cursor> >(begin(Order(), c));
 }
 
 } // namespace tree

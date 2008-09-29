@@ -15,7 +15,7 @@
 
 #include <boost/tree/cursor_facade.hpp>
 #include <boost/tree/detail/node/nary.hpp>
-#include <boost/tree/detail/iterator/inorder.hpp>
+#include <boost/tree/detail/iterator/iterator.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

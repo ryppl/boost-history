@@ -574,8 +574,6 @@ inline bool operator!=(binary_tree<Tp, Alloc> const& x
      return (!(x == y));
 }
 
-namespace inorder {
-
 /**
  * @brief    First element of a MultiwayTree in inorder traversal
  *             (equivalent to postorder::first()) - O(1) overload for binary_tree
@@ -584,7 +582,7 @@ namespace inorder {
  */
 template <class T, class Alloc>
 typename binary_tree<T, Alloc>::cursor 
-first_cursor(binary_tree<T, Alloc>& t)
+first_cursor(inorder, binary_tree<T, Alloc>& t)
 {
     return t.inorder_first();
 }
@@ -598,7 +596,7 @@ first_cursor(binary_tree<T, Alloc>& t)
  */
 template <class T, class Alloc>
 typename binary_tree<T, Alloc>::const_cursor 
-first_cursor(binary_tree<T, Alloc> const& t)
+first_cursor(inorder, binary_tree<T, Alloc> const& t)
 {
     return t.inorder_first();
 }
@@ -611,7 +609,7 @@ first_cursor(binary_tree<T, Alloc> const& t)
  */
 template <class T, class Alloc>
 typename binary_tree<T, Alloc>::const_cursor 
-cfirst_cursor(binary_tree<T, Alloc> const& t)
+cfirst_cursor(inorder, binary_tree<T, Alloc> const& t)
 {
     return t.inorder_first();
 }
@@ -623,10 +621,10 @@ cfirst_cursor(binary_tree<T, Alloc> const& t)
  * @return    Mutable inorder iterator to the first element of @a t
  */
 template <class T, class Alloc>
-iterator<typename binary_tree<T, Alloc>::cursor>
-begin(binary_tree<T, Alloc>& t)
+iterator<inorder, typename binary_tree<T, Alloc>::cursor>
+begin(inorder, binary_tree<T, Alloc>& t)
 {
-    return iterator<typename binary_tree<T, Alloc>::cursor>(first_cursor(t));
+    return iterator<inorder, typename binary_tree<T, Alloc>::cursor>(first_cursor(inorder(), t));
 }
 
 /**
@@ -636,10 +634,10 @@ begin(binary_tree<T, Alloc>& t)
  * @return    Read-only inorder iterator to the first element of @a t
  */
 template <class T, class Alloc>
-iterator<typename binary_tree<T, Alloc>::const_cursor>
-begin(binary_tree<T, Alloc> const& t)
+iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>
+begin(inorder, binary_tree<T, Alloc> const& t)
 {
-    return iterator<typename binary_tree<T, Alloc>::const_cursor>(first_cursor(t));
+    return iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>(first_cursor(inorder(), t));
 }
 
 /**
@@ -649,14 +647,14 @@ begin(binary_tree<T, Alloc> const& t)
  * @return    Read-only inorder iterator to the first element of @a t
  */
 template <class T, class Alloc>
-iterator<typename binary_tree<T, Alloc>::const_cursor>
-cbegin(binary_tree<T, Alloc> const& t)
+iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>
+cbegin(inorder, binary_tree<T, Alloc> const& t)
 {
 //    typedef
 //        typename cursor_vertical_traversal<
 //            typename binary_tree<T, Alloc>::const_cursor
 //        >::type traversal;
-    return iterator<typename binary_tree<T, Alloc>::const_cursor>(first_cursor(t));
+    return iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>(first_cursor(inorder(), t));
 }
 
 
@@ -667,10 +665,10 @@ cbegin(binary_tree<T, Alloc> const& t)
  * @return    Mutable inorder iterator to the first element of @a t
  */
 template <class T, class Alloc>
-iterator<typename binary_tree<T, Alloc>::cursor>
-end(binary_tree<T, Alloc>& t)
+iterator<inorder, typename binary_tree<T, Alloc>::cursor>
+end(inorder, binary_tree<T, Alloc>& t)
 {
-    return iterator<typename binary_tree<T, Alloc>::cursor>(last(t.root()));
+    return iterator<inorder, typename binary_tree<T, Alloc>::cursor>(last(inorder(), t.root()));
 }
 
 /**
@@ -680,10 +678,10 @@ end(binary_tree<T, Alloc>& t)
  * @return    Read-only inorder iterator to the first element of @a t
  */
 template <class T, class Alloc>
-iterator<typename binary_tree<T, Alloc>::const_cursor>
-end(binary_tree<T, Alloc> const& t)
+iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>
+end(inorder, binary_tree<T, Alloc> const& t)
 {
-    return iterator<typename binary_tree<T, Alloc>::const_cursor>(last(t.root()));
+    return iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>(last(inorder(), t.root()));
 }
 
 /**
@@ -693,13 +691,11 @@ end(binary_tree<T, Alloc> const& t)
  * @return    Read-only inorder iterator to the first element of @a t
  */
 template <class T, class Alloc>
-iterator<typename binary_tree<T, Alloc>::const_cursor>
-cend(binary_tree<T, Alloc> const& t)
+iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>
+cend(inorder, binary_tree<T, Alloc> const& t)
 {
-    return iterator<typename binary_tree<T, Alloc>::const_cursor>(last(t.root()));
+    return iterator<inorder, typename binary_tree<T, Alloc>::const_cursor>(last(inorder(), t.root()));
 }
-
-} // namespace inorder
 
 } // namespace tree
 } // namespace boost

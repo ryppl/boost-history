@@ -15,9 +15,7 @@
 
 #include "test_tree_traversal_data.hpp"
 
-#define ORDER preorder
 #include "subtree_algorithms_checks.hpp"
-#undef ORDER
 
 //TODO: Make this a test suite.
 
@@ -79,28 +77,29 @@ void test_natural_correspondence()
     back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
     oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
     
-    boost::tree::preorder::for_each(
+    boost::tree::for_each(
+        preorder(),
         ft.root(), 
         boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
     );
-    test::preorder::traversal(test_list.begin(), test_list.end());
+    test_traversal(preorder(), test_list.begin(), test_list.end());
     BOOST_CHECK(test_list.size() == 11);
     test_list.clear();
     
-    boost::tree::preorder::copy(ft.root(), oc_test_list);
-    test::preorder::traversal(test_list.begin(), test_list.end());
+    boost::tree::copy(preorder(), ft.root(), oc_test_list);
+    test_traversal(preorder(), test_list.begin(), test_list.end());
     BOOST_CHECK(test_list.size() == 11);
     test_list.clear();
     
-    boost::tree::preorder::transform(ft.root(), oc_test_list, std::bind2nd(std::plus<int>(),0));
-    test::preorder::traversal(test_list.begin(), test_list.end());
+    boost::tree::transform(preorder(), ft.root(), oc_test_list, std::bind2nd(std::plus<int>(),0));
+    test_traversal(preorder(), test_list.begin(), test_list.end());
     BOOST_CHECK(test_list.size() == 11);
     test_list.clear();
 
     //test::preorder::algorithms(ft.root(), ft.root()); // FIXME: Fix algorithms for use in here.
     
-    boost::tree::postorder::copy(ft.root(), oc_test_list);
-    test::inorder::traversal(test_list.begin(), test_list.end());
+    boost::tree::copy(postorder(), ft.root(), oc_test_list);
+    test_traversal(inorder(), test_list.begin(), test_list.end());
     BOOST_CHECK(test_list.size() == 11);
 }
 

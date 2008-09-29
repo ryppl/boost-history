@@ -32,8 +32,8 @@ class unbalanced {
         //typename Tree::cursor y = x;
         if (x.begin().empty() || x.end().empty())
              return x;
-         //inorder::forward(x);
-         return inorder::next(x);
+         //forward(inorder, x);
+         return next(inorder(), x);
     }
         
     template <class Tree>

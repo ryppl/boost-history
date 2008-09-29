@@ -17,8 +17,6 @@
 
 #include <boost/tree/detail/iterator/ascending.hpp>
 
-#include <boost/tree/detail/iterator/inorder.hpp>
-#include <boost/tree/detail/iterator/preorder.hpp>
-#include <boost/tree/detail/iterator/postorder.hpp>
+#include <boost/tree/detail/iterator/iterator.hpp>
 
 #endif // BOOST_TREE_ITERATORS_HPP

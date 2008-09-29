@@ -16,10 +16,7 @@
 
 #include <boost/tree/detail/algorithm/cursor/ascending.hpp>
 
-#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
-#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
-
+#include <boost/tree/detail/algorithm/cursor.hpp>
 #include <boost/tree/detail/algorithm/iterator.hpp>
 
 #include <algorithm>

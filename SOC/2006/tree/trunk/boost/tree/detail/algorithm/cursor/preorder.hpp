@@ -14,13 +14,17 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_PREORDER_HPP
 
+//#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+#include <boost/tree/detail/algorithm/cursor/common.hpp>
+//#endif
+
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
 
-struct preorder {};
-
 namespace boost {
 namespace tree {
+
+struct preorder {};
 
 /** \addtogroup traversal */
 /*\@{*/
@@ -30,7 +34,7 @@ namespace tree {
  * @param c    Cursor to be set to its preorder successor
  */
 template <class Cursor>
-inline void forward<preorder>(Cursor& c)
+inline void forward(preorder, Cursor& c)
 {
     // If we have a left child, go there.
     if (!c.empty()) {
@@ -66,7 +70,7 @@ inline void forward<preorder>(Cursor& c)
  * @param c    Cursor to be set to its preorder predecessor
  */
 template <class Cursor>
-inline void back<preorder>(Cursor& c)
+inline void back(preorder, Cursor& c)
 {
     if (!c.is_root()) {
         c.to_parent();
@@ -97,7 +101,7 @@ inline void back<preorder>(Cursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_first<preorder>(Cursor& c)
+void to_first(preorder, Cursor& c)
 {
     c.to_begin();
 }
@@ -109,7 +113,7 @@ void to_first<preorder>(Cursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_last<preorder>(Cursor& c)
+void to_last(preorder, Cursor& c)
 { }
 
 /*\@}*/
@@ -123,18 +127,18 @@ void to_last<preorder>(Cursor& c)
  * @endif
  */
 template <class Cursor, class Op>
-void for_each_recursive<preorder>(Cursor s, Op& f)
+void for_each_recursive(preorder, Cursor s, Op& f)
 {
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
         f(*s);
         if (!s.empty())
-            for_each_recursive<preorder>(s, f);
+            for_each_recursive(preorder(), s, f);
     }
     
     // Multiway cursor
     if (!s.empty())
-        for_each_recursive<preorder>(s, f);
+        for_each_recursive(preorder(), s, f);
 }
 
 /**
@@ -149,19 +153,19 @@ void for_each_recursive<preorder>(Cursor s, Op& f)
  */
 //[ preorder_for_each
 template <class Cursor, class Op>
-Op for_each<preorder>(Cursor s, Op f)
+Op for_each(preorder, Cursor s, Op f)
 //]
 {
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
         f(*s);
         if (!s.empty())
-            for_each_recursive<preorder>(s, f);
+            for_each_recursive(preorder(), s, f);
     }
     
     // Multiway cursor
     if (!s.empty())
-        for_each_recursive<preorder>(s, f);
+        for_each_recursive(preorder(), s, f);
     
     return f;
 }
@@ -175,7 +179,7 @@ Op for_each<preorder>(Cursor s, Op f)
  * @result    A cursor past t's preorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy<preorder>(InCursor s, OutCursor t)
+OutCursor copy(preorder, InCursor s, OutCursor t)
 {
     InCursor r = s.end();
     s.to_begin();
@@ -184,12 +188,12 @@ OutCursor copy<preorder>(InCursor s, OutCursor t)
     for (; s != r; ++s, ++t) {
         *t = *s;
         if (!s.empty())
-            copy<preorder>(s, t);
+            copy(preorder(), s, t);
     }
 
     // Multiway cursor
     if (!r.empty())
-        copy<preorder>(r, t);
+        copy(preorder(), r, t);
 
     return t;
 }
@@ -208,7 +212,7 @@ OutCursor copy<preorder>(InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform<preorder>(InCursor s, OutCursor t, Op op)
+OutCursor transform(preorder, InCursor s, OutCursor t, Op op)
 {
     InCursor r = s.end();
     s.to_begin();
@@ -216,12 +220,12 @@ OutCursor transform<preorder>(InCursor s, OutCursor t, Op op)
     for (; s != r; ++s, ++t) {
         *t = op(*s);
         if (!s.empty())
-            transform<preorder>(s, t, op);
+            transform(preorder(), s, t, op);
     }
 
     // Multiway cursor
     if (!s.empty())
-        transform<preorder>(s, t, op);
+        transform(preorder(), s, t, op);
         
     return t;
 }

@@ -14,18 +14,22 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ITERATIVE_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_CURSOR_ITERATIVE_HPP
 
+#include <boost/tree/detail/algorithm/cursor/preorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/inorder.hpp>
+#include <boost/tree/detail/algorithm/cursor/postorder.hpp>
+
 namespace boost {
 namespace tree {
 
 template <class Order, class Cursor, class Op>
-Op for_each(root_tracking_cursor<Cursor> s, Op f)
+Op for_each(Order, root_tracking_cursor<Cursor> s, Op f)
 {
     root_tracking_cursor<Cursor> s2(s);
-    to_first<Order>(s);
-    to_last<Order>(s2);
+    to_first(Order(), s);
+    to_last(Order(), s2);
     while (s!=s2) {
         f(*s);
-        forward<Order>(s);
+        forward(Order(), s);
     }
     return f;
 }
@@ -42,24 +46,24 @@ Op for_each(root_tracking_cursor<Cursor> s, Op f)
  */
 //[ for_each
 template <class Order, class Cursor, class Op>
-Op for_each(Cursor s, Op f)
+Op for_each(Order, Cursor s, Op f)
 //]
 {
-    return for_each<Order>(root_tracking_cursor<Cursor>(s), f);
+    return for_each(Order(), root_tracking_cursor<Cursor>(s), f);
 }
 
 template <class Order, class InCursor, class OutCursor>
-root_tracking_cursor<OutCursor> copy (root_tracking_cursor<InCursor> s
+root_tracking_cursor<OutCursor> copy (Order, root_tracking_cursor<InCursor> s
                                     , root_tracking_cursor<OutCursor> t)
 {
     root_tracking_cursor<InCursor> s2(s);
-    to_first<Order>(s);
-    to_last<Order>(s2);
-    to_first<Order>(t);
+    to_first(Order(), s);
+    to_last(Order(), s2);
+    to_first(Order(), t);
     while (s!=s2) {
         *t = *s;
-        forward<Order>(s);
-        forward<Order>(t);
+        forward(Order(), s);
+        forward(Order(), t);
     }
     return t;
 }
@@ -71,27 +75,28 @@ root_tracking_cursor<OutCursor> copy (root_tracking_cursor<InCursor> s
  * @result  A cursor past t's *order end, after the copying operation.
  */
 template <class Order, class InCursor, class OutCursor>
-OutCursor copy (InCursor s, OutCursor t)
+OutCursor copy (Order, InCursor s, OutCursor t)
 {
     root_tracking_cursor<OutCursor> u 
-        = copy<Order>(root_tracking_cursor<InCursor>(s)
+        = copy(Order(), root_tracking_cursor<InCursor>(s)
                     , root_tracking_cursor<OutCursor>(t));
     return u.base();
 }
 
 template <class Order, class InCursor, class OutCursor, class Op>
-root_tracking_cursor<OutCursor> transform (root_tracking_cursor<InCursor> s
+root_tracking_cursor<OutCursor> transform (Order
+                                         , root_tracking_cursor<InCursor> s
                                          , root_tracking_cursor<OutCursor> t
                                          , Op op)
 {
     root_tracking_cursor<InCursor> s2(s);
-    to_first<Order>(s);
-    to_last<Order>(s2);
-    to_first<Order>(t);
+    to_first(Order(), s);
+    to_last(Order(), s2);
+    to_first(Order(), t);
     while (s!=s2) {
         *t = op(*s);
-        forward<Order>(s);
-        forward<Order>(t);
+        forward(Order(), s);
+        forward(Order(), t);
     }
     return t;
 }
@@ -111,11 +116,11 @@ root_tracking_cursor<OutCursor> transform (root_tracking_cursor<InCursor> s
  * op must not change its argument.
  */
 template <class Order, class InCursor, class OutCursor, class Op>
-OutCursor transform (InCursor s, OutCursor t, Op op)
+OutCursor transform (Order, InCursor s, OutCursor t, Op op)
 {
     root_tracking_cursor<OutCursor> u 
-        = transform<Order>(root_tracking_cursor<InCursor>(s)
-                         , root_tracking_cursor<OutCursor>(t), op);
+        = transform(Order(), root_tracking_cursor<InCursor>(s)
+                  , root_tracking_cursor<OutCursor>(t), op);
     return u.base();
 }
 

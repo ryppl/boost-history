@@ -7,7 +7,11 @@
 #ifndef LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
 #define LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
 
+#include <boost/tree/algorithm.hpp>
+
 #include <list>
+
+#include <boost/test/minimal.hpp>
 
 // Test data from http://en.wikipedia.org/wiki/Image:Binary_search_tree.svg
 // (With two additional nodes: 11 inserted left of 13; 12 right of 11)
@@ -76,12 +80,8 @@ void validate_corresponding_forest_tree(Tree const& t)
     BOOST_CHECK(*++c == 12);
 }
 
-namespace test {
-
-namespace preorder {
-
 template <class Iterator>
-void traversal(Iterator a, Iterator b) 
+void test_traversal(boost::tree::preorder, Iterator a, Iterator b) 
 {
     BOOST_CHECK(*a++ == 8);
     BOOST_CHECK(*a++ == 3);
@@ -98,7 +98,7 @@ void traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void reverse_traversal(Iterator a, Iterator b)
+void test_reverse_traversal(boost::tree::preorder, Iterator a, Iterator b)
 {     
     BOOST_CHECK(*--a == 12);
     BOOST_CHECK(*--a == 11);
@@ -115,7 +115,7 @@ void reverse_traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void subtree_traversal(Iterator a, Iterator b) 
+void test_subtree_traversal(boost::tree::preorder, Iterator a, Iterator b) 
 {
     BOOST_CHECK(*a++ == 3);
     BOOST_CHECK(*a++ == 1);
@@ -125,12 +125,8 @@ void subtree_traversal(Iterator a, Iterator b)
     BOOST_CHECK(a == b);
 }
 
-} // namespace preorder
-
-namespace inorder {
-
 template <class Iterator>
-void traversal(Iterator a, Iterator b)
+void test_traversal(boost::tree::inorder, Iterator a, Iterator b)
 {        
     BOOST_CHECK(*a++ == 1);
     BOOST_CHECK(*a++ == 3);
@@ -147,8 +143,8 @@ void traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void reverse_traversal(Iterator a, Iterator b)
-{    
+void test_reverse_traversal(boost::tree::inorder, Iterator a, Iterator b)
+{
     BOOST_CHECK(*--a == 14);
     BOOST_CHECK(*--a == 13);
     BOOST_CHECK(*--a == 12);
@@ -163,12 +159,9 @@ void reverse_traversal(Iterator a, Iterator b)
     BOOST_CHECK(a == b);
 }
 
-} // namespace inorder
-
-namespace postorder {
 
 template <class Iterator>
-void traversal(Iterator a, Iterator b)
+void test_traversal(boost::tree::postorder, Iterator a, Iterator b)
 {    
     BOOST_CHECK(*a++ == 1);    
     BOOST_CHECK(*a++ == 4);
@@ -185,9 +178,9 @@ void traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void reverse_traversal(Iterator a, Iterator b)
+void test_reverse_traversal(boost::tree::postorder, Iterator a, Iterator b)
 {    
-    BOOST_CHECK(*--a == 8);    
+    BOOST_CHECK(*--a == 8);
     BOOST_CHECK(*--a == 10);
     BOOST_CHECK(*--a == 14);
     BOOST_CHECK(*--a == 13);
@@ -201,23 +194,16 @@ void reverse_traversal(Iterator a, Iterator b)
     BOOST_CHECK(a == b);
 }
 
-} // namespace postorder
-
-namespace ascending {
-
 template <class Iterator>
-void traversal_from_leaf4(Iterator a, Iterator b)
+void test_traversal_from_leaf4(Iterator a, Iterator b)
 {    
     BOOST_CHECK(*a == 4);
     BOOST_CHECK(*++a == 6);
     BOOST_CHECK(*++a == 3);
     BOOST_CHECK(*++a == 8);
     BOOST_CHECK(++a == b);
-}
 
 } // namespace ascending
-
-} // namespace test
 
 
 #endif // LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP

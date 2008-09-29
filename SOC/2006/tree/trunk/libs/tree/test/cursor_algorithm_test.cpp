@@ -24,17 +24,7 @@ using namespace boost::tree;
 // Some macro magic, to save us from all too tedious redundant calls
 // to each of the three types of order algorithms and checks.
 
-#define ORDER preorder
 #include "subtree_algorithms_checks.hpp"
-#undef ORDER
-
-#define ORDER inorder
-#include "subtree_algorithms_checks.hpp"
-#undef ORDER
-
-#define ORDER postorder
-#include "subtree_algorithms_checks.hpp"
-#undef ORDER
 
 int test_main(int, char* [])
 {
@@ -55,9 +45,9 @@ int test_main(int, char* [])
     BOOST_CHECK(test_tree != test_tree2);
     d = test_tree2.root();
 
-    test::preorder::algorithms (test_tree.root(), test_tree2.root());
-    test::inorder::algorithms  (test_tree.root(), test_tree2.root());
-    test::postorder::algorithms(test_tree.root(), test_tree2.root());
+    test::algorithms(preorder(), test_tree.root(), test_tree2.root());
+    test::algorithms(inorder(), test_tree.root(), test_tree2.root());
+    test::algorithms(postorder(), test_tree.root(), test_tree2.root());
 
     return 0;
 }
