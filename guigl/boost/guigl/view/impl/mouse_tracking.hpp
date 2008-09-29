@@ -73,6 +73,7 @@ namespace detail {
                 m_mouse_tracking.m_mouse_state.inside = false;
             else
             {
+                m_mouse_tracking.m_mouse_state.inside = true;
                 m_mouse_tracking.m_mouse_state.button_down = get_button_state<BaseView>::is_down(m_mouse_tracking);
             }
             return false;
