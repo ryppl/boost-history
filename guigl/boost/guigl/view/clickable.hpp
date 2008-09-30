@@ -35,6 +35,10 @@ public:
         : base_type(args)
         , m_button_down(false)
     {}
+    clickable(const clickable &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_button_down(false)
+    {}
 
 protected:
     bool on_event(const event_type &event_info);

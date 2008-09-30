@@ -14,6 +14,7 @@
 #include <boost/guigl/view/impl/solid_background.hpp>
 #include <boost/guigl/view/impl/draggable.hpp>
 #include <iostream>
+#include <cmath>
 
 namespace boost { namespace guigl { namespace widget {
 
@@ -36,7 +37,7 @@ void slider::draggable_on_drag(const position_type &position)
 {
     double new_value = (position.x / size().x) * (m_max-m_min);
     if(m_step!=0.0)
-        new_value = round(new_value / m_step) * m_step;
+        new_value = floor(new_value / m_step) * m_step;
     new_value += m_min;
     new_value = (std::max)(m_min, new_value);
     new_value = (std::min)(m_max, new_value);
@@ -53,5 +54,9 @@ void slider::set_value(double value)
     }
 }
 
+bool slider::on_event(const event_type &event_info)
+{
+    return base_type::on_event(event_info);
+}
 
 }}}

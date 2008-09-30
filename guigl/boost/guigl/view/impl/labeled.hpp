@@ -21,7 +21,7 @@ inline void labeled<BaseView>::draw_prologue()
 {
     BaseView::draw_prologue();
 
-    glRasterPos3f((BaseView::size().x - 9*m_label.size())/2, BaseView::size().y-(BaseView::size().y-15)/2, 0);
+    glRasterPos3d((BaseView::size().x - 9*m_label.size())/2, BaseView::size().y-(BaseView::size().y-15)/2, 0);
     for (std::string::const_iterator it=m_label.begin(); it!=m_label.end(); it++)
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *it);
 }

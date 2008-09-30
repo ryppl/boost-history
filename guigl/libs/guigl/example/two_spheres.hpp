@@ -39,6 +39,8 @@ public:
 protected:
     void draw();
     void draw_prologue();
+    bool on_event(const boost::guigl::event_type &event_info);
+
     static void *sphere();
     static void *s_sphere;
     

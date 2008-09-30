@@ -129,12 +129,7 @@ struct typed_tagged_argument : tagged_argument_base
     );
 
     reference value;
-# if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1310))
-    // warning suppression
- private:
-    void operator=(tagged_argument const&);
- public:    
-# endif
+
     // MPL sequence support
     typedef typed_tagged_argument type;            // Convenience for users
     typedef empty_typed_arg_list tail_type;        // For the benefit of iterators

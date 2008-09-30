@@ -19,4 +19,9 @@ void compound::draw()
     draw_epilogue();
 }
 
+bool compound::on_event(const event_type &event_info)
+{
+    return base_type::on_event(event_info);
+}
+
 }}}

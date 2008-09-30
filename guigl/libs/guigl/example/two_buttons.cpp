@@ -17,3 +17,8 @@ void two_buttons::draw()
     draw_prologue();
     draw_epilogue();
 }
+
+bool two_buttons::on_event(const boost::guigl::event_type &event_info)
+{
+    return base_type::on_event(event_info);
+}

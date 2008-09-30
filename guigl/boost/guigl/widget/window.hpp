@@ -31,7 +31,9 @@ public:
     {}
     
 protected:
-    BOOST_GUIGL_WIDGET_DRAW
+    void draw();
+
+    bool on_event(const event_type &event_info);
 };
 
 }}}

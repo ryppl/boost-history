@@ -23,7 +23,7 @@ void navigable<BaseView>::draw_prologue()
     glPushMatrix();
     glRotated(m_angle.x, 0, 1, 0);
     glRotated(m_angle.y, 1, 0, 0);
-	glTranslatef(0, 0, -m_distance);
+	glTranslated(0, 0, -m_distance);
 }
 
 template<typename BaseView>

@@ -39,6 +39,11 @@ public:
         , m_position(args[_position])
         , m_parent(0)
     {}
+    positioned(const positioned &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_position(rhs.m_position)
+        , m_parent(0)
+    {}
     
     /** Returns the position */
     const position_type &position() const

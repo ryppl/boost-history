@@ -43,6 +43,9 @@ public:
     mouse_tracking(const ArgumentPack &args)
         : base_type(args)
     {}
+    mouse_tracking(const mouse_tracking &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+    {}
 
     const guigl::mouse_state &mouse_state() const
     {   return m_mouse_state; }

@@ -40,6 +40,7 @@ public:
     }
 protected:
     void draw();
+    bool on_event(const boost::guigl::event_type &event_info);
 };
 
 #endif // BOOST__GUIGL__EXAMPLE__TWO_BUTTONS_HPP

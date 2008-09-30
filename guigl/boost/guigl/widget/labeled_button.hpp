@@ -26,11 +26,15 @@ class labeled_button : public labeled_button_base_type
 public:
     template<typename ArgumentPack>
     labeled_button(const ArgumentPack &args)
-        : labeled_button_base_type(args)
+        : base_type(args)
+    {}
+    labeled_button(const labeled_button &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
     {}
 
 protected:
     void draw();
+    bool on_event(const event_type &event_info);
     friend class guigl::access;
 };
 

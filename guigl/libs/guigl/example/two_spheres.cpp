@@ -50,3 +50,8 @@ void *two_spheres::sphere()
 }
 
 void *two_spheres::s_sphere = 0;
+
+bool two_spheres::on_event(const boost::guigl::event_type &event_info)
+{
+    return base_type::on_event(event_info);
+}

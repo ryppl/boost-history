@@ -26,16 +26,16 @@ class static_compound;
 namespace detail {
 
     template<typename BaseView>
-    class compound_event_visitor;
+    struct compound_event_visitor;
 
     template<typename ChildrenSequence, typename BaseView>
-    class static_compound_event_visitor;
+    struct static_compound_event_visitor;
 
 }
 
 }
 
-struct access
+class access
 {
 private:
     template<typename T>
@@ -60,12 +60,12 @@ private:
     template<typename BaseType>
     friend class view::compound;
     template<typename BaseType>
-    friend class view::detail::compound_event_visitor;
+    friend struct view::detail::compound_event_visitor;
     
     template<typename ChildrenSequence, typename BaseView>
     friend class view::static_compound;
     template<typename ChildrenSequence, typename BaseType>
-    friend class view::detail::static_compound_event_visitor;
+    friend struct view::detail::static_compound_event_visitor;
 };
 
 }}

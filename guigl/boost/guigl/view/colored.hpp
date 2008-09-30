@@ -23,6 +23,10 @@ public:
         : base_type(args)
         , m_color(args[_color])
     {}
+    colored(const colored &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_color(rhs.m_color)
+    {}
     
     const color_type &color() const
     {   return m_color; }

@@ -34,6 +34,7 @@ public:
 
 protected:
     void draw();
+    bool on_event(const event_type &event_info);
 };
 
 }}}

@@ -33,7 +33,7 @@ public:
     void enable(double seconds)
     {
         m_enabled = true;
-        m_milliseconds = seconds * 1000;
+        m_milliseconds = int(seconds * 1000);
         timer_callback();
     }
     

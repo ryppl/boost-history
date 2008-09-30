@@ -38,4 +38,9 @@ void button::clickable_button_down(bool state)
     guigl::window::redraw(*this);
 }
 
+bool button::on_event(const event_type &event_info)
+{
+    return base_type::on_event(event_info);
+}
+
 }}}

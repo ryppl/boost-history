@@ -28,7 +28,7 @@ public:
     
     int create_window(const size_type &size, const std::string &label, bool depth, window::impl *impl)
     {
-        glutInitWindowSize(size.x, size.y);
+        glutInitWindowSize((int)size.x, (int)size.y);
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | (depth?GLUT_DEPTH:0));
         int id = glutCreateWindow(label.c_str());
         if(depth)

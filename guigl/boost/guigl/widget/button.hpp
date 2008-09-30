@@ -41,13 +41,14 @@ public:
     
     button &operator=(const button &rhs)
     {
-        base_type::operator=(static_cast<const base_type &>(rhs));
+        base_type::operator=(*static_cast<const base_type *>(&rhs));
         return *this;
     }
     boost::signal<void()> on_click;
 protected:
     BOOST_GUIGL_WIDGET_DRAW
-    
+    bool on_event(const event_type &event_info);
+
 private:
     void clickable_button_down(bool state);
     void clickable_on_click()

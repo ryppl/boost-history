@@ -24,6 +24,10 @@ public:
         : base_type(args)
         , m_label(args[_label])
     {}
+    labeled(const labeled &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_label(rhs.m_label)
+    {}
     
     const std::string &label() const
     {   return m_label; }

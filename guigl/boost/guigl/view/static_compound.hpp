@@ -79,9 +79,9 @@ private:
         access::set_parent(view, *this);
     }
     
-    friend class detail::static_compound_event_visitor<ChildrenSequence, BaseView>;
-    friend class detail::draw<static_compound>;
-    friend class detail::set_parent<static_compound>;
+    friend struct detail::static_compound_event_visitor<ChildrenSequence, BaseView>;
+    friend struct detail::draw<static_compound>;
+    friend struct detail::set_parent<static_compound>;
 };
 
 }}}

@@ -10,9 +10,11 @@ project boost/guigl
     : source-location ../src
     : requirements
         <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <define>BOOST_ALL_NO_LIB=1
     : usage-requirements
         <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
         <library>/boost/signals//boost_signals
+        <define>BOOST_ALL_NO_LIB=1
     ;
 
 SOURCES =

@@ -31,6 +31,9 @@ public:
     compound(const ArgumentPack &args)
         : base_type(( args, _children=0 ))
     {}
+    compound(const compound &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+    {}
     
     compound & operator << (positioned<> *v)
     {

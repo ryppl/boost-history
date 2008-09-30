@@ -3,28 +3,27 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="doc"
-	ProjectGUID="{03a0b274-9816-4644-a53d-9f70f01ea5cd}"
+	ProjectGUID="{9D6EDF83-2360-4267-8075-64934F754048}"
 	>
-    <Platforms>
-        <Platform
+	<Platforms>
+		<Platform
 			Name="Win32"
 		/>
-    </Platforms>
-    <ToolFiles>
-    </ToolFiles>
-    <Configurations>
-        <Configuration
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-            <Tool
+			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="cd ../../doc&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
 				ReBuildCommandLine="cd ../../doc&#x0D;&#x0A;bjam --v2 -a $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -33,23 +32,11 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-        </Configuration>
-    </Configurations>
-    <References>
-    </References>
-    <Files>
-		<File
-			RelativePath="..\../doc/guigl.qbk"
-			>
-		</File>
-		<File
-			RelativePath="..\../doc/guigl_doxygen.xml"
-			>
-		</File>
-		<File
-			RelativePath="..\../doc/Jamfile"
-			>
-		</File>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
 		<Filter
 			Name="html"
 			>
@@ -58,11 +45,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\../doc/html/reference.css"
+				RelativePath="..\../doc/html/index.html"
 				>
 			</File>
 			<File
-				RelativePath="..\../doc/html/index.html"
+				RelativePath="..\../doc/html/reference.css"
 				>
 			</File>
 			<File
@@ -754,7 +741,19 @@
 				</Filter>
 			</Filter>
 		</Filter>
-    </Files>
-    <Globals>
-    </Globals>
+		<File
+			RelativePath="..\../doc/guigl.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\../doc/guigl_doxygen.xml"
+			>
+		</File>
+		<File
+			RelativePath="..\../doc/Jamfile"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
 </VisualStudioProject>

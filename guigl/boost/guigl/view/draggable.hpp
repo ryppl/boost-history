@@ -36,6 +36,10 @@ public:
         : base_type(args)
         , m_dragging(false)
     {}
+    draggable(const draggable &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_dragging(false)
+    {}
 
 protected:
     bool on_event(const event_type &event_info);

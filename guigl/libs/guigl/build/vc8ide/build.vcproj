@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="build"
-	ProjectGUID="{96dd7085-0763-49ff-9986-0244d7b43704}"
+	ProjectGUID="{96DD7085-0763-49FF-9986-0244D7B43704}"
 	>
 	<Platforms>
 		<Platform
@@ -24,7 +24,6 @@
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -45,7 +44,6 @@
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -328,23 +326,43 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="solution build"
+			Name="src"
 			>
-			<File
-				RelativePath="..\..\..\..\boost-build.jam"
+			<Filter
+				Name="widget"
 				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\project-root.jam"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\Jamfile.v2"
-				>
-			</File>
+				<File
+					RelativePath="..\..\src\widget\button.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\widget\compound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\widget\label.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\widget\labeled_button.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\widget\labeled_slider.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\widget\slider.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\widget\window.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
-			RelativePath="..\..\build\Jamfile.v2"
+			RelativePath="..\Jamfile"
 			>
 		</File>
 	</Files>

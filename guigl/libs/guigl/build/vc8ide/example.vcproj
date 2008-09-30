@@ -3,28 +3,27 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="example"
-	ProjectGUID="{ce89bcc4-f1e3-4de4-8d55-b09c5b4dab17}"
+	ProjectGUID="{9E866DB0-47D4-4A21-BFBD-2877DE504697}"
 	>
-    <Platforms>
-        <Platform
+	<Platforms>
+		<Platform
 			Name="Win32"
 		/>
-    </Platforms>
-    <ToolFiles>
-    </ToolFiles>
-    <Configurations>
-        <Configuration
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
 			Name="debug|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-            <Tool
+			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -33,19 +32,18 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-        </Configuration>
-        <Configuration
+		</Configuration>
+		<Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
-            <Tool
+			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
 				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
 				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -54,11 +52,11 @@
 				ForcedUsingAssemblies=""
 				CompileAsManaged=""
 			/>
-        </Configuration>
-    </Configurations>
-    <References>
-    </References>
-    <Files>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
 		<File
 			RelativePath="..\../example/Jamfile"
 			>
@@ -83,7 +81,7 @@
 			RelativePath="..\../example/window_example.cpp"
 			>
 		</File>
-    </Files>
-    <Globals>
-    </Globals>
+	</Files>
+	<Globals>
+	</Globals>
 </VisualStudioProject>

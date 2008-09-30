@@ -49,7 +49,8 @@ public:
     void set_value(double value);
 protected:
     BOOST_GUIGL_WIDGET_DRAW
-    
+    bool on_event(const event_type &event_info);
+
 private:
     double m_value;
     double m_min, m_max, m_step;

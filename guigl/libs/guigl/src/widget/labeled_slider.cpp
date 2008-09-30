@@ -15,4 +15,9 @@ namespace boost { namespace guigl { namespace widget {
 
 BOOST_GUIGL_WIDGET_DRAW_IMPL(labeled_slider)
 
+bool labeled_slider::on_event(const event_type &event_info)
+{
+    return base_type::on_event(event_info);
+}
+
 }}}

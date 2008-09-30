@@ -6,4 +6,13 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
+#ifdef __APPLE__
+
 #include <OpenGL/glu.h>
+
+#else
+
+#include <GL/glu.h>
+
+#endif
+

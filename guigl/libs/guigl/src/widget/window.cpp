@@ -17,14 +17,9 @@ namespace boost { namespace guigl { namespace widget {
 
 BOOST_GUIGL_WIDGET_DRAW_IMPL(window)
 
-inline void window::draw_prologue()
+bool window::on_event(const event_type &event_info)
 {
-    base_type::draw_prologue();
-}
-
-inline void window::draw_epilogue()
-{
-    base_type::draw_epilogue();
+    return base_type::on_event(event_info);
 }
 
 
