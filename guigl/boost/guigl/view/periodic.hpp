@@ -34,7 +34,7 @@ public:
     {
         m_enabled = true;
         m_milliseconds = int(seconds * 1000);
-        timer_callback();
+        schedule_callback();
     }
     
     void disable()
@@ -42,12 +42,16 @@ public:
         m_enabled = false;
     }
 private:
+    void schedule_callback()
+    {
+        guigl::application::timeout(boost::bind(&periodic::timer_callback, this), m_milliseconds);
+    }
     void timer_callback()
     {
         if(m_enabled)
         {
             static_cast<Derived *>(this)->periodic_callback();
-            guigl::application::timeout(boost::bind(&periodic::timer_callback, this), m_milliseconds);
+            schedule_callback();
         }
     }   
     bool m_enabled;
