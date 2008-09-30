@@ -8,7 +8,9 @@
 
 #include <boost/tree/algorithm.hpp>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
@@ -143,7 +145,18 @@ void test_swap_binary_trees(Tree& one, Tree& two)
     swap(one, two);
 }
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( constructors_test )
+{
+    typedef binary_tree<int> tree_t;
+    tree_t bt;
+    BOOST_CHECK(bt.root().empty());
+    //BOOST_CHECK_EQUAL(0, 1);
+    
+    // test with allocator 
+}
+
+//int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( old_test )
 {
     typedef binary_tree<int> tree_t;
     tree_t tree1, tree2;
@@ -211,5 +224,5 @@ int test_main(int, char* [])
 
     inorder_erase_test_data_tree(tree2);
     
-    return 0;
+    //return 0;
 }

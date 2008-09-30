@@ -15,6 +15,10 @@ project :
 	:	requirements
 		<include>$(BOOST_ROOT)
 		<include>../../../
+#		<define>BOOST_TEST_DYN_LINK
+#		<define>BOOST_TEST_MAIN
+#		<link>shared
+#		<runtime-link>shared
 	;
 	
 test-suite tree :

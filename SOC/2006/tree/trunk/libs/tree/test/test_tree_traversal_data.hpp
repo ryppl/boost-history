@@ -11,8 +11,6 @@
 
 #include <list>
 
-#include <boost/test/minimal.hpp>
-
 // Test data from http://en.wikipedia.org/wiki/Image:Binary_search_tree.svg
 // (With two additional nodes: 11 inserted left of 13; 12 right of 11)
 // and in combination with http://en.wikipedia.org/wiki/Tree_traversal#Examples

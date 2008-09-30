@@ -72,10 +72,10 @@ class binary_tree {
         m_header[1] = &m_header;
     }
 
-    explicit binary_tree (size_type n, value_type const& value = value_type(), 
-        allocator_type const& alloc = allocator_type())
-    : m_header(), m_value_alloc(alloc)
-    {}
+//    explicit binary_tree (size_type n, value_type const& value = value_type(), 
+//        allocator_type const& alloc = allocator_type())
+//    : m_header(), m_value_alloc(alloc)
+//    {}
 
     template <class InputCursor>
         binary_tree (InputCursor subtree,

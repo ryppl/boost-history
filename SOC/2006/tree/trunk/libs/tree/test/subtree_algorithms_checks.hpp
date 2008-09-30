@@ -13,8 +13,6 @@
 #include <algorithm>
 #include <iterator>
 
-#include <boost/test/minimal.hpp>
-
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 

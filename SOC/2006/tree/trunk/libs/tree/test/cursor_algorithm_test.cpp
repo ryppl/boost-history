@@ -10,11 +10,14 @@
 #include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#include <boost/test/minimal.hpp>
-
 #include <list>
 #include <algorithm>
 #include <iterator>
+
+#define BOOST_TEST_MODULE cursor_algorithm test
+#include <boost/test/included/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/mpl/list.hpp>
 
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
@@ -26,7 +29,9 @@ using namespace boost::tree;
 
 #include "subtree_algorithms_checks.hpp"
 
-int test_main(int, char* [])
+typedef boost::mpl::list<preorder,inorder,postorder> orders;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
 {
     using boost::forward_traversal_tag;
     
@@ -45,9 +50,5 @@ int test_main(int, char* [])
     BOOST_CHECK(test_tree != test_tree2);
     d = test_tree2.root();
 
-    test::algorithms(preorder(), test_tree.root(), test_tree2.root());
-    test::algorithms(inorder(), test_tree.root(), test_tree2.root());
-    test::algorithms(postorder(), test_tree.root(), test_tree2.root());
-
-    return 0;
+    test::algorithms(Order(), test_tree.root(), test_tree2.root());
 }

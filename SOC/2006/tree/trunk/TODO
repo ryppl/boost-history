@@ -14,7 +14,7 @@
 [section TODO]
 
 General:
-
+* Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
 * Fix recursive algorithms for use with forest.
 * Implement a real output cursor (if possible) and use preorder::copy to build a new tree.
@@ -35,10 +35,7 @@ General:
 * Look into SOC 2008 projects dsearch (already using concepts from Boost.Tree) and 
   spacial_indexing (with tree classes of its own)
 * Can't we really do without inorder_erase()?
-* Remove the word "recursive" from *order subtree algorithms context, as we might
-  implement these using iterative versions. Rename *_recursive algorithms to 
-  *_with_references or so; and use something like #ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS.
-  Overload then for root_tracking_cursor.
+* Possibly rename *_recursive algorithms to *_with_references or so, and implement iterative versions.
 * Check if Cursor(balanced_tree_iterator) really has no is_root member()!
 * Revisit binary_tree (inorder::)iterator functions
 * Possibly sort out some more concepts, like trees with "downwards" or "upwards" insertion
