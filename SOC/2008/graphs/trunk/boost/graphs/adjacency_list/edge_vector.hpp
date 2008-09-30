@@ -14,7 +14,7 @@ template <typename, typename> class in_vector;
 // What's in an edge vector? Basically, an edge vector has to specify
 // the type of property storage and the type of incidence storage. What
 // are the possible parameters to edge storage?
-// 1. The edge properties
+// 1. The edge label
 // 2. Allocator for the property store
 // 3. Allocator for the incidence store
 
@@ -32,7 +32,7 @@ template <typename, typename> class in_vector;
  * metafunction for both directed and undirected graphs. The meaning of the
  * first and second allocator differ depending on the type of graph. For
  * undirected graphs, FirstAlloc is the allocator for the per-vertex incidence
- * store and the SecondAlloc is the allocator for properties. For directed
+ * store and the SecondAlloc is the allocator for label. For directed
  * graphs, FirstAlloc and SecondAlloc are the per-vertex allocators for
  * out- and in-edge stores respectively.
  */
@@ -47,10 +47,10 @@ struct edge_vector
 
     // Descriptor types for undirected graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
-    typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type label_descriptor;
 
     // The property store metafunction generates the type of vector used to
-    // store global properties for undirected graphs.
+    // store global label for undirected graphs.
     template <typename VertexDesc, typename EdgeProps>
     struct property_store
     {
@@ -65,7 +65,7 @@ struct edge_vector
     template <typename VertexDesc>
     struct incidence_store
     {
-        typedef std::pair<VertexDesc, property_descriptor> incidence_pair;
+        typedef std::pair<VertexDesc, label_descriptor> incidence_pair;
         typedef FirstAlloc<incidence_pair> incidence_allocator;
         typedef incidence_vector<incidence_pair, incidence_allocator> type;
     };

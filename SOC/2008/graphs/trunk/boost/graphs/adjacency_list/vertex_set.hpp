@@ -24,7 +24,7 @@ template <typename, typename, typename> class vertices_set;
  * The Alloc parameter is also a unary template class. In this case, the caller
  * does not actually know what the final instantiated type is going to be.
  *
- * @param Compare A unary template class that compares vertex properties.
+ * @param Compare A unary template class that compares vertex label.
  * @param Alloc A unary template class that allocates vertices.
  */
 template <
@@ -42,7 +42,7 @@ struct vertex_set
     struct store
     {
         typedef Alloc<Vertex> allocator;
-        typedef property_comparator<Compare<typename Vertex::vertex_properties>> compare;
+        typedef label_comparator<Compare<typename Vertex::vertex_label>> compare;
         typedef vertices_set<Vertex, compare, allocator> type;
     };
 };
@@ -50,10 +50,10 @@ struct vertex_set
 
 /**
  * Implementation of the vertex set. This requires that vertices (actually
- * their properties) are less-than comparable.
+ * their label) are less-than comparable.
  *
  * @param Vertex The type of vertex stored by the set.
- * @param Compare An ordering of vertices (should delegate to properties).
+ * @param Compare An ordering of vertices (should delegate to label).
  * @param Allocator The allocator for stored vertices.
  */
 template <typename Vertex, typename Compare, typename Allocator>
@@ -66,7 +66,7 @@ public:
     typedef typename store_type::const_iterator const_iterator;
 
     typedef Vertex vertex_type;
-    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_label vertex_label;
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
@@ -78,18 +78,18 @@ public:
     { }
 
     /**
-     * Add a vertex to the store with the given properties (or none). Return
+     * Add a vertex to the store with the given label (or none). Return
      * a descriptor to the vertex that was added to the vector.
      */
-    inline vertex_descriptor add(vertex_properties const& vp)
+    inline vertex_descriptor add(vertex_label const& vp)
     { return make_descriptor(_verts, insert(_verts, vertex_type(vp))); }
 
-    /** Find the vertex with the given properties. */
-    inline vertex_descriptor find(vertex_properties const& vp) const
+    /** Find the vertex with the given label. */
+    inline vertex_descriptor find(vertex_label const& vp) const
     { return make_descriptor(_verts, _verts.find(vp)); }
 
     /** @name Remove Vertex
-     * Remove the given vertex or the one identified by the given properties.
+     * Remove the given vertex or the one identified by the given label.
      */
     //@{
     inline void remove(vertex_descriptor v)
@@ -98,7 +98,7 @@ public:
         erase(_verts, make_iterator(_verts, v));
     }
 
-    inline void remove(vertex_properties const& v)
+    inline void remove(vertex_label const& v)
     { remove(find(v)); }
     //@}
 
@@ -135,11 +135,11 @@ public:
 
     /** @name Property Accessors */
     //@{
-    vertex_properties& properties(vertex_descriptor v)
-    { return vertex(v).properties(); }
+    vertex_label& label(vertex_descriptor v)
+    { return vertex(v).label(); }
 
-    vertex_properties const& properties(vertex_descriptor v) const
-    { return vertex(v).properties(); }
+    vertex_label const& label(vertex_descriptor v) const
+    { return vertex(v).label(); }
     //@{
 
 private:

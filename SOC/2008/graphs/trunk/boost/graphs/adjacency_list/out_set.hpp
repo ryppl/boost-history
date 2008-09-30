@@ -20,7 +20,7 @@
  * The out edge set is actually implemented as a mapping from vertex descriptor
  * to stored edge property.
  *
- * @param Edge A pair describing a vertex descriptor and the edge properties.
+ * @param Edge A pair describing a vertex descriptor and the edge label.
  * @param Alloc The allocator for edge pairs.
  */
 template <typename Edge, typename Compare, typename Alloc>
@@ -29,7 +29,7 @@ class out_set
 public:
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type edge_pair;
-    typedef typename edge_pair::first_type edge_properties;
+    typedef typename edge_pair::first_type edge_label;
     typedef typename edge_pair::second_type in_descriptor;
 
     // Reconstruct the edge triple into a key/value type thing for the map.
@@ -48,7 +48,7 @@ public:
      * Try to add the given edge to the set.
      * @complexity O(log(deg(v)))
      */
-    insertion_result<out_descriptor> add(vertex_descriptor v, edge_properties const& ep)
+    insertion_result<out_descriptor> add(vertex_descriptor v, edge_label const& ep)
     {
         std::pair<iterator, bool> i = _edges.insert(std::make_pair(v, std::make_pair(ep, in_descriptor())));
         return make_result(_edges, i);
@@ -97,11 +97,11 @@ public:
     inline vertex_descriptor target(out_descriptor o) const
     { return make_iterator(_edges, o)->first; }
 
-    /** Return the properties stored with this edge. */
-    inline edge_properties& properties(out_descriptor o)
+    /** Return the label stored with this edge. */
+    inline edge_label& label(out_descriptor o)
     { return make_iterator(_edges, o)->second.first; }
 
-    inline edge_properties const& properties(out_descriptor o) const
+    inline edge_label const& label(out_descriptor o) const
     { return make_iterator(_edges, o)->second.first; }
 
     /** Return the in edge descriptor bound to this edge. */

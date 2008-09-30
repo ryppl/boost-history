@@ -15,7 +15,7 @@
 template <
     typename Graph,
     typename Visitor = default_search_visitor,
-    typename ColorMap = optional_vertex_map<Graph, color>>
+    typename ColorMap = optional_vertex_label<Graph, color>>
 void
 breadth_first_search(Graph const& g,
                      Visitor vis = Visitor(),

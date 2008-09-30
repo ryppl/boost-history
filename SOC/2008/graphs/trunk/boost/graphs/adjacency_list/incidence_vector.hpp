@@ -11,7 +11,7 @@
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
  * this stores pairs containing an adjacent vertex descriptor and a property
- * descriptor, that points to the edges global properties. This pair uniquely
+ * descriptor, that points to the edges global label. This pair uniquely
  * identifies incident edges of the vertex.
  *
  * This type allows constant-time edge addition and a linear search. Removal
@@ -22,7 +22,7 @@ class incidence_vector
 {
 public:
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type property_descriptor;
+    typedef typename Edge::second_type label_descriptor;
 
     typedef std::vector<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
@@ -42,9 +42,9 @@ public:
      */
     //@{
     inline insertion_result<incidence_descriptor> add(vertex_descriptor v)
-    { return add(v, property_descriptor()); }
+    { return add(v, label_descriptor()); }
 
-    insertion_result<incidence_descriptor> add(vertex_descriptor v, property_descriptor p)
+    insertion_result<incidence_descriptor> add(vertex_descriptor v, label_descriptor p)
     {
         iterator i = _edges.insert(_edges.end(), std::make_pair(v, p));
         return make_result(make_descriptor(_edges, i));
@@ -76,15 +76,15 @@ public:
     //@}
 
     /** Bind this edge to the given property. */
-    inline void bind(incidence_descriptor d, property_descriptor p)
+    inline void bind(incidence_descriptor d, label_descriptor p)
     { make_iterator(_edges, d)->second = p; }
 
     /** Return the vertex connected by this edge. */
     inline vertex_descriptor vertex(incidence_descriptor d) const
     { return make_iterator(_edges, d)->first; }
 
-    /** Return the properties of this edge. */
-    inline property_descriptor properties(incidence_descriptor d) const
+    /** Return the label of this edge. */
+    inline label_descriptor label(incidence_descriptor d) const
     { return make_iterator(_edges, d)->second; }
 
 private:

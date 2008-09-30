@@ -89,21 +89,21 @@ make_result(Cont& c, std::pair<typename Cont::iterator, bool> i)
  * @internal
  * A forwarding comparator for proeprties objects that forwards the comparison
  * to the configured comparator. This type is used internally to forward
- * comparisons of vertices to the property comparison provided by the edge set
+ * comparisons of vertices to the label comparison provided by the edge set
  * parameter.
  * @param Vertex The type of vertex being compared
- * @param Compare An ordering over vertex properties.
+ * @param Compare An ordering over vertex labels.
  */
 template <typename Compare>
-struct property_comparator
+struct label_comparator
 {
-    inline property_comparator()
+    inline label_comparator()
         : comp(Compare())
     { }
 
     template <typename Object>
     inline bool operator()(Object const& a, Object const& b) const
-    { return comp(a.properties(), b.properties()); }
+    { return comp(a.label(), b.label()); }
 
     Compare comp;
 };
@@ -116,25 +116,24 @@ struct property_comparator
  * @param Properties The type of properties being compared.
  * @todo This goes away with lambda expressions. Used in vertex_[v|l]::find().
  */
-template <typename Properties>
-struct property_finder
+template <typename Label>
+struct label_finder
 {
-    inline property_finder(Properties const& p)
-        : props(p)
+    inline label_finder(Label const& l)
+        : label(l)
     { }
 
     template <typename Object>
     inline bool operator()(Object const& o) const
-    { return o.properties() == props; }
+    { return o.label() == label; }
 
-    Properties const& props;
+    Label const& label;
 };
 
-template <typename Properties>
-inline property_finder<Properties>
-find_properties(Properties const& props)
-{ return property_finder<Properties>(props); }
-
+template <typename Label>
+inline label_finder<Label>
+find_label(Label const& l)
+{ return label_finder<Label>(l); }
 
 /**
  * @internal

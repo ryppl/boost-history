@@ -13,10 +13,10 @@ class directed_vertex
     typedef OutStore out_store;
     typedef InStore in_store;
 public:
-    typedef VertexProps vertex_properties;
+    typedef VertexProps vertex_label;
 
     typedef typename out_store::vertex_descriptor vertex_descriptor;
-    typedef typename out_store::edge_properties edge_properties;
+    typedef typename out_store::edge_label edge_label;
     typedef typename out_store::out_descriptor out_descriptor;
     typedef typename out_store::iterator out_iterator;
     typedef typename out_store::size_type out_size_type;
@@ -33,7 +33,7 @@ public:
         : _props(), _out(), _in()
     { }
 
-    inline directed_vertex(vertex_properties const& vp)
+    inline directed_vertex(vertex_label const& vp)
         : _props(vp), _out(), _in()
     { }
     //@}
@@ -46,7 +46,7 @@ public:
      * of the source.
      */
     //@{
-    insertion_result<out_descriptor> connect_target(vertex_descriptor v, edge_properties const& ep)
+    insertion_result<out_descriptor> connect_target(vertex_descriptor v, edge_label const& ep)
     { return _out.add(v, ep); }
 
     insertion_result<in_descriptor> connect_source(vertex_descriptor v, out_descriptor o)
@@ -68,18 +68,18 @@ public:
 
     /** @name Vertex Property Accessors */
     //@{
-    inline vertex_properties& properties()
+    inline vertex_label& label()
     { return _props; }
 
-    inline vertex_properties const& properties() const
+    inline vertex_label const& label() const
     { return _props; }
 
-    // Return the edge properties for the given out edge descriptor.
-    inline edge_properties& get_edge_properties(out_descriptor o)
-    { return _out.properties(o); }
+    // Return the edge label for the given out edge descriptor.
+    inline edge_label& get_edge_label(out_descriptor o)
+    { return _out.label(o); }
 
-    inline edge_properties const& get_edge_properties(out_descriptor o) const
-    { return _out.properties(o); }
+    inline edge_label const& get_edge_label(out_descriptor o) const
+    { return _out.label(o); }
     //@}
 
     /** Return the reverse out descriptor for the given in edge. */
@@ -157,7 +157,7 @@ public:
     //@}
 
 private:
-    vertex_properties   _props;
+    vertex_label   _props;
     out_store           _out;
     in_store            _in;
 };

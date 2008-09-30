@@ -18,16 +18,16 @@ struct labeled_vertex_tag { };
 // A fake vertex type.
 struct Vertex
 {
-    typedef int vertex_properties;
+    typedef int vertex_label;
 
     Vertex(int x)
         : value(x)
     { }
 
-    int& properties()
+    int& label()
     { return value; }
 
-    int const& properties() const
+    int const& label() const
     { return value; }
 
     int value;
@@ -72,7 +72,7 @@ void test()
     cout << "num verts after building: " << verts.size() << endl;
 
     Descriptor d = verts.find(3);
-    cout << "value of vertex properties: " << verts.properties(d) << endl;
+    cout << "value of vertex properties: " << verts.label(d) << endl;
 
     test_remove(verts, vertices_category(verts));
 }

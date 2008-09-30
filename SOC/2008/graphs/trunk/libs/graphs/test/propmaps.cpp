@@ -16,9 +16,9 @@ template <typename Graph>
 void test_props()
 {
     typedef typename Graph::vertex_descriptor Vertex;
-    typedef typename Graph::vertex_properties VertexProps;
+    typedef typename Graph::vertex_label VertexLabel;
     typedef typename Graph::edge_descriptor Edge;
-    typedef typename Graph::edge_properties EdgeProps;
+    typedef typename Graph::edge_label EdgeLabel;
 
     Graph g;
     cout << "--- " << typestr(g) << " ---" << endl;
@@ -38,12 +38,12 @@ void test_props()
     }
     cout << g.num_vertices() << " x " << g.num_edges() << endl;
 
-    typedef exterior_vertex_property<Graph, double> VertexWeightProp;
+    typedef exterior_vertex_label<Graph, double> VertexWeightProp;
     typedef exterior_property_map<VertexWeightProp> VertexWeightMap;
     VertexWeightProp vertex_weights(g, 6.28);
     VertexWeightMap vw(vertex_weights);
 
-    typedef exterior_edge_property<Graph, double> EdgeWeightProp;
+    typedef exterior_edge_label<Graph, double> EdgeWeightProp;
     typedef exterior_property_map<EdgeWeightProp> EdgeWeightMap;
     EdgeWeightProp edge_weights(g, 3.14);
     EdgeWeightMap ew(edge_weights);
@@ -66,9 +66,9 @@ void test_props()
 
     {
         typedef interior_property_map<Graph, Vertex> PropMap;
-        typedef interior_property_map<Graph, Vertex, string VertexProps::*> NameMap;
+        typedef interior_property_map<Graph, Vertex, string VertexLabel::*> NameMap;
         PropMap props(g);
-        NameMap names(g, &VertexProps::name);
+        NameMap names(g, &VertexLabel::name);
         for(vr.first = g.begin_vertices(); vr.first != vr.second; ++vr.first) {
             Vertex v = *vr.first;
             names(v) = "City " + lexical_cast<string>(props(v).id);
@@ -78,9 +78,9 @@ void test_props()
 
     {
         typedef interior_property_map<Graph, Edge> PropMap;
-        typedef interior_property_map<Graph, Edge, string EdgeProps::*> NameMap;
+        typedef interior_property_map<Graph, Edge, string EdgeLabel::*> NameMap;
         PropMap props(g);
-        NameMap names(g, &EdgeProps::name);
+        NameMap names(g, &EdgeLabel::name);
         for(er.first = g.begin_edges(); er.first != er.second; ++er.first) {
             Edge e = *er.first;
             names(e) = "Road " + lexical_cast<string>(props(e).id);
@@ -90,10 +90,10 @@ void test_props()
 
     {
         // Generic stuff?
-        exterior_vertex_property<Graph, double> these_weights(g, 6.28);
+        exterior_vertex_label<Graph, double> these_weights(g, 6.28);
 
-        optional_vertex_map<Graph, double> my_weights(g, 3.14);
-        optional_vertex_map<Graph, double> your_weights(these_weights);
+        optional_vertex_label<Graph, double> my_weights(g, 3.14);
+        optional_vertex_label<Graph, double> your_weights(these_weights);
 
         for(vr.first = g.begin_vertices(); vr.first != vr.second; ++vr.first) {
             Vertex v = *vr.first;

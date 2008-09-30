@@ -49,7 +49,7 @@ struct vertex_map
 
 /**
  * Implementation of the vertex set. This requires that vertices (actually
- * their properties) are less-than comparable.
+ * their label) are less-than comparable.
  *
  * @param Vertex The vertex type stored by the class.
  * @param Key The type of key mapping to vertices.
@@ -68,7 +68,7 @@ public:
     typedef Key key_type;
 
     typedef Vertex vertex_type;
-    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_label vertex_label;
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
@@ -81,9 +81,9 @@ public:
 
     /**
      * Add a vertex to the store mapped to the given key, and having the given
-     * properties.
+     * label.
      */
-    inline vertex_descriptor add(key_type const& k, vertex_properties const& vp)
+    inline vertex_descriptor add(key_type const& k, vertex_label const& vp)
     { return make_descriptor(_verts, _verts.insert(std::make_pair(k, vp)).first); }
 
     /**
@@ -93,7 +93,7 @@ public:
     { return make_descriptor(_verts, _verts.find(k)); }
 
     /** @name Remove Vertex
-     * Remove the vertex identified by the descriptor or the its properties.
+     * Remove the vertex identified by the descriptor or the its label.
      */
     //@{
     inline void remove(vertex_descriptor d)
@@ -139,11 +139,11 @@ public:
 
     /** @name Property Accessors */
     //@{
-    vertex_properties& properties(vertex_descriptor v)
-    { return vertex(v).properties(); }
+    vertex_label& label(vertex_descriptor v)
+    { return vertex(v).label(); }
 
-    vertex_properties const& properties(vertex_descriptor v) const
-    { return vertex(v).properties(); }
+    vertex_label const& label(vertex_descriptor v) const
+    { return vertex(v).label(); }
     //@}
 
 private:

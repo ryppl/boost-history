@@ -31,7 +31,7 @@ void test_remove(PropSet& props, unstable_remove_tag)
 template <typename PropSet>
 void test()
 {
-    typedef typename PropSet::property_descriptor PropDesc;
+    typedef typename PropSet::label_descriptor PropDesc;
 
     cout << "--- " << typestr<PropSet>() << " ---" << endl;
 

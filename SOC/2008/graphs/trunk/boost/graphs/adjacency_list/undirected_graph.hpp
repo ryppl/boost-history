@@ -9,17 +9,17 @@
 #include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
 template <
-    typename VertexProps,
-    typename EdgeProps,
+    typename VertexLabel,
+    typename EdgeLabel,
     typename VertexStore,
     typename EdgeStore>
 class undirected_graph
 {
-    typedef undirected_types<VertexProps, EdgeProps, VertexStore, EdgeStore> types;
-    typedef undirected_graph<VertexProps, EdgeProps, VertexStore, EdgeStore> this_type;
+    typedef undirected_types<VertexLabel, EdgeLabel, VertexStore, EdgeStore> types;
+    typedef undirected_graph<VertexLabel, EdgeLabel, VertexStore, EdgeStore> this_type;
 public:
-    typedef VertexProps vertex_properties;
-    typedef EdgeProps edge_properties;
+    typedef VertexLabel vertex_label;
+    typedef EdgeLabel edge_label;
     typedef VertexStore vertex_store_selector;
     typedef EdgeStore edge_store_selector;
 
@@ -33,7 +33,7 @@ public:
     // Vertex/Property/Edge descriptors
     typedef typename types::vertex_descriptor vertex_descriptor;
     typedef typename types::edge_descriptor edge_descriptor;
-    typedef typename types::property_descriptor property_descriptor;
+    typedef typename types::label_descriptor label_descriptor;
     typedef typename types::incidence_descriptor incidence_descriptor;
 
     // Iterators and ranges
@@ -60,14 +60,14 @@ public:
      * modeled by the vertex set.
      *
      * UnlabeledVertices        add_vertex()
-     * LabeledVerteces          add_vertex(vertex_properties)
-     * LabeledUniqueVertices    add_vertex(vertex_properties)
+     * LabeledVerteces          add_vertex(vertex_label)
+     * LabeledUniqueVertices    add_vertex(vertex_label)
      * MappedUniqueVertices     add_vertex(vertex_key)
      */
     //@{
     vertex_descriptor add_vertex();
-    vertex_descriptor add_vertex(vertex_properties const&);
-    vertex_descriptor add_vertex(vertex_key const&, vertex_properties const&);
+    vertex_descriptor add_vertex(vertex_label const&);
+    vertex_descriptor add_vertex(vertex_key const&, vertex_label const&);
     //@}
 
     /** @name Find Vertex
@@ -75,11 +75,11 @@ public:
      * have UniqueVertices. These functions can also be used to find the first
      * vertex of a non-unique vertices.
      *
-     * LabeledUniqueVertices    find_vertex(vertex_properties)
+     * LabeledUniqueVertices    find_vertex(vertex_label)
      * MappedUniqueVertices     find_vertex(vertex_key)
      */
     //@{
-    vertex_descriptor find_vertex(vertex_properties const&) const;
+    vertex_descriptor find_vertex(vertex_label const&) const;
     vertex_descriptor find_vertex(vertex_key const&) const;
     //@}
 
@@ -93,18 +93,18 @@ public:
 
     /** @name Remove Vertex
      * Remove a vertex from the graph. These functions only exist for graphs
-     * with ReducibleVertexSets. Functions that take properties or keys are
+     * with ReducibleVertexSets. Functions that take label or keys are
      * provided for convenience, but have additional requirements and cost.
      * These additional functions are equivalent to remove_vertex(find_vertex(x))
-     * where x is either a vertex_properties or vertex_key.
+     * where x is either a vertex_label or vertex_key.
      *
      * ReducibleVertexSet       remove_vertex(vertex_descriptor)
-     * LabeledUniqueVertices    remove_vertex(vertex_properties)
+     * LabeledUniqueVertices    remove_vertex(vertex_label)
      * MappedUniqueVertices     remove_vertex(vertex_key)
      */
     //@{
     void remove_vertex(vertex_descriptor);
-    void remove_vertex(vertex_properties const&);
+    void remove_vertex(vertex_label const&);
     void remove_vertex(vertex_key const&);
     //@}
 
@@ -113,29 +113,29 @@ public:
      * variations of this function, depending on the type of vertex store and
      * whether or not the edges are labeled. Convenience functions are provided
      * for graphs with UniqueVertices. Graphs with LabeledEdges can be added
-     * with edge properties. Convenience functions are equivalent to the
+     * with edge label. Convenience functions are equivalent to the
      * expression add_edge(find_vertex(x), find_vertex(y), p) with x and y
-     * eithe vertex proeprties or vertex keys and p optional edge properties.
+     * eithe vertex proeprties or vertex keys and p optional edge label.
      *
      * ExtendableEdgeSet        add_edge(vertex_descriptor, vertex_descriptor)
-     *   && LabeledEdges        add_edge(vertex_descriptor, vertex_descriptor, edge_properties)
+     *   && LabeledEdges        add_edge(vertex_descriptor, vertex_descriptor, edge_label)
      *
-     * LabeledUniqueVertices    add_edge(vertex_properties, vertex_properties)
-     *   && LabeledEdges        add_edge(vertex_properties, vertex_properties, edge_properties)
+     * LabeledUniqueVertices    add_edge(vertex_label, vertex_label)
+     *   && LabeledEdges        add_edge(vertex_label, vertex_label, edge_label)
      *
      * MappedUniqueVertices     add_edge(vertex_key, vertex_key)
-     *   & LabeledEdges         add_edge(vertex_key, vertex_key, edge_properties)
+     *   & LabeledEdges         add_edge(vertex_key, vertex_key, edge_label)
      */
     //@{
     // Unlabeled edge adders.
     edge_descriptor add_edge(vertex_descriptor, vertex_descriptor);
-    edge_descriptor add_edge(vertex_properties const&, vertex_properties const&);
+    edge_descriptor add_edge(vertex_label const&, vertex_label const&);
     edge_descriptor add_edge(vertex_key const&, vertex_key const&);
 
     // Labeled edge adders.
-    edge_descriptor add_edge(vertex_descriptor, vertex_descriptor, edge_properties const&);
-    edge_descriptor add_edge(vertex_properties const&, vertex_properties const&, edge_properties const&);
-    edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_properties const&);
+    edge_descriptor add_edge(vertex_descriptor, vertex_descriptor, edge_label const&);
+    edge_descriptor add_edge(vertex_label const&, vertex_label const&, edge_label const&);
+    edge_descriptor add_edge(vertex_key const&, vertex_key const&, edge_label const&);
     //@}
 
     /** @name Test Edge
@@ -144,7 +144,7 @@ public:
      */
     //@{
     edge_descriptor edge(vertex_descriptor, vertex_descriptor) const;
-    edge_descriptor edge(vertex_properties const&, vertex_properties const&) const;
+    edge_descriptor edge(vertex_label const&, vertex_label const&) const;
     edge_descriptor edge(vertex_key const&, vertex_key const&) const;
     //@}
 
@@ -159,11 +159,11 @@ public:
     void remove_edge(edge_descriptor);
 
     void remove_edges(vertex_descriptor);
-    void remove_edges(vertex_properties const&);
+    void remove_edges(vertex_label const&);
     void remove_edges(vertex_key const&);
 
     void remove_edges(vertex_descriptor, vertex_descriptor);
-    void remove_edges(vertex_properties const&, vertex_properties const&);
+    void remove_edges(vertex_label const&, vertex_label const&);
     void remove_edges(vertex_key const&, vertex_key const&);
     //@}
 
@@ -194,13 +194,13 @@ public:
     //@}
 
     /** @name Property Accessors
-     * Access the properties of the given vertex or edge.
+     * Access the label of the given vertex or edge.
      */
     //@{
-    vertex_properties& operator[](vertex_descriptor);
-    vertex_properties const& operator[](vertex_descriptor) const;
-    edge_properties& operator[](edge_descriptor);
-    edge_properties const& operator[](edge_descriptor) const;
+    vertex_label& operator[](vertex_descriptor);
+    vertex_label const& operator[](vertex_descriptor) const;
+    edge_label& operator[](edge_descriptor);
+    edge_label const& operator[](edge_descriptor) const;
     //@}
 
     mutable property_store  _props;
@@ -217,7 +217,7 @@ undirected_graph<VP,EP,VS,ES>::undirected_graph()
 { }
 
 /**
- * Add a vertex to the graph with no or default properties, and return a
+ * Add a vertex to the graph with no or default label, and return a
  * descriptor to the vertex. Although supported for all adjacency lists, this
  * function should not be used with graphs that have LabeledUniqueVertices
  * as it will always return the same default-propertied vertex iterator.
@@ -230,46 +230,46 @@ undirected_graph<VP,EP,VS,ES>::add_vertex()
 }
 
 /**
- * Add a vertex to the graph with the given properties, and return a descriptor
+ * Add a vertex to the graph with the given label, and return a descriptor
  * to the added vertes. If the graph has LabeledUniqe vertices, and a vertex
- * with the given properties already exists in the graph, then a new vertex
+ * with the given label already exists in the graph, then a new vertex
  * is not added and returned descriptor refers to the existing vertex.
  *
  * @requires LabeledVertices<Graph>
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
-undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_properties const& vp)
+undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_label const& vp)
 {
     return _verts.add(vp);
 }
 
 /**
- * Add a new vertex with the given properties to the graph and map it to the
+ * Add a new vertex with the given label to the graph and map it to the
  * given key.
  *
  * @requires MappedUniqueVertices<Graph>
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
-undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_key const& k, vertex_properties const& vp)
+undirected_graph<VP,EP,VS,ES>::add_vertex(vertex_key const& k, vertex_label const& vp)
 {
     return _verts.add(k, vp);
 }
 
 /**
- * Find the vertex with the given properties, returning a descriptor to it.
+ * Find the vertex with the given label, returning a descriptor to it.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
-undirected_graph<VP,EP,VS,ES>::find_vertex(vertex_properties const& vp) const
+undirected_graph<VP,EP,VS,ES>::find_vertex(vertex_label const& vp) const
 {
-    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    BOOST_STATIC_ASSERT(is_not_none<vertex_label>::value);
     return _verts.find(vp);
 }
 
 /**
- * Find the vertex with the given properties, returning a descriptor to it.
+ * Find the vertex with the given label, returning a descriptor to it.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::vertex_descriptor
@@ -291,13 +291,13 @@ undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_descriptor v)
 }
 
 /**
- * Remove the vertex from the graph identified by the given properties.
+ * Remove the vertex from the graph identified by the given label.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void
-undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_properties const& vp)
+undirected_graph<VP,EP,VS,ES>::remove_vertex(vertex_label const& vp)
 {
-    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    BOOST_STATIC_ASSERT(is_not_none<vertex_label>::value);
     remove_edges(vp);
     _verts.remove(vp);
 }
@@ -333,17 +333,17 @@ typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
 undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                         vertex_descriptor v)
 {
-    return add_edge(u, v, edge_properties());
+    return add_edge(u, v, edge_label());
 }
 
 /**
- * Create an edge with the given properties that connects the vertices u and v.
+ * Create an edge with the given label that connects the vertices u and v.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
 undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
                                         vertex_descriptor v,
-                                        edge_properties const& ep)
+                                        edge_label const& ep)
 {
     // Get vertices for the descriptors
     reorder(u, v);
@@ -361,14 +361,14 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
         BOOST_ASSERT(second.succeeded());
 
         // Add the property and bind everything together.
-        property_descriptor p = _props.add(ep);
+        label_descriptor p = _props.add(ep);
         src.bind(first.value, p);
         tgt.bind(second.value, p);
         _props.bind(p,make_pair(make_pair(u, first.value), make_pair(v, second.value)));
         return edge_descriptor(u, v, p);
     }
     else if(first.retained()) {
-        property_descriptor p = src.properties(first.value);
+        label_descriptor p = src.label(first.value);
         return edge_descriptor(u, v, p);
     }
     else {
@@ -378,39 +378,39 @@ undirected_graph<VP,EP,VS,ES>::add_edge(vertex_descriptor u,
 
 /**
  * Add an edge to the graph that connects the two vertices identified by the
- * given properties. The edge is either unlabeled or has default properties.
+ * given label. The edge is either unlabeled or has default label.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
-undirected_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
-                                        vertex_properties const& v)
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_label const& u,
+                                        vertex_label const& v)
 {
-    return add_edge(u, v, edge_properties());
+    return add_edge(u, v, edge_label());
 }
 
 /**
  * Add an edge to the graph that connects the two vertices identified by the
- * given properties and has the given edge properties.
+ * given label and has the given edge label.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
-undirected_graph<VP,EP,VS,ES>::add_edge(vertex_properties const& u,
-                                        vertex_properties const& v,
-                                        edge_properties const& ep)
+undirected_graph<VP,EP,VS,ES>::add_edge(vertex_label const& u,
+                                        vertex_label const& v,
+                                        edge_label const& ep)
 {
     return add_edge(find_vertex(u), find_vertex(v), ep);
 }
 
 /**
  * Add an edge to the graph that connects the two vertices identified by the
- * given keys. The edge is either unlabeled or has default properties.
+ * given keys. The edge is either unlabeled or has default label.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
 undirected_graph<VP,EP,VS,ES>::add_edge(vertex_key const& u,
                                         vertex_key const& v)
 {
-    return add_edge(u, v, edge_properties());
+    return add_edge(u, v, edge_label());
 }
 
 /**
@@ -425,19 +425,19 @@ undirected_graph<VP,EP,VS,ES>::edge(vertex_descriptor u, vertex_descriptor v) co
     reorder(u, v);
     vertex_type const& src = _verts.vertex(u);
     incidence_descriptor i = src.find(v);
-    return i ? edge_descriptor(u, v, src.properties(i)) : edge_descriptor();
+    return i ? edge_descriptor(u, v, src.label(i)) : edge_descriptor();
 }
 
 /**
  * Determine if any edge exists connecting the vertices identified by the given
- * properties. Return a pair containing the edge descriptor (if it exists) and
+ * label. Return a pair containing the edge descriptor (if it exists) and
  * a bool determining whether or not the edge did exist. This is equivalent to
  * edge(find_vertex(u), find_vertex(v)).
  */
 template <BOOST_GRAPH_UG_PARAMS>
 typename undirected_graph<VP,EP,VS,ES>::edge_descriptor
-undirected_graph<VP,EP,VS,ES>::edge(vertex_properties const& u,
-                                    vertex_properties const& v) const
+undirected_graph<VP,EP,VS,ES>::edge(vertex_label const& u,
+                                    vertex_label const& v) const
 {
     return edge(find_vertex(u), find_vertex(v));
 }
@@ -465,7 +465,7 @@ void
 undirected_graph<VP,EP,VS,ES>::remove_edge(edge_descriptor e)
 {
     // Grab descriptors out of the edge.
-    property_descriptor p = e.properties();
+    label_descriptor p = e.label();
     vertex_descriptor u = e.first(), v = e.second();
     vertex_type &src = _verts.vertex(u), &tgt = _verts.vertex(v);
 
@@ -500,16 +500,16 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
         vertex_type& tgt = _verts.vertex(e.opposite(v));
 
         // Get an incidence descriptor into the target into tgt's edge store,
-        // so we can remove the edge record and the properties of the removed
+        // so we can remove the edge record and the label of the removed
         // edge.
-        property_descriptor p = e.properties();
+        label_descriptor p = e.label();
         std::pair<incidence_descriptor, incidence_descriptor> x =
             std::make_pair(_props.first_edge(p), _props.second_edge(p));
         if(src.opposite(x.first) != v) {
             x.first.swap(x.second);
         }
         tgt.disconnect(x.first);
-        _props.remove(e.properties());
+        _props.remove(e.label());
     }
 
     // Clear the incident edge set of the vertex. We can't do this in the
@@ -518,13 +518,13 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor v)
 }
 
 /**
- * Disconnect the vertex having the given properties from the graph.
+ * Disconnect the vertex having the given label from the graph.
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void
-undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_properties const& vp)
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_label const& vp)
 {
-    BOOST_STATIC_ASSERT(is_not_none<vertex_properties>::value);
+    BOOST_STATIC_ASSERT(is_not_none<vertex_label>::value);
     remove_edges(find_vertex(vp));
 }
 
@@ -562,7 +562,7 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
         if(o == v) {
             // Grab descriptors to the property and the incident edge on the
             // target vertex and remove them,
-            property_descriptor p = e.properties();
+            label_descriptor p = e.label();
             pair<incidence_descriptor, incidence_descriptor> x =
                 make_pair(_props.first_edge(p), _props.second_edge(p));
             if(src.opposite(x.first) == v) {
@@ -584,13 +584,13 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
 }
 
 /**
- * Remove all edges connecting the vertices identified by the given properties.
+ * Remove all edges connecting the vertices identified by the given label.
  * This is equivalent to remove_edges(find_vertex(u), find_vertex(v)).
  */
 template <BOOST_GRAPH_UG_PARAMS>
 void
-undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_properties const& u,
-                                            vertex_properties const& v)
+undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_label const& u,
+                                            vertex_label const& v)
 {
     return remove_edges(find_vertex(u), find_vertex(v));
 }
@@ -726,29 +726,29 @@ undirected_graph<VP,EP,VS,ES>::degree(vertex_descriptor v) const
     return _verts.vertex(v).degree();
 }
 
-/** Return the properties for the given vertex. */
+/** Return the label for the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>
-typename undirected_graph<VP,EP,VS,ES>::vertex_properties&
+typename undirected_graph<VP,EP,VS,ES>::vertex_label&
 undirected_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v)
-{ return _verts.properties(v); }
+{ return _verts.label(v); }
 
-/** Return the properties for the given vertex. */
+/** Return the label for the given vertex. */
 template <BOOST_GRAPH_UG_PARAMS>
-typename undirected_graph<VP,EP,VS,ES>::vertex_properties const&
+typename undirected_graph<VP,EP,VS,ES>::vertex_label const&
 undirected_graph<VP,EP,VS,ES>::operator[](vertex_descriptor v) const
-{ return _verts.properties(v); }
+{ return _verts.label(v); }
 
-/** Return the properties for the given edge. */
+/** Return the label for the given edge. */
 template <BOOST_GRAPH_UG_PARAMS>
-typename undirected_graph<VP,EP,VS,ES>::edge_properties&
+typename undirected_graph<VP,EP,VS,ES>::edge_label&
 undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e)
-{ return _props.properties(e.properties()); }
+{ return _props.label(e.label()); }
 
-/** Return the properties for the given edge. */
+/** Return the label for the given edge. */
 template <BOOST_GRAPH_UG_PARAMS>
-typename undirected_graph<VP,EP,VS,ES>::edge_properties const&
+typename undirected_graph<VP,EP,VS,ES>::edge_label const&
 undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e) const
-{ return _props.properties(e.properties()); }
+{ return _props.label(e.label()); }
 
 #undef BOOST_GRAPH_UG_PARAMS
 

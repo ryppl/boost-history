@@ -145,10 +145,10 @@ template <typename Graph>
 void test(string const& module)
 {
     typedef typename Graph::vertex_descriptor Vertex;
-    typedef exterior_vertex_property<Graph, color> ColorProp;
-    typedef exterior_vertex_property<Graph, bool> RootProp;
-    typedef exterior_edge_property<Graph, bool> TreeProp;
-    typedef exterior_edge_property<Graph, int> TreeOrderProp;
+    typedef exterior_vertex_label<Graph, color> ColorProp;
+    typedef exterior_vertex_label<Graph, bool> RootProp;
+    typedef exterior_edge_label<Graph, bool> TreeProp;
+    typedef exterior_edge_label<Graph, int> TreeOrderProp;
     typedef exterior_property_map<ColorProp> ColorMap;
     typedef exterior_property_map<RootProp> RootMap;
     typedef exterior_property_map<TreeProp> TreeMap;

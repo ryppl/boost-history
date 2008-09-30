@@ -97,10 +97,10 @@ void directed_add_edge(Outs& outs, Ins& ins, VertexDesc v, EdgeProps const& ep)
 
         BOOST_ASSERT(outs.size() == m + 1);
         BOOST_ASSERT(ins.size() == 1);
-        cout << "  * added " << u << "," << v << " -> " << outs.properties(o.value) << endl;
+        cout << "  * added " << u << "," << v << " -> " << outs.label(o.value) << endl;
     }
     else if(o.retained()) {
-        cout << "  * exists " << u << "," << v << " -> " << outs.properties(o.value) << endl;
+        cout << "  * exists " << u << "," << v << " -> " << outs.label(o.value) << endl;
     }
 }
 

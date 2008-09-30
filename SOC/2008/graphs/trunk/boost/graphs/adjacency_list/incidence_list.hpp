@@ -10,7 +10,7 @@
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
  * this stores pairs containing an adjacent vertex descriptor and a property
- * descriptor, that points to the edges global properties. This pair uniquely
+ * descriptor, that points to the edges global label. This pair uniquely
  * identifies incident edges of the vertex.
  *
  * This type allows constant time insertions, and linear search and remove.
@@ -20,7 +20,7 @@ class incidence_list
 {
 public:
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type property_descriptor;
+    typedef typename Edge::second_type label_descriptor;
 
     typedef std::list<Edge, Alloc> store_type;
     typedef typename store_type::iterator iterator;
@@ -40,9 +40,9 @@ public:
      */
     //@{
     inline insertion_result<incidence_descriptor> add(vertex_descriptor v)
-    { return add(v, property_descriptor()); }
+    { return add(v, label_descriptor()); }
 
-    insertion_result<incidence_descriptor> add(vertex_descriptor v, property_descriptor p)
+    insertion_result<incidence_descriptor> add(vertex_descriptor v, label_descriptor p)
     {
         ++_size;
         iterator i = _edges.insert(_edges.end(), make_pair(v, p));
@@ -95,7 +95,7 @@ public:
     //@}
 
     /** Bind this incident edge to the given property descriptor. */
-    inline void bind(incidence_descriptor d, property_descriptor p)
+    inline void bind(incidence_descriptor d, label_descriptor p)
     { make_iterator(_edges, d)->second = p; }
 
     /** Return the connected vertex referenced by this edge. */
@@ -103,7 +103,7 @@ public:
     { return make_iterator(_edges, d)->first; }
 
     /** Return the property referenced by this edge. */
-    inline property_descriptor properties(incidence_descriptor d) const
+    inline label_descriptor label(incidence_descriptor d) const
     { return make_iterator(_edges, d)->second; }
 
 private:

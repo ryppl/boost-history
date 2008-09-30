@@ -15,7 +15,7 @@
  * removals.
  *
 
- * @param Edge A tuple describing a vertex descriptor and the edge properties.
+ * @param Edge A tuple describing a vertex descriptor and the edge label.
  * @param Alloc The allocator for edge pairs.
  */
 template <typename Edge, typename Alloc>
@@ -24,7 +24,7 @@ class out_list
 public:
     typedef typename Edge::first_type vertex_descriptor;
     typedef typename Edge::second_type edge_pair;
-    typedef typename edge_pair::first_type edge_properties;
+    typedef typename edge_pair::first_type edge_label;
     typedef typename edge_pair::second_type in_descriptor;
 
     typedef std::list<Edge, Alloc> store_type;
@@ -41,7 +41,7 @@ public:
      * Add the edge to the list.
      * @complexity O(1)
      */
-    insertion_result<out_descriptor> add(vertex_descriptor v, edge_properties const& ep)
+    insertion_result<out_descriptor> add(vertex_descriptor v, edge_label const& ep)
     {
         ++_size;
         iterator i = _edges.insert(_edges.end(), std::make_pair(v, std::make_pair(ep, in_descriptor())));
@@ -102,11 +102,11 @@ public:
     inline vertex_descriptor target(out_descriptor o) const
     { return make_iterator(_edges, o)->first; }
 
-    /** Return the properties stored with this edge. */
-    inline edge_properties& properties(out_descriptor o)
+    /** Return the label stored with this edge. */
+    inline edge_label& label(out_descriptor o)
     { return make_iterator(_edges, o)->second.first; }
 
-    inline edge_properties const& properties(out_descriptor o) const
+    inline edge_label const& label(out_descriptor o) const
     { return make_iterator(_edges, o)->second.first; }
 
     /** Return the in edge descriptor bound to this edge. */

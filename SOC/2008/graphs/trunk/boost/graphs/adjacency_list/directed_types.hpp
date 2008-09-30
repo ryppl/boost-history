@@ -34,7 +34,7 @@
  * This class is a metafunction that generates all of the types needed to
  * implement a directed graph.
  */
-template <typename VertexProps, typename EdgeProps, typename VertexStore, typename EdgeStore>
+template <typename VertexLabel, typename EdgeLabel, typename VertexStore, typename EdgeStore>
 struct directed_types
 {
     // Start by generating all of the descriptors.
@@ -46,7 +46,7 @@ struct directed_types
     typedef directed_edge<out_descriptor, in_descriptor> edge_descriptor;
 
     // Generate the out store and related types
-    typedef typename EdgeStore::template out_store<vertex_descriptor, EdgeProps>::type out_store;
+    typedef typename EdgeStore::template out_store<vertex_descriptor, EdgeLabel>::type out_store;
     typedef typename out_store::size_type out_edges_size_type;
     typedef typename out_store::size_type edges_size_type;
 
@@ -59,7 +59,7 @@ struct directed_types
     typedef out_edges_size_type incident_edges_size_type;
 
     // Generate the vertex, its store, and related types.
-    typedef directed_vertex<VertexProps, out_store, in_store> vertex_type;
+    typedef directed_vertex<VertexLabel, out_store, in_store> vertex_type;
     typedef typename VertexStore::template store<vertex_type>::type vertex_store;
     typedef typename vertex_store::size_type vertices_size_type;
     typedef typename vertex_store::vertex_iterator vertex_iterator;

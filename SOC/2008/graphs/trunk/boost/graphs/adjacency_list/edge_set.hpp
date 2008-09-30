@@ -21,7 +21,7 @@ template <typename, typename, typename> class in_set;
  *
  * @param Compare - A unary template class that compares vertex descriptors.
  * @param FirstAlloc - An allocator template for either incident edges or out edges.
- * @param SecondAlloc - An allocator template for either global properties or in edges.
+ * @param SecondAlloc - An allocator template for either global label or in edges.
  */
 template <
     template <typename> class Compare = std::less,
@@ -40,7 +40,7 @@ struct edge_set
 
     // Descriptor types for undirected graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
-    typedef typename descriptor_traits<prop_dummy>::descriptor_type property_descriptor;
+    typedef typename descriptor_traits<prop_dummy>::descriptor_type label_descriptor;
 
     // The property store metafunnction generates the global store type for
     // undirected graphs. The property list only needs to be a list, not a set.
@@ -58,7 +58,7 @@ struct edge_set
     template <typename VertexDesc>
     struct incidence_store
     {
-        typedef std::pair<VertexDesc, property_descriptor> value;
+        typedef std::pair<VertexDesc, label_descriptor> value;
         typedef Compare<VertexDesc> compare;
         typedef FirstAlloc<value> allocator;
         typedef incidence_set<value, compare, allocator> type;

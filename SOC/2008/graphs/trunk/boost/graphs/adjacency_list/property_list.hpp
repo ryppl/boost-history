@@ -9,7 +9,7 @@
 #include <boost/graphs/utility.hpp>
 
 /**
- * The property list implements global list of properties for node-based edge
+ * The property list implements global list of label for node-based edge
  * storage. Note that we can get away with only a list because the edge
  * addition logic is implemented by the incidence list.
  *
@@ -28,7 +28,7 @@ public:
     typedef std::list<Edge, Alloc> store_type;
 
     typedef Edge edge_type;
-    typedef typename Edge::first_type edge_properties;
+    typedef typename Edge::first_type edge_label;
     typedef typename Edge::second_type end_pair;
     typedef typename end_pair::first_type end_type; // same as second_type
     typedef typename end_type::first_type vertex_descriptor;
@@ -37,7 +37,7 @@ public:
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
-    typedef typename descriptor_traits<store_type>::descriptor_type property_descriptor;
+    typedef typename descriptor_traits<store_type>::descriptor_type label_descriptor;
 
     // Constructors.
     inline property_list()
@@ -49,10 +49,10 @@ public:
      * empty for the time being.
      */
     //@{
-    inline property_descriptor add()
-    { return add(edge_properties()); }
+    inline label_descriptor add()
+    { return add(edge_label()); }
 
-    inline property_descriptor add(edge_properties const& ep)
+    inline label_descriptor add(edge_label const& ep)
     {
         ++_size;
         iterator i = _props.insert(_props.end(), make_pair(ep, end_pair()));
@@ -61,23 +61,23 @@ public:
     //@}
 
     /**
-     * Find the edge with the given properties. Finding an edge by its
-     * properties is guaranteed to be O(E).
+     * Find the edge with the given label. Finding an edge by its
+     * label is guaranteed to be O(E).
      */
-    inline property_descriptor find(edge_properties const& ep) const
+    inline label_descriptor find(edge_label const& ep) const
     {
         iterator i = std::find_if(_props.begin(), _props.end(), find_first(ep));
         return make_descriptor(_props, i);
     }
 
     /** Remove the described property from the property set. */
-    inline void remove(property_descriptor d)
+    inline void remove(label_descriptor d)
     {
         _props.erase(make_iterator(_props, d));
         --_size;
     }
 
-    /** Return the number of properties. */
+    /** Return the number of label. */
     inline size_type size() const
     { return _size; }
 
@@ -98,36 +98,36 @@ public:
      * Bind vertex descriptors into the incidence lists into the global
      * property. This is the last step of edge creation for undirected graphs.
      */
-    void bind(property_descriptor d, end_pair const& p)
+    void bind(label_descriptor d, end_pair const& p)
     { make_iterator(_props, d)->second = p; }
 
     /** Return the incidence descriptors bound to the property. */
-    inline end_pair const& ends(property_descriptor d) const
+    inline end_pair const& ends(label_descriptor d) const
     { return make_iterator(_props, d)->second; }
 
-    /** Return the properties referenced by the given descriptor. */
-    inline edge_properties& properties(property_descriptor d)
+    /** Return the label referenced by the given descriptor. */
+    inline edge_label& label(label_descriptor d)
     { return make_iterator(_props, d)->first; }
 
     /** Return the first vertex of the edge. */
-    inline vertex_descriptor first_vertex(property_descriptor d) const
+    inline vertex_descriptor first_vertex(label_descriptor d) const
     { return make_iterator(_props, d)->second.first.first; }
 
     /** Return the second vertex of the edge. */
-    inline vertex_descriptor second_vertex(property_descriptor d) const
+    inline vertex_descriptor second_vertex(label_descriptor d) const
     { return make_iterator(_props, d)->second.second.first; }
 
     /** Return the first incidence descriptor of the edge. */
-    inline incidence_descriptor first_edge(property_descriptor d) const
+    inline incidence_descriptor first_edge(label_descriptor d) const
     { return make_iterator(_props, d)->second.first.second; }
 
     /** Return the second incidence descriptor of the edge. */
-    inline incidence_descriptor second_edge(property_descriptor d) const
+    inline incidence_descriptor second_edge(label_descriptor d) const
     { return make_iterator(_props, d)->second.second.second; }
 
 
     /** Return a descriptor for the iterator. */
-    inline property_descriptor describe(iterator i) const
+    inline label_descriptor describe(iterator i) const
     { return make_descriptor(_props, i); }
 
 private:

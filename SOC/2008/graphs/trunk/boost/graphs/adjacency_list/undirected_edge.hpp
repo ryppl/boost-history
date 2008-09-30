@@ -18,59 +18,59 @@ class undirected_edge
 {
 public:
     typedef VertexDesc vertex_descriptor;
-    typedef PropDesc property_descriptor;
+    typedef PropDesc label_descriptor;
     typedef unordered_pair<vertex_descriptor> edge_pair;
 
     /** @name Constructors */
     //@{
     inline undirected_edge()
-        : ends(), prop()
+        : _ends(), _label()
     { }
 
-    inline undirected_edge(vertex_descriptor u, vertex_descriptor v, property_descriptor p)
-        : ends(u, v), prop(p)
+    inline undirected_edge(vertex_descriptor u, vertex_descriptor v, label_descriptor p)
+        : _ends(u, v), _label(p)
     { }
 
-    inline undirected_edge(std::pair<vertex_descriptor, vertex_descriptor> const& e, property_descriptor p)
-        : ends(e.first, e.second), prop(p)
+    inline undirected_edge(std::pair<vertex_descriptor, vertex_descriptor> const& e, label_descriptor p)
+        : _ends(e.first, e.second), _label(p)
     { }
 
-    inline undirected_edge(unordered_pair<vertex_descriptor, vertex_descriptor> const& e, property_descriptor p)
-        : ends(e), prop(p)
+    inline undirected_edge(unordered_pair<vertex_descriptor, vertex_descriptor> const& e, label_descriptor p)
+        : _ends(e), _label(p)
     { }
     //@}
 
     /** @name Descriptor-like Functions
      * These allow you to treat the edge descriptor like a typical descriptor.
-     * That is, it can be tested for null status (which defers to the property
+     * That is, it can be tested for null status (which defers to the _labelerty
      * descriptor).
      */
     //@{
     inline bool is_null() const
-    { return prop.is_null(); }
+    { return _label.is_null(); }
 
     inline operator bool() const
     { return !is_null(); }
     //@}
 
-    inline property_descriptor properties() const
-    { return prop; }
+    inline label_descriptor label() const
+    { return _label; }
 
     inline edge_pair const& edge() const
-    { return ends; }
+    { return _ends; }
 
     /** @name End Points
      * Provide access to the end points of the undirected edge. Because the
-     * ends of this edge are unordered, they do not provide a source and target
+     * _ends of this edge are unordered, they do not provide a source and target
      * interface. See the rooted_undirected_edge class for a variant of this
      * type that imposes a source/target interface on these edges.
      */
     //@{
     inline vertex_descriptor first() const
-    { return ends.first(); }
+    { return _ends.first(); }
 
     inline vertex_descriptor second() const
-    { return ends.second(); }
+    { return _ends.second(); }
 
     inline vertex_descriptor opposite(vertex_descriptor v) const
     { return v == first() ? second() : first(); }
@@ -78,13 +78,13 @@ public:
 
     /** Return true if the edge connects the two vertices. */
     inline bool connects(vertex_descriptor u, vertex_descriptor v) const
-    { return make_unordered_pair(u, v) == ends; }
+    { return make_unordered_pair(u, v) == _ends; }
 
 
     /** @name Equality Comparable */
     //@{
     inline bool operator==(undirected_edge const& x) const
-    { return (ends == x.ends) && (prop == x.prop); }
+    { return (_ends == x._ends) && (_label == x._label); }
 
     inline bool operator!=(undirected_edge const& x) const
     { return !operator==(x); }
@@ -93,7 +93,7 @@ public:
     /** @name Less Than Comparable */
     //@{
     inline bool operator<(undirected_edge const& x) const
-    { return std::make_pair(ends, prop) < std::make_pair(x.ends < x.prop); }
+    { return std::make_pair(_ends, _label) < std::make_pair(x._ends < x._label); }
 
     inline bool operator>(undirected_edge const& x) const
     { return x.operator<(*this); }
@@ -105,8 +105,9 @@ public:
     { return !operator<(x); }
     //@}
 
-    edge_pair               ends;
-    property_descriptor     prop;
+private:
+    edge_pair           _ends;
+    label_descriptor    _label;
 };
 
 template <typename V, typename P>
@@ -123,7 +124,7 @@ inline std::size_t
 hash_value(undirected_edge<V,P> const& e)
 {
     using boost::hash;
-    return hash_value(e.prop);
+    return hash_value(e.label());
 }
 
 namespace detail
@@ -165,7 +166,7 @@ struct undirected_edge_iterator
     typedef typename Store::iterator iterator;
     typedef typename Store::vertex_descriptor vertex_descriptor;
     typedef typename Store::incidence_descriptor incidence_descriptor;
-    typedef typename Store::property_descriptor property_descriptor;
+    typedef typename Store::label_descriptor label_descriptor;
 
     typedef typename iterator::iterator_category iterator_category;
     typedef typename iterator::difference_type difference_type;
@@ -217,10 +218,9 @@ struct undirected_edge_iterator
 
     inline reference operator*() const
     {
-        property_descriptor p = store->describe(iter);
+        label_descriptor p = store->describe(iter);
         return Edge(store->first_vertex(p), store->second_vertex(p), p);
     }
-
 
     Store*      store;
     iterator    iter;

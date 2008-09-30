@@ -24,7 +24,7 @@ public:
     typedef typename iterator::value_type base_value_type;
     typedef typename boost::remove_const<typename base_value_type::first_type>::type vertex_descriptor;
     typedef typename base_value_type::second_type edge_pair;
-    typedef typename edge_pair::first_type edge_properties;
+    typedef typename edge_pair::first_type edge_label;
     typedef typename edge_pair::second_type in_descriptor;
 
     // This is a little misleading. This iterator can be either bidi or random.

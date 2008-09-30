@@ -32,10 +32,10 @@ struct edge_list
 
     // Descriptor types for undirected graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type incidence_descriptor;
-    typedef typename descriptor_traits<second_dummy>::descriptor_type property_descriptor;
+    typedef typename descriptor_traits<second_dummy>::descriptor_type label_descriptor;
 
     // The property store metafunction generates the underlying global store
-    // type for edge properties in undirected graphs.
+    // type for edge label in undirected graphs.
     template <typename VertexDesc, typename EdgeProps>
     struct property_store
     {
@@ -50,7 +50,7 @@ struct edge_list
     template <typename VertexDesc>
     struct incidence_store
     {
-        typedef std::pair<VertexDesc, property_descriptor> incidence_pair;
+        typedef std::pair<VertexDesc, label_descriptor> incidence_pair;
         typedef FirstAlloc<incidence_pair> allocator;
         typedef incidence_list<incidence_pair, allocator > type;
     };

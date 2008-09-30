@@ -46,36 +46,38 @@ namespace detail
 }
 
 /**
- * Used to cotnain exterior vertex properties.
+ * Used to contain exterior vertex properties.
  */
-template <typename Graph, typename Property>
-struct exterior_vertex_property
-    : detail::choose_container<typename Graph::vertex_descriptor, Property>::type
+template <typename Graph, typename Label>
+struct exterior_vertex_label
+    : detail::choose_container<typename Graph::vertex_descriptor, Label>::type
 {
     typedef typename detail::choose_container<
-        typename Graph::vertex_descriptor, Property
+        typename Graph::vertex_descriptor, Label
     >::type base_type;
 
-    exterior_vertex_property(Graph const& g, Property const& p = Property())
-        : base_type(g.begin_vertices(), g.end_vertices(), p)
+    exterior_vertex_label(Graph const& g, Label const& l = Label())
+        : base_type(g.begin_vertices(), g.end_vertices(), l)
     { }
 };
 
 /**
- * Used to contain exterior edge properties.
+ * Used to contain exterior edge properties. Unlike exterior vertex labels, the
+ * edge label must use a hashtable since edge descriptors are not integers.
  *
  * @todo It turns out that undirected edge_vectors can use vectors to store
  * properties. This is because the edge descriptor is basically just returning
- * the index into the vector as a key.
+ * the index into the vector as a key. It might be worthwhile specializing this
+ * template along those lines. For now, this is not done.
  */
-template <typename Graph, typename Property>
-struct exterior_edge_property
-    : hashed_property_container<typename Graph::edge_descriptor, Property>
+template <typename Graph, typename Label>
+struct exterior_edge_label
+    : hashed_property_container<typename Graph::edge_descriptor, Label>
 {
-    typedef hashed_property_container<typename Graph::edge_descriptor, Property> base_type;
+    typedef hashed_property_container<typename Graph::edge_descriptor, Label> base_type;
 
-    exterior_edge_property(Graph const& g, Property const& p = Property())
-        : base_type(g.begin_edges(), g.end_edges(), p)
+    exterior_edge_label(Graph const& g, Label const& l = Label())
+        : base_type(g.begin_edges(), g.end_edges(), l)
     { }
 };
 
@@ -101,7 +103,7 @@ struct exterior_property_map
  * value of the 3rd parameter. The Key parameter must either be the vertex
  * or edge descriptor type of the graph.
  */
-template <typename Graph, typename Key, typename Property = typename Graph::vertex_properties>
+template <typename Graph, typename Key, typename Property = typename Graph::vertex_label>
 struct interior_property_map
     : simple_property_map<Graph, Key, Property>
 {
@@ -119,7 +121,6 @@ struct interior_property_map<Graph, Key, Property Bundle::*>
         : bundled_property_map<Graph, Key, Bundle, Property>(g, b)
     { }
 };
-
 
 // The following is a solution to require/supply problem present in a number
 // of generic graph algorithms with respect to the external data. Essentially,
@@ -153,30 +154,32 @@ namespace detail
  * The use of this type incurs a slight overhead due to an additional level of
  * indirection.
  */
-template <typename Graph, typename Descriptor, typename Property>
-struct property_wrapper
+template <typename Graph, typename Descriptor, typename Label>
+struct optional_label
 {
     // Select the container and map type for the self-wrapping property.
-    typedef typename detail::choose_container<Descriptor, Property>::type container_type;
+    typedef typename detail::choose_container<Descriptor, Label>::type container_type;
     typedef container_property_map<container_type> map_type;
 
     typedef typename map_type::value_type value_type;
     typedef typename map_type::key_type key_type;
     typedef typename map_type::reference reference;
 
-    // Delay initialization...
-    inline property_wrapper()
+    // By default, the optional property contains no property. This should
+    // probably never be used.
+    inline optional_label()
         : container(), map()
     { }
 
-    // Construct an underlying store over the map.
-    inline property_wrapper(Graph const& g, value_type const& x = value_type())
+    // Allocate an exterior label and build a property map over it.
+    inline optional_label(Graph const& g, value_type const& x = value_type())
         : container(new container_type(detail::get_range(g, Descriptor()), x))
         , map(*container)
     { }
 
-    // Construct the map over a user-provided property map. No container needed.
-    inline property_wrapper(map_type map)
+    // Construct the optional property over the given map, without allocating
+    // an exterior label.
+    inline optional_label(map_type map)
         : container(), map(map)
     { }
 
@@ -186,11 +189,12 @@ struct property_wrapper
     inline void operator()(key_type const& key, value_type const& value) const
     { return map(key, value); }
 
-    inline void swap(property_wrapper& x)
+    inline optional_label& swap(optional_label&& x)
     {
         using std::swap;
-        container.swap(x.container);
+        swap(container, x.container);   // Should overload to constant time op.
         swap(map, x.map);
+        return *this;
     }
 
     boost::shared_ptr<container_type> container;
@@ -203,22 +207,22 @@ struct property_wrapper
  * provided property map is not required to be constructed over an exterior
  * property.
  */
-template <typename Graph, typename Property>
-struct optional_vertex_map
-    : property_wrapper<Graph, typename Graph::vertex_descriptor, Property>
+template <typename Graph, typename Label>
+struct optional_vertex_label
+    : optional_label<Graph, typename Graph::vertex_descriptor, Label>
 {
-    typedef property_wrapper<Graph, typename Graph::vertex_descriptor, Property> base_type;
+    typedef optional_label<Graph, typename Graph::vertex_descriptor, Label> base_type;
     typedef typename base_type::map_type map_type;
 
-    inline optional_vertex_map()
+    inline optional_vertex_label()
         : base_type()
     { }
 
-    inline optional_vertex_map(Graph const& g, Property const& x = Property())
+    inline optional_vertex_label(Graph const& g, Label const& x = Label())
         : base_type(g, x)
     { }
 
-    inline optional_vertex_map(map_type map)
+    inline optional_vertex_label(map_type map)
         : base_type(map)
     { }
 };
@@ -229,22 +233,22 @@ struct optional_vertex_map
  * provided property map is not required to be constructed over an exterior
  * property.
  */
-template <typename Graph, typename Property>
-struct optional_edge_map
-    : property_wrapper<Graph, typename Graph::edge_descriptor, Property>
+template <typename Graph, typename Label>
+struct optional_edge_label
+    : optional_label<Graph, typename Graph::edge_descriptor, Label>
 {
-    typedef property_wrapper<Graph, typename Graph::vertex_descriptor, Property> base_type;
+    typedef optional_label<Graph, typename Graph::vertex_descriptor, Label> base_type;
     typedef typename base_type::map_type map_type;
 
-    inline optional_edge_map()
+    inline optional_edge_label()
         : base_type()
     { }
 
-    inline optional_edge_map(Graph const& g, Property const& x = Property())
+    inline optional_edge_label(Graph const& g, Label const& x = Label())
         : base_type(g, x)
     { }
 
-    inline optional_edge_map(map_type map)
+    inline optional_edge_label(map_type map)
         : base_type(map)
     { }
 };
@@ -269,18 +273,18 @@ namespace detail
  * is to do nothing (i.e,. the map is already initialized). Specialized
  * variants simply swap the given map with one that's actually initialized.
  */
+/*
 template <typename Graph, typename Map>
 void initialize(Graph const&, Map&, typename Map::value_type)
-{ }
+{ throw 0; }'
+*/
 
-template <typename Graph, typename Prop>
-void initialize(Graph const& g, optional_vertex_map<Graph, Prop>& map, Prop x)
+template <typename Graph, typename Label>
+void initialize(Graph const& g, optional_vertex_label<Graph, Label>& map, Label const& x)
 { detail::optional_init(g, map, x); }
 
-template <typename Graph, typename Prop>
-void initialize(Graph const g, optional_edge_map<Graph, Prop>& map, Prop x)
+template <typename Graph, typename Label>
+void initialize(Graph const g, optional_edge_label<Graph, Label>& map, Label const& x)
 { detail::optional_init(g, map, x); }
-
-
 
 #endif

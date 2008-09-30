@@ -62,7 +62,7 @@ public:
     typedef typename store_type::iterator iterator;
 
     typedef Vertex vertex_type;
-    typedef typename Vertex::vertex_properties vertex_properties;
+    typedef typename Vertex::vertex_label vertex_label;
 
     typedef typename descriptor_traits<store_type>::descriptor_type vertex_descriptor;
 
@@ -75,14 +75,14 @@ public:
     { }
 
     /** @name Add Vertex
-     * Add a vertex to the store with the given properties (or none). Return
+     * Add a vertex to the store with the given label (or none). Return
      * a descriptor to the vertex that was added to the vector.
      */
     //@{
     inline vertex_descriptor add()
-    { return add(vertex_properties()); }
+    { return add(vertex_label()); }
 
-    inline vertex_descriptor add(vertex_properties const& vp)
+    inline vertex_descriptor add(vertex_label const& vp)
     {
         iterator i = insert(_verts, vertex_type(vp));
         return make_descriptor(_verts, i);
@@ -90,13 +90,13 @@ public:
     //@}
 
     /**
-     * Return a descriptor to the vertex with the given properties. If you
+     * Return a descriptor to the vertex with the given label. If you
      * end up calling this function, you're probably using the wrong graph
      * type.
      */
-    vertex_descriptor find(vertex_properties const& vp) const
+    vertex_descriptor find(vertex_label const& vp) const
     {
-        iterator i = std::find_if(_verts.begin(), _verts.end(), find_properties(vp));
+        iterator i = std::find_if(_verts.begin(), _verts.end(), find_label(vp));
         return make_descriptor(_verts, i);
     }
 
@@ -134,11 +134,11 @@ public:
 
     /** @name Property Accessors */
     //@{
-    vertex_properties& properties(vertex_descriptor v)
-    { return vertex(v).properties(); }
+    vertex_label& label(vertex_descriptor v)
+    { return vertex(v).label(); }
 
-    vertex_properties const& properties(vertex_descriptor v) const
-    { return vertex(v).properties(); }
+    vertex_label const& label(vertex_descriptor v) const
+    { return vertex(v).label(); }
     //@}
 
 private:

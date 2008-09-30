@@ -9,7 +9,7 @@
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
  * this stores pairs containing an adjacent vertex descriptor and a property
- * descriptor, that points to the edges global properties. This pair uniquely
+ * descriptor, that points to the edges global label. This pair uniquely
  * identifies incident edges of the vertex.
  *
  * This type allows logarithmic time insertions, searches, and removals.
@@ -19,17 +19,17 @@ class incidence_set
 {
 public:
     typedef typename Edge::first_type vertex_descriptor;
-    typedef typename Edge::second_type property_descriptor;
+    typedef typename Edge::second_type label_descriptor;
 
     // Actually, the incident set, as it fundamentally implements a simple
     // graph is based on a map keyed on the adjacenct vertex and mapped to the
-    // edge properties that describe it. We're basically undwinding and
+    // edge label that describe it. We're basically undwinding and
     // rebuilding the edge pair for this map.
     // NOTE: This can impose some difficulties since the vertex (key type) will
     // be made const in this map. That means we may have to cast out the const
     // aspect of the key at times, but changing that value would be absolutely
     // catastrophic.
-    typedef std::map<vertex_descriptor, property_descriptor, Compare, Alloc> store_type;
+    typedef std::map<vertex_descriptor, label_descriptor, Compare, Alloc> store_type;
     typedef typename store_type::iterator iterator;
     typedef typename store_type::size_type size_type;
 
@@ -48,9 +48,9 @@ public:
      */
     //@{
     inline insertion_result<incidence_descriptor> add(vertex_descriptor v)
-    { return add(v, property_descriptor()); }
+    { return add(v, label_descriptor()); }
 
-    insertion_result<incidence_descriptor> add(vertex_descriptor v, property_descriptor p)
+    insertion_result<incidence_descriptor> add(vertex_descriptor v, label_descriptor p)
     {
         std::pair<iterator, bool> i = _edges.insert(make_pair(v, p));
         return make_result(_edges, i);
@@ -96,15 +96,15 @@ public:
     //@}
 
     /** Bind this incident edge to the given property. */
-    inline void bind(incidence_descriptor d, property_descriptor p)
+    inline void bind(incidence_descriptor d, label_descriptor p)
     { make_iterator(_edges, d)->second = p; }
 
     /** Return the vertex connected by this edge. */
     inline vertex_descriptor vertex(incidence_descriptor d) const
     { return make_iterator(_edges, d)->first; }
 
-    /** Return the properties connected by this edge. */
-    inline property_descriptor properties(incidence_descriptor d) const
+    /** Return the label connected by this edge. */
+    inline label_descriptor label(incidence_descriptor d) const
     { return make_iterator(_edges, d)->second; }
 
 private:

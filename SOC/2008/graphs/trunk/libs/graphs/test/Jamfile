@@ -35,3 +35,6 @@ exe propmaps : propmaps.cpp ;
 # exe search : search.cpp ;
 exe adv_search : adv_search.cpp ;
 exe vis : visitors.cpp ;
+
+exe basic_matrix : basic_matrix.cpp ;
+exe un_matrix : un_matrix.cpp ;
