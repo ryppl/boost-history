@@ -80,7 +80,9 @@ struct pool : boost::pool<>,
     std::auto_ptr<pool_lii>
 #endif
 {
-    pool() : boost::pool<>(1)
+	static const size_t chunk_size_ = sizeof(int);
+
+    pool() : boost::pool<>(chunk_size_)
     {
         reset(new pool_lii());
     }
@@ -100,7 +102,7 @@ struct pool : boost::pool<>,
     
     void * allocate(std::size_t s)
     {
-        void * p = ordered_malloc(s);
+        void * p = ordered_malloc(s / chunk_size_ + 1);
         
         get()->push_back(numeric::interval<int>((int) p, int((char *)(p) + s)));
         
