@@ -10,7 +10,7 @@
     #ifndef BOOST_PROTO_EXPR_HPP_EAN_04_01_2005
     #define BOOST_PROTO_EXPR_HPP_EAN_04_01_2005
 
-    #include <boost/xpressive/proto/detail/prefix.hpp>
+    #include <boost/proto/detail/prefix.hpp>
     #include <boost/preprocessor/cat.hpp>
     #include <boost/preprocessor/arithmetic/dec.hpp>
     #include <boost/preprocessor/selection/max.hpp>
@@ -23,11 +23,10 @@
     #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
     #include <boost/preprocessor/repetition/enum_trailing_binary_params.hpp>
     #include <boost/utility/addressof.hpp>
-    #include <boost/xpressive/proto/proto_fwd.hpp>
-    #include <boost/xpressive/proto/ref.hpp>
-    #include <boost/xpressive/proto/args.hpp>
-    #include <boost/xpressive/proto/traits.hpp>
-    #include <boost/xpressive/proto/detail/suffix.hpp>
+    #include <boost/proto/proto_fwd.hpp>
+    #include <boost/proto/args.hpp>
+    #include <boost/proto/traits.hpp>
+    #include <boost/proto/detail/suffix.hpp>
 
     #if defined(_MSC_VER) && (_MSC_VER >= 1020)
     # pragma warning(push)
@@ -43,43 +42,34 @@
         {
         /// INTERNAL ONLY
         ///
-        #define BOOST_PROTO_ARG(z, n, data)                                                         \
-            typedef typename Args::BOOST_PP_CAT(arg, n) BOOST_PP_CAT(proto_arg, n);                 \
-            BOOST_PP_CAT(proto_arg, n) BOOST_PP_CAT(arg, n);                                        \
+        #define BOOST_PROTO_CHILD(Z, N, DATA)                                                       \
+            typedef typename Args::BOOST_PP_CAT(child, N) BOOST_PP_CAT(proto_child, N);             \
+            typedef typename Args::BOOST_PP_CAT(child_ref, N) BOOST_PP_CAT(proto_child_ref, N);     \
+            BOOST_PP_CAT(proto_child, N) BOOST_PP_CAT(child, N);                                    \
             /**/
 
         /// INTERNAL ONLY
         ///
-        #define BOOST_PROTO_VOID(z, n, data)                                                        \
-            typedef void BOOST_PP_CAT(proto_arg, n);                                                \
+        #define BOOST_PROTO_VOID(Z, N, DATA)                                                        \
+            typedef void BOOST_PP_CAT(proto_child, N);                                              \
+            typedef void BOOST_PP_CAT(proto_child_ref, N);                                          \
             /**/
 
-        /// INTERNAL ONLY
-        ///
-        #define BOOST_PROTO_AS_OP(z, n, data)                                                       \
-            proto::as_arg(BOOST_PP_CAT(a,n))                                                        \
-            /**/
-
-        /// INTERNAL ONLY
-        ///
-        #define BOOST_PROTO_UNREF_ARG_TYPE(z, n, data)                                              \
-            typename result_of::unref<typename Args::BOOST_PP_CAT(arg, n)>::const_reference         \
-            /**/
-
-        /// INTERNAL ONLY
-        ///
-        #define BOOST_PROTO_UNREF_ARG(z, n, data)                                                   \
-            proto::unref(this->BOOST_PP_CAT(arg, n))                                                \
-            /**/
-
+            struct not_a_valid_type
+            {
+            private:
+                not_a_valid_type()
+                {}
+            };
+            
             template<typename Tag, typename Arg>
             struct address_of_hack
             {
-                typedef address_of_hack type;
+                typedef not_a_valid_type type;
             };
 
             template<typename Expr>
-            struct address_of_hack<proto::tag::address_of, ref_<Expr> >
+            struct address_of_hack<proto::tag::address_of, Expr &>
             {
                 typedef Expr *type;
             };
@@ -102,30 +92,52 @@
             {
                 typedef int type;
             };
+
         }
 
         namespace result_of
         {
             /// \brief A helper metafunction for computing the
             /// return type of \c proto::expr\<\>::operator().
-            template<typename Sig, typename This>
+            template<typename Sig, typename This, typename Domain>
             struct funop;
 
-        #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_PP_DEC(BOOST_PROTO_MAX_FUNCTION_CALL_ARITY), <boost/xpressive/proto/detail/funop.hpp>))
+        #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_PP_DEC(BOOST_PROTO_MAX_FUNCTION_CALL_ARITY), <boost/proto/detail/funop.hpp>))
         #include BOOST_PP_ITERATE()
         }
 
-        namespace exprns_
-        {
-        #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_PROTO_MAX_ARITY, <boost/xpressive/proto/expr.hpp>))
-        #include BOOST_PP_ITERATE()
-        }
+        // TODO consider adding a basic_expr<> that doesn't have operator=,
+        // operator[] or operator() for use by BOOST_PROTO_BASIC_EXTENDS().
+        // Those member functions are unused in that case, and only slow
+        // down instantiations. basic_expr::proto_base_expr can still be
+        // expr<> because uses of proto_base_expr in proto::matches<> shouldn't
+        // case the expr<> type to be instantiated. (<-- Check that assumtion!)
+        // OR, should expr<>::proto_base_expr be a typedef for basic_expr<>?
 
-        #undef BOOST_PROTO_ARG
+        BOOST_PROTO_BEGIN_ADL_NAMESPACE(exprns_)
+        #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_PROTO_MAX_ARITY, <boost/proto/expr.hpp>))
+        #include BOOST_PP_ITERATE()
+        BOOST_PROTO_END_ADL_NAMESPACE(exprns_)
+
+        #undef BOOST_PROTO_CHILD
         #undef BOOST_PROTO_VOID
-        #undef BOOST_PROTO_AS_OP
-        #undef BOOST_PROTO_UNREF_ARG_TYPE
-        #undef BOOST_PROTO_UNREF_ARG
+
+        /// \brief Lets you inherit the interface of an expression
+        /// while hiding from Proto the fact that the type is a Proto
+        /// expression.
+        template<typename Expr>
+        struct unexpr
+          : Expr
+        {
+            BOOST_PROTO_UNEXPR()
+
+            explicit unexpr(Expr const &expr)
+              : Expr(expr)
+            {}
+            
+            using Expr::operator =;
+        };
+
     }}
 
     #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -145,7 +157,7 @@
         /// \brief Representation of a node in an expression tree.
         ///
         /// \c proto::expr\<\> is a node in an expression template tree. It
-        /// is a container for its children sub-trees. It also serves as
+        /// is a container for its child sub-trees. It also serves as
         /// the terminal nodes of the tree.
         ///
         /// \c Tag is type that represents the operation encoded by
@@ -157,15 +169,15 @@
         ///
         /// \c Args is a type list representing the type of the children
         ///             of this expression. It is an instantiation of one
-        ///             of \c proto::args1\<\>, \c proto::args2\<\>, etc. The
-        ///             children types must all themselves be either \c expr\<\>
-        ///             or \c proto::ref_\<proto::expr\<\>\>, unless the \c Tag
+        ///             of \c proto::list1\<\>, \c proto::list2\<\>, etc. The
+        ///             child types must all themselves be either \c expr\<\>
+        ///             or <tt>proto::expr\<\>&</tt>, unless the \c Tag
         ///             type is \c boost::proto::tag::terminal, in which case
-        ///             \c Args must be \c proto::args0\<T\>, where \c T can be any
+        ///             \c Args must be \c proto::term\<T\>, where \c T can be any
         ///             type.
         ///
         /// \c proto::expr\<\> is a valid Fusion random-access sequence, where
-        /// the elements of the sequence are the children expressions.
+        /// the elements of the sequence are the child expressions.
         template<typename Tag, typename Args>
         struct expr<Tag, Args, BOOST_PP_ITERATION() >
         {
@@ -174,11 +186,11 @@
             typedef expr proto_base_expr;
             typedef Args proto_args;
             typedef default_domain proto_domain;
-            BOOST_PROTO_DEFINE_FUSION_TAG(proto::tag::proto_expr)
+            BOOST_PROTO_FUSION_DEFINE_TAG(proto::tag::proto_expr)
             typedef void proto_is_expr_;
             typedef expr proto_derived_expr;
 
-            BOOST_PP_REPEAT(ARG_COUNT, BOOST_PROTO_ARG, ~)
+            BOOST_PP_REPEAT(ARG_COUNT, BOOST_PROTO_CHILD, ~)
             BOOST_PP_REPEAT_FROM_TO(ARG_COUNT, BOOST_PROTO_MAX_ARITY, BOOST_PROTO_VOID, ~)
 
             /// \return *this
@@ -199,7 +211,7 @@
             /// arguments.
             ///
             template<BOOST_PP_ENUM_PARAMS(ARG_COUNT, typename A)>
-            static expr make(BOOST_PP_ENUM_BINARY_PARAMS(ARG_COUNT, A, const &a))
+            static expr const make(BOOST_PP_ENUM_BINARY_PARAMS(ARG_COUNT, A, const &a))
             {
                 expr that = {BOOST_PP_ENUM_PARAMS(ARG_COUNT, a)};
                 return that;
@@ -209,7 +221,7 @@
             /// \overload
             ///
             template<typename A0>
-            static expr make(A0 &a0)
+            static expr const make(A0 &a0)
             {
                 expr that = {a0};
                 return that;
@@ -218,31 +230,31 @@
             /// \overload
             ///
             template<typename A0, std::size_t N>
-            static expr make(A0 (&a0)[N], typename detail::if_is_array<proto_arg0, N>::type = 0)
+            static expr const make(A0 (&a0)[N], typename detail::if_is_array<proto_child0, N>::type = 0)
             {
                 expr that;
-                detail::checked_copy(a0, that.arg0);
+                detail::checked_copy(a0, that.child0);
                 return that;
             }
 
             /// \overload
             ///
             template<typename A0, std::size_t N>
-            static expr make(A0 const (&a0)[N], typename detail::if_is_array<proto_arg0, N>::type = 0)
+            static expr const make(A0 const (&a0)[N], typename detail::if_is_array<proto_child0, N>::type = 0)
             {
                 expr that;
-                detail::checked_copy(a0, that.arg0);
+                detail::checked_copy(a0, that.child0);
                 return that;
             }
         #endif
 
         #if 1 == BOOST_PP_ITERATION()
-            /// If \c Tag is \c boost::proto::tag::address_of and \c proto_arg0 is
-            /// \c proto::ref_\<T\>, then \c address_of_hack_type_ is <tt>T*</tt>.
+            /// If \c Tag is \c boost::proto::tag::address_of and \c proto_child0 is
+            /// <tt>T&</tt>, then \c address_of_hack_type_ is <tt>T*</tt>.
             /// Otherwise, it is some undefined type.
-            typedef typename detail::address_of_hack<Tag, proto_arg0>::type address_of_hack_type_;
+            typedef typename detail::address_of_hack<Tag, proto_child0>::type address_of_hack_type_;
 
-            /// \return The address of <tt>this->arg0</tt> if \c Tag is
+            /// \return The address of <tt>this->child0</tt> if \c Tag is
             /// \c boost::proto::tag::address_of. Otherwise, this function will
             /// fail to compile.
             ///
@@ -251,8 +263,12 @@
             /// the following hack to make \c &x implicitly convertible to \c X*.
             operator address_of_hack_type_() const
             {
-                return boost::addressof(this->arg0.expr);
+                return boost::addressof(this->child0);
             }
+        #else
+            /// INTERNAL ONLY
+            ///
+            typedef detail::not_a_valid_type address_of_hack_type_;
         #endif
 
             /// Assignment
@@ -260,20 +276,32 @@
             /// \param a The rhs.
             /// \return A new \c expr\<\> node representing an assignment of \c a to \c *this.
             template<typename A>
-            proto::expr<proto::tag::assign, args2<ref_<expr const>, typename result_of::as_arg<A>::type> > const
+            proto::expr<
+                proto::tag::assign
+              , list2<expr const &, typename result_of::as_child<A>::type>
+            > const
             operator =(A &a) const
             {
-                proto::expr<proto::tag::assign, args2<ref_<expr const>, typename result_of::as_arg<A>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::assign
+                  , list2<expr const &, typename result_of::as_child<A>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
 
             /// \overload
             ///
             template<typename A>
-            proto::expr<proto::tag::assign, args2<ref_<expr const>, typename result_of::as_arg<A const>::type> > const
+            proto::expr<
+                proto::tag::assign
+              , list2<expr const &, typename result_of::as_child<A const>::type>
+            > const
             operator =(A const &a) const
             {
-                proto::expr<proto::tag::assign, args2<ref_<expr const>, typename result_of::as_arg<A const>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::assign
+                  , list2<expr const &, typename result_of::as_child<A const>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
 
@@ -281,20 +309,32 @@
             /// \overload
             ///
             template<typename A>
-            proto::expr<proto::tag::assign, args2<ref_<expr>, typename result_of::as_arg<A>::type> > const
+            proto::expr<
+                proto::tag::assign
+              , list2<expr &, typename result_of::as_child<A>::type>
+            > const
             operator =(A &a)
             {
-                proto::expr<proto::tag::assign, args2<ref_<expr>, typename result_of::as_arg<A>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::assign
+                  , list2<expr &, typename result_of::as_child<A>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
 
             /// \overload
             ///
             template<typename A>
-            proto::expr<proto::tag::assign, args2<ref_<expr>, typename result_of::as_arg<A const>::type> > const
+            proto::expr<
+                proto::tag::assign
+              , list2<expr &, typename result_of::as_child<A const>::type>
+            > const
             operator =(A const &a)
             {
-                proto::expr<proto::tag::assign, args2<ref_<expr>, typename result_of::as_arg<A const>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::assign
+                  , list2<expr &, typename result_of::as_child<A const>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
         #endif
@@ -304,20 +344,31 @@
             /// \param a The rhs.
             /// \return A new \c expr\<\> node representing \c *this subscripted with \c a.
             template<typename A>
-            proto::expr<proto::tag::subscript, args2<ref_<expr const>, typename result_of::as_arg<A>::type> > const
+            proto::expr<
+                proto::tag::subscript
+              , list2<expr const &, typename result_of::as_child<A>::type>
+            > const
             operator [](A &a) const
             {
-                proto::expr<proto::tag::subscript, args2<ref_<expr const>, typename result_of::as_arg<A>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::subscript
+                  , list2<expr const &, typename result_of::as_child<A>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
 
             /// \overload
             ///
             template<typename A>
-            proto::expr<proto::tag::subscript, args2<ref_<expr const>, typename result_of::as_arg<A const>::type> > const
+            proto::expr<
+                proto::tag::subscript
+              , list2<expr const &, typename result_of::as_child<A const>::type> > const
             operator [](A const &a) const
             {
-                proto::expr<proto::tag::subscript, args2<ref_<expr const>, typename result_of::as_arg<A const>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::subscript
+                  , list2<expr const &, typename result_of::as_child<A const>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
 
@@ -325,20 +376,32 @@
             /// \overload
             ///
             template<typename A>
-            proto::expr<proto::tag::subscript, args2<ref_<expr>, typename result_of::as_arg<A>::type> > const
+            proto::expr<
+                proto::tag::subscript
+              , list2<expr &, typename result_of::as_child<A>::type>
+            > const
             operator [](A &a)
             {
-                proto::expr<proto::tag::subscript, args2<ref_<expr>, typename result_of::as_arg<A>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::subscript
+                  , list2<expr &, typename result_of::as_child<A>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
 
             /// \overload
             ///
             template<typename A>
-            proto::expr<proto::tag::subscript, args2<ref_<expr>, typename result_of::as_arg<A const>::type> > const
+            proto::expr<
+                proto::tag::subscript
+              , list2<expr &, typename result_of::as_child<A const>::type>
+            > const
             operator [](A const &a)
             {
-                proto::expr<proto::tag::subscript, args2<ref_<expr>, typename result_of::as_arg<A const>::type> > that = {{*this}, proto::as_arg(a)};
+                proto::expr<
+                    proto::tag::subscript
+                  , list2<expr &, typename result_of::as_child<A const>::type>
+                > that = {*this, proto::as_child(a)};
                 return that;
             }
         #endif
@@ -348,31 +411,31 @@
             template<typename Sig>
             struct result
             {
-                typedef typename result_of::funop<Sig, expr>::type type;
+                typedef typename result_of::funop<Sig, expr, default_domain>::type type;
             };
 
             /// Function call
             ///
             /// \return A new \c expr\<\> node representing the function invocation of \c (*this)().
-            proto::expr<proto::tag::function, args1<ref_<expr const> > > const
+            proto::expr<proto::tag::function, list1<expr const &> > const
             operator ()() const
             {
-                proto::expr<proto::tag::function, args1<ref_<expr const> > > that = {{*this}};
+                proto::expr<proto::tag::function, list1<expr const &> > that = {*this};
                 return that;
             }
 
         #if IS_TERMINAL
             /// \overload
             ///
-            proto::expr<proto::tag::function, args1<ref_<expr> > > const
+            proto::expr<proto::tag::function, list1<expr &> > const
             operator ()()
             {
-                proto::expr<proto::tag::function, args1<ref_<expr> > > that = {{*this}};
+                proto::expr<proto::tag::function, list1<expr &> > that = {*this};
                 return that;
             }
         #endif
 
-    #define BOOST_PP_ITERATION_PARAMS_2 (3, (1, BOOST_PP_DEC(BOOST_PROTO_MAX_FUNCTION_CALL_ARITY), <boost/xpressive/proto/expr.hpp>))
+    #define BOOST_PP_ITERATION_PARAMS_2 (3, (1, BOOST_PP_DEC(BOOST_PROTO_MAX_FUNCTION_CALL_ARITY), <boost/proto/expr.hpp>))
     #include BOOST_PP_ITERATE()
         };
 
@@ -386,22 +449,32 @@
         /// \overload
         ///
         template<BOOST_PP_ENUM_PARAMS(N, typename A)>
-        typename result_of::BOOST_PP_CAT(funop, N)<expr const BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)>::type const
+        typename result_of::BOOST_PP_CAT(funop, N)<
+            expr const
+          , default_domain BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)
+        >::type const
         operator ()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const &a)) const
         {
-            return result_of::BOOST_PP_CAT(funop, N)<expr const BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)>
-                ::call(*this BOOST_PP_ENUM_TRAILING_PARAMS(N, a));
+            return result_of::BOOST_PP_CAT(funop, N)<
+                expr const
+              , default_domain BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)
+            >::call(*this BOOST_PP_ENUM_TRAILING_PARAMS(N, a));
         }
 
         #if IS_TERMINAL
         /// \overload
         ///
         template<BOOST_PP_ENUM_PARAMS(N, typename A)>
-        typename result_of::BOOST_PP_CAT(funop, N)<expr BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)>::type const
+        typename result_of::BOOST_PP_CAT(funop, N)<
+            expr
+          , default_domain BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)
+        >::type const
         operator ()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const &a))
         {
-            return result_of::BOOST_PP_CAT(funop, N)<expr BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)>
-                ::call(*this BOOST_PP_ENUM_TRAILING_PARAMS(N, a));
+            return result_of::BOOST_PP_CAT(funop, N)<
+                expr
+              , default_domain BOOST_PP_ENUM_TRAILING_PARAMS(N, const A)
+            >::call(*this BOOST_PP_ENUM_TRAILING_PARAMS(N, a));
         }
         #endif
 
