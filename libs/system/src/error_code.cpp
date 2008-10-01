@@ -9,14 +9,7 @@
 
 //----------------------------------------------------------------------------//
 
-//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
-//  can be cause buffer overruns or other possible security issues if misused.
-//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
-//  But the wording of the warning is misleading and unsettling, there are no
-//  portable alternative functions, and VC++ 8.0's own libraries use the
-//  functions in question. So turn off the warnings.
-#define _CRT_SECURE_NO_DEPRECATE
-#define _SCL_SECURE_NO_DEPRECATE
+#include <boost/config/warning_disable.hpp>
 
 // define BOOST_SYSTEM_SOURCE so that <boost/system/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
@@ -30,7 +23,7 @@
 #include <cassert>
 
 using namespace boost::system;
-using namespace boost::system::posix;
+using namespace boost::system::posix_error;
 
 #include <cstring> // for strerror/strerror_r
 
@@ -45,12 +38,12 @@ using namespace boost::system::posix;
 
 namespace
 {
-  //  standard error categories  -------------------------------------------//
+  //  standard error categories  ---------------------------------------------//
 
-  class posix_error_category : public error_category
+  class generic_error_category : public error_category
   {
   public:
-    posix_error_category(){}
+    generic_error_category(){}
     const char *   name() const;
     std::string    message( int ev ) const;
   };
@@ -64,15 +57,16 @@ namespace
     error_condition     default_error_condition( int ev ) const;
   };
 
-  //  posix_error_category implementation  ---------------------------------//
+  //  generic_error_category implementation  ---------------------------------//
 
-  const char * posix_error_category::name() const
+  const char * generic_error_category::name() const
   {
-    return "POSIX";
+    return "generic";
   }
 
-  std::string posix_error_category::message( int ev ) const
+  std::string generic_error_category::message( int ev ) const
   {
+    static std::string unknown_err( "Unknown error" );
   // strerror_r is preferred because it is always thread safe,
   // however, we fallback to strerror in certain cases because:
   //   -- Windows doesn't provide strerror_r.
@@ -88,15 +82,19 @@ namespace
      || (defined(__osf__) && !defined(_REENTRANT))\
      || (defined(__vms))
       const char * c_str = std::strerror( ev );
-      return std::string( c_str ? c_str : "invalid_argument" );
-  # else
+      return  c_str
+        ? std::string( c_str )
+        : unknown_err;
+  # else  // use strerror_r
       char buf[64];
       char * bp = buf;
       std::size_t sz = sizeof(buf);
   #  if defined(__CYGWIN__) || defined(__USE_GNU)
       // Oddball version of strerror_r
       const char * c_str = strerror_r( ev, bp, sz );
-      return std::string( c_str ? c_str : "invalid_argument" );
+      return  c_str
+        ? std::string( c_str )
+        : unknown_err;
   #  else
       // POSIX version of strerror_r
       int result;
@@ -107,7 +105,9 @@ namespace
   #  if defined (__sgi)
         const char * c_str = strerror( ev );
         result = 0;
-        return std::string( c_str ? c_str : "invalid_argument" );
+      return  c_str
+        ? std::string( c_str )
+        : unknown_err;
   #  else
         result = strerror_r( ev, bp, sz );
   #  endif
@@ -120,26 +120,31 @@ namespace
           result = errno;
   #  endif
           if ( result !=  ERANGE ) break;
-        if ( sz > sizeof(buf) ) std::free( bp );
-        sz *= 2;
-        if ( (bp = static_cast<char*>(std::malloc( sz ))) == 0 )
-          return std::string( "ENOMEM" );
+          if ( sz > sizeof(buf) ) std::free( bp );
+          sz *= 2;
+          if ( (bp = static_cast<char*>(std::malloc( sz ))) == 0 )
+            return std::string( "ENOMEM" );
         }
       }
+      std::string msg();
       try
       {
-      std::string msg( ( result == invalid_argument ) ? "invalid_argument" : bp );
-      if ( sz > sizeof(buf) ) std::free( bp );
-        sz = 0;
-      return msg;
+        msg = ( ( result == invalid_argument ) ? "Unknown error" : bp );
       }
+
+#   ifndef BOOST_NO_EXCEPTIONS
+      // See ticket #2098
       catch(...)
       {
-        if ( sz > sizeof(buf) ) std::free( bp );
-        throw;
+        // just eat the exception
       }
-  #  endif
-  # endif
+#   endif
+
+      if ( sz > sizeof(buf) ) std::free( bp );
+      sz = 0;
+      return msg;
+  #  endif   // else POSIX version of strerror_r
+  # endif  // else use strerror_r
   }
   //  system_error_category implementation  --------------------------------// 
 
@@ -325,7 +330,7 @@ namespace
 
   std::string system_error_category::message( int ev ) const
   {
-    return posix_category.message( ev );
+    return generic_category.message( ev );
   }
 # else
 // TODO:
@@ -345,8 +350,9 @@ namespace
 //Chris
   std::string system_error_category::message( int ev ) const
   {
+# ifndef BOOST_NO_ANSI_APIS  
     LPVOID lpMsgBuf;
-    ::FormatMessageA( 
+    DWORD retval = ::FormatMessageA( 
         FORMAT_MESSAGE_ALLOCATE_BUFFER | 
         FORMAT_MESSAGE_FROM_SYSTEM | 
         FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -357,8 +363,35 @@ namespace
         0,
         NULL 
     );
+    if (retval == 0)
+        return std::string("Unknown error");
+        
     std::string str( static_cast<LPCSTR>(lpMsgBuf) );
     ::LocalFree( lpMsgBuf ); // free the buffer
+# else  // WinCE workaround
+    LPVOID lpMsgBuf;
+    DWORD retval = ::FormatMessageW( 
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_FROM_SYSTEM | 
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL,
+        ev,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+        (LPWSTR) &lpMsgBuf,
+        0,
+        NULL 
+    );
+    if (retval == 0)
+        return std::string("Unknown error");
+    
+    int num_chars = (wcslen( static_cast<LPCWSTR>(lpMsgBuf) ) + 1) * 2;
+    LPSTR narrow_buffer = (LPSTR)_alloca( num_chars );
+    if (::WideCharToMultiByte(CP_ACP, 0, static_cast<LPCWSTR>(lpMsgBuf), -1, narrow_buffer, num_chars, NULL, NULL) == 0)
+        return std::string("Unknown error");
+
+    std::string str( narrow_buffer );
+    ::LocalFree( lpMsgBuf ); // free the buffer
+# endif
     while ( str.size()
       && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
         str.erase( str.size()-1 );
@@ -375,16 +408,22 @@ namespace boost
   namespace system
   {
 
+    BOOST_SYSTEM_DECL error_code throws; // "throw on error" special error_code;
+                                         //  note that it doesn't matter if this
+                                         //  isn't initialized before use since
+                                         //  the only use is to take its
+                                         //  address for comparison purposes
+
     BOOST_SYSTEM_DECL const error_category & get_system_category()
     {
       static const system_error_category  system_category_const;
       return system_category_const;
     }
 
-    BOOST_SYSTEM_DECL const error_category & get_posix_category()
+    BOOST_SYSTEM_DECL const error_category & get_generic_category()
     {
-      static const posix_error_category posix_category_const;
-      return posix_category_const;
+      static const generic_error_category generic_category_const;
+      return generic_category_const;
     }
 
   } // namespace system
