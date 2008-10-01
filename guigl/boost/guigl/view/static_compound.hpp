@@ -54,6 +54,12 @@ public:
     {
         detail::for_each(m_children, detail::set_parent<static_compound>(*this));
     }
+    static_compound(const static_compound &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_children(rhs.m_children)
+        , m_mouse_focus_child(0)
+        , m_button_focus_child(0)
+    {}
     
     bool on_event(const event_type &event_info);
 

@@ -29,6 +29,10 @@ public:
         if(args[_period]>0)
             enable(args[_period]);
     }
+    periodic(const periodic &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_enabled(false)
+    {}
     
     void enable(double seconds)
     {

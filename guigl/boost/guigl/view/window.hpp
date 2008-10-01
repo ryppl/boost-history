@@ -24,6 +24,10 @@ public:
         : base_type(args)
         , m_background_color(args[_background])
     {}
+    window(const window &rhs)
+        : base_type(static_cast<const base_type &>(rhs))
+        , m_background_color(rhs.m_background_color)
+    {}
     
     const color_type &background_color() const
     {   return m_background_color; }
