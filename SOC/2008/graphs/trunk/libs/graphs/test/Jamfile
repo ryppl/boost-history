@@ -16,7 +16,8 @@ project graphs
 # exe map : map.cpp : <include>../../ <include>/usr/local/include ;
 # exe props : props.cpp : <include>../../ <include>/usr/local/include ;
 # exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;
-# exe desc : desc.cpp : <include>../../ <include>/usr/local/include ;
+
+exe desc : desc.cpp : <include>../../ <include>/usr/local/include ;
 
 exe test_verts : test_verts.cpp ;
 exe test_props : test_props.cpp ;

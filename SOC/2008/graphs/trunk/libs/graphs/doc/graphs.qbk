@@ -130,6 +130,10 @@ See the "Programmer's Guide" for a brief tour of the library.
 
 [include concepts.qbk]
 
+[section Property Maps]
+Document information on interior and exterior labels.
+[endsect]
+
 [section Graph Types]
 Unlike the previous version of the BGL, this library's take on graph types is that
 more is better. Rather than parameterize all structural aspects of a graph data
@@ -201,9 +205,9 @@ Not implemented.
 [endsect]
 
 [section Minimum Spanning Tree Algorithms]
-[endsect]
 Not implemented.
 [endsect]
+[endsect] [/ Aglorithms /]
 
 [section Details]
 [include descriptors.qbk]

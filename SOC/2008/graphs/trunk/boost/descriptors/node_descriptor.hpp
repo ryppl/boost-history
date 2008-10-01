@@ -9,9 +9,13 @@
  * container iterator is just a pattern for the actual iterator and has no
  * real type (it's opaque).
  */
-template <typename Blob>
+template <typename Blob, typename Kind = basic_descriptor_kind>
 struct node_descriptor
 {
+    typedef node_descriptor<Blob, Kind> this_type;
+    typedef Blob this_type::*unspecified_bool_type;
+
+    typedef Kind descriptor_kind;
     typedef Blob descriptor_type;
 
     inline node_descriptor()
@@ -32,8 +36,8 @@ struct node_descriptor
     { return value == descriptor_type(); }
 
     /** Cast to bool tests to see if the descritpor is null. */
-    inline operator bool() const
-    { return !is_null(); }
+    inline operator unspecified_bool_type() const
+    { return is_null() ? 0 : &this_type::value; }
 
     /** @name Equality Comparable */
     //@{
@@ -70,15 +74,15 @@ struct node_descriptor
 };
 
 // A hash function for indexed descriptors.
-template <typename Blob>
-std::size_t hash_value(node_descriptor<Blob> const& x)
+template <typename Blob, typename Kind>
+std::size_t hash_value(node_descriptor<Blob, Kind> const& x)
 {
     using boost::hash_value;
     return hash_value(x.value);
 }
 
-template <typename Blob>
-std::ostream& operator<<(std::ostream& os, node_descriptor<Blob> const& d)
+template <typename Blob, typename Kind>
+std::ostream& operator<<(std::ostream& os, node_descriptor<Blob, Kind> const& d)
 { return os << hash_value(d); }
 
 #endif

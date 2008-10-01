@@ -11,8 +11,8 @@
 using namespace std;
 using namespace boost;
 
-typedef index_descriptor<size_t> VertexDesc;
-typedef index_descriptor<size_t> PropDesc;
+typedef index_descriptor<size_t, basic_descriptor_kind> VertexDesc;
+typedef index_descriptor<size_t, basic_descriptor_kind> PropDesc;
 typedef std::pair<VertexDesc, PropDesc> Edge;
 typedef allocator<Edge> Alloc;
 typedef std::less<VertexDesc> Compare;

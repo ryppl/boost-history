@@ -8,6 +8,11 @@
 // Some descriptors are built on blobs.
 #include "blob.hpp"
 
+// A default "responsibility" tag. Because descriptors are mostly container-
+// neutral, debugging intermixed descriptors can be a painful and error-prone.
+// We use responsibility tags to imbue descriptors with semantics.
+struct basic_descriptor_kind { };
+
 // Descriptor implementations.
 #include "descriptors/node_descriptor.hpp"
 #include "descriptors/index_descriptor.hpp"
@@ -61,6 +66,8 @@
 // Note that it is certainly possible for a container to be unstable for both
 // insertions and removals. These data structures are generally constructed over
 // a known set of objects and are generally immutable afterwards.
+
+// Kind of concepts
 struct stable_mutators_tag { };
 struct unstable_insert_tag { };
 struct unstable_remove_tag { };
@@ -74,9 +81,10 @@ struct unstable_mutators_tag : unstable_insert_tag, unstable_remove_tag { };
  *
  * This inherits a specialized version of container traits from boost/pending.
  */
-template <typename Container>
+template <typename Container, typename Kind = basic_descriptor_kind>
 struct descriptor_traits
 {
+    typedef Kind descriptor_kind;
     typedef typename Container::descriptor_type descriptor_type;
     typedef typename Container::mutator_stability mutator_stability;
 };
@@ -105,9 +113,7 @@ make_descriptor(Container& c, typename Container::iterator i)
 template <typename Container>
 inline typename Container::iterator
 make_iterator(Container& c, typename descriptor_traits<Container>::descriptor_type d)
-{
-    return d ? d.get(c) : c.end();
-}
+{ return d ? d.get(c) : c.end(); }
 
 
 /** Return the descriptor stability tag for the given container. */
@@ -151,52 +157,58 @@ struct has_remove_mutator
 // Specializations
 
 // Vector
-template <typename T, typename Alloc>
-struct descriptor_traits<std::vector<T, Alloc>>
+template <typename T, typename Alloc, typename Kind>
+struct descriptor_traits<std::vector<T, Alloc>, Kind>
 {
-    typedef index_descriptor<typename std::vector<T, Alloc>::size_type> descriptor_type;
+    typedef Kind descriptor_kind;
+    typedef index_descriptor<typename std::vector<T, Alloc>::size_type, Kind> descriptor_type;
     typedef unstable_remove_tag descriptor_stability;
 };
 
 // List
-template <typename T, typename Alloc>
-struct descriptor_traits<std::list<T, Alloc>>
+template <typename T, typename Alloc, typename Kind>
+struct descriptor_traits<std::list<T, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>> descriptor_type;
+    typedef Kind descriptor_kind;
+    typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>, Kind> descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
 // TODO: Dequeue
 
 // Set
-template <typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::set<T, Comp, Alloc>>
+template <typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::set<T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::set<T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef Kind descriptor_kind;
+    typedef node_descriptor<blob<sizeof(typename std::set<T, Comp, Alloc>::iterator)>, Kind> descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
 // Multiset
-template <typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::multiset<T, Comp, Alloc>>
+template <typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::multiset<T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::multiset<T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef Kind descriptor_kind;
+    typedef node_descriptor<blob<sizeof(typename std::multiset<T, Comp, Alloc>::iterator)>, Kind> descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
 // Map
-template <typename Key, typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::map<Key, T, Comp, Alloc>>
+template <typename Key, typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::map<Key, T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::map<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef Kind descriptor_kind;
+    typedef node_descriptor<blob<sizeof(typename std::map<Key, T, Comp, Alloc>::iterator)>, Kind> descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
 // Multimap
-template <typename Key, typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>>
+template <typename Key, typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::multimap<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef Kind descriptor_kind;
+    typedef node_descriptor<blob<sizeof(typename std::multimap<Key, T, Comp, Alloc>::iterator)>, Kind> descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
