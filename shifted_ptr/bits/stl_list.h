@@ -603,7 +603,8 @@ namespace _GLIBCXX_STD
         assign(_InputIterator __first, _InputIterator __last)
         {
 	  // Check whether it's an integral type.  If so, it's not an iterator.
-	  typedef typename _Is_integer<_InputIterator>::_Integral _Integral;
+	  //typedef typename _Is_integer<_InputIterator>::_Integral _Integral;
+	  typedef typename __is_integer<_InputIterator>::__type _Integral;
 	  _M_assign_dispatch(__first, __last, _Integral());
 	}
 
@@ -872,7 +873,8 @@ namespace _GLIBCXX_STD
 	       _InputIterator __last)
         {
 	  // Check whether it's an integral type.  If so, it's not an iterator.
-	  typedef typename _Is_integer<_InputIterator>::_Integral _Integral;
+	  //typedef typename _Is_integer<_InputIterator>::_Integral _Integral;
+	  typedef typename __is_integer<_InputIterator>::__type _Integral;
 	  _M_insert_dispatch(__position, __first, __last, _Integral());
 	}
 

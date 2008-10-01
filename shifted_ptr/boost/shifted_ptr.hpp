@@ -217,7 +217,7 @@ template <typename T>
                 if (ps_ && ! owned_base::pool_.is_from(ps_))
                 {
                     if (! owned_base::pool_.is_from(this))
-                        release();
+                        release(false);
 
                     init(p);
                 }
@@ -232,7 +232,7 @@ template <typename T>
                 if (ps_ && ! owned_base::pool_.is_from(ps_))
                     if (ps_->redir() != p.ps_->redir())
                     {
-                        release();
+                        release(false);
                         ps_->redir(p.ps_);
                     }
                 base::operator = (p);
@@ -247,7 +247,7 @@ template <typename T>
 
         void reset()
         {
-            release();
+            release(false);
         }
 
         ~shifted_ptr()
@@ -256,7 +256,7 @@ template <typename T>
         }
 
     private:
-        void release(bool d = false)
+        void release(bool d)
         {
             if (! owned_base::pool_.is_from(this))
             {
