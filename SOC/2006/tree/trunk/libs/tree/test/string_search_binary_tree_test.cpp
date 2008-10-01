@@ -16,7 +16,7 @@
 
 #include <string>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE string_search test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

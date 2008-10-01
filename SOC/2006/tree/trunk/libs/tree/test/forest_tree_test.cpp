@@ -11,15 +11,15 @@
 
 #include <list>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE forest_tree test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 
 #include "test_tree_traversal_data.hpp"
 
-//TODO: Make this a test suite.
+BOOST_FIXTURE_TEST_SUITE(forest_algorithms_test, test_binary_tree_with_list_fixture<int>)
 
-void test_forest_tree()
+BOOST_AUTO_TEST_CASE( forest_tree_test )
 {
     using namespace boost::tree;
     
@@ -54,14 +54,10 @@ void test_forest_tree()
 
 }
 
-void test_natural_correspondence()
+BOOST_AUTO_TEST_CASE( test_natural_correspondence )
 {
     using namespace boost::tree;
-    
-    typedef binary_tree<int> binary_tree_type;
-    binary_tree_type bt;
-    create_test_data_tree(bt);
-    
+
     typedef forest_tree<int> forest_tree_type;
     forest_tree_type ft(bt);
     
@@ -103,8 +99,5 @@ void test_natural_correspondence()
     BOOST_CHECK(test_list.size() == 11);
 }
 
-BOOST_AUTO_TEST_CASE( forest_tree_test )
-{
-    test_forest_tree();
-    test_natural_correspondence();
-}
+
+BOOST_AUTO_TEST_SUITE_END()

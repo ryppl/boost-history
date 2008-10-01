@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE red_black_tree test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

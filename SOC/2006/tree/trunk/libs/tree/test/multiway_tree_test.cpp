@@ -6,7 +6,7 @@
 
 #include <boost/tree/multiway_tree.hpp>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE multiway_tree test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

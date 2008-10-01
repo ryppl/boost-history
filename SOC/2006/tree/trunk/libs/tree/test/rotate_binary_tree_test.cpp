@@ -11,21 +11,20 @@
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE rotate_binary_tree test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 
 using boost::tree::binary_tree;
 
-//TODO: Make this a test suite.
+BOOST_FIXTURE_TEST_SUITE(rotate_binary_tree_test, test_binary_tree_with_list_fixture<int>)
 
-BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
+BOOST_AUTO_TEST_CASE( rotate_binary_tree_test1 )
 {
-    binary_tree<int> a;
-    binary_tree<int> mytree(a);
+    //binary_tree<int> a;
 
-    create_test_data_tree(mytree);
-    binary_tree<int>::cursor c = mytree.root().begin().end();
+    //create_test_data_tree(bt);
+    binary_tree<int>::cursor c = bt.root().begin().end();
     BOOST_CHECK(*c.begin() == 6);
 
     BOOST_CHECK(*c.parent() == 8);
@@ -39,7 +38,7 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
     BOOST_CHECK(c.parity() == 1);    
     BOOST_CHECK(*c.begin() == 6);
         
-    mytree.rotate(c); // Left rotate
+    bt.rotate(c); // Left rotate
 
     BOOST_CHECK(*c.begin() == 6);
     BOOST_CHECK(*c.parent().begin() == 8);
@@ -53,7 +52,7 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
     c = c.begin();
     BOOST_CHECK(*c.begin() == 3);
     
-    mytree.rotate(c); // Right rotate
+    bt.rotate(c); // Right rotate
     
     BOOST_CHECK(*c.begin() == 3);
     c = c.end();
@@ -81,3 +80,5 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
 //    BOOST_CHECK(*c.parent().parent().end().begin() == 7);
     
 }
+
+BOOST_AUTO_TEST_SUITE_END()

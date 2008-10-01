@@ -23,6 +23,8 @@
 
 using namespace boost::tree;
 
+BOOST_FIXTURE_TEST_SUITE(binary_tree_search_test, test_binary_tree_with_list_fixture<int>)
+
 void search_single_element(binary_tree<int>::const_cursor r, int v)
 {
     binary_tree<int>::const_cursor c, d;
@@ -34,34 +36,33 @@ void search_single_element(binary_tree<int>::const_cursor r, int v)
 }
 
 BOOST_AUTO_TEST_CASE( binary_tree_search_test )
-{
-    binary_tree<int> test_tree;
-    create_test_data_tree(test_tree);
-        
+{        
     binary_tree<int>::cursor c, d;
 
-    search_single_element(test_tree.root(), 4); // (Left) Leaf
-    search_single_element(test_tree.root(), 7); // (Right) Leaf
-    search_single_element(test_tree.root(), 6); // Non-Leaf
-    search_single_element(test_tree.root(), 8); // root().begin()
+    search_single_element(bt.root(), 4); // (Left) Leaf
+    search_single_element(bt.root(), 7); // (Right) Leaf
+    search_single_element(bt.root(), 6); // Non-Leaf
+    search_single_element(bt.root(), 8); // root().begin()
 
-    c = lower_bound(test_tree.root(), 5); // Not in tree
-    d = lower_bound(test_tree.root(), 5);
+    c = lower_bound(bt.root(), 5); // Not in tree
+    d = lower_bound(bt.root(), 5);
     BOOST_CHECK(*c == 6);
     BOOST_CHECK(*d == 6);
     
     *c = 4;
     
-    c = lower_bound(test_tree.root(), 5); // Not in tree
+    c = lower_bound(bt.root(), 5); // Not in tree
     BOOST_CHECK(*c == 7);
 
-    c = lower_bound(test_tree.root(), 4); // Twice in tree
-    d = upper_bound(test_tree.root(), 4);
+    c = lower_bound(bt.root(), 4); // Twice in tree
+    d = upper_bound(bt.root(), 4);
     BOOST_CHECK(*c == 4);
     BOOST_CHECK(*d == 7);
     BOOST_CHECK(*c.parent() == 4);
     //BOOST_CHECK(inorder::next(c, 2) == d);
     
     *c.to_parent() = 6;
-    validate_test_data_tree(test_tree);
+    validate_test_data_tree(bt);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

@@ -15,7 +15,7 @@
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
-//TODO: Make this a test suite.
+BOOST_FIXTURE_TEST_SUITE(graph_algorithms_test, test_binary_tree_with_list_fixture<int>)
 
 using namespace boost::tree;
 
@@ -175,37 +175,37 @@ BOOST_AUTO_TEST_CASE( binary_tree_test )
     BOOST_CHECK(tree2.empty());
     
     // Fill empty tree2 with different data
-    create_test_data_tree(tree2);
-    validate_test_data_tree(tree2);
-    BOOST_CHECK(tree1 != tree2);
+    //create_test_data_tree(tree2);
+    validate_test_data_tree(bt);
+    BOOST_CHECK(tree1 != bt);
     
     // Swap
-    test_swap_binary_trees(tree1, tree2);
+    test_swap_binary_trees(tree1, bt);
     validate_test_data_tree(tree1);
-    validate_binary_tree(tree2);
+    validate_binary_tree(bt);
     
-    destroy_binary_tree(tree2);
+    destroy_binary_tree(bt);
 
     // Insert subtree
-    tree_t::cursor c = tree2.insert(tree2.root(), tree1.root());    
+    tree_t::cursor c = bt.insert(bt.root(), tree1.root());    
     BOOST_CHECK(*c == 8);
-    validate_test_data_tree(tree2);
+    validate_test_data_tree(bt);
     
     // Copy constructor
-    tree_t tree3(tree2);
+    tree_t tree3(bt);
     validate_test_data_tree(tree3);
-    BOOST_CHECK(tree2 == tree3);
+    BOOST_CHECK(bt == tree3);
     
     // Change one value in test_tree3
     c = tree3.root().begin().end().begin().begin();
     int tmp = *c;
     *c = tmp + 1;
-    BOOST_CHECK(tree2 != tree3);
+    BOOST_CHECK(bt != tree3);
 
     // Change it back
     c = tree3.root().begin().end().begin().begin();
     *c = tmp;
-    BOOST_CHECK(tree2 == tree3);
+    BOOST_CHECK(bt == tree3);
     
     c = tree3.inorder_first();
     BOOST_CHECK(*c == 1);
@@ -213,15 +213,17 @@ BOOST_AUTO_TEST_CASE( binary_tree_test )
     //inorder::back(c);
     //BOOST_CHECK(*c == 14);    
     
-    destroy_binary_tree(tree2);
-    tree2.splice(tree2.root(), tree3);
+    destroy_binary_tree(bt);
+    bt.splice(bt.root(), tree3);
 
     BOOST_CHECK(tree3.empty());    
-    validate_test_data_tree(tree2);
-    c = tree2.inorder_first();
+    validate_test_data_tree(bt);
+    c = bt.inorder_first();
     BOOST_CHECK(*c == 1);
 
-    inorder_erase_test_data_tree(tree2);
+    inorder_erase_test_data_tree(bt);
     
     //return 0;
 }
+
+BOOST_AUTO_TEST_SUITE_END()

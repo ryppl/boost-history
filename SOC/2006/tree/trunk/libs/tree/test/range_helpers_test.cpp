@@ -6,7 +6,7 @@
 
 #include <boost/tree/detail/range_helpers.hpp>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE range_helpers test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

@@ -11,7 +11,7 @@
 //#include <boost/numeric/interval/compare/lexicographic.hpp>
 #include <boost/multi_index/identity.hpp>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE interval_search test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

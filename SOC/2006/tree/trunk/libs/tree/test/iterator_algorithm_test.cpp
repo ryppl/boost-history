@@ -23,6 +23,8 @@
 
 using namespace boost::tree;
 
+BOOST_FIXTURE_TEST_SUITE( iterator_algorithms_test, test_binary_tree_with_list_fixture<int> )
+
 template <class Order, class Cursor>
 void compare_cursor_to_iterator_traversal(Order, Cursor cur) {    
     std::list<int> test_list;
@@ -160,8 +162,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( compare_cursor_to_iterator_traversal_test, Order,
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
 {
     typedef boost::tree::binary_tree<int>::cursor cursor;
-    
-    binary_tree<int> test_tree;    
+   
 //    std::list<int> test_list;
 //    
 //    // TODO: Put this into a better testing context.
@@ -171,26 +172,24 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
 //    );
 //    BOOST_CHECK(test_list.empty());
 
-    create_test_data_tree(test_tree);
-
     //Preorder    
-    test_traversal(Order(), begin(Order(), make_root_tracking_cursor(test_tree.root())),
-                              end(Order(), make_root_tracking_cursor(test_tree.root())));
+    test_traversal(Order(), begin(Order(), make_root_tracking_cursor(bt.root())),
+                              end(Order(), make_root_tracking_cursor(bt.root())));
 
-    test_reverse_traversal(Order(), end(Order(), make_root_tracking_cursor(test_tree.root())),
-                                      begin(Order(), make_root_tracking_cursor(test_tree.root())));
+    test_reverse_traversal(Order(), end(Order(), make_root_tracking_cursor(bt.root())),
+                                      begin(Order(), make_root_tracking_cursor(bt.root())));
                                     
-    BOOST_CHECK(std::distance(begin(Order(), make_root_tracking_cursor(test_tree.root())), 
-                              end(Order(), make_root_tracking_cursor(test_tree.root()))) == 11);
+    BOOST_CHECK(std::distance(begin(Order(), make_root_tracking_cursor(bt.root())), 
+                              end(Order(), make_root_tracking_cursor(bt.root()))) == 11);
 
     // TODO: Also check with binary_tree-specialized inorder begin()!
 
     // Now the iterators based on stack-based cursors (that don't use cursor.to_parent())
 
-    test_traversal(Order(), begin(Order(), make_root_tracking_cursor(make_ascending_cursor(test_tree.root()))), 
-                                 end(Order(), make_root_tracking_cursor(make_ascending_cursor(test_tree.root()))));
-    test_reverse_traversal(Order(), end(Order(), make_root_tracking_cursor(make_ascending_cursor(test_tree.root()))), 
-                                         begin(Order(), make_root_tracking_cursor(make_ascending_cursor(test_tree.root()))));
+    test_traversal(Order(), begin(Order(), make_root_tracking_cursor(make_ascending_cursor(bt.root()))), 
+                                 end(Order(), make_root_tracking_cursor(make_ascending_cursor(bt.root()))));
+    test_reverse_traversal(Order(), end(Order(), make_root_tracking_cursor(make_ascending_cursor(bt.root()))), 
+                                         begin(Order(), make_root_tracking_cursor(make_ascending_cursor(bt.root()))));
 
 // TODO: Move to other unit
     //Ascending iterator.
@@ -204,4 +203,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
 
 }
 
-
+BOOST_AUTO_TEST_SUITE_END()

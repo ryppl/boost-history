@@ -10,7 +10,7 @@
 #include <boost/tree/searcher.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE key_search test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

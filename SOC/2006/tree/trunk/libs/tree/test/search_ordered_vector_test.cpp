@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE search_ordered_vector test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 

@@ -24,71 +24,34 @@
 
 using namespace boost::tree;
 
-template <class Order, class Cursor, class Container>
-void test_for_each(Order, Cursor c, Container& cont)
+BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, test_binary_tree_with_list_fixture<int>)
+
+typedef boost::mpl::list<preorder,inorder,postorder> orders;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders)
 {
     boost::tree::for_each(
         Order(),
-        c, 
-        boost::lambda::bind(&Container::push_back, &cont, boost::lambda::_1)
+        bt.root(), 
+        boost::lambda::bind(&std::list<int>::push_back, &l, boost::lambda::_1)
     );
-    test_traversal(Order(), cont.begin(), cont.end());
+    test_traversal(Order(), l.begin(), l.end());
 }
 
-template <class Order, class Cursor, class OutCursor, class Container>
-void test_copy(Order, Cursor c, OutCursor& o, Container& cont)
-{    
-    boost::tree::copy(Order(), c, o);
-    test_traversal(Order(), cont.begin(), cont.end());
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, Order, orders)
+{
+    boost::tree::copy(Order(), bt.root(), o);
+    test_traversal(Order(), l.begin(), l.end());
 }
 
-template <class Order, class Cursor, class OutCursor, class Container>
-void test_transform(Order, Cursor c, Cursor d, OutCursor& o, Container& cont)
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform, Order, orders)
 {
     // First copy test_tree to test_tree2, by adding 1 to each element,
     // then copy test_tree2 to test_list, by subtracting 1 - so 
     // test_list should hold test_tree's original elements in ORDER.
-    boost::tree::transform(Order(), c, d, std::bind2nd(std::plus<int>(),1));
-    boost::tree::transform(Order(), d, o, std::bind2nd(std::minus<int>(),1));
-    test_traversal(Order(), cont.begin(), cont.end());
+    boost::tree::transform(Order(), bt.root(), bt2.root(), std::bind2nd(std::plus<int>(),1));
+    boost::tree::transform(Order(), bt2.root(), o, std::bind2nd(std::minus<int>(),1));
+    test_traversal(Order(), l.begin(), l.end());
 }
 
-template <class Order, class Cursor>
-void algorithms(Order, Cursor c, Cursor d)
-{
-    std::list<int> test_list;
-    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-    typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
-    back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
-    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
-    
-    test_for_each(Order(), c, test_list);
-    
-    test_list.clear();
-    test_copy(Order(), c, oc_test_list, test_list);
-    
-    test_list.clear();
-    test_transform(Order(), c, d, oc_test_list, test_list);
-}
-
-typedef boost::mpl::list<preorder,inorder,postorder> orders;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
-{
-    binary_tree<int> test_tree, test_tree2;
-    create_test_data_tree(test_tree);
-    create_test_data_tree(test_tree2);
-        
-    binary_tree<int>::cursor c = test_tree.root();
-    binary_tree<int>::cursor d = test_tree2.root();
-
-    // Just to make sure we won't be getting any false positives when 
-    // copying test_tree1 to test_tree2, we'll change one of test_tree2's
-    // values.
-    d = d.begin().end().begin().begin();
-    ++*d;
-    BOOST_CHECK(test_tree != test_tree2);
-    d = test_tree2.root();
-
-    algorithms(Order(), test_tree.root(), test_tree2.root());
-}
+BOOST_AUTO_TEST_SUITE_END()
