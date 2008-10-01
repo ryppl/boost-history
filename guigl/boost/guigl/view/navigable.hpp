@@ -28,7 +28,7 @@ public:
         , m_distance(500)
     {}
     navigable(const navigable &rhs)
-        : base_type(static_cast<const base_type &)(rhs))
+        : base_type(static_cast<const base_type &>(rhs))
         , m_angle(rhs.m_angle)
         , m_distance(rhs.m_distance)
     {}
