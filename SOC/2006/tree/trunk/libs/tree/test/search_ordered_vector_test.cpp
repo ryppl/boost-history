@@ -4,16 +4,15 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/test/minimal.hpp>
-
 #include <boost/tree/searcher.hpp>
 
 #include <vector>
 
-//TODO: Make this a test suite.
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
-
-static void search_ordered_vector_test()
+BOOST_AUTO_TEST_CASE( search_ordered_vector_test )
 {
 //    using boost::tree::searcher;
 //    using std::vector;
@@ -48,10 +47,3 @@ static void search_ordered_vector_test()
 //
 //    return ordered_vector_test;
 //}
-
-
-int test_main(int, char* [])
-{
-    search_ordered_vector_test();
-    return 0;
-}

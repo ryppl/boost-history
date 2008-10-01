@@ -16,9 +16,9 @@
 
 #include <string>
 
-#include <boost/test/minimal.hpp>
-
-//TODO: Make this a test suite.
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 //Words from Austern et al., p1290
 
@@ -77,7 +77,7 @@ void test_optimized_string_search_binary_tree()
 }
 
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( string_search_binary_tree_test )
 {
     test_normal_string_search_binary_tree();
     test_optimized_string_search_binary_tree();

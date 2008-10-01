@@ -6,11 +6,11 @@
 
 #include <boost/tree/detail/range_helpers.hpp>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 #include <vector>
-
-//TODO: Make this a test suite.
 
 void test_binary_lower_bound()
 {
@@ -89,12 +89,11 @@ void test_linear_upper_bound()
     BOOST_CHECK(ci == vec().end());
 }
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( range_helpers_test )
 {
     test_binary_lower_bound();
     test_binary_upper_bound();
     
     test_linear_lower_bound();
     test_linear_upper_bound();
-    return 0;
 }

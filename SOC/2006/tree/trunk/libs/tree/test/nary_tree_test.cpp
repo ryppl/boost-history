@@ -6,11 +6,11 @@
 
 #include <boost/tree/nary_tree.hpp>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
-//TODO: Make this a test suite.
-
-void test_nary_tree()
+BOOST_AUTO_TEST_CASE( nary_tree_test )
 {
     using namespace boost::tree;
     
@@ -39,10 +39,4 @@ void test_nary_tree()
     BOOST_CHECK(!c.empty());
     BOOST_CHECK(c == c.begin().parent());
 
-}
-
-int test_main(int, char* [])
-{
-    test_nary_tree();
-    return 0;
 }

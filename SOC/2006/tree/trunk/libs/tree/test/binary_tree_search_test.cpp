@@ -10,7 +10,9 @@
 #include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 #include <list>
 #include <algorithm>
@@ -31,7 +33,7 @@ void search_single_element(binary_tree<int>::const_cursor r, int v)
     //BOOST_CHECK(inorder::next(c) == d);
 }
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( binary_tree_search_test )
 {
     binary_tree<int> test_tree;
     create_test_data_tree(test_tree);
@@ -62,6 +64,4 @@ int test_main(int, char* [])
     
     *c.to_parent() = 6;
     validate_test_data_tree(test_tree);
-    
-    return 0;
 }

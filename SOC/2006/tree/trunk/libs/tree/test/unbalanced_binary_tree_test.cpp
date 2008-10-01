@@ -4,21 +4,17 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/test/minimal.hpp>
-
 #include <boost/tree/balanced_tree.hpp>
 #include <boost/tree/detail/balancers/unbalanced.hpp>
 #include <boost/tree/binary_tree.hpp>
 
-//#include <boost/tree/searcher.hpp>
-//#include <boost/tree/algorithm.hpp>
-
 #include "helpers.hpp"
 
-//TODO: Make this a test suite.
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
-
-void test_unbalanced_binary_tree()
+BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_test )
 {
     using namespace boost::tree;
     
@@ -81,10 +77,3 @@ void test_unbalanced_binary_tree()
 //
 //    return key_search_test;
 //}
-
-int test_main(int, char* [])
-{
-    test_unbalanced_binary_tree();
-
-    return 0;
-}

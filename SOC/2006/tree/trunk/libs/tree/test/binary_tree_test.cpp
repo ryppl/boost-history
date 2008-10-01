@@ -155,8 +155,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
     // test with allocator 
 }
 
-//int test_main(int, char* [])
-BOOST_AUTO_TEST_CASE( old_test )
+BOOST_AUTO_TEST_CASE( binary_tree_test )
 {
     typedef binary_tree<int> tree_t;
     tree_t tree1, tree2;

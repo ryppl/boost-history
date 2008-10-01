@@ -8,18 +8,18 @@
 #include <boost/tree/balancers/treap.hpp>
 #include <boost/tree/augmentors/unaugmented.hpp>
 
-//#include <boost/tree/searcher.hpp>
-
 #include <vector>
 #include <algorithm>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 #include "helpers.hpp"
 
 //TODO: Make this a test suite.
 
-void test_treap()
+BOOST_AUTO_TEST_CASE( treap_test )
 {
     using namespace boost::tree;
     
@@ -55,11 +55,4 @@ void test_treap()
     //c = c.parent();
     //treap_t::metadata_type m = c->metadata();
     //int i = ci.base().base().parent()->metadata().get_priority();//m.get_priority();
-}
-
-
-int test_main(int, char* [])
-{
-    test_treap();
-    return 0;
 }

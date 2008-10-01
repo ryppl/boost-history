@@ -4,9 +4,6 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-//#include <boost/test/unit_test.hpp>
-#include <boost/test/minimal.hpp>
-
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/balancers/unbalanced.hpp>
 #include <boost/tree/augmentors/rank.hpp>
@@ -19,7 +16,7 @@
 //TODO: Make this a test suite.
 
 
-void test_rank_search_binary_tree()
+BOOST_AUTO_TEST_CASE( rank_search_binary_tree_test )
 {
     using namespace boost::tree;
 //    
@@ -55,10 +52,3 @@ void test_rank_search_binary_tree()
 //
 //    return rank_search_test;
 //}
-
-int test_main(int, char* [])
-{
-    test_rank_search_binary_tree();
-
-    return 0;
-}

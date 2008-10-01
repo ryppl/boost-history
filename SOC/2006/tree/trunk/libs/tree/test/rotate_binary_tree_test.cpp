@@ -11,13 +11,15 @@
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 using boost::tree::binary_tree;
 
 //TODO: Make this a test suite.
 
-void test_rotate()
+BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
 {
     binary_tree<int> a;
     binary_tree<int> mytree(a);
@@ -78,11 +80,4 @@ void test_rotate()
 //    BOOST_CHECK(*c.parent().parent().parent().begin() == 8);
 //    BOOST_CHECK(*c.parent().parent().end().begin() == 7);
     
-}
-
-
-int test_main(int, char* [])
-{
-    test_rotate();
-    return 0;
 }

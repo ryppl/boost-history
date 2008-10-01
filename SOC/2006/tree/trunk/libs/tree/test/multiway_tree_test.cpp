@@ -6,11 +6,13 @@
 
 #include <boost/tree/multiway_tree.hpp>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 //TODO: Make this a test suite.
 
-void test_multiway_tree()
+BOOST_AUTO_TEST_CASE( multiway_tree_test )
 {
     using namespace boost::tree;
     
@@ -19,10 +21,4 @@ void test_multiway_tree()
 
     //tree_type::cursor c = 
     //mytree.insert(mytree.root(), 3);
-}
-
-int test_main(int, char* [])
-{
-    test_multiway_tree();
-    return 0;
 }

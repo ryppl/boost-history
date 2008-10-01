@@ -8,20 +8,20 @@
 #include <boost/tree/balancers/red_black.hpp>
 #include <boost/tree/augmentors/unaugmented.hpp>
 
-//#include <boost/tree/searcher.hpp>
-
 #include <vector>
 #include <algorithm>
 
-#include "helpers.hpp"
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
-#include <boost/test/minimal.hpp>
+#include "helpers.hpp"
 
 using boost::tree::binary_tree;
 
 //TODO: Make this a test suite.
 
-void test_red_black_tree()
+BOOST_AUTO_TEST_CASE( red_black_tree_test )
 {
     using namespace boost::tree;
     
@@ -147,9 +147,3 @@ void test_red_black_tree()
         
 }
 
-
-int test_main(int, char* [])
-{
-    test_red_black_tree();
-    return 0;
-}

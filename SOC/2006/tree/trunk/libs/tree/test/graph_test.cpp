@@ -9,7 +9,9 @@
 #include <boost/graph/depth_first_search.hpp>
 #include <boost/graph/visitors.hpp>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 #include <list>
 #include <iterator>
@@ -17,7 +19,7 @@
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( graph_test )
 {
     using namespace boost;
     using boost::tree::binary_tree;
@@ -113,6 +115,4 @@ int test_main(int, char* [])
     
     // Output test_tree using write_graphviz. This might require copying
     // the IncidenceGraph to a VertexListGraph (using copy_component) 
-    
-    return 0;
 }

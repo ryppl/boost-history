@@ -11,11 +11,11 @@
 
 #include <list>
 
-#include <boost/test/minimal.hpp>
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 #include "test_tree_traversal_data.hpp"
-
-#include "subtree_algorithms_checks.hpp"
 
 //TODO: Make this a test suite.
 
@@ -103,10 +103,8 @@ void test_natural_correspondence()
     BOOST_CHECK(test_list.size() == 11);
 }
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( forest_tree_test )
 {
     test_forest_tree();
     test_natural_correspondence();
-
-    return 0;
 }

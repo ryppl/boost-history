@@ -11,10 +11,9 @@
 //#include <boost/numeric/interval/compare/lexicographic.hpp>
 #include <boost/multi_index/identity.hpp>
 
-
-#include <boost/test/minimal.hpp>
-
-//TODO: Make this a test suite.
+#define BOOST_TEST_MODULE binary_tree test
+//#define BOOST_TEST_DYN_LINK
+#include <boost/test/included/unit_test.hpp>
 
 //TODO: add real tests. (what is where?)
 // test overlaps stuff.
@@ -35,7 +34,7 @@ struct cerless {
     }
 };
 
-void test_interval_search_binary_tree()
+BOOST_AUTO_TEST_CASE( interval_search_binary_tree_test )
 {
     using boost::tree::searcher;
     using boost::tree::binary_tree;
@@ -60,11 +59,4 @@ void test_interval_search_binary_tree()
 //    BOOST_CHECK(*ci++ == interval<int>(29,99));
 //    BOOST_CHECK(ci == my_tree.end());
     
-}
-
-
-int test_main(int, char* [])
-{
-    test_interval_search_binary_tree();
-    return 0;
 }
