@@ -92,11 +92,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::generate_const<M,T>::type* pointer; 
 
     static pointer storage (matrix_type& m) { return m[0]; }
-    static int size1 (matrix_type& m) { return m.dim1(); } 
-    static int size2 (matrix_type& m) { return m.dim2(); } 
-    static int storage_size (matrix_type& m) { 
-      return size1 (m) * size2 (m); 
-    }
+    static int num_rows (matrix_type& m) { return m.dim1(); } 
+    static int num_columns (matrix_type& m) { return m.dim2(); } 
+    static int storage_size (matrix_type& m) { return m.dim1() * m.dim2(); }
     static int leading_dimension (matrix_type& m) { return m.dim2(); } 
   }; 
 
@@ -119,11 +117,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::generate_const<M,T>::type* pointer; 
 
     static pointer storage (matrix_type& m) { return &m(1, 1); }
-    static int size1 (matrix_type& m) { return m.dim1(); } 
-    static int size2 (matrix_type& m) { return m.dim2(); } 
-    static int storage_size (matrix_type& m) { 
-      return size1 (m) * size2 (m); 
-    }
+    static int num_rows (matrix_type& m) { return m.dim1(); } 
+    static int num_columns (matrix_type& m) { return m.dim2(); } 
+    static int storage_size (matrix_type& m) { return m.dim1() * m.dim2(); }
     static int leading_dimension (matrix_type& m) { return m.dim1(); } 
   }; 
 
