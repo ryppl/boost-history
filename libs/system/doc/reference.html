@@ -38,6 +38,7 @@
   <tr>
     <td width="100%" bgcolor="#E8F5FF">
       <a href="#Introduction">Introduction</a><br>
+      <a href="#Macros">Macros</a><br>
       <a href="#Header-error_code">Header &lt;boost/system/error_code.hpp&gt;</a><br>
       <a href="#Class-error_category">Class <code>error_category</code></a><br>
       &nbsp;&nbsp;&nbsp;<a href="#Class-error_category-synopsis">Class <code>error_category</code> synopsis</a><br>
@@ -56,6 +57,8 @@
       &nbsp;&nbsp;&nbsp;<a href="#Class-error_condition-constructors">Class <code>error_condition</code> constructors</a><br>
       &nbsp;&nbsp;&nbsp;<a href="#Class-error_condition-modifiers">Class <code>error_condition</code> modifiers</a><br>
       &nbsp;&nbsp;&nbsp;<a href="#Class-error_condition-observers">Class <code>error_condition</code> observers</a><br>
+      <a href="#throws-object"><code>throws</code> object</a><br>
+      <a href="#Semantics-of-throws">Semantics of <code>throws</code> object</a><br>
       <a href="#Non-member-functions">Non-member functions</a><br>
       <a href="#Header-system_error">Header &lt;boost/system/system_error.hpp&gt;</a><br>
       &nbsp;&nbsp;&nbsp;<a href="#Class-system_error">Class <code>system_error</code></a><br>
@@ -68,8 +71,51 @@
 <p>This reference documentation describes components that&nbsp; 
 programs may use to report error conditions originating from the operating 
 system or other low-level application program interfaces.</p>
-<p>System Library components do not change the value of <code>
+<p>Boost.System library components never change the value of <code>
 errno</code>.</p>
+<h2><a name="Macros">Macros</a></h2>
+<p>Users may defined the following macros if desired. Sensible defaults are 
+provided, so users may ignore these macros if they prefer.</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td><b><i>Macro Name</i></b></td>
+    <td><b><i>Default</i></b></td>
+    <td><b><i>Effect if defined</i></b></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>BOOST_WINDOWS_API</code></td>
+    <td valign="top">Defined if Windows is detected by Boost.System's automatic configuration 
+    code, otherwise not defined.</td>
+    <td valign="top">Implementation uses the Microsoft Windows native 
+    application program interface (API).</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>BOOST_POSIX_API</code></td>
+    <td valign="top">Defined if Windows is not detected by Boost.System's automatic configuration 
+    code.</td>
+    <td valign="top">Implementation uses the POSIX native 
+    application program interface (API).</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>BOOST_SYSTEM_DYN_LINK</code></td>
+    <td valign="top">Defined if <code>BOOST_ALL_DYN_LINK</code> is defined, 
+    otherwise not defined.</td>
+    <td valign="top">Boost.System library is dynamically linked. If not defined, 
+    static linking is assumed.</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>BOOST_SYSTEM_NO_LIB</code></td>
+    <td valign="top">Defined if <code>BOOST_ALL_NO_LIB</code> is defined, 
+    otherwise not defined.</td>
+    <td valign="top">Boost.System library does not use the Boost auto-link 
+    facility.</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>BOOST_SYSTEM_NO_DEPRECATED</code></td>
+    <td valign="top">Not defined.</td>
+    <td valign="top">Deprecated features are excluded.</td>
+  </tr>
+</table>
 <h2><a name="Header-error_code">Header &lt;boost/system/error_code.hpp&gt;</a></h2>
 <h3>&lt;boost/system/error_code.hpp&gt; synopsis</h3>
 <blockquote>
@@ -88,10 +134,10 @@ errno</code>.</p>
     template< class T="" >
       struct is_error_condition_enum { static const bool value = false; };
 
-    //  portable error_conditions
-    namespace posix
+    //  generic error_conditions
+    namespace errc
     {
-      enum posix_errno
+      enum errc_t
       {
         success = 0,
         address_family_not_supported,   //EAFNOSUPPORT
@@ -174,10 +220,15 @@ errno</code>.</p>
         wrong_protocol_type             //EPROTOTYPE
       };
 
-    } // namespace posix
+    } // namespace errc
 
-    template<> struct is_error_condition_enum<posix::posix_errno>&lt;posix::posix_errno&gt;
+    template<> struct is_error_condition_enum<posix::posix_errno>&lt;errc::errc_t&gt;
       { static const bool value = true; };
+
+    // predefined error_code object used as &quot;throw on error&quot; tag
+    extern error_code <a href="#throws-object">throws</a>;
+
+    //  <a href="#Non-member-functions">non-member functions</a>
 
     bool operator==( const error_code &amp; lhs, const error_code &amp; rhs );
     bool operator==( const error_code &amp; code, const error_condition &amp; condition );
@@ -192,8 +243,8 @@ errno</code>.</p>
     bool operator&lt;( const error_code &amp; lhs, const error_code &amp; rhs );
     bool operator&lt;( const error_condition &amp; lhs, const error_condition &amp; rhs );
 
-    error_code make_error_code( posix::posix_errno e );
-    error_condition make_error_condition( posix::posix_errno e );
+    error_code make_error_code( errc::errc_t e );
+    error_condition make_error_condition( errc::errc_t e );
 
     template &lt;class charT, class traits&gt;
       std::basic_ostream&lt;charT,traits&gt;&amp;
@@ -203,7 +254,7 @@ errno</code>.</p>
   }
 }</pre>
 </blockquote>
-<p>The value of each<code> posix_errno</code> constant shall be the same as the 
+<p>The value of each<code> errc_t</code> constant shall be the same as the 
 value of the <code>&lt;cerrno&gt;</code> macro shown in the above synopsis.</p>
 <p>Users may specialize <code>is_error_code_enum</code> and <code>
 is_error_condition_enum</code> templates to indicate that a type is eligible for 
@@ -246,10 +297,10 @@ types should create a single object of each such type. <i>—end note</i> ]</p>
     };
 
     const error_category &amp;  get_system_category();
-    const error_category &amp;  get_posix_category();
+    const error_category &amp;  get_generic_category();
 
     static const error_category &amp;  system_category = get_system_category();
-    static const error_category &amp;  posix_category = get_posix_category();
+    static const error_category &amp;  generic_category = get_generic_category();
   }
 }</pre>
 </blockquote>
@@ -272,7 +323,7 @@ this subclause.</p>
   <p><i>Returns:</i>&nbsp; <code>error_condition( ev, *this )</code>.</p>
   <blockquote>
     <p>&nbsp;[<i>--Note:</i> Derived classes will typically convert <code>ev</code> 
-    to some portable <code>error_category</code>, such as <code>posix_category</code>, 
+    to some portable <code>error_category</code>, such as <code>generic_category</code>, 
     and return it as an <code>error_condition</code> for that category. <i>--end 
     note</i>]</p>
   </blockquote>
@@ -317,7 +368,7 @@ non-member functions</a></h3>
   identifying errors originating from the operating system.</p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre>const error_category &amp; get_posix_category();</pre>
+<pre>const error_category &amp; get_generic_category();</pre>
 <blockquote>
   <p><i>Returns:</i> A reference to a <code>error_category</code> object 
   identifying portable error conditions.</p>
@@ -326,7 +377,7 @@ non-member functions</a></h3>
 <h3><a name="Class-error_category-predefined-objects">Class <code>error_category</code> 
 predefined objects</a></h3>
 <p>Predefined objects <code>system_category</code> 
-and <code>posix_category</code> identify operating system error codes and portable error conditions, respectively.</p>
+and <code>generic_category</code> identify system specific error codes and portable error conditions, respectively.</p>
 <h2><a name="Class-error_code">Class <code>
 error_code</code></a></h2>
 <p>The class <code>error_code</code> describes an object used to hold error code 
@@ -410,7 +461,7 @@ error_code</code> modifiers</a></h3>
 </blockquote>
 <p><code>void clear();</code></p>
 <blockquote>
-  <p><i>postcondition:</i> <code>value() == 0 &amp;&amp; category() == posix_category</code></p>
+  <p><i>postcondition:</i> <code>value() == 0 &amp;&amp; category() == generic_category</code></p>
 </blockquote>
   <h3><a name="Class-error_code-observers">Class <code>
 error_code</code> observers</a></h3>
@@ -494,7 +545,7 @@ constructors</a></h3>
 <pre>error_condition(); </pre>
 <blockquote>
   <p><i>Effects:</i> Constructs an object of type <code>error_condition</code>.</p>
-  <p><i>Postconditions:</i> <code>val_ == 0 and cat_ == posix_category</code>.</p>
+  <p><i>Postconditions:</i> <code>val_ == 0 and cat_ == generic_category</code>.</p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre>error_condition( value_type val, const error_category &amp; cat );</pre>
@@ -527,7 +578,7 @@ modifiers</a></h3>
 </blockquote>
 <p><code>void clear();</code></p>
 <blockquote>
-  <p><i>postcondition:</i> <code>value() == 0 &amp;&amp; category() == posix_category</code></p>
+  <p><i>postcondition:</i> <code>value() == 0 &amp;&amp; category() == generic_category</code></p>
 </blockquote>
 <h3><a name="Class-error_condition-observers">Class <code>error_condition</code> 
 observers</a></h3>
@@ -559,7 +610,29 @@ observers</a></h3>
   eliminating some sources of user error. One possible implementation choice for 
   this type is pointer to member. <i>--end note</i> <i>]</i></p>
 </blockquote>
-  <h2><a name="Non-member-functions">Non-member functions</a></h2>
+  <h2><a name="throws-object"><code>throws</code> object</a></h2>
+  <pre>extern error_code throws;</pre>
+<p>The predefined <code>error_code</code> object <code>throws</code> is supplied 
+for use as a &quot;throw on error&quot; tag.</p>
+<h2><a name="Semantics-of-throws">Semantics of <code>throws</code></a> object</h2>
+<p>Functions that specify an argument in the form <code>error_code&amp; ec=throws</code>, 
+with appropriate namespace qualifiers, have the following error handling 
+semantics:</p>
+<blockquote>
+  <p><i>Effects:</i> If <code>ec != throws</code>:</p>
+  <ul>
+    <li>If an error occurs, and sets <code>ec</code> to an appropriate <code>
+    <a href="#Class-error_code">error_code</a></code> that identifies the error 
+    value and category. The category should be the most specific <code>
+    <a href="#Class-error_category">error_category</a></code> applicable to the 
+    particular error.</li>
+    <li>if an error does not occur, <code>ec.clear()</code>.</li>
+  </ul>
+  <p><i>Throws:</i> If <code>ec == throws</code>, throws an exception of type
+  <code><a href="#Class-system_error">system_error</a></code> or of a type 
+  derived from <code><a href="#Class-system_error">system_error</a></code>.</p>
+</blockquote>
+<h2><a name="Non-member-functions">Non-member functions</a></h2>
   <pre>bool operator==( const error_code &amp; lhs, const error_code &amp; rhs );</pre>
 <blockquote>
   <p><i>Returns:</i> <code>lhs.category() == rhs.category() &amp;&amp; lhs.value() == 
@@ -607,13 +680,13 @@ bool operator!=( const error_condition &amp; condition, const error_code &amp; c
   &nbsp; || (lhs.category() == rhs.category() &amp;&amp; lhs.value() &lt; rhs.value())</code>.</p>
   <p><i>Throws: </i>Nothing.</p>
 </blockquote>
-<pre>error_code make_error_code( posix::posix_errno e );</pre>
+<pre>error_code make_error_code( errc::errc_t e );</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>error_code( e, posix_category)</code>.</p>
+  <p><i>Returns:</i> <code>error_code( e, generic_category)</code>.</p>
 </blockquote>
-<pre>error_condition make_error_condition( posix::posix_errno e );</pre>
+<pre>error_condition make_error_condition( errc::errc_t e );</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>error_condition( e, posix_category)</code>.</p>
+  <p><i>Returns:</i> <code>error_condition( e, generic_category)</code>.</p>
 </blockquote>
 
 <pre>template &lt;class charT, class traits&gt;
@@ -633,8 +706,7 @@ bool operator!=( const error_condition &amp; condition, const error_code &amp; c
 <h3><a name="Class-system_error">Class <code>
 system_error</code></a></h3>
 <p>The class <code>system_error</code> describes an exception object used to 
-report error conditions that have an associated error code. Such error 
-conditions typically originate from the operating system or other low-level 
+report errors that have an associated <code><a href="#Class-error_code">error_code</a></code>. Such errors typically originate from operating system or other low-level 
 application program interfaces.</p>
 <blockquote>
 <pre>namespace boost
@@ -645,7 +717,10 @@ application program interfaces.</p>
     {
     public:
       system_error( error_code ec );
+      system_error( error_code ec, const char * what_arg );
       system_error( error_code ec, const std::string &amp; what_arg );
+      system_error( error_code::value_type ev, const error_category &amp; ecat,
+                    const char * what_arg );
       system_error( error_code::value_type ev, const error_category &amp; ecat,
                     const std::string &amp; what_arg );
       system_error( error_code::value_type ev, const error_category &amp; ecat);
@@ -662,11 +737,24 @@ application program interfaces.</p>
   <p><i>Postcondition:</i> <code>code() == ec <br>
 &nbsp; &amp;&amp; std::strcmp( this-&gt;runtime_error::what(), &quot;&quot; ) == 0</code></p>
 </blockquote>
+<pre>system_error( error_code ec, const char * what_arg );</pre>
+<blockquote>
+  <p><i>Effects:</i> Constructs an object of class <code>system_error</code>.</p>
+  <p><i>Postcondition:</i> <code>code() == ec <br>
+&nbsp; &amp;&amp; std::strcmp( this-&gt;runtime_error::what(), what_arg ) == 0</code></p>
+</blockquote>
 <pre>system_error( error_code ec, const std::string &amp; what_arg );</pre>
 <blockquote>
   <p><i>Effects:</i> Constructs an object of class <code>system_error</code>.</p>
   <p><i>Postcondition:</i> <code>code() == ec <br>
 &nbsp; &amp;&amp; std::strcmp( this-&gt;runtime_error::what(), what_arg.c_str() ) == 0</code></p>
+</blockquote>
+<pre>system_error( error_code::value_type ev, const error_category &amp; ecat,
+             const char * what_arg );</pre>
+<blockquote>
+  <p><i>Effects:</i> Constructs an object of class <code>system_error</code>.</p>
+  <p><i>Postcondition:</i> <code>code() == error_code( ev, ecat )<br>
+&nbsp; &amp;&amp; std::strcmp( this-&gt;runtime_error::what(), what_arg ) == 0</code></p>
 </blockquote>
 <pre>system_error( error_code::value_type ev, const error_category &amp; ecat,
              const std::string &amp; what_arg );</pre>
@@ -694,13 +782,14 @@ application program interfaces.</p>
 </blockquote>
 <hr>
 
-<p>© Copyright Beman Dawes, 2006, 2007<br>
-Distributed under the Boost Software License, Version 1.0. See
-<a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
-
 <p>Revised 
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->September 19, 2007<!--webbot bot="Timestamp" endspan i-checksum="38025" --> </font>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->October 05, 2008<!--webbot bot="Timestamp" endspan i-checksum="30983" --> </font>
 </p>
+
+<p>© Copyright Beman Dawes, 2006, 2007, 2008</p>
+
+<p>Distributed under the Boost Software License, Version 1.0. See
+<a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 
 </body>
 
