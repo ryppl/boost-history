@@ -1,6 +1,6 @@
 
-#ifndef BOOST_WEAK_OPTIONAL_HPP
-#define BOOST_WEAK_OPTIONAL_HPP
+#ifndef BOOST_OPTIONAL_HPP
+#define BOOST_OPTIONAL_HPP
 
 #include <utility>
 
@@ -13,8 +13,13 @@ namespace boost {
  * isn't nearly as graceful.
  */
 template <typename T>
-struct optional
+class optional
 {
+    typedef optional<T> this_type;
+    typedef T* this_type::* unspecified_bool_type;
+public:
+    typedef T value_type;
+
     // Does not initialize the optional.
     optional()
         : _ptr(0)
@@ -42,11 +47,17 @@ struct optional
     optional& operator=(optional const& x)
     { return swap(optional(x)); }
 
-    optional& operator=(optional&& x)
+    inline optional& operator=(optional&& x)
     { return swap(optional().swap(x)); }
 
-    optional& operator=(T const& x)
+    inline optional& operator=(T const& x)
     { return swap(optional(x)); }
+
+    inline bool operator==(optional const& x) const
+    { return get() != x.get(); }
+
+    inline bool operator!=(optional const& x) const
+    { return !(*this == x); }
 
     T& operator*()
     { return get(); }
@@ -60,8 +71,8 @@ struct optional
     T const* operator->() const
     { return _ptr; }
 
-    operator bool() const
-    { return _ptr != 0; }
+    operator unspecified_bool_type() const
+    { return _ptr ? &this_type::_ptr : 0; }
 
     bool valid() const
     { return _ptr != 0; }
@@ -115,6 +126,83 @@ struct optional
     T* _ptr;
 };
 
-}
+/**
+ * Specialize the optional type for pointers. This basically removes the
+ * encoding of the object into the character buffer. The reason that this is
+ * specilized on pointers is that the null pointer is a built-in indicator of
+ * optionality. If null, the pointer does not exist.
+ *
+ * The purpose of this overload is to make optional ptrs work mostly just like
+ * regular pointers.
+ * 
+ * @todo Should this include ptr math to make it look like an iterable ptr?
+ */
+template <typename T>
+class optional<T*>
+{
+    typedef optional<T*> this_type;
+    typedef T* this_type::* unspecified_bool_type;
+public:
+    typedef T* value_type;
+
+    optional() : _ptr(0) { }
+    optional(optional const& x) : _ptr(x._ptr) { }
+    optional(optional&& x) : _ptr(std::move(x._ptr)) { }
+    optional(T* x) : _ptr(x) { }
+
+    optional& operator=(optional const& x)
+    { return swap(optional(x)); }
+
+    optional& operator=(optional&& x)
+    { return swap(x); }
+
+    optional& operator=(T* x)
+    { return swap(optional(x)); }
+
+    inline bool operator==(optional const& x) const
+    { return _ptr == x._ptr; }
+
+    inline bool operator!=(optional const& x) const
+    { return _ptr != x._ptr; }
+
+    T& operator*()
+    { return get(); }
+
+    T const& operator*() const
+    { return get(); }
+
+    T* operator->()
+    { return _ptr; }
+
+    T const* operator->() const
+    { return _ptr; }
+
+    operator unspecified_bool_type() const
+    { return _ptr ? &this_type::_ptr : 0; }
+
+    bool valid() const
+    { return _ptr != 0; }
+
+    T& get()
+    { return *_ptr; }
+
+    T const& get() const
+    { return *_ptr; }
+
+    // Reset the internal pointer to indicate uninitialized.
+    void reset()
+    { _ptr = 0; }
+
+    optional& swap(optional&& x)
+    {
+        using std::swap;
+        swap(_ptr, x._ptr);
+        return *this;
+    }
+
+    T* _ptr;
+};
+
+} /* namespace boost */
 
 #endif
