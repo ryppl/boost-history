@@ -153,7 +153,7 @@ template <typename T>
         typedef shifted_ptr_base<T> base;
         
         using base::share;
-
+		using base::po_;
 
         union
         {
