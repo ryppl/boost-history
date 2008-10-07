@@ -5,73 +5,17 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/optional_value.hpp>
 #include <boost/none.hpp>
 #include <boost/triple.hpp>
+
+#include <boost/graphs/adjacency_matrix/matrix_element.hpp>
+#include <boost/graphs/adjacency_matrix/column_traits.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_matrix {
 
 namespace detail
 {
-    // Metafunctions to generate the value type of a basic matrix.
-    // TODO: This facility probably needs to be exposed to other matrix
-    // implementations (e.g., triangular matrix, compressed matrix, etc.).
-    template <typename T>
-    struct matrix_element { typedef optional<T> type; };
-    template <> struct matrix_element<none> { typedef bool type; };
-
-    // Specialize the case of matrix references and various operations on them.
-    // Note that the generic case is empty.
-    template <typename T> struct column_traits { };
-    template <typename T>
-    struct column_traits<std::vector<optional<T>>>
-    {
-        typedef std::vector<optional<T>> container;
-        typedef typename container::size_type size_type;
-        typedef typename container::reference reference;
-        typedef typename container::const_reference const_reference;
-
-        typedef T const& get_result;
-
-        static optional<T> make_value(T const& x)
-        { return optional<T>(x); }
-
-        // This can easily segfault c[i] is not valid.
-        get_result get(container const& c, size_type i)
-        { return c[i].get(); }
-
-        static void set(container& c, size_type i)
-        { c[i] = optional<T>(); }
-
-        static void set(container&c, size_type i, T const& x)
-        { c[i] = x; }
-
-        static void clear(container& c, size_type i)
-        { c[i].reset(); }
-    };
-    template <>
-    struct column_traits<std::vector<bool>>
-    {
-        typedef std::vector<bool> container;
-        typedef container::size_type size_type;
-        typedef container::reference reference;
-        typedef container::const_reference const_reference;
-
-        typedef const_reference get_result;
-
-        static bool make_value(none)
-        { return false; }
-
-        static get_result get(container const& c, size_type i)
-        { return c[i]; }
-
-        static void set(container& c, size_type i)
-        { c[i] = true; }
-
-        static void clear(container& c, size_type i)
-        { c[i] = false; }
-    };
-
-
     // A little helper function for the template constructor.
     // TODO Write this for tuples also.
     template <typename Matrix, typename T1, typename T2>
@@ -85,10 +29,7 @@ namespace detail
 
 /**
  * An unoptimized implementation of the basic square matrix that contains
- * optional elements T. Note that the underlying storage type is specialized
- * for the type 'none', because this is essentially already a boolean data
- * structure, and we don't need to store any additional information. Otherwise,
- * T is made to be optional<T>.
+ * optional elements T.
  *
  * This is not a basic matrix in the linear algebra sense of things. This is a
  * legitimate container, albeit arranged in a fairly rigid fashion. This class
@@ -96,19 +37,26 @@ namespace detail
  * The reason for this is that we can return optional values for all non-boolean
  * value types.
  *
+ * There are three important variations of this structure that depend on the
+ * type T. If T is given as none, then the value type stored by this class is
+ * boolean. If T is an optional_value<U,A> then this stores exactly objects of
+ * exactly that type, buit the value_type is reinterpreted to be U. Otherwise,
+ * this will store optional<T> and the value_type is T.
+ *
  * This is currently implemented using std::vectors, but could potentially be
  * rewritten to use a simple dynamic array.
+ *
+ * @todo Invert the meanings of element_type and value_type.
  */
 template <typename T, template <typename> class Allocator = std::allocator>
 struct basic_matrix
 {
-    typedef typename detail::matrix_element<T>::type value_type;
-    typedef std::vector<value_type> columns_type;    // contains edges
-    typedef std::vector<columns_type> rows_type;     // contains rows
+    typedef typename detail::matrix_element<T>::value_type value_type;
+    typedef typename detail::matrix_element<T>::element_type element_type;
+    typedef std::vector<element_type> columns_type;     // contains edges
+    typedef std::vector<columns_type> rows_type;        // contains rows
 
     typedef detail::column_traits<columns_type> ct;
-
-    // The reference type of these vectors may not be the same as value_type&.
     typedef typename ct::reference reference;
     typedef typename ct::const_reference const_reference;
 
@@ -116,7 +64,11 @@ struct basic_matrix
 
     /** @name Constructors/Destructor */
     //@{
-    basic_matrix(size_type n, T const& x = T())
+    basic_matrix(size_type n)
+        : _rows(n, columns_type(n))
+    { }
+
+    basic_matrix(size_type n, value_type const& x)
         : _rows(n, columns_type(n, ct::make_value(x)))
     { }
 
@@ -170,7 +122,7 @@ struct basic_matrix
     /**
      * Set the value of this element to the given value.
      */
-    void set(size_type i, size_type j, T const& x)
+    void set(size_type i, size_type j, element_type const& x)
     { ct::set(_rows[i], j, x); }
 
     /**
@@ -202,6 +154,6 @@ private:
     rows_type _rows;
 };
 
-} } }
+} } } /* namespace boost::graphs::adjacency_matrix */
 
 #endif
