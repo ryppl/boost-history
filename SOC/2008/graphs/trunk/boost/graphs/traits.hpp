@@ -1,12 +1,14 @@
 
-#ifndef TRAITS_HPP
-#define TRAITS_HPP
+#ifndef BOOST_GRAPHS_TRAITS_HPP
+#define BOOST_GRAPHS_TRAITS_HPP
 
 #include <boost/utility.hpp>
 #include <boost/mpl/if.hpp>
 
 #include "undirected_graph.hpp"
 #include "directed_graph.hpp"
+
+namespace boost { namespace graphs {
 
 namespace detail
 {
@@ -85,5 +87,7 @@ template <typename Graph>
 inline bool allows_parallel_edges(const Graph& g)
 { return has_parallel_edges<Graph>::value; }
 //@}
+
+} } /* namespace boost::graphs */
 
 #endif

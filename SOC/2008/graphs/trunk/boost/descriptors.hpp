@@ -1,6 +1,6 @@
 
-#ifndef DESCRIPTORS_HPP
-#define DESCRIPTORS_HPP
+#ifndef BOOST_DESCRIPTORS_HPP
+#define BOOST_DESCRIPTORS_HPP
 
 // Pull the container traits.
 #include "containers.hpp"
@@ -66,6 +66,8 @@ struct basic_descriptor_kind { };
 // Note that it is certainly possible for a container to be unstable for both
 // insertions and removals. These data structures are generally constructed over
 // a known set of objects and are generally immutable afterwards.
+
+namespace boost {
 
 // Kind of concepts
 struct stable_mutators_tag { };
@@ -217,5 +219,6 @@ struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>, Kind>
 // TODO: Unordered Map
 // TODO: Unordered Multimap
 
+} /* namespace boost */
 
 #endif

@@ -1,6 +1,6 @@
 
-#ifndef PROPERTIES_HPP
-#define PROPERTIES_HPP
+#ifndef BOOST_GRAPHS_PROPERTIES_HPP
+#define BOOST_GRAPHS_PROPERTIES_HPP
 
 #include <boost/shared_ptr.hpp>
 
@@ -14,6 +14,8 @@
 #include "properties/container_property_map.hpp"
 #include "properties/simple_property_map.hpp"
 #include "properties/bundled_property_map.hpp"
+
+namespace boost { namespace graphs {
 
 namespace detail
 {
@@ -253,7 +255,6 @@ struct optional_edge_label
     { }
 };
 
-
 namespace detail
 {
     // Optionally initialize the container, but not if the map is already
@@ -286,5 +287,7 @@ void initialize(Graph const& g, optional_vertex_label<Graph, Label>& map, Label 
 template <typename Graph, typename Label>
 void initialize(Graph const g, optional_edge_label<Graph, Label>& map, Label const& x)
 { detail::optional_init(g, map, x); }
+
+} } /* namespace boost::graphs */
 
 #endif

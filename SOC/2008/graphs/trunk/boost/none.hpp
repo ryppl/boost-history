@@ -1,10 +1,16 @@
 
-#ifndef NONE_HPP
-#define NONE_HPP
+#ifndef BOOST_NONE_HPP
+#define BOOST_NONE_HPP
 
 #include <boost/utility.hpp>
 
-/** The canonical none type. */
+namespace boost {
+
+/**
+ * The canonical none type.
+ * @todo This conflicts mightily with the standard boost none, and none_t. We
+ * should not even be using this.
+ */
 struct none { };
 
 /** Like none, but not. */
@@ -22,6 +28,8 @@ struct is_not_none { BOOST_STATIC_CONSTANT(bool, value = !is_none<T>::value); };
 
 template <>
 struct is_not_none<none> { BOOST_STATIC_CONSTANT(bool, value = !is_none<none>::value); };
+
+} /* namespace boost */
 
 #endif
 

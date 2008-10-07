@@ -1,16 +1,18 @@
 
-#ifndef BLOB_HPP
-#define BLOB_HPP
+#ifndef BOOST_BLOB_HPP
+#define BOOST_BLOB_HPP
 
 #include <cstring>
 
 #include <boost/functional/hash.hpp>
 
+namespace boost {
+
 namespace detail
 {
-    // Not for the faint of heart. This helps get around type punning issues
-    // by using a union to hide the explicit recast of an array of bytes to
-    // a real object.
+    // Not for the faint of heart. This helps get around type punning issues by
+    // using a union to hide the explicit recast of an array of bytes to a real
+    // object.
     template <typename T>
     union union_caster
     {
@@ -133,5 +135,7 @@ hash_value(blob<N> const& x)
     }
     return seed;
 }
+
+} /* namespace boost */
 
 #endif

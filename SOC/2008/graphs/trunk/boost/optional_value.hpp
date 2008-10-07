@@ -87,6 +87,9 @@ public:
         return _val;
     }
 
+    inline void reset()
+    { _val = absent(); }
+
     inline optional_value& swap(optional_value&& x)
     {
         using namespace std;

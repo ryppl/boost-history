@@ -1,8 +1,10 @@
 
-#ifndef NODE_DESCRIPTOR_HPP
-#define NODE_DESCRIPTOR_HPP
+#ifndef BOOST_DESCRIPTORS_NODE_DESCRIPTOR_HPP
+#define BOOST_DESCRIPTORS_NODE_DESCRIPTOR_HPP
 
 #include <boost/functional/hash.hpp>
+
+namespace boost {
 
 /**
  * The node descriptor contains an iterator into the target container. The
@@ -84,5 +86,7 @@ std::size_t hash_value(node_descriptor<Blob, Kind> const& x)
 template <typename Blob, typename Kind>
 std::ostream& operator<<(std::ostream& os, node_descriptor<Blob, Kind> const& d)
 { return os << hash_value(d); }
+
+} /* namespace boost */
 
 #endif

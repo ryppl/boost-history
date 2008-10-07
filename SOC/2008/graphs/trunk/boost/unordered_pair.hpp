@@ -1,10 +1,12 @@
 
-#ifndef UNORDERED_PAIR_HPP
-#define UNORDERED_PAIR_HPP
+#ifndef BOOST_UNORDERED_PAIR_HPP
+#define BOOT_UNORDERED_PAIR_HPP
 
 #include <functional>
 
 #include <boost/functional/hash.hpp>
+
+namespace boost {
 
 /**
  * The unordered pair template provides a homogenously typed 2-element
@@ -24,15 +26,48 @@ public:
     typedef T value_type;
     typedef Compare compare;
 
-    unordered_pair();
-    unordered_pair(unordered_pair const& x);
-    unordered_pair(Compare const& comp);
-    unordered_pair(T const& f, T const& s);
-    unordered_pair(T const& f, T const& s, Compare const& comp);
+    /** @name Constructors */
+    //@{
+    inline unordered_pair(Compare const& comp = Compare())
+        : _pair(), _comp()
+    { }
 
-    T const& first() const;
-    T const& second() const;
-    Compare comp() const;
+    inline unordered_pair(unordered_pair const& x)
+        : _pair(x._pair), _comp(x._comp)
+    { }
+
+    inline unordered_pair(unordered_pair&& x)
+        : _pair(std::move(x._pair)), _comp(std::move(x._comp))
+    { }
+
+    inline unordered_pair(T const& f, T const& s, Compare const& comp = Compare())
+        : _pair(f, s), _comp()
+    { order(); }
+    //@}
+
+    /** @name Operators */
+    //@{
+    inline unordered_pair& operator=(unordered_pair const& x)
+    { return swap(unordered_pair(x)); }
+
+    inline unordered_pair& operator=(unordered_pair&& x)
+    { return swap(x); }
+    //@}
+
+    /** @name Accessors */
+    //@{
+    inline T const& first() const
+    { return _pair.first; }
+
+    inline T const& second() const
+    { return _pair.second; }
+
+    inline Compare comp() const
+    { return _comp; }
+    //@}
+
+    inline unordered_pair& swap(unordered_pair&& x)
+    { _pair.swap(x._pair); return *this; }
 
 private:
     void order();
@@ -41,55 +76,6 @@ private:
     std::pair<T, T> _pair;
     Compare _comp;
 };
-
-template <typename T, typename C>
-unordered_pair<T,C>::unordered_pair()
-    : _pair()
-    , _comp()
-{ }
-
-template <typename T, typename C>
-unordered_pair<T,C>::unordered_pair(unordered_pair const& x)
-    : _pair(x._pair)
-    , _comp(x._comp)
-{ }
-
-template <typename T, typename C>
-unordered_pair<T,C>::unordered_pair(C const& comp)
-    : _pair()
-    , _comp(comp)
-{ }
-
-template <typename T, typename C>
-unordered_pair<T,C>::unordered_pair(T const& f, T const& s)
-    : _pair(f, s)
-    , _comp()
-{ order(); }
-
-
-template <typename T, typename C>
-unordered_pair<T,C>::unordered_pair(T const& f, T const& s, C const& comp)
-    : _pair(f, s)
-    , _comp(comp)
-{ order(); }
-
-template <typename T, typename C>
-T const&
-unordered_pair<T,C>::first() const
-{ return _pair.first; }
-
-template <typename T, typename C>
-T const&
-unordered_pair<T,C>::second() const
-{ return _pair.second; }
-
-/**
- * Return a copy of the comparator used by the unordered pair.
- */
-template <typename T, typename C>
-C
-unordered_pair<T,C>::comp() const
-{ return _comp; }
 
 template <typename T, typename C>
 void
@@ -165,5 +151,7 @@ reorder(T& a, T& b, Comp = Comp())
     a = p.first();
     b = p.second();
 }
+
+} /* namespace boost */
 
 #endif

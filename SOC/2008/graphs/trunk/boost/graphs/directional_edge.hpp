@@ -1,6 +1,8 @@
 
-#ifndef DIRECTIONAL_EDGE_HPP
-#define DIRECTIONAL_EDGE_HPP
+#ifndef BOOST_GRAPHS_DIRECTIONAL_EDGE_HPP
+#define BOOST_GRAPHS_DIRECTIONAL_EDGE_HPP
+
+namespace boost { namespace graphs {
 
 // This basically wraps a concept called DirectionalEdge. A DirectionalEdge
 // is one that has directionality being imposed on it. Specializations of
@@ -8,7 +10,8 @@
 
 namespace detail
 {
-    // By default, we assume that the edge is directed.
+    // The default generic implementation assumes that the edge is directed.
+    // This would work nicely with inheriting constructors.
     template <typename Edge>
     struct directional_edge_adapter : Edge
     {
@@ -59,5 +62,7 @@ struct directional_edge
         : detail::directional_edge_adapter<Edge>(e, v)
     { }
 };
+
+} } /* namespace boost::graphs */
 
 #endif

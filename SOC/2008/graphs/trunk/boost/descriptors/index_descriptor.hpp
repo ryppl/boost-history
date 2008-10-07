@@ -1,9 +1,11 @@
 
-#ifndef INDEX_DESCRIPTOR_HPP
-#define INDEX_DESCRIPTOR_HPP
+#ifndef BOOST_DESCRIPTORS_INDEX_DESCRIPTOR_HPP
+#define BOOST_DESCRIOTORS_INDEX_DESCRIPTOR_HPP
 
 #include <boost/next_prior.hpp>
 #include <boost/functional/hash.hpp>
+
+namespace boost {
 
 /**
  * The index_descriptor simply maintains the descriptor as an index into the
@@ -84,5 +86,7 @@ std::size_t hash_value(index_descriptor<Index, Kind> const& x)
 template <typename Index, typename Kind>
 std::ostream& operator<<(std::ostream& os, index_descriptor<Index, Kind> const& x)
 { return os << x.value; }
+
+} /* namespace boost */
 
 #endif

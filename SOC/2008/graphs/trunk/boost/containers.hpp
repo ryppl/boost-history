@@ -4,26 +4,33 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef CONTAINERS_HPP
-#define CONTAINERS_HPP
+#ifndef BOOST_CONTAINERS_HPP
+#define BOOST_CONTAINERS_HPP
 
 #include <boost/type_traits.hpp>
 
 // Forward declarations of stdandard types. Jeremy's right! There does need
 // to be an <stlfwd> header since there's no guarantee that these are the
 // correct signatures for these types.
-namespace std
-{
+namespace std {
+
     template <typename, typename> class vector;
-    template <typename, typename> class list;
-    template <typename, typename, typename> class set;
-    template <typename, typename, typename> class multiset;
-    template <typename, typename, typename, typename> class map;
-    template <typename, typename, typename, typename> class multimap;
-}
+template <typename, typename> class list;
+template <typename, typename, typename> class set;
+template <typename, typename, typename> class multiset;
+template <typename, typename, typename, typename> class map;
+template <typename, typename, typename, typename> class multimap;
+
+} /* namespace std */
 
 // TODO: This probably all goes away with concepts. Seeing as how concepts
 // aren't in C++ just yet, we'll still do things this way.
+
+// TODO: Why is this duplicated? Did I actually change anything from the
+// original besides the formatting? I think I added some generic insert and
+// remove functions. Am I using those anywhere?
+
+namespace boost {
 
 // Container Category Tags
 // These define the basic concepts of STL containers. Note the use of
@@ -255,5 +262,6 @@ void
 erase(Container& c, typename Container::iterator i)
 { c.erase(i); }
 
+} /* namespace boost */
 
 #endif
