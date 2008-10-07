@@ -4,6 +4,7 @@
 
 	@note
 	Copyright (c) 2003 - 2008 Phil Bouchard <phil@fornux.com>.
+    Copyright (c) 2001 - 2007 Peter Dimov
 
 	Distributed under the Boost Software License, Version 1.0.
 
