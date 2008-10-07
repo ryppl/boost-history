@@ -39,25 +39,25 @@ namespace sh
 */
 
 template <typename T>
-	class shifted_ptr_base
+	class shifted_ptr_common
 	{
+		template <typename> friend class shifted_ptr_common;
+
+        // Borland 5.5.1 specific workaround
+        typedef shifted_ptr_common<T> this_type;
+
+	protected:
 		typedef T value_type;
 		typedef shifted<value_type> element_type;
 
-		template <typename> friend class shifted_ptr_base;
-
-        // Borland 5.5.1 specific workaround
-        typedef shifted_ptr_base<value_type> this_type;
-
-	protected:
 		value_type * po_;
 
 	public:
-		shifted_ptr_base() : po_(0)
+		shifted_ptr_common() : po_(0)
 		{
 		}
 
-        ~shifted_ptr_base()
+        ~shifted_ptr_common()
 		{
 			if (po_)
 			{
@@ -66,21 +66,21 @@ template <typename T>
 		}
 
 		template <typename V>
-			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
+			shifted_ptr_common(detail::sh::shifted<V> * p) : po_(p->element())
 			{
 			}
 
 		template <typename V>
-			shifted_ptr_base(shifted_ptr_base<V> const & p) : po_(p.share())
+			shifted_ptr_common(shifted_ptr_common<V> const & p) : po_(p.share())
 			{
 			}
 
-			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : po_(p.share())
+			shifted_ptr_common(shifted_ptr_common<value_type> const & p) : po_(p.share())
 			{
 			}
 
 		template <typename V>
-			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
+			shifted_ptr_common & operator = (detail::sh::shifted<V> * p)
 			{
 				reset(p->element());
 
@@ -88,7 +88,7 @@ template <typename T>
 			}
 
 		template <typename V>
-			shifted_ptr_base & operator = (shifted_ptr_base<V> const & p)
+			shifted_ptr_common & operator = (shifted_ptr_common<V> const & p)
 			{
 				if (p.po_ != po_)
 				{
@@ -97,20 +97,10 @@ template <typename T>
 				return * this;
 			}
 
-			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
+			shifted_ptr_common & operator = (shifted_ptr_common<value_type> const & p)
 			{
 				return operator = <value_type>(p);
 			}
-
-		value_type & operator * () const
-		{
-			return * po_;
-		}
-
-		value_type * operator -> () const
-		{
-			return po_;
-		}
 
 		value_type * get() const
 		{
@@ -192,69 +182,107 @@ template <typename T>
 	};
 
 
-#if !defined(_MSC_VER)
-template <typename T, size_t N>
-	class shifted_ptr_base<T [N]>
+template <typename T>
+	class shifted_ptr_base : public shifted_ptr_common<T>
 	{
-		typedef T value_type[N];
-		typedef shifted<value_type> element_type;
-
-		template <typename> friend class shifted_ptr_base;
-
-        // Borland 5.5.1 specific workaround
-        typedef shifted_ptr_base<value_type> this_type;
-
+        typedef shifted_ptr_common<T> base;
+        typedef typename base::value_type value_type;
+		
 	protected:
-		value_type * po_;
+		using base::po_;
 
 	public:
-		shifted_ptr_base() : po_(0)
+		shifted_ptr_base() : base()
 		{
-		}
-
-		~shifted_ptr_base()
-		{
-			if (po_)
-			{
-				header()->release();
-			}
 		}
 
 		template <typename V>
-			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
+			shifted_ptr_base(detail::sh::shifted<V> * p) : base(p)
 			{
 			}
 
 		template <typename V>
-			shifted_ptr_base(shifted_ptr_base<V> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<V> const & p) : base(p)
 			{
 			}
 
-			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : base(p)
 			{
 			}
 
 		template <typename V>
 			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
 			{
-				reset(p->element());
-
-				return * this;
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
 			}
 
 		template <typename V>
 			shifted_ptr_base & operator = (shifted_ptr_base<V> const & p)
 			{
-				if (p.po_ != po_)
-				{
-					reset(p.share());
-				}
-				return * this;
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
 			}
 
 			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
 			{
-				return operator = <value_type>(p);
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
+			}
+
+		value_type & operator * () const
+		{
+			return * po_;
+		}
+
+		value_type * operator -> () const
+		{
+			return po_;
+		}
+	};
+
+
+#if !defined(_MSC_VER)
+template <typename T, size_t N>
+	class shifted_ptr_base<T [N]> : public shifted_ptr_common<T [N]>
+	{
+        typedef shifted_ptr_common<T [N]> base;
+        typedef typename base::value_type value_type;
+
+	protected:
+		using base::po_;
+
+	public:
+		shifted_ptr_base() : base()
+		{
+		}
+
+		template <typename V>
+			shifted_ptr_base(detail::sh::shifted<V> * p) : base(p)
+			{
+			}
+
+		template <typename V>
+			shifted_ptr_base(shifted_ptr_base<V> const & p) : base(p)
+			{
+			}
+
+			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : base(p)
+			{
+			}
+
+		template <typename V>
+			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
+			{
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
+			}
+
+		template <typename V>
+			shifted_ptr_base & operator = (shifted_ptr_base<V> const & p)
+			{
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
+			}
+
+			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
+			{
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
 			}
 
 		T & operator [] (std::size_t n)
@@ -266,227 +294,54 @@ template <typename T, size_t N>
 		{
 			return ** (po_ + n);
 		}
-
-		value_type * get() const
-		{
-			return po_;
-		}
-
-		value_type * share() const
-		{
-			if (po_)
-			{
-				header()->add_ref_copy();
-			}
-			return po_;
-		}
-
-		void reset(value_type * p = 0)
-		{
-			if (po_)
-			{
-				header()->release();
-			}
-			po_ = p;
-		}
-
-#if ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, < 0x570) ) || defined(__CINT__)
-        operator bool () const
-        {
-            return po_ != 0;
-        }
-#elif defined( _MANAGED )
-        static void unspecified_bool( this_type*** )
-        {
-        }
-
-        typedef void (*unspecified_bool_type)( this_type*** );
-
-        operator unspecified_bool_type() const // never throws
-        {
-            return po_ == 0? 0: unspecified_bool;
-        }
-#elif \
-        ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
-        ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) ) || \
-        ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590) )
-
-        typedef value_type * (this_type::*unspecified_bool_type)() const;
-        
-        operator unspecified_bool_type() const // never throws
-        {
-            return po_ == 0? 0: &this_type::get;
-        }
-#else 
-        typedef value_type * this_type::*unspecified_bool_type;
-
-        operator unspecified_bool_type() const // never throws
-        {
-            return po_ == 0? 0: &this_type::po_;
-        }
-#endif
-
-        // operator! is redundant, but some compilers need it
-
-        bool operator! () const // never throws
-        {
-            return po_ == 0;
-        }
-
-        long use_count() const // never throws
-        {
-            return header()->use_count();
-        }
-
-	protected:
-		detail::sh::owned_base * header() const
-		{
-			return (shifted<value_type> *) (typename shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
-		}
 	};
 #endif
 
 
 template <>
-	class shifted_ptr_base<void>
+	class shifted_ptr_base<void> : public shifted_ptr_common<void>
 	{
-		typedef void value_type;
-		typedef shifted<value_type> element_type;
-
-		template <typename> friend class shifted_ptr_base;
-
-        // Borland 5.5.1 specific workaround
-        typedef shifted_ptr_base<value_type> this_type;
+        typedef shifted_ptr_common<void> base;
+        typedef base::value_type value_type;
 
 	protected:
-		value_type * po_;
+		using base::po_;
 
 	public:
-		shifted_ptr_base() : po_(0)
+		shifted_ptr_base() : base()
 		{
-		}
-
-		~shifted_ptr_base()
-		{
-			if (po_)
-			{
-				header()->release();
-			}
 		}
 
 		template <typename V>
-			shifted_ptr_base(detail::sh::shifted<V> * p) : po_(p->element())
+			shifted_ptr_base(detail::sh::shifted<V> * p) : base(p)
 			{
 			}
 
 		template <typename V>
-			shifted_ptr_base(shifted_ptr_base<V> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<V> const & p) : base(p)
 			{
 			}
 
-			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : po_(p.share())
+			shifted_ptr_base(shifted_ptr_base<value_type> const & p) : base(p)
 			{
 			}
 
 		template <typename V>
 			shifted_ptr_base & operator = (detail::sh::shifted<V> * p)
 			{
-				reset(p->element());
-
-				return * this;
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
 			}
 
 		template <typename V>
 			shifted_ptr_base & operator = (shifted_ptr_base<V> const & p)
 			{
-				if (p.po_ != po_)
-				{
-					reset(p.share());
-				}
-				return * this;
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
 			}
 
 			shifted_ptr_base & operator = (shifted_ptr_base<value_type> const & p)
 			{
-				return operator = <value_type>(p);
+				return static_cast<shifted_ptr_base &>(base::operator = (p));
 			}
-
-		value_type * get() const
-		{
-			return po_;
-		}
-
-		value_type * share() const
-		{
-			if (po_)
-			{
-				header()->add_ref_copy();
-			}
-			return po_;
-		}
-
-		void reset(value_type * p = 0)
-		{
-			if (po_)
-			{
-				header()->release();
-			}
-			po_ = p;
-		}
-
-#if ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, < 0x570) ) || defined(__CINT__)
-        operator bool () const
-        {
-            return po_ != 0;
-        }
-#elif defined( _MANAGED )
-        static void unspecified_bool( this_type*** )
-        {
-        }
-
-        typedef void (*unspecified_bool_type)( this_type*** );
-
-        operator unspecified_bool_type() const // never throws
-        {
-            return po_ == 0? 0: unspecified_bool;
-        }
-#elif \
-        ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
-        ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) ) || \
-        ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590) )
-
-        typedef value_type * (this_type::*unspecified_bool_type)() const;
-        
-        operator unspecified_bool_type() const // never throws
-        {
-            return po_ == 0? 0: &this_type::get;
-        }
-#else 
-        typedef value_type * this_type::*unspecified_bool_type;
-
-        operator unspecified_bool_type() const // never throws
-        {
-            return po_ == 0? 0: &this_type::po_;
-        }
-#endif
-
-        // operator! is redundant, but some compilers need it
-
-        bool operator! () const // never throws
-        {
-            return po_ == 0;
-        }
-
-        long use_count() const // never throws
-        {
-            return header()->use_count();
-        }
-
-	protected:
-		detail::sh::owned_base * header() const
-		{
-			return (shifted<value_type> *) (shifted<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
-		}
 	};
 
 
