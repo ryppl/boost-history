@@ -222,8 +222,65 @@ BOOST_AUTO_TEST_CASE( binary_tree_test )
     BOOST_CHECK(*c == 1);
 
     inorder_erase_test_data_tree(bt);
+}
+
+BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
+{
+    binary_tree<int>::cursor c = bt.root().begin().end();
+    BOOST_CHECK(*c.begin() == 6);
+
+    BOOST_CHECK(*c.parent() == 8);
+    BOOST_CHECK(*c.parent().begin() == 3); // invariant candidate
     
-    //return 0;
+    BOOST_CHECK(*--c == 3); // differently (not invariantly!) spoken
+    BOOST_CHECK(*c.begin() == 1);
+    BOOST_CHECK(*((++c).begin()).begin() == 4);
+    BOOST_CHECK(*(++c.begin()).begin() == 7);
+
+    BOOST_CHECK(c.parity() == 1);    
+    BOOST_CHECK(*c.begin() == 6);
+        
+    bt.rotate(c); // Left rotate
+
+    BOOST_CHECK(*c.begin() == 6);
+    BOOST_CHECK(*c.parent().begin() == 8);
+    
+    BOOST_CHECK(*c.end().begin() == 7);
+    BOOST_CHECK(*c.begin().begin() == 3);
+    BOOST_CHECK(*c.begin().begin().begin() == 1);
+
+    BOOST_CHECK(*c.begin().end().begin() == 4);
+
+    c = c.begin();
+    BOOST_CHECK(*c.begin() == 3);
+    
+    bt.rotate(c); // Right rotate
+    
+    BOOST_CHECK(*c.begin() == 3);
+    c = c.end();
+
+    BOOST_CHECK(*c.begin() == 6);
+
+    BOOST_CHECK(*c.parent() == 8);
+    BOOST_CHECK(*c.parent().begin() == 3); // other invariant candidate
+    
+    BOOST_CHECK(*--c == 3);
+    BOOST_CHECK(*c.begin() == 1);
+    BOOST_CHECK(*((++c).begin()).begin() == 4);
+    BOOST_CHECK(*(++c.begin()).begin() == 7);
+    
+    BOOST_CHECK(*c.begin() == 6);
+    
+//    BOOST_CHECK(*c.parent().parent().begin() == 6);
+//    BOOST_CHECK(*c.parent().parent().end().begin() == 7);
+    
+//    BOOST_CHECK(*c.begin() == 1);
+//    BOOST_CHECK(*c.parent().begin() == 3); // invariant?
+//    
+//    BOOST_CHECK(*c.parent().parent().begin() == 6);
+//    BOOST_CHECK(*c.parent().parent().parent().begin() == 8);
+//    BOOST_CHECK(*c.parent().parent().end().begin() == 7);
+    
 }
 
 BOOST_AUTO_TEST_SUITE_END()

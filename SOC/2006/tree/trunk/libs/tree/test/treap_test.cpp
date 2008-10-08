@@ -5,8 +5,8 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/tree/binary_tree.hpp>
-#include <boost/tree/balancers/treap.hpp>
-#include <boost/tree/augmentors/unaugmented.hpp>
+#include <boost/tree/detail/balancers/treap.hpp>
+#include <boost/tree/detail/augmentors/unaugmented.hpp>
 
 #include <vector>
 #include <algorithm>
