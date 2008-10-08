@@ -20,7 +20,9 @@ namespace tree {
 /** \addtogroup traversal */
 /*\@{*/
 
-struct ascending {};
+struct ascending {
+    typedef forward_traversal_tag iterator_category; 
+};
 
 /**
  * @brief    Ascending successor

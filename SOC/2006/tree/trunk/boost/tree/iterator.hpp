@@ -31,7 +31,7 @@ class iterator
  : public boost::iterator_adaptor<iterator<Order, Cursor>
       , Cursor
       , boost::use_default
-      , bidirectional_traversal_tag
+      , typename Order::iterator_category
     > {
  private:
     struct enabler {};

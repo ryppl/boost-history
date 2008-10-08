@@ -21,7 +21,9 @@ namespace tree {
 /** \addtogroup traversal */
 /*\@{*/
 
-struct postorder {};
+struct postorder {
+    typedef bidirectional_traversal_tag iterator_category;
+};
 
 /**
  * @brief    Postorder successor
