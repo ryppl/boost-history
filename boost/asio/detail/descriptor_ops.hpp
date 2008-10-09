@@ -47,33 +47,51 @@ inline ReturnType error_wrapper(ReturnType return_value,
   return return_value;
 }
 
+inline int open(const char* path, int flags, boost::system::error_code& ec)
+{
+  clear_error(ec);
+  return error_wrapper(::open(path, flags), ec);
+}
+
 inline int close(int d, boost::system::error_code& ec)
 {
   clear_error(ec);
   return error_wrapper(::close(d), ec);
 }
 
+inline void init_buf_iov_base(void*& base, void* addr)
+{
+  base = addr;
+}
+
+template <typename T>
+inline void init_buf_iov_base(T& base, void* addr)
+{
+  base = static_cast<T>(addr);
+}
+
 typedef iovec buf;
 
 inline void init_buf(buf& b, void* data, size_t size)
 {
-  b.iov_base = data;
+  init_buf_iov_base(b.iov_base, data);
   b.iov_len = size;
 }
 
 inline void init_buf(buf& b, const void* data, size_t size)
 {
-  b.iov_base = const_cast<void*>(data);
+  init_buf_iov_base(b.iov_base, const_cast<void*>(data));
   b.iov_len = size;
 }
 
-inline int readv(int d, buf* bufs, size_t count, boost::system::error_code& ec)
+inline int scatter_read(int d, buf* bufs, size_t count,
+    boost::system::error_code& ec)
 {
   clear_error(ec);
   return error_wrapper(::readv(d, bufs, static_cast<int>(count)), ec);
 }
 
-inline int writev(int d, const buf* bufs, size_t count,
+inline int gather_write(int d, const buf* bufs, size_t count,
     boost::system::error_code& ec)
 {
   clear_error(ec);
@@ -85,6 +103,18 @@ inline int ioctl(int d, long cmd, ioctl_arg_type* arg,
 {
   clear_error(ec);
   return error_wrapper(::ioctl(d, cmd, arg), ec);
+}
+
+inline int fcntl(int d, long cmd, boost::system::error_code& ec)
+{
+  clear_error(ec);
+  return error_wrapper(::fcntl(d, cmd), ec);
+}
+
+inline int fcntl(int d, long cmd, long arg, boost::system::error_code& ec)
+{
+  clear_error(ec);
+  return error_wrapper(::fcntl(d, cmd, arg), ec);
 }
 
 inline int poll_read(int d, boost::system::error_code& ec)

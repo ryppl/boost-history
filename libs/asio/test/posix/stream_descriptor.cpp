@@ -68,6 +68,11 @@ void test()
       = descriptor1.lowest_layer();
     (void)lowest_layer;
 
+    const posix::stream_descriptor& descriptor3 = descriptor1;
+    const posix::stream_descriptor::lowest_layer_type& lowest_layer2
+      = descriptor3.lowest_layer();
+    (void)lowest_layer2;
+
     int native_descriptor2 = -1;
     descriptor1.assign(native_descriptor2);
 
@@ -119,7 +124,7 @@ void test()
 } // namespace posix_stream_descriptor_compile
 
 //------------------------------------------------------------------------------
-test_suite* init_unit_test_suite(int argc, char* argv[])
+test_suite* init_unit_test_suite(int, char*[])
 {
   test_suite* test = BOOST_TEST_SUITE("posix/stream_descriptor");
   test->add(BOOST_TEST_CASE(&posix_stream_descriptor_compile::test));
