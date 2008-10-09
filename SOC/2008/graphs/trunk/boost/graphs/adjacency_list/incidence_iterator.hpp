@@ -1,6 +1,8 @@
 
-#ifndef INCIDENCE_ITERATOR_HPP
-#define INCIDENCE_ITERATOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_INCIDENCE_ITERATOR_HPP
+#define BOOST_GRAPHS_ADJLIST_INCIDENCE_ITERATOR_HPP
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The incidence iterator is an abstraction over the incidence iterators of
@@ -81,5 +83,6 @@ public:
     iterator            iter;
 };
 
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

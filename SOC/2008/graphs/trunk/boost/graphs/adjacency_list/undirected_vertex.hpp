@@ -1,8 +1,10 @@
 
-#ifndef UNDIRECTED_VERTEX_HPP
-#define UNDIRECTED_VERTEX_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_UNDIRECTED_VERTEX_HPP
+#define BOOST_GRAPHS_ADJLIST_UNDIRECTED_VERTEX_HPP
 
 #include <boost/graphs/adjacency_list/incidence_iterator.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * A vertex, at least for an undirected graph, is simply an repository for the
@@ -102,5 +104,7 @@ private:
     vertex_label   _label;
     incidence_store     _edges;
 };
+
+} } } /* namesapce boost::graphs::adjacency_list */
 
 #endif

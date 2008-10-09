@@ -1,12 +1,14 @@
 
-#ifndef EDGE_SET_HPP
-#define EDGE_SET_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_EDGE_SET_HPP
+#define BOOST_GRAPHS_ADJLIST_EDGE_SET_HPP
 
 #include <list>
 #include <map>
 
 #include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 // Forward declarations
 template <typename, typename> class property_list;
@@ -93,6 +95,8 @@ struct edge_set
         typedef in_set<edge, compare, allocator> type;
     };
 };
+
+} } }
 
 #endif
 

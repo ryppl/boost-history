@@ -1,8 +1,10 @@
 
-#ifndef UTILITY_HPP
-#define UTILITY_HPP
+#ifndef BOOST_GRAPHS_UTILITY_HPP
+#define BOOST_GRAPHS_UTILITY_HPP
 
 #include <boost/descriptors.hpp>
+
+namespace boost { namespace graphs {
 
 /**
  * @internal
@@ -162,5 +164,6 @@ inline first_finder<First>
 find_first(First const& props)
 { return first_finder<First>(props); }
 
+} } /* namespace boost::graphs */
 
 #endif

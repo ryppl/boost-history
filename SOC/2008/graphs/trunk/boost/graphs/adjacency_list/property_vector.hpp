@@ -1,12 +1,14 @@
 
-#ifndef PROPERTY_VECTOR_HPP
-#define PROPERTY_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_PROPERTY_VECTOR_HPP
+#define BOOST_GRAPHS_ADJLIST_PROPERTY_VECTOR_HPP
 
 #include <vector>
 #include <algorithm>
 
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The property vector implements a vector-based global property store for
@@ -117,6 +119,8 @@ public:
 private:
     mutable store_type _props;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif
 

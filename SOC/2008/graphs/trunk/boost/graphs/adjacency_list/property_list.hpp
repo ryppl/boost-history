@@ -1,12 +1,14 @@
 
-#ifndef PROPERTY_LIST_HPP
-#define PROPERTY_LIST_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_PROPERTY_LIST_HPP
+#define BOOST_GRAPHS_ADJLIST_PROPERTY_LIST_HPP
 
 #include <list>
 #include <algorithm>
 
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The property list implements global list of label for node-based edge
@@ -134,6 +136,8 @@ private:
     mutable store_type  _props;
     size_type           _size;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif
 

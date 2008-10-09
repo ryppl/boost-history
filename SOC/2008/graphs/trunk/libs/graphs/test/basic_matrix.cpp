@@ -1,9 +1,9 @@
 
 #include <iostream>
 
-#include "typestr.hpp"
-
 #include <boost/graphs/adjacency_matrix/basic_matrix.hpp>
+
+#include "typestr.hpp"
 
 using namespace std;
 using namespace boost;
@@ -21,6 +21,11 @@ int main()
     b(1, 1) = 3.14;
     cout << "(1, 1) -> " << (b.test(1, 1) ? "on" : "off") << endl;
     cout << "(2, 2) -> " << (b.test(2, 2) ? "on" : "off") << endl;
-    optional<double>& d = b(1, 1);
-    cout << d.get() << endl;
+    cout << endl;
+
+    typedef basic_matrix<optional_value<int>> C;
+    C c(10);
+    c(1, 1) = 12;
+    cout << "(1, 1) -> " << (c.test(1, 1) ? "on" : "off") << endl;
+    cout << "(2, 2) -> " << (c.test(2, 2) ? "on" : "off") << endl;
 }

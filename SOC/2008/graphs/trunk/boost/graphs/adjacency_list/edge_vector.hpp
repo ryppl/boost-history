@@ -1,9 +1,11 @@
 
-#ifndef EDGE_VECTOR_HPP
-#define EDGE_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_EDGE_VECTOR_HPP
+#define BOOST_GRAPHS_ADJLIST_EDGE_VECTOR_HPP
 
 #include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 // Forward declarations
 template <typename, typename> class property_vector;
@@ -70,8 +72,6 @@ struct edge_vector
         typedef incidence_vector<incidence_pair, incidence_allocator> type;
     };
 
-
-
     // Descriptor types for directed graphs.
     typedef typename descriptor_traits<first_dummy>::descriptor_type out_descriptor;
     typedef typename descriptor_traits<second_dummy>::descriptor_type in_descriptor;
@@ -97,5 +97,7 @@ struct edge_vector
         typedef in_vector<edge, allocator> type;
     };
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

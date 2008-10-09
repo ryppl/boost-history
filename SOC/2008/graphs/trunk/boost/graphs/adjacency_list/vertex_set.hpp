@@ -1,6 +1,6 @@
 
-#ifndef VERTEX_SET_HPP
-#define VERTEX_SET_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_VERTEX_SET_HPP
+#define BOOST_GRAPHS_ADJLIST_VERTEX_SET_HPP
 
 #include <set>
 
@@ -8,6 +8,8 @@
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
 #include <boost/graphs/adjacency_list/vertex_iterator.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 // Forward declarations
 template <typename, typename, typename> class vertices_set;
@@ -145,5 +147,7 @@ public:
 private:
     mutable store_type _verts;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

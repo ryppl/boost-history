@@ -1,6 +1,6 @@
 
-#ifndef VERTEX_VECTOR_HPP
-#define VERTEX_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_VERTEX_VECTOR_HPP
+#define BOOST_GRAPHS_ADJLIST_VERTEX_VECTOR_HPP
 
 #include <vector>
 #include <algorithm>
@@ -9,6 +9,8 @@
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
 #include <boost/graphs/adjacency_list/vertex_iterator.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 // Forward declarations
 template <typename, typename> struct vertices_vector;
@@ -144,5 +146,7 @@ public:
 private:
     mutable store_type _verts;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

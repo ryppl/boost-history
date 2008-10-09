@@ -217,45 +217,45 @@ struct container_traits<std::multimap<Key, T, Compare, Alloc>>
 
 // Generic insert/remove functions
 
-namespace dispatch
+namespace detail
 {
     // Insert implementations
     template <typename Container, typename T>
     inline typename Container::iterator
-    insert(Container& c, T const& x, sequence_tag)
+    dispatch_insert(Container& c, T const& x, sequence_tag)
     { return c.insert(c.end(), x); }
 
     template <typename Container, typename T>
     inline typename Container::iterator
-    insert(Container& c, T const& x, unique_associative_container_tag)
+    dispatch_insert(Container& c, T const& x, unique_associative_container_tag)
     { return c.insert(x).first; }
 
     template <typename Container, typename T>
     inline typename Container::iterator
-    insert(Container& c, T const& x, multiple_associative_container_tag)
+    dispatch_insert(Container& c, T const& x, multiple_associative_container_tag)
     { return c.insert(x); }
 
     // Find (non-const) implementations
     template <typename Container, typename T>
     inline typename Container::iterator
-    find(Container& c, T const& x, sequence_tag)
+    dispatch_find(Container& c, T const& x, sequence_tag)
     { return std::find(c.begin(), c.end(), x); }
 
     template <typename Container, typename T>
     inline typename Container::iterator
-    find(Container& c, T const& x, associative_container_tag)
+    dispatch_find(Container& c, T const& x, associative_container_tag)
     { return c.find(x); }
 }
 
 template <typename Container, typename T>
 inline typename Container::iterator
 insert(Container& c, T const& x)
-{ return dispatch::insert(c, x, container_category(c)); }
+{ return detail::dispatch_insert(c, x, container_category(c)); }
 
 template <typename Container, typename T>
 inline typename Container::iterator
 find(Container& c, T const& x)
-{ return dispatch::find(c, x, container_category(c)); }
+{ return detail::dispatch_find(c, x, container_category(c)); }
 
 template <typename Container>
 void

@@ -1,6 +1,6 @@
 
-#ifndef UNDIRECTED_TYPES_HPP
-#define UNDIRECTED_TYPES_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_UNDIRECTED_TYPES_HPP
+#define BOOST_GRAPHS_ADJLIST_UNDIRECTED_TYPES_HPP
 
 // Vertex stores
 #include <boost/graphs/adjacency_list/vertex_vector.hpp>
@@ -28,7 +28,7 @@
 // Adjacency components
 #include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
-using namespace std;
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * This class is a giant metafunction that generates the types required to
@@ -70,5 +70,7 @@ struct undirected_types
     typedef std::pair<adjacent_vertex_iterator, adjacent_vertex_iterator> adjacent_vertex_range;
 
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

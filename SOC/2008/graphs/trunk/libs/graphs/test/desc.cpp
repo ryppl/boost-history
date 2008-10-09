@@ -10,6 +10,7 @@
 #include "typestr.hpp"
 
 using namespace std;
+using namespace boost;
 
 struct my_kind { };
 

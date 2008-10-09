@@ -1,11 +1,13 @@
 
-#ifndef INCIDENCE_LIST_HPP
-#define INCIDENCE_LIST_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_INCIDENCE_LIST_HPP
+#define BOOST_GRAPHS_ADJLIST_INCIDENCE_LIST_HPP
 
 #include <list>
 #include <algorithm>
 
 #include <boost/graphs/utility.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The incidence vector stores incident "edges" of a vertex. In actuality,
@@ -110,5 +112,7 @@ private:
     mutable store_type  _edges;
     size_type           _size;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

@@ -17,7 +17,9 @@ project graphs
 # exe props : props.cpp : <include>../../ <include>/usr/local/include ;
 # exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;
 
-exe desc : desc.cpp : <include>../../ <include>/usr/local/include ;
+exe opt : opt.cpp ;
+exe unordered_pair : unordered_pair.cpp ;
+exe desc : desc.cpp ;
 
 exe test_verts : test_verts.cpp ;
 exe test_props : test_props.cpp ;

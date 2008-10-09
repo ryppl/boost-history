@@ -1,11 +1,13 @@
 
-#ifndef UNDIRECTED_EDGE_HPP
-#define UNDIRECTED_EDGE_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_UNDIRECTED_EDGE_HPP
+#define BOOST_GRAPHS_ADJLIST_UNDIRECTED_EDGE_HPP
 
 #include <iosfwd>
 
 #include <boost/unordered_pair.hpp>
 #include <boost/graphs/directional_edge.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * This structure implements an unordered edge - sort of. Because the undirected
@@ -127,35 +129,6 @@ hash_value(undirected_edge<V,P> const& e)
     return hash_value(e.label());
 }
 
-namespace detail
-{
-    // Provide an implementation of directionality for undirected edges.
-    template <typename Vert, typename Prop>
-    struct directional_edge_adapter<undirected_edge<Vert,Prop>>
-        : undirected_edge<Vert,Prop>
-    {
-        inline directional_edge_adapter()
-            : undirected_edge<Vert, Prop>(), src()
-        { }
-
-        inline directional_edge_adapter(undirected_edge<Vert,Prop> e, Vert s)
-            : undirected_edge<Vert,Prop>(e), src(s)
-        { }
-
-        inline directional_edge_adapter(Vert s, Vert t)
-            : undirected_edge<Vert,Prop>(s, t), src(s)
-        { }
-
-        inline Vert source() const
-        { return src; }
-
-        inline Vert target() const
-        { return this->opposite(src); }
-
-        Vert src;
-    };
-}
-
 /**
  * The undirected edge iterator simply wraps the iterator over the global edge
  * property store of undirected graphs.
@@ -225,5 +198,38 @@ struct undirected_edge_iterator
     Store*      store;
     iterator    iter;
 };
+
+} /* namespace adjacency_list */
+
+namespace detail
+{
+    // Provide an implementation of directionality for undirected edges.
+    template <typename Vert, typename Prop>
+    struct directional_edge_adapter<adjacency_list::undirected_edge<Vert,Prop>>
+        : adjacency_list::undirected_edge<Vert,Prop>
+    {
+        inline directional_edge_adapter()
+            : adjacency_list::undirected_edge<Vert, Prop>(), src()
+        { }
+
+        inline directional_edge_adapter(adjacency_list::undirected_edge<Vert,Prop> e, Vert s)
+            : adjacency_list::undirected_edge<Vert,Prop>(e), src(s)
+        { }
+
+        inline directional_edge_adapter(Vert s, Vert t)
+            : adjacency_list::undirected_edge<Vert,Prop>(s, t), src(s)
+        { }
+
+        inline Vert source() const
+        { return src; }
+
+        inline Vert target() const
+        { return this->opposite(src); }
+
+        Vert src;
+    };
+}
+
+} } /* namespace boost::graphs */
 
 #endif

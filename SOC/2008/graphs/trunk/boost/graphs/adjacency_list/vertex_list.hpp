@@ -1,12 +1,14 @@
 
-#ifndef VERTEX_LIST_HPP
-#define VERTEX_LIST_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_VERTEX_LIST_HPP
+#define BOOST_GRAPHS_ADJLIST_VERTEX_LIST_HPP
 
 #include <list>
 
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
 #include <boost/graphs/adjacency_list/vertex_iterator.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 // Forward declarations
 template <typename, typename> class vertices_list;
@@ -143,6 +145,7 @@ private:
     size_type           _size;
 };
 
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif
 

@@ -1,6 +1,6 @@
 
-#ifndef UNDIRECTED_GRAPH_HPP
-#define UNDIRECTED_GRAPH_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_UNDIRECTED_GRAPH_HPP
+#define BOOST_GRAPHS_ADJLIST_UNDIRECTED_GRAPH_HPP
 
 #include <boost/assert.hpp>
 #include <boost/none.hpp>
@@ -8,11 +8,12 @@
 #include <boost/graphs/adjacency_list/undirected_types.hpp>
 #include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
 
-template <
-    typename VertexLabel,
-    typename EdgeLabel,
-    typename VertexStore,
-    typename EdgeStore>
+namespace boost { namespace graphs { namespace adjacency_list {
+
+/**
+ *
+ */
+template <typename VertexLabel, typename EdgeLabel,typename VertexStore, typename EdgeStore>
 class undirected_graph
 {
     typedef undirected_types<VertexLabel, EdgeLabel, VertexStore, EdgeStore> types;
@@ -563,8 +564,8 @@ undirected_graph<VP,EP,VS,ES>::remove_edges(vertex_descriptor u,
             // Grab descriptors to the property and the incident edge on the
             // target vertex and remove them,
             label_descriptor p = e.label();
-            pair<incidence_descriptor, incidence_descriptor> x =
-                make_pair(_props.first_edge(p), _props.second_edge(p));
+            std::pair<incidence_descriptor, incidence_descriptor> x =
+                std::make_pair(_props.first_edge(p), _props.second_edge(p));
             if(src.opposite(x.first) == v) {
                 x.first.swap(x.second);
             }
@@ -751,6 +752,8 @@ undirected_graph<VP,EP,VS,ES>::operator[](edge_descriptor e) const
 { return _props.label(e.label()); }
 
 #undef BOOST_GRAPH_UG_PARAMS
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif
 

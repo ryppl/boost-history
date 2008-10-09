@@ -1,8 +1,10 @@
 
-#ifndef VERTEX_ITERATOR_HPP
-#define VERTEX_ITERATOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_VERTEX_ITERATOR_HPP
+#define BOOST_GRAPHS_ADJLIST_VERTEX_ITERATOR_HPP
 
 #include <boost/descriptors.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * A simple vertex iterator for any underlying store. These iterators must
@@ -72,5 +74,7 @@ private:
     Container*  cont;
     iterator    iter;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif
