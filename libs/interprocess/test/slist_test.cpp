@@ -10,7 +10,7 @@
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
-#include <boost/interprocess/containers/list.hpp>
+#include <boost/interprocess/containers/slist.hpp>
 #include <boost/interprocess/allocators/allocator.hpp>
 #include <boost/interprocess/offset_ptr.hpp>
 #include "dummy_test_allocator.hpp"
@@ -21,51 +21,54 @@
 using namespace boost::interprocess;
 
 //Explicit instantiation to detect compilation errors
-template class boost::interprocess::list<test::movable_and_copyable_int, 
+template class boost::interprocess::slist<test::movable_and_copyable_int, 
    test::dummy_test_allocator<test::movable_and_copyable_int> >;
 
 typedef allocator<int, managed_shared_memory::segment_manager> ShmemAllocator;
-typedef list<int, ShmemAllocator> MyList;
+typedef slist<int, ShmemAllocator> MyList;
 
 typedef allocator<volatile int, managed_shared_memory::segment_manager> ShmemVolatileAllocator;
-typedef list<volatile int, ShmemVolatileAllocator> MyVolatileList;
+typedef slist<volatile int, ShmemVolatileAllocator> MyVolatileList;
 
 typedef allocator<test::movable_int, managed_shared_memory::segment_manager> ShmemMoveAllocator;
-typedef list<test::movable_int, ShmemMoveAllocator> MyMoveList;
+typedef slist<test::movable_int, ShmemMoveAllocator> MyMoveList;
 
 typedef allocator<test::movable_and_copyable_int, managed_shared_memory::segment_manager> ShmemCopyMoveAllocator;
-typedef list<test::movable_and_copyable_int, ShmemCopyMoveAllocator> MyCopyMoveList;
+typedef slist<test::movable_and_copyable_int, ShmemCopyMoveAllocator> MyCopyMoveList;
 
-class recursive_list
+class recursive_slist
 {
 public:
    int id_;
-   list<recursive_list> list_;
+   slist<recursive_slist> slist_;
 };
 
-void recursive_list_test()//Test for recursive types
+void recursive_slist_test()//Test for recursive types
 {
-   list<recursive_list> recursive_list_list;
+   slist<recursive_slist> recursive_list_list;
 }
 
 int main ()
 {
-   recursive_list_test();
-   if(test::list_test<managed_shared_memory, MyList, true>())
+   recursive_slist_test();
+
+   if(test::list_test<managed_shared_memory, MyList, false>())
       return 1;
 
-   if(test::list_test<managed_shared_memory, MyVolatileList, true>())
+   if(test::list_test<managed_shared_memory, MyMoveList, false>())
       return 1;
 
-   if(test::list_test<managed_shared_memory, MyMoveList, true>())
+   if(test::list_test<managed_shared_memory, MyCopyMoveList, false>())
       return 1;
 
-   if(test::list_test<managed_shared_memory, MyCopyMoveList, true>())
+   if(test::list_test<managed_shared_memory, MyVolatileList, false>())
       return 1;
 
-   const test::EmplaceOptions Options = (test::EmplaceOptions)(test::EMPLACE_BACK | test::EMPLACE_FRONT | test::EMPLACE_BEFORE);
+   const test::EmplaceOptions Options = (test::EmplaceOptions)
+      (test::EMPLACE_FRONT | test::EMPLACE_AFTER | test::EMPLACE_BEFORE  | test::EMPLACE_AFTER);
 
-   if(!boost::interprocess::test::test_emplace<list<test::EmplaceInt>, Options>())
+   if(!boost::interprocess::test::test_emplace
+      < slist<test::EmplaceInt>, Options>())
       return 1;
 
    return 0;

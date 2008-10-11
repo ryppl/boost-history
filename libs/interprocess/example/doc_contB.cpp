@@ -9,48 +9,42 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
-//[doc_named_allocB
+//[doc_contB
 #include <boost/interprocess/managed_shared_memory.hpp>
-#include <cstddef>
-#include <utility>
-#include <cassert>
+#include <boost/interprocess/containers/vector.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <algorithm>
 
 int main ()
 {
    using namespace boost::interprocess;
-   typedef std::pair<double, int> MyType;
-
    try{
       //A special shared memory where we can
       //construct objects associated with a name.
       //Connect to the already created shared memory segment
       //and initialize needed resources
-      managed_shared_memory segment(open_only, "MySharedMemory");
+      managed_shared_memory segment
+         (open_only 
+         ,"MySharedMemory");  //segment name
 
-      std::pair<MyType*, std::size_t> res;
+      //Alias an STL compatible allocator of ints that allocates ints from the managed
+      //shared memory segment.  This allocator will allow to place containers
+      //in managed shared memory segments
+      typedef allocator<int, managed_shared_memory::segment_manager> 
+         ShmemAllocator;
 
-      //Find the array
-      res = segment.find<MyType> ("MyType array");   
-      //Length should be 10
-      assert(res.second == 10);
+      //Alias a vector that uses the previous STL-like allocator
+      typedef vector<int, ShmemAllocator> MyVector;
 
-      //Find the object
-      res = segment.find<MyType> ("MyType instance");   
-      //Length should be 1
-      assert(res.second == 1);
+      //Find the vector using the c-string name
+      MyVector *myvector = segment.find<MyVector>("MyVector").first;
 
-      //Find the array constructed from iterators
-      res = segment.find<MyType> ("MyType array from it");
-      //Length should be 3
-      assert(res.second == 3);
+      //Use vector in reverse order
+      std::sort(myvector->rbegin(), myvector->rend());
+      // . . .
 
-      //Use data
-      // . . . 
-
-      //We're done, delete all the objects
-      segment.destroy<MyType>("MyType array");
-      segment.destroy<MyType>("MyType instance");
-      segment.destroy<MyType>("MyType array from it");
+      //When done, destroy the vector from the segment
+      segment.destroy<MyVector>("MyVector");
    }
    catch(...){
       shared_memory_object::remove("MySharedMemory");
