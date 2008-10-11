@@ -16,8 +16,8 @@
 #include "system_alloc.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_POLICY_HPP
-#include "policy.hpp"
+#if !defined(_GLIBCXX_ALGORITHM) && !defined(_ALGORITHM)
+#include <algorithm>
 #endif
 
 NS_BOOST_MEMORY_BEGIN
@@ -29,13 +29,13 @@ template <class PolicyT>
 class region_alloc
 {
 private:
-	typedef typename PolicyT::allocator_type AllocT;
+	typedef typename PolicyT::alloc_type AllocT;
 
 public:
-	enum { MemBlockSize = PolicyT::MemBlockSize };
-	enum { IsGCAllocator = TRUE };
+	enum { MemBlockSize = PolicyT::MemBlockBytes - AllocT::Padding };
+	enum { IsGCAllocator = 1 };
 
-	typedef AllocT allocator_type;
+	typedef AllocT alloc_type;
 
 private:
 	enum { HeaderSize = sizeof(void*) };
@@ -164,6 +164,7 @@ public:
 		return _do_allocate(cb);
 	}
 
+#if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)
 	{
 		return allocate(cb);
@@ -177,7 +178,8 @@ public:
 		m_destroyChain = pNode;
 		return pNode + 1;
 	}
-
+#endif
+	
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn)
 	{
 		DestroyNode* pNode = (DestroyNode*)allocate(sizeof(DestroyNode) + cb);
@@ -185,14 +187,13 @@ public:
 		return pNode + 1;
 	}
 
-	__forceinline void* BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
+	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn)
 	{
 		DestroyNode* pNode = (DestroyNode*)p - 1;
 		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
 
 		pNode->pPrev = m_destroyChain;
 		m_destroyChain = pNode;
-		return p;
 	}
 
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero)
@@ -200,9 +201,9 @@ public:
 		return allocate(cb);
 	}
 
-	__forceinline void* BOOST_MEMORY_CALL manage(void* p, int fnZero)
+	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero)
 	{
-		return p;
+		// no action
 	}
 
 	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize)
@@ -226,19 +227,10 @@ public:
 	}
 
 	template <class Type>
-	Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
-	{
-		Type* array = (Type*)destructor_traits<Type>::allocArray(*this, count);
-		return constructor_traits<Type>::constructArray(array, count);
-	}
-
-	template <class Type>
 	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 	{
 		// no action
 	}
-
-	BOOST_MEMORY_FAKE_DBG_ALLOCATE_();
 };
 
 // -------------------------------------------------------------------------

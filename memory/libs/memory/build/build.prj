@@ -1,16 +1,16 @@
 [Include]
-.
-../..
+../
+../../..
 
 [Config Release]
-Product		Dll bin/linux/boost-memory
+Product		Dll ../bin/$(Platform)/boost-memory
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		LRelease
 LibDir		
 Libraries	pthread
 
 [Config ReleaseCS]
-Product		Dll bin/linux/boost-memory-cs
+Product		Dll ../bin/$(Platform)/boost-memory-cs
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 Defines		BOOST_MEMORY_NO_LOCKFREE
 ObjDir		LReleaseCS
@@ -18,12 +18,12 @@ LibDir
 Libraries	pthread
 
 [Config Debug]
-Product		Dll bin/linuxd/boost-memory
+Product		Dll Debug/boost-memory
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		LDebug
 LibDir		
 Libraries	pthread	
 
 [Source]
-memory.dsp
+../src/block_pool.cpp
 

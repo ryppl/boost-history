@@ -44,6 +44,9 @@ public:
 	proxy_alloc() : m_alloc(&TlsAllocT::instance()) {}
 
 public:
+	enum { Padding = AllocT::Padding };
+
+public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)	{ return m_alloc->allocate(cb); }
 	void BOOST_MEMORY_CALL deallocate(void* p) { m_alloc->deallocate(p); }
 	void BOOST_MEMORY_CALL swap(proxy_alloc& o)	{ std::swap(m_alloc, o.m_alloc); }
@@ -54,11 +57,11 @@ public:
 // class block_pool
 
 template <class PolicyT>
-class block_pool_imp
+class block_pool_
 {
 private:
-	typedef typename PolicyT::allocator_type AllocT;
-	enum { m_cbBlock = PolicyT::MemBlockSize };
+	typedef typename PolicyT::alloc_type AllocT;
+	enum { m_cbBlock = PolicyT::MemBlockBytes - AllocT::Padding };
 
 #pragma pack(1)
 	struct Block {
@@ -72,19 +75,22 @@ private:
 	const int m_nFreeLimit;
 
 private:
-	block_pool_imp(const block_pool_imp&);
-	void operator=(const block_pool_imp&);
+	block_pool_(const block_pool_&);
+	void operator=(const block_pool_&);
 
 public:
-	block_pool_imp(int cbFreeLimit = INT_MAX)
+	block_pool_(int cbFreeLimit = INT_MAX)
 		: m_freeList(NULL), m_nFree(0),
 		  m_nFreeLimit(cbFreeLimit / m_cbBlock + 1)
 	{
 	}
-	~block_pool_imp()
+	~block_pool_()
 	{
 		clear();
 	}
+
+public:
+	enum { Padding = AllocT::Padding };
 
 public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
@@ -137,47 +143,38 @@ public:
 	}
 };
 
-typedef block_pool_imp<NS_BOOST_MEMORY_POLICY::sys> block_pool;
+typedef block_pool_<NS_BOOST_MEMORY_POLICY::sys> block_pool;
 
 // -------------------------------------------------------------------------
 // class tls_block_pool
-
-#if !defined(BOOST_MEMORY_NO_SYSTEM_POOL_DYN_)
 
 typedef tls_object<block_pool> tls_block_pool_t;
 
 STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool();
 
 template <class Unused>
-class tls_block_pool_imp
+class tls_block_pool_
 {
 private:
 	static tls_block_pool_t* _tls_blockPool;
 	
 public:
-	tls_block_pool_imp() {
+	tls_block_pool_() {
 		_tls_blockPool->init();
 	}
-	~tls_block_pool_imp() {
+	~tls_block_pool_() {
 		_tls_blockPool->term();
 	}
 
-	static block_pool& BOOST_MEMORY_CALL instance()
-	{
+	static block_pool& BOOST_MEMORY_CALL instance() {
 		return _tls_blockPool->get();
 	}
 };
 
 template <class Unused>
-tls_block_pool_t* tls_block_pool_imp<Unused>::_tls_blockPool = _boost_TlsBlockPool();
+tls_block_pool_t* tls_block_pool_<Unused>::_tls_blockPool = _boost_TlsBlockPool();
 
-typedef tls_block_pool_imp<int> tls_block_pool;
-
-#else
-
-class tls_block_pool {};
-
-#endif
+typedef tls_block_pool_<int> tls_block_pool;
 
 // -------------------------------------------------------------------------
 // class scoped_alloc
@@ -189,7 +186,7 @@ NS_BOOST_MEMORY_POLICY_BEGIN
 class pool : public sys
 {
 public:
-	typedef proxy_block_pool allocator_type;
+	typedef proxy_block_pool alloc_type;
 };
 
 NS_BOOST_MEMORY_POLICY_END

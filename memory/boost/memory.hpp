@@ -40,14 +40,6 @@
 #include "memory/scoped_alloc.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_GC_ALLOC_HPP
-#include "memory/gc_alloc.hpp"
-#endif
-
-#ifndef BOOST_MEMORY_TLS_GC_ALLOC_HPP
-#include "memory/tls_gc_alloc.hpp"
-#endif
-
 // -------------------------------------------------------------------------
 // function swap_object
 
@@ -172,7 +164,7 @@ public:
 	}
 };
 
-#if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIAILIZATION)
+#if !defined(BOOST_MEMORY_NO_PARTIAL_SPECIALIZATION)
 
 template <class AllocT>
 class stl_allocator<void, AllocT>
@@ -258,10 +250,9 @@ namespace boost
 {
 	using NS_BOOST_MEMORY::auto_alloc;
 	using NS_BOOST_MEMORY::scoped_alloc;
-	using NS_BOOST_MEMORY::gc_alloc;
 
 	using NS_BOOST_MEMORY::stl_allocator;
-
+	
 	using NS_BOOST_MEMORY::enableMemoryLeakCheck;
 }
 

@@ -19,7 +19,7 @@ ifeq ($(CFG), Release)
 	ProductDir   = ../bin/$(Platform)
 	ObjectDir    = LRelease
 	Product      = ../bin/$(Platform)/libboost-memory.so
-	CFlags       = $(Defines) -fPIC -D__64BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions -Wall
+	CFlags       = $(Defines) -fPIC -D__64BIT__ -D__INTEL__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
@@ -37,7 +37,7 @@ ifeq ($(CFG), ReleaseCS)
 	ProductDir   = ../bin/$(Platform)
 	ObjectDir    = LReleaseCS
 	Product      = ../bin/$(Platform)/libboost-memory-cs.so
-	CFlags       = $(Defines) -fPIC -D__64BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions -Wall
+	CFlags       = $(Defines) -fPIC -D__64BIT__ -D__INTEL__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
@@ -54,7 +54,7 @@ ifeq ($(CFG), Debug)
 	ProductDir   = Debug
 	ObjectDir    = LDebug
 	Product      = Debug/libboost-memory.so
-	CFlags       = $(Defines) -fPIC -D__64BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -D_DEBUG -g3 -D_MT -fexceptions -Wall
+	CFlags       = $(Defines) -fPIC -D__64BIT__ -D__INTEL__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
@@ -96,16 +96,8 @@ $(ObjectDir)/block_pool.o :	\
 	../src/block_pool.cpp
 	@echo "---> Compiling" $< "..."
 	$(CompileCXX)
-$(ObjectDir)/gc_alloc.o :	\
-	../src/gc_alloc.cpp
-	@echo "---> Compiling" $< "..."
-	$(CompileCXX)
-$(ObjectDir)/system_pool.o :	\
-	../src/system_pool.cpp
-	@echo "---> Compiling" $< "..."
-	$(CompileCXX)
 
-Objects = $(ObjectDir)/block_pool.o $(ObjectDir)/gc_alloc.o $(ObjectDir)/system_pool.o 
+Objects = $(ObjectDir)/block_pool.o 
 
 $(Product) : $(Objects)
 	@echo "---> Creating" $@ "..."
