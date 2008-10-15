@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2007,2008 Stjepan Rajko
+    Copyright 2008 Stjepan Rajko
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -7,16 +7,19 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/generic/port/category.hpp>
+#include <boost/dataflow/blueprint/operation_adapter.hpp>
+
+#include "../generic/my_connect.hpp"
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-namespace df=boost::dataflow;
+
+namespace df = boost::dataflow;
+
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    BOOST_CHECK((df::is_port_category<df::ports::producer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::consumer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::producer_consumer>::value));
+    df::blueprint::operation_adapter<connect> c;
+    df::blueprint::operation_adapter<connect> c10(10);    
 }

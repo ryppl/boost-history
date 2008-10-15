@@ -6,17 +6,18 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
+#ifndef BOOST__DATAFLOW__TEST__GENERIC__MY_FRAMEWORK_HPP
+#define BOOST__DATAFLOW__TEST__GENERIC__MY_FRAMEWORK_HPP
 
-#include <boost/dataflow/generic/port/category.hpp>
 
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#include <boost/dataflow/generic/framework.hpp>
+#include <boost/mpl/vector.hpp>
+
 
 namespace df=boost::dataflow;
 
-BOOST_AUTO_TEST_CASE( test ) 
-{
-    BOOST_CHECK((df::is_port_category<df::ports::producer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::consumer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::producer_consumer>::value));
-}
+struct my_framework : public df::framework<boost::mpl::vector<> >
+{};
+
+
+#endif // BOOST__DATAFLOW__TEST__GENERIC__MY_FRAMEWORK_HPP

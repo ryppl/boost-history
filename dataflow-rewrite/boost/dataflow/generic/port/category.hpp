@@ -1,15 +1,45 @@
-// Copyright 2007 Stjepan Rajko.
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=================================---------------------------------------------
+    Copyright 2007,2008 Stjepan Rajko
+  
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
 
-#ifndef BOOST_DATAFLOW_SUPPORT_PORT_CATEGORY_HPP
-#define BOOST_DATAFLOW_SUPPORT_PORT_CATEGORY_HPP
+#ifndef BOOST__DATAFLOW__GENERIC__PORT__CATEGORY_HPP
+#define BOOST__DATAFLOW__GENERIC__PORT__CATEGORY_HPP
+
 
 #include <boost/dataflow/utility/enable_if_type.hpp>
 #include <boost/mpl/bool.hpp>
 
+
 namespace boost { namespace dataflow {
+
+/// PortCategory types.
+namespace ports
+{
+    struct producer;
+    struct consumer;
+
+    /// producer PortCategory.
+    struct producer
+    {
+        typedef consumer complement; ///< complement PortCategory type.
+    };
+
+    /// consumer PortCategory.
+    struct consumer
+    {
+        typedef producer complement; ///< complement PortCategory type.
+    };
+
+    /// consumer PortCategory.
+    struct producer_consumer
+    {
+        typedef producer_consumer complement; ///< complement PortCategory type.
+    };
+}
 
 /// Boolean Metafunction determining whether a type is a PortCategory.
 /** is_port_category<T> is an Integral Constant of type bool.
@@ -40,4 +70,5 @@ struct is_port_category<
 
 } } // namespace boost::dataflow
 
-#endif // BOOST_DATAFLOW_SUPPORT_PORT_CATEGORY_HPP
+
+#endif // BOOST__DATAFLOW__GENERIC__PORT__CATEGORY_HPP

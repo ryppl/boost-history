@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2007,2008 Stjepan Rajko
+    Copyright 2008 Stjepan Rajko
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -7,21 +7,10 @@
 -----------------------------------------------===============================*/
 
 
-#include "my_framework.hpp"
+#include <boost/dataflow/blueprint/framework.hpp>
 
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#include "../generic/my_framework.hpp"
 
 namespace df = boost::dataflow;
 
-struct not_framework
-{};
-
-BOOST_AUTO_TEST_CASE( test ) 
-{
-    BOOST_CHECK((df::is_framework<my_framework>::value));
-    BOOST_CHECK((!df::is_framework<not_framework>::value));
-}
-
-
-
+typedef df::blueprint::framework<my_framework> my_blueprint_framework;

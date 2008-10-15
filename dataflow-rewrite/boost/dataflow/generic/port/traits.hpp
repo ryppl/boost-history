@@ -1,20 +1,23 @@
-// Copyright 2007 Stjepan Rajko.
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=================================---------------------------------------------
+    Copyright 2007,2008 Stjepan Rajko
+  
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
 
-#ifndef BOOST_DATAFLOW_SUPPORT_PORT_TRAITS_HPP
-#define BOOST_DATAFLOW_SUPPORT_PORT_TRAITS_HPP
+#ifndef BOOST__DATAFLOW__GENERIC__PORT__TRAITS_HPP
+#define BOOST__DATAFLOW__GENERIC__PORT__TRAITS_HPP
 
-#include <boost/dataflow/support/port/category.hpp>
-#include <boost/dataflow/support/traits.hpp>
+#include <boost/dataflow/generic/port/category.hpp>
+#include <boost/dataflow/generic/framework_entity/traits.hpp>
 
 
 namespace boost { namespace dataflow {
 
 /// Convenience class for PortTraits types.
-template<typename PortCategory, typename Tag=default_tag>
-struct port_traits : public traits<Tag>
+template<typename PortCategory, typename Framework=default_framework>
+struct port_traits : public traits<Framework>
 {
     /// The PortCategory of the port.
     typedef PortCategory category;
@@ -37,7 +40,7 @@ struct is_port_traits<PortTraits,
     typename utility::enable_if_type<
         utility::all_of<
             typename PortTraits::category,
-            typename PortTraits::tag
+            typename PortTraits::framework
         >,
         detail::enable_guard
     >::type>
@@ -46,11 +49,11 @@ struct is_port_traits<PortTraits,
     /// INTERNAL ONLY
     BOOST_MPL_ASSERT(( is_port_category<typename PortTraits::category> ));
     /// INTERNAL ONLY
-    BOOST_MPL_ASSERT(( is_tag<typename PortTraits::tag>));
+    BOOST_MPL_ASSERT(( is_framework<typename PortTraits::framework>));
 };
 
 
 } } // namespace boost::dataflow
 
 
-#endif // BOOST_DATAFLOW_SUPPORT_PORT_TRAITS_HPP
+#endif // BOOST__DATAFLOW__GENERIC__PORT__TRAITS_HPP

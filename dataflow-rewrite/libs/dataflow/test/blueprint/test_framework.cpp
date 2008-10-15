@@ -1,22 +1,21 @@
 /*=================================---------------------------------------------
-    Copyright 2007,2008 Stjepan Rajko
+    Copyright 2008 Stjepan Rajko
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
+#include "my_blueprint_framework.hpp"
 
-#include <boost/dataflow/generic/port/category.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-namespace df=boost::dataflow;
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    BOOST_CHECK((df::is_port_category<df::ports::producer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::consumer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::producer_consumer>::value));
+    BOOST_CHECK((df::is_framework<my_blueprint_framework>::value));
+    BOOST_CHECK((boost::is_same<my_blueprint_framework::framework_type, my_framework>::value));    
 }

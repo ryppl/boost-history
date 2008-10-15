@@ -16,3 +16,4 @@ project dataflow/test
     ;
 
 build-project generic ;
+build-project blueprint ;

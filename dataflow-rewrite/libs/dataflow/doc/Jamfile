@@ -1,7 +1,10 @@
-# Copyright 2007 Stjepan Rajko.
-# Distributed under the Boost Software License, Version 1.0. (See
-# accompanying file LICENSE_1_0.txt or copy at
-# http://www.boost.org/LICENSE_1_0.txt)
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
 
 
 project boost/dataflow/doc ;
@@ -10,104 +13,22 @@ import boostbook : boostbook ;
 using quickbook ;
 
 local loc = [ path.native [ path.pwd ] ] ;
-local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
 
 xml dataflow_xml : dataflow.qbk ;
 
-doxygen dataflow_signals_doxygen
+doxygen dataflow_generic_doxygen
    :
-      [ glob ../../../boost/dataflow/signals/component/filter.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/storage.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/counter.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/junction.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/multiplexer.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/mutex.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/condition.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/timed_generator.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/function.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/socket_sender.hpp ]
-      [ glob ../../../boost/dataflow/signals/component/socket_receiver.hpp ]
+      [ glob ../../../boost/dataflow/generic/framework.hpp ]
+      [ glob ../../../boost/dataflow/generic/framework_entity.hpp ]
+      [ glob ../../../boost/dataflow/generic/framework_entity/default_framework.hpp ]
+      [ glob ../../../boost/dataflow/generic/framework_entity/traits.hpp ]
+      [ glob ../../../boost/dataflow/generic/framework_entity/traits_of.hpp ]
    :
         <doxygen:param>TAB_SIZE=4
         <doxygen:param>EXAMPLE_PATH=../test
         <doxygen:param>EXAMPLE_PATH=../example
-        <doxygen:param>STRIP_FROM_PATH=$(root)
-        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
-        <doxygen:param>EXTRACT_ALL=NO
-        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
-        <doxygen:param>INHERIT_DOCS=YES
-        <doxygen:param>EXTRACT_PRIVATE=NO
-        <doxygen:param>ENABLE_PREPROCESSING=YES
-        <doxygen:param>MACRO_EXPANSION=YES
-        <doxygen:param>SEARCH_INCLUDES=YES
-        <doxygen:param>INCLUDE_PATH=../../..
-        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
-        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_BUILD
-   ;
-
-doxygen dataflow_blueprint_doxygen
-   :
-      [ glob ../../../boost/dataflow/blueprint/port.hpp ]
-      [ glob ../../../boost/dataflow/blueprint/component.hpp ]
-      [ glob ../../../boost/dataflow/blueprint/binary_operation.hpp ]
-   :
-        <doxygen:param>TAB_SIZE=4
-        <doxygen:param>EXAMPLE_PATH=../test
-        <doxygen:param>EXAMPLE_PATH=../example
-        <doxygen:param>STRIP_FROM_PATH=$(root)
-        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
-        <doxygen:param>EXTRACT_ALL=NO
-        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
-        <doxygen:param>INHERIT_DOCS=YES
-        <doxygen:param>EXTRACT_PRIVATE=NO
-        <doxygen:param>ENABLE_PREPROCESSING=YES
-        <doxygen:param>MACRO_EXPANSION=YES
-        <doxygen:param>SEARCH_INCLUDES=YES
-        <doxygen:param>INCLUDE_PATH=../../..
-        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
-        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_BUILD
-   ;
-   
-doxygen dataflow_support_doxygen
-   :
-      [ glob ../../../boost/dataflow/support/traits.hpp ]
-      [ glob ../../../boost/dataflow/support/port/category.hpp ]
-      [ glob ../../../boost/dataflow/support/port/traits.hpp ]
-      [ glob ../../../boost/dataflow/support/port/port.hpp ]
-      [ glob ../../../boost/dataflow/support/complemented_port.hpp ]
-      [ glob ../../../boost/dataflow/support/default_port_provider.hpp ]
-      [ glob ../../../boost/dataflow/support/tags.hpp ]
-      [ glob ../../../boost/dataflow/support/component.hpp ]
-      [ glob ../../../boost/dataflow/support/fusion_component.hpp ]
-      [ glob ../../../boost/dataflow/support/vector_port.hpp ]
-      [ glob ../../../boost/dataflow/support/keyed_port.hpp ]
-   :
-        <doxygen:param>TAB_SIZE=4
-        <doxygen:param>EXAMPLE_PATH=../test
-        <doxygen:param>EXAMPLE_PATH=../example
-        <doxygen:param>STRIP_FROM_PATH=$(root)
-        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
-        <doxygen:param>EXTRACT_ALL=NO
-        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
-        <doxygen:param>INHERIT_DOCS=YES
-        <doxygen:param>EXTRACT_PRIVATE=NO
-        <doxygen:param>ENABLE_PREPROCESSING=YES
-        <doxygen:param>MACRO_EXPANSION=YES
-        <doxygen:param>SEARCH_INCLUDES=YES
-        <doxygen:param>INCLUDE_PATH=../../..
-#        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
-        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_BUILD
-   ;
-
-doxygen dataflow_utility_doxygen
-   :
-      [ glob ../../../boost/dataflow/utility/*.hpp ]
-   :
-        <doxygen:param>TAB_SIZE=4
-        <doxygen:param>EXAMPLE_PATH=../test/utility
-        <doxygen:param>EXAMPLE_PATH=../example
-        <doxygen:param>STRIP_FROM_PATH=$(root)
-        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
+        <doxygen:param>STRIP_FROM_PATH=$(TOP)
+        <doxygen:param>STRIP_FROM_INC_PATH=$(TOP)
         <doxygen:param>EXTRACT_ALL=NO
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>INHERIT_DOCS=YES
@@ -123,10 +44,7 @@ doxygen dataflow_utility_doxygen
 boostbook standalone
    :
       dataflow_xml
-      dataflow_utility_doxygen
-      dataflow_support_doxygen
-      dataflow_blueprint_doxygen
-      dataflow_signals_doxygen
+      dataflow_generic_doxygen
     :
         # pull in the online .css and images
         <xsl:param>project.root=http://dancinghacker.com
@@ -141,5 +59,5 @@ boostbook standalone
         <xsl:param>toc.max.depth=2
         <xsl:param>generate.section.toc.level=4
     ;
-    
+
 install png : [ glob *.png ] : <location>html ;

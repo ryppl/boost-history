@@ -10,20 +10,41 @@
 #define BOOST__DATAFLOW__GENERIC__FRAMEWORK_HPP
 
 
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/utility/enable_if.hpp>
+
 
 namespace boost { namespace dataflow {
 
-/// Base class for Framework types.
-struct framework_base {};
+
+template<typename ConnectOperations>
+struct framework
+{
+    typedef ConnectOperations connect_operations;
+};
+
+namespace operations {
+
+struct connect {};
+
+}
 
 /// The default Framework argument for Dataflow templates.
-struct default_framework : framework_base {};
+struct default_framework
+    : public framework<mpl::vector<operations::connect> >
+{};
 
 /// Boolean metafunction determining whether a type is a Framework.
-template<typename T>
+template<typename T, typename Enable=void>
 struct is_framework
-    : public is_base_of<framework_base, T> {};
+    : public mpl::false_ {};
+
+template<typename T>
+struct is_framework<T,
+    typename enable_if<mpl::is_sequence<typename T::connect_operations> >::type>
+    : public mpl::true_ {};
 
 
 } } // namespace boost::dataflow

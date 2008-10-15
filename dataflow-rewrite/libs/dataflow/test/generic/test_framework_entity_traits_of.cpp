@@ -8,6 +8,7 @@
 
 
 #include <boost/dataflow/generic/framework_entity/traits_of.hpp>
+#include "my_framework.hpp"
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -15,8 +16,6 @@
 
 namespace df = boost::dataflow;
 
-struct my_framework : public df::framework_base
-{};
 
 typedef df::traits<df::default_framework> default_traits;
 typedef df::traits<my_framework> my_traits;

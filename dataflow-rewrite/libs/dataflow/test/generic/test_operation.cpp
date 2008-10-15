@@ -7,16 +7,16 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/generic/port/category.hpp>
+#include <boost/dataflow/generic/operation.hpp>
+
+#include "my_connect.hpp"
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 namespace df=boost::dataflow;
 
-BOOST_AUTO_TEST_CASE( test ) 
+BOOST_AUTO_TEST_CASE( test )
 {
-    BOOST_CHECK((df::is_port_category<df::ports::producer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::consumer>::value));
-    BOOST_CHECK((df::is_port_category<df::ports::producer_consumer>::value));
+    BOOST_CHECK((df::is_operation<connect>::value));
 }
