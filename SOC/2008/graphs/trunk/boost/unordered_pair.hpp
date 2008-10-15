@@ -1,6 +1,6 @@
 
 #ifndef BOOST_UNORDERED_PAIR_HPP
-#define BOOT_UNORDERED_PAIR_HPP
+#define BOOST_UNORDERED_PAIR_HPP
 
 #include <functional>
 
