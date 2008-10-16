@@ -23,14 +23,19 @@ public:
     glut()
     {
         int argc = 0;
-        glutInit(&argc,0);
+        char *argv;
+        glutInit(&argc,&argv);
     }
     
     int create_window(const size_type &size, const std::string &label, bool depth, window::impl *impl)
     {
         glutInitWindowSize((int)size.x, (int)size.y);
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | (depth?GLUT_DEPTH:0));
+#if defined(BOOST_GUIGL_USE_FLTK_GLUT)
+        int id = glutCreateWindow(const_cast<char *>(label.c_str()));
+#else
         int id = glutCreateWindow(label.c_str());
+#endif
         if(depth)
             glEnable(GL_DEPTH_TEST);
         else
