@@ -72,6 +72,7 @@ namespace boost { namespace numeric { namespace bindings {
 		 int const ldc, float* work, int const lwork,
                  int& info) 
       {
+        assert ( trans=='N' || trans=='T' );
         LAPACK_SORMQR (&side, &trans, &m, &n, &k,
 		      a, &lda,
 		      tau,
@@ -87,6 +88,7 @@ namespace boost { namespace numeric { namespace bindings {
 		 int const ldc, double* work, int const lwork,
                  int& info) 
       {
+        assert ( trans=='N' || trans=='T' );
         LAPACK_DORMQR (&side, &trans, &m, &n, &k,
 		      a, &lda,
 		      tau,
@@ -102,6 +104,7 @@ namespace boost { namespace numeric { namespace bindings {
 		 int const ldc, traits::complex_f* work, int const lwork,
                  int& info) 
       {
+        assert ( trans=='N' || trans=='C' );
         LAPACK_CUNMQR (&side, &trans, &m, &n, &k,
 		      traits::complex_ptr(a), &lda,
 		      traits::complex_ptr(tau),
@@ -117,6 +120,7 @@ namespace boost { namespace numeric { namespace bindings {
 		 int const ldc, traits::complex_d* work, int const lwork,
                  int& info) 
       {
+        assert ( trans=='N' || trans=='C' );
         LAPACK_ZUNMQR (&side, &trans, &m, &n, &k,
 		      traits::complex_ptr(a), &lda,
 		      traits::complex_ptr(tau),
@@ -148,7 +152,6 @@ namespace boost { namespace numeric { namespace bindings {
         int const lwork = traits::vector_size (work);
 
         assert ( side=='L' || side=='R' );
-        assert ( trans=='N' || trans=='C' || trans=='T' );
         assert ( (side=='L' ?  m >= k : n >= k ) );
 
         assert ( (side=='L' ?
