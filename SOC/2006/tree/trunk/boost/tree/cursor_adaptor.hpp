@@ -28,6 +28,11 @@ namespace tree {
 
 using boost::iterator_core_access;
 
+class dummy {
+private:
+dummy() {}
+};
+
 // We'll abuse iterator_adaptor to determine our types.
 template <
     class Derived
@@ -46,7 +51,7 @@ class cursor_adaptor_base
                          , HorizontalTraversalOrCategory
                          , Reference
                          , Difference>
-, private iterator_adaptor<Derived 
+, private iterator_adaptor<dummy 
                          , Base
                          , Value
                          , VerticalTraversalOrCategory
@@ -59,7 +64,7 @@ private:
     typedef typename iterator_adaptor<Derived, Base, Value
                                     , HorizontalTraversalOrCategory, Reference
                                     , Difference>::super_t h_super_t;
-    typedef typename iterator_adaptor<Derived, Base, Value
+    typedef typename iterator_adaptor<dummy, Base, Value
                                     , VerticalTraversalOrCategory, Reference
                                     , Difference>::super_t v_super_t;
 public:

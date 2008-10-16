@@ -119,7 +119,7 @@ void to_last(postorder, Cursor& c)
 
 /*\@}*/
 
-#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @if maint
@@ -154,7 +154,7 @@ void for_each_recursive(postorder, Cursor s, Op& f)
  */
 //[ postorder_for_each
 template <class Cursor, class Op>
-Op for_each(postorder, Cursor s, Op f)
+Op for_each(postorder, Cursor s, Op f, forward_traversal_tag)
 //]
 {
     Cursor t = s;
@@ -178,7 +178,7 @@ Op for_each(postorder, Cursor s, Op f)
  * @result    A cursor past t's postorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy(postorder, InCursor s, OutCursor t)
+OutCursor copy(postorder, InCursor s, OutCursor t, forward_traversal_tag)
 {
     InCursor r = s;
     s.to_begin();
@@ -186,14 +186,14 @@ OutCursor copy(postorder, InCursor s, OutCursor t)
     
     for (; s != r.end(); ++s, ++t) {
         if (!s.empty())
-            copy(postorder(), s, t);
+            copy(postorder(), s, t, forward_traversal_tag());
 //        else
 //            *t = *s;
     }
     
     // Multiway cursor
     if (!s.empty())
-        copy(postorder(), s, t);
+        copy(postorder(), s, t, forward_traversal_tag());
 
     *t = *r.to_begin();
     return t;
@@ -213,7 +213,7 @@ OutCursor copy(postorder, InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform(postorder, InCursor s, OutCursor t, Op op)
+OutCursor transform(postorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
 {
     InCursor r = s;
     s.to_begin();
@@ -221,17 +221,17 @@ OutCursor transform(postorder, InCursor s, OutCursor t, Op op)
     
     for (; s != r.end(); ++s, ++t)
         if (!s.empty())
-            transform(postorder(), s, t, op);
+            transform(postorder(), s, t, op, forward_traversal_tag());
 
     // Multiway cursor
     if (!s.empty())
-        transform(postorder(), s, t, op);
+        transform(postorder(), s, t, op, forward_traversal_tag());
     
     *t = op(*r.to_begin());
     return t;
 }
 
-#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 } // namespace tree
 } // namespace boost

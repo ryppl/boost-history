@@ -19,9 +19,9 @@
 #include <boost/tree/detail/algorithm/inorder.hpp>
 #include <boost/tree/detail/algorithm/postorder.hpp>
 
-#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
 #include <boost/tree/detail/algorithm/iterative.hpp>
-#endif
+//#endif
 
 namespace boost {
 namespace tree {

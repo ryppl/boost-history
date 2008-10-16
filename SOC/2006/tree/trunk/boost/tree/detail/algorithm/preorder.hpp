@@ -116,7 +116,7 @@ void to_last(preorder, Cursor& c)
 
 /*\@}*/
 
-#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @if maint
@@ -151,7 +151,7 @@ void for_each_recursive(preorder, Cursor s, Op& f)
  */
 //[ preorder_for_each
 template <class Cursor, class Op>
-Op for_each(preorder, Cursor s, Op f)
+Op for_each(preorder, Cursor s, Op f, forward_traversal_tag)
 //]
 {
     Cursor t = s.end();
@@ -177,7 +177,7 @@ Op for_each(preorder, Cursor s, Op f)
  * @result    A cursor past t's preorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy(preorder, InCursor s, OutCursor t)
+OutCursor copy(preorder, InCursor s, OutCursor t, forward_traversal_tag)
 {
     InCursor r = s.end();
     s.to_begin();
@@ -186,12 +186,12 @@ OutCursor copy(preorder, InCursor s, OutCursor t)
     for (; s != r; ++s, ++t) {
         *t = *s;
         if (!s.empty())
-            copy(preorder(), s, t);
+            copy(preorder(), s, t, forward_traversal_tag());
     }
 
     // Multiway cursor
     if (!r.empty())
-        copy(preorder(), r, t);
+        copy(preorder(), r, t, forward_traversal_tag());
 
     return t;
 }
@@ -210,7 +210,7 @@ OutCursor copy(preorder, InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform(preorder, InCursor s, OutCursor t, Op op)
+OutCursor transform(preorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
 {
     InCursor r = s.end();
     s.to_begin();
@@ -218,17 +218,17 @@ OutCursor transform(preorder, InCursor s, OutCursor t, Op op)
     for (; s != r; ++s, ++t) {
         *t = op(*s);
         if (!s.empty())
-            transform(preorder(), s, t, op);
+            transform(preorder(), s, t, op, forward_traversal_tag());
     }
 
     // Multiway cursor
     if (!s.empty())
-        transform(preorder(), s, t, op);
+        transform(preorder(), s, t, op, forward_traversal_tag());
         
     return t;
 }
 
-#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 } // namespace tree
 } // namespace boost

@@ -34,6 +34,12 @@ Op for_each(Order, root_tracking_cursor<Cursor> s, Op f)
     return f;
 }
 
+template <class Order, class Cursor, class Op>
+Op for_each(Order, Cursor s, Op f, bidirectional_traversal_tag)
+{
+    return for_each(Order(), root_tracking_cursor<Cursor>(s), f);
+}
+
 /**
  * @brief   Apply a function to every element of a subtree, 
  *          in the order specified by the first parameter.
@@ -50,7 +56,8 @@ template <class Order, class Cursor, class Op>
 Op for_each(Order, Cursor s, Op f)
 //]
 {
-    return for_each(Order(), root_tracking_cursor<Cursor>(s), f);
+    return for_each(Order(), s, f
+                  , typename cursor_vertical_traversal<Cursor>::type());
 }
 
 template <class Order, class InCursor, class OutCursor>
@@ -69,6 +76,15 @@ root_tracking_cursor<OutCursor> copy (Order, root_tracking_cursor<InCursor> s
     return t;
 }
 
+template <class Order, class InCursor, class OutCursor>
+OutCursor copy (Order, InCursor s, OutCursor t, bidirectional_traversal_tag)
+{
+    root_tracking_cursor<OutCursor> u 
+        = copy(Order(), root_tracking_cursor<InCursor>(s)
+                    , root_tracking_cursor<OutCursor>(t));
+    return u.base();
+}
+
 /**
  * @brief   Copies the subtree s into t, by traversing s
  *          in the order specified by the first parameter.
@@ -79,10 +95,9 @@ root_tracking_cursor<OutCursor> copy (Order, root_tracking_cursor<InCursor> s
 template <class Order, class InCursor, class OutCursor>
 OutCursor copy (Order, InCursor s, OutCursor t)
 {
-    root_tracking_cursor<OutCursor> u 
-        = copy(Order(), root_tracking_cursor<InCursor>(s)
-                    , root_tracking_cursor<OutCursor>(t));
-    return u.base();
+    return copy(Order(), s, t
+              , typename cursor_vertical_traversal<InCursor>::type());
+    // What about OutCursor?
 }
 
 template <class Order, class InCursor, class OutCursor, class Op>
@@ -103,6 +118,16 @@ root_tracking_cursor<OutCursor> transform (Order
     return t;
 }
 
+template <class Order, class InCursor, class OutCursor, class Op>
+OutCursor transform (Order, InCursor s, OutCursor t, Op op
+                   , bidirectional_traversal_tag)
+{
+    root_tracking_cursor<OutCursor> u 
+        = transform(Order(), root_tracking_cursor<InCursor>(s)
+                  , root_tracking_cursor<OutCursor>(t), op);
+    return u.base();
+}
+
 /**
  * @brief       Performs an operation on a subtree, by traversing it  
  *              in the order specified by the first parameter.
@@ -120,10 +145,9 @@ root_tracking_cursor<OutCursor> transform (Order
 template <class Order, class InCursor, class OutCursor, class Op>
 OutCursor transform (Order, InCursor s, OutCursor t, Op op)
 {
-    root_tracking_cursor<OutCursor> u 
-        = transform(Order(), root_tracking_cursor<InCursor>(s)
-                  , root_tracking_cursor<OutCursor>(t), op);
-    return u.base();
+    return transform(Order(), s, t, op
+                  , typename cursor_vertical_traversal<InCursor>::type());
+    // What about OutCursor?
 }
 
 } // namespace tree

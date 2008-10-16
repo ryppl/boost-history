@@ -89,7 +89,7 @@ void to_last(inorder, Cursor& c)
 
 /*\@}*/
 
-#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
  * @if maint
@@ -126,7 +126,7 @@ void for_each_recursive(inorder, MultiwayCursor s, Op& f)
  */
  //[ inorder_for_each
 template <class MultiwayCursor, class Op>
-Op for_each(inorder, MultiwayCursor s, Op f)
+Op for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
 //]
 {
     MultiwayCursor t = s.end();
@@ -150,7 +150,7 @@ Op for_each(inorder, MultiwayCursor s, Op f)
  * @result    A cursor past t's inorder end, after the copying operation.
  */
 template <class InCursor, class OutCursor>
-OutCursor copy(inorder, InCursor s, OutCursor t)
+OutCursor copy(inorder, InCursor s, OutCursor t, forward_traversal_tag)
 {
     InCursor r = s.end();
 
@@ -159,13 +159,13 @@ OutCursor copy(inorder, InCursor s, OutCursor t)
     
     for (; s != r; ++s, ++t) {
         if (!s.empty())
-            copy(inorder(), s, t);
+            copy(inorder(), s, t, forward_traversal_tag());
         *t=*s;
     }
     
     // Multiway cursor
     if (!r.empty())
-        copy(inorder(), r, t);
+        copy(inorder(), r, t, forward_traversal_tag());
     return t;
 }
 
@@ -183,7 +183,7 @@ OutCursor copy(inorder, InCursor s, OutCursor t)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform(inorder, InCursor s, OutCursor t, Op op)
+OutCursor transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
 {
     InCursor r = s.end();
 
@@ -192,17 +192,17 @@ OutCursor transform(inorder, InCursor s, OutCursor t, Op op)
     
     for (; s != r; ++s, ++t) {
         if (!s.empty())
-            transform(inorder(), s, t, op);
+            transform(inorder(), s, t, op, forward_traversal_tag());
         *t=op(*s);
     }
 
     // Multiway cursor
     if (!r.empty())
-        transform(inorder(), r, t, op);
+        transform(inorder(), r, t, op, forward_traversal_tag());
     return t;
 }
 
-#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
+//#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /// Search
 

@@ -14,6 +14,7 @@
 [section TODO]
 
 General:
+* Caution: Iterative algorithms require ascending cursors!
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
 * Fix recursive algorithms for use with forest.
