@@ -9,6 +9,7 @@
 
 #include <string>
 #include <cstdio>
+#include <cstring>
 
 const char* search("template_profiler");
 

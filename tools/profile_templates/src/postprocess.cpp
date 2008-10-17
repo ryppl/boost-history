@@ -29,9 +29,19 @@ boost::regex split_file_and_line("(.*)\\((\\d+)\\)");
 
 #elif defined(__GNUC__)
 
+#if (__GNUC__ < 4) || (__GNUC_MINOR__ < 3)
+
 boost::regex warning_message("(.*): warning: division by zero in .template_profiler::value / 0.");
 boost::regex call_graph_line("(.*):(\\d+):   instantiated from .*");
 boost::regex split_file_and_line("(.*):(\\d+)");
+
+#else
+
+boost::regex warning_message("(.*): warning: .int template_profiler::f\\(int\\).*");
+boost::regex call_graph_line("(.*):(\\d+):   instantiated from .*");
+boost::regex split_file_and_line("(.*):(\\d+)");
+
+#endif
 
 #else
 
