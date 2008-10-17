@@ -11,6 +11,20 @@
     [purpose Count template instantiations]
 ]
 
+[section Introduction]
+
+Many libraries in C++ rely heavily on template metaprogramming.
+Often, this can cause compilation to be very slow.  One
+of the reasons is that there is no easy way to determine
+what templates are taking up the compiler's time.  This means
+that when trying to optimize the template metaprogramming,
+programmers often have to fall back on guesswork and random
+tweaks.  This tool is an attempt to solve this problem,
+allowing programmers to find out what their template metaprograms
+are doing.
+
+[endsect]
+
 [section Usage]
 
 In order to use the template profiler, create
@@ -22,8 +36,22 @@ template-profile foo : foo.cpp ;
 ]
 
 [note You will need to make sure that the tool's root
-directory is in BOOST_BUILD_PATH
+directory is in BOOST_BUILD_PATH, so that Boost.Build can
+find the template-profile module.
 ]
+
+Now, running the command
+[pre
+bjam toolset=msvc
+]
+will create a file called foo.template-profile in
+the build directory.  This file will contain contain
+a list of all the lines that any class or function is
+defined on, and the corresponding number of times that
+this line is compiled.
+
+[note You may see non-template classes and functions in
+the output.  This is expected.  They should appear exactly once. ]
 
 [endsect]
 
