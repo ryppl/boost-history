@@ -276,7 +276,7 @@ struct typed_arg_list : Next
         return arg.value;
     }
 
-/*
+
     template <class Default>
     reference operator[](default_<key_type, Default> const& d) const
     {
@@ -287,7 +287,7 @@ struct typed_arg_list : Next
     reference operator[](lazy_default<key_type, Default>) const
     {
         return arg.value;
-    }*/
+    }
 
     // Builds an overload set including operator[]s defined in base
     // classes.
