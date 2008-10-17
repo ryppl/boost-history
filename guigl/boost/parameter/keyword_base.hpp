@@ -47,6 +47,21 @@ struct keyword_base
     {
         return aux::lazy_default<Tag, Default>(default_);
     }
+
+    template <class Default>
+    aux::default_<Tag, const Default>
+    operator|(const Default& default_) const
+    {
+        return aux::default_<Tag, const Default>(default_);
+    }
+
+    template <class Default>
+    aux::lazy_default<Tag, Default>
+    operator||(Default const& default_) const
+    {
+        return aux::lazy_default<Tag, Default>(default_);
+    }
+
 };
 
 }} // namespace boost::parameter

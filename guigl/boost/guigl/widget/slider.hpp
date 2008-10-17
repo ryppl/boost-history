@@ -34,7 +34,7 @@ public:
     template<typename ArgumentPack>
     slider(const ArgumentPack &args)
         : slider_base_type(args)
-        , m_value(args[_min])
+        , m_value(args[_value|args[_min]])
         , m_min(args[_min]), m_max(args[_max]), m_step(args[_step])
     {}
 

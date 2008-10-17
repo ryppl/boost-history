@@ -11,6 +11,8 @@
 #define UNTYPED_KEYWORD_050328_HPP
 
 #include <boost/parameter/keyword_base.hpp>
+#include <boost/parameter/aux_/default.hpp>
+
 
 namespace boost { namespace parameter {
 
