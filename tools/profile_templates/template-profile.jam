@@ -48,7 +48,7 @@ module gcc {
     }
 
     actions compile.c++.template-profile {
-        "$(CONFIG_COMMAND)" $(LANG) -ftemplate-depth-$(TEMPLATE_DEPTH) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -D PROFILE_TEMPLATES -I"$(INCLUDES)" -c "$(>:W)" 2>&1 "$(FILTER)" | $(FILTER-OPTIONS) >"$(<)"
+        "$(CONFIG_COMMAND)" $(LANG) -ftemplate-depth-$(TEMPLATE_DEPTH) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -D PROFILE_TEMPLATES -I"$(INCLUDES)" -c "$(>:W)" 2>&1 | "$(FILTER)" $(FILTER-OPTIONS) >"$(<)"
     }
 
 }
@@ -59,11 +59,11 @@ module msvc {
     template-profile.init-toolset msvc ;
 
     actions compile.c++.preprocess {
-        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -E $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) $(nl)-D$(DEFINES) $(nl)"-I$(INCLUDES:W)")" | $(INSTRUMENT-ACTION) >"$(<[1]:W)"
+        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -E $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) $(.nl)-D$(DEFINES) $(.nl)"-I$(INCLUDES:W)")" | $(INSTRUMENT-ACTION) >"$(<[1]:W)"
     }
 
     actions compile.c++.template-profile {
-        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -c $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) -W4 $(nl)-D$(DEFINES) -D PROFILE_TEMPLATES $(nl)"-I$(INCLUDES:W)")" 2>&1 | "$(FILTER)" $(FILTER-OPTIONS) >"$(<)"
+        $(.CC) @"@($(<[1]:W).rsp:E="$(>[1]:W)" -c $(lang-opt) -U$(UNDEFS) $(CFLAGS) $(C++FLAGS) $(OPTIONS) -W4 $(.nl)-D$(DEFINES) -D PROFILE_TEMPLATES $(.nl)"-I$(INCLUDES:W)")" 2>&1 | "$(FILTER)" $(FILTER-OPTIONS) >"$(<)"
     }
 
 }

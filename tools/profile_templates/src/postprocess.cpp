@@ -19,6 +19,7 @@
 #include <iterator>
 #include <algorithm>
 #include <iomanip>
+#include <vector>
 
 #ifdef _MSC_VER
 
@@ -29,7 +30,8 @@ boost::regex split_file_and_line("(.*)\\((\\d+)\\)");
 #elif defined(__GNUC__)
 
 boost::regex warning_message("(.*): warning: division by zero in .template_profiler::value / 0.");
-#error gcc is not supported yet
+boost::regex call_graph_line("(.*):(\\d+):   instantiated from .*");
+boost::regex split_file_and_line("(.*):(\\d+)");
 
 #else
 
@@ -133,6 +135,8 @@ int main(int argc, char** argv) {
         }
         const line_id* current_instantiation = 0;
         std::ifstream input(input_file_name);
+#if defined(_MSC_VER)
+        // msvc puts the warning first and follows it with the backtrace.
         while(std::getline(input, line)) {
             boost::smatch match;
             if(boost::regex_match(line, match, warning_message)) {
@@ -162,6 +166,50 @@ int main(int argc, char** argv) {
                 ++graph[parent].total_with_children;
             }
         }
+#elif defined(__GNUC__)
+        // gcc puts the backtrace first, and then the warning.
+        // so we have to buffer the backtrace until we reach the
+        // warning.
+        std::vector<std::string> pending_lines;
+        while(std::getline(input, line)) {
+            boost::smatch match;
+            if(boost::regex_match(line, match, warning_message)) {
+                std::string file_and_line(match[1].str());
+                boost::regex_match(file_and_line, match, split_file_and_line);
+                std::string file = match[1];
+                int line = boost::lexical_cast<int>(match[2].str());
+                current_instantiation = &*lines.find(line_id(file, line));
+                ++graph[current_instantiation].total_with_children;
+                ++graph[current_instantiation].count;
+                BOOST_FOREACH(const std::string& line, pending_lines) {
+                    boost::regex_match(line, match, call_graph_line);
+                    std::string file = match[1];
+                    int line = boost::lexical_cast<int>(match[2].str());
+                    std::set<line_id>::const_iterator pos = lines.lower_bound(line_id(file, line));
+                    if(pos != lines.end()) {
+                        if(*pos != line_id(file, line) && pos != lines.begin() && boost::prior(pos)->first == file) {
+                            --pos;
+                        }
+                    } else if(pos != lines.begin()) {
+                        --pos;
+                    } else {
+                        break;
+                    }
+                    const line_id* parent = &*pos;
+                    ++graph[current_instantiation].parents[parent];
+                    ++graph[parent].children[current_instantiation];
+                    ++graph[parent].total_with_children;
+                }
+                pending_lines.clear();
+            } else if(boost::regex_match(line, match, call_graph_line)) {
+                pending_lines.push_back(line);
+            } else {
+                pending_lines.clear();
+            }
+        }
+#else
+    #error Unsupported compiler
+#endif
         typedef std::pair<const line_id*, node_info> call_graph_node_t;
         std::vector<call_graph_node_t> call_graph;
         std::copy(graph.begin(), graph.end(), std::back_inserter(call_graph));

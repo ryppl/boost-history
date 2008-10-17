@@ -11,7 +11,14 @@
 #include <cstdio>
 
 const char* search("template_profiler");
-const char* back_trace_search("see reference to");
+
+#if defined(_MSC_VER)
+    const char* back_trace_search("see reference to");
+#elif defined(__GNUC__)
+    const char* back_trace_search("instantiated from");
+#else
+    #error only Microsoft and gcc are supported.
+#endif
 
 void copy_flat_only() {
     std::string buffer;
@@ -64,8 +71,14 @@ void copy_call_graph() {
                 for(std::size_t i = 0; i < buffer.size(); ++i) {
                     std::putchar(buffer[i]);
                 }
-                if(++counter % 100 == 0) {
-                    std::fprintf(stderr, "On Instantiation %d\n", counter);
+                ++counter;
+#ifdef _MSC_VER
+                int instantiations = counter / 2;
+#else
+                int instantiations = counter;
+#endif
+                if(++instantiations % 100 == 0) {
+                    std::fprintf(stderr, "On Instantiation %d\n", instantiations);
                 }
                 buffer.clear();
                 matched = false;
@@ -115,8 +128,14 @@ void copy_call_graph() {
             pos = 0;
         }
     }
+#elif defined(__GNUC__)
+    // trying to figure out what we should copy is too hard.
+    int ch;
+    while((ch = std::getchar()) != EOF) {
+        std::putchar(ch);
+    }
 #else
-    #error gcc is not supported yet.
+    #error Unknown compiler
 #endif
 }
 
