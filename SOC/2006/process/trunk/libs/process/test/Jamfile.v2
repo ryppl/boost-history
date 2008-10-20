@@ -28,6 +28,7 @@ project :
       <runtime-link>static
     ;
 
+explicit helpers ;
 exe helpers
     : helpers.cpp
     : <library>$(BOOST_ROOT)//filesystem
