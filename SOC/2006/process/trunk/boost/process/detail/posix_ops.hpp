@@ -41,6 +41,7 @@ extern "C" {
 #include <boost/optional.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
+#include <boost/process/detail/posix_sigchld.hpp>
 #include <boost/process/detail/stream_info.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
@@ -426,8 +427,10 @@ posix_start(const Executable& exe,
             info_map& infoout,
             const posix_setup& setup)
 {
+    the_posix_sigchld_programmer.forking_child();
     pid_t pid = ::fork();
     if (pid == -1) {
+        the_posix_sigchld_programmer.forking_failed();
         boost::throw_exception
             (system_error("boost::process::detail::posix_start",
                           "fork(2) failed", errno));
