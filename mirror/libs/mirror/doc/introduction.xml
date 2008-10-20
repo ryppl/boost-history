@@ -64,13 +64,13 @@
 	</listitem>
 
 	<listitem>
-		Unform and generic inspection of class' base classes. One can inspect 
+		Uniform and generic inspection of class' base classes. One can inspect 
 		traits of the base classes for example their types, whether they are inherited
 		virtually or not and the access specifier (<code>private</code>, <code>protected</code>,
 		<code>public</code>).
 	</listitem>
 	<listitem>
-		Unform and generic inspection of class' member attributes either just those defined
+		Uniform and generic inspection of class' member attributes either just those defined
 		directly in the reflected class or inherited from it's base-classes. 
 		At compile-time the count of class' attributes and their types, storage class
 		specifiers (<code>static</code>, <code>mutable</code>) and some other traits

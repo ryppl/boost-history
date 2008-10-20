@@ -95,7 +95,7 @@ int main(void)
 	typedef <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(T) meta_T;
 
 	// print out the full type name
-	cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a>() &lt;&lt; 
+	cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2526780">bcout</a>() &lt;&lt; 
 		<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("The full type name is: ") &lt;&lt; 
 		meta_T::full_name() &lt;&lt; 
 	endl;
@@ -124,7 +124,7 @@ void print_meta_data(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a>(); 
+	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2526780">bcout</a>(); 
 	// print out the base type name
 	bcout &lt;&lt; 
 		<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("The type name is: ") &lt;&lt; 
@@ -197,7 +197,7 @@ void print_meta_data(void)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2466872">bcout</a>();
+	cts::<a class="link" href="../cts/bostream.html" title="Type definition bostream">bostream</a>&amp; bcout = cts::<a class="link" href="../../char_type_switch/reference.html#boost.cts.bcout_id2526780">bcout</a>();
 	bcout &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("type: '");
 	bcout &lt;&lt; MetaType::base_name();
 	bcout &lt;&lt; <a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("'  defined in: '");

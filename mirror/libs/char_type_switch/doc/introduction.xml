@@ -20,7 +20,7 @@
 	The library introduces a new character type called 
 	<code>::boost::cts::<classname>bchar</classname></code> that can be 
 	defined as <code>wchar_t</code> or as <code>char</code> based on whether
-	the <code>BOOST_CTS_USE_WIDE_CHARS</code> preprocessor symobol is or is not defined.
+	the <code><macroname>BOOST_CTS_USE_WIDE_CHARS</macroname></code> preprocessor symobol is or is not defined.
 	Based on the real type of <code>bchar</code> other types like 
 	<code>::boost::cts::<classname>bstring</classname></code>, 
 	<code>::boost::cts::<classname>bistream</classname></code>, 
@@ -72,7 +72,7 @@
 	One of the ways for a library to support different character types
 	is to provide a dual interface using different identifiers for
 	string-related types, classes and functions. For example a naming 
-	convention to prepend or append a defined prefix or suffing to the
+	convention to prepend or append a defined prefix or suffix to the
 	base identifiers. For example:
 </para>
 <programlisting>
