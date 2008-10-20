@@ -13,11 +13,11 @@
 
 #include <boost/mirror/meta_namespace.hpp>
 #include <boost/mirror/meta_type.hpp>
-#include <boost/mirror/meta_types/std_list.hpp>
-#include <boost/mirror/meta_types/std_set.hpp>
-#include <boost/mirror/meta_types/std_map.hpp>
-#include <boost/mirror/meta_types/std_pair.hpp>
-#include <boost/mirror/meta_types/boost_tuple.hpp>
+#include <boost/mirror/meta_types/std/list.hpp>
+#include <boost/mirror/meta_types/std/set.hpp>
+#include <boost/mirror/meta_types/std/map.hpp>
+#include <boost/mirror/meta_types/std/pair.hpp>
+#include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
 //
 #include <cstdlib>
 //

@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_classes/boost_fusion_vector.hpp
+ * \file boost/mirror/meta_classes/boost/fusion/vector.hpp
  * Meta-class for boost::fusion::vector<T0, T1, ..., Tn>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -11,7 +11,7 @@
 #define BOOST_MIRROR_META_CLASSES_BOOST_FUSION_VECTOR_HPP
 
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/meta_types/boost_fusion_vector.hpp>
+#include <boost/mirror/meta_types/boost/fusion/vector.hpp>
 #include <boost/mirror/detail/static_int_to_str.hpp>
 #include <boost/mirror/detail/unnamed_attribs.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>

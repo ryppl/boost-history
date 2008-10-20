@@ -15,9 +15,9 @@
 #include <boost/mirror/detail/meta_type_registering.hpp>
 // register native types
 #include <boost/mirror/meta_types/_native.hpp>
-#include <boost/mirror/meta_types/std_string.hpp>
+#include <boost/mirror/meta_types/std/string.hpp>
 // register bstrings
-#include <boost/mirror/meta_types/boost_bstring.hpp>
+#include <boost/mirror/meta_types/boost/cts/bstring.hpp>
 //
 // non-trivial types
 #include <boost/mirror/meta_types/_const_volatile.hpp>

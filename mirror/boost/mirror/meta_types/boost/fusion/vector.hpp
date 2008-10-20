@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/boost_fusion_vector.hpp
+ * \file boost/mirror/meta_types/boost/fusion/vector.hpp
  * Meta-type for boost::fusion::vector<>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -12,7 +12,7 @@
 
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/detail/template_name.hpp>
-#include <boost/mirror/meta_namespaces/boost_fusion.hpp>
+#include <boost/mirror/meta_namespaces/boost/fusion.hpp>
 //
 #include <boost/fusion/container/vector.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>

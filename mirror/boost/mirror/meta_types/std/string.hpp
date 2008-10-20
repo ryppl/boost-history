@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_string.hpp
+ * \file boost/mirror/meta_types/std/string.hpp
  *
  * Registering of native C++ string types
  *

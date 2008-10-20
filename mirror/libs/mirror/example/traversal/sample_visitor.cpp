@@ -18,9 +18,9 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/meta_types/std_pair.hpp>
-#include <boost/mirror/meta_types/boost_tuple.hpp>
-#include <boost/mirror/meta_classes/boost_tuple.hpp>
+#include <boost/mirror/meta_types/std/pair.hpp>
+#include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
+#include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
 
 #include <boost/mirror/meta_path/ancestors.hpp>
 #include <boost/mirror/meta_path/size.hpp>

@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_slist.hpp
+ * \file boost/mirror/meta_types/std/slist.hpp
  * Meta-type for std::list<T, ...>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost

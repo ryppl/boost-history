@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/boost_tuple.hpp
+ * \file boost/mirror/meta_types/boost/tuples/tuple.hpp
  * Meta-type for boost::tuple<>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,12 +7,12 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_TYPES_BOOST_TUPLE_HPP
-#define BOOST_MIRROR_META_TYPES_BOOST_TUPLE_HPP
+#ifndef BOOST_MIRROR_META_TYPES_BOOST_TUPLES_TUPLE_HPP
+#define BOOST_MIRROR_META_TYPES_BOOST_TUPLES_TUPLE_HPP
 
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/detail/template_name.hpp>
-#include <boost/mirror/meta_namespaces/boost_tuples.hpp>
+#include <boost/mirror/meta_namespaces/boost/tuples.hpp>
 //
 #include <boost/tuple/tuple.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>

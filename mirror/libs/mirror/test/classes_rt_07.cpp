@@ -15,7 +15,7 @@
 
 //
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/meta_classes/boost_fusion_vector.hpp>
+#include <boost/mirror/meta_classes/boost/fusion/vector.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
 //
 #include "./test.hpp"

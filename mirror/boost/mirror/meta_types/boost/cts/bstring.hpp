@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_string.hpp
+ * \file boost/mirror/meta_types/boost/cts/bstring.hpp
  *
  * Registering of native C++ string types
  *
@@ -8,13 +8,13 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_TYPES_BOOST_BSTRING_HPP
-#define BOOST_MIRROR_META_TYPES_BOOST_BSTRING_HPP
+#ifndef BOOST_MIRROR_META_TYPES_BOOST_CTS_BSTRING_HPP
+#define BOOST_MIRROR_META_TYPES_BOOST_CTS_BSTRING_HPP
 
 // register string types
-#include <boost/mirror/meta_types/std_string.hpp>
+#include <boost/mirror/meta_types/std/string.hpp>
 #include <boost/char_type_switch/string.hpp>
-#include <boost/mirror/meta_namespaces/boost_cts.hpp>
+#include <boost/mirror/meta_namespaces/boost/cts.hpp>
 
 namespace boost {
 namespace mirror {

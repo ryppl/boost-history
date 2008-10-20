@@ -17,7 +17,7 @@
 #include <boost/tuple/tuple.hpp>
 //
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/meta_classes/boost_tuple.hpp>
+#include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
 //
 #include "./test.hpp"

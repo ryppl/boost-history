@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_less.hpp
+ * \file boost/mirror/meta_types/std/less.hpp
  *
  * Meta-type for std::less<T>
  *

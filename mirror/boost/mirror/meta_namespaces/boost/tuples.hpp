@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_namespaces/boost_tuples.hpp
+ * \file boost/mirror/meta_namespaces/boost/tuples.hpp
  * Meta-namespace for the boost::tuples namespace
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost

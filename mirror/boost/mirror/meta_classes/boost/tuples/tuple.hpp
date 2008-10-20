@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_classes/boost_tuple.hpp
+ * \file boost/mirror/meta_classes/boost/tuples/tuple.hpp
  * Meta-class for boost::tuple<T0, T1, ..., Tn>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,11 +7,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_CLASSES_BOOST_TUPLE_HPP
-#define BOOST_MIRROR_META_CLASSES_BOOST_TUPLE_HPP
+#ifndef BOOST_MIRROR_META_CLASSES_BOOST_TUPLES_TUPLE_HPP
+#define BOOST_MIRROR_META_CLASSES_BOOST_TUPLES_TUPLE_HPP
 
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/meta_types/boost_tuple.hpp>
+#include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
 #include <boost/mirror/detail/static_int_to_str.hpp>
 #include <boost/mirror/detail/unnamed_attribs.hpp>
 

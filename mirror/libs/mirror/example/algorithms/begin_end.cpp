@@ -19,8 +19,8 @@
 #include <boost/mirror/algorithms.hpp>
 #include <boost/mirror/functions.hpp>
 
-#include <boost/mirror/meta_types/boost_tuple.hpp>
-#include <boost/mirror/meta_classes/boost_tuple.hpp>
+#include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
+#include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
 
 #include <boost/static_assert.hpp>
 #include <boost/mpl/modulus.hpp>

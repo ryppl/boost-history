@@ -19,7 +19,7 @@
 //
 #include <boost/mirror/algorithm/at.hpp>
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/meta_classes/std_pair.hpp>
+#include <boost/mirror/meta_classes/std/pair.hpp>
 //
 #include "./test.hpp"
 

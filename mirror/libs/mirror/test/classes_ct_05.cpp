@@ -24,7 +24,7 @@
 //
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/algorithm/accumulate.hpp>
-#include <boost/mirror/meta_classes/boost_tuple.hpp>
+#include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
 //
 #include "./test.hpp"
 

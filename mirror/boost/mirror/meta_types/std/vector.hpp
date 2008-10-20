@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_vector.hpp
+ * \file boost/mirror/meta_types/std/vector.hpp
  * Meta-type for std::vector<T, ...>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost

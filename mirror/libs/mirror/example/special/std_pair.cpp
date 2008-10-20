@@ -17,8 +17,8 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
-#include <boost/mirror/meta_types/std_pair.hpp>
-#include <boost/mirror/meta_classes/std_pair.hpp>
+#include <boost/mirror/meta_types/std/pair.hpp>
+#include <boost/mirror/meta_classes/std/pair.hpp>
 
 int main(void)
 {

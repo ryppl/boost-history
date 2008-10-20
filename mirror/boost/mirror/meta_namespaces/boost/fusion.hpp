@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_namespaces/boost_fusion.hpp
+ * \file boost/mirror/meta_namespaces/boost/fusion.hpp
  * Meta-namespace for the boost::fusion namespace
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost

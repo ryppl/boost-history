@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_pair.hpp
+ * \file boost/mirror/meta_types/std/pair.hpp
  * Meta-type for std::pair<T1, T2>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost

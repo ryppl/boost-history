@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_namespaces/boost_cts.hpp
+ * \file boost/mirror/meta_namespaces/boost/cts.hpp
  * Meta-namespace for the boost::cts namespace
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost

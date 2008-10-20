@@ -19,15 +19,15 @@
 #include <boost/mirror/algorithms.hpp>
 #include <boost/mirror/functions.hpp>
 
-#include <boost/mirror/meta_types/boost_tuple.hpp>
-#include <boost/mirror/meta_types/std_pair.hpp>
-#include <boost/mirror/meta_types/std_vector.hpp>
-#include <boost/mirror/meta_types/std_list.hpp>
-#include <boost/mirror/meta_types/std_map.hpp>
-#include <boost/mirror/meta_types/std_set.hpp>
+#include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
+#include <boost/mirror/meta_types/std/pair.hpp>
+#include <boost/mirror/meta_types/std/vector.hpp>
+#include <boost/mirror/meta_types/std/list.hpp>
+#include <boost/mirror/meta_types/std/map.hpp>
+#include <boost/mirror/meta_types/std/set.hpp>
 
-#include <boost/mirror/meta_classes/boost_tuple.hpp>
-#include <boost/mirror/meta_classes/boost_fusion_vector.hpp>
+#include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
+#include <boost/mirror/meta_classes/boost/fusion/vector.hpp>
 
 template <class Class>
 class attrib_value_printer

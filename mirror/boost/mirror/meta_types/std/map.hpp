@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/meta_types/std_map.hpp
+ * \file boost/mirror/meta_types/std/map.hpp
  * Meta-type for std::map<K, T, ...>
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -12,7 +12,7 @@
 
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/detail/template_name.hpp>
-#include <boost/mirror/meta_types/std_less.hpp>
+#include <boost/mirror/meta_types/std/less.hpp>
 #include <map> 
 
 namespace boost {
