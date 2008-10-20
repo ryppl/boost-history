@@ -132,6 +132,41 @@ environment_to_envp(const environment& env)
 // ------------------------------------------------------------------------
 
 //!
+//! \brief Gets the current work directory.
+//!
+//! Returns the path to the current work directory, without imposing any
+//! limits on its size as the native getcwd(2) does.  Note that calling
+//! getcwd(NULL, 0) is not portable, hence why we have this auxiliary
+//! function.
+//!
+template< class Path >
+inline
+Path
+get_work_directory(void)
+{
+    size_t buflen = 256;
+    boost::scoped_array< char > buf(new char[buflen]);
+    char *res;
+    do {
+        res = ::getcwd(buf.get(), buflen);
+        if (res == NULL) {
+            if (errno == ERANGE) {
+                buflen *= 2;
+                buf.reset(new char[buflen]);
+            } else {
+                boost::throw_exception
+                    (system_error
+                     ("boost::process::detail::posix_ops::get_work_directory",
+                      "getcwd(2) failed", errno));
+            }
+        }
+    } while (res == NULL);
+    return Path(buf.get());
+}
+
+// ------------------------------------------------------------------------
+
+//!
 //! Holds a mapping between native file descriptors and their corresponding
 //! pipes to set up communication between the parent and the %child process.
 //!
