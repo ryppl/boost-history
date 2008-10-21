@@ -163,7 +163,8 @@ test-suite process :
     [ run shell_test.cpp
         :
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        : <library>$(BOOST_ROOT)//filesystem # XXX Required by misc.hpp only.
+          <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run status_test.cpp
