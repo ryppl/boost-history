@@ -18,6 +18,9 @@
 #include <boost/mirror/meta_types/std/map.hpp>
 #include <boost/mirror/meta_types/std/pair.hpp>
 #include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
+#include <boost/mirror/meta_types/boost/optional.hpp>
+#include <boost/mirror/meta_types/boost/any.hpp>
+#include <boost/mirror/meta_types/boost/variant.hpp>
 //
 #include <cstdlib>
 //
@@ -56,14 +59,15 @@ void test_main()
 	typedef ::test::feature::detail::foo_impl X;
 	typedef BOOST_MIRROR_TYPEDEF(::test, foobar) Y;
 	typedef BOOST_MIRROR_TYPEDEF(::boost::cts, bstring) W;
-	typedef long int Z;
+	typedef ::boost::optional< ::boost::any> Z;
+	typedef ::boost::variant< X, Y, W, Z> V;
 	//
 	typedef X * const T1;
 	typedef Y volatile * const T2;
 	typedef const volatile W T3;
 	typedef Z const * const T4[][1][2][3][4][5][6][7][8][9];
 	typedef T1& (T5)(T2, T3, T4);
-	typedef T5* (T6)(T5*, T5&, Z);
+	typedef T5* (T6)(T5*, T5&, V);
 	//
 	typedef T6& T;
 	//

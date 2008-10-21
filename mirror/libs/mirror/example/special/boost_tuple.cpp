@@ -25,6 +25,9 @@
 #include <boost/mirror/meta_types/std/list.hpp>
 #include <boost/mirror/meta_types/std/map.hpp>
 #include <boost/mirror/meta_types/std/set.hpp>
+#include <boost/mirror/meta_types/boost/any.hpp>
+#include <boost/mirror/meta_types/boost/variant.hpp>
+#include <boost/mirror/meta_types/boost/optional.hpp>
 
 #include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
 #include <boost/mirror/meta_classes/boost/fusion/vector.hpp>
@@ -77,8 +80,10 @@ int main(void)
 	typedef A (*B)(string);
 	typedef B (C)(char, wchar_t);
 	typedef A D[2][3];
+        typedef ::boost::optional< ::boost::any> Z;
+        typedef ::boost::variant< A, B, C, D> V;
 	typedef tuple<int, double, const string *> T1;
-	typedef tuple<const A, volatile B, C&, D> T2;
+	typedef tuple<const A, volatile B, C&, D, V, Z> T2;
 	typedef pair<T1, T2> T3;
 	typedef tuple<void*, const wstring& , const string&> T4;
 	typedef tuple<char, wchar_t, short int const> T5;
