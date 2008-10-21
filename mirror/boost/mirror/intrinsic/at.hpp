@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/at.hpp
+ * \file boost/mirror/intrinsic/at.hpp
  * Gets the I-th meta-attribute/meta-inheritence/etc.
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,11 +7,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_AT_HPP
-#define BOOST_MIRROR_ALGORITHM_AT_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_AT_HPP
+#define BOOST_MIRROR_INTRINSIC_AT_HPP
 
-#include <boost/mirror/algorithm/detail/attribute_at.hpp>
-#include <boost/mirror/algorithm/detail/base_class_at.hpp>
+#include <boost/mirror/intrinsic/detail/attribute_at.hpp>
+#include <boost/mirror/intrinsic/detail/base_class_at.hpp>
 
 namespace boost {
 namespace mirror {

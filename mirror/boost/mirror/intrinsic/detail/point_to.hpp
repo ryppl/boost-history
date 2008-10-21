@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/point_to.hpp
+ * \file boost/mirror/intrinsic/detail/point_to.hpp
  *
  * Template returning the iterator poining to 
  * the element at the given position
@@ -9,10 +9,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_POINT_TO_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_POINT_TO_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_DETAIL_POINT_TO_HPP
+#define BOOST_MIRROR_INTRINSIC_DETAIL_POINT_TO_HPP
 
-#include <boost/mirror/algorithm/detail/iterator.hpp>
+#include <boost/mirror/iterator/detail/iterator.hpp>
 #include <boost/mpl/always.hpp>
 
 namespace boost {

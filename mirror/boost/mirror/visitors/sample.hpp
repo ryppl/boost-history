@@ -18,7 +18,7 @@
 #include <boost/mirror/traits/reflects_virtual_inheritance.hpp>
 #include <boost/mirror/traits/reflects_global_scope.hpp>
 // container size
-#include <boost/mirror/algorithm/size.hpp>
+#include <boost/mirror/intrinsic/size.hpp>
 //
 
 //

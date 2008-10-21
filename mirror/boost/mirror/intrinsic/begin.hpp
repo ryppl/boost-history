@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/begin.hpp
+ * \file boost/mirror/intrinsic/begin.hpp
  * Returns the iterator pointing to the first meta-object
  * in a meta-object sequence.
  *
@@ -8,11 +8,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_BEGIN_HPP
-#define BOOST_MIRROR_ALGORITHM_BEGIN_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_BEGIN_HPP
+#define BOOST_MIRROR_INTRINSIC_BEGIN_HPP
 
-#include <boost/mirror/algorithm/detail/begin.hpp>
-#include <boost/mirror/algorithm/detail/positional.hpp>
+#include <boost/mirror/intrinsic/detail/begin.hpp>
+#include <boost/mirror/intrinsic/detail/positional.hpp>
 
 namespace boost {
 namespace mirror {

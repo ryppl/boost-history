@@ -17,6 +17,8 @@
 #include <boost/mirror/meta_class.hpp>
 
 #include <boost/mirror/algorithms.hpp>
+#include <boost/mirror/intrinsic.hpp>
+#include <boost/mirror/iterators.hpp>
 #include <boost/mirror/functions.hpp>
 
 #include <boost/mirror/meta_types/boost/tuples/tuple.hpp>

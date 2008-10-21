@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/next.hpp
+ * \file boost/mirror/iterator/next.hpp
  * Returns the iterator pointing to the prior element
  * in a meta-object sequence.
  *
@@ -11,7 +11,7 @@
 #ifndef BOOST_MIRROR_ALGORITHM_NEXT_HPP
 #define BOOST_MIRROR_ALGORITHM_NEXT_HPP
 
-#include <boost/mirror/algorithm/detail/iterator.hpp>
+#include <boost/mirror/iterator/detail/iterator.hpp>
 
 namespace boost {
 namespace mirror {

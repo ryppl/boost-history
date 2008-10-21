@@ -19,7 +19,7 @@
 #include <boost/type_traits/is_same.hpp>
 //
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/algorithm/at.hpp>
+#include <boost/mirror/intrinsic/at.hpp>
 //
 #include "./namespaces.hpp"
 #include "./classes.hpp"

@@ -17,7 +17,7 @@
 #include <boost/mpl/at.hpp>
 //
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/algorithm/get_type_list.hpp>
+#include <boost/mirror/intrinsic/get_type_list.hpp>
 //
 #include "./test.hpp"
 #include "./classes.hpp"

@@ -25,7 +25,7 @@
 //
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/algorithm/accumulate.hpp>
-#include <boost/mirror/algorithm/get_type_list.hpp>
+#include <boost/mirror/intrinsic/get_type_list.hpp>
 //
 #include "./namespaces.hpp"
 #include "./classes.hpp"

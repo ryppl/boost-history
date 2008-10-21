@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/rend.hpp
+ * \file boost/mirror/intrinsic/rend.hpp
  * Returns the reverse iterator pointing before the first meta-object
  * in a meta-object sequence.
  *
@@ -8,11 +8,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_REND_HPP
-#define BOOST_MIRROR_ALGORITHM_REND_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_REND_HPP
+#define BOOST_MIRROR_INTRINSIC_REND_HPP
 
-#include <boost/mirror/algorithm/detail/rend.hpp>
-#include <boost/mirror/algorithm/detail/positional.hpp>
+#include <boost/mirror/intrinsic/detail/rend.hpp>
+#include <boost/mirror/intrinsic/detail/positional.hpp>
 
 namespace boost {
 namespace mirror {

@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/is_valid.hpp
+ * \file boost/mirror/iterator/is_valid.hpp
  *
  *  returns mpl::true_ if the passed iterator is valid
  *  returns mpl::false_ otherwise
@@ -9,8 +9,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_IS_VALID_HPP
-#define BOOST_MIRROR_ALGORITHM_ID_VALID_HPP
+#ifndef BOOST_MIRROR_ITERATOR_IS_VALID_HPP
+#define BOOST_MIRROR_ITERATOR_ID_VALID_HPP
 
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/and.hpp>

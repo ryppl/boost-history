@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/iterator_comparison.hpp
+ * \file boost/mirror/iterator/detail/iterator_comparison.hpp
  *
  * Common boilerplate for iterator comparison.
  * 
@@ -9,10 +9,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_ITERATOR_COMPARISON_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_ITERATOR_COMPARISON_HPP
+#ifndef BOOST_MIRROR_ITERATOR_DETAIL_ITERATOR_COMPARISON_HPP
+#define BOOST_MIRROR_ITERATOR_DETAIL_ITERATOR_COMPARISON_HPP
 
-#include <boost/mirror/algorithm/detail/common_iterator.hpp>
+#include <boost/mirror/iterator/detail/common_iterator.hpp>
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/bool.hpp>
 

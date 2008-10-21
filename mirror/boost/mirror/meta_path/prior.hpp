@@ -10,9 +10,9 @@
 #define BOOST_MIRROR_META_PATH_PRIOR_HPP
 
 #include <boost/mirror/meta_path/node_context.hpp>
-#include <boost/mirror/algorithm/prior.hpp>
-#include <boost/mirror/algorithm/point_to.hpp>
-#include <boost/mirror/algorithm/is_valid.hpp>
+#include <boost/mirror/iterator/prior.hpp>
+#include <boost/mirror/iterator/is_valid.hpp>
+#include <boost/mirror/intrinsic/point_to.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/back.hpp>

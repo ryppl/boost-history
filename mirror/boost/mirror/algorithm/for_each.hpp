@@ -12,8 +12,8 @@
 
 #include <boost/mirror/algorithm/detail/for_each.hpp>
 #include <boost/mirror/algorithm/detail/no_op.hpp>
-#include <boost/mirror/algorithm/begin.hpp>
-#include <boost/mirror/algorithm/end.hpp>
+#include <boost/mirror/intrinsic/begin.hpp>
+#include <boost/mirror/intrinsic/end.hpp>
 
 namespace boost {
 namespace mirror {

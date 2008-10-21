@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/attribute_iterator.hpp
+ * \file boost/mirror/iterator/detail/attribute_iterator.hpp
  * Iterators for iterating through meta-object sequences
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,10 +7,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_ATTRIBUTE_ITERATOR_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_ATTRIBUTE_ITERATOR_HPP
+#ifndef BOOST_MIRROR_ITERATOR_DETAIL_ATTRIBUTE_ITERATOR_HPP
+#define BOOST_MIRROR_ITERATOR_DETAIL_ATTRIBUTE_ITERATOR_HPP
 
-#include <boost/mirror/algorithm/detail/common_iterator.hpp>
+#include <boost/mirror/iterator/detail/common_iterator.hpp>
 #include <boost/mirror/meta_attributes.hpp>
 
 namespace boost {

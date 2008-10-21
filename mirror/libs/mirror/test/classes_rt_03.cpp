@@ -17,7 +17,7 @@
 #include <boost/lexical_cast.hpp>
 #include <utility>
 //
-#include <boost/mirror/algorithm/at.hpp>
+#include <boost/mirror/intrinsic/at.hpp>
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/meta_classes/std/pair.hpp>
 //

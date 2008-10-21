@@ -12,7 +12,7 @@
 #ifndef BOOST_MIRROR_ALGORITHM_DETAIL_REVERSE_FIND_IF_HPP
 #define BOOST_MIRROR_ALGORITHM_DETAIL_REVERSE_FIND_IF_HPP
 
-#include <boost/mirror/algorithm/detail/reverse_iterator.hpp>
+#include <boost/mirror/iterator/detail/reverse_iterator.hpp>
 
 namespace boost {
 namespace mirror {

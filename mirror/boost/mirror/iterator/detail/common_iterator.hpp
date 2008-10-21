@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/common_iterator.hpp
+ * \file boost/mirror/iterator/detail/common_iterator.hpp
  *
  *  Common iterator-related declarations
  *
@@ -8,11 +8,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_COMMON_ITERATOR_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_COMMON_ITERATOR_HPP
+#ifndef BOOST_MIRROR_ITERATOR_DETAIL_COMMON_ITERATOR_HPP
+#define BOOST_MIRROR_ITERATOR_DETAIL_COMMON_ITERATOR_HPP
 
-#include <boost/mirror/algorithm/size.hpp>
-#include <boost/mirror/algorithm/at.hpp>
+#include <boost/mirror/intrinsic/size.hpp>
+#include <boost/mirror/intrinsic/at.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>

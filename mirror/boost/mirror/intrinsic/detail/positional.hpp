@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/positional.hpp
+ * \file boost/mirror/intrinsic/detail/positional.hpp
  *
  * Common boilerplate for iterator getters.
  * 
@@ -9,8 +9,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_POSITIONAL_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_POSITIONAL_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_DETAIL_POSITIONAL_HPP
+#define BOOST_MIRROR_INTRINSIC_DETAIL_POSITIONAL_HPP
 
 #include <boost/mirror/meta_attributes.hpp>
 #include <boost/mirror/meta_inheritance.hpp>

@@ -11,8 +11,8 @@
 #define BOOST_MIRROR_ALGORITHM_ACCUMULATE_HPP
 
 #include <boost/mirror/algorithm/detail/accumulate.hpp>
-#include <boost/mirror/algorithm/begin.hpp>
-#include <boost/mirror/algorithm/end.hpp>
+#include <boost/mirror/intrinsic/begin.hpp>
+#include <boost/mirror/intrinsic/end.hpp>
 
 namespace boost {
 namespace mirror {

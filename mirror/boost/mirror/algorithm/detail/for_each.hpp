@@ -11,7 +11,7 @@
 #define BOOST_MIRROR_ALGORITHM_DETAIL_FOR_EACH_HPP
 
 #include <boost/mirror/algorithm/detail/iterative.hpp>
-#include <boost/mirror/algorithm/next.hpp>
+#include <boost/mirror/iterator/next.hpp>
 
 namespace boost {
 namespace mirror {

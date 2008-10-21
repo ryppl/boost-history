@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/get_type_list.hpp
+ * \file boost/mirror/intrinsic/get_type_list.hpp
  * Gets the list of types from a meta-object-sequence.
  * For meta_attributes it returns the types of reflected attributes,
  * for meta_base_classes it returns the types of base classes, etc.
@@ -9,8 +9,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_GET_TYPE_LIST_HPP
-#define BOOST_MIRROR_ALGORITHM_GET_TYPE_LIST_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_GET_TYPE_LIST_HPP
+#define BOOST_MIRROR_INTRINSIC_GET_TYPE_LIST_HPP
 
 #include <boost/mpl/accumulate.hpp>
 

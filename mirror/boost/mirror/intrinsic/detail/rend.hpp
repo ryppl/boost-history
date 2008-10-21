@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/rend.hpp
+ * \file boost/mirror/intrinsic/detail/rend.hpp
  * Template returning the iterator poining before 
  * the first element in a meta object sequence.
  *
@@ -8,10 +8,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_REND_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_REND_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_DETAIL_REND_HPP
+#define BOOST_MIRROR_INTRINSIC_DETAIL_REND_HPP
 
-#include <boost/mirror/algorithm/detail/iterator.hpp>
+#include <boost/mirror/iterator/detail/iterator.hpp>
 #include <boost/mpl/always.hpp>
 
 namespace boost {

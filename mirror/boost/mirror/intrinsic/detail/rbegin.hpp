@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/rbegin.hpp
+ * \file boost/mirror/intrinsic/detail/rbegin.hpp
  * Template returning the iterator poining to 
  * the last element in a meta object sequence.
  *
@@ -8,10 +8,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_RBEGIN_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_RBEGIN_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_DETAIL_RBEGIN_HPP
+#define BOOST_MIRROR_INTRINSIC_DETAIL_RBEGIN_HPP
 
-#include <boost/mirror/algorithm/detail/reverse_iterator.hpp>
+#include <boost/mirror/iterator/detail/reverse_iterator.hpp>
 #include <boost/mpl/always.hpp>
 
 namespace boost {

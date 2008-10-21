@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/base_class_at.hpp
+ * \file boost/mirror/intrinsic/detail/base_class_at.hpp
  * Implementation of the at algorithm for base_classes
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,8 +7,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_BASE_CLASS_AT_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_BASE_CLASS_AT_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_DETAIL_BASE_CLASS_AT_HPP
+#define BOOST_MIRROR_INTRINSIC_DETAIL_BASE_CLASS_AT_HPP
 
 // mirror common definitions 
 #include <boost/mirror/common_defs.hpp>

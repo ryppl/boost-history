@@ -11,7 +11,7 @@
 
 #include <boost/mirror/meta_path/node_context.hpp>
 #include <boost/mirror/meta_path/prior.hpp>
-#include <boost/mirror/algorithm/next.hpp>
+#include <boost/mirror/iterator/next.hpp>
 
 namespace boost {
 namespace mirror {

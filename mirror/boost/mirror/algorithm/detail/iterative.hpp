@@ -15,9 +15,9 @@
 // forward declarations
 #include <boost/mirror/meta_data_fwd.hpp>
 // mirror::size
-#include <boost/mirror/algorithm/size.hpp>
-#include <boost/mirror/algorithm/iterator_equal.hpp>
-#include <boost/mirror/algorithm/next.hpp>
+#include <boost/mirror/intrinsic/size.hpp>
+#include <boost/mirror/iterator/iterator_equal.hpp>
+#include <boost/mirror/iterator/next.hpp>
 //
 #include <boost/ref.hpp>
 

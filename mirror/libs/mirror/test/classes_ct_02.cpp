@@ -25,7 +25,7 @@
 #include <boost/mpl/equal_to.hpp>
 //
 #include <boost/mirror/meta_class.hpp>
-#include <boost/mirror/algorithm/size.hpp>
+#include <boost/mirror/intrinsic/size.hpp>
 //
 #include "./namespaces.hpp"
 #include "./classes.hpp"

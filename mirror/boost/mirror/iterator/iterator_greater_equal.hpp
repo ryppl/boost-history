@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/iterator_greater_equal.hpp
+ * \file boost/mirror/iterator/iterator_greater_equal.hpp
  * 
  * Iterator greater than or equal comparison
  *
@@ -8,10 +8,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_ITERATOR_GREATER_EQUAL_HPP
-#define BOOST_MIRROR_ALGORITHM_ITERATOR_GREATER_EQUAL_HPP
+#ifndef BOOST_MIRROR_ITERATOR_ITERATOR_GREATER_EQUAL_HPP
+#define BOOST_MIRROR_ITERATOR_ITERATOR_GREATER_EQUAL_HPP
 
-#include <boost/mirror/algorithm/detail/iterator_comparison.hpp>
+#include <boost/mirror/iterator/detail/iterator_comparison.hpp>
 #include <boost/mpl/greater_equal.hpp>
 
 namespace boost {

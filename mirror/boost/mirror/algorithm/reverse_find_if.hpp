@@ -13,7 +13,7 @@
 #define BOOST_MIRROR_ALGORITHM_REVERSE_FIND_IF_HPP
 
 #include <boost/mirror/algorithm/detail/reverse_find_if.hpp>
-#include <boost/mirror/algorithm/detail/positional.hpp>
+#include <boost/mirror/intrinsic/detail/positional.hpp>
 
 namespace boost {
 namespace mirror {

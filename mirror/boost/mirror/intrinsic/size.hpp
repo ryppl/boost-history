@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/size.hpp
+ * \file boost/mirror/intrinsic/size.hpp
  * Gets count of meta-attributes/meta-inheritences/etc.
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,8 +7,8 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_SIZE_HPP
-#define BOOST_MIRROR_ALGORITHM_SIZE_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_SIZE_HPP
+#define BOOST_MIRROR_INTRINSIC_SIZE_HPP
 
 namespace boost {
 namespace mirror {

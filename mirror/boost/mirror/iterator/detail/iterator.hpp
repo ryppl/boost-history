@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/algorithm/detail/iterator.hpp
+ * \file boost/mirror/iterator/detail/iterator.hpp
  * Includes all meta-object sequence iterators
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,11 +7,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ALGORITHM_DETAIL_ITERATOR_HPP
-#define BOOST_MIRROR_ALGORITHM_DETAIL_ITERATOR_HPP
+#ifndef BOOST_MIRROR_ITERATOR_DETAIL_ITERATOR_HPP
+#define BOOST_MIRROR_ITERATOR_DETAIL_ITERATOR_HPP
 
-#include <boost/mirror/algorithm/detail/attribute_iterator.hpp>
-#include <boost/mirror/algorithm/detail/base_class_iterator.hpp>
+#include <boost/mirror/iterator/detail/attribute_iterator.hpp>
+#include <boost/mirror/iterator/detail/base_class_iterator.hpp>
 
 namespace boost {
 namespace mirror {
