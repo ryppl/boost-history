@@ -15,5 +15,6 @@ alias bindings-blas-tests :
     [ run blas1.cpp ]
     [ link blas2.cpp ]
     [ run blas3.cpp ]
+    [ run ublas_slice.cpp ]
 ;
 
