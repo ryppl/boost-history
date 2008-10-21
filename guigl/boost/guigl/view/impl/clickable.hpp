@@ -9,8 +9,8 @@
 #ifndef BOOST__GUIGL__VIEW__IMPL__CLICKABLE_HPP
 #define BOOST__GUIGL__VIEW__IMPL__CLICKABLE_HPP
 
-#include <boost/guigl/view/colored.hpp>
-#include <boost/guigl/platform/opengl.hpp>
+
+#include <boost/guigl/view/clickable.hpp>
 
 
 namespace boost { namespace guigl { namespace view {
