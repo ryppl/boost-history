@@ -6,12 +6,15 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #----------------------------------------------===============================*/
 
+lib glut : : <name>glut <link>shared ;
+
 project boost/guigl 
     : source-location ../src
     : requirements
         <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
         <define>BOOST_ALL_NO_LIB=1
     : usage-requirements
+    	<toolset>gcc:<library>glut
         <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
         <library>/boost/signals//boost_signals
         <define>BOOST_ALL_NO_LIB=1

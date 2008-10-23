@@ -68,7 +68,7 @@ protected:
     void draw_prologue();
     void draw_epilogue();
 
-    friend class access;
+    friend class guigl::access;
     void set_parent(base &parent)
     {   m_parent = &parent; }
 private:
