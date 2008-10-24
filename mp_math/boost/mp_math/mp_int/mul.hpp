@@ -36,7 +36,8 @@ void mp_int<A,T>::multiply_by_2()
     /* get what will be the *next* carry bit from the 
      * MSB of the current digit 
      */
-    const digit_type rr = digits_[x] >> static_cast<digit_type>(valid_bits - 1);
+    const digit_type rr =
+      digits_[x] >> (static_cast<digit_type>(valid_bits - 1));
     
     /* now shift up this digit, add in the carry [from the previous] */
     digits_[x] = (digits_[x] << digit_type(1)) | carry;
