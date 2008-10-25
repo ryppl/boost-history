@@ -13,6 +13,7 @@ project
     : requirements
       <include>../../..
       <link>static
+      <toolset>gcc:<cxxflags>-std=c++0x
       <define>BOOST_TEST_DYN_LINK
       <define>BOOST_TEST_MAIN
       #<define>BOOST_MP_MATH_MP_INT_USE_ASM
@@ -27,6 +28,8 @@ unit-test div             : div.cpp             boost_test ;
 unit-test gcd             : gcd.cpp             boost_test ;
 unit-test integral_ops    : integral_ops.cpp    boost_test ;
 unit-test jacobi          : jacobi.cpp          boost_test ;
+unit-test lcm             : lcm.cpp             boost_test ;
+unit-test modinv          : modinv.cpp          boost_test ;
 unit-test mul             : mul.cpp             boost_test ;
 unit-test pow             : pow.cpp             boost_test ;
 unit-test prime           : prime.cpp           boost_test ;

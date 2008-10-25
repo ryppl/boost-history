@@ -3,20 +3,30 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-/* computes least common multiple as |a*b|/(a, b) */
+// computes least common multiple as |a*b|/gcd(a,b)
 template<class A, class T>
 mp_int<A,T> lcm(const mp_int<A,T>& a, const mp_int<A,T>& b)
 {
-  /* t1 = get the GCD of the two inputs */
-  const mp_int<A,T> t1 = gcd(a,b);
-
-  /* divide the smallest by the GCD */
-  const mp_int<A,T>* smallest = a.compare_magnitude(b) == -1 ? &a : &b;
-
-  mp_int<A,T> t2 = *smallest / t1;
+  mp_int<A,T> result;
+    
+  if (!a || !b)
+  {
+    result.zero();
+    return result;
+  }
   
-  t2.sign_ = 1;
+  result = a / gcd(a, b) * b;
+
+  result.set_sign(1);
   
-  return t2;
+  return result;
 }
+
+#ifdef BOOST_HAS_VARIADIC_TMPL
+template<class A, class T, class... MpInts>
+mp_int<A,T> lcm(const mp_int<A,T>& a, const mp_int<A,T>& b, const MpInts&... args)
+{
+  return lcm(lcm(a, b), args...);
+}
+#endif
 

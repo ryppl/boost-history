@@ -312,7 +312,7 @@ public: // low level interface
   void divide(const mp_int& divisor, mp_int* remainder);
   void divide_by_2();
   digit_type divide_by_3();
-  void modulo_2_to_the_power_of(int);
+  void modulo_2_to_the_power_of(size_type);
   size_type precision() const;
   size_type count_lsb() const;
   void shift_right(size_type b, mp_int* remainder);
@@ -344,9 +344,9 @@ public: // low level interface
   void barret_modpow(const mp_int& exp, const mp_int& m, int reduction_mode);
   void fast_modpow(const mp_int& exp, const mp_int& m, int reduction_mode);
 
-  void modinv(const mp_int& b);
-  void slow_modinv(const mp_int& b);
-  void fast_modinv(const mp_int& b);
+  void modinv(const mp_int& modulus);
+  void even_modinv(const mp_int& modulus);
+  void odd_modinv(const mp_int& modulus);
 
   void set_least_significant_bit()
   {
@@ -873,6 +873,7 @@ inline void swap(mp_int<A,T>& lhs, mp_int<A,T>&& rhs)
 #include <boost/mp_math/mp_int/jacobi.hpp>
 #include <boost/mp_math/mp_int/lcm.hpp>
 #include <boost/mp_math/mp_int/mod.hpp>
+#include <boost/mp_math/mp_int/modinv.hpp>
 #include <boost/mp_math/mp_int/modular_reduction.hpp>
 #include <boost/mp_math/mp_int/mul.hpp>
 #include <boost/mp_math/mp_int/operators.hpp>
