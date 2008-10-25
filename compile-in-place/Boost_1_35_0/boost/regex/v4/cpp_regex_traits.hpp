@@ -375,6 +375,8 @@ private:
 };
 
 #ifdef BOOST_REGEX_BUGGY_CTYPE_FACET
+#  ifndef CHAR_CLASS_DEFINED
+#  define CHAR_CLASS_DEFINED
 enum
 {
    char_class_space=1<<0, 
@@ -392,7 +394,7 @@ enum
    char_class_word=1<<10,
    char_class_unicode=1<<11
 };
-
+#  endif
 #endif
 
 //

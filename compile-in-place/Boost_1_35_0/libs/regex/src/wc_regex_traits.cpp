@@ -99,6 +99,8 @@ c_regex_traits<wchar_t>::string_type BOOST_REGEX_CALL c_regex_traits<wchar_t>::t
    return result;
 }
 
+#ifndef CHAR_CLASS_DEFINED
+#define CHAR_CLASS_DEFINED
 enum
 {
    char_class_space=1<<0, 
@@ -116,6 +118,7 @@ enum
    char_class_word=1<<10,
    char_class_unicode=1<<11
 };
+#endif
 
 c_regex_traits<wchar_t>::char_class_type BOOST_REGEX_CALL c_regex_traits<wchar_t>::lookup_classname(const wchar_t* p1, const wchar_t* p2) 
 {
