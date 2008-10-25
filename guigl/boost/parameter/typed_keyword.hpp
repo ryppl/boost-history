@@ -39,7 +39,22 @@ struct typed_keyword : public keyword_base<Tag>
     {
         return typed_tagged_argument_type(x);
     }
+    
+    template<typename T0>
+    typed_tagged_argument_type const
+    operator()(const T0 &t0) const
+    {   return typed_tagged_argument_type(typename Tag::value_type(t0)); }
 
+    template<typename T0, typename T1>
+    typed_tagged_argument_type const
+    operator()(const T0 &t0, const T1 &t1) const
+    {   return typed_tagged_argument_type(typename Tag::value_type(t0, t1)); }
+
+    template<typename T0, typename T1, typename T2>
+    typed_tagged_argument_type const
+    operator()(const T0 &t0, const T1 &t1, const T2 &t2) const
+    {   return typed_tagged_argument_type(typename Tag::value_type(t0, t1, t2)); }
+    
  public: // Insurance against ODR violations
     
     // People will need to define these keywords in header files.  To
