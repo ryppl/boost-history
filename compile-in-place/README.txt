@@ -1,8 +1,46 @@
+[$Id]
+
 Note: below is a copy of a mail from 2008-04-29 which started this feature
 branch. This is intended as information for people that want to try this
 feature. Further information follows.
 
+TODO:
+------
 
+- I replaced UINTMAX_C(~0) with static_cast<boost::uintmax_t>(-1) in once.cpp
+but I'm not sure why this was used in the first place. The problem I solved is
+that this doesn't require #define __STDC_CONSTANT_MACROS for the whole program
+using UINTMAX_C(~0).
+
+- The thread example currently uses thread, mutex and condition. Some tests for
+once and TSS are still missing.
+
+- Check if any changes to the Python support for embedding should be done for
+the test file.
+
+- Check if any of the changes to the filesystem lib affect the example code.
+
+- IOStreams depend on zlib and bzip2. However, the core functions should be
+available even without them, so we should try to make it possible to compile
+without them. There is also one filter for gzip, what about that? Also,
+looking at detail/config/zlib.hpp and bzip2.hpp it seems to link to two more
+libs boost_zlib and boost_bzip2. Maybe this should all be split somehow...
+
+- Boost.Regex can be configured to use ICU, test that setup.
+
+- boost/regex/v4/instances.hpp actually contains code that seems to be part of
+the actual library code. Check what is going on there and whether it shouldn't
+be moved from the headers to the library sources.
+
+- Under MS VC++8 (and others as well, I guess) you need to define a macro to
+tell the .cpp sources that you are compiling them and one to the header files
+to tell them that you don't want autolinking. Currently, the headers only
+support BOOST_foo_STATIC_LIB and BOOST_foo_DYNAMIC_LIB (or something akin) to
+switch between static and dynamic linking. These patches here should provide a
+third way.
+
+==============================================================================
+Content of mail follows...
 
 I have in the past sometimes[1] described another alternative way to linking 
 and quite a few people also seemed interested. Basically, it works by 
