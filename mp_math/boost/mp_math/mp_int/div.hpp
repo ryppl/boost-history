@@ -49,18 +49,18 @@ mp_int<A,T>::divide_by_digit(digit_type b)
   return static_cast<digit_type>(w);
 }
 
-/* b = a/2 */
+// *this /= 2
 template<class A, class T>
 void mp_int<A,T>::divide_by_2()
 {
   digit_type carry = 0;
   for (reverse_iterator d = rbegin(); d != rend(); ++d)
   {
-    /* get the carry for the next iteration */
+    // get the carry for the next iteration
     const digit_type rr = *d & 1;
-    /* shift the current digit, add in carry and store */
+    // shift the current digit, add in carry and store
     *d = (*d >> 1) | (carry << (valid_bits - 1));
-    /* forward carry to next iteration */
+    // forward carry to next iteration
     carry = rr;
   }
   clamp();
@@ -68,13 +68,14 @@ void mp_int<A,T>::divide_by_2()
     sign_ = 1;
 }
 
-/* divide by three (based on routine from MPI and the GMP manual) */
+// divide by three (based on routine from MPI and the GMP manual)
 template<class A, class T>
 typename mp_int<A,T>::digit_type
 mp_int<A,T>::divide_by_3()
 {
-  /* b = 2**valid_bits / 3 */
-  const word_type b = (word_type(1) << static_cast<word_type>(valid_bits)) / word_type(3);
+  // b = 2**valid_bits / 3
+  const word_type b = (word_type(1) << static_cast<word_type>(valid_bits))
+                    / word_type(3);
 
   word_type w = 0;
   for (reverse_iterator d = rbegin(); d != rend(); ++d)
@@ -84,15 +85,13 @@ mp_int<A,T>::divide_by_3()
     word_type t;
     if (w >= 3)
     {
-      /* multiply w by [1/3] */
+      // multiply w by [1/3]
       t = (w * b) >> static_cast<word_type>(valid_bits);
 
-      /* now subtract 3 * [w/3] from w, to get the remainder */
+      // now subtract 3 * [w/3] from w, to get the remainder
       w -= t+t+t;
 
-      /* fixup the remainder as required since
-       * the optimization is not exact.
-       */
+      // fixup the remainder as required since the optimization is not exact.
       while (w >= 3)
       {
         t += 1;
@@ -110,7 +109,7 @@ mp_int<A,T>::divide_by_3()
   return static_cast<digit_type>(w);
 }
 
-/* shift right by a certain bit count */
+// shift right by a certain bit count
 template<class A, class T>
 void mp_int<A,T>::shift_right(size_type b, mp_int* remainder)
 {
@@ -121,7 +120,7 @@ void mp_int<A,T>::shift_right(size_type b, mp_int* remainder)
     return;
   }
 
-  /* get the remainder */
+  // get the remainder
   mp_int t;
   if (remainder)
   {
@@ -129,29 +128,29 @@ void mp_int<A,T>::shift_right(size_type b, mp_int* remainder)
     remainder->modulo_2_to_the_power_of(b);
   }
 
-  /* shift by as many digits in the bit count */
+  // shift by as many digits in the bit count
   if (b >= static_cast<size_type>(valid_bits))
     shift_digits_right(b / valid_bits);
 
-  /* shift any bit count < valid_bits */
+  // shift any bit count < valid_bits
   const digit_type D = b % valid_bits;
   if (D)
   {
     const digit_type mask = (digit_type(1) << D) - 1;
 
-    /* shift for lsb */
+    // shift for lsb
     const digit_type shift = valid_bits - D;
 
     digit_type carry = 0;
     for (reverse_iterator d = rbegin(); d != rend(); ++d)
     {
-      /* get the lower bits of this word in a temp */
+      // get the lower bits of this word in a temp
       const digit_type rr = *d & mask;
 
-      /* shift the current word and mix in the carry bits from the previous word */
+      // shift the current word and mix in the carry bits from the previous word
       *d = (*d >> D) | (carry << shift);
 
-      /* set the carry to the carry bits of the current word found above */
+      // set the carry to the carry bits of the current word found above
       carry = rr;
     }
   }
@@ -160,19 +159,17 @@ void mp_int<A,T>::shift_right(size_type b, mp_int* remainder)
     sign_ = 1;
 }
 
-/* integer signed division. 
- * c*b + d == a [e.g. a/b, c=quotient, d=remainder]
- * HAC pp.598 Algorithm 14.20
- *
- * Note that the description in HAC is horribly 
- * incomplete.  For example, it doesn't consider 
- * the case where digits are removed from 'x' in 
- * the inner loop.  It also doesn't consider the 
- * case that y has fewer than three digits, etc..
- *
- * The overall algorithm is as described as 
- * 14.20 from HAC but fixed to treat these cases.
-*/
+// integer signed division. 
+// c*b + d == a [e.g. a/b, c=quotient, d=remainder]
+// HAC pp.598 Algorithm 14.20
+//
+// Note that the description in HAC is horribly incomplete.  For example, it
+// doesn't consider the case where digits are removed from 'x' in the inner
+// loop.  It also doesn't consider the case that y has fewer than three digits,
+// etc..
+// The overall algorithm is as described as 14.20 from HAC but fixed to treat
+// these cases.
+
 // divide *this by rhs, optionally store remainder
 template<class A, class T>
 void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
@@ -180,7 +177,7 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   if (rhs.is_zero())
     throw std::domain_error("mp_int::divide: division by zero");
 
-  /* if *this < rhs then q=0, r = *this */
+  // if *this < rhs then q=0, r = *this
   if (compare_magnitude(rhs) == -1)
   {
     if (remainder)
@@ -197,11 +194,11 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   mp_int x(*this);
   mp_int y(rhs);
 
-  /* fix the sign */
+  // fix the sign
   const int neg = (sign_ == rhs.sign_) ? 1 : -1;
   x.sign_ = y.sign_ = 1;
 
-  /* normalize both x and y, ensure that y >= beta/2, [beta == 2**valid_bits] */
+  // normalize both x and y, ensure that y >= beta/2, [beta == 2**valid_bits]
   size_type norm = y.precision() % valid_bits;
   if (norm < valid_bits-1)
   {
@@ -212,13 +209,13 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   else
     norm = 0;
 
-  /* note hac does 0 based, so if used==5 then its 0,1,2,3,4, e.g. use 4 */
+  // note hac does 0 based, so if used==5 then its 0,1,2,3,4, e.g. use 4
   const size_type n = x.used_ - 1;
   const size_type t = y.used_ - 1;
 
   // find leading digit of the quotient
-  /* while (x >= y*beta**(n-t)) do { q[n-t] += 1; x -= y*beta**(n-t) } */
-  y.shift_digits_left(n - t); /* y = y*beta**(n-t) */
+  // while (x >= y*beta**(n-t)) do { q[n-t] += 1; x -= y*beta**(n-t) }
+  y.shift_digits_left(n - t); // y = y*beta**(n-t)
 
   while (x.compare(y) != -1)
   {
@@ -226,18 +223,18 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
     x -= y;
   }
 
-  /* reset y by shifting it back down */
+  // reset y by shifting it back down
   y.shift_digits_right(n - t);
 
   // find the remainder of the digits
-  /* step 3. for i from n down to (t + 1) */
+  // step 3. for i from n down to (t + 1)
   for (size_type i = n; i >= (t + 1); i--)
   {
     if (i > x.used_)
       continue;
 
-    /* step 3.1 if xi == yt then set q{i-t-1} to beta-1, 
-     * otherwise set q{i-t-1} to (xi*beta + x{i-1})/yt */
+    // step 3.1 if xi == yt then set q{i-t-1} to beta-1, 
+    // otherwise set q{i-t-1} to (xi*beta + x{i-1})/yt
     if (x[i] == y[t])
       q[i - t - 1] = std::numeric_limits<digit_type>::max();
     else
@@ -250,11 +247,10 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
     }
 
     // now fixup quotient estimation
-    /* while (q{i-t-1} * (yt * beta + y{t-1})) > 
-             xi * beta**2 + xi-1 * beta + xi-2 
-     
-       do q{i-t-1} -= 1; 
-    */
+    // while (q{i-t-1} * (yt * beta + y{t-1})) >
+    //       xi * beta**2 + xi-1 * beta + xi-2
+    //
+    // do q{i-t-1} -= 1;
 
     mp_int t1, t2;
     t1.grow_capacity(3);
@@ -265,27 +261,27 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
     {
       --q[i - t - 1];
 
-      /* find left hand */
+      // find left hand
       t1.zero();
       t1[0] = (t == 0) ? 0 : y[t - 1];
       t1[1] = y[t];
       t1.used_ = 2;
       t1.multiply_by_digit(q[i - t - 1]);
 
-      /* find right hand */
+      // find right hand
       t2[0] = (i < 2) ? 0 : x[i - 2];
       t2[1] = (i == 0) ? 0 : x[i - 1];
       t2[2] = x[i];
       t2.used_ = 3;
     } while (t1.compare_magnitude(t2) == 1);
 
-    /* step 3.3 x = x - q{i-t-1} * y * beta**{i-t-1} */
+    // step 3.3 x = x - q{i-t-1} * y * beta**{i-t-1}
     t1 = y;
     t1.multiply_by_digit(q[i - t -1]);
     t1.shift_digits_left(i - t - 1);
     x -= t1;
 
-    /* if x < 0 then { x = x + y*beta**{i-t-1}; q{i-t-1} -= 1; } */
+    // if x < 0 then { x = x + y*beta**{i-t-1}; q{i-t-1} -= 1; }
     if (x.sign_ == -1)
     {
       t1 = y;
@@ -296,11 +292,9 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
     }
   }
 
-  /* now q is the quotient and x is the remainder 
-   * [which we have to normalize] 
-   */
+  // now q is the quotient and x is the remainder [which we have to normalize]
   
-  /* get sign before writing to c */
+  // get sign before writing to *this
   x.sign_ = x.is_zero() ? 1 : sign_;
 
   q.clamp();
