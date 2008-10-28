@@ -30,6 +30,7 @@ unit-test integral_ops    : integral_ops.cpp    boost_test ;
 unit-test jacobi          : jacobi.cpp          boost_test ;
 unit-test lcm             : lcm.cpp             boost_test ;
 unit-test modinv          : modinv.cpp          boost_test ;
+unit-test modpow          : modpow.cpp          boost_test ;
 unit-test mul             : mul.cpp             boost_test ;
 unit-test pow             : pow.cpp             boost_test ;
 unit-test prime           : prime.cpp           boost_test ;

@@ -5,25 +5,26 @@
 
 
 // hac 14.61, pp608
-// *this = *this**-1 (mod b)
+// Computes the modular multiplicative inverse of *this mod m
+// *this = *this**-1 (mod m)
 template<class A, class T>
-void mp_int<A,T>::modinv(const mp_int& b)
+void mp_int<A,T>::modinv(const mp_int& m)
 {
-  if (b.is_negative() || !b)
+  if (m.is_negative() || !m)
     throw std::domain_error("modinv: modulus is negative or zero");
 
   // if the modulus is odd we can use a faster routine
-  if (b.is_odd())
-    odd_modinv(b);
+  if (m.is_odd())
+    odd_modinv(m);
   else
-    even_modinv(b);
+    even_modinv(m);
 }
 
-/* hac 14.61, pp608 */
+// hac 14.61, pp608
 template<class A1, class T>
 void mp_int<A1,T>::even_modinv(const mp_int& y)
 {
-  assert(y.is_positive() && y);
+  assert(y.is_even());
 
   static const char* const err_msg = "mp_int::modinv: inverse does not exist";
 
@@ -46,7 +47,7 @@ top:
     
     if (A.is_odd() || B.is_odd())
     {
-      /* A = (A+y)/2, B = (B-x)/2 */
+      // A = (A+y)/2, B = (B-x)/2
       A += y;
       B -= x;
     }
@@ -60,7 +61,7 @@ top:
 
     if (C.is_odd() || D.is_odd())
     {
-      /* C = (C+y)/2, D = (D-x)/2 */
+      // C = (C+y)/2, D = (D-x)/2
       C += y;
       D -= x;
     }
@@ -84,9 +85,9 @@ top:
   if (u)
     goto top;
 
-  /* now a = C, b = D, gcd == g*v */
+  // now a = C, b = D, gcd == g*v
 
-  /* if v != 1 then there is no inverse */
+  // if v != 1 then there is no inverse
   if (v != digit_type(1))
     throw std::domain_error(err_msg);
 
@@ -98,7 +99,7 @@ top:
   while (C.compare_magnitude(y) != -1)
     C -= y;
   
-  swap(C);
+  *this = C;
 }
 
 /* computes the modular inverse via binary extended euclidean algorithm, 
@@ -168,7 +169,7 @@ top:
   while (D.is_negative())
     D += x;
 
-  swap(D);
+  *this = D;
 }
 
 

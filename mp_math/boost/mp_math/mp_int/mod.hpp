@@ -22,5 +22,5 @@ void mp_int<A,T>::modulo_2_to_the_power_of(size_type b)
   clamp();
   if (is_zero())
     sign_ = 1;
- }
+}
 

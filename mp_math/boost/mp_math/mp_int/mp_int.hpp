@@ -33,6 +33,7 @@
 namespace boost {
 namespace mp_math {
 
+template<class A, class T> struct modpow_ctx;
 
 // digits are stored in least significant order
 
@@ -259,11 +260,16 @@ public: // low level interface
     return digits_[i];
   }
 
+  void push(digit_type x) { digits_[used_++] = x; }
+  void pop() { --used_; }
+
   void zero();
 
   // debug functionality
   void print(bool all=false) const;
   bool test_invariants() const;
+
+  bool is_uninitialized() const { return digits_ == 0; }
 
   size_type size() const { return used_; }
   size_type capacity() const { return capacity_; }
@@ -316,33 +322,10 @@ public: // low level interface
   size_type precision() const;
   size_type count_lsb() const;
   void shift_right(size_type b, mp_int* remainder);
-  
-  void reduce_setup(const mp_int&);
-  void reduce(const mp_int& m, const mp_int& mu);
-  
-  digit_type montgomery_setup() const;
-  void montgomery_reduce(const mp_int& n, digit_type rho);
-  void montgomery_calc_normalization(const mp_int&);
-  void fast_montgomery_reduce(const mp_int& n, digit_type rho);
-  
-  void dr_reduce(const mp_int& n, digit_type k);
-  digit_type dr_setup() const;
-  bool is_dr_modulus() const;
-  
-  digit_type reduce_2k_setup() const;
-  void reduce_2k(const mp_int& n, digit_type d);
-  bool reduce_is_2k() const;
 
-  mp_int reduce_2k_l_setup();
-  void reduce_2k_l(const mp_int& n, const mp_int& d);
-  bool reduce_is_2k_l() const;
-  
   void pow2(size_type b);
-  void pow(digit_type);
 
-  void modpow(const mp_int& exp, const mp_int& m);
-  void barret_modpow(const mp_int& exp, const mp_int& m, int reduction_mode);
-  void fast_modpow(const mp_int& exp, const mp_int& m, int reduction_mode);
+  void modpow(const mp_int& exp, const mp_int& m, modpow_ctx<Allocator,Traits>* c = 0);
 
   void modinv(const mp_int& modulus);
   void even_modinv(const mp_int& modulus);
@@ -875,6 +858,7 @@ inline void swap(mp_int<A,T>& lhs, mp_int<A,T>&& rhs)
 #include <boost/mp_math/mp_int/mod.hpp>
 #include <boost/mp_math/mp_int/modinv.hpp>
 #include <boost/mp_math/mp_int/modular_reduction.hpp>
+#include <boost/mp_math/mp_int/modpow.hpp>
 #include <boost/mp_math/mp_int/mul.hpp>
 #include <boost/mp_math/mp_int/operators.hpp>
 #include <boost/mp_math/mp_int/pow.hpp>

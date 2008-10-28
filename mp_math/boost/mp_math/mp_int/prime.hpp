@@ -100,14 +100,15 @@ primality_fermat_test<Distribution>::operator()
   const mp_int<A,T> p1(p-one);
   
   distribution_type rng(digit_type(2), p1);
-  
+
+  modpow_ctx<A,T> ctx;
   for (unsigned int i = 0; i < rounds_; ++i)
   {
     mp_int<A,T> base = rng(eng);
 
     base.set_least_significant_bit(); // test only odd bases
     
-    const mp_int<A,T> tmp = modpow(base, p1, p);
+    const mp_int<A,T> tmp = modpow(base, p1, p, &ctx);
 
     if (tmp != one)
       return false; // definitely composite!
@@ -193,11 +194,12 @@ primality_miller_rabin_test<Distribution>::operator()
   const typename mp_int<A,T>::digit_type one = 1;
   const mp_int<A,T> p_minus_one(p-one);
   distribution_type rng(one, p_minus_one);
-  
+
+  modpow_ctx<A,T> ctx;
   for (unsigned int i = 0; i < r; ++i)
   {
     const mp_int<A,T> base = rng(eng);
-    mp_int<A,T> y = modpow(base,n,p);
+    mp_int<A,T> y = modpow(base, n, p, &ctx);
     
     for (typename mp_int<A,T>::size_type j = 0; j < s; ++j)
     {
@@ -323,7 +325,9 @@ safe_prime_generator<PrimalityTest,Dist>::operator()(Engine& eng) const
       p.multiply_by_2();
       ++p;
     } while (!is_prime(p, test_));
-  } while (p.precision() > bits_); // catch extremely rare case
+  // Catch extremely rare case, this occurs if the carry from ++p ripples
+  // through the whole number thereby adding one more bit to it.
+  } while (p.precision() > bits_);
 
   return p;
 }

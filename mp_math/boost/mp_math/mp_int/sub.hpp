@@ -21,7 +21,7 @@ void mp_int<A,T>::sub_digit(digit_type b)
       digits_[0] = b - digits_[0];
       sign_ = -1;
     }
-    else // example 8 - 7 = 1 or 5 - 5 = 0
+    else // example: 8 - 7 = 1 or 5 - 5 = 0
       digits_[0] -= b;
   }
   else

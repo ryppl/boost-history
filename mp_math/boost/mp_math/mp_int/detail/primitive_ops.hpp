@@ -47,10 +47,10 @@ struct basic_primitive_ops
                                 digit_type& c);
 
   // z = x + y, where xlen >= ylen
-  // z and x may not overlap
-  static void add_magnitude(digit_type* z,
-                            const digit_type* x, size_type xlen,
-                            const digit_type* y, size_type ylen);
+  // returns last carry
+  static digit_type add_smaller_magnitude(digit_type* z,
+                                          const digit_type* x, size_type xlen,
+                                          const digit_type* y, size_type ylen);
 
   // SUB ------------------------------------
 
@@ -172,21 +172,22 @@ basic_primitive_ops<D,W,S>::ripple_carry(digit_type* z,
 
 template<typename D, typename W, typename S>
 inline
-void basic_primitive_ops<D,W,S>::add_magnitude(
+typename basic_primitive_ops<D,W,S>::digit_type
+basic_primitive_ops<D,W,S>::add_smaller_magnitude(
     digit_type* z,
     const digit_type* x, size_type xlen,
     const digit_type* y, size_type ylen)
 {
   digit_type carry = add_digits(z, x, y, ylen);
-  
+
   size_type n = ripple_carry(z + ylen, x + ylen, xlen - ylen, carry);
 
-  if (carry)
-    *(z + n++) = carry; // wrong
+  n += ylen;
   
-  const size_type cur = ylen + n;
-  if (cur < xlen)
-    std::memcpy(z + cur, x + cur, (xlen - cur) * sizeof(digit_type));
+  if (n < xlen && z != x)
+    std::memcpy(z + n, x + n, sizeof(digit_type) * (xlen - n));
+  
+  return carry;
 }
 
 template<typename D, typename W, typename S>
@@ -257,10 +258,13 @@ void basic_primitive_ops<D,W,S>::sub_smaller_magnitude(
 {
   const digit_type borrow = subtract_digits(z, x, y, ylen);
 
-  const size_type n = ripple_borrow(z + ylen, x + ylen, xlen - ylen, borrow);
+  size_type n = ripple_borrow(z + ylen, x + ylen, xlen - ylen, borrow);
 
-  const size_type cur = ylen + n;
-  std::memcpy(z + cur, x + cur, (xlen - cur) * sizeof(digit_type));
+  if (z != x)
+  {
+    n += ylen;
+    std::memcpy(z + n, x + n, (xlen - n) * sizeof(digit_type));
+  }
 }
 
 
