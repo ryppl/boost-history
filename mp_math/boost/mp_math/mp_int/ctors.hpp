@@ -8,8 +8,7 @@ mp_int<A,T>::mp_int()
 :
   digits_(0),
   used_(0),
-  capacity_(0),
-  sign_(1)
+  capacity_(0)
 {
 }
 
@@ -34,7 +33,7 @@ void mp_int<A,T>::init(RandomAccessIterator c, RandomAccessIterator last)
 
   if (c == last)
   {
-    sign_ = 1;
+    set_sign(1);
     return;
   }
 
@@ -77,7 +76,7 @@ void mp_int<A,T>::init(RandomAccessIterator c, RandomAccessIterator last)
   else
     throw std::invalid_argument("mp_int ctor: malformed string");
 
-  sign_ = sign;
+  set_sign(sign);
 
   from_string(c, last, radix);
 }
@@ -92,13 +91,13 @@ void mp_int<A,T>::init(RandomAccessIterator c,
 
   if (c == last)
   {
-    sign_ = 1;
+    set_sign(1);
     return;
   }
 
   if (*c == '-')
   {
-    sign_ = -1;
+    set_sign(-1);
     ++c;
   }
   else
@@ -110,7 +109,7 @@ void mp_int<A,T>::init(RandomAccessIterator c,
       else
         throw std::invalid_argument("mp_int<>::init: expected a '+' sign");
     }
-    sign_ = 1;
+    set_sign(1);
   }
   
   const bool uppercase = f & std::ios_base::uppercase;
@@ -241,8 +240,8 @@ mp_int<A,T>::mp_int(const mp_int& copy)
   digits_ = this->allocate(copy.used_);
   std::memcpy(digits_, copy.digits_, copy.used_ * sizeof(digit_type));
   used_ = copy.used_;
-  capacity_ = copy.used_;
-  sign_ = copy.sign_;
+  set_capacity(copy.used_);
+  set_sign(copy.sign());
 }
 
 #ifdef BOOST_HAS_RVALUE_REFS
@@ -251,13 +250,11 @@ mp_int<A,T>::mp_int(mp_int&& copy)
 :
   digits_(copy.digits_),
   used_(copy.used_),
-  capacity_(copy.capacity_),
-  sign_(copy.sign_)
+  capacity_(copy.capacity_) // this copies capacity and sign
 {
   copy.digits_ = 0;
   copy.used_ = 0;
   copy.capacity_ = 0;
-  copy.sign_ = 1;
 }
 #endif
 
@@ -265,6 +262,6 @@ mp_int<A,T>::mp_int(mp_int&& copy)
 template<class A, class T>
 mp_int<A,T>::~mp_int()
 {
-  this->deallocate(digits_, capacity_);
+  this->deallocate(digits_, capacity());
 }
 

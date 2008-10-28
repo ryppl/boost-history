@@ -195,6 +195,6 @@ void mp_int<A,T>::sqr()
     karatsuba_sqr();
   else
     comba_sqr();
-  sign_ = 1;
+  set_sign(1);
 }
 

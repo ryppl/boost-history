@@ -75,7 +75,7 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
     
     clamp();
     if (is_zero())
-      sign_ = 1;
+      set_sign(1);
   }
   else // radix can only be 10 at this point
   {

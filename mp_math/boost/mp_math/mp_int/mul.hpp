@@ -315,7 +315,7 @@ void mp_int<A,T>::mul_digits(const mp_int& b, size_type digs)
 
   tmp.clamp();
   if (tmp.is_zero())
-    tmp.sign_ = 1;
+    tmp.set_sign(1);
   swap(tmp);
 }
 
@@ -355,7 +355,7 @@ void mp_int<A,T>::mul_high_digits(const mp_int& b, size_type digs)
 
   tmp.clamp();
   if (tmp.is_zero())
-    tmp.sign_ = 1;
+    tmp.set_sign(1);
   swap(tmp);
 }
 

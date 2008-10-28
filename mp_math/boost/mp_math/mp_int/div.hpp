@@ -44,7 +44,7 @@ mp_int<A,T>::divide_by_digit(digit_type b)
 
   clamp();
   if (is_zero())
-    sign_ = 1;
+    set_sign(1);
  
   return static_cast<digit_type>(w);
 }
@@ -65,7 +65,7 @@ void mp_int<A,T>::divide_by_2()
   }
   clamp();
   if (is_zero())
-    sign_ = 1;
+    set_sign(1);
 }
 
 // divide by three (based on routine from MPI and the GMP manual)
@@ -156,7 +156,7 @@ void mp_int<A,T>::shift_right(size_type b, mp_int* remainder)
   }
   clamp();
   if (is_zero())
-    sign_ = 1;
+    set_sign(1);
 }
 
 // integer signed division. 
@@ -195,8 +195,9 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   mp_int y(rhs);
 
   // fix the sign
-  const int neg = (sign_ == rhs.sign_) ? 1 : -1;
-  x.sign_ = y.sign_ = 1;
+  const int neg = (sign() == rhs.sign()) ? 1 : -1;
+  x.set_sign(1);
+  y.set_sign(1);
 
   // normalize both x and y, ensure that y >= beta/2, [beta == 2**valid_bits]
   size_type norm = y.precision() % valid_bits;
@@ -282,7 +283,7 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
     x -= t1;
 
     // if x < 0 then { x = x + y*beta**{i-t-1}; q{i-t-1} -= 1; }
-    if (x.sign_ == -1)
+    if (x.is_negative())
     {
       t1 = y;
       t1.shift_digits_left(i - t -1);
@@ -295,11 +296,11 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   // now q is the quotient and x is the remainder [which we have to normalize]
   
   // get sign before writing to *this
-  x.sign_ = x.is_zero() ? 1 : sign_;
+  x.set_sign(x.is_zero() ? 1 : sign());
 
   q.clamp();
   swap(q);
-  sign_ = neg;
+  set_sign(neg);
 
   if (remainder)
   {

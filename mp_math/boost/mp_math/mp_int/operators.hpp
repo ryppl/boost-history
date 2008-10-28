@@ -8,7 +8,7 @@ template<class A, class T>
 inline bool
 operator == (const mp_int<A,T>& lhs, const mp_int<A,T>& rhs)
 {
-  return lhs.sign_ == rhs.sign_ && lhs.used_ == rhs.used_ &&
+  return lhs.sign() == rhs.sign() && lhs.size() == rhs.size() &&
     std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
@@ -20,8 +20,7 @@ template<class A, class T>
 bool
 operator < (const mp_int<A,T>& lhs, const mp_int<A,T>& rhs)
 {
-  /* compare based on sign */
-  if (lhs.sign_ != rhs.sign_)
+  if (lhs.sign() != rhs.sign())
   {
     if (lhs.is_negative())
       return true;
@@ -34,7 +33,6 @@ operator < (const mp_int<A,T>& lhs, const mp_int<A,T>& rhs)
   if (lhs.size() > rhs.size())
     return false;
   
-  /* compare digits */
   if (lhs.is_negative())
     return std::lexicographical_compare(
       rhs.rbegin(), rhs.rend(), lhs.rbegin(), lhs.rend());
@@ -357,7 +355,7 @@ template<class A, class T>
 inline mp_int<A,T>& mp_int<A,T>::operator - ()
 {
   if (!is_zero())
-    sign_ = sign_ == 1 ? -1 : 1;
+    set_sign(sign() == 1 ? -1 : 1);
   return *this;
 }
 
@@ -369,7 +367,7 @@ inline mp_int<A,T>& mp_int<A,T>::operator - ()
 template<class A, class T>
 mp_int<A,T>& mp_int<A,T>::operator += (const mp_int<A,T>& rhs)
 {
-  if (sign_ == rhs.sign_)
+  if (sign() == rhs.sign())
     add_magnitude(rhs);
   else
   {
@@ -386,7 +384,7 @@ mp_int<A,T>& mp_int<A,T>::operator += (const mp_int<A,T>& rhs)
     else // |*this| < |rhs|
     {
       grow_capacity(rhs.used_);
-      sign_ = rhs.sign_;
+      set_sign(rhs.sign());
       x = &rhs;
       y = this;
     }
@@ -397,7 +395,7 @@ mp_int<A,T>& mp_int<A,T>::operator += (const mp_int<A,T>& rhs)
 
     clamp();
     if (is_zero())
-      sign_ = 1;
+      set_sign(1);
   }
   return *this;
 }
@@ -406,7 +404,7 @@ mp_int<A,T>& mp_int<A,T>::operator += (const mp_int<A,T>& rhs)
 template<class A, class T>
 mp_int<A,T>& mp_int<A,T>::operator -= (const mp_int<A,T>& rhs)
 {
-  if (sign_ != rhs.sign_)
+  if (sign() != rhs.sign())
     // add magnitudes, and use the sign of *this.
     add_magnitude(rhs);
   else
@@ -422,7 +420,7 @@ mp_int<A,T>& mp_int<A,T>::operator -= (const mp_int<A,T>& rhs)
     {
       grow_capacity(rhs.used_);
       // result has opposite sign from *this
-      sign_ = is_positive() ? -1 : 1; 
+      set_sign(is_positive() ? -1 : 1); 
       x = &rhs;
       y = this;
     }
@@ -434,7 +432,7 @@ mp_int<A,T>& mp_int<A,T>::operator -= (const mp_int<A,T>& rhs)
     
     clamp();
     if (is_zero())
-      sign_ = 1;
+      set_sign(1);
   }
   return *this;
 }
@@ -448,7 +446,7 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
     return *this;
   }
   
-  const int neg = (sign_ == rhs.sign_) ? 1 : -1;
+  const int neg = (sign() == rhs.sign()) ? 1 : -1;
   const size_type min = std::min(used_, rhs.used_);
 
   if (min >= traits_type::toom_mul_cutoff)
@@ -478,7 +476,7 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
     swap(tmp);
   }
 
-  sign_ = is_zero() ? 1 : neg;
+  set_sign(is_zero() ? 1 : neg);
 
   return *this;
 }

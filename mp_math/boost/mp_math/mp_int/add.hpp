@@ -20,7 +20,7 @@ void mp_int<A,T>::add_digit(digit_type b)
     {
       digits_[0] -= b;
       if (is_zero())
-        sign_ = 1;
+        set_sign(1);
     }
     else
     {
@@ -28,9 +28,9 @@ void mp_int<A,T>::add_digit(digit_type b)
         digits_[0] = b - digits_[0];
       else            // example -11 + 5 = -6
       {
-        sign_ = 1;
+        set_sign(1);
         sub_digit(b);
-        sign_ = -1;
+        set_sign(-1);
       }
     }
   }
