@@ -3,6 +3,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_MP_MATH_MP_INT_JACOBI_HPP
+#define BOOST_MP_MATH_MP_INT_JACOBI_HPP
+
+#include <boost/mp_math/mp_int/mp_int_fwd.hpp>
+
+
+namespace boost {
+namespace mp_math {
+
 // computes the jacobi c = (a | p) (or Legendre if p is prime)
 // HAC pp. 73 Algorithm 2.149
 template<class A, class T>
@@ -37,7 +46,7 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   else
   {
     // calculate p.digits_[0] mod 8
-    const digit_type residue = p.digits_[0] & 7;
+    const digit_type residue = p[0] & 7;
 
     if (residue == 1 || residue == 7)
       s = 1;
@@ -46,7 +55,7 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   }
 
   /* if p == 3 (mod 4) *and* a1 == 3 (mod 4) then s = -s */
-  if (((p.digits_[0] & 3) == 3) && ((a1.digits_[0] & 3) == 3))
+  if (((p[0] & 3) == 3) && ((a1[0] & 3) == 3))
     s = -s;
 
   if (a1 == digit_type(1))
@@ -57,4 +66,10 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
     return s * jacobi(p1, a1);
   }
 }
+
+
+} // namespace mp_math
+} // namespace boost
+
+#endif
 

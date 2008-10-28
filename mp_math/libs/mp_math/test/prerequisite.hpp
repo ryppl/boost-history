@@ -5,8 +5,8 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/mp_math/mp_int.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/mpl/unique.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 //typedef boost::mp_math::mp_int_traits<boost::uint8_t, boost::uint16_t> traits_type;

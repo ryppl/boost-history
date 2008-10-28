@@ -3,6 +3,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_MP_MATH_MP_INT_PRIME_HPP
+#define BOOST_MP_MATH_MP_INT_PRIME_HPP
+
+#include <boost/mp_math/mp_int/mp_int_fwd.hpp>
+#include <boost/mp_math/mp_int/detail/prime_tab.hpp>
+
+
+namespace boost {
+namespace mp_math {
+
 // this one simply divides x by some small primes found in prime_tab
 // returns false if definitely composite, returns true if probably prime
 // this test is to be used to quickly filter out composite numbers
@@ -333,6 +343,8 @@ safe_prime_generator<PrimalityTest,Dist>::operator()(Engine& eng) const
 }
 
 
+} // namespace mp_math
+} // namespace boost
 
-
+#endif
 

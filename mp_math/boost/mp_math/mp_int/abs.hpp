@@ -7,6 +7,6 @@ template<class A, class T>
 mp_int<A,T> abs(const mp_int<A,T>& x)
 {
   mp_int<A,T> tmp(x);
-  tmp.sign_ = 1;
+  tmp.set_sign(1);
   return tmp;
 }

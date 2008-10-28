@@ -22,24 +22,20 @@
 #include <boost/serialization/string.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mp_math/mp_int/traits.hpp>
 #include <boost/mp_math/mp_int/detail/string_conversion_constants.hpp>
 #include <boost/mp_math/mp_int/detail/integral_ops.hpp>
 #include <boost/mp_math/mp_int/detail/meta_math.hpp>
-#include <boost/mp_math/mp_int/detail/prime_tab.hpp>
 #include <boost/mp_math/mp_int/detail/primitive_ops.hpp>
 
 
 namespace boost {
 namespace mp_math {
 
-template<class A, class T> struct modpow_ctx;
-
 // digits are stored in least significant order
 
 template<
-  class Allocator = std::allocator<void>,
-  class Traits = mp_int_traits<>
+  class Allocator,
+  class Traits
 >
 struct mp_int
 :
@@ -325,12 +321,6 @@ public: // low level interface
 
   void pow2(size_type b);
 
-  void modpow(const mp_int& exp, const mp_int& m, modpow_ctx<Allocator,Traits>* c = 0);
-
-  void modinv(const mp_int& modulus);
-  void even_modinv(const mp_int& modulus);
-  void odd_modinv(const mp_int& modulus);
-
   void set_least_significant_bit()
   {
     digits_[0] |= digit_type(1);
@@ -347,13 +337,6 @@ public: // low level interface
 
   template<class A, class T>
   friend bool operator < (const mp_int<A,T>&, const mp_int<A,T>&);
-
-  template<class A, class T>
-  friend mp_int<A,T> abs(const mp_int<A,T>& x);
-  template<class A, class T>
-  friend mp_int<A,T> gcd(const mp_int<A,T>& a, const mp_int<A,T>& b);
-  template<class A, class T>
-  friend int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& b);
 
   template<typename Iter>
   void from_string(Iter first, Iter last, unsigned radix);
@@ -852,27 +835,16 @@ inline void swap(mp_int<A,T>& lhs, mp_int<A,T>&& rhs)
 #include <boost/mp_math/mp_int/add.hpp>
 #include <boost/mp_math/mp_int/ctors.hpp>
 #include <boost/mp_math/mp_int/div.hpp>
-#include <boost/mp_math/mp_int/gcd.hpp>
-#include <boost/mp_math/mp_int/jacobi.hpp>
-#include <boost/mp_math/mp_int/lcm.hpp>
 #include <boost/mp_math/mp_int/mod.hpp>
-#include <boost/mp_math/mp_int/modinv.hpp>
-#include <boost/mp_math/mp_int/modular_reduction.hpp>
-#include <boost/mp_math/mp_int/modpow.hpp>
 #include <boost/mp_math/mp_int/mul.hpp>
 #include <boost/mp_math/mp_int/operators.hpp>
 #include <boost/mp_math/mp_int/pow.hpp>
 #include <boost/mp_math/mp_int/random.hpp>
-#include <boost/mp_math/mp_int/prime.hpp>
-#include <boost/mp_math/mp_int/root.hpp>
 #include <boost/mp_math/mp_int/sqr.hpp>
 #include <boost/mp_math/mp_int/sub.hpp>
 #include <boost/mp_math/mp_int/string_conversion.hpp>
 
 } // namespace mp_math
 } // namespace boost
-
-#include <boost/mp_math/mp_int/numeric_limits.hpp>
-
 
 #endif

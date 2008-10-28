@@ -3,6 +3,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_MP_MATH_MP_INT_GCD_HPP
+#define BOOST_MP_MATH_MP_INT_GCD_HPP
+
+#include <boost/mp_math/mp_int/mp_int_fwd.hpp>
+
+
+namespace boost {
+namespace mp_math {
+
 // Greatest Common Divisor using the binary method
 template<class A, class T>
 mp_int<A,T> gcd(const mp_int<A,T>& a, const mp_int<A,T>& b)
@@ -52,3 +61,10 @@ mp_int<A,T> gcd(const mp_int<A,T>& a, const mp_int<A,T>& b, const MpInts&... arg
   return gcd(gcd(a, b), args...);
 }
 #endif
+
+
+} // namespace mp_math
+} // namespace boost
+
+#endif
+
