@@ -16,3 +16,4 @@ project guigl/test
     ;
 
 run test_parameter.cpp ;
+run test_delayed_constructor.cpp ;

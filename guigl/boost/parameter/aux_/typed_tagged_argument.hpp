@@ -14,9 +14,12 @@
 # include <boost/parameter/aux_/typed_arg_list.hpp>
 # include <boost/parameter/aux_/result_of0.hpp>
 # include <boost/parameter/aux_/tagged_argument.hpp>
+# include <boost/parameter/aux_/delayed_constructor.hpp>
 # include <boost/mpl/if.hpp>
+# include <boost/mpl/eval_if.hpp>
 # include <boost/mpl/apply_wrap.hpp>
 # include <boost/mpl/and.hpp>
+# include <boost/mpl/identity.hpp> 
 # include <boost/mpl/not.hpp>
 # include <boost/type_traits/is_same.hpp>
 # include <boost/type_traits/is_convertible.hpp>
@@ -36,8 +39,13 @@ template <class Keyword, class Arg>
 struct typed_tagged_argument : tagged_argument_base
 {
     typedef Keyword key_type;
-    typedef Arg value_type;
-    typedef Arg& reference;
+    typedef Arg arg_type;
+
+    typedef typename mpl::eval_if<is_delayed_constructor<Arg>, value_type_of<Arg>, mpl::identity<Arg> >::type value_type;
+    typedef value_type& reference;
+    
+    typedef typename mpl::if_<is_delayed_constructor<Arg>, value_type, reference>::type index_result_type;
+    typedef typename mpl::if_<is_delayed_constructor<Arg>, Arg, reference>::type storage_type;
 
     typed_tagged_argument(reference x) : value(x) {}
 
@@ -84,7 +92,7 @@ struct typed_tagged_argument : tagged_argument_base
         return Tag::default_value();
     }
 
-    reference operator[](keyword_base<Keyword> const&) const
+    index_result_type operator[](keyword_base<Keyword> const&) const
     {
         return value;
     }
@@ -95,13 +103,13 @@ struct typed_tagged_argument : tagged_argument_base
     }*/
 
     template <class Default>
-    reference operator[](default_<key_type,Default> const& x) const
+    index_result_type operator[](default_<key_type,Default> const& x) const
     {
         return value;
     }
 
     template <class F>
-    reference operator[](lazy_default<key_type,F> const& x) const
+    index_result_type operator[](lazy_default<key_type,F> const& x) const
     {
         return value;
     }
@@ -128,7 +136,7 @@ struct typed_tagged_argument : tagged_argument_base
         parameter_requirements<key_type,Predicate,HasDefault>*
     );
 
-    reference value;
+    storage_type value;
 
     // MPL sequence support
     typedef typed_tagged_argument type;            // Convenience for users

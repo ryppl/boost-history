@@ -190,6 +190,8 @@ struct typed_arg_list : Next
       , get_reference<TaggedArg>
     >::type reference;
 
+    typedef typename TaggedArg::index_result_type index_result_type;
+
     typedef typename mpl::if_<
         holds_maybe
       , reference

@@ -33,6 +33,7 @@ template <class Tag>
 struct typed_keyword : public keyword_base<Tag>
 {
     typedef aux::typed_tagged_argument<Tag, typename Tag::value_type> typed_tagged_argument_type;
+    typedef typename Tag::value_type value_type;
     
     typed_tagged_argument_type const
     operator=(typename Tag::value_type& x) const
@@ -41,19 +42,19 @@ struct typed_keyword : public keyword_base<Tag>
     }
     
     template<typename T0>
-    typed_tagged_argument_type const
+    aux::typed_tagged_argument<Tag, const aux::delayed_constructor<value_type, T0> > const
     operator()(const T0 &t0) const
-    {   return typed_tagged_argument_type(typename Tag::value_type(t0)); }
+    {   return aux::typed_tagged_argument<Tag, const aux::delayed_constructor<value_type, T0> >(aux::delayed_constructor<value_type, T0>(t0)); }
 
     template<typename T0, typename T1>
-    typed_tagged_argument_type const
+    aux::typed_tagged_argument<Tag, const aux::delayed_constructor<value_type, T0, T1> > const
     operator()(const T0 &t0, const T1 &t1) const
-    {   return typed_tagged_argument_type(typename Tag::value_type(t0, t1)); }
+    {   return aux::typed_tagged_argument<Tag, const aux::delayed_constructor<value_type, T0, T1> >(aux::delayed_constructor<value_type, T0, T1>(t0, t1)); }
 
     template<typename T0, typename T1, typename T2>
-    typed_tagged_argument_type const
+    aux::typed_tagged_argument<Tag, const aux::delayed_constructor<value_type, T0, T1, T2> > const
     operator()(const T0 &t0, const T1 &t1, const T2 &t2) const
-    {   return typed_tagged_argument_type(typename Tag::value_type(t0, t1, t2)); }
+    {   return aux::typed_tagged_argument<Tag, const aux::delayed_constructor<value_type, T0, T1, T2> >(aux::delayed_constructor<value_type, T0, T1, T2>(t0, t1, t2)); }
     
  public: // Insurance against ODR violations
     

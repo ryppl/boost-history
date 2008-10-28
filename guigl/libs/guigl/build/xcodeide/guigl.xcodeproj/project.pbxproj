@@ -161,6 +161,8 @@
 		08AD8F620E5CD63400BFB2C8 /* opengl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = opengl.hpp; sourceTree = "<group>"; };
 		08ADC1F90E7B62BD00D8CB9D /* static_compound.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_compound.hpp; sourceTree = "<group>"; };
 		08ADC1FD0E7B64E100D8CB9D /* static_compound.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_compound.hpp; sourceTree = "<group>"; };
+		08B919780EB682BC00F743E3 /* delayed_constructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = delayed_constructor.hpp; sourceTree = "<group>"; };
+		08B9197C0EB6885C00F743E3 /* test_delayed_constructor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_delayed_constructor.cpp; sourceTree = "<group>"; };
 		08D0F2550E6712E90026C6DF /* active_colored.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = active_colored.hpp; sourceTree = "<group>"; };
 		08D0F25D0E67139E0026C6DF /* active_colored.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = active_colored.hpp; sourceTree = "<group>"; };
 		08D5606D0E52901F005A2391 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window.cpp; sourceTree = "<group>"; };
@@ -373,6 +375,7 @@
 				089D83780E5A3AA900325868 /* test_parameter_map_compilation.cpp */,
 				0885D46A0E539F7000DFFA5D /* test_parameter_dispatch_compilation.cpp */,
 				089E86720E5A80E500DA4902 /* test_parameter.cpp */,
+				08B9197C0EB6885C00F743E3 /* test_delayed_constructor.cpp */,
 			);
 			name = test;
 			path = ../../test;
@@ -408,6 +411,7 @@
 			children = (
 				08F506AF0E5B42930020D95E /* typed_arg_list.hpp */,
 				08F506AB0E5B41AD0020D95E /* typed_tagged_argument.hpp */,
+				08B919780EB682BC00F743E3 /* delayed_constructor.hpp */,
 			);
 			path = aux_;
 			sourceTree = "<group>";

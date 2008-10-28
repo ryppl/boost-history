@@ -56,19 +56,19 @@ int main()
 
     widget::labeled_button *b1 = new widget::labeled_button((
         _size=size_type(100,30),
-        _position=position_type(50, 50),
-        _background=color_type(1,1,1),
-        _active_color=color_type(1,0,0),
-        _color=color_type(0,0,0),
+        _position(50, 50),
+        _background(1,1,1),
+        _active_color(1,0,0),
+        _color(0,0,0),
         _label="Button"));
     test_window1 << b1;
     
     widget::labeled_slider *s = new widget::labeled_slider((
         _label="Slider",
-        _size(100,30),
-        _position(50,80),
-        _background(0.5,0.5,0.5),
-        _active_color(0,1,0),
+        _size=size_type(100,30),
+        _position=position_type(50,80),
+        _background=color_type(0.5,0.5,0.5),
+        _active_color=color_type(0,1,0),
         _min=0.1,_max=0.9,_value=0.5,
         _step=0.1 ));
     test_window1 << s;
