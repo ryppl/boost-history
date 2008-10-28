@@ -272,7 +272,7 @@ struct typed_arg_list : Next
         return arg.value ? arg.value.get() : arg.value.construct(d.value);
     }
 
-    reference operator[](keyword_base<key_type> const&) const
+    index_result_type operator[](keyword_base<key_type> const&) const
     {
         BOOST_MPL_ASSERT_NOT((holds_maybe));
         return arg.value;

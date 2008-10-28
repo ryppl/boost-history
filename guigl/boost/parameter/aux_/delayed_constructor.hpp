@@ -37,14 +37,15 @@ namespace boost { namespace parameter { namespace aux {
         : public mpl::true_
     {};
 
+    template< typename T, BOOST_PP_ENUM_PARAMS(BOOST_PARAMETER_MAX_DELAYED_CONSTRUCTOR_ARITY, typename T)>
+    struct is_delayed_constructor<const delayed_constructor<T, BOOST_PP_ENUM_PARAMS(BOOST_PARAMETER_MAX_DELAYED_CONSTRUCTOR_ARITY, T)> >
+        : public mpl::true_
+    {};
+
     template< typename T >
     struct value_type_of
-    {};
-    
-    template< typename T, BOOST_PP_ENUM_PARAMS(BOOST_PARAMETER_MAX_DELAYED_CONSTRUCTOR_ARITY, typename T)>
-    struct value_type_of<delayed_constructor<T, BOOST_PP_ENUM_PARAMS(BOOST_PARAMETER_MAX_DELAYED_CONSTRUCTOR_ARITY, T)> >
     {
-        typedef typename delayed_constructor<T, BOOST_PP_ENUM_PARAMS(BOOST_PARAMETER_MAX_DELAYED_CONSTRUCTOR_ARITY, T)>::value_type type;
+        typedef typename T::value_type type;
     };
 
 #     define BOOST_PP_FILENAME_1 <boost/parameter/aux_/delayed_constructor.hpp>

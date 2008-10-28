@@ -46,8 +46,9 @@ struct typed_tagged_argument : tagged_argument_base
     
     typedef typename mpl::if_<is_delayed_constructor<Arg>, value_type, reference>::type index_result_type;
     typedef typename mpl::if_<is_delayed_constructor<Arg>, Arg, reference>::type storage_type;
-
-    typed_tagged_argument(reference x) : value(x) {}
+    typedef typename mpl::if_<is_delayed_constructor<Arg>, Arg &, reference>::type init_type;
+    
+    typed_tagged_argument(init_type x) : value(x) {}
 
     // A metafunction class that, given a keyword and a default
     // type, returns the appropriate result type for a keyword

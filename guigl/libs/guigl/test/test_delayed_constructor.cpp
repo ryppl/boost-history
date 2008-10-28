@@ -17,7 +17,8 @@ BOOST_AUTO_TEST_CASE( test )
 {
     using namespace boost::parameter::aux;
 
-    delayed_constructor<int, int> delayed_int(2);
+    typedef delayed_constructor<int, int> delayed_int_constructor_type;
+    delayed_int_constructor_type delayed_int(2);
     int i = delayed_int;
     
     BOOST_CHECK_EQUAL(i, 2);
@@ -29,4 +30,6 @@ BOOST_AUTO_TEST_CASE( test )
     
     BOOST_CHECK_EQUAL(p.first, 1);
     BOOST_CHECK_EQUAL(p.second, 3.5);
+    
+    BOOST_CHECK(is_delayed_constructor<delayed_int_constructor_type>::value);
 }
