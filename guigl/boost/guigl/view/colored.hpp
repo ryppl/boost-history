@@ -16,8 +16,9 @@ namespace boost { namespace guigl { namespace view {
 template<typename BaseView=base>
 class colored : public BaseView
 {
-    typedef BaseView base_type;
 public:
+    typedef BaseView base_type;
+
     template<typename ArgumentPack>
     colored(const ArgumentPack &args)
         : base_type(args)

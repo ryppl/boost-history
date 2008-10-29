@@ -22,15 +22,16 @@ class button;
 typedef
     view::active_colored<
         view::solid_background<
-            view::clickable<button,
+            view::clickable<button,guigl::button::left_type,
                 view::positioned<>
     >   >   > button_base_type;
 
 /// A button which sends a signal when clicked.
 class button : public button_base_type
 {
-    typedef button_base_type base_type;
 public:
+    typedef button_base_type base_type;
+
     template<typename ArgumentPack>
     button(const ArgumentPack &args)
         : button_base_type(args)
@@ -54,7 +55,7 @@ private:
     void clickable_on_click()
     {   on_click(); }
     
-    friend class view::clickable<button, view::positioned<> >;
+    friend class view::clickable<button, guigl::button::left_type, view::positioned<> >;
 };
 
 }}}

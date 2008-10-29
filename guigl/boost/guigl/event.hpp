@@ -23,6 +23,22 @@ enum enum_type
     left, middle, right
 };
 
+struct left_type
+{
+    const static enum_type value = left;
+};
+
+struct middle_type
+{
+    const static enum_type value = middle;
+};
+
+struct right_type
+{
+    const static enum_type value = right;
+};
+
+
 }
 
 namespace direction {

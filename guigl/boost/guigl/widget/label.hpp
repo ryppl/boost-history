@@ -24,8 +24,9 @@ typedef view::labeled<
 
 class label : public label_base_type
 {
-    typedef label_base_type base_type;
 public:
+    typedef label_base_type base_type;
+
     template<typename ArgumentPack>
     label(const ArgumentPack &args)
         : base_type(args)

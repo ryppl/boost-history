@@ -26,6 +26,10 @@ namespace keywords {
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(max,const double,1.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(step,const double,0.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(period,const double,0.0)
+
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(clickable_button,button::enum_type,button::left)
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(draggable_button,button::enum_type,button::left)
+
     BOOST_PARAMETER_UNTYPED_NAME(value)
     BOOST_PARAMETER_UNTYPED_NAME(children)
     

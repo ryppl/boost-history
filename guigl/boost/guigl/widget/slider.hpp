@@ -21,7 +21,7 @@ class slider;
 
 typedef
     view::active_colored<
-        view::draggable<slider,
+        view::draggable<slider,guigl::button::left_type,
             view::solid_background<
                 view::positioned<>
     >   >   > slider_base_type;
@@ -58,7 +58,7 @@ private:
     void draggable_on_drag(const position_type &position);
     void draggable_on_end_drag(const position_type &position) {};
     
-    friend class view::draggable<slider,
+    friend class view::draggable<slider,guigl::button::left_type,
         view::solid_background<
             view::positioned<>
     >   >;

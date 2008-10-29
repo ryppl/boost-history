@@ -22,8 +22,9 @@ typedef view::labeled<
 
 class labeled_button : public labeled_button_base_type
 {
-    typedef labeled_button_base_type base_type;
 public:
+    typedef labeled_button_base_type base_type;
+
     template<typename ArgumentPack>
     labeled_button(const ArgumentPack &args)
         : base_type(args)

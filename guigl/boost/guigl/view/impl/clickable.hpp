@@ -15,8 +15,8 @@
 
 namespace boost { namespace guigl { namespace view {
 
-template<typename Derived, typename BaseView>
-inline void clickable<Derived, BaseView>::button_down(bool state)
+template<typename Derived, typename Button, typename BaseView>
+inline void clickable<Derived, Button, BaseView>::button_down(bool state)
 {
     m_button_down = state;
     static_cast<Derived *>(this)->clickable_button_down(state);
@@ -24,12 +24,12 @@ inline void clickable<Derived, BaseView>::button_down(bool state)
 
 namespace detail {
 
-    template<typename Derived, typename BaseView>
+    template<typename Derived, typename Button, typename BaseView>
     struct clickable_static_visitor
         : public boost::static_visitor<>
     {
     public:
-        clickable_static_visitor(clickable<Derived, BaseView> &c)
+        clickable_static_visitor(clickable<Derived, Button, BaseView> &c)
             : m_clickable(c)
         {}
         
@@ -43,6 +43,8 @@ namespace detail {
         
         bool operator()(const button_event &event_info) const
         {
+            if(event_info.button != m_clickable.clickable_button())
+                return false;
             if(event_info.direction == direction::down)
             {
                 m_clickable.button_down(true);
@@ -64,18 +66,18 @@ namespace detail {
             return true;
         }
 
-        clickable<Derived, BaseView> &m_clickable;
+        clickable<Derived, Button, BaseView> &m_clickable;
     };
 
 }
 
-template<typename Derived, typename BaseView>
-inline bool clickable<Derived, BaseView>::on_event(const event_type &event_info)
+template<typename Derived, typename Button, typename BaseView>
+inline bool clickable<Derived, Button, BaseView>::on_event(const event_type &event_info)
 {
     if(base_type::on_event(event_info))
         return true;
     else
-        return boost::apply_visitor(detail::clickable_static_visitor<Derived,BaseView>(*this), event_info);
+        return boost::apply_visitor(detail::clickable_static_visitor<Derived,Button,BaseView>(*this), event_info);
 }
 
 

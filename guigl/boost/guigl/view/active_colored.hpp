@@ -17,8 +17,9 @@ namespace boost { namespace guigl { namespace view {
 template<typename BaseView=base>
 class active_colored : public BaseView
 {
-    typedef BaseView base_type;
 public:
+    typedef BaseView base_type;
+
     /** Sets the active color to the _active_color named parameter. */
     template<typename ArgumentPack>
     active_colored(const ArgumentPack &args)

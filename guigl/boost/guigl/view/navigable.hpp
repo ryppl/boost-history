@@ -16,10 +16,10 @@
 namespace boost { namespace guigl { namespace view {
 
 template<typename BaseView=base>
-class navigable : public draggable<navigable<BaseView>, BaseView>
+class navigable : public draggable<navigable<BaseView>, guigl::button::left_type, BaseView>
 {
 public:
-    typedef draggable<navigable<BaseView>, BaseView> base_type;
+    typedef draggable<navigable<BaseView>, guigl::button::left_type, BaseView> base_type;
 
     template<typename ArgumentPack>
     navigable(const ArgumentPack &args)
@@ -48,7 +48,7 @@ protected:
     void draggable_on_drag(const position_type &position);
     void draggable_on_end_drag(const position_type &position) {};
 
-    friend class draggable<navigable<BaseView>, BaseView>;
+    friend class draggable<navigable<BaseView>, guigl::button::left_type, BaseView>;
 
 private:
     position_type m_angle;

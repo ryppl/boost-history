@@ -15,7 +15,7 @@ namespace boost { namespace guigl { namespace view {
 
 namespace detail {
 
-    template<typename Derived, typename BaseView>
+    template<typename Derived, typename Button, typename BaseView>
     struct clickable_static_visitor;
 
 }
@@ -25,11 +25,12 @@ namespace detail {
     The Derived class must have the method clickable_on_click(), which
     will be called when the user completes a click in the view.
 */
-template<typename Derived, typename BaseView=base>
+template<typename Derived, typename Button, typename BaseView=base>
 class clickable : public BaseView
 {
-    typedef BaseView base_type;
 public:
+    typedef BaseView base_type;
+
     template<typename ArgumentPack>
     clickable(const ArgumentPack &args)
         : base_type(args)
@@ -39,7 +40,8 @@ public:
         : base_type(static_cast<const base_type &>(rhs))
         , m_button_down(false)
     {}
-
+    button::enum_type clickable_button()
+    {   return Button::value; }
 protected:
     bool on_event(const event_type &event_info);
 
@@ -47,13 +49,14 @@ protected:
     {   return m_button_down; }
 private:
     bool m_button_down;
+    
     void button_down(bool state);
     void clickable_on_click()
     {
         static_cast<Derived *>(this)->clickable_on_click();
     }
 
-    friend struct detail::clickable_static_visitor<Derived,BaseView>;
+    friend struct detail::clickable_static_visitor<Derived,Button,BaseView>;
 };
 
 }}}

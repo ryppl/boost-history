@@ -16,7 +16,7 @@ namespace boost { namespace guigl { namespace view {
 
 namespace detail {
 
-    template<typename Derived, typename BaseView>
+    template<typename Derived, typename Button, typename BaseView>
     struct draggable_static_visitor;
 
 }
@@ -25,7 +25,7 @@ namespace detail {
 /** Behavior capturing dragging (moving the mouse over the view with the button
     held down).
 */
-template<typename Derived, typename BaseView=base>
+template<typename Derived, typename Button, typename BaseView=base>
 class draggable : public mouse_tracking<BaseView>
 {
 public:
@@ -40,6 +40,14 @@ public:
         : base_type(static_cast<const base_type &>(rhs))
         , m_dragging(false)
     {}
+
+    void draggable_on_drag(const position_type &position)
+    {}
+    void draggable_on_end_drag(const position_type &position)
+    {}
+    
+    button::enum_type draggable_button() const
+    {   return Button::value; }
 
 protected:
     bool on_event(const event_type &event_info);
@@ -58,7 +66,7 @@ private:
         static_cast<Derived *>(this)->draggable_on_end_drag(position);
     }
 
-    friend struct detail::draggable_static_visitor<Derived,BaseView>;
+    friend struct detail::draggable_static_visitor<Derived,Button,BaseView>;
     
     position_type m_drag_origin;
     bool m_dragging;

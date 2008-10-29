@@ -18,12 +18,12 @@ namespace boost { namespace guigl { namespace view {
 
 namespace detail {
 
-    template<typename Derived, typename BaseView>
+    template<typename Derived, typename Button, typename BaseView>
     struct draggable_static_visitor
         : public boost::static_visitor<>
     {
     public:
-        draggable_static_visitor(draggable<Derived, BaseView> &c)
+        draggable_static_visitor(draggable<Derived, Button, BaseView> &c)
             : m_draggable(c)
         {}
         
@@ -37,6 +37,8 @@ namespace detail {
 
         bool operator()(const button_event &event_info) const
         {
+            if(event_info.button != m_draggable.draggable_button())
+                return false;
             if(event_info.direction == direction::down)
             {
                 m_draggable.m_drag_origin = m_draggable.mouse_state().position;
@@ -58,18 +60,18 @@ namespace detail {
             return true;
         }
         
-        draggable<Derived, BaseView> &m_draggable;
+        draggable<Derived, Button, BaseView> &m_draggable;
     };
 
 }
 
-template<typename Derived, typename BaseView>
-inline bool draggable<Derived, BaseView>::on_event(const event_type &event_info)
+template<typename Derived, typename Button, typename BaseView>
+inline bool draggable<Derived, Button, BaseView>::on_event(const event_type &event_info)
 {
     if(base_type::on_event(event_info))
         return true;
     else
-        return boost::apply_visitor(detail::draggable_static_visitor<Derived,BaseView>(*this), event_info);
+        return boost::apply_visitor(detail::draggable_static_visitor<Derived,Button,BaseView>(*this), event_info);
 }
 
 

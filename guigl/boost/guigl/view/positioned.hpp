@@ -49,7 +49,7 @@ public:
     const position_type &position() const
     {   return m_position; }
 
-    /** Returns the position */
+    /** Sets the position */
     void set_position(const position_type &position)
     {   m_position = position; }
 
