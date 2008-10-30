@@ -29,17 +29,17 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     //std::pair<searcher_t::iterator, std::pair<bool, bool> > ret;
 
     c = my_tree.end();
-    BOOST_CHECK(c == my_tree.end());
-    BOOST_CHECK(c == my_tree.begin());
+    BOOST_CHECK_EQUAL(c, my_tree.end());
+    BOOST_CHECK_EQUAL(c, my_tree.begin());
     
 //    searcher_t::cursor cur = searcher_t::cursor(c);
 //    BOOST_CHECK(cur.empty());
-//    BOOST_CHECK(cur == searcher_t::cursor(my_tree.end()));
+//    BOOST_CHECK_EQUAL(cur, searcher_t::cursor(my_tree.end()));
         
     c1 = my_tree.insert(c, 8);
     
-    BOOST_CHECK(*c1 == 8);
-//    BOOST_CHECK(searcher_t::cursor(c1).parity() == 0);
+    BOOST_CHECK_EQUAL(*c1, 8);
+//    BOOST_CHECK_EQUAL(searcher_t::cursor(c1).parity(), 0);
     BOOST_CHECK(c != my_tree.end());
     BOOST_CHECK(c1 != my_tree.end());
     
@@ -49,43 +49,43 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
 //    
 //    cur = cur.parent(); //header-cursor(,1) (root)
 //    BOOST_CHECK(!cur.parity());
-//    BOOST_CHECK(searcher_t::iterator(cur) == my_tree.end());    
+//    BOOST_CHECK_EQUAL(searcher_t::iterator(cur), my_tree.end());    
     BOOST_CHECK(*c1 = 8);
 
-    BOOST_CHECK(++c1 == my_tree.end());
+    BOOST_CHECK_EQUAL(++c1, my_tree.end());
 
 
     --c1;
-    BOOST_CHECK(*c1 == 8);
+    BOOST_CHECK_EQUAL(*c1, 8);
     
-//    BOOST_CHECK(searcher_t::cursor(my_tree.end()).parity() == 1);
+//    BOOST_CHECK_EQUAL(searcher_t::cursor(my_tree.end()).parity(), 1);
 //
-//    BOOST_CHECK(cur.end().parity() == 1);
+//    BOOST_CHECK_EQUAL(cur.end().parity(), 1);
 //    
 //    cur = searcher_t::cursor(c1);
 //    
-//    BOOST_CHECK(*cur == 8);
+//    BOOST_CHECK_EQUAL(*cur, 8);
 //    
 //    BOOST_CHECK((++cur).empty());
 //    BOOST_CHECK(!(--cur).parent().parity()); // root's parity...
 //
-//    BOOST_CHECK(*(searcher_t::cursor(c).begin()) == 8);
+//    BOOST_CHECK_EQUAL(*(searcher_t::cursor(c).begin()), 8);
     
-    BOOST_CHECK(*c1 == 8);
-    BOOST_CHECK(++c1 == my_tree.end());
+    BOOST_CHECK_EQUAL(*c1, 8);
+    BOOST_CHECK_EQUAL(++c1, my_tree.end());
     
     // root (e.g. c) instead of c1 would crash this. but should that be really 
     // illegal?
     c2 = my_tree.insert(c1, 18); 
 
-    BOOST_CHECK(*c2 == 18);
+    BOOST_CHECK_EQUAL(*c2, 18);
 
     ++c2;
-    BOOST_CHECK(c2 == my_tree.end());
+    BOOST_CHECK_EQUAL(c2, my_tree.end());
     
     c = my_tree.end();
     --c;
-    BOOST_CHECK(*c == 18);
+    BOOST_CHECK_EQUAL(*c, 18);
 
     c2 = my_tree.insert(c, 31);
 
@@ -94,19 +94,19 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     
     c4 = my_tree.insert(c, 7);
     
-    BOOST_CHECK(*c4 == 7);
+    BOOST_CHECK_EQUAL(*c4, 7);
 
-    BOOST_CHECK(++c2 == my_tree.end());
+    BOOST_CHECK_EQUAL(++c2, my_tree.end());
     c = my_tree.end();
     --c;
 
     BOOST_CHECK(*c != 39);
-    BOOST_CHECK(*c == 412);
+    BOOST_CHECK_EQUAL(*c, 412);
     --c;
-    BOOST_CHECK(*c == 39);
+    BOOST_CHECK_EQUAL(*c, 39);
     
     c = my_tree.begin();
-//    BOOST_CHECK(searcher_t::cursor(c).parity() == 0);
+//    BOOST_CHECK_EQUAL(searcher_t::cursor(c).parity(), 0);
 //    BOOST_CHECK(*(searcher_t::cursor(c).parent()) != 412);
     BOOST_CHECK(*c < 413);    
     
@@ -117,57 +117,57 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
 //    BOOST_CHECK(tree_cur.empty());
 //    BOOST_CHECK((++tree_cur).empty());
 //    --tree_cur;
-//    BOOST_CHECK(*tree_cur == 39);
+//    BOOST_CHECK_EQUAL(*tree_cur, 39);
 //    
 //    tree_cur = boost::tree::lower_bound(the_tree.root(), 18);    
-//    BOOST_CHECK(*tree_cur == 18);
+//    BOOST_CHECK_EQUAL(*tree_cur, 18);
 //    
 //    tree_cur = boost::tree::lower_bound(the_tree.root(), 30);    
 //    BOOST_CHECK(tree_cur.empty());
 //    BOOST_CHECK(!(++tree_cur).empty());
 //    --tree_cur;
-//    BOOST_CHECK(*tree_cur == 31);
+//    BOOST_CHECK_EQUAL(*tree_cur, 31);
 //    
 //    tree_cur = boost::tree::lower_bound(the_tree.root(), 3);    
-//    BOOST_CHECK(*tree_cur == 7);
+//    BOOST_CHECK_EQUAL(*tree_cur, 7);
     
     c = my_tree.begin();
-    BOOST_CHECK(*c++ == 7);
-    BOOST_CHECK(*c++ == 8);
-    BOOST_CHECK(*c++ == 18);
-    BOOST_CHECK(*c++ == 31);
-    BOOST_CHECK(*c++ == 39);
-    BOOST_CHECK(*c++ == 412);
-    BOOST_CHECK(c == my_tree.end());
-    BOOST_CHECK(*--c == 412);
-    BOOST_CHECK(*--c == 39);
-    BOOST_CHECK(*--c == 31);
-    BOOST_CHECK(*--c == 18);
-    BOOST_CHECK(*--c == 8);
-    BOOST_CHECK(*--c == 7);
-    BOOST_CHECK(c == my_tree.begin());
+    BOOST_CHECK_EQUAL(*c++, 7);
+    BOOST_CHECK_EQUAL(*c++, 8);
+    BOOST_CHECK_EQUAL(*c++, 18);
+    BOOST_CHECK_EQUAL(*c++, 31);
+    BOOST_CHECK_EQUAL(*c++, 39);
+    BOOST_CHECK_EQUAL(*c++, 412);
+    BOOST_CHECK_EQUAL(c, my_tree.end());
+    BOOST_CHECK_EQUAL(*--c, 412);
+    BOOST_CHECK_EQUAL(*--c, 39);
+    BOOST_CHECK_EQUAL(*--c, 31);
+    BOOST_CHECK_EQUAL(*--c, 18);
+    BOOST_CHECK_EQUAL(*--c, 8);
+    BOOST_CHECK_EQUAL(*--c, 7);
+    BOOST_CHECK_EQUAL(c, my_tree.begin());
     
     while (c != my_tree.end())
         ++c;
     
     ------c;
-    BOOST_CHECK(*c == 31);
+    BOOST_CHECK_EQUAL(*c, 31);
 
     //my_tree.erase(c);
 
-    //BOOST_CHECK(*c == 39);
+    //BOOST_CHECK_EQUAL(*c, 39);
     
 //    tree_cur = boost::tree::lower_bound(the_tree.root(), 412);    
-//    BOOST_CHECK(*tree_cur == 412);
-//    BOOST_CHECK(*tree_cur.parent() == 18);
+//    BOOST_CHECK_EQUAL(*tree_cur, 412);
+//    BOOST_CHECK_EQUAL(*tree_cur.parent(), 18);
 //    
 //    c = my_tree.begin();
-//    BOOST_CHECK(*c++ == 7);
-//    BOOST_CHECK(*c++ == 8);
-//    BOOST_CHECK(*c++ == 18);
-//    BOOST_CHECK(*c++ == 39);
-//    BOOST_CHECK(*c++ == 412);
-//    BOOST_CHECK(c == my_tree.end());
+//    BOOST_CHECK_EQUAL(*c++, 7);
+//    BOOST_CHECK_EQUAL(*c++, 8);
+//    BOOST_CHECK_EQUAL(*c++, 18);
+//    BOOST_CHECK_EQUAL(*c++, 39);
+//    BOOST_CHECK_EQUAL(*c++, 412);
+//    BOOST_CHECK_EQUAL(c, my_tree.end());
     
 
 }

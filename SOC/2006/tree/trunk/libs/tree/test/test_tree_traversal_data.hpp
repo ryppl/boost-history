@@ -71,123 +71,123 @@ struct test_binary_tree_with_list_fixture
 template <class Tree>
 void validate_test_data_tree(Tree const& ret)
 {
-    BOOST_CHECK(*ret.root().begin() == 8);
-    BOOST_CHECK(*ret.root().begin().begin() == 3);    
-    BOOST_CHECK(*ret.root().begin().begin().begin() == 1);            //Leaf
-    BOOST_CHECK(*ret.root().begin().end().begin() == 6);        
-    BOOST_CHECK(*ret.root().begin().end().begin().begin() == 4);    //Leaf
-    BOOST_CHECK(*ret.root().begin().end().end().begin() == 7);        //Leaf
+    BOOST_CHECK_EQUAL(*ret.root().begin(), 8);
+    BOOST_CHECK_EQUAL(*ret.root().begin().begin(), 3);    
+    BOOST_CHECK_EQUAL(*ret.root().begin().begin().begin(), 1);            //Leaf
+    BOOST_CHECK_EQUAL(*ret.root().begin().end().begin(), 6);        
+    BOOST_CHECK_EQUAL(*ret.root().begin().end().begin().begin(), 4);    //Leaf
+    BOOST_CHECK_EQUAL(*ret.root().begin().end().end().begin(), 7);        //Leaf
 
-    BOOST_CHECK(*ret.root().end().begin() == 10);
-    BOOST_CHECK(*ret.root().end().end().begin() == 14);
-    BOOST_CHECK(*ret.root().end().end().begin().begin() == 13);
-    BOOST_CHECK(*ret.root().end().end().begin().begin().begin() == 11); 
-    BOOST_CHECK(*ret.root().end().end().begin().begin().end().begin() == 12);    //Leaf
+    BOOST_CHECK_EQUAL(*ret.root().end().begin(), 10);
+    BOOST_CHECK_EQUAL(*ret.root().end().end().begin(), 14);
+    BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 13);
+    BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 11); 
+    BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 12);    //Leaf
 }
 
 template <class Tree>
 void validate_corresponding_forest_tree(Tree const& t)
 {
     typename Tree::const_cursor c = t.root().begin();
-    BOOST_CHECK(*c == 8);
-    BOOST_CHECK(*c.to_begin() == 3);
-    BOOST_CHECK(*c.to_begin() == 1);
+    BOOST_CHECK_EQUAL(*c, 8);
+    BOOST_CHECK_EQUAL(*c.to_begin(), 3);
+    BOOST_CHECK_EQUAL(*c.to_begin(), 1);
     BOOST_CHECK(c.empty());
     BOOST_CHECK(++c == t.root().begin().begin().end());
     --c;
     c.to_parent();
-    BOOST_CHECK(*++c == 6);
-    BOOST_CHECK(*c.to_begin() == 4);
+    BOOST_CHECK_EQUAL(*++c, 6);
+    BOOST_CHECK_EQUAL(*c.to_begin(), 4);
     c.to_parent();
-    BOOST_CHECK(*++c == 7);
+    BOOST_CHECK_EQUAL(*++c, 7);
     BOOST_CHECK(++c == t.root().begin().end());
     
     c = t.root().begin();
-    BOOST_CHECK(*++c == 10);
-    BOOST_CHECK(*++c == 14);
+    BOOST_CHECK_EQUAL(*++c, 10);
+    BOOST_CHECK_EQUAL(*++c, 14);
     BOOST_CHECK(++c == t.root().end());
     --c;
-    BOOST_CHECK(*c.to_begin() == 13);
-    BOOST_CHECK(*c.to_begin() == 11);
-    BOOST_CHECK(*++c == 12);
+    BOOST_CHECK_EQUAL(*c.to_begin(), 13);
+    BOOST_CHECK_EQUAL(*c.to_begin(), 11);
+    BOOST_CHECK_EQUAL(*++c, 12);
 }
 
 template <class Iterator>
 void test_traversal(boost::tree::preorder, Iterator a, Iterator b) 
 {
-    BOOST_CHECK(*a++ == 8);
-    BOOST_CHECK(*a++ == 3);
-    BOOST_CHECK(*a++ == 1);
-    BOOST_CHECK(*a++ == 6);
-    BOOST_CHECK(*a++ == 4);
-    BOOST_CHECK(*a++ == 7);
-    BOOST_CHECK(*a++ == 10);
-    BOOST_CHECK(*a++ == 14);
-    BOOST_CHECK(*a++ == 13);
-    BOOST_CHECK(*a++ == 11);
-    BOOST_CHECK(*a++ == 12);
+    BOOST_CHECK_EQUAL(*a++, 8);
+    BOOST_CHECK_EQUAL(*a++, 3);
+    BOOST_CHECK_EQUAL(*a++, 1);
+    BOOST_CHECK_EQUAL(*a++, 6);
+    BOOST_CHECK_EQUAL(*a++, 4);
+    BOOST_CHECK_EQUAL(*a++, 7);
+    BOOST_CHECK_EQUAL(*a++, 10);
+    BOOST_CHECK_EQUAL(*a++, 14);
+    BOOST_CHECK_EQUAL(*a++, 13);
+    BOOST_CHECK_EQUAL(*a++, 11);
+    BOOST_CHECK_EQUAL(*a++, 12);
     BOOST_CHECK(a == b);
 }
 
 template <class Iterator>
 void test_reverse_traversal(boost::tree::preorder, Iterator a, Iterator b)
 {     
-    BOOST_CHECK(*--a == 12);
-    BOOST_CHECK(*--a == 11);
-    BOOST_CHECK(*--a == 13);
-    BOOST_CHECK(*--a == 14);
-    BOOST_CHECK(*--a == 10);
-    BOOST_CHECK(*--a == 7);
-    BOOST_CHECK(*--a == 4);
-    BOOST_CHECK(*--a == 6);
-    BOOST_CHECK(*--a == 1);
-    BOOST_CHECK(*--a == 3);
-    BOOST_CHECK(*--a == 8);
+    BOOST_CHECK_EQUAL(*--a, 12);
+    BOOST_CHECK_EQUAL(*--a, 11);
+    BOOST_CHECK_EQUAL(*--a, 13);
+    BOOST_CHECK_EQUAL(*--a, 14);
+    BOOST_CHECK_EQUAL(*--a, 10);
+    BOOST_CHECK_EQUAL(*--a, 7);
+    BOOST_CHECK_EQUAL(*--a, 4);
+    BOOST_CHECK_EQUAL(*--a, 6);
+    BOOST_CHECK_EQUAL(*--a, 1);
+    BOOST_CHECK_EQUAL(*--a, 3);
+    BOOST_CHECK_EQUAL(*--a, 8);
     BOOST_CHECK(a == b);
 }
 
 template <class Iterator>
 void test_subtree_traversal(boost::tree::preorder, Iterator a, Iterator b) 
 {
-    BOOST_CHECK(*a++ == 3);
-    BOOST_CHECK(*a++ == 1);
-    BOOST_CHECK(*a++ == 6);
-    BOOST_CHECK(*a++ == 4);
-    BOOST_CHECK(*a++ == 7);
+    BOOST_CHECK_EQUAL(*a++, 3);
+    BOOST_CHECK_EQUAL(*a++, 1);
+    BOOST_CHECK_EQUAL(*a++, 6);
+    BOOST_CHECK_EQUAL(*a++, 4);
+    BOOST_CHECK_EQUAL(*a++, 7);
     BOOST_CHECK(a == b);
 }
 
 template <class Iterator>
 void test_traversal(boost::tree::inorder, Iterator a, Iterator b)
 {        
-    BOOST_CHECK(*a++ == 1);
-    BOOST_CHECK(*a++ == 3);
-    BOOST_CHECK(*a++ == 4);
-    BOOST_CHECK(*a++ == 6);
-    BOOST_CHECK(*a++ == 7);
-    BOOST_CHECK(*a++ == 8);
-    BOOST_CHECK(*a++ == 10);
-    BOOST_CHECK(*a++ == 11);
-    BOOST_CHECK(*a++ == 12);
-    BOOST_CHECK(*a++ == 13);
-    BOOST_CHECK(*a++ == 14);
+    BOOST_CHECK_EQUAL(*a++, 1);
+    BOOST_CHECK_EQUAL(*a++, 3);
+    BOOST_CHECK_EQUAL(*a++, 4);
+    BOOST_CHECK_EQUAL(*a++, 6);
+    BOOST_CHECK_EQUAL(*a++, 7);
+    BOOST_CHECK_EQUAL(*a++, 8);
+    BOOST_CHECK_EQUAL(*a++, 10);
+    BOOST_CHECK_EQUAL(*a++, 11);
+    BOOST_CHECK_EQUAL(*a++, 12);
+    BOOST_CHECK_EQUAL(*a++, 13);
+    BOOST_CHECK_EQUAL(*a++, 14);
     BOOST_CHECK(a == b);
 }
 
 template <class Iterator>
 void test_reverse_traversal(boost::tree::inorder, Iterator a, Iterator b)
 {
-    BOOST_CHECK(*--a == 14);
-    BOOST_CHECK(*--a == 13);
-    BOOST_CHECK(*--a == 12);
-    BOOST_CHECK(*--a == 11);
-    BOOST_CHECK(*--a == 10);
-    BOOST_CHECK(*--a == 8);
-    BOOST_CHECK(*--a == 7);
-    BOOST_CHECK(*--a == 6);
-    BOOST_CHECK(*--a == 4);
-    BOOST_CHECK(*--a == 3);
-    BOOST_CHECK(*--a == 1);
+    BOOST_CHECK_EQUAL(*--a, 14);
+    BOOST_CHECK_EQUAL(*--a, 13);
+    BOOST_CHECK_EQUAL(*--a, 12);
+    BOOST_CHECK_EQUAL(*--a, 11);
+    BOOST_CHECK_EQUAL(*--a, 10);
+    BOOST_CHECK_EQUAL(*--a, 8);
+    BOOST_CHECK_EQUAL(*--a, 7);
+    BOOST_CHECK_EQUAL(*--a, 6);
+    BOOST_CHECK_EQUAL(*--a, 4);
+    BOOST_CHECK_EQUAL(*--a, 3);
+    BOOST_CHECK_EQUAL(*--a, 1);
     BOOST_CHECK(a == b);
 }
 
@@ -195,44 +195,44 @@ void test_reverse_traversal(boost::tree::inorder, Iterator a, Iterator b)
 template <class Iterator>
 void test_traversal(boost::tree::postorder, Iterator a, Iterator b)
 {    
-    BOOST_CHECK(*a++ == 1);    
-    BOOST_CHECK(*a++ == 4);
-    BOOST_CHECK(*a++ == 7);
-    BOOST_CHECK(*a++ == 6);
-    BOOST_CHECK(*a++ == 3);
-    BOOST_CHECK(*a++ == 12);
-    BOOST_CHECK(*a++ == 11);
-    BOOST_CHECK(*a++ == 13);
-    BOOST_CHECK(*a++ == 14);
-    BOOST_CHECK(*a++ == 10);
-    BOOST_CHECK(*a++ == 8);
+    BOOST_CHECK_EQUAL(*a++, 1);    
+    BOOST_CHECK_EQUAL(*a++, 4);
+    BOOST_CHECK_EQUAL(*a++, 7);
+    BOOST_CHECK_EQUAL(*a++, 6);
+    BOOST_CHECK_EQUAL(*a++, 3);
+    BOOST_CHECK_EQUAL(*a++, 12);
+    BOOST_CHECK_EQUAL(*a++, 11);
+    BOOST_CHECK_EQUAL(*a++, 13);
+    BOOST_CHECK_EQUAL(*a++, 14);
+    BOOST_CHECK_EQUAL(*a++, 10);
+    BOOST_CHECK_EQUAL(*a++, 8);
     BOOST_CHECK(a == b);
 }
 
 template <class Iterator>
 void test_reverse_traversal(boost::tree::postorder, Iterator a, Iterator b)
 {    
-    BOOST_CHECK(*--a == 8);
-    BOOST_CHECK(*--a == 10);
-    BOOST_CHECK(*--a == 14);
-    BOOST_CHECK(*--a == 13);
-    BOOST_CHECK(*--a == 11);
-    BOOST_CHECK(*--a == 12);
-    BOOST_CHECK(*--a == 3);
-    BOOST_CHECK(*--a == 6);
-    BOOST_CHECK(*--a == 7);
-    BOOST_CHECK(*--a == 4);
-    BOOST_CHECK(*--a == 1);
+    BOOST_CHECK_EQUAL(*--a, 8);
+    BOOST_CHECK_EQUAL(*--a, 10);
+    BOOST_CHECK_EQUAL(*--a, 14);
+    BOOST_CHECK_EQUAL(*--a, 13);
+    BOOST_CHECK_EQUAL(*--a, 11);
+    BOOST_CHECK_EQUAL(*--a, 12);
+    BOOST_CHECK_EQUAL(*--a, 3);
+    BOOST_CHECK_EQUAL(*--a, 6);
+    BOOST_CHECK_EQUAL(*--a, 7);
+    BOOST_CHECK_EQUAL(*--a, 4);
+    BOOST_CHECK_EQUAL(*--a, 1);
     BOOST_CHECK(a == b);
 }
 
 template <class Iterator>
 void test_traversal_from_leaf4(Iterator a, Iterator b)
 {    
-    BOOST_CHECK(*a == 4);
-    BOOST_CHECK(*++a == 6);
-    BOOST_CHECK(*++a == 3);
-    BOOST_CHECK(*++a == 8);
+    BOOST_CHECK_EQUAL(*a, 4);
+    BOOST_CHECK_EQUAL(*++a, 6);
+    BOOST_CHECK_EQUAL(*++a, 3);
+    BOOST_CHECK_EQUAL(*++a, 8);
     BOOST_CHECK(++a == b);
 
 } // namespace ascending

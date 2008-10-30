@@ -8,6 +8,8 @@
 #include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
 
+#include <boost/tree/insert_cursor.hpp>
+
 #include <boost/lambda/bind.hpp>
 
 #include <list>
@@ -42,6 +44,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, Order, orders)
 {
     boost::tree::copy(Order(), bt.root(), o);
     test_traversal(Order(), l.begin(), l.end());
+}
+
+typedef boost::mpl::list<preorder,inorder/*,postorder*/> preandinorders; //FIXME
+
+BOOST_AUTO_TEST_CASE_TEMPLATE ( test_copy2, Order, preandinorders )
+{
+    //boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_messages ) ;
+    bt2.clear();
+    l.clear();
+    boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root()), boost::forward_traversal_tag());
+    boost::tree::copy(Order(), bt2.root(), o);
+    validate_test_data_tree(bt2);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform, Order, orders)

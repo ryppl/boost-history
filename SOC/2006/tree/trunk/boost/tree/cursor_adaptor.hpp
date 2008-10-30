@@ -158,7 +158,8 @@ public:
     {
         return *m_cursor;
     }
-     
+    
+private:     
     void increment()
     {
         ++m_cursor;

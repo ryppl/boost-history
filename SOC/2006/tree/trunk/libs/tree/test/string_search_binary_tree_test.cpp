@@ -40,12 +40,12 @@ void test_normal_string_search_binary_tree()
     
     //FIXME: const_iterator doesn't work properly yet
     searcher_t::iterator ci = my_tree.begin(); 
-    BOOST_CHECK(*ci++ == "anagram");
-    BOOST_CHECK(*ci++ == "anodyne");
-    BOOST_CHECK(*ci++ == "anteater");
-    BOOST_CHECK(*ci++ == "anthology");
-    BOOST_CHECK(*ci++ == "anthrax");
-    BOOST_CHECK(ci == my_tree.end());
+    BOOST_CHECK_EQUAL(*ci++, "anagram");
+    BOOST_CHECK_EQUAL(*ci++, "anodyne");
+    BOOST_CHECK_EQUAL(*ci++, "anteater");
+    BOOST_CHECK_EQUAL(*ci++, "anthology");
+    BOOST_CHECK_EQUAL(*ci++, "anthrax");
+    BOOST_CHECK_EQUAL(ci, my_tree.end());
 }
 
 void test_optimized_string_search_binary_tree()
@@ -68,12 +68,12 @@ void test_optimized_string_search_binary_tree()
     
     //FIXME: const_iterator doesn't work properly yet
     searcher_t::iterator ci = my_tree.begin(); 
-    BOOST_CHECK(*ci++ == "anagram");
-    BOOST_CHECK(*ci++ == "anodyne");
-    BOOST_CHECK(*ci++ == "anteater");
-    BOOST_CHECK(*ci++ == "anthology");
-    BOOST_CHECK(*ci++ == "anthrax");
-    BOOST_CHECK(ci == my_tree.end());
+    BOOST_CHECK_EQUAL(*ci++, "anagram");
+    BOOST_CHECK_EQUAL(*ci++, "anodyne");
+    BOOST_CHECK_EQUAL(*ci++, "anteater");
+    BOOST_CHECK_EQUAL(*ci++, "anthology");
+    BOOST_CHECK_EQUAL(*ci++, "anthrax");
+    BOOST_CHECK_EQUAL(ci, my_tree.end());
 }
 
 

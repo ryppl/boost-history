@@ -30,11 +30,11 @@ BOOST_AUTO_TEST_CASE( search_ordered_vector_test )
 //    c1 = my_searcher.insert(c1, 8);
 //
 //    c1 = my_searcher.begin();
-//    BOOST_CHECK(*c1++ == 6);
-//    BOOST_CHECK(*c1++ == 7);
-//    BOOST_CHECK(*c1++ == 8);
-//    BOOST_CHECK(*c1++ == 18);
-//    BOOST_CHECK(c1 == my_searcher.end());
+//    BOOST_CHECK_EQUAL(*c1++, 6);
+//    BOOST_CHECK_EQUAL(*c1++, 7);
+//    BOOST_CHECK_EQUAL(*c1++, 8);
+//    BOOST_CHECK_EQUAL(*c1++, 18);
+//    BOOST_CHECK_EQUAL(c1, my_searcher.end());
 }
 
 //boost::unit_test::test_suite*

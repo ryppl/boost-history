@@ -183,7 +183,7 @@ OutCursor copy(preorder, InCursor s, OutCursor t, forward_traversal_tag)
     s.to_begin();
     t.to_begin();
     
-    for (; s != r; ++s, ++t) {
+    for (;s != r; ++s, ++t) {
         *t = *s;
         if (!s.empty())
             copy(preorder(), s, t, forward_traversal_tag());

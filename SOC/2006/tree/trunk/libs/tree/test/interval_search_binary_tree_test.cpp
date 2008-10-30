@@ -52,11 +52,11 @@ BOOST_AUTO_TEST_CASE( interval_search_binary_tree_test )
     my_tree.insert(interval<int>(29,99));    
 
     searcher_t::iterator ci = my_tree.begin(); 
-    BOOST_CHECK(*ci++ == interval<int>( 0, 1));
-//    BOOST_CHECK(*ci++ == interval<int>( 3,41));
-    BOOST_CHECK(*ci++ == interval<int>(10,15));
-//    BOOST_CHECK(*ci++ == interval<int>(20,36));
-//    BOOST_CHECK(*ci++ == interval<int>(29,99));
-//    BOOST_CHECK(ci == my_tree.end());
+    BOOST_CHECK_EQUAL(*ci++, interval<int>( 0, 1));
+//    BOOST_CHECK_EQUAL(*ci++, interval<int>( 3,41));
+    BOOST_CHECK_EQUAL(*ci++, interval<int>(10,15));
+//    BOOST_CHECK_EQUAL(*ci++, interval<int>(20,36));
+//    BOOST_CHECK_EQUAL(*ci++, interval<int>(29,99));
+//    BOOST_CHECK_EQUAL(ci, my_tree.end());
     
 }

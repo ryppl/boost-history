@@ -14,6 +14,11 @@
 [section TODO]
 
 General:
+* Future: Optimise insert_cursor for use with binary_tree insert and copy ctor 
+  (preorder copy; ideally, we can guarantee RAII for every single element)
+  and clear/dtor (postorder for_each).
+* Get insert_cursor to work with postorder copy, then with linear (ascending cursor)
+  versions. Check with other algorithms that use output cursors.
 * Caution: Iterative algorithms require ascending cursors!
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.

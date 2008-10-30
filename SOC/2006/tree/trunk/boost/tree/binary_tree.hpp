@@ -242,6 +242,7 @@ class binary_tree {
     template <class InputCursor>
     cursor insert(cursor pos, InputCursor subtree)
     {
+        //boost::tree::copy(boost::tree::preorder(), subtree, pos, forward_traversal_tag());
         subtree.to_begin();
         insert(pos, *subtree);
         if (!subtree.empty())

@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
 //    binary_tree<int>::cursor c = test_tree.root();
 //    boost::tree::iterator<ascending, binary_tree<int>::cursor> ai_root(c);
 //    c = c.begin().end().begin().begin();
-//    BOOST_CHECK(*c == 4);
+//    BOOST_CHECK_EQUAL(*c, 4);
 //
 //    boost::tree::iterator<ascending, binary_tree<int>::cursor> ais(c);
 //    test_traversal_from_leaf4(ais, ai_root);

@@ -31,8 +31,8 @@ void search_single_element(binary_tree<int>::const_cursor r, int v)
     c = lower_bound(r, v);
     d = upper_bound(r, v); 
     
-    BOOST_CHECK(*c == v);
-    //BOOST_CHECK(inorder::next(c) == d);
+    BOOST_CHECK_EQUAL(*c, v);
+    //BOOST_CHECK_EQUAL(inorder::next(c) , d);
 }
 
 BOOST_AUTO_TEST_CASE( binary_tree_search_test )
@@ -46,20 +46,20 @@ BOOST_AUTO_TEST_CASE( binary_tree_search_test )
 
     c = lower_bound(bt.root(), 5); // Not in tree
     d = lower_bound(bt.root(), 5);
-    BOOST_CHECK(*c == 6);
-    BOOST_CHECK(*d == 6);
+    BOOST_CHECK_EQUAL(*c, 6);
+    BOOST_CHECK_EQUAL(*d, 6);
     
     *c = 4;
     
     c = lower_bound(bt.root(), 5); // Not in tree
-    BOOST_CHECK(*c == 7);
+    BOOST_CHECK_EQUAL(*c, 7);
 
     c = lower_bound(bt.root(), 4); // Twice in tree
     d = upper_bound(bt.root(), 4);
-    BOOST_CHECK(*c == 4);
-    BOOST_CHECK(*d == 7);
-    BOOST_CHECK(*c.parent() == 4);
-    //BOOST_CHECK(inorder::next(c, 2) == d);
+    BOOST_CHECK_EQUAL(*c, 4);
+    BOOST_CHECK_EQUAL(*d, 7);
+    BOOST_CHECK_EQUAL(*c.parent(), 4);
+    //BOOST_CHECK_EQUAL(inorder::next(c, 2), d);
     
     *c.to_parent() = 6;
     validate_test_data_tree(bt);

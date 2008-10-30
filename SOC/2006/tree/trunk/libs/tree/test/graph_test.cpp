@@ -59,13 +59,13 @@ BOOST_AUTO_TEST_CASE( graph_test )
         boost::tree::cursor_value<cursor>::type::extract_meta
     > cpm;
 
-    BOOST_CHECK(get(dpm, bt.root()) == 8); // Check the entire tree?
-    BOOST_CHECK(get(cpm, bt.root()) == Color::white());
+    BOOST_CHECK_EQUAL(get(dpm, bt.root()), 8); // Check the entire tree?
+    BOOST_CHECK_EQUAL(get(cpm, bt.root()), Color::white());
     
     put(cpm, bt.root(), Color::gray());    
-    BOOST_CHECK(get(cpm, bt.root()) == Color::gray());
+    BOOST_CHECK_EQUAL(get(cpm, bt.root()), Color::gray());
     put(cpm, bt.root(), Color::white());    
-    BOOST_CHECK(get(cpm, bt.root()) == Color::white());
+    BOOST_CHECK_EQUAL(get(cpm, bt.root()), Color::white());
     
     boost::dfs_visitor< 
         boost::property_writer<
@@ -90,10 +90,10 @@ BOOST_AUTO_TEST_CASE( graph_test )
     
     w = bt.root().begin().end().begin();
     default_color_type color = get(cpm, w);
-    BOOST_CHECK(color == Color::white());
+    BOOST_CHECK_EQUAL(color, Color::white());
     
     put(cpm, w, Color::white());
-    BOOST_CHECK(get(cpm, w) == Color::white());
+    BOOST_CHECK_EQUAL(get(cpm, w), Color::white());
     
     BOOST_CHECK(!empty_cursor(v, bt));
     
@@ -105,14 +105,14 @@ BOOST_AUTO_TEST_CASE( graph_test )
     BOOST_CHECK(target(*oei, bt) == bt.root().begin());
     BOOST_CHECK(target(*oei_end, bt) == bt.root());
     
-    BOOST_CHECK(out_degree(v, bt) == 2);
+    BOOST_CHECK_EQUAL(out_degree(v, bt), 2);
 //        
-//    BOOST_CHECK(test_list.size() == 2);
+//    BOOST_CHECK_EQUAL(test_list.size(), 2);
 //    
 //    std::list<int>::const_iterator ci = test_list.begin();
 //    
-//    BOOST_CHECK(*ci == 8);
-//    BOOST_CHECK(*++ci == 10); //FIXME
+//    BOOST_CHECK_EQUAL(*ci, 8);
+//    BOOST_CHECK_EQUAL(*++ci, 10); //FIXME
     
 //    test::preorder::traversal(test_list.begin(), test_list.end());
     

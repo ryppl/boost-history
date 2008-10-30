@@ -28,9 +28,9 @@ template <class Cursor>
 class root_tracking_cursor
 : public cursor_adaptor<root_tracking_cursor<Cursor>
                       , Cursor 
-                      , boost::use_default
-                      , typename cursor_horizontal_traversal<Cursor>::type
-                      , typename cursor_vertical_traversal<Cursor>::type
+//                      , boost::use_default
+//                      , typename cursor_horizontal_traversal<Cursor>::type
+//                      , typename cursor_vertical_traversal<Cursor>::type
     > {
 private:
     struct enabler {};
