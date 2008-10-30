@@ -9,7 +9,7 @@ void mp_int<A,T>::toom_sqr()
 {
   mp_int w0, w1, w2, w3, w4, tmp1, a0, a1, a2;
 
-  const size_type B = used_ / 3;
+  const size_type B = size_ / 3;
 
   /* a = a2 * B**2 + a1 * B + a0 */
   a0 = *this;
@@ -130,22 +130,22 @@ void mp_int<A,T>::karatsuba_sqr()
   mp_int x0, x1, tmp, tmp2, x0x0, x1x1;
 
   /* min # of digits divided in two */
-  const size_type B = used_ >> 1;
+  const size_type B = size_ >> 1;
 
   /* init copy all the temps */
   x0.grow_capacity(B);
-  x1.grow_capacity(used_ - B);
+  x1.grow_capacity(size_ - B);
 
   /* init temps */
   x0x0.grow_capacity(B * 2);
-  x1x1.grow_capacity((used_ - B) * 2);
+  x1x1.grow_capacity((size_ - B) * 2);
 
   /* now shift the digits */
   std::memcpy(x0.digits_, digits_, B * sizeof(digit_type));
-  std::memcpy(x1.digits_, digits_ + B, (used_ - B) * sizeof(digit_type));
+  std::memcpy(x1.digits_, digits_ + B, (size_ - B) * sizeof(digit_type));
 
-  x0.used_ = B;
-  x1.used_ = used_ - B;
+  x0.size_ = B;
+  x1.size_ = size_ - B;
 
   x0.clamp();
 
@@ -175,11 +175,11 @@ template<class A, class T>
 void mp_int<A,T>::comba_sqr()
 {
   mp_int tmp;
-  tmp.grow_capacity(used_ + used_);
+  tmp.grow_capacity(size_ + size_);
 
-  ops_type::comba_sqr(tmp.digits(), digits(), used_);
+  ops_type::comba_sqr(tmp.digits(), digits(), size_);
 
-  tmp.used_ = used_ + used_;
+  tmp.size_ = size_ + size_;
   
   tmp.clamp();
   swap(tmp);
@@ -189,9 +189,9 @@ void mp_int<A,T>::comba_sqr()
 template<class A, class T>
 void mp_int<A,T>::sqr()
 {
-  if (used_ >= traits_type::toom_sqr_cutoff)
+  if (size_ >= traits_type::toom_sqr_cutoff)
     toom_sqr();
-  else if (used_ >= traits_type::karatsuba_sqr_cutoff)
+  else if (size_ >= traits_type::karatsuba_sqr_cutoff)
     karatsuba_sqr();
   else
     comba_sqr();

@@ -24,7 +24,7 @@ namespace detail
 
 // low level from string conversion routine
 // Requires:
-// - used_ = 0
+// - size_ = 0
 // - first and last must point into string without sign prefix and without base
 //   prefix (like 0x)
 // - radix is 8, 10 or 16
@@ -32,7 +32,7 @@ template<class A, class T>
 template<typename Iter>
 void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
 {
-  assert(used_ == 0);
+  assert(size_ == 0);
   assert(first != last);
 
   const detail::string_conversion_constants<mp_int> sc(radix);
@@ -64,14 +64,14 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
       
       if (offset >= valid_bits)
       {
-        digits_[used_++] = result;
+        digits_[size_++] = result;
         offset -= valid_bits;
         result = static_cast<digit_type>(x >> (sc.radix_storage_bits - offset));
       }
     }
     
-    if (result || !used_)
-      digits_[used_++] = result;
+    if (result || !size_)
+      digits_[size_++] = result;
     
     clamp();
     if (is_zero())
@@ -104,18 +104,18 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
       }
 
       // then use multi precision routines to convert this digit to binary
-      if (used_)
+      if (size_)
       {
-        digit_type carry = ops_type::multiply_by_digit(digits_, digits_, used_,
+        digit_type carry = ops_type::multiply_by_digit(digits_, digits_, size_,
                                                             sc.max_power_value);
 
-        carry += ops_type::add_single_digit(digits_, digits_, used_, result);
+        carry += ops_type::add_single_digit(digits_, digits_, size_, result);
         
         if (carry)
-          digits_[used_++] = carry;
+          digits_[size_++] = carry;
       }
       else
-        digits_[used_++] = result;
+        digits_[size_++] = result;
     }
 
     // one last round for the remaining decimal digits
@@ -133,18 +133,18 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
         radix_power *= 10U;
       }
       
-      if (used_)
+      if (size_)
       {
-        digit_type carry = ops_type::multiply_by_digit(digits_, digits_, used_,
+        digit_type carry = ops_type::multiply_by_digit(digits_, digits_, size_,
                                           static_cast<digit_type>(radix_power));
 
-        carry += ops_type::add_single_digit(digits_, digits_, used_, result);
+        carry += ops_type::add_single_digit(digits_, digits_, size_, result);
 
         if (carry)
-          digits_[used_++] = carry;
+          digits_[size_++] = carry;
       }
       else
-        digits_[used_++] = result;
+        digits_[size_++] = result;
     }
   }
 }
@@ -174,7 +174,7 @@ StringT mp_int<A,T>::to_string(std::ios_base::fmtflags f) const
 
   StringT s;
 
-  if (!used_)
+  if (!size_)
     return s;
 
   digit_type radix;

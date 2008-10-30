@@ -14,7 +14,7 @@ void mp_int<A,T>::sub_digit(digit_type b)
     return;
   }
 
-  if (used_ == 1)
+  if (size_ == 1)
   {
     if (digits_[0] < b) // example: 2 - 6 = -4
     {
@@ -26,9 +26,9 @@ void mp_int<A,T>::sub_digit(digit_type b)
   }
   else
   {
-    ops_type::subtract_single_digit(digits_, digits_, used_, b);
-    if (!digits_[used_-1])
-      --used_;
+    ops_type::subtract_single_digit(digits_, digits_, size_, b);
+    if (!digits_[size_-1])
+      --size_;
   }
 }
 
@@ -36,7 +36,7 @@ void mp_int<A,T>::sub_digit(digit_type b)
 template<class A, class T>
 inline void mp_int<A,T>::sub_smaller_magnitude(const mp_int& rhs)
 {
-  ops_type::sub_smaller_magnitude(digits_, digits_, used_, rhs.digits_, rhs.used_);
+  ops_type::sub_smaller_magnitude(digits_, digits_, size_, rhs.digits_, rhs.size_);
 
   clamp();
 }

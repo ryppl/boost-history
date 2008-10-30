@@ -102,6 +102,15 @@ struct basic_primitive_ops
 
   // z = x * x;
   static void comba_sqr(digit_type* z, const digit_type* x, size_type x_size);
+  
+  // MADD ------------------------------------
+
+  // z = w * x + y
+  static digit_type multiply_add_digits(digit_type* z,
+                                        const digit_type* w,
+                                        digit_type x,
+                                        const digit_type* y,
+                                        size_type n);
 };
 
 
@@ -501,6 +510,28 @@ basic_primitive_ops<D,W,S>::comba_sqr(digit_type* z,
   *z = static_cast<digit_type>(acc);
 }
 
+template<typename D, typename W, typename S>
+typename basic_primitive_ops<D,W,S>::digit_type
+basic_primitive_ops<D,W,S>::multiply_add_digits(digit_type* z,
+                                                const digit_type* w,
+                                                digit_type x,
+                                                const digit_type* y,
+                                                size_type n)
+{
+  word_type carry = 0;
+  while (n--)
+  {
+    const word_type r = static_cast<word_type>(*w++)
+                      * static_cast<word_type>(x)
+                      + static_cast<word_type>(*y++)
+                      + carry;
+
+    *z++ = static_cast<digit_type>(r);
+    carry = r >> digit_bits;
+  }
+
+  return static_cast<digit_type>(carry);
+}
 
 
 

@@ -3,6 +3,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_MP_MATH_MP_INT_DETAIL_MODULAR_REDUCTION_HPP
+#define BOOST_MP_MATH_MP_INT_DETAIL_MODULAR_REDUCTION_HPP
+
+#include <boost/mp_math/mp_int/mp_int_fwd.hpp>
+
+namespace boost {
+namespace mp_math {
+namespace detail {
 
 // reduces x mod m, assumes 0 < x < m**2, mu is precomputed.
 // From HAC pp.604 Algorithm 14.42
@@ -47,78 +55,61 @@ void barrett_reduce(mp_int<A,T>& x, const mp_int<A,T>& m, const mp_int<A,T>& mu)
     x.sub_smaller_magnitude(m);
 }
 
-/* computes xR**-1 == x (mod N) via Montgomery Reduction */
+/* computes xR**-1 == x (mod m) via Montgomery Reduction */
 template<class A, class T>
 void montgomery_reduce(mp_int<A,T>& x,
-                       const mp_int<A,T>& n,
+                       const mp_int<A,T>& m,
                        typename mp_int<A,T>::digit_type rho)
 {
-  typedef typename mp_int<A,T>::digit_type digit_type;
-  typedef typename mp_int<A,T>::word_type  word_type;
-  typedef typename mp_int<A,T>::size_type  size_type;
+  typedef typename mp_int<A,T>::digit_type     digit_type;
+  typedef typename mp_int<A,T>::word_type      word_type;
+  typedef typename mp_int<A,T>::size_type      size_type;
+  typedef typename mp_int<A,T>::iterator       iterator;
+  typedef typename mp_int<A,T>::const_iterator const_iterator;
 
-  const size_type digs = n.size() * 2 + 1;
+  const size_type num = m.size() * 2 + 1;
 
-  x.grow_capacity(digs);
+  x.grow_capacity(num);
   std::memset(x.digits() + x.size(), 0, (x.capacity() - x.size()) * sizeof(digit_type));
-  x.set_size(digs);
+  x.set_size(num);
 
-  // TODO rewrite both for loops in terms of const_iterator nd = n.begin();...
-  for (size_type i = 0; i < n.size(); ++i)
+  for (size_type i = 0; i < m.size(); ++i)
   {
     // mu = x[i] * rho (mod base)
     // The value of rho must be precalculated such that it equals -1/n0 mod b
-    // this allows the following inner loop to reduce the input one digit at a
-    // time.
-    const digit_type mu = static_cast<word_type>(x[i]) * rho;
+    // this allows multiply_add_digits to reduce the input one digit at a time.
+    const digit_type mu = x[i] * rho;
 
     // x = x + mu * m * base**i
   
-    // alias for digits of the modulus
-    const digit_type* tmpn = n.digits();
+    digit_type carry =
+      mp_int<A,T>::ops_type::multiply_add_digits(x.digits() + i,
+                                                 m.digits(),
+                                                 mu,
+                                                 x.digits() + i,
+                                                 m.size());
 
-    // alias for the digits of x
-    digit_type* tmpx = x.digits() + i;
-
-    digit_type carry = 0;
-
-    // Multiply and add in place
-    for (size_type j = 0; j < n.size(); ++j)
-    {
-      // compute product and sum
-      const word_type r = static_cast<word_type>(mu)
-                        * static_cast<word_type>(*tmpn++)
-                        + static_cast<word_type>(carry)
-                        + static_cast<word_type>(*tmpx);
-      
-      carry = static_cast<digit_type>(r >> mp_int<A,T>::digit_bits);
-
-      *tmpx++ = r;
-    }
     // At this point the i'th digit of x should be zero
-    
-    // propagate carries upwards as required
-    while (carry)
-    {
-      const word_type r = static_cast<word_type>(*tmpx) + carry;
-      *tmpx++ = r;
-      carry = r >> mp_int<A,T>::digit_bits;
-    }
+
+    mp_int<A,T>::ops_type::ripple_carry(x.digits() + i + m.size(),
+                                        x.digits() + i + m.size(),
+                                        num,
+                                        carry);
   }
 
-  // at this point the n.used'th least significant digits of x are all zero
-  // which means we can shift x to the right by n.used digits and the residue is
+  // at this point the m.size least significant digits of x are all zero which
+  // means we can shift x to the right by m.size digits and the residue is
   // unchanged.
 
-  // x = x/base**n.size()
+  // x = x/base**m.size()
   x.clamp();
   if (x.is_zero())
     x.set_sign(1);
 
-  x.shift_digits_right(n.size());
+  x.shift_digits_right(m.size());
 
-  if (x.compare_magnitude(n) != -1)
-    x.sub_smaller_magnitude(n);
+  if (x.compare_magnitude(m) != -1)
+    x.sub_smaller_magnitude(m);
 }
 
 // shifts with subtractions when the result is greater than n.
@@ -147,93 +138,6 @@ void montgomery_normalize(mp_int<A,T>& x, const mp_int<A,T>& n)
   }
 }
 
-/* computes xR**-1 == x (mod N) via Montgomery Reduction
- *
- * This is an optimized implementation of montgomery_reduce
- * which uses the comba method to quickly calculate the columns of the
- * reduction.
- *
- * Based on Algorithm 14.32 on pp.601 of HAC.
-*/
-template<class A, class T>
-void fast_montgomery_reduce(mp_int<A,T>& x,
-                            const mp_int<A,T>& n,
-                            typename mp_int<A,T>::digit_type rho)
-{
-  typedef typename mp_int<A,T>::digit_type digit_type;
-  typedef typename mp_int<A,T>::word_type  word_type;
-  typedef typename mp_int<A,T>::size_type  size_type;
-
-  word_type W[512];
-
-  x.grow_capacity(n.used_ + 1);
-
-  for (size_type i = 0; i < x.size(); ++i)
-    W[i] = x[i];
-
-  // zero the high words of W[a->used..m->used*2]
-  std::memset(W + x.size(), 0, (n.size() * 2 + 1) * sizeof(word_type));
-
-  // now we proceed to zero successive digits
-  // from the least significant upwards
-  for (size_type i = 0; i < n.size(); ++i)
-  {
-    // mu = ai * m' mod b
-    //
-    // We avoid a double precision multiplication (which isn't required) by
-    // casting the value down to a mp_digit.  Note this requires that W[ix-1]
-    // have  the carry cleared (see after the inner loop)
-    const digit_type mu = static_cast<digit_type>(W[i])
-                        * static_cast<word_type>(rho);
-
-    /* a = a + mu * m * b**i
-     *
-     * This is computed in place and on the fly.  The multiplication
-     * by b**i is handled by offseting which columns the results
-     * are added to.
-     *
-     * Note the comba method normally doesn't handle carries in the
-     * inner loop In this case we fix the carry from the previous
-     * column since the Montgomery reduction requires digits of the
-     * result (so far) [see above] to work.  This is
-     * handled by fixing up one carry after the inner loop. The
-     * carry fixups are done in order so after these loops the
-     * first m->used words of W[] have the carries fixed
-     */
-    /* inner loop */
-    for (size_type j = 0; j < n.size(); ++j)
-      W[i+j] += static_cast<word_type>(mu) * static_cast<word_type>(n[j]);
-
-    // now fix carry for next digit, W[ix+1]
-    W[i + 1] += W[i] >> static_cast<word_type>(mp_int<A,T>::valid_bits);
-  }
-
-  // now we have to propagate the carries and shift the words downward [all
-  // those least significant digits we zeroed].
-
-  // now fix rest of carries
-  for (size_type i = n.size() + 1; i <= n.size() * 2 + 1; ++i)
-    W[i] += W[i-1] >> static_cast<word_type>(mp_int<A,T>::valid_bits);
-
-  // copy out, A = A/b**n
-  //
-  // The result is A/b**n but instead of converting from an array of word_type
-  // to digit_type than calling mp_rshd we just copy them in the right order
-  for (size_type i = 0; i < n.size() + 1; ++i)
-    x[i] = static_cast<digit_type>(W[n.size() + i]);
-
-  // set the max used and clamp
-  x.set_size(n.size() + 1);
-  x.clamp();
-  if (x.is_zero())
-    x.set_sign(1);
-
-  // if A >= m then A = A - m
-  if (x.compare_magnitude(n) != -1)
-    x.sub_smaller_magnitude(n);
-}
-
-
 // reduce "x" modulo "n" using the Diminished Radix algorithm.
 // Based on algorithm from the paper
 //
@@ -254,6 +158,7 @@ void restricted_dr_reduce(mp_int<A,T>& x,
   typedef typename mp_int<A,T>::digit_type digit_type;
   typedef typename mp_int<A,T>::word_type  word_type;
   typedef typename mp_int<A,T>::size_type  size_type;
+  typedef typename mp_int<A,T>::iterator   iterator;
 
   const size_type m = n.size();
 
@@ -265,11 +170,11 @@ top:
   digit_type mu = 0;
 
   // compute (r mod B**m) + k * [r/B**m] inline and inplace
-  for (size_type i = 0; i < m; ++i)
+  for (iterator d = x.begin(); d != x.begin() + m; ++d)
   {
-    const word_type r = static_cast<word_type>(x[m+i])
-                      * static_cast<word_type>(k) + x[i] + mu;
-    x[i] = static_cast<digit_type>(r);
+    const word_type r = static_cast<word_type>(*(d + m))
+                      * static_cast<word_type>(k) + *d + mu;
+    *d = static_cast<digit_type>(r);
     mu = static_cast<digit_type>(r >> static_cast<word_type>(mp_int<A,T>::digit_bits));
   }
 
@@ -345,4 +250,10 @@ top:
   }
 }
 
+
+} // namespace detail
+} // namespace mp_math
+} // namespace boost
+
+#endif
 

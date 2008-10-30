@@ -11,11 +11,11 @@ void mp_int<A,T>::pow2(typename mp_int<A,T>::size_type b)
 {
   grow_capacity(b / digit_bits + 1);
 
-  // set the used count of where the bit will go
-  used_ = b / digit_bits + 1;
+  // set size_ to where the bit will go
+  size_ = b / digit_bits + 1;
 
   // set all bits to zero
-  std::memset(digits_, 0, used_ * sizeof(digit_type));
+  std::memset(digits_, 0, size_ * sizeof(digit_type));
   
   // put the single bit in its place
   digits_[b / digit_bits] = digit_type(1) << (b % digit_bits);

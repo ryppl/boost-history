@@ -305,7 +305,7 @@ inline mp_int<A,T> mp_int<A,T>::operator --(int)
 template<class A, class T>
 mp_int<A,T>& mp_int<A,T>::operator <<= (size_type b)
 {
-  grow_capacity(used_ + b/valid_bits + 1);
+  grow_capacity(size_ + b/valid_bits + 1);
 
   /* shift by as many digits in the bit count */
   if (b >= static_cast<size_type>(valid_bits))
@@ -323,7 +323,7 @@ mp_int<A,T>& mp_int<A,T>::operator <<= (size_type b)
     const digit_type shift = valid_bits - d;
 
     digit_type carry = 0;
-    for (size_type i = 0; i < used_; ++i)
+    for (size_type i = 0; i < size_; ++i)
     {
       /* get the higher bits of the current word */
       const digit_type carry_cur = (digits_[i] >> shift) & mask;
@@ -336,7 +336,7 @@ mp_int<A,T>& mp_int<A,T>::operator <<= (size_type b)
     }
     
     if (carry)
-      digits_[used_++] = carry;
+      digits_[size_++] = carry;
   }
 
   clamp();
@@ -383,15 +383,15 @@ mp_int<A,T>& mp_int<A,T>::operator += (const mp_int<A,T>& rhs)
     }
     else // |*this| < |rhs|
     {
-      grow_capacity(rhs.used_);
+      grow_capacity(rhs.size_);
       set_sign(rhs.sign());
       x = &rhs;
       y = this;
     }
 
-    ops_type::sub_smaller_magnitude(digits_, x->digits_, x->used_,
-                                             y->digits_, y->used_);
-    used_ = x->used_;
+    ops_type::sub_smaller_magnitude(digits_, x->digits_, x->size_,
+                                             y->digits_, y->size_);
+    size_ = x->size_;
 
     clamp();
     if (is_zero())
@@ -418,17 +418,17 @@ mp_int<A,T>& mp_int<A,T>::operator -= (const mp_int<A,T>& rhs)
     }
     else // |*this| < |rhs|
     {
-      grow_capacity(rhs.used_);
+      grow_capacity(rhs.size_);
       // result has opposite sign from *this
       set_sign(is_positive() ? -1 : 1); 
       x = &rhs;
       y = this;
     }
     
-    ops_type::sub_smaller_magnitude(digits_, x->digits_, x->used_,
-                                             y->digits_, y->used_);
+    ops_type::sub_smaller_magnitude(digits_, x->digits_, x->size_,
+                                             y->digits_, y->size_);
 
-    used_ = x->used_;
+    size_ = x->size_;
     
     clamp();
     if (is_zero())
@@ -447,7 +447,7 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
   }
   
   const int neg = (sign() == rhs.sign()) ? 1 : -1;
-  const size_type min = std::min(used_, rhs.used_);
+  const size_type min = std::min(size_, rhs.size_);
 
   if (min >= traits_type::toom_mul_cutoff)
     toom_cook_mul(rhs);
@@ -456,22 +456,22 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
   else
   {
     mp_int tmp;
-    tmp.grow_capacity(used_ + rhs.used_);
+    tmp.grow_capacity(size_ + rhs.size_);
     
-    if (used_ == rhs.used_)
-      ops_type::comba_mul(tmp.digits(), digits(), rhs.digits(), used_);
+    if (size_ == rhs.size_)
+      ops_type::comba_mul(tmp.digits(), digits(), rhs.digits(), size_);
     else
     {
       // always multiply larger by smaller number
       const mp_int* a = this;
       const mp_int* b = &rhs;
-      if (a->used_ < b->used_)
+      if (a->size_ < b->size_)
         std::swap(a, b);
 
-      ops_type::comba_mul(tmp.digits(), a->digits(), a->used_, b->digits(), b->used_);
+      ops_type::comba_mul(tmp.digits(), a->digits(), a->size_, b->digits(), b->size_);
     }
 
-    tmp.used_ = used_ + rhs.used_;
+    tmp.size_ = size_ + rhs.size_;
     tmp.clamp();
     swap(tmp);
   }
@@ -505,16 +505,16 @@ mp_int<A,T>& mp_int<A,T>::operator |= (const mp_int<A,T>& rhs)
   mp_int tmp;
   const mp_int* x;
 
-  if (used_ > rhs.used_)
+  if (size_ > rhs.size_)
   {
     tmp = *this;
-    px = rhs.used_;
+    px = rhs.size_;
     x = &rhs;
   }
   else
   {
     tmp = rhs;
-    px = used_;
+    px = size_;
     x = this;
   }
   
@@ -534,16 +534,16 @@ mp_int<A,T>& mp_int<A,T>::operator &= (const mp_int<A,T>& rhs)
   mp_int tmp;
   const mp_int *x;
 
-  if (used_ > rhs.used_)
+  if (size_ > rhs.size_)
   {
     tmp = *this;
-    px = rhs.used_;
+    px = rhs.size_;
     x = &rhs;
   }
   else
   {
     tmp = rhs;
-    px = used_;
+    px = size_;
     x = this;
   }
 
@@ -551,7 +551,7 @@ mp_int<A,T>& mp_int<A,T>::operator &= (const mp_int<A,T>& rhs)
     tmp[i] &= (*x)[i];
   
   /* zero digits above the last from the smallest mp_int */
-  std::memset(tmp.digits_ + px, 0, (tmp.used_ - px) * sizeof(digit_type));
+  std::memset(tmp.digits_ + px, 0, (tmp.size_ - px) * sizeof(digit_type));
   tmp.clamp();
   swap(tmp);
   
@@ -565,16 +565,16 @@ mp_int<A,T>& mp_int<A,T>::operator ^= (const mp_int<A,T>& rhs)
   mp_int tmp;
   const mp_int *x;
 
-  if (used_ > rhs.used_)
+  if (size_ > rhs.size_)
   {
     tmp = *this;
-    px = rhs.used_;
+    px = rhs.size_;
     x = &rhs;
   }
   else
   {
     tmp = rhs;
-    px = used_;
+    px = size_;
     x = this;
   }
 

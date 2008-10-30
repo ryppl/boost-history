@@ -18,8 +18,6 @@
 
 #include <boost/config.hpp>
 #include <boost/random.hpp>
-#include <boost/serialization/split_member.hpp>
-#include <boost/serialization/string.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mp_math/mp_int/detail/string_conversion_constants.hpp>
@@ -41,22 +39,20 @@ struct mp_int
 :
   Allocator::template rebind<typename Traits::digit_type>::other
 {
-  typedef Allocator                       allocator_type;
-  typedef Traits                          traits_type;
-  typedef typename traits_type::size_type size_type;
+  typedef Allocator                     allocator_type;
+  typedef Traits                        traits_type;
+  typedef typename Allocator::size_type size_type;
 
   mp_int();
 
   template<typename IntegralT>
   mp_int(IntegralT, typename enable_if<is_integral<IntegralT> >::type* dummy = 0);
 
-  mp_int(const char*);
-  mp_int(const char*, std::ios_base::fmtflags);
+  template<typename charT>
+  mp_int(const charT*);
 
-  #ifndef BOOST_NO_CWCHAR
-  mp_int(const wchar_t*);
-  mp_int(const wchar_t*, std::ios_base::fmtflags);
-  #endif
+  template<typename charT>
+  mp_int(const charT*, std::ios_base::fmtflags);
 
   template<typename charT, class traits, class Alloc>
   mp_int(const std::basic_string<charT,traits,Alloc>&);
@@ -190,7 +186,7 @@ public:
 
   operator unspecified_bool_type() const
   {
-	  return is_zero() ? 0 : &mp_int::used_;
+	  return is_zero() ? 0 : &mp_int::size_;
   }
 
   bool is_even() const { return (digits_[0] & digit_type(1)) == 0; }
@@ -235,9 +231,9 @@ public: // low level interface
             std::ios_base::fmtflags f);
 
   iterator       begin()       { return digits_;         }
-  iterator       end  ()       { return digits_ + used_; }
+  iterator       end  ()       { return digits_ + size_; }
   const_iterator begin() const { return digits_;         }
-  const_iterator end  () const { return digits_ + used_; }
+  const_iterator end  () const { return digits_ + size_; }
   reverse_iterator       rbegin()       { return reverse_iterator(end());   }
   reverse_iterator       rend  ()       { return reverse_iterator(begin()); }
   const_reverse_iterator rbegin() const { return const_reverse_iterator(end());   }
@@ -248,19 +244,19 @@ public: // low level interface
   
   digit_type&       at(size_type i)
   {
-    if (i >= used_)
+    if (i >= size_)
       throw std::out_of_range("mp_int::at: array subscript out of range");
     return digits_[i];
   }
   const digit_type& at(size_type i) const
   {
-    if (i >= used_)
+    if (i >= size_)
       throw std::out_of_range("mp_int::at: array subscript out of range");
     return digits_[i];
   }
 
-  void push(digit_type x) { digits_[used_++] = x; }
-  void pop() { --used_; }
+  void push(digit_type x) { digits_[size_++] = x; }
+  void pop() { --size_; }
 
   void zero();
 
@@ -268,9 +264,9 @@ public: // low level interface
   void print(bool all=false) const;
   bool test_invariants() const;
 
-  bool is_uninitialized() const { return used_ == 0U; }
+  bool is_uninitialized() const { return size_ == 0U; }
 
-  size_type size() const { return used_; }
+  size_type size() const { return size_; }
   size_type capacity() const
   {
     return capacity_ & ~sign_bit;
@@ -282,7 +278,7 @@ public: // low level interface
     capacity_ |= c;
   }
 
-  void set_size(size_type s) { used_ = s; }
+  void set_size(size_type s) { size_ = s; }
 
   int sign() const
   {
@@ -365,24 +361,8 @@ public: // low level interface
 
 private:
   
-  friend class boost::serialization::access;
-  template<class Archive>
-  void save(Archive & ar, const unsigned int /*version*/) const
-  {
-    const std::string s = to_string<std::string>(std::ios_base::hex);
-    ar & s;
-  }
-  template<class Archive>
-  void load(Archive & ar, const unsigned int /*version*/)
-  {
-    std::string s;
-    ar & s;
-    assign(s, std::ios_base::hex);
-  }
-  BOOST_SERIALIZATION_SPLIT_MEMBER()
-
   digit_type* digits_;
-  size_type used_, capacity_;
+  size_type size_, capacity_;
 };
 
 
@@ -393,19 +373,19 @@ void mp_int<A,T>::print(bool all) const
   using std::cout;
   if (is_negative())
   cout << '-';
-  cout << used_ << "{";
-  for (size_type i = 0; i < used_; ++i)
+  cout << size_ << "{";
+  for (size_type i = 0; i < size_; ++i)
   {
     cout << static_cast<word_type>(digits_[i]);
-    if (i < used_  - 1)
+    if (i < size_  - 1)
       cout << ",";
   }
   cout << "}";
   
   if (all)
   {
-    cout << capacity() - used_ << "{";
-    for (size_type i = used_; i < capacity(); ++i)
+    cout << capacity() - size_ << "{";
+    for (size_type i = size_; i < capacity(); ++i)
     {
       cout << static_cast<word_type>(digits_[i]);
       if (i < capacity()  - 1)
@@ -419,11 +399,11 @@ void mp_int<A,T>::print(bool all) const
 template<class A, class T>
 bool mp_int<A,T>::test_invariants() const
 {
-  if (used_) // don't test uninitialized mp_ints
+  if (size_) // don't test uninitialized mp_ints
   {
-    if (used_ > capacity())
+    if (size_ > capacity())
       return false;
-    if (digits_[used_-1] == 0U)
+    if (digits_[size_-1] == 0U)
       return false;
     if (is_zero() && sign() != 1)
       return false;
@@ -440,8 +420,8 @@ mp_int<A,T>& mp_int<A,T>::operator = (const mp_int<A,T>& rhs)
       mp_int(rhs).swap(*this);
     else
     {
-      std::memcpy(digits_, rhs.digits_, rhs.used_ * sizeof(digit_type));
-      used_ = rhs.used_;
+      std::memcpy(digits_, rhs.digits_, rhs.size_ * sizeof(digit_type));
+      size_ = rhs.size_;
       set_sign(rhs.sign());
     }
   }
@@ -456,7 +436,7 @@ mp_int<A,T>& mp_int<A,T>::operator = (mp_int<A,T>&& rhs)
   {
     this->deallocate(digits_, capacity());
     digits_ = 0;
-    used_ = 0;
+    size_ = 0;
     capacity_ = 0;
     swap(rhs);
   }
@@ -475,7 +455,7 @@ inline mp_int<A,T>& mp_int<A,T>::operator = (IntegralT rhs)
 template<class A, class T>
 mp_int<A,T>& mp_int<A,T>::operator = (const char* s)
 {
-  used_ = 0;
+  size_ = 0;
   init(s, s + std::strlen(s));
   return *this;
 }
@@ -484,7 +464,7 @@ mp_int<A,T>& mp_int<A,T>::operator = (const char* s)
 template<class A, class T>
 mp_int<A,T>& mp_int<A,T>::operator = (const wchar_t* s)
 {
-  used_ = 0;
+  size_ = 0;
   init(s, s + std::wcslen(s));
   return *this;
 }
@@ -494,7 +474,7 @@ template<class A, class T>
 template<typename charT, class traits, class Alloc>
 mp_int<A,T>& mp_int<A,T>::operator = (const std::basic_string<charT,traits,Alloc>& s)
 {
-  used_ = 0;
+  size_ = 0;
   init(s.begin(), s.end());
   return *this;
 }
@@ -530,7 +510,7 @@ inline void
 mp_int<A,T>::assign(RandomAccessIterator first, RandomAccessIterator last,
                     std::ios_base::fmtflags f)
 {
-  used_ = 0;
+  size_ = 0;
   init(first, last, f);
 }
 
@@ -543,7 +523,7 @@ void mp_int<A,T>::swap(mp_int& other)
 #endif
 {
   std::swap(digits_, other.digits_);
-  std::swap(used_, other.used_);
+  std::swap(size_, other.size_);
   std::swap(capacity_, other.capacity_);
 }
 
@@ -617,7 +597,7 @@ void mp_int<A,T>::zero()
 {
   grow_capacity(1);
   digits_[0] = 0;
-  used_ = 1;
+  size_ = 1;
   set_sign(1);
 }
 
@@ -626,11 +606,13 @@ void mp_int<A,T>::grow_capacity(size_type n)
 {
   if (capacity() < n)
   {
+    if (n >= sign_bit)
+      throw std::bad_alloc();
     const size_type new_cap = capacity() + capacity();
     if (new_cap > n)
       n = new_cap;
     digit_type* d = this->allocate(n, digits_);
-    std::memcpy(d, digits_, sizeof(digit_type) * used_);
+    std::memcpy(d, digits_, sizeof(digit_type) * size_);
     this->deallocate(digits_, capacity());
     digits_ = d;
     set_capacity(n);
@@ -638,19 +620,18 @@ void mp_int<A,T>::grow_capacity(size_type n)
 }
 
 // This is used to ensure that leading zero digits are trimmed.
-// Typically very fast.
 template<class A, class T>
 void mp_int<A,T>::clamp()
 {
-  // decrease used_ while the most significant digit is zero.
-  while (used_ > 1 && digits_[used_-1] == 0)
-    --used_;
+  // decrease size_ while the most significant digit is zero.
+  while (size_ > 1 && digits_[size_-1] == 0)
+    --size_;
 }
 
 template<class A, class T>
 inline bool mp_int<A,T>::is_zero() const
 {
-  return used_ == 1 && digits_[0] == 0;
+  return size_ == 1 && digits_[0] == 0;
 }
 
 // disregards the sign of the numbers
@@ -661,10 +642,10 @@ template<class A, class T>
 int mp_int<A,T>::compare_magnitude(const mp_int& rhs) const
 {
   // compare based on # of non-zero digits
-  if (used_ > rhs.used_)
+  if (size_ > rhs.size_)
     return 1;
   
-  if (used_ < rhs.used_)
+  if (size_ < rhs.size_)
     return -1;
 
   // compare based on digits
@@ -688,7 +669,7 @@ int mp_int<A,T>::compare_to_digit(digit_type d) const
     return -1;
 
   // compare based on magnitude
-  if (used_ > 1)
+  if (size_ > 1)
     return 1;
 
   // compare the only digit of *this to d
@@ -726,14 +707,14 @@ void mp_int<A,T>::shift_digits_left(size_type b)
   if (b <= 0)
     return;
 
-  grow_capacity(used_ + b);
+  grow_capacity(size_ + b);
 
-  std::memmove(digits_ + b, digits_, used_ * sizeof(digit_type));
+  std::memmove(digits_ + b, digits_, size_ * sizeof(digit_type));
 
   // zero the lower digits
   std::memset(digits_, 0, b * sizeof(digit_type));
 
-  used_ += b;
+  size_ += b;
 }
 
 // {A,B,C,D,E} shifted right by 2 digits becomes
@@ -744,20 +725,20 @@ void mp_int<A,T>::shift_digits_right(size_type b)
   if (b <= 0)
     return;
 
-  if (used_ <= b)
+  if (size_ <= b)
   {
     zero();
     return;
   }
 
   // shift the digits down
-  std::memmove(digits_, digits_ + b, (used_ - b) * sizeof(digit_type));
+  std::memmove(digits_, digits_ + b, (size_ - b) * sizeof(digit_type));
 
   // zero the top digits
-  std::memset(digits_ + used_ - b, 0, b * sizeof(digit_type));
+  std::memset(digits_ + size_ - b, 0, b * sizeof(digit_type));
   
   // remove excess digits
-  used_ -= b;
+  size_ -= b;
 }
 
 template<class A, class T>
@@ -765,10 +746,10 @@ typename mp_int<A,T>::size_type
 mp_int<A,T>::precision() const
 {
   // get number of digits and add that
-  size_type r = (used_ - 1) * valid_bits;
+  size_type r = (size_ - 1) * valid_bits;
   
   // take the last digit and count the bits in it
-  digit_type q = digits_[used_ - 1];
+  digit_type q = digits_[size_ - 1];
   while (q > 0U)
   {
     ++r;
@@ -791,7 +772,7 @@ mp_int<A,T>::count_lsb() const
 
   // scan lower digits until non-zero
   size_type x = 0;
-  while (x < used_ && digits_[x] == 0)
+  while (x < size_ && digits_[x] == 0)
     ++x;
   digit_type q = digits_[x];
   x *= valid_bits;

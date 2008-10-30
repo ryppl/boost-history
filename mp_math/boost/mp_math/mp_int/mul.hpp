@@ -16,44 +16,40 @@ void mp_int<A,T>::multiply_by_digit(digit_type x)
     return;
 
   // make sure we can hold the result
-  grow_capacity(used_ + 1);
+  grow_capacity(size_ + 1);
   
-  const digit_type carry = ops_type::multiply_by_digit(digits_, digits_, used_, x);
+  const digit_type carry = ops_type::multiply_by_digit(digits_, digits_, size_, x);
 
   if (carry)
-    digits_[used_++] = carry;
+    push(carry);
 }
 
 /* *this *= 2 */
 template<class A, class T>
 void mp_int<A,T>::multiply_by_2()
 {
-  grow_capacity(used_ + 1);
+  grow_capacity(size_ + 1);
 
   digit_type carry = 0;
-  for (size_type x = 0; x < used_; ++x)
+  for (iterator d = begin(); d != end(); ++d)
   {
-    /* get what will be the *next* carry bit from the 
-     * MSB of the current digit 
-     */
-    const digit_type rr =
-      digits_[x] >> (static_cast<digit_type>(valid_bits - 1));
+    // get what will be the *next* carry bit from the 
+    // MSB of the current digit 
+    const digit_type rr = *d >> (static_cast<digit_type>(valid_bits - 1));
     
-    /* now shift up this digit, add in the carry [from the previous] */
-    digits_[x] = (digits_[x] << digit_type(1)) | carry;
+    // now shift up this digit, add in the carry [from the previous]
+    *d = (*d << digit_type(1)) | carry;
  
-    /* copy the carry that would be from the source 
-     * digit into the next iteration 
-     */
+    // copy the carry that would be from the source 
+    // digit into the next iteration 
     carry = rr;
   }
 
-  /* new leading digit? */
+  // new leading digit?
   if (carry)
   {
-    /* add a MSB which is always 1 at this point */
-    digits_[used_] = 1;
-    ++used_;
+    // add a MSB which is always 1 at this point
+    push(1);
   }
 }
 
@@ -67,7 +63,7 @@ void mp_int<A,T>::multiply_by_2()
 template<class A, class T>
 void mp_int<A,T>::toom_cook_mul(const mp_int& b)
 {
-  const size_type B = std::min(used_, b.used_) / 3;
+  const size_type B = std::min(size_, b.size_) / 3;
   
   // a = a2 * B**2 + a1 * B + a0
   mp_int a0(*this);
@@ -221,25 +217,25 @@ void mp_int<A,T>::karatsuba_mul(const mp_int& b)
   mp_int x0, x1, y0, y1, /*tmp,*/ x0y0, x1y1;
 
   // min # of digits
-  const size_type B = std::min(used_, b.used_) / 2;
+  const size_type B = std::min(size_, b.size_) / 2;
 
   // allocate memory
   x0.grow_capacity(B);
-  x1.grow_capacity(used_ + b.used_);
+  x1.grow_capacity(size_ + b.size_);
   y0.grow_capacity(B);
-  y1.grow_capacity(b.used_ - B + 1);
+  y1.grow_capacity(b.size_ - B + 1);
 
-  // set used_ count
-  x0.used_ = y0.used_ = B;
-  x1.used_ = used_ - B;
-  y1.used_ = b.used_ - B;
+  // set size_ count
+  x0.size_ = y0.size_ = B;
+  x1.size_ = size_ - B;
+  y1.size_ = b.size_ - B;
 
   // copy digits over
   static const size_type s = sizeof(digit_type);
   std::memcpy(x0.digits_, digits_,   s * B);
   std::memcpy(y0.digits_, b.digits_, s * B);
-  std::memcpy(x1.digits_, digits_ + B,   s * (  used_ - B));
-  std::memcpy(y1.digits_, b.digits_ + B, s * (b.used_ - B));
+  std::memcpy(x1.digits_, digits_ + B,   s * (  size_ - B));
+  std::memcpy(y1.digits_, b.digits_ + B, s * (b.size_ - B));
 
   // only need to clamp the lower words since by definition the 
   // upper words x1/y1 must have a known number of digits
@@ -283,34 +279,34 @@ void mp_int<A,T>::mul_digits(const mp_int& b, size_type digs)
   tmp.grow_capacity(digs);
   // zero allocated digits
   std::memset(tmp.digits_, 0, sizeof(digit_type) * digs);
-  tmp.used_ = digs;
+  tmp.size_ = digs;
 
   // compute the digits of the product directly
-  for (size_type i = 0; i < used_; ++i)
+  for (size_type i = 0; i < size_; ++i)
   {
     digit_type carry = 0;
 
     // limit ourselves to making digs digits of output
-    const size_type pb = std::min(b.used_, digs - i);
+    const size_type pb = std::min(b.size_, digs - i);
 
     // compute the columns of the output and propagate the carry
     for (size_type j = 0; j < pb; ++j)
     {
       // compute the column as a word_type
-      const word_type r = static_cast<word_type>(tmp.digits_[i+j])
+      const word_type r = static_cast<word_type>(tmp[i+j])
                         + static_cast<word_type>(digits_[i])
-                        * static_cast<word_type>(b.digits_[j])
+                        * static_cast<word_type>(b[j])
                         + static_cast<word_type>(carry);
 
       // the new column is the lower part of the result
-      tmp.digits_[i+j] = static_cast<digit_type>(r);
+      tmp[i+j] = static_cast<digit_type>(r);
 
       // get the carry word from the result
       carry = static_cast<digit_type>(r >> static_cast<word_type>(valid_bits));
     }
     // set carry if it is placed below digs
     if (i + pb < digs)
-      tmp.digits_[i+pb] = carry;
+      tmp[i+pb] = carry;
   }
 
   tmp.clamp();
@@ -321,23 +317,23 @@ void mp_int<A,T>::mul_digits(const mp_int& b, size_type digs)
 
 // FIXME no routine seems to use this
 //
-// multiplies |a| * |b| and does not compute the lower digs digits
+// multiplies |a| * |b| and does not compute the lower num digits
 // [meant to get the higher part of the product]
 template<class A, class T>
-void mp_int<A,T>::mul_high_digits(const mp_int& b, size_type digs)
+void mp_int<A,T>::mul_high_digits(const mp_int& b, size_type num)
 {
   mp_int tmp;
-  tmp.grow_capacity(used_ + b.used_ + 1);
-  tmp.used_ = used_ + b.used_ + 1;
-  std::memset(tmp.digits_, 0, sizeof(digit_type) * tmp.used_);
+  tmp.grow_capacity(size_ + b.size_ + 1);
+  tmp.size_ = size_ + b.size_ + 1;
+  std::memset(tmp.digits_, 0, sizeof(digit_type) * tmp.size_);
 
-  for (size_type i = 0; i < used_; ++i)
+  for (size_type i = 0; i < size_; ++i)
   {
-    digit_type* dst = tmp.digits_ + digs;
-    digit_type* z   = b.digits_ + (digs - i);
+    iterator dst     = tmp.begin() + num;
+    const_iterator z = b.begin() + (num - i);
     digit_type carry = 0;
 
-    for (size_type j = digs - i; j < b.used_; ++j)
+    for (size_type j = num - i; j < b.size_; ++j)
     {
       const word_type r = static_cast<word_type>(*dst)
                         + static_cast<word_type>(digits_[i])
@@ -361,7 +357,7 @@ void mp_int<A,T>::mul_high_digits(const mp_int& b, size_type digs)
 
 
 // this is a modified version of fast_s_mul_digs that only produces
-// output digits *above* digs.  See the comments for fast_s_mul_digs
+// output digits *above* num.  See the comments for fast_s_mul_digs
 // to see how it works.
 //
 // This is used in the Barrett reduction since for one of the multiplications
@@ -369,8 +365,8 @@ void mp_int<A,T>::mul_high_digits(const mp_int& b, size_type digs)
 //
 // Based on Algorithm 14.12 on pp.595 of HAC.
 template<class A, class T>
-void mp_int<A,T>::fast_mul_high_digits(const mp_int& b, size_type digs)
+void mp_int<A,T>::fast_mul_high_digits(const mp_int& b, size_type num)
 {
-  mul_high_digits(b, digs);
+  mul_high_digits(b, num);
 }
 

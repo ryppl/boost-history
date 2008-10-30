@@ -7,7 +7,7 @@ template<class A, class T>
 mp_int<A,T>::mp_int()
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
 }
@@ -19,7 +19,7 @@ mp_int<A,T>::mp_int(
     typename enable_if<is_integral<IntegralT> >::type*)
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
   detail::integral_ops<IntegralT>::assign(*this, b);
@@ -29,7 +29,7 @@ template<class A, class T>
 template<typename RandomAccessIterator>
 void mp_int<A,T>::init(RandomAccessIterator c, RandomAccessIterator last)
 {
-  assert(used_ == 0);
+  assert(size_ == 0);
 
   if (c == last)
   {
@@ -87,7 +87,7 @@ void mp_int<A,T>::init(RandomAccessIterator c,
                        RandomAccessIterator last,
                        std::ios_base::fmtflags f)
 {
-  assert(used_ == 0);
+  assert(size_ == 0);
 
   if (c == last)
   {
@@ -161,61 +161,40 @@ template<typename RandomAccessIterator>
 mp_int<A,T>::mp_int(RandomAccessIterator first, RandomAccessIterator last)
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
   init(first, last);
 }
 
 template<class A, class T>
-mp_int<A,T>::mp_int(const char* s)
+template<typename charT>
+mp_int<A,T>::mp_int(const charT* s)
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
-  init(s, s + std::strlen(s));
+  init(s, s + std::char_traits<charT>::length(s));
 }
 
 template<class A, class T>
-mp_int<A,T>::mp_int(const char* s, std::ios_base::fmtflags f)
+template<typename charT>
+mp_int<A,T>::mp_int(const charT* s, std::ios_base::fmtflags f)
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
-  init(s, s + std::strlen(s), f);
+  init(s, s + std::char_traits<charT>::length(s), f);
 }
-
-
-#ifndef BOOST_NO_CWCHAR
-template<class A, class T>
-mp_int<A,T>::mp_int(const wchar_t* s)
-:
-  digits_(0),
-  used_(0),
-  capacity_(0)
-{
-  init(s, s + std::wcslen(s));
-}
-
-  template<class A, class T>
-mp_int<A,T>::mp_int(const wchar_t* s, std::ios_base::fmtflags f)
-:
-  digits_(0),
-  used_(0),
-  capacity_(0)
-{
-  init(s, s + std::wcslen(s), f);
-}
-#endif
 
 template<class A, class T>
 template<typename charT, class traits, class Alloc>
 mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s)
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
   init(s.begin(), s.end());
@@ -227,7 +206,7 @@ mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s,
                     std::ios_base::fmtflags f)
 :
   digits_(0),
-  used_(0),
+  size_(0),
   capacity_(0)
 {
   init(s.begin(), s.end(), f);
@@ -237,10 +216,10 @@ mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s,
 template<class A, class T>
 mp_int<A,T>::mp_int(const mp_int& copy)
 {
-  digits_ = this->allocate(copy.used_);
-  std::memcpy(digits_, copy.digits_, copy.used_ * sizeof(digit_type));
-  used_ = copy.used_;
-  set_capacity(copy.used_);
+  digits_ = this->allocate(copy.size_);
+  std::memcpy(digits_, copy.digits_, copy.size_ * sizeof(digit_type));
+  size_ = copy.size_;
+  set_capacity(copy.size_);
   set_sign(copy.sign());
 }
 
@@ -249,11 +228,11 @@ template<class A, class T>
 mp_int<A,T>::mp_int(mp_int&& copy)
 :
   digits_(copy.digits_),
-  used_(copy.used_),
+  size_(copy.size_),
   capacity_(copy.capacity_) // this copies capacity and sign
 {
   copy.digits_ = 0;
-  copy.used_ = 0;
+  copy.size_ = 0;
   copy.capacity_ = 0;
 }
 #endif

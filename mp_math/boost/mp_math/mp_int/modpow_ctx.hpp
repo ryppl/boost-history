@@ -141,14 +141,13 @@ void modpow_ctx<A,T>::precalculate(const mp_int<A,T>& m)
     {
       assert(m.is_odd());
 
-      /* fast inversion mod 2**k
-       *
-       * Based on the fact that
-       *
-       * XA = 1 (mod 2**n)  =>  (X(2-XA)) A = 1 (mod 2**2n)
-       *                    =>  2*X*A - X*X*A*A = 1
-       *                    =>  2*(1) - (1)     = 1
-       */
+      // fast inversion mod 2**k
+      //
+      // Based on the fact that
+      //
+      // XA = 1 (mod 2**n)  =>  (X(2-XA)) A = 1 (mod 2**2n)
+      //                    =>  2*X*A - X*X*A*A = 1
+      //                    =>  2*(1) - (1)     = 1
       const digit_type b = m[0];
 
       static const typename mp_int<A,T>::size_type S = 

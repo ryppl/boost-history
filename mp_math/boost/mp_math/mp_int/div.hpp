@@ -187,9 +187,9 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   }
 
   mp_int q;
-  q.grow_capacity(used_ + 2);
-  q.used_ = used_ + 2;
-  std::memset(q.digits_, 0, q.used_ * sizeof(digit_type));
+  q.grow_capacity(size_ + 2);
+  q.size_ = size_ + 2;
+  std::memset(q.digits_, 0, q.size_ * sizeof(digit_type));
 
   mp_int x(*this);
   mp_int y(rhs);
@@ -211,8 +211,8 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
     norm = 0;
 
   // note hac does 0 based, so if used==5 then its 0,1,2,3,4, e.g. use 4
-  const size_type n = x.used_ - 1;
-  const size_type t = y.used_ - 1;
+  const size_type n = x.size_ - 1;
+  const size_type t = y.size_ - 1;
 
   // find leading digit of the quotient
   // while (x >= y*beta**(n-t)) do { q[n-t] += 1; x -= y*beta**(n-t) }
@@ -231,7 +231,7 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
   // step 3. for i from n down to (t + 1)
   for (size_type i = n; i >= (t + 1); i--)
   {
-    if (i > x.used_)
+    if (i > x.size_)
       continue;
 
     // step 3.1 if xi == yt then set q{i-t-1} to beta-1, 
@@ -266,14 +266,14 @@ void mp_int<A,T>::divide(const mp_int& rhs, mp_int* remainder)
       t1.zero();
       t1[0] = (t == 0) ? 0 : y[t - 1];
       t1[1] = y[t];
-      t1.used_ = 2;
+      t1.size_ = 2;
       t1.multiply_by_digit(q[i - t - 1]);
 
       // find right hand
       t2[0] = (i < 2) ? 0 : x[i - 2];
       t2[1] = (i == 0) ? 0 : x[i - 1];
       t2[2] = x[i];
-      t2.used_ = 3;
+      t2.size_ = 3;
     } while (t1.compare_magnitude(t2) == 1);
 
     // step 3.3 x = x - q{i-t-1} * y * beta**{i-t-1}

@@ -8,6 +8,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/test/unit_test.hpp>
 #include "prerequisite.hpp"
+#include <boost/mp_math/mp_int_serialization.hpp>
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_serialization1, mp_int_type, mp_int_types)
 {

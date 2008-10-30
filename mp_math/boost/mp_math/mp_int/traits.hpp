@@ -8,6 +8,7 @@
 
 #include <cstddef> // size_t
 #include <boost/config.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/mpl/back.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/deref.hpp>
@@ -69,23 +70,22 @@ struct mp_int_traits
     std::numeric_limits<Digit>::digits <= std::numeric_limits<Word>::digits/2
   );
 
-  typedef std::size_t size_type; // TODO should prolly get size_type from allocator_type
-  typedef Digit       digit_type;
-  typedef Word        word_type;
+  typedef Digit digit_type;
+  typedef Word  word_type;
 
-  static size_type toom_mul_cutoff;
-  static size_type toom_sqr_cutoff;
-  static size_type karatsuba_mul_cutoff;
-  static size_type karatsuba_sqr_cutoff;
+  static std::size_t toom_mul_cutoff;
+  static std::size_t toom_sqr_cutoff;
+  static std::size_t karatsuba_mul_cutoff;
+  static std::size_t karatsuba_sqr_cutoff;
 };
 
 
 #define BMPINT_init(S) template<typename D, typename W>\
-  typename mp_int_traits<D,W>::S mp_int_traits<D,W>::
-BMPINT_init(size_type  )toom_mul_cutoff = 350;
-BMPINT_init(size_type  )toom_sqr_cutoff = 400;
-BMPINT_init(size_type  )karatsuba_mul_cutoff = 80;
-BMPINT_init(size_type  )karatsuba_sqr_cutoff = 120;
+  S mp_int_traits<D,W>::
+BMPINT_init(std::size_t)toom_mul_cutoff = 350;
+BMPINT_init(std::size_t)toom_sqr_cutoff = 400;
+BMPINT_init(std::size_t)karatsuba_mul_cutoff = 80;
+BMPINT_init(std::size_t)karatsuba_sqr_cutoff = 120;
 
 #undef BMPINT_init
 

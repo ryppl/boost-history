@@ -8,11 +8,11 @@ void mp_int<A,T>::add_digit(digit_type b)
 {
   if (is_positive())
   {
-    grow_capacity(used_ + 1);
+    grow_capacity(size_ + 1);
     const digit_type carry =
-      ops_type::add_single_digit(digits_, digits_, used_, b);
+      ops_type::add_single_digit(digits_, digits_, size_, b);
     if (carry)
-      digits_[used_++] = carry;
+      push(carry);
   }
   else
   {
@@ -24,7 +24,7 @@ void mp_int<A,T>::add_digit(digit_type b)
     }
     else
     {
-      if (used_ == 1) // example: -1 + 5 = 4
+      if (size_ == 1) // example: -1 + 5 = 4
         digits_[0] = b - digits_[0];
       else            // example -11 + 5 = -6
       {
@@ -45,7 +45,7 @@ void mp_int<A,T>::add_magnitude(const mp_int& rhs)
   const mp_int* y;
 
   // x will point to the number with the most digits
-  if (used_ > rhs.used_)
+  if (size_ > rhs.size_)
   {
     x = this;
     y = &rhs;
@@ -56,32 +56,32 @@ void mp_int<A,T>::add_magnitude(const mp_int& rhs)
     y = this;
   }
 
-  grow_capacity(x->used_ + 1);
+  grow_capacity(x->size_ + 1);
 
   digit_type carry = ops_type::add_digits(digits_,
                                           x->digits_,
-                                          y->digits_, y->used_);
+                                          y->digits_, y->size_);
 
-  size_type n = ops_type::ripple_carry(digits_ + y->used_,
-                                       x->digits_ + y->used_,
-                                       x->used_ - y->used_, carry);
-  n += y->used_;
+  size_type n = ops_type::ripple_carry(digits_ + y->size_,
+                                       x->digits_ + y->size_,
+                                       x->size_ - y->size_, carry);
+  n += y->size_;
 
-  if (n < x->used_) // this implies that there is no carry left
+  if (n < x->size_) // this implies that there is no carry left
   {
     if (x != this)
     {
-      std::memcpy(digits_ + n, x->digits_ + n, sizeof(digit_type) * (x->used_ - n));
-      used_ = x->used_;
+      std::memcpy(digits_ + n, x->digits_ + n, sizeof(digit_type) * (x->size_ - n));
+      size_ = x->size_;
     }
     return;
   }
-  else if (carry) // at this point n equals x->used_
+  else if (carry) // at this point n equals x->size_
   {
     digits_[n] = carry;
     ++n;
   }
 
-  used_ = n;
+  size_ = n;
 }
 
