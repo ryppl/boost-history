@@ -7,6 +7,7 @@
 #define BOOST_MP_MATH_MP_INT_TRAITS_HPP
 
 #include <cstddef> // size_t
+#include <limits>
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/back.hpp>

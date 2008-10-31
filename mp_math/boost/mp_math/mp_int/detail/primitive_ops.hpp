@@ -86,23 +86,23 @@ struct basic_primitive_ops
                                       digit_type x);
 
   // z = x * y
-  static void classic_mul(digit_type* z, const digit_type* x, size_type x_size,
-                                         const digit_type* y, size_type y_size);
+  static void classic_mul(digit_type* z, const digit_type* x, size_type xlen,
+                                         const digit_type* y, size_type ylen);
 
-  // z = x * y; precondition: x_size >= y_size
-  static void comba_mul(digit_type* z, const digit_type* x, size_type x_size,
-                                       const digit_type* y, size_type y_size);
+  // z = x * y; precondition: xlen >= ylen
+  static void comba_mul(digit_type* z, const digit_type* x, size_type xlen,
+                                       const digit_type* y, size_type ylen);
 
   // z = x * y; for numbers of the same size
   static void comba_mul(digit_type* z,
                         const digit_type* x,
-                        const digit_type* y, size_type xy_size);
-  
+                        const digit_type* y, size_type xylen);
+
   // SQR ------------------------------------
 
   // z = x * x;
-  static void comba_sqr(digit_type* z, const digit_type* x, size_type x_size);
-  
+  static void comba_sqr(digit_type* z, const digit_type* x, size_type xlen);
+
   // MADD ------------------------------------
 
   // z = w * x + y
@@ -300,14 +300,14 @@ basic_primitive_ops<D,W,S>::multiply_by_digit(digit_type* z,
 template<typename D, typename W, typename S>
 void
 basic_primitive_ops<D,W,S>::classic_mul(
-    digit_type* z, const digit_type* x, size_type x_size,
-                   const digit_type* y, size_type y_size)
+    digit_type* z, const digit_type* x, size_type xlen,
+                   const digit_type* y, size_type ylen)
 {
   // phase 1
   word_type tmp = static_cast<word_type>(x[0]) * static_cast<word_type>(y[0]);
   z[0] = static_cast<digit_type>(tmp);
   
-  for (size_type i = 1; i < x_size; ++i)
+  for (size_type i = 1; i < xlen; ++i)
   {
     tmp = (tmp >> digit_bits)
         + static_cast<word_type>(x[i])
@@ -316,17 +316,17 @@ basic_primitive_ops<D,W,S>::classic_mul(
   }
   
   tmp >>= digit_bits;
-  z[x_size] = static_cast<digit_type>(tmp);
+  z[xlen] = static_cast<digit_type>(tmp);
   
   // phase 2
-  for (size_type i = 1; i < y_size; ++i)
+  for (size_type i = 1; i < ylen; ++i)
   {
     tmp = static_cast<word_type>(y[i])
         * static_cast<word_type>(x[0])
         + static_cast<word_type>(z[i]);
     z[i] = static_cast<digit_type>(tmp);
     
-    for (size_type j = 1; j < x_size; ++j)
+    for (size_type j = 1; j < xlen; ++j)
     {
       tmp = (tmp >> digit_bits)
           + static_cast<word_type>(y[i]) * static_cast<word_type>(x[j])
@@ -335,7 +335,7 @@ basic_primitive_ops<D,W,S>::classic_mul(
     }
     
     tmp >>= digit_bits;
-    z[i + x_size] = static_cast<digit_type>(tmp);
+    z[i + xlen] = static_cast<digit_type>(tmp);
   }
 }
 
@@ -357,68 +357,69 @@ basic_primitive_ops<D,W,S>::classic_mul(
 // operator *= (). Just check if (smaller number).used_ >= overflow_count.
 template<typename D, typename W, typename S>
 void
-basic_primitive_ops<D,W,S>::comba_mul(
-    digit_type* z, const digit_type* x, size_type x_size,
-                   const digit_type* y, size_type y_size)
+basic_primitive_ops<D,W,S>::comba_mul(digit_type* z,
+                                      const digit_type* x, size_type xlen,
+                                      const digit_type* y, size_type ylen)
 {
-  assert(x_size >= y_size);
+  assert(xlen >= ylen);
 
-  const size_type k = x_size + y_size;
-
-  word_type acc = 0;  // accumulator in each column
+  word_type acc = 0;  // accumulator for each column
   word_type carry = 0;
   
   // phase 1
-  for (size_type i = 0; i < y_size; ++i)
+  for (size_type i = 0; i < ylen; ++i)
   {
+    const digit_type* a = x;
+    const digit_type* b = y + i;
+
     for (size_type j = 0; j <= i; ++j)
     {
-      const word_type r = static_cast<word_type>(y[j])
-                        * static_cast<word_type>(x[i-j]);
-      acc += r;
+      acc += static_cast<word_type>(*a++) * static_cast<word_type>(*b--);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc  = static_cast<digit_type>(carry);
     carry >>= digit_bits;
   }
-  
+
   // phase 2
-  for (size_type i = 0; i < x_size - y_size; ++i)
+  for (size_type i = 0; i < xlen - ylen; ++i)
   {
-    size_type j = 0;
-    size_type m = y_size;
-    while (j < y_size)
+    const digit_type* a = x + ylen + i;
+    const digit_type* b = y;
+
+    for (size_type j = 0; j < ylen; ++j)
     {
-      const word_type r = static_cast<word_type>(y[j])
-                        * static_cast<word_type>(x[m+i]);
-      acc += r;
+      acc += static_cast<word_type>(*a--) * static_cast<word_type>(*b++);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
-      ++j; --m;
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc = static_cast<digit_type>(carry);
     carry >>= digit_bits;
   }
   
   // phase 3
-  for (size_type i = x_size; i < k - 1; ++i)
+  for (size_type i = 0; i < ylen - 1; ++i)
   {
-    for (size_type j = y_size - (k - i - 1); j < y_size; ++j)
+    const digit_type* a = x + xlen - 1;
+    const digit_type* b = y + i + 1;
+
+    for (size_type j = i + 1; j < ylen; ++j)
     {
-      const word_type r = static_cast<word_type>(y[j])
-                        * static_cast<word_type>(x[i-j]);
-      acc += r;
+      acc += static_cast<word_type>(*a--) * static_cast<word_type>(*b++);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc  = static_cast<digit_type>(carry);
     carry >>= digit_bits;
   }
-  
+
   *z = static_cast<digit_type>(acc);
 }
 
@@ -426,38 +427,42 @@ template<typename D, typename W, typename S>
 void
 basic_primitive_ops<D,W,S>::comba_mul(digit_type* z,
                                       const digit_type* x,
-                                      const digit_type* y, size_type xy_size)
+                                      const digit_type* y, size_type xylen)
 {
   word_type acc = 0;  // accumulator for each column
   word_type carry = 0;
 
   // phase 1
-  for (size_type i = 0; i < xy_size; ++i)
+  for (size_type i = 0; i < xylen; ++i)
   {
+    const digit_type* a = x;
+    const digit_type* b = y + i;
+
     for (size_type j = 0; j <= i; ++j)
     {
-      const word_type r = static_cast<word_type>(x[j])
-                        * static_cast<word_type>(y[i-j]);
-      acc += r;
+      acc += static_cast<word_type>(*a++) * static_cast<word_type>(*b--);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc = static_cast<digit_type>(carry);
     carry >>= digit_bits;
   }
 
   // phase 2
-  for (size_type i = xy_size; i < 2 * xy_size - 1; ++i)
+  for (size_type i = 1; i < xylen; ++i)
   {
-    for (size_type j = i - xy_size + 1; j < xy_size; ++j)
+    const digit_type* a = y + xylen - 1;
+    const digit_type* b = x + i;
+
+    for (size_type j = 0; j < xylen - i; ++j)
     {
-      const word_type r = static_cast<word_type>(x[j])
-                        * static_cast<word_type>(y[i-j]);
-      acc += r;
+      acc += static_cast<word_type>(*a--) * static_cast<word_type>(*b++);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc = static_cast<digit_type>(carry);
     carry >>= digit_bits;
@@ -470,38 +475,42 @@ template<typename D, typename W, typename S>
 void
 basic_primitive_ops<D,W,S>::comba_sqr(digit_type* z,
                                       const digit_type* x,
-                                      size_type x_size)
+                                      size_type xlen)
 {
   word_type acc = 0;  // accumulator for each column
   word_type carry = 0;
 
   // phase 1
-  for (size_type i = 0; i < x_size; ++i)
+  for (size_type i = 0; i < xlen; ++i)
   {
+    const digit_type* a = x;
+    const digit_type* b = x + i;
+
     for (size_type j = 0; j <= i; ++j)
     {
-      const word_type r = static_cast<word_type>(x[j])
-                        * static_cast<word_type>(x[i-j]);
-      acc += r;
+      acc += static_cast<word_type>(*a++) * static_cast<word_type>(*b--);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc = static_cast<digit_type>(carry);
     carry >>= digit_bits;
   }
 
   // phase 2
-  for (size_type i = x_size; i < 2 * x_size - 1; ++i)
+  for (size_type i = 1; i < xlen; ++i)
   {
-    for (size_type j = i - x_size + 1; j < x_size; ++j)
+    const digit_type* a = x + xlen - 1;
+    const digit_type* b = x + i;
+
+    for (size_type j = 0; j < xlen - i; ++j)
     {
-      const word_type r = static_cast<word_type>(x[j])
-                        * static_cast<word_type>(x[i-j]);
-      acc += r;
+      acc += static_cast<word_type>(*a--) * static_cast<word_type>(*b++);
       carry += acc >> digit_bits;
       acc = static_cast<digit_type>(acc);
     }
+
     *z++ = static_cast<digit_type>(acc);
     acc = static_cast<digit_type>(carry);
     carry >>= digit_bits;

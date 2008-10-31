@@ -47,7 +47,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mul5, mp_int_type, mp_int_types)
   BOOST_CHECK_EQUAL(z, "43076328327684465744675616648356768900793087398990591539995027544295");
 }
 
-
 BOOST_AUTO_TEST_CASE_TEMPLATE(mul6, mp_int_type, mp_int_types)
 {
   // this tests karatsuba multiplication for 8, 16 and 32 bit digit_type
@@ -364,5 +363,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mul7, mp_int_type, mp_int_types)
   
   BOOST_CHECK_EQUAL(z, w);
 }
-
 
