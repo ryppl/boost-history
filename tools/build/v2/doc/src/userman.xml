@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+<!DOCTYPE part PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
   "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 
-<book xmlns:xi="http://www.w3.org/2001/XInclude"
+<part xmlns:xi="http://www.w3.org/2001/XInclude"
       id="bbv2" last-revision="$Date$">
 
   <title>Boost.Build V2 User Manual</title>
@@ -19,14 +19,6 @@
 
   <!-- Appendicies -->
 <!--  <xi:include href="architecture.xml"/> -->
-  <appendix id="bbv2.jam">
-    <title>Boost.Jam Documentation</title>
-    <xi:include href="jam_docs.xml" parse="xml" 
-	xpointer="xpointer(id('jam.intro')|id('jam.intro')/following-sibling::*)"/>
-  </appendix>    
-
   <xi:include href="v1_vs_v2.xml"/>
-  
-  <index/>
 
-</book>
+</part>
