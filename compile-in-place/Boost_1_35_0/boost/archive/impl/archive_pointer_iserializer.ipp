@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_ARCHIVE_POINTER_ISERIALIZER_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_ARCHIVE_POINTER_ISERIALIZER_IPP_INCLUDED
 #include <cassert>
 
 #include <boost/config.hpp> // msvc 6.0 needs this for warning suppression
@@ -63,3 +65,4 @@ archive_pointer_iserializer<Archive>::~archive_pointer_iserializer(){
 } // namespace detail
 } // namespace archive
 } // namespace boost
+#endif

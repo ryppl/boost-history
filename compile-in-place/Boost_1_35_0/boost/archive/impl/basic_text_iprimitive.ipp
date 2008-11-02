@@ -7,6 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for updates, documentation, and revision history.
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_TEXT_IPRIMITIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_TEXT_IPRIMITIVE_IPP_INCLUDED
 
 #include <cstddef> // size_t
 
@@ -121,3 +123,4 @@ basic_text_iprimitive<IStream>::~basic_text_iprimitive(){
 
 } // namespace archive
 } // namespace boost
+#endif

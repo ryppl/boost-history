@@ -6,6 +6,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ARCHIVE_IMPL_XML_WOARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_XML_WOARCHIVE_IMPL_IPP_INCLUDED
 #include <boost/config.hpp>
 #ifndef BOOST_NO_STD_WSTREAMBUF
 
@@ -157,3 +159,4 @@ xml_woarchive_impl<Archive>::xml_woarchive_impl(
 } // namespace boost
 
 #endif //BOOST_NO_STD_WSTREAMBUF
+#endif

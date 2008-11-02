@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_BINARY_OPRIMITIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_BINARY_OPRIMITIVE_IPP_INCLUDED
 #include <ostream>
 #include <cstring>
 
@@ -158,3 +160,4 @@ basic_binary_oprimitive<Archive, Elem, Tr>::~basic_binary_oprimitive(){
 
 } // namespace archive
 } // namespace boost
+#endif

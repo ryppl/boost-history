@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_XML_IARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_XML_IARCHIVE_IMPL_IPP_INCLUDED
 #include <boost/config.hpp>
 #include <cstring> // memcpy
 #if defined(BOOST_NO_STDC_NAMESPACE)
@@ -197,3 +199,4 @@ xml_iarchive_impl<Archive>::~xml_iarchive_impl(){
 }
 } // namespace archive
 } // namespace boost
+#endif

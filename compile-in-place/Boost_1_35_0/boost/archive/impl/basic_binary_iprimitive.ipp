@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_BINARY_IPRIMITIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_BINARY_IPRIMITIVE_IPP_INCLUDED
 #include <cassert>
 #include <cstddef> // size_t
 #include <cstring> // memcpy
@@ -188,3 +190,4 @@ basic_binary_iprimitive<Archive, Elem, Tr>::~basic_binary_iprimitive(){
 
 } // namespace archive
 } // namespace boost
+#endif

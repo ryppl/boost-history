@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_TEXT_WIARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_TEXT_WIARCHIVE_IMPL_IPP_INCLUDED
 #include <cstddef> // size_t
 
 #include <boost/config.hpp>
@@ -116,3 +118,4 @@ text_wiarchive_impl<Archive>::text_wiarchive_impl(
 } // boost
 
 #endif // BOOST_NO_STD_WSTREAMBUF
+#endif

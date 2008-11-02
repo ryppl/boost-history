@@ -6,6 +6,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ARCHIVE_IMPL_XML_OARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_XML_OARCHIVE_IMPL_IPP_INCLUDED
 #include <ostream>
 #include <iomanip>
 #include <algorithm>
@@ -115,3 +117,4 @@ xml_oarchive_impl<Archive>::xml_oarchive_impl(
 
 } // namespace archive
 } // namespace boost
+#endif

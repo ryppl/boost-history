@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_XML_OARCHIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_XML_OARCHIVE_IPP_INCLUDED
 #include <algorithm>
 #include <cstring>
 #if defined(BOOST_NO_STDC_NAMESPACE) && ! defined(__LIBCOMO__)
@@ -267,3 +269,4 @@ basic_xml_oarchive<Archive>::~basic_xml_oarchive(){
 
 } // namespace archive
 } // namespace boost
+#endif

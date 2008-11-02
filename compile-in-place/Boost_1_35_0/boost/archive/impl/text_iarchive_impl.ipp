@@ -12,6 +12,8 @@
 // implementation of basic_text_iprimitive overrides for the combination
 // of template parameters used to implement a text_iprimitive
 
+#ifndef BOOST_ARCHIVE_IMPL_TEXT_IARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_TEXT_IARCHIVE_IMPL_IPP_INCLUDED
 #include <cstddef> // size_t
 #include <boost/config.hpp>
 #if defined(BOOST_NO_STDC_NAMESPACE)
@@ -125,3 +127,4 @@ text_iarchive_impl<Archive>::text_iarchive_impl(
 
 } // namespace archive
 } // namespace boost
+#endif

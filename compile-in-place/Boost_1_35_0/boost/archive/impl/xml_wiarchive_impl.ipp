@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_XML_WIARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_XML_WIARCHIVE_IMPL_IPP_INCLUDED
 #include <boost/config.hpp> // for BOOST_DEDUCED_TYPENAME
 
 #include <cstring>
@@ -200,3 +202,4 @@ xml_wiarchive_impl<Archive>::~xml_wiarchive_impl(){
 } // namespace boost
 
 #endif  // BOOST_NO_STD_WSTREAMBUF
+#endif

@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_TEXT_OARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_TEXT_OARCHIVE_IMPL_IPP_INCLUDED
 #include <string>
 #include <boost/config.hpp>
 #include <locale>
@@ -122,3 +124,4 @@ text_oarchive_impl<Archive>::save_binary(const void *address, std::size_t count)
 } // namespace archive
 } // namespace boost
 
+#endif
