@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, Order, orders)
 
 typedef boost::mpl::list<preorder,inorder/*,postorder*/> preandinorders; //FIXME
 
-BOOST_AUTO_TEST_CASE_TEMPLATE ( test_copy2, Order, preandinorders )
+BOOST_AUTO_TEST_CASE_TEMPLATE ( test_inserter, Order, preandinorders )
 {
     //boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_messages ) ;
     bt2.clear();

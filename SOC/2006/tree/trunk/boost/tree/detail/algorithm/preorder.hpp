@@ -171,32 +171,6 @@ Op for_each(preorder, Cursor s, Op f, forward_traversal_tag)
 //#endif //BOOST_RECURSIVE_ORDER_ALGORITHMS
 
 /**
- * @brief    Copies the subtree s into t, by traversing s in preorder.
- * @param s    An input cursor.
- * @param t An output cursor.
- * @result    A cursor past t's preorder end, after the copying operation.
- */
-template <class InCursor, class OutCursor>
-OutCursor copy(preorder, InCursor s, OutCursor t, forward_traversal_tag)
-{
-    InCursor r = s.end();
-    s.to_begin();
-    t.to_begin();
-    
-    for (;s != r; ++s, ++t) {
-        *t = *s;
-        if (!s.empty())
-            copy(preorder(), s, t, forward_traversal_tag());
-    }
-
-    // Multiway cursor
-    if (!r.empty())
-        copy(preorder(), r, t, forward_traversal_tag());
-
-    return t;
-}
-
-/**
  * @brief     Performs an operation on a subtree, by traversing it in preorder.
  * @param s  An input cursor.
  * @param t  An output cursor.

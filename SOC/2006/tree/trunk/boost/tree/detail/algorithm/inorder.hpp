@@ -144,32 +144,6 @@ Op for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
 }
 
 /**
- * @brief    Copies the subtree s into t, by traversing s in inorder.
- * @param s    An input cursor.
- * @param t An output cursor.
- * @result    A cursor past t's inorder end, after the copying operation.
- */
-template <class InCursor, class OutCursor>
-OutCursor copy(inorder, InCursor s, OutCursor t, forward_traversal_tag)
-{
-    InCursor r = s.end();
-
-    s.to_begin();
-    t.to_begin();
-    
-    for (; s != r; ++s, ++t) {
-        if (!s.empty())
-            copy(inorder(), s, t, forward_traversal_tag());
-        *t=*s;
-    }
-    
-    // Multiway cursor
-    if (!r.empty())
-        copy(inorder(), r, t, forward_traversal_tag());
-    return t;
-}
-
-/**
  * @brief     Performs an operation on a subtree, by traversing it in inorder.
  * @param s  An input cursor.
  * @param t  An output cursor.
