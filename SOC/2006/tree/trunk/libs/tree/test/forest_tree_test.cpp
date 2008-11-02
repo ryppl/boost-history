@@ -24,7 +24,7 @@
 using namespace boost::tree;
 
 typedef boost::mpl::list< boost::mpl::pair<preorder, preorder>
-                        /*, boost::mpl::pair<postorder, inorder>*/ > order_pairs;
+                        /*, boost::mpl::pair<postorder, inorder>*/ > corresponding_orders;
 
 BOOST_FIXTURE_TEST_SUITE(forest_algorithms_test, test_binary_tree_with_list_fixture<int>)
 
@@ -63,7 +63,8 @@ BOOST_AUTO_TEST_CASE( forest_tree_test )
 
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence, Order, order_pairs )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence, Order
+                             , corresponding_orders )
 {
     using namespace boost::tree;
 

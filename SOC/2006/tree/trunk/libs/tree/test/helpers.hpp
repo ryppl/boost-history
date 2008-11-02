@@ -12,11 +12,13 @@
 #include <boost/tree/searcher.hpp>
 
 #include <boost/multi_index/identity.hpp>
+#include <boost/mpl/list.hpp>
 
 using namespace boost::tree;
 
 using boost::multi_index::identity;
 
+typedef boost::mpl::list<preorder,inorder,postorder> orders;
 
 /**
  * @brief    test_balancer (exposes underlying hierarchy for test purposes)

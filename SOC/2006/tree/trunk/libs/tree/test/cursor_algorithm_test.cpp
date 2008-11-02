@@ -19,7 +19,6 @@
 #define BOOST_TEST_MODULE cursor_algorithm test
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
-#include <boost/mpl/list.hpp>
 
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
@@ -27,8 +26,6 @@
 using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, test_binary_tree_with_list_fixture<int>)
-
-typedef boost::mpl::list<preorder,inorder,postorder> orders;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders)
 {

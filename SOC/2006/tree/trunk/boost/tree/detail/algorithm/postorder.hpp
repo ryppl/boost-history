@@ -188,6 +188,7 @@ template <class InCursor, class OutCursor, class Op>
 OutCursor transform(postorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
 {
     InCursor r = s;
+    //OutCursor t2 = t;
     s.to_begin();
     t.to_begin();
     
@@ -199,7 +200,7 @@ OutCursor transform(postorder, InCursor s, OutCursor t, Op op, forward_traversal
     if (!s.empty())
         transform(postorder(), s, t, op, forward_traversal_tag());
     
-    *t = op(*r.to_begin());
+    *t/*2.to_begin()*/ = op(*r.to_begin());
     return t;
 }
 

@@ -107,7 +107,7 @@ public:
 };
 
 template <class Cursor>
-inline root_tracking_cursor<Cursor> make_root_tracking_cursor(Cursor c)
+inline root_tracking_cursor<Cursor> track_root(Cursor c)
 {
     return root_tracking_cursor<Cursor>(c);
 }
