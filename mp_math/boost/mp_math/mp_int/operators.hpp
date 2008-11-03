@@ -111,108 +111,55 @@ inline typename enable_if<is_integral<IntegralT>, bool>::type
 operator >= (IntegralT lhs, const mp_int<A,T>& rhs) { return rhs <= lhs;  }
 
 
-// compare mp_int to const char*
-template<class A, class T>
+// compare mp_int to character string
+template<class A, class T, typename charT>
 inline bool
-operator == (const mp_int<A,T>& lhs, const char* rhs) { return lhs == mp_int<A,T>(rhs); }
+operator == (const mp_int<A,T>& lhs, const charT* rhs) { return lhs == mp_int<A,T>(rhs); }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator != (const mp_int<A,T>& lhs, const char* rhs) { return lhs != mp_int<A,T>(rhs); }
+operator != (const mp_int<A,T>& lhs, const charT* rhs) { return lhs != mp_int<A,T>(rhs); }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator < (const mp_int<A,T>& lhs, const char* rhs) { return lhs < mp_int<A,T>(rhs); }
+operator < (const mp_int<A,T>& lhs, const charT* rhs) { return lhs < mp_int<A,T>(rhs); }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator > (const mp_int<A,T>& lhs, const char* rhs) { return lhs > mp_int<A,T>(rhs); }
+operator > (const mp_int<A,T>& lhs, const charT* rhs) { return lhs > mp_int<A,T>(rhs); }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator <= (const mp_int<A,T>& lhs, const char* rhs) { return lhs <= mp_int<A,T>(rhs); }
+operator <= (const mp_int<A,T>& lhs, const charT* rhs) { return lhs <= mp_int<A,T>(rhs); }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator >= (const mp_int<A,T>& lhs, const char* rhs) { return lhs >= mp_int<A,T>(rhs); }
+operator >= (const mp_int<A,T>& lhs, const charT* rhs) { return lhs >= mp_int<A,T>(rhs); }
 
 // compare const char* to mp_int
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator == (const char* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) == rhs; }
+operator == (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) == rhs; }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator != (const char* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) != rhs; }
+operator != (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) != rhs; }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator < (const char* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) < rhs; }
+operator < (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) < rhs; }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator > (const char* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) > rhs; }
+operator > (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) > rhs; }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator <= (const char* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) <= rhs; }
+operator <= (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) <= rhs; }
 
-template<class A, class T>
+template<class A, class T, typename charT>
 inline bool
-operator >= (const char* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) >= rhs; }
-
-
-#ifndef BOOST_NO_CWCHAR
-// compare mp_int to const wchar_t*
-template<class A, class T>
-inline bool
-operator == (const mp_int<A,T>& lhs, const wchar_t* rhs) { return lhs == mp_int<A,T>(rhs); }
-
-template<class A, class T>
-inline bool
-operator != (const mp_int<A,T>& lhs, const wchar_t* rhs) { return lhs != mp_int<A,T>(rhs); }
-
-template<class A, class T>
-inline bool
-operator < (const mp_int<A,T>& lhs, const wchar_t* rhs) { return lhs < mp_int<A,T>(rhs); }
-
-template<class A, class T>
-inline bool
-operator > (const mp_int<A,T>& lhs, const wchar_t* rhs) { return lhs > mp_int<A,T>(rhs); }
-
-template<class A, class T>
-inline bool
-operator <= (const mp_int<A,T>& lhs, const wchar_t* rhs) { return lhs <= mp_int<A,T>(rhs); }
-
-template<class A, class T>
-inline bool
-operator >= (const mp_int<A,T>& lhs, const wchar_t* rhs) { return lhs >= mp_int<A,T>(rhs); }
-
-// compare const wchar_t* to mp_int
-template<class A, class T>
-inline bool
-operator == (const wchar_t* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) == rhs; }
-
-template<class A, class T>
-inline bool
-operator != (const wchar_t* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) != rhs; }
-
-template<class A, class T>
-inline bool
-operator < (const wchar_t* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) < rhs; }
-
-template<class A, class T>
-inline bool
-operator > (const wchar_t* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) > rhs; }
-
-template<class A, class T>
-inline bool
-operator <= (const wchar_t* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) <= rhs; }
-
-template<class A, class T>
-inline bool
-operator >= (const wchar_t* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) >= rhs; }
-#endif // BOOST_NO_CWCHAR
+operator >= (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) >= rhs; }
 
 
 // compare mp_int to basic_string
@@ -748,170 +695,94 @@ inline mp_int<A,T> operator ^ (const mp_int<A,T>& lhs, IntegralT rhs)
 }
 
 
-// Arithmetic and bitwise operators involving const char*
+// Arithmetic and bitwise operators involving character strings
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator += (const char* s) { return *this += mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator += (const charT* s) { return *this += mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator -= (const char* s) { return *this -= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator -= (const charT* s) { return *this -= mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator *= (const char* s) { return *this *= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator *= (const charT* s) { return *this *= mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator /= (const char* s) { return *this /= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator /= (const charT* s) { return *this /= mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator %= (const char* s) { return *this %= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator %= (const charT* s) { return *this %= mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator |= (const char* s) { return *this |= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator |= (const charT* s) { return *this |= mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator &= (const char* s) { return *this &= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator &= (const charT* s) { return *this &= mp_int<A,T>(s); }
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator ^= (const char* s) { return *this ^= mp_int<A,T>(s); }
+template<typename charT>
+inline mp_int<A,T>& mp_int<A,T>::operator ^= (const charT* s) { return *this ^= mp_int<A,T>(s); }
 
-template<class A, class T>
-inline mp_int<A,T> operator + (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator + (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv += mp_int<A,T>(rhs);
   return nrv;
 }
 
-template<class A, class T>
-inline mp_int<A,T> operator - (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator - (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv -= mp_int<A,T>(rhs);
   return nrv;
 }
 
-template<class A, class T>
-inline mp_int<A,T> operator * (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator * (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv *= mp_int<A,T>(rhs);
   return nrv;
 }
 
-template<class A, class T>
-inline mp_int<A,T> operator / (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator / (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv /= mp_int<A,T>(rhs);
   return nrv;
 }
-template<class A, class T>
-inline mp_int<A,T> operator % (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator % (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv %= mp_int<A,T>(rhs);
   return nrv;
 }
 
-template<class A, class T>
-inline mp_int<A,T> operator | (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator | (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv |= mp_int<A,T>(rhs);
   return nrv;
 }
 
-template<class A, class T>
-inline mp_int<A,T> operator & (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator & (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv &= mp_int<A,T>(rhs);
   return nrv;
 }
 
-template<class A, class T>
-inline mp_int<A,T> operator ^ (const mp_int<A,T>& lhs, const char* rhs)
+template<class A, class T, typename charT>
+inline mp_int<A,T> operator ^ (const mp_int<A,T>& lhs, const charT* rhs)
 {
   mp_int<A,T> nrv(lhs);
   nrv ^= mp_int<A,T>(rhs);
   return nrv;
 }
-
-
-#ifndef BOOST_NO_CWCHAR
-// Arithmetic and bitwise operators involving const wchar_t*
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator += (const wchar_t* s) { return *this += mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator -= (const wchar_t* s) { return *this -= mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator *= (const wchar_t* s) { return *this *= mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator /= (const wchar_t* s) { return *this /= mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator %= (const wchar_t* s) { return *this %= mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator |= (const wchar_t* s) { return *this |= mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator &= (const wchar_t* s) { return *this &= mp_int<A,T>(s); }
-template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator ^= (const wchar_t* s) { return *this ^= mp_int<A,T>(s); }
-
-template<class A, class T>
-inline mp_int<A,T> operator + (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv += mp_int<A,T>(rhs);
-  return nrv;
-}
-
-template<class A, class T>
-inline mp_int<A,T> operator - (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv -= mp_int<A,T>(rhs);
-  return nrv;
-}
-
-template<class A, class T>
-inline mp_int<A,T> operator * (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv *= mp_int<A,T>(rhs);
-  return nrv;
-}
-
-template<class A, class T>
-inline mp_int<A,T> operator / (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv /= mp_int<A,T>(rhs);
-  return nrv;
-}
-template<class A, class T>
-inline mp_int<A,T> operator % (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv %= mp_int<A,T>(rhs);
-  return nrv;
-}
-
-template<class A, class T>
-inline mp_int<A,T> operator | (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv |= mp_int<A,T>(rhs);
-  return nrv;
-}
-
-template<class A, class T>
-inline mp_int<A,T> operator & (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv &= mp_int<A,T>(rhs);
-  return nrv;
-}
-
-template<class A, class T>
-inline mp_int<A,T> operator ^ (const mp_int<A,T>& lhs, const wchar_t* rhs)
-{
-  mp_int<A,T> nrv(lhs);
-  nrv ^= mp_int<A,T>(rhs);
-  return nrv;
-}
-#endif // BOOST_NO_CWCHAR
 
 
 // Arithmetic and bitwise operators involving basic_string

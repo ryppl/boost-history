@@ -61,8 +61,6 @@ mp_int<A,T> sqrt(const mp_int<A,T>& x)
 template<class A, class T>
 mp_int<A,T> nth_root(const mp_int<A,T>& x, typename mp_int<A,T>::digit_type n)
 {
-  mp_int<A,T> t1, t2, t3;
-
   if ((n & 1) == 0 && x.is_negative())
     throw std::domain_error("nth_root: argument must be positive if n is even");
 
@@ -70,7 +68,8 @@ mp_int<A,T> nth_root(const mp_int<A,T>& x, typename mp_int<A,T>::digit_type n)
   const int neg = x.sign();
   const_cast<mp_int<A,T>*>(&x)->set_sign(1);
 
-  // t2 = 2
+  mp_int<A,T> t1, t2, t3;
+  
   t2 = typename mp_int<A,T>::digit_type(2);
 
   do
@@ -105,7 +104,70 @@ mp_int<A,T> nth_root(const mp_int<A,T>& x, typename mp_int<A,T>::digit_type n)
     t2 = pow(t1, n);
 
     if (t2 > x)
-      t1.sub_digit(1);
+      --t1;
+    else
+      break;
+  }
+
+  // reset the sign of x first
+  const_cast<mp_int<A,T>*>(&x)->set_sign(neg);
+
+  // set the sign of the result
+  t1.set_sign(neg);
+
+  return t1;
+}
+
+template<class A, class T>
+mp_int<A,T> nth_root(const mp_int<A,T>& x, const mp_int<A,T>& n)
+{
+  if (n.is_odd() && x.is_negative())
+    throw std::domain_error("nth_root: argument must be positive if n is even");
+
+  if (n.size() == 1)
+    return nth_root(x, n[0]);
+
+  // if x is negative fudge the sign but keep track
+  const int neg = x.sign();
+  const_cast<mp_int<A,T>*>(&x)->set_sign(1);
+
+  mp_int<A,T> t1, t2, t3;
+  
+  t2 = typename mp_int<A,T>::digit_type(2);
+
+  do
+  {
+    t1 = t2;
+
+    // t2 = t1 - ((t1**n - x) / (n * t1**(n-1)))
+    
+    // t3 = t1**(n-1)
+    t3 = pow(t1, n-1);
+
+    // numerator
+    // t2 = t1**n
+    t2 = t3 * t1;
+
+    // t2 = t1**n - x
+    t2 -= x;
+
+    // denominator
+    // t3 = t1**(n-1) * n
+    t3 *= n;
+
+    // t3 = (t1**n - x)/(n * t1**(n-1))
+    t3 = t2 / t3;
+
+    t2 = t1 - t3;
+  } while (t1 != t2);
+  
+  // result can be off by a few so check
+  for (;;)
+  {
+    t2 = pow(t1, n);
+
+    if (t2 > x)
+      --t1;
     else
       break;
   }

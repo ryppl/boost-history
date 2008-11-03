@@ -6,39 +6,6 @@
 #include "benchmark.hpp"
 #include <iostream>
 #include <stdexcept>
-#include <boost/random.hpp>
-
-std::string create_random_hex_string(int size_in_bits)
-{
-  std::string s;
-  boost::mt19937 r;
-  boost::uniform_smallint<char> u(0,15);
-  boost::variate_generator<boost::mt19937&, boost::uniform_smallint<char> > vg(r, u);
-  // one hex digit can occupy 4 bits
-  for (int i = 0; i < size_in_bits/4; ++i)
-  {
-    char tmp = vg();
-    if (tmp < 10)
-      tmp = '0' + tmp;
-    else
-      tmp = 'a' + (tmp-10);
-    s.push_back(tmp);
-  }
-  return s;
-}
-
-std::string create_random_dec_string(int size_in_digits)
-{
-  std::string s;
-  boost::mt19937 r;
-  boost::uniform_smallint<char> u(0,9);
-  boost::variate_generator<boost::mt19937&, boost::uniform_smallint<char> > vg(r, u);
-  
-  for (int i = 0; i < size_in_digits; ++i)
-    s.push_back('0' + vg());
-  
-  return s;
-}
 
 
 const char* to_string(op_type op)

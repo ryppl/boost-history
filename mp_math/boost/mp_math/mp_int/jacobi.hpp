@@ -29,10 +29,10 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   if (a == digit_type(1))
     return 1;
 
-  /* default */
+  // default
   int s = 0;
 
-  /* write a = a1 * 2**k  */
+  // write a = a1 * 2**k
   mp_int<A,T> a1(a);
 
   // find largest power of two that divides a1
@@ -40,7 +40,7 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   // now divide by it
   a1.shift_right(k,0);
 
-  /* if k is even set s=1 */
+  // if k is even set s=1
   if ((k & 1) == 0)
     s = 1;
   else
@@ -54,7 +54,7 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
       s = -1;
   }
 
-  /* if p == 3 (mod 4) *and* a1 == 3 (mod 4) then s = -s */
+  // if p == 3 (mod 4) *and* a1 == 3 (mod 4) then s = -s
   if (((p[0] & 3) == 3) && ((a1[0] & 3) == 3))
     s = -s;
 

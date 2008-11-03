@@ -6,6 +6,12 @@
 #include <boost/test/unit_test.hpp>
 #include "prerequisite.hpp"
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(construct_from_zero, mp_int_type, mp_int_types)
+{
+  const mp_int_type x(0);
+  BOOST_CHECK_EQUAL(x.is_zero(), true);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(equal_signed_char_min, mp_int_type, mp_int_types)
 {
   const signed char x = std::numeric_limits<signed char>::min();

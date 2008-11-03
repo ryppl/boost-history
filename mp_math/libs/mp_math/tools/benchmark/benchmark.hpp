@@ -11,11 +11,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/timer.hpp>
 
-
-std::string create_random_hex_string(int size_in_bits);
-std::string create_random_dec_string(int size_in_digits);
-
-
 enum op_type
 {
   op_ctor_dec,
@@ -158,8 +153,8 @@ void benchmark<MPInt>::do_bench(BenchFunctor f, benchmark_result& r, double samp
     op_time.restart();
     for (; op_time.elapsed() < sample_time; ++num_ops_executed)
       f(i);
-    // push the number of ops per millisecond
-    r.ops.push_back(1.0/(op_time.elapsed() * 1000.0 / num_ops_executed));
+    // push the number of ops per sample_time
+    r.ops.push_back(num_ops_executed/op_time.elapsed());
   }
   r.total_time = total.elapsed();
   // clear dst vector for next test

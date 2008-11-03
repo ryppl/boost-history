@@ -84,20 +84,14 @@ struct mp_int
   template<typename IntegralT>
   mp_int& operator = (IntegralT rhs);
 
-  mp_int& operator = (const char*);
-  
-  #ifndef BOOST_NO_CWCHAR
-  mp_int& operator = (const wchar_t*);
-  #endif
+  template<typename charT>
+  mp_int& operator = (const charT*);
 
   template<typename charT, class traits, class Alloc>
   mp_int& operator = (const std::basic_string<charT,traits,Alloc>&);
 
-  void assign(const char*, std::ios_base::fmtflags);
-
-  #ifndef BOOST_NO_CWCHAR
-  void assign(const wchar_t*, std::ios_base::fmtflags);
-  #endif
+  template<typename charT>
+  void assign(const charT*, std::ios_base::fmtflags);
 
   template<typename charT, class traits, class Alloc>
   void assign(const std::basic_string<charT,traits,Alloc>&,
@@ -139,25 +133,14 @@ struct mp_int
   template<typename IntegralT> mp_int& operator &= (IntegralT);
   template<typename IntegralT> mp_int& operator ^= (IntegralT);
 
-  mp_int& operator += (const char*);
-  mp_int& operator -= (const char*);
-  mp_int& operator *= (const char*);
-  mp_int& operator /= (const char*);
-  mp_int& operator %= (const char*);
-  mp_int& operator |= (const char*);
-  mp_int& operator &= (const char*);
-  mp_int& operator ^= (const char*);
-
-  #ifndef BOOST_NO_CWCHAR
-  mp_int& operator += (const wchar_t*);
-  mp_int& operator -= (const wchar_t*);
-  mp_int& operator *= (const wchar_t*);
-  mp_int& operator /= (const wchar_t*);
-  mp_int& operator %= (const wchar_t*);
-  mp_int& operator |= (const wchar_t*);
-  mp_int& operator &= (const wchar_t*);
-  mp_int& operator ^= (const wchar_t*);
-  #endif
+  template<typename charT> mp_int& operator += (const charT*);
+  template<typename charT> mp_int& operator -= (const charT*);
+  template<typename charT> mp_int& operator *= (const charT*);
+  template<typename charT> mp_int& operator /= (const charT*);
+  template<typename charT> mp_int& operator %= (const charT*);
+  template<typename charT> mp_int& operator |= (const charT*);
+  template<typename charT> mp_int& operator &= (const charT*);
+  template<typename charT> mp_int& operator ^= (const charT*);
 
   template<typename charT, class traits, class Alloc>
   mp_int& operator += (const std::basic_string<charT,traits,Alloc>&);
@@ -453,22 +436,13 @@ inline mp_int<A,T>& mp_int<A,T>::operator = (IntegralT rhs)
 }
 
 template<class A, class T>
-mp_int<A,T>& mp_int<A,T>::operator = (const char* s)
+template<typename charT>
+mp_int<A,T>& mp_int<A,T>::operator = (const charT* s)
 {
   size_ = 0;
-  init(s, s + std::strlen(s));
+  init(s, s + std::char_traits<charT>::length(s));
   return *this;
 }
-
-#ifndef BOOST_NO_CWCHAR
-template<class A, class T>
-mp_int<A,T>& mp_int<A,T>::operator = (const wchar_t* s)
-{
-  size_ = 0;
-  init(s, s + std::wcslen(s));
-  return *this;
-}
-#endif
 
 template<class A, class T>
 template<typename charT, class traits, class Alloc>
@@ -480,20 +454,12 @@ mp_int<A,T>& mp_int<A,T>::operator = (const std::basic_string<charT,traits,Alloc
 }
 
 template<class A, class T>
+template<typename charT>
 inline void
-mp_int<A,T>::assign(const char* s, std::ios_base::fmtflags f)
+mp_int<A,T>::assign(const charT* s, std::ios_base::fmtflags f)
 {
-  assign(s, s + std::strlen(s), f);
+  assign(s, s + std::char_traits<charT>::length(s), f);
 }
-
-#ifndef BOOST_NO_CWCHAR
-template<class A, class T>
-inline void
-mp_int<A,T>::assign(const wchar_t* s, std::ios_base::fmtflags f)
-{
-  assign(s, s + std::wcslen(s), f);
-}
-#endif
 
 template<class A, class T>
 template<typename charT, class traits, class Alloc>
@@ -606,16 +572,19 @@ void mp_int<A,T>::grow_capacity(size_type n)
 {
   if (capacity() < n)
   {
-    if (n >= sign_bit)
+    if (n < sign_bit)
+    {
+      const size_type new_cap = capacity() + capacity();
+      if (new_cap > n)
+        n = new_cap;
+      digit_type* d = this->allocate(n, digits_);
+      std::memcpy(d, digits_, sizeof(digit_type) * size_);
+      this->deallocate(digits_, capacity());
+      digits_ = d;
+      set_capacity(n);
+    }
+    else
       throw std::bad_alloc();
-    const size_type new_cap = capacity() + capacity();
-    if (new_cap > n)
-      n = new_cap;
-    digit_type* d = this->allocate(n, digits_);
-    std::memcpy(d, digits_, sizeof(digit_type) * size_);
-    this->deallocate(digits_, capacity());
-    digits_ = d;
-    set_capacity(n);
   }
 }
 

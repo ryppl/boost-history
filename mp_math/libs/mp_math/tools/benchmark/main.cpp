@@ -15,17 +15,37 @@
 #include "benchmark_libtom.hpp"
 #include "benchmark_gmp.hpp"
 
+#include "modes.hpp"
 
-const char* version = "0.3";
+
+const char* version = "0.4";
 
 
 struct config
 {
-  unsigned int graph_x, graph_y;
+  // mode can be 0, 1 or 2 which is:
+  // 0) run all modes
+  // 1) run with continuously sized operands, this benchmark takes long because
+  //    it uses num_input_samples (default = 1000) operands, so it should be
+  //    used for smaller numbers.
+  // 2) run benchmark with operands that are a power of two, this should be used
+  //    to get a 'quick' look into how the functions perform for very large
+  //    numbers.
+  unsigned int mode;
+
+  // mode 1 options
   unsigned int num_input_samples;
   double       max_error;
   double       sample_time;
   std::pair<unsigned int, unsigned int> range;
+
+  // mode 2 options
+  unsigned int pow_from;
+  unsigned int pow_to;
+  unsigned int pow_step;
+
+  // general options
+  unsigned int graph_x, graph_y;
 
   typedef std::vector<std::string> string_list;
   // we receive these two strings from the cmdline and need to tokenize them
@@ -75,7 +95,18 @@ void config::show_available_ops(std::ostream& os) const
 
 double config::estimated_run_time() const
 {
-  return sample_time * num_input_samples * ops.size() * libs.size();
+  const double mode1_time =
+    sample_time * num_input_samples * ops.size() * libs.size();
+  
+  const double mode2_time = 0.05 * ops.size() * libs.size();
+  
+  double sum = 0.0;
+  if (mode == 0 || mode == 1)
+    sum += mode1_time;
+  if (mode == 0 || mode == 2)
+    sum += mode2_time;
+
+  return sum;
 }
 
 
@@ -86,7 +117,7 @@ double calibrate_sample_time(double max_error)
   double st = 0.01;
   
   int verified = 0;
-  while (true)
+  for (;;)
   {
     for (int k = 0; k < vec_length; ++k)
     {
@@ -167,28 +198,12 @@ int main(int argc, char** argv)
 
     ("version,v", "print version")
 
-    ("num-input-samples,n",
-        value(&c.num_input_samples)->default_value(1000),
-          "number of input samples to create")
-   
-    ("max-error,e",
-        value(&c.max_error)->default_value(0.1, "0.1"),
-          "this value is used to calculate the sample time, you should not "
-          "need to modify it")
-    
-    ("sample-time,s",
-        value(&c.sample_time)->default_value(0.035, "0.035"),
-          "directly specify the sample time in seconds, it is used to reduce "
-          "the error of the measurements")
-    
-    ("range-beg,a",
-        value(&c.range.first)->default_value(32),
-          "range of numbers, measured in bits")
-    
-    ("range-end,b",
-        value(&c.range.second)->default_value(3072),
-          "range of numbers, measured in bits")
-    
+    ("mode,m",
+        value(&c.mode)->default_value(1),
+          "0 = run all benchmarks\n"
+          "1 = run benchmark meant to test small numbers\n"
+          "2 = run benchmark meant to test large numbers")
+
     ("ops", 
         value(&c.ops_string),
           "the operations to benchmark")
@@ -208,6 +223,52 @@ int main(int argc, char** argv)
         value(&c.graph_y)->default_value(768),
           "height of graphs created by gnuplot")
     ;
+
+  options_description mode1_opts("Mode 1 options");
+
+  mode1_opts.add_options()
+    ("num-input-samples,n",
+        value(&c.num_input_samples)->default_value(1000),
+          "number of input samples to create")
+
+    ("max-error,e",
+        value(&c.max_error)->default_value(0.1, "0.1"),
+          "this value is used to calculate the sample time, you should not "
+          "need to modify it")
+    
+    ("sample-time,s",
+        value(&c.sample_time)->default_value(0.035, "0.035"),
+          "directly specify the sample time in seconds, it is used to reduce "
+          "the error of the measurements")
+    
+    ("range-beg,a",
+        value(&c.range.first)->default_value(32),
+          "range of numbers, measured in bits")
+    
+    ("range-end,b",
+        value(&c.range.second)->default_value(3072),
+          "range of numbers, measured in bits")
+    ;
+
+  options_description mode2_opts("Mode 2 options");
+
+  mode2_opts.add_options()
+
+    ("pow-from,f",
+        value(&c.pow_from)->default_value(7),
+          "the first power of two to use")
+
+    ("pow-to,t",
+        value(&c.pow_to)->default_value(21),
+          "the last power of two to use")
+
+    ("pow-step,q",
+        value(&c.pow_step)->default_value(1),
+          "the stepsize used to iterate through the powers of two")
+    ;
+
+  opts.add(mode1_opts);
+  opts.add(mode2_opts);
 
   variables_map vm;
 
@@ -271,7 +332,7 @@ int main(int argc, char** argv)
   boost::filesystem::current_path(timestring);
 
 
-  benchmark_runner b_runner(c.num_input_samples, c.range.first, c.range.second);
+  benchmark_runner b_runner;
 
   std::cout << "Libraries that we are about to benchmark:\n";
   for (string_list::const_iterator lib = c.libs.begin();
@@ -282,7 +343,7 @@ int main(int argc, char** argv)
     b_runner.add_library(p);
   }
 
-  if (!vm.count("sample-time"))
+  if (vm.count("sample-time") && c.sample_time == 0.0)
   {
     std::cout << "calibrating sample time..." << std::endl;
     c.sample_time = calibrate_sample_time(c.max_error);
@@ -290,13 +351,33 @@ int main(int argc, char** argv)
     
   std::cout << "Sample time is: " << c.sample_time << " sec" <<  std::endl;
 
-  const double runtime = c.estimated_run_time();
+  const unsigned long runtime =
+    static_cast<unsigned long>(c.estimated_run_time()/60.0);
   std::cout << "Estimated run time of benchmark is at least "
-            << (long)(runtime/60.0) << " minutes, but could be much longer for "
+            << runtime << " minute(s), but will be much longer for "
             << "very large numbers." << std::endl;
 
-  b_runner.run(c.ops, c.sample_time);
-  b_runner.write_results(c.graph_x, c.graph_y);
+  if (c.mode == 0 || c.mode == 1)
+  {
+    std::cout << "Entering mode 1..." << std::endl;
+    mode1 m1(c.num_input_samples, c.range.first, c.range.second);
+    b_runner.run(c.ops, c.sample_time,
+                 m1.vec1, m1.vec2,
+                 m1.hex_str_vec, m1.dec_str_vec);
+    m1.create_data_files(b_runner.get_results());
+    m1.write_results(c.graph_x, c.graph_y);
+  }
+
+  if (c.mode == 0 || c.mode == 2)
+  {
+    std::cout << "Entering mode 2..." << std::endl;
+    mode2 m2(c.pow_from, c.pow_to, c.pow_step);
+    b_runner.run(c.ops, 0.05,
+                 m2.vec1, m2.vec2,
+                 m2.hex_str_vec, m2.dec_str_vec);
+    m2.create_data_files(b_runner.get_results());
+    m2.write_results(c.graph_x, c.graph_y);
+  }
 
   std::cout << "done with benchmarking!" << std::endl;
 
@@ -304,8 +385,8 @@ int main(int argc, char** argv)
   std::cout << "calling \'gnuplot *.plt\'" << std::endl;
   const int ret = std::system("gnuplot *.plt");
   if (ret)
-    std::cout << "something went wrong, received the error code " << ret
-      << std::endl;
+    std::cout << "something went wrong, gnuplot call exited with code " << ret
+              << std::endl;
   else
     std::cout << "done" << std::endl;
 

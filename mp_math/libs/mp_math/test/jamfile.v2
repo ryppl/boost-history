@@ -13,7 +13,6 @@ project
     : requirements
       <include>../../..
       <link>static
-      <toolset>gcc:<cxxflags>-std=c++0x
       <define>BOOST_TEST_DYN_LINK
       <define>BOOST_TEST_MAIN
       #<define>BOOST_MP_MATH_MP_INT_USE_ASM

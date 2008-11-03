@@ -12,13 +12,12 @@ project
     <include>../../../..
     <include>.
     <link>static
-    <toolset>gcc:<cxxflags>"-march=i686 -mtune=generic"
   ;
 
 
 
-# GMP (GNU Multiple Precision Arithmetic, http://gmplib.org/) library need to be
-# installed for the benchmark to work
+# GMP (GNU Multiple Precision Arithmetic, http://gmplib.org/) library needs to
+# be installed for the benchmark to work
 # gmpxx is the library for the C++ bindings of gmp
 lib gmpxx : : <name>gmpxx ;
 lib gmp   : : <name>gmp ;
@@ -33,13 +32,13 @@ exe benchmark
     benchmark_libtom.cpp
     benchmark_gmp.cpp
     main.cpp
+    modes.cpp
     tommath
     gmpxx gmp
     boost_fs
     boost_po
   :
     <variant>release
-    <toolset>gcc:<cxxflags>-std=c++0x #-DBOOST_MP_MATH_MP_INT_USE_ASM"
   ;
 
 
