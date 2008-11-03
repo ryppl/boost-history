@@ -49,8 +49,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_inserter, Order, orders )
     bt2.clear();
     l.clear();
     boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root()), boost::forward_traversal_tag());
-    boost::tree::copy(Order(), bt2.root(), o);
     validate_test_data_tree(bt2);
+    BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root()));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform, Order, orders)

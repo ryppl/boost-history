@@ -14,6 +14,8 @@
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_ITERATIVE_HPP
 
+#include <boost/tree/coupling_cursor.hpp>
+
 #include <boost/tree/detail/algorithm/preorder.hpp>
 #include <boost/tree/detail/algorithm/inorder.hpp>
 #include <boost/tree/detail/algorithm/postorder.hpp>
@@ -47,15 +49,17 @@ root_tracking_cursor<OutCursor> transform (Order
                                          , Op op)
 {
     root_tracking_cursor<InCursor> s2(s);
-    to_first(Order(), s);
+    
+    boost::tree::coupling_cursor< root_tracking_cursor<InCursor>, root_tracking_cursor<OutCursor> > cc(s, t);
+
+    to_first(Order(), cc);
     to_last(Order(), s2);
-    to_first(Order(), t);
-    while (s!=s2) {
-        *t = op(*s);
-        forward(Order(), s);
-        forward(Order(), t);
+
+    while (cc.in()!=s2) {
+        *cc.out() = op(*cc.in());
+        forward(Order(), cc);
     }
-    return t;
+    return cc.out();
 }
 
 template <class Order, class InCursor, class OutCursor, class Op>

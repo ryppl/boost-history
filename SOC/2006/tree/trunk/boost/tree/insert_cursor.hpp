@@ -53,6 +53,10 @@ public:
     explicit insert_cursor(Tree& x, typename Tree::cursor cur)
     : insert_cursor::cursor_adaptor_(cur), tree(x), ins(false) {}
 
+    // Cursor-specific
+    typedef insert_cursor<typename Tree::cursor> cursor;
+    typedef insert_cursor<typename Tree::const_cursor> const_cursor;
+
 private:
     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
@@ -60,8 +64,8 @@ private:
     typename insert_cursor::cursor_adaptor_::reference dereference() const
     {
         if (ins) {
-            const_cast<typename Tree::cursor&>(this->base_reference()) =
-            tree.insert(this->base_reference(), typename Tree::value_type());
+            const_cast<typename Tree::cursor&>(this->base_reference())
+            = tree.insert(this->base_reference(), typename Tree::value_type());
         }
         return *this->base_reference();
     }
