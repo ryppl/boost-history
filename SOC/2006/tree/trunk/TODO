@@ -14,12 +14,10 @@
 [section TODO]
 
 General:
-* Future: Optimise insert_cursor for use with binary_tree insert and copy ctor 
-  (preorder copy; ideally, we can guarantee RAII for every single element)
-  and clear/dtor (postorder for_each).
-* Get insert_cursor to work with postorder copy, then with linear (ascending cursor)
-  versions. Check with other algorithms that use output cursors.
-* Caution: Iterative algorithms require ascending cursors!
+* Remove algorithm overloads for root_tracking_cursors, as track_root is a very
+  context dependent thing; so merge it into the general iterative algorithm versions.
+* Get insert_cursor to work with linear (ascending cursor) algorithm
+  versions.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
 * Fix recursive algorithms for use with forest.
@@ -109,6 +107,13 @@ General:
   They'd surely be interesting for experimenting with algorithms!
 * Start an RFC: what subtree algorithms should there be? In particular, of which of
   the STL's linear algorithms should there be a hierarchical version?
+
+Future: 
+* Do we need cursors that are not iterators, ie that provide to_begin() and to_end 
+  (and possibly to_parent()) operations, but not operator++() and --?
+* Optimise insert_cursor for use with binary_tree insert and copy ctor 
+  (preorder copy; ideally, we can guarantee RAII for every single element)
+  and clear/dtor (postorder for_each).
 
 Ask on the mailing list:
 
