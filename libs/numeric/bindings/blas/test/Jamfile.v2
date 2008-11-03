@@ -16,5 +16,7 @@ alias bindings-blas-tests :
     [ link blas2.cpp ]
     [ run blas3.cpp ]
     [ run ublas_slice.cpp ]
+    [ run vector2.cpp ]
+    [ run dense_matrix_stride.cpp ]
 ;
 
