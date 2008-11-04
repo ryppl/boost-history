@@ -1,0 +1,27 @@
+# (C) Copyright 2008: Joachim Faulhaber
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# bring in rules for testing
+import testing ;
+import feature ;
+
+project
+    : requirements
+      <library>/boost/test//boost_unit_test_framework
+      <library>/boost/date_time//boost_date_time
+      <link>static
+      <include>../../..
+    ;
+
+test-suite "itl"
+    : 
+      [ run test_itl_interval/test_itl_interval.cpp ]
+      [ run test_interval_set/test_interval_set.cpp ]
+      [ run test_separate_interval_set/test_separate_interval_set.cpp ]
+      [ run test_split_interval_set/test_split_interval_set.cpp ]
+      [ run test_interval_set_mixed/test_interval_set_mixed.cpp ]
+      [ run test_interval_map/test_interval_map.cpp ]
+      [ run test_split_interval_map/test_split_interval_map.cpp ]
+      [ run test_interval_map_mixed/test_interval_map_mixed.cpp ]
+    ;

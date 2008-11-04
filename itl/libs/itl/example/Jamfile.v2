@@ -1,0 +1,90 @@
+# (C) Copyright 2008: Joachim Faulhaber
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# Examples that do not use boost_date_time
+exe interval
+    :
+        interval/interval.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe interval_container
+    :
+        interval_container/interval_container.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe overlap_counter
+    :
+        overlap_counter/overlap_counter.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe party
+    :
+        party/party.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+# Examples using boost_date_time
+exe boost_party
+    :
+        boost_party/boost_party.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe man_power
+    :
+        man_power/man_power.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe month_and_week_grid
+    :
+        month_and_week_grid/month_and_week_grid.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe user_groups
+    :
+        user_groups/user_groups.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe itvset_shell
+    :
+        itvset_shell/itvset_shell.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe splititvmap_shell
+    :
+        splititvmap_shell/splititvmap_shell.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
