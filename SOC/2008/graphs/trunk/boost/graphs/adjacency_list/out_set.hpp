@@ -1,11 +1,13 @@
 
-#ifndef OUT_SET_HPP
-#define OUT_SET_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_OUT_SET_HPP
+#define BOOST_GRAPHS_ADJLIST_OUT_SET_HPP
 
 #include <map>
 #include <memory>
 
 #include <boost/descriptors.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The out set implements set-based, out-edge storage for directed graphs.
@@ -115,5 +117,7 @@ public:
 private:
     mutable store_type _edges;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

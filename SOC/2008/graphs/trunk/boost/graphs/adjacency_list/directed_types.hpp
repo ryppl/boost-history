@@ -1,6 +1,6 @@
 
-#ifndef DIRECTED_TYPES_HPP
-#define DIRECTED_TYPES_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_DIRECTED_TYPES_HPP
+#define BOOST_GRAPHS_ADJLIST_DIRECTED_TYPES_HPP
 
 // Vertex stores
 #include <boost/graphs/adjacency_list/vertex_vector.hpp>
@@ -29,6 +29,8 @@
 
 // Adjacency components
 #include <boost/graphs/adjacency_list/adjacency_iterator.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * This class is a metafunction that generates all of the types needed to
@@ -83,5 +85,7 @@ struct directed_types
     typedef adjacency_iterator<incident_edge_iterator> adjacent_vertex_iterator;
     typedef std::pair<adjacent_vertex_iterator, adjacent_vertex_iterator> adjacent_vertex_range;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

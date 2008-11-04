@@ -1,12 +1,14 @@
 
-#ifndef IN_VECTOR_HPP
-#define IN_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_IN_VECTOR_HPP
+#define BOOST_GRAPHS_ADJLIST_IN_VECTOR_HPP
 
 #include <vector>
 #include <algorithm>
 
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The in-edge vector references incoming edges from other vertices. Each edge
@@ -85,5 +87,7 @@ public:
 private:
     mutable store_type _edges;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

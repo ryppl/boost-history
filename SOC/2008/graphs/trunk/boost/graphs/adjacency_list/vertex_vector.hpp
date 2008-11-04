@@ -120,7 +120,7 @@ public:
     inline typename store_type::iterator begin() const
     { return _verts.begin(); }
 
-    inline iterator end() const
+    inline typename store_type::iterator end() const
     { return _verts.end(); }
     //@}
 

@@ -1,6 +1,6 @@
 
-#ifndef OUT_LIST_HPP
-#define OUT_LIST_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_OUT_LIST_HPP
+#define BOOST_GRAPHS_ADJLIST_OUT_LIST_HPP
 
 #include <list>
 #include <algorithm>
@@ -8,13 +8,14 @@
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
 
+namespace boost { namespace graphs { namespace adjacency_list {
+
 /**
  * The out list implements list-based, out-edge storage for directed graphs.
  * out-edges are uniquely identified by their target vertex and property
  * descriptor. List-based stores support fast inserts, slow finds, but do allow
  * removals.
  *
-
  * @param Edge A tuple describing a vertex descriptor and the edge label.
  * @param Alloc The allocator for edge pairs.
  */
@@ -121,5 +122,7 @@ private:
     mutable store_type  _edges;
     size_type           _size;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

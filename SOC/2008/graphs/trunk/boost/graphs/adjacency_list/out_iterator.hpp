@@ -1,6 +1,8 @@
 
-#ifndef OUT_ITERATOR_HPP
-#define OUT_ITERATOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_OUT_ITERATOR_HPP
+#define BOOST_GRAPHS_ADJLIST_OUT_ITERATOR_HPP
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The out edge iterator is a wrapper around out store iterators that, when
@@ -84,5 +86,7 @@ public:
     vertex_descriptor   src;
     iterator            iter;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

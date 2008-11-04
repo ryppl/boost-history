@@ -11,9 +11,9 @@
 namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
- *
+ * The undirected graph class.
  */
-template <typename VertexLabel, typename EdgeLabel,typename VertexStore, typename EdgeStore>
+template <typename VertexLabel, typename EdgeLabel, typename VertexStore, typename EdgeStore>
 class undirected_graph
 {
     typedef undirected_types<VertexLabel, EdgeLabel, VertexStore, EdgeStore> types;
@@ -200,6 +200,7 @@ public:
     //@{
     vertex_label& operator[](vertex_descriptor);
     vertex_label const& operator[](vertex_descriptor) const;
+
     edge_label& operator[](edge_descriptor);
     edge_label const& operator[](edge_descriptor) const;
     //@}

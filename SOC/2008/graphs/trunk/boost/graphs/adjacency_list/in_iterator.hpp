@@ -1,6 +1,8 @@
 
-#ifndef IN_ITERATOR_HPP
-#define IN_ITERATOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_IN_ITERATOR_HPP
+#define BOOST_GRAPHS_ADJLIST_IN_ITERATOR_HPP
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The in edge iterator is a wrapper around out store iterators that, when
@@ -61,5 +63,7 @@ public:
     vertex_descriptor   tgt;
     iterator            iter;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

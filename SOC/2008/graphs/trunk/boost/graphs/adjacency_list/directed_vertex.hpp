@@ -1,6 +1,8 @@
 
-#ifndef DIRECTED_VERTEX_HPP
-#define DIRECTED_VERTEX_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_DIRECTED_VERTEX_HPP
+#define BOOST_GRAPHS_ADJLIST_DIRECTED_VERTEX_HPP
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * A directed vertex provides storage for both outgoing edges and in edges.
@@ -162,5 +164,6 @@ private:
     in_store            _in;
 };
 
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

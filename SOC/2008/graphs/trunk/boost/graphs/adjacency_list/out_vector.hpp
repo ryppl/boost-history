@@ -1,6 +1,6 @@
 
-#ifndef OUT_VECTOR_HPP
-#define OUT_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_OUT_VECTOR_HPP
+#define BOOST_GRAPHS_ADJLIST_OUT_VECTOR_HPP
 
 #include <vector>
 #include <algorithm>
@@ -8,6 +8,8 @@
 #include <boost/triple.hpp>
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The in/out vector implements vector-based, edge storage for directed graphs.
@@ -99,5 +101,7 @@ public:
 private:
     mutable store_type _edges;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

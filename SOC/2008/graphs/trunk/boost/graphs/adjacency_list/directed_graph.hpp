@@ -1,6 +1,6 @@
 
-#ifndef DIRECTED_GRAPH_HPP
-#define DIRECTED_GRAPH_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_DIRECTED_GRAPH_HPP
+#define BOOST_GRAPHS_ADJLIST_DIRECTED_GRAPH_HPP
 
 // Notes on directed graphs... Unlike directed graphs, which are required
 // to globally store edge label, the vertices directed graphs act as
@@ -30,6 +30,8 @@
 
 #include <boost/none.hpp>
 #include <boost/graphs/adjacency_list/directed_types.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 template <
     typename VertexLabel,
@@ -942,5 +944,7 @@ directed_graph<VP,EP,VS,ES>::operator[](edge_descriptor e) const
 { return _verts.vertex(e.source()).get_edge_label(e.out_edge()); }
 
 #undef BOOST_GRAPH_DG_PARAMS
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

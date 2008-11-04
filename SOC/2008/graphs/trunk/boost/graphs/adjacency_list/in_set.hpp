@@ -1,10 +1,12 @@
 
-#ifndef IN_SET_HPP
-#define IN_SET_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_IN_SET_HPP
+#define BOOST_GRAPHS_ADJLIST_IN_SET_HPP
 
 #include <map>
 
 #include <boost/descriptors.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * The in-edge set references incoming edges from other vertices. Each edge
@@ -91,5 +93,7 @@ public:
 private:
    mutable store_type _edges;
 };
+
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif

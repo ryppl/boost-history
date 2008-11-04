@@ -1,10 +1,12 @@
-#ifndef DIRECTED_EDGE_HPP
-#define DIRECTED_EDGE_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_DIRECTED_EDGE_HPP
+#define BOOST_GRAPHS_ADJLIST_DIRECTED_EDGE_HPP
 
 #include <iosfwd>
 #include <iterator>
 
 #include <boost/graphs/directional_edge.hpp>
+
+namespace boost { namespace graphs { namespace adjacency_list {
 
 /**
  * A directed edge represents an edge in a directed graph. A directed edge is
@@ -228,5 +230,6 @@ struct directed_edge_iterator
     edge_iterator       edge;
 };
 
+} } } /* namespace boost::graphs::adjacency_list */
 
 #endif
