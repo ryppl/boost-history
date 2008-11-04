@@ -20,6 +20,7 @@
 #include <boost/numeric/bindings/lapack/lapack.h>
 #include <boost/numeric/bindings/lapack/workspace.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
+#include <boost/numeric/bindings/traits/detail/utils.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  include <boost/static_assert.hpp>
@@ -153,7 +154,7 @@ namespace boost { namespace numeric { namespace bindings {
             traits::vector_storage (iwork), traits::vector_size (iwork),
             info);
 
-          traits::detail::array<T> work( static_cast<int>( workspace_query ) );
+          traits::detail::array<T> work( traits::detail::to_int( workspace_query ) );
 
           heevd( jobz, uplo, n, a, lda, w,
             traits::vector_storage (work), traits::vector_size (work),
@@ -214,7 +215,7 @@ namespace boost { namespace numeric { namespace bindings {
             traits::vector_storage (iwork), traits::vector_size (iwork),
             info);
 
-          traits::detail::array<T> work( static_cast<int>( traits::real( workspace_query ) ) );
+          traits::detail::array<T> work( traits::detail::to_int( workspace_query ) );
 
           heevd( jobz, uplo, n, a, lda, w,
             traits::vector_storage (work), traits::vector_size (work),
