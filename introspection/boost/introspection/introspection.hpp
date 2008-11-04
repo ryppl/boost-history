@@ -510,12 +510,17 @@ struct bound_member_function
   
   const OBJECT* object_;
   FUNCTION function_;
-  
+
   return_type operator ()() const
   {
     return function_.direct_member()->call(
       object_->type()->adjust(function_.path(), const_cast<void*>(object_->address())));
   }
+
+  #define BOOST_INTROSPECTION_MAX_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
+  #define BOOST_PP_ITERATION_LIMITS (1, BOOST_INTROSPECTION_MAX_SIZE - 1)
+  #define BOOST_PP_FILENAME_1 "boost/introspection/detail/object_call_spec.hpp"
+  #include BOOST_PP_ITERATE()
 };
 
 template<typename T>

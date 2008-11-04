@@ -111,9 +111,8 @@ int test_main( int, char *[] )
   BOOST_INTROSPECTION_DEFAULT_CONSTRUCTOR(dog);
   BOOST_INTROSPECTION_CONSTRUCTOR_1(dog, const std::string&);
   BOOST_INTROSPECTION_MEMBER_VARIABLE(dog, name_);
-  //BOOST_INTROSPECTION_OVERLOADED_MEMBER_FUNCTION(dog, name, (string (dog::*)() const));
-  introspection_class<dog>::function<string (dog::*)() const>("name", &dog::name);
-  introspection_class<dog>::function<void (dog::*)(const string&)>("name", &dog::name);
+  BOOST_INTROSPECTION_OVERLOADED_MEMBER_FUNCTION(dog, name, string (dog::*)() const);
+  BOOST_INTROSPECTION_OVERLOADED_MEMBER_FUNCTION(dog, name, void (dog::*)(const string&));
   BOOST_INTROSPECTION_MEMBER_FUNCTION(dog, bark);
 
   introspection_class<dog>::instance()->dump_inheritance_tree(cout);
@@ -187,6 +186,11 @@ int test_main( int, char *[] )
     object o("dog");
     member_function<string (object::*)() const> dog_name(o, "name");
     BOOST_CHECK(droopy.name() == o[dog_name]());
+
+    member_function<void (object::*)(const string&)> set_dog_name(o, "name");
+    o[set_dog_name]("Rantanplan");
+    
+    BOOST_CHECK("Rantanplan" == o[dog_name]());
   }
   
   {
