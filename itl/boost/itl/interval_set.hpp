@@ -290,7 +290,7 @@ typename interval_set<DomainT,Interval,Compare,Alloc>::iterator
     ::joint_insert(const iterator& left_it, const iterator& right_it)
 {
     // both left and right are in the set and they are neighbours
-    BOOST_ASSERT((*left_it).excl_less(*right_it));
+    BOOST_ASSERT((*left_it).exclusive_less(*right_it));
     BOOST_ASSERT((*left_it).touches(*right_it));
 
     interval_type curItv = (*left_it);

@@ -63,7 +63,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="true"
-				AdditionalDependencies="boost_date_time-vc80-mt-gd-1_35.lib"
 				OutputFile="../../../../bin/debug/$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../lib;../../boost_1_35_0/lib"
