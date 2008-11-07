@@ -1,0 +1,50 @@
+#
+# Boost.LUID
+# Build script for tests.
+#
+# Copyright (c) 2008 Vicente J. Botet Escriba]
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+using testing ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project :
+    : requirements
+      <include>$(BOOST_ROOT)
+      <include>../../..
+      
+#      <threading>multi
+      <target-os>cygwin
+#      <threadapi>pthread
+      <variant>debug
+
+      # XXX Workaround to fix build problems under Windows.
+#      <define>BOOST_DSL_EXPR_PP
+#      <define>BOOST_DSL_EXPR_ARITY=8
+#      <define>BOOST_PARAMETER_MAX_ARITY=8
+#      <define>BOOST_MPL_LIMIT_METAFUNCTION_ARITY=8
+#      <define>EXPR
+#      <define>SOL2
+#      <define>OLD2
+#      <define>BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS=yes 
+      
+      <define>BOOST_TEST_BUILD_INFO
+#      <library>/boost/thread//boost_thread/<link>static
+      <library>/boost/test//boost_unit_test_framework/<link>static
+;
+
+#exe helpers
+#    : helpers.cpp
+#    : <library>$(BOOST_ROOT)//filesystem
+#    ;
+
+test-suite and_or_ext :
+    [ compile test_or_seq.cpp : : ]
+    [ compile test_and_seq.cpp : : ]
+    #[ compile inclusion/dsl/include_expr.cpp : : ]
+;
