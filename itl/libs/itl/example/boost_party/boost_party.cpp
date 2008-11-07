@@ -120,7 +120,7 @@ void boost_party()
 	  inplace_max<int>()
 	);
 
-    tallest_guest.add<inplace_max>(
+    tallest_guest.add(
       make_pair( 
         rightopen_interval<ptime>(
           time_from_string("2008-05-20 20:10"), 
@@ -129,7 +129,7 @@ void boost_party()
 	  inplace_max<int>()
 	);
 
-    tallest_guest.add<inplace_max>(
+    tallest_guest.add(
       make_pair( 
         rightopen_interval<ptime>(
           time_from_string("2008-05-20 22:15"), 

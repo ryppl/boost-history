@@ -328,8 +328,8 @@ public:
         If Combinator implements addition (+=) associated values will contain sums.
         If Combinator implements max, associated values will contain maximal values and so on.
     */
-    template<template<class>class Combinator>
-    SubType& add(const base_pair_type& x, const Combinator<CodomainT>& combine) 
+    template<class Combiner>
+    SubType& add(const base_pair_type& x, const Combiner& combine) 
     { 
         that()->template add_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
         return *that();
@@ -351,8 +351,8 @@ public:
         If Combinator implements addition (+=) associated values will contain sums.
         If Combinator implements max, associated values will contain maximal values and so on.
     */
-    template<template<class>class Combinator>
-    SubType& add(const value_type& x, const Combinator<CodomainT>& combine) 
+    template<class Combiner>
+    SubType& add(const value_type& x, const Combiner& combine) 
     { that()->add_(x, combine); return *that(); };
 
     /// Addition of a base value pair.
@@ -404,8 +404,8 @@ public:
         A Combinator for subtract is usually an inverse function of
         the corresponding add<Combinator>. 
     */
-    template<template<class>class Combinator>
-    SubType& subtract(const base_pair_type& x, const Combinator<CodomainT>& combine)
+    template<class Combiner>
+    SubType& subtract(const base_pair_type& x, const Combiner& combine)
     { 
 		that()->subtract_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
 		return *that();
@@ -421,8 +421,8 @@ public:
         are decremented by <tt>y</tt>. This is done via the Combinator function
         that is passed a template parameter.
     */
-    template<template<class>class Combinator>
-    void subtract(const value_type& x, const Combinator<CodomainT>& combine)
+    template<class Combiner>
+    void subtract(const value_type& x, const Combiner& combine)
 	{ that()->template subtract_(x, combine); }
 
 

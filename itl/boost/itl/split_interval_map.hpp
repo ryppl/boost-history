@@ -191,14 +191,14 @@ namespace boost{namespace itl
         bool contains_(const value_type& x)const;
 
 
-        template<template<class>class Combinator>
-        void add_(const value_type&, const Combinator<CodomainT>&);
+        template<class Combiner>
+        void add_(const value_type&, const Combiner&);
 
         void add_(const value_type& value)
         { add_(value, inplace_plus<CodomainT>()); }
 
-        template<template<class>class Combinator>
-        void subtract_(const value_type&, const Combinator<CodomainT>&);
+        template<class Combiner>
+        void subtract_(const value_type&, const Combiner&);
 
         void subtract_(const value_type& value)
         {
@@ -220,22 +220,22 @@ namespace boost{namespace itl
 
         void fill(const value_type&);
 
-        template<template<class>class Combinator>
-        void fill_gap(const value_type&, const Combinator<CodomainT>& combine);
+        template<class Combiner>
+        void fill_gap(const value_type&, const Combiner& combine);
 
-        template<template<class>class Combinator>
+        template<class Combiner>
         void add_rest(const interval_type& x_itv, const CodomainT& x_val, 
                       iterator& it, iterator& end_it,
-					  const Combinator<CodomainT>& combine);
+					  const Combiner& combine);
 
-        template<template<class>class Combinator>
+        template<class Combiner>
         void add_rear(const interval_type& x_itv, const CodomainT& x_val, 
-			          iterator& it, const Combinator<CodomainT>& combine);
+			          iterator& it, const Combiner& combine);
 
-        template<template<class>class Combinator>
+        template<class Combiner>
         void subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
 			               iterator& it, iterator& end_it, 
-						   const Combinator<CodomainT>& combine);
+						   const Combiner& combine);
 
         void insert_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it);
         void insert_rear(const interval_type& x_itv, const CodomainT& x_val, iterator& it);
@@ -303,11 +303,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
 template <typename DomainT, typename CodomainT, class Traits,
           template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    template<template<class>class Combinator>
+    template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::fill_gap(const value_type& value, const Combinator<CodomainT>& combine)
+    ::fill_gap(const value_type& value, const Combiner& combine)
 {
-    //CL static Combinator<CodomainT> combine;
+    //CL static Combiner combine;
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return;
@@ -328,11 +328,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 // add<Combinator>(pair(interval,value)):
 //-----------------------------------------------------------------------------
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    template<template<class>class Combinator>
+    template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::add_(const value_type& x, const Combinator<CodomainT>& combine)
+    ::add_(const value_type& x, const Combiner& combine)
 {
-    //CL static Combinator<CodomainT> combine;
+    //CL static Combiner combine;
     const interval_type& x_itv = x.KEY_VALUE;
 
     if(x_itv.empty()) 
@@ -413,13 +413,13 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    template<template<class>class Combinator>
+    template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_rest(const interval_type& x_itv, const CodomainT& x_val, 
                iterator& it, iterator& end_it,
-               const Combinator<CodomainT>& combine)
+               const Combiner& combine)
 {
-    //CL static Combinator<CodomainT> combine;
+    //CL static Combiner combine;
     iterator nxt_it = it; nxt_it++;
     interval_type x_rest = x_itv, gap, common, cur_itv;
 
@@ -444,12 +444,12 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    template<template<class>class Combinator>
+    template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_rear(const interval_type& x_rest, const CodomainT& x_val, iterator& it,
-	           const Combinator<CodomainT>& combine)
+	           const Combiner& combine)
 {
-    //CL static Combinator<CodomainT> combine;
+    //CL static Combiner combine;
     interval_type cur_itv = (*it).KEY_VALUE ;
     CodomainT     cur_val = (*it).CONT_VALUE ;
 
@@ -481,11 +481,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 // subtract<Combinator>(pair(interval,value)):
 //-----------------------------------------------------------------------------
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    template<template<class>class Combinator>
+    template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::subtract_(const value_type& x, const Combinator<CodomainT>& combine)
+    ::subtract_(const value_type& x, const Combiner& combine)
 {
-    //CL static Combinator<CodomainT> combine;
+    //CL static Combiner combine;
     const interval_type& x_itv = x.KEY_VALUE;
 
     if(x_itv.empty()) 
@@ -541,13 +541,13 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
 
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    template<template<class>class Combinator>
+    template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
                     iterator& it, iterator& end_it, 
-					const Combinator<CodomainT>& combine)
+					const Combiner& combine)
 {
-    //CL static Combinator<CodomainT> combine;
+    //CL static Combiner combine;
     iterator nxt_it=it; nxt_it++;
 
     while(nxt_it!=end_it)
