@@ -293,18 +293,18 @@ namespace boost{namespace itl
         {
             //content_is_neutron<key_type, data_type> neutron_dropper;
             if(!Traits::absorbs_neutrons)
-                erase_if<content_is_neutron>();
+                erase_if(content_is_neutron<value_type>());
         }
 
         /** Erase the elements in *this map to which property \c hasProperty applies. 
         Keep all the rest. */
-        template<template<class>class Predicate>
-        map& erase_if();
+        template<class Predicate>
+        map& erase_if(const Predicate&);
 
         /** Copy the elements in map \c src to which property \c hasProperty applies 
         into \c *this map. */
-        template<template<class>class Predicate>
-        map& assign_if(const map& src);
+        template<class Predicate>
+        map& assign_if(const map& src, const Predicate&);
 
         /** Represent this map as string */
         std::string as_string()const;
@@ -461,13 +461,13 @@ namespace boost{namespace itl
     }
 
     template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-        template<template<class>class Predicate>
+        template<class Predicate>
     map<KeyT,DataT,Traits,Compare,Alloc>& map<KeyT,DataT,Traits,Compare,Alloc>
-        ::erase_if()
+        ::erase_if(const Predicate& pred)
     {
         iterator it = begin();
         while(it != end())
-            if(Predicate<value_type>()(*it))
+            if(pred(*it))
                 erase(it++); 
             else ++it;
         return *this;
@@ -475,14 +475,14 @@ namespace boost{namespace itl
 
 
     template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-        template<template<class>class Predicate>
+        template<class Predicate>
     map<KeyT,DataT,Traits,Compare,Alloc>& map<KeyT,DataT,Traits,Compare,Alloc>
-        ::assign_if(const map<KeyT,DataT,Traits,Compare,Alloc>& src)
+        ::assign_if(const map<KeyT,DataT,Traits,Compare,Alloc>& src, const Predicate& pred)
     {
         clear();
         const_iterator it = src.begin();
         while(it != src.end()) {
-            if(Predicate<value_type>(*it)) 
+            if(pred(*it)) 
                 add(*it++); 
         }
         return *this;

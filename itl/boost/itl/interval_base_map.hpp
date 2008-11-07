@@ -691,7 +691,7 @@ public:
     {
         //content_is_neutron<key_type, data_type> neutron_dropper;
         if(!Traits::absorbs_neutrons)
-            erase_if<content_is_neutron>();
+            erase_if(content_is_neutron<value_type>());
     }
 
     /// Copies this map into a neutron_absorber type.
@@ -767,13 +767,14 @@ public:
     */
 //@{
     /// Remove all elements where property <tt>p</tt> holds, keep all others
-    template<template<class>class Predicate>
-    interval_base_map& erase_if(){ _map.erase_if<Predicate>(); return *this; }
+    template<class Predicate>
+    interval_base_map& erase_if(const Predicate& pred)
+	{ _map.erase_if(pred); return *this; }
 
     /// Copy all elements if property <tt>p</tt> holds
-    template<template<class>class Predicate>
-    interval_base_map& assign_if(const interval_base_map& src)
-    { _map.assign_if<Predicate>(src._map); return *this; }
+    template<class Predicate>
+    interval_base_map& assign_if(const interval_base_map& src, const Predicate& pred)
+    { _map.assign_if(src._map, pred); return *this; }
 
 //@}
 
