@@ -33,7 +33,7 @@ struct test_binary_tree_fixture {
     // (With two additional nodes: 11 inserted left of 13; 12 right of 11)
     // and in combination with http://en.wikipedia.org/wiki/Tree_traversal#Examples
     // (as tree shapes are equal [apart from the extra nodes])
-    void create_test_data_tree(boost::tree::binary_tree<T>& ret)
+    static void create_test_data_tree(boost::tree::binary_tree<T>& ret)
     {
         // For augmented trees. (Why is this necessary? Nothing here is explicit!)
         typedef typename boost::tree::binary_tree<T>::value_type value_type; 

@@ -45,13 +45,12 @@ class insert_cursor
  {
 protected:
     mutable Tree& tree;
-    mutable bool ins;
 public:        
     /**
      * For construction, we obviously need a tree and a cursor to work on (i.e., write to).
      */
     explicit insert_cursor(Tree& x, typename Tree::cursor cur)
-    : insert_cursor::cursor_adaptor_(cur), tree(x), ins(false) {}
+    : insert_cursor::cursor_adaptor_(cur), tree(x) {}
 
     // Cursor-specific
     typedef insert_cursor<typename Tree::cursor> cursor;
@@ -63,26 +62,18 @@ private:
 
     typename insert_cursor::cursor_adaptor_::reference dereference() const
     {
-        if (ins) {
+        if (this->base_reference().parity()) {
             const_cast<typename Tree::cursor&>(this->base_reference())
             = tree.insert(this->base_reference(), typename Tree::value_type());
         }
         return *this->base_reference();
-    }
-    
-    void increment()
-    {
-        ins = true;
-        ++this->base_reference();
     }
 
     void left()
     {
         this->base_reference() = 
             tree.insert(this->base_reference(), typename Tree::value_type());
-        ins = false;
     }
-
 };
 
 /** 

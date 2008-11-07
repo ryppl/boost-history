@@ -16,8 +16,6 @@
 General:
 * Remove algorithm overloads for root_tracking_cursors, as track_root is a very
   context dependent thing; so merge it into the general iterative algorithm versions.
-* Get insert_cursor to work with linear (ascending cursor) inorder algorithm
-  version.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
 * Fix recursive algorithms for use with forest.

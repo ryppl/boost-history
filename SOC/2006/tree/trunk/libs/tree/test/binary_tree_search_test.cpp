@@ -13,6 +13,7 @@
 #define BOOST_TEST_MODULE binary_tree test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
+#include <boost/test/parameterized_test.hpp>
 
 #include <list>
 #include <algorithm>
@@ -59,7 +60,7 @@ BOOST_AUTO_TEST_CASE( binary_tree_search_test )
     BOOST_CHECK_EQUAL(*c, 4);
     BOOST_CHECK_EQUAL(*d, 7);
     BOOST_CHECK_EQUAL(*c.parent(), 4);
-    //BOOST_CHECK_EQUAL(inorder::next(c, 2), d);
+    //BOOST_CHECK(next(inorder(), c, 2) == d);
     
     *c.to_parent() = 6;
     validate_test_data_tree(bt);
