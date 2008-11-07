@@ -1,0 +1,39 @@
+#  Boost.LUID library documentation Jamfile  ---------------------------------
+#
+#  Copyright Vicente Botet 2008. Use, modification and
+#  distribution is subject to the Boost Software License, Version
+#  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+#
+#  See http://www.boost.org for updates, documentation, and revision history.
+
+#import doxygen ;
+import quickbook ;
+
+#doxygen autodoc
+#   :
+#      [ glob ../../../boost/interprocess/*.hpp ]
+#      [ glob ../../../boost/interprocess/allocators/*.hpp ]
+#   :
+#        <doxygen:param>EXTRACT_ALL=NO
+#        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+#        <doxygen:param>EXTRACT_PRIVATE=NO
+#        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+#        <doxygen:param>PREDEFINED=BOOST_INTERPROCESS_DOXYGEN_INVOKED
+#        <xsl:param>"boost.doxygen.reftitle=Boost.Interprocess Reference"
+#   ;
+
+xml constant_time_size : constant_time_size.qbk ;
+
+boostbook standalone
+   :
+      constant_time_size
+   :
+        <xsl:param>boost.root=../../../../
+#        <xsl:param>boost.libraries=../../../../libs/libraries.htm
+        <xsl:param>toc.max.depth=3
+        <xsl:param>toc.section.depth=3
+        <xsl:param>chunk.first.sections=1
+        <xsl:param>chunk.section.depth=2
+#        <dependency>autodoc
+   ;

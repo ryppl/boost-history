@@ -1,0 +1,507 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Boost.StlConstantTimeSize
+    [quickbook 1.3]
+    [authors [Botet, Vicente]]
+    [copyright 2008 Vicente Botet]
+    [id stl_constant_time_size]
+    [dirname stl_constant_time_size]
+    [purpose Define a wrapper to the stl containers providing a constant time size function]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+[section Introduction]
+[warning StlConstantTimeSize is not a part of the Boost libraries.]
+
+[heading Description]
+
+[*Boost.StlConstantTimeSize] Defines a wrapper to the stl containers list and slist providing a constant time size function.
+
+
+[heading Motivation]
+
+There is a discussion that comes up about once a year. Which member function must be linear time: size() or splice().  
+
+list::size is implemented usualy like
+
+      /**  Returns the number of elements in the %list.  */
+      size_type
+      size() const
+      { return std::distance(begin(), end()); }
+
+
+The prototype of spice that interest us is
+
+      /**
+       *  @brief  Insert range from another %list.
+       *  @param  position  Iterator referencing the element to insert before.
+       *  @param  x  Source list.
+       *  @param  first  Iterator referencing the start of range in x.
+       *  @param  last  Iterator referencing the end of range in x.
+       *
+       *  Removes elements in the range [first,last) and inserts them
+       *  before @a position in constant time.
+       *
+       *  Undefined if @a position is in [first,last).
+       */
+      void
+      splice(iterator __position, list&, iterator __first, iterator __last);
+
+
+First of all it is not possible to do both in constant time, and second the C++ standard requires linear time for boths. 
+In addition the standard says that size() "should" be constant time, and "should" does not mean the same thing as "shall". 
+This is the officially recommended ISO wording for saying that an implementation is supposed to do something unless 
+there is a good reason not to. 
+
+There are advantages and liabilities to both approaches. Here follow an extract of the arguments I have found on the web.
+
+[*linear time]
+
+The implementers that chose to make *size() linear time* rather than constant, 
+appeal the following reasons.
+
+# They believe it's more important for splice() to be fast than for size(), 
+since the whole point of using a list rather than a vector is so that you 
+can perform operations like splicing.
+    * This is not completlly true, there are other features in lists taht vector do not provide at least with same complexity.
+# Making size() constant time would require one extra word, to store
+the list's size.They don't want to use that extra word, since lists
+are things that people often have a lot of. 
+    * But this extra word in in only on the list and not on the stored data.
+# The only way to make size() constant time is to have an extra variable 
+hanging around, and to increment/decrement it for every insert/erase operation. 
+This requires taking extra time to update that variable.
+    * This is right, but the updating of this variable do not suppose a lot of cycles.
+# There are people who're already using lists who wouldn't want them to slow 
+down, or grow their data member size - even a little bit - to maintain this extra 
+state. 
+    * This is a major requirement.
+# You can easily provide this in a wrapper class around the STL.
+If we put in that extra variable, though, there's no way that 
+users would be able to get back the lost performance (in splice, insert, erase,
+etc.) that it would cost.
+    * I don't think that the wrapper class will be an easy task that every developper will do. 
+# The fact that nobody has already purposes such a wrapper let think that this is 
+perhaps because nobody needs it.
+    * I needs it, or atleast I think so. I'm porting a whole product from solaris to linux.
+    The solaris stdlib has a size list implementation in constant-time. It seam to me less risky to use a size 
+    constant-time implementation than repare every non portable use of the list size function (non portable respect to performances)
+# From a design point of view, you rarely need to know the size of a list.
+    * Maybe, but I have thousans of uses of such a size function on the product to port.
+
+[*constant time]
+
+The implementers that chose to make *size() constant time* rather than linear, 
+appeal for following reasons.
+
+O(N) size() is more surprising than O(N) splice, especially in
+light of:
+
+# The standard says that size() /should/ be O(1).
+    * Surely, but if I don't use it ... what matters
+# The standard says that the splice signature in question /is/ linear
+time if &x != this.
+    * Surely, but if I can have it in constant time this even indispensable for a given application, because the concurrence wcan do better.
+# In practice every other container has an O(1) size.
+    * In practice, but not on the standard
+# In practice size is more commonly used than splice.
+    * More common do not means that in my own application I msut use a plice in linear time because size is more commonly used.
+    All this depends on the application nedds and context.
+# The size of the list elements would not change at all. Only the
+size of the std::list class would grow by one flag and one size
+variable. Hardly catastrophical (especially taking into account
+how much it speeds up size()).
+    * even in this case an application ussing a lot of lists could refuse to use std::list if there is yet another word. 
+    It is the opposit that these applications are asking for, i.e. standard slist (that has been accepted recently for the TR2)
+
+It would have been better if the committee had either:
+
+# Required size() to be O(1) for all containers. or:
+    * I thik that this is not good, because this will force the removal of the splice functions and so all the applications that use list because it provides splice will redefine its own list.    
+# Omitted size() from std::list.
+    * I thik this will have a worst consequence than the more 
+
+So what can we do today to improve the situation?
+
+# Change the requirements on size(). This would involve
+debates and blood letting of biblical proportions.
+# Omit size() from std::list, breaking untold amounts of
+existing C++ code. But the fix is easy: s = distance(l.begin(), l.end())
+# Do nothing.
+# Add a new splice signature:
+
+    void splice(iterator position, list& x,
+            iterator first, iterator last, size_type n);
+
+    Precondition: n == distance(first, last).
+    Complexity: Constant time.
+
+The user can know distance(first,last) or could compute it without changing the time complexity of the
+algorithm.
+    * This is a good compromise, between the library designers and the user.
+
+[*An hybrid approach]
+
+In a http://www.thescripts.com/forum/thread720757.html "A solution for a fast std::list::size() 
+*and* a fast std::list::splice()" - Juha Nieminen present an hybrid solution.
+"
+...
+I was thinking: What if size() was an O(n) operation only *after*
+a splice() operation has been performed (and only the first time size()
+is called after that), but O(1) otherwise?
+
+In other words, keep a size variable in the list class and update
+it as necessary, and additionally keep a flag which tells if this
+size variable is valid. As long as the flag tells that it's valid,
+list::size() can return the value of the variable. Only if the flag
+says it's invalid, then the O(n) counting will be performed, updating
+the variable, after which the flag can be set to valid.
+
+A splice() operation would set the flag to invalid in both lists.
+
+This way splice() will always be O(1), and size() will be O(n) only
+once after a splice(), but O(1) otherwise. You will get speed benefits
+in all cases except if you alternatively call splice() and size()
+repeatedly (in which case you just get the same behavior as in most
+current list implementations, so it's not like the result would be
+worse).
+"
+
+This discusion will continue forever if we don't want a take in account all the requirements. There is not a best solution, 
+there are bests solution each one on a different context. 
+The question is, do we require only one solution that can not satisfy every body or should allow the 
+user to ask for the better respect to its context.
+
+I think that it is better to have the freedom to choose the implementation more adapted to each context.
+
+* linear_time: size has linear time complexity -> splice shall be implemented in constant time in the worst case
+* constant_time: size in constant time in the worst case  -> splice has linear time complexity
+* quasy_constant_time: size in constant time in most of the cases -> splice can have constant time in most of the cases
+
+In addition this complexity parameter educate the user respect to this complexity problem.
+
+It would have been better if the committee had added a size_splice complexity parameter.
+
+    struct linear_time {};
+    struct constant_time {};
+    struct quasy_constant_time {};
+
+    template< typename T
+            , typename Allocator = std::allocator<T>
+            , typename SizeTimeComplexity = linear_time>
+    class list;
+
+The advantage to doing a wrapper are:
+
+* Possible to interface with the current stl containers (list, slist oon). Even if the wrapper would not inherit from the container, 
+the wrapper will have a container member.
+* Reduced complexity by the use of the already implemented functions.
+
+There is a major liability:
+
+* There is no way to implement a constant time splice function if the underlying implementation has a constant time size function. 
+But this is not worst than using directly the container.
+* There are some functions in the stl that change the number of elements of the container, that could be counted easyly.
+
+The advantages to coding the class directly are:
+
+* Mastering every thing 
+
+There is a major liability:
+
+* I don't see an easy way to interface with the current stl containers other than replacing them, and even in this case, 
+we will be unable to interface with libraries linked with the standard STL lists. 
+* More complex
+
+[heading Requirements]
+
+# The user must be able to choose the complexity of these antonomic functions.
+# The container wrapper class should not be a container, because otherwise this will not be safe.
+    * A container wrapper instance can be used where the container was used when it is constants
+    * A container wrapper instance can be seen as a non constant container explicitly using a kind os cast. 
+This cast will have the responsability to preserve the ['coherency] of the instance
+# A container must be convertible implicitly to a wrapper container
+# The wrapper class must provided the same funcions the corresponding container provides.
+# No extra cost is added when linear complexity is choosen by the user
+# An audit must possible on debug mode (NDEBUG defined).
+# Some extra functions that improve the performances could be added. 
+
+This concerns mainly the functions such 
+      
+      void splice(iterator __position, list&, iterator __first, iterator __last);
+
+that will take an extra distance argument
+
+    void splice(iterator __position, list&, iterator __first, iterator __last
+                , distance_type __d);
+
+[endsect]
+
+[section Design]
+
+Why not to take the best of each approach depending of the user context. 
+
+* linear_time: size has linear time complexity -> splice shall be implemented in constant time in the worst case
+* constant_time: size in constant time in the worst case  -> splice has linear time complexity
+* quasy_constant_time: size in constant time in most of the cases -> splice can have constant time in most of the cases
+
+
+[table size spice complexity
+[[function][size_constant_time][size_linear_time][size_quasy_constant_time]]
+[[size]     [O(1)][O(N)][O(1)-O(N)]]
+[[splice one][O(1)][O(1)][O(1)]]
+[[splice all][O(1)][O(1)][O(1)]]
+[[splice some][O(SOME)][O(1)][O(1)]]
+[[splice some distance][O(1)][O(1)][O(1)]]
+]
+
+This wrapper will inherit from the std::list when the underlying std::list implements list::size() in constant time. 
+In this case the wrapper can not ensure the complexity for splice some or splice some + distance.
+
+[*Stack]
+
+* list: common interface for all the configurable size time complexity lists
+* make_list: metafunction providing the list type  depending on SizeTimeComplexity parameter and 
+the complexity of the std::list::size() function
+* wrapper: wrapper used on std::ist implentations with linear time complexity 
+for the size function. It contains a std::list. This layer inherits from the coherency size layer.
+* extension: extends the std::list with the news functions in order to be compatible. 
+This extension is used either when the std::list implentation has already constant time complexity 
+for the size function, or when the user requires a linear_time and std::list has linear time 
+complexity for the size function.
+* coherency size policy: This layer manage the size counter variable and its implementation depends on 
+whether this variable must be coherent every time or only when the size function is called. 
+This library provides two implementations for thispolicy:
+    * coherent: store the counter variable and ensure that this variable is modified coherently every 
+    time the size of the list change.
+    * lazy: in addition to the counter variable it has also a coherent state. ensure that this 
+    variable is modified coherently every time the size of the list change except when the function 
+    complexity will be decreased, as for example the splice function. In this case the coherent 
+    state will be set to false. 
+    It is only when the size function is called that this flag is checked and when incoherent the real 
+    size will be required making the size function O-N) in this case.
+    * lazy_compact: There is also a compact policy that could be used instead of lazy which will 
+    compact the size and coherent variables in one variable. This will reduce the number of elements 
+    in the list because it uses one bit of the size_type to store the coherent state. Some overflow 
+    control is needed.
+
+[table make_list metafunction
+[[required/implementation][size_constant_time][size_linear_time]]
+[[size_constant_time]     [extension<std::list>][wrapper<coherent<std::list>>]]
+[[size_linear_time]       [extension<std::list>][extension<std::list>]]
+[[size_quasy_constant_time][extension<std::list>][wrapper<lazy<std::list>>]]
+]
+
+[*Conversion to non const std::list&]
+
+When the wrapper is used the direct conversion to std::list is not safe, because the modifications in the list could change the size, making it incoherent.
+A non_const class has been added to this purpose. It is conversible to a std::list& and the coherency is ensured in the destructor.
+As the C++0x do not looks for a chain of user supplied conversion the user needs to state explicitly that a conversion to a non const std::list is required.
+
+    // 3pp functions that can not be modified
+    extern void mod_list(std::list<int>&);
+    extern void mod2_list(std::list<int>&);
+    
+    typedef constant_time_size::list<int, std::allocator<int>, constant_time> my_list;
+    my_list l;
+    mod_list(l); // do not compile
+    mod_list(l.get_non_const()); // OK
+    mod_list(my_list::non_const(l));  //OK
+    
+    {
+        // non_const behaves like a coherency guard
+        my_list::non_const nc(l); 
+        mod_list(nc); // OK
+        std::cout << l.size() << std::endl; // NOK this call to size is not coherent
+        mod2_list(nc); // OK
+        // on destructor the size of l will be coherent
+    }
+
+
+
+[endsect]
+
+[section Reference]
+
+[heading class list]
+The class boost::constant_time_size::list wraps a std::list. 
+It is a standard container with configurable time complexity for the size function, and as the std::list 
+with linear access to elements, and fixed time insertion/deletion at any point in the sequence.
+
+In addition to the std::list template parameters
+
+* T
+* Allocator
+
+there is a third parameter 
+
+* SizeTime stating a requirement (quess) for the complexity of the size function (and as consequence for the splice function).
+The default value is constant_time.
+
+    namespace boost { 
+    namespace constant_time_size {
+    
+        struct linear_time {};
+        struct constant_time {};
+        struct quasy_constant_time {};
+    
+        template < 
+            class T,
+            class Allocator = std::allocator<T>,
+            class SizeTime = constant_time
+            > class list;
+    } 
+    }
+
+The class provides the same interface than the std::list, and in addition provides 
+functions that allows to see the wrapper as a std::list, and
+function constant time prototypes for functions like splice by adding a parameter distance.
+
+[heading global variable audit]
+When audit is enabled, every call to the size function will check that the size of the container and the counter are equals.
+The audit is enabled in debug mode (NDEBUG must be defined) and the boost::constant_time_size::audit variable is true.
+The initial value of this variable is true if the ATRIUM_CONSTANT_TIME_SIZE_AUDIT is defined.
+
+[heading linear_size&]
+
+      std::size_t linear_size() const;
+
+[*Effects]: Returns the number of elements in the underlying list
+
+[*Throws]: Nothing.
+
+[*Complexity]: could be linear on size().     
+
+[heading set_coherent]
+Ensure a coherency between the counter and the number of elements in the list.
+
+      void set_coherent();
+
+[*Effects]: Set the current counter with the size of the underlying list
+
+[*Postcondition]: size()==linear_size() 
+
+[*Throws]: Nothing.
+
+[*Complexity]: could be linear on size().     
+
+[heading copy constructor from a list]
+
+    explicit list(const std::list& l);
+    list(const std::list& l, std::size_t s);
+
+[*Effects]: Copy constructs a wraper with the list contents
+
+[*Postcondition]: x == *this.
+
+[*Throws]: If allocator_type's default constructor or copy constructor throws.
+
+[*Complexity]: Linear to the elements l contains. 
+
+[*Example]:
+
+    std::list<int> l;
+    list<int> w(l);
+    
+[heading copy constructor from another wrapper list]
+
+    template <class OtherSizeTime>
+    explicit list(const list<T, Allocator, OtherSizeTime>& l)
+
+[*Effects]: Copy constructs a wraper with the list contents
+
+[*Postcondition]: x == *this.
+
+[*Throws]: If allocator_type's default constructor or copy constructor throws.
+
+[*Complexity]: Linear to the elements l contains. 
+
+[heading assign a list]
+
+    list& operator=(const std::list& l);
+
+[*Effects]: makes *this a copy of l.
+
+[*Postcondition]: x == *this.
+
+[*Throws]: If allocator_type's default constructor or copy constructor throws.
+
+[*Complexity]: Linear to the elements l contains. 
+
+[heading assign another wrapper list]
+
+    template <class OtherSizeTime>
+    list& operator=(const list<T, Allocator, OtherSizeTime>& l)
+
+[*Effects]: makes *this a copy of l.
+
+[*Postcondition]: x == *this.
+
+[*Throws]: If allocator_type's default constructor or copy constructor throws.
+
+[*Complexity]: Linear to the elements l contains. 
+
+[heading swap with a list]
+
+    void swap(std::list& l);
+
+[*Effects]: Swaps the contents of *this and l. If this->allocator_type() != l.allocator_type() allocators are also swapped.
+
+[*Throws]: Nothing.
+
+[*Complexity]: Constant.     
+
+[heading swap with another wrapper list]
+
+    template <class OtherSizeTime>
+    void swap(list<T, Allocator, OtherSizeTime>& l)
+
+[*Effects]: Swaps the contents of *this and l. If this->allocator_type() != l.allocator_type() allocators are also swapped.
+
+[*Throws]: Nothing.
+
+[*Complexity]: Constant.     
+
+[heading conversions to a const list&]
+
+      operator const list&() const;
+
+[*Effects]: Returns a const reference to the underlying list.
+
+[*Throws]: Nothing.
+
+[*Complexity]: Constant.     
+
+[heading conversions to a const list*]
+
+    operator const list*() const;
+
+[*Effects]: Returns a const pointer to the underlying list.
+
+[*Throws]: Nothing.
+
+[*Complexity]: Constant.     
+
+[heading conversions to a list&]
+There is not really a conversion to a list& because it is not safe. Instead the user need to explicitly create a
+non_const which have an implicit conversion to a list&.
+
+    operator const non_const() const; 
+
+[*Effects]: Returns an object convertible to std::list& which will on destruction ensure the coherency between the counter and the underying list.
+
+[*Throws]: Nothing.
+
+[*Complexity]: Constant.     
+
+
+[endsect]
+
