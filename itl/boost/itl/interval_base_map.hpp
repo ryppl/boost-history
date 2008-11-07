@@ -329,9 +329,9 @@ public:
         If Combinator implements max, associated values will contain maximal values and so on.
     */
     template<template<class>class Combinator>
-    SubType& add(const base_pair_type& x) 
+    SubType& add(const base_pair_type& x, const Combinator<CodomainT>& combine) 
     { 
-        that()->template add_<Combinator>( value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE) ); 
+        that()->template add_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
         return *that();
     }
 
@@ -352,8 +352,8 @@ public:
         If Combinator implements max, associated values will contain maximal values and so on.
     */
     template<template<class>class Combinator>
-    SubType& add(const value_type& x) 
-    { that()->template add_<Combinator>(x); return *that(); };
+    SubType& add(const value_type& x, const Combinator<CodomainT>& combine) 
+    { that()->add_(x, combine); return *that(); };
 
     /// Addition of a base value pair.
     /** Addition of a base value pair <tt>x := pair(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
@@ -385,7 +385,7 @@ public:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
     SubType& add(const value_type& x) 
-    { that()->template add_<inplace_plus>(x); return *that(); }
+    { that()->add_(x, inplace_plus<CodomainT>()); return *that(); }
 //@}
 
 
@@ -405,8 +405,11 @@ public:
         the corresponding add<Combinator>. 
     */
     template<template<class>class Combinator>
-    void subtract(const base_pair_type& x)
-    { that()->template subtract_<Combinator>( value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE) ); }
+    SubType& subtract(const base_pair_type& x, const Combinator<CodomainT>& combine)
+    { 
+		that()->subtract_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
+		return *that();
+	}
 
     /// Subtraction of an interval value pair using a Combinator operation
     /** Subtraction of an interval value pair  <tt>x=(I,y)</tt> 
@@ -419,7 +422,8 @@ public:
         that is passed a template parameter.
     */
     template<template<class>class Combinator>
-    void subtract(const value_type& x){ that()->template subtract_<Combinator>(x); }
+    void subtract(const value_type& x, const Combinator<CodomainT>& combine)
+	{ that()->template subtract_(x, combine); }
 
 
     /// Subtraction of a base value pair.
@@ -458,9 +462,9 @@ public:
     SubType& subtract(const value_type& x)
     {
         if(Traits::emits_neutrons)
-            that()->template add_<inplace_minus>(x); 
+            that()->add_(x, inplace_minus<CodomainT>()); 
         else 
-            that()->template subtract_<inplace_minus>(x); 
+            that()->subtract_(x, inplace_minus<CodomainT>()); 
     
         return *that();
     }
@@ -963,10 +967,11 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
         {
             section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
             if(is_set<CodomainT>::value)
-                section.that()->add<inplace_star>( value_type(common_interval, sectant.CONT_VALUE) );
+                section.that()->add(value_type(common_interval, sectant.CONT_VALUE), 
+				                    inplace_star<CodomainT>());
             else
-                section.that()->add<inplace_plus>( value_type(common_interval, sectant.CONT_VALUE) );
-                //section.that()->add<inplace_identity>( value_type(common_interval, sectant.CONT_VALUE) );
+                section.that()->add(value_type(common_interval, sectant.CONT_VALUE),
+				                    inplace_plus<CodomainT>());
         }
     }
 }

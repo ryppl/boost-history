@@ -192,20 +192,20 @@ namespace boost{namespace itl
 
 
         template<template<class>class Combinator>
-        void add_(const value_type&);
+        void add_(const value_type&, const Combinator<CodomainT>&);
 
         void add_(const value_type& value)
-        { add_<inplace_plus>(value); }
+        { add_(value, inplace_plus<CodomainT>()); }
 
         template<template<class>class Combinator>
-        void subtract_(const value_type&);
+        void subtract_(const value_type&, const Combinator<CodomainT>&);
 
         void subtract_(const value_type& value)
         {
             if(Traits::emits_neutrons)
-                add_<inplace_minus>(value); 
+                add_(value, inplace_minus<CodomainT>()); 
             else
-                subtract_<inplace_minus>(value); 
+                subtract_(value, inplace_minus<CodomainT>()); 
         }
 
         void insert_(const value_type& value);
@@ -221,16 +221,21 @@ namespace boost{namespace itl
         void fill(const value_type&);
 
         template<template<class>class Combinator>
-        void fill_gap(const value_type&);
+        void fill_gap(const value_type&, const Combinator<CodomainT>& combine);
 
         template<template<class>class Combinator>
-        void add_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it);
+        void add_rest(const interval_type& x_itv, const CodomainT& x_val, 
+                      iterator& it, iterator& end_it,
+					  const Combinator<CodomainT>& combine);
 
         template<template<class>class Combinator>
-        void add_rear(const interval_type& x_itv, const CodomainT& x_val, iterator& it);
+        void add_rear(const interval_type& x_itv, const CodomainT& x_val, 
+			          iterator& it, const Combinator<CodomainT>& combine);
 
         template<template<class>class Combinator>
-        void subtract_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it);
+        void subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
+			               iterator& it, iterator& end_it, 
+						   const Combinator<CodomainT>& combine);
 
         void insert_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it);
         void insert_rear(const interval_type& x_itv, const CodomainT& x_val, iterator& it);
@@ -300,9 +305,9 @@ template <typename DomainT, typename CodomainT, class Traits,
           template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<template<class>class Combinator>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::fill_gap(const value_type& value)
+    ::fill_gap(const value_type& value, const Combinator<CodomainT>& combine)
 {
-    static Combinator<CodomainT> combine;
+    //CL static Combinator<CodomainT> combine;
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return;
@@ -325,9 +330,9 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<template<class>class Combinator>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::add_(const value_type& x)
+    ::add_(const value_type& x, const Combinator<CodomainT>& combine)
 {
-    static Combinator<CodomainT> combine;
+    //CL static Combinator<CodomainT> combine;
     const interval_type& x_itv = x.KEY_VALUE;
 
     if(x_itv.empty()) 
@@ -362,7 +367,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
         interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
-        fill_gap<Combinator>(value_type(leadGap, x_val));
+        fill_gap(value_type(leadGap, x_val), combine);
 
         // only for the first there can be a leftResid: a part of *it left of x
         interval_type leftResid;  fst_itv.left_surplus(leftResid, x_itv);
@@ -382,7 +387,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
             interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
-            fill_gap<Combinator>(value_type(endGap, x_val));
+            fill_gap(value_type(endGap, x_val), combine);
 
             // only for the last there can be a rightResid: a part of *it right of x
             interval_type rightResid;  (*fst_it).KEY_VALUE.right_surplus(rightResid, x_itv);
@@ -402,7 +407,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
             interval_type x_rest(x_itv);
             x_rest.left_subtract(fst_itv);
 
-            add_rest<Combinator>(x_rest, x_val, snd_it, end_it);
+            add_rest(x_rest, x_val, snd_it, end_it, combine);
         }
     }
 }
@@ -410,9 +415,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<template<class>class Combinator>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::add_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it)
+    ::add_rest(const interval_type& x_itv, const CodomainT& x_val, 
+               iterator& it, iterator& end_it,
+               const Combinator<CodomainT>& combine)
 {
-    static Combinator<CodomainT> combine;
+    //CL static Combinator<CodomainT> combine;
     iterator nxt_it = it; nxt_it++;
     interval_type x_rest = x_itv, gap, common, cur_itv;
 
@@ -422,7 +429,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
         x_rest.left_surplus(gap, cur_itv);
 
         combine(it->CONT_VALUE, x_val);
-        fill_gap<Combinator>(value_type(gap, x_val));
+        fill_gap(value_type(gap, x_val), combine);
 
         if(Traits::absorbs_neutrons && it->CONT_VALUE == CodomainT())
             this->_map.erase(it++);
@@ -433,21 +440,22 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
         nxt_it++;
     }
 
-    add_rear<Combinator>(x_rest, x_val, it);
+    add_rear(x_rest, x_val, it, combine);
 }
 
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<template<class>class Combinator>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::add_rear(const interval_type& x_rest, const CodomainT& x_val, iterator& it)
+    ::add_rear(const interval_type& x_rest, const CodomainT& x_val, iterator& it,
+	           const Combinator<CodomainT>& combine)
 {
-    static Combinator<CodomainT> combine;
+    //CL static Combinator<CodomainT> combine;
     interval_type cur_itv = (*it).KEY_VALUE ;
     CodomainT     cur_val = (*it).CONT_VALUE ;
 
     interval_type left_gap;
     x_rest.left_surplus(left_gap, cur_itv);
-    fill_gap<Combinator>(value_type(left_gap, x_val));
+    fill_gap(value_type(left_gap, x_val), combine);
 
     interval_type common;
     cur_itv.intersect(common, x_rest);
@@ -457,7 +465,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
     interval_type end_gap; 
     x_rest.right_surplus(end_gap, cur_itv);
-    fill_gap<Combinator>(value_type(end_gap, x_val));
+    fill_gap(value_type(end_gap, x_val), combine);
 
     // only for the last there can be a rightResid: a part of *it right of x
     interval_type right_resid;  
@@ -475,9 +483,9 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<template<class>class Combinator>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::subtract_(const value_type& x)
+    ::subtract_(const value_type& x, const Combinator<CodomainT>& combine)
 {
-    static Combinator<CodomainT> combine;
+    //CL static Combinator<CodomainT> combine;
     const interval_type& x_itv = x.KEY_VALUE;
 
     if(x_itv.empty()) 
@@ -526,7 +534,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
         fill(value_type(leftResid, fst_val));
         fill(value_type(interSec,  cmb_val));
 
-        subtract_rest<Combinator>(x_itv, x_val, snd_it, end_it);
+        subtract_rest(x_itv, x_val, snd_it, end_it, combine);
     }
 }
 
@@ -535,9 +543,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<template<class>class Combinator>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
-    ::subtract_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it)
+    ::subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
+                    iterator& it, iterator& end_it, 
+					const Combinator<CodomainT>& combine)
 {
-    static Combinator<CodomainT> combine;
+    //CL static Combinator<CodomainT> combine;
     iterator nxt_it=it; nxt_it++;
 
     while(nxt_it!=end_it)
@@ -612,7 +622,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
         interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
-        fill_gap<inplace_plus>(value_type(leadGap, x_val));
+        fill_gap(value_type(leadGap, x_val), inplace_plus<CodomainT>());
 
         // only for the first there can be a leftResid: a part of *it left of x
         interval_type leftResid;  fst_itv.left_surplus(leftResid, x_itv);
@@ -627,7 +637,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
         {
             interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
-            fill_gap<inplace_plus>(value_type(endGap, x_val));
+            fill_gap(value_type(endGap, x_val), inplace_plus<CodomainT>());
         }
         else
         {
@@ -654,7 +664,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     {
         cur_itv = (*it).KEY_VALUE ;            
         x_rest.left_surplus(gap, cur_itv);
-        fill_gap<inplace_plus>(value_type(gap, x_val));
+        fill_gap(value_type(gap, x_val), inplace_plus<CodomainT>());
         // shrink interval
         x_rest.left_subtract(cur_itv);
     }
@@ -672,14 +682,14 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
     interval_type left_gap;
     x_rest.left_surplus(left_gap, cur_itv);
-    fill_gap<inplace_plus>(value_type(left_gap, x_val));
+    fill_gap(value_type(left_gap, x_val), inplace_plus<CodomainT>());
 
     interval_type common;
     cur_itv.intersect(common, x_rest);
 
     interval_type end_gap; 
     x_rest.right_surplus(end_gap, cur_itv);
-    fill_gap<inplace_plus>(value_type(end_gap, x_val));
+    fill_gap(value_type(end_gap, x_val), inplace_plus<CodomainT>());
 }
 
 
