@@ -6,24 +6,24 @@
  * See http://www.boost.org/libs/ for library home page.
  */
 
-#ifndef BOOST_DSL_EXPR_HPP_
-#define BOOST_DSL_EXPR_HPP_
+#ifndef BOOST_PARAMETER_EXT_EXPR_HPP_
+#define BOOST_PARAMETER_EXT_EXPR_HPP_
 
-#if !defined(BOOST_DSL_EXPR_ARITY)
-#	define BOOST_DSL_EXPR_ARITY 5
+#if !defined(BOOST_PARAMETER_EXT_EXPR_ARITY)
+#	define BOOST_PARAMETER_EXT_EXPR_ARITY 5
 #endif
 
 #if !defined(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-#   define BOOST_MPL_LIMIT_METAFUNCTION_ARITY BOOST_DSL_EXPR_ARITY 
-#elif BOOST_MPL_LIMIT_METAFUNCTION_ARITY < BOOST_DSL_EXPR_ARITY
-#	define BOOST_MPL_LIMIT_METAFUNCTION_ARITY BOOST_DSL_EXPR_ARITY
+#   define BOOST_MPL_LIMIT_METAFUNCTION_ARITY BOOST_PARAMETER_EXT_EXPR_ARITY 
+#elif BOOST_MPL_LIMIT_METAFUNCTION_ARITY < BOOST_PARAMETER_EXT_EXPR_ARITY
+#	define BOOST_MPL_LIMIT_METAFUNCTION_ARITY BOOST_PARAMETER_EXT_EXPR_ARITY
 #else
 #endif
 
 #if !defined(BOOST_PARAMETER_MAX_ARITY)
-#   define BOOST_PARAMETER_MAX_ARITY BOOST_DSL_EXPR_ARITY
-#elif BOOST_PARAMETER_MAX_ARITY < BOOST_DSL_EXPR_ARITY
-#	define BOOST_PARAMETER_MAX_ARITY BOOST_DSL_EXPR_ARITY
+#   define BOOST_PARAMETER_MAX_ARITY BOOST_PARAMETER_EXT_EXPR_ARITY
+#elif BOOST_PARAMETER_MAX_ARITY < BOOST_PARAMETER_EXT_EXPR_ARITY
+#	define BOOST_PARAMETER_MAX_ARITY BOOST_PARAMETER_EXT_EXPR_ARITY
 #else
 #endif
 
@@ -38,13 +38,14 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/dsl/or_seq.hpp>
+
+#include <boost/mpl_ext/or_seq.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/type_traits/detail/type_trait_def.hpp>
 #include <boost/parameter/binding.hpp>
 
 namespace boost { 
-namespace dsl {
+namespace parameter_ext {
 
 // optional parameter
 template <typename Tag, typename Pred, typename Default> 
@@ -75,7 +76,7 @@ struct get_pred_impl {
 
 BOOST_TT_AUX_TYPE_TRAIT_DEF1(get_pred,T,typename get_pred_impl<T>::type)
 
-// get the default_t member of a dsl::vector of parameters 
+// get the default_t member of a parameter_ext::vector of parameters 
 
 template <typename Tag, typename Parameters> 
 struct default_t {
@@ -83,7 +84,7 @@ struct default_t {
 	typedef typename mpl::deref<iter>::type::default_t type;
 };
 
-// maps from dsl::optional/requered parameters to a parameters::optional/requered parameters 
+// maps from parameter_ext::optional/requered parameters to a parameters::optional/requered parameters 
 
 template <typename T> struct signature_parameter;
 
@@ -97,7 +98,7 @@ struct signature_parameter<required<Tag, Pred, Default> >{
 	typedef parameter::required<parameter::deduced<Tag>, Pred>  type;
 };
 
-// maps a vector of dsl::optional/requered parameters to a parameter::parameters of parameters::optional/requered  
+// maps a vector of parameter_ext::optional/requered parameters to a parameter::parameters of parameters::optional/requered  
 template <typename T> struct signature;
 
 // bind to the signature the Args provided
@@ -106,7 +107,7 @@ template <typename Signature, typename Args>
 struct args;
 
 /* Used for the detection of unmatched template args in a
- * dsl instantiations.
+ * parameter_ext instantiations.
  */
 
 struct unmatched_arg;
@@ -120,7 +121,7 @@ struct unmatched_signature {
     typedef parameter::parameters<
     	parameter::optional<
     		parameter::deduced<detail::unmatched_arg>, 
-    		mpl::not_< or_seq<preds> >    		
+    		mpl::not_< boost::mpl_ext::or_seq<preds> >    		
     	>
     >  type;
 };
@@ -134,10 +135,10 @@ struct unmatched_args;
 }
 
 // include variadic templates using the preprocesor
-#include <boost/dsl/expr_pp.hpp>
+#include <boost/parameter_ext/detail/expr_pp.hpp>
 
 namespace boost { 
-namespace dsl {
+namespace parameter_ext {
 
 template <typename Tag, typename Parameters, typename Args> 
 class expr {
@@ -170,7 +171,10 @@ public:
     };
 };
 
-#if 1
+#if 0
+
+
+
 
 template <BOOST_PP_ENUM_PARAMS(n,typename Param)>
 struct parameters<BOOST_PP_ENUM_PARAMS(n,Param), void_> {
@@ -182,7 +186,7 @@ private:
 	
 //    typedef typename detail::signature<Parameters>::type signature;
     typedef parameter::parameters<
-    BOOST_PP_ENUM(n,BOOST_DSL_EXPR_signature_parameter,~)
+    BOOST_PP_ENUM(n,BOOST_PARAMETER_EXT_EXPR_signature_parameter,~)
     >                                      signature;	
 //    typedef typename detail::args<signature, Args>::type args;
 	typedef typename signature::template bind<BOOST_PP_ENUM_PARAMS(n,Arg)>::type args;
@@ -195,7 +199,7 @@ private:
     typedef parameter::parameters<
     	parameter::optional<
     		parameter::deduced<detail::unmatched_arg>, 
-    		mpl::not_< or_seq<preds> >    		
+    		mpl::not_< mpl_ext::or_seq<preds> >    		
     	>
     >  unmatched_signature;
     
@@ -223,9 +227,9 @@ public:
 
 #endif
 
-} // dsl
+} // parameter_ext
 } // boost
-#endif // BOOST_DSL_EXPR_HPP_
+#endif // BOOST_PARAMETER_EXT_EXPR_HPP_
 
 
 
