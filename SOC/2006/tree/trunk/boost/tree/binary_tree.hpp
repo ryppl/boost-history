@@ -15,6 +15,7 @@
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
+#include <boost/tree/insert_cursor.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
@@ -160,7 +161,7 @@ class binary_tree {
      */     
     const_cursor croot() const
     {
-        return const_cursor(/*cursor(*/&m_header, 0/*)*/);
+        return const_cursor(&m_header, 0);
     }
     
     /**
@@ -242,7 +243,12 @@ class binary_tree {
     template <class InputCursor>
     cursor insert(cursor pos, InputCursor subtree)
     {
-        //boost::tree::copy(boost::tree::preorder(), subtree, pos, forward_traversal_tag());
+//    // Optimise insert_cursor before using this
+//    return cursor(boost::tree::copy(boost::tree::preorder()
+//                , subtree 
+//                , boost::tree::tree_inserter(*this, pos)
+//                , forward_traversal_tag()));
+
         subtree.to_begin();
         insert(pos, *subtree);
         if (!subtree.empty())

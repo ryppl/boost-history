@@ -56,6 +56,11 @@ public:
     typedef insert_cursor<typename Tree::cursor> cursor;
     typedef insert_cursor<typename Tree::const_cursor> const_cursor;
 
+    operator typename Tree::cursor()
+    {
+        return this->base_reference();
+    }
+    
 private:
     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;

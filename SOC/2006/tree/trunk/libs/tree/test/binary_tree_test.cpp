@@ -15,12 +15,12 @@
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
-BOOST_FIXTURE_TEST_SUITE(graph_algorithms_test, test_binary_tree_with_list_fixture<int>)
+BOOST_FIXTURE_TEST_SUITE(binary_tree_test, test_binary_tree_with_list_fixture<int>)
 
 using namespace boost::tree;
 
 template <class Tree>
-void create_binary_tree(Tree& mytree)
+void create_test_dataset2_tree(Tree& mytree)
 {
     typename Tree::cursor c, c1, c2, c3, c4;
     
@@ -33,9 +33,6 @@ void create_binary_tree(Tree& mytree)
     
     BOOST_CHECK(!c.empty());
     
-    BOOST_CHECK(c1.m_node->m_parent != 0);
-    BOOST_CHECK(c1.m_node->m_parent != c1.m_node);
-    BOOST_CHECK(c1.m_node->m_parent == c.m_node);
     BOOST_CHECK(c1.parent() == c);
     
     c2 = mytree.insert(c1, 2);
@@ -68,8 +65,6 @@ void create_binary_tree(Tree& mytree)
     --c4;
     BOOST_CHECK_EQUAL(*c4, 2);
     BOOST_CHECK(c4.parent() == c1);
-    c = boost::tree::lower_bound(mytree.root(), 2, std::less<int>());
-    BOOST_CHECK_EQUAL(*c, 2);
     BOOST_CHECK(c4.empty());
 
     BOOST_CHECK_EQUAL(*c1, 14);
@@ -82,7 +77,28 @@ void create_binary_tree(Tree& mytree)
 }
 
 template <class Tree>
-void inorder_erase_test_data_tree(Tree& mytree)
+void validate_test_dataset2_tree(Tree const& mytree)
+{
+    typename Tree::const_cursor c = mytree.root();
+
+    BOOST_CHECK(!c.empty());
+    
+    c.to_begin();
+    BOOST_CHECK(c.parent() == mytree.root());
+    BOOST_CHECK_EQUAL(*c, 14);
+    
+    c.to_begin();
+    BOOST_CHECK(c.parent() == mytree.root().begin());
+    BOOST_CHECK_EQUAL(*c, 2);
+    
+    ++c;
+    BOOST_CHECK(c.parent() == mytree.root().begin());
+    BOOST_CHECK_EQUAL(*c.begin(), 4);
+    
+}
+
+template <class Tree>
+void inorder_erase_test_dataset1_tree(Tree& mytree)
 {
     typename Tree::cursor c = mytree.root().end().end().begin();
     BOOST_CHECK_EQUAL(*c, 14);
@@ -109,119 +125,96 @@ void inorder_erase_test_data_tree(Tree& mytree)
     BOOST_CHECK_EQUAL(*c, 13);
 }
 
-template <class Tree>
-void destroy_binary_tree(Tree& mytree)
+BOOST_AUTO_TEST_CASE( clear_test )
 {
-    mytree.clear();    
-    BOOST_CHECK(mytree.empty());
-}
-
-template <class Tree>
-void validate_binary_tree(Tree const& mytree)
-{
-    typename Tree::const_cursor c, c1, c2, c3, c4;
-
-    c = mytree.root();
-    BOOST_CHECK(!c.empty());
-    
-    c1 = c.begin();
-    BOOST_CHECK(c1.parent() == c);
-    BOOST_CHECK_EQUAL(*c1, 14);
-    
-    c2 = c1.begin();
-    BOOST_CHECK(c2.parent() == c1);
-    BOOST_CHECK_EQUAL(*c2, 2);
-    
-    c3 = c1.end();
-    BOOST_CHECK(c3.parent() == c1);
-    BOOST_CHECK_EQUAL(*c3.begin(), 4);
-    
-}
-
-template <class Tree>
-void test_swap_binary_trees(Tree& one, Tree& two)
-{
-    using std::swap;
-    swap(one, two);
+    bt.clear();    
+    BOOST_CHECK(bt.empty());
 }
 
 BOOST_AUTO_TEST_CASE( constructors_test )
 {
-    typedef binary_tree<int> tree_t;
-    tree_t bt;
-    BOOST_CHECK(bt.root().empty());
+    binary_tree<int> bt0;
+    BOOST_CHECK(bt0.root().empty());
     //BOOST_CHECK_EQUAL(0, 1);
     
     // test with allocator 
 }
 
-BOOST_AUTO_TEST_CASE( binary_tree_test )
+BOOST_AUTO_TEST_CASE( swap_binary_tree_test )
 {
+    using std::swap;
     typedef binary_tree<int> tree_t;
     tree_t tree1, tree2;
     
     // Filling with test data.
-    create_binary_tree(tree1);
-    validate_binary_tree(tree1);
+    create_test_dataset2_tree(tree1);
+    validate_test_dataset2_tree(tree1);
 
     // Swap tree1 with empty tree2
-    test_swap_binary_trees(tree1, tree2);
-    validate_binary_tree(tree2);
+    swap(tree1, tree2);
+    validate_test_dataset2_tree(tree2);
     BOOST_CHECK(tree1.empty());
-
+    
     // Swap back
-    test_swap_binary_trees(tree1, tree2);
-    validate_binary_tree(tree1);
+    swap(tree1, tree2);
+    validate_test_dataset2_tree(tree1);
     BOOST_CHECK(tree2.empty());
     
-    // Fill empty tree2 with different data
-    //create_test_data_tree(tree2);
-    validate_test_data_tree(bt);
-    BOOST_CHECK(tree1 != bt);
-    
-    // Swap
-    test_swap_binary_trees(tree1, bt);
-    validate_test_data_tree(tree1);
-    validate_binary_tree(bt);
-    
-    destroy_binary_tree(bt);
+    // Swap with tree containing different data
+    swap(tree1, bt);
+    validate_test_dataset1_tree(tree1);
+    validate_test_dataset2_tree(bt);
+}
 
-    // Insert subtree
-    tree_t::cursor c = bt.insert(bt.root(), tree1.root());    
-    BOOST_CHECK_EQUAL(*c, 8);
-    validate_test_data_tree(bt);
-    
-    // Copy constructor
-    tree_t tree3(bt);
-    validate_test_data_tree(tree3);
-    BOOST_CHECK(bt == tree3);
-    
-    // Change one value in test_tree3
-    c = tree3.root().begin().end().begin().begin();
+BOOST_AUTO_TEST_CASE( insert_subtree_test )
+{
+    binary_tree<int> bt0;
+    binary_tree<int>::cursor c = bt0.insert(bt0.root(), bt.root());    
+    validate_test_dataset1_tree(bt0);
+}
+
+BOOST_AUTO_TEST_CASE( copy_constructor_test )
+{
+    binary_tree<int> bt0(bt);
+    validate_test_dataset1_tree(bt0);
+}
+
+BOOST_AUTO_TEST_CASE( comparison_operator_test )
+{
+    BOOST_CHECK(bt == bt2);
+}
+
+BOOST_AUTO_TEST_CASE( splice_test )
+{
+    binary_tree<int> bt0;
+    bt0.splice(bt0.root(), bt);
+
+    BOOST_CHECK(bt.empty());    
+    validate_test_dataset1_tree(bt0);
+}
+
+BOOST_AUTO_TEST_CASE( binary_tree_test )
+{
+    binary_tree<int> bt0(bt);
+
+    // Change one value in bt0
+    binary_tree<int>::cursor c = bt0.root().begin().end().begin().begin();
     int tmp = *c;
     *c = tmp + 1;
-    BOOST_CHECK(bt != tree3);
+    BOOST_CHECK(bt != bt0);
 
     // Change it back
-    c = tree3.root().begin().end().begin().begin();
+    c = bt0.root().begin().end().begin().begin();
     *c = tmp;
-    BOOST_CHECK(bt == tree3);
+    BOOST_CHECK(bt == bt0);
     
-    c = tree3.inorder_first();
+    c = bt0.inorder_first();
     BOOST_CHECK_EQUAL(*c, 1);
-    c = tree3.root();
+    c = bt0.root();
     //inorder::back(c);
     //BOOST_CHECK_EQUAL(*c, 14);    
-    
-    destroy_binary_tree(bt);
-    bt.splice(bt.root(), tree3);
 
-    BOOST_CHECK(tree3.empty());    
-    validate_test_data_tree(bt);
-    c = bt.inorder_first();
-    BOOST_CHECK_EQUAL(*c, 1);
-
-    //inorder_erase_test_data_tree(bt);
+    //inorder_erase_test_dataset1_tree(bt);
 }
 
 BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )

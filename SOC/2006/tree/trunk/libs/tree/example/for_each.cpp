@@ -25,7 +25,7 @@ int main() {
     binary_tree<int> bt;
     
     // Fill it with data...
-    create_test_data_tree(bt);
+    create_test_dataset1_tree(bt);
 
     std::cout << "Preorder:";
     preorder::for_each(bt.root(), to_cout);

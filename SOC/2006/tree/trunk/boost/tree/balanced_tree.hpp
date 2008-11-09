@@ -53,7 +53,8 @@ struct augmented_type {
     value_type data;
     metadata_type meta;
     
-    augmented_type(value_type const& d, metadata_type const& m = metadata_type())
+    augmented_type(value_type const& d = value_type()
+                 , metadata_type const& m = metadata_type())
     : data(d), meta(m) {}
     
     augmented_type(augmented_type const& x)

@@ -17,8 +17,8 @@ template <class T = int>
 struct test_binary_tree_fixture {
     test_binary_tree_fixture()
     {
-        create_test_data_tree(bt);
-        create_test_data_tree(bt2);
+        create_test_dataset1_tree(bt);
+        create_test_dataset1_tree(bt2);
         
         typename boost::tree::binary_tree<T>::cursor d = bt2.root();
 
@@ -33,7 +33,7 @@ struct test_binary_tree_fixture {
     // (With two additional nodes: 11 inserted left of 13; 12 right of 11)
     // and in combination with http://en.wikipedia.org/wiki/Tree_traversal#Examples
     // (as tree shapes are equal [apart from the extra nodes])
-    static void create_test_data_tree(boost::tree::binary_tree<T>& ret)
+    static void create_test_dataset1_tree(boost::tree::binary_tree<T>& ret)
     {
         // For augmented trees. (Why is this necessary? Nothing here is explicit!)
         typedef typename boost::tree::binary_tree<T>::value_type value_type; 
@@ -49,6 +49,22 @@ struct test_binary_tree_fixture {
         cur = ret.insert(cur, value_type(13));
         cur = ret.insert(cur, value_type(11));
         cur = ret.insert(++cur, value_type(12));
+    }
+    
+    static void validate_test_dataset1_tree(boost::tree::binary_tree<T>& ret)
+    {
+        BOOST_CHECK_EQUAL(*ret.root().begin(), 8);
+        BOOST_CHECK_EQUAL(*ret.root().begin().begin(), 3);    
+        BOOST_CHECK_EQUAL(*ret.root().begin().begin().begin(), 1);  //Leaf
+        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin(), 6);        
+        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin().begin(), 4); //Leaf
+        BOOST_CHECK_EQUAL(*ret.root().begin().end().end().begin(), 7); //Leaf
+    
+        BOOST_CHECK_EQUAL(*ret.root().end().begin(), 10);
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin(), 14);
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 13);
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 11); 
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 12); //Leaf
     }
     
     boost::tree::binary_tree<T> bt, bt2;
@@ -67,23 +83,6 @@ struct test_binary_tree_with_list_fixture
     back_insert_iter_list_int i;
     oc_bi_lst_type o;
 };
-
-template <class Tree>
-void validate_test_data_tree(Tree const& ret)
-{
-    BOOST_CHECK_EQUAL(*ret.root().begin(), 8);
-    BOOST_CHECK_EQUAL(*ret.root().begin().begin(), 3);    
-    BOOST_CHECK_EQUAL(*ret.root().begin().begin().begin(), 1);            //Leaf
-    BOOST_CHECK_EQUAL(*ret.root().begin().end().begin(), 6);        
-    BOOST_CHECK_EQUAL(*ret.root().begin().end().begin().begin(), 4);    //Leaf
-    BOOST_CHECK_EQUAL(*ret.root().begin().end().end().begin(), 7);        //Leaf
-
-    BOOST_CHECK_EQUAL(*ret.root().end().begin(), 10);
-    BOOST_CHECK_EQUAL(*ret.root().end().end().begin(), 14);
-    BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 13);
-    BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 11); 
-    BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 12);    //Leaf
-}
 
 template <class Tree>
 void validate_corresponding_forest_tree(Tree const& t)

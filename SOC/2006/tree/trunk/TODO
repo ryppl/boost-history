@@ -37,8 +37,7 @@ General:
 * Look into SOC 2008 projects dsearch (already using concepts from Boost.Tree) and 
   spacial_indexing (with tree classes of its own)
 * Can't we really do without inorder_erase()?
-* Possibly rename *_recursive algorithms to *_with_references or so, and implement iterative versions.
-* Check if Cursor(balanced_tree_iterator) really has no is_root member()!
+* Check if Cursor(balanced_tree_iterator) really has no is_root member()! (BOOST_STATIC_ASSERT?)
 * Revisit binary_tree (inorder::)iterator functions
 * Possibly sort out some more concepts, like trees with "downwards" or "upwards" insertion
   (insert()/insert_above()), trees with values only at the leaves (makes sense in combination
@@ -93,7 +92,7 @@ General:
   pp. 348--351). Those should be especially useful for automated testing of "real" (binary, 
   forest) trees.
 * have `erase()` operations return cursor/iterator instead of void (as in new STD)
-* modify parity/parent specs according to newsgroup thread, but members add to binary_tree cursor!
+* modify parity/parent specs according to newsgroup thread, but add members to binary_tree cursor!
 * We might need still more binary_tree members for more efficient functions operating on
   ranges...
 * `insert()` and `erase()` semantics need reworking. For instance, Proposal 23.X.4.1.4 §2 
@@ -191,5 +190,6 @@ Further applications:
 * Implement associative containers and priority_queue specialization using searcher
 * Implement (binary) heap
 * Is it possible to implement BGL's traversal algorithms using tree semantics?
+* Trie
 
 [endsect]

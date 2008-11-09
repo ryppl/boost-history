@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE( forest_tree_test )
     BOOST_CHECK_EQUAL(*c, 6);
     
     tree_type forest;
-    //create_test_data_tree(forest);
+    //create_test_dataset1_tree(forest);
     c = forest.insert(forest.root(), 8);
     BOOST_CHECK(c == forest.root().begin());
     BOOST_CHECK_EQUAL(*c, 8);

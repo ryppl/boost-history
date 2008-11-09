@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE( graph_test )
     typedef tree_type::cursor cursor;
     
     //tree_type test_tree;
-    //create_test_data_tree(test_tree);
+    //create_test_dataset1_tree(test_tree);
     
     std::list<int> test_list;
     typedef std::back_insert_iterator< std::list<int> > bi_list_int_type;
