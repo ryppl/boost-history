@@ -122,8 +122,10 @@ Op for_each(Order, Cursor s, Op f)
  * 
  * op must not change its argument.
  */
+//[ transform
 template <class Order, class InCursor, class OutCursor, class Op>
 OutCursor transform (Order, InCursor s, OutCursor t, Op op)
+//]
 {
     return transform(Order(), s, t, op
                   , typename cursor_vertical_traversal<InCursor>::type());
@@ -150,8 +152,10 @@ OutCursor copy(Order, InCursor s, OutCursor t, Traversal tr)
  * @param t An output cursor.
  * @result  A cursor past t's *order end, after the copying operation.
  */
+//[ copy
 template <class Order, class InCursor, class OutCursor>
 OutCursor copy (Order, InCursor s, OutCursor t)
+//]
 {
     return copy(Order(), s, t
               , typename cursor_vertical_traversal<InCursor>::type());

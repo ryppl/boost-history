@@ -5,7 +5,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/tree/binary_tree.hpp>
-//[ foreach_include_algorithm
+//[ for_each_include_algorithm
 #include <boost/tree/algorithm.hpp>
 //]
 
@@ -15,7 +15,7 @@
 
 using namespace boost::tree;
 
-//[ for_each
+//[ for_each_example
 void to_cout(int i) {
     std::cout << ' ' << i;
     return;
@@ -25,16 +25,16 @@ int main() {
     binary_tree<int> bt;
     
     // Fill it with data...
-    create_test_dataset1_tree(bt);
+    test_binary_tree_fixture<int>::create_test_dataset1_tree(bt);
 
     std::cout << "Preorder:";
-    preorder::for_each(bt.root(), to_cout);
+    for_each(preorder(), bt.root(), to_cout);
     
     std::cout << std::endl << "Inorder:";
-    inorder::for_each(bt.root(), to_cout);
+    for_each(inorder(), bt.root(), to_cout);
     
     std::cout << std::endl << "Postorder:";
-    postorder::for_each(bt.root(), to_cout);
+    for_each(postorder(), bt.root(), to_cout);
 
     return 0;
 }

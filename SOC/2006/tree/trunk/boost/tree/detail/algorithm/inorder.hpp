@@ -124,10 +124,8 @@ void for_each_recursive(inorder, MultiwayCursor s, Op& f)
  * inorder. @p f must not modify the order of the sequence.
  * If @p f has a return value it is ignored.
  */
- //[ inorder_for_each
 template <class MultiwayCursor, class Op>
 Op for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
-//]
 {
     MultiwayCursor t = s.end();
 
@@ -190,8 +188,10 @@ OutCursor transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_t
  *                @a val, or @x if every element in the subtree is less than 
  *                 @a val.
  */
+//[ lower_bound
 template <class MultiwayCursor, class T>
 MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
+//]
 {
     MultiwayCursor y = x;
     while (!x.empty()) {
@@ -213,8 +213,10 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
  *                @a val, or @x if every element in the subtree is less than 
  *                 @a val.
  */
+//[ lower_bound_cmp
 template <class MultiwayCursor, class T, class Cmp>
 MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
+//]
 {
     MultiwayCursor y = x;
     while (!x.empty()) {
@@ -235,8 +237,10 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
  *                @a val, or @x if no element in the subtree is greater than 
  *                 @a val.
  */
+//[ upper_bound
 template <class MultiwayCursor, class T>
 MultiwayCursor upper_bound(MultiwayCursor x, T const& val)
+//]
 {
     MultiwayCursor y = x;
     while (!x.empty()) {
@@ -258,8 +262,10 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val)
  *                @a val, or @x if no element in the subtree is greater than
  *                 @a val.
  */
+//[ upper_bound_cmp
 template <class MultiwayCursor, class T, class Cmp>
 MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
+//]
 {
     MultiwayCursor y = x;
     while (!x.empty()) {

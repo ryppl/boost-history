@@ -149,10 +149,8 @@ void for_each_recursive(preorder, Cursor s, Op& f)
  * preorder. @p f must not modify the order of the sequence.
  * If @p f has a return value it is ignored.
  */
-//[ preorder_for_each
 template <class Cursor, class Op>
 Op for_each(preorder, Cursor s, Op f, forward_traversal_tag)
-//]
 {
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
