@@ -750,3 +750,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_disjoint_4_bicremental
     BOOST_CHECK_EQUAL( is_disjoint(join_A,  sep_B),   true );
     BOOST_CHECK_EQUAL( is_disjoint(join_A,  join_B),  true );
 }
+

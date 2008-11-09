@@ -376,7 +376,7 @@ bool is_element_equal
                            Traits,Interval,Compare,Alloc>& right
 )
 {
-    return Map::is_element_equal(left, right);
+    return Interval_Set::is_element_equal(left, right);
 }
 
 
@@ -498,6 +498,23 @@ typename IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::interval_
 enclosure(const IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& object)
 {
     typedef IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc> IntervalMapT;
+    typedef typename IntervalMapT::interval_type interval_type;
+    return 
+        object.empty() ? neutron<interval_type>::value()
+        : (object.begin()->KEY_VALUE)
+            .span(object.rbegin()->KEY_VALUE);
+}
+
+template 
+<
+    class SubType, class DomainT, class CodomainT,
+    class Traits, template<class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
+>
+typename interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::interval_type 
+enclosure(const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& object)
+{
+    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc> IntervalMapT;
     typedef typename IntervalMapT::interval_type interval_type;
     return 
         object.empty() ? neutron<interval_type>::value()

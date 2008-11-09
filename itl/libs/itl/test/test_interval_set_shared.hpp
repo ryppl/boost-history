@@ -413,6 +413,7 @@ void interval_set_operators_4_bicremental_types()
     BOOST_CHECK_EQUAL( all.contains(left), true );
     BOOST_CHECK_EQUAL( all.contains(right), true );
     BOOST_CHECK_EQUAL( all.contains(complement), true );
+
     BOOST_CHECK_EQUAL( left.contains(section), true );
     BOOST_CHECK_EQUAL( right.contains(section), true );
 

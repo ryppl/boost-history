@@ -8,6 +8,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #ifndef __itl_interval_set_algo_JOFA_081005_H__
 #define __itl_interval_set_algo_JOFA_081005_H__
 
+#include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/notate.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 
@@ -60,34 +61,55 @@ struct discrete_interval_container
 };
 
 
-namespace Set
+namespace Interval_Set
 {
 
-template<class LeftIntervalSetT, class RightIntervalSetT>
-class interval_set_sequence_tracker
+template<class LeftT, class RightT>
+class interval_sequence_tracker
 {
 public:
-    typedef typename LeftIntervalSetT::const_iterator  LeftIterT;
-    typedef typename RightIntervalSetT::const_iterator RightIterT;
+    typedef typename LeftT::const_iterator  LeftIterT;
+    typedef typename RightT::const_iterator RightIterT;
 
-    interval_set_sequence_tracker(const LeftIntervalSetT& left, 
-                              const RightIntervalSetT& right)
-        : _left(left), _right(right), _result(false)
-    {}
+    interval_sequence_tracker(const LeftT&      left,
+		                      const RightT&     right,
+		                      const LeftIterT&  left_end,
+		                      const RightIterT& right_end)
+        : _left(left), _right(right),
+	      _left_end(left_end), _right_end(right_end), 
+		  _compare_codomain(false), _result(result_is_equal)
+    {
+		_scope = enclosure(_left).intersect(enclosure(_right));
+	}
 
-    enum{nextboth, nextleft, nextright, leftaligned, stop};
+    enum{firstboth, nextboth, nextleft, nextright, leftaligned, stop};
+	enum{result_is_less = -1, result_is_equal = 0, result_is_greater = 1};
 
-    bool result()const{ return _result; }
+	void set_compare_codomain(bool truth=true)
+	{ _compare_codomain = truth; }
+
+	bool compare_codomain()const { return _compare_codomain; }
+
+    int result()const{ return _result; }
+
+	bool covalues_are_equal(LeftIterT& left, RightIterT& right)
+	{
+		if(LeftT::codomain_value(left) < RightT::codomain_value(right))
+			_result = result_is_less;
+		if(RightT::codomain_value(right) < LeftT::codomain_value(left))
+			_result = result_is_greater;
+		return _result == result_is_equal;
+	}
 
     int proceed(LeftIterT& left, RightIterT& right)
     {
-        if((*left).upper_equal(*right))
+        if(LeftT::key_value(left).upper_equal(RightT::key_value(right)))
         { 
             ++left; 
             ++right;    
             return nextboth;
         }
-        else if((*left).upper_less(*right))
+        else if(LeftT::key_value(left).upper_less(RightT::key_value(right)))
         {
             _prior_left = left;
             ++left;
@@ -98,69 +120,145 @@ public:
             _prior_right = right;
             ++right;
             return nextright;
-        }        
+        }
     }
 
     int next_both(LeftIterT& left, RightIterT& right)
     {
-        if(left == _left.end())
+        if(left == _left_end)
         {
-            _result = (right == _right.end()) ? true : false;
+            _result = (right == _right_end) ? result_is_equal : result_is_less;
             return stop;
         }
 
-        // left != _left.end()
-        if(right == _right.end())
-            return stop; //_result = false;
+        // left != _left_end
+        if(right == _right_end)
+		{
+			_result = result_is_greater;
+            return stop;
+		}
 
-        // The starting intervals have to begin equally
-        if(!(*left).lower_equal(*right))
-            return stop; //_result = false;
+		// Two matching intervals for left and right
+		// if they both start at or before the _scope, they are
+		// assumed to be leftaligned.
+		if(!(    LeftT::key_value(left).lower_less_equal(_scope) 
+			  && RightT::key_value(right).lower_less_equal(_scope)))
+		{
+			// The starting intervals have to begin equally
+			if(LeftT::key_value(left).lower_less(RightT::key_value(right)))
+			{   // left: same A... = sameA...
+				// right:same  B.. = sameB...
+				_result = result_is_less;
+				return stop;
+			}
+
+			if(LeftT::key_value(right).lower_less(RightT::key_value(left)))
+			{   // left: same  B.. = sameB...
+				// right:same A... = sameA...
+				_result = result_is_greater;
+				return stop;
+			}
+
+			if(compare_codomain() && covalues_are_equal(left, right))
+				return stop;
+		}
+
+		// If left and right intervals reach to or beyond the _scope's end
+		// the result is equality
+		if(   _scope.upper_less_equal(LeftT::key_value(left))
+		   && _scope.upper_less_equal(RightT::key_value(right)))
+			return stop;
 
         return leftaligned;
     }
 
     int next_left(LeftIterT& left, RightIterT& right)
     {
-        if(left == _left.end())
+        if(left == _left_end)
+		{   // left: same
+			// right:sameA...
+			_result = result_is_less;
             return stop;
-        if(!(*_prior_left).touches(*left))
-            return stop; //_result = false;
+		}
+
+        if(!LeftT::key_value(_prior_left).touches(LeftT::key_value(left)))
+		{   // left: same B = sameB...
+			// right:sameA  = sameA...
+			_result = result_is_greater;
+            return stop;
+		}
+
+        if(compare_codomain() && covalues_are_equal(left, right))
+			return stop;
+
+		// If left and right intervals reach to or beyond the _scope's end
+		// the result is equality
+		if(   _scope.upper_less_equal(LeftT::key_value(left))
+		   && _scope.upper_less_equal(RightT::key_value(right)))
+			return stop;
 
         return proceed(left, right);
     }
 
     int next_right(LeftIterT& left, RightIterT& right)
     {
-        if(right == _right.end())
+        if(right == _right_end)
+		{   // left: sameA...
+			// right:same
+			_result = result_is_greater;
             return stop;
-        if(!(*_prior_right).touches(*right))
-            return stop; //_result = false;
+		}
+
+        if(!RightT::key_value(_prior_right).touches(RightT::key_value(right)))
+		{
+			// left: sameA... = sameA...
+			// right:same B.. = sameB...
+			_result = result_is_less;
+            return stop;
+		}
+
+        if(compare_codomain() && covalues_are_equal(left, right))
+			return stop;
+
+		// If left and right intervals reach to or beyond the _scope's end
+		// the result is equality
+		if(   _scope.upper_less_equal(LeftT::key_value(left))
+		   && _scope.upper_less_equal(RightT::key_value(right)))
+			return stop;
 
         return proceed(left, right);
     }
 
 private:
-    const LeftIntervalSetT&  _left;
-    const RightIntervalSetT& _right;
-    LeftIterT                _prior_left;
-    RightIterT               _prior_right;
-    bool                     _result;
+	const LeftT&  _left;
+	const RightT& _right;
+    LeftIterT     _left_end;
+    RightIterT    _right_end;
+	bool          _compare_codomain;
+    LeftIterT     _prior_left;
+    RightIterT    _prior_right;
+    int           _result;
+	typename LeftT::interval_type _scope;
 };
 
+/* Lexicographical comparison on ranges of two interval container */
 template<class LeftT, class RightT>
-bool is_element_equal(const LeftT& left, const RightT& right)
+int lexicographical_compare_3way
+(
+	const LeftT& left,   //sub
+	const RightT& right, //super
+	typename LeftT::const_iterator  left_begin,   
+	typename LeftT::const_iterator  left_end,
+	typename RightT::const_iterator right_begin, 
+	typename RightT::const_iterator right_end
+)
 {
-    if(left.empty())
-        return right.empty();
-    else if(right.empty())
-        return false;
+    typedef interval_sequence_tracker<LeftT,RightT> Step;
+    Step step(left, right, left_end, right_end);
+	step.set_compare_codomain(is_map<LeftT>::value && is_map<RightT>::value);
 
-    typedef interval_set_sequence_tracker<LeftT,RightT> Step;
-    Step step(left, right);
-
-    typename LeftT::const_iterator  left_  = left.begin();
-    typename RightT::const_iterator right_ = right.begin();
+    typename LeftT::const_iterator  left_  = left_begin;
+    typename RightT::const_iterator right_ = right_begin;
 
     int state = Step::nextboth;
     while(state != Step::stop)
@@ -175,7 +273,29 @@ bool is_element_equal(const LeftT& left, const RightT& right)
     return step.result();
 }
 
-} //Set
+template<class LeftT, class RightT>
+bool is_element_equal(const LeftT& left, const RightT& right)
+{
+	return lexicographical_compare_3way
+		    (
+				left, right, 
+				left.begin(), left.end(), 
+				right.begin(), right.end()
+			) == 0;
+}
+
+template<class LeftT, class RightT>
+bool is_element_less(const LeftT& left, const RightT& right)
+{
+	return lexicographical_compare_3way
+		    (
+				left, right, 
+				left.begin(), left.end(), 
+				right.begin(), right.end()
+			) == -1;
+}
+
+} // namespace Interval_Set
     
 }} // namespace itl boost
 

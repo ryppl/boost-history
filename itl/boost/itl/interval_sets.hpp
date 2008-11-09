@@ -290,7 +290,7 @@ bool is_element_equal
     const IntervalSet              <DomainT,Interval,Compare,Alloc>& operand
 )
 {
-    return Set::is_element_equal(object, operand);
+	return Interval_Set::is_element_equal(object, operand);
 }
 
 
@@ -453,6 +453,21 @@ typename IntervalSet<DomainT,Interval,Compare,Alloc>::interval_type
 enclosure(const IntervalSet<DomainT,Interval,Compare,Alloc>& object)
 {
     typedef IntervalSet<DomainT,Interval,Compare,Alloc> IntervalSetT;
+    typedef typename IntervalSetT::interval_type interval_type;
+    return 
+        object.empty() ? neutron<interval_type>::value()
+        : (*object.begin()).span(*object.rbegin());
+}
+
+template 
+<
+    class SubType, class DomainT, template<class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
+>
+typename interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::interval_type 
+enclosure(const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& object)
+{
+    typedef interval_base_set<SubType,DomainT,Interval,Compare,Alloc> IntervalSetT;
     typedef typename IntervalSetT::interval_type interval_type;
     return 
         object.empty() ? neutron<interval_type>::value()

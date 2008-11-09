@@ -907,9 +907,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect_4_bicremental_types, T, bicremental_types)
 {         
     typedef int U;
-    typedef interval_map<T,U>        IntervalMapT;
+    typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
-    typedef interval_set<T>            IntervalSetT;
+    typedef interval_set<T>         IntervalSetT;
     typedef split_interval_set<T>    SplitIntervalSetT;
     U u1 = make<U>(1);
     U u2 = make<U>(2);

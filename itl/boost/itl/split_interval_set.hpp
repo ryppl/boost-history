@@ -199,26 +199,6 @@ namespace boost{namespace itl
         void subtract_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
     } ;
 
-    /*
-    template <typename DomainT, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
-    bool split_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& x)const
-    {
-        if(x.empty()) return true;
-
-        typename ImplSetT::const_iterator fst_it = this->_set.lower_bound(x);
-        typename ImplSetT::const_iterator end_it = this->_set.upper_bound(x);
-
-        interval_set<DomainT,Interval,Compare,Alloc> matchSet;
-        for(typename ImplSetT::const_iterator it=fst_it; it!=end_it; it++) 
-            matchSet.add(*it);
-
-        interval_set<DomainT,Interval,Compare,Alloc> x_asSet; 
-        x_asSet.add(x);
-        return x_asSet.contained_in(matchSet);
-    }
-    */
-
-
     template <typename DomainT, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
     bool split_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
     {

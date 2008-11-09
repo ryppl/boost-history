@@ -251,6 +251,7 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const valu
 //-----------------------------------------------------------------------------
 // equality of elements
 //-----------------------------------------------------------------------------
+/*CL
 template 
 <
     class DomainT, template<class>class Interval, 
@@ -271,6 +272,7 @@ is_element_equal
     joined_type joined_rhs(rhs);
     return Set::lexicographical_equal(joined_lhs, joined_rhs);
 }
+*/
 
 template <class Type>
 struct is_set<itl::separate_interval_set<Type> >

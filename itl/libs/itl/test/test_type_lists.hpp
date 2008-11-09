@@ -17,6 +17,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 #include <boost/itl/interval.hpp>
 
+
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
     ,short, int, long
@@ -25,6 +26,11 @@ typedef ::boost::mpl::list<
     ,boost::posix_time::ptime
 //    ,boost::gregorian::date
 > bicremental_types;
+
+//DBG short list for debugging
+//typedef ::boost::mpl::list<
+//    int
+//> bicremental_types;
 
 typedef ::boost::mpl::list<
     float, double

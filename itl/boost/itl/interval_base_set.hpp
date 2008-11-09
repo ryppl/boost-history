@@ -417,7 +417,7 @@ public:
 
     template<typename IteratorT>
     static codomain_type codomain_value(IteratorT& value_)
-    { return (*value_).empty()? codomain_type() : (*value_).first(); }
+    { return (*value_).empty()? codomain_type() : (*value_).lower(); }
 
     template<typename LeftIterT, typename RightIterT>
     static bool key_less(LeftIterT& lhs_, RightIterT& rhs_) 

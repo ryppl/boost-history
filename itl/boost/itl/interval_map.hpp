@@ -13,6 +13,7 @@ class interval_map
 #define __interval_map_h_JOFA_080705__
 
 #include <boost/assert.hpp>
+#include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/interval_base_map.hpp>
 #include <boost/itl/interval_maps.hpp>
@@ -413,7 +414,6 @@ typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::fill_gap_join_left(const value_type& value, const Combiner& combine)
 {
-    //CL static Combiner combine;
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return this->_map.end();
@@ -442,7 +442,6 @@ typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::fill_gap_join_both(const value_type& value, const Combiner& combine)
 {
-    //CL static Combiner combine;
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return this->_map.end();
@@ -473,8 +472,6 @@ template <typename DomainT, typename CodomainT, class Traits, template<class>cla
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_(const value_type& x, const Combiner& combine)
 {
-    //CL static Combiner combine;
-
     const interval_type& x_itv = x.KEY_VALUE;
     if(x_itv.empty()) 
         return;
@@ -574,8 +571,6 @@ template <typename DomainT, typename CodomainT, class Traits, template<class>cla
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it, const Combiner& combine)
 {
-    //CL static Combiner combine;
-
     iterator nxt_it = it; nxt_it++;
     interval_type x_rest = x_itv, left_gap, common, cur_itv;
 
@@ -609,8 +604,6 @@ template <typename DomainT, typename CodomainT, class Traits, template<class>cla
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_rear(const interval_type& x_rest, const CodomainT& x_val, iterator& it, const Combiner& combine)
 {
-    //CL static Combiner combine;
-
     interval_type cur_itv = (*it).KEY_VALUE ;
     CodomainT     cur_val = (*it).CONT_VALUE ;
 
@@ -653,7 +646,6 @@ template <typename DomainT, typename CodomainT, class Traits, template<class>cla
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::subtract_(const value_type& x, const Combiner& combine)
 {
-    //CL static Combiner combine;
     const interval_type& x_itv = x.KEY_VALUE;
 
     if(x_itv.empty()) 
@@ -723,7 +715,6 @@ template <typename DomainT, typename CodomainT, class Traits, template<class>cla
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::subtract_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it, const Combiner& combine)
 {
-    //CL static Combiner combine;
     iterator nxt_it=it; nxt_it++;
 
     while(nxt_it!=end_it)
@@ -1024,6 +1015,10 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
 template <class KeyT, class DataT, class Traits>
 struct is_set<itl::interval_map<KeyT,DataT,Traits> >
+{ enum{value = true}; };
+
+template <class KeyT, class DataT, class Traits>
+struct is_map<itl::interval_map<KeyT,DataT,Traits> >
 { enum{value = true}; };
 
 template <class KeyT, class DataT, class Traits>

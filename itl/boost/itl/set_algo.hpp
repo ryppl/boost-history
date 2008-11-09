@@ -79,9 +79,6 @@ namespace boost{namespace itl
             return true;
         }
 
-        //JODO where to put common algorithms? namespace Collector, Ordered, Sorted, SortedObject
-
-
         template<class ObjectT>
         ObjectT& add(ObjectT& result, const ObjectT& x2)
         {
