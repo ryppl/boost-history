@@ -17,3 +17,8 @@ project dataflow/test
 
 build-project generic ;
 build-project blueprint ;
+
+if $(guigl_present)
+{
+    build-project vivid ;
+}

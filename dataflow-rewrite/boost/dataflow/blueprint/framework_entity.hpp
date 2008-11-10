@@ -11,27 +11,28 @@
 
 
 #include <boost/dataflow/blueprint/castable_polymorphic_object.hpp>
-
+#include <boost/dataflow/blueprint/framework_object_fwd.hpp>
 
 namespace boost { namespace dataflow { namespace blueprint {
 
 template<typename BlueprintFramework>
 class framework_entity : public castable_polymorphic_object
 {
+    typedef framework_object<BlueprintFramework> framework_object_type;
 public:
     struct dataflow_traits
     {
         typedef BlueprintFramework framework;
     };
     
-    template<typename Entity>
-    framework_entity(const Entity &entity)
-        : castable_polymorphic_object(entity)
+    framework_entity(framework_object<BlueprintFramework> &fo, const std::type_info &ti)
+        : castable_polymorphic_object(ti)
+        , m_framework_object(fo)
     {}
-    virtual ~framework_entity()
-    {}
+    framework_object_type &framework_object()
+    {   return m_framework_object; }
 private:
-    virtual const void *get_ptr() const=0;
+    framework_object_type &m_framework_object;
 };
 
 } } } // namespace boost::dataflow::blueprint

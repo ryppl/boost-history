@@ -22,12 +22,16 @@ namespace df = boost::dataflow;
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    my_blueprint_port_producer producer;
-    my_blueprint_port_consumer consumer;
+    my_blueprint_framework_object fo;
+
+    my_blueprint_port_producer producer(fo);
+    my_blueprint_port_consumer consumer(fo);
     df::blueprint::operation_adapter<connect> blueprint_connect;
-    
+
     BOOST_CHECK(( df::are_port_binary_operable<my_blueprint_port_producer, my_blueprint_port_consumer, df::blueprint::operation>::value ));
     BOOST_CHECK(( df::are_port_binary_operable<my_blueprint_port_consumer, my_blueprint_port_producer, df::blueprint::operation>::value ));
+
+    // will not succeed without the operation being added to the framework object.
     BOOST_CHECK(( !df::port_binary_operation_will_succeed<df::blueprint::operation>(producer, consumer, blueprint_connect) ));
     BOOST_CHECK(( !df::port_binary_operation_will_succeed<df::blueprint::operation>(consumer, producer, blueprint_connect) ));
 }

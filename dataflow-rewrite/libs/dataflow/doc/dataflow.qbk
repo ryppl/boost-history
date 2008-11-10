@@ -1,6 +1,6 @@
-[article Dataflow
+[article Boost.Dataflow
     [quickbook 1.4]
-    [version 0.9.1]
+    [version 1.0]
     [authors [Rajko, Stjepan]]
     [copyright 2007 2008 Stjepan Rajko]
     [purpose Generic dataflow lirary providing support for data producers,
@@ -12,100 +12,109 @@
     ]
 ]
 
-[template concepts[] [link dataflow.support.concepts concepts]]
-[template Tag[] [link dataflow.support.concepts.general.tag [^Tag]]]
-[template Traits[] [link dataflow.support.concepts.general.entity [^Traits]]]
-[template Side[] [link dataflow.support.concepts.general.side [^Side]]]
-[template Entity[] [link dataflow.support.concepts.general.entity [^Entity]]]
-[template PortCategory[] [link dataflow.support.concepts.port_related.portcategory [^PortCategory]]]
-[template Mechanism[] [link dataflow.support.concepts.port_related.mechanism [^Mechanism]]]
-[template PortTraits[] [link dataflow.support.concepts.port_related.port [^PortTraits]]]
-[template Port[] [link dataflow.support.concepts.port_related.port [^Port]]]
-[template ProducerPort[] [link dataflow.support.concepts.port_related.port [^ProducerPort]]]
-[template ConsumerPort[] [link dataflow.support.concepts.port_related.port [^ConsumerPort]]]
-[template ComplementedPort[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPort]]]
-[template ComplementedPortTraits[] [link dataflow.support.concepts.port_related.complementedport [^ComplementedPortTraits]]]
-[template PortVector[] [link dataflow.support.concepts.component_related.portvector [^PortVector]]]
-[template PortVectorTraits[] [link dataflow.support.concepts.component_related.portvector [^PortVectorTraits]]]
-[template VectorPort[] [link dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
-[template VectorPortTraits[] [link dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
-[template KeyedPort[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
-[template KeyedPortTraits[] [link dataflow.support.concepts.port_related.keyedport [^KeyedPortTraits]]]
-[template DynamicPort[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPort]]]
-[template DynamicPortTraits[] [link dataflow.support.concepts.port_related.dynamicport [^DynamicPortTraits]]]
+[template concepts[] [link boost_dataflow.generic.concepts concepts]]
 
-[template ProxyPortTraits[] [link dataflow.support.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
-[template ProxyPort[] [link dataflow.support.concepts.port_related.proxyport [^ProxyPort]]]
+[template Framework[] [link boost_dataflow.generic.concepts.general.framework [^Framework]]]
+[template FrameworkEntityTraits[] [link boost_dataflow.generic.concepts.general.entity [^FrameworkEntityTraits]]]
+[template FrameworkEntity[] [link boost_dataflow.generic.concepts.general.entity [^FrameworkEntity]]]
 
-[template BinaryOperable[] [link dataflow.support.concepts.port_related.binaryoperable [^BinaryOperable]]]
-[template Connectable[] [link dataflow.support.concepts.port_related.binaryoperable [^Connectable]]]
-[template OnlyConnectable[] [link dataflow.support.concepts.port_related.binaryoperable [^OnlyConnectable]]]
-[template Disconnectable[] [link dataflow.support.concepts.port_related.binaryoperable [^Disconnectable]]]
-[template Extractable[] [link dataflow.support.concepts.port_related.binaryoperable [^Extractable]]]
+[template true[] Boolean MPL Metafunction that evaulates to true]
 
-[template UnaryOperable[] [link dataflow.support.concepts.port_related.unaryoperable [^UnaryOperable]]]
-[template AllDisconnectable[] [link dataflow.support.concepts.port_related.unaryoperable [^AllDisconnectable]]]
+[/
+[template Side[] [link boost_dataflow.support.concepts.general.side [^Side]]]
+[template PortCategory[] [link boost_dataflow.support.concepts.port_related.portcategory [^PortCategory]]]
+[template Mechanism[] [link boost_dataflow.support.concepts.port_related.mechanism [^Mechanism]]]
+[template PortTraits[] [link boost_dataflow.support.concepts.port_related.port [^PortTraits]]]
+[template Port[] [link boost_dataflow.support.concepts.port_related.port [^Port]]]
+[template ProducerPort[] [link boost_dataflow.support.concepts.port_related.port [^ProducerPort]]]
+[template ConsumerPort[] [link boost_dataflow.support.concepts.port_related.port [^ConsumerPort]]]
+[template ComplementedPort[] [link boost_dataflow.support.concepts.port_related.complementedport [^ComplementedPort]]]
+[template ComplementedPortTraits[] [link boost_dataflow.support.concepts.port_related.complementedport [^ComplementedPortTraits]]]
+[template PortVector[] [link boost_dataflow.support.concepts.component_related.portvector [^PortVector]]]
+[template PortVectorTraits[] [link boost_dataflow.support.concepts.component_related.portvector [^PortVectorTraits]]]
+[template VectorPort[] [link boost_dataflow.support.concepts.port_related.vectorport [^VectorPort]]]
+[template VectorPortTraits[] [link boost_dataflow.support.concepts.port_related.vectorport [^VectorPortTraits]]]
+[template KeyedPort[] [link boost_dataflow.support.concepts.port_related.keyedport [^KeyedPort]]]
+[template KeyedPortTraits[] [link boost_dataflow.support.concepts.port_related.keyedport [^KeyedPortTraits]]]
+[template DynamicPort[] [link boost_dataflow.support.concepts.port_related.dynamicport [^DynamicPort]]]
+[template DynamicPortTraits[] [link boost_dataflow.support.concepts.port_related.dynamicport [^DynamicPortTraits]]]
 
-[template ComponentTraits[] [link dataflow.support.concepts.component_related.component [^ComponentTraits]]]
-[template Component[] [link dataflow.support.concepts.component_related.component [^Component]]]
+[template ProxyPortTraits[] [link boost_dataflow.support.concepts.port_related.proxyporttraits [^ProxyPortTraits]]]
+[template ProxyPort[] [link boost_dataflow.support.concepts.port_related.proxyport [^ProxyPort]]]
 
-[template ComponentOperable[] [link dataflow.support.concepts.component_related.componentoperable [^ComponentOperable]]]
-[template Invocable[] [link dataflow.support.concepts.component_related.componentoperable [^Invocable]]]
+[template BinaryOperable[] [link boost_dataflow.support.concepts.port_related.binaryoperable [^BinaryOperable]]]
+[template Connectable[] [link boost_dataflow.support.concepts.port_related.binaryoperable [^Connectable]]]
+[template OnlyConnectable[] [link boost_dataflow.support.concepts.port_related.binaryoperable [^OnlyConnectable]]]
+[template Disconnectable[] [link boost_dataflow.support.concepts.port_related.binaryoperable [^Disconnectable]]]
+[template Extractable[] [link boost_dataflow.support.concepts.port_related.binaryoperable [^Extractable]]]
 
-[template SignalTraits[] [link dataflow.signals.concepts.signaltraits [^SignalTraits]]]
-[template SignalPortTraits[] [link dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
-[template SignalProducer[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
-[template SignalConsumer[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
-[template SignalFilterComponent[] [link dataflow.signals.concepts.signalfiltercomponent [^SignalFilterComponent]]]
-[template SignalConsumerComponent[] [link dataflow.signals.concepts.signalconsumercomponent [^SignalConsumerComponent]]]
+[template UnaryOperable[] [link boost_dataflow.support.concepts.port_related.unaryoperable [^UnaryOperable]]]
+[template AllDisconnectable[] [link boost_dataflow.support.concepts.port_related.unaryoperable [^AllDisconnectable]]]
 
-[template PhoenixProducer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
-[template PhoenixConsumer[] [link dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
+[template ComponentTraits[] [link boost_dataflow.support.concepts.component_related.component [^ComponentTraits]]]
+[template Component[] [link boost_dataflow.support.concepts.component_related.component [^Component]]]
 
-[template vtk_example[text] [link dataflow.support.examples.new_layer [text]]]
-[template gui_example[text] [link dataflow.blueprint.examples.fltk_gui [text]]]
-[template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
+[template ComponentOperable[] [link boost_dataflow.support.concepts.component_related.componentoperable [^ComponentOperable]]]
+[template Invocable[] [link boost_dataflow.support.concepts.component_related.componentoperable [^Invocable]]]
 
-[template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
-[template DataflowBlueprint[] [link dataflow.blueprint Dataflow.Blueprint]]
-[template DataflowPhoenix[] [link dataflow.phoenix Dataflow.Phoenix]]
+[template SignalTraits[] [link boost_dataflow.signals.concepts.signaltraits [^SignalTraits]]]
+[template SignalPortTraits[] [link boost_dataflow.signals.concepts.signalporttraits [^SignalPortTraits]]]
+[template SignalProducer[] [link boost_dataflow.signals.concepts.signalproducer [^SignalProducer]]]
+[template SignalConsumer[] [link boost_dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
+[template SignalFilterComponent[] [link boost_dataflow.signals.concepts.signalfiltercomponent [^SignalFilterComponent]]]
+[template SignalConsumerComponent[] [link boost_dataflow.signals.concepts.signalconsumercomponent [^SignalConsumerComponent]]]
 
-[template producer_group[] [link dataflow.components.producer_group producer_group]]
-[template consumer_group[] [link dataflow.components.consumer_group consumer_group]]
-[template consumer_map[] [link dataflow.components.consumer_map consumer_map]]
+[template PhoenixProducer[] [link boost_dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
+[template PhoenixConsumer[] [link boost_dataflow.support.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
-[template signals_quickstart[] [link dataflow.signals.introduction.quick_start quick start]]
-[template signals_freefunctions[] [link dataflow.signals.connections free functions and operators]]
-[template connect[] [link dataflow.signals.connections.connect connect]]
-[template invoke[] [link dataflow.signals.connections.invoke invoke]]
-[template disconnect_all[] [link dataflow.signals.connections.disconnect_all disconnect_all]]
-[template signals_tutorial[] [link dataflow.signals.introduction.tutorial tutorial]]
-[template components[] [link dataflow.signals.components components]]
-[template component[] [link dataflow.signals.component component]]
-[template operators[] [link dataflow.signals.connections.operators operators]]
+[template vtk_example[text] [link boost_dataflow.support.examples.new_layer [text]]]
+[template gui_example[text] [link boost_dataflow.blueprint.examples.fltk_gui [text]]]
+[template how_to_use[text] [link boost_dataflow.introduction.how_to_use [text]]]
+]
 
-[template slot_selector[] [link dataflow.signals.connections.classes.slot_selector slot_selector]]
+[template BoostDataflow[] [link dataflow Boost.Dataflow]]
+[template DataflowGeneric[] [link boost_dataflow.generic Dataflow.Generic]]
+[/
+[template DataflowSignals[] [link boost_dataflow.signals Dataflow.Signals]]
+[template DataflowBlueprint[] [link boost_dataflow.blueprint Dataflow.Blueprint]]
+[template DataflowPhoenix[] [link boost_dataflow.phoenix Dataflow.Phoenix]]
 
-[template consumer[] [link dataflow.signals.components.generic.consumer consumer]]
-[template filter[] [link dataflow.signals.components.generic.filter filter]]
-[template applicator[] [link dataflow.signals.components.generic.applicator applicator]]
-[template conditional[] [link dataflow.signals.components.generic.conditional conditional]]
-[template instantiator[] [link dataflow.signals.components.generic.instantiator instantiator]]
-[template modifier[] [link dataflow.signals.components.generic.modifier modifier]]
-[template storage[] [link dataflow.signals.components.properties.storage storage]]
-[template counter[] [link dataflow.signals.components.properties.counter counter]]
-[template junction[] [link dataflow.signals.components.flow.junction junction]]
-[template multiplexer[] [link dataflow.signals.components.flow.multiplexer multiplexer]]
-[template mutex[] [link dataflow.signals.components.threading.mutex mutex]]
-[template condition[] [link dataflow.signals.components.threading.condition condition]]
-[template timed_generator[] [link dataflow.signals.components.threading.timed_generator timed_generator]]
-[template function[] [link dataflow.signals.components.adapters.function function]]
-[template socket_sender[] [link dataflow.signals.components.network.socket_sender socket_sender]]
-[template socket_receiver[] [link dataflow.signals.components.network.socket_receiver socket_receiver]]
-[template chain[] [link dataflow.signals.components.topologies.chain chain]]
+[template producer_group[] [link boost_dataflow.components.producer_group producer_group]]
+[template consumer_group[] [link boost_dataflow.components.consumer_group consumer_group]]
+[template consumer_map[] [link boost_dataflow.components.consumer_map consumer_map]]
 
-[template bind_mem_fn[] [link dataflow.utility.bind_mem_fn bind_mem_fn]]
-[template bind_mem_fn_overload[] [link dataflow.utility.bind_mem_fn_overload bind_mem_fn_overload]]
+[template signals_quickstart[] [link boost_dataflow.signals.introduction.quick_start quick start]]
+[template signals_freefunctions[] [link boost_dataflow.signals.connections free functions and operators]]
+[template connect[] [link boost_dataflow.signals.connections.connect connect]]
+[template invoke[] [link boost_dataflow.signals.connections.invoke invoke]]
+[template disconnect_all[] [link boost_dataflow.signals.connections.disconnect_all disconnect_all]]
+[template signals_tutorial[] [link boost_dataflow.signals.introduction.tutorial tutorial]]
+[template components[] [link boost_dataflow.signals.components components]]
+[template component[] [link boost_dataflow.signals.component component]]
+[template operators[] [link boost_dataflow.signals.connections.operators operators]]
+
+[template slot_selector[] [link boost_dataflow.signals.connections.classes.slot_selector slot_selector]]
+
+[template consumer[] [link boost_dataflow.signals.components.generic.consumer consumer]]
+[template filter[] [link boost_dataflow.signals.components.generic.filter filter]]
+[template applicator[] [link boost_dataflow.signals.components.generic.applicator applicator]]
+[template conditional[] [link boost_dataflow.signals.components.generic.conditional conditional]]
+[template instantiator[] [link boost_dataflow.signals.components.generic.instantiator instantiator]]
+[template modifier[] [link boost_dataflow.signals.components.generic.modifier modifier]]
+[template storage[] [link boost_dataflow.signals.components.properties.storage storage]]
+[template counter[] [link boost_dataflow.signals.components.properties.counter counter]]
+[template junction[] [link boost_dataflow.signals.components.flow.junction junction]]
+[template multiplexer[] [link boost_dataflow.signals.components.flow.multiplexer multiplexer]]
+[template mutex[] [link boost_dataflow.signals.components.threading.mutex mutex]]
+[template condition[] [link boost_dataflow.signals.components.threading.condition condition]]
+[template timed_generator[] [link boost_dataflow.signals.components.threading.timed_generator timed_generator]]
+[template function[] [link boost_dataflow.signals.components.adapters.function function]]
+[template socket_sender[] [link boost_dataflow.signals.components.network.socket_sender socket_sender]]
+[template socket_receiver[] [link boost_dataflow.signals.components.network.socket_receiver socket_receiver]]
+[template chain[] [link boost_dataflow.signals.components.topologies.chain chain]]
+
+[template bind_mem_fn[] [link boost_dataflow.utility.bind_mem_fn bind_mem_fn]]
+[template bind_mem_fn_overload[] [link boost_dataflow.utility.bind_mem_fn_overload bind_mem_fn_overload]]
 
 [template boost_signal[] [@http://www.boost.org/doc/html/boost/signal.html [^boost::signal]]]
 [template boost_function[] [@http://www.boost.org/doc/html/boost/function.html [^boost::function]]]
@@ -135,17 +144,21 @@
 [template vtkActor[] [@http://www.vtk.org/doc/nightly/html/classvtkActor.html ['vtkActor]]]
 [template vtkRenderer[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkRenderer]]]
 
-[template future_work[] [link dataflow.future future_work]]
-[template blueprint[] [link dataflow.future.blueprint blueprint]]
-[template FuturePin[] [link dataflow.future.pin pin]]
-[template rationale[] [link dataflow.development.rationale rationale]]
+[template future_work[] [link boost_dataflow.future future_work]]
+[template blueprint[] [link boost_dataflow.future.blueprint blueprint]]
+[template FuturePin[] [link boost_dataflow.future.pin pin]]
+[template rationale[] [link boost_dataflow.development.rationale rationale]]
+/]
 
-[template is_tag[] [classref boost::dataflow::is_tag is_tag]]
+[template is_framework[] [classref boost::dataflow::is_framework is_framework]]
+[template framework_entity[] [classref boost::dataflow::framework_entity framework_entity]]
+[template traits_of[] [classref boost::dataflow::traits_of traits_of]]
+[template default_framework[] [classref boost::dataflow::default_framework default_framework]]
+[template default_framework_of[] [classref boost::dataflow::default_framework_of default_framework_of]]
+[template register_traits[] [classref boost::dataflow::register_traits register_traits]]
 [template is_mechanism[] [classref boost::dataflow::is_mechanism is_mechanism]]
 [template is_port_category[] [classref boost::dataflow::is_port_category is_port_category]]
 [template port_traits[] [classref boost::dataflow::port_traits [^port_traits]]]
-[template traits_of[] [classref boost::dataflow::traits_of traits_of]]
-[template register_traits[] [classref boost::dataflow::register_traits register_traits]]
 [template is_entity[] [classref boost::dataflow::is_entity [^is_entity]]]
 [template is_port[] [classref boost::dataflow::is_port [^is_port]]]
 [template port[] [classref boost::dataflow::port [^port]]]
@@ -153,12 +166,11 @@
 [template complemented_port_traits[] [classref boost::dataflow::complemented_port_traits [^complemented_port_traits]]]
 [template is_complemented_port[] [classref boost::dataflow::is_complemented_port [^is_complemented_port]]]
 
-[template DATAFLOW_TRAITS[] [macroref DATAFLOW_TRAITS DATAFLOW_TRAITS]]
-[template DATAFLOW_TRAITS_ENABLE_IF[] [macroref DATAFLOW_TRAITS_ENABLE_IF DATAFLOW_TRAITS_ENABLE_IF]]
-[template default_tag[] [classref boost::dataflow::default_tag [^default_tag]]]
+[template BOOST_DATAFLOW_TRAITS[] [macroref BOOST_DATAFLOW_TRAITS BOOST_DATAFLOW_TRAITS]]
+[template BOOST_DATAFLOW_TRAITS_ENABLE_IF[] [macroref BOOST_DATAFLOW_TRAITS_ENABLE_IF BOOST_DATAFLOW_TRAITS_ENABLE_IF]]
+[template framework_base[] [classref boost::dataflow::framework_base [^framework_base]]]
 
-[template true[] Boolean MPL Metafunction that evaulates to true]
-
+[/
 [import ../test/test_port.cpp]
 
 [import ../test/signals/test_connect.cpp]
@@ -196,7 +208,7 @@
 [import ../example/signals/modifier_example.cpp]
 [import ../example/threadpool/threadpool_component_example.cpp]
 
-[import ../../../boost/dataflow/vtk/support.hpp]
+[import ../../../boost/dataflow/vtk/generic.hpp]
 [import ../example/VTK/Cone.cxx]
 
 [import ../example/blueprint/blueprint_example.cpp]
@@ -205,9 +217,11 @@
 [import ../example/glv_gui/glvgui_graph.cpp]
 
 [include introduction/introduction.qbk]
+]
 
-[include support/support.qbk]
+[include generic/generic.qbk]
 
+[/
 [/[include components.qbk]]
 
 [include signals.qbk]
@@ -233,7 +247,7 @@ community, and what has been done to incorporate this feedback.
    and suggested making the examples more connected to the introductory
    examples and including visual diagrams for the dataflow networks.]
 
-* I have added an [link dataflow.introduction.examples.new_layer example]
+* I have added an [link boost_dataflow.introduction.examples.new_layer example]
   of [VTK] support, but the library is not quite ready for [BoostIostreams].
 * As per Doug's suggestion, I have made the documentation focus on the
   unfused components, and made the unfused components default in the
@@ -246,12 +260,12 @@ community, and what has been done to incorporate this feedback.
    and other suggestions on improving the documentation.]
 
 * A master table has been added to the [components] page.
-* I have started a [link dataflow.introduction.download Downloading and Linking]
+* I have started a [link boost_dataflow.introduction.download Downloading and Linking]
   instruction page.
 
 [* Tobias Schwinger indicated that the library could be used for pulling rather than pushing data.]
 
-* [link dataflow.signals.introduction.examples.pull An example] which illustrates this has been addded.
+* [link boost_dataflow.signals.introduction.examples.pull An example] which illustrates this has been addded.
 
 [* James Jones suggested that a ||-like operator could be used for branching, and >> for chaining.]
 
@@ -311,16 +325,17 @@ to get a start on this concept.
   project, and for his support, suggestions and feedback.
 * Thanks to all the members of the Boost community who have expressed an
   interest in this library and contributed
-  [link dataflow.discussion valuable feedback], in particular Douglas Gregor and
+  [link boost_dataflow.discussion valuable feedback], in particular Douglas Gregor and
   Jake Voytko for in-depth reviews of the library.
 * Thanks to Tobias Schwinger for a most valuable discussion on various
   dataflow-oriented approaches and ideas.
 
 [endsect]
+]
 
 [section:license License]
 
-Copyright 2007 Stjepan Rajko.
+Copyright 2007, 2008 Stjepan Rajko.
 Distributed under the Boost Software License, Version 1.0. (See
 accompanying file LICENSE_1_0.txt or copy at
 [@http://www.boost.org/LICENSE_1_0.txt])

@@ -13,8 +13,9 @@
 #include <boost/dataflow/generic/port_binary_operation.hpp>
 #include <boost/dataflow/generic/framework_entity/traits_of.hpp>
 #include <boost/dataflow/blueprint/framework.hpp>
+#include <boost/dataflow/blueprint/framework_object.hpp>
 #include <boost/dataflow/blueprint/operation.hpp>
-
+#include <boost/assert.hpp>
 
 namespace boost { namespace dataflow { namespace extension {
 
@@ -27,11 +28,14 @@ struct port_binary_operation_impl<Traits1, Traits2, blueprint::operation,
         >
     >::type>
 {
-    typedef void result_type;
+    typedef boost::any result_type;
 
     template<typename Port1, typename Port2>
-    void operator()(Port1 &port1, Port2 &port2, const blueprint::operation &operation)
-    {}
+    boost::any operator()(Port1 &port1, Port2 &port2, const blueprint::operation &operation)
+    {
+        BOOST_ASSERT(port1.framework_object() == port2.framework_object());
+        return port1.framework_object().port_binary_operation(port1, port2, operation);
+    }
 };
 
 template<typename Traits1, typename Traits2>
@@ -48,7 +52,8 @@ struct port_binary_operation_will_succeed_impl<Traits1, Traits2, blueprint::oper
     template<typename Port1, typename Port2>
     bool operator()(Port1 &port1, Port2 &port2, const blueprint::operation &operation)
     {
-        return false;
+        BOOST_ASSERT(port1.framework_object() == port2.framework_object());
+        return port1.framework_object().port_binary_operation_will_succeed(port1, port2, operation);
     }
 };
 

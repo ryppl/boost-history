@@ -17,9 +17,8 @@
 
 namespace df = boost::dataflow;
 
-
 BOOST_AUTO_TEST_CASE( test ) 
 {
     df::blueprint::operation_adapter<connect> c;
-    df::blueprint::operation_adapter<connect> c10(10);    
+    df::blueprint::operation_adapter<connect> c10(10);
 }

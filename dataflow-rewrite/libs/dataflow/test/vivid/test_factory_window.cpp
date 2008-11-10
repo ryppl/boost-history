@@ -7,18 +7,21 @@
 -----------------------------------------------===============================*/
 
 
-#include "my_blueprint_ports.hpp"
+#include <boost/dataflow/vivid/factory_window.hpp>
+#include <boost/dataflow/vivid/network_window.hpp>
+#include "../blueprint/my_blueprint_framework.hpp"
+#include "../generic/my_ports.hpp"
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 
-namespace df = boost::dataflow;
-
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    my_blueprint_framework_object fo;
+    df::vivid::factory_window<my_blueprint_framework> window;
     
-    my_blueprint_port_producer producer(fo);
-    my_blueprint_port_consumer consumer(fo);
+    df::blueprint::factory<my_blueprint_framework> factory;
+    factory.add_port<my_port_producer>("my_port_producer");
+
+    window.set_factory(factory);
 }

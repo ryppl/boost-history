@@ -8,6 +8,9 @@
 
 
 #include "my_framework.hpp"
+#include "my_framework_with_object.hpp"
+
+#include <boost/type_traits/is_same.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -20,7 +23,13 @@ struct not_framework
 BOOST_AUTO_TEST_CASE( test ) 
 {
     BOOST_CHECK((df::is_framework<my_framework>::value));
+    BOOST_CHECK((!df::has_framework_object<my_framework>::value));
+    
     BOOST_CHECK((!df::is_framework<not_framework>::value));
+
+    BOOST_CHECK((df::is_framework<my_framework_with_object>::value));
+    BOOST_CHECK((df::has_framework_object<my_framework_with_object>::value));
+    BOOST_CHECK((boost::is_same<my_framework_with_object::framework_object_type, my_object>::value));
 }
 
 

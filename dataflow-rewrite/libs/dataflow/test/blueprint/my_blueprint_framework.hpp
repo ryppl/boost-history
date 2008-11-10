@@ -8,9 +8,11 @@
 
 
 #include <boost/dataflow/blueprint/framework.hpp>
+#include <boost/dataflow/blueprint/framework_object.hpp>
 
 #include "../generic/my_framework.hpp"
 
 namespace df = boost::dataflow;
 
 typedef df::blueprint::framework<my_framework> my_blueprint_framework;
+typedef df::blueprint::framework_object<my_blueprint_framework> my_blueprint_framework_object;

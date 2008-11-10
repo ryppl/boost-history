@@ -32,3 +32,26 @@ project dataflow
         <include>.
         <include>$(BOOST_ROOT)
    ;
+
+local build-if ;
+
+if ! [ os.environ GUIGL_ROOT ]
+{
+    ECHO "note: -------------------------------------------------------" ;
+    ECHO "note:  Dataflow.Vivid tests and examples will be skipped." ;
+    ECHO "note:  to build them examples, set the environment variable" ;
+    ECHO "note:  GUIGL_ROOT to the location of the guigl library root." ;
+    ECHO "note: -------------------------------------------------------" ;
+    constant guigl_present : false ;
+}
+else
+{
+    path-constant GUIGL_ROOT : [ os.environ GUIGL_ROOT ] ;
+
+    use-project /boost_guigl
+        : $(GUIGL_ROOT)/libs/guigl/build
+        ;
+
+    constant guigl_present : true ;
+}
+

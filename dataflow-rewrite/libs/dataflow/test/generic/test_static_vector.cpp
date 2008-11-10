@@ -7,18 +7,14 @@
 -----------------------------------------------===============================*/
 
 
-#include "my_blueprint_ports.hpp"
+#include "my_static_vector.hpp"
+#include <boost/type_traits/is_same.hpp>
+
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 
-namespace df = boost::dataflow;
-
-BOOST_AUTO_TEST_CASE( test ) 
+BOOST_AUTO_TEST_CASE( test )
 {
-    my_blueprint_framework_object fo;
-    
-    my_blueprint_port_producer producer(fo);
-    my_blueprint_port_consumer consumer(fo);
 }

@@ -24,7 +24,7 @@ public:
         , m_operation(op)
     {}
 private:
-    virtual const void * get_ptr() const
+    virtual void * get_ptr()
     {
         return &m_operation;
     };

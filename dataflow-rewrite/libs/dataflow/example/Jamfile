@@ -7,11 +7,15 @@
 #----------------------------------------------===============================*/
 
 
-run test_framework.cpp ;
-run test_framework_entity.cpp ;
-run test_port.cpp ;
-run test_port_binary_operation.cpp ;
-run test_port_binary_operation_implementation.cpp ;
-run test_operation.cpp ;
-run test_framework_object.cpp ;
-run test_factory.cpp ;
+project dataflow/example
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+    ;
+
+build-project generic ;
+
+if $(guigl_present)
+{
+    build-project vivid ;
+}
+

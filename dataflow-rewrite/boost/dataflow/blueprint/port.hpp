@@ -20,9 +20,8 @@ class port : public framework_entity<BlueprintFramework>
 {
     typedef framework_entity<BlueprintFramework> base_type;
 public:
-    template<typename T>
-    port(const T &t)
-        : base_type(t)
+    port(framework_object<BlueprintFramework> &fo, const std::type_info &ti)
+        : base_type(fo, ti)
     {}
     struct dataflow_traits : public base_type::dataflow_traits
     {
