@@ -116,13 +116,20 @@ private:
     }
 };
 
+template <class InCursor, class OutCursor>
+typename coupling_cursor<InCursor, OutCursor>::size_type
+index(coupling_cursor<InCursor, OutCursor> const& cur)
+{
+    return cur.index();
+}
+
 /** 
  * @param o    An output iterator.
  * @result    An instance of coupling_cursor working on o.
  * 
  * Use as shortcut for cumbersome typenames, just as with std::inserter and the like.
  */
-template<class InCursor, class OutCursor>
+template <class InCursor, class OutCursor>
 inline coupling_cursor<InCursor, OutCursor>
 make_coupling_cursor(InCursor i, OutCursor o)
 {

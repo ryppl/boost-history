@@ -63,13 +63,13 @@ class iterator
     void increment()
     {
         forward(Order(), this->base_reference());
-        //BOOST_ASSERT(!this->base_reference().index() || this->base_reference().is_root());
+        //BOOST_ASSERT(!index(this->base_reference()) || this->base_reference().is_root());
     }
     
     void decrement()
     {
         back(Order(), this->base_reference());
-        //BOOST_ASSERT(!this->base_reference().index() || this->base_reference().is_root());
+        //BOOST_ASSERT(!index(this->base_reference()) || this->base_reference().is_root());
     }
 };
 

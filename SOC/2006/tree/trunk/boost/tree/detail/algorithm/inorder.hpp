@@ -40,7 +40,7 @@ inline void forward(inorder, MultiwayCursor& c)
         return;
     }
     
-    while (c.index() && !c.is_root())
+    while (index(c) && !c.is_root())
         c.to_parent();
     return;
 }
@@ -58,7 +58,7 @@ inline void back(inorder, MultiwayCursor& c)
         return;
     }
     
-    while (!c.index() && !c.is_root())
+    while (!index(c) && !c.is_root())
         c.to_parent();
     if (!c.is_root())
         --c;
@@ -196,7 +196,7 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
     MultiwayCursor y = x;
     while (!x.empty()) {
         x = std::lower_bound(x.begin(), x.end(), val);
-        if (x.index() == 0)
+        if (index(x) == 0)
             y = x;
     }
     return y;
@@ -221,7 +221,7 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
     MultiwayCursor y = x;
     while (!x.empty()) {
         x = std::lower_bound(x.begin(), x.end(), val, cmp);
-        if (x.index() == 0)
+        if (index(x) == 0)
             y = x;
     }
     return y;
@@ -245,7 +245,7 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val)
     MultiwayCursor y = x;
     while (!x.empty()) {
         x = std::upper_bound(x.begin(), x.end(), val);
-        if (x.index() == 0)
+        if (index(x) == 0)
             y = x;
     }
     return y;
@@ -270,7 +270,7 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
     MultiwayCursor y = x;
     while (!x.empty()) {
         x = std::upper_bound(x.begin(), x.end(), val, cmp);
-        if (x.index() == 0)
+        if (index(x) == 0)
             y = x;
     }
     return y;

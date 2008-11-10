@@ -149,7 +149,7 @@ private:
     
     size_type const idx() const
     {
-        return m_s.top().index();
+        return index(m_s.top());
     }
 
     void left()

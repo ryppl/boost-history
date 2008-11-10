@@ -1268,20 +1268,20 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
       <li>
         <p><strong>Effects:</strong> Performs a left tree rotation around the
-        parent of <tt>position</tt> if <tt>position.parity() == 0</tt> or a
-        right tree rotation if <tt>position.parity() == 1</tt>.</p>
+        parent of <tt>position</tt> if <tt>position.index() == 0</tt> or a
+        right tree rotation if <tt>position.index() == 1</tt>.</p>
       </li>
 
       <li>
         <p><strong>Postcondition:</strong> If <tt>par ==
-        position.parity()</tt> as of before the rotation, then, after the
+        position.index()</tt> as of before the rotation, then, after the
         rotation:</p>
 
         <ul>
           <li><tt>*position.begin()</tt> yields the same value it yielded
           before the rotation</li>
 
-          <li><tt>position.parity() == !par</tt></li>
+          <li><tt>position.index() == !par</tt></li>
 
           <li><tt>*(((position.begin())[par]).begin())</tt> yields what
           <tt>*(p.begin())</tt> yielded before, if <tt>p</tt> was
@@ -1837,7 +1837,7 @@ typedef <i>implementation defined</i>                        const_cursor;
             <tr>
               <td><tt>!f</tt></td>
 
-              <td><tt>while ((!b).parity() == 1); b =
+              <td><tt>while ((!b).index() == 1); b =
               (!b).begin();</tt><br /></td>
 
               <td>linear</td>
@@ -2081,7 +2081,7 @@ namespace tr2 {
             <tr>
               <td><tt>*m</tt></td>
 
-              <td><tt>*((p-&gt;begin())[b.parity()])</tt></td>
+              <td><tt>*((p-&gt;begin())[b.index()])</tt></td>
 
               <td>constant</td>
             </tr>
@@ -3153,7 +3153,7 @@ while(first++ != last)
                 </tr>
 
                 <tr>
-                  <td><tt>a.parity()</tt></td>
+                  <td><tt>a.index()</tt></td>
 
                   <td><tt>size_type</tt></td>
 

@@ -237,6 +237,13 @@ public:
     std::size_t const index() const { return 0; }
 };
 
+template <class OutputIterator>
+typename output_cursor_iterator_wrapper<OutputIterator>::size_type
+index(output_cursor_iterator_wrapper<OutputIterator> const& cur)
+{
+    return cur.index();
+}
+
 /** 
  * @param o    An output iterator.
  * @result    An instance of output_cursor_iterator_wrapper working on o.

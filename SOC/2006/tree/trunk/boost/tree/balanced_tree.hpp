@@ -80,6 +80,7 @@ struct metadata< augmented_type<Val,Meta,Meta2> > {
     typedef typename augmented_type<Val,Meta,Meta2>::metadata_type type;
 };
 
+
 template <class Cursor>
 class is_on_top_cursor
 : public Cursor {
@@ -95,6 +96,58 @@ public:
         return this->is_on_top();
     }
 };
+
+//template <class Cursor> 
+//class is_on_top_cursor
+//: public cursor_adaptor<is_on_top_cursor<Cursor>
+//      , Cursor
+//      , boost::use_default
+//      , bidirectional_traversal_tag
+//      , bidirectional_traversal_tag
+//    > {
+//private:
+//    struct enabler {};
+//
+//public:
+//     //TODO: Tidy up typedefs
+//
+//    typedef Cursor base_cursor;
+//    
+//     typedef is_on_top_cursor<Cursor> cursor;
+//     typedef is_on_top_cursor<Cursor const> const_cursor; //FIXME (?)
+//
+//    //typedef typename cursor_size<base_cursor>::type size_type;
+//
+//    //typedef bidirectional_traversal_tag cursor_category;
+//        
+//    // Container-specific:
+//    typedef cursor iterator;  // For (range) concepts' sake, mainly
+////    typedef const_cursor const_iterator;
+//    
+//     // Common iterator facade stuff
+//    is_on_top_cursor()
+//     : is_on_top_cursor::cursor_adaptor_() {}
+//
+//    explicit is_on_top_cursor(base_cursor p)
+//     : is_on_top_cursor::cursor_adaptor_(p) {}
+//    
+//private:
+//    friend class cursor_core_access;
+//    friend class iterator_core_access;
+//
+//public:
+//    bool is_root() const
+//    {
+//        return this->base_reference().is_on_top();
+//    }
+//};
+
+template <class Cursor>
+typename is_on_top_cursor<Cursor>::size_type
+index(is_on_top_cursor<Cursor> const& cur)
+{
+    return cur.index();
+}
 
 template <class Cursor>
 class balanced_tree_iterator

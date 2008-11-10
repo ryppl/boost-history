@@ -90,7 +90,6 @@ General:
   pp. 348--351). Those should be especially useful for automated testing of "real" (binary, 
   forest) trees.
 * have `erase()` operations return cursor/iterator instead of void (as in new STD)
-* modify parity/parent specs according to newsgroup thread, but add members to binary_tree cursor!
 * We might need still more binary_tree members for more efficient functions operating on
   ranges...
 * `insert()` and `erase()` semantics need reworking. For instance, Proposal 23.X.4.1.4 §2 
@@ -118,6 +117,7 @@ Ask on the mailing list:
 
 Proposal:
 
+* Change parity/parent complexity requirements at least for binary_tree::cursor? - See newsgroup thread.
 * Change complexity requirements for * order end() to constant? We're using root(), and
   for postorder begin() - which is also root() - it's already constant. Then again, how much
   do we cater for "pathological" implementations (and not so pathological ones, like 

@@ -102,7 +102,7 @@ private:
     
     void decrement()
     {
-        if (!this->base().index())
+        if (!index(this->base()))
             this->base_reference().to_parent();
         --this->base_reference();
     }
@@ -120,12 +120,20 @@ private:
     
     void up()
     {
-        if (!this->base().index())
+        if (!index(this->base()))
             this->base_reference().to_parent();
     }
 };
 
 } // namespace detail
+
+template <class Cursor>
+typename detail::forest_cursor<Cursor>::size_type
+index(detail::forest_cursor<Cursor> const& cur)
+{
+    return cur.index();
+}
+
 } // namespace tree
 } // namespace boost
 

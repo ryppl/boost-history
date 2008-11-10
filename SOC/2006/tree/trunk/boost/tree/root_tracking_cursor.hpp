@@ -107,6 +107,13 @@ public:
 };
 
 template <class Cursor>
+typename root_tracking_cursor<Cursor>::size_type
+index(root_tracking_cursor<Cursor> const& cur)
+{
+    return cur.index();
+}
+
+template <class Cursor>
 inline root_tracking_cursor<Cursor> track_root(Cursor c)
 {
     return root_tracking_cursor<Cursor>(c);

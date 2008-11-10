@@ -156,7 +156,7 @@ public:
         return this->derived();
     }
                   
-    Derived begin()
+    Derived begin() const
     {
         Derived tmp(this->derived());
         return tmp.to_begin();
@@ -168,7 +168,7 @@ public:
         return this->derived();
     }
      
-    Derived end()
+    Derived end() const
     {
         Derived tmp(this->derived());
         return tmp.to_end();
@@ -180,7 +180,7 @@ public:
         return this->derived();
     }
      
-    Derived parent()
+    Derived parent() const
     {
         Derived tmp(this->derived());
         return tmp.to_parent();

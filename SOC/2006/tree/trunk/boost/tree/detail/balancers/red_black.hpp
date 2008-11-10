@@ -55,9 +55,9 @@ public:
                 y->metadata().set_color(black);
                 x = x.parent().parent();
             } else {
-                if (x.index() != x.parent().index()) {
+                if (index(x) != index(x.parent())) {
                     t.rotate(x);
-                    x = (x.index() ? x.end() : x.begin());
+                    x = (index(x) ? x.end() : x.begin());
                 }
                 x.parent()->metadata().set_color(black);
                 x.parent().parent()->metadata().set_color(red);

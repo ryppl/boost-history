@@ -231,7 +231,8 @@ public:
 } // namespace detail
 
 template <class Node>
-typename detail::nary_tree_cursor<Node>::size_type index(detail::nary_tree_cursor<Node> const& cur)
+typename detail::nary_tree_cursor<Node>::size_type
+index(detail::nary_tree_cursor<Node> const& cur)
 {
     return cur.index();
 }

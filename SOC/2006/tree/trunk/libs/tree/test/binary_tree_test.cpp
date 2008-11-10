@@ -49,7 +49,7 @@ void create_test_dataset2_tree(Tree& mytree)
     c3 = c1.end();
     BOOST_CHECK(c3 == c1.end());
     --c3;
-    BOOST_CHECK_EQUAL(c3.index(), 0);
+    BOOST_CHECK_EQUAL(index(c3), 0);
     BOOST_CHECK(c3.parent() != c3);
     BOOST_CHECK(c3.parent() == c1);
     BOOST_CHECK(c3 == c1.begin());
@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
     BOOST_CHECK_EQUAL(*((++c).begin()).begin(), 4);
     BOOST_CHECK_EQUAL(*(++c.begin()).begin(), 7);
 
-    BOOST_CHECK_EQUAL(c.index(), 1);    
+    BOOST_CHECK_EQUAL(index(c), 1);    
     BOOST_CHECK_EQUAL(*c.begin(), 6);
         
     bt.rotate(c); // Left rotate

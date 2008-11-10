@@ -144,6 +144,7 @@ public:
     typedef typename cursor_facade_::horizontal_traversal horizontal_traversal;
     typedef typename cursor_facade_::vertical_traversal cursor_category;
     
+    typedef typename cursor_facade_::difference_type difference_type;
     typedef typename cursor_facade_::size_type size_type;
  
     cursor_adaptor() {}
@@ -180,7 +181,7 @@ private:
      
     template <class OtherDerived, class OtherCursor, class V, class C, 
               class R, class D, class S>
-    Difference distance_to(cursor_adaptor<OtherDerived, OtherCursor, 
+    difference_type distance_to(cursor_adaptor<OtherDerived, OtherCursor, 
                                           V, C, R, D, S> const& x) const
     {
         return x.base() - m_cursor;

@@ -129,7 +129,7 @@ class multiway_tree {
             bc.m_pos = 0;
         } 
         else {
-            bc->insert((bc->begin()+bc.index()), val);
+            bc->insert((bc->begin()+index(bc)), val);
         }
         return cursor(bc);
         
