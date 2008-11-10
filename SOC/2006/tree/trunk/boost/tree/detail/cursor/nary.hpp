@@ -147,7 +147,7 @@ public:
     bool empty_() const
     {
         return m_node->operator[](m_pos)->empty();
-        //return m_node->operator[](1) == static_cast<node_type*>(m_node);
+        //return m_node->get_index();
     }
     
     size_type size_() const
