@@ -71,6 +71,11 @@ public:
 //    : root_tracking_cursor::cursor_adaptor_(other.base())
 //    , m_depth(other.m_depth) {}
 
+    Cursor const& base() const
+    {
+        return this->base(); 
+    }
+
 private: 
     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;

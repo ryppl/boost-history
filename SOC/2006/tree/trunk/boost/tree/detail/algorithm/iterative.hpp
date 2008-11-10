@@ -24,8 +24,9 @@ namespace boost {
 namespace tree {
 
 template <class Order, class Cursor, class Op>
-Op for_each(Order, root_tracking_cursor<Cursor> s, Op f)
+Op for_each(Order, Cursor is, Op f, bidirectional_traversal_tag)
 {
+    root_tracking_cursor<Cursor> s(is);
     root_tracking_cursor<Cursor> s2(s);
     to_first(Order(), s);
     to_last(Order(), s2);
@@ -36,17 +37,11 @@ Op for_each(Order, root_tracking_cursor<Cursor> s, Op f)
     return f;
 }
 
-template <class Order, class Cursor, class Op>
-Op for_each(Order, Cursor s, Op f, bidirectional_traversal_tag)
-{
-    return for_each(Order(), root_tracking_cursor<Cursor>(s), f);
-}
-
 template <class Order, class InCursor, class OutCursor, class Op>
-OutCursor transform (Order, root_tracking_cursor<InCursor> s
-                   , OutCursor t
-                   , Op op)
+OutCursor transform (Order, InCursor is, OutCursor t, Op op
+                   , bidirectional_traversal_tag)
 {
+    root_tracking_cursor<InCursor> s(is);
     root_tracking_cursor<InCursor> s2(s);
     
     boost::tree::coupling_cursor< root_tracking_cursor<InCursor>, OutCursor > cc(s, t);
@@ -60,15 +55,6 @@ OutCursor transform (Order, root_tracking_cursor<InCursor> s
     }
     return cc.out();
 }
-
-template <class Order, class InCursor, class OutCursor, class Op>
-OutCursor transform (Order, InCursor s, OutCursor t, Op op
-                   , bidirectional_traversal_tag)
-{
-    return transform(Order(), root_tracking_cursor<InCursor>(s), t, op);
-}
-
-
 
 } // namespace tree
 } // namespace boost
