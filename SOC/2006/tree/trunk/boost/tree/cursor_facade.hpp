@@ -55,7 +55,7 @@ public:
     template <class Facade>
     static typename Facade::size_type par(Facade const& f)
     {
-        return f.par();
+        return f.idx();
     }
         
     template <class Facade>

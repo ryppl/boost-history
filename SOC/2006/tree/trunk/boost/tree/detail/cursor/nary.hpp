@@ -160,7 +160,7 @@ public:
         return m_node->max_size();
     }
     
-    size_type par() const
+    size_type idx() const
     {
         return m_pos;
         //return 
@@ -228,13 +228,14 @@ public:
 
 };
 
+} // namespace detail
+
 template <class Node>
-typename nary_tree_cursor<Node>::size_type index(nary_tree_cursor<Node> const& cur)
+typename detail::nary_tree_cursor<Node>::size_type index(detail::nary_tree_cursor<Node> const& cur)
 {
     return cur.index();
 }
 
-} // namespace detail
 } // namespace tree
 } // namespace boost
 

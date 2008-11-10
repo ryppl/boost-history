@@ -201,7 +201,7 @@ private:
         return m_cursor.max_size();
     }
 
-    size_type const par() const
+    size_type const idx() const
     {
         return m_cursor.index();
     }

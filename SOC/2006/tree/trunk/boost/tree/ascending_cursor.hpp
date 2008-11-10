@@ -147,7 +147,7 @@ private:
         return m_s.top().max_size();
     }
     
-    size_type const par() const
+    size_type const idx() const
     {
         return m_s.top().index();
     }
