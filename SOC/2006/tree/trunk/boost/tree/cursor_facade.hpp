@@ -145,7 +145,7 @@ public:
         return cursor_core_access::max_size_(this->derived());
     }
 
-    size_type const parity() const
+    size_type const index() const
     {
         return cursor_core_access::par(this->derived());
     }

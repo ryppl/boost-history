@@ -480,7 +480,7 @@ class binary_tree {
             static_cast<node_base_pointer>(p_node->m_parent)
                 ->node_base_type::operator[](0) = (*p_node)[0];
                 
-            while (position.parity()) 
+            while (position.index()) 
                 position = position.parent();
         } else {
             position = position.begin();

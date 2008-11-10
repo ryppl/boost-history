@@ -120,7 +120,7 @@ class multiway_tree {
         base_cursor bc = base_cursor(pos);
 //        if (bc != h.root())
 //            bc = bc.parent();
-//if (bc.parity())
+//if (bc.index())
         //h.insert(bc, val);
         //if (bc == h.root())
         //    bc =
@@ -129,7 +129,7 @@ class multiway_tree {
             bc.m_pos = 0;
         } 
         else {
-            bc->insert((bc->begin()+bc.parity()), val);
+            bc->insert((bc->begin()+bc.index()), val);
         }
         return cursor(bc);
         

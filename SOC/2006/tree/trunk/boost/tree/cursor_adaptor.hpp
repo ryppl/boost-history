@@ -203,7 +203,7 @@ private:
 
     size_type const par() const
     {
-        return m_cursor.parity();
+        return m_cursor.index();
     }
 
     void left()

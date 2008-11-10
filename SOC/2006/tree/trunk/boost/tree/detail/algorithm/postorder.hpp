@@ -37,7 +37,7 @@ inline void forward(postorder, Cursor& c)
     if (c.is_root())
         return;
 
-    if (c.parity()) { // Right child? Return parent.
+    if (c.index()) { // Right child? Return parent.
         --c;
         return;
     }
@@ -49,7 +49,7 @@ inline void forward(postorder, Cursor& c)
         if (c.empty())
             ++c;
     }
-    if (c.parity())
+    if (c.index())
         --c;
     return;
 }
@@ -79,7 +79,7 @@ inline void back(postorder, Cursor& c)
     // child (which is what we'll return) or we land at root.
     while (!c.is_root()) {
         c.to_parent();
-        if (c.parity())
+        if (c.index())
             if (!(--c).empty()) {
                 c.to_begin();
                 return;

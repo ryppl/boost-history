@@ -72,8 +72,6 @@ General:
     the complete test data.)
   * With the tree complete, do the same recursively for all its subtrees.
 * Also test copy with two trees (not just one tree and a container/output iterator)
-* Rename parity() (which looks somewhat binary-related) to index (more general for forest
-  trees etc)?
 * /Possibly/ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
   detail/cursor/ (same for iterator).
 * Make *order iterators work with empty subtrees; same for cursor algorithms.

@@ -98,7 +98,7 @@ class node_base : public node_with_parent_base, public Container<node_base<Conta
     }
 
     // O(n); n is number of parent's children
-    typename base_type::size_type const get_parity() const
+    typename base_type::size_type const get_index() const
     {
         typename base_type::size_type i = 0;
         while (static_cast<base_pointer>(this->m_parent)->base_type::operator[](i++) != this);
@@ -156,7 +156,7 @@ class node_base<binary_array>
         B->m_parent = this;
         q->m_parent = this->m_parent;
 
-        base_type::size_type qp = get_parity();
+        base_type::size_type qp = get_index();
         static_cast<base_pointer>(q->m_parent)->base_type::operator[](qp) = q;
         this->m_parent = q;
         q->base_type::operator[](c ? 0 : 1) = this;
@@ -176,16 +176,16 @@ class node_base<binary_array>
     }
     
     // TODO: actually implement this.
-    base_pointer detach(base_type::size_type parity, 
-                        base_type::size_type other_parity, 
+    base_pointer detach(base_type::size_type index, 
+                        base_type::size_type other_index, 
                         base_pointer other)
     {
         //Node::pre_splice(q, r);
         // splice out q
-        base_pointer x = detach(parity);
+        base_pointer x = detach(index);
 
         // q has been spliced out, now relink it in place of r.                
-        static_cast<base_pointer>(other->m_parent)->base_type::operator[](other_parity) = this;
+        static_cast<base_pointer>(other->m_parent)->base_type::operator[](other_index) = this;
         m_parent = other->m_parent;
 
         for (base_type::size_type i=0; i<base_type::max_size(); ++i) {
@@ -196,7 +196,7 @@ class node_base<binary_array>
     }
     
     // O(1)
-    base_type::size_type const get_parity() const
+    base_type::size_type const get_index() const
     {
         return (static_cast<base_pointer>(this->m_parent)->base_type::operator[](0) == this ? 0 : 1);
     }

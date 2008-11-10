@@ -93,7 +93,7 @@ bool equal(InCursor1 c1, InCursor2 c2, BinPred p)
  * After finishing, s will have been increased by the number of elements in c.         
  */
 template <class InCursor>
-void size(InCursor c, typename InCursor::size_type& s)
+void size(InCursor c, typename InCursor::subtree_size_type& s)
 {
     InCursor d = c.end();
     c.to_begin();
@@ -111,10 +111,10 @@ void size(InCursor c, typename InCursor::size_type& s)
  */
 //[ size
 template <class InCursor>
-typename InCursor::size_type size(InCursor c)
+typename InCursor::subtree_size_type size(InCursor c)
 //]
 {
-    typename InCursor::size_type s = 0;
+    typename InCursor::subtree_size_type s = 0;
     InCursor d = c.end();
     c.to_begin();
     ++s;

@@ -95,7 +95,7 @@ class forest_tree {
         base_cursor bc = base_cursor(pos);
         if (bc != h.root())
             bc = bc.parent();
-        //if (bc.parity())
+        //if (bc.index())
         return cursor(h.insert(bc, val));
     }
     

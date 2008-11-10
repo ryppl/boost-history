@@ -89,7 +89,7 @@ private:
 
 //    bool empty_() const
 //    {
-//        if (this->base().parity())
+//        if (this->base().index())
 //            return true;
 //        return this->base().empty();
 //    }
@@ -102,7 +102,7 @@ private:
     
     void decrement()
     {
-        if (!this->base().parity())
+        if (!this->base().index())
             this->base_reference().to_parent();
         --this->base_reference();
     }
@@ -120,7 +120,7 @@ private:
     
     void up()
     {
-        if (!this->base().parity())
+        if (!this->base().index())
             this->base_reference().to_parent();
     }
 };

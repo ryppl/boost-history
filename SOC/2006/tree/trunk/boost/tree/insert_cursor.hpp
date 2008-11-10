@@ -67,7 +67,7 @@ private:
 
     typename insert_cursor::cursor_adaptor_::reference dereference() const
     {
-        if (this->base_reference().parity()) {
+        if (this->base_reference().index()) {
             const_cast<typename Tree::cursor&>(this->base_reference())
             = tree.insert(this->base_reference(), typename Tree::value_type());
         }

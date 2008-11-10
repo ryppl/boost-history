@@ -149,7 +149,7 @@ private:
     
     size_type const par() const
     {
-        return m_s.top().parity();
+        return m_s.top().index();
     }
 
     void left()

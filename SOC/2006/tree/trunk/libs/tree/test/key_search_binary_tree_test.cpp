@@ -39,16 +39,16 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     c1 = my_tree.insert(c, 8);
     
     BOOST_CHECK_EQUAL(*c1, 8);
-//    BOOST_CHECK_EQUAL(searcher_t::cursor(c1).parity(), 0);
+//    BOOST_CHECK_EQUAL(searcher_t::cursor(c1).index(), 0);
     BOOST_CHECK(c != my_tree.end());
     BOOST_CHECK(c1 != my_tree.end());
     
 //    cur = searcher_t::cursor(c1);
 //    BOOST_CHECK((++cur).empty());
-//    BOOST_CHECK(cur.parity());
+//    BOOST_CHECK(cur.index());
 //    
 //    cur = cur.parent(); //header-cursor(,1) (root)
-//    BOOST_CHECK(!cur.parity());
+//    BOOST_CHECK(!cur.index());
 //    BOOST_CHECK_EQUAL(searcher_t::iterator(cur), my_tree.end());    
     BOOST_CHECK(*c1 = 8);
 
@@ -58,16 +58,16 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     --c1;
     BOOST_CHECK_EQUAL(*c1, 8);
     
-//    BOOST_CHECK_EQUAL(searcher_t::cursor(my_tree.end()).parity(), 1);
+//    BOOST_CHECK_EQUAL(searcher_t::cursor(my_tree.end()).index(), 1);
 //
-//    BOOST_CHECK_EQUAL(cur.end().parity(), 1);
+//    BOOST_CHECK_EQUAL(cur.end().index(), 1);
 //    
 //    cur = searcher_t::cursor(c1);
 //    
 //    BOOST_CHECK_EQUAL(*cur, 8);
 //    
 //    BOOST_CHECK((++cur).empty());
-//    BOOST_CHECK(!(--cur).parent().parity()); // root's parity...
+//    BOOST_CHECK(!(--cur).parent().index()); // root's index...
 //
 //    BOOST_CHECK_EQUAL(*(searcher_t::cursor(c).begin()), 8);
     
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     BOOST_CHECK_EQUAL(*c, 39);
     
     c = my_tree.begin();
-//    BOOST_CHECK_EQUAL(searcher_t::cursor(c).parity(), 0);
+//    BOOST_CHECK_EQUAL(searcher_t::cursor(c).index(), 0);
 //    BOOST_CHECK(*(searcher_t::cursor(c).parent()) != 412);
     BOOST_CHECK(*c < 413);    
     

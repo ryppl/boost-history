@@ -42,9 +42,9 @@ class nary_tree_cursor
       , bidirectional_traversal_tag
     > {
  private:
-      typedef typename Node::base_type node_base;
+    typedef typename Node::base_type node_base;
       
-      typedef typename mpl::eval_if<
+    typedef typename mpl::eval_if<
                         is_const<Node>
                       , add_const<node_base>
                       , mpl::identity<node_base>
@@ -71,6 +71,7 @@ public:
     // Cursor-specific
     typedef nary_tree_cursor<node_type> cursor;
     typedef nary_tree_cursor<node_type const> const_cursor;
+    typedef std::size_t subtree_size_type;
     
     // Container-specific:
     typedef cursor iterator;
@@ -120,28 +121,33 @@ public:
     void increment()
     {
         ++m_pos;
+        // m_node += sizeof(node_type);
     }
     
     void decrement()
     {
         --m_pos;
+        //m_node -= sizeof(node_type);
     }    
     
     void advance(typename nary_tree_cursor::cursor_facade_::difference_type n)
     {
-            m_pos += n;
+        m_pos += n;
+        //m_node += n * sizeof(node_type);
     }
     
     typename nary_tree_cursor::cursor_facade_::difference_type
     distance_to(nary_tree_cursor z) const //FIXME: convertible to instead of nary_tree_cursor
     {
-            return (z.m_pos - this->m_pos);
+        return (z.m_pos - this->m_pos);
+        //return (z.m_node - this->m_node) / sizeof(node_type); 
     }
     
     // Container specific
     bool empty_() const
     {
         return m_node->operator[](m_pos)->empty();
+        //return m_node->operator[](1) == static_cast<node_type*>(m_node);
     }
     
     size_type size_() const
@@ -157,12 +163,14 @@ public:
     size_type par() const
     {
         return m_pos;
+        //return 
     }
 
     void left()
     {
         m_node = m_node->operator[](m_pos);
         m_pos  = 0;
+        //m_node = m_node->operator[0];
     }
 
     void right()
@@ -170,13 +178,15 @@ public:
         size_type new_pos = m_node->size()-1; 
         m_node = m_node->operator[](m_pos);
         m_pos  = new_pos;
+        //m_node = m_node->operator[0];
     }
 
     // Cursor stuff
     void up()
     {
-        m_pos  = m_node->get_parity();
+        m_pos  = m_node->get_index();
         m_node = static_cast<base_pointer>(m_node->parent());
+        //m_node = m_node->parent();
     }
     
 protected:
@@ -184,7 +194,7 @@ protected:
     {
         base_pointer parent_begin_node = 
             static_cast<base_pointer>(m_node->parent())
-            ->operator[](m_node->get_parity());
+            ->operator[](m_node->get_index());
         return (!m_pos && (m_node != parent_begin_node));
         // (*this != this->parent().begin())
     }
@@ -218,6 +228,11 @@ public:
 
 };
 
+template <class Node>
+typename nary_tree_cursor<Node>::size_type index(nary_tree_cursor<Node> const& cur)
+{
+    return cur.index();
+}
 
 } // namespace detail
 } // namespace tree

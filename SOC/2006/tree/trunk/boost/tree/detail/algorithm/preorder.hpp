@@ -53,7 +53,7 @@ inline void forward(preorder, Cursor& c)
     // we find an ancestor that has a right child.
     while (!c.is_root()) { // Doesn't work with subtrees!    
         c.to_parent();
-        if (!c.is_root() && !c.parity()) {
+        if (!c.is_root() && !c.index()) {
             if (!(++c).empty()) {
                 c.to_begin();
                 return;
@@ -74,7 +74,7 @@ inline void back(preorder, Cursor& c)
         c.to_parent();
         
         // If a left child was given, just move to its parent.
-        if (!c.parity())
+        if (!c.index())
             return;
         
         // So this is a right child.
@@ -88,7 +88,7 @@ inline void back(preorder, Cursor& c)
         else
             c.to_begin();
 
-    if (c.parity())
+    if (c.index())
         --c;
     return;
 }

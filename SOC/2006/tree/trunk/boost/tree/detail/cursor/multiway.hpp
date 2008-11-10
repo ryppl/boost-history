@@ -85,7 +85,7 @@ class const_multiway_tree_cursor
     
     typename const_multiway_tree_cursor::cursor_adaptor_::reference dereference() const
     {
-        return this->base()->m_parent->operator[](this->parity());
+        return this->base()->m_parent->operator[](this->index());
     }
 };
 
@@ -146,7 +146,7 @@ class multiway_tree_cursor
     
     typename multiway_tree_cursor::cursor_adaptor_::reference dereference() const
     {
-        return this->base()->m_parent->operator[](this->parity());
+        return this->base()->m_parent->operator[](this->index());
     }
     
 public:
@@ -165,7 +165,7 @@ public:
     
 //    const_cursor parent() const
 //    {
-//        if (!this->base_reference().parity())) {
+//        if (!this->base_reference().index())) {
 //            return this->base_reference().parent();
 //        }
 //    }

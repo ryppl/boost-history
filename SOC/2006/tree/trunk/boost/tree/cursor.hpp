@@ -234,7 +234,7 @@ public:
     /// Returns true, in case an algorithm has a loop only terminating at a leaf.
     bool empty() const { return true; }
     
-    std::size_t const parity() const { return 0; }
+    std::size_t const index() const { return 0; }
 };
 
 /** 

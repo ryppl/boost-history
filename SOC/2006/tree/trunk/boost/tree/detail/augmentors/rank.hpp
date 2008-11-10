@@ -61,7 +61,7 @@ class rank {
      void pre_rotate(Tree&, typename Tree::cursor& q)
      {
          typename Tree::cursor p = q->parent();
-        if (!q.parity())
+        if (!q.index())
             p.metadata().rank() -= q.metadata().rank();
         else
             q.metadata().rank() += p.metadata().rank();
@@ -72,7 +72,7 @@ class rank {
      {
          typename Tree::cursor p = y;
          while (p.parent() != t.root()) {
-            if (!p.parity())
+            if (!p.index())
                  --p.parent().metadata().rank();
              p = p.parent();
          }
@@ -83,7 +83,7 @@ class rank {
      {
          typename Tree::cursor p = y;
          while (p.parent() != t.root()) {
-            if (!p.parity())
+            if (!p.index())
                  --p.parent().metadata().rank();
              p = p.parent();
          }
@@ -94,7 +94,7 @@ class rank {
      template <class Tree>
      void descend(Tree&, typename Tree::cursor& p)
      {
-        if (p.parity() == 0) {
+        if (p.index() == 0) {
              ++p.metadata().rank();
          }
      }

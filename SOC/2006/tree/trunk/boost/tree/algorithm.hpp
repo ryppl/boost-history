@@ -83,7 +83,7 @@ Cursor last(Cursor c)
 }
 
 template <class AscendingCursor>
-typename AscendingCursor::size_type parity(AscendingCursor& cur)
+typename AscendingCursor::size_type index(AscendingCursor const& cur)
 {
     return std::distance(cur.parent().begin(), cur);
 }
