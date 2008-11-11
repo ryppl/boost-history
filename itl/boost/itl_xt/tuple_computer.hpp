@@ -102,7 +102,7 @@ namespace boost{namespace itl
         typedef var_tuple<VarCount> var_tuple_type;
         typedef var_tuple_order<var_tuple_type> tuple_order_type;
         /// Container type for the implementation 
-        typedef itl::map<var_tuple_type, CounterT, neutron_absorber, var_tuple_order> ImplMapTD;
+        typedef itl::map<var_tuple_type, CounterT, neutron_absorber, var_tuple_order<var_tuple_type> > ImplMapTD;
         /// iterator
         typedef typename ImplMapTD::iterator iterator;
         /// const_iterator

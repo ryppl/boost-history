@@ -196,7 +196,7 @@ public:
 
     /// Container type for the implementation 
     typedef itl::map<interval_type,codomain_type,Traits,
-                     exclusive_less,Alloc> ImplMapT;
+                     exclusive_less<interval_type>,Alloc> ImplMapT;
 
     /// key type of the implementing container
     typedef typename ImplMapT::key_type   key_type;
@@ -220,7 +220,7 @@ public:
 
     /// The atomized type is elementbased map that is equivalent to the interval map
     typedef typename itl::map<DomainT,CodomainT,
-                              Traits,Compare,Alloc> atomized_type;
+                              Traits,Compare<DomainT>,Alloc> atomized_type;
 //@}
 
 public:
