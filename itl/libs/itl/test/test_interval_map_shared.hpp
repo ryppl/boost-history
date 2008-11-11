@@ -13,7 +13,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -160,7 +160,7 @@ void interval_map_fundamentals_4_ordered_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -221,7 +221,7 @@ void interval_map_ctor_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -274,7 +274,7 @@ void interval_map_add_sub_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -305,7 +305,7 @@ void interval_map_distinct_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -354,7 +354,7 @@ void interval_map_distinct_4_bicremental_continuous_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -405,7 +405,7 @@ void interval_map_isolate_4_bicremental_continuous_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -447,7 +447,7 @@ void interval_map_contains_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -509,7 +509,7 @@ void interval_map_operators_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -620,7 +620,7 @@ void interval_map_base_intersect_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -735,7 +735,7 @@ void interval_map_base_erase_4_bicremental_types()
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class>class = interval,
-                   template<class>class = std::less,
+                   class = std::less<T>,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>

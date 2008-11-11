@@ -17,7 +17,7 @@ namespace boost{namespace itl
 template
 <    
     class, class, class, template<class>class, 
-    template<class>class, template<class>class
+    class, template<class>class
 >
 class interval_map;
 
@@ -33,7 +33,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -63,7 +63,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -103,7 +103,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -132,7 +132,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -174,7 +174,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -200,7 +200,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -229,7 +229,7 @@ template
     template
     <    
         class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalSet
 >
@@ -257,7 +257,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -358,13 +358,13 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class LeftIntervalMap,
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class RightIntervalMap
 >
@@ -393,7 +393,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >
@@ -441,7 +441,7 @@ template
     template
     <    
         class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalSet
 >
@@ -490,7 +490,7 @@ template
     template
     <    
         class, class, class, template<class>class, 
-        template<class>class, template<class>class
+        class, template<class>class
     >
     class IntervalMap
 >

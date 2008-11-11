@@ -68,7 +68,7 @@ template
 <
     typename             DomainT, 
     template<class>class Interval = itl::interval,
-    template<class>class Compare  = std::less,
+    class Compare  = std::less<DomainT>,
     template<class>class Alloc    = std::allocator
 > 
 class separate_interval_set: 
@@ -94,7 +94,7 @@ public:
     typedef Interval<DomainT> interval_type;
 
     /// Comparison functor for domain values
-    typedef Compare<DomainT> domain_compare;
+    typedef Compare domain_compare;
     /// Comparison functor for intervals
     typedef exclusive_less<interval_type> interval_compare;
 
@@ -108,10 +108,10 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// The type of the set of elements that is equivalent to the set of intervals
-    typedef typename itl::set<DomainT,Compare<DomainT>,Alloc> element_set;
+    typedef typename itl::set<DomainT,Compare,Alloc> element_set;
 
     /// The corresponding atomized type representing this interval container of elements
-    typedef typename itl::set<DomainT,Compare<DomainT>,Alloc> atomized_type;
+    typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
     /// Container type for the implementation 
     typedef typename itl::set<interval_type,exclusive_less<interval_type>,Alloc> ImplSetT;
@@ -180,7 +180,7 @@ public:
 } ;
 
 
-template <typename DomainT, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
+template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
 bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
 {
     if(interv.empty()) 
@@ -192,7 +192,7 @@ bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const inte
 }
 
 
-template<class DomainT, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
+template<class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
 void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_type& x)
 {
     if(x.empty()) return;
@@ -225,7 +225,7 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_typ
 }
 
 
-template<class DomainT, template<class>class Interval, template<class>class Compare, template<class>class Alloc>
+template<class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
 void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const value_type& x)
 {
     if(x.empty()) return;
@@ -255,7 +255,7 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const valu
 template 
 <
     class DomainT, template<class>class Interval, 
-    template<class>class Compare, template<class>class Alloc
+    class Compare, template<class>class Alloc
 >
 inline bool 
 is_element_equal

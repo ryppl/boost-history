@@ -10,7 +10,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -142,7 +142,7 @@ void interval_set_fundamentals_4_ordered_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -193,7 +193,7 @@ void interval_set_ctor_4_bicremental_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -235,7 +235,7 @@ void interval_set_add_sub_4_bicremental_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -261,7 +261,7 @@ void interval_set_distinct_4_bicremental_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -302,7 +302,7 @@ void interval_set_distinct_4_bicremental_continuous_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -346,7 +346,7 @@ void interval_set_isolate_4_bicremental_continuous_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -384,7 +384,7 @@ void interval_set_contains_4_bicremental_types()
 
 
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -427,7 +427,7 @@ void interval_set_operators_4_bicremental_types()
 
 // Test for nontrivial intersection of interval sets with intervals and values
 template <template<class T, template<class>class = interval,
-                            template<class>class = std::less,
+                            class = std::less<T>,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
