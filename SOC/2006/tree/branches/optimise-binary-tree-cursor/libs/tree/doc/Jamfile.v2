@@ -1,0 +1,51 @@
+#  Copyright (c) 2006-2008, Bernhard Reiter
+#
+#  Distributed under the Boost Software License, Version 1.0.
+#  (See accompanying file LICENSE_1_0.txt or copy at
+#  http:#www.boost.org/LICENSE_1_0.txt)
+
+using doxygen ;
+using quickbook ;
+
+if ! $(BOOST_ROOT)
+{
+	BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+doxygen autodoc
+	:
+		[ glob ../../../boost/tree/*.hpp ]
+		[ glob ../../../boost/tree/detail/algorithm/*.hpp ]
+		[ glob ../../../boost/tree/detail/algorithm/cursor/*.hpp ]
+		[ glob ../../../boost/tree/detail/algorithm/iterator/*.hpp ]
+		[ glob ../../../boost/tree/detail/augmentors/*.hpp ]
+		[ glob ../../../boost/tree/detail/balancers/*.hpp ]
+		[ glob ../../../boost/tree/detail/comparators/*.hpp ]
+		[ glob ../../../boost/tree/detail/cursor/*.hpp ]
+		[ glob ../../../boost/tree/detail/iterator/*.hpp ]
+		[ glob ../../../boost/tree/detail/node/*.hpp ]
+	:
+		<doxygen:param>"PREDEFINED=\"BOOST_PROCESS_DOXYGEN\""
+		<xsl:param>boost.doxygen.detailns=documenteverything
+	;
+
+xml tree
+	:
+		tree.qbk
+	;
+
+boostbook standalone
+	:
+		tree
+	:
+		<dependency>autodoc
+		<xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm
+		<xsl:param>boost.root=../../../../
+		<xsl:param>doc.standalone=1
+		<xsl:param>nav.layout=none
+		<xsl:param>toc.section.depth=2
+		<xsl:param>section.autolabel=1
+		<xsl:param>section.autolabel.max.depth=3
+		<xsl:param>chapter.autolabel=0
+		<xsl:param>navig.graphics=0		
+	;
