@@ -69,21 +69,21 @@ namespace boost{namespace itl
     template 
     <
         typename KeyT, 
-        template<class>class Compare = std::less,
+        class Compare = std::less<KeyT>,
         template<class>class Alloc   = std::allocator 
     >
-    class set: private std::set<KeyT, Compare<KeyT>, Alloc<KeyT> >
+    class set: private std::set<KeyT, Compare, Alloc<KeyT> >
     {
     public:
-        typedef typename itl::set<KeyT, Compare,       Alloc >       type;
-        typedef typename std::set<KeyT, Compare<KeyT>, Alloc<KeyT> > base_type;
+        typedef typename itl::set<KeyT, Compare, Alloc >       type;
+        typedef typename std::set<KeyT, Compare, Alloc<KeyT> > base_type;
 
     public:
         typedef KeyT     key_type;
         typedef KeyT     value_type;
         typedef KeyT     data_type;
-        typedef Compare<KeyT> key_compare;
-        typedef Compare<KeyT> value_compare;
+        typedef Compare key_compare;
+        typedef Compare value_compare;
         typedef Alloc<KeyT>   allocator_type;
 
     public:        
@@ -100,8 +100,8 @@ namespace boost{namespace itl
 
     public:
         set(){}
-        set(const Compare<KeyT>& comp): 
-            std::set<KeyT, Compare<KeyT>, Alloc<KeyT> >(comp){}
+        set(const Compare& comp): 
+            std::set<KeyT, Compare, Alloc<KeyT> >(comp){}
 
         template <class InputIterator>
         set(InputIterator f, InputIterator l): std::set<InputIterator>(f,l) {}
@@ -213,47 +213,47 @@ namespace boost{namespace itl
 
     /** Standard equality, which is lexicographical equality of the sets
         as sequences, that are given by their Compare order. */
-    template <typename KeyT, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, class Compare, template<class>class Alloc>
     inline bool operator == (const itl::set<KeyT,Compare,Alloc>& lhs,
                              const itl::set<KeyT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<KeyT,Compare,Alloc<KeyT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Element equality. Two sets are equal if they contain the same 
         elements */
-    template <typename KeyT, template<class>class Compare, 
+    template <typename KeyT, class Compare, 
                              template<class>class Alloc>
     inline bool is_element_equal(const itl::set<KeyT,Compare,Alloc>& lhs,
                                  const itl::set<KeyT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<KeyT,Compare,Alloc<KeyT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Strict weak less ordering which is given by the Compare order */
-    template <typename KeyT, template<class>class Compare, 
+    template <typename KeyT, class Compare, 
                              template<class>class Alloc>
     inline bool operator < (const itl::set<KeyT,Compare,Alloc>& lhs,
                             const itl::set<KeyT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<KeyT,Compare,Alloc<KeyT> > base_type;
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Partial ordering which is induced by Compare */
-    template <typename KeyT, template<class>class Compare, 
+    template <typename KeyT, class Compare, 
                              template<class>class Alloc>
     inline bool operator <= (const itl::set<KeyT,Compare,Alloc>& lhs,
         const itl::set<KeyT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<KeyT,Compare,Alloc<KeyT> > base_type;
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
     }
 
 
-    template <typename KeyT, template<class>class Compare, 
+    template <typename KeyT, class Compare, 
                              template<class>class Alloc>
     typename set<KeyT,Compare,Alloc>::iterator
         set<KeyT,Compare,Alloc>::subtract(const value_type& val)
@@ -266,7 +266,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename KeyT, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, class Compare, template<class>class Alloc>
     std::string set<KeyT,Compare,Alloc>::as_string(const char* sep)const
     { 
         const_iterator it_ = begin();
@@ -281,7 +281,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename KeyT, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, class Compare, template<class>class Alloc>
         template<class Predicate>
     set<KeyT,Compare,Alloc>& set<KeyT,Compare,Alloc>
         ::erase_if(const Predicate& pred)
@@ -295,7 +295,7 @@ namespace boost{namespace itl
 
     }
 
-    template <typename KeyT, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, class Compare, template<class>class Alloc>
         template<class Predicate>
     set<KeyT,Compare,Alloc>& set<KeyT,Compare,Alloc>
         ::assign_if(const set<KeyT,Compare,Alloc>& src, const Predicate& pred)
@@ -311,7 +311,7 @@ namespace boost{namespace itl
 
     //-------------------------------------------------------------------------
     template <typename KeyT,
-              template<class>class Compare, template<class>class Alloc>
+              class Compare, template<class>class Alloc>
     set<KeyT,Compare,Alloc>& 
         insert(      set<KeyT,Compare,Alloc>& object, 
                const set<KeyT,Compare,Alloc>& insertee) 
@@ -320,7 +320,7 @@ namespace boost{namespace itl
     }
 
     template <typename KeyT,
-              template<class>class Compare, template<class>class Alloc>
+              class Compare, template<class>class Alloc>
     set<KeyT,Compare,Alloc>& 
         erase(      set<KeyT,Compare,Alloc>& object, 
               const set<KeyT,Compare,Alloc>& erasee) 

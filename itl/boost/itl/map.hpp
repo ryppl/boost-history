@@ -114,8 +114,8 @@ namespace boost{namespace itl
 
         typedef typename itl::map<KeyT, DataT, Traits, Compare, Alloc> type;
         typedef typename std::map<KeyT, DataT, Compare<KeyT>, 
-                                  allocator_type>              base_type;
-        typedef typename itl::set<KeyT, Compare, Alloc >       set_type;
+                                  allocator_type>            base_type;
+        typedef typename itl::set<KeyT,Compare<KeyT>,Alloc>        set_type;
 
         typedef itl::map<KeyT, DataT, itl::neutron_absorber, Compare, Alloc> 
                                                                neutron_absorber_type;

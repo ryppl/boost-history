@@ -43,7 +43,7 @@ namespace boost{namespace itl
     public:
         typedef var_tuple<VarCount> var_tuple_type;
         typedef var_tuple_order<var_tuple_type> tuple_order_type;
-        typedef itl::set<var_tuple_type, var_tuple_order> tuple_set_type;
+        typedef itl::set<var_tuple_type, var_tuple_order<var_tuple_type> > tuple_set_type;
 
     public:
         virtual ~tuple_computer_interface(){};
@@ -339,7 +339,7 @@ namespace boost{namespace itl
         typedef tuple_computer_base<VarCount, counter_type> base_type;
         typedef typename base_type::var_tuple_type var_tuple_type;
         typedef typename base_type::key_compare key_compare;
-        typedef typename itl::set<var_tuple_type, var_tuple_order> 
+        typedef typename itl::set<var_tuple_type, var_tuple_order<var_tuple_type> > 
                 tuple_set_type;
 
     public:
@@ -392,7 +392,7 @@ namespace boost{namespace itl
         typedef tuple_computer_base<VarCount, counter_type>  base_type;
         typedef typename base_type::var_tuple_type           var_tuple_type;
         typedef typename base_type::key_compare              key_compare;
-        typedef itl::set<var_tuple_type, var_tuple_order>    tuple_set_type;
+        typedef itl::set<var_tuple_type, var_tuple_order<var_tuple_type> > tuple_set_type;
         typedef typename base_type::counter_type::interval_type interval_type;
 
     private:

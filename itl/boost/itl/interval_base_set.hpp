@@ -149,13 +149,13 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// The type of the set of elements that is equivalent to the set of intervals
-    typedef typename itl::set<DomainT,Compare,Alloc> element_set;
+    typedef typename itl::set<DomainT,Compare<DomainT>,Alloc> element_set;
 
     /// The corresponding atomized type representing this interval container of elements
-    typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
+    typedef typename itl::set<DomainT,Compare<DomainT>,Alloc> atomized_type;
 
     /// Container type for the implementation 
-    typedef typename itl::set<interval_type,exclusive_less,Alloc> ImplSetT;
+    typedef typename itl::set<interval_type,exclusive_less<interval_type>,Alloc> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;

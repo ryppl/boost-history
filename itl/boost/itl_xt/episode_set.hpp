@@ -67,11 +67,11 @@ namespace boost{namespace itl
     @author  Joachim Faulhaber
 */
 template <class TimeT, class TypeDomain>
-class episode_set : public itl::set<typed_episode<TimeT, TypeDomain>*, Less_TypedEpisodeATP > 
+class episode_set : public itl::set<typed_episode<TimeT, TypeDomain>*, Less_TypedEpisodeATP<typed_episode<TimeT, TypeDomain>*> > 
 {
     // all elements must have the same type from TypeDomain
 public:
-    typedef itl::set<typed_episode<TimeT, TypeDomain>*, Less_TypedEpisodeATP > base_type;
+    typedef itl::set<typed_episode<TimeT, TypeDomain>*, Less_TypedEpisodeATP<typed_episode<TimeT, TypeDomain>*> > base_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
     
