@@ -8,7 +8,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="..\..\..\.."
+		AdditionalIncludeDirectories="..\..\..\..\.."
 		PreprocessorDefinitions="BOOST_ALL_NO_LIB"
 		ExceptionHandling="2"
 	/>
