@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ratio_test", "ratio_test\ratio_test.vcproj", "{C2B1EC73-9C8A-46C8-A602-F4DC36EF4874}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "time2_demo", "time2_demo\time2_demo.vcproj", "{1635693B-62F9-4D21-B341-090987602716}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "await_keystroke", "await_keystroke\await_keystroke.vcproj", "{E0E5B024-EF94-46AE-A848-3973848F2773}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2B1EC73-9C8A-46C8-A602-F4DC36EF4874}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C2B1EC73-9C8A-46C8-A602-F4DC36EF4874}.Debug|Win32.Build.0 = Debug|Win32
+		{C2B1EC73-9C8A-46C8-A602-F4DC36EF4874}.Release|Win32.ActiveCfg = Release|Win32
+		{C2B1EC73-9C8A-46C8-A602-F4DC36EF4874}.Release|Win32.Build.0 = Release|Win32
+		{1635693B-62F9-4D21-B341-090987602716}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1635693B-62F9-4D21-B341-090987602716}.Debug|Win32.Build.0 = Debug|Win32
+		{1635693B-62F9-4D21-B341-090987602716}.Release|Win32.ActiveCfg = Release|Win32
+		{1635693B-62F9-4D21-B341-090987602716}.Release|Win32.Build.0 = Release|Win32
+		{E0E5B024-EF94-46AE-A848-3973848F2773}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0E5B024-EF94-46AE-A848-3973848F2773}.Debug|Win32.Build.0 = Debug|Win32
+		{E0E5B024-EF94-46AE-A848-3973848F2773}.Release|Win32.ActiveCfg = Release|Win32
+		{E0E5B024-EF94-46AE-A848-3973848F2773}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
