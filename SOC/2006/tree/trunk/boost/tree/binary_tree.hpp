@@ -208,8 +208,6 @@ class binary_tree {
      */
     cursor insert(cursor pos, value_type const& val)
     {
-        //increment size!
-        
         void* val_hint = 0;//TODO: need some method to obtain hints from cursor
         void* node_hint = 0;
         
@@ -226,19 +224,19 @@ class binary_tree {
         if ((pos == this->inorder_first()))
             m_header[1] = p_node; 
 
-        return pos.begin(); 
+        return pos; 
     }
 
     // TODO: Optimise. Especially wrt header links. 
     // Making the other insert() a special case of this one might be more
     // reasonable.
     /**
-     * @brief        Inserts val in front of @a pos, or, if @a pos' parent is
-     *                 already full, creates a new child node containing @a val 
-     *                 instead.
-     * @param pos    The %binary_tree inorder iterator in front of which to insert.
-     * @param val    The value to insert.
-     * @return        An inorder iterator that points to the inserted data.
+     * @brief       Inserts val in front of @a pos, or, if @a pos' parent is
+     *              already full, creates a new child node containing @a val 
+     *              instead.
+     * @param pos   The %binary_tree inorder iterator in front of which to insert.
+     * @param val   The value to insert.
+     * @return      An inorder iterator that points to the inserted data.
      */
     template <class InputCursor>
     cursor insert(cursor pos, InputCursor subtree)
@@ -255,7 +253,7 @@ class binary_tree {
             insert(pos.begin(), subtree);
         if (!(++subtree).empty())
             insert(pos.end(), subtree);
-        return pos.begin();
+        return pos;
     }
 
 //    //erase operations must rebalance; clear doesn't need to.    

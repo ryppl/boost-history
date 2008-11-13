@@ -106,7 +106,7 @@ class forest_tree {
      */
     cursor insert(cursor pos, value_type const& val)
     {
-        return cursor(h.insert(base_cursor(pos), val).to_parent());
+        return cursor(h.insert(base_cursor(pos), val));
     }
 
     /**

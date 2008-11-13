@@ -30,8 +30,9 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     binary_tree<int> bt0;
     BOOST_CHECK(bt0.root().empty());
     
-    binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.begin()*/, 8);
-    
+    binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.begin()*/, 8);   
+    c.to_begin();
+
     BOOST_CHECK(c == bt0.root().begin());
     BOOST_CHECK(bt0.root().begin().parent() == bt0.root());
     BOOST_CHECK(!bt0.root().empty());
@@ -39,6 +40,7 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     BOOST_CHECK(bt0.root().begin().empty());
     
     c = bt0.insert(c, 3);
+    c.to_begin();
     
     // The 8 valued cursor still ok?
     BOOST_CHECK(bt0.root().begin().parent() == bt0.root());
@@ -71,6 +73,8 @@ void create_test_dataset2_tree(Tree& mytree)
     BOOST_CHECK(c.empty());
     
     c1 = mytree.insert(c, 1);
+    c1.to_begin();
+
     BOOST_CHECK_EQUAL(*c1, 1);
     
     BOOST_CHECK(!c.empty());
@@ -78,6 +82,8 @@ void create_test_dataset2_tree(Tree& mytree)
     BOOST_CHECK(c1.parent() == c);
     
     c2 = mytree.insert(c1, 2);
+    c2.to_begin();
+
     BOOST_CHECK(!c.empty());
     BOOST_CHECK(c2.empty());
     BOOST_CHECK_EQUAL(*c1, 1);
@@ -102,6 +108,8 @@ void create_test_dataset2_tree(Tree& mytree)
     BOOST_CHECK_EQUAL(*c3, 2);
     ++c3;
     c4 = mytree.insert(c3, 4);
+    c4.to_begin();
+
     BOOST_CHECK_EQUAL(*c4, 4);
     c4 = c4.parent();
     --c4;
