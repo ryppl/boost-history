@@ -282,6 +282,25 @@ class binary_tree {
 //        m_node_alloc.deallocate(p_node, 1);
 //    }
      
+//     static void destroy_node(cursor position)
+//     {
+//        if (!position.empty()) {
+//             node_pointer pos_node = 
+//                 static_cast<node_pointer>(position.m_node->operator[](position.m_pos));
+//             // delete the value position points to    
+//             m_value_alloc.destroy(pos_node->data());
+//             m_value_alloc.deallocate(pos_node->data(), 1);
+//             
+//            // recurse
+////             clear(position.begin());
+////             clear(position.end());
+//             
+//             // delete the node position points to
+//            m_node_alloc.destroy(pos_node);
+//            m_node_alloc.deallocate(pos_node, 1);         
+//          }
+//     }
+     
      /** 
       * Removes a node and its descendants recursively in postorder
       * without rebalancing
@@ -290,6 +309,11 @@ class binary_tree {
      // TODO: Take care of header-pointers
      void clear(cursor position) 
      {
+//    return cursor(boost::tree::for_each(boost::tree::postorder()
+//                , direct_cursor(position)
+//                , destroy_node
+//                , forward_traversal_tag()));
+
          if (!position.empty()) {
              node_pointer pos_node = 
                  static_cast<node_pointer>(position.m_node->operator[](position.m_pos));

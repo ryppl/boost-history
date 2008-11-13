@@ -40,6 +40,7 @@ class forest_cursor
       , bidirectional_traversal_tag
       , bidirectional_traversal_tag
     > {
+
 private:
     struct enabler {};
 

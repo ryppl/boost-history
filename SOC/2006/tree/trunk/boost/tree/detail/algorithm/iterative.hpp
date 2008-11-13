@@ -20,11 +20,19 @@
 #include <boost/tree/detail/algorithm/inorder.hpp>
 #include <boost/tree/detail/algorithm/postorder.hpp>
 
+#include <boost/tree/cursor_concepts.hpp>
+
+#include <boost/concept/requires.hpp>
+
 namespace boost {
 namespace tree {
 
 template <class Order, class Cursor, class Op>
-Op for_each(Order, Cursor is, Op f, bidirectional_traversal_tag)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>))
+    ((AscendingCursor<Cursor>)),
+    (Op)) // return type
+for_each(Order, Cursor is, Op f, bidirectional_traversal_tag)
 {
     root_tracking_cursor<Cursor> s(is);
     root_tracking_cursor<Cursor> s2(s);

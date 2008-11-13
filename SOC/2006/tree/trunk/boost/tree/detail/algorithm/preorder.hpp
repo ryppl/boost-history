@@ -16,6 +16,9 @@
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
+#include <boost/tree/cursor_concepts.hpp>
+
+#include <boost/concept/requires.hpp>
 
 namespace boost {
 namespace tree {
@@ -31,8 +34,13 @@ struct preorder {
  * @brief    Preorder successor
  * @param c    Cursor to be set to its preorder successor
  */
-template <class Cursor>
-inline void forward(preorder, Cursor& c)
+template <typename Cursor>
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>))
+    ((AscendingCursor<Cursor>)),
+    (void)) // return type
+forward(preorder, Cursor& c)
 {
     // If we have a left child, go there.
     if (!c.empty()) {
@@ -68,7 +76,12 @@ inline void forward(preorder, Cursor& c)
  * @param c    Cursor to be set to its preorder predecessor
  */
 template <class Cursor>
-inline void back(preorder, Cursor& c)
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>))
+    ((AscendingCursor<Cursor>)),
+    (void)) // return type
+back(preorder, Cursor& c)
 {
     if (!c.is_root()) {
         c.to_parent();
@@ -99,7 +112,10 @@ inline void back(preorder, Cursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_first(preorder, Cursor& c)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+to_first(preorder, Cursor& c)
 {
     c.to_begin();
 }
@@ -125,7 +141,10 @@ void to_last(preorder, Cursor& c)
  * @endif
  */
 template <class Cursor, class Op>
-void for_each_recursive(preorder, Cursor s, Op& f)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+for_each_recursive(preorder, Cursor s, Op& f)
 {
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
@@ -150,7 +169,10 @@ void for_each_recursive(preorder, Cursor s, Op& f)
  * If @p f has a return value it is ignored.
  */
 template <class Cursor, class Op>
-Op for_each(preorder, Cursor s, Op f, forward_traversal_tag)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (Op)) // return type
+for_each(preorder, Cursor s, Op f, forward_traversal_tag)
 {
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
@@ -182,7 +204,11 @@ Op for_each(preorder, Cursor s, Op f, forward_traversal_tag)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform(preorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<InCursor>))
+    ((DescendingCursor<OutCursor>)),
+    (OutCursor)) // return type
+transform(preorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
 {
     InCursor r = s.end();
     s.to_begin();

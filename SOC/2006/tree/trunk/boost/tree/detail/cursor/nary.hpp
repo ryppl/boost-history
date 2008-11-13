@@ -41,7 +41,8 @@ class nary_tree_cursor
       , random_access_traversal_tag
       , bidirectional_traversal_tag
     > {
- private:
+
+private:
     typedef typename Node::base_type node_base;
       
     typedef typename mpl::eval_if<

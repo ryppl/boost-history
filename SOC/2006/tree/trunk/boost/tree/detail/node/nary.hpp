@@ -68,10 +68,10 @@ template <template <typename> class Container>
 class node_base : public node_with_parent_base, public Container<node_base<Container>*> {
     typedef node_base<Container> self_type;
     
- public:
+public:
  
-     typedef Container<node_base<Container>*> base_type;
-     typedef typename base_type::size_type size_type;
+    typedef Container<node_base<Container>*> base_type;
+    typedef typename base_type::size_type size_type;
     typedef self_type* base_pointer;
     typedef self_type const* const_base_pointer;
     
@@ -112,9 +112,9 @@ class node_base<binary_array>
 : public node_with_parent_base, public binary_array<node_base<binary_array>*> {
     typedef node_base<binary_array> self_type;
     
- public:
+public:
  
-     typedef binary_array<node_base*> base_type;
+    typedef binary_array<node_base*> base_type;
     typedef self_type* base_pointer;
     typedef self_type const* const_base_pointer;
     
@@ -206,7 +206,7 @@ class node_base<binary_array>
 template <typename T, template <typename> class Container>
 class node : public node_base<Container> {
  public:
-     typedef T value_type;
+    typedef T value_type;
     
     typedef Container<node_base<Container>*> container_type;
 

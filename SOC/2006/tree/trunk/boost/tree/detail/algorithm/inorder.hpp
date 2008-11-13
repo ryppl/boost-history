@@ -14,6 +14,9 @@
 
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
+#include <boost/tree/cursor_concepts.hpp>
+
+#include <boost/concept/requires.hpp>
 
 #include <algorithm>
 
@@ -33,7 +36,12 @@ struct inorder {
  * @ingroup    traversal
  */
 template <class MultiwayCursor>
-inline void forward(inorder, MultiwayCursor& c)
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>))
+    ((AscendingCursor<MultiwayCursor>)),
+    (void)) // return type
+forward(inorder, MultiwayCursor& c)
 {
     if (!(++c).empty()) {
         while (!c.to_begin().empty());
@@ -50,7 +58,12 @@ inline void forward(inorder, MultiwayCursor& c)
  * @param c    MultiwayCursor to be set to its inorder predecessor
  */
 template <class MultiwayCursor>
-inline void back(inorder, MultiwayCursor& c)
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>))
+    ((AscendingCursor<MultiwayCursor>)),
+    (void)) // return type
+back(inorder, MultiwayCursor& c)
 {
     if (!c.empty()) {
         while (!c.to_end().empty());
@@ -71,7 +84,10 @@ inline void back(inorder, MultiwayCursor& c)
  *          position in the subtree.
  */
 template <class Cursor>
-void to_first(inorder, Cursor& c)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+to_first(inorder, Cursor& c)
 {
     while (!c.empty())
         c.to_begin();
@@ -98,7 +114,10 @@ void to_last(inorder, Cursor& c)
  * @endif
  */
 template <class MultiwayCursor, class Op>
-void for_each_recursive(inorder, MultiwayCursor s, Op& f)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>)),
+    (void)) // return type
+for_each_recursive(inorder, MultiwayCursor s, Op& f)
 {
     MultiwayCursor t = s.end();
 
@@ -125,7 +144,10 @@ void for_each_recursive(inorder, MultiwayCursor s, Op& f)
  * If @p f has a return value it is ignored.
  */
 template <class MultiwayCursor, class Op>
-Op for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>)),
+    (Op)) // return type
+for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
 {
     MultiwayCursor t = s.end();
 
@@ -155,7 +177,12 @@ Op for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
  * op must not change its argument.
  */
 template <class InCursor, class OutCursor, class Op>
-OutCursor transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<InCursor>))
+    ((DescendingCursor<OutCursor>))
+    /*((UnaryFunction<Op>))*/,
+    (OutCursor)) // return type
+transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
 {
     InCursor r = s.end();
 
@@ -190,7 +217,10 @@ OutCursor transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_t
  */
 //[ lower_bound
 template <class MultiwayCursor, class T>
-MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>)),
+    (MultiwayCursor)) // return type
+lower_bound(MultiwayCursor x, T const& val)
 //]
 {
     MultiwayCursor y = x;
@@ -215,7 +245,11 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val)
  */
 //[ lower_bound_cmp
 template <class MultiwayCursor, class T, class Cmp>
-MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>))
+    /*((LessThanComparable<Cmp>))*/, // Problem with balanced_tree
+    (MultiwayCursor)) // return type
+lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]
 {
     MultiwayCursor y = x;
@@ -239,7 +273,10 @@ MultiwayCursor lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
  */
 //[ upper_bound
 template <class MultiwayCursor, class T>
-MultiwayCursor upper_bound(MultiwayCursor x, T const& val)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>)),
+    (MultiwayCursor)) // return type
+upper_bound(MultiwayCursor x, T const& val)
 //]
 {
     MultiwayCursor y = x;
@@ -264,7 +301,11 @@ MultiwayCursor upper_bound(MultiwayCursor x, T const& val)
  */
 //[ upper_bound_cmp
 template <class MultiwayCursor, class T, class Cmp>
-MultiwayCursor upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<MultiwayCursor>))
+    ((LessThanComparable<Cmp>)),
+    (MultiwayCursor)) // return type
+upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]
 {
     MultiwayCursor y = x;

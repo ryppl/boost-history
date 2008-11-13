@@ -58,36 +58,30 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
 
     forest_tree<int>::cursor c = ft0.insert(ft0.root().end(), 8);
     
+    BOOST_CHECK_EQUAL(*c, 8);
     BOOST_CHECK(c == ft0.root().begin());
     BOOST_CHECK(++c == ft0.root().end());
     BOOST_CHECK(ft0.root().begin().parent() == ft0.root());
     BOOST_CHECK(!ft0.root().empty());
-    BOOST_CHECK_EQUAL(*ft0.root().begin(), 8);
     BOOST_CHECK(ft0.root().begin().empty());
     
     c = ft0.insert(ft0.root().end(), 6);
-    
+    BOOST_CHECK_EQUAL(*c, 6);
     BOOST_CHECK(ft0.root().begin() != ft0.root().end());
     BOOST_CHECK(c != ft0.root().end());
-    
     BOOST_CHECK(c.base() == ft0.root().base().begin().end());
-    
-    BOOST_CHECK_EQUAL(*c, 6);
     BOOST_CHECK(c.parent() == ft0.root());
     BOOST_CHECK(!ft0.root().empty());
-    BOOST_CHECK(++c == ft0.root().end());
-    
+    BOOST_CHECK(++c == ft0.root().end()); 
     ----c;
     BOOST_CHECK(c == ft0.root().begin());
     BOOST_CHECK_EQUAL(*c, 8);
 
-    c = ft0.insert(ft0.root().end(), 7);
-    
+    c = ft0.insert(ft0.root().end(), 7);  
     BOOST_CHECK_EQUAL(*c, 7);
     BOOST_CHECK(c.parent() == ft0.root());
     BOOST_CHECK(!ft0.root().empty());
     BOOST_CHECK(++c == ft0.root().end());
-    
     ----c;
     BOOST_CHECK_EQUAL(*c, 6);
     BOOST_CHECK(c.parent() == ft0.root());
@@ -95,9 +89,9 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     BOOST_CHECK(c == ft0.root().begin());
     BOOST_CHECK(c.parent() == ft0.root());
     BOOST_CHECK_EQUAL(*c, 8);
-
     c = ft0.root().begin().begin();
     BOOST_CHECK(c.parent() == ft0.root().begin());
+
     c = ft0.insert(ft0.root().begin().begin(), 3);
     BOOST_CHECK_EQUAL(*c, 3);
     BOOST_CHECK(c == ft0.root().begin().begin());
@@ -105,9 +99,9 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
 
     // Need more checks after this line...
     c = ft0.insert(ft0.root().begin().begin().begin(), 1);
-
     c = ft0.root().begin();
     (++c).to_end();
+
     c = ft0.insert(c, 4);
     BOOST_CHECK_EQUAL(*c, 4);
     BOOST_CHECK(--(c.to_parent()) == ft0.root().begin());
