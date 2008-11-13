@@ -27,7 +27,7 @@ time2_demo contained this comment:
 
 #define _CRT_SECURE_NO_WARNINGS  // disable VC++ foolishness
 
-#include <boost/chrono.hpp>
+#include <boost/chrono/chrono.hpp>
 #include <boost/type_traits.hpp>
 
 #include <iostream>

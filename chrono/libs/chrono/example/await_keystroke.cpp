@@ -7,7 +7,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <boost/chrono.hpp>
+#include <boost/chrono/chrono.hpp>
 #include <iostream>
 #include <iomanip>
 
