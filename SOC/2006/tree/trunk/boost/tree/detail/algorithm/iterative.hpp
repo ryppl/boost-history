@@ -46,7 +46,13 @@ for_each(Order, Cursor is, Op f, bidirectional_traversal_tag)
 }
 
 template <class Order, class InCursor, class OutCursor, class Op>
-OutCursor transform (Order, InCursor is, OutCursor t, Op op
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<InCursor>))
+    ((AscendingCursor<InCursor>))
+    ((DescendingCursor<OutCursor>))
+    ((AscendingCursor<OutCursor>)),
+    (OutCursor)) // return type
+transform (Order, InCursor is, OutCursor t, Op op
                    , bidirectional_traversal_tag)
 {
     root_tracking_cursor<InCursor> s(is);
