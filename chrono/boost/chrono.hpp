@@ -863,7 +863,7 @@ template <class Clock, class Duration>
 //      20.9.5.1 Class system_clock [time.clock.system]                       //
 //----------------------------------------------------------------------------//
 
-  class system_clock
+  class BOOST_CHRONO_DECL system_clock
   {
   public:
       typedef BOOST_SYSTEM_CLOCK_DURATION          duration;
@@ -882,7 +882,7 @@ template <class Clock, class Duration>
 //      20.9.5.2 Class monotonic_clock [time.clock.monotonic]                 //
 //----------------------------------------------------------------------------//
 
-  class monotonic_clock
+  class BOOST_CHRONO_DECL monotonic_clock
   {
   public:
       typedef nanoseconds                          duration;
@@ -903,5 +903,7 @@ template <class Clock, class Duration>
 
 } // namespace chrono
 } // namespace boost
+
+#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif // BOOST_CHRONO_HPP
