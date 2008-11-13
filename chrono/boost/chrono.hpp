@@ -173,8 +173,8 @@ namespace chrono {
   time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
 
   // Clocks
-  class system_clock;
-  class monotonic_clock;
+  class BOOST_CHRONO_DECL system_clock;
+  class BOOST_CHRONO_DECL monotonic_clock;
   typedef monotonic_clock high_resolution_clock;  // as permitted by [time.clock.hires]
 
 //----------------------------------------------------------------------------//

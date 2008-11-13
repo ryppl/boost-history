@@ -943,7 +943,7 @@ public:
         long long r = rhs.tv_sec * 1000000 + rhs.tv_usec;
         t %= r;
         tv_sec = static_cast<long>(t / 1000000);
-        tv_usec = t % 1000000;
+        tv_usec = static_cast<long>(t % 1000000);
         fixup();
         return *this;
     }

@@ -11,6 +11,7 @@
 
 #define BOOST_VARIADIC_COMMON_TYPE 0
 
+#define BOOST_TYPEOF_SILENT
 #include <boost/typeof/typeof.hpp>   // boost wonders never cease!
 
 //----------------------------------------------------------------------------//
