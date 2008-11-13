@@ -15,6 +15,48 @@
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
+BOOST_AUTO_TEST_SUITE( basic_binary_tree_test )
+
+BOOST_AUTO_TEST_CASE( constructors_test )
+{
+    binary_tree<int> bt0;
+    BOOST_CHECK(bt0.root().empty());
+    
+    // test with allocator? 
+}
+
+BOOST_AUTO_TEST_CASE( insert_value_test )
+{
+    binary_tree<int> bt0;
+    BOOST_CHECK(bt0.root().empty());
+    
+    binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.begin()*/, 8);
+    
+    BOOST_CHECK(c == bt0.root().begin());
+    BOOST_CHECK(bt0.root().begin().parent() == bt0.root());
+    BOOST_CHECK(!bt0.root().empty());
+    BOOST_CHECK_EQUAL(*bt0.root().begin(), 8);
+    BOOST_CHECK(bt0.root().begin().empty());
+    
+    c = bt0.insert(c, 3);
+    
+    // The 8 valued cursor still ok?
+    BOOST_CHECK(bt0.root().begin().parent() == bt0.root());
+    BOOST_CHECK(!bt0.root().empty());
+    BOOST_CHECK_EQUAL(*bt0.root().begin(), 8);
+    
+    // The 3 valued cursor.
+    BOOST_CHECK(c == bt0.root().begin().begin());
+    BOOST_CHECK(bt0.root().begin().begin().parent() == bt0.root().begin());
+    BOOST_CHECK(!bt0.root().begin().empty());
+    BOOST_CHECK_EQUAL(*bt0.root().begin().begin(), 3);
+    BOOST_CHECK(bt0.root().begin().begin().empty());
+    
+    BOOST_CHECK(++c == bt0.root().begin().end());
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_FIXTURE_TEST_SUITE(binary_tree_test, test_binary_tree_with_list_fixture<int>)
 
 using namespace boost::tree;
@@ -129,15 +171,6 @@ BOOST_AUTO_TEST_CASE( clear_test )
 {
     bt.clear();    
     BOOST_CHECK(bt.empty());
-}
-
-BOOST_AUTO_TEST_CASE( constructors_test )
-{
-    binary_tree<int> bt0;
-    BOOST_CHECK(bt0.root().empty());
-    //BOOST_CHECK_EQUAL(0, 1);
-    
-    // test with allocator 
 }
 
 BOOST_AUTO_TEST_CASE( swap_binary_tree_test )

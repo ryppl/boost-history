@@ -46,26 +46,36 @@ class forest_tree {
     typedef typename cursor_size<cursor>::type size_type;
     typedef typename cursor_difference<cursor>::type difference_type;
 
-//    forest_tree()
-//    {
-//        h.insert(h.root(), );
-//    }
-    
-    explicit forest_tree(Hierarchy const& hier = Hierarchy()) : h(hier)
-    { }
-    
+    /**
+     *  @brief    The default constructor creates one element at the root.
+     *  @param    val   The value the root will be assigned. 
+     */
+    forest_tree(value_type const& val = value_type()) : h(Hierarchy())
+    {
+        h.insert(h.root(), val);
+    }
+
+    /**
+     *  @brief    The default constructor creates no elements.
+     *  @param    hier    A hierarchy object that will be used as a base to
+     *                    construct this forest_tree.
+     */
+    explicit forest_tree(Hierarchy const& hier) : h(hier)
+    {
+        if (h.empty())
+            h.insert(h.root(), value_type());
+    }
+
+    /**
+     * Returns true if the %forest_tree is empty.
+     */
     bool empty()
     {
         return h.empty();
     }
     
-    size_type size() const
-    {
-        return h.size();
-    }
-    
     /**
-     * Returns a read/write ("mutable") cursor to the %binary_tree's root.
+     * Returns a read/write ("mutable") cursor to the %forest_tree's root.
      */     
     cursor root()
     {
@@ -73,7 +83,7 @@ class forest_tree {
     }
 
     /**
-     * Returns a read-only const_cursor to the %binary_tree's root.
+     * Returns a read-only const_cursor to the %forest_tree's root.
      */     
     const_cursor root() const
     {
@@ -81,27 +91,34 @@ class forest_tree {
     }
     
     /**
-     * Returns a read-only const_cursor to the %binary_tree's root.
+     * Returns a read-only const_cursor to the %forest_tree's root.
      */     
     const_cursor croot() const
     {
         return const_cursor(h.croot());
     }
 
+    /**
+     * @brief       Inserts val in front of @a pos.
+     * @param pos   The %forest_tree cursor in front of which to insert.
+     * @param val   The value to insert.
+     * @return      A cursor that points to the inserted data.
+     */
     cursor insert(cursor pos, value_type const& val)
     {
-        // TODO: Could we remove the root-checking part if root.parent() 
-        // returned root? Or don't we even want root?
-        base_cursor bc = base_cursor(pos);
-        if (bc != h.root())
-            bc = bc.parent();
-        //if (index(bc))
-        return cursor(h.insert(bc, val));
+        return cursor(h.insert(base_cursor(pos), val).to_parent());
     }
+
+    /**
+     * @brief Clears all data from the forest tree.
+     */
+     void clear()
+     {
+        h.clear();
+     }
     
- protected:
+protected:
     hierarchy_type h;
-     
 };
 
 

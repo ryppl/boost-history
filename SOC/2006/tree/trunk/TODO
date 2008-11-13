@@ -18,7 +18,10 @@ General:
   context dependent thing; so merge it into the general iterative algorithm versions.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
-* Fix recursive algorithms for use with forest.
+* Fix algorithms for use with forest:
+  * Recursive preorder: OK.
+  * Recursive postorder: TBD.
+  * Iterative pre- and postorder: TBD.
 * Implement a real output cursor (if possible) and use preorder::copy to build a new tree.
   Then, do some performance measurements comparing
   * Different *orders;

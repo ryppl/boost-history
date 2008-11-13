@@ -199,12 +199,12 @@ class binary_tree {
     // Hierarchy-specific
     
     /**
-     * @brief        Inserts val in front of @a pos, or, if @a pos' parent is
-     *                 already full, creates a new child node containing @a val 
-     *                 instead.
-     * @param pos    The %binary_tree cursor in front of which to insert.
-     * @param val    The value to insert.
-     * @return        A cursor that points to the inserted data.
+     * @brief       Inserts val in front of @a pos, or, if @a pos' parent is
+     *              already full, creates a new child node containing @a val 
+     *              instead.
+     * @param pos   The %binary_tree cursor in front of which to insert.
+     * @param val   The value to insert.
+     * @return      A cursor that points to the inserted data.
      */
     cursor insert(cursor pos, value_type const& val)
     {

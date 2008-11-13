@@ -79,32 +79,36 @@ public:
 
     operator base_cursor()
     {
-        return this->base();
+        return forest_cursor::cursor_adaptor_::base();
     }
     
+    Cursor const& base() const
+    {
+        return forest_cursor::cursor_adaptor_::base();
+    }
 private:
     
     friend class cursor_core_access;
     friend class iterator_core_access;
 
-//    bool empty_() const
-//    {
-//        if (this->base().index())
-//            return true;
-//        return this->base().empty();
-//    }
+    bool empty_() const
+    {
+        return this->base().begin().empty() && this->base().end().empty();
+    }
+
+    typename forest_cursor::cursor_adaptor_::reference dereference() const
+    {
+        return *this->base_reference().begin();
+    }
 
     void increment()
     {
-         if (!(++this->base_reference()).empty())
-             this->base_reference().to_begin();
+        this->base_reference().to_end();
     }
     
     void decrement()
     {
-        if (!index(this->base()))
-            this->base_reference().to_parent();
-        --this->base_reference();
+        this->base_reference().to_parent();
     }
     
     // Range stuff.
@@ -113,15 +117,18 @@ private:
 
     void right()
     {
-        while (!this->base_reference().to_end().empty());
+        this->base_reference().to_begin();
+        while (!this->base_reference().empty())
+            this->base_reference().to_end();
     }
     
     // Cursor stuff. 
     
     void up()
     {
-        if (!index(this->base()))
+        while (index(this->base_reference()))
             this->base_reference().to_parent();
+        this->base_reference().to_parent();
     }
 };
 
