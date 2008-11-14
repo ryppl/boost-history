@@ -9,10 +9,10 @@
  * Ascending traversal algorithms for cursors
  */
 
-
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_ASCENDING_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_ASCENDING_HPP
 
+#include <boost/iterator/iterator_categories.hpp>
 
 namespace boost {
 namespace tree {

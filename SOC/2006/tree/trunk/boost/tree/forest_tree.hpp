@@ -14,6 +14,7 @@
 
 #include <boost/tree/detail/cursor/forest.hpp>
 #include <boost/tree/binary_tree.hpp>
+#include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept_check.hpp>
 
@@ -21,7 +22,7 @@ namespace boost {
 namespace tree {
 
 using detail::forest_cursor;
-
+using namespace boost_concepts;
 
 /** 
  * @brief A %forest_tree.
@@ -34,6 +35,8 @@ template <class T, class Hierarchy = binary_tree<T> >
 class forest_tree {
 
 BOOST_CONCEPT_ASSERT((DefaultConstructible<T>));
+BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::cursor >));
+BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >));
 //BOOST_CONCEPT_ASSERT((SameType<T, typename Hierarchy::value_type>)); 
 // Is there a SameType concept in BCCL?
 

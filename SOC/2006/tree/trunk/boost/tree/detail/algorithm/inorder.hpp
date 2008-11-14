@@ -23,6 +23,8 @@
 namespace boost {
 namespace tree {
 
+using namespace boost_concepts;
+
 /** \addtogroup traversal */
 /*\@{*/
 
