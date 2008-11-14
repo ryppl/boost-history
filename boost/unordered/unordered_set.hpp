@@ -6,8 +6,8 @@
 
 //  See http://www.boost.org/libs/unordered for documentation
 
-#ifndef BOOST_UNORDERED_SET_HPP_INCLUDED
-#define BOOST_UNORDERED_SET_HPP_INCLUDED
+#ifndef BOOST_UNORDERED_UNORDERED_SET_HPP_INCLUDED
+#define BOOST_UNORDERED_UNORDERED_SET_HPP_INCLUDED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -357,8 +357,8 @@ namespace boost
         friend bool operator==(unordered_set const&, unordered_set const&);
         friend bool operator!=(unordered_set const&, unordered_set const&);
 #else
-        friend bool operator==<>(unordered_set const&, unordered_set const&);
-        friend bool operator!=<>(unordered_set const&, unordered_set const&);
+        friend bool operator==<Value, Hash, Pred, Alloc>(unordered_set const&, unordered_set const&);
+        friend bool operator!=<Value, Hash, Pred, Alloc>(unordered_set const&, unordered_set const&);
 #endif
     }; // class template unordered_set
 
@@ -714,8 +714,8 @@ namespace boost
         friend bool operator==(unordered_multiset const&, unordered_multiset const&);
         friend bool operator!=(unordered_multiset const&, unordered_multiset const&);
 #else
-        friend bool operator==<>(unordered_multiset const&, unordered_multiset const&);
-        friend bool operator!=<>(unordered_multiset const&, unordered_multiset const&);
+        friend bool operator==<Value, Hash, Pred, Alloc>(unordered_multiset const&, unordered_multiset const&);
+        friend bool operator!=<Value, Hash, Pred, Alloc>(unordered_multiset const&, unordered_multiset const&);
 #endif
     }; // class template unordered_multiset
 
@@ -742,4 +742,4 @@ namespace boost
 
 } // namespace boost
 
-#endif // BOOST_UNORDERED_SET_HPP_INCLUDED
+#endif // BOOST_UNORDERED_UNORDERED_SET_HPP_INCLUDED
