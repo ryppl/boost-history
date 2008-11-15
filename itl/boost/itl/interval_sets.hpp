@@ -14,8 +14,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-template<typename, template<class>class,
-         class, template<class>class> 
+template<typename, template<class,template<class>class>class,
+         template<class>class, template<class>class> 
 class interval_set;
 
 //-----------------------------------------------------------------------------
@@ -23,12 +23,12 @@ class interval_set;
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -49,12 +49,12 @@ operator +=
 //--- interval_type -----------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -71,12 +71,12 @@ operator +=
 //--- domain_type -------------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -96,12 +96,12 @@ operator +=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -122,12 +122,12 @@ operator -=
 //--- interval_type -----------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -144,12 +144,12 @@ operator -=
 //--- domain_type -------------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -169,12 +169,12 @@ operator -=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -216,12 +216,12 @@ operator *=
 //--- interval_type -----------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -249,12 +249,12 @@ operator *=
 //--- domain_type -------------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -262,7 +262,7 @@ IntervalSet<DomainT,Interval,Compare,Alloc>&
 operator *=
 (
     IntervalSet<DomainT,Interval,Compare,Alloc>& object,
-    const typename IntervalSet<DomainT,Interval,Compare,Alloc>::domain_type& value
+    const DomainT& value
 )
 {
     typedef typename IntervalSet<DomainT,Interval,Compare,Alloc>
@@ -275,12 +275,12 @@ operator *=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -300,12 +300,12 @@ bool is_element_equal
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -342,12 +342,12 @@ bool is_disjoint
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class Traits, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, class, class, template<class>class, 
-        class, template<class>class
+        class, class, class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalMap
 >
@@ -391,12 +391,12 @@ bool is_disjoint
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -415,12 +415,12 @@ insert
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -440,12 +440,12 @@ erase
 //-----------------------------------------------------------------------------
 template 
 <
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc,
+    class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc,
     template
     <    
-        class, template<class>class, 
-        class, template<class>class
+        class, template<class,template<class>class>class, 
+        template<class>class, template<class>class
     >
     class IntervalSet
 >
@@ -461,8 +461,8 @@ enclosure(const IntervalSet<DomainT,Interval,Compare,Alloc>& object)
 
 template 
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class SubType, class DomainT, template<class,template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
 typename interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::interval_type 
 enclosure(const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& object)

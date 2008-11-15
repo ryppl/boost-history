@@ -79,9 +79,9 @@ void party()
 
     PartyAttendenceHistoryT party;
 
-    party += make_pair( rightopen_interval<Time>(Time(19,30), Time(23,00)), mary_harry);
-    party += make_pair( rightopen_interval<Time>(Time(20,10), Time(monday,0,0)), diana_susan);
-    party += make_pair( rightopen_interval<Time>(Time(22,15), Time(monday,0,30)), peter);
+    party += make_pair( interval<Time>::rightopen(Time(19,30), Time(23,00)), mary_harry);
+    party += make_pair( interval<Time>::rightopen(Time(20,10), Time(monday,0,0)), diana_susan);
+    party += make_pair( interval<Time>::rightopen(Time(22,15), Time(monday,0,30)), peter);
 
     PartyAttendenceHistoryT::iterator it = party.begin();
     while(it != party.end())

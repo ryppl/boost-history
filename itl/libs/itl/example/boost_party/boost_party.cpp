@@ -88,20 +88,20 @@ void boost_party()
 
     party.add( // add and element
       make_pair( 
-        rightopen_interval<ptime>(
+        interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
           mary_harry));
 
     party += // element addition can also be done via operator +=
       make_pair( 
-        rightopen_interval<ptime>(
+        interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
           diana_susan);
     party +=
       make_pair( 
-        rightopen_interval<ptime>(
+        interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
           peter);
@@ -113,7 +113,7 @@ void boost_party()
     // like e.g. min, max etc. in their 'inplace' or op= incarnation
     tallest_guest.add(
       make_pair( 
-        rightopen_interval<ptime>(
+        interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
           180), 
@@ -122,7 +122,7 @@ void boost_party()
 
     tallest_guest.add(
       make_pair( 
-        rightopen_interval<ptime>(
+        interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
           170),
@@ -131,7 +131,7 @@ void boost_party()
 
     tallest_guest.add(
       make_pair( 
-        rightopen_interval<ptime>(
+        interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
           200),

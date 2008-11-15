@@ -14,9 +14,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/split_interval_map.hpp>
 #include "../toytime.h"
 
-using namespace std;
-using namespace boost::itl;
-
 /** Example history.cpp \file history.cpp
 
 History demonstrates further possibilities of an interval map
@@ -82,6 +79,9 @@ separate episode data to a history object.
 #include <boost/itl_xt/typed_episode.hpp>
 #include <boost/itl_xt/episode_product.hpp>
 #include <boost/itl_xt/product_history.hpp>
+
+using namespace std;
+using namespace boost::itl;
 
 
 /* To use a product_history object, we need an TypeDomain-class, specifying
@@ -157,8 +157,8 @@ private:
 class DiagnosisEpisode : public HospitalEpisodes
 {
 public:
-    DiagnosisEpisode(Time begin, Time end, const std::string& val)
-        : HospitalEpisodes(rightopen_interval(begin,end),val){}
+	DiagnosisEpisode(Time begin, Time end, const std::string& val)
+        : HospitalEpisodes(boost::itl::interval<Time>::rightopen(begin,end),val){}
 
     HospitalTypeDomain::DomainET type()const { return HospitalTypeDomain::diagnosis; }
 };
@@ -168,7 +168,7 @@ class WardEpisode : public HospitalEpisodes
 {
 public:
     WardEpisode(Time begin, Time end, const std::string& val)
-        : HospitalEpisodes(rightopen_interval(begin,end),val){}
+        : HospitalEpisodes(boost::itl::interval<Time>::rightopen(begin,end),val){}
 
     HospitalTypeDomain::DomainET type()const { return HospitalTypeDomain::ward; }
 };

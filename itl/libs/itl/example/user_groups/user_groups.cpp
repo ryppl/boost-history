@@ -77,18 +77,18 @@ void user_groups()
 
     med_users.add( // add and element
       make_pair( 
-        closed_interval<date>(
+        interval<date>::closed(
           from_string("2008-01-01"), from_string("2008-12-31")), mary_harry));
 
     med_users +=  // element addition can also be done via operator +=
       make_pair( 
-        closed_interval<date>(
+        interval<date>::closed(
           from_string("2008-01-15"), from_string("2008-12-31")), 
           chief_physician);
 
     med_users +=
       make_pair( 
-        closed_interval<date>(
+        interval<date>::closed(
           from_string("2008-02-01"), from_string("2008-10-15")), 
           director_of_admin);
 
@@ -97,18 +97,18 @@ void user_groups()
 
     admin_users += // element addition can also be done via operator +=
       make_pair( 
-        closed_interval<date>(
+        interval<date>::closed(
           from_string("2008-03-20"), from_string("2008-09-30")), diana_susan);
 
     admin_users +=
       make_pair( 
-        closed_interval<date>(
+        interval<date>::closed(
           from_string("2008-01-15"), from_string("2008-12-31")), 
           chief_physician);
 
     admin_users +=
       make_pair( 
-        closed_interval<date>(
+        interval<date>::closed(
           from_string("2008-02-01"), from_string("2008-10-15")), 
           director_of_admin);
 

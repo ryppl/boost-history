@@ -32,10 +32,10 @@ using namespace boost::itl;
 */
 void interval_container_basics()
 {
-    interval<Time> night_and_day = rightopen_interval(Time(monday,   20,00), Time(tuesday,  20,00));
-    interval<Time> day_and_night = rightopen_interval(Time(tuesday,   7,00), Time(wednesday, 7,00));
-    interval<Time> next_morning  = rightopen_interval(Time(wednesday, 7,00), Time(wednesday,10,00));
-    interval<Time> next_evening  = rightopen_interval(Time(wednesday,18,00), Time(wednesday,21,00));
+    interval<Time> night_and_day = interval<Time>::rightopen(Time(monday,   20,00), Time(tuesday,  20,00));
+    interval<Time> day_and_night = interval<Time>::rightopen(Time(tuesday,   7,00), Time(wednesday, 7,00));
+    interval<Time> next_morning  = interval<Time>::rightopen(Time(wednesday, 7,00), Time(wednesday,10,00));
+    interval<Time> next_evening  = interval<Time>::rightopen(Time(wednesday,18,00), Time(wednesday,21,00));
 
     // An interval set of type interval_set joins intervals that that overlap or touch each other.
     interval_set<Time> joinedTimes;

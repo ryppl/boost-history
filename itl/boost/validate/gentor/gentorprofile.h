@@ -20,19 +20,19 @@ namespace boost{namespace itl
         GentorProfile();
 
         void set_range_int(int lwb, int upb) 
-        { _range_int = rightopen_interval(lwb, upb); }
+        { _range_int = interval<int>::rightopen(lwb, upb); }
         void set_range_double(double lwb, double upb) 
-        { _range_double = rightopen_interval(lwb, upb); }
+        { _range_double = interval<double>::rightopen(lwb, upb); }
         void set_range_ContainerSize(int lwb, int upb) 
-        { _range_ContainerSize = rightopen_interval(lwb, upb); }
+        { _range_ContainerSize = interval<int>::rightopen(lwb, upb); }
         void set_range_interval_int(int lwb, int upb) 
-        { _range_interval_int = rightopen_interval(lwb, upb); }
+        { _range_interval_int = interval<int>::rightopen(lwb, upb); }
         void set_range_interval_double(double lwb, double upb) 
-        { _range_interval_double = rightopen_interval(lwb, upb); }
+        { _range_interval_double = interval<double>::rightopen(lwb, upb); }
         void set_maxIntervalLength(int val) 
         { _maxIntervalLength = val; }
         void set_range_element_ContainerSize(int lwb, int upb) 
-        { _range_element_ContainerSize = rightopen_interval(lwb, upb); }
+        { _range_element_ContainerSize = interval<int>::rightopen(lwb, upb); }
 
         interval<int>       range_int()             { return _range_int; }
         interval<double>    range_double()          { return _range_double; }

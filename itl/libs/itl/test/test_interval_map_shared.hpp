@@ -12,8 +12,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -159,8 +159,8 @@ void interval_map_fundamentals_4_ordered_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -220,8 +220,8 @@ void interval_map_ctor_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -236,12 +236,12 @@ void interval_map_add_sub_4_bicremental_types()
     U u1 = make<U>(1);
     interval<T> I5_6I(v5,v6);
     interval<T> I5_9I(v5,v9);
-    interval<T> I0_9I = closed_interval(v0, v9);
+    interval<T> I0_9I = interval<T>::closed(v0, v9);
     typename IntervalMapT::base_pair_type v0_u1 = make_pair(v0, u1);
     typename IntervalMapT::base_pair_type v9_u1 = make_pair(v9, u1);
     typename IntervalMapT::value_type I5_6I_u1 = make_pair(I5_6I, u1);
     typename IntervalMapT::value_type I5_9I_u1 = make_pair(I5_9I, u1);
-    typename IntervalMapT::value_type I0_9I_u1 = make_pair(closed_interval(v0, v9), u1);
+    typename IntervalMapT::value_type I0_9I_u1 = make_pair(interval<T>::closed(v0, v9), u1);
 
     BOOST_CHECK_EQUAL( IntervalMapT(I5_6I_u1).add(v0_u1).add(v9_u1), 
                        IntervalMapT().add(v9_u1).add(I5_6I_u1).add(v0_u1) );
@@ -273,8 +273,8 @@ void interval_map_add_sub_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -304,8 +304,8 @@ void interval_map_distinct_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -339,10 +339,10 @@ void interval_map_distinct_4_bicremental_continuous_types()
     IntervalMapT is_123_5;
     is_123_5 = is_1_3_5;
     //OPROM: open problem: Ambiguity resolving value_type and base_value_type for overloaded o= operators.
-    //is_123_5 += make_pair(open_interval<T>(v1,v3),u1);                 //error C2593: 'operator +=' is ambiguous
-    //is_123_5 += make_pair<interval<T>, U>(open_interval<T>(v1,v3),u1); //error C2593: 'operator +=' is ambiguous
+    //is_123_5 += make_pair(interval<T>::open(v1,v3),u1);                 //error C2593: 'operator +=' is ambiguous
+    //is_123_5 += make_pair<interval<T>, U>(interval<T>::open(v1,v3),u1); //error C2593: 'operator +=' is ambiguous
     //USASO: unsatisfctory solution 1: explicit IntervalMapT::value_type instead of make_pair
-    is_123_5 += typename IntervalMapT::value_type(open_interval<T>(v1,v3),u1);
+    is_123_5 += typename IntervalMapT::value_type(interval<T>::open(v1,v3),u1);
     //USASO: unsatisfctory solution 2: not implementing base_value_type version of o=
 
     BOOST_CHECK_EQUAL( is_123_5.cardinality(),      std::numeric_limits<size_T>::infinity() );
@@ -353,8 +353,8 @@ void interval_map_distinct_4_bicremental_continuous_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -368,9 +368,9 @@ void interval_map_isolate_4_bicremental_continuous_types()
     T v2 = make<T>(2);
     T v4 = make<T>(4);
     U u1 = make<U>(1);
-    interval<T> I0_4I = closed_interval(v0,v4);
-    interval<T> C0_2D = open_interval(v0,v2);
-    interval<T> C2_4D = open_interval(v2,v4);
+    interval<T> I0_4I = interval<T>::closed(v0,v4);
+    interval<T> C0_2D = interval<T>::open(v0,v2);
+    interval<T> C2_4D = interval<T>::open(v2,v4);
     typename IntervalMapT::value_type I0_4I_u1(I0_4I,u1);
     typename IntervalMapT::value_type C0_2D_u1(C0_2D,u1);
     typename IntervalMapT::value_type C2_4D_u1(C2_4D,u1);
@@ -404,8 +404,8 @@ void interval_map_isolate_4_bicremental_continuous_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -438,7 +438,7 @@ void interval_map_contains_4_bicremental_types()
     IntervalMapT im0 = im;    
 
     im.clear();
-    IntervalMapT im2(typename IntervalMapT::value_type(closed_interval(v5,v8),u1));
+    IntervalMapT im2(typename IntervalMapT::value_type(interval<T>::closed(v5,v8),u1));
     im2.add(v9_u1).add(v11_u1);
     im += im2;
     BOOST_CHECK_EQUAL( im.contains(im2), true );    
@@ -446,8 +446,8 @@ void interval_map_contains_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -461,10 +461,10 @@ void interval_map_operators_4_bicremental_types()
     T v7 = make<T>(7);
     T v8 = make<T>(8);
     U u1 = make<U>(1);
-    typename IntervalMapT::interval_type I3_5I(closed_interval(v3,v5));
-    typename IntervalMapT::value_type I0_1I_u1(closed_interval(v0,v1),u1);
-    typename IntervalMapT::value_type I3_5I_u1(closed_interval(v3,v5),u1);
-    typename IntervalMapT::value_type I7_8I_u1(closed_interval(v7,v8),u1);
+    typename IntervalMapT::interval_type I3_5I(interval<T>::closed(v3,v5));
+    typename IntervalMapT::value_type I0_1I_u1(interval<T>::closed(v0,v1),u1);
+    typename IntervalMapT::value_type I3_5I_u1(interval<T>::closed(v3,v5),u1);
+    typename IntervalMapT::value_type I7_8I_u1(interval<T>::closed(v7,v8),u1);
     
     IntervalMapT left, left2, right, all, section, complement;
     left.add(I0_1I_u1).add(I3_5I_u1);
@@ -508,8 +508,8 @@ void interval_map_operators_4_bicremental_types()
 // Test for nontrivial intersection of interval maps with intervals and values
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -530,16 +530,16 @@ void interval_map_base_intersect_4_bicremental_types()
 
     U u1 = make<U>(1);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I1_4D = rightopen_interval(v1,v4);
-    interval<T> I1_8D = rightopen_interval(v1,v8);
-    interval<T> I2_7D = rightopen_interval(v2,v7);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I5_8D = rightopen_interval(v5,v8);
-    interval<T> I6_7D = rightopen_interval(v6,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I1_4D = interval<T>::rightopen(v1,v4);
+    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
+    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     typename IntervalMapT::value_type I0_3D_1(I0_3D, u1);
     typename IntervalMapT::value_type I6_9D_1(I6_9D, u1);
@@ -619,8 +619,8 @@ void interval_map_base_intersect_4_bicremental_types()
 // Test for nontrivial erasure of interval maps with intervals and interval sets
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -641,22 +641,22 @@ void interval_map_base_erase_4_bicremental_types()
 
     U u1 = make<U>(1);
 
-    interval<T> I0_1D = rightopen_interval(v0,v1);
-    interval<T> I0_2D = rightopen_interval(v0,v2);
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I1_4D = rightopen_interval(v1,v4);
-    interval<T> I1_8D = rightopen_interval(v1,v8);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I2_7D = rightopen_interval(v2,v7);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I5_8D = rightopen_interval(v5,v8);
-    interval<T> I6_7D = rightopen_interval(v6,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
-    interval<T> I7_9D = rightopen_interval(v7,v9);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
+    interval<T> I0_1D = interval<T>::rightopen(v0,v1);
+    interval<T> I0_2D = interval<T>::rightopen(v0,v2);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I1_4D = interval<T>::rightopen(v1,v4);
+    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    interval<T> I7_9D = interval<T>::rightopen(v7,v9);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
 
     typename IntervalMapT::value_type I0_1D_1(I0_1D, u1);
     typename IntervalMapT::value_type I0_3D_1(I0_3D, u1);
@@ -734,8 +734,8 @@ void interval_map_base_erase_4_bicremental_types()
 // Test first_collision
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class>class = interval,
-                   class = std::less<T>,
+                   template<class,template<class>class>class = interval,
+                   template<class>class = std::less,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -755,12 +755,12 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 
     U u1 = make<U>(1);
 
-    interval<T> I0_1D = rightopen_interval(v0,v1);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
+    interval<T> I0_1D = interval<T>::rightopen(v0,v1);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
 
     typename IntervalMapT::value_type I0_1D_1(I0_1D, u1);
     typename IntervalMapT::value_type I1_3D_1(I1_3D, u1);

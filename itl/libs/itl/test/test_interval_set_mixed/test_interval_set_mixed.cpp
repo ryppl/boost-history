@@ -139,9 +139,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_ctor_4_bicremental_typ
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     split_interval_set<T> split_set;
     split_set.add(I1_3D).add(I2_4D).add(I4_5D);
@@ -170,9 +170,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_assign_4_bicremental_t
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     split_interval_set<T> split_set;
     split_set.add(I1_3D).add(I2_4D).add(I4_5D);
@@ -205,9 +205,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_equal_4_bicremental_ty
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     interval_set<T> join_set;
     join_set.add(I1_3D).add(I2_4D).add(I4_5D);
@@ -246,9 +246,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_add_4_bicremental_type
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     split_interval_set<T> split_set;
     split_set.add(I1_3D).add(I2_4D);
@@ -297,13 +297,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_subtract_4_bicremental
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
     //Never does a subtract operation introduce or preserve interval borders within
@@ -408,13 +408,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_erase_4_bicremental_ty
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
     //Never does a subtract operation introduce or preserve interval borders within
@@ -519,14 +519,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_basic_intersect_4_bicr
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I1_8D = rightopen_interval(v1,v8);
-    interval<T> I2_7D = rightopen_interval(v2,v7);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I6_7D = rightopen_interval(v6,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
+    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     //--------------------------------------------------------------------------
     // split_interval_set
@@ -567,9 +567,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_basic_intersect_4_bicr
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB *= v1) += open_interval<T>(v1,v7);
+    (split_AB *= v1) += interval<T>::open(v1,v7);
     split_ab2.clear();
-    split_ab2 += rightopen_interval<T>(v1,v7);
+    split_ab2 += interval<T>::rightopen(v1,v7);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
@@ -587,14 +587,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_2D = rightopen_interval(v1,v2);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I5_8D = rightopen_interval(v5,v8);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_2D = interval<T>::rightopen(v1,v2);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     //--------------------------------------------------------------------------
     // split_interval_set
@@ -720,12 +720,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_disjoint_4_bicremental
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_2D = rightopen_interval(v0,v2);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I3_4D = rightopen_interval(v3,v4);
-    interval<T> I4_4I = closed_interval(v4,v4);
-    interval<T> C4_6D = open_interval(v4,v6);
-    interval<T> I6_6I = closed_interval(v6,v6);
+    interval<T> I0_2D = interval<T>::rightopen(v0,v2);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I3_4D = interval<T>::rightopen(v3,v4);
+    interval<T> I4_4I = interval<T>::closed(v4,v4);
+    interval<T> C4_6D = interval<T>::open(v4,v6);
+    interval<T> I6_6I = interval<T>::closed(v6,v6);
 
     //--------------------------------------------------------------------------
     //split_A: [0  2)          [4 4]      [6 6]

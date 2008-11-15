@@ -99,7 +99,7 @@ public:
     }
 
     void setRange(interval<NumTV> rng) { m_valueRange = rng; }
-    void setRange(NumTV lwb, NumTV upb) { m_valueRange = rightopen_interval(lwb,upb); } 
+	void setRange(NumTV lwb, NumTV upb) { m_valueRange = interval<NumTV>::rightopen(lwb,upb); } 
 
     void calibrate(const RandomGentorProfile<NumTV>& profile)
     {

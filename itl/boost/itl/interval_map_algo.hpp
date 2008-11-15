@@ -140,36 +140,6 @@ bool is_element_equal(const LeftT& left, const RightT& right)
     return step.result();
 }
 
-/*CL
-template<class LeftT, class RightT>
-int lexicographical_compare(LeftT::const_iterator left_begin,   LeftT::const_iterator left_end, 
-							RightT::const_iterator right_begin, RightT::const_iterator right_end)
-{
-    if(left.empty())
-        return right.empty();
-    else if(right.empty())
-        return false;
-
-    typedef interval_map_sequence_tracker<LeftT,RightT> Step;
-    Step step(left_end, right_end);
-
-    typename LeftT::const_iterator  left_  = left.begin();
-    typename RightT::const_iterator right_ = right.begin();
-
-    int state = Step::nextboth;
-    while(state != Step::stop)
-    {
-        switch(state){
-        case Step::nextboth:    state = step.next_both(left_, right_);  break;
-        case Step::nextleft:    state = step.next_left(left_, right_);  break;
-        case Step::nextright:   state = step.next_right(left_, right_); break;
-        case Step::leftaligned: state = step.proceed(left_, right_);    break;
-        }
-    }
-    return step.result();
-}
-*/
-
 } //Map
     
 }} // namespace itl boost

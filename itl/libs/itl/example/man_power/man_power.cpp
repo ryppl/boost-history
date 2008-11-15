@@ -50,7 +50,7 @@ interval_set<date> weekends(const interval<date>& scope)
     week_iterator week_iter(cur_weekend_sat);
 
     for(; week_iter <= scope.last(); ++week_iter)
-        weekends += rightopen_interval(*week_iter, *week_iter + days(2));
+        weekends += interval<date>::rightopen(*week_iter, *week_iter + days(2));
 
     weekends *= scope; // cut off the surplus
 
@@ -67,7 +67,7 @@ void man_power()
     date someday = from_string("2008-08-01");
     date thenday = someday + months(3);
 
-    interval<date> scope = rightopen_interval(someday, thenday);
+    interval<date> scope = interval<date>::rightopen(someday, thenday);
 
     // ------------------------------------------------------------------------
     // (1) In a first step, the regular working times are computed for the
@@ -80,8 +80,8 @@ void man_power()
     worktime -= from_string("2008-10-03"); //german reunification ;)
 
     // company holidays (fictitious ;)
-    worktime -= closed_interval(from_string("2008-08-18"), 
-                                from_string("2008-08-22"));
+    worktime -= interval<date>::closed(from_string("2008-08-18"), 
+                                       from_string("2008-08-22"));
 
     //-------------------------------------------------------------------------
     // (2) Now we calculate the individual worktimes for some employees

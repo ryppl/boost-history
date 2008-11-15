@@ -56,19 +56,19 @@ void overlap_counter()
     OverlapCounterTD overlap_counter;
     interval<int> itv;
 
-    itv = rightopen_interval(4,8);
+    itv = interval<int>::rightopen(4,8);
     cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
     overlap_counter += make_pair(itv, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    itv = rightopen_interval(6,9);
+    itv = interval<int>::rightopen(6,9);
     cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
     overlap_counter += make_pair(itv, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    itv = rightopen_interval(1,9);
+    itv = interval<int>::rightopen(1,9);
     cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
     overlap_counter += make_pair(itv, 1);
     print_overlaps(overlap_counter);

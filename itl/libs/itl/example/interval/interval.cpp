@@ -30,12 +30,12 @@ using namespace boost::itl;
 int main()
 {
     cout << ">> Interval Template Library: Sample interval.cpp <<\n";
-    cout << "---------------------------------------------------\n";
+    cout << "----------------------------------------------------\n";
 
-    interval<int>    int_Itv  = closed_interval(3,7);
-    interval<double> sqrt_Itv = rightopen_interval(1/sqrt(2.0), sqrt(2.0));
-    interval<string> city_Itv = leftopen_interval<string>("Barcelona", "Boston");
-    interval<Time>   time_Itv = open_interval(Time(monday,8,30), Time(monday,17,20));
+	interval<int>    int_Itv  = interval<int>::closed(3,7);
+    interval<double> sqrt_Itv = interval<double>::rightopen(1/sqrt(2.0), sqrt(2.0));
+    interval<string> city_Itv = interval<string>::leftopen("Barcelona", "Boston");
+    interval<Time>   time_Itv = interval<Time>::open(Time(monday,8,30), Time(monday,17,20));
 
     cout << "Interval<int>: " << int_Itv.as_string() << endl;
     cout << "Interval<double>: " << sqrt_Itv.as_string() << " does " 

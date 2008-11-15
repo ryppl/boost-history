@@ -131,9 +131,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_ctor_4_bicremental_typ
     T v5 = make<T>(5);
 
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
     std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
@@ -159,9 +159,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_assign_4_bicremental_t
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
     std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
@@ -189,9 +189,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_equal_4_bicremental_ty
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
     std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
@@ -227,9 +227,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_add_4_bicremental_type
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I4_5D = rightopen_interval(v4,v5);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
 
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
     std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
@@ -273,13 +273,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_subtract_4_bicremental
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
     std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
@@ -359,13 +359,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_4_bicremental_ty
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
     std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
@@ -447,13 +447,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase2_4_bicremental_t
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
     std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
@@ -533,13 +533,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_insert_erase_4_bicreme
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
     std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
@@ -626,13 +626,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_insert_erase2_4_bicrem
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = rightopen_interval(v0,v4);
-    interval<T> I2_6D = rightopen_interval(v2,v6);
-    interval<T> I3_6D = rightopen_interval(v3,v6);
-    interval<T> I5_7D = rightopen_interval(v5,v7);
-    interval<T> I7_8D = rightopen_interval(v7,v8);
-    interval<T> I8_9D = rightopen_interval(v8,v9);
-    interval<T> I8_9I =    closed_interval(v8,v9);
+    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+    interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
     std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
     std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
@@ -729,14 +729,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I1_8D = rightopen_interval(v1,v8);
-    interval<T> I2_7D = rightopen_interval(v2,v7);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I6_7D = rightopen_interval(v6,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
+    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
@@ -796,11 +796,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB *= base_pair<T,U>(v1,u1)) += make_pair(open_interval<T>(v1,v7), u1); //JODO
+    //(split_AB *= base_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
     split_AB *= base_pair<T,U>(v1,u1);
-    split_AB += make_pair(open_interval<T>(v1,v7), u2);
+    split_AB += make_pair(interval<T>::open(v1,v7), u2);
     split_ab2.clear();
-    split_ab2 += make_pair(rightopen_interval<T>(v1,v7), u2);
+    split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u2);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
@@ -828,14 +828,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I1_8D = rightopen_interval(v1,v8);
-    interval<T> I2_7D = rightopen_interval(v2,v7);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I6_7D = rightopen_interval(v6,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
+    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
@@ -894,11 +894,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB *= base_pair<T,U>(v1,u1)) += make_pair(open_interval<T>(v1,v7), u1); //JODO
+    //(split_AB *= base_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
     split_AB *= interval<T>(v1);
-    split_AB += make_pair(open_interval<T>(v1,v7), u1);
+    split_AB += make_pair(interval<T>::open(v1,v7), u1);
     split_ab2.clear();
-    split_ab2 += make_pair(rightopen_interval<T>(v1,v7), u1);
+    split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u1);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
@@ -926,14 +926,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect_4_bicrementa
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_2D = rightopen_interval(v1,v2);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I5_8D = rightopen_interval(v5,v8);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_2D = interval<T>::rightopen(v1,v2);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
     std::pair<interval<T>,U> I1_2D_1(I1_2D, u1);
@@ -1007,14 +1007,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect2_4_bicrement
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_2D = rightopen_interval(v1,v2);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I2_4D = rightopen_interval(v2,v4);
-    interval<T> I5_8D = rightopen_interval(v5,v8);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_2D = interval<T>::rightopen(v1,v2);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
     std::pair<interval<T>,U> I1_2D_1(I1_2D, u1);
@@ -1085,12 +1085,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_disjoint_4_bicremental
 
 
 
-    interval<T> I0_2D = rightopen_interval(v0,v2);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I3_4D = rightopen_interval(v3,v4);
-    interval<T> I4_4I = closed_interval(v4,v4);
-    interval<T> C4_6D = open_interval(v4,v6);
-    interval<T> I6_6I = closed_interval(v6,v6);
+    interval<T> I0_2D = interval<T>::rightopen(v0,v2);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I3_4D = interval<T>::rightopen(v3,v4);
+    interval<T> I4_4I = interval<T>::closed(v4,v4);
+    interval<T> C4_6D = interval<T>::open(v4,v6);
+    interval<T> I6_6I = interval<T>::closed(v6,v6);
 
     std::pair<interval<T>,U> I0_2D_1(I0_2D, u1);
     std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
@@ -1146,12 +1146,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_if_4_integral_ty
 
 
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I3_4D = rightopen_interval(v3,v4);
-    interval<T> I4_4I = closed_interval(v4,v4);
-    interval<T> C4_6D = open_interval(v4,v6);
-    interval<T> I6_6I = closed_interval(v6,v6);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I3_4D = interval<T>::rightopen(v3,v4);
+    interval<T> I4_4I = interval<T>::closed(v4,v4);
+    interval<T> C4_6D = interval<T>::open(v4,v6);
+    interval<T> I6_6I = interval<T>::closed(v6,v6);
 
     std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
     std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);

@@ -9,8 +9,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #define __test_itl_interval_set_shared_h_JOFA_080920__
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -141,8 +141,8 @@ void interval_set_fundamentals_4_ordered_types()
 
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -192,8 +192,8 @@ void interval_set_ctor_4_bicremental_types()
 }
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -205,7 +205,7 @@ void interval_set_add_sub_4_bicremental_types()
     T v9 = make<T>(9);
     interval<T> I5_6I(v5,v6);
     interval<T> I5_9I(v5,v9);
-    interval<T> I0_9I = closed_interval(v0, v9);
+    interval<T> I0_9I = interval<T>::closed(v0, v9);
 
     BOOST_CHECK_EQUAL( IntervalSet<T>(I5_6I).add(v0).add(v9), 
                        IntervalSet<T>().insert(v9).insert(I5_6I).insert(v0) );
@@ -234,8 +234,8 @@ void interval_set_add_sub_4_bicremental_types()
 }
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -260,8 +260,8 @@ void interval_set_distinct_4_bicremental_types()
 }
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -293,7 +293,7 @@ void interval_set_distinct_4_bicremental_continuous_types()
 
     IntervalSet<T> is_123_5;
     is_123_5 = is_1_3_5;
-    is_123_5 += open_interval<T>(v1,v3);
+    is_123_5 += interval<T>::open(v1,v3);
 
     BOOST_CHECK_EQUAL( is_123_5.cardinality(),      std::numeric_limits<size_T>::infinity() );
     BOOST_CHECK_EQUAL( is_123_5.size(),             std::numeric_limits<size_T>::infinity() );
@@ -301,8 +301,8 @@ void interval_set_distinct_4_bicremental_continuous_types()
 }
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -314,9 +314,9 @@ void interval_set_isolate_4_bicremental_continuous_types()
     T v0 = make<T>(0);
     T v2 = make<T>(2);
     T v4 = make<T>(4);
-    interval<T> I0_4I = closed_interval(v0,v4);
-    interval<T> C0_2D = open_interval(v0,v2);
-    interval<T> C2_4D = open_interval(v2,v4);
+    interval<T> I0_4I = interval<T>::closed(v0,v4);
+    interval<T> C0_2D = interval<T>::open(v0,v2);
+    interval<T> C2_4D = interval<T>::open(v2,v4);
     //   {[0               4]}
     // - {   (0,2)   (2,4)   }
     // = {[0]     [2]     [4]}
@@ -345,8 +345,8 @@ void interval_set_isolate_4_bicremental_continuous_types()
 }
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -370,21 +370,21 @@ void interval_set_contains_4_bicremental_types()
 
     IntervalSet<T> is0 = is;    
 
-    IntervalSet<T> is2(closed_interval(v5,v8));
+    IntervalSet<T> is2(interval<T>::closed(v5,v8));
     is2.add(v9).add(v11);
     is += is2;
     BOOST_CHECK_EQUAL( is.contains(is2), true );    
 
     is = is0;
-    IntervalSet<T> is3(closed_interval(v5,v8));
+    IntervalSet<T> is3(interval<T>::closed(v5,v8));
     is3.insert(v9).insert(v11);
     is += is3;
     BOOST_CHECK_EQUAL( is.contains(is3), true );    
 }
 
 
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -397,8 +397,8 @@ void interval_set_operators_4_bicremental_types()
     T v7 = make<T>(7);
     T v8 = make<T>(8);
     IntervalSet<T> left, left2, right, all, all2, section, complement, naught;
-    left.add(closed_interval(v0,v1)).add(closed_interval(v3,v5));
-    (right += closed_interval(v3,v5)) += closed_interval(v7,v8);
+    left.add(interval<T>::closed(v0,v1)).add(interval<T>::closed(v3,v5));
+    (right += interval<T>::closed(v3,v5)) += interval<T>::closed(v7,v8);
 
     BOOST_CHECK_EQUAL( is_disjoint(left, right), false );
 
@@ -426,8 +426,8 @@ void interval_set_operators_4_bicremental_types()
 
 
 // Test for nontrivial intersection of interval sets with intervals and values
-template <template<class T, template<class>class = interval,
-                            class = std::less<T>,
+template <template<class T, template<class,template<class>class>class = interval,
+                            template<class>class = std::less,
                             template<class>class = std::allocator
                   >class IntervalSet, 
           class T>
@@ -444,14 +444,14 @@ void interval_set_base_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = rightopen_interval(v0,v3);
-    interval<T> I1_3D = rightopen_interval(v1,v3);
-    interval<T> I1_8D = rightopen_interval(v1,v8);
-    interval<T> I2_7D = rightopen_interval(v2,v7);
-    interval<T> I2_3D = rightopen_interval(v2,v3);
-    interval<T> I6_7D = rightopen_interval(v6,v7);
-    interval<T> I6_8D = rightopen_interval(v6,v8);
-    interval<T> I6_9D = rightopen_interval(v6,v9);
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
+    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
+    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
 
     //--------------------------------------------------------------------------
     // IntervalSet
@@ -492,9 +492,9 @@ void interval_set_base_intersect_4_bicremental_types()
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB *= v1) += open_interval<T>(v1,v7);
+    (split_AB *= v1) += interval<T>::open(v1,v7);
     split_ab2.clear();
-    split_ab2 += rightopen_interval<T>(v1,v7);
+    split_ab2 += interval<T>::rightopen(v1,v7);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
