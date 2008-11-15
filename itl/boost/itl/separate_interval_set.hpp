@@ -67,8 +67,8 @@ namespace boost{namespace itl
 template 
 <
     typename             DomainT, 
-    template<class>class Interval = itl::interval,
-    class Compare  = std::less<DomainT>,
+    template<class, template<class>class>class Interval = itl::interval,
+    template<class>class Compare  = std::less,
     template<class>class Alloc    = std::allocator
 > 
 class separate_interval_set: 
@@ -91,10 +91,10 @@ public:
     typedef DomainT   codomain_type;
 
     /// The interval type of the set
-    typedef Interval<DomainT> interval_type;
+    typedef Interval<DomainT,Compare> interval_type;
 
     /// Comparison functor for domain values
-    typedef Compare domain_compare;
+    typedef Compare<DomainT> domain_compare;
     /// Comparison functor for intervals
     typedef exclusive_less<interval_type> interval_compare;
 
@@ -114,7 +114,7 @@ public:
     typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
     /// Container type for the implementation 
-    typedef typename itl::set<interval_type,exclusive_less<interval_type>,Alloc> ImplSetT;
+    typedef typename itl::set<interval_type,exclusive_less,Alloc> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
@@ -180,7 +180,7 @@ public:
 } ;
 
 
-template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
 {
     if(interv.empty()) 
@@ -192,7 +192,7 @@ bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const inte
 }
 
 
-template<class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+template<class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_type& x)
 {
     if(x.empty()) return;
@@ -207,8 +207,8 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_typ
         typename ImplSetT::iterator end_it = this->_set.upper_bound(x);
 
         typename ImplSetT::iterator it=fst_it, nxt_it=fst_it, victim;
-        Interval<DomainT> leftResid;  (*it).left_surplus(leftResid,x);
-        Interval<DomainT> rightResid;
+        interval_type leftResid;  (*it).left_surplus(leftResid,x);
+        interval_type rightResid;
 
         while(it!=end_it)
         { 
@@ -217,7 +217,7 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_typ
             victim = it; it++; this->_set.erase(victim);
         }
 
-        Interval<DomainT> extended = x;
+        interval_type extended = x;
         extended.extend(leftResid).extend(rightResid);
         extended.extend(rightResid);
         add_(extended);
@@ -225,7 +225,7 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_typ
 }
 
 
-template<class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+template<class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const value_type& x)
 {
     if(x.empty()) return;
@@ -251,28 +251,6 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const valu
 //-----------------------------------------------------------------------------
 // equality of elements
 //-----------------------------------------------------------------------------
-/*CL
-template 
-<
-    class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc
->
-inline bool 
-is_element_equal
-(
-    const separate_interval_set<DomainT,Interval,Compare,Alloc>& lhs,
-    const separate_interval_set<DomainT,Interval,Compare,Alloc>& rhs
-)
-{
-    typedef itl::interval_set<DomainT,Interval,Compare,Alloc> joined_type;
-    if(&lhs == &rhs)
-        return true;
-    //OTHERWISE
-    joined_type joined_lhs(lhs);
-    joined_type joined_rhs(rhs);
-    return Set::lexicographical_equal(joined_lhs, joined_rhs);
-}
-*/
 
 template <class Type>
 struct is_set<itl::separate_interval_set<Type> >
