@@ -102,8 +102,8 @@ template
 <
     typename             SubType,
     typename             DomainT, 
-    template<class>class Interval = itl::interval,
-    class Compare  = std::less<DomainT>,
+    template<class, template<class>class>class Interval = itl::interval,
+    template<class>class Compare  = std::less,
     template<class>class Alloc    = std::allocator
 > 
 #ifdef USE_CONCEPTS
@@ -125,7 +125,7 @@ public:
     typedef DomainT   codomain_type;
 
     /// The interval type of the set
-    typedef Interval<DomainT> interval_type;
+    typedef Interval<DomainT,Compare> interval_type;
 
     /// The difference type of an interval which is sometimes different form the data_type
     typedef typename interval_type::difference_type difference_type;
@@ -135,7 +135,7 @@ public:
 
 
     /// Comparison functor for domain values
-    typedef Compare domain_compare;
+    typedef Compare<DomainT> domain_compare;
     /// Comparison functor for intervals
     typedef exclusive_less<interval_type> interval_compare;
 
@@ -155,7 +155,7 @@ public:
     typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
     /// Container type for the implementation 
-    typedef typename itl::set<interval_type,exclusive_less<interval_type>,Alloc> ImplSetT;
+    typedef typename itl::set<interval_type,exclusive_less,Alloc> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
@@ -222,10 +222,10 @@ public:
 //@{ 
     /// lower bound of all intervals in the set
     DomainT lower()const 
-    { return empty()? Interval<DomainT>().lower() : (*(_set.begin())).lower(); }
+    { return empty()? interval_type().lower() : (*(_set.begin())).lower(); }
     /// upper bound of all intervals in the set
     DomainT upper()const 
-    { return empty()? Interval<DomainT>().upper() : (*(_set.rbegin())).upper(); }
+    { return empty()? interval_type().upper() : (*(_set.rbegin())).upper(); }
 
     iterator lower_bound(const value_type& interval)
     { return _set.lower_bound(interval); }
@@ -436,8 +436,8 @@ protected:
 
 template
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class SubType, class DomainT, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
 typename interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::size_type 
 interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::cardinality()const
@@ -467,8 +467,8 @@ interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::cardinality()const
 
 template
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class SubType, class DomainT, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
 typename 
     interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::difference_type 
@@ -483,8 +483,8 @@ interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::length()const
 
 template
 <
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class SubType, class DomainT, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
 bool interval_base_set<SubType,DomainT,Interval,Compare,Alloc>
     ::contained_in(const interval_base_set& x2)const
@@ -510,7 +510,7 @@ bool interval_base_set<SubType,DomainT,Interval,Compare,Alloc>
 
 
 template<class SubType,
-         class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+         class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::add_intersection(interval_base_set& section, const value_type& x)const
 {
     // any intersection with the empty intervall is empty
@@ -530,7 +530,7 @@ void interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::add_intersection
 
 
 template<class SubType,
-         class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+         class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::join()
 {
     iterator it=_set.begin();
@@ -573,7 +573,7 @@ interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& interval_base_set<Sub
 
 
 template<class SubType,
-         class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+         class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::uniform_bounds(typename interval<DomainT>::bound_types bt)
 {
     // I can do this only, because I am shure that the contents and the
@@ -583,7 +583,7 @@ void interval_base_set<SubType,DomainT,Interval,Compare,Alloc>::uniform_bounds(t
 
 
 template<class SubType,
-         class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+         class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 inline bool operator == (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& rhs)
 {
@@ -596,16 +596,16 @@ inline bool operator == (const interval_base_set<SubType,DomainT,Interval,Compar
 }
 
 template<class SubType,
-         class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+         class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 inline bool operator < (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& lhs,
                         const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& rhs)
 {
     return std::lexicographical_compare(
-		lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::less<Interval<DomainT> >()); //JODO URG
+        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), Compare<Interval<DomainT,Compare> >());
 }
 
 template<class SubType,
-         class DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+         class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 inline bool operator <= (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& rhs)
 {
@@ -614,8 +614,8 @@ inline bool operator <= (const interval_base_set<SubType,DomainT,Interval,Compar
 
 
 template<class CharType, class CharTraits, 
-    class SubType, class DomainT, template<class>class Interval, 
-    class Compare, template<class>class Alloc>
+    class SubType, class DomainT, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
    const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& object)

@@ -88,8 +88,8 @@ namespace boost{namespace itl
     template 
     <
         typename             DomainT, 
-        template<class>class Interval = itl::interval,
-        class Compare  = std::less<DomainT>,
+        template<class, template<class>class>class Interval = itl::interval,
+        template<class>class Compare  = std::less,
         template<class>class Alloc    = std::allocator
     > 
     class split_interval_set: 
@@ -109,10 +109,10 @@ namespace boost{namespace itl
         typedef DomainT   codomain_type;
 
         /// The interval type of the set
-        typedef Interval<DomainT> interval_type;
+        typedef Interval<DomainT,Compare> interval_type;
 
         /// Comparison functor for domain values
-        typedef Compare domain_compare;
+        typedef Compare<DomainT> domain_compare;
         /// Comparison functor for intervals
         typedef exclusive_less<interval_type> interval_compare;
 
@@ -132,7 +132,7 @@ namespace boost{namespace itl
         typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
         /// Container type for the implementation 
-        typedef typename itl::set<interval_type,exclusive_less<interval_type>,Alloc> ImplSetT;
+        typedef typename itl::set<interval_type,exclusive_less,Alloc> ImplSetT;
 
         /// key type of the implementing container
         typedef typename ImplSetT::key_type   key_type;
@@ -199,7 +199,7 @@ namespace boost{namespace itl
         void subtract_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
     } ;
 
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     bool split_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
     {
         if(interv.empty()) 
@@ -211,7 +211,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     void split_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_type& x)
     {
         if(x.empty()) return;
@@ -273,7 +273,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     void split_interval_set<DomainT,Interval,Compare,Alloc>::insert_rest(const interval_type& x_itv, iterator& it, iterator& end_it)
     {
         iterator nxt_it = it; nxt_it++;
@@ -314,7 +314,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     void split_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const value_type& x)
     {
         if(x.empty()) return;
@@ -365,7 +365,7 @@ namespace boost{namespace itl
 
 
 
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     void split_interval_set<DomainT,Interval,Compare,Alloc>::subtract_rest(const interval_type& x_itv, iterator& snd_it, iterator& end_it)
     {
         iterator it=snd_it, nxt_it=snd_it; nxt_it++;
@@ -400,7 +400,7 @@ namespace boost{namespace itl
         NOTE: This is not inline with the mathematical view.
         We have a distiction between 'element equality' and 'lexicographical 
         equality'.    */
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     inline bool operator == (const split_interval_set<DomainT,Interval,Compare,Alloc>& lhs,
                              const split_interval_set<DomainT,Interval,Compare,Alloc>& rhs)
     {
@@ -413,7 +413,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class>class Interval, class Compare, template<class>class Alloc>
+    template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     inline bool operator < (const split_interval_set<DomainT,Interval,Compare,Alloc>& lhs,
                             const split_interval_set<DomainT,Interval,Compare,Alloc>& rhs)
     {
@@ -422,7 +422,7 @@ namespace boost{namespace itl
         return std::lexicographical_compare(
             lhs_joined.begin(), lhs_joined.end(), 
             rhs_joined.begin(), rhs_joined.end(), 
-			std::less<Interval<DomainT> >()); //JODO URG
+            Compare<Interval<DomainT,Compare> >());
     }
 
     template <class Type>

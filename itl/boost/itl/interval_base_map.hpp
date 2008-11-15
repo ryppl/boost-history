@@ -135,8 +135,8 @@ template
     typename DomainT,
     typename CodomainT,
     class Traits = itl::neutron_absorber,
-    template<class>class Interval = itl::interval,
-    class Compare  = std::less<DomainT>,
+    template<class, template<class>class>class Interval = itl::interval,
+    template<class>class Compare  = std::less,
     template<class>class Alloc    = std::allocator
 >
 #ifdef USE_CONCEPTS
@@ -174,7 +174,7 @@ public:
     /// Auxiliary type to help the compiler resolve ambiguities when using std::make_pair
     typedef base_pair<domain_type,codomain_type> base_pair_type;
     /// The interval type of the map
-    typedef Interval<DomainT> interval_type;
+    typedef Interval<DomainT,Compare> interval_type;
 
     /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename interval_type::difference_type difference_type;
@@ -183,7 +183,7 @@ public:
     typedef typename interval_type::size_type size_type;
 
     /// Comparison functor for domain values
-    typedef Compare domain_compare;
+    typedef Compare<DomainT> domain_compare;
     /// Comparison functor for intervals which are keys as well
     typedef exclusive_less<interval_type> interval_compare;
 
@@ -196,7 +196,7 @@ public:
 
     /// Container type for the implementation 
     typedef itl::map<interval_type,codomain_type,Traits,
-                     exclusive_less<interval_type>,Alloc> ImplMapT;
+                     exclusive_less,Alloc> ImplMapT;
 
     /// key type of the implementing container
     typedef typename ImplMapT::key_type   key_type;
@@ -289,11 +289,11 @@ public:
 //@{ 
     /// Lower bound of the first interval
     DomainT lower()const 
-    { return empty()? Interval<DomainT>().lower() : (*(_map.begin())).KEY_VALUE.lower(); }
+    { return empty()? interval_type().lower() : (*(_map.begin())).KEY_VALUE.lower(); }
 
     /// Upper bound of the last interval
     DomainT upper()const 
-    { return empty()? Interval<DomainT>().upper() : (*(_map.rbegin())).KEY_VALUE.upper(); }
+    { return empty()? interval_type().upper() : (*(_map.rbegin())).KEY_VALUE.upper(); }
 
     /// Number of intervals which is also the size of the iteration over the map
     size_t interval_count()const { return _map.size(); }
@@ -623,8 +623,8 @@ public:
     <
         template
         <    
-            class DomT, template<class>class Interv, 
-            class Comp, template<class>class Allc
+            class DomT, template<class DomT,template<class>class Comp>class Interv, 
+            template<class>class Comp, template<class>class Allc
         >
         class IntervalSet
     >
@@ -652,8 +652,8 @@ public:
         template
         <    
             class DomT, class CodomT, 
-            class Trts, template<class>class Interv, 
-            class Comp, template<class>class Allc
+            class Trts, template<class DomT,template<class>class Comp>class Interv, 
+            template<class>class Comp, template<class>class Allc
         >
         class IntervalMap
     >
@@ -712,8 +712,8 @@ public:
     <
         template
         <    
-            class DomT, template<class>class Interv, 
-            class Comp, template<class>class Allc
+            class DomT, template<class DomT,template<class>class Comp>class Interv, 
+            template<class>class Comp, template<class>class Allc
         >
         class IntervalSet
     >
@@ -854,7 +854,7 @@ protected:
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits, 
-    template<class>class Interval, class Compare, 
+    template<class, template<class>class>class Interval, template<class>class Compare, 
     template<class>class Alloc
 >
 typename interval_base_map<SubType,DomainT,CodomainT,Traits,
@@ -874,7 +874,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits, 
-    template<class>class Interval, class Compare, 
+    template<class, template<class>class>class Interval, template<class>class Compare, 
     template<class>class Alloc
 >
 typename interval_base_map<SubType,DomainT,CodomainT,Traits,
@@ -894,7 +894,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 bool interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::contained_in(const interval_base_map& super)const
 {
@@ -910,16 +910,16 @@ template
 <
     class SubType,
     class DomainT, class CodomainT, 
-    class Traits, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class Traits, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
     template
     <
         template
         <    
             class DomT, class CodomT, 
-            class Trts, template<class>class Interv, 
-            class Comp, template<class>class Allc
+            class Trts, template<class DomT,template<class>class Comp>class Interv, 
+            template<class>class Comp, template<class>class Allc
         >
         class IntervalMap
     >
@@ -946,7 +946,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_intersection(interval_base_map& section, 
@@ -981,7 +981,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_intersection(interval_base_map& section, 
@@ -1008,7 +1008,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::join()
@@ -1057,7 +1057,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& inte
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 std::string interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::as_string()const
 {
@@ -1077,7 +1077,7 @@ std::string interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 CodomainT interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::sum()const
 {
@@ -1091,7 +1091,7 @@ CodomainT interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Al
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::uniformBounds( typename interval<DomainT>::bound_types bt)
 {
@@ -1103,7 +1103,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>:
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::closeLeftBounds()
 {
@@ -1117,7 +1117,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>:
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::erase(const interval_type& x_itv)
@@ -1155,7 +1155,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,All
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 SubType& 
 interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
@@ -1179,7 +1179,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 inline bool operator == (const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& lhs,
                          const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& rhs)
@@ -1195,7 +1195,7 @@ inline bool operator == (const interval_base_map<SubType,DomainT,CodomainT,Trait
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 inline bool is_protonic_equal(const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& lhs,
                               const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& rhs)
@@ -1216,22 +1216,21 @@ inline bool is_protonic_equal(const interval_base_map<SubType,DomainT,CodomainT,
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 inline bool operator < (const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& lhs,
                         const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& rhs)
 {
     return std::lexicographical_compare(
         lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-		std::less<std::pair<Interval<DomainT>, CodomainT> >() //JODO URG
-        ); 
-	//NOTE DESIGN: case against class Compare parameter!
+        Compare<std::pair<Interval<DomainT,Compare>, CodomainT> >()
+        );
 }
 
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc
+    class DomainT, class CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc
 >
 inline bool operator <= (const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& lhs,
                         const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& rhs)
@@ -1246,8 +1245,8 @@ template
 <
     class SubType,
     class DomainT, class CodomainT, 
-    class Traits, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class Traits, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
 interval_base_map<SubType,DomainT,CodomainT,
                   Traits,Interval,Compare,Alloc>& 
@@ -1271,8 +1270,8 @@ template
 <
     class SubType,
     class DomainT, class CodomainT, 
-    class Traits, template<class>class Interval, 
-    class Compare, template<class>class Alloc
+    class Traits, template<class, template<class>class>class Interval, 
+    template<class>class Compare, template<class>class Alloc
 >
 interval_base_map<SubType,DomainT,CodomainT,
                   Traits,Interval,Compare,Alloc>& 
@@ -1296,7 +1295,7 @@ max_assign
 
 template<class CharType, class CharTraits, 
     class SubType, class DomainT, class CodomainT, class Traits, 
-    template<class>class Interval, class Compare, 
+    template<class, template<class>class>class Interval, template<class>class Compare, 
     template<class>class Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 

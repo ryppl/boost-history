@@ -107,8 +107,8 @@ template
     typename DomainT,
     typename CodomainT,
     class Traits = itl::neutron_absorber,
-    template<class>class Interval = itl::interval,
-    class Compare  = std::less<DomainT>,
+    template<class, template<class>class>class Interval = itl::interval,
+    template<class>class Compare  = std::less,
     template<class>class Alloc    = std::allocator
 >
 class interval_map:
@@ -125,7 +125,7 @@ public:
     typedef interval_map<DomainT,CodomainT,itl::neutron_absorber,Interval,Compare,Alloc>
             neutron_absorber_type;
 
-    typedef Interval<DomainT> interval_type;
+    typedef Interval<DomainT,Compare> interval_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::value_type value_type;
     typedef typename base_type::base_value_type base_value_type;
@@ -242,7 +242,7 @@ private:
 } ;
 
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::contains_(const value_type& interv_value)const
 {
@@ -256,7 +256,7 @@ bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::getResiduals(const interval_type& x_itv, interval_type& leftResid, interval_type& rightResid)
 {
     iterator fst_it = this->_map.lower_bound(x_itv);
@@ -285,7 +285,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::getResiduals
 
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::joinable(const iterator& some, const iterator& next)const
 {
@@ -295,7 +295,7 @@ bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator 
     interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::joint_insert(iterator& left_it, const iterator& right_it)
@@ -325,7 +325,7 @@ typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::join_left(iterator& it)
 {
@@ -347,7 +347,7 @@ bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::join_right(iterator& it)
 {
@@ -369,7 +369,7 @@ bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::fill_join_left(const value_type& value)
@@ -388,7 +388,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::fill_join_both(const value_type& value)
@@ -408,7 +408,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
 //-----------------------------------------------------------------------------
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
@@ -436,7 +436,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
-          template<class>class Interval, class Compare, template<class>class Alloc>
+          template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::iterator
 interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
@@ -467,7 +467,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 //-----------------------------------------------------------------------------
 // add<Combinator>(pair(interval,value)):
 //-----------------------------------------------------------------------------
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_(const value_type& x, const Combiner& combine)
@@ -566,7 +566,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     }
 }
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it, const Combiner& combine)
@@ -599,7 +599,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     add_rear(x_rest, x_val, it, combine);
 }
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::add_rear(const interval_type& x_rest, const CodomainT& x_val, iterator& it, const Combiner& combine)
@@ -641,7 +641,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 //-----------------------------------------------------------------------------
 // subtract<Combinator>(pair(interval,value)):
 //-----------------------------------------------------------------------------
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::subtract_(const value_type& x, const Combiner& combine)
@@ -710,7 +710,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 
 
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
     template<class Combiner>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::subtract_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it, const Combiner& combine)
@@ -781,8 +781,8 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 //-----------------------------------------------------------------------------
 // insert(pair(interval,value)):
 //-----------------------------------------------------------------------------
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, 
-          class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, 
+          template<class>class Compare, template<class>class Alloc>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::insert_(const value_type& x)
 {
@@ -846,8 +846,8 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, 
-          class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, 
+          template<class>class Compare, template<class>class Alloc>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::insert_rest(const interval_type& x_itv, const CodomainT& x_val, 
                   iterator& it, iterator& end_it)
@@ -874,8 +874,8 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     insert_rear(x_rest, x_val, it);
 }
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, 
-          class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, 
+          template<class>class Compare, template<class>class Alloc>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::insert_rear(const interval_type& x_rest, const CodomainT& x_val, 
                   iterator& it)
@@ -905,7 +905,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 //-----------------------------------------------------------------------------
 // erase(pair(interval,value)):
 //-----------------------------------------------------------------------------
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::erase_(const value_type& x)
 {
@@ -964,7 +964,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
 }
 
 
-template <typename DomainT, typename CodomainT, class Traits, template<class>class Interval, class Compare, template<class>class Alloc>
+template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
 void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::erase_rest(const interval_type& x_itv, const CodomainT& x_val, 
                  iterator& it, iterator& end_it)
