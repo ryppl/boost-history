@@ -2,6 +2,8 @@
 #ifndef VERTICES_TRAITS_HPP
 #define VERTICES_TRAITS_HPP
 
+namespace boost { namespace graphs { namespace adjacency_list {
+
 struct simple_vertex_store_tag { };
 struct mapped_vertex_store_tag { };
 
@@ -19,7 +21,6 @@ typename vertices_traits<Verts>::category
 vertices_category(Verts const&)
 { return typename vertices_traits<Verts>::category(); }
 
-
 template <typename Vertex, typename Alloc>
 struct vertices_traits<vertices_vector<Vertex, Alloc>>
 { typedef vertex_vector_tag category; };
@@ -35,5 +36,7 @@ struct vertices_traits<vertices_set<Vertex, Compare, Alloc>>
 template <typename Vertex, typename Key, typename Compare, typename Alloc>
 struct vertices_traits<vertices_map<Vertex, Key, Compare, Alloc>>
 { typedef vertex_map_tag category; };
+
+} } }
 
 #endif

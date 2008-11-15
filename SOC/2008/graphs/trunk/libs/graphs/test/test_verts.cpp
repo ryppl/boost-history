@@ -9,8 +9,16 @@
 #include "typestr.hpp"
 #include "vertices_traits.hpp"
 
+// TODO: Migrate this documentation out to some kind of design rationale document.
+// It might have been nice to implement the underlying as typedefs to vector
+// or whatever, and then specialize the add vertex/remove vertex algorithms
+// specifically for those types. Unfortunately, that won't work since there is
+// so much type information that we need to associate with those data structures.
+
+
 using namespace std;
 using namespace boost;
+using namespace boost::graphs::adjacency_list;
 
 struct unlabled_vertex_tag { };
 struct labeled_vertex_tag { };

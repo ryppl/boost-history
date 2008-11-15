@@ -10,6 +10,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace boost::graphs::adjacency_list;
 
 typedef int City;
 typedef int Road;
