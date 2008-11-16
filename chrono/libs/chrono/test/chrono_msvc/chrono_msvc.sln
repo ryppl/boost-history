@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "time2_demo", "time2_demo\ti
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "await_keystroke", "await_keystroke\await_keystroke.vcproj", "{E0E5B024-EF94-46AE-A848-3973848F2773}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "run_timer_test", "run_timer_test\run_timer_test.vcproj", "{BD153170-B250-4081-A736-603A593B470B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{E0E5B024-EF94-46AE-A848-3973848F2773}.Debug|Win32.Build.0 = Debug|Win32
 		{E0E5B024-EF94-46AE-A848-3973848F2773}.Release|Win32.ActiveCfg = Release|Win32
 		{E0E5B024-EF94-46AE-A848-3973848F2773}.Release|Win32.Build.0 = Release|Win32
+		{BD153170-B250-4081-A736-603A593B470B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD153170-B250-4081-A736-603A593B470B}.Debug|Win32.Build.0 = Debug|Win32
+		{BD153170-B250-4081-A736-603A593B470B}.Release|Win32.ActiveCfg = Release|Win32
+		{BD153170-B250-4081-A736-603A593B470B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
