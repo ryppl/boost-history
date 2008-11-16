@@ -6,6 +6,7 @@
 #include <boost/graphs/adjacency_list/vertex_vector.hpp>
 #include <boost/graphs/adjacency_list/vertex_list.hpp>
 #include <boost/graphs/adjacency_list/vertex_set.hpp>
+#include <boost/graphs/adjacency_list/vertex_map.hpp>
 
 using namespace std;
 using namespace boost;
@@ -48,6 +49,7 @@ int main()
     typedef vertex_vector<>::vertex_store<my_vertex>::type VV;
     typedef vertex_list<>::vertex_store<my_vertex>::type VL;
     typedef vertex_set<>::vertex_store<my_vertex>::type VS;
+    // typedef vertex_map<>::vertex_map<string, my_vertex>::type VM;
 
     test<VV>();
     test<VL>();
