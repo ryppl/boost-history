@@ -17,6 +17,8 @@ project graphs
 # exe props : props.cpp : <include>../../ <include>/usr/local/include ;
 # exe edge : edge.cpp : <include>../../ <include>/usr/local/include ;
 
+exe vertex_store : vertex_store.cpp ;
+
 exe opt : opt.cpp ;
 exe unordered_pair : unordered_pair.cpp ;
 exe desc : desc.cpp ;
@@ -42,5 +44,3 @@ exe di : di.cpp ;
 exe basic_matrix : basic_matrix.cpp ;
 exe un_matrix : un_matrix.cpp ;
 
-# Various application tests
-exe dawg : dawg.cpp ;

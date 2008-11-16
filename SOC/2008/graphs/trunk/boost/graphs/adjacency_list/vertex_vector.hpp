@@ -8,7 +8,7 @@
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
 #include <boost/graphs/utility.hpp>
-#include <boost/graphs/adjacency_list/vertex_store_traits.hpp>
+#include <boost/graphs/adjacency_list/vertex_store.hpp>
 #include <boost/graphs/adjacency_list/vertex_iterator.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_list {
@@ -31,17 +31,18 @@ struct vertex_vector
 {
     typedef unused key_type;
 
-    typedef std::vector<int, Alloc<int>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
+    typedef typename descriptor_traits<
+        std::vector<int, Alloc<int>>
+    >::descriptor_type vertex_descriptor;
 
     // The store metafunction generates the type used to store vertices in
     // either a directed or undirected graph. This metafunction takes the
     // fully configured vertex type as a type parameter.
     template <typename Vertex>
-    struct store
+    struct vertex_store
     {
-        typedef Alloc<Vertex> allocator;
-        typedef vertices_vector<Vertex, allocator> type;
+        typedef Alloc<Vertex> allocator_type;
+        typedef std::vector<Vertex, allocator_type> type;
     };
 };
 

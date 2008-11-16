@@ -7,6 +7,8 @@
 #ifndef BOOST_CONTAINERS_HPP
 #define BOOST_CONTAINERS_HPP
 
+#include <algorithm>
+
 #include <boost/type_traits.hpp>
 
 // Forward declarations of stdandard types. Jeremy's right! There does need
@@ -247,6 +249,13 @@ namespace detail
     { return c.find(x); }
 }
 
+/**
+ * Insert an object into a container. The actual method of insertion depends
+ * on the underlying container. For back insertion sequences, this appends
+ * the object to the sequence. For associative containers, it is simply
+ * inserted. For unique associative containers, the object is not inserted if
+ * an object with the same key already exists.
+ */
 template <typename Container, typename T>
 inline typename Container::iterator
 insert(Container& c, T const& x)

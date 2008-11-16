@@ -5,6 +5,8 @@
 #include <list>
 #include <algorithm>
 
+#include <boost/containers.hpp>
+
 namespace boost {
 
 /**
@@ -20,9 +22,9 @@ class counted_list
     typedef List base_type;
 public:
     typedef typename base_type::value_type value_type;
-    typedef typename base-type::pointer pointer;
+    typedef typename base_type::pointer pointer;
     typedef typename base_type::reference reference;
-    typedef typename base-type::const_reference const_reference;
+    typedef typename base_type::const_reference const_reference;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
     typedef typename base_type::reverse_iterator reverse_iterator;
@@ -65,7 +67,7 @@ public:
     const_reverse_iterator rend() const     { return _list.rend(); }
 
     size_type size() const          { return _size; }
-    size_type max_size() const      { return _list.max_size() }
+    size_type max_size() const      { return _list.max_size(); }
 
     bool empty() const              { return _list.empty(); }
 
@@ -109,7 +111,7 @@ public:
     }
 
     void resize(size_type n, T const& x = T())
-    { _list.resize(n, t); _size = n; }
+    { _list.resize(n, x); _size = n; }
 
     void clear()
     { _list.clear(); _size = 0; }
@@ -132,6 +134,23 @@ public:
 private:
     base_type   _list;
     size_type   _size;
+};
+
+// Specialize container traits
+template <typename T, typename Alloc, typename List>
+struct container_traits<counted_list<T, Alloc, List>>
+{
+    typedef list_tag category;
+    typedef stable_iterator_tag iterator_stability;
+};
+
+// Specialize descriptor traits
+template <typename T, typename Alloc, typename List>
+struct descriptor_traits<counted_list<T, Alloc, List>>
+{
+    typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>> descriptor_type;
+    typedef stable_mutators_tag descriptor_stability;
+
 };
 
 } /* namespace boost */

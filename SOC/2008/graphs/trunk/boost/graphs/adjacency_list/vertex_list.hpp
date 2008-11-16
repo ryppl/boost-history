@@ -6,6 +6,8 @@
 
 #include <boost/none.hpp>
 #include <boost/descriptors.hpp>
+#include <boost/counted_list.hpp>
+#include <boost/graphs/adjacency_list/vertex_store.hpp>
 #include <boost/graphs/adjacency_list/vertex_iterator.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_list {
@@ -14,29 +16,31 @@ namespace boost { namespace graphs { namespace adjacency_list {
 template <typename, typename> class vertices_list;
 
 /**
- * This metafunction defines the basic elements of a vertex list.
+ * This metafunction defines the basic elements of a vertex list. This builds
+ * the list on a counted_list over the std::list class.
  */
 template <template <typename> class Alloc = std::allocator>
 struct vertex_list
 {
     typedef unused key_type;
 
-    typedef std::list<int, Alloc<int>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
+    typedef typename descriptor_traits<
+        std::list<int, Alloc<int>>
+    >::descriptor_type vertex_descriptor;
 
     template <typename Vertex>
-    struct store
+    struct vertex_store
     {
-        typedef vertices_list<Vertex, Alloc<Vertex>> type;
+        typedef Alloc<Vertex> allocator_type;
+        typedef counted_list<Vertex, allocator_type> type;
     };
 };
-
 
 template <typename T, typename A>
 struct vertex_store_traits<counted_list<T,A>>
 {
 private:
-    typedef std::counted_list<T,A> base_type;
+    typedef counted_list<T,A> base_type;
 public:
     typedef typename base_type::iterator store_iterator;
 
