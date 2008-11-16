@@ -17,10 +17,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/interval_map.hpp>
+#include <boost/mpl/placeholders.hpp>
 
 using namespace std;
 using namespace boost::posix_time;
 using namespace boost::itl;
+using namespace boost::mpl::placeholders;
 
 /** Example boost_party.cpp \file boost_party.cpp
 
@@ -111,31 +113,28 @@ void boost_party()
 
     // adding an element can be done wrt. simple aggregate functions
     // like e.g. min, max etc. in their 'inplace' or op= incarnation
-    tallest_guest.add(
+    tallest_guest.add<inplace_max<_> >(
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
-          180), 
-	  inplace_max<int>()
+          180) 
 	);
 
-    tallest_guest.add(
+    tallest_guest.add<inplace_max<_> >(
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
-          170),
-	  inplace_max<int>()
+          170)
 	);
 
-    tallest_guest.add(
+    tallest_guest.add<inplace_max<_> >(
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
-          200),
-	  inplace_max<int>()
+          200)
 	);
 
 

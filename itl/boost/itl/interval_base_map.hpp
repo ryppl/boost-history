@@ -355,6 +355,14 @@ public:
     SubType& add(const value_type& x, const Combiner& combine) 
     { that()->add_(x, combine); return *that(); };
 
+	template<class Combiner>
+    SubType& add(const value_type& x) 
+	{ that()->add_(x, mpl::apply<Combiner,CodomainT>::type()); return *that(); };
+
+	template<template<class>class Combiner>
+    SubType& add(const value_type& x) 
+    { that()->add_(x, Combiner<CodomainT>()); return *that(); };
+
     /// Addition of a base value pair.
     /** Addition of a base value pair <tt>x := pair(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
     
