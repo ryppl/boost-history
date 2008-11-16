@@ -1,5 +1,0 @@
-
-#ifndef BOOST_GRAPHS_POLICY_HPP
-#define BOOST_GRAPHS_POLICY_HPP
-
-#endif
