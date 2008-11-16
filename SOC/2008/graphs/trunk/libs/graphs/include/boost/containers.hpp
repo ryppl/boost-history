@@ -258,17 +258,30 @@ namespace detail
  */
 template <typename Container, typename T>
 inline typename Container::iterator
-insert(Container& c, T const& x)
+container_insert(Container& c, T const& x)
 { return detail::dispatch_insert(c, x, container_category(c)); }
 
+/** @name Find
+ * Find the first instance in the cotnainer that is equivalent to x.
+ */
+//@{
 template <typename Container, typename T>
 inline typename Container::iterator
-find(Container& c, T const& x)
+container_find(Container& c, T const& x)
 { return detail::dispatch_find(c, x, container_category(c)); }
 
+template <typename Container, typename T>
+inline typename Container::const_iterator
+container_find(Container const& c, T const& x)
+{ return detail::dispatch_find(c, x, container_category(c)); }
+//@}
+
+/**
+ * Erase the element in the container pointed to by the iterator i.
+ */
 template <typename Container>
 void
-erase(Container& c, typename Container::iterator i)
+container_erase(Container& c, typename Container::iterator i)
 { c.erase(i); }
 
 } /* namespace boost */

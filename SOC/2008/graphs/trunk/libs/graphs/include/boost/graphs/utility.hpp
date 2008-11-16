@@ -89,29 +89,6 @@ make_result(Cont& c, std::pair<typename Cont::iterator, bool> i)
 
 /**
  * @internal
- * A forwarding comparator for proeprties objects that forwards the comparison
- * to the configured comparator. This type is used internally to forward
- * comparisons of vertices to the label comparison provided by the edge set
- * parameter.
- * @param Vertex The type of vertex being compared
- * @param Compare An ordering over vertex labels.
- */
-template <typename Compare>
-struct label_comparator
-{
-    inline label_comparator()
-        : comp(Compare())
-    { }
-
-    template <typename Object>
-    inline bool operator()(Object const& a, Object const& b) const
-    { return comp(a.label(), b.label()); }
-
-    Compare comp;
-};
-
-/**
- * @internal
  * A functor that returns true when we can find a propertied object with the
  * same value as those given in the cosntructor. This works for both vertices
  * and edges.

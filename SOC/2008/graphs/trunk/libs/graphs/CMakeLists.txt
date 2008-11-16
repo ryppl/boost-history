@@ -16,6 +16,15 @@ include(BoostCore)
 include(BoostDocs)
 include(BoostTesting)
 
+# This is a substitute for add_executable, that automatically adds somem flags
+# to the executable.
+# TODO Make this work better with Boost.Build stuff.
+macro(add_exec name)
+    add_executable(${name} ${ARGN})
+    set_target_properties(${name} PROPERTIES COMPILE_FLAGS "-Wall --std=c++0x")
+endmacro()
+
+
 # Define the library project
 # TODO: This doesn't actually seem to do very much if we're out of the build.
 boost_library_project(
