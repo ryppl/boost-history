@@ -24,7 +24,7 @@ namespace
     // exercise each supported combination of constructor arguments
 
     std::ostream &             os   = std::cout;
-    int                        pl   = 6;
+    const int                  pl   = 9;
     boost::system::error_code  ec;
 
     run_timer t1;
@@ -39,28 +39,29 @@ namespace
     run_timer t10( os, "t10, default places,  r %r, c %c, p %p, u %u, s %s\n" );
     run_timer t11( "t11, default places,  r %r, c %c, p %p, u %u, s %s\n", ec );
     run_timer t12( os, "t12, default places,  r %r, c %c, p %p, u %u, s %s\n", ec );
-    run_timer t13( pl, "t13, 6 places,  r %r, c %c, p %p, u %u, s %s\n" );
-    run_timer t14( "t14, 6 places,  r %r, c %c, p %p, u %u, s %s\n", pl );
-    run_timer t15( os, pl, "t15, 6 places,  r %r, c %c, p %p, u %u, s %s\n" );
-    run_timer t16( os, "t16, 6 places,  r %r, c %c, p %p, u %u, s %s\n", pl );
-    run_timer t17( pl, "t17, 6 places,  r %r, c %c, p %p, u %u, s %s\n", ec );
-    run_timer t18( "t18, 6 places,  r %r, c %c, p %p, u %u, s %s\n", pl, ec );
-    run_timer t19( os, pl, "t19, 6 places,  r %r, c %c, p %p, u %u, s %s\n", ec );
-    run_timer t20( os, "t20, 6 places,  r %r, c %c, p %p, u %u, s %s\n", pl, ec );
+    run_timer t13( pl, "t13, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n" );
+    run_timer t14( "t14, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n", pl );
+    run_timer t15( os, pl, "t15, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n" );
+    run_timer t16( os, "t16, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n", pl );
+    run_timer t17( pl, "t17, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n", ec );
+    run_timer t18( "t18, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n", pl, ec );
+    run_timer t19( os, pl, "t19, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n", ec );
+    run_timer t20( os, "t20, explicitly code places,  r %r, c %c, p %p, u %u, s %s\n", pl, ec );
 
     std::cout << "Burn some time so run_timers have something to report...";
     boost::chrono::timer<boost::chrono::high_resolution_clock> t;
     while ( t.elapsed() < boost::chrono::seconds(1) ) {}
     std::cout << "\n";
-    std::cout << "default places is " << run_timer::default_places() << "\n";
+    std::cout << run_timer::default_places() << " default places\n";
+    std::cout << pl << " explicitly coded places\n";
 
   }
 }
 
 int main( int argc, char * argv[] )
 {
-  //std::locale loc( "" );
-  //std::cout.imbue( loc );
+  std::locale loc( "" );     // test with appropriate locale
+  std::cout.imbue( loc );
 
   run_timer_constructor_overload_test();
   

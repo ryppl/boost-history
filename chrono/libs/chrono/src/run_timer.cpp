@@ -47,30 +47,10 @@ namespace
 //  }
 //# endif
 
-  const long long scale[10] = { 1000000000LL, 100000000LL, 10000000LL,
-     1000000LL, 100000LL, 10000LL, 1000LL, 100LL, 10LL, 1LL };
-
-  void fixed_point_nano( std::ostream & os, long long value, int places )
-  {
-    if ( places > 0 )
-    {
-      os << value / 1000000000LL
-         << '.';  // TODO: get appropriate char from locale
-      os.width( places );
-      value %= 1000000000LL;
-      value /= scale[places]; 
-      os << value;
-    }
-    else
-    {
-      os << value; 
-    }
-  }
-
   void show_time( const boost::chrono::process_times & times,
                   const char * format, int places, std::ostream & os )
-  ////  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
-  ////  be as low as 10, although will be 15 for many common platforms.
+  //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
+  //  be as low as 10, although will be 15 for many common platforms.
   {
     if ( times.real < nanoseconds(0) ) return;
     if ( places > 9 )
@@ -78,15 +58,10 @@ namespace
     else if ( places < 0 )
       places = 0;
 
-    //boost::io::ios_flags_saver ifs( os );
-    //boost::io::ios_precision_saver ips( os );
-    //os.setf( std::ios_base::fixed, std::ios_base::floatfield );
-    //os.precision( places );
-
-    boost::io::ios_flags_saver ifkgs( os );
-    os.setf(std::ios_base::right, std::ios_base::adjustfield);
-    boost::io::ios_fill_saver ifils( os );
-    os.fill( '0' );
+    boost::io::ios_flags_saver ifs( os );
+    os.setf( std::ios_base::fixed, std::ios_base::floatfield );
+    boost::io::ios_precision_saver ips( os );
+    os.precision( places );
 
     nanoseconds total = times.system + times.user;
 
@@ -100,25 +75,20 @@ namespace
         switch ( *format )
         {
         case 'r':
-          //os << duration<double>(times.real).count();
-          fixed_point_nano( os, times.real.count(), places );
+          os << duration<double>(times.real).count();
           break;
         case 'u':
-          //os << duration<double>(times.user).count();
-          fixed_point_nano( os, times.user.count(), places );
+          os << duration<double>(times.user).count();
           break;
         case 's':
-          //os << duration<double>(times.system).count();
-          fixed_point_nano( os, times.system.count(), places );
+          os << duration<double>(times.system).count();
           break;
         case 'c':
-          //os << duration<double>(total).count();
-          fixed_point_nano( os, total.count(), places );
+          os << duration<double>(total).count();
           break;
         case 'p':
           {
             boost::io::ios_precision_saver ips( os );
-            os.setf( std::ios_base::fixed, std::ios_base::floatfield );
             os.precision( 1 );
             if ( times.real.count() && total.count() )
               os << duration<double>(total).count()
