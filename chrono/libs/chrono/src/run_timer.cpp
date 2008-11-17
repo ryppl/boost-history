@@ -140,5 +140,17 @@ namespace boost
       }
     }
 
+    void run_timer::test_report( duration real_, duration user_, duration system_ )
+    {
+      if ( m_format.empty() ) m_format = default_format; 
+
+      process_times times;
+      times.real = real_;
+      times.user = user_;
+      times.system = system_;
+
+      show_time( times, m_format.c_str(), m_places, m_os );
+    }
+
   } // namespace chrono
 } // namespace boost

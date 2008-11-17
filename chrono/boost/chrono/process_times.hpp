@@ -23,16 +23,7 @@ namespace boost
   namespace chrono
   {
 
-//---------------------------------------------------------------------------------//
-//                                process_times                                    //
-//---------------------------------------------------------------------------------//
-
-    struct process_times
-    {
-      nanoseconds real;       // real time
-      nanoseconds user;       // user cpu time
-      nanoseconds system;     // system cpu time
-    };
+    struct process_times;
 
 //---------------------------------------------------------------------------------//
 //                                process_clock                                    //
@@ -52,12 +43,27 @@ namespace boost
     };
 
 //---------------------------------------------------------------------------------//
+//                                process_times                                    //
+//---------------------------------------------------------------------------------//
+
+    struct process_times
+    {
+      process_clock::duration                        real;       // real time
+      process_clock::duration                        user;       // user cpu time
+      process_clock::duration                        system;     // system cpu time
+    };
+
+//---------------------------------------------------------------------------------//
 //                                 process_timer                                   //
 //---------------------------------------------------------------------------------//
 
     class process_timer
     {
     public:
+
+      typedef process_clock                          clock;
+      typedef process_clock::duration                duration;
+      typedef process_clock::time_point              time_point;
 
       explicit process_timer( system::error_code & ec = system::throws )
       {
@@ -143,6 +149,8 @@ namespace boost
       }
 
       void  report( system::error_code & ec = system::throws );
+
+      void  test_report( duration real_, duration user_, duration system_ );
 
       bool  reported() const { return m_reported; }
 

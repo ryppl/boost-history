@@ -29,8 +29,8 @@ namespace boost
     {
     public:
       typedef Clock                       clock;
-      typedef typename Clock::time_point  time_point;
       typedef typename Clock::duration    duration;
+      typedef typename Clock::time_point  time_point;
 
       explicit timer( system::error_code & ec = system::throws )
         { start(ec); }
@@ -46,6 +46,10 @@ namespace boost
     private:
       time_point m_start;
     };
+
+    typedef boost::chrono::timer< boost::chrono::system_clock > system_timer;
+    typedef boost::chrono::timer< boost::chrono::monotonic_clock > monotonic_timer;
+    typedef boost::chrono::timer< boost::chrono::high_resolution_clock > high_resolution_timer;
 
   } // namespace chrono
 } // namespace boost
