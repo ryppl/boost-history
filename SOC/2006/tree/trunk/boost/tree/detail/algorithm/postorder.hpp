@@ -38,7 +38,7 @@ template <class Cursor>
 inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
-    ((AscendingCursor<Cursor>)),
+    ((RootTrackingCursor<Cursor>)),
     (void)) // return type
 forward(postorder, Cursor& c)
 {
@@ -72,7 +72,7 @@ template <class Cursor>
 inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
-    ((AscendingCursor<Cursor>)),
+    ((RootTrackingCursor<Cursor>)),
     (void)) // return type
 back(postorder, Cursor& c)
 {

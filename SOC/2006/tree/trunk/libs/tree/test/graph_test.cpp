@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE( graph_test )
 //    BOOST_CHECK_EQUAL(*ci, 8);
 //    BOOST_CHECK_EQUAL(*++ci, 10); //FIXME
     
-//    test::preorder::traversal(test_list.begin(), test_list.end());
+//    test::traversal(preorder(), test_list.begin(), test_list.end());
     
     // Output bt using write_graphviz. This might require copying
     // the IncidenceGraph to a VertexListGraph (using copy_component) 

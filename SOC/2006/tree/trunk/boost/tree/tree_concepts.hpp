@@ -5,56 +5,37 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file cursor_concepts.hpp
- * Cursor concepts
+ * @file tree_concepts.hpp
+ * Tree concepts
  */
  
-#ifndef BOOST_TREE_CURSOR_CONCEPTS_HPP
-#define BOOST_TREE_CURSOR_CONCEPTS_HPP
+#ifndef BOOST_TREE_TREE_CONCEPTS_HPP
+#define BOOST_TREE_TREE_CONCEPTS_HPP
 
 #include <boost/concept_check.hpp>
 
-namespace boost {
-namespace tree {
+namespace boost_concepts {
 
 template <class X>
-struct DescendingCursor
+struct Tree
 {
 public:
-    BOOST_CONCEPT_USAGE(DescendingCursor)
+    typedef typename X::cursor cursor;
+    typedef typename X::const_cursor const_cursor;
+
+    BOOST_CONCEPT_USAGE(Tree)
     {
-        d.to_begin();
-        d.to_end();
+        c = t.root();
+        cc = t.root();
     }
     
 private:
-    X d;
+    X t;
+    cursor c;
+    const_cursor cc;
     
 };
 
-template <class T>
-class descending_cursor_archetype
-{
-public:
-    void to_begin() {}
-    void to_end() {}
-};
+} // namespace boost_concepts
 
-// Derive from DescendingCursor or not?
-template <class X>
-struct AscendingCursor
-{
-public:
-    BOOST_CONCEPT_USAGE(AscendingCursor)
-    {
-        a.to_parent();
-    }
-    
-private:
-    X a;
-};
-
-} // namespace tree
-} // namespace boost
-
-#endif // BOOST_TREE_CURSOR_CONCEPTS_HPP
+#endif // BOOST_TREE_TREE_CONCEPTS_HPP

@@ -22,26 +22,24 @@ General:
   * Recursive preorder: OK.
   * Recursive postorder: TBD.
   * Iterative pre- and postorder: TBD.
-* Implement a real output cursor (if possible) and use preorder::copy to build a new tree.
+* Implement a real output cursor (if possible) and use copy(preorder(), ...) to build a new tree.
   Then, do some performance measurements comparing
   * Different *orders;
   * BOOST_RECURSIVE_ORDER_ALGORITHMS on and off;
   * cursor and iterator based algorithms (from Boost.Tree and the STL, respectively)
   Do these measurements also with algorithms other than copy.
 * Test cursor adaptors wrapped around output cursors!
-* Add tests for *order::copy involving a second tree cursor (not just a cursor adaptor).
+* Add tests for copy involving a second tree cursor (not just a cursor adaptor).
 * Think of a couple good examples (draw inspiration eg from Wikipedia: Tree traversal
   or CRLS) and include them in the docs. Maybe move some files from libs/test to
   example.
-  Eg.: maybe use preorder::copy in combination with an inserting cursor to "physically"
-  copy a tree?
 * Migrate to using Jamfile.v2 from Intrusive (already used in our libs/example dir)
 * Add performance checks (to a libs/perf/ directory).
 * Look into SOC 2008 projects dsearch (already using concepts from Boost.Tree) and 
   spacial_indexing (with tree classes of its own)
 * Can't we really do without inorder_erase()?
 * Check if Cursor(balanced_tree_iterator) really has no is_root member()! (BOOST_STATIC_ASSERT?)
-* Revisit binary_tree (inorder::)iterator functions
+* Revisit binary_tree inorder iterator functions
 * Possibly sort out some more concepts, like trees with "downwards" or "upwards" insertion
   (insert()/insert_above()), trees with values only at the leaves (makes sense in combination
   with "upwards" insertion"), etc.
@@ -81,8 +79,8 @@ General:
   (Not necessarily! If that means a check for empty(), it's better to leave it to
   the user!)
 * Investigate the lower_bound for search vs insert purposes problem.
-* Take care of inorder::begin() for binary_tree<int>.  
-* Keep in mind it's not necessarily a good thing to have *order::end() be the last element's
+* Take care of inorder begin() for binary_tree<int>.  
+* Keep in mind it's not necessarily a good thing to have *order end() be the last element's
   right child. For inorder and postorder, it seems like the subtree root is a better choice.
   For preorder, things are pretty diffcult.
 * Do a unit test that creates a random tree with a given number of elements. 
@@ -178,8 +176,8 @@ Documentation:
   In order to work for subtrees, we need at least an int to store
   the current depth.
   Solution:
-  Introduce a root tracking cursor concept providing c.is_root(). *order::forward(), back(),
-  next() and prior() functions as well as *order::iterators then require this concept.
+  Introduce a root tracking cursor concept providing c.is_root(). *order forward(), back(),
+  next() and prior() functions as well as *order iterators then require this concept.
   Write a root_tracking_cursor adaptor that does exactly that, with suitable specializations
   for different underlying cursors. 
   (Why? Because any root_tracker object would have to be

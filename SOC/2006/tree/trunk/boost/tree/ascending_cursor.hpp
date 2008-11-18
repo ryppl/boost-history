@@ -39,6 +39,14 @@ typename iterator< ascending, ascending_cursor<Cursor> >::difference_type
 distance(iterator< ascending, ascending_cursor<Cursor> > iter1
        , iterator< ascending, ascending_cursor<Cursor> > iter2);
 
+/**
+ * @brief Turns any descending cursor into an ascending one. 
+ * 
+ * When descending from a given initial cursor, this wrapper
+ * tracks any cursors along the way. This way, it is able to
+ * re-ascend later (only up to the initially passed cursor,
+ * of course).  
+ */
 template <class DescendingCursor> 
 class ascending_cursor
 : public cursor_facade<ascending_cursor<DescendingCursor>
@@ -257,8 +265,7 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
 //    {
 //    }
 
-public:
-    bool is_root() const
+    bool is_root_() const
     {
         return this->base().m_s.size() == m_root_depth;
     }

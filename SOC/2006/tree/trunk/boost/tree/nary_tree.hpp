@@ -276,9 +276,9 @@ private:
 //namespace inorder {
 //
 ///**
-// * @brief    First element of a MultiwayTree in inorder traversal
-// *             (equivalent to postorder::first()) - O(1) overload for nary_tree
-// * @param t    A nary_tree
+// * @brief     First element of a MultiwayTree in inorder traversal.
+// *            O(1) overload for nary_tree
+// * @param t   A nary_tree
 // * @return    Mutable cursor to the first element of @a t in inorder traversal
 // */
 //template <class T, class Balance, class Augment, class Alloc>
@@ -289,10 +289,9 @@ private:
 //}
 //
 ///**
-// * @brief    First element of a MultiwayTree in inorder traversal
-// *             (Alias of cfirst(); equivalent to postorder::first()) -
-// *             O(1) overload for nary_tree
-// * @param t    A nary_tree
+// * @brief     First element of a MultiwayTree in inorder traversal
+// *            (alias of cfirst()). O(1) overload for nary_tree
+// * @param t   A nary_tree
 // * @return    Read-only cursor to the first element of @a t in inorder traversal
 // */
 //template <class T, class Balance, class Augment, class Alloc>
@@ -303,9 +302,9 @@ private:
 //}
 //
 ///**
-// * @brief    First element of a MultiwayTree in inorder traversal
-// *             (equivalent to postorder::first()) - O(1) overload for nary_tree
-// * @param t    A nary_tree
+// * @brief     First element of a MultiwayTree in inorder traversal.
+// *            O(1) overload for nary_tree
+// * @param t   A nary_tree
 // * @return    Read-only cursor to the first element of @a t in inorder traversal
 // */
 //template <class T, class Balance, class Augment, class Alloc>

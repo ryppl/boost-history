@@ -12,19 +12,26 @@
 #ifndef BOOST_TREE_ITERATOR_HPP
 #define BOOST_TREE_ITERATOR_HPP
 
-//#include <boost/tree/cursor.hpp>
-
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <boost/tree/cursor_concepts.hpp>
+
+#include <boost/concept_check.hpp>
+
 namespace boost {
 namespace tree {
+    
+using namespace boost_concepts;
 
 /**
  * @brief   Traversal order iterator adaptor
  * 
- *          Only works with ascending cursors.
+ * This wrapper adapts a cursor (which is used for hierarchical
+ * traversal) to work as an iterator (for linear traversal, such
+ * as required by STL algorithms), along a specified order.
+ * 
  */
 template <class Order, class Cursor>
 class iterator
@@ -33,6 +40,8 @@ class iterator
       , boost::use_default
       , typename Order::iterator_category
     > {
+BOOST_CONCEPT_ASSERT((AscendingCursor<Cursor>));
+
  private:
     struct enabler {};
 
@@ -74,10 +83,9 @@ class iterator
 };
 
 /**
- * @brief    First element of a subtree in traversal
- *             (equivalent to postorder::begin())
- * @param c    A cursor
- * @return    Iterator to the first element of @a c
+ * @brief   First element of a subtree in traversal
+ * @param c A cursor
+ * @return  Iterator to the first element of @a c
  */
 template <class Order, class Cursor>
 iterator<Order, Cursor>

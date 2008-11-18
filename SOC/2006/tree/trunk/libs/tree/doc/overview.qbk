@@ -15,6 +15,18 @@
 [section Overview]
 
 [section Motivation]
+Trees can be found in most fields of computer science. In C++, 
+[http://en.wikipedia.org/wiki/Self-balancing_binary_search_tree self-balancing binary search trees
+(SBBSTs)] are used in prominent implementations of the Standard Template Library's (STL) associative containers, ie
+`std::map`, `std::set` and their "multi" variants (Ref gcc?). But as we're only talking about implementations here,
+the actual trees aren't ever visible to a user of the STL. This of course already hints at the importance of
+trees plus at least one other level of indirection: trees for quick (O(log n)) associative storage and 
+retrieval of data.
+
+Furthermore, there are a couple of libraries that provide tree classes for the somewhat more obvious cases 
+in which the tree is not just an implementation detail, but where the actual hierarchical structure interface 
+is needed, eg for representing a directory hierarchy or an XML file.
+
 Existing efforts concerning C++ tree designs and implementations mostly try either to present somewhat 
 STL-compatible iterator-like types and tree classes for mapping the latter kind of external or "explicit" 
 structures (ref); or, on the other hand, untangle balancing mechanisms from key search and other 
@@ -22,7 +34,7 @@ additional features (which are referred to as "augmenting" here, using the termi
 [link clrs CLRS]). 
 At the time of this writing, no efforts are known to the author that would cater for both cases; and, as 
 an aspect of this fact, there are presently no efforts that try in turn to separate the underlying tree 
-structure or "topology" from searching, balancing and augmenting.
+structure or "topology" from searching, balancing and augmenting and open up its hierarchical interface.
 
 The present approach in providing a consistent framework for trees is arranged roughly around the following 
 principles:
@@ -59,7 +71,10 @@ This includes, but is not limited to
 [section Some Introductory Examples]
 
 [section (Multiway) Tree Search]
-Due to their implicit-only nature within the Standard Library (as used by `map`or `set` internally), 
+
+[import ../example/stl_lower_bound.cpp]
+
+Due to their implicit-only nature within the Standard Library (as used by `map` or `set` internally), 
 there are no algorithms that deal with tree structures -- which naturally require an approach differing 
 from the one-dimesional, iterator(-interval)-based ones present in the STL. Most notably, binary search 
 algorithms like `lower_bound` and `upper_bound` hardly make sense using a linearized version of the tree 
@@ -73,14 +88,7 @@ The (multiway tree) cursor design present in this library supports this continua
 To motivate this, we illustrate this by crafting a `lower_bound` binary tree search algorithm. 
 To do so, consider the following piece of code:
 
-	std::vector<int> v(1, 1066); // c contains one element: 1066
-	std::vector<int>::const_iterator ci996  = std::lower_bound(v.begin(), v.end(),  996);
-	std::vector<int>::const_iterator ci1066 = std::lower_bound(v.begin(), v.end(), 1066);
-	std::vector<int>::const_iterator ci2006 = std::lower_bound(v.begin(), v.end(), 2006);
-
-	assert(ci996  == v.begin());
-	assert(ci1066 == v.begin());
-	assert(ci2006 == v.end());
+[stl_lower_bound_example]
 
 If this doesn't really excite you, that's perfectly okay. Note however that this kind of binary "flat"
 search does something that is similar to what a binary tree search algorithm just as well at every 
@@ -103,14 +111,14 @@ Forward Readable Range with a Forward Readable Iterator).
 
 Note that while coupling range with iterator concepts, we decide at the same time for a separation
 of the (user-supplied) value contents of a tree cursor and its children. This reflects the desire
-that tree traversal, as achieved by cursors, should be mapped a structural matter rather than a
+that tree traversal, as achieved by cursors, should be a structural matter rather than a
 content-dependent one (which can more concretely be seen e.g. in the fact that there is always one
  child node more than values in a (multiway) tree).
 
 In particular, although `c.end()` can still not be dereferenced, there may well be other valid operations
 (independent of its `*` and `->` operators - those would only be useful in case ). In our case, this is
  mainly range operations like `c.end().begin()` and `c.end().end()`; but as we can hardly always guarantee
-that there actually ['is] a child range, we need some way to detect these operations are actually legal.
+that there actually ['is] a child range, we need some way to detect these operations are really legal.
 This is what `c.empty()` is used for, and this includes an actual change to its expression semantics; it
 is guaranteed to be legal for any valid cursor `c` even if that cursor's `c.begin()` and `c.end()` are not
 (so we cannot really say that it is equivalent to `c.begin() == c.end()`). It is, however, about the
@@ -202,7 +210,7 @@ no parent "pointers" from a child "node"), you will be told there, you have basi
 # With any amount of extra information, such as parent "pointers", using a stack can become obsolete
 altogether.
 
-[/import ../../../boost/tree/algorithm/postorder.hpp]
+[/import ../../../boost/tree/detail/algorithm/postorder.hpp]
 
 Boost.Tree offers you each of the options listed above, each found in a namepace indicating the respective
 traversal order. For option number 1, pass the (root cursor of the) subtree to be traversed to either of
@@ -210,21 +218,13 @@ traversal order. For option number 1, pass the (root cursor of the) subtree to b
 [/postorder_for_each]
 [/warning TODO: Use up-to-date Boostbook to embed current code snip form header files directly!]
 
-[funcref boost::tree::preorder::for_each preorder::for_each]
-
-[funcref boost::tree::inorder::for_each inorder::for_each]
-
-[funcref boost::tree::postorder::for_each postorder::for_each]
+[funcref boost::tree::for_each for_each]
 
 The other two options are both invoked by constructing an `iterator` with a cursor as argument:
 
 [/warning FIXME: Invalid class reference]
 
-[classref boost::tree::preorder::iterator preorder::iterator]
-
-[classref boost::tree::inorder::iterator inorder::iterator]
-
-[classref boost::tree::postorder::iterator postorder::iterator]
+[classref boost::tree::iterator iterator]
 
 If the argument cursor is descending, the iterator that will be constructed will internally use a `std::stack`
 of cursors. If on the other hand the cursor is ascending (has a `parent` member function), the iterator 

@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
 //    std::list<int> test_list;
 //    
 //    // TODO: Put this into a better testing context.
-//    boost::tree::preorder::for_each(
+//    boost::tree::for_each(preorder(), 
 //        test_tree.root(), 
 //        boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
 //    );

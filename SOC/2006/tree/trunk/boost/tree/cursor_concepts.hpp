@@ -48,18 +48,37 @@ struct DescendingCursor
 };
 
 // Derive from DescendingCursor or not?
+// See eg Knuth 2.3.3, p 353.
 template <class X>
-struct AscendingCursor
+struct Ascendor
 {
 public:
-    BOOST_CONCEPT_USAGE(AscendingCursor)
+    BOOST_CONCEPT_USAGE(Ascendor)
     {
         a.to_parent();
         a.parent();
     }
-    
 private:
     X a;
+};
+
+template <class X>
+struct AscendingCursor
+  : Ascendor<X>, LvalueIterator<X>
+{
+};
+
+template <class X>
+struct RootTrackingCursor
+  : AscendingCursor<X>
+{
+    BOOST_CONCEPT_USAGE(RootTrackingCursor)
+    {
+        b = r.is_root();
+    }
+private:
+    X r;
+    bool b;
 };
 
 } // namespace boost_concepts

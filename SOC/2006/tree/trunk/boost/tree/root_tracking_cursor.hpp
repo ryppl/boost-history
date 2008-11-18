@@ -23,7 +23,20 @@
 namespace boost {
 namespace tree {
 
-
+/**
+ * @brief Turns any cursor into an root tracking one. 
+ * 
+ * This wrapper tracks the cursor it is initially given as root.
+ * When later descending and possibly re-ascending, it can thus
+ * tell if any cursor reached via those operations is the root.
+ * 
+ * It works for any cursor, but doesn't make much sense
+ * with descending ones as they will never re-ascend.
+ * 
+ * This adaptor is required for the treatment of subtrees - if we were only
+ * requiring algorithms to work on entire trees (as in many textbooks),
+ * we wouldn't really need such a device.
+ */
 template <class Cursor> 
 class root_tracking_cursor
 : public cursor_adaptor<root_tracking_cursor<Cursor>
@@ -104,8 +117,7 @@ private:
         this->base_reference().to_parent();
     }
 
-public:
-    bool is_root() const
+    bool is_root_() const
     {
         return !m_depth;
     }

@@ -41,7 +41,7 @@ template <class MultiwayCursor>
 inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
-    ((AscendingCursor<MultiwayCursor>)),
+    ((RootTrackingCursor<MultiwayCursor>)),
     (void)) // return type
 forward(inorder, MultiwayCursor& c)
 {
@@ -63,7 +63,7 @@ template <class MultiwayCursor>
 inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
-    ((AscendingCursor<MultiwayCursor>)),
+    ((RootTrackingCursor<MultiwayCursor>)),
     (void)) // return type
 back(inorder, MultiwayCursor& c)
 {

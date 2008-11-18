@@ -39,6 +39,12 @@ public:
     {
         return f.empty_();
     }
+
+    template <class Facade>
+    static bool is_root_(Facade const& f)
+    {
+        return f.is_root_();
+    }
     
     template <class Facade>
     static typename Facade::size_type size_(Facade const& f)
@@ -133,6 +139,11 @@ public:
     bool const empty() const
     {
         return cursor_core_access::empty_(this->derived());
+    }
+
+    bool const is_root() const
+    {
+        return cursor_core_access::is_root_(this->derived());
     }
     
     size_type const size() const

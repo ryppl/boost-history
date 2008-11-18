@@ -191,6 +191,11 @@ private:
     {
         return m_cursor.empty();
     }
+
+    bool const is_root_() const
+    {
+        return m_cursor.is_root();
+    }
     
     size_type const size_() const
     {
