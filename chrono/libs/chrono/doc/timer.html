@@ -5,29 +5,75 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Boost System Timers</title>
+<title>Chrono: Process Times</title>
+<link rel="stylesheet" type="text/css" href="../../../doc/html/minimal.css">
 </head>
 
 <body>
 
-<h1><img border="0" src="../../../boost.png" align="center" width="277" height="86">
-Boost System Timers<br>
-<a name="Introduction">Introduction</a></h1>
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td width="277">
+<a href="../../../index.html">
+<img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
+    <td width="337" align="middle">
+    <font size="7">Chrono: Process Times</font>
+    </td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
+  <tr>
+    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp; <a href="index.html">
+    Library Home</a></td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" align="right">
+  <tr>
+    <td width="100%" bgcolor="#D7EEFF" align="center">
+      <i><b>Contents</b></i></td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#E8F5FF">
+      <a href="#Introduction">Introduction</a><br>
+      <a href="#Examples">Examples</a><br>
+      <a href="#Reference">Reference material</a><br>
+      <a href="#Acknowledgements">Acknowledgements</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#D7EEFF" align="center">
+      <b><i>Headers</i></b></td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#E8F5FF">
+      <a href="../../../boost/chrono/chrono.hpp">&lt;boost/chrono/chrono.hpp&gt;</a><br>
+      <a href="../../../boost/chrono/timer.hpp">&lt;boost/chrono/timer.hpp&gt;</a><br>
+      <a href="../../../boost/chrono/process_times.hpp">
+      &lt;boost/chrono/process_times.hpp&gt;</a><br>
+      <a href="../../../boost/ratio.hpp">&lt;boost/ratio.hpp&gt;</a></td>
+  </tr>
+</table>
+
+<h2><a name="Introduction">Introduction</a></h2>
 <p>Knowing how long a program takes to execute is useful in both test and 
 production environments. It is also helpful if such timing information is broken down 
-into wall clock time, CPU time spent by the user, and CPU time spent by the 
+into real (wall clock) time, CPU time spent by the user, and CPU time spent by the 
 operating system servicing user requests.</p>
-<p>The Boost System Library's timer components provide that information:</p>
+<p>The Boost Chrono Library's process times components provide that information:</p>
 <ul>
   <li>At the highest level, class <code>run_timer</code> provides a 
   complete run time reporting package that can be invoked in a single line of 
   code.<br>
 &nbsp;</li>
-  <li>At a middle level, class <code>timer</code> provides a widely useful timer 
-  object abstraction.<br>
+  <li>At a middle level, class <code>process_timer</code> provides a process timer useful 
+  when the automatic reporting of <code>run_timer</code> isn't desired.<br>
 &nbsp;</li>
-  <li>At the lowest level, two <code>times</code> functions provide  
-  thin wrappers around the operating system's process timer API.</li>
+  <li>At the lowest level, <code>process_clock</code> provides a  
+  thin wrapper around the operating system's process timer API. For POSIX-like 
+  systems, that's the <code>times()</code> function, while for Windows, it's the
+  <code>GetProcessTimes()</code> function.</li>
 </ul>
 
 <h2><a name="Example">Example</a>s</h2>
@@ -35,12 +81,12 @@ operating system servicing user requests.</p>
 <p>Here is the <a href="../example/run_timer_example.cpp">run_timer_example.cpp</a> 
 program supplied with the Boost System library:</p>
 <blockquote>
-  <pre>#include &lt;boost/system/timer.hpp&gt;
+  <pre>#include &lt;boost/chrono/run_timer.hpp&gt;
 #include &lt;cmath&gt;
 
 int main()
 {
-  boost::system::run_timer t;
+  boost::chrono::run_timer t;
 
   for ( long i = 0; i &lt; 10000000; ++i )
     std::sqrt( 123.456L ); // burn some time
@@ -48,6 +94,8 @@ int main()
   return 0;
 }</pre>
 </blockquote>
+<p><b><span style="background-color: #FFFF00">Warning: The remainder of this 
+page is totally out-of-date</span></b></p>
 <p>When the <code>run_timer t</code> object is created, it starts timing. When 
 it is destroyed at the end of the program, its destructor stops the timer and 
 displays timing information on cout.</p>
@@ -393,12 +441,12 @@ timer</a></code>. For the description of inherited functions, see
       <td width="75%"><b><i>Replacement value</i></b></td>
     </tr>
     <tr>
-      <td width="25%" align="center"><code>%w</code></td>
-      <td width="75%"><code>wall()</code></td>
+      <td width="25%" align="center"><code>%r</code></td>
+      <td width="75%"><code>real</code></td>
     </tr>
     <tr>
       <td width="25%" align="center"><code>%u</code></td>
-      <td width="75%"><code>user()</code></td>
+      <td width="75%"><code>user</code></td>
     </tr>
     <tr>
       <td width="25%" align="center"><code>%s</code></td>
@@ -406,12 +454,12 @@ timer</a></code>. For the description of inherited functions, see
     </tr>
     <tr>
       <td width="25%" align="center"><code>%t</code></td>
-      <td width="75%"><code>user()+system()</code></td>
+      <td width="75%"><code>user + system</code></td>
     </tr>
     <tr>
       <td width="25%" align="center"><code>%p</code></td>
-      <td width="75%">The percentage of <code>wall()</code> represented by by <code>
-      user()+system()</code></td>
+      <td width="75%">The percentage of <code>real</code> represented by by <code>
+      user + system</code></td>
     </tr>
   </table>
   <p><i>Returns:</i> <code>ec</code></p>
@@ -420,10 +468,9 @@ timer</a></code>. For the description of inherited functions, see
 
 <hr>
 <p>Last revised:
-<!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->19 January, 2008<!--webbot bot="Timestamp" endspan i-checksum="39223" --></p>
-<p>© Copyright Beman Dawes, 2006</p>
-<p>Distributed under the Boost Software License, Version 1.0. (See accompanying 
-file <a href="../../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or copy at
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->18 November, 2008<!--webbot bot="Timestamp" endspan i-checksum="39373" --></p>
+<p>© Copyright Beman Dawes, 2006, 2008</p>
+<p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/ LICENSE_1_0.txt</a>)</p>
 
 </body>
