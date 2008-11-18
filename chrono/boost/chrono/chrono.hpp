@@ -118,12 +118,8 @@ namespace chrono {
 
   // duration_cast
 
-  # if !BOOST_WORKAROUND( BOOST_MSVC, <= 1500 ) // VC++ 9.0 can't handle this
-
-  template <class ToDuration, class Rep, class Period>
-    ToDuration duration_cast(const duration<Rep, Period>& d);
-
-  # endif
+  //template <class ToDuration, class Rep, class Period>
+  //  ToDuration duration_cast(const duration<Rep, Period>& d);
 
   // convenience typedefs
   typedef duration<boost::int_least64_t, nano> nanoseconds;    // at least 64 bits needed
@@ -407,7 +403,16 @@ namespace chrono {
                   || (ratio_divide<Period2, period>::type::den == 1
                     && !treat_as_floating_point<Rep2>::value)
               >::type* = 0)
+#ifdef __GNUC__
+              // GCC 4.2.4 refused to accept a definition at this point,
+              // yet both VC++ 9.0 SP1 and Intel ia32 11.0 accepted the definition
+              // without complaint. VC++ 9.0 SP1 refused to accept a later definition,
+              // although that was fine with GCC 4.2.4 and Intel ia32 11.0. Thus we
+              // have to support both approaches.
+              ;
+#else
               : rep_(duration_cast<duration>(d).count()) {}
+#endif
 
       // observer
 
@@ -900,6 +905,25 @@ template <class Clock, class Duration>
 
 //  As permitted, monotonic_clock is a typedef for high_resolution_clock.
 //  See synopsis.
+
+
+//----------------------------------------------------------------------------//
+//                 duration constructor implementation                        //
+//----------------------------------------------------------------------------//
+
+#ifdef __GNUC__
+  // see comment above in section 20.9.3 Class template duration [time.duration]
+  template <class Rep, class Period>
+  template <class Rep2, class Period2>
+  duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
+          typename boost::enable_if_c
+          <
+              treat_as_floating_point<rep>::value
+              || (ratio_divide<Period2, period>::type::den == 1
+                && !treat_as_floating_point<Rep2>::value)
+          >::type*)
+          : rep_(duration_cast<duration>(d).count()) {}
+#endif
 
 } // namespace chrono
 } // namespace boost

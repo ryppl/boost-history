@@ -27,26 +27,6 @@ namespace
   const char * default_format =
     "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n";
 
-//# if defined(BOOST_POSIX_API)
-//  long tick_factor()        // multiplier to convert ticks
-//                             //  to nanoseconds; -1 if unknown
-//  {
-//    static long tick_factor = 0;
-//    if ( !tick_factor )
-//    {
-//      if ( (tick_factor = ::sysconf( _SC_CLK_TCK )) <= 0 )
-//        tick_factor = -1;
-//      else
-//      {
-//        assert( tick_factor <= 1000000L ); // doesn't handle large ticks
-//        tick_factor = 1000000L / tick_factor;  // compute factor
-//        if ( !tick_factor ) tick_factor = -1;
-//      }
-//    }
-//    return tick_factor;
-//  }
-//# endif
-
   void show_time( const boost::chrono::process_times & times,
                   const char * format, int places, std::ostream & os )
   //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
@@ -110,7 +90,7 @@ namespace boost
 {
   namespace chrono
   {
-    //  run_timer:: report  --------------------------------------//
+    //  run_timer::report  --------------------------------------------------------//
 
     void run_timer::report( system::error_code & ec )
     {
@@ -139,6 +119,8 @@ namespace boost
         } 
       }
     }
+
+    //  run_timer::test_report  ---------------------------------------------------//
 
     void run_timer::test_report( duration real_, duration user_, duration system_ )
     {

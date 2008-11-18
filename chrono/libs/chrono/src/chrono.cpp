@@ -137,8 +137,7 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
     {
-        boost::throw_exception(
-          std::runtime_error( "system_clock: clock_gettime failed" ));
+        throw std::runtime_error( "system_clock: clock_gettime failed" );
     }
 
     return time_point(duration(
@@ -164,8 +163,7 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
-        boost::throw_exception(
-          std::runtime_error( "monotonic_clock: clock_gettime failed" ));
+        throw std::runtime_error( "monotonic_clock: clock_gettime failed" );
     }
 
     return time_point(duration(

@@ -21,6 +21,29 @@
 # include <windows.h>
 #elif defined(BOOST_CHRONO_POSIX_API)
 # include <sys/times.h>
+# include <unistd.h>
+
+namespace
+{
+  long tick_factor()        // multiplier to convert ticks
+                            //  to nanoseconds; -1 if unknown
+  {
+    static long factor = 0;
+    if ( !factor )
+    {
+      if ( (factor = ::sysconf( _SC_CLK_TCK )) <= 0 )
+        factor = -1;
+      else
+      {
+        assert( factor <= 1000000l ); // doesn't handle large ticks
+        factor = 1000000l / factor;  // compute factor
+        if ( !factor ) factor = -1;
+      }
+    }
+    return factor;
+  }
+}
+
 #else
 # error unknown API
 #endif
@@ -30,30 +53,24 @@ namespace boost
   namespace chrono
   {
 
-    void process_clock::now( process_times & times, system::error_code & ec )
+    void process_clock::now( process_times & times_, system::error_code & ec )
     {
 
-#   if defined(BOOST_WINDOWS_API)
+#   if defined(BOOST_CHRONO_WINDOWS_API)
 
       //  note that Windows uses 100 nanosecond ticks for FILETIME
       FILETIME creation, exit, user_time, system_time;
 
-      //FILETIME stopwatch_time;
-      //::GetSystemTimeAsFileTime( &stopwatch_time );
-      //times.real = duration(
-      //  ((static_cast<time_point::rep>(stopwatch_time.dwHighDateTime) << 32)
-      //    | stopwatch_time.dwLowDateTime) * 100 );
-
-      times.real = duration( monotonic_clock::now().time_since_epoch().count() );
+      times_.real = duration( monotonic_clock::now().time_since_epoch().count() );
 
       if ( ::GetProcessTimes( ::GetCurrentProcess(), &creation, &exit,
              &system_time, &user_time ) )
       {
-        times.user   = duration(
+        times_.user   = duration(
           ((static_cast<time_point::rep>(user_time.dwHighDateTime) << 32)
             | user_time.dwLowDateTime) * 100 );
 
-        times.system = duration(
+        times_.system = duration(
           ((static_cast<time_point::rep>(system_time.dwHighDateTime) << 32)
             | system_time.dwLowDateTime) * 100 );
       }
@@ -61,32 +78,35 @@ namespace boost
       {
         assert( 0 && "error handling not implemented yet" );
         //ec = error_code( ::GetLastError(), native_ecat );
-        //current.wall = current.system = current.user = microsecond_t(-1);
+        //times_.real = times_.system = times_.user = nanoseconds(-1);
       }
 
-#   else
+#   else  // BOOST_CHRONO_POSIX_API
       tms tm;
       clock_t c = ::times( &tm );
       if ( c == -1 ) // error
       {
-        ec = error_code( errno, native_ecat );
-        current.wall = current.system = current.user = microsecond_t(-1);
+        assert( 0 && "error handling not implemented yet" );
+
+        ec = system::error_code( errno, system::system_category );
+        times_.real = times_.system = times_.user = nanoseconds(-1);
       }
       else
       {
-        current.wall = microsecond_t(c);
-        current.system = microsecond_t(tm.tms_stime + tm.tms_cstime);
-        current.user = microsecond_t(tm.tms_utime + tm.tms_cutime);
+        times_.real = microseconds(c);
+        times_.system = microseconds(tm.tms_stime + tm.tms_cstime);
+        times_.user = microseconds(tm.tms_utime + tm.tms_cutime);
         if ( tick_factor() != -1 )
         {
-          current.wall *= tick_factor();
-          current.user *= tick_factor();
-          current.system *= tick_factor();
+          times_.real *= tick_factor();
+          times_.user *= tick_factor();
+          times_.system *= tick_factor();
         }
         else
         {
-          ec = error_code( errno, native_ecat );
-          current.wall = current.user = current.system = microsecond_t(-1);
+        assert( 0 && "error handling not implemented yet" );
+          ec = system::error_code( errno, system::system_category );
+          times_.real = times_.user = times_.system = nanoseconds(-1);
         }
       }
 #   endif
