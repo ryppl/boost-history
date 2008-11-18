@@ -31,8 +31,8 @@ struct vertex_vector
     template <typename Vertex>
     struct vertex_store
     {
-        typedef Alloc<Vertex> allocator_type;
-        typedef std::vector<Vertex, allocator_type> type;
+        typedef Alloc<Vertex> allocator;
+        typedef std::vector<Vertex, allocator> type;
     };
 };
 

@@ -4,8 +4,8 @@
 
 #include <map>
 
-#include <boost/descriptors.hpp>
-#include <boost/graphs/adjacency_list/vertex_iterator.hpp>
+#include <boost/none.hpp>
+#include <boost/graphs/adjacency_list/vertex_store.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
@@ -30,11 +30,11 @@ struct vertex_map
     >::descriptor_type vertex_descriptor;
 
     template <typename Vertex>
-    struct store
+    struct vertex_store
     {
         typedef Alloc<std::pair<Key, Vertex>> allocator;
         typedef Compare<Key> compare;
-        typedef vertices_map<Vertex, Key, compare, allocator> type;
+        typedef std::map<Key, Vertex, compare, allocator> type;
     };
 };
 

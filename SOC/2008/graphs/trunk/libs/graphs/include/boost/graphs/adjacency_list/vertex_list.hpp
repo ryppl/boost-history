@@ -28,8 +28,8 @@ struct vertex_list
     template <typename Vertex>
     struct vertex_store
     {
-        typedef Alloc<Vertex> allocator_type;
-        typedef counted_list<Vertex, allocator_type> type;
+        typedef Alloc<Vertex> allocator;
+        typedef counted_list<Vertex, allocator> type;
     };
 };
 

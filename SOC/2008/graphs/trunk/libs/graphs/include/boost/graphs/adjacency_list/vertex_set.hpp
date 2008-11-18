@@ -24,8 +24,9 @@ struct vertex_set
 {
     typedef unused key_type;
 
-    typedef std::set<int, Compare<int>, Alloc<int>> dummy;
-    typedef typename descriptor_traits<dummy>::descriptor_type vertex_descriptor;
+    typedef typename descriptor_traits<
+        std::set<int, Compare<int>, Alloc<int>>
+    >::descriptor_type vertex_descriptor;
 
     template <typename Vertex>
     struct vertex_store
