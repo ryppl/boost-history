@@ -223,6 +223,63 @@ public:
                               Traits,Compare,Alloc> atomized_type;
 //@}
 
+private:
+	/** access is a technical class that makes protected members of derived classes
+		SubType accessible for direct call from the base class. Accessing via
+		fuction pointers has been proposed by Alexander Nasonov 2005:
+		http://accu.org/index.php/journals/296.
+	*/
+	struct access : SubType
+	{
+		static bool contains(const SubType& subject, const typename SubType::value_type& operand)
+		{
+			 bool (SubType::*fp)(const typename SubType::value_type&)const = &access::contains_;
+			 return (subject.*fp)(operand);
+		}
+
+		template<class OperandT, class Combiner>
+		static void add(SubType& subject, const OperandT& operand, const Combiner& combine)
+		{
+			 void (SubType::*fp)(const OperandT&, const Combiner&) = &access::add_;
+			 (subject.*fp)(operand, combine);
+		}
+
+		template<class OperandT, class Combiner>
+		static void subtract(SubType& subject, const OperandT& operand, const Combiner& combine)
+		{
+			 void (SubType::*fp)(const OperandT&, const Combiner&) = &access::subtract_;
+			 (subject.*fp)(operand, combine);
+		}
+
+		template<class OperandT>
+		static void add(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::add_;
+			 (subject.*fp)(operand);
+		}
+
+		template<class OperandT>
+		static void subtract(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::subtract_;
+			 (subject.*fp)(operand);
+		}
+
+		template<class OperandT>
+		static void insert(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::insert_;
+			 (subject.*fp)(operand);
+		}
+
+		template<class OperandT>
+		static void erase(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::erase_;
+			 (subject.*fp)(operand);
+		}
+	};
+
 public:
     inline static bool has_symmetric_difference() 
     { return is_set<codomain_type>::value || !traits::absorbs_neutrons || traits::emits_neutrons; }
@@ -270,11 +327,11 @@ public:
     //--- contains: map view ------------------------------------------------------
     /// Does the map contain the element pair <tt>x = (key_element,value)</tt>?
     bool contains(const base_pair_type& x)const
-    { return that()->contains_(value_type(interval_type(x.key), x.data));    }
+	{ return access::contains(*that(), value_type(interval_type(x.key), x.data));    }
 
     /// Does the map contain all element value pairs represented by the interval-value pair sub?
     bool contains(const value_type& sub)const
-    { return that()->contains_(sub); }
+	{ return access::contains(*that(), sub); }
 
     /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
     bool contains(const interval_base_map& sub)const 
@@ -331,7 +388,7 @@ public:
     template<class Combiner>
     SubType& add(const base_pair_type& x, const Combiner& combine) 
     { 
-        that()->template add_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
+		access::add(*that(), value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine);
         return *that();
     }
 
@@ -351,17 +408,22 @@ public:
         If Combinator implements addition (+=) associated values will contain sums.
         If Combinator implements max, associated values will contain maximal values and so on.
     */
+    //template<class Combiner>
+    //SubType& add(const value_type& x, const Combiner& combine) 
+    //{ that()->add_(x, combine); return *that(); };
+
     template<class Combiner>
-    SubType& add(const value_type& x, const Combiner& combine) 
-    { that()->add_(x, combine); return *that(); };
+	SubType& add(const value_type& x, const Combiner& combine) 
+	{ access::add(*that(), x, combine); return *that(); }
+
 
 	template<class Combiner>
     SubType& add(const value_type& x) 
-	{ that()->add_(x, mpl::apply<Combiner,CodomainT>::type()); return *that(); };
+	{ access::add(*that(), x, mpl::apply<Combiner,CodomainT>::type()); return *that(); };
 
 	template<template<class>class Combiner>
     SubType& add(const value_type& x) 
-    { that()->add_(x, Combiner<CodomainT>()); return *that(); };
+    { access::add(*that(), x, Combiner<CodomainT>()); return *that(); };
 
     /// Addition of a base value pair.
     /** Addition of a base value pair <tt>x := pair(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
@@ -393,7 +455,7 @@ public:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
     SubType& add(const value_type& x) 
-    { that()->add_(x, inplace_plus<CodomainT>()); return *that(); }
+	{ access::add(*that(), x, inplace_plus<CodomainT>()); return *that(); }
 //@}
 
 
@@ -449,7 +511,7 @@ public:
     */
     SubType& subtract(const base_pair_type& x)
     { 
-        that()->subtract_( value_type(interval_type(x.key), x.data) ); 
+		access::subtract(*that(), value_type(interval_type(x.key), x.data) ); 
         return *that();
     }
 
@@ -470,9 +532,9 @@ public:
     SubType& subtract(const value_type& x)
     {
         if(Traits::emits_neutrons)
-            that()->add_(x, inplace_minus<CodomainT>()); 
+			access::add(*that(), x, inplace_minus<CodomainT>()); 
         else 
-            that()->subtract_(x, inplace_minus<CodomainT>()); 
+			access::subtract(*that(), x, inplace_minus<CodomainT>()); 
     
         return *that();
     }
@@ -493,7 +555,7 @@ public:
     */
     SubType& insert(const base_pair_type& x) 
     { 
-        that()->insert_( value_type(interval_type(x.key), x.data) ); 
+		access::insert(*that(), value_type(interval_type(x.key), x.data) ); 
         return *that();
     }
 
@@ -509,7 +571,7 @@ public:
         \c insert(x) is equivalent to \c add<inplace_identity>(x)
     */
     SubType& insert(const value_type& x)
-    { that()->insert_(x); return *that(); }
+	{ access::insert(*that(), x); return *that(); }
 
     /// Erase a base value pair from the map
     /** Erase a base value pair <tt>x=(k,y)</tt>.
@@ -518,7 +580,7 @@ public:
     */
     SubType& erase(const base_pair_type& x) 
     { 
-        that()->erase_(value_type(interval_type(x.key), x.data));
+		access::erase(*that(), value_type(interval_type(x.key), x.data));
         return *that();
     }
 
@@ -532,7 +594,7 @@ public:
         \c erase(x) is equivalent to \c subtract<inplace_erasure>(x)
     */
     SubType& erase(const value_type& x)
-    { that()->erase_(x); return *that(); }
+	{ access::erase(*that(), x); return *that(); }
 
 
     /// Erase an associated value for a key
@@ -908,7 +970,7 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>:
 {
     // x2 should be larger than *this; so every element in this should be in x2
     const_FOR_IMPLMAP(it) 
-        if(!super.that()->contains_(*it)) 
+        if(!super.contains(*it)) 
             return false;
     return true;
 }
@@ -1153,8 +1215,8 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,All
         victim = it; it++; _map.erase(victim);
     }
     
-    that()->add_(value_type(leftResid,  leftResid_ContVal));
-    that()->add_(value_type(rightResid, rightResid_ContVal));
+    add(value_type(leftResid,  leftResid_ContVal));
+    add(value_type(rightResid, rightResid_ContVal));
 
     return *that();
 }
@@ -1170,7 +1232,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     ::erase(const interval_base_map& erasure)
 {
     const_FORALL(typename interval_base_map, value_pair_, erasure)
-        that()->erase_(*value_pair_);
+		access::erase(*that(), *value_pair_);
 
     return *that();
 }

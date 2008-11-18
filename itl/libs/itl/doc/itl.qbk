@@ -1,0 +1,99 @@
+[library Boost.Itl
+    [quickbook 1.4]
+    [authors [Faulhaber, Joachim]]
+    [copyright 2007-2008 Joachim Faulhaber]
+    [copyright 2000-2006 Cortex Software GmbH]
+    [category container]
+    [id optional]
+    [dirname optional]
+    [purpose
+        Implements sets and maps as sets and maps of intervals
+    ]
+    [source-mode c++]
+    [license
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ Macros will be used for links so we have a central place to change them ]
+
+[/ Cited Boost resources ]
+
+[/ Other web resources ]
+
+[/ Icons ]
+
+[def __SPACE__ [$images/space.png]]
+[def __GO_TO__ [$images/callouts/R.png]]
+
+
+[section Introduction]
+
+The Interval Template Library (ITL) offers *intervals* and two kinds of 
+interval containers: *interval_sets* and *interval_maps*.
+
+An [classref boost::itl::interval_base_set interval_set] implements a set as a set of intervals.[br]
+An [classref boost::itl::interval_base_map interval_map] implements a map as a map of interval value pairs.
+
+[classref boost::itl::interval_base_set Interval_sets] and 
+[classref boost::itl::interval_base_map interval_maps] thus expose two different aspects in
+their interfaces: (1) The functionality of a set or a map, which is the more 
+['abstract aspect]. And (2) the functionality of an interval container which
+is the more specific and ['implementation related aspect]. In practice both 
+aspects are useful and are therefore supported. 
+
+Working with interval_sets and interval_maps can be 
+beneficial whenever in a given problem domain the elements of 
+sets appear in contiguous chunks: intervals. This is obviously the 
+case in many problem domains, namely in fields that deal with problems 
+related to date and time. 
+
+This is a first motivating example of a very small party, demonstrationg the 
+['*aggregate on overlap*] principle ['*(aggrovering)*] on interval_maps:
+
+In the example Mary enters the party first. She attends during the 
+time interval [20:00,22:00). Harry enters later he stays within [21:00,23:00).
+``
+typedef set<string> guests;
+interval_map<time, guests> party; 
+party += make_pair(interval<time>::rightopen(20:00, 22:00), guests("Mary"));
+party += make_pair(interval<time>::rightopen(21:00, 23:00), guests("Harry")); 
+// party now contains
+[20:00, 21:00)->{"Mary"} 
+[21:00, 22:00)->{"Harry","Mary"} //guest sets aggregated on overlap
+[22:00, 23:00)->{"Harry"}
+``
+On overlap of intervals, the corresponding name sets ar accumulated. At
+the points of overlap the intervals are split. The accumulation of content on
+overlap of intervals is done via an operator += that has to be implemented
+for the content parameter of the interval_map.
+
+As can be seen from the example an interval_map has both 
+a decompositional behavior (on the time dimension) as well as 
+an accumulative one (on the associated values). 
+
+[section Interval Container's Conduct]
+
+[table Synopsis over the behavior of interval containers
+    [[joining] [joining] [separating] [splitting]]
+    [[set]      [R0-C2]     [R0-C3]   [R0-C4]]
+    [[map]      [R1-C2]     [R1-C3]   [R1-C4]]
+]
+
+
+[endsect]
+
+[endsect]
+
+[/aggregate on overlap  aggrovering]
+[/aggregate on collide  aggrolliding]
+
+[include examples.qbk]
+[include dependencies.qbk]
+[include acknowledgments.qbk]
+[xinclude itldoc.xml]
+
+
+14:46 18.11.2008

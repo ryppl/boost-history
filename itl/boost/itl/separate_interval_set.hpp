@@ -154,9 +154,6 @@ public:
         (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
     { assign(src); return *this; }
 
-    /// Does the set contain the interval  <tt>x</tt>?
-    bool contains_(const interval_type& x)const;
-
     /// Assignment from a base interval_set.
     template<class SubType>
     void assign(const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
@@ -168,6 +165,9 @@ public:
             this->_set.insert(*it); 
     }
 
+protected:
+    /// Does the set contain the interval  <tt>x</tt>?
+    bool contains_(const interval_type& x)const;
 
     /// Insertion of an interval <tt>x</tt>
     void add_(const value_type& x);
@@ -175,6 +175,7 @@ public:
     /// Removal of an interval <tt>x</tt>
     void subtract_(const value_type& x);
 
+private:
     /// Treatment of adjoint intervals on insertion
     void handle_neighbours(const iterator& it){}
 } ;

@@ -203,6 +203,7 @@ public:
             this->add(*it);
     }
 
+protected:
     /// Does the set contain the interval  <tt>x</tt>?
     bool contains_(const interval_type& x)const;
 
@@ -212,10 +213,10 @@ public:
     /// Removal of an interval <tt>x</tt>
     void subtract_(const value_type& x);
 
+private:
     /// Treatment of adjoint intervals on insertion
     void handle_neighbours(const iterator& it);
 
-protected:
     iterator joint_insert(const iterator& left_it, const iterator& right_it);
 } ;
 

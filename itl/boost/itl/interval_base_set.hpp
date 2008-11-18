@@ -173,7 +173,35 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_reverse_iterator const_reverse_iterator;
 
+private:
+	/** access is a technical class that makes protected members of derived classes
+		SubType accessible for direct call from the base class. Accessing via
+		fuction pointers has been proposed by Alexander Nasonov 2005:
+		http://accu.org/index.php/journals/296.
+	*/
+	struct access : SubType
+	{
+		static bool contains(const SubType& subject, const typename SubType::value_type& operand)
+		{
+			 bool (SubType::*fp)(const typename SubType::value_type&)const = &access::contains_;
+			 return (subject.*fp)(operand);
+		}
 
+		static void add(SubType& subject, const typename SubType::value_type& operand)
+		{
+			 void (SubType::*fp)(const typename SubType::value_type&) = &access::add_;
+			 (subject.*fp)(operand);
+		}
+
+		static void subtract(SubType& subject, const typename SubType::value_type& operand)
+		{
+			 void (SubType::*fp)(const typename SubType::value_type&) = &access::subtract_;
+			 (subject.*fp)(operand);
+		}
+
+	};
+
+public:
     // B: Constructors, destructors, assignment
     /// Default constructor for the empty set 
     interval_base_set(){}
@@ -204,11 +232,11 @@ public:
 
     /// Does the container contain the element \c x
     bool contains(const DomainT& x)const
-    { return that()->contains_(interval_type(x)); }
+	{ return access::contains(*that(), interval_type(x)); }
 
     /// Does the container contain the interval x
     bool contains(const interval_type& x)const
-    { return that()->contains_(x); }
+    { return access::contains(*that(), x); }
 
     /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
     bool contains(const interval_base_set& sub)const 
@@ -251,11 +279,11 @@ public:
 
     /// Add a single element \c x to the set
     SubType& add(const DomainT& x) 
-    { that()->add_(interval_type(x)); return *that(); }
+	{ access::add(*that(), interval_type(x)); return *that(); }
 
     /// Add an interval of elements \c x to the set
     SubType& add(const value_type& x) 
-    { that()->add_(x); return *that(); }
+    { access::add(*that(), x); return *that(); }
 
 //@}
 
@@ -265,11 +293,11 @@ public:
 
     /// Subtract a single element \c x from the set
     SubType& subtract(const DomainT& x) 
-    { that()->subtract_(interval_type(x)); return *that(); }
+	{ access::subtract(*that(), interval_type(x)); return *that(); }
 
     /// Subtract an interval of elements \c x from the set
     SubType& subtract(const value_type& x) 
-    { that()->subtract_(x); return *that(); }
+    { access::subtract(*that(), x); return *that(); }
 
     ///// Subtract a single element \c x from the set
     //interval_base_set& operator -= (const DomainT& x) 
@@ -502,7 +530,7 @@ bool interval_base_set<SubType,DomainT,Interval,Compare,Alloc>
     {
         // x2 should be larger than *this; so every element in this should be in x2
         const_FOR_IMPL(it) 
-            if(!x2.that()->contains_(*it)) 
+            if(!x2.contains(*it)) 
                 return false;
         return true;
     }

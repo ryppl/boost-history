@@ -182,6 +182,7 @@ namespace boost{namespace itl
                 this->_set.insert(*it); 
         }
         
+	protected:
         /// Does the set contain the interval  <tt>x</tt>?
         bool contains_(const interval_type& x)const;
 
@@ -191,10 +192,10 @@ namespace boost{namespace itl
         /// Removal of an interval <tt>x</tt>
         void subtract_(const value_type& x);
 
+    private:
         /// Treatment of adjoint intervals on insertion
         void handle_neighbours(const iterator& it){}
 
-    private:
         void insert_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
         void subtract_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
     } ;

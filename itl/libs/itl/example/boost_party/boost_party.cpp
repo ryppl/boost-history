@@ -139,7 +139,7 @@ void boost_party()
 
 
     BoostPartyAttendenceHistoryT::iterator it = party.begin();
-    cout << "----- Histrory of party guests ------------------------\n";
+    cout << "----- History of party guests -------------------------\n";
     while(it != party.end())
     {
         interval<ptime> when = (*it).first;
@@ -150,7 +150,7 @@ void boost_party()
     }
 
     BoostPartyHeightHistoryT::iterator height_ = tallest_guest.begin();
-    cout << "----- Histrory of maximum guest height ----------------\n";
+    cout << "----- History of maximum guest height -----------------\n";
     while(height_ != tallest_guest.end())
     {
         interval<ptime> when = height_->first;

@@ -174,8 +174,8 @@ public:
             this->add(*it); 
     }
 
+protected:
     bool contains_(const value_type& x)const;
-
 
     template<class Combiner>
     void add_(const value_type&, const Combiner&);
@@ -196,9 +196,6 @@ public:
 
     void insert_(const value_type& value);
     void erase_(const value_type& value);
-
-    //TESTCODE
-    void getResiduals(const interval_type& x_itv, interval_type& leftResid, interval_type& rightResid);
 
 private:
     bool insertable(const value_type& value)const
@@ -253,34 +250,6 @@ bool interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>
     type section;
     add_intersection(section, interv);
     return is_element_equal(section, type(interv_value));
-}
-
-
-template <typename DomainT, typename CodomainT, class Traits, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
-void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::getResiduals(const interval_type& x_itv, interval_type& leftResid, interval_type& rightResid)
-{
-    iterator fst_it = this->_map.lower_bound(x_itv);
-    iterator end_it = this->_map.upper_bound(x_itv);
-    
-    if(fst_it==end_it)
-    {
-        leftResid.clear();
-        rightResid.clear();
-        return;
-    }
-
-    (*fst_it).KEY_VALUE.left_surplus(leftResid, x_itv);
-    iterator lst_it = fst_it; lst_it++;
-
-    if(lst_it==end_it)
-    {
-        rightResid.clear();
-        return;
-    }
-
-    lst_it=end_it; lst_it--;
-
-    (*lst_it).KEY_VALUE.right_surplus(rightResid, x_itv);
 }
 
 
