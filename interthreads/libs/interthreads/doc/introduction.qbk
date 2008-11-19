@@ -1,0 +1,172 @@
+[/
+  (C) Copyright 2008 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:motivation Motivation]
+
+[section:decorator_motivation Decorators]
+
+`boost::call_once` provides a mechanism for ensuring that an initialization routine is run exactly once on a 
+programm without data races or deadlocks. 
+`boost::this_thread::at_thread_exit` allows to execute a cleanup function at thread exit.
+
+If we want a setup function be executed once at the begining on the threads and a cleanup at thread exit we need to do
+
+    void thread_main() {
+        setup();
+        boost::this_thread::at_thread_exit(cleanup);
+        // do whatever
+        // ...
+    }
+    // ...
+    {
+        boost::thread th(thread_main);
+        //...
+    }
+
+Of course we can define an init function that call setup and do the registration.
+
+    void init() {
+        setup();
+        boost::this_thread::at_thread_exit(cleanup);
+    }
+
+Different services could require these setup/cleanup functions to be called, and so 
+each thread function should do 
+
+    void thread_main() {
+        serv1::init();
+        // ...
+        servN::init();
+        // do whatever using serv1, ..., servN.
+        // ...
+    }
+
+This approach is valid for services that the user can configure for specifics threads, 
+but not for services that must be installed on every thread.
+
+__thread_decoration__ ensures that a setup function is called only once by thread before 
+the thread function provided the thread is created with a decorator wrapper. 
+This setup function is usualy used to set thread specific pointers and call functions once.
+
+The conterpart of the setup is the cleanup. The __thread_decoration__ takes an optional 
+cleanup function which will be executed at thread exit.
+
+    // define in only the implementation file of each service
+    
+    boost::interthreads::decoration serv1:decoration(serv1:setup, serv1:cleanup);
+    // ...
+    boost::interthreads::decoration servN:decoration(servN:setup, servN:cleanup);
+    
+    
+    void thread_main() {
+        // do whatever using serv1, ..., servN.
+        // ...
+    }
+    
+    // ...
+    {
+        boost::thread th(boost::interthreads::make_decorator(thread_main));
+        //...
+    }
+
+
+[endsect]
+
+[section:thread_specific_shared_ptr_Motivation Sharing Thread Local Storage]
+
+Thread local storage allows multi-threaded applications to have a separate instance of a given data item for 
+each thread. But do not provide any mechanism to access this data from other threads. Although this seems to 
+defeat the whole point of thread-specific storage, it is useful when these contexts needs some kind of 
+communication between them, or some central global object needs to control them.
+
+The intent of the `boost::thread_specific_shared_ptr` class is to allow two threads to establish a shared memory 
+space, without requiring the user code to pass any information.
+`boost::thread_specific_shared_ptr` provides a portable mechanism for shared thread-local storage that works on 
+all compilers supported by `boost::thread` and `boost::shared_ptr`. Each instance of 
+`boost::thread_specific_shared_ptr` represents a pointer to a shared object where each thread must have a distinct 
+value. 
+
+Only the current thread can modify the thread specific shared pointer using the non const functions reset/release 
+functions. Each time these functions are used a synchronization must be ensured to update the mapping.
+The other threads have only read access to the shared_ptr<T>. It is worh saying that the shared object T must be 
+thread safe.
+
+[endsect]
+
+[section:keep_alive_motivation Keep Alive]
+
+On fault tolerant systems we need to be able to detect threads that could stay on a loop, or simply blocked.
+
+One way to detect this situations is to require the thread to signal it is alive by calling a check point function.
+Of course it should be up to the user to state when this mechanism is enabled or disabled. 
+At the begining of a thread the keep alive mechanism is disabled.
+
+A thread will be considered dead if during a given period the number of checkins is inferior to a given threshold.
+These two parameters can be given when the keep alive mechanislm is enabled.
+
+The controler checks at predefined intervals if the thread is dead, and in this case it will call a user specific 
+function which by default aborts the program.
+
+[endsect]
+
+[section:thread_tuple_motovation Thread Tuple]
+
+The __thread_group__ class allows to group dynamically threads. This means that the container must be dynamic.
+
+    {
+        boost::thread_group tg;
+        tg.create_thread(thread1);
+        tg.create_thread(thread2);
+        tg.join_all(thread1);
+    }
+
+
+The __thread_tuple__ class is responsible for launching and managing a static collection of threads 
+that are related in some fashion. No new threads can be added to the tuple once constructed. So we can write
+
+    boost::interthreads:thread_join(thread1, tg.create_thread(thread2));
+
+In addition the user can join the first finishing thread.
+
+    unsigned i = boost::interthreads:thread_join_first_then_interrupt(thread1, thread2);
+
+
+Evidently, thread_tuple can not be used when we needs dynamic creation or deletion
+
+The __thread_group__ class allows to group dynamically threads.
+
+    {
+        boost::thread_group tg;
+        tg.create_thread(thread1);
+        
+        // later on
+        tg.create_thread(thread2);
+        boost::thread th3(thread3)
+        tg.add_thread(th3);
+        
+        // later on
+        tg.remove_thread(th3);
+        
+        tg.join_all(thread1);
+    }
+
+Objects of type __thread_tuple__ are movable, so they can be stored in move-aware containers, and returned from 
+functions. This allows the details of thread tuple creation to be wrapped in a function.
+
+    boost::interthreads::thread_tuple<2> make_thread_tuple(...);
+
+    void f()
+    {
+        boost::interthreads::thread_tuple<2> some_thread_tuple=make_thread_tuple(f1, g2);
+        some_thread_tuple.join();
+    }
+
+[endsect]
+
+
+
+[endsect]

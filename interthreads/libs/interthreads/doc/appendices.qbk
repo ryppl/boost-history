@@ -1,0 +1,121 @@
+[/
+[/
+  (C) Copyright 2008 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/=================]
+[section Appendices]
+[/=================]
+
+[include changes.qbk]
+
+[include rationale.qbk]
+
+[include implementation.qbk]
+
+[include acknowledgements.qbk]
+
+[/=====================================]
+[section:todo  Appendix E: Future plans]
+[/=====================================]
+
+[heading Tasks to do before review]
+[variablelist
+
+[[Add tests] [Currently there are only some examples. There is yet a long way before been able to review the library.]]
+
+[[Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise] [.]]
+[[Use C++0x variadic templates on compilers supporting it and the Use the preprocesor otherwise] [.]]
+
+[[Add a practical example using thread_tuple, thread_tuple_once] [.]]
+
+[[Complete the STM example] [.]]
+
+[[Optimize the TSSS maps using intrusive containers] [.]]
+
+]
+
+[heading For later releases]
+[variablelist
+
+[[Generalize both specific pointers in a template class basic_thread_specific_ptr] [
+
+[*Domain Features]
+
+[variablelist
+
+[[ownership: exclusive/shared] [Specifies if the pointer is exclusive to the thread or shared with other threads.]]
+
+[[key range: fixed/variable/mixed ] [Specifies how the key range is defined. fixed has an integer range 0..n, variable takes as key the address of the specific_ptr and mixed use a variant of fixed or variable key.]]
+
+[[key creation: eager/lazy] [Specifies how the key is created, eager at construction time, lazy when needed.]]
+
+[[context setting: eager/lazy] [Specifies how the pointer is set, eager at thread initialization time, lazy when needed.]]
+
+]
+
+The current `thread_specific_ptr` is exclusive, has a variable key range and so the key is initialized at construction time and 
+explicit context setting by user on the current thread.
+
+    typedef basic_thread_specific_ptr<exclusive, variable_key_range<>, eager_context_setting> thread_specific_ptr;
+
+The current `thread_specific_shared_ptr` is shared, has a variable key range and so the key is initialized at construction time and 
+explicit context setting by user on the current thread.
+
+    typedef basic_thread_specific_ptr<exclusive, variable_key_range<>, eager_context_setting> thread_specific_ptr;
+
+[*Design rationale]
+
+`boost::thread_specific_ptr` uses as key the address of the variable. This has as consequence that 
+the mapping from keys to the thread specific context pointer is much less efficient that the direct access provided 
+by some implementations. In this concern this library would try to improve the performance to this mapping providing 
+direct access keys. As the number of direct access keys must be know at compile time this has a limit on the number 
+of thread specific pointers. A mixed approach would be also provided in which the key could be a fixed one or a 
+variable one. It is up to the user to give an hint of the key sort. 
+When using fixed or mixed keys, there is decision to take related to when the key is created, i.e. eager before the 
+threads starts or lazy when we need it.
+
+Non-portable: The interfaces of POSIX Pthreads, Solaris threads, and Win32 threads are very similar. However,
+the semantics of Win32 threads are subtly different since they do not provide a reliable means of cleaning up objects
+allocated in thread-specific storage when a thread exits. Moreover, there is no API to delete a key in Solaris 
+threads. This makes it hard to write portable code among UNIX and Win32 platforms.
+
+So we need to implement it on top of the underlying OS. The idea is to take a native thread specific pointer which 
+will manage with the fixed, variable and mixed keys. This exactly the approach of `boost::thread_specific_ptr` but 
+only for variable keys.
+
+Just to finish, we need to decide when the context is set, two possibilities: the user sets explicitlly the context 
+when it considers pertinent or the context is created lazily the first time we try to get it. The first approach has 
+the liability that the user needs to ensure that the context is set before get them, but when the context must be set 
+before the function thread starts this is a no issue. The second is safe but has as consequence that every access 
+include a check. In addition the type must be default constructible. 
+
+    bith::thread_specific_shared_ptr<myclass, lazy_setting> ptr;
+
+The pointer will be initilaized when needed as if we had do
+
+    if (ptr.get()==0) { 
+        ptr.reset( new myclass() );
+    }
+
+Between the features: 
+
+Thread_specific key mapping optimization: Replace the Boost.Thread thread_specific_ptr thread specific key mapping implementation 
+by a mix of fixed/variable mapping which will provide efficient access to the fixed keys and scalability with the 
+others keys.
+
+Configuration the fixed/variable/mixed key range, ordered/unordered map, intrusive/extrusive map, shared/exclusive locking.
+]]
+
+[[Add Message queues] [Messages queue are the next step concerning the communication between threads on the InterThreads library.]]
+[[Add a daemon controlling all the keep alive controller threads] [This daemon will send regular keep_alive messages and kill the process when dead]]
+
+]
+
+[endsect]
+
+[endsect]
+

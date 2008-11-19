@@ -1,0 +1,199 @@
+[/
+  (C) Copyright 2008 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/=======================================]
+[section:rationale  Appendix B: Rationale]
+[/=======================================]
+
+[/=======================]
+[section Thread Decorator]
+[/=======================]
+
+[variablelist
+
+[[Function wrapper versus thread refinement] [The threadalert on which this library was initialy based redefined the 
+boost:thread class which called implicitly the wrapper. As the single varying features between both threads was this 
+wrapping of the thread function it has been isolated in the interthreads library.]]
+
+[[Static decoration variables] [Thread decorations construction is not thread safe and must be done before other threads have been 
+created and the __thread_decorator_decorate__ function is called.]]
+]
+
+[endsect]
+
+[/==============================]
+[section Thread Specific Storage]
+[/==============================]
+
+[variablelist
+
+[[Non copiable/Non movable] [Specific pointers are singletons.]]
+
+[[External locking] [In order to ensure thread safety while providing as much functionality as possible the class allows
+to get the map of thread specific contexts as soon as the application provides a `unique_lock`.]]
+
+[[Mimic thread_specific_ptr] [From the point of view of the current thread thread_specific_shared_ptr behaves as a thread_specific_ptr. 
+From it we takes: 
+
+```thread_specific_shared_ptr();
+explicit thread_specific_shared_ptr(void (*cleanup_)(shared_ptr_type));
+T* get() const;
+T* operator->() const;
+T& operator*() const;
+void reset();
+template<class Y> void reset(Y * p);
+```     
+]]
+
+[[Mimic shared_ptr] [From the point of the other threads thread_specific_shared_ptr behaves as a shared_ptr lockup. 
+From the point of view of the current thread the stored pointer is located in a shared_pointer, so we can use the shared_ptr deleter feature
+From it we takes: 
+
+```T* get() const;
+T* operator->() const;
+T& operator*() const;
+void reset();
+template<class Y> void reset(Y * p);
+template<class Y, class D> void reset(Y * p, D d);
+template<class Y, class D, class A> void reset(Y * p, D d, A a);
+``` 
+]]
+
+[[Why doesn't thread_specific_shared_ptr provide a release() function?] 
+[As it store a shared_ptr, it cannot give away ownership unless it's unique() because the other copy will still destroy the object.]]
+
+]
+
+[/==============================]
+[heading Comparaing TSSS and TSS]
+[/==============================]
+
+
+[table Comparaing TSSS and TSS
+[[Feature][thread_specific_shared_ptr][thread_specific_ptr][Compatible]]
+[[ownership][shared][exclusive][no]]
+[[default constructor][[*yes]][[*yes]][[*yes]]]
+[[cleanup constructor][[*yes]: can not delete the pointer][yes:must delete the pointer][no]]
+[[`get()`][[*yes]][[*yes]][[*yes]]]
+[[`operator->()`][[*yes]][[*yes]][[*yes]]]
+[[`operator*()`][[*yes]][[*yes]][[*yes]]]
+[[`reset()`][[*yes]][[*yes]][[*yes]]]
+[[`reset(T*)`][[*yes]][[*yes]][[*yes]]]
+[[`reset(Y*)`][[*yes]][no][no]]
+[[`reset(Y*,D)`][[*yes]][no][no]]
+[[`reset(Y*,D,A)`][[*yes]][no][no]]
+[[`release()`][no][[*yes]][no]]
+[[`get_mutex()`][[*yes]][no][no]]
+[[`get_map()`][[*yes]][no][no]]
+[[`operator[]()`][[*yes]][no][no]]
+[[`wait_and_get()`][[*yes]][no][no]]
+]
+
+
+[endsect]
+
+[/=================]
+[section Keep Alive]
+[/=================]
+
+[variablelist
+
+[[Can a thread that has just do a check point be considered as dead less than one second after?] 
+[Whell this depends on the enabling parameters. If the checking parameter is greater tan one it could be possible that 
+the thread do a check_point just before the keep alive manager do the check, seen that there are not enough check_points and declaring the thread dead.
+If you want to avoid this situation let the checkin to 1.
+]]
+
+[[Nesting enablers and disablers] [Enablers/disablers use RAII, so they can be nested and the context be restored on the destructor.]]
+
+[[Configurable on dead action] [The default action is to abort the process because I don't see any generic and cleaner way to manage this event. 
+The library provides this hook for user wanting to try something specific.]]
+
+[[Who control the controler?] [There is no way to control this thread other than adding an external process.]]
+
+]
+
+[endsect]
+
+
+[/===================]
+[section Thread Tuple]
+[/===================]
+
+[variablelist
+[[Why must be not copiable?] [Thread tuples can not be copiable since boost::thread is not copiable.]]
+[[Why should be movable?] [If we want functions to return Thread tuples it is necessary to make them movable.]]
+[[Mimic boost::thread_group] [thread_tuple has in common some function found in thread_group. From it we take 
+
+```void join_all();
+void interrupt_all();
+std::size_t size();
+``` 
+
+]]
+[[Mimic boost::thread] [We can consider a thread tuple as a compound thread, and so we can mimic 
+the thread intyerface. From it we takes 
+
+```void join();
+void interrupt();
+void detach/detach_all();
+bool interruption_requested() const;
+void timed_join/timed_join_all();
+bool joinable/all_joinable() const;
+```
+
+]]
+
+[[Why the user can not modify directly the embeeded threads?] [
+
+The library provides a safe function to get a constant thread reference
+
+```const thread& operator[](std::size_t i) const;```
+        
+The problem if we provide the non constant variant is that the user can detach them.
+        
+        
+]]
+
+
+[[Joining the first finishing thread of a thread tuple] 
+[This functionallity has a price. We need to synchronize all the threads transparently, so we need to wrap the user thread functions.
+]]
+]
+
+[/=======================================================]
+[heading Comparaing thread, thread_group and thread_tuple]
+[/=======================================================]
+
+
+[table Comparaing thread, thread_group and thread_tuple
+[[Feature][thread][thread_group][thread_tuple][Compatible]]
+[[default constructor][[*yes]][[*yes]][[*yes]][[*yes]]]
+[[copiable][no][no][no][[*yes]]]
+[[movable][[*yes]][no][[*yes]][no]]
+[[`joinable()`][[*yes]][no][[*yes]][no*]]
+[[`join()`][[*yes]][no][[*yes]][no*]]
+[[`timed_join()`][[*yes]][no][[*yes]][no*]]
+[[`interruption_requested()`][[*yes]][no][[*yes]][no*]]
+[[`join_all()`][no][[*yes]][[*yes]][no]]
+[[`timed_join_all()`][no][[*yes]][[*yes]][no]]
+[[`interrupt_all()`][no][[*yes]][[*yes]][no]]
+[[`size()`][no][[*yes]][[*yes]][no* *]]
+[[`join_first_then_interrupt()`][no][no][[*yes]][no* * *]]
+[[`timed_join_first_then_interrupt()`][no][no][[*yes]][no* * *]]
+[[`operator[]()`][no][no][[*yes]][no]]
+[[`swap()`][[*yes]][no][[*yes]][no*]]
+]
+
+[variablelist
+
+[[*][thread_group could add these synonym functions]]
+[[* *][thread could add the size function returning 1]]
+[[* * *][thread & thread_group could add these functions]]
+]
+[endsect]
+[endsect]

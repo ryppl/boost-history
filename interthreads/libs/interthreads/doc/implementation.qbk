@@ -1,0 +1,84 @@
+[/
+  (C) Copyright 2008 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:implementation  Appendix C: Implementation Notes]
+
+[section Thread Decorator]
+
+[variablelist
+
+[[Thread safe] [The library is thread safe as far as the thread decorations are declared staticaly, because these variables will be initialized sequentially.]]
+
+[[Chained thread decorations] [All the thread decorations are chained between them.]]
+
+]
+
+[endsect]
+
+[section Thread Specific Storage]
+
+The Thread-Specific Storage pattern can be implemented in various ways
+
+[variablelist
+
+[[External versus internal thread storage] [The thread specific data collections can be stored either externally
+to all threads or internally to each thread. The thread_specific_shared_ptr use both ensuring efficiency when the context is 
+requested by the current thread and allowing threads to access thread specific pointer of other threads]]
+
+[[Fixed- vs. variable-sized thread specific key mapping] 
+[This library is based on the the Boost.Thread thread_specific_ptr implementation which use a variable-size map indexed by the 
+address of the object. Future releases will provide fixed and mixed keys.]]
+
+[[Fixed- vs. variable-sized mapping of thread IDs to thread specific pointers] 
+[It may be impractical to have a fixed-size array with an entry for every possible thread ID value. 
+Instead, it is more space efficient to have threads use a dynamic data structure to map thread IDs to thread specific pointers.]]
+
+[[One mapping of thread IDs to thread specific pointers or to thread specific key mapping] 
+[This library maps thread IDs to thread specific pointers to avoid contention on a single map.]]
+
+[[Default versus explicit specific context setting] 
+[This library provides explicit setting. In future release will provide explicit/eager and implicit/lazy specific context setting.]]
+
+[[Ordered or unordered map] [The current implementation use an ordered map. Future version will allow the user to configure this.]]
+
+[[Intrusive or not maps] [As the thread specific pointer is stored on only one map the current implementation use the intrusive container.]]
+
+[[Shared versus exclusive locking] [Locating the right TS pointer requires the use of mutex to prevent race conditions. The library use a a shared_mutex 
+because most of the access to the map will be readings by other threads. The problem is that the native conditions can not be used directly with 
+shared mutex. Some benchmarks will be needed before decidinf which implementation is the best.]]
+
+]
+
+[endsect]
+
+[section Keep Alive]
+
+[variablelist
+
+[[Ensuring keep alive manager singleton is initialized and the thread specific shared storage is set before use] 
+[The use of the thread preamble ensures that the preables are called before the user thread function is called. 
+The keep_alive preable use the call_once to ensure that the keep_alive manager is correctly initialized.]]
+
+[[backup/restore context] [The real thread specific data is stored directly on the stack of enablers/disablers avoiding heap memory. 
+On enablers/disablers construction they store a backup pointer to the nesting context. This allows a quick restore.
+The keep alive pointer contains just a pointer to this data.]]
+
+]
+[endsect]
+
+
+[section Thread Tuple]
+
+[variablelist
+[[Joining the first finishing thread] 
+[In order to synchronize the finish of all the threads we use a internal class which store the index of the first 
+thread notifying that it is finished. As the user function has no ideaof this index we wrap the user thread functions.
+]]
+]
+
+[endsect]
+[endsect]

@@ -1,0 +1,1777 @@
+[/
+  (C) Copyright 2008 Vicente J Botet Escriba.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================]
+[section:reference Reference]
+[/==========================]
+
+[/==========================================================================================]
+[section:decorator_thread_decoration_file Header `<boost/interthreads/thread_decorator.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        class thread_decoration;
+        class thread_decorator;
+        void decorate();
+    }
+    }
+
+[/==================================================]
+[section:thread_decoration Class `thread_decoration`] 
+[/==========================================================================================]
+
+`thread_decoration` defines a couple of setup/cleanup functions chained to the last constructed decoration, i.e. decorations are chained between them.
+
+    class thread_decoration {
+    public:
+ 	    template<typename Callable1>
+	    thread_decoration(Callable1 setup);
+        
+ 	    template<typename Callable1,typename Callable2>
+	    thread_decoration(Callable1 setup, Callable2 cleanup);
+        
+ 	    ~thread_decoration() {
+    };
+
+[section:thread_decoration_class_constructor_setup Constructor with setup]
+[/==========================================================================================]
+
+    template<typename Callable>
+    thread_decoration(Callable func);
+
+[variablelist
+
+[[Requires:] [`Callable` is `CopyConstructible`. Copying `setup` shall have no side effects, and the effect of calling the copy shall
+be equivalent to calling the original. ]]
+
+[[Effects:] [`setup` is copied into storage managed internally by the library, and that copy is invoked by the 
+__thread_decorator_decorate__ function.]]
+
+[[Postconditions:] [`*this` refers to a decoration.]]
+
+[[Throws:] [Nothing]]
+
+[[Thread safety:][unsafe]]
+
+]
+
+[note The library do not ensures any order of decorations.]
+
+[endsect]
+
+[section Constructor with setup & cleanup]
+[/==========================================================================================]
+
+    template<typename Callable1,typename Callable2>
+    thread_decoration(Callable1 setup, Callable2 cleanup);
+
+
+[variablelist
+
+[[Requires:] [`Callable1` & `Callable1` are `CopyConstructible`. Copying `setup`  or `cleanup` shall have no side effects, and the effect of calling the copy shall
+be equivalent to calling the original. ]]
+
+[[Effects:] [`setup` and `cleanup` are copied into storage managed internally by the library, and the `setup` copy is invoked by the 
+__thread_decorator_decorate__ function. If successful the cleanup function is registered to the to the thread exit handler.]]
+
+[[Postconditions:] [`*this` refers to a decoration.]]
+
+[[Throws:] [Nothing]]
+
+[[Thread safety:][unsafe]]
+
+]
+
+[note The library do not ensures any order of setup decorations neither of cleanup decorations.]
+
+[endsect]
+[endsect]
+
+[section:thread_decorator Class `thread_decorator`]
+[/==========================================================================================]
+
+`thread_decorator` is a functor wrapping a function with the setup and the cleanup of chained decorations which will be called only once by thread: 
+decoration's setup are called before the thread function and decoration's cleanup at thread exit. 
+
+    class thread_decorator {
+    public:    
+
+        template <class Callable>
+        explicit thread_decorator(Callable&& f);
+        template <class Callable>
+        explicit thread_decorator(detail::thread_move_t<Callable> f):
+        template<typename Callable>
+        thread_decorator(Callable f, 
+            typename disable_if<boost::is_convertible<F&,detail::thread_move_t<F> >
+                               , detail::dummy* >::type=0);        
+
+        template <typename Callable, typename A1, typename A2, ...>
+        thread_decorator(Callable f, A1 a1, A2 a2, ...)
+
+        thread_decorator(thread_decorator&& other);
+        
+        thread_decorator& operator=(thread_decorator&& other);
+
+        thread_decorator&& move();
+        
+        void swap(thread_decorator& x);
+
+        void operator ()();
+
+    };
+
+Functor wrapping the user function thread to ensure that all the decorations are called.
+
+Objects of type `thread_decorator` are movable, so they can be stored in move-aware containers, and returned from functions. 
+This allows the details of thread decoration to be wrapped in a function.
+
+thread_decorator make_decorator();
+
+void f()
+{
+    boot::thread some_thread(make_decorator());
+    some_thread.join();
+}
+
+[note On compilers that support rvalue references, `thread_decorator` provides a proper move constructor and move-assignment operator, 
+and therefore meets the C++0x `MoveConstructible` and `MoveAssignable` concepts. With such compilers, `thread_decorator` can therefore 
+be used with containers that support those concepts.
+
+For other compilers, move support is provided with a move emulation layer, so containers must explicitly detect that move emulation 
+layer. See `<boost/thread/detail/move.hpp>` for details.] 
+
+[section:decorator_thread_decoration_decorate_constructor Constructor]
+[/==========================================================================================]
+
+        template <class Callable>
+        thread_decorator(Callable&& func);
+        template<typename Callable>
+        thread_decorator(Callable func);        
+        
+[variablelist
+
+[[Template parameters:] [`Callable` must by `CopyConstructible`.]]
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_decorate_constructorn Constructor]
+[/==========================================================================================]
+
+        template <typename Callable, typename A1, typename A2, ...>
+        thread_decorator(Callable func, A1 a1, A2 a2, ...)
+
+[variablelist
+
+[[Template parameters:] [`Callable` must by `CopyConstructible`.]]
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_decorate_copy_move_constructor Copy Move Constructor]
+[/==========================================================================================]
+
+        thread_decorator(thread_decorator&& other);
+        thread_decorator(detail::thread_move_t<thread_decorator> other) {
+
+[variablelist
+
+[[Template parameters:] [`Callable` must by `CopyConstructible`.]]
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe]]
+
+]
+
+[endsect]
+
+
+[section:decorator_thread_decoration_decorate_copy_constructor Assign Move Constructor]
+[/==========================================================================================]
+
+        thread_decorator& operator=(thread_decorator&& other);
+        thread_decorator& operator=(detail::thread_move_t<thread_decorator> x) {
+        
+
+[variablelist
+
+[[Requires:] [`Callable` must by `CopyConstructible`.]]
+
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Returns:] [a reference to `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_conversion Member Function `operator detail::thread_move_t<thread_decorator>()`]
+[/==========================================================================================]
+
+        operator detail::thread_move_t<thread_decorator>();
+
+
+[variablelist
+
+[[Effects:] [helper for move semantics emulation.]]
+
+[[Returns:] [the move form `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_move Member Function `move()`]
+[/==========================================================================================]
+
+        detail::thread_move_t<thread_decorator> move() {
+        thread_decorator&& move();
+
+
+[variablelist
+
+[[Effects:] [Move *this to the caller.]]
+
+[[Returns:] [the move form `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_swap Member Function `swap()`]
+[/==========================================================================================]
+
+        void swap(thread_decorator& x);
+
+
+[variablelist
+
+[[Effects:] []]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_operator_f Member Function `operator()()`]
+[/==========================================================================================]
+
+    void operator()();
+
+
+[variablelist
+
+[[Effects:] [Functor operator]]
+
+[[Throws:] [Any exception thrown by the decorations or the user function.]]
+
+[[Thread safety:][unsafe - depends on the decorations constructio/destruction.]]
+
+]
+
+[endsect]
+[endsect]
+
+[section:decorate Non Member Function `decorate()`]
+[/==========================================================================================]
+
+    void decorate();
+
+
+[variablelist
+
+[[Requires:] [`Callable` is `CopyConstructible`. Copying `f` shall have no side effects, and the effect of calling the copy shall
+be equivalent to calling the original. ]]
+
+[[Effects:] [Calls every declared decoration using the thread_decoration class. 
+]]
+
+[[Postconditions:] [All the decorations have been called.]]
+
+[[Throws:] [Any exception thrown by the decorations.]]
+
+[[Thread safety:][unsafe - depends on the decorations constructio/destruction.]]
+
+]
+
+[endsect]
+
+
+[endsect]
+
+
+[section:thread_specific_shared_ptr_reference_Header Header `<boost/thread/thread_specific_shared_ptr.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+    
+        template <typename T>
+        class thread_specific_shared_ptr;
+    
+    }
+    }
+    
+
+[section:thread_specific_shared_ptr_reference_thread_specific_shared_ptr Template Class `thread_specific_shared_ptr<>`]
+[/==========================================================================================]
+
+`bith::thread_specific_shared_ptr<>` is an extension of the thread_specific_ptr providing access 
+to this thread specific context from other threads.
+
+    template <typename T>
+    class thread_specific_shared_ptr : private noncopyable
+    {
+    public:
+        typedef shared_ptr<T>               shared_ptr_type;
+        typedef 'implementation defined'    map_type;
+        typedef 'implementation defined'    mutex_type;
+        typedef 'implementation defined'    lock_type;
+
+        thread_specific_shared_ptr();
+        explicit thread_specific_shared_ptr(void (*cleanup_)(shared_ptr_type));
+        ~thread_specific_shared_ptr();
+
+        T*                      get() const;
+        T*                      operator->() const;        
+        T&                      operator*() const;
+        void                    reset();
+        template<class Y> 
+        void                    reset(Y * p);
+        template<class Y, class D> 
+        void                    reset(Y * p, D d);
+        template<class Y, class D, class A> 
+        void                    reset(Y * p, D d, A a);
+        
+        mutex_type&             get_mutex();
+        const map_type&         get_map(lock_type&) const;
+        shared_ptr_type   operator[](thread::id id) const;
+        shared_ptr_type   wait_and_get(thread::id id) const;
+    private:        
+        shared_ptr_type         get_shared_ptr() const;
+    };
+
+[section:thread_specific_shared_ptr_reference_parameters Template parameters]
+[/==========================================================================================]
+
+`thread_specific_shared_ptr<>` is instantiated with the following types:
+
+* T The type of the pointeed object
+
+[endsect]
+
+[section:thread_specific_shared_ptr_reference_types  Public types]
+[/==========================================================================================]
+
+`thread_specific_shared_ptr<>` defines the following types:
+
+* [*`shared_ptr_type`] The shared pointed type.
+* [*`map_type`] The mapping type from `thread::id` to `shared_ptr_type`
+* [*`mutex_type`] The protecting mutext type follwing the Lockable Concept
+* [*`lock_type`] The lock used to get the map follwing the unique_lock subjacent Concept
+
+[endsect]
+
+[section:thread_specific_shared_ptr_default_constructor Constructor]
+[/==========================================================================================]
+
+    thread_specific_shared_ptr();
+
+[variablelist
+
+[[Effects:] [Construct a `thread_specific_shared_ptr<>` object for storing a pointer to an object of type `T` specific to each thread.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe.]]
+
+]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_constructor_with_custom_cleanup Cleanup Constructor]
+[/==========================================================================================]
+
+    explicit thread_specific_shared_ptr(void (*cleanup_)(shared_ptr_type));
+
+[variablelist
+
+[[Requires:] [`cleanup_function(this->get())` does not throw any exceptions.]]
+
+[[Effects:] [Construct a `thread_specific_shared_ptr<>` object for storing a pointer to an object of type `T` specific to each thread. The
+supplied `cleanup_function` will be called at thread exit.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe.]]
+
+]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_destructor Destructor]
+[/==========================================================================================]
+
+    ~thread_specific_shared_ptr();
+
+[variablelist
+
+[[Effects:] [Remove from the map the current thread::id and destroys `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][safe.]]
+
+]
+
+[note Care needs to be taken to ensure that any threads still running after an instance of `boost::thread_specific_shared_ptr<>` has been
+destroyed do not call any member functions on that instance. Is for this raison that usualy instance of this class are static.]
+
+[endsect]
+
+
+[section:thread_specific_shared_ptr_get Member Function `get()`]
+[/==========================================================================================]
+
+    shared_ptr_type get() const;
+
+[variablelist
+
+[[Returns:] [The pointer associated with the current thread.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][safe.]]
+
+]
+
+[note The initial value associated with an instance of `boost::thread_specific_shared_ptr<>` is `NULL` for each thread.]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_operator_arrow Member Function `operator->()`]
+[/==========================================================================================]
+
+    T* operator->() const;        
+
+[variablelist
+
+[[Requires:] [`this->get()` is not `NULL`.]]
+
+[[Returns:] [`this->get()`]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][safe.]]
+
+]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_operator_star Member Function `operator*()`]
+[/==========================================================================================]
+
+    T& operator*() const;
+
+[variablelist
+
+[[Requires:] [`this->get()` is not `NULL`.]]
+
+[[Returns:] [`*(this->get())`]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][safe.]]
+
+]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_reset Member Function `reset()`]
+[/==========================================================================================]
+
+    void reset();
+
+[variablelist
+[[Effects:] [Equivalent to `shared_ptr().swap(this->get_shared_ptr())`. Update the mapping.]]
+[[Postcondition:] [`this->get()==0`]]
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+[[Thread safety:][safe.]]
+
+]
+
+    template<class Y> void reset(Y * new_value);
+
+[variablelist
+[[Effects:] [Equivalent to `shared_ptr(new_value).swap(this->get_shared_ptr())`. Update the mapping.]]
+[[Postcondition:] [`this->get()==new_value`]]
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+[[Thread safety:][safe.]]
+]
+
+    template<class Y, class D> void reset(Y * new_value, D deleter);
+
+[variablelist
+[[Effects:] [Equivalent to `shared_ptr(new_value, deleter).swap(this->get_shared_ptr())`. Update the mapping.]]
+[[Postcondition:] [`this->get()==new_value`]]
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+[[Thread safety:][safe.]]
+]
+
+    template<class Y, class D, class A> void reset(Y * new_value, D deleter, A a);
+
+[variablelist
+[[Effects:] [Equivalent to `shared_ptr(new_value, deleter, a).swap(this->get_shared_ptr())`. Update the mapping.]]
+[[Postcondition:] [`this->get()==new_value`]]
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+[[Thread safety:][safe.]]
+]
+
+[variablelist
+
+[[Effects:] [If `this->get()!=new_value` and `this->get()` is non-`NULL`, invoke `delete this->get()` or
+`deleter(this->get())` as appropriate. Store `new_value` as the pointer associated with the current thread.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_wait_and_get Member Function `wait_and_get()`]
+[/==========================================================================================]
+        
+    shared_ptr_type wait_and_get(thread::id id) const;
+
+[variablelist
+
+[[Effects:] [Waits until the specific shared pointer has been set and returns a shared pointer to this context.]]
+
+[[Throws:] [`boost::thread_interrupted` if the current thread of execution is interrupted.]]
+
+]
+
+[endsect]
+
+[section:thread_specific_shared_ptr_operatora Member Function `operator[]()`]
+[/==========================================================================================]
+
+    shared_ptr_type operator[](thread::id id) const;
+
+[variablelist
+
+[[Effects:] [Returns a copy of the specific shared_ptr of the thread of execution identified by the `thread::id`.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+
+[section:get_mutex Member Function `get_mutex()`]
+[/==========================================================================================]
+        
+    mutex_type&             get_mutex();
+
+[variablelist
+
+[[Effects:] [Returns a reference to the protection mutex.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+[section:get_map Member Function `get_map()`]
+[/==========================================================================================]
+        
+    const map_type&         get_map(lock_type&) const;
+
+[variablelist
+
+[[Effects:] [Returns a reference to the mapping from `thread::id` to the specific pointers provided the user gives a lock on the motext get using `get_mutex()`.]]
+
+[[Throws:] [Nothing.]]
+
+]
+[endsect]
+
+
+
+
+[endsect]
+
+[endsect]
+
+[section:keep_alive_file Header `<boost/interthreads/thread_keep_alive.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        namespace this_thread 	{
+            class enable_keep_alive;
+            class disable_keep_alive;
+
+            void keep_alive_check_point();
+            bool keep_alive_enabled();
+            typedef void (*on_dead_thread_type)(thread::id);
+            void set_on_dead_thread(on_dead_thread_type fct);
+        }
+    }
+    }
+
+[section:keep_alive_enable_keep_alive class `enable_keep_alive`]
+[/==========================================================================================]
+
+    class enable_keep_alive : private noncopyable{
+    public:
+        enable_keep_alive(std::size_t threshold=2, std::size_t tap=1);
+        ~enable_keep_alive();
+    };
+
+[section:keep_alive_enable_keep_alive_Constructor Constructor]
+[/==========================================================================================]
+
+        enable_keep_alive(std::size_t threshold=2, std::size_t tap=1);
+
+[variablelist
+
+[[Effects:] [Enable the keep alive mechanism on this thread of execution.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_enable_keep_alive_Destructor Destructor]
+[/==========================================================================================]
+
+        ~enable_keep_alive();
+
+[variablelist
+
+[[Effects:] [Restore the keep alive mechanism as it was before the constructor.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+[endsect]
+
+[section:keep_alive_disable_keep_alive class `disable_keep_alive`]
+[/==========================================================================================]
+
+    class disable_keep_alive private noncopyable {
+    public:
+        disable_keep_alive();
+        ~disable_keep_alive();
+    };
+
+[section:keep_alive_disable_keep_alive_Constructor Constructor]
+[/==========================================================================================]
+
+    disable_keep_alive();
+
+[variablelist
+
+[[Effects:] [Disable the keep alive mechanism on this thread of execution.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_disable_keep_alive_Destructor Destructor]
+[/==========================================================================================]
+
+    ~disable_keep_alive();
+
+[variablelist
+
+[[Effects:] [Restore the keep alive mechanism as it was before the constructor.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+[endsect]
+
+[section:keep_alive_keep_alive_check_point Non Member Function `keep_alive_check_point()`]
+[/==========================================================================================]
+
+    void keep_alive_check_point();
+
+[variablelist
+
+[[Effects:] [States that the current thread is alive.]]
+[[Postconditions:] [The thread is alive.]]
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_keep_alive_enabled Non Member Function `keep_alive_enabled()`]
+[/==========================================================================================]
+
+    bool keep_alive_enabled();
+
+[variablelist
+
+[[Effects:] [States if the keep alive mechanism is enabled on this thread.]]
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_keep_alive_set_on_dead_thread Non Member Function `set_on_dead_thread()`]
+[/==========================================================================================]
+
+    void set_on_dead_thread(on_dead_thread_type fct);
+
+[variablelist
+
+[[Effects:] [Modifies the action to be done when a this thread is declared dead.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_tuple_thread_tuple_hpp Header `<boost/interthreads/thread_tuple.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <std::size_t  N>
+        class thread_tuple;
+
+        template<typename F0, ..., typename Fn-1>
+        thread_tuple<n> make_thread_tuple(F0 f0, ..., Fn fn-1);
+
+    }
+    }
+
+
+[section:thread_tuple_class Template Class `thread_tuple<>`]
+[/==========================================================================================]
+
+`thread_tuple<>` defines a thread groupe where the number of threads is know statically and the threads are 
+created at construction time. 
+
+    template <std::size_t  n>
+    class thread_tuple {
+    public:
+        template<typename F0, ..., typename Fn-1>
+    	thread_tuple(F0 f0, ..., Fn-1 fn-1);
+        
+        template <class F>
+        thread_tuple(boost::move_t<F> f);
+        ~thread_tuple();
+
+        // move support
+        thread_tuple(boost::move_t<thread_tuple<n>> x);
+        thread_tuple& operator=(boost::move_t<thread_tuple<n>> x);
+        operator boost::move_t<thread_tuple<n>>();
+        boost::move_t<thread_tuple<n>> move();
+
+        void swap(thread_tuple<n>& x);
+
+        bool joinable() const;
+        void join();
+        void join_all();
+        bool timed_join(const system_time& wait_until);
+        template<typename TimeDuration>
+        bool timed_join(TimeDuration const& rel_time);
+        bool timed_join_all(const system_time& wait_until);
+        template<typename TimeDuration>
+        bool timed_join_all(TimeDuration const& rel_time);
+
+        void detach();
+        void detach_all();
+
+        void interrupt();
+        void interrupt_all();
+        bool interruption_requested() const;
+
+        size_t size();
+        
+        const thread& operator[](std::size_t i);
+    };    
+    }
+    }
+
+
+The __thread_tuple__ class is responsible for launching and managing a static collection of threads that are related in some fashion. 
+No new threads can be added to the tuple once constructed.
+
+[section Template parameters]
+[/==========================================================================================]
+
+`thread_tuple<>` is instantiated with the following value:
+
+* n is the size of the tuple.
+
+[endsect]
+
+[section:thread_tuple_callable_constructor Constructor]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_tuple(F0 func_0, ..., Fn-1 func_n-1);
+
+[variablelist
+
+[[Preconditions:] [`Fk` must by copyable.]]
+
+[[Effects:] [`func_k` is copied into storage managed internally by the library, and that copy is invoked on a newly-created
+thread of execution. If this invocation results in an exception being propagated into the internals of the library that is
+not of type __thread_interrupted__, then `std::terminate()` will be called.]]
+
+[[Postconditions:] [`*this` refers to the newly created tuple of threads of execution.]]
+
+[[Throws:] [__thread_resource_error__ if an error occurs.]]
+
+[[Note:] [Currently up to ten arguments `func_0` to `funct_9` can be specified.]]
+
+]
+
+[endsect]
+
+
+[section:thread_tuple_destructor Destructor]
+[/==========================================================================================]
+
+    ~thread_tuple();
+
+[variablelist
+
+[[Effects:] [If *this  have associateds thread of execution, calls detach() on them. Destroys *this.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_joinable Member function `joinable()`]
+[/==========================================================================================]
+
+    bool joinable() const;
+
+[variablelist
+
+[[Returns:] [`true` if `*this` refers to threads of execution, `false` otherwise.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_join Member function `join()|join_all()`]
+[/==========================================================================================]
+
+    void join();
+    void join_all();
+
+[variablelist
+
+[[Effects:] [Call `join()` on each __thread__ object in the tuple.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_tuple<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_timed_join Member function `timed_join()|timed_join_all()`]
+[/==========================================================================================]
+
+    bool timed_join(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool timed_join(TimeDuration const& rel_time);
+
+    bool timed_join_all(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool timed_join_all(TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join()` on each __thread__ object in the tuple.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_tuple<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:join_first_then_interrupt Member function `join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    std::size_t join_first_then_interrupt();
+
+[variablelist
+
+[[Effects:] [Call `join_first()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_tuple<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:timed_join_first_then_interrupt Member function `timed_join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            const system_time& wait_until);
+    template<typename TimeDuration>
+    std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join_first()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_tuple<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:detach_all Member function `detach|detach_all()`]
+[/==========================================================================================]
+
+    void detach();
+    void detach_all();
+
+[variablelist
+
+[[Effects:] [Call `detach()` on each __thread__ object in the tuple.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_interrupt_all Member function `interrupt()|interrupt_all()`]
+[/==========================================================================================]
+
+    void interrupt();
+    void interrupt_all();
+
+[variablelist
+
+[[Effects:] [Call `thread::interrupt()` on each __thread__ object in the tuple.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_size Member function `size()`]
+[/==========================================================================================]
+
+    int size();
+
+[variablelist
+
+[[Returns:] [The number of threads in the tuple.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_tuple_make_thread_tuple Non Member Function `make_thread_tuple()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_tuple make_thread_tuple(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [makes a new thread_tuple<>.]]
+[[Returns:] [the created thread tuple.]]
+
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:set_once_hpp Header `<boost/interthreads/set_once.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        template <typename T>
+        class set_once;
+    }    
+    }
+
+
+[section:set_onceclass Template Class `set_once_once<>`]
+[/==========================================================================================]
+
+`set_once_once<>` is a synchonizer that allows to set a variable only once, notifying 
+to the variable value to whatever is waiting for that.
+
+
+    template <typename T>
+    class set_once {
+    public:
+        typedef T value_type;
+        
+        set_once();
+        void wait();
+        value_type get();
+        
+        std::pair<bool,value_type> timed_get(const system_time& wait_until);
+
+        bool set(value_type id);
+        
+        template<typename F>
+        static void decorator(this_type& once, T value, F fct);
+        template<typename F>
+        static boost::detail::thread_move_t<thread> make_thread(this_type& once, T value, F fct);
+    };
+
+[endsect]
+
+[endsect]
+
+[section:thread_tuple_once_hpp Header `<boost/interthreads/thread_tuple_once.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <std::size_t  N>
+        class thread_tuple_once;
+
+        template<typename F0, ..., typename Fn-1>
+        thread_tuple make_thread_tuple_once(F0 f0, ..., Fn fn-1);
+
+    }
+    }
+
+
+[section:thread_tuple_once_class Template Class `thread_tuple_once<>`]
+[/==========================================================================================]
+
+`biththread_tuple_once` is an extension of the `bith::thread_tuple` which allows to join the thread finishing 
+the first, using for that the `bith::set_once` synchronizer.
+
+    template <std::size_t  n>
+    class thread_tuple_once {
+    public:
+        template<typename F0, ..., typename Fn-1>
+    	thread_tuple_once(F0 f0, ..., Fn-1 fn-1);
+        
+        template <class F>
+        thread_tuple_once(boost::move_t<F> f);
+        ~thread_tuple_once();
+
+        // move support
+        thread_tuple_once(boost::move_t<thread_tuple_once<n>> x);
+        thread_tuple_once& operator=(boost::move_t<thread_tuple_once<n>> x);
+        operator boost::move_t<thread_tuple_once<n>>();
+        boost::move_t<thread_tuple_once<n>> move();
+
+        void swap(thread_tuple_once<n>& x);
+
+        bool joinable() const;
+        void join();
+        void join_all();
+        bool timed_join(const system_time& wait_until);
+        template<typename TimeDuration>
+        bool timed_join(TimeDuration const& rel_time);
+        bool timed_join_all(const system_time& wait_until);
+        template<typename TimeDuration>
+        bool timed_join_all(TimeDuration const& rel_time);
+
+        std::size_t join_first_then_interrupt();
+        std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            const system_time& wait_until);
+        template<typename TimeDuration>
+        std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            TimeDuration const& rel_time);
+
+        void detach();
+        void detach_all();
+
+        void interrupt();
+        void interrupt_all();
+        bool interruption_requested() const;
+
+        size_t size();
+        
+        const thread& operator[](std::size_t i);
+    };    
+    }
+    }
+
+
+The __thread_tuple_once__ class is responsible for launching and managing a static collection of threads that are related in some fashion. 
+No new threads can be added to the tuple once constructed.
+
+[section Template parameters]
+[/==========================================================================================]
+
+`thread_tuple_once<>` is instantiated with the following value:
+
+* n is the size of the tuple.
+
+[endsect]
+
+[section:thread_tuple_once_callable_constructor Constructor]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_tuple_once(F0 func_0, ..., Fn-1 func_n-1);
+
+[variablelist
+
+[[Preconditions:] [`Fk` must by copyable.]]
+
+[[Effects:] [`func_k` is copied into storage managed internally by the library, and that copy is invoked on a newly-created
+thread of execution. If this invocation results in an exception being propagated into the internals of the library that is
+not of type __thread_interrupted__, then `std::terminate()` will be called.]]
+
+[[Postconditions:] [`*this` refers to the newly created tuple of threads of execution.]]
+
+[[Throws:] [__thread_resource_error__ if an error occurs.]]
+
+[[Note:] [Currently up to ten arguments `func_0` to `funct_9` can be specified.]]
+
+]
+
+[endsect]
+
+
+[section:thread_tuple_once_destructor Destructor]
+[/==========================================================================================]
+
+    ~thread_tuple_once();
+
+[variablelist
+
+[[Effects:] [If *this  have associateds thread of execution, calls detach() on them. Destroys *this.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_once_joinable Member function `joinable()`]
+[/==========================================================================================]
+
+    bool joinable() const;
+
+[variablelist
+
+[[Returns:] [`true` if `*this` refers to threads of execution, `false` otherwise.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_once_join Member function `join()|join_all()`]
+[/==========================================================================================]
+
+    void join();
+    void join_all();
+
+[variablelist
+
+[[Effects:] [Call `join()` on each __thread__ object in the tuple.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_tuple_once<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_once_timed_join Member function `timed_join()|timed_join_all()`]
+[/==========================================================================================]
+
+    bool timed_join(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool timed_join(TimeDuration const& rel_time);
+
+    bool timed_join_all(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool timed_join_all(TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join()` on each __thread__ object in the tuple.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_tuple_once<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:join_first_then_interrupt Member function `join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    std::size_t join_first_then_interrupt();
+
+[variablelist
+
+[[Effects:] [Call `join_first()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_tuple_once<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:timed_join_first_then_interrupt Member function `timed_join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            const system_time& wait_until);
+    template<typename TimeDuration>
+    std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join_first()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_tuple_once<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:detach_all Member function `detach|detach_all()`]
+[/==========================================================================================]
+
+    void detach();
+    void detach_all();
+
+[variablelist
+
+[[Effects:] [Call `detach()` on each __thread__ object in the tuple.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_once_interrupt_all Member function `interrupt()|interrupt_all()`]
+[/==========================================================================================]
+
+    void interrupt();
+    void interrupt_all();
+
+[variablelist
+
+[[Effects:] [Call `thread::interrupt()` on each __thread__ object in the tuple.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_once_size Member function `size()`]
+[/==========================================================================================]
+
+    int size();
+
+[variablelist
+
+[[Returns:] [The number of threads in the tuple.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_tuple_once_make_thread_tuple_once Non Member Function `make_thread_tuple_once()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_tuple_once make_thread_tuple_once(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [makes a new thread_tuple_once<>.]]
+[[Returns:] [the created thread tuple.]]
+
+
+]
+
+[endsect]
+
+[endsect]
+
+
+[section:thread_and_join_hpp Header `<boost/interthreads/thread_and_join.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template<typename F0, ..., typename Fn-1>
+        void thread_and_join_all(F0 f0, ..., Fn fn-1);
+        template<typename F0, ..., typename Fn-1>
+        bool thread_and_timed_join_all(const system_time& wait_until, F0 f0, ..., Fn fn-1);
+        template<typename TimeDuration, typename F0, ..., typename Fn-1>
+        bool thread_and_timed_join_all(TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+        template<typename F0, ..., typename Fn-1>
+        std::size_t thread_and_join_first_then_interrupt(F0 f0, ..., Fn fn-1);
+        template<typename F0, ..., typename Fn-1>
+        std::pair<bool,std::size_t> thread_and_timed_join_first_then_interrupt(
+                const system_time& wait_until, F0 f0, ..., Fn fn-1);
+        template<typename TimeDuration, typename F0, ..., typename Fn-1>
+        std::pair<bool,std::size_t> thread_and_timed_join_first_then_interrupt(
+                TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+    }
+    }
+
+
+
+[section:thread_tuple_join_all Non Member Function `thread_join_all()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    void thread_join_all(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution and join all.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_timed_join_all Non Member Function `thread_timed_join_all()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    bool thread_timed_join_all(
+            const system_time& wait_until, F0 f0, ..., Fn fn-1);
+    template<typename TimeDuration, typename F0, ..., typename Fn-1>
+    bool thread_timed_join_all(
+            TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch each function on a thread of execution and join all until a given time or duration if not interrup all.]]
+[[Returns:] [true if joined.]]
+
+]
+
+[endsect]
+
+
+[section:thread_tuple_join_first_then_interrupt Non Member Function `thread_join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    std::size_t thread_join_first_then_interrupt(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution, join the first and then interrupt the others.]]
+[[Returns:] [the index on the tuple of the first thread joined.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_timed_join_first_then_interruptl Non Member Function `thread_timed_join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    std::pair<bool,std::size_t> thread_timed_join_first_then_interrupt(
+            const system_time& wait_until, F0 f0, ..., Fn fn-1);
+    template<typename TimeDuration, typename F0, ..., typename Fn-1>
+    std::pair<bool,std::size_t> thread_timed_join_first_then_interrupt(
+            TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution, join the first and then interrupt the others or interrup all.]]
+[[Returns:] [a pair consisting of a boolean stating if the a thread has been joined before the given time and the index on the tuple of the first thread joined.]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_group_once_hpp Header `<boost/interthreads/thread_group_once.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <std::size_t  N>
+        class thread_group;
+
+    }
+    }
+
+
+[section:thread_group_once_class Template Class `thread_group_once<>`]
+[/==========================================================================================]
+
+`thread_group_once<>` is an extension of the boost::thread_group which allows to join the thread finishing 
+the first, using for that the set_once synchronizer.
+
+    template <std::size_t  n>
+    class thread_group_once {
+    public:
+    	thread_group_once();
+        ~thread_group_once();
+        
+        template<typename F>
+        thread* create_thread(F threadfunc);
+        void remove_thread(thread* thrd);
+
+        // move support
+        thread_group_once(boost::move_t<thread_group_once<n>> x);
+        thread_group_once& operator=(boost::move_t<thread_group_once<n>> x);
+        operator boost::move_t<thread_group_once<n>>();
+        boost::move_t<thread_group_once<n>> move();
+
+        void swap(thread_group_once<n>& x);
+
+        // bool joinable() const;
+        void join();
+        void join_all();
+        // bool timed_join(const system_time& wait_until);
+        // template<typename TimeDuration>
+        // bool timed_join(TimeDuration const& rel_time);
+        // bool timed_join_all(const system_time& wait_until);
+        // template<typename TimeDuration>
+        // bool timed_join_all(TimeDuration const& rel_time);
+
+        std::size_t join_first_then_interrupt();
+        std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            const system_time& wait_until);
+        template<typename TimeDuration>
+        std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            TimeDuration const& rel_time);
+
+        // void detach();
+        // void detach_all();
+
+        void interrupt();
+        void interrupt_all();
+        // bool interruption_requested() const;
+
+        size_t size();
+        
+        const thread& operator[](std::size_t i);
+    };    
+    }
+    }
+
+
+[section:thread_group_once_callable_constructor Constructor]
+[/==========================================================================================]
+
+    thread_group_once();
+
+[variablelist
+
+
+[[Effects:] [creates a thread group.]]
+
+[[Postconditions:] [`*this` refers to the newly created group of threads of execution.]]
+
+[[Throws:] [__thread_resource_error__ if an error occurs.]]
+
+]
+
+[endsect]
+
+
+[section:thread_group_once_destructor Destructor]
+[/==========================================================================================]
+
+    ~thread_group_once();
+
+[variablelist
+
+[[Effects:] [If *this  have associateds thread of execution, calls detach() on them. Destroys *this.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_joinable Member function `joinable()`]
+[/==========================================================================================]
+
+    bool joinable() const;
+
+[variablelist
+
+[[Returns:] [`true` if `*this` refers to threads of execution, `false` otherwise.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_join Member function `join()|join_all()`]
+[/==========================================================================================]
+
+    void join();
+    void join_all();
+
+[variablelist
+
+[[Effects:] [Call `join()` on each __thread__ object in the group.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_group_once<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_timed_join Member function `timed_join()|timed_join_all()`]
+[/==========================================================================================]
+
+    bool timed_join(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool timed_join(TimeDuration const& rel_time);
+
+    bool timed_join_all(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool timed_join_all(TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join()` on each __thread__ object in the group.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_group_once<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:join_first_then_interrupt Member function `join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    std::size_t join_first_then_interrupt();
+
+[variablelist
+
+[[Effects:] [Call `join_first()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_group_once<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:timed_join_first_then_interrupt Member function `timed_join_first_then_interrupt()`]
+[/==========================================================================================]
+
+    std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            const system_time& wait_until);
+    template<typename TimeDuration>
+    std::pair<bool,std::size_t> timed_join_first_then_interrupt(
+            TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join_first()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_group_once<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:detach_all Member function `detach|detach_all()`]
+[/==========================================================================================]
+
+    void detach();
+    void detach_all();
+
+[variablelist
+
+[[Effects:] [Call `detach()` on each __thread__ object in the group.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_interrupt_all Member function `interrupt()|interrupt_all()`]
+[/==========================================================================================]
+
+    void interrupt();
+    void interrupt_all();
+
+[variablelist
+
+[[Effects:] [Call `thread::interrupt()` on each __thread__ object in the group.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_size Member function `size()`]
+[/==========================================================================================]
+
+    int size();
+
+[variablelist
+
+[[Returns:] [The number of threads in the group.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_group_once_make_thread_group_once Non Member Function `make_thread_group_once()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_group_once make_thread_group_once(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [makes a new thread_group_once<>.]]
+[[Returns:] [the created thread group.]]
+
+
+]
+
+[endsect]
+
+[endsect]
+
+
+
+[endsect]

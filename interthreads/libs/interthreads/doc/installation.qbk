@@ -1,0 +1,76 @@
+[/
+  (C) Copyright 2008 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/======================================]
+[section:install Installing InterThreads]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.InterThreads]
+[/=================================]
+
+You can get __Boost_InterThreads__ by downloading [^interthreads.zip] from
+[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Vault]
+
+[/==================================]
+[heading Building Boost.InterThreads]
+[/==================================]
+
+__Boost_InterThreads__ is not a header only library. There is a need to compile it before use.
+
+[/=========================]
+[heading Build Requirements]
+[/=========================]
+
+
+[*Boost.InterThreads] depends on Boost. You must use either Boost version 1.37.x 
+or the version in SVN trunk. In particular, __Boost_InterThreads__ depends on:
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/thread [*Boost.Threads]]] [for thread, thread_specific_ptr, call_once, mutex, ...]
+]
+[
+    [[@http://www.boost.org/libs/smart_ptr [*Boost.SmartPtr]]] [for shared_ptr, ...]
+]
+[
+    [[@http://www.boost.org/libs/function [*Boost.Function]]] [for function, ...]
+]
+[
+    [[@http://www.boost.org/libs/bind [*Boost.Bind]]] [for bind, ...]
+]
+[
+    [[@http://www.boost.org/libs [*Boost.Preprocesor]]] [to implement variadic thread_tuples, ...]
+]
+]
+
+[/========================]
+[heading Exceptions safety]
+[/========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as 
+the underlying parameters provide it. 
+
+[/====================]
+[heading Thread safety]
+[/====================]
+
+All functions in the library are exception-safe except:
+
+
+[/=======================]
+[heading Tested compilers]
+[/=======================]
+Currently, __Boost_InterThreads__ has been tested in the following compilers/platforms:
+
+*  GCC 3.4.4 Cygwin
+*  GCC 4.3.2 Cygwin
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]

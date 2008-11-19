@@ -1,0 +1,223 @@
+[/
+[/
+  (C) Copyright 2008 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[include installation.qbk]
+
+[/=============================]
+[section Hello World! decorator]
+[/=============================]
+
+This is a little bit more than a Hello World! example. It will also say Bye, Bye!
+
+    #include <boost/interthreads/thread_decorator.hpp>
+    #include <boost/thread.hpp>
+    #include <iostream>
+        
+    namespace bith = boost::interthreads;
+
+    void my_setup() {
+        std::cout << "Hello World!" << std::endl;
+    }
+
+    void my_cleanup() {
+        std::cout << "Bye, Bye!" << std::endl;
+    }
+
+    bith::thread_decoration my_decoration(my_setup, my_cleanup);
+
+    void my_thread() {
+        std::cout << "..." << std::endl;
+    }
+    
+    int main() {
+        boost::thread th(bith::make_decorator(my_thread));
+        th.join();
+        return 0;
+    }
+
+When `th` is created with the `bith::thread_decorator` wrapper, it will initialize all the decorations before calling `my_thread`.
+This `my_cleanup` will be registered with the `boost:this_thread::at_thread_exit` if the `my_setup` function succeeds i.e. do not throws. 
+Then the thread function `my_thread` is called. At the thread exit, the `my_cleanup` function is called. This results on the following output    
+
+[pre
+Hello World!
+...
+Bye, Bye!
+]
+
+[endsect]
+
+[/==========================]
+[section Monotonic Thread Id]
+[/==========================]
+
+This example use thread decorator and threas specific pointers to implement a monotonic thread identifier.
+
+    #include <boost/interthreads/thread_decorator.hpp>
+    #include <boost/interthreads/thread_specific_shared_ptr.hpp>
+    #include <boost/thread.hpp>
+    #include <iostream>
+        
+    namespace bith = boost::interthreads;
+
+    class mono_thread_id {
+        static bith::thread_decoration decoration_;
+        typedef bith::thread_specific_shared_ptr<unsigned> tssp_type;
+        static tssp_type current_;
+        static unsigned counter_=0;
+        static boost::mutex sync_;
+        
+        static unsigned create() {
+            boost::lock_guard<boost::mutex> lock(sync_);
+            unsigned res = counter_;
+            ++counter;
+            return res;
+        }
+        static void setup() {
+            current_.reset(new unsigned(create());
+        }
+    public:        
+        static unsigned id() {
+            return *current_;
+        }
+        static unsigned id(boost::thread::id id) {
+            return *current_[id]
+        }
+
+    };
+
+    bith::thread_decoration mono_thread_id::decoration(mono_thread_id::setup);
+    mono_thread_id::tssp_type mono_thread_id::current_;
+    unsigned mono_thread_id::counter_=0;
+    boost::mutex mono_thread_id::sync_;
+    
+
+The monotonic thread identifier is managed by the mono_thread_id class. 
+There is a mutex protecting the access to the monotonic counter. 
+A decoration for the setup function will set the thread specific shared pointer with the value of the monotonic counter which 
+will be self increased.
+
+In this way the applications using the thread_decorator can have access to a monotonic thread id mono_thread_id::id() 
+and this id is accesible to other threads providing the boost::thread::id.
+
+    void my_thread() {
+        std::cout << "mono_thread_id=" << mono_thread_id::id() << std::endl;
+        sleep(5);
+    }
+    
+    int main() {
+        boost::thread th1(bith::make_decorator(my_thread));
+        boost::thread th2(bith::make_decorator(my_thread));
+        sleep(2);
+
+        std::cout << "thread::id=" << th1.get_id() 
+                  << " mono_thread_id=" << mono_thread_id::id(th1.get_id()) 
+                  << std::endl;
+        th1.join();
+        th2.join();
+        return 0;
+    }
+
+This results on the following output    
+
+[pre
+mono_thread_id=1
+mono_thread_id=2
+thread::id=xxxx mono_thread_id=1
+thread::id=xxxx mono_thread_id=2
+
+]
+
+[endsect]
+
+[/=======================]
+[section Basic keep alive]
+[/=======================]
+
+This example shows the keep_alive basics.
+
+    #include <boost/interthreads/thread_decorator.hpp>
+    #include <boost/interthreads/keep_alive.hpp>
+    #include <boost/thread/thread.hpp>
+    #include <iostream>
+        
+    namespace bith = boost::interthreads;
+
+    void my_thread() {
+        bith::this_thread::enable_keep_alive enabler;
+        for (int i=0; i<5; i++) {
+            bith::this_thread::keep_alive_point();            
+            std::cout << "thread_id=" << boost::this_thread::get_id() << std::endl;
+            sleep(1);
+        }
+    }
+    
+    int main() {
+        boost::thread th1(bith::make_decorator(my_thread));
+        boost::thread th2(bith::make_decorator(my_thread));
+        sleep(2);
+
+        th1.join();
+        th2.join();
+        return 0;
+    }
+
+The user creates two threads using the thread_decorator wrapper to be able to use the keep_alive mechanism.
+It uses the default enabler (one keep_alive_point every 2 seconds)
+
+This results on the following output    
+
+[pre
+]
+
+[endsect]
+
+[/==========================]
+[section Multiple algorithms]
+[/==========================]
+
+This example shows how to launch several algorithms and wait only for the more efficient.
+
+    #include <boost/interthreads/thread_tuple.hpp>
+    #include <boost/thread.hpp>
+    #include <iostream>
+        
+    namespace bith = boost::interthreads;
+
+    void my_thread1() {
+        std::cout << "1 thread_id=" << boost::this_thread::get_id() << std::endl;
+        sleep(1);
+    }
+    
+    void my_thread2() {
+        std::cout << "2 thread_id=" << boost::this_thread::get_id() << std::endl;
+        sleep(5);
+    }
+
+    int main() {
+        unsigned res = bith::thread_and_join_first_then_interrupt(my_thread1, my_thread2)
+            );
+        std::cout << "Algotithm " << res+1 << "finished the first" << std::endl;
+        return 0;
+    }
+
+This results on the following output    
+
+[pre
+]
+
+[endsect]
+
+[endsect]
+
+

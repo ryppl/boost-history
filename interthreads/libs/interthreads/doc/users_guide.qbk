@@ -1,0 +1,51 @@
+[/
+[/
+  (C) Copyright 2008 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==============================]
+[section:users_guide Users'Guide]
+[/==============================]
+
+[include getting_started.qbk]
+[include tutorial.qbk]
+
+
+[/==============================]
+[section:bibliography References]
+[/==============================]
+
+[variablelist
+[[boost::call_once] [Boost.Thread implementation for call_once.]]
+[[boost::this_thread::at_thread_exit] [Boost.Thread implementation for at thread exit cleanup registration.]]
+[[boost::thread_specific_ptr] [Boost.Thread implementation for TSS.]]
+[[boost::thread_group] [Boost.Thread thread_group.]]
+]
+[endsect]
+
+[/=======================]
+[section:glosary Glossary]
+[/=======================]
+
+
+[variablelist
+
+[[alive (thread)] [a thread is considered alive when not dead.]]
+[[cleanup decoration] [function called at thread exit.]]
+[[dead (thread)] [a thread is considered dead when has not done enough keep alive check points for a given duration.]]
+[[decoration] [Couple of setup/cleanup thread decorating functions.]]
+[[decorator] [Functor wrapper decorating a thread with all the setups and cleanups decorations.]]
+[[deleter TSSS] [specific function used to delete the TSSS.]]
+[[KA] [Keep Alive.]]
+[[setup decoration] [function called before the thread starts.]]
+[[TSS] [Thread Specific Storage.]]
+[[TSSS] [Thread Specific Shared Storage.]]
+[[tuple (thread)] [group of threads statically determined and launched at construction time.]]
+]
+
+[endsect]
+
+[endsect]

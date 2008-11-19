@@ -1,0 +1,78 @@
+[/
+  (C) Copyright 2008 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/========================]
+[section:overview Overview]
+[/========================]
+
+[/==================]
+[heading Description]
+[/==================]
+
+__boost_interthreads__ extends __boost_thread__ adding some features:
+
+* thread decorator: thread_decorator allows to define setup/cleanup functions which will be called only once by thread: 
+setup before the thread function and cleanup at thread exit. 
+
+* thread specific shared pointer: this is an extension of the thread_specific_ptr providing access 
+to this thread specific context from other threads.
+As it is shared the stored pointer is a shared_ptr instead of a raw one.
+
+* thread keep alive mechanism: this mechanism allows to detect threads that do not prove that they are alive by 
+calling to the keep_alive_point regularly. 
+When a thread is declared dead a user provided function is called, which by default will abort the program.
+
+* thread tuple: defines a thread groupe where the number of threads is know statically and the threads are 
+created at construction time. 
+
+* set_once: a synchonizer that allows to set a variable only once, notifying 
+to the variable value to whatever is waiting for that.
+
+* thread_tuple_once: an extension of the boost::thread_tuple which allows to join the thread finishing 
+the first, using for that the set_once synchronizer.
+
+* thread_group_once: an extension of the boost::thread_group which allows to join the thread finishing 
+the first, using for that the set_once synchronizer.
+
+(thread_decorator and thread_specific_shared_ptr) are based on the original implementation of 
+[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming [*threadalert]] written by Roland Schwarz.
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()` 
+  to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:
+  `class_template<>`; that is, it is in code font and its name is followed by `<>` 
+  to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to
+  indicate that it is a function-like macro. Object-like macros appear without the 
+  trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are
+  specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that
+provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of Proto
+    #include <boost/interthreads/interthreads.hpp>
+
+    // Create a namespace aliases
+    namespace bith = boost::interthreads;
+
+[include introduction.qbk]
+[endsect]

@@ -1,0 +1,632 @@
+[/
+  (C) Copyright 2008 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:tutorial Tutorial]
+[/========================]
+
+[section Thread Decorator]
+[/==========================================================================================]
+
+[section Declaring a decoration]
+Objects of type __thread_decoration__ are usualy static and initialized with a `Callable` object:
+
+    static boost::interthreads::thread_decoration d;
+    void setup();
+    
+    boost::interthreads::thread_decoration d(setup)
+
+These decorations will be called either when we request this explicitly at the initialization of the 
+thread (this is needed on the main thread) or when we create a thread using specific decorator wrapper. This is explained in more detail 
+in the next sections.
+
+[endsect]
+
+[section Creating threads with decorators]
+When we want the decorations to decorate one thread of execution we can create the thread using the decorator wrapper.
+
+    boost::thread th(boost::interthreads::thread_decorator(fct));
+
+[endsect]
+
+[section:decorator_explicit_call Calling explictly the decoration on a thread]
+For threads that are not created using the boost::thread class, as it is the case of the main thread, we need to call explicitly the function 
+__thread_decoration_decorate__ at the begining of the thread.
+
+    int main() {
+        boost::interthreads::decorate();
+        // ...
+    }
+
+[endsect]
+
+[endsect]
+
+[section Thread Specific Shared Pointer]
+[/==========================================================================================]
+
+
+[section Key initialization]
+[/==========================================================================================]
+
+As the curent implementation use the address of the thread_specific_shared_ptr<> object, there is no need to do whatever to get the key. 
+
+    bith::thread_specific_shared_ptr<myclass> ptr;
+
+[endsect]
+
+[section Context initialization]
+[/==========================================================================================]
+
+Initially the pointer has a value of `NULL` in each thread, but the value for the
+current thread can be set using the `reset()` member functions.
+
+If the value of the pointer for the current thread is changed using `reset()`, then the previous value is destroyed by calling the
+deleter routine. Alternatively, the stored value can be reset to `NULL` and the prior value returned by calling the `release()`
+member function, allowing the application to take back responsibility for destroying the object.
+
+Initialization can be done 
+
+* explicitly on the curret thread. Basically it works like a thread local storage from inside the thread.
+
+    bith::thread_specific_shared_ptr<myclass> ptr;
+
+    { // current thread
+        // ...
+        ptr.reset(p);
+        // ...
+    }
+
+* When we associate a thread decoration to the thread_specific_shared_ptr<> we can initialize all the decorations either calling 
+decorate or creating a thread wrapping the function with the thread thread_decorator functor.
+
+    void myclass_init() {
+        ptr.reset(new myclass(any specific parameters));
+    }
+    bith::thread_decoratio myclass_decoration(myclass_init);
+
+[endsect]
+
+[section Obtain the pointer to the thread-specific object on the current thread]
+[/==========================================================================================]
+
+All functions known from boost::thread_specific_ptr are available, and so its semantics from inside the thread.
+The value for the current thread can be obtained using the `get()` member function, or by using
+the `*` and `->` pointer deference operators.
+
+[endsect]
+
+[section Waiting for the seeting of the thread-specific object from another thread]
+[/==========================================================================================]
+
+The setting of a thread specific context must be done on a thread. When access the thread specific shared context of another thread it can be NULL.
+The library provides a wait_and_get() function that allows a thread tosynchonize with the setting from another thread.
+
+    shared_ptr<myclass> shp = ptr.wait_and_get(th->get_id());
+    
+where `th` is a `boost::thread*`.    
+
+[section Obtain the pointer to the thread-specific object of another thread]
+[/==========================================================================================]
+
+Besides this another thread can get access to the data when it can get the thread::id by:
+
+    shared_ptr<myclass> shp = ptr[th->get_id()]->foo();
+
+where `th` is a `boost::thread*` and `foo()` is a function of `myclass`.
+
+The lifetime of the myclass instance is managed by a shared_ptr. One reference is held by the thread (by means of a tss), a second is
+held by the thread::id to shared_ptr<T> map and additional references might be held by other threads that obtained it by `*pmyclass[th]`.
+
+[endsect]
+
+[section Iterating through all the thread specific context]
+[/==========================================================================================]
+
+Another use case appears when some global controller needs to access the thread specific data of all the threads. Several approaches are 
+here possible; the library has choosed to provide a map getter using a external locking mechanism that 'ensure' that the map access is 
+locked during the map query. 
+
+    {    
+        bith::thread_specific_shared_ptr<myclass>::lock_type lock(ptr.get_mutex(lock));
+        const bith::thread_specific_shared_ptr<myclass>::map_type amap = ptr.get_map(lock);
+        // use the map
+    }
+
+
+[endsect]
+
+
+[section Deleting the context]
+[/==========================================================================================]
+
+When a thread exits, the objects associated with each `boost::thread_specific_shared_ptr<>` instance is not inmediately destroyed due to 
+its shared nature. It is detached from the current thread and removed from the map. 
+Only when there are no more references to the shared pointer it will be destroyed. By default, the object
+pointed to by a pointer `p` is destroyed by invoking `delete p`, but this can be overridden for a specific instance of
+`boost::thread_specific_shared_ptr<>` by providing a deleter routine to the constructor. In this case, the object is destroyed by invoking
+`deleter(p)` where `deleter` is the deleter routine supplied to the constructor. The deleter function is called only when there are no 
+more references to the shared pointer.
+
+[endsect]
+
+[section Cleanup at thread exit]
+[/==========================================================================================]
+
+When a thread exits, the objects associated with each thread_specific_shared_ptr<> instance is not inmediately destroyed due to its shared nature. Only when there are no more references to the shared pointer it will be destroyed. By default, the object pointed to by a pointer p  is destroyed by invoking delete  p, but this can be overridden for a specific instance of boost::thread_specific_shared_ptr<>  by providing a cleanup routine to the constructor. In this case, the object is destroyed by invoking func(p)  where func is the cleanup routine supplied to the constructor. The cleanup functions are called in an unspecified order. If a cleanup routine sets the value of associated with an instance of boost::thread_specific_shared_ptr<>  that has already been cleaned up, that value is added to the cleanup list. Cleanup finishes when there are no outstanding instances of boost::thread_specific_shared_ptr<> with values. 
+If a cleanup routine sets the value associated with an instance of `boost::thread_specific_shared_ptr<>` that has already been
+cleaned up, that value is added to the cleanup list. Cleanup finishes when there are no outstanding instances of
+`boost::thread_specific_shared_ptr<>` with values.
+
+[endsect]
+[endsect]
+
+
+[section Keep alive]
+[/==========================================================================================]
+
+We will use the implementation of the keep alive mechanism as tutorial for the thread decorators, 
+thread specific shared pointers and the kepp alive mechanism itself.
+
+We want to detect situations on which a thread is looping or blocked on some component.
+The user needs to state when this mechanism is enabled or disabled.
+
+Since the only purpose is to find threads that don't work, the thread needs to say if it is alive to a controller. 
+The controler request at predefined intervals if the thread is dead, and in this case it will call a user specific function 
+which by default aborts the program.
+
+A thread is considered dead if during a given period the number of checkins is inferior to a given threshold.
+These two parameters are given when the keep alive mechanislm is enabled.
+At the begining of a thread the keep alive mechanism is disabled.
+
+[section Interface]
+[/==========================================================================================]
+
+Next follows the keep alive interface.
+
+    namespace boost {
+    namespace interthreads {
+    namespace this_thread 	{
+        class enable_keep_alive
+        {
+            enable_keep_alive(const enable_keep_alive&);
+            enable_keep_alive& operator=(const enable_keep_alive&);
+        public:
+            enable_keep_alive(std::size_t periods=2, std::size_t checkins=1);
+            ~enable_keep_alive();
+        };
+        
+        class disable_keep_alive
+        {
+            disable_keep_alive(const disable_keep_alive&);
+            disable_keep_alive& operator=(const disable_keep_alive&);
+        public:
+            disable_keep_alive();
+            ~disable_keep_alive();
+        };
+
+        void keep_alive_point();
+        bool keep_alive_enabled();
+
+        typedef void (*on_dead_thread_type)(thread*); 
+        void set_on_dead_thread(on_dead_thread_type fct); 
+      
+    }
+    }
+    }
+
+[endsect]
+
+[section Keep alive mechanism initialization] 
+[/==========================================================================================]
+
+There is a single controller `keep_alive_mgr`. The controler needs to access some thread specific shared context 
+`thread_keep_alive_ctx` to be able to control a thread. 
+
+    namespace detail {
+        struct thread_keep_alive_ctx {
+            // ...
+            static void init();
+
+            typedef thread_specific_shared_ptr<thread_keep_alive_ctx> tssp;
+            static tssp instance_;
+            static thread_decoration initializer_;
+            thread_keep_alive_internal* data_;
+        };
+        struct keep_alive_mgr {
+            // ...
+            static void initialize() {
+                boost::call_once(flag, init);
+            }
+            static void init() {
+                instance_=new keep_alive_mgr();
+            }
+            boost::thread thread_;
+            static boost::once_flag flag_;
+            static keep_alive_mgr* instance_;
+        };
+    }
+
+The initialization of the controller itself and the setting the thread specific context is done 
+using an internal thread decoration `thread_keep_alive_ctx::initializer_` 
+with thread_keep_alive_ctx::init as setup function.
+
+    thread_specific_shared_ptr<detail::thread_keep_alive_ctx> thread_keep_alive_ctx::instance_;
+    thread_decoration thread_keep_alive_ctx::initializer_(thread_keep_alive_ctx::init);
+    boost::once_flag keep_alive_mgr::flag;
+
+This setup function will initialize the `keep_alive_mgr` and then set the `thread_specific_shared_ptr<>` with a new `thread_keep_alive_ctx`.
+
+    void thread_keep_alive_ctx::init() {
+        keep_alive_mgr::initialize();
+        instance_.reset(new thread_keep_alive_ctx());
+    }
+
+The keep_alive_mgr::initialize function ensure just that the init function is called once using the boost::call_once. 
+This init function create the instance of the keep_alive_mgr singleton.
+
+    void keep_alive_mgr::initialize() {
+        boost::call_once(flag_, init);
+    }
+    void keep_alive_mgr::init() {
+        instance_=new keep_alive_mgr();
+    }
+[endsect]
+
+[section:keep_alive_threads Which threads can be controlled?] 
+[/==========================================================================================]
+
+As the keep alive mechanism use a thread decoration, the user needs to explicit calls the 
+`bith::decorate` function at the begining of the thread function or by wrapping the thread function. 
+Instead of having a specific function to call or thread function wrapper the keep alive uses the functions 
+provided by the thread decorator (`bith::decorate` and `bith::thread_decorator`). 
+So we must either call `bith::decorate` explicitly on the thread function
+
+    void fct() {
+        bith::decorate();
+        // ...
+    }
+
+or create the thread with the `bith::make_decorator` wrapper
+
+    boost::thread th(bith::make_decorator(fct));
+
+
+[endsect]
+
+[section:keep_alive_enabling Enabling the keep alive mechanism]
+[/==========================================================================================]
+
+To be controled by the keep alive manager we need to enable the mechanism using the enable_keep_alive.
+By default this enabler requires the application to do at least one check point every 2 seconds using the 
+`bith::keep_alive_point()` function.
+
+    void fct() {
+        using bith::this_thread;
+
+        // ...
+        enable_keep_alive ena;
+        // states that the thread will be declared dead if threre are
+        // less that 1 check_points in 2 seconds.
+        for(;;) {
+            // do a check point
+            keep_alive_point();
+            // ...        
+        }
+    }
+
+
+[endsect]
+
+[section:keep_alive_disabling Disabling the keep alive mechanism] 
+[/==========================================================================================]
+Some times we need to do an external task that could take an undefined time. We can then disable the 
+keep alive mechanisme by using a disabler `bith::disable_keep_alive`.
+
+    void fct() {
+        using bith::this_thread;
+
+        // ...
+        // states that the thread will be declared dead if threre are 
+        // less that 1 check_points in 2 seconds.
+        enable_keep_alive enabler;
+        for(;;) {
+            // do a check point
+            keep_alive_point();
+            
+            if (cnd) {
+                // when a blocking task spending an undefined time
+                // you can disable the keep alive mechanism
+                disable_keep_alive disabler;
+
+            }
+        }
+    }
+
+If on the contrary we don't want to disable the keep alive mechanism, it will be interesting to do a 
+`boost::interruption_check_point()` just after the blocking task. In this way if the task takes too much time and 
+the thread is declared dead, you let the possibility to manage the keep alive error by interrupting 
+the dead thread, once the task is finished.
+
+    void fct() {
+        using boost::this_thread;
+        using bith::this_thread;
+
+        // ...
+        // states that the thread will be declared dead if threre are 
+        // less that 1 check_points in 2 seconds.
+        enable_keep_alive enabler;
+        for(;;) {
+            // do a check point
+            keep_alive_point();
+            
+            if (cnd) {
+                // when a blocking task spending an undefined time 
+                // you can disable the keep alive mechanism
+                unknow_time_task();
+                interruption_check_point();
+
+            }
+        }
+    }
+
+[endsect]
+
+[section:keep_alive_persistent Configuring the dead persistency] 
+[/==========================================================================================]
+
+The default enabling parameters could be too restrictive in some cases. But the `enable_keep_alive` configure that with the two parameters.
+We can declare a thread dead when the thread has not done a number of checkins in a given period. 
+This can be useful when you know the time a given task should take.
+
+    void fct() {
+        using bith::this_thread;
+
+        // ...
+        // states that the thread will be declared dead if threre are 
+        // less that 4 check_points in 30 seconds.
+        enable_keep_alive enabler(15, 1);
+        for(;;) {
+        
+            if (cnd) {
+                // it is know that this task will take no more than 15 seconds
+                enable_keep_alive control(15, 1);
+                know_time_task();
+                keep_alive_point();
+                this_thread::interruprion_check_point();
+            }
+
+            
+        }
+        // ...
+    }
+
+
+[endsect]
+
+[section Access from the current thread] 
+[/==========================================================================================]
+
+But how all this works. We start with enablers/disablers.
+Enablers/disablers use RAII, so they can be nested and the context be restored on the destructor. 
+At the construction they store the current state of the keep alive of this thread using the backup 
+function and then they enable/disable the KA mechanism. On destruction they restore the backuped context.
+
+    enable_keep_alive::enable_keep_alive(
+            std::size_t periods, std::size_t checkins) 
+    {
+        backup_=detail::thread_keep_alive_ctx::instance()->backup(data_);
+        detail::thread_keep_alive_ctx::instance()->enable_keep_alive(periods, checkins);
+    }
+
+    enable_keep_alive::~enable_keep_alive() {
+        detail::thread_keep_alive_ctx::instance()->restore(backup_);
+    }
+
+    disable_keep_alive::disable_keep_alive() {
+        backup_=detail::thread_keep_alive_ctx::instance()->backup(data_);
+        detail::thread_keep_alive_ctx::instance()->disable_keep_alive();
+    }
+
+    disable_keep_alive::~disable_keep_alive() {
+        detail::thread_keep_alive_ctx::instance()->restore(backup_);
+    }
+
+These function are quite simple
+
+    thread_keep_alive_internal* thread_keep_alive_ctx::backup(thread_keep_alive_internal* new_data) {
+        thread_keep_alive_internal* the_backup=data_;
+        data_=new_data
+        return the_backup;
+    }
+    
+    void thread_keep_alive_ctx::restore(thread_keep_alive_internal* backup) {
+        data_=backup;
+    }
+
+    void thread_keep_alive_ctx::enable_keep_alive() {
+        data_->enabled_=true;
+    }
+    void thread_keep_alive_ctx::disable_keep_alive() {
+        data_->enabled_ = false;
+    }
+    
+Note that there is no need to check if the `detail::thread_keep_alive_ctx::instance_` 
+contains a poiter because we have ensured that at initialization time.
+
+Next there is the central function `keep_alive_point()`. This function 
+does nothing more than relaying the request to the specific context of this thread. 
+This function just increase the number of `checkins_`.
+
+    void keep_alive_point() {
+        detail::thread_keep_alive_ctx::instance()->check_point();
+    }
+    
+    void thread_keep_alive_ctx::check_point() {
+        ++data_->checkins_;
+    }
+    
+The `set_on_dead_thread()` do the same. This function just store the on dead action.
+
+    void set_on_dead_thread(on_dead_thread_type fct); 
+        detail::thread_keep_alive_ctx::instance()->set_on_dead_thread(fct);
+    }
+
+    void set_on_dead_thread(on_dead_thread_type fct); 
+        data_->on_dead_=fct;
+    }
+
+[endsect]
+
+[section Access from  the controller thread] 
+[/==========================================================================================]
+
+Up to now we have see the use of `bith::thread_keep_alive_ctx` as a `boost::thread_specific_ptr`, i.e. it is used 
+from the current thread.
+
+We will see now how the controler behaves. The single instance of the keep_alive_mgr has been created on the 
+init function.
+
+The constructor just construct a thread with the loop function.
+
+    keep_alive_mgr::keep_alive_mgr() : thread_(loop) {}
+
+
+The loop function will every second iterate over all the thread_keep_alive_ctx threads specific contexts asking them to control itselfs.
+Note that as the map can be modified when threads are created or finish we nee to protect the iteration externally with a lock on the 
+protecting mutex.
+
+    void keep_alive_mgr::loop() {
+        boost::xtime t;
+        boost::xtime_get(&t,1);	
+        for(;;) {
+            t.sec += 1; 
+            boost::thread::sleep(t);
+            lock_type lock(thread_keep_alive_ctx::instance().get_mutex());
+            const detail::thread_keep_alive_ctx::tssp::map_type& tmap(
+                thread_keep_alive_ctx::instance().get_map());
+            thread_keep_alive_ctx::tssp::map_type::const_iterator it = tmap.begin();
+            for (;it != tmap.end(); ++it) {
+                it->second.control(it->first);
+            }
+        }
+    }
+
+
+The thread_keep_alive_ctx::control function behaves as follows: if it is enabled decrease 
+the number of remaining periods and if the thread is declared dead execute the on dead 
+action and reset the checkings and periods.
+
+    void control(thread::id id) {
+        if (data_->enabled_) {
+            --data_->periods_;
+            if (dead()) {
+                on_dead(id);
+                data_->checkins_=0;
+                data_->periods_=data_->total_periods;
+            } 
+        }
+    }
+
+[endsect]
+
+[endsect]
+
+[section Thread Tuple]
+[/==========================================================================================]
+
+[section:thread_tuple_launching Launching thread tuple]
+[/==========================================================================================]
+
+A new thread tuple is launched by passing a collection of object of some callable type that can be invoked with no parameters to the constructor. 
+These objects are then copied into internal storage, and invoked on the newly-created threads of execution. 
+If the objects must not (or cannot) be copied, then `boost::ref` can be used to pass in a reference to the function object. 
+In this case, the user of __thread_tuple__ must ensure that the referred-to object outlives the newly-created thread of execution.
+
+    struct callable
+    {
+        void operator()();
+    };
+
+    bith::thread_tuple<2> copies_are_safe()
+    {
+        callable x;
+        callable y;
+        return bith::thread_tuple<2>(x, y);
+    } // x and y are destroyed, but the newly-created threads have a copy, so this is OK
+
+    bith::thread_tuple<2> oops()
+    {
+        callable x;
+        callable y;
+        return bith::thread_tuple<2>(boost::ref(x), boost::ref(y));
+    } // x and y are destroyed, but the newly-created threads still have a reference
+      // this leads to undefined behaviour
+
+If you wish to construct an instance of __thread_tuple__ with a function or callable object that requires arguments to be supplied,
+this can NOT be done by passing additional arguments as is the case for threads to the __thread_tuple__ constructor, and you will need to use bind explicitlly.
+
+    void find_the_question(int the_answer);
+
+    bith::thread_tuple<2> deep_thought_2(boost::bind(find_the_question,42), boost::bind(find_the_question,16));
+
+The arguments are ['copied] into the internals of Boost.Bind structure: if a reference is required, use `boost::ref`, just as for references
+to callable functions.
+
+The limit on the number of additional arguments that can be passed are specified by the Boost.Bind.
+
+[endsect]
+
+[section:thread_tuple_exceptions Exceptions in thread functions]
+[/==========================================================================================]
+
+If the function or callable objects passed to the __thread_tuple__ constructor propagates an exception when invoked that is not of type
+__thread_interrupted__, `std::terminate()` is called. 
+
+[endsect]
+
+[section:thread_tuple_joining  Joining and detaching]
+[/==========================================================================================]
+
+When the __thread_tuple__ object that represents a collection of threads of execution is destroyed the threads become ['detached]. 
+Once a threads are detached, they will continue executing until the invocation of the functions or callable objects supplied on construction have completed,
+or the program is terminated. The threads of a __thread_tuple__ can also be detached by explicitly invoking the detach member function on the __thread_tuple__
+object. In this case, all the threads of the __thread_tuple__ object ceases to represent the now-detached thread, and instead represents 'Not-a-Thread.
+
+In order to wait for a tuple of threads of execution to finish, the __join__ or __timed_join__ member functions of the __thread_tuple__ object must be
+used. 
+__join__ will block the calling thread until the all the threads represented by the __thread_tuple__ object have completed. 
+If the threads of execution represented by the __thread_tuple__ object have already completed, or 
+the __thread_tuple__ objects represents __not_a_thread__, then __join__ returns immediately. 
+__timed_join__ is similar, except that a call to __timed_join__ will also return if the threads being waited for
+does not complete when the specified time has elapsed.
+
+There is also a the possibility to wait until the first thread completes, interrupting the rest of the threads.
+[endsect]
+
+[section:thread_tuple_interruption  Interruption]
+[/==========================================================================================]
+
+A tuple of running threads can be ['interrupted] by invoking the __interrupt__ member function of the corresponding __thread_tuple__ object. 
+When the interrupted threads next executes one of the specified __interruption_points__ (or if it is currently __blocked__ whilst executing one)
+with interruption enabled, then a __thread_interrupted__ exception will be thrown in the interrupted thread. If not caught,
+this will cause the execution of the interrupted thread to terminate. As with any other exception, the stack will be unwound, and
+destructors for objects of automatic storage duration will be executed.
+
+See the __boost_thread__ library on how to avoid a thread being interrupted.
+
+At any point, the interruption state for the current thread can be queried by calling `interruption_enabled`.
+
+
+[#interruption_points]
+
+See the __boost_thread__ library for the Predefined Interruption Points.
+
+[endsect]
+[endsect]
+
+
+[endsect]
