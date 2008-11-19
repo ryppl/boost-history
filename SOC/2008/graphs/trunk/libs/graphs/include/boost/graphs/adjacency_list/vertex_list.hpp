@@ -10,9 +10,6 @@
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
-// Forward declarations
-template <typename, typename> class vertices_list;
-
 /**
  * @param Alloc A unary template class that will allocate stored vertices.
  */
@@ -33,19 +30,6 @@ struct vertex_list
     };
 };
 
-template <typename T, typename A>
-struct vertex_store_traits<counted_list<T,A>>
-{
-private:
-    typedef counted_list<T,A> base_type;
-public:
-    typedef typename base_type::iterator store_iterator;
-
-    typedef typename base_type::size_type                           vertices_size_type;
-    typedef typename descriptor_traits<base_type>::descriptor_type  vertex_descriptor;
-    typedef basic_vertex_iterator<base_type>                        vertex_iterator;
-    typedef std::pair<vertex_iterator, vertex_iterator>             vertex_range;
-};
 
 } } } /* namespace boost::graphs::adjacency_list */
 

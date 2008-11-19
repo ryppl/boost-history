@@ -9,9 +9,6 @@
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
-// Forward declarations
-template <typename, typename, typename, typename> class vertices_map;
-
 /**
  * @param Key The key type of the vertex map can be any LessThanComparable type.
  * @param Compare A unary template class that implements a comparison of keys.

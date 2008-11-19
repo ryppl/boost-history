@@ -8,16 +8,31 @@
 #include <boost/descriptors.hpp>
 
 #include <boost/graphs/label.hpp>
-#include <boost/graphs/adjacency_list/vertex_iterator.hpp>
+#include <boost/graphs/adjacency_list/vs/vector.hpp>
+
+// The Vertex Store defines the generic interface for working with a vertex
+// set for both directed and undirected adjacency lists. Its primary goal is
+// to provide generic interfaces that abstract common operations on these
+// sets. Important kinds of types are:
+// - Store - the selected container. Must model Container.
+// - Iterator - a non-const iterator into the store.
+// - Size - the size type of the container
+// - Vertex - a type of vertex. Can be labelled.
+// - Label - a vertex label
+// - Key - a key maapping to a vertex.
+// - Result - pair<Iterator, bool>
+//
+// Supported operations are:
+// - Iterator   vs_add_vertex       (Store, Vertex)
+// - Iterator   vs_add_vertex       (Store, Key, Vertex)
+// - Result     vs_try_add_vertex   (Store, Vertex)
+// - Result     vs_try_add_vertex   (Store, Key, Vertex)
+// - Iterator   vs_find_vertex      (Store, Label)
+// - void       vs_remove_vertex    (Store, Iterator)
+// - bool       vs_empty            (Store)
+// - Size       vs_size             (Store)
 
 namespace boost { namespace graphs { namespace adjacency_list {
-
-/**
- * The vertex store traits defines the basic types associate with a vertex set.
- */
-template <typename VertexStore>
-struct vertex_store_traits
-{ };
 
 namespace detail
 {
@@ -50,27 +65,11 @@ namespace detail
             bind2nd(labelled_equal_to<typename Store::value_type>(), l));
     }
 
-    // Iterate and compare for sequences.
-    template <typename Store, typename Label>
-    inline typename Store::const_iterator
-    dispatch_vs_find(Store const& store, Label const& l, sequence_tag)
-    {
-        return std::find_if(
-            store.begin(),
-            store.end(),
-            bind2nd(labelled_equal_to<typename Store::value_type>(), l));
-    }
-
     // Associative containers already forward the label as the key, so we just
     // have to use the basic find command.
     template <typename Store, typename Label>
     inline typename Store::iterator
     dispatch_vs_find(Store& store, Label const& l, associative_container_tag)
-    { return store.find(l); }
-
-    template <typename Store, typename Label>
-    inline typename Store::const_iterator
-    dispatch_vs_find(Store const& store, Label const& l, associative_container_tag)
     { return store.find(l); }
 
     // Explicitly remove the ability use this function, by failing a concept
@@ -137,10 +136,11 @@ inline typename Store::iterator
 vs_find_vertex(Store& store, Label const& l)
 { return detail::dispatch_vs_find(store, l, container_category(store)); }
 
+// Does not return a const iterator!
 template <typename Store, typename Label>
-inline typename Store::const_iterator
+inline typename Store::iterator
 vs_find_vertex(Store const& store, Label const& l)
-{ return detail::dispatch_vs_find(store, l, container_category(store)); }
+{ return detail::dispatch_vs_find(const_cast<Store&>(store), l, container_category(store)); }
 //@}
 
 /**
@@ -149,12 +149,21 @@ vs_find_vertex(Store const& store, Label const& l)
  * store, it cannot operate on edges.
  */
 //@{
-// Since all container support a positional erase.
-// TODO: Can I make this fail to compile if Store is 
 template <typename Store>
 void vs_remove_vertex(Store& store, typename Store::iterator i)
 { detail::dispatch_vs_remove(store, i, container_category(store)); }
 //@}
+
+/** Return the number of elements in the vertex store. */
+template <typename Store>
+typename Store::size_type vs_size(Store const& store)
+{ return store.size(); }
+
+/** Return true if the store is empty. */
+template <typename Store>
+bool vs_empty(Store const& store)
+{ return store.empty(); }
+
 } } } /* namespace boost::graphs::adjacency_list */
 
 #endif
