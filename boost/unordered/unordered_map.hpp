@@ -6,8 +6,8 @@
 
 //  See http://www.boost.org/libs/unordered for documentation
 
-#ifndef BOOST_UNORDERED_MAP_HPP_INCLUDED
-#define BOOST_UNORDERED_MAP_HPP_INCLUDED
+#ifndef BOOST_UNORDERED_UNORDERED_MAP_HPP_INCLUDED
+#define BOOST_UNORDERED_UNORDERED_MAP_HPP_INCLUDED
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -19,6 +19,15 @@
 
 #if !defined(BOOST_HAS_RVALUE_REFS)
 #include <boost/unordered/detail/move.hpp>
+#endif
+
+#if defined(BOOST_MSVC)
+#pragma warning(push)
+#if BOOST_MSVC >= 1400
+#pragma warning(disable:4396) //the inline specifier cannot be used when a
+                              // friend declaration refers to a specialization
+                              // of a function template
+#endif
 #endif
 
 namespace boost
@@ -385,8 +394,8 @@ namespace boost
         friend bool operator==(unordered_map const&, unordered_map const&);
         friend bool operator!=(unordered_map const&, unordered_map const&);
 #else
-        friend bool operator==<>(unordered_map const&, unordered_map const&);
-        friend bool operator!=<>(unordered_map const&, unordered_map const&);
+        friend bool operator==<Key, T, Hash, Pred, Alloc>(unordered_map const&, unordered_map const&);
+        friend bool operator!=<Key, T, Hash, Pred, Alloc>(unordered_map const&, unordered_map const&);
 #endif
     }; // class template unordered_map
 
@@ -757,8 +766,8 @@ namespace boost
         friend bool operator==(unordered_multimap const&, unordered_multimap const&);
         friend bool operator!=(unordered_multimap const&, unordered_multimap const&);
 #else
-        friend bool operator==<>(unordered_multimap const&, unordered_multimap const&);
-        friend bool operator!=<>(unordered_multimap const&, unordered_multimap const&);
+        friend bool operator==<Key, T, Hash, Pred, Alloc>(unordered_multimap const&, unordered_multimap const&);
+        friend bool operator!=<Key, T, Hash, Pred, Alloc>(unordered_multimap const&, unordered_multimap const&);
 #endif
     }; // class template unordered_multimap
 
@@ -785,4 +794,8 @@ namespace boost
 
 } // namespace boost
 
-#endif // BOOST_UNORDERED_MAP_HPP_INCLUDED
+#if defined(BOOST_MSVC)
+#pragma warning(pop)
+#endif
+
+#endif // BOOST_UNORDERED_UNORDERED_MAP_HPP_INCLUDED
