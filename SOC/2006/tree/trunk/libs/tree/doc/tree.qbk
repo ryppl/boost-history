@@ -101,6 +101,7 @@ Einführung (Oldenbourg, 2004) (German translation of Introduction to Algorithms
 [include concepts.qbk]
 [include algorithms.qbk]
 
+[include implementation.qbk]
 [include glossary.qbk]
 [include ../../../TODO]
 [xinclude autodoc.xml]

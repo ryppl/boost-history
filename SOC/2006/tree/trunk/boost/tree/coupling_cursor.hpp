@@ -19,6 +19,9 @@ namespace tree {
 
 using boost::iterator_core_access;
 
+/** \addtogroup cursor_adaptors
+ *  \@{ */
+
 template <class InCursor, class OutCursor>
 class coupling_cursor;
 
@@ -138,5 +141,7 @@ make_coupling_cursor(InCursor i, OutCursor o)
 
 } // namespace tree
 } // namespace boost
+
+/** @} */
 
 #endif // BOOST_TREE_COUPLING_CURSOR_HPP

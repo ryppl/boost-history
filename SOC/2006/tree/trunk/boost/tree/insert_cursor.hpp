@@ -23,6 +23,9 @@ namespace tree {
 using boost::iterator_core_access;
 using namespace boost_concepts;
 
+/** \addtogroup cursor_adaptors
+ *  \@{ */
+
 template <class Tree>
 class insert_cursor;
 
@@ -101,6 +104,8 @@ tree_inserter(Tr& t, typename Tr::cursor c)
 {
     return insert_cursor<Tr>(t, c);
 }
+
+/** @} */
 
 } // namespace tree
 } // namespace boost

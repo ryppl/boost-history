@@ -23,6 +23,9 @@
 namespace boost {
 namespace tree {
 
+/** \addtogroup cursor_adaptors
+ *  \@{ */
+
 /**
  * @brief Turns any cursor into an root tracking one. 
  * 
@@ -136,6 +139,7 @@ inline root_tracking_cursor<Cursor> track_root(Cursor c)
     return root_tracking_cursor<Cursor>(c);
 }
 
+/** @} */
 
 } // namespace tree
 } // namespace boost

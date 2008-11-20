@@ -5,7 +5,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_TREE_AUGMENTORS_INTERVAL_HPP
-#define SBOOST_TREE_AUGMENTORS_INTERVAL_HPP
+#define BOOST_TREE_AUGMENTORS_INTERVAL_HPP
 
 //#include <boost/numeric/interval.hpp> //useful ?
 

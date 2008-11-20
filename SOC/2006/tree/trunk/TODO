@@ -14,8 +14,6 @@
 [section TODO]
 
 General:
-* Remove algorithm overloads for root_tracking_cursors, as track_root is a very
-  context dependent thing; so merge it into the general iterative algorithm versions.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
 * Fix algorithms for use with forest:
@@ -123,23 +121,19 @@ Proposal:
   for postorder begin() - which is also root() - it's already constant. Then again, how much
   do we cater for "pathological" implementations (and not so pathological ones, like 
   threaded trees)?
-* Write a cursor_facade, cursor_adaptor as well as ascending_adaptor 
-  (and output_cursor_iterator_wrapper?) proposal.
+* Write a cursor_facade, cursor_adaptor, ascending_cursor, root_tracking_cursor
+  (and output_cursor_iterator_wrapper? etc.) proposal.
 * Add a revision log:
  * Add to_parent() (replaces operator!()), to_begin() and to_end() descending cursor members.
  * Remove shoot(), size() (rationale for size(): see std::list::size() O(n) vs O(1) discussion,
    esp the Howard Hinnant comments, http://home.twcny.rr.com/hinnant/cpp_extensions/On_list_size.html )
  * Change some occurences of "vector" (oops) to the respective tree type.
-* Add (subtree) cursor algorithms.
-* Probably split up cursor categories into: cursor (value access) category, vertical traversal 
-  and horizontal traversal (along the lines of the new iterator concepts).
-* cursor's begin(), end() and parent() members now only return cursor, same for const_cursor.
+ * cursor's begin(), end() and parent() members now only return cursor, same for const_cursor.
   (This somewhat breaks with container requirements, but it makes sense this way.)
 * Add InputCursor requirements: binary cursor if it's a binary_tree member function, etc.
 * Cursor validity after insertion/erasure/clearing
 * Possibly rename ascending to hierarchy cursor? (because of other uses for ascending/cursors in a graph context)
 * Remove operator* requirement? (for upward-growing trees with data only on the bottom level --- like B+trees)
-* Add tree lower_bound algorithm (to namespace inorder because it's somewhat inorder dependent? or is it?)
 * Refactor balancer section to map implementation 
 	(balanced_tree template class using policies -- like red_black -- from namespace balancers)
 * Add new metadata approach
@@ -170,19 +164,6 @@ Documentation:
   depict what is introduced at what step (nodes with pointers to their siblings, children, parents,
   a frame around a given cursor [and possibly additionally required information stated]
   that signifies what amount of information is contained within that cursor.
-* Add some rationale about the is_root problem() and its solution:
-  Get rid of checks for/assignments to root in pre/post/inorder algorithms,
-  as they are otherwise limited to "whole" trees and cannot be applied to subtrees.
-  In order to work for subtrees, we need at least an int to store
-  the current depth.
-  Solution:
-  Introduce a root tracking cursor concept providing c.is_root(). *order forward(), back(),
-  next() and prior() functions as well as *order iterators then require this concept.
-  Write a root_tracking_cursor adaptor that does exactly that, with suitable specializations
-  for different underlying cursors. 
-  (Why? Because any root_tracker object would have to be
-  passed along with a cursor, plus in- or decremented when going down or up in the hierarchy, 
-  resp. This kind of naturally suggests some kind of encapsulation/adaptation.)
 
 Further applications:
 

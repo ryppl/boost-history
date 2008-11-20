@@ -31,6 +31,9 @@
 namespace boost {
 namespace tree {
 
+/** \addtogroup cursor_adaptors
+ *  \@{ */
+
 template <class DescendingCursor> 
 class ascending_cursor;
 
@@ -183,16 +186,6 @@ inline ascending_cursor<Cursor> make_ascending_cursor(Cursor c)
     return ascending_cursor<Cursor>(c);
 }
 
-/// Specialization
-template <class Cursor>
-typename iterator< ascending, ascending_cursor<Cursor> >::difference_type
-distance(iterator< ascending, ascending_cursor<Cursor> > iter1
-       , iterator< ascending, ascending_cursor<Cursor> > iter2)
-{
-    return ascending_cursor<Cursor>(iter2).m_s.size() 
-         - ascending_cursor<Cursor>(iter1).m_s.size();
-}
-
 template <class Cursor> 
 class root_tracking_cursor< ascending_cursor<Cursor> >
 : public cursor_adaptor<root_tracking_cursor< ascending_cursor<Cursor> >
@@ -271,6 +264,17 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
     }
 };
 
+/** @} */
+
+/// Specialization
+template <class Cursor>
+typename iterator< ascending, ascending_cursor<Cursor> >::difference_type
+distance(iterator< ascending, ascending_cursor<Cursor> > iter1
+       , iterator< ascending, ascending_cursor<Cursor> > iter2)
+{
+    return ascending_cursor<Cursor>(iter2).m_s.size() 
+         - ascending_cursor<Cursor>(iter1).m_s.size();
+}
 
 } // namespace tree
 } // namespace boost
