@@ -11,6 +11,119 @@
     ]
 ]
 
+
+[section:introduction Introduction]
+
+This article is working document to discuss the design of multivariate distributions, 
+in particular the multivariate Gaussian distribution.
+
+[endsect]
+
+
+[section:multivariate_distributions Multivariate Distribution]
+
+For the sake of testing the design and generic concepts of multivariate distributions, 
+we will begin the inital design based two multivariate distributions. 
+
+* Uniform
+* Gaussian
+
+[endsect]
+
+
+[section:multivariate_datatypes Datatype Concepts]
+
+(Non-)member function arguments and return types are (contrary to the univariate distribution) 
+in need for multivariate extensions. 
+
+To give an example, calculating the cdf of a multivariate Gaussian will involve the following steps:
+
+# construct a multivariate Gaussian using a *mean vector* and *covariance matrix*.
+# pass *the distribution object* and a *x vector*. The x vector represents the upperbound of the multivariate integration region.
+# return the probability which is a *scalar*.
+
+
+[h1 RealType]
+[h1 VectorType]
+[h1 MatrixType]
+[h1 DistributionType]
+
+[endsect]
+
+
+
+[section:anyvariate_nonmember Multivariate Non-member Accessors that have univariate equivalents]
+
+In this section we will discuss the compatibilities of functions accesors between the uni 
+and miltivariate case.
+
+[h1 cdf]
+The cummulative probability distribution.
+
+* Input: VectorType, the upperbound of the multivariate integral. 
+* Return: RealType
+
+[h1 cdf complement]
+[h1 chf]
+[h1 hazard]
+[h1 kurtosis]
+[h1 kurtosis_excess]
+
+[h1 mean]
+* Input: none
+* Return: VectorType
+
+[h1 median]
+* Input: none
+* Return: VectorType
+
+[h1 mode]
+
+[h1 pdf]
+
+* Input: VectorType, the density location.
+* Return: RealType
+
+[h1 range]
+
+[h1 quantile]
+
+[h1 quantile from the complement]
+
+[h1 skewness]
+
+[h1 standard_deviation]
+
+[h1 support]
+
+[h1 variance]
+
+[endsect]
+
+
+[section:multivariate_nonmember Multivariate Non-member Accessors that don\'t have an univariate equivalents]
+
+[h1 marginal]
+The marginal distribution returns the marginal distribution. A specific application wil be to create a univariate density out of a multivariate one!
+This is great, to combine with other functions, e.g. to get the variance along the first dimension of a multivariate Gaussian, you could use
+
+``
+    variance( marginal( multivariate_gaussian({0,0,0}, {1,2,3}), 1));
+``
+
+Input: ? Some way to define a set of variables to marginalize on. Could be a list of dimension indices, or a boolean mask.
+Return: DistributionType
+
+[h1 conditional]
+The conditional distribution.
+
+* Input: ? Some way to define a set of variables to condition on. Could be a list of dimension indices, or a boolean mask.
+* Input: VectorType the values of the conditioned variables
+* Return: DistributionType
+
+[endsect]
+
+
 [section:license License]
 
 Copyright 2008 Thijs van den Berg, Stjepan Rajko.
