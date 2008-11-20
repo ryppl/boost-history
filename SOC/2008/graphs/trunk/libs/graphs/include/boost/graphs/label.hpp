@@ -20,32 +20,19 @@ struct label_traits
     typedef typename Object::label_type label_type;
 };
 
-/**
- * Metafunction that returns true if the labeled objects type is none. This
- * should actually be significantly better adapted - for example with arbitrary
- * types for which label_traits does not exist.
- */
-template <typename Object>
-struct has_label
-{
-    enum { value = is_same<typename label_traits<Object>::label_type, none>::value };
-};
-
-/**
+/** @name Label Access
  * Return a reference to the object's label. The generic implementation requires
  * the object to have a non-const label() member.
  */
+//@{
 template <typename Object>
 typename label_traits<Object>::label_type& label(Object& x)
 { return x.label(); }
 
-/**
- * Return a const reference to the object's label. The generic implementation
- * requires the object to have a const label() member.
- */
 template <typename Object>
 typename label_traits<Object>::label_type const& label(Object const& x)
 { return x.label(); }
+//@}
 
 /**
  * This is a simple template wrapper for building comparison functors for

@@ -1,11 +1,10 @@
 
-#ifndef BOOST_GRAPHS_ADJLIST_VERTEX_MAP_HPP
-#define BOOST_GRAPHS_ADJLIST_VERTEX_MAP_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_VS_MAP_HPP
+#define BOOST_GRAPHS_ADJLIST_VS_MAP_HPP
 
 #include <map>
 
 #include <boost/none.hpp>
-#include <boost/graphs/adjacency_list/vertex_store.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
@@ -33,6 +32,14 @@ struct vertex_map
         typedef Compare<Key> compare;
         typedef std::map<Key, Vertex, compare, allocator> type;
     };
+};
+
+// Specialize the vertex store traits to refer to the mapped type instead
+// of the value type.
+template <typename Key, typename Value, typename Compare, typename Alloc>
+struct vertex_store_traits<std::map<Key, Value, Compare, Alloc>>
+{
+    typedef typename std::map<Key, Value, Compare, Alloc>::mapped_type vertex_type;
 };
 
 } } } /* namespace boost::graphs::adjacency_list */

@@ -1,12 +1,8 @@
 
-#ifndef BOOST_GRAPHS_ADJLIST_VERTEX_VECTOR_HPP
-#define BOOST_GRAPHS_ADJLIST_VERTEX_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_VS_VECTOR_HPP
+#define BOOST_GRAPHS_ADJLIST_VS_VECTOR_HPP
 
 #include <vector>
-#include <algorithm>
-
-#include <boost/none.hpp>
-#include <boost/graphs/adjacency_list/vertex_store.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
@@ -16,7 +12,7 @@ namespace boost { namespace graphs { namespace adjacency_list {
 template <template <typename> class Alloc = std::allocator>
 struct vertex_vector
 {
-    typedef unused key_type;
+    typedef void key_type;
 
     typedef typename descriptor_traits<
         std::vector<int, Alloc<int>>

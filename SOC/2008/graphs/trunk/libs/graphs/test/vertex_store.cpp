@@ -3,13 +3,8 @@
 #include <string>
 
 #include <boost/graphs/adjacency_list/vertex_store.hpp>
-#include <boost/graphs/adjacency_list/vertex_vector.hpp>
-#include <boost/graphs/adjacency_list/vertex_list.hpp>
-#include <boost/graphs/adjacency_list/vertex_set.hpp>
-#include <boost/graphs/adjacency_list/vertex_map.hpp>
 
 #include "typestr.hpp"
-
 
 using namespace std;
 using namespace boost;
@@ -44,45 +39,63 @@ pair_container_tag container_arity(map_tag) { return pair_container_tag(); }
 template <typename Store>
 void add_verts(Store& store, simple_container_tag)
 {
-    typedef typename Store::iterator Iterator;
-    typedef typename Store::value_type Vertex;
-    vs_add_vertex(store, Vertex("b"));
-    Iterator iter = vs_add_vertex(store, Vertex("a"));
-
-    vs_remove_vertex(store, iter);
+    typedef typename descriptor_traits<Store>::descriptor_type Descriptor;
+    typedef typename vertex_store_traits<Store>::vertex_type Vertex;
+    vs::insert(store, Vertex("b"));
+    vs::insert(store, Vertex("a"));
 
     // Try to re-add a vertex.
-    pair<Iterator, bool> i = vs_try_add_vertex(store, Vertex("b"));
-    cout << "re-add: " << i.second << "\n";
+    pair<Descriptor, bool> i = vs::try_insert(store, Vertex("b"));
+    BOOST_ASSERT(!i.second);
 }
 
 template <typename Store>
 void add_verts(Store& store, pair_container_tag)
 {
-    typedef typename Store::iterator Iterator;
-    typedef typename Store::mapped_type Vertex;
-    vs_add_vertex(store, "a", Vertex());
-    vs_add_vertex(store, "b", Vertex());
+    typedef typename descriptor_traits<Store>::descriptor_type Descriptor;
+    typedef typename vertex_store_traits<Store>::vertex_type Vertex;
+    vs::insert(store, "a", Vertex());
+    vs::insert(store, "b", Vertex());
 
     // Try to re-add a vertex.
-    pair<Iterator, bool> i = vs_try_add_vertex(store, string("b"), Vertex());
-    cout << "re-add: " << i.second << "\n";
+    pair<Descriptor, bool> i = vs::try_insert(store, string("b"), Vertex());
+    BOOST_ASSERT(!i.second);
 }
+
+template <typename Store, typename Tag>
+void remove_vert(Store& store, Tag t)
+{
+    typedef typename descriptor_traits<Store>::descriptor_type Descriptor;
+    Descriptor d = vs::find(store, string("b"));
+    BOOST_ASSERT(d);
+    size_t n = vs::size(store);
+    vs::remove(store, d);
+    BOOST_ASSERT(vs::size(store) == n - 1);
+}
+
+// No-op for vectors... Can't remove vertices.
+template <typename Store>
+void remove_vert(Store& store, vector_tag)
+{ }
 
 template <typename Store>
 void test()
 {
     typedef typename Store::value_type Vertex;
-    typedef typename descriptor_traits<Store>::descriptor_type VertexDesc;
-    typedef typename Store::iterator StoreIterator;
+    typedef typename descriptor_traits<Store>::descriptor_type Descriptor;
 
     Store store;
 
     add_verts(store, container_arity(container_category(store)));
+    BOOST_ASSERT(!vs::empty(store));
+    BOOST_ASSERT(vs::size(store));
 
     // Find a verts
-    StoreIterator i = vs_find_vertex(store, string("b"));
-    cout << "test: " << distance(store.begin(), i) << endl;
+    Descriptor d = vs::find(store, string("b"));
+    BOOST_ASSERT(d);
+
+    // Check the removal of vertices
+    remove_vert(store, container_category(store));
 }
 
 int main()
@@ -92,7 +105,7 @@ int main()
     typedef vertex_set<>::vertex_store<my_vertex>::type VS;
     typedef vertex_map<string>::vertex_store<my_vertex>::type VM;
 
-    // test<VV>();
+    test<VV>();
     test<VL>();
     test<VS>();
     test<VM>();
