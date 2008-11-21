@@ -16,7 +16,7 @@ template <typename Store>
 void test()
 {
     typedef typename edge_store_traits<Store>::edge_type Edge;
-    typedef typename edge_traits<Edge>::end_pair Ends;
+    typedef typename edge_traits<Edge>::edge_ends Ends;
     typedef typename descriptor_traits<Store>::descriptor_type EdgeDesc;
 
     Store store;

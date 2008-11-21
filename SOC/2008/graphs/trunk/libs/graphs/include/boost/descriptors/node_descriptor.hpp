@@ -11,13 +11,12 @@ namespace boost {
  * container iterator is just a pattern for the actual iterator and has no
  * real type (it's opaque).
  */
-template <typename Blob, typename Kind = basic_descriptor_kind>
+template <typename Blob>
 struct node_descriptor
 {
-    typedef node_descriptor<Blob, Kind> this_type;
+    typedef node_descriptor<Blob> this_type;
     typedef Blob this_type::*unspecified_bool_type;
 
-    typedef Kind descriptor_kind;
     typedef Blob descriptor_type;
 
     inline node_descriptor()
@@ -76,15 +75,15 @@ struct node_descriptor
 };
 
 // A hash function for indexed descriptors.
-template <typename Blob, typename Kind>
-std::size_t hash_value(node_descriptor<Blob, Kind> const& x)
+template <typename Blob>
+std::size_t hash_value(node_descriptor<Blob> const& x)
 {
     using boost::hash_value;
     return hash_value(x.value);
 }
 
-template <typename Blob, typename Kind>
-std::ostream& operator<<(std::ostream& os, node_descriptor<Blob, Kind> const& d)
+template <typename Blob>
+std::ostream& operator<<(std::ostream& os, node_descriptor<Blob> const& d)
 { return os << hash_value(d); }
 
 } /* namespace boost */

@@ -18,11 +18,14 @@ struct vertex_list
         std::list<int, Alloc<int>>
     >::descriptor_type vertex_descriptor;
 
-    template <typename Vertex>
-    struct vertex_store
+    template <typename Edges, typename Label>
+    struct store
     {
-        typedef Alloc<Vertex> allocator;
-        typedef counted_list<Vertex, allocator> type;
+    private:
+        typedef std::pair<Edges, Label> vertex;
+        typedef Alloc<vertex> allocator;
+    public:
+        typedef counted_list<vertex, allocator> type;
     };
 };
 

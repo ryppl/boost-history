@@ -2,7 +2,7 @@
 #ifndef BOOST_GRAPHS_ADJLIST_VS_SET_HPP
 #define BOOST_GRAPHS_ADJLIST_VS_SET_HPP
 
-#include <set>
+#include <map>
 
 #include <boost/graphs/label.hpp>
 
@@ -24,15 +24,17 @@ struct vertex_set
         std::set<int, Compare<int>, Alloc<int>>
     >::descriptor_type vertex_descriptor;
 
-    template <typename Vertex>
-    struct vertex_store
+    // Quietly define a set as a map from label (which is the key being
+    // compared) to the vertex which is actually just the set of edges.
+    template <typename Edges, typename Label>
+    struct store
     {
     private:
-        typedef Alloc<Vertex> allocator;
-        typedef typename label_traits<Vertex>::label_type label_type;
-        typedef labelled_compare<Vertex, Compare<label_type>> compare;
+        typedef Edges vertex;
+        typedef Compare<Label> compare;
+        typedef Alloc<std::pair<Label, vertex>> allocator;
     public:
-        typedef std::set<Vertex, compare, allocator> type;
+        typedef std::map<Label, vertex, compare, allocator> type;
     };
 };
 

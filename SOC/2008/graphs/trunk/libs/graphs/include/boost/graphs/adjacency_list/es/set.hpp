@@ -25,13 +25,14 @@ struct edge_set
 
     // This quietly implements a map, not a set because we'll be using the
     // endpoints as keys to the label.
-    template <typename Ends, typename Label>
-    struct edge_store
+    template <typename Vertex, typename Label>
+    struct store
     {
-        typedef Compare<Ends> compare;
-        typedef Alloc<std::pair<Ends, Label>> allocator;
+        typedef std::pair<Vertex, Vertex> ends;
+        typedef Compare<ends> compare;
+        typedef Alloc<std::pair<ends, Label>> allocator;
     public:
-        typedef std::map<Ends, Label, compare, allocator> type;
+        typedef std::map<ends, Label, compare, allocator> type;
     };
 };
 

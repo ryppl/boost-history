@@ -1,8 +1,8 @@
 
-#ifndef BOOST_GRAPHS_ADJLIST_ES_VECTOR_HPP
-#define BOOST_GRAPHS_ADJLIST_ES_VECTOR_HPP
+#ifndef BOOST_GRAPHS_ADJLIST_ES_LIST_HPP
+#define BOOST_GRAPHS_ADJLIST_ES_LIST_HPP
 
-#include <vector>
+#include <boost/counted_list.hpp>
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
@@ -10,10 +10,10 @@ namespace boost { namespace graphs { namespace adjacency_list {
  * @param Alloc A unary template class that will allocate stored vertices.
  */
 template <template <typename> class Alloc = std::allocator>
-struct edge_vector
+struct edge_list
 {
     typedef typename descriptor_traits<
-        std::vector<int, Alloc<int>>
+        counted_list<int, Alloc<int>>
     >::descriptor_type edge_descriptor;
 
     // Ends must be a pair of vertices.
@@ -25,7 +25,7 @@ struct edge_vector
         typedef std::pair<ends, Label> edge;
         typedef Alloc<edge> allocator;
     public:
-        typedef std::vector<edge, allocator> type;
+        typedef counted_list<edge, allocator> type;
     };
 };
 

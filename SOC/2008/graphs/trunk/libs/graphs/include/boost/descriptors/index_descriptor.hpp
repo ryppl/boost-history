@@ -11,13 +11,12 @@ namespace boost {
  * The index_descriptor simply maintains the descriptor as an index into the
  * given offset.
  */
-template <typename Index, typename Kind = basic_descriptor_kind>
+template <typename Index>
 struct index_descriptor
 {
-    typedef index_descriptor<Index, Kind> this_type;
+    typedef index_descriptor<Index> this_type;
     typedef Index this_type::*unspecified_bool_type;
 
-    typedef Kind descriptor_kind;
     typedef Index descriptor_type;
 
     inline index_descriptor()
@@ -76,15 +75,15 @@ struct index_descriptor
 };
 
 // A hash function for indexed descriptors.
-template <typename Index, typename Kind>
-std::size_t hash_value(index_descriptor<Index, Kind> const& x)
+template <typename Index>
+std::size_t hash_value(index_descriptor<Index> const& x)
 {
     using boost::hash_value;
     return hash_value(x.value);
 }
 
-template <typename Index, typename Kind>
-std::ostream& operator<<(std::ostream& os, index_descriptor<Index, Kind> const& x)
+template <typename Index>
+std::ostream& operator<<(std::ostream& os, index_descriptor<Index> const& x)
 { return os << x.value; }
 
 } /* namespace boost */

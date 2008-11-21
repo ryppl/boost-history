@@ -25,21 +25,16 @@ struct vertex_map
         std::map<Key, int, Compare<Key>, Alloc<std::pair<Key, int>>>
     >::descriptor_type vertex_descriptor;
 
-    template <typename Vertex>
-    struct vertex_store
+    template <typename Edges, typename Label>
+    struct store
     {
-        typedef Alloc<std::pair<Key, Vertex>> allocator;
+    private:
+        typedef std::pair<Edges, Label> vertex;
         typedef Compare<Key> compare;
-        typedef std::map<Key, Vertex, compare, allocator> type;
+        typedef Alloc<std::pair<Key, vertex>> allocator;
+    public:
+        typedef std::map<Key, vertex, compare, allocator> type;
     };
-};
-
-// Specialize the vertex store traits to refer to the mapped type instead
-// of the value type.
-template <typename Key, typename Value, typename Compare, typename Alloc>
-struct vertex_store_traits<std::map<Key, Value, Compare, Alloc>>
-{
-    typedef typename std::map<Key, Value, Compare, Alloc>::mapped_type vertex_type;
 };
 
 } } } /* namespace boost::graphs::adjacency_list */
