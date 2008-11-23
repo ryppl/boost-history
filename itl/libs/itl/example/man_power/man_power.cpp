@@ -8,20 +8,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +----------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <iostream>
-
-// The next line includes <boost/gregorian/date.hpp>
-// and a few lines of adapter code.
-#include <boost/itl/gregorian.hpp> 
-
-#include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/interval_map.hpp>
-
-using namespace std;
-using namespace boost::gregorian;
-using namespace boost::itl;
-
 /** Example man_power.cpp \file man_power.cpp
 
     Interval sets and maps can be filled and manipulated using
@@ -35,6 +21,20 @@ using namespace boost::itl;
 
     \include man_power/man_power.cpp
 */
+//[example_man_power
+#include <stdio.h>
+#include <iostream>
+
+// The next line includes <boost/gregorian/date.hpp>
+// and a few lines of adapter code.
+#include <boost/itl/gregorian.hpp> 
+
+#include <boost/itl/type_traits/to_string.hpp>
+#include <boost/itl/interval_map.hpp>
+
+using namespace std;
+using namespace boost::gregorian;
+using namespace boost::itl;
 
 
 // Function weekends returns the interval_set of weekends that are contained in
@@ -184,3 +184,4 @@ int main()
 2008-Oct-20 - 2008-Oct-24 -> 12
 2008-Oct-27 - 2008-Oct-31 -> 12
 */
+//]

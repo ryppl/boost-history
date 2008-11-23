@@ -8,6 +8,17 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +----------------------------------------------------------------------------*/
+/** Example interval_container.cpp \file interval_container.cpp
+
+    Sample file interval_container.cpp demontrates basic charactersistics of 
+    interval container objects.
+
+    Simple interactive shells for the manipulation of interval containers can be found
+    in the 'tests.sln' project.
+
+    \include interval_container/interval_container.cpp
+*/
+//[example_interval_container
 #include <stdio.h>
 #include <iostream>
 
@@ -20,16 +31,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 using namespace std;
 using namespace boost::itl;
 
-/** Example interval_container.cpp \file interval_container.cpp
-
-    Sample file interval_container.cpp demontrates basic charactersistics of 
-    interval container objects.
-
-    Simple interactive shells for the manipulation of interval containers can be found
-    in the 'tests.sln' project.
-
-    \include interval_container/interval_container.cpp
-*/
 void interval_container_basics()
 {
     interval<Time> night_and_day = interval<Time>::rightopen(Time(monday,   20,00), Time(tuesday,  20,00));
@@ -100,3 +101,4 @@ Split times overlap counted:
 ([mon:20:00,tue:07:00),1)([tue:07:00,tue:20:00),2)([tue:20:00,wed:07:00),1)
 ([wed:07:00,wed:10:00),1)([wed:18:00,wed:21:00),1)
 -----------------------------------------------------------------------------*/
+//]

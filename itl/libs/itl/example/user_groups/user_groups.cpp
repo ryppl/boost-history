@@ -8,20 +8,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +----------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <iostream>
-
-// The next line includes <boost/gregorian/date.hpp>
-// and a few lines of adapter code.
-#include <boost/itl/gregorian.hpp> 
-
-#include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/split_interval_map.hpp>
-
-using namespace std;
-using namespace boost::gregorian;
-using namespace boost::itl;
-
 /** Example user_groups.cpp \file user_groups.cpp
 
     Example user_groups.cpp shows the availability of set operations
@@ -43,6 +29,20 @@ using namespace boost::itl;
     
     \include user_groups/user_groups.cpp
 */
+//[example_user_groups
+#include <stdio.h>
+#include <iostream>
+
+// The next line includes <boost/gregorian/date.hpp>
+// and a few lines of adapter code.
+#include <boost/itl/gregorian.hpp> 
+
+#include <boost/itl/type_traits/to_string.hpp>
+#include <boost/itl/split_interval_map.hpp>
+
+using namespace std;
+using namespace boost::gregorian;
+using namespace boost::itl;
 
 // Type itl::set<string> collects the names a user group's members. Therefore
 // it needs to implement operator += that performs a set union on overlap of 
@@ -200,3 +200,4 @@ int main()
 [2008-Feb-01 - 2008-Oct-15]: Dr.Jekyll Mr.Hyde
 [2008-Oct-16 - 2008-Dec-31]: Dr.Jekyll
 -----------------------------------------------------------------------------*/
+//]

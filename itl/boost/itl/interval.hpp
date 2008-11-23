@@ -157,7 +157,9 @@ namespace boost{namespace itl
     \subsection user_groups_subsec User Groups: Union and intersecion of histories
 
     Example user_groups.cpp shows how interval_maps can be unified (+=) or 
-    intersected    (*=) to calculate desired informations. We have a group of
+    intersected (*=) to calculate desired informations. 
+	
+	We have a group of
     admin users and    of medcial staff, who have different authorisations in
     a ficticious system. The interval_maps for
     the groups show the history of the group membership: The members
@@ -462,11 +464,10 @@ public:
     /// Returns the intersection with the interval  <tt>x2</tt>
     interval intersect(const interval& x2)const { interval isec; intersect(isec, x2); return isec; }
 
-    // wenn <tt>*this</tt> links über <tt>x2</tt> herausragt, ist <tt>lsur</tt> das überstehende linke Teilintervall
-    ///
+    /// lsur is the part of <tt>*this</tt> that juts out left over <tt>x2</tt>.
     void left_surplus(interval& lsur, const interval& x2)const;
-    // wenn <tt>*this</tt> rechts über <tt>x2</tt> herausragt, ist <tt>rsur</tt> das überstehende rechte Teilintervall
-    ///
+
+    /// rsur is the part of <tt>*this</tt> that juts out right over <tt>x2</tt>.
     void right_surplus(interval& rsur, const interval& x2)const;
 
     /** Interval spanning from lower bound of *this interval to the upper bound of rhs.

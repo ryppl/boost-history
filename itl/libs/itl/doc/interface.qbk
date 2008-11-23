@@ -1,0 +1,69 @@
+[/
+    Copyright (c) 2008-2008 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Interface]
+
+[table
+[[Placeholder]                  [Argument types]          [Description]]             
+[[[#element_type]         [*e]] [T::domain_type]          [the element type of the container]]
+[[[#interval_type]        [*i]] [T::interval_type]        [the interval type of the container]]
+[[[#interval_set_types]   [*S]] [interval_sets]           [one of the interval set types]]
+[[[#element_mapping_type] [*b]] [T::element_mapping_type] [type of the element mapping of the map]]
+[[[#interval_mapping_type][*p]] [T::interval_mapping_type][type of the interval mapping of the map]]
+[[[#interval_map_types]   [*M]] [interval_maps]           [one of the interval map types]]
+]
+
+[table Itl Interfaces
+[[T]      [interval][interval\nsets][interval\nmaps][itl::set][itl::map][std::set][std::map]]                                                      								   
+[/                                   interval  itvset   itvmap  itl:set  itl:map  std:set  std:map]
+[[['*Construct, copy, destruct*]]    [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[T()]                               [1]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[T(const T&)]                       [A]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[T(const P&)]                       [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[T& operator=(const T&)]            [A]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[void swap(T&)]                     [ ]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[['*Emptieness, containment*]]      [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[void clear()]                      [E]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[bool empty()const]                 [1]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[bool contains(const P&)const]    [__ei]  [__eiS][__eiS __bpM][?__e]   [?__b]    [ ]      [ ]]
+[[bool contained_in(const P&)const] [__e]     [__S]    [__M]   [?__e]   [?__p]    [ ]      [ ]]
+[[['*Size*]]                         [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[size_type size()const]             [1]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[size_type cardinality()const]      [1]       [1]      [1]     [?]      [?]      [ ]      [ ]]
+[[difference_type length()const]     [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
+[[size_t iterative_size()const]      [1]       [1]      [1]     [?]      [?]      [ ]      [ ]]
+[[size_t interval_count()const]      [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
+[[['*Range*]]                        [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[domain_type lower()const]          [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
+[[domain_type upper()const]          [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
+[[['*Addition*]]                     [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[T& add<F>(const P&, const F&)]     [ ]       [ ]     [__bp]   [ ]     [?__b]    [ ]      [ ]]
+[[T& add(const P&)]                  [ ]     [__ei]    [__bp]   [__e]   [__b]     [ ]      [ ]]
+[[T& operator+=(T&, const P&)]       [ ]     [__eiS]   [__bpM]  [?__eS]   [?__bM]     [ ]      [ ]]
+[[['*Subtraction*]]        [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[T& subtract<F>(const P&, const F&)][ ]       [ ]     [__bp]   [ ]     [?__b]    [ ]      [ ]]
+[[T& subtract(const P&)]             [ ]     [__ei]    [__bp]   [__e]   [__b]     [ ]      [ ]]
+[[T& operator-=(T&, const P&)]       [ ]     [__eiS]   [__bpM]  [?__eS]   [?__bM]     [ ]      [ ]]
+[[['*Insertion, erasure*]]           [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[T& insert(const P&)]               [ ]     [__ei]    [__bp]   [__e]   [__b]  [?__e]   [?__b]]
+[[T& erase(const P&)]                [ ]    [__eiS][__eiS __bpM][__e]   [__b]  [?__e]   [?__b]]
+[[['*Intersection*]]                 [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[void intersect(T&, const P&)const] [__i]  [__eiS][__eiS __bpM][ ]      [ ]      [ ]      [ ]]
+[[void add_intersection(T&, const P&)const][][__eiS][__eiS __bpM][ ]     [ ]      [ ]      [ ]]
+[[T& operator*=(T&, const P&)]       [__i]  [__eiS][__eiS __bpM][?__eS][?__bM]    [ ]      [ ]]
+[[['*Iterator related*]]             [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
+[[J begin()]                         [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
+[[J end()]                           [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
+[[J rbegin()]                        [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
+[[J rend()]                          [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
+[[J lower_bound(const I&)]           [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
+[[J upper_bound(const I&)]           [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
+]
+
+
+[endsect]

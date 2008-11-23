@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------+
+/*---------------------------------------------------------------------------+
 Interval Template Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2008: Joachim Faulhaber
@@ -8,21 +8,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +----------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <iostream>
-
-// The next line includes <boost/date_time/posix_time/posix_time.hpp>
-// and a few lines of adapter code.
-#include <boost/itl/ptime.hpp> 
-
-#include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/interval_map.hpp>
-#include <boost/mpl/placeholders.hpp>
-
-using namespace std;
-using namespace boost::posix_time;
-using namespace boost::itl;
-using namespace boost::mpl::placeholders;
 
 /** Example boost_party.cpp \file boost_party.cpp
 
@@ -44,11 +29,11 @@ using namespace boost::mpl::placeholders;
     time, where the group of party guests changed.
 
     boost_party.cpp demonstrates a principle that we call 
-    <b><em>aggregate on overlap (aggovering;)</em></b>:
+    <b><em>aggregate on overlap (aggrovering;)</em></b>:
     On insertion a value associated to the interval is aggregated (added) to those
     values in the interval_map that overlap with the inserted value.
 
-    There are two behavioral aspects to <b>aggovering</b>: a <em>decompositional
+    There are two behavioral aspects to <b>aggrovering</b>: a <em>decompositional
     behavior</em> and a <em>accumulative behavior</em>.
 
     The <em>decompositional behavior</em> splits up intervals on the time dimension of the 
@@ -60,6 +45,18 @@ using namespace boost::mpl::placeholders;
 
     \include boost_party/boost_party.cpp
 */
+//[example_boost_party
+#include <iostream>
+// The next line includes <boost/date_time/posix_time/posix_time.hpp>
+// and a few lines of adapter code.
+#include <boost/itl/ptime.hpp> 
+
+#include <boost/itl/type_traits/to_string.hpp>
+#include <boost/itl/interval_map.hpp>
+
+using namespace std;
+using namespace boost::posix_time;
+using namespace boost::itl;
 
 // Type itl::set<string> collects the names of party guests. Therefore it needs to
 // implement operator += that performs a set union on overlap of intervals.
@@ -113,28 +110,31 @@ void boost_party()
 
     // adding an element can be done wrt. simple aggregate functions
     // like e.g. min, max etc. in their 'inplace' or op= incarnation
-    tallest_guest.add<inplace_max<_> >(
+    tallest_guest.add(
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
-          180) 
+          180),
+	  inplace_max<int>()
 	);
 
-    tallest_guest.add<inplace_max<_> >(
+    tallest_guest.add(
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
-          170)
+          170),
+	  inplace_max<int>()
 	);
 
-    tallest_guest.add<inplace_max<_> >(
+    tallest_guest.add(
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
-          200)
+          200),
+	  inplace_max<int>()
 	);
 
 
@@ -174,13 +174,14 @@ int main()
 /*-----------------------------------------------------------------------------
 >> Interval Template Library: Sample boost_party.cpp <<
 -------------------------------------------------------
------ Histrory of party guests ------------------------
+----- History of party guests -------------------------
 [2008-May-20 19:30:00 - 2008-May-20 20:10:00): Harry Mary
 [2008-May-20 20:10:00 - 2008-May-20 22:15:00): Diana Harry Mary Susan
 [2008-May-20 22:15:00 - 2008-May-20 23:00:00): Diana Harry Mary Peter Susan
 [2008-May-20 23:00:00 - 2008-May-21 00:00:00): Diana Peter Susan
 [2008-May-21 00:00:00 - 2008-May-21 00:30:00): Peter
------ Histrory of maximum guest height ----------------
+----- History of maximum guest height -----------------
 [2008-May-20 19:30:00 - 2008-May-20 22:15:00): 180 cm = 5.90551 ft
 [2008-May-20 22:15:00 - 2008-May-21 00:30:00): 200 cm = 6.56168 ft
 -----------------------------------------------------------------------------*/
+//]

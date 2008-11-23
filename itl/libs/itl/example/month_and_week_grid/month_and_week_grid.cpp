@@ -8,20 +8,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +----------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <iostream>
-
-// The next line includes <boost/gregorian/date.hpp>
-// and a few lines of adapter code.
-#include <boost/itl/gregorian.hpp> 
-
-#include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/split_interval_map.hpp>
-
-using namespace std;
-using namespace boost::gregorian;
-using namespace boost::itl;
-
 /** Example month_and_week_grid.cpp \file month_and_week_grid.cpp
 
     As split_interval_set preserves all interval borders on insertion
@@ -40,6 +26,20 @@ using namespace boost::itl;
 
     \include month_and_week_grid/month_and_week_grid.cpp
 */
+//[example_month_and_week_grid
+#include <stdio.h>
+#include <iostream>
+
+// The next line includes <boost/gregorian/date.hpp>
+// and a few lines of adapter code.
+#include <boost/itl/gregorian.hpp> 
+
+#include <boost/itl/type_traits/to_string.hpp>
+#include <boost/itl/split_interval_map.hpp>
+
+using namespace std;
+using namespace boost::gregorian;
+using namespace boost::itl;
 
 typedef split_interval_set<boost::gregorian::date> date_grid;
 
@@ -139,3 +139,4 @@ new week : 2008-Aug-04 - 2008-Aug-10
 new week : 2008-Aug-11 - 2008-Aug-17
 new week : 2008-Aug-18 - 2008-Aug-21
 */
+//]

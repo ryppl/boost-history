@@ -1,0 +1,79 @@
+[/
+    Copyright (c) 2008-2008 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Examples]
+
+[section Overview]
+
+[table Overview over Itl Examples
+	[[level]   [example] [classes] [features]]
+	[[flagship][[link boost_itl.examples.boost_party Boost party]]
+		[__itv_map__][Generates an attendance history of a party
+	                  by inserting into an __itv_map__. 
+					  Demonstrating 
+					  ['*aggregate on overlap, split on insertion*]]]
+	[[basic]   [[link boost_itl.examples.interval Interval]]
+	    [__itv__] [Intervals for integral and continuous instance types. 
+	               Closed and open interval borders]]
+	[[basic]   [[link boost_itl.examples.interval_container Interval container]]
+		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__]
+	                               [basic charactersistics of interval container]]
+	[[basic]   [overlap_counter][__itv_map__][The most simple application of an interval map: Counting
+	                                          the overlaps of added intervals.]]
+	[[advanced][[link boost_itl.examples.month_and_week_grid Timegrids for months and weeks]]
+	                            [__spl_itv_set__]
+								             [Shows how the ['*border preserving*]
+                                              __spl_itv_set__ can be used to create time partitionigs where different
+                                              periodic time intervals overlay each other.]]
+	[[advanced][[link boost_itl.examples.man_power Man power]]      
+		[__itv_set__,\n__itv_map__]
+		[Set style operations on __itv_sets__ and __itv_maps__ like union, difference
+	     and intersection can be used to obtain calculations in a flexible way. Example
+	     [*man_power] demontrates such operations in the process of calculating the
+	     available man-power of a company in a given time interval.]]
+	[[advanced][[link boost_itl.examples.user_groups User groups]][__itv_map__]
+		[Example [*user_groups] shows how interval_maps can be unified or 
+         intersected to calculate desired informations.]]
+]
+
+[endsect]
+
+[section Boost party]
+[import ../example/boost_party/boost_party.cpp]
+[example_boost_party]
+[endsect]
+
+[section Interval]
+[import ../example/interval/interval.cpp]
+[example_interval]
+[endsect]
+
+[section Interval container]
+[import ../example/interval_container/interval_container.cpp]
+[example_interval_container]
+[endsect]
+
+[section Time grids for months and weeks]
+[import ../example/month_and_week_grid/month_and_week_grid.cpp]
+[example_month_and_week_grid]
+[endsect]
+
+[section Man power]
+[import ../example/man_power/man_power.cpp]
+[example_man_power]
+[endsect]
+
+[section User groups]
+[import ../example/user_groups/user_groups.cpp]
+[example_user_groups]
+[endsect]
+
+
+[endsect]
+
+ 
