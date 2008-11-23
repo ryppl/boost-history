@@ -1,0 +1,10 @@
+# bring in rules for testing
+import testing ;
+
+test-suite "property_tree"
+   : [ run test_property_tree.cpp /boost/serialization//boost_serialization ]
+     [ run test_info_parser.cpp ]
+     [ run test_json_parser.cpp ]
+     [ run test_ini_parser.cpp ]
+     [ run test_xml_parser_rapidxml.cpp ]
+;
