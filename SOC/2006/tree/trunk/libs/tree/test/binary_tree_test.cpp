@@ -55,6 +55,7 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     BOOST_CHECK(bt0.root().begin().begin().empty());
     
     BOOST_CHECK(++c == bt0.root().begin().end());
+    //BOOST_CHECK_EQUAL(1, 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

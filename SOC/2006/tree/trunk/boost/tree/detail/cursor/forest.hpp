@@ -49,8 +49,8 @@ public:
 
     typedef Cursor base_cursor;
     
-     typedef forest_cursor<Cursor> cursor;
-     typedef forest_cursor<Cursor const> const_cursor; //FIXME (?)
+    typedef forest_cursor<Cursor> cursor;
+    typedef forest_cursor<Cursor const> const_cursor; //FIXME (?)
 
     //typedef typename cursor_size<base_cursor>::type size_type;
 
@@ -118,29 +118,18 @@ private:
 
     void right()
     {
-        this->base_reference().to_begin();
-        while (!this->base_reference().empty())
-            this->base_reference().to_end();
+        to_forest_end(this->base_reference());
     }
     
     // Cursor stuff. 
     
     void up()
     {
-        while (index(this->base_reference()))
-            this->base_reference().to_parent();
-        this->base_reference().to_parent();
+        to_forest_parent(this->base_reference());
     }
 };
 
 } // namespace detail
-
-template <class Cursor>
-typename detail::forest_cursor<Cursor>::size_type
-index(detail::forest_cursor<Cursor> const& cur)
-{
-    return cur.index();
-}
 
 } // namespace tree
 } // namespace boost

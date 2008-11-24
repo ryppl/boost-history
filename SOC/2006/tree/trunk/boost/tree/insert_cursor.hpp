@@ -81,6 +81,7 @@ private:
         if (index(this->base_reference())) {
             const_cast<typename Tr::cursor&>(this->base_reference())
             = tree.insert(this->base_reference(), typename Tr::value_type());
+            const_cast<typename Tr::cursor&>(this->base_reference()).to_begin();
         }
         return *this->base_reference();
     }
@@ -89,6 +90,7 @@ private:
     {
         this->base_reference() = 
             tree.insert(this->base_reference(), typename Tr::value_type());
+        this->base_reference().to_begin();
     }
 };
 

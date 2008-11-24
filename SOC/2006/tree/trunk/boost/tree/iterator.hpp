@@ -16,9 +16,12 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <boost/tree/root_tracking_cursor.hpp>
+
 #include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept_check.hpp>
+#include <boost/concept/requires.hpp>
 
 namespace boost {
 namespace tree {
@@ -40,7 +43,7 @@ class iterator
       , boost::use_default
       , typename Order::iterator_category
     > {
-BOOST_CONCEPT_ASSERT((AscendingCursor<Cursor>));
+BOOST_CONCEPT_ASSERT((RootTrackingCursor<Cursor>));
 
  private:
     struct enabler {};
@@ -88,11 +91,15 @@ BOOST_CONCEPT_ASSERT((AscendingCursor<Cursor>));
  * @return  Iterator to the first element of @a c
  */
 template <class Order, class Cursor>
-iterator<Order, Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((AscendingCursor<Cursor>)),
+    (iterator< Order, root_tracking_cursor<Cursor> >)) // return type
+//iterator< Order, root_tracking_cursor<Cursor> >
 begin(Order, Cursor c)
 {
-    to_first(Order(), c);
-    return iterator<Order, Cursor>(c);
+    root_tracking_cursor<Cursor> rtc(c);
+    to_first(Order(), rtc);
+    return iterator< Order, root_tracking_cursor<Cursor> >(rtc);
 }
 
 /**
@@ -102,11 +109,15 @@ begin(Order, Cursor c)
  * @return    Iterator one position past the last element of @a c 
  */
 template <class Order, class Cursor>
-iterator<Order, Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((AscendingCursor<Cursor>)),
+    (iterator< Order, root_tracking_cursor<Cursor> >)) // return type
+//iterator<Order, root_tracking_cursor<Cursor> >
 end(Order, Cursor c)
 {
-    to_last(Order(), c);
-    return iterator<Order, Cursor>(c);
+    root_tracking_cursor<Cursor> rtc(c);
+    to_last(Order(), rtc);
+    return iterator< Order, root_tracking_cursor<Cursor> >(rtc);
 }
 
 /// Reverse iterators

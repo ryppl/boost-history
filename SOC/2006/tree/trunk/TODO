@@ -14,6 +14,8 @@
 [section TODO]
 
 General:
+* Fix iterator tests.
+* Add forest cursor algorithms for postorder.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
 * Fix algorithms for use with forest:

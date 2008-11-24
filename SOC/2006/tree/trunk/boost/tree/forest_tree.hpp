@@ -13,7 +13,9 @@
 #define BOOST_TREE_FOREST_TREE_HPP
 
 #include <boost/tree/detail/cursor/forest.hpp>
+
 #include <boost/tree/binary_tree.hpp>
+#include <boost/tree/algorithm.hpp>
 #include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept_check.hpp>
@@ -131,6 +133,35 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
 protected:
     hierarchy_type h;
 };
+
+
+// TODO: template <class Cursor> -> template <class T, class Hierarchy>
+// forest_cursor<Cursor> -> forest_tree<T, Hierarchy>::cursor
+// const_cursor?
+template <class Cursor>
+typename forest_cursor<Cursor>::size_type
+index(forest_cursor<Cursor> const& cur)
+{
+    return cur.index();
+}
+
+template <class Cursor, class Op>
+Op for_each(preorder, forest_cursor<Cursor> s, Op f)
+{
+    return for_each(preorder(), Cursor(s), f);
+}
+
+template <class InCursor, class OutCursor, class Op>
+OutCursor transform (preorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t, Op op)
+{
+    return transform(preorder(), InCursor(s), InCursor(t), op);
+}
+
+template <class InCursor, class OutCursor>
+OutCursor copy (preorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t)
+{
+    return copy(preorder(), InCursor(s), InCursor(t));
+}
 
 
 } // namespace tree

@@ -88,6 +88,22 @@ typename AscendingCursor::size_type index(AscendingCursor const& cur)
     return std::distance(cur.parent().begin(), cur);
 }
 
+template <class BinaryCursor>
+void to_forest_end(BinaryCursor& c)
+{
+    c.to_begin();
+    while (!c.empty())
+        c.to_end();
+}
+
+template <class BinaryCursor>
+void to_forest_parent(BinaryCursor& c)
+{
+    while (index(c))
+        c.to_parent();
+    c.to_parent();
+}
+
 /**
  * @brief   Apply a function to every element of a subtree, 
  *          in the order specified by the first parameter.

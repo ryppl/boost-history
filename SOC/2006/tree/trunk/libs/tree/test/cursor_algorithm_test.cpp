@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_asc_copy_using_insert_cursor, Order, orders
                     , boost::bidirectional_traversal_tag());
 
     validate_test_dataset1_tree(bt2);
-    BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root()));    
+    BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root())); 
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform, Order, orders)

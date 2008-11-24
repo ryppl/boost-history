@@ -39,16 +39,16 @@ struct test_binary_tree_fixture {
         typedef typename boost::tree::binary_tree<T>::value_type value_type; 
         
         typename boost::tree::binary_tree<T>::cursor cur = ret.insert(ret.root(), value_type(8));
-        cur = ret.insert(cur, value_type(3));
-        ret.insert(cur, value_type(1));
+        cur = ret.insert(cur.to_begin(), value_type(3));
+        ret.insert(cur.to_begin(), value_type(1));
         cur = ret.insert(++cur, value_type(6));
-        ret.insert(cur, value_type(4));
+        ret.insert(cur.to_begin(), value_type(4));
         ret.insert(++cur, value_type(7));
         cur = ret.insert(ret.root().end(), value_type(10));
         cur = ret.insert(ret.root().end().end(), value_type(14));
-        cur = ret.insert(cur, value_type(13));
-        cur = ret.insert(cur, value_type(11));
-        cur = ret.insert(++cur, value_type(12));
+        cur = ret.insert(cur.to_begin(), value_type(13));
+        cur = ret.insert(cur.to_begin(), value_type(11));
+        cur = ret.insert(++cur.to_begin(), value_type(12));
     }
     
     static void validate_test_dataset1_tree(boost::tree::binary_tree<T>& ret)

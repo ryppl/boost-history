@@ -113,11 +113,12 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     BOOST_CHECK(c.empty());
     
     //validate_corresponding_forest_tree(ft0);
+    //BOOST_CHECK_EQUAL(1, 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
 
-//BOOST_FIXTURE_TEST_SUITE(forest_algorithms_test, test_binary_tree_with_list_fixture<int>)
+BOOST_FIXTURE_TEST_SUITE(forest_algorithms_test, test_binary_tree_with_list_fixture<int>)
 //
 //// Test *order correspondence:
 //// forest   binary
@@ -125,12 +126,12 @@ BOOST_AUTO_TEST_SUITE_END()
 //// post     in
 //// FIXME: should also check post-/inorder correspondence
 //
-//typedef boost::mpl::list< boost::mpl::pair<preorder, preorder>
-//                        /*, boost::mpl::pair<postorder, inorder>*/ > corresponding_orders;
+typedef boost::mpl::list< boost::mpl::pair<preorder, preorder>
+                        /*, boost::mpl::pair<postorder, inorder>*/ > corresponding_orders;
 //
-//BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_for_each, Order
-//                             , corresponding_orders )
-//{
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_for_each, Order
+                             , corresponding_orders )
+{
 //    using namespace boost::tree;
 //
 //    forest_tree<int> ft(bt);
@@ -144,15 +145,16 @@ BOOST_AUTO_TEST_SUITE_END()
 //    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 //    
 //    boost::tree::for_each(
-//        typename Order::first(),
-//        ft.root(), 
-//        boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1),
-//        boost::forward_traversal_tag() // FIXME: Also fix and test iterative versions!
+//        typename Order::first()
+//      , ft.root()
+//      , boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
+//      /*, boost::forward_traversal_tag()*/ // FIXME: Also fix and test iterative versions!
 //    );
 //    test_traversal(typename Order::second(), test_list.begin(), test_list.end());
 //    BOOST_CHECK_EQUAL(test_list.size(), 11);
+//    BOOST_CHECK_EQUAL(1, 2);
 //    
-//}
+}
 //
 //BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_copy, Order
 //                             , corresponding_orders )
@@ -170,17 +172,17 @@ BOOST_AUTO_TEST_SUITE_END()
 //    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 //    
 //    boost::tree::copy(typename Order::first(), ft.root(), oc_test_list
-//                    , boost::forward_traversal_tag()); // FIXME: Also fix and test iterative versions!
+//                    /*, boost::forward_traversal_tag()*/); // FIXME: Also fix and test iterative versions!
 //    test_traversal(typename Order::second(), test_list.begin(), test_list.end());
 //    BOOST_CHECK_EQUAL(test_list.size(), 11);
 //    test_list.clear();
 //    
 //    boost::tree::transform(typename Order::first(), ft.root(), oc_test_list
 //                         , std::bind2nd(std::plus<int>(),0)
-//                         , boost::forward_traversal_tag()); // FIXME: Also fix and test iterative versions!
+//                         /*, boost::forward_traversal_tag()*/); // FIXME: Also fix and test iterative versions!
 //    test_traversal(typename Order::second(), test_list.begin(), test_list.end());
 //    BOOST_CHECK_EQUAL(test_list.size(), 11);
 //    
 //}
 //
-//BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()
