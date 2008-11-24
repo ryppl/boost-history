@@ -142,6 +142,7 @@ template <
 >
 struct meta_base_classes
 {
+	typedef Class derived_class;
 	typedef mpl::vector0<> list;
 };
 
@@ -154,6 +155,7 @@ struct meta_base_classes
 		A_CLASS, \
 		detail::default_meta_class_variant \
 	> { \
+		typedef A_CLASS derived_class;\
 		typedef mpl::vector< 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
@@ -210,9 +212,9 @@ struct meta_base_classes
  *  as the only virtual base class of the A_CLASS class
  *  with the ACCESS_SPEC access specifier
  */
-#define BOOST_MIRROR_REG_SINGLE_BASE_CLASS_VIRTUAL(A_CLASS, ACCESS_SPEC, A_BASE_CLASS) \
+#define BOOST_MIRROR_REG_SINGLE_VIRTUAL_BASE_CLASS(A_CLASS, ACCESS_SPEC, A_BASE_CLASS) \
 	BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(A_CLASS) \
-	BOOST_MIRROR_REG_BASE_CLASS_VIRTUAL(0, ACCESS_SPEC, A_BASE_CLASS) \
+	BOOST_MIRROR_REG_VIRTUAL_BASE_CLASS(0, ACCESS_SPEC, A_BASE_CLASS) \
 	BOOST_MIRROR_REG_BASE_CLASSES_END
 
 } // namespace mirror

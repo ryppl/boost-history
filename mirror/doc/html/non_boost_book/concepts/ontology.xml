@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="concept_hierarchy.xsl" ?>
+<concept_ontology>
+	<!-- this file defines the relationships between various
+	   - reflection-related concepts.
+	 -->
+	<concept name="MetaObject">
+	</concept>
+
+	<concept name="MetaNamedObject">
+		<member_function concept="String" name="base_name">
+			<desc>Returns the base name of the reflected entity, <em>without</em> the nested name specifier.</desc>
+		</member_function>
+		<member_function concept="String" name="get_name">
+			<desc>Generic name getter. Returns the base name of the type and allows to select the character type of the returned string, via the type of the char_traits parameter.</desc>
+			<fn_param concept="FalseType" name="full_name"/>
+			<fn_param concept="CharTraits" name="char_traits"/>
+		</member_function>
+	</concept>
+	
+	<concept name="MetaScopedObject">
+		<member_typedef concept="MetaScope" name="scope">
+			<desc>The MetaScope reflecting the scope of the scoped object, reflected by the MetaScopedObject.</desc>
+		</member_typedef>
+	</concept>
+	
+	<concept name="MetaNamedScopedObject">
+		<member_function name="full_name" concept="String" >
+			<desc>Returns the full name of the reflected entity, <em>with</em> the nested name specifier.</desc>
+		</member_function>
+
+		<member_function concept="String" name="get_name" >
+			<desc>Generic name getter. Returns the base or the full name of the type based on the type of the full_name parameter and allows to select the character type of the returned string, (from the supported options) via the type of the char_traits parameter.</desc>
+			<fn_param concept="TrueOrFalseType" name="full_name"/>
+			<fn_param concept="CharTraits" name="char_traits"/>
+		</member_function>
+	</concept>
+	
+	<concept name="MetaScope">
+	</concept>
+
+	<!-- -->
+	<relation_type 
+		name="Generalization" 
+		inverse="Specialization"
+	>
+	</relation_type>
+	<!-- -->
+	<relation_type 
+		name="Specialization" 
+		inverse="Generalization"
+	>
+	</relation_type>
+
+	<!-- MetaNamedObject is MetaObject  -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaNamedObject"
+	>
+	</role>
+
+	<!-- MetaScope is MetaObject  -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaScope"
+	>
+	</role>
+
+	<!-- MetaScopedObject is MetaObject  -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaScopedObject"
+	>
+	</role>
+
+	<concept name="MetaNamedScopedObject">
+	</concept>
+	
+	<!-- MetaNamedScopedObject is MetaNamedObject -->
+	<role 
+		subject="MetaNamedObject" 
+		type="Specialization" 
+		object="MetaNamedScopedObject"
+	>
+	</role>
+
+	<!-- MetaNamedScopedObject is MetaScopedObject -->
+	<role 
+		subject="MetaScopedObject" 
+		type="Specialization" 
+		object="MetaNamedScopedObject"
+	>
+	</role>
+
+
+
+
+	<concept name="MetaNamespace">
+		<member_typedef concept="MetaNamespace" name="scope">
+			<desc>The MetaNamespace reflecting the parent namespace in which the namespace reflected by this MetaNamespace is directly nested.</desc>
+		</member_typedef>
+		<member_typedef concept="mpl::Sequence" name="ancestors">
+			<desc>An mpl::Sequence containing the MetaNamespaces for all the namespaces in which the reflected namespace is directly or indirectly nested.</desc>
+		</member_typedef>
+	</concept>
+
+	<!-- MetaNamespace is MetaNamedScopedObject -->
+	<role 
+		subject="MetaNamedScopedObject" 
+		type="Specialization" 
+		object="MetaNamespace"
+	>
+	</role>
+
+	<!-- MetaNamespace is MetaScope -->
+	<role 
+		subject="MetaScope" 
+		type="Specialization" 
+		object="MetaNamespace"
+	>
+	</role>
+
+	<concept name="MetaType">
+		<member_typedef concept="Type" name="reflected_type">
+			<desc>The type reflected by this MetaType.</desc>
+		</member_typedef>
+	</concept>
+
+	<!-- MetaType is MetaNamedScopedObject -->
+	<role 
+		subject="MetaNamedScopedObject" 
+		type="Specialization" 
+		object="MetaType"
+	>
+	</role>
+
+	<concept name="MetaTypedef">
+	</concept>
+
+	<!-- MetaTypedef is MetaType -->
+	<role 
+		subject="MetaType" 
+		type="Specialization" 
+		object="MetaTypedef"
+	>
+	</role>
+
+	<concept name="MetaTemplate">
+	</concept>
+
+	<!-- MetaTemplate is MetaObject -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaTemplate"
+	>
+	</role>
+
+	<concept name="MetaClass">
+		<member_typedef concept="MetaBaseClasses" name="base_classes">
+			<desc>The sequence of MetaInheritance(s) reflecting the inheritance of the base classes.</desc>
+		</member_typedef>
+		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
+			<desc>The sequence of MetaClassAttribute(s) reflecting the "own" attributes of a class. These are the attributes that are defined directly in the class reflected by this MetaClass, not including the attributes inherited from the base classes.</desc>
+		</member_typedef>
+		<member_typedef concept="MetaClassAttributes" name="meta_all_attributes">
+			<desc>The sequence of MetaClassAttribute(s) reflecting all attributes of a class including the ones inherited from base classes.</desc>
+		</member_typedef>
+		<member_typedef concept="Class" name="reflected_type">
+			<desc>The class reflected by this MetaClass.</desc>
+		</member_typedef>
+	</concept>
+
+	<!-- MetaClass is MetaType -->
+	<role 
+		subject="MetaType" 
+		type="Specialization" 
+		object="MetaClass"
+	>
+	</role>
+
+	<!-- MetaClass is MetaScope -->
+	<role 
+		subject="MetaScope" 
+		type="Specialization" 
+		object="MetaClass"
+	>
+	</role>
+
+	<!-- MetaClass is MetaTemplate -->
+	<role 
+		subject="MetaTemplate" 
+		type="Specialization" 
+		object="MetaClass"
+	>
+	</role>
+
+	<concept name="MetaVariable">
+	</concept>
+
+	<!-- MetaVariable is MetaNamedScopedObject -->
+	<role 
+		subject="MetaNamedScopedObject" 
+		type="Specialization" 
+		object="MetaVariable"
+	>
+	</role>
+
+	<concept name="MetaFunction">
+	</concept>
+
+	<!-- MetaFunction is MetaTemplate -->
+	<role 
+		subject="MetaTemplate" 
+		type="Specialization" 
+		object="MetaFunction"
+	>
+	</role>
+
+	<!-- MetaFunction is MetaScope -->
+	<role 
+		subject="MetaScope" 
+		type="Specialization" 
+		object="MetaFunction"
+	>
+	</role>
+
+	<!-- MetaFunction is MetaNamedScopedObject -->
+	<role 
+		subject="MetaNamedScopedObject" 
+		type="Specialization" 
+		object="MetaFunction"
+	>
+	</role>
+
+	<concept name="MetaFreeFunction">
+	</concept>
+
+	<!-- MetaFreeFunction is MetaFunction -->
+	<role 
+		subject="MetaFunction" 
+		type="Specialization" 
+		object="MetaFreeFunction"
+	>
+	</role>
+
+	<concept name="MetaClassMember">
+		<member_typedef concept="MetaClass" name="scope">
+			<desc>A MetaClass reflecting the class that the class member, reflected by this MetaClassMember, belongs to.</desc>
+		</member_typedef>
+	</concept>
+
+	<!-- MetaClassMember is MetaNamedScopedObject -->
+	<role 
+		subject="MetaNamedScopedObject" 
+		type="Specialization" 
+		object="MetaClassMember"
+	>
+	</role>
+
+	<concept name="MetaInheritance">
+		<member_typedef concept="MetaBaseClasses" name="container">
+			<desc>The list of MetaInhertiance(s) that this MetaInheritance belongs to.</desc>
+		</member_typedef>
+	</concept>
+	
+	<!-- MetaInheritance is MetaObject -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaInheritance"
+	>
+	</role>
+
+	<!-- MetaInheritance is MetaObjectSequenceElement -->
+	<role 
+		subject="MetaObjectSequenceElement" 
+		type="Specialization" 
+		object="MetaInheritance"
+	>
+	</role>
+
+	<concept name="MetaClassAttribute">
+		<member_typedef concept="MetaClassAttributes" name="container">
+			<desc>The sequence of MetaClassAttribute(s) that this MetaClassAttribute belongs to.</desc>
+		</member_typedef>
+		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
+			<desc>Equivalent to container.</desc>
+		</member_typedef>
+		<member_typedef concept="Type" name="type">
+			<desc>The type of the reflected attribute.</desc>
+		</member_typedef>
+		<member_typedef concept="TypeOrTypedefSelector" name="type_or_type">
+			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
+		</member_typedef>
+
+		<member_function concept="Type" name="get">
+			<desc>Generic attribute value getter. Returns the value of the reflected class attribute when given an instance of the class that the attribute belongs to.</desc>
+			<fn_param concept="Class" name="instance"/>
+		</member_function>
+		<member_function concept="TypeReference" name="query">
+			<desc>Generic attribute value query. Stores the value of the reflected class attribute into the instance referred to by dest_ref, when given an instance of the class that the attribute belongs to.</desc>
+			<fn_param concept="Class" name="instance"/>
+			<fn_param concept="TypeReference" name="dest_ref"/>
+		</member_function>
+		<member_function concept="TypeReference" name="query">
+			<desc>Generic attribute value setter. Assigns the new_value to the reflected class attribute, when given an instance of the class that the attribute belongs to.</desc>
+			<fn_param concept="Class" name="instance"/>
+			<fn_param concept="Type" name="new_value"/>
+		</member_function>
+	</concept>
+
+	<!-- MetaClassAttribute is MetaClassMember -->
+	<role 
+		subject="MetaClassMember" 
+		type="Specialization" 
+		object="MetaClassAttribute"
+	>
+	</role>
+
+	<!-- MetaClassAttribute is MetaVariable -->
+	<role 
+		subject="MetaVariable" 
+		type="Specialization" 
+		object="MetaClassAttribute"
+	>
+	</role>
+
+	<!-- MetaClassAttribute is MetaObjectSequenceElement -->
+	<role 
+		subject="MetaObjectSequenceElement" 
+		type="Specialization" 
+		object="MetaClassAttribute"
+	>
+	</role>
+
+	<concept name="MetaClassAttributeTraits">
+		<member_typedef concept="mpl::BooleanIntegralConstant" name="is_static">
+			<desc>Type that indicates whether the class member attribute is static.</desc>
+		</member_typedef>
+		<member_typedef concept="mpl::BooleanIntegralConstant" name="is_mutable">
+			<desc>Type that indicates whether the class member attribute is mutable.</desc>
+		</member_typedef>
+		<member_typedef concept="TypeOrTypedefSelector" name="meta_type_selector">
+			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
+		</member_typedef>
+	</concept>
+
+	<!-- MetaClassAttributeTraits is MetaObject -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaClassAttributeTraits"
+	>
+	</role>
+
+	<concept name="MetaFunctionParameter">
+	</concept>
+
+	<concept name="MetaMemberFunction">
+	</concept>
+
+	<!-- MetaMemberFunction is MetaClassMember -->
+	<role 
+		subject="MetaClassMember" 
+		type="Specialization" 
+		object="MetaMemberFunction"
+	>
+	</role>
+
+	<!-- MetaMemberFunction is MetaFunction -->
+	<role 
+		subject="MetaFunction" 
+		type="Specialization" 
+		object="MetaMemberFunction"
+	>
+	</role>
+
+
+	<concept name="MetaFunctionParameter">
+	</concept>
+
+	<!-- MetaFunctionParameter is MetaVariable -->
+	<role 
+		subject="MetaVariable" 
+		type="Specialization" 
+		object="MetaFunctionParameter"
+	>
+	</role>
+
+	<concept name="MetaObjectSequence">
+	</concept>
+	
+	<!-- MetaObjectSequence is MetaObject -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaObjectSequence"
+	>
+	</role>
+
+	<concept name="MetaObjectSequenceElement">
+		<member_typedef concept="MetaObjectSequence" name="container">
+			<desc>The sequence that this element belongs to.</desc>
+		</member_typedef>
+		<member_typedef concept="mpl::IntegralConstant" name="position">
+			<desc>An mpl::IntegralConstant indicating the position of the reflected element in the container.</desc>
+		</member_typedef>
+	</concept>
+	
+	<!-- MetaObjectSequenceElement is MetaObject -->
+	<role 
+		subject="MetaObject" 
+		type="Specialization" 
+		object="MetaObjectSequenceElement"
+	>
+	</role>
+
+	<concept name="MetaBaseClasses">
+		<member_typedef concept="Class" name="derived_class">
+			<desc>The class which base classes this MetaBaseClasses sequence reflects.</desc>
+		</member_typedef>
+	</concept>
+	
+	<!-- MetaBaseClasses is MetaObjectSequence -->
+	<role 
+		subject="MetaObjectSequence" 
+		type="Specialization" 
+		object="MetaBaseClasses"
+	>
+	</role>
+
+	<concept name="MetaClassAttributes">
+	</concept>
+	
+	<!-- MetaClassAttributes is MetaObjectSequence -->
+	<role 
+		subject="MetaObjectSequence" 
+		type="Specialization" 
+		object="MetaClassAttributes"
+	>
+	</role>
+
+	
+</concept_ontology>

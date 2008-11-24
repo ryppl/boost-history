@@ -1,0 +1,62 @@
+td.mirror-concept {
+	border-style: solid;
+	border-color: #C0C0C0;
+	border-width: 1px;
+	font-weight: bold;
+	text-align: center;
+	width: 200px;
+}
+
+div.table td.mirror-concept {
+	text-align: center;
+}
+
+div.table td.mirror-concepts-leaf-frame {
+	border-style: none;
+	padding: 0;
+}
+
+th.mirror-concepts {
+	background-color: #F0F0F0;
+	border-style: solid;
+	border-color: #C0C0C0;
+	border-width: 1px;
+}
+
+tr a.mirror-concepts {
+	text-decoration: none;
+	cursor: hand;
+}
+
+tr a.mirror-concepts:link {
+	color: black;
+}
+
+tr a.mirror-concepts:visited {
+	color: black;
+}
+
+table.mirror-concepts-node-0 .mirror-concept {
+	background-color: #FFFFF0;
+}
+
+table.mirror-concepts-node-1 .mirror-concept {
+	background-color: #FFFFB0;
+}
+
+table.mirror-concepts-node-2 .mirror-concept {
+	background-color: #FFFF80;
+}
+
+table.mirror-concepts-node-3 .mirror-concept {
+	background-color: #FFFF50;
+}
+
+table.mirror-concepts-node-4 .mirror-concept {
+	background-color: #FFFF20;
+}
+
+table.mirror-concepts-node-5 .mirror-concept {
+	background-color: #F0F000;
+}
+
