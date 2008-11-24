@@ -15,6 +15,7 @@
 	<section id="mirror.concepts.concept_overview">
 	<title>Concept overview</title>
 	<para>
+		For a comprehensive overview of concepts defined by <libraryname>Mirror</libraryname> see the <ulink url="./mirror/non_boost_book/concepts/views/overview/MetaObject.xml">concept browser</ulink>.
 	</para>
 	</section>
 

@@ -25,12 +25,12 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="char_type_switch.reference"></a>Char Type Switch Reference</h2></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="reference.html#id2616538">Header files</a></span></dt></dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#id2552920">Header files</a></span></dt></dl></div>
 <p>
 	</p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2616538"></a>Header files</h3></div></div></div>
+<a name="id2552920"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.char_type_switch.choice.hpp">Header &lt;boost/char_type_switch/choice.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.char_type_switch.char.hpp">Header &lt;boost/char_type_switch/char.hpp&gt;</a></span></dt>
@@ -78,31 +78,31 @@
     <span class="bold"><strong>typedef</strong></span> ::std::basic_ostream&lt;<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>, <a class="link" href="../boost/cts/bchar_traits.html" title="Type definition bchar_traits">bchar_traits</a>&gt; <a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a>;
     <span class="bold"><strong>typedef</strong></span> ::std::basic_iostream&lt;<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>, <a class="link" href="../boost/cts/bchar_traits.html" title="Type definition bchar_traits">bchar_traits</a>&gt; <a class="link" href="../boost/cts/biostream.html" title="Type definition biostream">biostream</a>;
 
-    <span class="emphasis"><em>// <a class="link" href="reference.html#id2412746-bb">free-functions</a></em></span>
-    <span class="type"><a class="link" href="../boost/cts/bistream.html" title="Type definition bistream">bistream</a>&amp;</span> <a class="link" href="reference.html#boost.cts.bcin_id2504683">bcin</a>();
-    <span class="type"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a>&amp;</span> <a class="link" href="reference.html#boost.cts.bcout_id2526780">bcout</a>();
+    <span class="emphasis"><em>// <a class="link" href="reference.html#id2461451-bb">free-functions</a></em></span>
+    <span class="type"><a class="link" href="../boost/cts/bistream.html" title="Type definition bistream">bistream</a>&amp;</span> <a class="link" href="reference.html#boost.cts.bcin_id2461448">bcin</a>();
+    <span class="type"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a>&amp;</span> <a class="link" href="reference.html#boost.cts.bcout_id2527623">bcout</a>();
   }
 }</pre>
 <div class="refsect2" lang="en">
-<a name="id2618041"></a><h3>
-<a name="id2412746-bb"></a><code class="computeroutput"></code> free-functions</h3>
+<a name="id2618191"></a><h3>
+<a name="id2461451-bb"></a><code class="computeroutput"></code> free-functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bistream.html" title="Type definition bistream">bistream</a>&amp;</span> <a name="boost.cts.bcin_id2504683"></a>bcin();</pre>
+<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bistream.html" title="Type definition bistream">bistream</a>&amp;</span> <a name="boost.cts.bcin_id2461448"></a>bcin();</pre>
 <p>Returns a reference to the standard input stream. 
 		</p>
 <p>If <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> is defined as <code class="computeroutput">char</code> then this function returns a reference 
 		to <code class="computeroutput">::std::cin</code>, otherwise if <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> is defined as <code class="computeroutput">wchar_t</code>,
-		then <code class="computeroutput"><a class="link" href="reference.html#boost.cts.bcin_id2504683">bcin</a></code> returns a reference to <code class="computeroutput">::std::wcin</code>.
+		then <code class="computeroutput"><a class="link" href="reference.html#boost.cts.bcin_id2461448">bcin</a></code> returns a reference to <code class="computeroutput">::std::wcin</code>.
 		</p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a>&amp;</span> <a name="boost.cts.bcout_id2526780"></a>bcout();</pre>
+<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a>&amp;</span> <a name="boost.cts.bcout_id2527623"></a>bcout();</pre>
 <p>Returns a reference to the standard output stream. 
 		</p>
 <p>If <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> is defined as <code class="computeroutput">char</code> then this function returns a reference 
 		to <code class="computeroutput">::std::cout</code>, otherwise if <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> is defined as <code class="computeroutput">wchar_t</code>,
-		then <code class="computeroutput"><a class="link" href="reference.html#boost.cts.bcout_id2526780">bcout</a></code> returns a reference to <code class="computeroutput">::std::wcout</code>.
+		then <code class="computeroutput"><a class="link" href="reference.html#boost.cts.bcout_id2527623">bcout</a></code> returns a reference to <code class="computeroutput">::std::wcout</code>.
 		</p>
 </li>
 </ol></div>
@@ -114,19 +114,19 @@
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> cts {
 
-    <span class="emphasis"><em>// <a class="link" href="reference.html#id2485845-bb">free-functions</a></em></span>
-    <span class="type">size_t</span> <a class="link" href="reference.html#boost.cts.bstrlen_id2530021">bstrlen</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*);
-    <span class="type"><span class="bold"><strong>int</strong></span></span> <a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*);
-    <span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a class="link" href="reference.html#boost.cts.bstrcpy_id2442811">bstrcpy</a>(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*);
-    <span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a class="link" href="reference.html#boost.cts.bstrncpy_id2434768">bstrncpy</a>(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, size_t);
+    <span class="emphasis"><em>// <a class="link" href="reference.html#id2537642-bb">free-functions</a></em></span>
+    <span class="type">size_t</span> <a class="link" href="reference.html#boost.cts.bstrlen_id2549268">bstrlen</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*);
+    <span class="type"><span class="bold"><strong>int</strong></span></span> <a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*);
+    <span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a class="link" href="reference.html#boost.cts.bstrcpy_id2464099">bstrcpy</a>(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*);
+    <span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a class="link" href="reference.html#boost.cts.bstrncpy_id2429192">bstrncpy</a>(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*, size_t);
   }
 }</pre>
 <div class="refsect2" lang="en">
-<a name="id2619038"></a><h3>
-<a name="id2485845-bb"></a><code class="computeroutput"></code> free-functions</h3>
+<a name="id2619187"></a><h3>
+<a name="id2537642-bb"></a><code class="computeroutput"></code> free-functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type">size_t</span> <a name="boost.cts.bstrlen_id2530021"></a>bstrlen(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* str);</pre>
+<pre class="literallayout"><span class="type">size_t</span> <a name="boost.cts.bstrlen_id2549268"></a>bstrlen(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* str);</pre>
 <p>Returns the length (the count of characters) of the given string without the terminating null character.
 		</p>
 <p>Calling this function is equivalent to calling <code class="computeroutput">strlen</code> if 
@@ -143,18 +143,18 @@
 int main(void)
 {
 	using namespace ::boost::cts;
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrlen_id2530021">bstrlen</a></code>(<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo")) == 3);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrlen_id2530021">bstrlen</a></code>(<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo")) == <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT_LENGTH.html" title="Macro BOOST_CTS_LIT_LENGTH">BOOST_CTS_LIT_LENGTH</a></code>("foo"));
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrlen_id2549268">bstrlen</a></code>(<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo")) == 3);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrlen_id2549268">bstrlen</a></code>(<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo")) == <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT_LENGTH.html" title="Macro BOOST_CTS_LIT_LENGTH">BOOST_CTS_LIT_LENGTH</a></code>("foo"));
 	//
 	const <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> bar[] = <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("bar");
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrlen_id2530021">bstrlen</a></code>(bar) == 3);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrlen_id2549268">bstrlen</a></code>(bar) == 3);
 	return 0;
 }
 </pre>
 </div>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>int</strong></span></span> <a name="boost.cts.bstrcmp_id2535708"></a>bstrcmp(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* str1, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* str2);</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>int</strong></span></span> <a name="boost.cts.bstrcmp_id2536718"></a>bstrcmp(<span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* str1, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* str2);</pre>
 <p>This function compares the given two strings and returns an integral value that indicates the relationship between them.
 		</p>
 <p>Calling this function is equivalent to calling <code class="computeroutput">strcmp</code> if 
@@ -177,19 +177,19 @@ int main(void)
 	const <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> foo[] = <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo");
 	const <code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> bar[] = <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("bar");
 
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(foo, bar) &gt; 0);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(foo, foo) == 0);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(bar, foo) &lt; 0);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(foo, bar) &gt; 0);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(foo, foo) == 0);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(bar, foo) &lt; 0);
 
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(foo, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("baz")) &gt; 0);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(foo, <code class="computeroutput"><a class="link" href="../BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">BOOST_CTS_STRINGIZE</a></code>(foobar)) &lt;= 0);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(foo, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("baz")) &gt; 0);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(foo, <code class="computeroutput"><a class="link" href="../BOOST_CTS_STRINGIZE.html" title="Macro BOOST_CTS_STRINGIZE">BOOST_CTS_STRINGIZE</a></code>(foobar)) &lt;= 0);
 	return 0;
 }
 </pre>
 </div>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a name="boost.cts.bstrcpy_id2442811"></a>bstrcpy(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* dst, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* src);</pre>
+<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a name="boost.cts.bstrcpy_id2464099"></a>bstrcpy(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* dst, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* src);</pre>
 <p>This function copies <code class="computeroutput">src</code> into <code class="computeroutput">dst</code> including the terminating null character and returns <code class="computeroutput">dst</code>.
 			<code class="computeroutput">dst</code> should not overlap <code class="computeroutput">src</code> in memory.
 		</p>
@@ -210,19 +210,19 @@ int main(void)
 	<code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> aaa[4];
 	<code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> bbb[4];
 
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcpy_id2442811">bstrcpy</a></code>(aaa, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo"));
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcpy_id2442811">bstrcpy</a></code>(bbb, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("bar"));
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(aaa, bbb) != 0);
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcpy_id2464099">bstrcpy</a></code>(aaa, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo"));
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcpy_id2464099">bstrcpy</a></code>(bbb, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("bar"));
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(aaa, bbb) != 0);
 
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcpy_id2442811">bstrcpy</a></code>(bbb, aaa);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(aaa, bbb) == 0);
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcpy_id2464099">bstrcpy</a></code>(bbb, aaa);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(aaa, bbb) == 0);
 	return 0;
 }
 </pre>
 </div>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a name="boost.cts.bstrncpy_id2434768"></a>bstrncpy(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* dst, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* src, size_t num);</pre>
+<pre class="literallayout"><span class="type"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>*</span> <a name="boost.cts.bstrncpy_id2429192"></a>bstrncpy(<a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* dst, <span class="bold"><strong>const</strong></span> <a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a>* src, size_t num);</pre>
 <p>This function copies the first <code class="computeroutput">num</code> characters from <code class="computeroutput">src</code> into <code class="computeroutput">dst</code> and returns <code class="computeroutput">dst</code>.
 		If the end of <code class="computeroutput">src</code> is found before <code class="computeroutput">num</code> characters are copied, <code class="computeroutput">dst</code> is padded with null characters
 		until the count of modified characters reaches <code class="computeroutput">num</code>. If <code class="computeroutput">num</code> is less or equal to the length of <code class="computeroutput">src</code>,
@@ -246,16 +246,16 @@ int main(void)
 	<code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> aaa[size];
 	<code class="computeroutput"><a class="link" href="../boost/cts/bchar.html" title="Type definition bchar">bchar</a></code> bbb[size];
 
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2434768">bstrncpy</a></code>(aaa, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo"), size);
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2434768">bstrncpy</a></code>(bbb, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("bar"), size);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(aaa, bbb) != 0);
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2429192">bstrncpy</a></code>(aaa, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foo"), size);
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2429192">bstrncpy</a></code>(bbb, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("bar"), size);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(aaa, bbb) != 0);
 
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2434768">bstrncpy</a></code>(bbb, aaa, size);
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(aaa, bbb) == 0);
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2429192">bstrncpy</a></code>(bbb, aaa, size);
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(aaa, bbb) == 0);
 
-	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2434768">bstrncpy</a></code>(bbb, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foobar"), size);
+	<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrncpy_id2429192">bstrncpy</a></code>(bbb, <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("foobar"), size);
 	bbb[size-1] = <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>('\0');
-	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2535708">bstrcmp</a></code>(aaa, bbb) == 0);	return 0;
+	assert(<code class="computeroutput"><a class="link" href="reference.html#boost.cts.bstrcmp_id2536718">bstrcmp</a></code>(aaa, bbb) == 0);	return 0;
 }
 </pre>
 </div>
