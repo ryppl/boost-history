@@ -176,6 +176,10 @@
 				RelativePath="..\..\..\src\chrono.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\..\system\src\error_code.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

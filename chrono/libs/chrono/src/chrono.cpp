@@ -29,18 +29,25 @@
 
 namespace
 {
-  double get_nanosecs_per_tic()
+  double get_nanosecs_per_tic( boost::system::error_code & ec )
   {
     LARGE_INTEGER freq;
     if ( !QueryPerformanceFrequency( &freq ) )
     {
-      throw
-        std::runtime_error( "monotonic_clock: QueryPerformanceFrequency failed" );
+      if ( &ec == &boost::system::throws )
+        throw
+          std::runtime_error( "monotonic_clock: QueryPerformanceFrequency failed" );
+      return -1.0;
     }
+    if ( &ec != &boost::system::throws ) ec.clear();
     return 1000000000.0L / freq.QuadPart;
   }
 
-  double nanosecs_per_tic = get_nanosecs_per_tic();
+  inline double nanosecs_per_tic( boost::system::error_code & ec )
+  {
+    static double ns_per_tic = get_nanosecs_per_tic(ec);
+    return ns_per_tic;
+  }
 }
 
 namespace boost
@@ -48,24 +55,29 @@ namespace boost
 namespace chrono
 {
 
-  monotonic_clock::time_point monotonic_clock::now()
+  monotonic_clock::time_point monotonic_clock::now( system::error_code & ec )
   {
     LARGE_INTEGER pcount;
+    pcount.QuadPart = 1LL;  // just in case nanosecs_per_tic(ec) fails 
     if ( !QueryPerformanceCounter( &pcount ) )
     {
+      if ( &ec == &system::throws )
         throw
           std::runtime_error( "monotonic_clock: QueryPerformanceCounter failed" );
-    }
+      return time_point(duration(
+        static_cast<monotonic_clock::rep>(-1.0) ));
+   }
 
+    if ( &ec != &system::throws ) ec.clear();
     return time_point(duration(
-      static_cast<monotonic_clock::rep>(nanosecs_per_tic * pcount.QuadPart) ));
+      static_cast<monotonic_clock::rep>(nanosecs_per_tic(ec) * pcount.QuadPart) ));
   }
 
-
-  system_clock::time_point system_clock::now()
+  system_clock::time_point system_clock::now( system::error_code & ec )
   {
     FILETIME ft;
     ::GetSystemTimeAsFileTime( &ft );  // never fails
+    if ( &ec != &system::throws ) ec.clear();
     return time_point(duration(
       (static_cast<__int64>( ft.dwHighDateTime ) << 32) | ft.dwLowDateTime));
   }

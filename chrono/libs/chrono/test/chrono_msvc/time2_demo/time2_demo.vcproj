@@ -173,6 +173,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\system\src\error_code.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\example\time2_demo.cpp"
 				>
 			</File>

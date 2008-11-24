@@ -22,8 +22,6 @@ namespace boost
 //                                 timer                                           //
 //---------------------------------------------------------------------------------//
 
-// TODO: enable commented out ec
-
     template <class Clock>
     class timer
     {
@@ -38,10 +36,10 @@ namespace boost
      ~timer() {}  // never throws
 
       void start( system::error_code & ec = system::throws )
-        { m_start = clock::now(/*ec*/); }
+        { m_start = clock::now( ec ); }
 
       duration elapsed( system::error_code & ec = system::throws )
-        { return clock::now(/*ec*/) - m_start; }
+        { return clock::now( ec ) - m_start; }
 
     private:
       time_point m_start;

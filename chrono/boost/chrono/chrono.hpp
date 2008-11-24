@@ -25,6 +25,36 @@ time2_demo contained this comment:
                    Anthony Williams.
 */
 
+/*
+
+TODO:
+
+  * Fully implement error handling, with test cases.
+  * Use boost::throw_exception. (Currently not used because of an issue with Intel 11.0.)
+  * Consider issues raised by Michael Marcin:
+
+    > In the past I've seen QueryPerformanceCounter give incorrect results,
+    > especially with SpeedStep processors on laptops. This was many years ago and
+    > might have been fixed by service packs and drivers.
+    >
+    > Typically you check the results of QPC against GetTickCount to see if the
+    > results are reasonable.
+    > http://support.microsoft.com/kb/274323
+    >
+    > I've also heard of problems with QueryPerformanceCounter in multi-processor
+    > systems.
+    >
+    > I know some people SetThreadAffinityMask to 1 for the current thread call
+    > their QueryPerformance* functions then restore SetThreadAffinityMask. This
+    > seems horrible to me because it forces your program to jump to another
+    > physical processor if it isn't already on cpu0 but they claim it worked well
+    > in practice because they called the timing functions infrequently.
+    >
+    > In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for
+    > high resolution timers to avoid these issues.
+
+*/
+
 #ifndef BOOST_CHRONO_HPP
 #define BOOST_CHRONO_HPP
 
@@ -35,6 +65,7 @@ time2_demo contained this comment:
 #include <boost/chrono/config.hpp>
 #include <boost/ratio.hpp>
 #include <boost/type_traits/common_type.hpp>
+#include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -403,7 +434,7 @@ namespace chrono {
                   || (ratio_divide<Period2, period>::type::den == 1
                     && !treat_as_floating_point<Rep2>::value)
               >::type* = 0)
-#ifdef __GNUC__
+#ifdef        __GNUC__
               // GCC 4.2.4 refused to accept a definition at this point,
               // yet both VC++ 9.0 SP1 and Intel ia32 11.0 accepted the definition
               // without complaint. VC++ 9.0 SP1 refused to accept a later definition,
@@ -877,7 +908,7 @@ template <class Clock, class Duration>
       typedef chrono::time_point<system_clock>     time_point;
       static const bool is_monotonic =             false;
 
-      static time_point  now();
+      static time_point  now( system::error_code & ec = system::throws );
 
       static std::time_t to_time_t(const time_point& t);
       static time_point  from_time_t(std::time_t t);
@@ -896,7 +927,7 @@ template <class Clock, class Duration>
       typedef chrono::time_point<monotonic_clock>  time_point;
       static const bool is_monotonic =             true;
 
-      static time_point now();
+      static time_point now( system::error_code & ec = system::throws );
   };
 
 //----------------------------------------------------------------------------//
@@ -909,6 +940,7 @@ template <class Clock, class Duration>
 
 //----------------------------------------------------------------------------//
 //                 duration constructor implementation                        //
+//              See comment in the class duration synopsis                    //
 //----------------------------------------------------------------------------//
 
 #ifdef __GNUC__
