@@ -66,8 +66,8 @@ Distributed under the Boost Software License, Version 1.0.
 The Interval Template Library (ITL) offers *intervals* and two kinds of 
 interval containers: *interval_sets* and *interval_maps*.
 
-An [classref boost::itl::interval_base_set interval_set] implements a set as a set of intervals.[br]
-An [classref boost::itl::interval_base_map interval_map] implements a map as a map of interval value pairs.
+An [classref boost::itl::interval_base_set interval_set] implements a set as a /*set*/ of intervals.[br]
+An [classref boost::itl::interval_base_map interval_map] implements a map as a /*map*/ of interval value pairs.
 
 [classref boost::itl::interval_base_set Interval_sets] and 
 [classref boost::itl::interval_base_map interval_maps] thus expose two different aspects in
@@ -77,7 +77,7 @@ is the more specific and ['implementation related aspect]. In practice both
 aspects are useful and are therefore supported. 
 
 Working with interval_sets and interval_maps can be 
-beneficial whenever in a given problem domain the elements of 
+beneficial whenever the elements of 
 sets appear in contiguous chunks: intervals. This is obviously the 
 case in many problem domains, namely in fields that deal with problems 
 related to date and time. 
