@@ -9,7 +9,7 @@
 		<xsl:param name="caption"/>
 		<xsl:param name="depth">0</xsl:param>
 		<xsl:param name="part">both</xsl:param>
-		<xsl:variable name="ontology_src"><xsl:value-of select="'../../ontology.xml'"/></xsl:variable>
+		<xsl:variable name="ontology_src"><xsl:value-of select="'../ontology.xml'"/></xsl:variable>
 		<xsl:variable name="inverse-role"><xsl:value-of select="document($ontology_src)/concept_ontology/relation_type[@name=$role]/@inverse"/></xsl:variable>
 		
 		<xsl:element name="table">
