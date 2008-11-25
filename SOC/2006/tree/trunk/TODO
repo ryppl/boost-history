@@ -14,14 +14,12 @@
 [section TODO]
 
 General:
-* Fix iterator tests.
-* Add forest cursor algorithms for postorder.
+* Fix forest copy
+* Fix cursor archetypes: *order copy checks don't compile
+* Implement forest_tree::insert_above.
+* Revisit namespaces.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
 * Redo testing. Right now, it's just chaotic.
-* Fix algorithms for use with forest:
-  * Recursive preorder: OK.
-  * Recursive postorder: TBD.
-  * Iterative pre- and postorder: TBD.
 * Implement a real output cursor (if possible) and use copy(preorder(), ...) to build a new tree.
   Then, do some performance measurements comparing
   * Different *orders;
@@ -29,7 +27,6 @@ General:
   * cursor and iterator based algorithms (from Boost.Tree and the STL, respectively)
   Do these measurements also with algorithms other than copy.
 * Test cursor adaptors wrapped around output cursors!
-* Add tests for copy involving a second tree cursor (not just a cursor adaptor).
 * Think of a couple good examples (draw inspiration eg from Wikipedia: Tree traversal
   or CRLS) and include them in the docs. Maybe move some files from libs/test to
   example.
@@ -118,6 +115,7 @@ Ask on the mailing list:
 
 Proposal:
 
+* Can we just build the proposal from doxygen and quickbook parts?
 * Change parity/parent complexity requirements at least for binary_tree::cursor? - See newsgroup thread.
 * Change complexity requirements for * order end() to constant? We're using root(), and
   for postorder begin() - which is also root() - it's already constant. Then again, how much

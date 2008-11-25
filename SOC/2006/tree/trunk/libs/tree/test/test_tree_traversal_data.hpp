@@ -25,8 +25,8 @@ struct test_binary_tree_fixture {
         // Just to make sure we won't be getting any false positives when 
         // copying test_tree1 to test_tree2, we'll change one of test_tree2's
         // values.
-//        d = d.begin().end().begin().begin();
-//        ++*d;
+        d = d.begin().end().begin().begin();
+        *d = T(29);
     }
     
     // Test data from http://en.wikipedia.org/wiki/Image:Binary_search_tree.svg
@@ -65,6 +65,22 @@ struct test_binary_tree_fixture {
         BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 13);
         BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 11); 
         BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 12); //Leaf
+    }
+
+    static void validate_test_dataset1_minus_1_tree(boost::tree::binary_tree<T>& ret)
+    {
+        BOOST_CHECK_EQUAL(*ret.root().begin(), 7);
+        BOOST_CHECK_EQUAL(*ret.root().begin().begin(), 2);    
+        BOOST_CHECK_EQUAL(*ret.root().begin().begin().begin(), 0);  //Leaf
+        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin(), 5);        
+        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin().begin(), 3); //Leaf
+        BOOST_CHECK_EQUAL(*ret.root().begin().end().end().begin(), 6); //Leaf
+    
+        BOOST_CHECK_EQUAL(*ret.root().end().begin(), 9);
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin(), 13);
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 12);
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 10); 
+        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 11); //Leaf
     }
     
     boost::tree::binary_tree<T> bt, bt2;

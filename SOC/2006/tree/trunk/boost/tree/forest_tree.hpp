@@ -145,6 +145,9 @@ index(forest_cursor<Cursor> const& cur)
     return cur.index();
 }
 
+/// Use natural forest_tree-binary_tree correspondence:
+/// Preoder - preorder
+
 template <class Cursor, class Op>
 Op for_each(preorder, forest_cursor<Cursor> s, Op f)
 {
@@ -163,6 +166,25 @@ OutCursor copy (preorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t)
     return copy(preorder(), InCursor(s), InCursor(t));
 }
 
+/// Postoder - inorder
+
+template <class Cursor, class Op>
+Op for_each(postorder, forest_cursor<Cursor> s, Op f)
+{
+    return for_each(inorder(), Cursor(s), f);
+}
+
+template <class InCursor, class OutCursor, class Op>
+OutCursor transform (postorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t, Op op)
+{
+    return transform(inorder(), InCursor(s), InCursor(t), op);
+}
+
+template <class InCursor, class OutCursor>
+OutCursor copy (postorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t)
+{
+    return copy(inorder(), InCursor(s), InCursor(t));
+}
 
 } // namespace tree
 } // namespace boost

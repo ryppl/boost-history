@@ -223,6 +223,8 @@ BOOST_AUTO_TEST_CASE( copy_constructor_test )
 
 BOOST_AUTO_TEST_CASE( comparison_operator_test )
 {
+    *bt2.root().begin().end().begin().begin()
+        = *bt.root().begin().end().begin().begin();
     BOOST_CHECK(bt == bt2);
 }
 

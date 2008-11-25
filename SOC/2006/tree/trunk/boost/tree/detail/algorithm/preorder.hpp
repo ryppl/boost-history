@@ -9,8 +9,6 @@
  * Subtree preorder traversal algorithms
  */
 
-// TODO: concept checks.
-
 #ifndef BOOST_TREE_DETAIL_ALGORITHM_PREORDER_HPP
 #define BOOST_TREE_DETAIL_ALGORITHM_PREORDER_HPP
 

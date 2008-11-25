@@ -25,74 +25,41 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE( iterator_algorithms_test, test_binary_tree_with_list_fixture<int> )
 
-template <class Order, class Cursor>
-void compare_cursor_to_iterator_traversal(Order, Cursor cur) {    
-    std::list<int> test_list;
-    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-    typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
-    back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
-    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
-    
-    boost::tree::copy(Order(), cur, oc_test_list);
-    
-    // Are the elements accessed in the correct order?
-    BOOST_CHECK(std::equal( boost::tree::begin(Order(), cur)
-                          , boost::tree::end(Order(), cur)
-                          , test_list.begin()
-                            ));
-
-    // Does end() mark the right element? 
-    BOOST_CHECK(std::distance(boost::tree::begin(Order(), cur)
-                            , boost::tree::end(Order(), cur)) == 
-                std::distance(test_list.begin(), test_list.end()));
-
-    // Reverse order.
-    BOOST_CHECK(std::equal(boost::tree::rbegin(Order(), cur)
-                         , boost::tree::rend(Order(), cur)
-                         , test_list.rbegin()
-                            ));
-
-    BOOST_CHECK(std::distance(boost::tree::rbegin(Order(), cur)
-                            , boost::tree::rend(Order(), cur)) == 
-                std::distance(test_list.rbegin(), test_list.rend()));                    
-
-}
-
-template <class Cursor, class Op>
-void underefed_for_each_recursive(Cursor s, Op& f)
-{
-    Cursor t = s.end();
-    f(s);            // Caution: f(s) comes before s.to_begin(), as opposed to
-    s.to_begin();    // "normal" preorder for_each
-    do
-        if (!s.empty())
-            underefed_for_each_recursive(s, f);
-    while (s++ != t);
-}
-
-template <class Cursor, class Op>
-Op underefed_for_each(Cursor s, Op f)
-{
-    Cursor t = s.end();
-    f(s);            // Caution: f(s) comes before s.to_begin(), as opposed to
-    s.to_begin();    // "normal" preorder for_each
-    do
-        if (!s.empty())
-            underefed_for_each_recursive(s, f);
-    while (s++ != t);
-
-    return f;
-}
-
-template <class Order>
-void comparisons_using_ac(binary_tree<int>::cursor c) {
-    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(c));
-}
-
-template <class Order>
-void comparisons_using_rtc(binary_tree<int>::cursor c) {
-    compare_cursor_to_iterator_traversal(Order(), c);
-}
+//template <class Cursor, class Op>
+//void underefed_for_each_recursive(Cursor s, Op& f)
+//{
+//    Cursor t = s.end();
+//    f(s);            // Caution: f(s) comes before s.to_begin(), as opposed to
+//    s.to_begin();    // "normal" preorder for_each
+//    do
+//        if (!s.empty())
+//            underefed_for_each_recursive(s, f);
+//    while (s++ != t);
+//}
+//
+//template <class Cursor, class Op>
+//Op underefed_for_each(Cursor s, Op f)
+//{
+//    Cursor t = s.end();
+//    f(s);            // Caution: f(s) comes before s.to_begin(), as opposed to
+//    s.to_begin();    // "normal" preorder for_each
+//    do
+//        if (!s.empty())
+//            underefed_for_each_recursive(s, f);
+//    while (s++ != t);
+//
+//    return f;
+//}
+//
+//template <class Order>
+//void comparisons_using_ac(binary_tree<int>::cursor c) {
+//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(c));
+//}
+//
+//template <class Order>
+//void comparisons_using_rtc(binary_tree<int>::cursor c) {
+//    compare_cursor_to_iterator_traversal(Order(), c);
+//}
 
 /** 
  * Check all iterator traversals by comparing them to a recursive cursor
@@ -102,7 +69,10 @@ void comparisons_using_rtc(binary_tree<int>::cursor c) {
  * 
  * Afterwards, do all that using iterators wrapped around
  * "explicit stack"-based cursors also.
- */ 
+ * 
+ * FIXME: This depends too much on the correct behavior of cursor algorithms.
+ * Do check algorithms, but with ready-made, differently shaped trees. 
+ */
 //void compare_cursor_to_iterator_traversal() {
 //BOOST_AUTO_TEST_CASE_TEMPLATE( compare_cursor_to_iterator_traversal_test, Order, orders )
 //{
@@ -157,27 +127,16 @@ void comparisons_using_rtc(binary_tree<int>::cursor c) {
 //    underefed_for_each(test_tree2.root(), comparisons_using_rtc<Order>);
 //}
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_algorithms, Order, orders )
 {
-    typedef boost::tree::binary_tree<int>::cursor cursor;
-   
-//    std::list<int> test_list;
-//    
-//    // TODO: Put this into a better testing context.
-//    boost::tree::for_each(preorder(), 
-//        test_tree.root(), 
-//        boost::lambda::bind(&std::list<int>::push_back, &test_list, boost::lambda::_1)
-//    );
-//    BOOST_CHECK(test_list.empty());
-
-    test_traversal(Order(), begin(Order(), bt.root()),
-                              end(Order(), bt.root()));
+    test_traversal(Order(), begin(Order(), bt.root())
+                          , end(Order(), bt.root()));
 
     test_reverse_traversal(Order(), end(Order(), bt.root())
                                   , begin(Order(), bt.root()));
                                     
-    BOOST_CHECK(std::distance(begin(Order(), bt.root()) 
-                            , end(Order(), bt.root())) == 11);
+    BOOST_CHECK_EQUAL(std::distance(begin(Order(), bt.root()) 
+                                  , end(Order(), bt.root())), 11);
 
     // TODO: Also check with binary_tree-specialized inorder begin()!
 
@@ -187,16 +146,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_algorithms, Order, orders )
                           , end(Order(), make_ascending_cursor(bt.root())));
     test_reverse_traversal(Order(), end(Order(), make_ascending_cursor(bt.root()))
                                   , begin(Order(), make_ascending_cursor(bt.root())));
-// TODO: Move to other unit
-    //Ascending iterator.
-//    binary_tree<int>::cursor c = test_tree.root();
-//    boost::tree::iterator<ascending, binary_tree<int>::cursor> ai_root(c);
-//    c = c.begin().end().begin().begin();
+    BOOST_CHECK_EQUAL(std::distance(
+                        begin(Order(), make_ascending_cursor(bt.root())) 
+                      , end(Order(), make_ascending_cursor(bt.root()))), 11);
+}
+
+//BOOST_AUTO_TEST_CASE( test_ascending_iterator_algorithms )
+//{
+//    binary_tree<int>::cursor c = bt.root();
+//    typedef boost::tree::iterator<ascending, binary_tree<int>::cursor> ai;
+//    c.to_begin().to_end().to_begin().to_begin();
 //    BOOST_CHECK_EQUAL(*c, 4);
 //
-//    boost::tree::iterator<ascending, binary_tree<int>::cursor> ais(c);
-//    test_traversal_from_leaf4(ais, ai_root);
-
-}
+//    test_traversal_from_leaf4(ai(c), ai(bt.root()));
+//}
 
 BOOST_AUTO_TEST_SUITE_END()

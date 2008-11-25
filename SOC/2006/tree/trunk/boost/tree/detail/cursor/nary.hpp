@@ -207,8 +207,8 @@ public:
         p_node->m_parent = m_node;
         
         // Only forest-relevant:
-        p_node->operator[](1) = m_node->operator[](m_pos);
-        m_node->operator[](m_pos)->m_parent = p_node;
+//        p_node->operator[](1) = m_node->operator[](m_pos);
+//        m_node->operator[](m_pos)->m_parent = p_node;
         
         m_node->operator[](m_pos) = p_node;
     }

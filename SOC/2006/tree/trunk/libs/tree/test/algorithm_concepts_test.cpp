@@ -38,7 +38,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders )
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, Order, orders )
 //{
-////    boost::detail::dummy_constructor dummy_cons;
 //    cursor_archetype< boost::null_archetype<>
 //                      , boost::iterator_archetypes::readable_lvalue_iterator_t // Really lvalue?
 //                      , boost::forward_traversal_tag
