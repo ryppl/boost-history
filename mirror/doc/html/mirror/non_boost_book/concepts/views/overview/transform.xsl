@@ -158,7 +158,7 @@
 		<xsl:variable name="concept" select="@name"/>
 
 		<!-- make the genealization/specialization "graph" -->
-		<div >
+		<div>
 		<p class="title"><b>The direct and indirect generalizations and specializations of the <code><xsl:value-of select="@name"/></code> concept.</b></p>
 		<xsl:call-template name="make-graph">
 			<xsl:with-param name="concept" select="$concept"/>
@@ -175,6 +175,11 @@
 
 	</xsl:template>
 
-	<!-- -->
+	<!-- the template for the concept index node -->
+	<xsl:template match="/concept_index">
+		<div class="table">
+		</div>
+	</xsl:template>
+
 
 </xsl:stylesheet>
