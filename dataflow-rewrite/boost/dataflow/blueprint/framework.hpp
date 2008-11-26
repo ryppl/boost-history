@@ -10,7 +10,7 @@
 #define BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_HPP
 
 
-#include <boost/dataflow/blueprint/framework_object_fwd.hpp>
+#include <boost/dataflow/blueprint/framework_context_fwd.hpp>
 #include <boost/dataflow/blueprint/operation.hpp>
 #include <boost/dataflow/generic/framework.hpp>
 #include <boost/mpl/bool.hpp>
@@ -22,8 +22,8 @@ namespace boost { namespace dataflow { namespace blueprint {
 template<typename Framework> struct framework : public Framework
 {
     typedef Framework framework_type;
-    typedef framework_object<Framework> framework_object_type;
-    typedef typename has_framework_object<Framework>::type framework_has_object;
+    typedef framework_context<Framework> framework_context_type;
+    typedef typename has_framework_context<Framework>::type framework_has_object;
     typedef mpl::vector<operation> operations;
 };
 

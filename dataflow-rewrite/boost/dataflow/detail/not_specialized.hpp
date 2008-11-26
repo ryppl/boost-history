@@ -1,24 +1,24 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2007,2008 Stjepan Rajko
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-
-#include "my_blueprint_ports.hpp"
-
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#ifndef BOOST__DATAFLOW__DETAIL__NOT_SPECIALIZED_HPP
+#define BOOST__DATAFLOW__DETAIL__NOT_SPECIALIZED_HPP
 
 
-namespace df = boost::dataflow;
+namespace boost { namespace dataflow {
 
-BOOST_AUTO_TEST_CASE( test ) 
-{
-    my_blueprint_framework_context fo;
-    
-    my_blueprint_port_producer producer(fo);
-    my_blueprint_port_consumer consumer(fo);
+namespace detail {
+
+    struct not_specialized
+    {};
+
 }
+
+}}
+
+#endif // BOOST__DATAFLOW__DETAIL__NOT_SPECIALIZED_HPP

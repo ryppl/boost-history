@@ -13,7 +13,7 @@
 #include <boost/dataflow/generic/port_binary_operation.hpp>
 #include <boost/dataflow/generic/framework_entity/traits_of.hpp>
 #include <boost/dataflow/blueprint/framework.hpp>
-#include <boost/dataflow/blueprint/framework_object.hpp>
+#include <boost/dataflow/blueprint/framework_context.hpp>
 #include <boost/dataflow/blueprint/operation.hpp>
 #include <boost/assert.hpp>
 
@@ -33,8 +33,8 @@ struct port_binary_operation_impl<Traits1, Traits2, blueprint::operation,
     template<typename Port1, typename Port2>
     boost::any operator()(Port1 &port1, Port2 &port2, const blueprint::operation &operation)
     {
-        BOOST_ASSERT(port1.framework_object() == port2.framework_object());
-        return port1.framework_object().port_binary_operation(port1, port2, operation);
+        BOOST_ASSERT(port1.framework_context() == port2.framework_context());
+        return port1.framework_context().port_binary_operation(port1, port2, operation);
     }
 };
 
@@ -52,8 +52,8 @@ struct port_binary_operation_will_succeed_impl<Traits1, Traits2, blueprint::oper
     template<typename Port1, typename Port2>
     bool operator()(Port1 &port1, Port2 &port2, const blueprint::operation &operation)
     {
-        BOOST_ASSERT(port1.framework_object() == port2.framework_object());
-        return port1.framework_object().port_binary_operation_will_succeed(port1, port2, operation);
+        BOOST_ASSERT(port1.framework_context() == port2.framework_context());
+        return port1.framework_context().port_binary_operation_will_succeed(port1, port2, operation);
     }
 };
 

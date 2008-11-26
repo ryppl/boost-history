@@ -8,3 +8,4 @@
 
 
 exe vivid_graph_example : vivid_graph_example.cpp /boost_guigl//boost_guigl/<link>static ;
+exe vivid_managed_example : vivid_managed_example.cpp /boost_guigl//boost_guigl/<link>static ;

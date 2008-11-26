@@ -20,4 +20,5 @@ run test_port_binary_operation.cpp ;
 run test_operation.cpp ;
 
 run test_static_vector.cpp ;
+run test_dynamic_vector.cpp ;
 run test_get_port.cpp ;

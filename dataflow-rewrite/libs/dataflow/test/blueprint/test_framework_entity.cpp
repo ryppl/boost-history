@@ -21,7 +21,7 @@ namespace df = boost::dataflow;
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    my_blueprint_framework_object fo;
+    my_blueprint_framework_context fo;
 
     my_port_producer p;
     df::blueprint::framework_entity_adapter<my_blueprint_framework, my_port_producer &> ref_entity(fo, p);

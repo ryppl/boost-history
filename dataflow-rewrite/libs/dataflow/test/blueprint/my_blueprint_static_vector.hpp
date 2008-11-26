@@ -7,12 +7,6 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/blueprint/framework.hpp>
-#include <boost/dataflow/blueprint/framework_context.hpp>
+#include "my_blueprint_framework.hpp"
+#include "../generic/my_static_vector.hpp"
 
-#include "../generic/my_framework.hpp"
-
-namespace df = boost::dataflow;
-
-typedef df::blueprint::framework<my_framework> my_blueprint_framework;
-typedef df::blueprint::framework_context<my_blueprint_framework> my_blueprint_framework_context;

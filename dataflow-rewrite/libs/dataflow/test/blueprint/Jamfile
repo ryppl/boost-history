@@ -13,5 +13,6 @@ run test_port.cpp ;
 run test_port_binary_operation.cpp ;
 run test_port_binary_operation_implementation.cpp ;
 run test_operation.cpp ;
-run test_framework_object.cpp ;
+run test_static_vector.cpp ;
+run test_framework_context.cpp ;
 run test_factory.cpp ;

@@ -7,48 +7,45 @@
 -----------------------------------------------===============================*/
 
 
-#ifndef BOOST__DATAFLOW__GENERIC__STATIC_VECTOR__TRAITS_HPP
-#define BOOST__DATAFLOW__GENERIC__STATIC_VECTOR__TRAITS_HPP
+#ifndef BOOST__DATAFLOW__GENERIC__DYNAMIC_VECTOR__TRAITS_HPP
+#define BOOST__DATAFLOW__GENERIC__DYNAMIC_VECTOR__TRAITS_HPP
 
 #include <boost/dataflow/generic/framework_entity/traits.hpp>
 #include <boost/mpl/is_sequence.hpp>
 
 namespace boost { namespace dataflow {
 
-template<typename EntitySequence, typename Framework=default_framework>
-struct static_vector_traits
+template<typename Entity, typename Framework=default_framework>
+struct dynamic_vector_traits
     : public traits<Framework>
 {
-    typedef EntitySequence entity_sequence;
-    BOOST_MPL_ASSERT(( mpl::is_sequence<EntitySequence> ));
+    typedef Entity entity;
 };
 
 /// Boolean Metafunction determining whether a type is a PortTraits.
 template<typename StaticVectorTraits, typename Enable=detail::enable_guard>
-struct is_static_vector_traits : public mpl::false_
+struct is_dynamic_vector_traits : public mpl::false_
 {
     /// INTERNAL ONLY
     BOOST_MPL_ASSERT(( is_same<Enable, detail::enable_guard> ));
 };
 
 /// INTERNAL ONLY
-template<typename StaticVectorTraits>
-struct is_static_vector_traits<StaticVectorTraits,
+template<typename DynamicVectorTraits>
+struct is_dynamic_vector_traits<DynamicVectorTraits,
     typename utility::enable_if_type<
         utility::all_of<
-            typename StaticVectorTraits::framework,
-            typename StaticVectorTraits::entity_sequence
+            typename DynamicVectorTraits::framework,
+            typename DynamicVectorTraits::entity
         >,
         detail::enable_guard
     >::type>
  : public mpl::true_
 {
     /// INTERNAL ONLY
-    BOOST_MPL_ASSERT(( is_framework<typename StaticVectorTraits::framework>));
-    /// INTERNAL ONLY
-    BOOST_MPL_ASSERT(( mpl::is_sequence<typename StaticVectorTraits::entity_sequence> ));
+    BOOST_MPL_ASSERT(( is_framework<typename DynamicVectorTraits::framework>));
 };
 
 } } // namespace boost::dataflow
 
-#endif // BOOST__DATAFLOW__GENERIC__STATIC_VECTOR_HPP
+#endif // BOOST__DATAFLOW__GENERIC__DYNAMIC_VECTOR__TRAITS_HPP

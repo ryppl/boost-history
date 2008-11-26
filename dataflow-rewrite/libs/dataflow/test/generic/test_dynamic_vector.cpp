@@ -7,12 +7,18 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/blueprint/framework.hpp>
-#include <boost/dataflow/blueprint/framework_context.hpp>
+#include "my_dynamic_vector.hpp"
+#include <boost/type_traits/is_same.hpp>
 
-#include "../generic/my_framework.hpp"
 
-namespace df = boost::dataflow;
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
-typedef df::blueprint::framework<my_framework> my_blueprint_framework;
-typedef df::blueprint::framework_context<my_blueprint_framework> my_blueprint_framework_context;
+namespace df=boost::dataflow;
+
+
+BOOST_AUTO_TEST_CASE( test )
+{
+    my_dynamic_vector v;
+    BOOST_CHECK_EQUAL(&df::entities(v), &v.ports);
+}

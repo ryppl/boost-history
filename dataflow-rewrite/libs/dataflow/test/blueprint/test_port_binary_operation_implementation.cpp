@@ -39,7 +39,7 @@ namespace df = boost::dataflow;
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    my_blueprint_framework_object fo;
+    my_blueprint_framework_context fo;
 
     my_blueprint_port_producer producer(fo);
     my_blueprint_port_consumer consumer(fo);

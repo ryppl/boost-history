@@ -29,6 +29,12 @@ namespace detail {
         typedef typename is_same<Framework, typename mpl::at_c<typename T::dataflow_traits, N>::type::tag>::type type;
     };
     
+    template<int Iteration, typename Sequence>
+    struct lazy_is_less_than_size
+    {
+        typedef typename mpl::less<mpl::int_<Iteration>, typename mpl::size<Sequence>::type>::type type;
+    };
+    
 }
 
 } }
@@ -50,10 +56,7 @@ struct traits_of<
     typename enable_if<
         mpl::and_<
             mpl::is_sequence<typename T::dataflow_traits>,
-            typename mpl::less<
-                mpl::int_<BOOST_PP_ITERATION()>,
-                typename mpl::size<typename T::dataflow_traits>::type
-            >::type,
+            detail::lazy_is_less_than_size<BOOST_PP_ITERATION(), typename T::dataflow_traits>,
             detail::lazy_is_same_traits_tag<Framework, T, BOOST_PP_ITERATION()>
         >
     >::type

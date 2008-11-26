@@ -15,15 +15,11 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/dataflow/generic/framework_entity/default_framework_of.hpp>
 #include <boost/dataflow/generic/framework_entity/traits_of.hpp>
+#include <boost/dataflow/detail/not_specialized.hpp>
+
+
 #include <boost/dataflow/generic/port/port.hpp>
 namespace boost { namespace dataflow {
-
-namespace detail {
-
-    struct not_specialized
-    {};
-
-}
 
 namespace extension
 {

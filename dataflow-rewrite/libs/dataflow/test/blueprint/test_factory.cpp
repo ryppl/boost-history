@@ -23,9 +23,9 @@ BOOST_AUTO_TEST_CASE( test )
     df::blueprint::factory<my_blueprint_framework> factory;
     factory.add_port<my_port_producer>("my_port_producer");
     
-    df::blueprint::framework_object<my_blueprint_framework> fo;
+    df::blueprint::framework_context<my_blueprint_framework> fo;
     df::blueprint::framework_entity<my_blueprint_framework> *entity = factory["my_port_producer"](fo);
     
-    BOOST_CHECK_EQUAL(&entity->framework_object(), &fo);
+    BOOST_CHECK_EQUAL(&entity->framework_context(), &fo);
     BOOST_CHECK(entity->type_info() == typeid(my_port_producer));
 }

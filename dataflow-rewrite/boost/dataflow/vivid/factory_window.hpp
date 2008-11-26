@@ -1,57 +1,81 @@
-// Copyright 2007 Stjepan Rajko.
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=================================---------------------------------------------
+    Copyright 2007,2008 Stjepan Rajko
+  
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
+
+#ifndef BOOST__DATAFLOW__VIVID__FACTORY_WINDOW_HPP
+#define BOOST__DATAFLOW__VIVID__FACTORY_WINDOW_HPP
 
 
-#ifndef BLUEPRINT_COMPONENT_BANK_HPP
-#define BLUEPRINT_COMPONENT_BANK_HPP
+#include <boost/dataflow/blueprint/factory.hpp>
 
-#include <boost/dataflow/blueprint/component_bank.hpp>
-#include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/guigl/window.hpp>
+#include <boost/guigl/widget/labeled_button.hpp>
+#include <boost/guigl/widget/label.hpp>
+#include <boost/guigl/layout/grid.hpp>
 
-#include <glv.h>
-#include <glv_pimpl_binding.h>
+#include <memory>
 
-namespace boost { namespace dataflow { namespace glv_gui {
 
-class blueprint_window;
+namespace boost { namespace dataflow { namespace vivid {
 
-class blueprint_bank
+template<typename BlueprintFramework>
+class network_window;
+
+template<typename BlueprintFramework>
+class factory_window
 {
+    typedef blueprint::factory<BlueprintFramework> factory_type;
+    typedef blueprint::framework_entity<BlueprintFramework> framework_entity_type;
 public:
-    blueprint_bank()
-        : m_view(glv::Rect(70, 600))
-        , m_layout(m_view, glv::Direction::S, glv::Place::TL, 5, 5, 5)
-    {
-        m_view.colors().back.set(0);
-    };
+    factory_window()
+        : m_window(( guigl::_label="Factory", guigl::_size=guigl::size_type(60, 600) ))
+    {};
 
-    void set_bank(const blueprint::component_bank &bank)
+    void set_factory(const factory_type &factory)
     {
-        m_bank = bank;
+        m_factory = factory;
         rearrange();
     }
-    void set_blueprint(blueprint_window &blueprint)
+    void set_network_window(network_window<BlueprintFramework> &network)
     {
-        m_blueprint = &blueprint;
+        m_network = &network;
     }
     
-    glv::View &view()
-    {   return m_view; }
+    guigl::window &window()
+    {   return m_window; }
 
-    typedef boost::ptr_vector<glv::Button> component_buttons_type;
 private:
-    void rearrange();
-    blueprint_window * m_blueprint;
-    blueprint::component_bank m_bank;
-    glv::View m_view;
-    glv::Placer m_layout;
+    void rearrange()
+    {
+        guigl::layout::grid layout((guigl::_grid_size=m_window.size(), guigl::_vertical=10));
+        for(typename factory_type::iterator it=m_factory.begin(); it!=m_factory.end(); it++)
+        {
+            guigl::widget::labeled_button *button;
+            m_window << (button = layout.create<guigl::widget::labeled_button>((guigl::_label=it->c_str())));
+            button->on_click.connect(boost::bind(&factory_window::select, this, *it));
+        }
+    }
+    void select(const std::string &key)
+    {
+        if(m_network)
+        {
+            std::auto_ptr<framework_entity_type> entity(
+                m_factory[key](m_network->framework_context()));
+            m_network->add_entity(entity);
+        }
+    }
+    network_window<BlueprintFramework> * m_network;
+    factory_type m_factory;
+    guigl::window m_window;
 	
-    component_buttons_type m_component_buttons;
-    friend class component_button;
+//    component_buttons_type m_component_buttons;
+//    friend class component_button;
 };
 
 } } }
 
-#endif
+#endif // BOOST__DATAFLOW__VIVID__FACTORY_WINDOW_HPP

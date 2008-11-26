@@ -11,7 +11,7 @@
 
 
 #include <boost/dataflow/blueprint/framework_entity.hpp>
-#include <boost/dataflow/blueprint/framework_object.hpp>
+#include <boost/dataflow/blueprint/framework_context.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -24,16 +24,16 @@ class framework_entity_adapter : public Base
 public:
     typedef typename remove_reference<EntityOrRef>::type entity_type;
     
-    framework_entity_adapter(framework_object<BlueprintFramework> &fo)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo)
         : Base(fo, typeid(m_entity))
     {}
     template<typename T>
-    framework_entity_adapter(framework_object<BlueprintFramework> &fo, const T &t)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_object<BlueprintFramework> &fo, T &t)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
@@ -53,17 +53,17 @@ class framework_entity_adapter<BlueprintFramework, EntityOrRef, Base,
 public:
     typedef typename remove_reference<EntityOrRef>::type entity_type;
     
-    framework_entity_adapter(framework_object<BlueprintFramework> &fo)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo)
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object())
     {}
     template<typename T>
-    framework_entity_adapter(framework_object<BlueprintFramework> &fo, const T &t)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_object<BlueprintFramework> &fo, T &t)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}

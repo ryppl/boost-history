@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-#ifndef BOOST__DATAFLOW__GENERIC__GET_PORT_HPP
-#define BOOST__DATAFLOW__GENERIC__GET_PORT_HPP
+#ifndef BOOST__DATAFLOW__GENERIC__ENTITIES_HPP
+#define BOOST__DATAFLOW__GENERIC__ENTITIES_HPP
 
 
 #include <boost/mpl/assert.hpp>
@@ -24,16 +24,16 @@ namespace boost { namespace dataflow {
 namespace extension
 {
     template<typename Traits1,typename Enable=void>
-    struct get_port_impl
+    struct entities_impl
     {
         BOOST_MPL_ASSERT(( is_same<Enable, void> ));
         
         typedef detail::not_specialized result_type;
 
-        template<typename T1,typename Index>
-        result_type operator()(T1 &t1,const Index &index)
+        template<typename T1>
+        result_type operator()(T1 &t1)
         {
-            // Error: get_port_impl has not been
+            // Error: entities_impl has not been
             // specialized appropriately.
             BOOST_MPL_ASSERT(( mpl::bool_<sizeof(T1)==0> ));
             return result_type();
@@ -41,18 +41,18 @@ namespace extension
     };
     
     template<typename Traits1,typename Enable=void>
-    struct get_port_will_succeed_impl
+    struct entities_will_succeed_impl
     {
         BOOST_MPL_ASSERT(( is_same<Enable, void> ));
         
         typedef bool result_type;
 
-        template<typename T1,typename Index>
-        result_type operator()(T1 &t1,const Index &index)
+        template<typename T1>
+        result_type operator()(T1 &t1)
         {
             return
                 !is_same<
-                        typename  extension::get_port_impl<
+                        typename  extension::entities_impl<
                             Traits1
                             >::result_type,
                     detail::not_specialized
@@ -64,18 +64,18 @@ namespace extension
 namespace detail
 {
 
-    template<typename T1,typename Index,typename Framework1=typename default_framework_of<T1>::type,typename Enable=void>
-    struct has_ports_specialized
+    template<typename T1,typename Framework1=typename default_framework_of<T1>::type,typename Enable=void>
+    struct has_entities_specialized
         : public mpl::true_
     {};
     
-    template<typename T1,typename Index,typename Framework1>
-    struct has_ports_specialized<
-        T1,Index,Framework1
+    template<typename T1,typename Framework1>
+    struct has_entities_specialized<
+        T1,Framework1
         ,
         typename enable_if<
             is_same<
-               typename  extension::get_port_impl<
+               typename  extension::entities_impl<
                 typename traits_of<T1, Framework1>::type
                 >::result_type,
                 detail::not_specialized>
@@ -86,17 +86,17 @@ namespace detail
 }
 
 template<typename T1,typename Framework1=typename default_framework_of<T1>::type,typename Enable=void>
-struct has_ports
+struct has_entities
     : public mpl::false_
 {
     BOOST_MPL_ASSERT((mpl::and_<is_framework_entity<T1,Framework1> >));
 };
 
 template<typename T1,typename Framework1>
-struct has_ports<
+struct has_entities<
     T1,Framework1,
     typename enable_if<
-        detail::has_ports_specialized<
+        detail::has_entities_specialized<
             T1,Framework1>
      >::type>
     : public mpl::true_
@@ -106,105 +106,105 @@ struct has_ports<
 
 namespace result_of {
 
-    template<typename T1,typename Index,typename Framework1=typename default_framework_of<T1>::type>
-    struct get_port
+    template<typename T1,typename Framework1=typename default_framework_of<T1>::type>
+    struct entities
     {
         typedef typename boost::result_of<
-            extension::get_port_impl<
+            extension::entities_impl<
                 typename traits_of<T1, Framework1>::type
             >
-            (T1,Index)
+            (T1)
         >::type type;
     };
     
 }
 
 
-template<typename Index,typename Framework1,typename T1>
-inline typename result_of::get_port<
-    T1,Index,Framework1
+template<typename Framework1,typename T1>
+inline typename result_of::entities<
+    T1,Framework1
     >::type 
-get_port_framework(T1 &t1,const Index &index=Index())
+entities_framework(T1 &t1)
 {
-    return extension::get_port_impl<
+    return extension::entities_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename T1>
-inline typename result_of::get_port<
-    T1,Index,typename default_framework_of<T1>::type
+template<typename T1>
+inline typename result_of::entities<
+    T1,typename default_framework_of<T1>::type
     >::type 
-get_port(T1 &t1,const Index &index=Index())
+entities(T1 &t1)
 {
     typedef typename default_framework_of<T1>::type Framework1;
-    return extension::get_port_impl<
+    return extension::entities_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename Framework1,typename T1>
+template<typename Framework1,typename T1>
 inline bool
-get_port_will_succeed_framework(T1 &t1,const Index &index=Index())
+entities_will_succeed_framework(T1 &t1)
 {
-    return extension::get_port_will_succeed_impl<
+    return extension::entities_will_succeed_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename T1>
+template<typename T1>
 inline bool 
-get_port_will_succeed(T1 &t1,const Index &index=Index())
+entities_will_succeed(T1 &t1)
 {
     typedef typename default_framework_of<T1>::type Framework1;
-    return extension::get_port_will_succeed_impl<
+    return extension::entities_will_succeed_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename Framework1,typename T1>
-inline typename result_of::get_port<
-    T1,Index,Framework1
+template<typename Framework1,typename T1>
+inline typename result_of::entities<
+    T1,Framework1
     >::type 
-get_port_framework(const T1 &t1,const Index &index=Index())
+entities_framework(const T1 &t1)
 {
-    return extension::get_port_impl<
+    return extension::entities_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename T1>
-inline typename result_of::get_port<
-    T1,Index,typename default_framework_of<T1>::type
+template<typename T1>
+inline typename result_of::entities<
+    T1,typename default_framework_of<T1>::type
     >::type 
-get_port(const T1 &t1,const Index &index=Index())
+entities(const T1 &t1)
 {
     typedef typename default_framework_of<T1>::type Framework1;
-    return extension::get_port_impl<
+    return extension::entities_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename Framework1,typename T1>
+template<typename Framework1,typename T1>
 inline bool
-get_port_will_succeed_framework(const T1 &t1,const Index &index=Index())
+entities_will_succeed_framework(const T1 &t1)
 {
-    return extension::get_port_will_succeed_impl<
+    return extension::entities_will_succeed_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
-template<typename Index,typename T1>
+template<typename T1>
 inline bool 
-get_port_will_succeed(const T1 &t1,const Index &index=Index())
+entities_will_succeed(const T1 &t1)
 {
     typedef typename default_framework_of<T1>::type Framework1;
-    return extension::get_port_will_succeed_impl<
+    return extension::entities_will_succeed_impl<
         typename traits_of<T1, Framework1>::type
-        >()(t1,index);
+        >()(t1);
 }
 
 }}
 
 
-#endif // BOOST__DATAFLOW__GENERIC__GET_PORT_HPP
+#endif // BOOST__DATAFLOW__GENERIC__ENTITIES_HPP

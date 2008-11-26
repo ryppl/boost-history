@@ -26,7 +26,7 @@ template<typename Operations, typename FrameworkObject=void>
 struct framework
 {
     typedef typename utility::forced_sequence<Operations>::type operations;
-    typedef FrameworkObject framework_object_type;
+    typedef FrameworkObject framework_context_type;
 };
 
 template<typename Operations>
@@ -58,12 +58,12 @@ struct is_framework<T,
 
 /// Boolean metafunction determining whether a type is a Framework.
 template<typename T, typename Enable=void>
-struct has_framework_object
+struct has_framework_context
     : public mpl::false_ {};
 
 template<typename T>
-struct has_framework_object<T,
-    typename utility::enable_if_type<typename T::framework_object_type>::type>
+struct has_framework_context<T,
+    typename utility::enable_if_type<typename T::framework_context_type>::type>
     : public mpl::true_ {};
 
 } } // namespace boost::dataflow

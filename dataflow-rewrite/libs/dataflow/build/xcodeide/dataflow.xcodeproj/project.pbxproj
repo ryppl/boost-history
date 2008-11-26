@@ -110,8 +110,6 @@
 		0826E38D0EA542730090AB4E /* operation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = operation.hpp; sourceTree = "<group>"; };
 		0826E3950EA543F60090AB4E /* operation_adapter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = operation_adapter.hpp; sourceTree = "<group>"; };
 		0826E39B0EA5463A0090AB4E /* test_operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_operation.cpp; sourceTree = "<group>"; };
-		0826E3FA0EA5537B0090AB4E /* framework_object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework_object.hpp; sourceTree = "<group>"; };
-		0826E3FD0EA55D1B0090AB4E /* test_framework_object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_framework_object.cpp; sourceTree = "<group>"; };
 		0826E43A0EA562160090AB4E /* port_binary_operation_implementation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port_binary_operation_implementation.hpp; sourceTree = "<group>"; };
 		0826E4470EA563930090AB4E /* port_binary_operation_implementation_adapter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port_binary_operation_implementation_adapter.hpp; sourceTree = "<group>"; };
 		0826E44D0EA566F70090AB4E /* test_port_binary_operation_implementation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_port_binary_operation_implementation.cpp; sourceTree = "<group>"; };
@@ -138,8 +136,6 @@
 		089A28B10E8D96F2000FCCC9 /* my_framework.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_framework.hpp; sourceTree = "<group>"; };
 		089A28B50E8D9772000FCCC9 /* my_ports.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_ports.hpp; sourceTree = "<group>"; };
 		089A28D80E8D99BC000FCCC9 /* my_entity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_entity.hpp; sourceTree = "<group>"; };
-		089F17380EAE8B3D00560022 /* my_framework_with_object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_framework_with_object.hpp; sourceTree = "<group>"; };
-		089F17400EAE8E5200560022 /* framework_object_fwd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework_object_fwd.hpp; sourceTree = "<group>"; };
 		08A0FF8A0E8B4012000F0F8F /* file_template.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = file_template.py; sourceTree = "<group>"; };
 		08A227910EAE417000F70466 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A227930EAE417C00F70466 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
@@ -153,6 +149,7 @@
 		08A53F8E0EAC0AC1000B9C17 /* factory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = factory.hpp; sourceTree = "<group>"; };
 		08A53F920EAC14A4000B9C17 /* test_factory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_factory.cpp; sourceTree = "<group>"; };
 		08A59AB60EA6AED700F96721 /* forced_sequence.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = forced_sequence.hpp; sourceTree = "<group>"; };
+		08A614DF0EDB72FA000DD105 /* vivid_managed_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vivid_managed_example.cpp; sourceTree = "<group>"; };
 		08A77AB30E4F91AA00B8793E /* Jamroot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Jamroot; path = ../../../../Jamroot; sourceTree = SOURCE_ROOT; };
 		08A77AB40E4F91AB00B8793E /* LICENSE_1_0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE_1_0.txt; path = ../../../../LICENSE_1_0.txt; sourceTree = SOURCE_ROOT; };
 		08A77ADC0E4FB06600B8793E /* framework.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework.hpp; sourceTree = "<group>"; };
@@ -169,6 +166,29 @@
 		08AB81B70EC7A45900A2B98A /* get_port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = get_port.hpp; sourceTree = "<group>"; };
 		08AB81BB0EC7A50200A2B98A /* test_static_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_static_vector.cpp; sourceTree = "<group>"; };
 		08AB81BF0EC7A52F00A2B98A /* my_static_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_static_vector.hpp; sourceTree = "<group>"; };
+		08AD7BB30EDD1332002E9432 /* entities.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = entities.hpp; sourceTree = "<group>"; };
+		08AD7BB50EDD13F2002E9432 /* test_dynamic_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_dynamic_vector.cpp; sourceTree = "<group>"; };
+		08AD7BBA0EDD1435002E9432 /* dynamic_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_vector.hpp; sourceTree = "<group>"; };
+		08AD7BC20EDD1720002E9432 /* traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits.hpp; sourceTree = "<group>"; };
+		08AD7BC50EDD17F6002E9432 /* dynamic_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_vector.hpp; sourceTree = "<group>"; };
+		08ADD5040EDCC92D00838188 /* test_static_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_static_vector.cpp; sourceTree = "<group>"; };
+		08ADD5080EDCC9A400838188 /* my_blueprint_static_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_blueprint_static_vector.hpp; sourceTree = "<group>"; };
+		08B3CBF30EC8B532002D2124 /* component.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = component.hpp; sourceTree = "<group>"; };
+		08B3CBF40EC8B532002D2124 /* fusion_component.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fusion_component.hpp; sourceTree = "<group>"; };
+		08B3CBF50EC8B532002D2124 /* network.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = network.hpp; sourceTree = "<group>"; };
+		08B3CBF60EC8B532002D2124 /* port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port.hpp; sourceTree = "<group>"; };
+		08B3CBF70EC8B532002D2124 /* runtime_support.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = runtime_support.hpp; sourceTree = "<group>"; };
+		08B3CBF80EC8B532002D2124 /* support.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = support.hpp; sourceTree = "<group>"; };
+		08B3CBFF0EC8B6C2002D2124 /* framework_context.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework_context.hpp; sourceTree = "<group>"; };
+		08B3CC000EC8B6C2002D2124 /* framework_context_fwd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework_context_fwd.hpp; sourceTree = "<group>"; };
+		08B3CC220EC8B7D3002D2124 /* my_framework_with_context.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_framework_with_context.hpp; sourceTree = "<group>"; };
+		08B3CC240EC8B823002D2124 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
+		08B3CC250EC8B823002D2124 /* test_fusion_component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_fusion_component.cpp; sourceTree = "<group>"; };
+		08B3CC260EC8B823002D2124 /* test_network.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_network.cpp; sourceTree = "<group>"; };
+		08B3CC270EC8B823002D2124 /* test_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_port.cpp; sourceTree = "<group>"; };
+		08B3CC640EC8C73E002D2124 /* make_ref.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = make_ref.hpp; sourceTree = "<group>"; };
+		08B3CC650EC8C73E002D2124 /* transform_remove_reference.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = transform_remove_reference.hpp; sourceTree = "<group>"; };
+		08B3CC660EC8C74A002D2124 /* not_specialized.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = not_specialized.hpp; sourceTree = "<group>"; };
 		08B44C1B0EB63549004B133F /* entity_widget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = entity_widget.hpp; sourceTree = "<group>"; };
 		08B8F1AC0E512CF7000545B8 /* traits_sequence_intrusive_registration.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits_sequence_intrusive_registration.hpp; sourceTree = "<group>"; };
 		08B8F1AD0E512D31000545B8 /* framework_entity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framework_entity.hpp; sourceTree = "<group>"; };
@@ -176,6 +196,7 @@
 		08B8F1BE0E512E72000545B8 /* traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits.hpp; sourceTree = "<group>"; };
 		08B8F1C00E512F45000545B8 /* test_framework_entity_traits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_framework_entity_traits.cpp; sourceTree = "<group>"; };
 		08B8F1D00E513569000545B8 /* test_framework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_framework.cpp; sourceTree = "<group>"; };
+		08BA454B0EDCF1A00053808D /* my_dynamic_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_dynamic_vector.hpp; sourceTree = "<group>"; };
 		08D18D760EBE25E800B1A160 /* fusion_static_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fusion_static_vector.hpp; sourceTree = "<group>"; };
 		08D18D770EBE25E800B1A160 /* static_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_vector.hpp; sourceTree = "<group>"; };
 		08D965820E83A2F900087C6F /* framework_entity.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = framework_entity.qbk; sourceTree = "<group>"; };
@@ -271,6 +292,7 @@
 			children = (
 				08A227930EAE417C00F70466 /* Jamfile */,
 				08A227960EAE41AD00F70466 /* vivid_graph_example.cpp */,
+				08A614DF0EDB72FA000DD105 /* vivid_managed_example.cpp */,
 			);
 			path = vivid;
 			sourceTree = "<group>";
@@ -310,6 +332,8 @@
 		08A77ACC0E4F941C00B8793E /* dataflow */ = {
 			isa = PBXGroup;
 			children = (
+				08B3CC630EC8C73E002D2124 /* detail */,
+				08B3CBF20EC8B532002D2124 /* managed */,
 				08A59A8C0EA69D9D00F96721 /* vivid */,
 				08EE1D690E9533ED00EF3E66 /* blueprint */,
 				08A77AEC0E4FB4C800B8793E /* utility */,
@@ -322,9 +346,12 @@
 		08A77ACD0E4F941C00B8793E /* generic */ = {
 			isa = PBXGroup;
 			children = (
+				08AD7BC10EDD1715002E9432 /* dynamic_vector */,
+				08AD7BB30EDD1332002E9432 /* entities.hpp */,
 				08AB81A90EC7A1E300A2B98A /* static_vector */,
 				08D18D760EBE25E800B1A160 /* fusion_static_vector.hpp */,
 				08D18D770EBE25E800B1A160 /* static_vector.hpp */,
+				08AD7BBA0EDD1435002E9432 /* dynamic_vector.hpp */,
 				0898B4700E83E6E1004F3E91 /* port_binary_operation.hpp */,
 				08A227A90EAE434300F70466 /* port.hpp */,
 				08D965C50E83A83600087C6F /* port */,
@@ -352,6 +379,7 @@
 		08A77AFF0E4FC51C00B8793E /* generic */ = {
 			isa = PBXGroup;
 			children = (
+				08B3CC220EC8B7D3002D2124 /* my_framework_with_context.hpp */,
 				08A77B060E4FC58D00B8793E /* Jamfile */,
 				08DD9DFA0E7B22DD008DC46A /* test_default_framework_of.cpp */,
 				08B8F1D00E513569000545B8 /* test_framework.cpp */,
@@ -366,10 +394,11 @@
 				089A28B50E8D9772000FCCC9 /* my_ports.hpp */,
 				089A28D80E8D99BC000FCCC9 /* my_entity.hpp */,
 				0826E2DC0EA52A850090AB4E /* my_connect.hpp */,
-				089F17380EAE8B3D00560022 /* my_framework_with_object.hpp */,
 				08AB81BF0EC7A52F00A2B98A /* my_static_vector.hpp */,
+				08BA454B0EDCF1A00053808D /* my_dynamic_vector.hpp */,
 				08A486B30EC11632007D73CC /* test_get_port.cpp */,
 				08AB81BB0EC7A50200A2B98A /* test_static_vector.cpp */,
+				08AD7BB50EDD13F2002E9432 /* test_dynamic_vector.cpp */,
 			);
 			path = generic;
 			sourceTree = "<group>";
@@ -410,6 +439,49 @@
 			path = static_vector;
 			sourceTree = "<group>";
 		};
+		08AD7BC10EDD1715002E9432 /* dynamic_vector */ = {
+			isa = PBXGroup;
+			children = (
+				08AD7BC20EDD1720002E9432 /* traits.hpp */,
+				08AD7BC50EDD17F6002E9432 /* dynamic_vector.hpp */,
+			);
+			path = dynamic_vector;
+			sourceTree = "<group>";
+		};
+		08B3CBF20EC8B532002D2124 /* managed */ = {
+			isa = PBXGroup;
+			children = (
+				08B3CBF30EC8B532002D2124 /* component.hpp */,
+				08B3CBF40EC8B532002D2124 /* fusion_component.hpp */,
+				08B3CBF50EC8B532002D2124 /* network.hpp */,
+				08B3CBF60EC8B532002D2124 /* port.hpp */,
+				08B3CBF70EC8B532002D2124 /* runtime_support.hpp */,
+				08B3CBF80EC8B532002D2124 /* support.hpp */,
+			);
+			path = managed;
+			sourceTree = "<group>";
+		};
+		08B3CC230EC8B823002D2124 /* managed */ = {
+			isa = PBXGroup;
+			children = (
+				08B3CC240EC8B823002D2124 /* Jamfile */,
+				08B3CC250EC8B823002D2124 /* test_fusion_component.cpp */,
+				08B3CC260EC8B823002D2124 /* test_network.cpp */,
+				08B3CC270EC8B823002D2124 /* test_port.cpp */,
+			);
+			path = managed;
+			sourceTree = "<group>";
+		};
+		08B3CC630EC8C73E002D2124 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				08B3CC640EC8C73E002D2124 /* make_ref.hpp */,
+				08B3CC650EC8C73E002D2124 /* transform_remove_reference.hpp */,
+				08B3CC660EC8C74A002D2124 /* not_specialized.hpp */,
+			);
+			path = detail;
+			sourceTree = "<group>";
+		};
 		08B8F1AB0E512CF7000545B8 /* framework_entity */ = {
 			isa = PBXGroup;
 			children = (
@@ -424,6 +496,7 @@
 		08C675960C13A03E00D85379 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				08B3CC230EC8B823002D2124 /* managed */,
 				08AA90400EAD43AD00409A2E /* vivid */,
 				08ED9F2B0E9AFE0F00894656 /* blueprint */,
 				08A77AFF0E4FC51C00B8793E /* generic */,
@@ -453,10 +526,11 @@
 				0826E26C0EA523AE0090AB4E /* test_port_binary_operation.cpp */,
 				0826E44D0EA566F70090AB4E /* test_port_binary_operation_implementation.cpp */,
 				0826E39B0EA5463A0090AB4E /* test_operation.cpp */,
-				0826E3FD0EA55D1B0090AB4E /* test_framework_object.cpp */,
 				087535BE0E9C141200AD4E99 /* my_blueprint_framework.hpp */,
 				0826E2AE0EA526F70090AB4E /* my_blueprint_ports.hpp */,
+				08ADD5080EDCC9A400838188 /* my_blueprint_static_vector.hpp */,
 				08A53F920EAC14A4000B9C17 /* test_factory.cpp */,
+				08ADD5040EDCC92D00838188 /* test_static_vector.cpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";
@@ -464,6 +538,8 @@
 		08EE1D690E9533ED00EF3E66 /* blueprint */ = {
 			isa = PBXGroup;
 			children = (
+				08B3CBFF0EC8B6C2002D2124 /* framework_context.hpp */,
+				08B3CC000EC8B6C2002D2124 /* framework_context_fwd.hpp */,
 				08A53F8E0EAC0AC1000B9C17 /* factory.hpp */,
 				08EE1D7C0E95453200EF3E66 /* framework.hpp */,
 				08EE1D6A0E95348400EF3E66 /* framework_entity.hpp */,
@@ -475,9 +551,7 @@
 				0826E4470EA563930090AB4E /* port_binary_operation_implementation_adapter.hpp */,
 				0826E38D0EA542730090AB4E /* operation.hpp */,
 				0826E3950EA543F60090AB4E /* operation_adapter.hpp */,
-				0826E3FA0EA5537B0090AB4E /* framework_object.hpp */,
 				0826E4BB0EA57D110090AB4E /* castable_polymorphic_object.hpp */,
-				089F17400EAE8E5200560022 /* framework_object_fwd.hpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";

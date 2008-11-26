@@ -7,6 +7,7 @@
 -----------------------------------------------===============================*/
 
 
+#include <boost/fusion/include/mpl.hpp>
 #include <boost/dataflow/blueprint/framework.hpp>
 #include <boost/dataflow/vivid/factory_window.hpp>
 #include <boost/dataflow/vivid/network_window.hpp>
@@ -18,7 +19,7 @@
 namespace df = boost::dataflow;
 typedef df::blueprint::framework<df::ugraph::framework> graph_blueprint_framework;
 
-void connected_components(const df::blueprint::framework_object<graph_blueprint_framework> &bfo)
+void connected_components(const df::blueprint::framework_context<graph_blueprint_framework> &bfo)
 {
     std::vector<int> component(num_vertices(bfo.object()));
     int num = connected_components(bfo.object(), &component[0]);
@@ -40,12 +41,12 @@ int main()
     df::blueprint::factory<graph_blueprint_framework> factory;
     
     factory.add_port<df::ugraph::vertex>("vertex");
-    network_window.framework_object().register_operation<df::ugraph::vertex, df::ugraph::vertex, df::operations::connect>();
+    network_window.framework_context().register_operation<df::ugraph::vertex, df::ugraph::vertex, df::operations::connect>();
 
     factory_window.set_factory(factory);
     
     
-    connected_components_button->on_click.connect(boost::bind(&connected_components, boost::ref(network_window.framework_object())));
+    connected_components_button->on_click.connect(boost::bind(&connected_components, boost::ref(network_window.framework_context())));
     boost::guigl::window::redraw(*connected_components_button);
     
     boost::guigl::application::run();
