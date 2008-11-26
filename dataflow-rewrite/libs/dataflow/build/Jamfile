@@ -1,0 +1,34 @@
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
+
+import path ;
+
+project boost/dataflow/build ;
+
+make port_binary_operation.hpp : specializable_operation.hpp.py : @in2out ;
+make get_port.hpp : specializable_operation.hpp.py : @get_port ;
+make entities.hpp : specializable_operation.hpp.py : @entities ;
+
+actions in2out
+{
+    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="port_binary_operation" CHECK="are_port_binary_operable" TEMPLATES="Operation" EXTRA_ARGS="Operation" ARITY=2 HAS_TRAITS="is_port" INCLUDES="<boost/dataflow/generic/port/port.hpp>"
+}
+
+actions get_port
+{
+    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="get_port" CHECK="has_ports" INNER_TEMPLATES="Index" EXTRA_ARGS="Index" ARITY=1 HAS_TRAITS="is_framework_entity" INCLUDES="<boost/dataflow/generic/framework_entity.hpp>"
+}
+
+actions entities
+{
+    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="entities" CHECK="has_entities" ARITY=1 HAS_TRAITS="is_framework_entity" INCLUDES="<boost/dataflow/generic/framework_entity.hpp>"
+}
+
+install port_binary_operation_result : port_binary_operation.hpp : <location>$(TOP)/boost/dataflow/generic ;
+install get_port_result : get_port.hpp : <location>$(TOP)/boost/dataflow/generic/static_vector ;
+install entities_result : entities.hpp : <location>$(TOP)/boost/dataflow/generic ;
