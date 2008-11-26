@@ -9,13 +9,18 @@
 	<using-namespace name="boost"/>
 	<using-namespace name="boost::mirror"/>
 
-	<para>
-	</para>
-
 	<section id="mirror.concepts.concept_overview">
 	<title>Concept overview</title>
 	<para>
-		For a comprehensive overview of concepts defined by <libraryname>Mirror</libraryname> see the <ulink url="./mirror/non_boost_book/concepts/overview/MetaObject.xml">concept browser</ulink>.
+		For a comprehensive overview of concepts defined by <libraryname>Mirror</libraryname> see the <ulink url="./mirror/non_boost_book/concepts/overview/MetaObject.xml">concept browser</ulink> (requires a XSLT capable web browser).
+	</para>
+	</section>
+
+	<section id="mirror.concepts.meta_object">
+	<title>MetaObject</title>
+	<para>The MetaObject concept is the generalization of all other concepts that provide meta-data about a reflected <emphasis>object</emphasis> (C++ <emphasis>construct</emphasis>). The meaning of the term <emphasis>object</emphasis> should not be confused with the meaning defined by object-oriented programming.
+	</para>
+	<para>For the purposes of the <libraryname>Mirror</libraryname> an <emphasis>object</emphasis> is a C++ compile-time or run-time construct like a namespace, type, typedef, class, class member attribute, class member function, variable, function parameter, etc. Models of the MetaObject concept provide meta-data about these base-level constructs (base-level "objects"). 
 	</para>
 	</section>
 

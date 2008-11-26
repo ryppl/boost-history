@@ -18,7 +18,7 @@
 			<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 				<table cellpadding="2" width="100%"><tr>
 				<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"/></td>
-				<td align="center"><a href="../../../../../../index.html">Home</a></td>
+				<td align="center"><a href="../../../../../../../index.html">Home</a></td>
 				<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
 				<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
 				<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
@@ -28,6 +28,7 @@
 				<div class="spirit-nav">
 					<a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"/></a>
 				</div>
+
 				<xsl:apply-templates/>
 
 				<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

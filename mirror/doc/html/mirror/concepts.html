@@ -25,14 +25,23 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="mirror.concepts"></a>Concepts</h2></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="concepts.html#mirror.concepts.concept_overview">Concept overview</a></span></dt></dl></div>
-<p>
-	</p>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#mirror.concepts.concept_overview">Concept overview</a></span></dt>
+<dt><span class="section"><a href="concepts.html#mirror.concepts.meta_object">MetaObject</a></span></dt>
+</dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="mirror.concepts.concept_overview"></a>Concept overview</h3></div></div></div>
 <p>
-		For a comprehensive overview of concepts defined by <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> see the <a href=".././mirror/non_boost_book/concepts/overview/MetaObject.xml" target="_top">concept browser</a>.
+		For a comprehensive overview of concepts defined by <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> see the <a href=".././mirror/non_boost_book/concepts/overview/MetaObject.xml" target="_top">concept browser</a> (requires a XSLT capable web browser).
+	</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="mirror.concepts.meta_object"></a>MetaObject</h3></div></div></div>
+<p>The MetaObject concept is the generalization of all other concepts that provide meta-data about a reflected <span class="emphasis"><em>object</em></span> (C++ <span class="emphasis"><em>construct</em></span>). The meaning of the term <span class="emphasis"><em>object</em></span> should not be confused with the meaning defined by object-oriented programming.
+	</p>
+<p>For the purposes of the <a class="link" href="../mirror.html" title="Chapter 1. Mirror">Mirror</a> an <span class="emphasis"><em>object</em></span> is a C++ compile-time or run-time construct like a namespace, type, typedef, class, class member attribute, class member function, variable, function parameter, etc. Models of the MetaObject concept provide meta-data about these base-level constructs (base-level "objects"). 
 	</p>
 </div>
 </div>

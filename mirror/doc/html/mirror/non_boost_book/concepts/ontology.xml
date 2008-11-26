@@ -3,6 +3,89 @@
 	<!-- this file defines the relationships between various
 	   - reflection-related concepts.
 	 -->
+	<concept name="String">
+		<model namespace="cts" name="bstring"/>
+		<model url="http://www.sgi.com/tech/stl/basic_string.html" name="::std::basic_string"/>
+	</concept>
+
+	<concept name="Iterator">
+		<metafunction concept="MplBooleanIntegralType" name="is_valid" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns mpl::true_ if the passed iterator is valid, returns mpl::false_ otherwise. A valid iterator can be dereferenced.</desc>
+		</metafunction>
+		<metafunction concept="MetaObjectSequenceElement" name="deref">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Dereferences the passed iterator. The result is the MetaObjectSequenceElement, that the iterator points to.</desc>
+		</metafunction>
+		<metafunction concept="Iterator" name="prior">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns an Iterator pointing to the previous element in the MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="Iterator" name="next">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns an Iterator pointing to the next element in the MetaObjectSequence.</desc>
+		</metafunction>
+
+		<metafunction concept="MplBooleanIntegralType" name="iterator_equal" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Iterator equality comparison.</desc>
+		</metafunction>
+		<metafunction concept="MplBooleanIntegralType" name="iterator_not_equal" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Iterator non-equality comparison.</desc>
+		</metafunction>
+		<metafunction concept="MplBooleanIntegralType" name="iterator_less" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Iterator less than comparison.</desc>
+		</metafunction>
+		<metafunction concept="MplBooleanIntegralType" name="iterator_less_equal" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Iterator less than or equal comparison.</desc>
+		</metafunction>
+		<metafunction concept="MplBooleanIntegralType" name="iterator_greater" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Iterator greater than comparison.</desc>
+		</metafunction>
+		<metafunction concept="MplBooleanIntegralType" name="iterator_greater_equal" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Iterator greater than or equal comparison.</desc>
+		</metafunction>
+	</concept>
+
+
+	<concept name="ReverseIterator">
+	</concept>
+
+	<!-- ReverseITerator is Iterator -->
+	<role 
+		subject="Iterator" 
+		type="Specialization" 
+		object="ReverseIterator"
+	>
+	</role>
+
 	<concept name="MetaObject">
 	</concept>
 
@@ -59,9 +142,9 @@
 	>
 	</role>
 
-	<!-- MetaScope is MetaObject  -->
+	<!-- MetaScope is MetaNamedObject  -->
 	<role 
-		subject="MetaObject" 
+		subject="MetaNamedObject" 
 		type="Specialization" 
 		object="MetaScope"
 	>
@@ -98,10 +181,11 @@
 
 
 	<concept name="MetaNamespace">
+		<model name="meta_namespace"/>
 		<member_typedef concept="MetaNamespace" name="scope">
 			<desc>The MetaNamespace reflecting the parent namespace in which the namespace reflected by this MetaNamespace is directly nested.</desc>
 		</member_typedef>
-		<member_typedef concept="mpl::Sequence" name="ancestors">
+		<member_typedef concept="MplSequence" name="ancestors">
 			<desc>An mpl::Sequence containing the MetaNamespaces for all the namespaces in which the reflected namespace is directly or indirectly nested.</desc>
 		</member_typedef>
 	</concept>
@@ -123,7 +207,8 @@
 	</role>
 
 	<concept name="MetaType">
-		<member_typedef concept="Type" name="reflected_type">
+		<model name="meta_type"/>
+		<member_typedef concept="Type" name="reflected_type" nolink="true">
 			<desc>The type reflected by this MetaType.</desc>
 		</member_typedef>
 	</concept>
@@ -137,6 +222,7 @@
 	</role>
 
 	<concept name="MetaTypedef">
+		<model name="meta_type"/>
 	</concept>
 
 	<!-- MetaTypedef is MetaType -->
@@ -159,6 +245,7 @@
 	</role>
 
 	<concept name="MetaClass">
+		<model name="meta_class"/>
 		<member_typedef concept="MetaBaseClasses" name="base_classes">
 			<desc>The sequence of MetaInheritance(s) reflecting the inheritance of the base classes.</desc>
 		</member_typedef>
@@ -168,7 +255,7 @@
 		<member_typedef concept="MetaClassAttributes" name="meta_all_attributes">
 			<desc>The sequence of MetaClassAttribute(s) reflecting all attributes of a class including the ones inherited from base classes.</desc>
 		</member_typedef>
-		<member_typedef concept="Class" name="reflected_type">
+		<member_typedef concept="Class" name="reflected_type" nolink="true">
 			<desc>The class reflected by this MetaClass.</desc>
 		</member_typedef>
 	</concept>
@@ -261,6 +348,7 @@
 	</role>
 
 	<concept name="MetaInheritance">
+		<model name="meta_inheritance"/>
 		<member_typedef concept="MetaBaseClasses" name="container">
 			<desc>The list of MetaInhertiance(s) that this MetaInheritance belongs to.</desc>
 		</member_typedef>
@@ -283,32 +371,33 @@
 	</role>
 
 	<concept name="MetaClassAttribute">
+		<model name="meta_class_attribute"/>
 		<member_typedef concept="MetaClassAttributes" name="container">
 			<desc>The sequence of MetaClassAttribute(s) that this MetaClassAttribute belongs to.</desc>
 		</member_typedef>
 		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
 			<desc>Equivalent to container.</desc>
 		</member_typedef>
-		<member_typedef concept="Type" name="type">
+		<member_typedef concept="Type" name="type" nolink="true">
 			<desc>The type of the reflected attribute.</desc>
 		</member_typedef>
-		<member_typedef concept="TypeOrTypedefSelector" name="type_or_type">
+		<member_typedef concept="TypedefOrTypeSelector" name="typedef_or_type" nolink="true">
 			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
 		</member_typedef>
 
-		<member_function concept="Type" name="get">
+		<member_function concept="Type" name="get" nolink="true">
 			<desc>Generic attribute value getter. Returns the value of the reflected class attribute when given an instance of the class that the attribute belongs to.</desc>
-			<fn_param concept="Class" name="instance"/>
+			<fn_param concept="Class" name="instance" nolink="true"/>
 		</member_function>
-		<member_function concept="TypeReference" name="query">
+		<member_function concept="TypeReference" name="query" nolink="true">
 			<desc>Generic attribute value query. Stores the value of the reflected class attribute into the instance referred to by dest_ref, when given an instance of the class that the attribute belongs to.</desc>
-			<fn_param concept="Class" name="instance"/>
-			<fn_param concept="TypeReference" name="dest_ref"/>
+			<fn_param concept="Class" name="instance" nolink="true"/>
+			<fn_param concept="TypeReference" name="dest_ref" nolink="true"/>
 		</member_function>
-		<member_function concept="TypeReference" name="query">
+		<member_function concept="TypeReference" name="query" nolink="true">
 			<desc>Generic attribute value setter. Assigns the new_value to the reflected class attribute, when given an instance of the class that the attribute belongs to.</desc>
-			<fn_param concept="Class" name="instance"/>
-			<fn_param concept="Type" name="new_value"/>
+			<fn_param concept="Class" name="instance" nolink="true"/>
+			<fn_param concept="Type" name="new_value" nolink="true"/>
 		</member_function>
 	</concept>
 
@@ -337,13 +426,13 @@
 	</role>
 
 	<concept name="MetaClassAttributeTraits">
-		<member_typedef concept="mpl::BooleanIntegralConstant" name="is_static">
+		<member_typedef concept="MplBooleanIntegralConstant" name="is_static">
 			<desc>Type that indicates whether the class member attribute is static.</desc>
 		</member_typedef>
-		<member_typedef concept="mpl::BooleanIntegralConstant" name="is_mutable">
+		<member_typedef concept="MplBooleanIntegralConstant" name="is_mutable">
 			<desc>Type that indicates whether the class member attribute is mutable.</desc>
 		</member_typedef>
-		<member_typedef concept="TypeOrTypedefSelector" name="meta_type_selector">
+		<member_typedef concept="TypedefOrTypeSelector" name="meta_type_selector" nolink="true">
 			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
 		</member_typedef>
 	</concept>
@@ -391,6 +480,66 @@
 	</role>
 
 	<concept name="MetaObjectSequence">
+		<metafunction concept="MetaObjectSequenceElement" name="at">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param name="Position">
+			</metafn_param>
+			<desc>The result is the element from the MetaObjectSequence at the given Position. The type used as the Position parameter must conform to MPL Integral Constant concept.</desc>
+		</metafunction>
+		<metafunction concept="MplIntegralConstant" name="size" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>The result is the count of elements in the MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="Iterator" name="begin">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns an Iterator pointing at the beginning of the MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="Iterator" name="end">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns an Iterator pointing past the end of the MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="ReverseIterator" name="rbegin">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a Reverse Iterator pointing at the beginning of the reversed MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="ReverseIterator" name="rend">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a Reverse Iterator pointing past the end of the reversed MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="Iterator" name="point_to">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns an Iterator pointing to the element at the given Position in the MetaObjectSequence.</desc>
+		</metafunction>
+		<metafunction concept="Iterator" name="find_if">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param name="Predicate">
+			</metafn_param>
+			<desc>Returns an Iterator pointing to the first element in the MetaObjectSequence satisfying the given Predicate.</desc>
+		</metafunction>
+		<metafunction concept="ReverseIterator" name="reverse_find_if">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param name="Predicate">
+			</metafn_param>
+			<desc>Returns a Reverse Iterator pointing to the first element in the reversed MetaObjectSequence satisfying the given Predicate.</desc>
+		</metafunction>
+		<metafunction concept="unspecified" name="accumulate" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param name="InitialState">
+			</metafn_param>
+			<metafn_param name="ForwardOp">
+			</metafn_param>
+			<desc>Returns the result of sequential application of the ForwardOp on the intermediate State and the individual elements of the MetaObjectSequence.</desc>
+		</metafunction>
 	</concept>
 	
 	<!-- MetaObjectSequence is MetaObject -->
@@ -405,8 +554,8 @@
 		<member_typedef concept="MetaObjectSequence" name="container">
 			<desc>The sequence that this element belongs to.</desc>
 		</member_typedef>
-		<member_typedef concept="mpl::IntegralConstant" name="position">
-			<desc>An mpl::IntegralConstant indicating the position of the reflected element in the container.</desc>
+		<member_typedef concept="MplIntegralConstant" name="position" nolink="true">
+			<desc>An MPL Integral Constant indicating the position of the reflected element in the container.</desc>
 		</member_typedef>
 	</concept>
 	
@@ -419,10 +568,17 @@
 	</role>
 
 	<concept name="MetaBaseClasses">
-		<member_typedef concept="Class" name="derived_class">
+		<model name="meta_base_classes"/>
+		<member_typedef concept="Class" name="derived_class" nolink="true">
 			<desc>The class which base classes this MetaBaseClasses sequence reflects.</desc>
 		</member_typedef>
+		<metafunction concept="MplSequence" name="get_type_list" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>The result is an MPL Sequence of the base classes of derived_class.</desc>
+		</metafunction>
 	</concept>
+
 	
 	<!-- MetaBaseClasses is MetaObjectSequence -->
 	<role 
@@ -433,6 +589,13 @@
 	</role>
 
 	<concept name="MetaClassAttributes">
+		<model name="meta_class_attributes"/>
+		<model name="meta_class_all_attributes"/>
+		<metafunction concept="MplSequence" name="get_type_list" nolink="true">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>The result is an MPL Sequence of the types of the class' member attributes.</desc>
+		</metafunction>
 	</concept>
 	
 	<!-- MetaClassAttributes is MetaObjectSequence -->
