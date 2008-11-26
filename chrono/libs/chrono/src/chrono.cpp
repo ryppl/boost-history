@@ -10,7 +10,8 @@
 #define BOOST_CHRONO_SOURCE 
 
 #include <boost/chrono/chrono.hpp>
-#include <stdexcept>
+#include <boost/system/system_error.hpp>
+#include <boost/throw_exception.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -29,25 +30,14 @@
 
 namespace
 {
-  double get_nanosecs_per_tic( boost::system::error_code & ec )
+  double get_nanosecs_per_tic()
   {
     LARGE_INTEGER freq;
     if ( !QueryPerformanceFrequency( &freq ) )
-    {
-      if ( &ec == &boost::system::throws )
-        throw
-          std::runtime_error( "monotonic_clock: QueryPerformanceFrequency failed" );
       return -1.0;
-    }
-    if ( &ec != &boost::system::throws ) ec.clear();
     return 1000000000.0L / freq.QuadPart;
   }
 
-  inline double nanosecs_per_tic( boost::system::error_code & ec )
-  {
-    static double ns_per_tic = get_nanosecs_per_tic(ec);
-    return ns_per_tic;
-  }
 }
 
 namespace boost
@@ -57,20 +47,25 @@ namespace chrono
 
   monotonic_clock::time_point monotonic_clock::now( system::error_code & ec )
   {
+    static double nanosecs_per_tic = get_nanosecs_per_tic();
+
     LARGE_INTEGER pcount;
-    pcount.QuadPart = 1LL;  // just in case nanosecs_per_tic(ec) fails 
-    if ( !QueryPerformanceCounter( &pcount ) )
+    if ( nanosecs_per_tic <= 0.0L || !QueryPerformanceCounter( &pcount ) )
     {
+      DWORD cause = (nanosecs_per_tic <= 0.0L ? ERROR_NOT_SUPPORTED : ::GetLastError());
       if ( &ec == &system::throws )
-        throw
-          std::runtime_error( "monotonic_clock: QueryPerformanceCounter failed" );
+      {
+        boost::throw_exception(
+          system::system_error( cause, system::system_category, "monotonic_clock" ));
+      }
+      ec.assign( cause, system::system_category );
       return time_point(duration(
         static_cast<monotonic_clock::rep>(-1.0) ));
    }
 
     if ( &ec != &system::throws ) ec.clear();
     return time_point(duration(
-      static_cast<monotonic_clock::rep>(nanosecs_per_tic(ec) * pcount.QuadPart) ));
+      static_cast<monotonic_clock::rep>(nanosecs_per_tic * pcount.QuadPart) ));
   }
 
   system_clock::time_point system_clock::now( system::error_code & ec )
