@@ -51,7 +51,7 @@
 				<xsl:with-param name="count" select="$count - 1"/>
 			</xsl:call-template>
 		</xsl:if>
-		<xsl:text>.</xsl:text>
+		<xsl:text>_</xsl:text>
 	</xsl:template>
 	
 	<xsl:template name="make-concept-list">
@@ -77,9 +77,9 @@
 									<xsl:with-param name="count" select="$max_name_length - string-length(@name)"/>
 								</xsl:call-template>
 								<xsl:value-of select="@name"/>
+							<xsl:text> </xsl:text>
 							</xsl:element>
 						</xsl:element>
-						<xsl:text> </xsl:text>
 				</xsl:for-each>
 				</code> </div> </td> </tr>
 			</table>
