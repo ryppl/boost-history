@@ -67,7 +67,7 @@
 				<xsl:for-each select="document($ontology_src)/concept_ontology/concept">
 					<xsl:sort select="@name" data-type="text" order="ascending"/>
 						<xsl:element name="span">
-						<xsl:attribute name="class">mirror-concept-list-iitem</xsl:attribute>
+						<xsl:attribute name="class">mirror-concept-list-item</xsl:attribute>
 							<xsl:element name="a">
 								<xsl:attribute name="href">
 									<xsl:value-of select="@name"/>
