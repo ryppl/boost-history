@@ -15,6 +15,9 @@
 	<!-- include the template that makes the alphabetical list of concepts-->
 	<xsl:include href="../xslt/make_concept_list.xsl"/>
 
+	<!-- include the template that makes the list of concept models-->
+	<xsl:include href="../xslt/make_model_list.xsl"/>
+
 
 	<xsl:template name="make-list-of-already-done-members">
 		<xsl:param name="current"/>
@@ -54,22 +57,24 @@
 			<xsl:if test="not(contains($already_done, concat('[', @name, ']')))">
 			<tr>
 				<td><code>
-					<xsl:if test="@nolink='true'">
-						<xsl:value-of select="@concept"/>
+					<xsl:variable name="this_concept" select="@concept"/>
+					<xsl:variable name="this_is_known_concept" select="document($ontology_src)/concept_ontology/concept[@name = $this_concept]"/>
+					<xsl:if test="not($this_is_known_concept)">
+						<xsl:value-of select="$this_concept"/>
 					</xsl:if>
-					<xsl:if test="not(@nolink='true')">
+					<xsl:if test="$this_is_known_concept">
 						<xsl:element name="a">
 							<xsl:attribute name="href">
 								<xsl:if test="@url">
 									<xsl:value-of select="@url"/>
 								</xsl:if>
 								<xsl:if test="not(@url)">
-									<xsl:value-of select="@concept"/>
+									<xsl:value-of select="$this_concept"/>
 									<xsl:text>.xml</xsl:text>
 								</xsl:if>
 							</xsl:attribute>
 
-							<xsl:value-of select="@concept"/>
+							<xsl:value-of select="$this_concept"/>
 						</xsl:element>
 					</xsl:if>
 				</code></td>
@@ -81,31 +86,69 @@
 						<strong>x</strong><xsl:text>.</xsl:text>
 					</xsl:if>
 					
-					<xsl:value-of select="@name"/>
-					<xsl:if test="$member_type = 'member_function'">
-						<xsl:text>(</xsl:text>
-						<xsl:for-each select="fn_param">
-							<xsl:value-of select="@concept"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="@name"/>
-							<xsl:if test="position()!=last()">
-							<xsl:text>, </xsl:text>
-							</xsl:if>
-						</xsl:for-each>
-						<xsl:text>)</xsl:text>
+					
+					<xsl:if test="$member_type = 'free_function' or $member_type='metafunction'">
+						<xsl:if test="@namespace or @subnamespace">
+							<xsl:value-of select="@namespace | @subnamespace"/>
+							<xsl:text>::</xsl:text>
+						</xsl:if>
 					</xsl:if>
-					<xsl:if test="$member_type = 'metafunction'">
+					<xsl:value-of select="@name"/>
+					<xsl:if test="$member_type = 'metafunction' or template_param">
 						<xsl:text>&lt; </xsl:text>
-						<xsl:for-each select="metafn_param">
+						<xsl:for-each select="metafn_param | template_param">
+							<xsl:variable name="templ_param_concept" select="@name"/>
 							<xsl:if test="@placeholder='true'">
 								<strong>T</strong>
 							</xsl:if>
-							<xsl:value-of select="@name"/>
+							<xsl:choose>
+								<xsl:when test="document($ontology_src)/concept_ontology/concept[@name = $templ_param_concept]">
+									<xsl:element name="a">
+										<xsl:attribute name="href">
+											<xsl:value-of select="@name"/>
+											<xsl:text>.xml</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="@name"/>
+									</xsl:element>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@name"/>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:if test="position()!=last()">
 							<xsl:text>, </xsl:text>
 							</xsl:if>
 						</xsl:for-each>
 						<xsl:text> &gt;::type</xsl:text>
+					</xsl:if>
+					<xsl:if test="$member_type = 'member_function' or $member_type = 'free_function'">
+						<xsl:text>(</xsl:text>
+						<xsl:for-each select="fn_param">
+							<xsl:variable name="fn_param_concept" select="@concept"/>
+							<xsl:element name="span">
+								<xsl:attribute name="title">
+									<xsl:value-of select="@concept"/>
+								</xsl:attribute>
+								<xsl:choose>
+									<xsl:when test="document($ontology_src)/concept_ontology/concept[@name = $fn_param_concept]">
+										<xsl:element name="a">
+											<xsl:attribute name="href">
+												<xsl:value-of select="@concept"/>
+												<xsl:text>.xml</xsl:text>
+											</xsl:attribute>
+											<xsl:value-of select="@name"/>
+										</xsl:element>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@name"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:element>
+							<xsl:if test="position()!=last()">
+							<xsl:text>, </xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+						<xsl:text>)</xsl:text>
 					</xsl:if>
 				</code></td>
 				<td>
@@ -202,6 +245,28 @@
 		</div>
 	</xsl:template>
 
+	<!-- makes the free function table -->
+	<xsl:template name="make-free-fn-table">
+		<xsl:param name="concept"/>
+		<div class="table">
+			<p class="title"><b>Free functions</b></p>
+			<div class="table-contents">
+				<table class="table">
+					<tr>
+						<th>Return value concept</th>
+						<th>Expression</th>
+						<th>Notes</th>
+					</tr>
+					<xsl:call-template name="make-member-items">
+						<xsl:with-param name="concept" select="$concept"/>
+						<xsl:with-param name="current" select="$concept"/>
+						<xsl:with-param name="member_type">free_function</xsl:with-param>
+					</xsl:call-template>
+				</table>
+			</div>
+		</div>
+	</xsl:template>
+
 	<!-- makes the metafunction function table -->
 	<xsl:template name="make-meta-fn-table">
 		<xsl:param name="concept"/>
@@ -224,82 +289,6 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template name="make-model-list">
-		<xsl:param name="concept"/>
-		<xsl:param name="current"/>
-		<xsl:param name="already_done"/>
-	
-		<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/model">
-			<xsl:if test="not(contains($already_done, concat('[', @name, ']')))">
-				<tr>
-					<td>
-						<xsl:if test="@nolink='true'">
-							<code> <xsl:value-of select="@name"/> </code>
-						</xsl:if>
-						<xsl:if test="not(@nolink='true')">
-							<xsl:element name="a">
-								<xsl:attribute name="href">
-									<xsl:if test="@url">
-										<xsl:value-of select="@url"/>
-									</xsl:if>
-									<xsl:if test="not(@url)">
-										<xsl:text>../../../../boost/</xsl:text>
-										<xsl:if test="@namespace">
-											<xsl:value-of select="@namespace"/>
-										</xsl:if>
-										<xsl:if test="not(@namespace)">
-											<xsl:text>mirror</xsl:text>
-										</xsl:if>
-										<xsl:text>/</xsl:text>
-										<xsl:value-of select="@name"/>
-										<xsl:text>.html</xsl:text>
-									</xsl:if>
-			
-								</xsl:attribute>
-	
-								<xsl:if test="@namespace">
-									<xsl:value-of select="@namespace"/>
-									<xsl:text>::</xsl:text>
-								</xsl:if>
-								<code> <xsl:value-of select="@name"/> </code>
-							</xsl:element>
-						</xsl:if>
-					</td>
-					<td>
-						<xsl:if test="not(notes)">
-							<xsl:text>-</xsl:text>
-						</xsl:if>
-					</td>
-				</tr>
-			</xsl:if>
-		</xsl:for-each>
-		
-		<xsl:variable name="new_already_done">
-			<xsl:value-of select="$already_done"/>
-			<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/model">
-				<xsl:value-of select="concat('[', @name, ']')"/>
-			</xsl:for-each>
-		</xsl:variable>
-		<!-- go through the refinements of this concept --> 
-		<xsl:for-each select="document($ontology_src)/concept_ontology/role[@type='Specialization' and @subject=$current]">
-			<!-- get the list of members that were already covered -->
-			<xsl:call-template name="make-model-list">
-				<xsl:with-param name="concept" select="$concept"/>
-				<xsl:with-param name="current" select="@object"/>
-				<xsl:with-param name="already_done">
-					<xsl:value-of select="$new_already_done"/>
-					<xsl:for-each select="preceding-sibling::node()[@type='Specialization' and @subject=$current]">
-						<xsl:call-template name="make-list-of-already-done-models">
-							<xsl:with-param name="current" select="@object"/>
-						</xsl:call-template>
-					</xsl:for-each>
-				</xsl:with-param>
-			</xsl:call-template>
-		</xsl:for-each>
-
-	</xsl:template>
-
-	<!-- makes the concept models table -->
 	<xsl:template name="make-models-table">
 		<xsl:param name="concept"/>
 		<div class="table">
@@ -337,12 +326,15 @@
 		</xsl:call-template>
 		</div>
 
-		<p>For each type <code>T</code> which is a model of the <xsl:value-of select="$concept"/> concept and for each variable <code>x</code> which is of <code>T</code> type, the following expressions are valid.</p>
+		<p>For each type <code><strong>T</strong></code> which is a model of the <xsl:value-of select="$concept"/> concept and for each variable <code><strong>x</strong></code> which is of <code><strong>T</strong></code> type, the following expressions are valid.</p>
 
 		<xsl:call-template name="make-typedef-table">
 			<xsl:with-param name="concept" select="$concept"/>
 		</xsl:call-template>
 		<xsl:call-template name="make-mem-fn-table">
+			<xsl:with-param name="concept" select="$concept"/>
+		</xsl:call-template>
+		<xsl:call-template name="make-free-fn-table">
 			<xsl:with-param name="concept" select="$concept"/>
 		</xsl:call-template>
 		<xsl:call-template name="make-meta-fn-table">

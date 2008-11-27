@@ -8,8 +8,181 @@
 		<model url="http://www.sgi.com/tech/stl/basic_string.html" name="::std::basic_string"/>
 	</concept>
 
+	<concept name="ContextNodeSet">
+		<metafunction concept="MplIntegralConstant" subnamespace="meta_path" name="size">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns the count of MetaObjects in the ContextNodeSet.</desc>
+		</metafunction>
+		<metafunction concept="MetaObject" subnamespace="meta_path" name="at">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<metafn_param name="Position">
+			</metafn_param>
+			<desc>Returns the MetaObject at the given Position in the ContextNodeSet. Position should be a model of the MPL's IntegralConstant concept.</desc>
+		</metafunction>
+
+		<free_function concept="UnaryFunctor" subnamespace="meta_path" name="for_each">
+			<template_param placeholder="true"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the runtime functor on an temporary instance of every MetaObject in the ContextNodeSet.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" subnamespace="meta_path" name="for_each">
+			<template_param placeholder="true"/>
+			<template_param name="TransformOp"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="TransformOp" name="transform"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the runtime functor on a temporary instance of the result of the TransformOp on every MetaObject in the ContextNodeSet.</desc>
+		</free_function>
+	</concept>
+
+	<concept name="TraversalContext">
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="self">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing only the contextual MetaObject.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="parent">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing only the parent MetaObject of the contextual MetaObject. For example a MetaClass is a parent of MetaBaseClasses or MetaClassAttributes, MetaClassAttributes is a parent of MetaClassAttribute, etc.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="ancestors">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing the MetaObjects which are ancestors of the contextual MetaObject.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="ancestors_and_self">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing the MetaObjects which are ancestors of the contextual MetaObject and the contextual MetaObject itself.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="siblings">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing the MetaObjects which are siblings of the contextual MetaObject.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="siblings_and_self">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing the MetaObjects which are siblings of the contextual MetaObject and the contextual MetaObject itself.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="prior">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing the single MetaObject which is directly preceding the contextual MetaObject.</desc>
+		</metafunction>
+		<metafunction concept="ContextNodeSet" subnamespace="meta_path" name="next">
+			<metafn_param placeholder="true">
+			</metafn_param>
+			<desc>Returns a ContextNodeSet containing the single MetaObject which is directly following the contextual MetaObject.</desc>
+		</metafunction>
+	</concept>
+
+	<concept name="TraversalVisitor">
+		<member_typedef concept="MplBooleanIntegralConstant" name="works_on_instances">
+			<desc>Indicates whether the visitor works on instances or just on the structure of the visited type.</desc>
+		</member_typedef>
+
+		<member_function concept="void" name="enter_type">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor enters a type reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="leave_type">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor leaves a type reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="enter_base_classes">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="MetaBaseClasses" name="_meta_base_classes"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor enters the list of base classes reflected by _meta_base_classes, of a class reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="leave_base_classes">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="MetaBaseClasses" name="_meta_base_classes"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor leaves the list of base classes reflected by _meta_base_classes, of a class reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="enter_base_class">
+			<fn_param concept="MetaInheritance" name="_meta_inheritance"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor enters a concrete base class reflected by _meta_inheritance in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="leave_base_class">
+			<fn_param concept="MetaInheritance" name="_meta_inheritance"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor leaves a concrete base class reflected by _meta_inheritance in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="enter_attributes">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="MetaClassAttributes" name="_meta_class_attributes"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor enters the list of member attributes reflected by _meta_class_attributes, of a class reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="leave_base_classes">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="MetaClassAttributes" name="_meta_class_attributes"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor leaves the list of member attributes reflected by _meta_class_attributes, of a class reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="enter_base_class">
+			<fn_param concept="MetaClassAttribute" name="_meta_attribute"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor enters a concrete member attribute reflected by _meta_attribute in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="leave_base_class">
+			<fn_param concept="MetaClassAttribute" name="_meta_attribute"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<desc>The visitor leaves a concrete member attribute reflected by _meta_attribute in the context indicated by _context.</desc>
+		</member_function>
+		<member_function concept="void" name="visit_instance">
+			<fn_param concept="MetaClass" name="_meta_class"/>
+			<fn_param concept="TraversalContext" name="_context"/>
+			<fn_param concept="Pointer" name="_ptr_to_inst"/>
+			<desc>The visitor visits an instance, pointed to by _ptr_to_inst, of the class or type reflected by _meta_class in the context indicated by _context.</desc>
+		</member_function>
+	</concept>
+
 	<concept name="Iterator">
-		<metafunction concept="MplBooleanIntegralType" name="is_valid" nolink="true">
+		<free_function concept="UnaryFunctor" name="for_each">
+			<template_param placeholder="true"/>
+			<template_param placeholder="true"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the functor on an temporary instance of every element in the range specified by the passed iterators.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" name="for_each">
+			<template_param placeholder="true"/>
+			<template_param placeholder="true"/>
+			<template_param name="TransformOp"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="TransformOp" name="transform"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the runtime functor on a temporary instance of the result of the TransformOp on every element in the range specified by the passed iterators.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" name="reverse_for_each">
+			<template_param placeholder="true"/>
+			<template_param placeholder="true"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the functor on an temporary instance of every element in the reversed range specified by the passed iterators.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" name="reverse_for_each">
+			<template_param placeholder="true"/>
+			<template_param placeholder="true"/>
+			<template_param name="TransformOp"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="TransformOp" name="transform"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the runtime functor on a temporary instance of the result of the TransformOp on every element in the reverse range specified by the passed iterators.</desc>
+		</free_function>
+			
+		<metafunction concept="MplBooleanIntegralConstant" name="is_valid">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>Returns mpl::true_ if the passed iterator is valid, returns mpl::false_ otherwise. A valid iterator can be dereferenced.</desc>
@@ -30,42 +203,42 @@
 			<desc>Returns an Iterator pointing to the next element in the MetaObjectSequence.</desc>
 		</metafunction>
 
-		<metafunction concept="MplBooleanIntegralType" name="iterator_equal" nolink="true">
+		<metafunction concept="MplBooleanIntegralConstant" name="iterator_equal">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>Iterator equality comparison.</desc>
 		</metafunction>
-		<metafunction concept="MplBooleanIntegralType" name="iterator_not_equal" nolink="true">
+		<metafunction concept="MplBooleanIntegralConstant" name="iterator_not_equal">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>Iterator non-equality comparison.</desc>
 		</metafunction>
-		<metafunction concept="MplBooleanIntegralType" name="iterator_less" nolink="true">
+		<metafunction concept="MplBooleanIntegralConstant" name="iterator_less">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>Iterator less than comparison.</desc>
 		</metafunction>
-		<metafunction concept="MplBooleanIntegralType" name="iterator_less_equal" nolink="true">
+		<metafunction concept="MplBooleanIntegralConstant" name="iterator_less_equal">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>Iterator less than or equal comparison.</desc>
 		</metafunction>
-		<metafunction concept="MplBooleanIntegralType" name="iterator_greater" nolink="true">
+		<metafunction concept="MplBooleanIntegralConstant" name="iterator_greater">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>Iterator greater than comparison.</desc>
 		</metafunction>
-		<metafunction concept="MplBooleanIntegralType" name="iterator_greater_equal" nolink="true">
+		<metafunction concept="MplBooleanIntegralConstant" name="iterator_greater_equal">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param placeholder="true">
@@ -208,7 +381,7 @@
 
 	<concept name="MetaType">
 		<model name="meta_type"/>
-		<member_typedef concept="Type" name="reflected_type" nolink="true">
+		<member_typedef concept="Type" name="reflected_type">
 			<desc>The type reflected by this MetaType.</desc>
 		</member_typedef>
 	</concept>
@@ -255,7 +428,7 @@
 		<member_typedef concept="MetaClassAttributes" name="meta_all_attributes">
 			<desc>The sequence of MetaClassAttribute(s) reflecting all attributes of a class including the ones inherited from base classes.</desc>
 		</member_typedef>
-		<member_typedef concept="Class" name="reflected_type" nolink="true">
+		<member_typedef concept="Class" name="reflected_type">
 			<desc>The class reflected by this MetaClass.</desc>
 		</member_typedef>
 	</concept>
@@ -378,26 +551,26 @@
 		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
 			<desc>Equivalent to container.</desc>
 		</member_typedef>
-		<member_typedef concept="Type" name="type" nolink="true">
+		<member_typedef concept="Type" name="type">
 			<desc>The type of the reflected attribute.</desc>
 		</member_typedef>
-		<member_typedef concept="TypedefOrTypeSelector" name="typedef_or_type" nolink="true">
+		<member_typedef concept="TypedefOrTypeSelector" name="typedef_or_type">
 			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
 		</member_typedef>
 
-		<member_function concept="Type" name="get" nolink="true">
+		<member_function concept="Type" name="get">
 			<desc>Generic attribute value getter. Returns the value of the reflected class attribute when given an instance of the class that the attribute belongs to.</desc>
-			<fn_param concept="Class" name="instance" nolink="true"/>
+			<fn_param concept="Class" name="instance"/>
 		</member_function>
-		<member_function concept="TypeReference" name="query" nolink="true">
+		<member_function concept="TypeReference" name="query">
 			<desc>Generic attribute value query. Stores the value of the reflected class attribute into the instance referred to by dest_ref, when given an instance of the class that the attribute belongs to.</desc>
-			<fn_param concept="Class" name="instance" nolink="true"/>
-			<fn_param concept="TypeReference" name="dest_ref" nolink="true"/>
+			<fn_param concept="Class" name="instance"/>
+			<fn_param concept="TypeReference" name="dest_ref"/>
 		</member_function>
-		<member_function concept="TypeReference" name="query" nolink="true">
+		<member_function concept="TypeReference" name="query">
 			<desc>Generic attribute value setter. Assigns the new_value to the reflected class attribute, when given an instance of the class that the attribute belongs to.</desc>
-			<fn_param concept="Class" name="instance" nolink="true"/>
-			<fn_param concept="Type" name="new_value" nolink="true"/>
+			<fn_param concept="Class" name="instance"/>
+			<fn_param concept="Type" name="new_value"/>
 		</member_function>
 	</concept>
 
@@ -432,7 +605,7 @@
 		<member_typedef concept="MplBooleanIntegralConstant" name="is_mutable">
 			<desc>Type that indicates whether the class member attribute is mutable.</desc>
 		</member_typedef>
-		<member_typedef concept="TypedefOrTypeSelector" name="meta_type_selector" nolink="true">
+		<member_typedef concept="TypedefOrTypeSelector" name="meta_type_selector">
 			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
 		</member_typedef>
 	</concept>
@@ -480,14 +653,42 @@
 	</role>
 
 	<concept name="MetaObjectSequence">
-		<metafunction concept="MetaObjectSequenceElement" name="at">
+		<free_function concept="UnaryFunctor" name="for_each">
+			<template_param placeholder="true"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the functor on an temporary instance of every element in the MetaObjectSequence.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" name="for_each">
+			<template_param placeholder="true"/>
+			<template_param name="TransformOp"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="TransformOp" name="transform"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the runtime functor on a temporary instance of the result of the TransformOp on every element in the MetaObjectSequence.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" name="reverse_for_each">
+			<template_param placeholder="true"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the functor on an temporary instance of every element in the reversed reversed MetaObjectSequence.</desc>
+		</free_function>
+		<free_function concept="UnaryFunctor" name="reverse_for_each">
+			<template_param placeholder="true"/>
+			<template_param name="TransformOp"/>
+			<template_param name="UnaryFunctor"/>
+			<fn_param concept="TransformOp" name="transform"/>
+			<fn_param concept="UnaryFunctor" name="funct"/>
+			<desc>Executes the runtime functor on a temporary instance of the result of the TransformOp on every element in the reversed MetaObjectSequence.</desc>
+		</free_function>
+	<metafunction concept="MetaObjectSequenceElement" name="at">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param name="Position">
 			</metafn_param>
 			<desc>The result is the element from the MetaObjectSequence at the given Position. The type used as the Position parameter must conform to MPL Integral Constant concept.</desc>
 		</metafunction>
-		<metafunction concept="MplIntegralConstant" name="size" nolink="true">
+		<metafunction concept="MplIntegralConstant" name="size">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>The result is the count of elements in the MetaObjectSequence.</desc>
@@ -531,7 +732,7 @@
 			</metafn_param>
 			<desc>Returns a Reverse Iterator pointing to the first element in the reversed MetaObjectSequence satisfying the given Predicate.</desc>
 		</metafunction>
-		<metafunction concept="unspecified" name="accumulate" nolink="true">
+		<metafunction concept="unspecified" name="accumulate">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<metafn_param name="InitialState">
@@ -554,7 +755,7 @@
 		<member_typedef concept="MetaObjectSequence" name="container">
 			<desc>The sequence that this element belongs to.</desc>
 		</member_typedef>
-		<member_typedef concept="MplIntegralConstant" name="position" nolink="true">
+		<member_typedef concept="MplIntegralConstant" name="position">
 			<desc>An MPL Integral Constant indicating the position of the reflected element in the container.</desc>
 		</member_typedef>
 	</concept>
@@ -569,10 +770,10 @@
 
 	<concept name="MetaBaseClasses">
 		<model name="meta_base_classes"/>
-		<member_typedef concept="Class" name="derived_class" nolink="true">
+		<member_typedef concept="Class" name="derived_class">
 			<desc>The class which base classes this MetaBaseClasses sequence reflects.</desc>
 		</member_typedef>
-		<metafunction concept="MplSequence" name="get_type_list" nolink="true">
+		<metafunction concept="MplSequence" name="get_type_list">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>The result is an MPL Sequence of the base classes of derived_class.</desc>
@@ -591,7 +792,7 @@
 	<concept name="MetaClassAttributes">
 		<model name="meta_class_attributes"/>
 		<model name="meta_class_all_attributes"/>
-		<metafunction concept="MplSequence" name="get_type_list" nolink="true">
+		<metafunction concept="MplSequence" name="get_type_list">
 			<metafn_param placeholder="true">
 			</metafn_param>
 			<desc>The result is an MPL Sequence of the types of the class' member attributes.</desc>
