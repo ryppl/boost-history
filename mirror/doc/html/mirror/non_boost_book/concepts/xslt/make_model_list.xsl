@@ -2,6 +2,19 @@
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
+        <xsl:template name="make-list-of-already-done-models">
+                <xsl:param name="current"/>
+                <xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/model">
+                        <xsl:value-of select="concat('[', @name, ']')"/>
+                </xsl:for-each>
+                <xsl:for-each select="document($ontology_src)/concept_ontology/role[@type='Specialization' and @subject=$current]">
+                        <xsl:call-template name="make-list-of-already-done-models">
+                                <xsl:with-param name="current" select="@object"/>
+                        </xsl:call-template>
+                </xsl:for-each>
+        </xsl:template>
+
+
         <xsl:template name="make-model-list">
                 <xsl:param name="concept"/>
                 <xsl:param name="current"/>

@@ -8,6 +8,21 @@
 		<model url="http://www.sgi.com/tech/stl/basic_string.html" name="::std::basic_string"/>
 	</concept>
 
+	<concept name="Traversal">
+		<member_function concept="void" name="accept">
+			<fn_param concept="TraversalVisitor" name="_visitor"/>
+			<desc>Accepts the given visitor for traversal of the class' structure only.</desc>
+		</member_function>
+		<member_function concept="void" name="accept">
+			<fn_param concept="TraversalVisitor" name="_visitor"/>
+			<fn_param concept="Pointer" name="_ptr_to_instance"/>
+			<desc>Accepts the given visitor for traversal of the class and of its instance.</desc>
+		</member_function>
+
+		<model name="flat_traversal_of"/>
+		<model name="deep_traversal_of"/>
+	</concept>
+
 	<concept name="ContextNodeSet">
 		<metafunction concept="MplIntegralConstant" subnamespace="meta_path" name="size">
 			<metafn_param placeholder="true">
@@ -420,7 +435,7 @@
 	<concept name="MetaClass">
 		<model name="meta_class"/>
 		<member_typedef concept="MetaBaseClasses" name="base_classes">
-			<desc>The sequence of MetaInheritance(s) reflecting the inheritance of the base classes.</desc>
+			<desc>The sequence of MetaBaseClasses reflecting the inheritance of the base classes.</desc>
 		</member_typedef>
 		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
 			<desc>The sequence of MetaClassAttribute(s) reflecting the "own" attributes of a class. These are the attributes that are defined directly in the class reflected by this MetaClass, not including the attributes inherited from the base classes.</desc>
@@ -523,7 +538,7 @@
 	<concept name="MetaInheritance">
 		<model name="meta_inheritance"/>
 		<member_typedef concept="MetaBaseClasses" name="container">
-			<desc>The list of MetaInhertiance(s) that this MetaInheritance belongs to.</desc>
+			<desc>The list of MetaBaseClasses that this MetaInheritance belongs to.</desc>
 		</member_typedef>
 	</concept>
 	

@@ -21,39 +21,59 @@
 
 	<xsl:template name="make-list-of-already-done-members">
 		<xsl:param name="current"/>
-		<xsl:param name="member_type"/>
-		<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_type]">
+		<xsl:param name="member_kind"/>
+		<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_kind]">
 			<xsl:value-of select="concat('[', @name, ']')"/>
 		</xsl:for-each>
 		<xsl:for-each select="document($ontology_src)/concept_ontology/role[@type='Specialization' and @object=$current]">
 			<xsl:call-template name="make-list-of-already-done-members">
 				<xsl:with-param name="current" select="@subject"/>
-				<xsl:with-param name="member_type" select="$member_type"/>
+				<xsl:with-param name="member_kind" select="$member_kind"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="make-list-of-already-done-models">
+
+	<xsl:template name="find-and-mark-member-items">
 		<xsl:param name="current"/>
-		<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/model">
-			<xsl:value-of select="concat('[', @name, ']')"/>
-		</xsl:for-each>
-		<xsl:for-each select="document($ontology_src)/concept_ontology/role[@type='Specialization' and @subject=$current]">
-			<xsl:call-template name="make-list-of-already-done-models">
-				<xsl:with-param name="current" select="@object"/>
-			</xsl:call-template>
-		</xsl:for-each>
+		<xsl:param name="member_kind"/>
+		
+		<xsl:choose>
+			<xsl:when test="count(document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_kind]) &gt; 0">
+				<xsl:text>X</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+			<xsl:for-each select="document($ontology_src)/concept_ontology/role[@type='Specialization' and @object=$current]">
+				<xsl:call-template name="find-and-mark-member-items">
+					<xsl:with-param name="current" select="@subject"/>
+					<xsl:with-param name="member_kind" select="$member_kind"/>
+				</xsl:call-template>
+			</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template name="has-member-items">
+		<xsl:param name="concept"/>
+		<xsl:param name="member_kind"/>
+		<xsl:variable name="marks">
+			<xsl:call-template name="find-and-mark-member-items">
+				<xsl:with-param name="current" select="$concept"/>
+				<xsl:with-param name="member_kind" select="$member_kind"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:value-of select="string-length($marks) &gt; 0"/>
+	</xsl:template>
+	
 
 	<xsl:template name="make-member-items">
 		<xsl:param name="concept"/>
 		<xsl:param name="current"/>
 		<xsl:param name="already_done"/>
-		<xsl:param name="member_type"/>
+		<xsl:param name="member_kind"/>
 
 		<!-- print out the typedefs of the current concept -->
-		<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_type]">
+		<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_kind]">
 			<xsl:if test="not(contains($already_done, concat('[', @name, ']')))">
 			<tr>
 				<td><code>
@@ -79,22 +99,22 @@
 					</xsl:if>
 				</code></td>
 				<td><code>
-					<xsl:if test="$member_type = 'member_typedef'">
+					<xsl:if test="$member_kind = 'member_typedef'">
 						<strong>T</strong><xsl:text>::</xsl:text>
 					</xsl:if>
-					<xsl:if test="$member_type = 'member_function'">
+					<xsl:if test="$member_kind = 'member_function'">
 						<strong>x</strong><xsl:text>.</xsl:text>
 					</xsl:if>
 					
 					
-					<xsl:if test="$member_type = 'free_function' or $member_type='metafunction'">
+					<xsl:if test="$member_kind = 'free_function' or $member_kind='metafunction'">
 						<xsl:if test="@namespace or @subnamespace">
 							<xsl:value-of select="@namespace | @subnamespace"/>
 							<xsl:text>::</xsl:text>
 						</xsl:if>
 					</xsl:if>
 					<xsl:value-of select="@name"/>
-					<xsl:if test="$member_type = 'metafunction' or template_param">
+					<xsl:if test="$member_kind = 'metafunction' or template_param">
 						<xsl:text>&lt; </xsl:text>
 						<xsl:for-each select="metafn_param | template_param">
 							<xsl:variable name="templ_param_concept" select="@name"/>
@@ -121,7 +141,7 @@
 						</xsl:for-each>
 						<xsl:text> &gt;::type</xsl:text>
 					</xsl:if>
-					<xsl:if test="$member_type = 'member_function' or $member_type = 'free_function'">
+					<xsl:if test="$member_kind = 'member_function' or $member_kind = 'free_function'">
 						<xsl:text>(</xsl:text>
 						<xsl:for-each select="fn_param">
 							<xsl:variable name="fn_param_concept" select="@concept"/>
@@ -174,7 +194,7 @@
 
 		<xsl:variable name="new_already_done">
 			<xsl:value-of select="$already_done"/>
-			<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_type]">
+			<xsl:for-each select="document($ontology_src)/concept_ontology/concept[@name = $current]/*[name() = $member_kind]">
 				<xsl:value-of select="concat('[', @name, ']')"/>
 			</xsl:for-each>
 		</xsl:variable>
@@ -190,103 +210,93 @@
 					<xsl:for-each select="preceding-sibling::node()[@type='Specialization' and @object=$current]">
 						<xsl:call-template name="make-list-of-already-done-members">
 							<xsl:with-param name="current" select="@subject"/>
-							<xsl:with-param name="member_type" select="$member_type"/>
+							<xsl:with-param name="member_kind" select="$member_kind"/>
 						</xsl:call-template>
 					</xsl:for-each>
 				</xsl:with-param>
-				<xsl:with-param name="member_type" select="$member_type"/>
+				<xsl:with-param name="member_kind" select="$member_kind"/>
 			</xsl:call-template>
 		</xsl:for-each>
 
 
 	</xsl:template>
 
+
+	<xsl:template name="make-member-item-table">
+		<xsl:param name="concept"/>
+		<xsl:param name="member_kind"/>
+		<xsl:param name="caption"/>
+		<xsl:param name="concept_column_heading"/>
+		<xsl:variable name="has_items">
+			<xsl:call-template name="has-member-items">
+				<xsl:with-param name="concept" select="$concept"/>
+				<xsl:with-param name="member_kind" select="$member_kind"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:if test="$has_items='true'">
+			<div class="table">
+				<p class="title"><b><xsl:value-of select="$caption"/></b></p>
+				<div class="table-contents">
+					<table class="table">
+						<tr>
+							<th><xsl:value-of select="$concept_column_heading"/></th>
+							<th>Expression</th>
+							<th>Notes</th>
+						</tr>
+						<xsl:call-template name="make-member-items">
+							<xsl:with-param name="concept" select="$concept"/>
+							<xsl:with-param name="current" select="$concept"/>
+							<xsl:with-param name="member_kind" select="$member_kind"/>
+						</xsl:call-template>
+					</table>
+				</div>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
 	<!-- makes the typedef table -->
 	<xsl:template name="make-typedef-table">
 		<xsl:param name="concept"/>
-		<div class="table">
-			<p class="title"><b>Member types</b></p>
-			<div class="table-contents">
-				<table class="table">
-					<tr>
-						<th>Concept</th>
-						<th>Expression</th>
-						<th>Notes</th>
-					</tr>
-					<xsl:call-template name="make-member-items">
-						<xsl:with-param name="concept" select="$concept"/>
-						<xsl:with-param name="current" select="$concept"/>
-						<xsl:with-param name="member_type">member_typedef</xsl:with-param>
-					</xsl:call-template>
-				</table>
-			</div>
-		</div>
+		<xsl:call-template name="make-member-item-table">
+			<xsl:with-param name="concept" select="$concept"/>
+			<xsl:with-param name="member_kind" select="'member_typedef'"/>
+			<xsl:with-param name="caption" select="'Member types'"/>
+			<xsl:with-param name="concept_column_heading" select="'Concept'"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<!-- makes the member function table -->
 	<xsl:template name="make-mem-fn-table">
 		<xsl:param name="concept"/>
-		<div class="table">
-			<p class="title"><b>Member functions</b></p>
-			<div class="table-contents">
-				<table class="table">
-					<tr>
-						<th>Return value concept</th>
-						<th>Expression</th>
-						<th>Notes</th>
-					</tr>
-					<xsl:call-template name="make-member-items">
-						<xsl:with-param name="concept" select="$concept"/>
-						<xsl:with-param name="current" select="$concept"/>
-						<xsl:with-param name="member_type">member_function</xsl:with-param>
-					</xsl:call-template>
-				</table>
-			</div>
-		</div>
+                <xsl:call-template name="make-member-item-table">
+                        <xsl:with-param name="concept" select="$concept"/>
+                        <xsl:with-param name="member_kind" select="'member_function'"/>
+                        <xsl:with-param name="caption" select="'Member functions'"/>
+                        <xsl:with-param name="concept_column_heading" select="'Return value concept'"/>
+                </xsl:call-template>
 	</xsl:template>
 
 	<!-- makes the free function table -->
 	<xsl:template name="make-free-fn-table">
 		<xsl:param name="concept"/>
-		<div class="table">
-			<p class="title"><b>Free functions</b></p>
-			<div class="table-contents">
-				<table class="table">
-					<tr>
-						<th>Return value concept</th>
-						<th>Expression</th>
-						<th>Notes</th>
-					</tr>
-					<xsl:call-template name="make-member-items">
-						<xsl:with-param name="concept" select="$concept"/>
-						<xsl:with-param name="current" select="$concept"/>
-						<xsl:with-param name="member_type">free_function</xsl:with-param>
-					</xsl:call-template>
-				</table>
-			</div>
-		</div>
+                <xsl:call-template name="make-member-item-table">
+                        <xsl:with-param name="concept" select="$concept"/>
+                        <xsl:with-param name="member_kind" select="'free_function'"/>
+                        <xsl:with-param name="caption" select="'Free functions'"/>
+                        <xsl:with-param name="concept_column_heading" select="'Return value concept'"/>
+                </xsl:call-template>
 	</xsl:template>
 
 	<!-- makes the metafunction function table -->
 	<xsl:template name="make-meta-fn-table">
 		<xsl:param name="concept"/>
-		<div class="table">
-			<p class="title"><b>Metafunctions</b></p>
-			<div class="table-contents">
-				<table class="table">
-					<tr>
-						<th>Result concept</th>
-						<th>Expression</th>
-						<th>Notes</th>
-					</tr>
-					<xsl:call-template name="make-member-items">
-						<xsl:with-param name="concept" select="$concept"/>
-						<xsl:with-param name="current" select="$concept"/>
-						<xsl:with-param name="member_type">metafunction</xsl:with-param>
-					</xsl:call-template>
-				</table>
-			</div>
-		</div>
+                <xsl:call-template name="make-member-item-table">
+                        <xsl:with-param name="concept" select="$concept"/>
+                        <xsl:with-param name="member_kind" select="'metafunction'"/>
+                        <xsl:with-param name="caption" select="'Metafunctions'"/>
+                        <xsl:with-param name="concept_column_heading" select="'Result concept'"/>
+                </xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="make-models-table">
