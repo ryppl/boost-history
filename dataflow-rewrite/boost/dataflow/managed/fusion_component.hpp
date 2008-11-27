@@ -7,7 +7,7 @@
 #define BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP
 
 #include <boost/dataflow/detail/make_ref.hpp>
-#include <boost/dataflow/generic/fusion_static_vector.hpp>
+#include <boost/dataflow/generic/static_vector.hpp>
 #include <boost/dataflow/managed/port.hpp>
 #include <boost/dataflow/managed/component.hpp>
 //#include <boost/dataflow/support/component_operation.hpp>
@@ -56,21 +56,12 @@ namespace detail
 
 template<typename InTypes, typename OutTypes>
 struct component_traits
-    : public dataflow::fusion_static_vector_traits<
-    boost::fusion::transform_view<
+    : public dataflow::static_vector_traits
+        <
             typename detail::make_fusion_ports<InTypes, OutTypes>::type,
-            boost::dataflow::detail::make_ref
-        >,
-        managed::framework>
-{
-    typedef typename detail::make_fusion_ports<InTypes, OutTypes>::type fusion_ports;
-
-    template<typename Component>
-    static typename component_traits::fusion_ports &get_ports(Component &component)
-    {
-        return component.ports();
-    };
-};
+            managed::framework
+        >
+{};
 
 namespace detail {
 
@@ -128,6 +119,20 @@ namespace extension {
             component.invoke();
         }
     };*/
+
+
+    template<typename InTypesSequence, typename OutTypesSequence>
+    struct entities_impl<managed::component_traits<InTypesSequence,OutTypesSequence> >
+    {
+        typedef typename managed::component_traits<InTypesSequence,OutTypesSequence>::entity_sequence & result_type;
+        
+        template<typename Entity>
+        result_type operator()(Entity &entity) const
+        {
+            return entity.ports();
+        }
+        
+    };
 
 }
 

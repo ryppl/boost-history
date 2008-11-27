@@ -15,12 +15,13 @@
 int test_main(int, char* [])
 {
     using namespace boost;
+    using boost::fusion::at_c;
     namespace df=boost::dataflow;
     df::managed::network network;
     df::managed::fusion_component<bool> c(network);
 
-    BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<0> >(c)), &c.port<0>());
-    BOOST_CHECK_EQUAL((&df::get_port<boost::mpl::int_<1> >(c)), &c.port<1>());
+    BOOST_CHECK_EQUAL(&at_c<0>(df::entities(c)), &c.port<0>());
+    BOOST_CHECK_EQUAL(&at_c<1>(df::entities(c)), &c.port<1>());
 
     return 0;
 } // int test_main(int, char* [])

@@ -11,17 +11,11 @@ import path ;
 project boost/dataflow/build ;
 
 make port_binary_operation.hpp : specializable_operation.hpp.py : @in2out ;
-make get_port.hpp : specializable_operation.hpp.py : @get_port ;
 make entities.hpp : specializable_operation.hpp.py : @entities ;
 
 actions in2out
 {
     python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="port_binary_operation" CHECK="are_port_binary_operable" TEMPLATES="Operation" EXTRA_ARGS="Operation" ARITY=2 HAS_TRAITS="is_port" INCLUDES="<boost/dataflow/generic/port/port.hpp>"
-}
-
-actions get_port
-{
-    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="get_port" CHECK="has_ports" INNER_TEMPLATES="Index" EXTRA_ARGS="Index" ARITY=1 HAS_TRAITS="is_framework_entity" INCLUDES="<boost/dataflow/generic/framework_entity.hpp>"
 }
 
 actions entities

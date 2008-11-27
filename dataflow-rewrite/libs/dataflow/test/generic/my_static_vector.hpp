@@ -33,25 +33,14 @@ struct tuple
 namespace boost { namespace dataflow { namespace extension {
 
 template<>
-struct get_port_impl<my_traits>
+struct entities_impl<my_traits>
 {
-    template<typename FArgs>
-    struct result
-    {};
+    typedef boost::fusion::vector2<float, int> & result_type;
     
-    template<typename F, typename Entity, typename N>
-    struct result<F(Entity, N)>
+    template<typename Entity>
+    result_type operator()(Entity &e)
     {
-        typedef typename fusion::result_of::value_at<
-            fusion::vector2<float, int>,
-            N>::type type;
-    };
-    
-    template<typename Entity, typename N>
-    typename result<get_port_impl(Entity &, N)>::type
-    operator()(Entity &e, N)
-    {
-        return fusion::at<N>(e.ports);
+        return e.ports;
     }
 };
 
