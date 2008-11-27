@@ -12,10 +12,8 @@
 #ifndef BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 #define BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 
-
-#include <boost/tree/cursor_facade.hpp>
+#include <boost/tree/cursor_adaptor.hpp>
 #include <boost/tree/detail/node/nary.hpp>
-//#include <boost/tree/iterator.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -32,7 +30,12 @@ using boost::tree::cursor_core_access;
 
 template <class Node> 
 class nary_tree_cursor
- : public cursor_facade<nary_tree_cursor<Node>
+ : public cursor_adaptor<nary_tree_cursor<Node>
+      , typename mpl::eval_if<
+                        is_const<Node>
+                      , add_const<typename Node::base_type>
+                      , mpl::identity<typename Node::base_type>
+                    >::type*                  
       , typename mpl::eval_if<
                     is_const<Node>
                   , add_const<typename Node::value_type>
@@ -67,7 +70,7 @@ public:
                     >::type value_type;
 
     // Container-specific:
-    typedef typename node_type::size_type size_type;
+    typedef typename nary_tree_cursor::cursor_adaptor_::size_type size_type;
 
     // Cursor-specific
     typedef nary_tree_cursor<node_type> cursor;
@@ -84,10 +87,10 @@ public:
     };
     
     nary_tree_cursor()
-      : m_node(0), m_pos(0) {}
+      : nary_tree_cursor::cursor_adaptor_(0), m_pos(0) {}
 
     explicit nary_tree_cursor(base_pointer p, size_type pos) 
-    : m_node(p), m_pos(pos) {}
+    : nary_tree_cursor::cursor_adaptor_(p), m_pos(pos) {}
 
     template <class OtherNode>
     nary_tree_cursor(
@@ -97,12 +100,11 @@ public:
           , enabler
         >::type = enabler()
     )
-      : m_node(other.m_node), m_pos(other.m_pos) {}
+    : nary_tree_cursor::cursor_adaptor_(other.base()), m_pos(other.m_pos) {}
 
-     base_pointer m_node;
      size_type m_pos;
 
- private: 
+private: 
 
     friend class iterator_core_access;
     friend class cursor_core_access;
@@ -111,54 +113,54 @@ public:
     
     value_type& dereference() const
     {
-        return **static_cast<node_type*>(m_node);
+        return **static_cast<node_type*>(this->base_reference());
     }
     
     bool equal(cursor const& other) const
     {
-        return (this->m_node == other.m_node) && (this->m_pos == other.m_pos);
+        return (this->base_reference() == other.base_reference()) && (this->m_pos == other.m_pos);
     }
     
     void increment()
     {
         ++m_pos;
-        // m_node += sizeof(node_type);
+        // this->base_reference() += sizeof(node_type);
     }
     
     void decrement()
     {
         --m_pos;
-        //m_node -= sizeof(node_type);
+        //this->base_reference() -= sizeof(node_type);
     }    
     
     void advance(typename nary_tree_cursor::cursor_facade_::difference_type n)
     {
         m_pos += n;
-        //m_node += n * sizeof(node_type);
+        //this->base_reference() += n * sizeof(node_type);
     }
     
     typename nary_tree_cursor::cursor_facade_::difference_type
     distance_to(nary_tree_cursor z) const //FIXME: convertible to instead of nary_tree_cursor
     {
         return (z.m_pos - this->m_pos);
-        //return (z.m_node - this->m_node) / sizeof(node_type); 
+        //return (z.base_reference() - this->base_reference()) / sizeof(node_type); 
     }
     
     // Container specific
     bool empty_() const
     {
-        return m_node->operator[](m_pos)->empty();
-        //return m_node->get_index();
+        return this->base_reference()->m_children[m_pos]->empty();
+        //return this->base_reference()->get_index();
     }
     
     size_type size_() const
     {
-        return m_node->size();
+        return this->base_reference()->m_children.size();
     }
     
     size_type max_size_() const
     {
-        return m_node->max_size();
+        return this->base_reference()->m_children.max_size();
     }
     
     size_type idx() const
@@ -169,48 +171,59 @@ public:
 
     void left()
     {
-        m_node = m_node->operator[](m_pos);
+        this->base_reference() = this->base_reference()->m_children[m_pos];
         m_pos  = 0;
-        //m_node = m_node->operator[0];
+        //this->base_reference() = this->base_reference()->operator[0];
     }
 
     void right()
     {
-        size_type new_pos = m_node->size()-1; 
-        m_node = m_node->operator[](m_pos);
+        size_type new_pos = this->base_reference()->m_children.size()-1; 
+        this->base_reference() = this->base_reference()->m_children[m_pos];
         m_pos  = new_pos;
-        //m_node = m_node->operator[0];
+        //this->base_reference() = this->base_reference()->operator[0];
     }
 
     // Cursor stuff
     void up()
     {
-        m_pos  = m_node->get_index();
-        m_node = static_cast<base_pointer>(m_node->parent());
-        //m_node = m_node->parent();
+        m_pos  = this->base_reference()->get_index();
+        this->base_reference() = static_cast<base_pointer>(this->base_reference()->parent());
+        //this->base_reference() = this->base_reference()->parent();
     }
     
 protected:
     bool is_on_top() const
     {
         base_pointer parent_begin_node = 
-            static_cast<base_pointer>(m_node->parent())
-            ->operator[](m_node->get_index());
-        return (!m_pos && (m_node != parent_begin_node));
+            static_cast<base_pointer>(this->base_reference()->parent())
+            ->m_children[this->base_reference()->get_index()];
+        return (!m_pos && (this->base_reference() != parent_begin_node));
         // (*this != this->parent().begin())
     }
 
 public:
+    
+    base_pointer const& base_node() const
+    {
+        return this->base_reference();
+    }
+
+    base_pointer& base_node()
+    {
+        return this->base_reference();
+    }
+    
     // TODO: protect?
     void attach(node_pointer p_node)
     {
-        p_node->m_parent = m_node;
+        p_node->m_parent = this->base_reference();
         
         // Only forest-relevant:
-//        p_node->operator[](1) = m_node->operator[](m_pos);
-//        m_node->operator[](m_pos)->m_parent = p_node;
+//        p_node->operator[](1) = this->base_reference()->operator[](m_pos);
+//        this->base_reference()->operator[](m_pos)->m_parent = p_node;
         
-        m_node->operator[](m_pos) = p_node;
+        this->base_reference()->m_children[m_pos] = p_node;
     }
 
 //    /** 

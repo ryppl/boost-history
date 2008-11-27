@@ -109,7 +109,7 @@ public:
 
 template <>
 class node_base<binary_array>
-: public node_with_parent_base, public binary_array<node_base<binary_array>*> {
+: public node_with_parent_base/*, public binary_array<node_base<binary_array>*>*/ {
     typedef node_base<binary_array> self_type;
     
 public:
@@ -117,6 +117,8 @@ public:
     typedef binary_array<node_base*> base_type;
     typedef self_type* base_pointer;
     typedef self_type const* const_base_pointer;
+    
+    base_type m_children;
     
     node_base() : node_with_parent_base()
     { }
@@ -131,7 +133,7 @@ public:
     void init()
     {
         for (base_type::size_type i=0; i<base_type::max_size(); ++i)
-            operator[](i) = nil();
+            m_children[i] = nil();
     }
 
     // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
@@ -145,33 +147,33 @@ public:
     base_type::size_type rotate(base_type::size_type const& c)
     {
         //TODO: Optimise.
-        base_pointer q = base_type::operator[](c);
+        base_pointer q = m_children[c];
         
-        base_pointer B = (base_type::operator[](c))->base_type::operator[](c ? 0 : 1);
+        base_pointer B = m_children[c]->m_children[(c ? 0 : 1)];
         //pre_rotate();
         
         //B swaps places with its m_parent:
 
-        base_type::operator[](c) = B;
+        m_children[c] = B;
         B->m_parent = this;
         q->m_parent = this->m_parent;
 
         base_type::size_type qp = get_index();
-        static_cast<base_pointer>(q->m_parent)->base_type::operator[](qp) = q;
+        static_cast<base_pointer>(q->m_parent)->m_children[qp] = q;
         this->m_parent = q;
-        q->base_type::operator[](c ? 0 : 1) = this;
+        q->m_children[(c ? 0 : 1)] = this;
         return qp;
         //return (c ? 0 : 1);
     }
     
     base_pointer detach(base_type::size_type m_pos)
     {
-        base_pointer q = base_type::operator[](m_pos);
-        base_type::operator[](m_pos) = 
-            base_type::operator[](m_pos)
-          ->base_type::operator[]((base_type::operator[](m_pos))
-          ->base_type::operator[](0) == node_base::nil() ? 1 : 0);
-        base_type::operator[](m_pos)->m_parent = this;
+        base_pointer q = m_children[m_pos];
+        m_children[m_pos] = 
+            m_children[m_pos]
+          ->m_children[((m_children[m_pos])
+          ->m_children[0] == node_base::nil() ? 1 : 0)];
+        m_children[m_pos]->m_parent = this;
         return q;
     }
     
@@ -185,12 +187,12 @@ public:
         base_pointer x = detach(index);
 
         // q has been spliced out, now relink it in place of r.                
-        static_cast<base_pointer>(other->m_parent)->base_type::operator[](other_index) = this;
+        static_cast<base_pointer>(other->m_parent)->m_children[other_index] = this;
         m_parent = other->m_parent;
 
         for (base_type::size_type i=0; i<base_type::max_size(); ++i) {
-            base_type::operator[](i) = other->base_type::operator[](i);
-            base_type::operator[](i)->m_parent = this;
+            m_children[i] = other->m_children[i];
+            m_children[i]->m_parent = this;
         }
         return x;
     }
@@ -198,7 +200,7 @@ public:
     // O(1)
     base_type::size_type const get_index() const
     {
-        return (static_cast<base_pointer>(this->m_parent)->base_type::operator[](0) == this ? 0 : 1);
+        return (static_cast<base_pointer>(this->m_parent)->m_children[0] == this ? 0 : 1);
     }
     
 };

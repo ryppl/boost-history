@@ -90,7 +90,7 @@ template <class T = int>
 struct test_binary_tree_with_list_fixture
 : public test_binary_tree_fixture<T> {
     typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-    typedef boost::tree::output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
+    typedef boost::tree::output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
     
     test_binary_tree_with_list_fixture()
     : test_binary_tree_fixture<T>(), l(), i(l), o(i) { }

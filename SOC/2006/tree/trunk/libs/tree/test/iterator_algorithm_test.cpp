@@ -151,14 +151,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_algorithms, Order, orders )
                       , end(Order(), make_ascending_cursor(bt.root()))), 11);
 }
 
-//BOOST_AUTO_TEST_CASE( test_ascending_iterator_algorithms )
-//{
-//    binary_tree<int>::cursor c = bt.root();
-//    typedef boost::tree::iterator<ascending, binary_tree<int>::cursor> ai;
-//    c.to_begin().to_end().to_begin().to_begin();
-//    BOOST_CHECK_EQUAL(*c, 4);
-//
-//    test_traversal_from_leaf4(ai(c), ai(bt.root()));
-//}
+BOOST_AUTO_TEST_CASE( test_ascending_iterator_algorithms )
+{
+    binary_tree<int>::cursor c = bt.root();
+    typedef boost::tree::root_tracking_cursor<binary_tree<int>::cursor> rtc;
+    typedef boost::tree::iterator<ascending, rtc> ai;
+    c.to_begin().to_end().to_begin().to_begin();
+    BOOST_CHECK_EQUAL(*c, 4);
+
+    test_traversal_from_leaf4(ai(rtc(c)), ai(rtc(bt.root())));
+}
 
 BOOST_AUTO_TEST_SUITE_END()

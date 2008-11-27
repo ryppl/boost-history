@@ -58,6 +58,11 @@ struct cursor_size {
     typedef typename Cursor::size_type type;
 };
 
+template <class T>
+struct cursor_size<T*> {
+    typedef std::size_t type;
+};
+
 template <class Cursor>
 struct cursor_category {
     typedef typename Cursor::cursor_category type;
@@ -129,7 +134,7 @@ template <
 //  , class Difference                
 //  , class Size                          
 >
-class output_cursor_iterator_wrapper;
+class output_iterator_cursor;
 
 /**
  * @brief Output cursor wrapper around an output iterator.
@@ -152,11 +157,11 @@ template <
 //  , class Difference                    = use_default
 //  , class Size                          = use_default
 >
-class output_cursor_iterator_wrapper {
+class output_iterator_cursor {
 protected:
     OutputIterator* iter;
 //private:
-//    typedef iterator_adaptor<output_cursor_iterator_wrapper<OutputIterator> 
+//    typedef iterator_adaptor<output_iterator_cursor<OutputIterator> 
 //                         , OutputIterator
 //                         , Value
 //                         , HorizontalTraversalOrCategory
@@ -167,9 +172,9 @@ public:
     typedef OutputIterator iterator;
 
     // FIXME: Very adhoc.
-    typedef output_cursor_iterator_wrapper<OutputIterator> value_type;
+    typedef output_iterator_cursor<OutputIterator> value_type;
     typedef std::size_t size_type;
-    typedef output_cursor_iterator_wrapper<OutputIterator> const_cursor;
+    typedef output_iterator_cursor<OutputIterator> const_cursor;
     typedef forward_traversal_tag horizontal_traversal;
     typedef bidirectional_traversal_tag vertical_traversal;
     typedef forward_traversal_tag iterator_category;
@@ -180,7 +185,7 @@ public:
     /**
      * For construction, we obviously need an Output Iterator to work on (i.e., write to).
      */
-    explicit output_cursor_iterator_wrapper(OutputIterator& i) : iter(&i) {}
+    explicit output_iterator_cursor(OutputIterator& i) : iter(&i) {}
 
     /** 
      * @param value A const& value of the value_type of container that iter is
@@ -195,38 +200,38 @@ public:
      */
     // TODO: Consult C++0x if this has been changed
     template <class ValueType>
-    output_cursor_iterator_wrapper& operator=(ValueType const& value)
+    output_iterator_cursor& operator=(ValueType const& value)
     { 
         *((*iter)++) = value;
         return *this; 
     }
 
     /// Returns *this.
-    output_cursor_iterator_wrapper& operator*() { return *this; }
+    output_iterator_cursor& operator*() { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper& operator++() { return *this; }
+    output_iterator_cursor& operator++() { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper operator++(int) { return *this; }
+    output_iterator_cursor operator++(int) { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper& operator--() { return *this; }
+    output_iterator_cursor& operator--() { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper operator--(int) { return *this; }
+    output_iterator_cursor operator--(int) { return *this; }
     
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper& to_begin() { return *this; }
-    output_cursor_iterator_wrapper& begin() { return *this; }
+    output_iterator_cursor& to_begin() { return *this; }
+    output_iterator_cursor& begin() { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper& to_end() { return *this; }
-    output_cursor_iterator_wrapper& end() { return *this; }
+    output_iterator_cursor& to_end() { return *this; }
+    output_iterator_cursor& end() { return *this; }
 
     /// Returns *this, as this %cursor doesn't "move".
-    output_cursor_iterator_wrapper& to_parent() { return *this; }
-    output_cursor_iterator_wrapper& parent() { return *this; }
+    output_iterator_cursor& to_parent() { return *this; }
+    output_iterator_cursor& parent() { return *this; }
     
     /// Returns true, in case an algorithm has a loop only terminating at root.
     bool is_root() const { return true; }
@@ -238,23 +243,23 @@ public:
 };
 
 template <class OutputIterator>
-typename output_cursor_iterator_wrapper<OutputIterator>::size_type
-index(output_cursor_iterator_wrapper<OutputIterator> const& cur)
+typename output_iterator_cursor<OutputIterator>::size_type
+index(output_iterator_cursor<OutputIterator> const& cur)
 {
     return cur.index();
 }
 
 /** 
  * @param o    An output iterator.
- * @result    An instance of output_cursor_iterator_wrapper working on o.
+ * @result    An instance of output_iterator_cursor working on o.
  * 
  * Use as shortcut for cumbersome typenames, just as with std::inserter and the like.
  */
 template<class OutputIterator>
-inline output_cursor_iterator_wrapper<OutputIterator>
+inline output_iterator_cursor<OutputIterator>
 outputter_cursor_iterator_wrapper(OutputIterator o)
 {
-    return output_cursor_iterator_wrapper<OutputIterator>(o);
+    return output_iterator_cursor<OutputIterator>(o);
 }
 
 } // namespace tree

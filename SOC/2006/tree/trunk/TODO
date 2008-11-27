@@ -16,6 +16,7 @@
 General:
 * Fix forest copy
 * Fix cursor archetypes: *order copy checks don't compile
+* Test insert_cursor independently of algorithms.
 * Implement forest_tree::insert_above.
 * Revisit namespaces.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
@@ -101,6 +102,7 @@ General:
   the STL's linear algorithms should there be a hierarchical version?
 
 Future: 
+* Add cool constructors/assignment à la C++0x, ie (nested) parentheses or Boost.Assign.
 * Do we need cursors that are not iterators, ie that provide to_begin() and to_end 
   (and possibly to_parent()) operations, but not operator++() and --?
 * Optimise insert_cursor for use with binary_tree insert and copy ctor 
@@ -154,6 +156,7 @@ Implementation:
 
 Documentation:
 
+* Include examples output (requires some Jamfile tweaking)!
 * Add a tree visualisation of the documentation structure (as some kind of frontispiece)
   to the docs!
 * Add FAQ

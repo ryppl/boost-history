@@ -36,8 +36,40 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders )
     boost::tree::for_each(Order(), c, f);
 }
 
+//BOOST_AUTO_TEST_CASE_TEMPLATE( test_std_copy, Order, orders )
+//{
+//    boost::detail::dummy_constructor dummy_cons;
+//    boost::iterator_archetype< boost::null_archetype<>
+//                      , boost::iterator_archetypes::readable_lvalue_iterator_t // Really lvalue?
+//                      , boost::forward_traversal_tag
+//                      > i;
+//    boost::iterator_archetype< boost::null_archetype<>
+//                      , boost::iterator_archetypes::writable_iterator_t // Really lvalue?
+//                      , boost::forward_traversal_tag
+//                      > o(dummy_cons);
+//    
+//    std::copy(i, i, o);
+//}
+
 //BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, Order, orders )
 //{
+//    cursor_archetype< boost::null_archetype<>
+//                      , boost::iterator_archetypes::readable_iterator_t // Really lvalue?
+//                      , boost::forward_traversal_tag
+//                      , boost::forward_traversal_tag
+//                      > i;
+//    cursor_archetype< boost::assignable_archetype<>
+//                      , boost::iterator_archetypes::writable_iterator_t // Really lvalue?
+//                      , boost::forward_traversal_tag
+//                      , boost::forward_traversal_tag
+//                      > o;
+//    
+//    boost::tree::copy(Order(), i, o);
+//}
+
+//BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform, Order, orders )
+//{
+//    boost::detail::dummy_constructor dummy_cons;
 //    cursor_archetype< boost::null_archetype<>
 //                      , boost::iterator_archetypes::readable_lvalue_iterator_t // Really lvalue?
 //                      , boost::forward_traversal_tag
@@ -48,8 +80,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders )
 //                      , boost::forward_traversal_tag
 //                      , boost::forward_traversal_tag
 //                      > o;
+//    boost::unary_function_archetype< boost::null_archetype<> , boost::null_archetype<> > 
+//      f(dummy_cons);
 //    
-//    boost::tree::copy(Order(), i, o);
+//    boost::tree::transform(Order(), i, o, f);
 //}
 
 BOOST_AUTO_TEST_SUITE_END()

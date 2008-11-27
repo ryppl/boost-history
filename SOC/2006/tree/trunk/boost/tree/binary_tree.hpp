@@ -69,8 +69,8 @@ class binary_tree {
     explicit binary_tree (allocator_type const& alloc = allocator_type())
     : m_header(), m_value_alloc(alloc)
     {
-        m_header[0] = node_base_type::nil();
-        m_header[1] = &m_header;
+        m_header.m_children[0] = node_base_type::nil();
+        m_header.m_children[1] = &m_header;
     }
 
 //    explicit binary_tree (size_type n, value_type const& value = value_type(), 
@@ -83,8 +83,8 @@ class binary_tree {
             allocator_type const& alloc = allocator_type())
             : m_header(), m_value_alloc(alloc)
     {
-        m_header[0] = node_base_type::nil();
-        m_header[1] = &m_header;
+        m_header.m_children[0] = node_base_type::nil();
+        m_header.m_children[1] = &m_header;
 
         insert(root(), subtree);
     }
@@ -99,8 +99,8 @@ class binary_tree {
     binary_tree (self_type const& x)
     : m_header(), m_value_alloc(x.m_value_alloc)
     {
-        m_header[0] = node_base_type::nil();
-        m_header[1] = &m_header;
+        m_header.m_children[0] = node_base_type::nil();
+        m_header.m_children[1] = &m_header;
         
         if (!x.empty())
             insert(root(), x.root());
@@ -169,7 +169,7 @@ class binary_tree {
      */      
     cursor inorder_first()
     {
-        return cursor(m_header[1], 0);
+        return cursor(m_header.m_children[1], 0);
     }
     
     /**
@@ -185,7 +185,7 @@ class binary_tree {
      */      
     const_cursor inorder_cfirst() const
     {
-        return const_cursor(m_header[1], 0);
+        return const_cursor(m_header.m_children[1], 0);
     }
     
     /**
@@ -193,7 +193,7 @@ class binary_tree {
      */
     bool empty() const
     {
-        return m_header[1] == &m_header;
+        return m_header.m_children[1] == &m_header;
     }
     
     // Hierarchy-specific
@@ -222,7 +222,7 @@ class binary_tree {
 
         // Readjust begin
         if ((pos == this->inorder_first()))
-            m_header[1] = p_node; 
+            m_header.m_children[1] = p_node; 
 
         return pos; 
     }
@@ -316,7 +316,7 @@ class binary_tree {
 
          if (!position.empty()) {
              node_pointer pos_node = 
-                 static_cast<node_pointer>(position.m_node->operator[](position.m_pos));
+                 static_cast<node_pointer>(position.base_node()->m_children[position.m_pos]);
              // delete the value position points to    
              m_value_alloc.destroy(pos_node->data());
              m_value_alloc.deallocate(pos_node->data(), 1);
@@ -334,8 +334,8 @@ class binary_tree {
     void rotate(cursor& pos)
     {
         //TODO: Take care of inorder_first pointer!
-        pos.m_pos = pos.m_node->rotate(pos.m_pos);
-        pos.m_node = static_cast<node_base_pointer>(pos.m_node->m_parent->m_parent);
+        pos.m_pos = pos.base_node()->rotate(pos.m_pos);
+        pos.base_node() = static_cast<node_base_pointer>(pos.base_node()->m_parent->m_parent);
     }
     
     /**
@@ -352,37 +352,37 @@ class binary_tree {
             if (other.empty())
                 return;
                 
-            m_header[0] = other.m_header[0];
-            m_header[0]->m_parent = &m_header;
+            m_header.m_children[0] = other.m_header.m_children[0];
+            m_header.m_children[0]->m_parent = &m_header;
 
-            m_header[1] = other.m_header[1];
+            m_header.m_children[1] = other.m_header.m_children[1];
             //m_header.m_parent = other.m_header.m_parent;
             
-            other.m_header[0] = node_base_type::nil();
-            other.m_header[1] = &other.m_header;
+            other.m_header.m_children[0] = node_base_type::nil();
+            other.m_header.m_children[1] = &other.m_header;
             //other.m_header.m_parent = &other.m_header;
             
             return;
         }
         
         if (other.empty()) {
-            other.m_header[0] = m_header[0];
-            other.m_header[0]->m_parent = &other.m_header;
+            other.m_header.m_children[0] = m_header.m_children[0];
+            other.m_header.m_children[0]->m_parent = &other.m_header;
             
-            other.m_header[1] = m_header[1];
+            other.m_header.m_children[1] = m_header.m_children[1];
             //other.m_header.m_parent = m_header.m_parent;
             
-            m_header[0] = node_base_type::nil();
-            m_header[1] = &m_header;
+            m_header.m_children[0] = node_base_type::nil();
+            m_header.m_children[1] = &m_header;
             //m_header.m_parent = &m_header;
             
             return;            
         }
         
         swap(m_header, other.m_header);
-        //swap(m_header[0]->m_parent, other.m_header[0]->m_parent);
-        m_header[0]->m_parent = &m_header;
-        other.m_header[0]->m_parent = &other.m_header;
+        //swap(m_header.m_children[0]->m_parent, other.m_header.m_children[0]->m_parent);
+        m_header.m_children[0]->m_parent = &m_header;
+        other.m_header.m_children[0]->m_parent = &other.m_header;
         
         return;
     }
@@ -394,8 +394,8 @@ class binary_tree {
      {
          clear(this->root());
          m_header.m_parent = &m_header;
-         m_header[0] = node_base_type::nil();
-        m_header[1] = &m_header;
+         m_header.m_children[0] = node_base_type::nil();
+        m_header.m_children[1] = &m_header;
      }
      
     // splice operations
@@ -415,12 +415,12 @@ class binary_tree {
     {
         if (!x.empty()) {
             if (position == inorder_first()) // Readjust inorder_first to x's
-                m_header[1] = x.m_header[1];
+                m_header.m_children[1] = x.m_header.m_children[1];
                 
-            position.m_node->node_base_type::operator[](position.m_pos) = x.m_header[0];
+            position.base_node()->m_children[position.m_pos] = x.m_header.m_children[0];
             //TODO: replace the following by some temporary-swapping?
-            x.m_header[0] = node_base_type::nil();
-            x.m_header[1] = &x.m_header;
+            x.m_header.m_children[0] = node_base_type::nil();
+            x.m_header.m_children[1] = &x.m_header;
             x.m_header.m_parent = &x.m_header;
         }
     }
@@ -439,18 +439,18 @@ class binary_tree {
     {
         if (!x.empty()) {
             if (inorder_first == x.inorder_first())
-                x.m_header[1] = inorder_first.m_node;
+                x.m_header.m_children[1] = inorder_first.base_node();
             if (position == inorder_first()) // Readjust inorder_first to x's
-                m_header[1] = inorder_first.m_node;
+                m_header.m_children[1] = inorder_first.base_node();
                 
-            position.m_node->node_base_type::operator[](position.m_pos) = root.m_node;
+            position.base_node()->node_base_type::operator[](position.m_pos) = root.base_node();
             
-            root.m_node[0] = node_base_type::nil();
+            root.base_node()->m_children[0] = node_base_type::nil();
             if (root == x.root()) {
-                x.m_header[1] = &x.m_header;
+                x.m_header.m_children[1] = &x.m_header;
                 x.m_header.m_parent = &x.m_header;            
             } else
-                root.m_node[1] = node_base_type::nil();
+                root.base_node()->m_children[1] = node_base_type::nil();
         }        
     }
     
@@ -494,7 +494,7 @@ class binary_tree {
      */
     cursor inorder_erase(cursor position)
     {
-        node_pointer p_node = static_cast<node_pointer>(position.m_node);
+        node_pointer p_node = static_cast<node_pointer>(position.base_node());
         ++position;
         
         if (position.empty()) {                        
@@ -506,9 +506,9 @@ class binary_tree {
                 position = position.parent();
         } else {
             position = position.begin();
-            position.m_node->m_parent = p_node->m_parent;
+            position.base_node()->m_parent = p_node->m_parent;
             static_cast<node_base_pointer>(p_node->m_parent)
-                ->node_base_type::operator[](1) = position.m_node;
+                ->node_base_type::operator[](1) = position.base_node();
             
             while (!position.empty())
                 position = position.begin();
@@ -525,7 +525,7 @@ class binary_tree {
 
     cursor inorder_erase(cursor position, cursor descendant)
     {
-        node_pointer p_node = static_cast<node_pointer>(descendant.m_node);
+        node_pointer p_node = static_cast<node_pointer>(descendant.base_node());
         ++descendant;
         
         if (descendant.empty()) {                        
@@ -534,26 +534,26 @@ class binary_tree {
                 ->node_base_type::operator[](0) = (*p_node)[0];
         } else {
             descendant = descendant.begin();
-            descendant.m_node->m_parent = p_node->m_parent;
+            descendant.base_node()->m_parent = p_node->m_parent;
             static_cast<node_base_pointer>(p_node->m_parent)
-                ->node_base_type::operator[](1) = descendant.m_node;
+                ->node_base_type::operator[](1) = descendant.base_node();
         }
         
         cursor pos_parent = position.parent();        
-        pos_parent.m_node->node_base_type::operator[](pos_parent.m_pos)
-            = descendant.m_node;
-        descendant.m_node->m_parent = pos_parent.m_node;
-        descendant.m_node->node_base_type::operator[](0)
-            = position.m_node->node_base_type::operator[](0);
-        descendant.m_node->node_base_type::operator[](1)
-            = position.m_node->node_base_type::operator[](1);
-        descendant.m_node->node_base_type::operator[](0)->m_parent
-            = descendant.m_node;
-        descendant.m_node->node_base_type::operator[](1)->m_parent
-            = descendant.m_node;
+        pos_parent.base_node()->node_base_type::operator[](pos_parent.m_pos)
+            = descendant.base_node();
+        descendant.base_node()->m_parent = pos_parent.base_node();
+        descendant.base_node()->node_base_type::operator[](0)
+            = position.base_node()->node_base_type::operator[](0);
+        descendant.base_node()->node_base_type::operator[](1)
+            = position.base_node()->node_base_type::operator[](1);
+        descendant.base_node()->node_base_type::operator[](0)->m_parent
+            = descendant.base_node();
+        descendant.base_node()->node_base_type::operator[](1)->m_parent
+            = descendant.base_node();
 
         p_node = 
-            static_cast<node_pointer>(position.m_node->node_base_type::operator[](position.m_pos));
+            static_cast<node_pointer>(position.base_node()->node_base_type::operator[](position.m_pos));
             
         m_value_alloc.destroy(p_node->data());
         m_value_alloc.deallocate(p_node->data(), 1);

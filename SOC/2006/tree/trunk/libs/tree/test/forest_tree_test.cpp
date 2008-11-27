@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_for_each, Order
     
     std::list<int> test_list;
     typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-    typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
+    typedef output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
     back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
     oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
     
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_for_each, Order
 //    
 //    std::list<int> test_list;
 //    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-//    typedef output_cursor_iterator_wrapper<back_insert_iter_list_int> oc_bi_lst_type;
+//    typedef output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
 //    back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
 //    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 //    
@@ -170,7 +170,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_for_each, Order
 //    test_traversal(typename Order::second(), test_list.begin(), test_list.end());
 //    BOOST_CHECK_EQUAL(test_list.size(), 11);
 //    test_list.clear();
+//}
+
+//BOOST_AUTO_TEST_CASE_TEMPLATE( test_natural_correspondence_transform, Order
+//                             , corresponding_orders )
+//{
+//    using namespace boost::tree;
+//
+//    forest_tree<int> ft(bt);
 //    
+//    //validate_corresponding_forest_tree(ft);
+//    
+//    std::list<int> test_list;
+//    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
+//    typedef output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
+//    back_insert_iter_list_int it_test_list = std::back_inserter(test_list);
+//    oc_bi_lst_type oc_test_list = oc_bi_lst_type(it_test_list);
 //    boost::tree::transform(typename Order::first(), ft.root(), oc_test_list
 //                         , std::bind2nd(std::plus<int>(),0));
 //    test_traversal(typename Order::second(), test_list.begin(), test_list.end());
