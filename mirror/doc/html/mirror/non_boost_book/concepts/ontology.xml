@@ -139,7 +139,7 @@
 			<fn_param concept="TraversalContext" name="_context"/>
 			<desc>The visitor enters the list of member attributes reflected by _meta_class_attributes, of a class reflected by _meta_class in the context indicated by _context.</desc>
 		</member_function>
-		<member_function concept="void" name="leave_base_classes">
+		<member_function concept="void" name="leave_attributes">
 			<fn_param concept="MetaClass" name="_meta_class"/>
 			<fn_param concept="MetaClassAttributes" name="_meta_class_attributes"/>
 			<fn_param concept="TraversalContext" name="_context"/>
