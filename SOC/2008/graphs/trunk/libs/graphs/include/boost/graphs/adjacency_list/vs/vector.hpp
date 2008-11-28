@@ -15,7 +15,8 @@ struct vertex_vector
     typedef void key_type;
 
     typedef typename descriptor_traits<
-        std::vector<int, Alloc<int>>
+        std::vector<int, Alloc<int>>,
+        vertex_descriptor_kind
     >::descriptor_type vertex_descriptor;
 
     template <typename Edges, typename Label>

@@ -2,6 +2,8 @@
 #ifndef BOOST_DESCRIPTORS_HPP
 #define BOOST_DESCRIPTORS_HPP
 
+#include <boost/type_traits/is_same.hpp>
+
 // Pull the container traits.
 #include "containers.hpp"
 
@@ -80,15 +82,17 @@ struct unstable_mutators_tag : unstable_insert_tag, unstable_remove_tag { };
  * containers. This structure must be specialized by each container. By default
  * the types and properties of this class reference nested types of the
  * container, which are basically doomed to fail.
- *
- * This inherits a specialized version of container traits from boost/pending.
  */
-template <typename Container>
+template <typename Container, typename Kind = basic_descriptor_kind>
 struct descriptor_traits
 {
+    typedef Kind descriptor_kind;
     typedef typename Container::descriptor_type descriptor_type;
     typedef typename Container::mutator_stability mutator_stability;
 };
+
+template <typename Container, typename Kind>
+struct descriptor_traits<Container const, Kind> : descriptor_traits<Container, Kind> { };
 
 /**
  * Given a container and a valid iterator into the container, return a
@@ -96,11 +100,11 @@ struct descriptor_traits
  * be at least as long as the iterator, generally longer. If the given iterator
  * is past the end of the container, then the returned descriptor is null.
  */
-template <typename Container>
-inline typename descriptor_traits<Container>::descriptor_type
-make_descriptor(Container& c, typename Container::iterator i)
+template <typename Container, typename Kind = basic_descriptor_kind>
+inline typename descriptor_traits<Container, Kind>::descriptor_type
+make_descriptor(Container& c, typename Container::iterator i, Kind = Kind())
 {
-    typedef typename descriptor_traits<Container>::descriptor_type result_type;
+    typedef typename descriptor_traits<Container, Kind>::descriptor_type result_type;
     return i != c.end() ? result_type(c, i) : result_type();
 }
 
@@ -110,18 +114,38 @@ make_descriptor(Container& c, typename Container::iterator i)
  * not been invalidated (e.g., removing an item from a vector). If the given
  * descriptor is null, then the returned iterator is past the end of the
  * container.
+ * @note Normally, I'd use descriptor traits instead of making the entire
+ * descriptor parameterized, but that isn't quite possible since the kind is
+ * not known and actually factored out of the return type.
  */
-template <typename Container>
+template <typename Container, typename Descriptor>
 inline typename Container::iterator
-make_iterator(Container& c, typename descriptor_traits<Container>::descriptor_type d)
-{ return d ? d.get(c) : c.end(); }
+make_iterator(Container& c, Descriptor d)
+{
+    static_assert(
+        is_same<
+            typename descriptor_traits<
+                Container,
+                typename Descriptor::descriptor_kind>
+            ::descriptor_type,
+            Descriptor
+        >::value,
+        "Descriptor does not describe Container"
+    );
+    return d ? d.get(c) : c.end();
+}
+
+template <typename Container, typename Descriptor>
+inline typename Container::iterator
+make_iterator(Container const& c, Descriptor d)
+{ return make_iterator(const_cast<Container&>(c), d); }
 
 
 /** Return the descriptor stability tag for the given container. */
-template <typename Container>
+template <typename Container, typename Kind = basic_descriptor_kind>
 inline typename descriptor_traits<Container>::mutator_stability
-mutator_stability(Container const&)
-{ return typename descriptor_traits<Container>::mutator_stability(); }
+mutator_stability(Container const&, Kind = Kind())
+{ return typename descriptor_traits<Container,Kind>::mutator_stability(); }
 
 // Metafunctions
 
@@ -129,13 +153,13 @@ mutator_stability(Container const&)
  * Returns true if the cotnainer supports insert operations that do not
  * invalidate outstanding descriptors.
  */
-template <typename Container>
+template <typename Container, typename Kind = basic_descriptor_kind>
 struct has_insert_mutator
 {
     // True if not convertible to unstable_insert_tag.
     static bool const value =
         !boost::is_convertible<
-            typename descriptor_traits<Container>::descriptor_stability,
+            typename descriptor_traits<Container, Kind>::descriptor_stability,
             unstable_insert_tag
         >::value;
 };
@@ -144,66 +168,72 @@ struct has_insert_mutator
  * Returns true if the container supports remove operations that do not
  * invalidate outstanding descriptors.
  */
-template <typename Container>
+template <typename Container, typename Kind = basic_descriptor_kind>
 struct has_remove_mutator
 {
     // True if not convertible to unstable_remove_tag.
     static bool const value =
         !boost::is_convertible<
-            typename descriptor_traits<Container>::descriptor_stability,
+            typename descriptor_traits<Container, Kind>::descriptor_stability,
             unstable_remove_tag
         >::value;
 };
 
 // Specializations
 
-// Vector
-template <typename T, typename Alloc>
-struct descriptor_traits<std::vector<T, Alloc>>
+template <typename T, typename Alloc, typename Kind>
+struct descriptor_traits<std::vector<T, Alloc>, Kind>
 {
-    typedef index_descriptor<typename std::vector<T, Alloc>::size_type> descriptor_type;
+    typedef index_descriptor<
+        typename std::vector<T, Alloc>::size_type, Kind
+    > descriptor_type;
     typedef unstable_remove_tag descriptor_stability;
 };
 
-// List
-template <typename T, typename Alloc>
-struct descriptor_traits<std::list<T, Alloc>>
+template <typename T, typename Alloc, typename Kind>
+struct descriptor_traits<std::list<T, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<
+        blob<sizeof(typename std::list<T, Alloc>::iterator)>, Kind
+    > descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
 // TODO: Dequeue
 
-// Set
-template <typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::set<T, Comp, Alloc>>
+template <typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::set<T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::set<T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<
+        blob<sizeof(typename std::set<T, Comp, Alloc>::iterator)>, Kind
+    > descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
-// Multiset
-template <typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::multiset<T, Comp, Alloc>>
+template <typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::multiset<T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::multiset<T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<
+        blob<sizeof(typename std::multiset<T, Comp, Alloc>::iterator)>, Kind
+    > descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
-// Map
-template <typename Key, typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::map<Key, T, Comp, Alloc>>
+template <typename Key, typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::map<Key, T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::map<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<
+        blob<sizeof(typename std::map<Key, T, Comp, Alloc>::iterator)>, Kind
+    > descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 
-// Multimap
-template <typename Key, typename T, typename Comp, typename Alloc>
-struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>>
+template <typename Key, typename T, typename Comp, typename Alloc, typename Kind>
+struct descriptor_traits<std::multimap<Key, T, Comp, Alloc>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::multimap<Key, T, Comp, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<
+        blob<sizeof(typename std::multimap<Key, T, Comp, Alloc>::iterator)>, Kind
+    > descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 };
 

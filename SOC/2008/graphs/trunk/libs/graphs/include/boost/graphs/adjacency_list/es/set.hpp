@@ -20,7 +20,8 @@ template <
 struct edge_set
 {
     typedef typename descriptor_traits<
-        std::set<int, Compare<int>, Alloc<int>>
+        std::set<int, Compare<int>, Alloc<int>>,
+        edge_descriptor_kind
     >::descriptor_type edge_descriptor;
 
     // This quietly implements a map, not a set because we'll be using the

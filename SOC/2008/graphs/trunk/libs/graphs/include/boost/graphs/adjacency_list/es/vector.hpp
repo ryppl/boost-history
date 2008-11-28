@@ -13,7 +13,8 @@ template <template <typename> class Alloc = std::allocator>
 struct edge_vector
 {
     typedef typename descriptor_traits<
-        std::vector<int, Alloc<int>>
+        std::vector<int, Alloc<int>>,
+        edge_descriptor_kind
     >::descriptor_type edge_descriptor;
 
     // Ends must be a pair of vertices.

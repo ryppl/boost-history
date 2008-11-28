@@ -8,7 +8,15 @@
 #include <boost/graphs/label.hpp>
 #include <boost/graphs/edge.hpp>
 
+// Defines a kind of edge descriptor.
+struct edge_descriptor_kind { };
+
+#include <boost/graphs/adjacency_list/es/vector.hpp>
+#include <boost/graphs/adjacency_list/es/list.hpp>
+#include <boost/graphs/adjacency_list/es/set.hpp>
+
 // Include specializations for the label and edge interfaces.
+// TODO: Migrate code from these files to here.
 #include <boost/graphs/adjacency_list/es/seq_edge.hpp>
 #include <boost/graphs/adjacency_list/es/assoc_edge.hpp>
 
@@ -27,9 +35,10 @@ namespace boost { namespace graphs { namespace adjacency_list {
 template <typename Store>
 struct edge_store_traits
 {
-    typedef typename Store::value_type edge_type;
+    typedef typename descriptor_traits<Store, edge_descriptor_kind>::descriptor_kind
+        edge_descriptor;
 
-    // These are provided for convenience.
+    typedef typename Store::value_type edge_type;
     typedef typename edge_traits<edge_type>::edge_ends edge_ends;
     typedef typename label_traits<edge_type>::label_type edge_label;
 };
@@ -147,9 +156,5 @@ ends(Store& store, typename descriptor_traits<Store>::descriptor_type d)
 } /* namespace es */
 
 } } } /* namespace boost::graphs::adjacency_list */
-
-// Type selectors
-#include <boost/graphs/adjacency_list/es/vector.hpp>
-#include <boost/graphs/adjacency_list/es/set.hpp>
 
 #endif

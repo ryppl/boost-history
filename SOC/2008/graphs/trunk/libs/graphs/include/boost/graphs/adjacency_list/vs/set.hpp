@@ -21,7 +21,8 @@ struct vertex_set
     typedef void key_type;
 
     typedef typename descriptor_traits<
-        std::set<int, Compare<int>, Alloc<int>>
+        std::set<int, Compare<int>, Alloc<int>>,
+        vertex_descriptor_kind
     >::descriptor_type vertex_descriptor;
 
     // Quietly define a set as a map from label (which is the key being

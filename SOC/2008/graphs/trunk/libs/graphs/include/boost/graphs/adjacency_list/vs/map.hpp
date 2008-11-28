@@ -22,7 +22,8 @@ struct vertex_map
     typedef Key key_type;
 
     typedef typename descriptor_traits<
-        std::map<Key, int, Compare<Key>, Alloc<std::pair<Key, int>>>
+        std::map<Key, int, Compare<Key>, Alloc<std::pair<Key, int>>>,
+        vertex_descriptor_kind
     >::descriptor_type vertex_descriptor;
 
     template <typename Edges, typename Label>

@@ -32,7 +32,8 @@ struct node
     node() : n() { }
     node(int n) : n(n) { }
 
-    bool operator<(node const& x) const { return n < x.n; }
+    bool operator==(node const& x) const    { return n == x.n; }
+    bool operator<(node const& x) const     { return n < x.n; }
 
     int n;
 };
@@ -47,10 +48,27 @@ struct arc
 template <typename Graph>
 void add_vertices(Graph& g, mpl::false_)
 {
-    add_vertex(g);
+    add_vertex(g);  // This is really a test for unlabeled verts
     add_vertex(g, node(3));
     add_vertex(g, std::move(node(5)));
     BOOST_ASSERT(num_vertices(g) == 3);
+
+    // Test the non-cosnt find
+    {
+        typedef typename Graph::vertex_descriptor VertexDesc;
+        VertexDesc v = find_vertex(g, node(3));
+        BOOST_ASSERT(!v.is_null());
+        BOOST_ASSERT(g[v] == node(3));
+    }
+
+    // Test the const find.
+    {
+        Graph const& h = g;
+        typedef typename Graph::vertex_descriptor VertexDesc;
+        VertexDesc v = find_vertex(h, node(3));
+        BOOST_ASSERT(!v.is_null());
+        BOOST_ASSERT(h[v] == node(3));
+    }
 }
 
 template <typename Graph>
@@ -60,6 +78,12 @@ void add_vertices(Graph& g, mpl::true_)
     add_vertex(g, "b", node(3));
     add_vertex(g, "c", std::move(node(5)));
     BOOST_ASSERT(num_vertices(g) == 3);
+
+    // Test the find also.
+    typedef typename Graph::vertex_descriptor VertexDesc;
+    VertexDesc v = find_vertex(g, "b");
+    BOOST_ASSERT(!v.is_null());
+    BOOST_ASSERT(g[v] == node(3));
 }
 
 template <typename Graph>

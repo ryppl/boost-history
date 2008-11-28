@@ -40,18 +40,28 @@ public:
     typedef typename VertexStore::key_type vertex_key;
     typedef typename vertex_store::size_type vertices_size_type;
 
+    vertex_label& operator[](vertex_descriptor d)
+    { return vs::label(v, d); }
+    vertex_label const& operator[](vertex_descriptor d) const
+    { return vs::label(v, d); }
+
+    // TODO: Implement me
+    edge_label& operator[](edge_descriptor d)
+    { return edge_label(); }
+    edge_label const& operator[](edge_descriptor d) const
+    { return edge_label(); }
+
 public:
     vertex_store v;
     edge_store e;
 };
 
+/** @name Add Vertex */
+//@{
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
 add_vertex(undirected_graph<VL,EL,VS,ES,IS>& g)
-{
-    typedef typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label VertexLabel;
-    return vs::insert(g.v, VertexLabel());
-}
+{ return vs::insert(g.v, typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label()); }
 
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
@@ -65,9 +75,38 @@ add_vertex(undirected_graph<VL,EL,VS,ES,IS>& g,
            typename undirected_graph<VL,EL,VS,ES,IS>::vertex_key const& k,
            typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label&& l)
 { return vs::insert(g.v, k, l); }
+//@}
 
+/** @name Find Vertex
+ * Return a descriptor to the first vertex found with the given label.
+ *
+ * There are two overloads of this function: one for finding vertices based on
+ * their label, the other based on their key. The latter is only applicable
+ * for graphs with mapped vertices.
+ *
+ * @note, These overloads are ambigous for mapped vertex graphs if the key
+ * and label are the same type. We should probably provide special function to
+ * differentiate these functions.
+ */
+//@{
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
+find_vertex(undirected_graph<VL,EL,VS,ES,IS> const& g,
+            typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label const& l)
+{ return vs::find(g.v, l); }
 
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
+find_vertex(undirected_graph<VL,EL,VS,ES,IS> const& g,
+            typename undirected_graph<VL,EL,VS,ES,IS>::vertex_key const& k)
+{ return vs::find(g.v, k); }
+//@}
 
+/** @name Remove Vertex
+ * Remove the given vertex from the graph.
+ */
+//@{
+//@}
 
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 typename undirected_graph<VL,EL,VS,ES,IS>::vertices_size_type

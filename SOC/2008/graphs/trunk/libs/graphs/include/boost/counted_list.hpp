@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include <boost/containers.hpp>
+#include <boost/descriptors.hpp>
 
 namespace boost {
 
@@ -145,10 +146,12 @@ struct container_traits<counted_list<T, Alloc, List>>
 };
 
 // Specialize descriptor traits
-template <typename T, typename Alloc, typename List>
-struct descriptor_traits<counted_list<T, Alloc, List>>
+template <typename T, typename Alloc, typename List, typename Kind>
+struct descriptor_traits<counted_list<T, Alloc, List>, Kind>
 {
-    typedef node_descriptor<blob<sizeof(typename std::list<T, Alloc>::iterator)>> descriptor_type;
+    typedef node_descriptor<
+        blob<sizeof(typename std::list<T, Alloc>::iterator)>, Kind
+    > descriptor_type;
     typedef stable_mutators_tag descriptor_stability;
 
 };
