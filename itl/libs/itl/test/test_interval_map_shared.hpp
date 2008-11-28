@@ -14,6 +14,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -161,6 +162,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -222,6 +224,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -275,6 +278,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -306,6 +310,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -355,6 +360,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -406,6 +412,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -448,6 +455,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -510,6 +518,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -621,6 +630,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -736,6 +746,7 @@ template <template<class T, class U,
                    class Traits = neutron_absorber,
                    template<class,template<class>class>class = interval,
                    template<class>class = std::less,
+                   template<class>class = itl::inplace_plus,
                    template<class>class = std::allocator
                   >class IntervalMap, 
           class T, class U>

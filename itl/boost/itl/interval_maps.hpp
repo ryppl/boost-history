@@ -17,7 +17,7 @@ namespace boost{namespace itl
 template
 <    
     class, class, class, template<class,template<class>class>class, 
-    template<class>class, template<class>class
+    template<class>class, template<class>class, template<class>class
 >
 class interval_map;
 
@@ -29,25 +29,25 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator +=
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& operand
+                      Traits,Interval,Compare,Combine,Alloc>& operand
 )
 {
     typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Interval,Compare,Alloc> operand_type;
+                        Traits,Interval,Compare,Combine,Alloc> operand_type;
     const_FORALL(typename operand_type, elem_, operand) 
         object.add(*elem_); 
 
@@ -59,22 +59,22 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator +=
 (
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& object,
+                      Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>::value_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::value_type& operand
 )
 {
     return object.add(operand); 
@@ -99,22 +99,22 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator +=
 (
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& object,
+                      Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>::base_pair_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::base_pair_type& operand
 )
 {
     return object.add(operand); 
@@ -128,25 +128,25 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator -=
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& operand
+                      Traits,Interval,Compare,Combine,Alloc>& operand
 )
 {
     typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Interval,Compare,Alloc> operand_type;
+                        Traits,Interval,Compare,Combine,Alloc> operand_type;
     const_FORALL(typename operand_type, elem_, operand) 
         object.subtract(*elem_); 
 
@@ -170,22 +170,22 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator -=
 (
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& object,
+                      Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>::value_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::value_type& operand
 )
 {
     return object.subtract(operand); 
@@ -196,22 +196,22 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator -=
 (
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& object,
+                      Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>::base_pair_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::base_pair_type& operand
 )
 {
     return object.subtract(operand); 
@@ -225,7 +225,7 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, template<class,template<class>class>class, 
@@ -233,11 +233,11 @@ template
     >
     class IntervalSet
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator -=
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const IntervalSet<DomainT,Interval,Compare,Alloc>& erasure
 )
 {
@@ -253,22 +253,22 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator -=
 (
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& object,
+                      Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>::interval_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::interval_type& operand
 )
 {
     return object.erase(operand); 
@@ -282,14 +282,14 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     class OperandT
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 insert
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const OperandT& operand
 )
 {
@@ -305,14 +305,14 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     class OperandT
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 erase
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const OperandT& operand
 )
 {
@@ -328,19 +328,19 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     class SectanT
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
 operator *=
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const SectanT& operand
 )
 {
     typedef interval_base_map<SubType,DomainT,CodomainT,
-                              Traits,Interval,Compare,Alloc> object_type;
+                              Traits,Interval,Compare,Combine,Alloc> object_type;
     object_type intersection;
     object.add_intersection(intersection,operand);
     object.swap(intersection);
@@ -354,26 +354,26 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class LeftIntervalMap,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class RightIntervalMap
 >
 bool is_element_equal
 (
     const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Interval,Compare,Alloc>& left,
+                           Traits,Interval,Compare,Combine,Alloc>& left,
     const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Interval,Compare,Alloc>& right
+                           Traits,Interval,Compare,Combine,Alloc>& right
 )
 {
     return Interval_Set::is_element_equal(left, right);
@@ -389,11 +389,11 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
@@ -401,15 +401,15 @@ template
 bool is_disjoint
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>& operand
+                      Traits,Interval,Compare,Combine,Alloc>& operand
 )
 {
     typedef interval_base_map<SubType,DomainT,CodomainT,
-                              Traits,Interval,Compare,Alloc> object_type;
+                              Traits,Interval,Compare,Combine,Alloc> object_type;
     typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Interval,Compare,Alloc> operand_type;
+                        Traits,Interval,Compare,Combine,Alloc> operand_type;
     object_type intersection;
 
     if(operand.empty())
@@ -450,12 +450,12 @@ template
 bool is_disjoint
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const IntervalSet<DomainT,Interval,Compare,Alloc>& operand
 )
 {
     typedef interval_base_map<SubType,DomainT,CodomainT,
-                              Traits,Interval,Compare,Alloc> object_type;
+                              Traits,Interval,Compare,Combine,Alloc> object_type;
     typedef IntervalSet<DomainT,Interval,Compare,Alloc> operand_type;
     object_type intersection;
 
@@ -484,11 +484,11 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap,
     template
@@ -502,12 +502,12 @@ template
 bool is_disjoint
 (
     const IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>&  object,
+                      Traits,Interval,Compare,Combine,Alloc>&  object,
     const IntervalSet<DomainT,Interval,Compare,Alloc>& operand
 )
 {
     typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Interval,Compare,Alloc> object_type;
+                        Traits,Interval,Compare,Combine,Alloc> object_type;
     typedef IntervalSet<DomainT,Interval,Compare,Alloc> operand_type;
     object_type intersection;
 
@@ -535,11 +535,11 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap,
     template
@@ -554,7 +554,7 @@ bool is_disjoint
 (
     const IntervalSet<DomainT,Interval,Compare,Alloc>& left,
     const IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Alloc>&  right
+                      Traits,Interval,Compare,Combine,Alloc>&  right
 )
 {
 	return is_disjoint(right, left);
@@ -567,18 +567,18 @@ template
 <
     class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
     template
     <    
         class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        template<class>class, template<class>class, template<class>class
     >
     class IntervalMap
 >
-typename IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>::interval_type 
-enclosure(const IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc>& object)
+typename IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>::interval_type 
+enclosure(const IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& object)
 {
-    typedef IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Alloc> IntervalMapT;
+    typedef IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc> IntervalMapT;
     typedef typename IntervalMapT::interval_type interval_type;
     return 
         object.empty() ? neutron<interval_type>::value()
@@ -590,12 +590,12 @@ template
 <
     class SubType, class DomainT, class CodomainT,
     class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc
+    template<class>class Compare, template<class>class Combine, template<class>class Alloc
 >
-typename interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>::interval_type 
-enclosure(const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc>& object)
+typename interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>::interval_type 
+enclosure(const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& object)
 {
-    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Alloc> IntervalMapT;
+    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc> IntervalMapT;
     typedef typename IntervalMapT::interval_type interval_type;
     return 
         object.empty() ? neutron<interval_type>::value()

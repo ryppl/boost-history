@@ -104,6 +104,7 @@ namespace boost{namespace itl
         typename DataT, 
         class Traits = itl::neutron_absorber,
         template<class>class Compare = std::less,
+        template<class>class Combine = itl::inplace_plus,
         template<class>class Alloc   = std::allocator 
     >
     class map: private std::map<KeyT, DataT, Compare<KeyT>, 
@@ -130,6 +131,7 @@ namespace boost{namespace itl
         typedef DataT                                      codomain_type;
         typedef std::pair<const KeyT, DataT>               value_type;
         typedef Compare<KeyT>                              key_compare;
+        typedef Combine<DataT>                             data_combine;
         typedef typename base_type::value_compare          value_compare;
 
     public:
@@ -313,60 +315,60 @@ namespace boost{namespace itl
 
     /** Standard equality, which is lexicographical equality of the sets
         as sequences, that are given by their Compare order. */
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    inline bool operator == (const itl::map<KeyT,DataT,Traits,Compare,Alloc>& lhs,
-                             const itl::map<KeyT,DataT,Traits,Compare,Alloc>& rhs)
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    inline bool operator == (const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& lhs,
+                             const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& rhs)
     {
         typedef std::map<KeyT,DataT,Compare<KeyT>,Alloc<KeyT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     //JODO comment... 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    inline bool is_element_equal(const itl::map<KeyT,DataT,Traits,Compare,Alloc>& lhs,
-                                 const itl::map<KeyT,DataT,Traits,Compare,Alloc>& rhs)
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    inline bool is_element_equal(const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& lhs,
+                                 const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& rhs)
     {
         typedef std::map<KeyT,DataT,Compare<KeyT>,Alloc<KeyT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Protonic equality is equality on all elements that do not carry a neutron as content. */
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    inline bool is_protonic_equal (const itl::map<KeyT,DataT,Traits,Compare,Alloc>& lhs,
-                                   const itl::map<KeyT,DataT,Traits,Compare,Alloc>& rhs)
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    inline bool is_protonic_equal (const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& lhs,
+                                   const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& rhs)
     {
         //JODO: Efficient implementation.
         typedef std::map<KeyT,DataT,Compare<KeyT>,Alloc<KeyT> > base_type;
 
-        itl::map<KeyT,DataT,Traits,Compare,Alloc> lhs0 = lhs;
-        itl::map<KeyT,DataT,Traits,Compare,Alloc> rhs0 = rhs;
+        itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc> lhs0 = lhs;
+        itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc> rhs0 = rhs;
         lhs0.absorb_neutrons();
         rhs0.absorb_neutrons();
         return operator==((const base_type&)lhs0, (const base_type&)rhs0);
     }
 
     /** Strict weak less ordering which is given by the Compare order */
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    inline bool operator < (const itl::map<KeyT,DataT,Traits,Compare,Alloc>& lhs,
-        const itl::map<KeyT,DataT,Traits,Compare,Alloc>& rhs)
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    inline bool operator < (const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& lhs,
+        const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& rhs)
     {
         typedef std::map<KeyT,DataT,Compare<KeyT>,Alloc<KeyT> > base_type;
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Partial ordering which is induced by Compare */
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    inline bool operator <= (const itl::map<KeyT,DataT,Traits,Compare,Alloc>& lhs,
-        const itl::map<KeyT,DataT,Traits,Compare,Alloc>& rhs)
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    inline bool operator <= (const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& lhs,
+        const itl::map<KeyT,DataT,Traits,Compare,Combine,Alloc>& rhs)
     {
         typedef std::map<KeyT,DataT,Compare<KeyT>,Alloc<KeyT> > base_type;
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
         template <template<class>class Combinator>
-    typename map<KeyT,DataT,Traits,Compare,Alloc>::iterator
-        map<KeyT,DataT,Traits,Compare,Alloc>::add(const value_type& val)
+    typename map<KeyT,DataT,Traits,Compare,Combine,Alloc>::iterator
+        map<KeyT,DataT,Traits,Compare,Combine,Alloc>::add(const value_type& val)
     {
         if(Traits::absorbs_neutrons && val.CONT_VALUE == DataT())
             return end();
@@ -398,9 +400,9 @@ namespace boost{namespace itl
         }
     }
 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    typename map<KeyT,DataT,Traits,Compare,Alloc>::size_type 
-        map<KeyT,DataT,Traits,Compare,Alloc>
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    typename map<KeyT,DataT,Traits,Compare,Combine,Alloc>::size_type 
+        map<KeyT,DataT,Traits,Compare,Combine,Alloc>
         ::erase(const value_type& value_pair)
     {
         if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == DataT())
@@ -418,9 +420,9 @@ namespace boost{namespace itl
     }
 
 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    typename map<KeyT,DataT,Traits,Compare,Alloc>::iterator
-        map<KeyT,DataT,Traits,Compare,Alloc>::subtract(const value_type& val)
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    typename map<KeyT,DataT,Traits,Compare,Combine,Alloc>::iterator
+        map<KeyT,DataT,Traits,Compare,Combine,Alloc>::subtract(const value_type& val)
     {
         if(Traits::emits_neutrons)
             return add<inplace_minus>(val);
@@ -444,8 +446,8 @@ namespace boost{namespace itl
     }
 
 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
-    std::string map<KeyT,DataT,Traits,Compare,Alloc>::as_string()const
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    std::string map<KeyT,DataT,Traits,Compare,Combine,Alloc>::as_string()const
     { 
         std::string repr;
         const_FORALL_THIS(it) {
@@ -460,9 +462,9 @@ namespace boost{namespace itl
         return repr;
     }
 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
         template<class Predicate>
-    map<KeyT,DataT,Traits,Compare,Alloc>& map<KeyT,DataT,Traits,Compare,Alloc>
+    map<KeyT,DataT,Traits,Compare,Combine,Alloc>& map<KeyT,DataT,Traits,Compare,Combine,Alloc>
         ::erase_if(const Predicate& pred)
     {
         iterator it = begin();
@@ -474,10 +476,10 @@ namespace boost{namespace itl
     }
 
 
-    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Alloc>
+    template <typename KeyT, typename DataT, class Traits, template<class>class Compare, template<class>class Combine, template<class>class Alloc>
         template<class Predicate>
-    map<KeyT,DataT,Traits,Compare,Alloc>& map<KeyT,DataT,Traits,Compare,Alloc>
-        ::assign_if(const map<KeyT,DataT,Traits,Compare,Alloc>& src, const Predicate& pred)
+    map<KeyT,DataT,Traits,Compare,Combine,Alloc>& map<KeyT,DataT,Traits,Compare,Combine,Alloc>
+        ::assign_if(const map<KeyT,DataT,Traits,Compare,Combine,Alloc>& src, const Predicate& pred)
     {
         clear();
         const_iterator it = src.begin();
@@ -489,12 +491,12 @@ namespace boost{namespace itl
     }
     //-------------------------------------------------------------------------
     template <typename KeyT, typename DataT, class Traits, 
-              template<class>class Compare, template<class>class Alloc>
-    map<KeyT,DataT,Traits,Compare,Alloc>& 
-        insert(map<KeyT,DataT,Traits,Compare,Alloc>& object, 
-               const map<KeyT,DataT,Traits,Compare,Alloc>& insertee) 
+              template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    map<KeyT,DataT,Traits,Compare,Combine,Alloc>& 
+        insert(map<KeyT,DataT,Traits,Compare,Combine,Alloc>& object, 
+               const map<KeyT,DataT,Traits,Compare,Combine,Alloc>& insertee) 
     {
-        typedef map<KeyT,DataT,Traits,Compare,Alloc> map_type;
+        typedef map<KeyT,DataT,Traits,Compare,Combine,Alloc> map_type;
 
         const_FORALL(typename map_type, elem_, insertee) 
             object.insert(*elem_); 
@@ -503,12 +505,12 @@ namespace boost{namespace itl
     }
 
     template <typename KeyT, typename DataT, class Traits, 
-              template<class>class Compare, template<class>class Alloc>
-    map<KeyT,DataT,Traits,Compare,Alloc>& 
-        erase(map<KeyT,DataT,Traits,Compare,Alloc>& object, 
-              const map<KeyT,DataT,Traits,Compare,Alloc>& erasee) 
+              template<class>class Compare, template<class>class Combine, template<class>class Alloc>
+    map<KeyT,DataT,Traits,Compare,Combine,Alloc>& 
+        erase(map<KeyT,DataT,Traits,Compare,Combine,Alloc>& object, 
+              const map<KeyT,DataT,Traits,Compare,Combine,Alloc>& erasee) 
     {
-        typedef map<KeyT,DataT,Traits,Compare,Alloc> map_type;
+        typedef map<KeyT,DataT,Traits,Compare,Combine,Alloc> map_type;
 
         const_FORALL(typename map_type, elem_, erasee) 
             object.erase(*elem_); 

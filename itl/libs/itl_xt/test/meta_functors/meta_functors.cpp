@@ -27,6 +27,7 @@ DEALINGS IN THE SOFTWARE.
 +----------------------------------------------------------------------------*/
 
 #include <iostream>
+#include <set>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/placeholders.hpp>
 
@@ -70,6 +71,32 @@ struct binator2{
   }
 };
 
+template<class T1, class Compare = std::less<T1> >
+class PairSet1
+{
+public:
+	typedef std::set
+		    <
+				std::pair<T1,T1>, 
+		        typename mpl::apply<Compare, std::pair<T1,T1> >::type
+			> 
+			ImplSetT;
+
+	typedef std::set
+		    <
+				T1, 
+				typename mpl::apply<Compare, T1>::type
+			> 
+			ElemSetT;
+	// 
+	PairSet1(): _set() 
+	{cout << "PairSet1 constructed" << endl;}
+
+private:
+	ElemSetT _set;
+};
+
+typedef PairSet1<int, std::less<_> > PairSet1_int;
 
 int main()
 {
@@ -80,6 +107,8 @@ int main()
 	unator2<int, unary<_> >  untor2; untor2.speak();
 	binator1<int, int, binary>     bintor1; bintor1.speak();
 	binator2<int, int, binary<_1,_2> > bintor2; bintor2.speak();
+
+	PairSet1_int ps1;
 
     return 0;
 }
