@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_SERIALIZATION_BASIC_XML_GRAMMAR_IPP_INCLUDED
+#define BOOST_SERIALIZATION_BASIC_XML_GRAMMAR_IPP_INCLUDED
 #if (defined _MSC_VER) && (_MSC_VER == 1200)
 #  pragma warning (disable : 4786) // too long name, harmless warning
 #endif
@@ -454,3 +456,4 @@ void basic_xml_grammar<CharType>::windup(IStream & is){
 
 } // namespace archive
 } // namespace boost
+#endif
