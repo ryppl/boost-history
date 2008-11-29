@@ -41,6 +41,8 @@ namespace mirror {
 	{
 		typedef boost::mirror::meta_class<ReflectedType, VariantTag> 
 			meta_class;
+		typedef boost::mirror::meta_class<ReflectedType, VariantTag> 
+			scope;
 		/** This struct "hides" the internal helpers
 		 */
 		struct detail 

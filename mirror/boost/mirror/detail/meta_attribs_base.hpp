@@ -37,6 +37,8 @@ template <class Class, class VariantTag>
 struct meta_class_attributes
 {
 	typedef mpl::vector0<> type_list;
+	typedef ::boost::mirror::meta_class<Class, VariantTag>
+		scope;
 };
 
 /** Possible class attribute storage specifiers 
@@ -108,6 +110,8 @@ struct meta_class_attribute_traits<
 	{ \
 		typedef THE_CLASS Class; \
 		typedef detail::default_meta_class_variant variant_tag; \
+		typedef ::boost::mirror::meta_class<Class, variant_tag> \
+			scope; \
 		typedef mpl::vector<> 
 
 /** This macro starts the declaration of member attributes
@@ -126,6 +130,8 @@ struct meta_class_attribute_traits<
 		typedef THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
 			Class; \
 		typedef detail::default_meta_class_variant variant_tag; \
+		typedef ::boost::mirror::meta_class<Class, variant_tag> \
+			scope; \
 		typedef typename mpl::vector<> 
 
 
