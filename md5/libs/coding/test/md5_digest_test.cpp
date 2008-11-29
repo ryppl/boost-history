@@ -16,7 +16,6 @@
 #include <boost/lexical_cast.hpp>          // for boost::lexical_cast
 #include <boost/serialization/nvp.hpp>     // for boost::serialization::make_nvp
 #include <boost/test/unit_test.hpp>        // unit testing framework
-#include <boost/test/output/compiler_log_formatter.hpp>  // for new formatter
 
 #include <cstddef>  // for std::size_t
 #include <cstdio>   // for EOF
@@ -24,7 +23,6 @@
 #include <iomanip>  // for std::setfill, setw
 #include <ios>      // for std::left, uppercase
 #include <istream>  // for std::basic_istream
-#include <memory>   // for std::auto_ptr [for xcode_config]
 #include <ostream>  // for std::basic_ostream
 #include <sstream>  // for std::[w](o|i)stringstream
 #include <string>   // for std::string, wstring
@@ -39,41 +37,6 @@ using boost::coding::md5_digest;
 // Put custom types/templates, helper functions, and objects here
 namespace
 {
-
-#ifdef __APPLE_CC__
-/* Xcode-compatible logging format, idea by Richard Dingwall at
-   <http://richarddingwall.name/2008/06/01/using-the-boost-unit-test-framework-
-   with-xcode-3/>.
-*/
-class xcode_log_formatter
-    : public boost::unit_test::output::compiler_log_formatter
-{
-protected:
-    virtual  void  print_prefix( std::ostream &o, boost::unit_test::const_string
-     file, std::size_t line )
-    {
-        o << file << ':' << line << ": ";
-    }
-
-};  // xcode_log_formatter
-
-class xcode_config
-{
-public:
-    xcode_config()
-    {
-        std::auto_ptr<xcode_log_formatter>  p( new xcode_log_formatter );
-
-        boost::unit_test::unit_test_log.set_formatter( p.get() );
-        p.release();
-    }
- 
-    ~xcode_config()  {}
-
-};  // xcode_config
- 
-BOOST_GLOBAL_FIXTURE(xcode_config);
-#endif
 
 // Sample MD5 message digest values
 md5_digest const  md5_initial = { {0x67452301ul, 0xEFCDAB89ul, 0x98BADCFEul,
