@@ -151,44 +151,66 @@ namespace detail {
     make_edge(Store const&, Ends e, Label&& l)
     { return typename edge_store_traits<Store>::edge_type(e, l); }
 
-    // Just push the edge into the sequence. Since these types support a
-    // multigraph, the ordering of endpoints is essentially irrelevant.
-    template <typename Store, typename Vertex, typename Label>
-    inline typename Store::iterator
-    dispatch_insert(Store& store, Vertex u, Vertex v, Label&& l, sequence_tag)
-    { return store.insert(store.end(), make_edge(store, std::make_pair(u, v), l)); }
+    // This is one of the few non-generic components of the library. We're
+    // fixing the ordering of vertices within the end pair as strictly less.
+    // Since descriptors are required to define this operation, we're in good
+    // shape.
+    template <typename Vertex>
+    inline typename std::pair<Vertex, Vertex> order_verts(Vertex& u, Vertex& v)
+    { return (u < v) ? std::make_pair(u, v) : std::make_pair(v, u); }
 
-    // This re-orders the endpoints before inerting in order to guarantee a
-    // canonical ordering edges, and preserving uniqueness, if required.
-    // TODO: Is there a way to convert Comp<pair<VD,VD>> to Comp<VD>? Yeah, but
-    // it's kind of nasty and uses template template parameters.
+    // Just push the edge into the sequence. Since these types support a
+    // multigraph, the ordering of endpoints is essentially irrelevant. This
+    // always inserts so the returned pair is always true.
     template <typename Store, typename Vertex, typename Label>
-    inline typename Store::iterator
-    dispatch_insert(Store& store, Vertex u, Vertex v, Label&& l, pair_associative_container_tag)
+    inline std::pair<typename Store::iterator, bool>
+    dispatch_insert(Store& store, Vertex u, Vertex v, Label&& l, sequence_tag)
     {
-        // NOTE: Ends must be Pair<VD,VD>. For some reason, writing the expression
-        // e.first < e.second tries to open a new template and gives an error
-        // about constant expressions.
-        std::less<Vertex> comp;
-        if(!comp(u, v)) {
-            using std::swap;
-            swap(u, v);
-        }
-        return container_insert(store, make_edge(store, std::make_pair(u, v), l));
+        typename edge_store_traits<Store>::edge_type e =
+            make_edge(store, std::make_pair(u, v), l);
+        return std::make_pair(store.insert(store.end(), e), true);
+    }
+
+    // Unique associative containers may fail the insertion, returning false
+    // as the second.
+    template <typename Store, typename Edge>
+    inline std::pair<typename Store::iterator, bool>
+    assoc_insert(Store& store, Edge&& e, unique_associative_container_tag)
+    { return store.insert(e); }
+
+    // Pair associative containers always permit insertion.
+    template<typename Store, typename Edge>
+    inline std::pair<typename Store::iterator, bool>
+    assoc_insert(Store& store, Edge&& e, multiple_associative_container_tag)
+    { return std::make_pair(store.insert(e), true); }
+
+    // This matches all associative containers, but we have to dispatch
+    // separately for unique and multiple.
+    template <typename Store, typename Vertex, typename Label>
+    inline std::pair<typename Store::iterator, bool>
+    dispatch_insert(Store& store, Vertex u, Vertex v, Label&& l, associative_container_tag)
+    {
+        typename edge_store_traits<Store>::edge_type e =
+            make_edge(store, order_verts(u, v), l);
+        return assoc_insert(store, std::move(e), container_category(store));
     }
 } /* namespace detail */
 
-/** Insert an edge into the graph. */
+/**
+ * Insert an edge into the graph. If the edge set is uniquely associative, then
+ * this may not insert the edge, and will return a descriptor to the exsiting
+ * edge.
+ */
 template <typename Store, typename Vertex, typename Label>
-inline typename edge_store_traits<Store>::edge_descriptor
+inline std::pair<typename edge_store_traits<Store>::edge_descriptor, bool>
 insert(Store& store, Vertex u, Vertex v, Label&& l)
 {
     typedef typename Store::iterator Iterator;
-    typedef typename edge_store_traits<Store>::edge_descriptor Descriptor;
-
-    // Start by inserting the edge globally. Could be O(1), O(lgE).
-    Iterator i = detail::dispatch_insert(store, u, v, l, container_category(store));
-    return make_descriptor(store, i, edge_descriptor_kind());
+    typedef typename edge_store_traits<Store>::edge_descriptor Edge;
+    std::pair<Iterator, bool> x =
+        detail::dispatch_insert(store, u, v, l, container_category(store));
+    Edge e = make_descriptor(store, x.first, edge_descriptor_kind());
+    return std::make_pair(e, x.second);
 }
 
 /** @name Find Edge

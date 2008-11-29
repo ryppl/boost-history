@@ -138,6 +138,27 @@ add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
          typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
 { return add_edge(g, u, v, typename undirected_graph<VL,EL,VS,ES,IS>::edge_label()); }
 
+namespace detail {
+    // Specialize the binding of edge descriptors into the vertex by recognizing
+    // that only unique associative containers actually need to test the result
+    // of the insertion before binding.
+    template <typename VS, typename V, typename Ins, typename Tag>
+    inline void bind_edges(VS& vs, V u, V v, Ins ins, Tag)
+    {
+        incs::insert(vs::edges(vs, u), ins.first);
+        incs::insert(vs::edges(vs, v), ins.first);
+    }
+
+    template <typename VS, typename V, typename Ins, typename Tag>
+    inline void bind_edges(VS& vs, V u, V v, Ins ins, unique_associative_container_tag)
+    {
+        if(ins.second) {
+            incs::insert(vs::edges(vs, u), ins.first);
+            incs::insert(vs::edges(vs, v), ins.first);
+        }
+    }
+} /* namespace detail */
+
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 inline typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor
 add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
@@ -146,8 +167,9 @@ add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
          typename undirected_graph<VL,EL,VS,ES,IS>::edge_label&& l)
 {
     typedef typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor Edge;
-    Edge e = es::insert(g.e, u, v, l);
-    return e;
+    std::pair<Edge, bool> x = es::insert(g.e, u, v, l);
+    detail::bind_edges(g.v, u, v, x, container_category(g.e));
+    return x.first;
 }
 //@}
 

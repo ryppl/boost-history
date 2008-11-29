@@ -118,7 +118,7 @@ public:
     { _list.clear(); _size = 0; }
 
     counted_list& swap(counted_list&& x)
-    { _list.swap(x); return* this; }
+    { _list.swap(x._list); return* this; }
 
     counted_list& operator=(counted_list const& x)
     { return swap(counted_list(x)); }

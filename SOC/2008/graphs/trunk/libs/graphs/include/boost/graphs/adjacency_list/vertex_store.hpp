@@ -212,6 +212,28 @@ namespace detail {
     { return i->second; }
     //@}
 
+    /** @internal @name Get Edges */
+    //@{
+    // Overload for all stores with edges first in the vertex.
+    template <typename Store, typename Vertex>
+    inline typename vertex_store_traits<Store>::vertex_edges&
+    get_edges(Store& store, Vertex v)
+    { return get_vertex(store, make_iterator(store, v)).first; }
+
+    // Overload for maps - identical to above, but has to be separate because
+    // the cause to get_vertex doesn't appear to return the right type when
+    // instantiated with this specialization.
+    template <typename Key, typename Edges, typename Label, typename Compare, typename Alloc, typename Vertex>
+    inline Edges&
+    get_edges(std::map<Key, std::pair<Edges, Label>, Compare, Alloc>& store, Vertex v)
+    { return get_vertex(store, make_iterator(store, v)).first; }
+
+    // Overload for sets (edges second).
+    template <typename Label, typename Edges, typename Compare, typename Alloc, typename Vertex>
+    inline Edges&
+    get_edges(std::map<Label, Edges, Compare, Alloc>& store, Vertex v)
+    { return get_vertex(store, make_iterator(store, v)).second; }
+    //@}
 
     // Iterate and compare for sequences.
     template <typename Store, typename Label>
@@ -375,15 +397,7 @@ vertex(Store const& store, typename vertex_store_traits<Store>::vertex_descripto
 { return detail::get_vertex(store, make_iterator(store, v)); }
 //@}
 
-/** @name Vertex Label
- *
- * @todo There's a problem with vertex_sets that causes the compiler to select
- * a non-const return type and then causes an error because we can't convert
- * the const label to the non-const label. One solution would be to provide an
- * internal overload that casted out the const - this isn't a terribly bad idea
- * since its easily possible that the only part of the label required to be
- * immutable is the part involved in the comparison and sorting.
- */
+/** @name Vertex Label */
 //@{
 template <typename Store>
 inline typename vertex_store_traits<Store>::vertex_label&
@@ -394,6 +408,19 @@ template <typename Store>
 inline typename vertex_store_traits<Store>::vertex_label const&
 label(Store const& store, typename vertex_store_traits<Store>::vertex_descriptor v)
 { return graphs::label(vertex(store, v)); }
+//@}
+
+/** @name Vertex Edges */
+//@{
+template <typename Store>
+inline typename vertex_store_traits<Store>::vertex_edges&
+edges(Store& store, typename vertex_store_traits<Store>::vertex_descriptor v)
+{ return detail::get_edges(store, v); }
+
+template <typename Store>
+inline typename vertex_store_traits<Store>::vertex_edges const&
+edges(Store const& store, typename vertex_store_traits<Store>::vertex_descriptor v)
+{ return edges(const_cast<Store&>(store), v); }
 //@}
 
 /** Return the number of elements in the vertex store. */

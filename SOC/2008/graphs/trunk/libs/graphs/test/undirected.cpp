@@ -163,15 +163,19 @@ void test()
 
 int main()
 {
-    typedef undirected_graph<node, arc, vertex_vector<>, edge_vector<>, incidence_vector<>> VVV;
-    typedef undirected_graph<node, arc, vertex_list<>, edge_vector<>, incidence_vector<>> LVV;
-    typedef undirected_graph<node, arc, vertex_set<>, edge_vector<>, incidence_vector<>> SVV;
-    typedef undirected_graph<node, arc, vertex_map<int>, edge_vector<>, incidence_vector<>> MVV;
+    typedef undirected_graph<node, arc, vertex_vector<>, edge_vector<>, incidence_vector<>> V_V_V;
+    typedef undirected_graph<node, arc, vertex_list<>, edge_vector<>, incidence_vector<>> L_V_V;
+    typedef undirected_graph<node, arc, vertex_set<>, edge_vector<>, incidence_vector<>> S_V_V;
+    typedef undirected_graph<node, arc, vertex_map<int>, edge_vector<>, incidence_vector<>> M_V_V;
 
-    test<VVV>();
-    test<LVV>();
-    test<SVV>();
-    test<MVV>();
+    typedef undirected_graph<node, arc, vertex_vector<>, edge_list<>, incidence_list<>> V_L_L;
+    typedef undirected_graph<node, arc, vertex_vector<>, edge_set<>, incidence_set<>> V_S_S;
 
+    test<V_V_V>();
+    test<L_V_V>();
+    test<S_V_V>();
+    test<M_V_V>();
+    test<V_L_L>();
+    test<V_S_S>();
 }
 
