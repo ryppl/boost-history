@@ -16,8 +16,8 @@ namespace boost{namespace itl
 
 template
 <    
-    class, class, class, template<class,template<class>class>class, 
-    template<class>class, template<class>class, template<class>class
+    class, class, class, template<class,ITL_COMPARE>class, 
+    ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
 >
 class interval_map;
 
@@ -28,12 +28,12 @@ class interval_map;
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -58,12 +58,12 @@ operator +=
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -98,12 +98,12 @@ operator +=
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -127,12 +127,12 @@ operator +=
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -169,12 +169,12 @@ operator -=
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -195,12 +195,12 @@ operator -=
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -224,12 +224,12 @@ operator -=
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_ALLOC
     >
     class IntervalSet
 >
@@ -252,12 +252,12 @@ operator -=
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -281,8 +281,8 @@ operator -=
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     class OperandT
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
@@ -304,8 +304,8 @@ insert
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     class OperandT
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
@@ -327,8 +327,8 @@ erase
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     class SectanT
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& 
@@ -353,18 +353,18 @@ operator *=
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class LeftIntervalMap,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class RightIntervalMap
 >
@@ -388,12 +388,12 @@ bool is_element_equal
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -437,12 +437,12 @@ bool is_disjoint
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_ALLOC Alloc,
     template
     <    
-        class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_ALLOC
     >
     class IntervalSet
 >
@@ -483,18 +483,18 @@ bool is_disjoint
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap,
     template
     <    
-        class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_ALLOC
     >
     class IntervalSet
 >
@@ -534,18 +534,18 @@ bool is_disjoint
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap,
     template
     <    
-        class, template<class,template<class>class>class, 
-        template<class>class, template<class>class
+        class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_ALLOC
     >
     class IntervalSet
 >
@@ -566,12 +566,12 @@ bool is_disjoint
 template 
 <
     class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc,
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc,
     template
     <    
-        class, class, class, template<class,template<class>class>class, 
-        template<class>class, template<class>class, template<class>class
+        class, class, class, template<class,ITL_COMPARE>class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_ALLOC
     >
     class IntervalMap
 >
@@ -589,8 +589,8 @@ enclosure(const IntervalMap<DomainT,CodomainT,Traits,Interval,Compare,Combine,Al
 template 
 <
     class SubType, class DomainT, class CodomainT,
-    class Traits, template<class,template<class>class>class Interval, 
-    template<class>class Compare, template<class>class Combine, template<class>class Alloc
+    class Traits, template<class,ITL_COMPARE>class Interval, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc
 >
 typename interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>::interval_type 
 enclosure(const interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>& object)

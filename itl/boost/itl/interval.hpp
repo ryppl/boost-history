@@ -39,6 +39,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/call_traits.hpp> 
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
+#include <boost/itl/notate.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
@@ -299,7 +300,7 @@ namespace boost{namespace itl
 
     @author  Joachim Faulhaber
 */
-template <class DataT, template<class>class Compare = std::less>
+template <class DataT, ITL_COMPARE Compare = std::less>
 class interval
 {
 public:
@@ -618,7 +619,7 @@ private:
 } ;
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::bound_types interval<DataT,Compare>::succession_bounds()const
 {
     if(_boundtypes==RIGHT_OPEN) return RIGHT_OPEN;
@@ -652,7 +653,7 @@ struct discrete_type
 	{ return IntervalT::data_less(succ(x),y); }        //{ return succ(x) <       y ; }
 };
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::empty()const
 {
     using namespace boost::mpl;
@@ -732,7 +733,7 @@ struct discrete_interval
 
 // NOTE structural similarities between empty and exclusive_less! 
 // emptieness can be defined as being exclusive less to oneself.
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::exclusive_less(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -750,7 +751,7 @@ bool interval<DataT,Compare>::exclusive_less(const interval& x2)const
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::lower_less(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -768,7 +769,7 @@ bool interval<DataT,Compare>::lower_less(const interval& x2)const
            ::type::open_bound_less(_lwb, x2._lwb);
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::upper_less(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -787,7 +788,7 @@ bool interval<DataT,Compare>::upper_less(const interval& x2)const
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::lower_less_equal(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -806,7 +807,7 @@ bool interval<DataT,Compare>::lower_less_equal(const interval& x2)const
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::upper_less_equal(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -827,7 +828,7 @@ bool interval<DataT,Compare>::upper_less_equal(const interval& x2)const
 
 //NOTE THINK: This implementation is rather interesting wrt. continuous value types.
 // An alternative implementation was x.lwb_equal(y)={return x.lower_less_equal(y) && y.lower_less_equal(x)}
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::lower_equal(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -845,7 +846,7 @@ bool interval<DataT,Compare>::lower_equal(const interval& x2)const
 
 //NOTE THINK: This implementation is rather interesting wrt. continuous value types.
 // An alternative implementation was x.lwb_equal(y)={return x.lower_less_equal(y) && y.lower_less_equal(x)}
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::upper_equal(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -863,7 +864,7 @@ bool interval<DataT,Compare>::upper_equal(const interval& x2)const
 
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::lwb_min(const interval& x2)const
 {
     if( x2.lower_less(*this) )
@@ -872,7 +873,7 @@ typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::lwb_min(const 
         return BoundT(_lwb, boundtypes());
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::upb_max(const interval& x2)const
 {
     if( upper_less(x2) )
@@ -883,7 +884,7 @@ typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::upb_max(const 
 
 
 // JODO THINK URG do borders reverse when lwb_max is used as upb etc. ?
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::lwb_max(const interval& x2)const
 {
     if( lower_less(x2) )
@@ -892,7 +893,7 @@ typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::lwb_max(const 
         return BoundT(_lwb, boundtypes());
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::upb_min(const interval& x2)const
 {
     if( x2.upper_less(*this) )
@@ -902,13 +903,13 @@ typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::upb_min(const 
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::upb_leftOf(const interval& x2)const
 {
     return BoundT(x2._lwb, x2.succession_bounds());
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::lwb_rightOf(const interval& x2)const
 {
     return BoundT(x2._upb, x2.succession_bounds());
@@ -916,7 +917,7 @@ typename interval<DataT,Compare>::BoundT interval<DataT,Compare>::lwb_rightOf(co
 
 
 // NOTE non symmetric version: *this[upb].touches(x2[lwb])   
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::touches(const interval& x2)const
 {
     using namespace boost::mpl;
@@ -932,7 +933,7 @@ bool interval<DataT,Compare>::touches(const interval& x2)const
            ::type::has_equal_border_touch(*this, x2);
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::contains(const DataT& x)const
 {
     if(rightbound_closed() && leftbound_closed()) return data_less_equal(_lwb, x) && data_less_equal(x, _upb);
@@ -941,16 +942,16 @@ bool interval<DataT,Compare>::contains(const DataT& x)const
                                                   return data_less(_lwb, x)       && data_less(x, _upb);
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::contained_in(const interval& super)const
 { return super.lower_less_equal(*this) && upper_less_equal(super); }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 bool interval<DataT,Compare>::contains(const interval& sub)const
 { return lower_less_equal(sub) && sub.upper_less_equal(*this); }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 interval<DataT,Compare>& interval<DataT,Compare>::extend(const interval<DataT,Compare>& x2)
 {
     if(x2.empty()) return *this;
@@ -968,7 +969,7 @@ interval<DataT,Compare>& interval<DataT,Compare>::extend(const interval<DataT,Co
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 inline interval<DataT,Compare>& interval<DataT,Compare>::left_subtract(const interval& x2)
 {
     set_lwb( BoundT(x2._upb, x2.succession_bounds()) );
@@ -976,7 +977,7 @@ inline interval<DataT,Compare>& interval<DataT,Compare>::left_subtract(const int
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 void interval<DataT,Compare>::intersect(interval<DataT,Compare>& isec, const interval<DataT,Compare>& x2)const
 {
     isec.set_lwb(lwb_max(x2));
@@ -984,7 +985,7 @@ void interval<DataT,Compare>::intersect(interval<DataT,Compare>& isec, const int
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 void interval<DataT,Compare>::left_surplus(interval<DataT,Compare>& lsur, const interval<DataT,Compare>& x2)const
 {
     if(lower_less(x2)) {
@@ -994,7 +995,7 @@ void interval<DataT,Compare>::left_surplus(interval<DataT,Compare>& lsur, const 
     else lsur.clear();
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 void interval<DataT,Compare>::right_surplus(interval<DataT,Compare>& rsur, const interval<DataT,Compare>& x2)const
 {
     if(x2.upper_less(*this)) {
@@ -1005,7 +1006,7 @@ void interval<DataT,Compare>::right_surplus(interval<DataT,Compare>& rsur, const
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 const std::string interval<DataT,Compare>::as_string()const
 {
     std::string itvRep("");
@@ -1027,7 +1028,7 @@ const std::string interval<DataT,Compare>::as_string()const
 // NOTE: they must be used in any function that is essential to all instances
 // of DataT
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 DataT interval<DataT,Compare>::first()const
 {
     //JODO: BOOST_STATIC_ASSERT generates compiletime error even if 
@@ -1037,14 +1038,14 @@ DataT interval<DataT,Compare>::first()const
     return leftbound_closed() ? _lwb : succ(_lwb); 
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 DataT interval<DataT,Compare>::last()const
 { 
     BOOST_ASSERT(!itl::is_continuous<DataT>::value);
     return rightbound_closed() ? _upb : pred(_upb); 
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::size_type interval<DataT,Compare>::cardinality()const
 {
     using namespace boost::mpl;
@@ -1056,7 +1057,7 @@ typename interval<DataT,Compare>::size_type interval<DataT,Compare>::cardinality
               ::type::cardinality(*this);
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 typename interval<DataT,Compare>::difference_type interval<DataT,Compare>::length()const
 {
     using namespace boost::mpl;
@@ -1069,19 +1070,19 @@ typename interval<DataT,Compare>::difference_type interval<DataT,Compare>::lengt
 }
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 interval<DataT,Compare> interval<DataT,Compare>::as_closed_interval()const
 { 
     return interval(first(), last(), CLOSED); 
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 interval<DataT,Compare> interval<DataT,Compare>::as_rightopen_interval()const
 { 
     return interval(first(), pred(last()), RIGHT_OPEN); 
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 void interval<DataT,Compare>::transform_bounds(bound_types bt)
 { 
     switch(bt)
@@ -1093,7 +1094,7 @@ void interval<DataT,Compare>::transform_bounds(bound_types bt)
     }
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 void interval<DataT,Compare>::close_left_bound()
 {
     if(leftbound_open())
@@ -1103,7 +1104,7 @@ void interval<DataT,Compare>::close_left_bound()
     }
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 void interval<DataT,Compare>::open_right_bound()
 {
     if(rightbound_closed())
@@ -1115,13 +1116,13 @@ void interval<DataT,Compare>::open_right_bound()
 
 
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 inline bool operator == (const interval<DataT,Compare>& lhs, const interval<DataT,Compare>& rhs)
 {
     return lhs.equal(rhs);
 }
 
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 inline bool operator < (const interval<DataT,Compare>& lhs, const interval<DataT,Compare>& rhs)
 {
     return lhs.less(rhs);
@@ -1156,7 +1157,7 @@ struct exclusive_less {
 // ----------------------------------------------------------------------------
 // operators
 // ----------------------------------------------------------------------------
-template <class DataT, template<class>class Compare>
+template <class DataT, ITL_COMPARE Compare>
 itl::interval<DataT,Compare>& operator *= (      itl::interval<DataT,Compare>& section, 
                                    const itl::interval<DataT,Compare>& sectant)
 {
@@ -1164,7 +1165,7 @@ itl::interval<DataT,Compare>& operator *= (      itl::interval<DataT,Compare>& s
     return section;
 }
 
-template<class CharType, class CharTraits, class DataT, template<class>class Compare>
+template<class CharType, class CharTraits, class DataT, ITL_COMPARE Compare>
 std::basic_ostream<CharType, CharTraits> &operator<<
   (std::basic_ostream<CharType, CharTraits> &stream, interval<DataT,Compare> const& x)
 {

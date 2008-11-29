@@ -57,7 +57,7 @@ namespace boost{namespace itl
     // sets of strings
     // ---------------------------------------------------------------------------------
 
-    template <template<class>class Compare = std::less>
+    template <ITL_COMPARE Compare = std::less>
     class string_set: public itl::set<std::string, Compare>
     {
     public:
@@ -80,7 +80,7 @@ namespace boost{namespace itl
     typedef string_set<String_ICLess> ICstring_setD;
     
 
-    template <template<class>class Compare>
+    template <ITL_COMPARE Compare>
     std::string string_set<Compare>::as_string(char* sep)const
     {
         const_iterator it = this->begin();
@@ -94,7 +94,7 @@ namespace boost{namespace itl
     }
 
 
-    template <template<class>class Compare>
+    template <ITL_COMPARE Compare>
     void string_set<Compare>::selectSet(string_set& selectees, StringSelectorFPD selector)const
     {
         selectees.clear();

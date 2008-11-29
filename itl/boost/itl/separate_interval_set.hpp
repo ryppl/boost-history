@@ -67,9 +67,9 @@ namespace boost{namespace itl
 template 
 <
     typename             DomainT, 
-    template<class, template<class>class>class Interval = itl::interval,
-    template<class>class Compare  = std::less,
-    template<class>class Alloc    = std::allocator
+    template<class,ITL_COMPARE>class Interval = itl::interval,
+    ITL_COMPARE Compare  = std::less,
+    ITL_ALLOC   Alloc    = std::allocator
 > 
 class separate_interval_set: 
     public interval_base_set<separate_interval_set<DomainT,Interval,Compare,Alloc>,
@@ -181,7 +181,7 @@ private:
 } ;
 
 
-template <typename DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
+template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
 {
     if(interv.empty()) 
@@ -193,7 +193,7 @@ bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const inte
 }
 
 
-template<class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
+template<class DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_type& x)
 {
     if(x.empty()) return;
@@ -226,7 +226,7 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_typ
 }
 
 
-template<class DomainT, template<class, template<class>class>class Interval, template<class>class Compare, template<class>class Alloc>
+template<class DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const value_type& x)
 {
     if(x.empty()) return;

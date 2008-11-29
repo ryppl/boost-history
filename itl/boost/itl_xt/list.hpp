@@ -52,7 +52,7 @@ namespace boost{namespace itl
 
         @author Joachim Faulhaber
     */
-    template <typename DataT, template<class>class Alloc = std::allocator>
+    template <typename DataT, ITL_ALLOC Alloc = std::allocator>
     class list: private std::list<DataT, Alloc<DataT> >
     {
     public:
@@ -210,7 +210,7 @@ namespace boost{namespace itl
     };
 
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     inline bool operator == (const itl::list<DataT,Alloc>& lhs,
                              const itl::list<DataT,Alloc>& rhs)
     {
@@ -218,7 +218,7 @@ namespace boost{namespace itl
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
     
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     inline bool operator < (const itl::list<DataT,Alloc>& lhs,
         const itl::list<DataT,Alloc>& rhs)
     {
@@ -226,7 +226,7 @@ namespace boost{namespace itl
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     inline bool operator <= (const itl::list<DataT,Alloc>& lhs,
         const itl::list<DataT,Alloc>& rhs)
     {
@@ -234,7 +234,7 @@ namespace boost{namespace itl
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_unique()const 
     {
         //JODO implement via std-algorithm of directly
@@ -243,7 +243,7 @@ namespace boost{namespace itl
         return (*this) == self;
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_supersequence(const list& subSeq)const
     {
         list sub = subSeq;
@@ -251,7 +251,7 @@ namespace boost{namespace itl
         return is_supersequence(sub, pos);
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_supersequence(list& subtee, const_iterator& pos)const
     {
         if(subtee.empty())
@@ -271,7 +271,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_consequent(const list& conSeq)const
     {
         list seq = conSeq;
@@ -280,7 +280,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_consequent(list& seq, const_iterator& pos)const
     {
         if(seq.empty())
@@ -300,7 +300,7 @@ namespace boost{namespace itl
         }
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     void list<DataT,Alloc>::consequent_permutation(list& perm, list& seq)
     {
         perm.clear();
@@ -309,7 +309,7 @@ namespace boost{namespace itl
         consequent_permutation(perm, this_, seq, seq_);
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     void list<DataT,Alloc>::consequent_permutation(list& perm, iterator& this_, list& seq, iterator& seq_)
     {
         if(seq_ == seq.end())
@@ -351,7 +351,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     typename list<DataT,Alloc>::iterator list<DataT,Alloc>::first_common_element
         (iterator& beg1_, iterator& end1_, iterator& beg2_, iterator& end2_)const
     {
@@ -365,7 +365,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     void list<DataT,Alloc>::interlace(const list& inList)
     {
         BOOST_ASSERT(is_unique());
@@ -375,7 +375,7 @@ namespace boost{namespace itl
         interlace(seq, inPos);
     }
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     void list<DataT,Alloc>::interlace(list& seq, iterator& inPos)
     {
         if(seq.empty())
@@ -405,7 +405,7 @@ namespace boost{namespace itl
 
 
     // THINK: here codereplication occurs at the next level of abstraction (cf. SetT)
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     bool list<DataT,Alloc>::any(const property<DataT>& pred)const
     {
         const_iterator it = begin();
@@ -414,7 +414,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DataT, template<class>class Alloc>
+    template <typename DataT, ITL_ALLOC Alloc>
     std::string list<DataT,Alloc>::as_string(const char* sep /* =" " */)const
     {
         const_iterator it=begin();

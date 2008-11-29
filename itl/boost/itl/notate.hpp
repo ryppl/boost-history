@@ -68,6 +68,18 @@ namespace boost{namespace itl
     const int UNDEFINED_INDEX = -1;
 }} // namespace itl boost
 
+//------------------------------------------------------------------------------
+// Auxiliary macros for denoting template signatures.
+// Purpose:
+// (1) Shorten the lenthy and redundant template signatures.
+// (2) Name anonymous template types according to theirs meaning ...
+// (3) Making easier to refactor by redefinitin of the macros
+// (4) Being able to check template template parameter variants against
+//     template type parameter variants.
+
+#define ITL_COMPARE  template<class>class
+#define ITL_COMBINE  template<class>class
+#define ITL_ALLOC    template<class>class
 
 #endif // __itl_NOTATE_H_JOFA_990119__
 
