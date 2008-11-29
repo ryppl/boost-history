@@ -309,11 +309,11 @@ public:
 */
 //@{ 
     /// Domain type or element type
-    typedef DataT data_type;
+    typedef DataT domain_type;
 	/// Compare order on the data
     typedef Compare<DataT> domain_compare;
 
-    /// The difference type of an interval which is sometimes different form the data_type
+    /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename itl::difference<DataT>::type difference_type;
 
     /// The size type of an interval which is mostly std::size_t
@@ -575,15 +575,15 @@ public:
     bool upper_equal(const interval& x2)const;
 
 public:
-    typedef typename boost::call_traits<DataT>::param_type DataP;
+    typedef typename boost::call_traits<DataT>::param_type DomainP;
 
-	inline static bool data_less(DataP left, DataP right)       
-	{return   domain_compare()(left, right) ;}
+	inline static bool data_less(DomainP left, DomainP right)       
+	{return domain_compare()(left, right) ;}
 
-	inline static bool data_less_equal(DataP left, DataP right) 
+	inline static bool data_less_equal(DomainP left, DomainP right) 
 	{return !domain_compare()(right, left );}
 
-	inline static bool data_equal(DataP left, DataP right)
+	inline static bool data_equal(DomainP left, DomainP right)
 	{return !domain_compare()(left, right) && !domain_compare()(right, left);}
 
 private:
@@ -632,24 +632,24 @@ typename interval<DataT,Compare>::bound_types interval<DataT,Compare>::successio
 template<class IntervalT> 
 struct continuous_type
 {
-	typedef typename IntervalT::data_type data_type;
-    typedef typename boost::call_traits<data_type>::param_type DataP;
+	typedef typename IntervalT::domain_type domain_type;
+    typedef typename boost::call_traits<domain_type>::param_type DomainP;
 
-	static bool open_bound_less_equal(DataP x, DataP y) 
+	static bool open_bound_less_equal(DomainP x, DomainP y) 
 	{ return IntervalT::data_less_equal(x,y); } //{ return x <= y; }
-    static bool open_bound_less      (DataP x, DataP y) 
+    static bool open_bound_less      (DomainP x, DomainP y) 
 	{ return IntervalT::data_less(x,y); } //{ return x < y; }
 };
 
 template<class IntervalT> 
 struct discrete_type
 {
-	typedef typename IntervalT::data_type data_type;
-    typedef typename boost::call_traits<data_type>::param_type DataP;
+	typedef typename IntervalT::domain_type domain_type;
+    typedef typename boost::call_traits<domain_type>::param_type DomainP;
 
-    static bool open_bound_less_equal(DataP x, DataP y) 
+    static bool open_bound_less_equal(DomainP x, DomainP y) 
 	{ return IntervalT::data_less_equal(x, succ(y)); } //{ return      x  <= succ(y); }
-    static bool open_bound_less      (DataP x, DataP y) 
+    static bool open_bound_less      (DomainP x, DomainP y) 
 	{ return IntervalT::data_less(succ(x),y); }        //{ return succ(x) <       y ; }
 };
 
@@ -696,7 +696,7 @@ struct continuous_interval
 template<class IntervalT> 
 struct discrete_interval
 {
-	typedef typename IntervalT::data_type data_type;
+	typedef typename IntervalT::domain_type domain_type;
 
     static typename IntervalT::size_type 
         cardinality(const IntervalT& x) 

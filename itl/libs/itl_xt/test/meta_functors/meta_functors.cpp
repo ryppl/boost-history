@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 #include <set>
+#include <boost/itl/functors.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/placeholders.hpp>
 
@@ -41,7 +42,7 @@ template<class T>struct unary{
 
 template<class T, template<class>class U>
 struct unator1{
-	void speak(){U<T> obj; obj.speak();}
+  void speak(){U<T> obj; obj.speak();}
 };
 
 template<class T, class U>
@@ -98,6 +99,14 @@ private:
 
 typedef PairSet1<int, std::less<_> > PairSet1_int;
 
+template<template<class>class Functor, class Type> struct inverse;
+
+template<class Type> 
+struct inverse<itl::inplace_plus, Type>
+{
+	typedef itl::inplace_minus<Type> type;
+};
+
 int main()
 {
     cout << ">> Interval Template Library: Test meta_functors     <<\n";
@@ -109,6 +118,12 @@ int main()
 	binator2<int, int, binary<_1,_2> > bintor2; bintor2.speak();
 
 	PairSet1_int ps1;
+
+	int x = 0, y = 0;
+	itl::inplace_plus<int>()(x,2);
+	inverse<itl::inplace_plus,int>::type()(y,2);
+	cout << "x=" << x << endl;
+	cout << "y=" << y << endl;
 
     return 0;
 }

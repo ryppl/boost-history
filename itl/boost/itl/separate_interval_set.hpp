@@ -66,10 +66,10 @@ namespace boost{namespace itl
 */
 template 
 <
-    typename             DomainT, 
+    typename                         DomainT, 
     template<class,ITL_COMPARE>class Interval = itl::interval,
-    ITL_COMPARE Compare  = std::less,
-    ITL_ALLOC   Alloc    = std::allocator
+    ITL_COMPARE                      Compare  = std::less,
+    ITL_ALLOC                        Alloc    = std::allocator
 > 
 class separate_interval_set: 
     public interval_base_set<separate_interval_set<DomainT,Interval,Compare,Alloc>,

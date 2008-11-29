@@ -67,9 +67,6 @@ namespace boost{namespace itl
 
         void operator()(Type& object, const Type& operand)const
         { object += operand; }
-
-        static void complement(Type& object, const Type& operand)
-        { object -= operand; }
     };
 
     template<>
@@ -82,9 +79,6 @@ namespace boost{namespace itl
         typedef Type type;
         void operator()(Type& object, const Type& operand)const
         { object -= operand; }
-
-        static void complement(Type& object, const Type& operand)
-        { object += operand; }
     };
 
     template<>
@@ -124,6 +118,17 @@ namespace boost{namespace itl
     inline std::string unary_template_to_string<inplace_star>::apply() { return "*="; }
 
     // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_div
+        : public std::binary_function<Type&, const Type&, void>
+    {
+        void operator()(Type& object, const Type& operand)const
+        { object /= operand; }
+    };
+
+    template<>
+    inline std::string unary_template_to_string<inplace_div>::apply() { return "/="; }
+
+    // ------------------------------------------------------------------------
     template <typename Type> struct inplace_max
         : public std::binary_function<Type&, const Type&, void>
     {
@@ -151,19 +156,21 @@ namespace boost{namespace itl
     template<>
     inline std::string unary_template_to_string<inplace_min>::apply() { return "min="; }
 
+	//--------------------------------------------------------------------------
+	// Inverse functor
+	template<template<class>class Functor, class Type> struct inverse;
 
-    // -------------------------------------------------------------------------
-    template<template<class>class InplaceBinaryOp, class Type> struct complement
-        : public std::binary_function
-                    <      typename InplaceBinaryOp<Type>::type& , 
-                     const typename InplaceBinaryOp<Type>::type& , void>
-    {
-        void operator()(typename InplaceBinaryOp<Type>::type& object, 
-                        const typename InplaceBinaryOp<Type>::type& operand)
-        {
-            return InplaceBinaryOp<Type>::complement(object, operand);
-        }
-    };
+	template<class Type> 
+	struct inverse<itl::inplace_plus, Type>
+	{
+		typedef itl::inplace_minus<Type> type;
+	};
+
+	template<class Type> 
+	struct inverse<itl::inplace_star, Type>
+	{
+		typedef itl::inplace_div<Type> type;
+	};
 
 }} // namespace itl boost
 

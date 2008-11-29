@@ -68,7 +68,7 @@ typedef boost::itl::set<string> GuestSetT;
 typedef interval_map<ptime, GuestSetT> BoostPartyAttendenceHistoryT;
 
 // A party's height shall be defined as the maximum height of all guests ;-)
-typedef interval_map<ptime, int> BoostPartyHeightHistoryT;
+typedef interval_map<ptime, int, neutron_absorber, interval, less, inplace_max> BoostPartyHeightHistoryT;
 
 void boost_party()
 {
@@ -115,8 +115,8 @@ void boost_party()
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
-          180),
-	  inplace_max<int>()
+          180)
+	  //, inplace_max<int>()
 	);
 
     tallest_guest.add(
@@ -124,8 +124,8 @@ void boost_party()
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
-          170),
-	  inplace_max<int>()
+          170)
+	  //, inplace_max<int>()
 	);
 
     tallest_guest.add(
@@ -133,8 +133,8 @@ void boost_party()
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
-          200),
-	  inplace_max<int>()
+          200)
+	  //, inplace_max<int>()
 	);
 
 

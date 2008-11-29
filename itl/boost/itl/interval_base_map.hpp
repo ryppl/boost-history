@@ -388,12 +388,12 @@ public:
         If Combinator implements addition (+=) associated values will contain sums.
         If Combinator implements max, associated values will contain maximal values and so on.
     */
-    template<class Combiner>
-    SubType& add(const base_pair_type& x, const Combiner& combine) 
-    { 
-		access::add(*that(), value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine);
-        return *that();
-    }
+    //template<class Combiner>
+    //CL? SubType& add(const base_pair_type& x, const Combiner& combine) 
+    //{ 
+    //    access::add(*that(), value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine);
+    //    return *that();
+    //}
 
     /// Addition of a value pair using a Combinator operation.
     /** Addition of a value pair <tt>x := pair(I,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
@@ -415,18 +415,19 @@ public:
     //SubType& add(const value_type& x, const Combiner& combine) 
     //{ that()->add_(x, combine); return *that(); };
 
+private:
     template<class Combiner>
 	SubType& add(const value_type& x, const Combiner& combine) 
 	{ access::add(*that(), x, combine); return *that(); }
 
+public:
+	//template<class Combiner>
+    //CL? SubType& add(const value_type& x) 
+	//{ access::add(*that(), x, mpl::apply<Combiner,CodomainT>::type()); return *that(); };
 
-	template<class Combiner>
-    SubType& add(const value_type& x) 
-	{ access::add(*that(), x, mpl::apply<Combiner,CodomainT>::type()); return *that(); };
-
-	template<ITL_COMBINE Combiner>
-    SubType& add(const value_type& x) 
-    { access::add(*that(), x, Combiner<CodomainT>()); return *that(); };
+	//template<ITL_COMBINE Combiner>
+    //CL? SubType& add(const value_type& x) 
+    //{ access::add(*that(), x, Combiner<CodomainT>()); return *that(); };
 
     /// Addition of a base value pair.
     /** Addition of a base value pair <tt>x := pair(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
@@ -477,12 +478,12 @@ public:
         A Combinator for subtract is usually an inverse function of
         the corresponding add<Combinator>. 
     */
-    template<class Combiner>
-    SubType& subtract(const base_pair_type& x, const Combiner& combine)
-    { 
-		that()->subtract_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
-		return *that();
-	}
+    //template<class Combiner>
+    //CL? SubType& subtract(const base_pair_type& x, const Combiner& combine)
+    //{ 
+    //    that()->subtract_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
+    //    return *that();
+    //}
 
     /// Subtraction of an interval value pair using a Combinator operation
     /** Subtraction of an interval value pair  <tt>x=(I,y)</tt> 
@@ -494,11 +495,12 @@ public:
         are decremented by <tt>y</tt>. This is done via the Combinator function
         that is passed a template parameter.
     */
+private:
     template<class Combiner>
     void subtract(const value_type& x, const Combiner& combine)
-	{ that()->template subtract_(x, combine); }
+    { that()->template subtract_(x, combine); }
 
-
+public:
     /// Subtraction of a base value pair.
     /** Subtraction of a base value pair <tt>x=(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
 
@@ -535,9 +537,9 @@ public:
     SubType& subtract(const value_type& x)
     {
         if(Traits::emits_neutrons)
-			access::add(*that(), x, inplace_minus<CodomainT>()); 
+			access::add(*that(), x, inverse<Combine,CodomainT>::type()); 
         else 
-			access::subtract(*that(), x, inplace_minus<CodomainT>()); 
+			access::subtract(*that(), x, inverse<Combine,CodomainT>::type()); 
     
         return *that();
     }
@@ -1323,17 +1325,17 @@ template
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc
 >
 interval_base_map<SubType,DomainT,CodomainT,
-                  Traits,Interval,Compare,Alloc>& 
+                  Traits,Interval,Compare,Combine,Alloc>& 
 min_assign
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& operand
+                            Traits,Interval,Compare,Combine,Alloc>& operand
 )
 {
-    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,
-                              Interval,Compare,Alloc>    map_type;
+    typedef interval_base_map<SubType,DomainT,CodomainT,
+                              Traits,Interval,Compare,Combine,Alloc> map_type;
     const_FORALL(typename map_type, elem_, operand) 
         object.template add<inplace_min >(*elem_); 
 
@@ -1348,17 +1350,17 @@ template
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc
 >
 interval_base_map<SubType,DomainT,CodomainT,
-                  Traits,Interval,Compare,Alloc>& 
+                  Traits,Interval,Compare,Combine,Alloc>& 
 max_assign
 (
           interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& object,
+                            Traits,Interval,Compare,Combine,Alloc>& object,
     const interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Interval,Compare,Alloc>& operand
+                            Traits,Interval,Compare,Combine,Alloc>& operand
 )
 {
-    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,
-                              Interval,Compare,Alloc>    map_type;
+    typedef interval_base_map<SubType,DomainT,CodomainT,
+                              Traits,Interval,Compare,Combine,Alloc>    map_type;
     const_FORALL(typename map_type, elem_, operand) 
         object.template add<inplace_max>(*elem_); 
 
@@ -1376,8 +1378,8 @@ std::basic_ostream<CharType, CharTraits>& operator <<
    const interval_base_map<SubType,DomainT,CodomainT,Traits,
                            Interval,Compare,Combine,Alloc>& object)
 {
-    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,
-                              Interval,Compare,Alloc> IntervalMapT;
+    typedef interval_base_map<SubType,DomainT,CodomainT,
+                              Traits,Interval,Compare,Combine,Alloc> IntervalMapT;
     stream << "{";
     const_FORALL(typename IntervalMapT, it, object)
         stream << "(" << (*it).KEY_VALUE << "->" << (*it).CONT_VALUE << ")";
