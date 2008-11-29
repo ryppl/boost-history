@@ -253,11 +253,11 @@ namespace detail {
     // Explicitly remove the ability use this function, by failing a concept
     // check when it is instantiated.
     template <typename Store>
-    void dispatch_remove(Store&, typename Store::iterator, vector_tag)
-    { function_requires(Integer<Store>()); }
+    void dispatch_erase(Store&, typename Store::iterator, vector_tag)
+    { BOOST_CONCEPT_ASSERT((Integer<Store>)); }
 
     template <typename Store, typename Tag>
-    void dispatch_remove(Store& store, typename Store::iterator i, Tag)
+    void dispatch_erase(Store& store, typename Store::iterator i, Tag)
     { store.erase(i); }
 
 } /* namespace detail */
@@ -271,8 +271,7 @@ namespace detail {
 /** Insert a vertex into the container. */
 template <typename Store>
 inline typename vertex_store_traits<Store>::vertex_descriptor
-insert(Store& store,
-       typename vertex_store_traits<Store>::vertex_label&& l)
+insert(Store& store, typename vertex_store_traits<Store>::vertex_label&& l)
 {
     typedef typename Store::iterator Iterator;
     Iterator i = container_insert(store, detail::make_vertex(store, l));
@@ -352,15 +351,15 @@ find(Store const& store, LabelOrKey const& lk)
 //@}
 
 /**
- * @name Remove Vertex
+ * @name Erase Vertex
  * Remove the vertex from the store. This will only remove the vertex from the
- * store, it cannot operate on edges.
+ * store, it does not remove any incident edges.
  */
 //@{
 template <typename Store>
 inline void
-remove(Store& store, typename descriptor_traits<Store>::descriptor_type d)
-{ detail::dispatch_remove(store, make_iterator(store, d), container_category(store)); }
+erase(Store& store, typename vertex_store_traits<Store>::vertex_descriptor d)
+{ detail::dispatch_erase(store, make_iterator(store, d), container_category(store)); }
 //@}
 
 /** @name Vertex Object */

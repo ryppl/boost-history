@@ -38,7 +38,8 @@ public:
 
     // Misc types
     typedef typename VertexStore::key_type vertex_key;
-    typedef typename vertex_store::size_type vertices_size_type;
+    typedef typename vertex_store_traits<vertex_store>::vertices_size_type vertices_size_type;
+    typedef typename edge_store_traits<edge_store>::edges_size_type edges_size_type;
 
     vertex_label& operator[](vertex_descriptor d)
     { return vs::label(v, d); }
@@ -61,7 +62,7 @@ public:
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
 add_vertex(undirected_graph<VL,EL,VS,ES,IS>& g)
-{ return vs::insert(g.v, typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label()); }
+{ return add_vertex(g, typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label()); }
 
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
@@ -84,34 +85,78 @@ add_vertex(undirected_graph<VL,EL,VS,ES,IS>& g,
  * their label, the other based on their key. The latter is only applicable
  * for graphs with mapped vertices.
  *
- * @note, These overloads are ambigous for mapped vertex graphs if the key
- * and label are the same type. We should probably provide special function to
+ * @note These overloads are ambigous for mapped vertex graphs if the key and
+ * label are the same type. We should probably provide special function to
  * differentiate these functions.
  */
 //@{
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
-typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
-find_vertex(undirected_graph<VL,EL,VS,ES,IS> const& g,
-            typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label const& l)
+inline typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
+vertex(undirected_graph<VL,EL,VS,ES,IS> const& g,
+       typename undirected_graph<VL,EL,VS,ES,IS>::vertex_label const& l)
 { return vs::find(g.v, l); }
 
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
-typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
-find_vertex(undirected_graph<VL,EL,VS,ES,IS> const& g,
-            typename undirected_graph<VL,EL,VS,ES,IS>::vertex_key const& k)
+inline typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor
+vertex(undirected_graph<VL,EL,VS,ES,IS> const& g,
+       typename undirected_graph<VL,EL,VS,ES,IS>::vertex_key const& k)
 { return vs::find(g.v, k); }
 //@}
 
 /** @name Remove Vertex
- * Remove the given vertex from the graph.
+ * Remove the given vertex from the graph. This will also remove all incident
+ * edges from the vertex before removing it from the graph.
+ * @todo Implement remove_edges.
  */
 //@{
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline void
+remove_vertex(undirected_graph<VL,EL,VS,ES,IS>& g,
+              typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
+{
+    // remove_edges();
+    return vs::erase(g.v, v);
+}
 //@}
 
+/** Return the number of vertices in the graph. */
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
-typename undirected_graph<VL,EL,VS,ES,IS>::vertices_size_type
+inline typename undirected_graph<VL,EL,VS,ES,IS>::vertices_size_type
 num_vertices(undirected_graph<VL,EL,VS,ES,IS> const& g)
 { return vs::size(g.v); }
+
+/** @name Remove Vertex
+ * Remove the given vertex from the graph. This will also remove all incident
+ * edges from the vertex before removing it from the graph.
+ * @todo Implement remove_edges.
+ */
+//@{
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor
+add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
+         typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor u,
+         typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
+{ return add_edge(g, u, v, typename undirected_graph<VL,EL,VS,ES,IS>::edge_label()); }
+
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor
+add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
+         typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor u,
+         typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v,
+         typename undirected_graph<VL,EL,VS,ES,IS>::edge_label&& l)
+{
+    typedef typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor Edge;
+    Edge e = es::insert(g.e, u, v, l);
+    return e;
+}
+//@}
+
+/** Return the number of edges in the graph. */
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline typename undirected_graph<VL,EL,VS,ES,IS>::edges_size_type
+num_edges(undirected_graph<VL,EL,VS,ES,IS> const& g)
+{ return es::size(g.e); }
+
 
 
 } } } /* namespace boost::graphs::adjacency_list */

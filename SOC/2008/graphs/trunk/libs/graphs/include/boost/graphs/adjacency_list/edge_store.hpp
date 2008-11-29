@@ -15,32 +15,132 @@ struct edge_descriptor_kind { };
 #include <boost/graphs/adjacency_list/es/list.hpp>
 #include <boost/graphs/adjacency_list/es/set.hpp>
 
-// Include specializations for the label and edge interfaces.
-// TODO: Migrate code from these files to here.
-#include <boost/graphs/adjacency_list/es/seq_edge.hpp>
-#include <boost/graphs/adjacency_list/es/assoc_edge.hpp>
-
 // The edge store interface defines generic operations on an edge store for
 // undirected graphs.
 
 // NOTE: Directed graphs do not use a global edge store. They use out and in
 // edge stores and have a completely different interface.
 
-// TODO: There is a significant overlap between the sequence selectors for
-// vertex and edge stores. These could easily be integrated into a kind of
-// general purpose selector mechanism. For now, they're separate.
+namespace boost { namespace graphs {
 
-namespace boost { namespace graphs { namespace adjacency_list {
+/** @name Label Traits [edge_vector, edge_list] */
+//@{
+template <typename Vertex, typename Label>
+struct label_traits<std::pair<std::pair<Vertex, Vertex>, Label>>
+{
+    typedef Label label_type;
+};
+
+template <typename Vertex, typename Label>
+inline Label&
+label(std::pair<std::pair<Vertex, Vertex>, Label>& edge)
+{ return edge.second; }
+
+template <typename Vertex, typename Label>
+inline Label const&
+label(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
+{ return edge.second; }
+//@}
+
+/** @name Label Traits [edge_set] */
+//@{
+template <typename Vertex, typename Label>
+struct label_traits<std::pair<std::pair<Vertex, Vertex> const, Label>>
+{
+    typedef Label label_type;
+};
+
+template <typename Vertex, typename Label>
+inline Label&
+label(std::pair<std::pair<Vertex, Vertex> const, Label>& edge)
+{ return edge.second; }
+
+template <typename Vertex, typename Label>
+inline Label const&
+label(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
+{ return edge.second; }
+//@}
+
+// NOTE: The difference between the specialization of edge traits over the
+// edge types is quite subtle. Compare:
+// std::pair<std::pair<Vertex, Vertex>, Label>  <- Vector and List
+// std::pair<std::pair<Vertex, Vertex> const, Label>  <- Set
+// Even worse, there's no functional difference between then.
+
+/** @name Edge Traits [edge_vector, edge_list] */
+//@{
+template <typename Vertex, typename Label>
+struct edge_traits<std::pair<std::pair<Vertex, Vertex>, Label>>
+{
+    typedef Vertex vertex_descriptor;
+    typedef std::pair<Vertex, Vertex> edge_ends;
+};
+
+template <typename Vertex, typename Label>
+inline Label const&
+ends(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
+{ return edge.first; }
+
+template <typename Vertex, typename Label>
+inline Vertex
+first(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
+{ return edge.first.first; }
+
+template <typename Vertex, typename Label>
+inline Vertex
+second(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
+{ return edge.first.second; }
+
+template <typename Vertex, typename Label>
+inline Vertex
+oppposite(std::pair<std::pair<Vertex, Vertex>, Label> const& edge, Vertex which)
+{ return which == first(edge) ? second(edge) : first(edge); }
+//@}
+
+/** @name Edge Traits [edge_set] */
+//@{
+template <typename Vertex, typename Label>
+struct edge_traits<std::pair<std::pair<Vertex, Vertex> const, Label>>
+{
+    typedef Vertex vertex_descriptor;
+    typedef std::pair<Vertex, Vertex> edge_ends;
+};
+
+template <typename Vertex, typename Label>
+inline std::pair<Vertex, Vertex>
+ends(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
+{ return edge.first; }
+
+template <typename Vertex, typename Label>
+inline Vertex
+first(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
+{ return edge.first.first; }
+
+template <typename Vertex, typename Label>
+inline Vertex
+second(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
+{ return edge.first.second; }
+
+template <typename Vertex, typename Label>
+inline Vertex
+oppposite(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge, Vertex which)
+{ return which == first(edge) ? second(edge) : first(edge); }
+//@}
+
+namespace adjacency_list {
 
 template <typename Store>
 struct edge_store_traits
 {
-    typedef typename descriptor_traits<Store, edge_descriptor_kind>::descriptor_kind
+    typedef typename Store::size_type edges_size_type;
+    typedef typename descriptor_traits<Store, edge_descriptor_kind>::descriptor_type
         edge_descriptor;
 
     typedef typename Store::value_type edge_type;
     typedef typename edge_traits<edge_type>::edge_ends edge_ends;
     typedef typename label_traits<edge_type>::label_type edge_label;
+
+    typedef typename edge_traits<edge_type>::vertex_descriptor vertex_descriptor;
 };
 
 namespace es {
@@ -51,48 +151,44 @@ namespace detail {
     make_edge(Store const&, Ends e, Label&& l)
     { return typename edge_store_traits<Store>::edge_type(e, l); }
 
-    template <typename Store, typename Ends, typename Label>
+    // Just push the edge into the sequence. Since these types support a
+    // multigraph, the ordering of endpoints is essentially irrelevant.
+    template <typename Store, typename Vertex, typename Label>
     inline typename Store::iterator
-    dispatch_insert(Store& store, Ends e, Label&& l, sequence_tag)
-    { return store.insert(store.end(), make_edge(store, e, l)); }
+    dispatch_insert(Store& store, Vertex u, Vertex v, Label&& l, sequence_tag)
+    { return store.insert(store.end(), make_edge(store, std::make_pair(u, v), l)); }
 
     // This re-orders the endpoints before inerting in order to guarantee a
     // canonical ordering edges, and preserving uniqueness, if required.
     // TODO: Is there a way to convert Comp<pair<VD,VD>> to Comp<VD>? Yeah, but
     // it's kind of nasty and uses template template parameters.
-    template <typename Store, typename Ends, typename Label>
+    template <typename Store, typename Vertex, typename Label>
     inline typename Store::iterator
-    dispatch_insert(Store& store, Ends e, Label&& l, pair_associative_container_tag)
+    dispatch_insert(Store& store, Vertex u, Vertex v, Label&& l, pair_associative_container_tag)
     {
         // NOTE: Ends must be Pair<VD,VD>. For some reason, writing the expression
         // e.first < e.second tries to open a new template and gives an error
         // about constant expressions.
-        typedef typename Ends::first_type VertexDesc;
-        std::less<typename Ends::first_type> comp;
-        if(!comp(e.first, e.second)) {
-            swap(e.first, e.second);
+        std::less<Vertex> comp;
+        if(!comp(u, v)) {
+            using std::swap;
+            swap(u, v);
         }
-        return container_insert(store, make_edge(store, e, l));
+        return container_insert(store, make_edge(store, std::make_pair(u, v), l));
     }
-}
+} /* namespace detail */
 
 /** Insert an edge into the graph. */
-template <typename Store, typename Ends, typename Label>
-inline typename descriptor_traits<Store>::descriptor_type
-insert(Store& store, Ends e, Label&& l)
+template <typename Store, typename Vertex, typename Label>
+inline typename edge_store_traits<Store>::edge_descriptor
+insert(Store& store, Vertex u, Vertex v, Label&& l)
 {
     typedef typename Store::iterator Iterator;
-    typedef typename descriptor_traits<Store>::descriptor_type Descriptor;
+    typedef typename edge_store_traits<Store>::edge_descriptor Descriptor;
 
     // Start by inserting the edge globally. Could be O(1), O(lgE).
-    Iterator i = detail::dispatch_insert(store, e, l, container_category(store));
-    Descriptor d = make_descriptor(store, i);
-
-    // Insert the edge into the incidence lists of each vertex.
-    // TODO: implement me!
-    // ies::insert(e.first, d);
-    // ies::insert(e.second, d);
-    return d;
+    Iterator i = detail::dispatch_insert(store, u, v, l, container_category(store));
+    return make_descriptor(store, i, edge_descriptor_kind());
 }
 
 /** @name Find Edge
@@ -117,7 +213,7 @@ find(Store const& store, Ends e)
 
 /** Return the number of edges in the edge store. */
 template <typename Store>
-typename Store::size_type size(Store const& store)
+typename edge_store_traits<Store>::edges_size_type size(Store const& store)
 { return store.size(); }
 
 /** Return true if the global edge set is empty. */
