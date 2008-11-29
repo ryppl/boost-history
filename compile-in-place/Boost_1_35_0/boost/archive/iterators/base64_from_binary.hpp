@@ -43,6 +43,7 @@ struct from_6_bit {
             "0123456789"
             "+/";
         assert(t < 64);
+        assert(t >= 0);
         return lookup_table[t];
     }
 };
