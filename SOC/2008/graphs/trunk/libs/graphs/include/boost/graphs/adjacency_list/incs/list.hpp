@@ -9,13 +9,14 @@ namespace boost { namespace graphs { namespace adjacency_list {
 template <template <typename> class Alloc = std::allocator>
 struct incidence_list
 {
-    template <typename EdgeDesc>
+    template <typename Vertex, typename Edge>
     struct store
     {
     private:
-        typedef Alloc<EdgeDesc> allocator;
+        typedef std::pair<Vertex, Edge> edge;
+        typedef Alloc<edge> allocator;
     public:
-        typedef counted_list<EdgeDesc, allocator> type;
+        typedef counted_list<edge, allocator> type;
     };
 };
 

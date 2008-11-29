@@ -148,6 +148,9 @@ void test_edges(Graph& g)
     Edge e2 = add_edge(g, v, w, arc(201));
     Edge e3 = add_edge(g, w, u, arc(202));
 
+    Edge t = edge(g, u, v);
+    BOOST_ASSERT(!t.is_null());
+
     BOOST_ASSERT(num_edges(g) == 3);
 }
 
@@ -163,19 +166,19 @@ void test()
 
 int main()
 {
+    // Recall... there is no edge_set<>!
     typedef undirected_graph<node, arc, vertex_vector<>, edge_vector<>, incidence_vector<>> V_V_V;
     typedef undirected_graph<node, arc, vertex_list<>, edge_vector<>, incidence_vector<>> L_V_V;
     typedef undirected_graph<node, arc, vertex_set<>, edge_vector<>, incidence_vector<>> S_V_V;
     typedef undirected_graph<node, arc, vertex_map<int>, edge_vector<>, incidence_vector<>> M_V_V;
-
     typedef undirected_graph<node, arc, vertex_vector<>, edge_list<>, incidence_list<>> V_L_L;
-    typedef undirected_graph<node, arc, vertex_vector<>, edge_set<>, incidence_set<>> V_S_S;
+    typedef undirected_graph<node, arc, vertex_vector<>, edge_list<>, incidence_set<>> V_L_S;
 
     test<V_V_V>();
-    test<L_V_V>();
-    test<S_V_V>();
-    test<M_V_V>();
-    test<V_L_L>();
-    test<V_S_S>();
+//     test<L_V_V>();
+//     test<S_V_V>();
+//     test<M_V_V>();
+//     test<V_L_L>();
+//     test<V_L_S>();
 }
 

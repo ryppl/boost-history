@@ -13,7 +13,6 @@ struct edge_descriptor_kind { };
 
 #include <boost/graphs/adjacency_list/es/vector.hpp>
 #include <boost/graphs/adjacency_list/es/list.hpp>
-#include <boost/graphs/adjacency_list/es/set.hpp>
 
 // The edge store interface defines generic operations on an edge store for
 // undirected graphs.
@@ -42,31 +41,6 @@ label(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
 { return edge.second; }
 //@}
 
-/** @name Label Traits [edge_set] */
-//@{
-template <typename Vertex, typename Label>
-struct label_traits<std::pair<std::pair<Vertex, Vertex> const, Label>>
-{
-    typedef Label label_type;
-};
-
-template <typename Vertex, typename Label>
-inline Label&
-label(std::pair<std::pair<Vertex, Vertex> const, Label>& edge)
-{ return edge.second; }
-
-template <typename Vertex, typename Label>
-inline Label const&
-label(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
-{ return edge.second; }
-//@}
-
-// NOTE: The difference between the specialization of edge traits over the
-// edge types is quite subtle. Compare:
-// std::pair<std::pair<Vertex, Vertex>, Label>  <- Vector and List
-// std::pair<std::pair<Vertex, Vertex> const, Label>  <- Set
-// Even worse, there's no functional difference between then.
-
 /** @name Edge Traits [edge_vector, edge_list] */
 //@{
 template <typename Vertex, typename Label>
@@ -94,36 +68,6 @@ second(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
 template <typename Vertex, typename Label>
 inline Vertex
 oppposite(std::pair<std::pair<Vertex, Vertex>, Label> const& edge, Vertex which)
-{ return which == first(edge) ? second(edge) : first(edge); }
-//@}
-
-/** @name Edge Traits [edge_set] */
-//@{
-template <typename Vertex, typename Label>
-struct edge_traits<std::pair<std::pair<Vertex, Vertex> const, Label>>
-{
-    typedef Vertex vertex_descriptor;
-    typedef std::pair<Vertex, Vertex> edge_ends;
-};
-
-template <typename Vertex, typename Label>
-inline std::pair<Vertex, Vertex>
-ends(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
-{ return edge.first; }
-
-template <typename Vertex, typename Label>
-inline Vertex
-first(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
-{ return edge.first.first; }
-
-template <typename Vertex, typename Label>
-inline Vertex
-second(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge)
-{ return edge.first.second; }
-
-template <typename Vertex, typename Label>
-inline Vertex
-oppposite(std::pair<std::pair<Vertex, Vertex> const, Label> const& edge, Vertex which)
 { return which == first(edge) ? second(edge) : first(edge); }
 //@}
 
@@ -218,13 +162,10 @@ insert(Store& store, Vertex u, Vertex v, Label&& l)
  * such edge found.
  */
 //@{
-template <typename Store, typename Ends>
-inline typename descriptor_traits<Store>::descriptor_type
-find(Store& store, Ends e)
+template <typename Store, typename Vertex>
+inline typename edge_store_traits<Store>::edge_descriptor
+find(Store& store, Vertex u, Vertex v)
 {
-    // Search the incidene list of the smaller vertex for an edge who's endpoint
-    // is given as the other.
-    // if(ies::size(e.first) < ies::size(e.second)
 }
 
 template <typename Store, typename Ends>

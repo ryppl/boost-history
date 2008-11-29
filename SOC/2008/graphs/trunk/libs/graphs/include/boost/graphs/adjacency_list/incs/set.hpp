@@ -2,7 +2,7 @@
 #ifndef BOOST_GRAPHS_ADJLIST_IES_SET_HPP
 #define BOOST_GRAPHS_ADJLIST_IES_SET_HPP
 
-#include <set>
+#include <map>
 
 namespace boost { namespace graphs { namespace adjacency_list {
 
@@ -11,14 +11,16 @@ template <
     template <typename> class Alloc = std::allocator>
 struct incidence_set
 {
-    template <typename EdgeDesc>
+    // The incidence set quietly implements a map from an adjacent vertex to
+    // the edge descriptor that references the underlying edge.
+    template <typename Vertex, typename Edge>
     struct store
     {
     private:
-        typedef Compare<EdgeDesc> compare;
-        typedef Alloc<EdgeDesc> allocator;
+        typedef Compare<Vertex> compare;
+        typedef Alloc<std::pair<Vertex, Edge>> allocator;
     public:
-        typedef std::set<EdgeDesc, compare, allocator> type;
+        typedef std::map<Vertex, Edge, compare, allocator> type;
     };
 };
 
