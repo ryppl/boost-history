@@ -10,6 +10,7 @@ Notes:
 $Id$
 */
 
+#define BOOST_THREAD_COMPILE_IN_PLACE
 #include <boost/thread.hpp>
 #include <iostream>
 #include <ostream>

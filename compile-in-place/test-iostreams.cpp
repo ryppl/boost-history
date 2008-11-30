@@ -13,6 +13,7 @@ compilation somehow for people that don't want to use them.
 $Id$
 */
 
+#define BOOST_IOSTREAMS_COMPILE_IN_PLACE
 #include <iostream>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/line.hpp>

@@ -7,6 +7,8 @@ Notes:
 
 $Id$
 */
+
+#define BOOST_REGEX_COMPILE_IN_PLACE
 #include <boost/regex.hpp>
 #include <boost/regex/compile_in_place.cpp>
 #include <iostream>

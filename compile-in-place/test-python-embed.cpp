@@ -17,6 +17,8 @@ or turn them off with -Wno-write-strings.
 
 $Id$
 */
+
+#define BOOST_PYTHON_COMPILE_IN_PLACE
 #include <boost/python.hpp>
 #include <boost/python/compile_in_place.cpp>
 #include <iostream>

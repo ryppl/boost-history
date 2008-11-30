@@ -8,6 +8,7 @@ Notes:
 $Id$
 */
 
+#define BOOST_SYSTEM_COMPILE_IN_PLACE
 #include <iostream>
 #include <ostream>
 #include <boost/system/system_error.hpp>

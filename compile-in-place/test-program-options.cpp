@@ -8,6 +8,7 @@ Notes:
 $Id$
 */
 
+#define BOOST_PROGRAM_OPTIONS_COMPILE_IN_PLACE
 #include <iostream>
 #include <ostream>
 #include <boost/program_options.hpp>

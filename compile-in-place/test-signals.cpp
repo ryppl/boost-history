@@ -8,6 +8,7 @@ Notes:
 $Id$
 */
 
+#define BOOST_SIGNALS_COMPILE_IN_PLACE
 #include <iostream>
 #include <ostream>
 #include <boost/signal.hpp>
