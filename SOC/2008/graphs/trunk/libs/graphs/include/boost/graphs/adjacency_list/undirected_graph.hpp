@@ -221,6 +221,61 @@ edge(undirected_graph<VL,EL,VS,ES,IS> const& g,
     return incs::find(vs::edges(g.v, s), t);
 }
 
+/**
+ * Remove the given edge from the graph, disconnecting the vertices at its
+ * endpoints.
+ *
+ * @note The removal of edges is almost never a constant operation because we
+ * have to search the incidence lists of each vertex to remove the corresponding
+ * incidence record. The removal of the edge from the edge list is constant.
+ */
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline void
+remove_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
+            typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor e)
+{
+    typedef typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor Vertex;
+    Vertex u, v;
+    std::tie(u, v) = es::ends(g.e, e);
+    incs::erase(vs::edges(g.v, u), v, e);
+    incs::erase(vs::edges(g.v, v), u, e);
+    es::erase(g.e, e);
+}
+
+namespace detail {
+    // This functor automatically erases edges from the edge set when visited
+    // during incident edge erasure.
+    // TODO: Make this fail for vectors.
+    template <typename EdgeList>
+    struct edge_eraser
+    {
+        edge_eraser(EdgeList& el) : edges(el) { }
+
+        template <typename Pair>
+        void operator()(Pair const& x)
+        { es::erase(edges, x.second); }
+
+        EdgeList& edges;
+    };
+
+    template <typename EdgeList>
+    edge_eraser<EdgeList> erase_edges(EdgeList& el)
+    { return edge_eraser<EdgeList>(el); }
+}
+
+/** Remove all edges connecting the given vertices. */
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline void
+remove_edges(undirected_graph<VL,EL,VS,ES,IS>& g,
+             typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor u,
+             typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
+{
+    // There doesn't seem to be a very clean implementation other than to
+    // iterate over all the incident edges of u, find the corresponding edges
+    // in v, and then erase all of the edge descriptors.
+    incs::erase_all(vs::edges(g.v, u), v, detail::erase_edges(g.e));
+    incs::erase_all(vs::edges(g.v, v), u);
+}
 
 /** Return the number of edges in the graph. */
 template <typename VL, typename EL, typename VS, typename ES, typename IS>

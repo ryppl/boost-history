@@ -51,7 +51,7 @@ struct edge_traits<std::pair<std::pair<Vertex, Vertex>, Label>>
 };
 
 template <typename Vertex, typename Label>
-inline Label const&
+inline std::pair<Vertex, Vertex>
 ends(std::pair<std::pair<Vertex, Vertex>, Label> const& edge)
 { return edge.first; }
 
@@ -138,6 +138,14 @@ namespace detail {
             make_edge(store, order_verts(u, v), l);
         return assoc_insert(store, std::move(e), container_category(store));
     }
+
+    template <typename Store, typename Edge, typename Tag>
+    inline void dispatch_erase(Store& store, Edge e, Tag)
+    { store.erase(make_iterator(store, e)); }
+
+    template <typename Store, typename Edge>
+    inline void dispatch_erase(Store& store, Edge e, vector_tag)
+    { BOOST_CONCEPT_ASSERT((Integer<Store>)); }
 } /* namespace detail */
 
 /**
@@ -174,9 +182,16 @@ find(Store const& store, Ends e)
 { return find(const_cast<Store&>(store), e); }
 //@}
 
+/** Remove the edge from the store. */
+template <typename Store>
+inline void
+erase(Store& store, typename edge_store_traits<Store>::edge_descriptor d)
+{ detail::dispatch_erase(store, d, container_category(store)); }
+
 /** Return the number of edges in the edge store. */
 template <typename Store>
-typename edge_store_traits<Store>::edges_size_type size(Store const& store)
+inline typename edge_store_traits<Store>::edges_size_type
+size(Store const& store)
 { return store.size(); }
 
 /** Return true if the global edge set is empty. */
@@ -206,10 +221,8 @@ label(Store const& store, typename edge_store_traits<Store>::edge_descriptor d)
 //@{
 template <typename Store>
 inline typename edge_store_traits<Store>::edge_ends
-ends(Store& store, typename descriptor_traits<Store>::descriptor_type d)
-{
-    graphs::ends(*make_iterator(store, d));
-}
+ends(Store& store, typename edge_store_traits<Store>::edge_descriptor d)
+{ return graphs::ends(*make_iterator(store, d)); }
 //@}
 
 } /* namespace es */
