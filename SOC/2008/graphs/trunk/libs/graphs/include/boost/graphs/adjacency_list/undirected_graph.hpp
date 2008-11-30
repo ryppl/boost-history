@@ -58,9 +58,9 @@ public:
 
     // TODO: Implement me
     edge_label& operator[](edge_descriptor d)
-    { return edge_label(); }
+    { return es::label(e, d); }
     edge_label const& operator[](edge_descriptor d) const
-    { return edge_label(); }
+    { return es::label(e, d); }
 
 public:
     vertex_store v;
@@ -149,23 +149,35 @@ add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
 { return add_edge(g, u, v, typename undirected_graph<VL,EL,VS,ES,IS>::edge_label()); }
 
 namespace detail {
-    // Specialize the binding of edge descriptors into the vertex by recognizing
-    // that only unique associative containers actually need to test the result
-    // of the insertion before binding.
-    template <typename VS, typename V, typename Ins, typename Tag>
-    inline void bind_edges(VS& vs, V u, V v, Ins ins, Tag)
+    // Build the edge and bind the ends into the incidence stores of each
+    // vertex.
+    template <typename Graph, typename Vertex, typename Label>
+    inline typename Graph::edge_descriptor
+    do_add_edge(Graph& g, Vertex u, Vertex v, Label&& l)
     {
-        incs::insert(vs::edges(vs, u), v, ins.first);
-        incs::insert(vs::edges(vs, v), u, ins.first);
+        std::pair<typename Graph::edge_descriptor, bool> x = es::insert(g.e, u, v, l);
+        incs::insert(vs::edges(g.v, u), v, x.first);
+        incs::insert(vs::edges(g.v, v), u, x.first);
+        return x.first;
     }
 
-    template <typename VS, typename V, typename Ins, typename Tag>
-    inline void bind_edges(VS& vs, V u, V v, Ins ins, unique_associative_container_tag)
+    // For multigraphs, always add the edge.
+    template <typename Graph, typename Vertex, typename Label, typename Tag>
+    inline typename Graph::edge_descriptor
+    dispatch_add_edge(Graph& g, Vertex u, Vertex v, Label&& l, Tag)
+    { return do_add_edge(g, u, v, l); }
+
+    // For unique-edged graphs, we should be checking if the edge exists before
+    // actually adding it.
+    template <typename Graph, typename Vertex, typename Label>
+    inline typename Graph::edge_descriptor
+    dispatch_add_edge(Graph& g, Vertex u, Vertex v, Label&& l, unique_associative_container_tag)
     {
-        if(ins.second) {
-            incs::insert(vs::edges(vs, u), ins.first);
-            incs::insert(vs::edges(vs, v), ins.first);
+        typename Graph::edge_descriptor e = edge(u, v);
+        if(!e) {
+            e = do_add_edge(u, v);
         }
+        return e;
     }
 } /* namespace detail */
 
@@ -176,26 +188,10 @@ add_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
          typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v,
          typename undirected_graph<VL,EL,VS,ES,IS>::edge_label&& l)
 {
-    typedef typename undirected_graph<VL,EL,VS,ES,IS>::edge_descriptor Edge;
-
-    // This is not a great implementation... (or correct, really).
-    std::pair<Edge, bool> x = es::insert(g.e, u, v, l);
-    detail::bind_edges(g.v, u, v, x, container_category(g.e));
-    return x.first;
-
-    // What we should do follows: The primary reason for this is that 
-#if NO_COMPILE
-    if(has_unique_edges(*this)) {    // obviously done at compile time
-        Edge e = edge(u, v);
-        if(e) return e;
-        else {
-            // See code above
-        }
-    }
-    else {
-        // See code above.
-    }
-#endif
+    typedef typename container_traits<
+        typename undirected_graph<VL,EL,VS,ES,IS>::incidence_store
+    >::category Category;
+    return detail::dispatch_add_edge(g, u, v, l, Category());
 }
 //@}
 

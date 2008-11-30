@@ -64,6 +64,9 @@ struct arc
 {
     arc() : n() { }
     arc(int n) : n(n) { }
+
+    bool operator==(arc const& x) const     { return n == x.n; }
+
     int n;
 };
 
@@ -147,11 +150,11 @@ void test_edges(Graph& g)
     Edge e1 = add_edge(g, u, v, arc(200));
     Edge e2 = add_edge(g, v, w, arc(201));
     Edge e3 = add_edge(g, w, u, arc(202));
+    BOOST_ASSERT(num_edges(g) == 3);
 
     Edge t = edge(g, u, v);
     BOOST_ASSERT(!t.is_null());
-
-    BOOST_ASSERT(num_edges(g) == 3);
+    BOOST_ASSERT(g[t] == arc(200));
 }
 
 template <typename Graph>
@@ -175,10 +178,10 @@ int main()
     typedef undirected_graph<node, arc, vertex_vector<>, edge_list<>, incidence_set<>> V_L_S;
 
     test<V_V_V>();
-//     test<L_V_V>();
-//     test<S_V_V>();
-//     test<M_V_V>();
-//     test<V_L_L>();
-//     test<V_L_S>();
+    test<L_V_V>();
+    test<S_V_V>();
+    test<M_V_V>();
+    test<V_L_L>();
+    test<V_L_S>();
 }
 

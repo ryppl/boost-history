@@ -190,12 +190,12 @@ bool empty(Store const& store)
 //@{
 template <typename Store>
 inline typename edge_store_traits<Store>::edge_label&
-label(Store& store, typename descriptor_traits<Store>::descriptor_type d)
+label(Store& store, typename edge_store_traits<Store>::edge_descriptor d)
 { return graphs::label(*make_iterator(store, d)); }
 
 template <typename Store>
 inline typename edge_store_traits<Store>::edge_label const&
-label(Store const& store, typename descriptor_traits<Store>::descriptor_type d)
+label(Store const& store, typename edge_store_traits<Store>::edge_descriptor d)
 { return graphs::label(*make_iterator(store, d)); }
 //@}
 
