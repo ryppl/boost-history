@@ -7,6 +7,11 @@ feature. Further information follows.
 TODO:
 ------
 
+- MS Windows needs further work. The problem there is that Borland and MSC do
+auto linking, i.e. select the linked lib during compilation, which conflicts
+with compiling the libraries into the code itself. The goal is to make the
+macro BOOST_<whatever>_INPLACE_COMPILE take that part.
+
 - I replaced UINTMAX_C(~0) with static_cast<boost::uintmax_t>(-1) in once.cpp
 but I'm not sure why this was used in the first place. The problem I solved is
 that this doesn't require #define __STDC_CONSTANT_MACROS for the whole program

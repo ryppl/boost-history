@@ -120,5 +120,10 @@
 // that feature off.
 // #define BOOST_WHATEVER_NO_LIB
  
+// BOOST_<whatever>_INPLACE_COMPILE: tells the config system that you will
+// compile the library as part of your program. That requires that you include
+// the library's compile_in_place.cpp file into exactly one translation unit
+// of your code. The placeholder <whatever> can either be a specific library
+// like e.g. REGEX for Boost.Regex or ALL for all libraries.
 
 
