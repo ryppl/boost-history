@@ -536,10 +536,11 @@ public:
     */
     SubType& subtract(const value_type& x)
     {
+		typedef inverse<Combine,CodomainT>::type InverseCombine;
         if(Traits::emits_neutrons)
-			access::add(*that(), x, inverse<Combine,CodomainT>::type()); 
+			access::add<value_type,InverseCombine>(*that(), x, InverseCombine()); 
         else 
-			access::subtract(*that(), x, inverse<Combine,CodomainT>::type()); 
+			access::subtract<value_type,InverseCombine>(*that(), x, InverseCombine()); 
     
         return *that();
     }

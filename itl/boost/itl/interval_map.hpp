@@ -190,9 +190,9 @@ protected:
     void subtract_(const value_type& value)
     {
         if(Traits::emits_neutrons)
-            add_(value, inplace_minus<CodomainT>()); 
+            add_<inplace_minus<CodomainT> >(value, inplace_minus<CodomainT>()); 
         else
-            subtract_(value, inplace_minus<CodomainT>()); 
+            subtract_<inplace_minus<CodomainT> >(value, inplace_minus<CodomainT>()); 
     }
 
     void insert_(const value_type& value);
@@ -394,7 +394,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     if(Traits::emits_neutrons)
     {
         CodomainT added_val = CodomainT();
-        combine(added_val, value.CONT_VALUE);
+        Combiner()(added_val, value.CONT_VALUE);
         insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
     }
     else
@@ -422,7 +422,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     if(Traits::emits_neutrons)
     {
         CodomainT added_val = CodomainT();
-        combine(added_val, value.CONT_VALUE);
+        Combiner()(added_val, value.CONT_VALUE);
         insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
     }
     else
@@ -454,7 +454,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     if(Traits::emits_neutrons)
     {
         CodomainT added_val = CodomainT();
-        combine(added_val, x_val);
+        Combiner()(added_val, x_val);
         insertion = this->_map.insert(value_type(x_itv, added_val));
     }
     else
@@ -489,7 +489,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         fst_itv.intersect(interSec, x_itv);
 
         CodomainT cmb_val = cur_val;
-        combine(cmb_val, x_val);
+        Combiner()(cmb_val, x_val);
 
         iterator snd_it = fst_it; snd_it++; 
 
@@ -512,9 +512,9 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
                 fill_join_left(value_type(interSec,   cmb_val));
 
             if(!leadGap.empty())
-                fill_gap_join_both(value_type(leadGap, x_val), combine);
+                fill_gap_join_both<Combiner>(value_type(leadGap, x_val), combine);
             if(!endGap.empty())
-                fill_gap_join_both(value_type(endGap, x_val), combine);
+                fill_gap_join_both<Combiner>(value_type(endGap, x_val), combine);
             else
                 fill_join_left(value_type(rightResid, cur_val));
         }
@@ -525,13 +525,13 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
             fill_join_left(value_type(interSec,  cmb_val));
 
             if(!leadGap.empty())
-                fill_gap_join_both(value_type(leadGap, x_val), combine);
+                fill_gap_join_both<Combiner>(value_type(leadGap, x_val), combine);
 
             // shrink interval
             interval_type x_rest(x_itv);
             x_rest.left_subtract(fst_itv);
 
-            add_rest(x_rest, x_val, snd_it, end_it, combine);
+            add_rest<Combiner>(x_rest, x_val, snd_it, end_it, combine);
         }
     }
 }
@@ -549,8 +549,8 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         cur_itv = (*it).KEY_VALUE ;            
         x_rest.left_surplus(left_gap, cur_itv);
 
-        combine(it->CONT_VALUE, x_val);
-        fill_gap_join_left(value_type(left_gap, x_val), combine); //A posteriori
+        Combiner()(it->CONT_VALUE, x_val);
+        fill_gap_join_left<Combiner>(value_type(left_gap, x_val), combine); //A posteriori
 
         if(Traits::absorbs_neutrons && it->CONT_VALUE == CodomainT())
             this->_map.erase(it++);
@@ -566,7 +566,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         nxt_it++;
     }
 
-    add_rear(x_rest, x_val, it, combine);
+    add_rear<Combiner>(x_rest, x_val, it, combine);
 }
 
 template <typename DomainT, typename CodomainT, class Traits, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_COMPARE Combine, ITL_ALLOC Alloc>
@@ -584,7 +584,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     cur_itv.intersect(common, x_rest);
 
     CodomainT cmb_val = cur_val;
-    combine(cmb_val, x_val);
+    Combiner()(cmb_val, x_val);
 
     interval_type end_gap; 
     x_rest.right_surplus(end_gap, cur_itv);
@@ -600,9 +600,9 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         fill_join_left(value_type(common,   cmb_val));
 
     if(!lead_gap.empty())
-        fill_gap_join_both(value_type(lead_gap, x_val), combine);
+        fill_gap_join_both<Combiner>(value_type(lead_gap, x_val), combine);
     if(!end_gap.empty())
-        fill_gap_join_both(value_type(end_gap, x_val), combine);
+        fill_gap_join_both<Combiner>(value_type(end_gap, x_val), combine);
     else
         fill_join_left(value_type(right_resid, cur_val));
 }
@@ -644,7 +644,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     fst_itv.intersect(interSec, x_itv);
 
     CodomainT cmb_val = fst_val;
-    combine(cmb_val, x_val);
+    Combiner()(cmb_val, x_val);
 
     iterator snd_it = fst_it; snd_it++;
     if(snd_it == end_it) 
@@ -674,7 +674,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         interval_type x_rest(x_itv);
         x_rest.left_subtract(fst_itv);
 
-        subtract_rest(x_rest, x_val, snd_it, end_it, combine);
+        subtract_rest<Combiner>(x_rest, x_val, snd_it, end_it, combine);
     }
 }
 
@@ -690,7 +690,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     while(nxt_it!=end_it)
     {
         CodomainT& cur_val = (*it).CONT_VALUE ;
-        combine(cur_val, x_val);
+        Combiner()(cur_val, x_val);
 
         if(Traits::absorbs_neutrons && cur_val==CodomainT())
             this->_map.erase(it++); 
@@ -712,7 +712,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     if(rightResid.empty())
     {
         CodomainT& cur_val = (*it).CONT_VALUE ;
-        combine(cur_val, x_val);
+        Combiner()(cur_val, x_val);
         if(Traits::absorbs_neutrons && cur_val==CodomainT())
             this->_map.erase(it);
         else
@@ -732,7 +732,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT cur_val = (*it).CONT_VALUE ;
         CodomainT cmb_val = cur_val ;
-        combine(cmb_val, x_val);
+        Combiner()(cmb_val, x_val);
         interval_type interSec; 
         cur_itv.intersect(interSec, x_itv);
 
