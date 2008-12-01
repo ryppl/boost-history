@@ -10,3 +10,6 @@
 #include "my_blueprint_framework.hpp"
 #include "../generic/my_static_vector.hpp"
 
+#include <boost/dataflow/blueprint/static_vector_adapter.hpp>
+
+typedef df::blueprint::static_vector_adapter<my_blueprint_framework, my_static_vector> my_blueprint_static_vector;

@@ -22,8 +22,7 @@ class port_adapter : public framework_entity_adapter<BlueprintFramework, PortOrR
     typedef framework_entity_adapter<BlueprintFramework, PortOrRef, Base> base_type;
 public:
     port_adapter(framework_context<BlueprintFramework> &fo)
-        : base_type(fo)
-        
+        : base_type(fo)        
     {}
     template<typename T>
     port_adapter(framework_context<BlueprintFramework> &fo, const T &t)

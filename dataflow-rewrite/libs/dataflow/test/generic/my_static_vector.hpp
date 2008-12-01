@@ -17,13 +17,13 @@
 #include <boost/fusion/include/value_at.hpp>
 #include <boost/fusion/include/at.hpp>
 
-typedef df::static_vector_traits<boost::fusion::vector2<float, int> > my_traits;
+typedef df::static_vector_traits<boost::fusion::vector2<float, int>, my_framework> my_traits;
 
 namespace df=boost::dataflow;
 
-struct tuple
+struct my_static_vector
 {
-    tuple(float f, int i)
+    my_static_vector(float f, int i)
         : ports(f,i) {}
     
     typedef my_traits dataflow_traits;

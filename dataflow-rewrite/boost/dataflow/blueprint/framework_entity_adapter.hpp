@@ -37,6 +37,15 @@ public:
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
+
+    entity_type &entity()
+    {
+        return m_entity;
+    }
+    const entity_type &entity() const
+    {
+        return m_entity;
+    }
 private:
     virtual void *get_ptr()
     {

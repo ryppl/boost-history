@@ -14,7 +14,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/remove_const.hpp>
-
+#include <boost/assert.hpp>
 
 namespace boost { namespace dataflow { namespace blueprint {
 
@@ -29,11 +29,15 @@ public:
     
     template<typename T>
     typename disable_if<is_const<T>, T &>::type get_as()
-    {   return *reinterpret_cast<T *>(get_ptr()); }
+    {
+        BOOST_ASSERT(typeid(T)==m_type_info);
+        return *reinterpret_cast<T *>(get_ptr());
+    }
     
     template<typename T>
     typename enable_if<is_const<T>, const T &>::type get_as() const
     {
+        BOOST_ASSERT(typeid(T)==m_type_info);
         return *reinterpret_cast<typename remove_const<T>::type *>(
             const_cast<castable_polymorphic_object *>(this)->get_ptr());
     }

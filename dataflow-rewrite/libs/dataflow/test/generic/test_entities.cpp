@@ -7,7 +7,7 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/generic/static_vector/get_port.hpp>
+#include <boost/dataflow/generic/entities.hpp>
 #include "my_static_vector.hpp"
 
 #include <boost/type_traits/is_same.hpp>
@@ -19,17 +19,11 @@
 
 BOOST_AUTO_TEST_CASE( test )
 {
-    tuple x(0.5, 2);
+    my_static_vector x(0.5, 2);
     
-    typedef df::result_of::get_port<tuple, boost::mpl::int_<0> >::type result_of_0;
-    typedef df::result_of::get_port<tuple, boost::mpl::int_<1> >::type result_of_1;
+    typedef df::result_of::entities<my_static_vector>::type result_of_entities;
     
-    BOOST_CHECK((boost::is_same<result_of_0, float>::value));
-    BOOST_CHECK((boost::is_same<result_of_1, int>::value));
+    BOOST_CHECK((boost::is_same<result_of_entities, ::boost::fusion::vector2<float,int> & >::value));
     
-    BOOST_CHECK_EQUAL((df::get_port(x, boost::mpl::int_<0>())), 0.5);
-    BOOST_CHECK_EQUAL((df::get_port<boost::mpl::int_<0> >(x)), 0.5);
-
-    BOOST_CHECK_EQUAL((df::get_port(x, boost::mpl::int_<1>())), 2);
-    BOOST_CHECK_EQUAL((df::get_port<boost::mpl::int_<1> >(x)), 2);
+    BOOST_CHECK_EQUAL(&df::entities(x), &x.ports);
 }

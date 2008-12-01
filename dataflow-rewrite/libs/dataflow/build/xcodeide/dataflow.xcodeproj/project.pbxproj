@@ -197,6 +197,8 @@
 		08BA454B0EDCF1A00053808D /* my_dynamic_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_dynamic_vector.hpp; sourceTree = "<group>"; };
 		08D18D770EBE25E800B1A160 /* static_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_vector.hpp; sourceTree = "<group>"; };
 		08D6B0BA0EDE06A8005821A8 /* test_entities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_entities.cpp; sourceTree = "<group>"; };
+		08D6B0DE0EDE1F55005821A8 /* static_vector_adapter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_vector_adapter.hpp; sourceTree = "<group>"; };
+		08D6B0E50EDE2101005821A8 /* vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector.hpp; sourceTree = "<group>"; };
 		08D965820E83A2F900087C6F /* framework_entity.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = framework_entity.qbk; sourceTree = "<group>"; };
 		08D965C80E83A94E00087C6F /* category.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = category.hpp; sourceTree = "<group>"; };
 		08D965C90E83A94E00087C6F /* port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port.hpp; sourceTree = "<group>"; };
@@ -548,6 +550,8 @@
 				0826E38D0EA542730090AB4E /* operation.hpp */,
 				0826E3950EA543F60090AB4E /* operation_adapter.hpp */,
 				0826E4BB0EA57D110090AB4E /* castable_polymorphic_object.hpp */,
+				08D6B0DE0EDE1F55005821A8 /* static_vector_adapter.hpp */,
+				08D6B0E50EDE2101005821A8 /* vector.hpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";
