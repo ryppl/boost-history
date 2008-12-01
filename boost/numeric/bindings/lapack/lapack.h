@@ -333,12 +333,27 @@ extern "C" {
 
   /* banded */
 
+  void LAPACK_SGBTRF (int const* n, int const* m, int const* kl, int const* ku,
+                      float* ab, int const* ldab, int* ipiv, int* info);
   void LAPACK_DGBTRF (int const* n, int const* m, int const* kl, int const* ku,
                       double* ab, int const* ldab, int* ipiv, int* info);
+  void LAPACK_CGBTRF (int const* n, int const* m, int const* kl, int const* ku,
+                      fcomplex_t* ab, int const* ldab, int* ipiv, int* info);
+  void LAPACK_ZGBTRF (int const* n, int const* m, int const* kl, int const* ku,
+                      dcomplex_t* ab, int const* ldab, int* ipiv, int* info);
 
+  void LAPACK_SGBTRS (char const* trans, int const* n, int const* kl, int const* ku, int const* nrhs, 
+                      float const* ab, int const* ldab, int const* ipiv, 
+                      float* b, int const* ldb, int* info);
   void LAPACK_DGBTRS (char const* trans, int const* n, int const* kl, int const* ku, int const* nrhs, 
                       double const* ab, int const* ldab, int const* ipiv, 
                       double* b, int const* ldb, int* info);
+  void LAPACK_CGBTRS (char const* trans, int const* n, int const* kl, int const* ku, int const* nrhs, 
+                      fcomplex_t const* ab, int const* ldab, int const* ipiv, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZGBTRS (char const* trans, int const* n, int const* kl, int const* ku, int const* nrhs, 
+                      dcomplex_t const* ab, int const* ldab, int const* ipiv, 
+                      dcomplex_t* b, int const* ldb, int* info);
 
 
   /**********************************************************************/

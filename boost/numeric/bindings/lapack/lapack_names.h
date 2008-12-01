@@ -169,8 +169,14 @@
 
 /* banded solve */
 
+#define LAPACK_SGBTRF FORTRAN_ID( sgbtrf )
 #define LAPACK_DGBTRF FORTRAN_ID( dgbtrf )
+#define LAPACK_CGBTRF FORTRAN_ID( cgbtrf )
+#define LAPACK_ZGBTRF FORTRAN_ID( zgbtrf )
+#define LAPACK_SGBTRS FORTRAN_ID( sgbtrs )
 #define LAPACK_DGBTRS FORTRAN_ID( dgbtrs )
+#define LAPACK_CGBTRS FORTRAN_ID( cgbtrs )
+#define LAPACK_ZGBTRS FORTRAN_ID( zgbtrs )
 
 
 /********************************************/

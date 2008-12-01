@@ -14,7 +14,6 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_HBEV_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_HBEV_HPP
 
-#include <boost/numeric/bindings/traits/type.hpp>
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <boost/numeric/bindings/traits/type_traits.hpp>
 #include <boost/numeric/bindings/lapack/lapack.h>

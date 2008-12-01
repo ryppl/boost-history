@@ -65,8 +65,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::generate_const<M,ArrT>::type array_type ;
       return vector_traits<array_type>::storage (m.data()); 
     }
-    static std::ptrdiff_t size1 (matrix_type& m) { return m.size1(); } 
-    static std::ptrdiff_t size2 (matrix_type& m) { return m.size2(); }
+    static std::ptrdiff_t num_rows (matrix_type& m) { return m.size1(); } 
+    static std::ptrdiff_t num_columns (matrix_type& m) { return m.size2(); }
     static std::ptrdiff_t lower_bandwidth (matrix_type& m) { return m.lower() ; }
     static std::ptrdiff_t upper_bandwidth (matrix_type& m) { return m.upper() ; }
     static std::ptrdiff_t storage_size (matrix_type& m) { return size1 (m) * size2 (m); }
