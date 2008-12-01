@@ -40,7 +40,7 @@ public:
             glEnable(GL_DEPTH_TEST);
         else
             glDisable(GL_DEPTH_TEST);
-        s_windows[id] = impl;
+        m_windows[id] = impl;
         
        	glutDisplayFunc(display);
         glutMouseFunc(mouse);
@@ -60,10 +60,8 @@ private:
     static void mouse(int button, int state, int x, int y);
     static void movement(int x, int y);
     static void entry(int state);
-    static std::map<int, window::impl *> s_windows;
+    std::map<int, window::impl *> m_windows;
 };
-
-std::map<int, window::impl *> glut::s_windows;
 
 
 class window::impl
@@ -122,9 +120,9 @@ public:
     }
     int id() const
     {   return m_id; }
+    static glut *s_glut;
 private:
     int m_id;
-    static glut *s_glut;
     window *m_window;
     std::string m_label;
 };
@@ -149,26 +147,26 @@ void window::redraw(const view::positioned<> &v)
 void glut::display()
 {
     int id = glutGetWindow();
-    s_windows[id]->display();
+    window::impl::s_glut->m_windows[id]->display();
     glutSwapBuffers();
 }
 
 void glut::mouse(int button, int state, int x, int y)
 {
     int id = glutGetWindow();
-    s_windows[id]->mouse(button, state, x, y);
+    window::impl::s_glut->m_windows[id]->mouse(button, state, x, y);
 }
 
 void glut::movement(int x, int y)
 {
     int id = glutGetWindow();
-    s_windows[id]->movement(x, y);
+    window::impl::s_glut->m_windows[id]->movement(x, y);
 }
 
 void glut::entry(int state)
 {
     int id = glutGetWindow();
-    s_windows[id]->entry_exit(state);
+    window::impl::s_glut->m_windows[id]->entry_exit(state);
 }
 
 
