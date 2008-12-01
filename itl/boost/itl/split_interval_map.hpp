@@ -201,14 +201,14 @@ namespace boost{namespace itl
         { add_<inplace_plus<CodomainT> >(value); }
 
         template<class Combiner>
-        void subtract_(const value_type&, const Combiner&);
+        void subtract_(const value_type&);
 
-        void subtract_(const value_type& value)
+        void subtract_(const value_type& value)//JODO
         {
             if(Traits::emits_neutrons)
                 add_<inplace_minus<CodomainT> >(value); 
             else
-                subtract_<inplace_minus<CodomainT> >(value, inplace_minus<CodomainT>() ); 
+                subtract_<inplace_minus<CodomainT> >(value); 
         }
 
         void insert_(const value_type& value);
@@ -232,7 +232,7 @@ namespace boost{namespace itl
 
         template<class Combiner>
         void subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
-			               iterator& it, iterator& end_it, const Combiner& combine);
+			               iterator& it, iterator& end_it);
 
         void insert_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it);
         void insert_rear(const interval_type& x_itv, const CodomainT& x_val, iterator& it);
@@ -446,7 +446,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 template <typename DomainT, typename CodomainT, class Traits, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
     template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
-    ::subtract_(const value_type& x, const Combiner& combine)
+    ::subtract_(const value_type& x)
 {
     const interval_type& x_itv = x.KEY_VALUE;
 
@@ -496,7 +496,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         fill(value_type(leftResid, fst_val));
         fill(value_type(interSec,  cmb_val));
 
-        subtract_rest<Combiner>(x_itv, x_val, snd_it, end_it, combine);
+        subtract_rest<Combiner>(x_itv, x_val, snd_it, end_it);
     }
 }
 
@@ -506,7 +506,7 @@ template <typename DomainT, typename CodomainT, class Traits, template<class,ITL
     template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     ::subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
-                    iterator& it, iterator& end_it, const Combiner& combine)
+                    iterator& it, iterator& end_it)
 {
     iterator nxt_it=it; nxt_it++;
 

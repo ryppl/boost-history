@@ -498,8 +498,8 @@ public:
     */
 private:
     template<class Combiner>
-    void subtract(const value_type& x, const Combiner& combine)
-    { that()->template subtract_(x, combine); }
+    void subtract(const value_type& x)
+    { that()->template subtract_<Combiner>(x); }
 
 public:
     /// Subtraction of a base value pair.
@@ -517,8 +517,7 @@ public:
     */
     SubType& subtract(const base_pair_type& x)
     { 
-		access::subtract(*that(), value_type(interval_type(x.key), x.data) ); 
-        return *that();
+		return subtract( value_type(interval_type(x.key), x.data) ); 
     }
 
 
@@ -540,9 +539,8 @@ public:
 		typedef inverse<Combine,CodomainT>::type InverseCombine;
         if(Traits::emits_neutrons)
 			that()->template add_<InverseCombine>(x); 
-			//CL access::add<value_type,InverseCombine>(*that(), x, InverseCombine()); 
         else 
-			access::subtract<value_type,InverseCombine>(*that(), x, InverseCombine()); 
+			that()->template subtract_<InverseCombine>(x); 
     
         return *that();
     }
