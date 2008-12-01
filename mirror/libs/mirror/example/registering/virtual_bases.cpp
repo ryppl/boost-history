@@ -214,10 +214,8 @@ int main(void)
 	//
 	bcout << "The reflected class has " << endl;
 	//
-	bcout << meta_T::base_classes::size::value << " base class(es)" << endl;
-	bcout << meta_T::attributes::size::value << " own member attrib(s)" << endl;
-	bcout << meta_T::all_attributes::inherited_size::value << " inherited member attrib(s)" << endl;
-	bcout << meta_T::all_attributes::size::value << " member attrib(s)" << endl;
+	bcout << size<meta_T::attributes>::value << " own member attrib(s)" << endl;
+	bcout << size<meta_T::all_attributes>::value << " member attrib(s)" << endl;
 	// execute a functor on all attributes
 	for_each<meta_T::all_attributes>(attrib_printer());
 	//
@@ -230,6 +228,81 @@ int main(void)
 	// F::b (bool)
 	// G::c (char)
 	// H::w (wchar_t)
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(B)::base_classes, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(C)::base_classes, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(D)::base_classes, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT_NOT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(E)::base_classes, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT_NOT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(E)::base_classes, mpl::int_<1> >::type >
+	));
+	BOOST_MPL_ASSERT_NOT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(E)::base_classes, mpl::int_<2> >::type >
+	));
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< at<BOOST_MIRRORED_CLASS(G)::base_classes, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< mpl::at<BOOST_MIRRORED_CLASS(G)::base_classes::list, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT_NOT((
+		reflects_virtual_inheritance< mpl::at<BOOST_MIRRORED_CLASS(E)::base_classes::list, mpl::int_<0> >::type >
+	));
+	BOOST_MPL_ASSERT_NOT((
+		reflects_virtual_inheritance< mpl::at<BOOST_MIRRORED_CLASS(E)::base_classes::list, mpl::int_<1> >::type >
+	));
+	BOOST_MPL_ASSERT_NOT((
+		reflects_virtual_inheritance< mpl::at<BOOST_MIRRORED_CLASS(E)::base_classes::list, mpl::int_<2> >::type >
+	));
+	//
+	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::list_of_base_class_infos huuh = "1223";
+	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::list_of_regular_base_classes huuh = "1223";
+	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::list_of_virtual_base_classes huuh = "1223";
+	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::regular_base_class_layout huuh = "1223";
+	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::virtual_base_class_layout_w_dups huuh = "1223";
+	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::virtual_base_class_layout huuh = "1223";
+	//BOOST_MIRRORED_CLASS(E)::all_attributes::detail::base_class_layout huuh = "1223";
+	//
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< 
+			at<			
+				at<
+					BOOST_MIRRORED_CLASS(E)::base_classes, 
+					mpl::int_<0> 
+				>::type::base_class::base_classes,
+				mpl::int_<0>
+			>::type
+		>
+	));
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< 
+			at<			
+				at<
+					BOOST_MIRRORED_CLASS(E)::base_classes, 
+					mpl::int_<1> 
+				>::type::base_class::base_classes,
+				mpl::int_<0>
+			>::type
+		>
+	));
+	BOOST_MPL_ASSERT((
+		reflects_virtual_inheritance< 
+			at<			
+				at<
+					BOOST_MIRRORED_CLASS(E)::base_classes, 
+					mpl::int_<2> 
+				>::type::base_class::base_classes,
+				mpl::int_<0>
+			>::type
+		>
+	));
 	//
 	BOOST_STATIC_ASSERT((is_same<
 		mpl::at<meta_T::all_attributes::type_list, mpl::int_<0> >::type, 

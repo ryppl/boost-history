@@ -143,21 +143,13 @@ namespace detail {
 	template <
 		class PathsAndNodes, 
 		class Pair, 
-		class Position,
-		class BaseClass,
-		typename AccessSpec, 
-		typename InheritanceSpec,
+		class InheritanceInfo,
 		template <class> class PriorOrNext
 	>
 	struct neighbour_base_process_single_path_and_node_apply<
 		PathsAndNodes, 
 		Pair, 
-		meta_inheritance<
-			Position,
-			BaseClass,
-			AccessSpec, 
-			InheritanceSpec
-		>,
+		meta_inheritance< InheritanceInfo >,
 		PriorOrNext
 	> : neighbour_base_process_single_path_and_seq_elem_apply<
 		PathsAndNodes, 

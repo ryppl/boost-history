@@ -21,19 +21,9 @@ namespace mirror {
 template <class MetaObject>
 struct reflects_inheritance : public false_type { };
 
-template <
-	class Position,
-	class BaseClass,
-	class AccessSpec, 
-	class VirtualSpec
->
+template < class InheritanceInfo >
 struct reflects_inheritance<
-	meta_inheritance<
-		Position,
-		BaseClass,
-		AccessSpec,
-		VirtualSpec
-	> 
+	meta_inheritance< InheritanceInfo > 
 > : public true_type{ };
 
 

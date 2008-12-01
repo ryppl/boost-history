@@ -54,7 +54,7 @@ namespace detail {
 	template <class MetaInheritance>
 	struct get_type_list_impl_get_base_class
 	{
-		typedef typename MetaInheritance::base_class
+		typedef typename MetaInheritance::base_class::reflected_type
 			type;
 	};
 	template <class Class, class VariantTag>

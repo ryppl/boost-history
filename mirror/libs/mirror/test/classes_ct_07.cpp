@@ -39,15 +39,20 @@ using namespace ::boost::mirror;
 template <typename MetaAttribute>
 struct get_attrib_type
 {
-	typedef typename MetaAttribute::type type;
+	typedef typename 
+		MetaAttribute::
+		type::
+		reflected_type type;
 };
 
 template <typename MetaInheritance>
 struct get_base_class
 {
-	typedef typename MetaInheritance::base_class type;
+	typedef typename 
+		MetaInheritance::
+		base_class::
+		reflected_type type;
 };
-
 
 /** Checks whether the reflected attribute type list
  *  is equal to the hard coded

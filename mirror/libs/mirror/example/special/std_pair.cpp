@@ -17,6 +17,8 @@
 #include <boost/mirror/meta_type.hpp>
 #include <boost/mirror/meta_class.hpp>
 
+#include <boost/mirror/intrinsic/size.hpp>
+
 #include <boost/mirror/meta_types/std/pair.hpp>
 #include <boost/mirror/meta_classes/std/pair.hpp>
 
@@ -42,7 +44,7 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The full type name is: "<< meta_T::full_name() << endl;
 	bcout << "---------------------------------------------------" << endl;
-	bcout << "The class has "<< meta_T::all_attributes::size::value << " members" << endl;
+	bcout << "The class has "<< size<meta_T::all_attributes>::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	//
 	return 0;

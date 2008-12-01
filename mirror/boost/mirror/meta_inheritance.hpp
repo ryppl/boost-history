@@ -23,126 +23,78 @@
 
 namespace boost {
 namespace mirror {
+namespace detail {
 
-
-/** helper template instances of which define the inheritance type,
- *  access specifiers and base class of a meta_class
+/** Internal information about a class inheritance 
  */
 template <
-	class BaseClass, 
-	typename AccessSpec, 
-	typename InheritanceSpec
-> struct meta_inheritance_defs
-{
-	typedef InheritanceSpec inheritance_specifier;
-	typedef AccessSpec access_specifier;
-	typedef BaseClass base_class;
-	typedef BOOST_MIRRORED_CLASS(BaseClass) meta_base_class;
-};
-
-/** This template stores the inheritance type and access specifier
- *  of a base class for a derived class
- */
-template <
-	class BaseClass, 
-	typename AccessSpec, 
-	typename InheritanceSpec
-> struct meta_inheritance_spec;
-
-template <class BaseClass>
-struct meta_inheritance_spec<
-	BaseClass, 
-	private_, 
-	virtual_base_
-> : meta_inheritance_defs<
-	BaseClass, 
-	private_, 
-	virtual_base_
-> { };
-
-template <class BaseClass>
-struct meta_inheritance_spec<
-	BaseClass, 
-	protected_, 
-	virtual_base_
-> : meta_inheritance_defs<
-	BaseClass, 
-	protected_, 
-	virtual_base_
-> { };
-
-template <class BaseClass>
-struct meta_inheritance_spec<
-	BaseClass, 
-	public_, 
-	virtual_base_
-> : meta_inheritance_defs<
-	BaseClass, 
-	public_, 
-	virtual_base_
-> { };
-
-template <class BaseClass>
-struct meta_inheritance_spec<
-	BaseClass, 
-	private_, 
-	nonvirtual_base_
-> : meta_inheritance_defs<
-	BaseClass, 
-	private_, 
-	nonvirtual_base_
-> { };
-
-template <class BaseClass>
-struct meta_inheritance_spec<
-	BaseClass, 
-	protected_, 
-	nonvirtual_base_
-> : meta_inheritance_defs<
-	BaseClass, 
-	protected_, 
-	nonvirtual_base_
-> { };
-
-template <class BaseClass>
-struct meta_inheritance_spec<
-	BaseClass, 
-	public_, 
-	nonvirtual_base_
-> : meta_inheritance_defs<
-	BaseClass, 
-	public_, 
-	nonvirtual_base_
-> { };
-
-/** This template stores the inheritance type and access specifier
- *  of a base class for a derived class
- */
-template <
+	class DerivedClass,
+	class VariantTag,
 	class Position,
 	class BaseClass,
-	typename AccessSpec, 
-	typename InheritanceSpec = nonvirtual_base_
+	class AccessSpecifier,
+	class InheritanceSpecifier
 >
-struct meta_inheritance
-: meta_inheritance_spec<
-	BaseClass, 
-	AccessSpec, 
-	InheritanceSpec
->
+struct class_inheritance_info
 {
+	struct detail {
+		typedef DerivedClass derived_class;
+		typedef VariantTag derived_class_vt;
+	}; // struct detail
+
+	// the scope ot the meta_inheritance
+	typedef BOOST_MIRRORED_CLASS(DerivedClass) scope;
+	// the position inside of the containder
 	typedef Position position;
+	// access specifier
+	typedef AccessSpecifier access;
+	// inheritance specifier
+	typedef InheritanceSpecifier inheritance;
+	// meta_class reflecting the base class
+	typedef BOOST_MIRRORED_CLASS(BaseClass) base_class;
+};
+
+
+} // namespace detail
+
+
+/** Forward declaration of the meta_base_classes template 
+ */
+template <
+	class Class, 
+	class VariantTag = detail::default_meta_class_variant
+>
+struct meta_base_classes;
+
+/** This template stores the inheritance type and access specifier
+ *  of a base class for a derived class
+ */
+template <
+	class InheritanceInfo
+>
+struct meta_inheritance : public InheritanceInfo
+{
+	// the container where this meta inheritance belongs
+	typedef meta_base_classes<
+		typename InheritanceInfo::detail::derived_class,
+		typename InheritanceInfo::detail::derived_class_vt
+	> container;
+	typedef typename InheritanceInfo::position position;
+	typedef typename InheritanceInfo::scope scope;
+	typedef typename InheritanceInfo::inheritance inheritance;
+	typedef typename InheritanceInfo::access access;
+	typedef typename InheritanceInfo::base_class base_class;
 };
 
 /** Default (empty) list of base classes of a meta_class
  */
 template <
 	class Class, 
-	class VariantTag = detail::default_meta_class_variant
+	class VariantTag
 >
 struct meta_base_classes
 {
-	typedef Class derived_class;
+	typedef BOOST_MIRRORED_CLASS(Class) scope;
 	typedef mpl::vector0<> list;
 };
 
@@ -155,7 +107,9 @@ struct meta_base_classes
 		A_CLASS, \
 		detail::default_meta_class_variant \
 	> { \
-		typedef A_CLASS derived_class;\
+		typedef BOOST_MIRRORED_CLASS(A_CLASS) scope; \
+		typedef A_CLASS derived_class; \
+		typedef detail::default_meta_class_variant derived_class_vt; \
 		typedef mpl::vector< 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
@@ -165,12 +119,15 @@ struct meta_base_classes
  */
 #define BOOST_MIRROR_REG_SIMPLE_BASE_CLASS(NUMBER, A_BASE_CLASS) \
 	BOOST_PP_COMMA_IF(NUMBER) \
-	meta_inheritance<\
+	detail::class_inheritance_info<\
+		derived_class, \
+		derived_class_vt, \
 		mpl::int_<NUMBER>, \
 		A_BASE_CLASS, \
 		class_kind_default_access<\
 			meta_class_kind< A_BASE_CLASS >::result \
-		>::specifier \
+		>::specifier, \
+		nonvirtual_base_ \
 	> 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
@@ -180,7 +137,14 @@ struct meta_base_classes
  */
 #define BOOST_MIRROR_REG_BASE_CLASS(NUMBER, ACCESS_SPEC, A_BASE_CLASS) \
 	BOOST_PP_COMMA_IF(NUMBER) \
-	meta_inheritance<mpl::int_<NUMBER>, A_BASE_CLASS, ACCESS_SPEC##_> 
+	detail::class_inheritance_info< \
+		derived_class, \
+		derived_class_vt, \
+		mpl::int_<NUMBER>, \
+		A_BASE_CLASS, \
+		ACCESS_SPEC##_, \
+		nonvirtual_base_ \
+	> 
 
 /** This macro declares that the A_BASE_CLASS class is the i-th
  *  base class of the given class, with the given access specifier
@@ -189,14 +153,20 @@ struct meta_base_classes
  */
 #define BOOST_MIRROR_REG_VIRTUAL_BASE_CLASS(NUMBER, ACCESS_SPEC, A_BASE_CLASS) \
 	BOOST_PP_COMMA_IF(NUMBER) \
-	meta_inheritance<mpl::int_<NUMBER>, A_BASE_CLASS, ACCESS_SPEC##_, virtual_base_> 
+	detail::class_inheritance_info< \
+		derived_class, \
+		derived_class_vt, \
+		mpl::int_<NUMBER>, \
+		A_BASE_CLASS, \
+		ACCESS_SPEC##_, \
+		virtual_base_ \
+	> 
 
 /** This macro finishes the declaration of base classes
  *  of the given class
  */
 #define BOOST_MIRROR_REG_BASE_CLASSES_END \
 	> list; \
-	struct size : public mpl::size<list>{ };\
 };
 
 /** This macro registers a the A_BASE_CLASS class 

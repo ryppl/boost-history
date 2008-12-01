@@ -37,75 +37,111 @@ void test_main()
 	//
 	//
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<0> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<0> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.a1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<1> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<1> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.a2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<2> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<2> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.a3)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<3> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<3> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.b1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<4> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<4> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.b2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<5> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<5> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.c1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<6> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<6> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.c2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<7> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<7> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.d1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<8> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<8> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.d2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<9> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<9> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.e)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<10> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<10> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.f1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<11> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<11> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.f2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<12> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<12> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.g1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<13> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<13> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.g2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<14> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<14> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.g3)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<15> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<15> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.h1)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<16> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<16> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.h2)
 	> ));
 	BOOST_MPL_ASSERT(( is_same< 
-		at<meta_H::all_attributes, mpl::int_<17> >::type::type *,
+		at<
+			meta_H::all_attributes, mpl::int_<17> 
+		>::type::type::reflected_type *,
 		BOOST_TYPEOF(&h.h3)
 	> ));
 }

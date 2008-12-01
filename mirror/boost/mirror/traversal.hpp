@@ -25,11 +25,15 @@ class deep_traversal_of
 	deep_traversal_of
 >
 {
+private:
+	typedef typename remove_reference<
+		typename MetaClass::reflected_type
+	>::type* InstancePtr;
 public:
 	template <class VisitorType>
 	static void accept(
 		VisitorType visitor,
-		typename MetaClass::reflected_type* ptr_to_inst = 0
+		InstancePtr ptr_to_inst = 0
 	)
 	{
 		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
@@ -38,7 +42,7 @@ public:
 	template <class VisitorType>
 	static void accept(
 		reference_wrapper<VisitorType> visitor,
-		typename MetaClass::reflected_type* ptr_to_inst = 0
+		InstancePtr ptr_to_inst = 0
 	)
 	{
 		do_accept(visitor, ptr_to_inst);
@@ -47,7 +51,7 @@ private:
 	template <class VisitorType>
 	static void do_accept(
 		reference_wrapper<VisitorType> visitor,
-		typename MetaClass::reflected_type* ptr_to_inst
+		InstancePtr ptr_to_inst
 	)
 	{
 		MetaClass mc;
@@ -90,11 +94,15 @@ class flat_traversal_of
 	flat_traversal_of
 >
 {
+private:
+	typedef typename remove_reference<
+		typename MetaClass::reflected_type
+	>::type* InstancePtr;
 public:
 	template <class VisitorType>
 	static void accept(
 		VisitorType visitor,
-		typename MetaClass::reflected_type* ptr_to_inst = 0
+		InstancePtr ptr_to_inst = 0
 	)
 	{
 		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
@@ -102,7 +110,7 @@ public:
 	template <class VisitorType>
 	static void accept(
 		reference_wrapper<VisitorType> visitor,
-		typename MetaClass::reflected_type* ptr_to_inst = 0
+		InstancePtr ptr_to_inst = 0
 	)
 	{
 		do_accept(visitor, ptr_to_inst);
@@ -111,7 +119,7 @@ private:
 	template <class VisitorType>
 	static void do_accept(
 		reference_wrapper<VisitorType> visitor, 
-		typename MetaClass::reflected_type* ptr_to_inst
+		InstancePtr ptr_to_inst
 	)
 	{
 		MetaClass mc;

@@ -15,6 +15,7 @@
 #include <boost/mirror/meta_path/node_context.hpp>
 //
 #include <boost/ref.hpp>
+#include  <boost/type_traits/remove_reference.hpp>
 //
 #include <assert.h>
 
@@ -39,13 +40,19 @@ namespace detail {
 		typedef typename mpl::push_back<NodePath, MetaClass>::type
 			ClassNodePath;
 
+		typedef typename remove_reference<
+			typename MetaClass::reflected_type
+		>::type* InstancePtr;
+			
+
+
 		template <class VisitorType>
 		class attribute_traversal
 		{
 		public:
 			attribute_traversal(
 				reference_wrapper<VisitorType> _visitor,
-				typename MetaClass::reflected_type* _ptr_to_inst
+				InstancePtr _ptr_to_inst
 			)
 			: visitor(_visitor)
 			, ptr_to_inst(_ptr_to_inst)
@@ -90,7 +97,7 @@ namespace detail {
 			}
 		private:
 			VisitorType& visitor;
-			typename MetaClass::reflected_type* ptr_to_inst;
+			InstancePtr ptr_to_inst;
 
 			// process single attribute WITH an instance
 			template <class MetaAttribute, class AttribsNodePath>
@@ -116,11 +123,9 @@ namespace detail {
 				typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
 				instance_type instance(ma.get(*ptr_to_inst));
 				//
-				typedef typename MetaAttribute::type
-					attrib_type_selector;
 				// traverse the attribute
 				TraversalType<
-					BOOST_MIRRORED_CLASS(attrib_type_selector),
+					typename MetaAttribute::type,
 					typename mpl::push_back<
 						AttribsNodePath, 
 						MetaAttribute
@@ -155,10 +160,8 @@ namespace detail {
 				);
 				//
 				// traverse the attributes
-				typedef typename MetaAttribute::type
-					attrib_type_selector;
 				TraversalType<
-					BOOST_MIRRORED_CLASS(attrib_type_selector),
+					typename MetaAttribute::type,
 					typename mpl::push_back<
 						AttribsNodePath, 
 						MetaAttribute
@@ -181,7 +184,7 @@ namespace detail {
 		static inline attribute_traversal<VisitorType>
 		show_attribs_to(
 			reference_wrapper<VisitorType> visitor,
-			typename MetaClass::reflected_type* ptr_to_inst
+			InstancePtr ptr_to_inst
 		)
 		{
 			return attribute_traversal<VisitorType>(visitor, ptr_to_inst);
@@ -194,7 +197,7 @@ namespace detail {
 		public:
 			base_class_traversal(
 				reference_wrapper<VisitorType> _visitor,
-				typename MetaClass::reflected_type* _ptr_to_inst
+	                        InstancePtr _ptr_to_inst
 			)
 			: visitor(_visitor)
 			, ptr_to_inst(_ptr_to_inst)
@@ -240,7 +243,7 @@ namespace detail {
 				);
 				//
 				// get the meta-class of the base class
-				typedef typename MetaInheritance::meta_base_class
+				typedef typename MetaInheritance::base_class
 					meta_base_class;
 				// traverse the base class
 				TraversalType<
@@ -261,7 +264,7 @@ namespace detail {
 			}
 		private:
 			VisitorType& visitor;
-			typename MetaClass::reflected_type* ptr_to_inst;
+                        InstancePtr ptr_to_inst;
 		};
 
 		// base class traversal factory function
@@ -269,7 +272,7 @@ namespace detail {
 		static inline base_class_traversal<VisitorType>
 		show_bases_to(
 			reference_wrapper<VisitorType> visitor,
-			typename MetaClass::reflected_type* ptr_to_inst
+                        InstancePtr ptr_to_inst
 		)
 		{
 			return base_class_traversal<VisitorType>(visitor, ptr_to_inst);

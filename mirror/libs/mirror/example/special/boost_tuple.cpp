@@ -106,7 +106,7 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "The full type name is: "<< meta_T1::full_name() << endl;
 	bcout << "---------------------------------------------------" << endl;
-	bcout << "The class has "<< meta_T1::all_attributes::size::value << " members" << endl;
+	bcout << "The class has "<< size<meta_T1::all_attributes>::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	bcout << meta_T1::all_attributes::get_name(mpl::int_<0>(), mpl::false_(), cts::bchar_traits()) << " = ";
 	bcout << meta_T1::all_attributes::get(t1, mpl::int_<0>()) << endl;
@@ -128,7 +128,7 @@ int main(void)
 	attrib_value_printer<meta_X::reflected_type> p(x);
 	//
 	bcout << "The type name is: "<< meta_X::base_name() << endl;
-	bcout << "The class has "<< meta_X::all_attributes::size::value << " members" << endl;
+	bcout << "The class has "<< size<meta_X::all_attributes>::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
 	for_each<meta_X::all_attributes>(p);
 	bcout << "---------------------------------------------------" << endl;

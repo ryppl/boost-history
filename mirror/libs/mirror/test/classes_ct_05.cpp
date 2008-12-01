@@ -23,6 +23,7 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 //
 #include <boost/mirror/meta_class.hpp>
+#include <boost/mirror/meta_types/boost/mpl/int.hpp>
 #include <boost/mirror/algorithm/accumulate.hpp>
 #include <boost/mirror/meta_classes/boost/tuples/tuple.hpp>
 //
@@ -33,7 +34,10 @@
 template <typename MetaAttribute>
 struct get_attrib_type
 {
-	typedef typename MetaAttribute::type type;
+	typedef typename 
+		MetaAttribute::
+		type::
+		reflected_type type;
 };
 
 void test_main()
@@ -47,11 +51,14 @@ void test_main()
 	T t;
 	typedef BOOST_MIRRORED_CLASS(T) meta_T;
 	//
+	//
 	// define a forward op
-	typedef mpl::lambda<mpl::push_back<
+	typedef mpl::lambda<
+		mpl::push_back<
 			mpl::_1, 
 			get_attrib_type<mpl::_2>
-	> >::type accumulate_op;
+		> 
+	>::type accumulate_op;
 	//
 	// use the accumulate algorithm to get the typelist
 	typedef accumulate<

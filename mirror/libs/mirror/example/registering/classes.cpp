@@ -367,7 +367,7 @@ struct pretty_printer
 			// it's base_class typedef is the type 
 			// of the base class
 			using namespace ::std;
-			typedef typename MetaInheritance::meta_base_class meta_class;
+			typedef typename MetaInheritance::base_class meta_class;
 			s << endl << " - " << meta_class::full_name();
 		}
 	};
@@ -416,9 +416,7 @@ struct pretty_printer
 		{
 			using namespace ::std;
 			s << endl << " - " << 
-				BOOST_MIRRORED_TYPE(
-					typename MetaAttribute::typedef_or_type
-				)::full_name() <<
+				MetaAttribute::type::full_name() <<
 				"        " <<
 				ma.base_name();
 		}

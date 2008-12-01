@@ -8,6 +8,17 @@
 		<model url="http://www.sgi.com/tech/stl/basic_string.html" name="::std::basic_string"/>
 	</concept>
 
+	<concept name="AccessSpecifier">
+		<model name="private_"/>
+		<model name="protected_"/>
+		<model name="public_"/>
+	</concept>
+
+	<concept name="InheritanceSpecifier">
+		<model name="virtual_base_"/>
+		<model name="nonvirtual_base_"/>
+	</concept>
+
 	<concept name="Traversal">
 		<member_function concept="void" name="accept">
 			<fn_param concept="TraversalVisitor" name="_visitor"/>
@@ -346,9 +357,6 @@
 	>
 	</role>
 
-	<concept name="MetaNamedScopedObject">
-	</concept>
-	
 	<!-- MetaNamedScopedObject is MetaNamedObject -->
 	<role 
 		subject="MetaNamedObject" 
@@ -437,10 +445,10 @@
 		<member_typedef concept="MetaBaseClasses" name="base_classes">
 			<desc>The sequence of MetaBaseClasses reflecting the inheritance of the base classes.</desc>
 		</member_typedef>
-		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
+		<member_typedef concept="MetaClassAttributes" name="attributes">
 			<desc>The sequence of MetaClassAttribute(s) reflecting the "own" attributes of a class. These are the attributes that are defined directly in the class reflected by this MetaClass, not including the attributes inherited from the base classes.</desc>
 		</member_typedef>
-		<member_typedef concept="MetaClassAttributes" name="meta_all_attributes">
+		<member_typedef concept="MetaClassAttributes" name="all_attributes">
 			<desc>The sequence of MetaClassAttribute(s) reflecting all attributes of a class including the ones inherited from base classes.</desc>
 		</member_typedef>
 		<member_typedef concept="Class" name="reflected_type">
@@ -540,11 +548,20 @@
 		<member_typedef concept="MetaBaseClasses" name="container">
 			<desc>The list of MetaBaseClasses that this MetaInheritance belongs to.</desc>
 		</member_typedef>
+		<member_typedef concept="InheritanceSpecifier" name="inheritance">
+			<desc>The inheritance specifier.</desc>
+		</member_typedef>
+		<member_typedef concept="AccessSpecifier" name="access">
+			<desc>The access specifier.</desc>
+		</member_typedef>
+		<member_typedef concept="MetaClass" name="base_class">
+			<desc>MetaClass reflecting the type of the base class.</desc>
+		</member_typedef>
 	</concept>
 	
-	<!-- MetaInheritance is MetaObject -->
+	<!-- MetaInheritance is MetaScopedObject -->
 	<role 
-		subject="MetaObject" 
+		subject="MetaScopedObject" 
 		type="Specialization" 
 		object="MetaInheritance"
 	>
@@ -563,16 +580,9 @@
 		<member_typedef concept="MetaClassAttributes" name="container">
 			<desc>The sequence of MetaClassAttribute(s) that this MetaClassAttribute belongs to.</desc>
 		</member_typedef>
-		<member_typedef concept="MetaClassAttributes" name="meta_attributes">
-			<desc>Equivalent to container.</desc>
+		<member_typedef concept="MetaType" name="type">
+			<desc>The MetaType reflecting the type of the attribute.</desc>
 		</member_typedef>
-		<member_typedef concept="Type" name="type">
-			<desc>The type of the reflected attribute.</desc>
-		</member_typedef>
-		<member_typedef concept="TypedefOrTypeSelector" name="typedef_or_type">
-			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
-		</member_typedef>
-
 		<member_function concept="Type" name="get">
 			<desc>Generic attribute value getter. Returns the value of the reflected class attribute when given an instance of the class that the attribute belongs to.</desc>
 			<fn_param concept="Class" name="instance"/>
@@ -632,9 +642,6 @@
 		object="MetaClassAttributeTraits"
 	>
 	</role>
-
-	<concept name="MetaFunctionParameter">
-	</concept>
 
 	<concept name="MetaMemberFunction">
 	</concept>
@@ -785,9 +792,6 @@
 
 	<concept name="MetaBaseClasses">
 		<model name="meta_base_classes"/>
-		<member_typedef concept="Class" name="derived_class">
-			<desc>The class which base classes this MetaBaseClasses sequence reflects.</desc>
-		</member_typedef>
 		<metafunction concept="MplSequence" name="get_type_list">
 			<metafn_param placeholder="true">
 			</metafn_param>
@@ -799,6 +803,14 @@
 	<!-- MetaBaseClasses is MetaObjectSequence -->
 	<role 
 		subject="MetaObjectSequence" 
+		type="Specialization" 
+		object="MetaBaseClasses"
+	>
+	</role>
+
+	<!-- MetaBaseClasses is MetaScopedObject -->
+	<role 
+		subject="MetaScopedObject" 
 		type="Specialization" 
 		object="MetaBaseClasses"
 	>
@@ -817,6 +829,14 @@
 	<!-- MetaClassAttributes is MetaObjectSequence -->
 	<role 
 		subject="MetaObjectSequence" 
+		type="Specialization" 
+		object="MetaClassAttributes"
+	>
+	</role>
+
+	<!-- MetaClassAttributes is MetaScopedObject -->
+	<role 
+		subject="MetaScopedObject" 
 		type="Specialization" 
 		object="MetaClassAttributes"
 	>

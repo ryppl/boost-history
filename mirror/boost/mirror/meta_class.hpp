@@ -77,6 +77,7 @@ struct meta_class_base
 		all_attributes;
 
 	/** Meta data concerning the destructor of the reflected class
+	 *  EXPERIMENTAL
 	 */
 	typedef meta_class_destructor<Class, VariantTag>
 		destructor;
@@ -118,9 +119,6 @@ struct meta_class<
 	VariantTag
 >
 { };
-
-
-
 
 /** This macro should be included in the definition of every class
  *  with private or protected members, that should be refleccted

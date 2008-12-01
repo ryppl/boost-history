@@ -38,5 +38,15 @@
 		</section>
 		</section>
 	</description>
+        <access name="public">
+        <typedef name="scope">
+                <type><classname>meta_class</classname>&lt;<emphasis>unspecified</emphasis>&gt;</type>
+                <description>
+                        <para>Meta-class describing the scope where the reflected attributes are defined.
+                        The scope is the class that the reflected attributes belong to.
+                        </para>
+                </description>
+        </typedef>
+	</access>
 </class>
 

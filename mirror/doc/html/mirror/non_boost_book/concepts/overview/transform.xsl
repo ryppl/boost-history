@@ -255,6 +255,38 @@
 		</xsl:if>
 	</xsl:template>
 
+
+	<xsl:template name="has-any-member-items-helper">
+		<xsl:param name="concept"/>
+		<xsl:call-template name="has-member-items">
+			<xsl:with-param name="concept" select="$concept"/>
+			<xsl:with-param name="member_kind" select="'member_typedef'"/>
+		</xsl:call-template>
+		<xsl:call-template name="has-member-items">
+			<xsl:with-param name="concept" select="$concept"/>
+			<xsl:with-param name="member_kind" select="'member_function'"/>
+		</xsl:call-template>
+		<xsl:call-template name="has-member-items">
+			<xsl:with-param name="concept" select="$concept"/>
+			<xsl:with-param name="member_kind" select="'free_function'"/>
+		</xsl:call-template>
+		<xsl:call-template name="has-member-items">
+			<xsl:with-param name="concept" select="$concept"/>
+			<xsl:with-param name="member_kind" select="'metafunction'"/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="has-any-member-items">
+		<xsl:param name="concept"/>
+		<xsl:variable name="subresults">
+			<xsl:call-template name="has-any-member-items-helper">
+				<xsl:with-param name="concept" select="$concept"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:value-of select="contains($subresults, 'true')"/>
+	</xsl:template>
+	
+
 	<!-- makes the typedef table -->
 	<xsl:template name="make-typedef-table">
 		<xsl:param name="concept"/>
@@ -336,8 +368,15 @@
 		</xsl:call-template>
 		</div>
 
-		<p>For each type <code><strong>T</strong></code> which is a model of the <xsl:value-of select="$concept"/> concept and for each variable <code><strong>x</strong></code> which is of <code><strong>T</strong></code> type, the following expressions are valid.</p>
-
+		<xsl:variable name="has_expressions">
+			<xsl:call-template name="has-any-member-items">
+				<xsl:with-param name="concept" select="$concept"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:if test="$has_expressions='true'">
+			<p>For each type <code><strong>T</strong></code> which is a model of the <xsl:value-of select="$concept"/> concept and for each variable <code><strong>x</strong></code> which is of <code><strong>T</strong></code> type, the following expressions are valid.</p>
+		</xsl:if>
+	
 		<xsl:call-template name="make-typedef-table">
 			<xsl:with-param name="concept" select="$concept"/>
 		</xsl:call-template>

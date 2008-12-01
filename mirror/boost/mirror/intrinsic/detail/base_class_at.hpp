@@ -28,10 +28,12 @@ namespace detail {
 template <class MetaBaseClasses, class Position>
 struct meta_inheritance_at
 {
-	typedef typename mpl::at<
-		typename MetaBaseClasses::list,
-		Position
-	>::type type;
+	typedef meta_inheritance<
+		typename mpl::at<
+			typename MetaBaseClasses::list,
+			Position
+		>::type 
+	> type;
 };
 
 } // namespace detail

@@ -33,7 +33,10 @@
 template <typename MetaAttribute>
 struct get_attrib_type
 {
-	typedef typename MetaAttribute::type type;
+	typedef typename 
+		MetaAttribute::
+		type::
+		reflected_type type;
 };
 
 void test_main()

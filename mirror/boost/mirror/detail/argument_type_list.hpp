@@ -58,6 +58,14 @@ private:
 	private:
 		typedef type_name_decorator_literals<CharT> lits;
 	public:
+		template <int I>
+		inline void operator()(::boost::mpl::identity< ::boost::mpl::int_<I> >)
+		{
+			static ::std::basic_string<CharT> comma(lits::get(lits::comma()));
+			//TODO: list.append();
+			list.append(comma);
+		}
+
 		template <typename T>
 		inline void operator()(::boost::mpl::identity<T>)
 		{

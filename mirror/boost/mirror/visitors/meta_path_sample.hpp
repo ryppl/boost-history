@@ -110,25 +110,12 @@ namespace detail {
 			print_indent();
 		}
 	
-		template <
-			class Position,
-			class BaseClass,
-			typename AccessSpec, 
-			typename InheritanceSpec
-		>
-		void operator()(meta_inheritance<
-			Position,
-			BaseClass,
-			AccessSpec, 
-			InheritanceSpec
-		> mi) const
+		template < class InheritanceInfo >
+		void operator()(meta_inheritance< InheritanceInfo > mi) const
 		{
 			typedef typename meta_inheritance<
-				Position,
-				BaseClass,
-				AccessSpec, 
-				InheritanceSpec
-			>::meta_base_class mbc;
+				InheritanceInfo
+			>::base_class mbc;
 			cts::bcout() << "|base_class '" << mbc::base_name() << "'|";
 			print_indent();
 		}
