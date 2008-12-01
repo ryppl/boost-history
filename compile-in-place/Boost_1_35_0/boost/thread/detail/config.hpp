@@ -60,7 +60,9 @@
 //
 // Automatically link to the correct build variant where possible.
 //
-#if !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_THREAD_NO_LIB) && !defined(BOOST_THREAD_BUILD_DLL) && !defined(BOOST_THREAD_BUILD_LIB)
+#if !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_THREAD_NO_LIB) && \
+    !defined(BOSST_ALL_COMPILE_IN_PLACE) && !defined(BOOST_THREAD_COMPILE_IN_PLACE) && \
+    !defined(BOOST_THREAD_BUILD_DLL) && !defined(BOOST_THREAD_BUILD_LIB)
 //
 // Tell the autolink to link dynamically, this will get undef'ed by auto_link.hpp
 // once it's done with it: 

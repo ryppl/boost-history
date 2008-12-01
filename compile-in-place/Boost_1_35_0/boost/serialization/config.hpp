@@ -55,6 +55,7 @@
 //  enable automatic library variant selection  ------------------------------// 
 
 #if !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_SERIALIZATION_NO_LIB) \
+&& !defined(BOOST_ALL_COMPILE_IN_PLACE) && !defined(BOOST_SERIALIZATION_COMPILE_IN_PLACE) \
 && !defined(BOOST_SERIALIZATION_SOURCE) \
 && !defined(BOOST_ARCHIVE_SOURCE) && !defined(BOOST_WARCHIVE_SOURCE)
 //

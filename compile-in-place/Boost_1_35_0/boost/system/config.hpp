@@ -53,7 +53,9 @@
 
 //  enable automatic library variant selection  ------------------------------// 
 
-#if !defined(BOOST_SYSTEM_SOURCE) && !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_SYSTEM_NO_LIB)
+#if !defined(BOOST_SYSTEM_SOURCE) && \
+    !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_SYSTEM_NO_LIB) && \
+    !defined(BOOST_ALL_COMPILE_IN_PLACE) && !defined(BOOST_SYSTEM_COMPILE_IN_PLACE)
 //
 // Set the name of our library, this will get undef'ed by auto_link.hpp
 // once it's done with it:

@@ -445,8 +445,9 @@ namespace boost { namespace wave
 //  Auto library naming
 #if BOOST_VERSION >= 103100   
 // auto link features work beginning from Boost V1.31.0
-#if !defined(BOOST_WAVE_SOURCE) && !defined(BOOST_ALL_NO_LIB) && \
-    !defined(BOOST_WAVE_NO_LIB)
+#if !defined(BOOST_WAVE_SOURCE) && \
+    !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_WAVE_NO_LIB) && \
+    !defined(BOOST_ALL_COMPILE_IN_PLACE) && !defined(BOOST_WAVE_COMPILE_IN_PLACE)
 
 #define BOOST_LIB_NAME boost_wave
 

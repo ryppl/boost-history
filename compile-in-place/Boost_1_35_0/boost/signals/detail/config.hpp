@@ -32,7 +32,9 @@
 #endif
 
 // Setup autolinking
-#if !defined(BOOST_SIGNALS_SOURCE) && !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_SIGNALS_NO_LIB)
+#if !defined(BOOST_SIGNALS_SOURCE) && \
+    !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_SIGNALS_NO_LIB) && \
+    !defined(BOOST_ALL_COMPILE_IN_PLACE) && !defined(BOOST_SIGNALS_COMPILE_IN_PLACE)
 #  define BOOST_LIB_NAME boost_signals
 
 #  if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_SIGNALS_DYN_LINK)
