@@ -190,6 +190,11 @@ namespace boost{namespace itl
         }
 
 	private:
+		// The following _suffixed function templates funx_ are implementations
+		// correspoding unsuffixed function templates funx of the base class.
+		// For funx_ want to be used in the base class via derived SubType pointer:
+		// that()->funx_. So they must be either public or made accessible by a
+		// friend declaration:
 		friend class base_type;
 
         bool contains_(const value_type& x)const;
@@ -197,19 +202,8 @@ namespace boost{namespace itl
         template<class Combiner>
         void add_(const value_type&);
 
-        void add_(const value_type& value)
-        { add_<inplace_plus<CodomainT> >(value); }
-
         template<class Combiner>
         void subtract_(const value_type&);
-
-        void subtract_(const value_type& value)//JODO
-        {
-            if(Traits::emits_neutrons)
-                add_<inplace_minus<CodomainT> >(value); 
-            else
-                subtract_<inplace_minus<CodomainT> >(value); 
-        }
 
         void insert_(const value_type& value);
         void erase_(const value_type& value);
@@ -582,7 +576,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 
         interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
-        fill_gap<inplace_plus<CodomainT> >(value_type(leadGap, x_val));
+        fill_gap<Combine<CodomainT> >(value_type(leadGap, x_val));
 
         // only for the first there can be a leftResid: a part of *it left of x
         interval_type leftResid;  fst_itv.left_surplus(leftResid, x_itv);
@@ -597,7 +591,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         {
             interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
-            fill_gap<inplace_plus<CodomainT> >(value_type(endGap, x_val));
+            fill_gap<Combine<CodomainT> >(value_type(endGap, x_val));
         }
         else
         {
@@ -624,7 +618,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         cur_itv = (*it).KEY_VALUE ;            
         x_rest.left_surplus(gap, cur_itv);
-        fill_gap<inplace_plus<CodomainT> >(value_type(gap, x_val));
+        fill_gap<Combine<CodomainT> >(value_type(gap, x_val));
         // shrink interval
         x_rest.left_subtract(cur_itv);
     }
@@ -642,14 +636,14 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 
     interval_type left_gap;
     x_rest.left_surplus(left_gap, cur_itv);
-    fill_gap<inplace_plus<CodomainT> >(value_type(left_gap, x_val));
+    fill_gap<Combine<CodomainT> >(value_type(left_gap, x_val));
 
     interval_type common;
     cur_itv.intersect(common, x_rest);
 
     interval_type end_gap; 
     x_rest.right_surplus(end_gap, cur_itv);
-    fill_gap<inplace_plus<CodomainT> >(value_type(end_gap, x_val));
+    fill_gap<Combine<CodomainT> >(value_type(end_gap, x_val));
 }
 
 

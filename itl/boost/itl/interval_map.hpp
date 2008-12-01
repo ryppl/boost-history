@@ -176,6 +176,11 @@ public:
     }
  
 private:
+	// The following _suffixed function templates funx_ are implementations
+	// correspoding unsuffixed function templates funx of the base class.
+	// For funx_ want to be used in the base class via derived SubType pointer:
+	// that()->funx_. So they must be either public or made accessible by a
+	// friend declaration:
 	friend class base_type;
 
     bool contains_(const value_type& x)const;
@@ -183,19 +188,8 @@ private:
     template<class Combiner>
     void add_(const value_type&);
 
-    void add_(const value_type& value)
-    { add_<Combine<CodomainT> >(value); }
-
     template<class Combiner>
     void subtract_(const value_type&);
-
-    void subtract_(const value_type& value)//JODO
-    {
-        if(Traits::emits_neutrons)
-            add_<inplace_minus<CodomainT> >(value); 
-        else
-            subtract_<inplace_minus<CodomainT> >(value); 
-    }
 
     void insert_(const value_type& value);
     void erase_(const value_type& value);
