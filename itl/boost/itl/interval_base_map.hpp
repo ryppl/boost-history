@@ -417,8 +417,8 @@ public:
 
 private:
     template<class Combiner>
-	SubType& add(const value_type& x, const Combiner& combine) 
-	{ access::add(*that(), x, combine); return *that(); }
+	SubType& add(const value_type& x) 
+	{ that()->template add_<Combiner>(x); return *that(); }
 
 public:
 	//template<class Combiner>
@@ -459,7 +459,8 @@ public:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
     SubType& add(const value_type& x) 
-	{ access::add(*that(), x, Combine<CodomainT>()); return *that(); }
+	{ that()->template add_<Combine<CodomainT> >(x); return *that(); }
+	//CL { access::add(*that(), x, Combine<CodomainT>()); return *that(); }
 //@}
 
 
@@ -538,7 +539,8 @@ public:
     {
 		typedef inverse<Combine,CodomainT>::type InverseCombine;
         if(Traits::emits_neutrons)
-			access::add<value_type,InverseCombine>(*that(), x, InverseCombine()); 
+			that()->template add_<InverseCombine>(x); 
+			//CL access::add<value_type,InverseCombine>(*that(), x, InverseCombine()); 
         else 
 			access::subtract<value_type,InverseCombine>(*that(), x, InverseCombine()); 
     
@@ -1045,11 +1047,9 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine
         {
             section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
             if(is_set<CodomainT>::value)
-                section.that()->add(value_type(common_interval, sectant.CONT_VALUE), 
-				                    inplace_star<CodomainT>());
+                section.that()->template add<inplace_star<CodomainT> >(value_type(common_interval, sectant.CONT_VALUE)); 
             else
-                section.that()->add(value_type(common_interval, sectant.CONT_VALUE),
-				                    Combine<CodomainT>());
+                section.that()->template add<Combine<CodomainT> >(value_type(common_interval, sectant.CONT_VALUE));
         }
     }
 }

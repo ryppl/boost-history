@@ -189,14 +189,16 @@ namespace boost{namespace itl
                 this->_map.insert(*it); 
         }
 
-	protected:
+	private:
+		friend class base_type;
+
         bool contains_(const value_type& x)const;
 
         template<class Combiner>
-        void add_(const value_type&, const Combiner&);
+        void add_(const value_type&);
 
         void add_(const value_type& value)
-        { add_<inplace_plus<CodomainT> >(value, inplace_plus<CodomainT>()); }
+        { add_<inplace_plus<CodomainT> >(value); }
 
         template<class Combiner>
         void subtract_(const value_type&, const Combiner&);
@@ -204,9 +206,9 @@ namespace boost{namespace itl
         void subtract_(const value_type& value)
         {
             if(Traits::emits_neutrons)
-                add_<inplace_minus<CodomainT> >(value, inplace_minus<CodomainT>()); 
+                add_<inplace_minus<CodomainT> >(value); 
             else
-                subtract_<inplace_minus<CodomainT> >(value, inplace_minus<CodomainT>()); 
+                subtract_<inplace_minus<CodomainT> >(value, inplace_minus<CodomainT>() ); 
         }
 
         void insert_(const value_type& value);
@@ -296,7 +298,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 template <typename DomainT, typename CodomainT, class Traits, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
     template<class Combiner>
 void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
-    ::add_(const value_type& x, const Combiner& combine)
+    ::add_(const value_type& x)
 {
     const interval_type& x_itv = x.KEY_VALUE;
 
