@@ -7,6 +7,11 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 // $Id$
 
+// The code must be set up for in-place compilation
+#if !defined(BOOST_ALL_COMPILE_IN_PLACE) && !defined(BOOST_SIGNALS_COMPILE_IN_PLACE)
+#  error "this file should only be included when compiling Boost.Signals in place"
+#endif
+
 // This file must not be included more than once. Note that this 'once' is
 // not per translation unit but per binary! Never include this in a header!
 #ifdef BOOST_SIGNALS_COMPILE_IN_PLACE_CPP_INCLUDED
