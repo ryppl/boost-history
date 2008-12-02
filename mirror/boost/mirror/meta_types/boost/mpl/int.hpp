@@ -34,7 +34,7 @@ struct meta_type< ::boost::mpl::int_<I> >
 : detail::static_template_name<
 	BOOST_MIRRORED_NAMESPACE(::boost::mpl_),
 	detail::meta_type_boost_mpl_int_ , 
-	mpl::vector1< ::boost::mpl::int_<I> >
+	mpl::vector1< detail::integer_template_param_placeholder<I> >
 >
 {
 	typedef ::boost::mpl::int_<I> reflected_type;

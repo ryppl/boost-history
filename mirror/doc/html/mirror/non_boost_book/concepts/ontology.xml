@@ -580,9 +580,13 @@
 		<member_typedef concept="MetaClassAttributes" name="container">
 			<desc>The sequence of MetaClassAttribute(s) that this MetaClassAttribute belongs to.</desc>
 		</member_typedef>
-		<member_typedef concept="MetaType" name="type">
-			<desc>The MetaType reflecting the type of the attribute.</desc>
+		<member_typedef concept="MetaClass" name="type">
+			<desc>The MetaClass reflecting the type of the attribute.</desc>
 		</member_typedef>
+		<member_typedef concept="MetaClassAttributeTraits" name="traits">
+			<desc>Additional properties of the attribute.</desc>
+		</member_typedef>
+
 		<member_function concept="Type" name="get">
 			<desc>Generic attribute value getter. Returns the value of the reflected class attribute when given an instance of the class that the attribute belongs to.</desc>
 			<fn_param concept="Class" name="instance"/>
@@ -629,9 +633,6 @@
 		</member_typedef>
 		<member_typedef concept="MplBooleanIntegralConstant" name="is_mutable">
 			<desc>Type that indicates whether the class member attribute is mutable.</desc>
-		</member_typedef>
-		<member_typedef concept="TypedefOrTypeSelector" name="meta_type_selector">
-			<desc>A type that can be reflected to obtain the proper MetaType for the attribute's type. This selector allows to distinguish typedefined types.</desc>
 		</member_typedef>
 	</concept>
 

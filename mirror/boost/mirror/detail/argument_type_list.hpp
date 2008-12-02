@@ -40,6 +40,9 @@ struct template_args_type_list_wo_nulls
 	>::type type;
 };
 
+template <int I>
+struct integer_template_param_placeholder { };
+
 /** Helper class implementing a function that can be used 
  *  to append the list of type names to the given string.
  */
@@ -59,7 +62,7 @@ private:
 		typedef type_name_decorator_literals<CharT> lits;
 	public:
 		template <int I>
-		inline void operator()(::boost::mpl::identity< ::boost::mpl::int_<I> >)
+		inline void operator()(::boost::mpl::identity< integer_template_param_placeholder<I> >)
 		{
 			static ::std::basic_string<CharT> comma(lits::get(lits::comma()));
 			//TODO: list.append();
