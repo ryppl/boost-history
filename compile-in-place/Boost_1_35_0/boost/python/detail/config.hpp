@@ -60,11 +60,17 @@
  ****************************************************************************/
 
 // backwards compatibility:
+/* deactivate(TODO)
+The problem here is that these lines are utter nonsense. The check for
+BOOST_PYTHON_STATIC_LIB might not be wrong, but what follows sure is. It
+should check all four BOOST_{PYTHON,ALL}_{DYNAMIC_LIB,STATIC_LINK} first
+and only if neither is defined check BOOST_PYTHON_STATIC_LIB additionally.
 #ifdef BOOST_PYTHON_STATIC_LIB
 #  define BOOST_PYTHON_STATIC_LINK
 # elif !defined(BOOST_PYTHON_DYNAMIC_LIB)
 #  define BOOST_PYTHON_DYNAMIC_LIB
 #endif
+*/
 
 #if defined(BOOST_PYTHON_DYNAMIC_LIB)
 
