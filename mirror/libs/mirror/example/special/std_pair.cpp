@@ -32,7 +32,7 @@ int main(void)
 	//
 	//
 	typedef pair<const int*, double [654][321]> T1;
-	typedef pair<float, const ::std::string&> T2;
+	typedef pair<float, const ::std::string*> T2;
 	typedef pair<T1 const volatile, T2 volatile const> T3;
 	typedef pair<T2, T1 volatile> T4;
 	typedef T4 (T)(const T1&, T2, volatile T3*);
