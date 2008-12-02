@@ -131,7 +131,7 @@ namespace boost{namespace itl
         class Traits = itl::neutron_absorber,
         template<class,ITL_COMPARE>class Interval = itl::interval,
         ITL_COMPARE Compare  = std::less,
-        ITL_COMBINE Combine  = itl::inplace_plus,
+        ITL_COMBINE Combine  = ITL_INPLACE_PLUS(CodomainT),
         ITL_ALLOC   Alloc    = std::allocator
     >
     class split_interval_map:
@@ -576,7 +576,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 
         interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
-        fill_gap<Combine<CodomainT> >(value_type(leadGap, x_val));
+        fill_gap<codomain_combine>(value_type(leadGap, x_val));
 
         // only for the first there can be a leftResid: a part of *it left of x
         interval_type leftResid;  fst_itv.left_surplus(leftResid, x_itv);
@@ -591,7 +591,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         {
             interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
-            fill_gap<Combine<CodomainT> >(value_type(endGap, x_val));
+            fill_gap<codomain_combine>(value_type(endGap, x_val));
         }
         else
         {
@@ -618,7 +618,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         cur_itv = (*it).KEY_VALUE ;            
         x_rest.left_surplus(gap, cur_itv);
-        fill_gap<Combine<CodomainT> >(value_type(gap, x_val));
+        fill_gap<codomain_combine>(value_type(gap, x_val));
         // shrink interval
         x_rest.left_subtract(cur_itv);
     }
@@ -636,14 +636,14 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 
     interval_type left_gap;
     x_rest.left_surplus(left_gap, cur_itv);
-    fill_gap<Combine<CodomainT> >(value_type(left_gap, x_val));
+    fill_gap<codomain_combine>(value_type(left_gap, x_val));
 
     interval_type common;
     cur_itv.intersect(common, x_rest);
 
     interval_type end_gap; 
     x_rest.right_surplus(end_gap, cur_itv);
-    fill_gap<Combine<CodomainT> >(value_type(end_gap, x_val));
+    fill_gap<codomain_combine>(value_type(end_gap, x_val));
 }
 
 

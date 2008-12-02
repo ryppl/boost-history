@@ -105,10 +105,9 @@ namespace boost{namespace itl
                 {
                     result.insert(*x1_);
                     if(is_set<typename MapType::data_type>::value)
-                        result.template add<inplace_star>(*x2_); //MEMO template cast for gcc
+						result.template add<MapType::data_intersect>(*x2_); //MEMO template cast for gcc
                     else
-                        result.template add<inplace_plus>(*x2_);
-                        //result.template add<inplace_identity>(*x2_);
+                        result.template add<MapType::data_combine>(*x2_);//JODO URG
                 }
                 x1_++;
             }

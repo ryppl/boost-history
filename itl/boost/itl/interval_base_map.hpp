@@ -137,7 +137,7 @@ template
     class Traits = itl::neutron_absorber,
     template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_COMPARE Compare  = std::less,
-    ITL_COMBINE Combine  = itl::inplace_plus,
+    ITL_COMBINE Combine  = ITL_INPLACE_PLUS(CodomainT),
     ITL_ALLOC   Alloc    = std::allocator
 >
 #ifdef USE_CONCEPTS
@@ -186,7 +186,8 @@ public:
     /// Comparison functor for domain values
     typedef Compare<DomainT> domain_compare;
     /// Combine functor for codomain values
-    typedef Combine<DomainT> codomain_combine;
+    //typedef Combine<CodomainT> codomain_combine;
+    typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT) codomain_combine;
     /// Comparison functor for intervals which are keys as well
     typedef exclusive_less<interval_type> interval_compare;
 
@@ -225,6 +226,58 @@ public:
     typedef typename itl::map<DomainT,CodomainT,
                               Traits,Compare,Combine,Alloc> atomized_type;
 //@}
+
+private:
+	struct access : SubType
+	{
+		static bool contains(const SubType& subject, const typename SubType::value_type& operand)
+		{
+			 bool (SubType::*fp)(const typename SubType::value_type&)const = &access::contains_;
+			 return (subject.*fp)(operand);
+		}
+
+		template<class OperandT, class Combiner>
+		static void add(SubType& subject, const OperandT& operand, const Combiner& combine)
+		{
+			 void (SubType::*fp)(const OperandT&, const Combiner&) = &access::add_;
+			 (subject.*fp)(operand, combine);
+		}
+
+		template<class OperandT, class Combiner>
+		static void subtract(SubType& subject, const OperandT& operand, const Combiner& combine)
+		{
+			 void (SubType::*fp)(const OperandT&, const Combiner&) = &access::subtract_;
+			 (subject.*fp)(operand, combine);
+		}
+
+		template<class OperandT>
+		static void add(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::add_;
+			 (subject.*fp)(operand);
+		}
+
+		template<class OperandT>
+		static void subtract(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::subtract_;
+			 (subject.*fp)(operand);
+		}
+
+		template<class OperandT>
+		static void insert(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::insert_;
+			 (subject.*fp)(operand);
+		}
+
+		template<class OperandT>
+		static void erase(SubType& subject, const OperandT& operand)
+		{
+			 void (SubType::*fp)(const OperandT&) = &access::erase_;
+			 (subject.*fp)(operand);
+		}
+	};
 
 public:
     inline static bool has_symmetric_difference() 
@@ -394,7 +447,7 @@ public:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
     SubType& add(const value_type& x) 
-	{ that()->template add_<Combine<CodomainT> >(x); return *that(); }
+	{ that()->template add_<codomain_combine>(x); return *that(); }
 //@}
 
 
@@ -495,7 +548,7 @@ public:
     */
     SubType& insert(const base_pair_type& x) 
     { 
-		that()->insert_(value_type(interval_type(x.key), x.data) ); 
+		access::insert(*that(), value_type(interval_type(x.key), x.data) ); 
         return *that();
     }
 
@@ -511,7 +564,7 @@ public:
         \c insert(x) is equivalent to \c add<inplace_identity>(x)
     */
     SubType& insert(const value_type& x)
-	{ that()->insert_(x); return *that(); }
+	{ access::insert(*that(), x); return *that(); }
 
     /// Erase a base value pair from the map
     /** Erase a base value pair <tt>x=(k,y)</tt>.
@@ -981,7 +1034,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Interval,Compare,Combine
             if(is_set<CodomainT>::value)
                 section.that()->template add<inplace_star<CodomainT> >(value_type(common_interval, sectant.CONT_VALUE)); 
             else
-                section.that()->template add<Combine<CodomainT> >(value_type(common_interval, sectant.CONT_VALUE));
+                section.that()->template add<codomain_combine>(value_type(common_interval, sectant.CONT_VALUE));
         }
     }
 }

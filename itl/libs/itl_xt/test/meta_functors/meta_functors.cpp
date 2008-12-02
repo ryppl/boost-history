@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 #include <set>
+#include <vector>
 #include <boost/itl/functors.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -99,13 +100,67 @@ private:
 
 typedef PairSet1<int, std::less<_> > PairSet1_int;
 
-template<template<class>class Functor, class Type> struct inverse;
-
-template<class Type> 
-struct inverse<itl::inplace_plus, Type>
+template<class T, 
+         template<class,class>class Vec, 
+         class A = std::allocator<T> >
+class my_class
 {
-	typedef itl::inplace_minus<Type> type;
+public:
+	typedef Vec<T,A> vec_type;
+	my_class():_vec(1,static_cast<T>(42))
+	{ std::cout<<"Aswer: "<<_vec[0]<<endl; }
+private:
+	vec_type _vec;
 };
+
+void template_default_problem()
+{
+	my_class<double, std::vector> myInst;
+}
+
+/*
+template<class T, 
+         class C = std::less<T>, 
+         class A = std::allocator<T> >
+class interval_set
+{
+public:
+  typedef 
+	set<interval<T>, 
+        exclusive_less<interval<T> >
+		A::allocator_template<interval<T> >//error 
+	   > impl_type; // ^^^^ No language support
+
+  typedef set<T,C,A> atomized_type;
+
+  // Return the interval set as a set of elements 
+  void atomize(atomized_type& atomized);
+}
+
+template<
+  class T, 
+  class C = std::less<T>, 
+  template<class>class A = std::allocator 
+>
+class my_interval_set
+{
+public:
+  typedef 
+	set<interval<T>, 
+        exclusive_less<interval<T> >
+		A<interval<T> > //ok now 
+	   > impl_type;
+
+  typedef 
+    set<T,C,
+        A<T> //Same allocator,
+             //different instances
+       > atomized_type;
+
+  // Return the interval set as a set of elements 
+  void atomize(atomized_type& atomized);
+}
+*/
 
 int main()
 {
@@ -119,11 +174,7 @@ int main()
 
 	PairSet1_int ps1;
 
-	int x = 0, y = 0;
-	itl::inplace_plus<int>()(x,2);
-	inverse<itl::inplace_plus,int>::type()(y,2);
-	cout << "x=" << x << endl;
-	cout << "y=" << y << endl;
+	template_default_problem();
 
     return 0;
 }

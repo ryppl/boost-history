@@ -104,7 +104,7 @@ namespace boost{namespace itl
         typename DataT, 
         class Traits = itl::neutron_absorber,
         ITL_COMPARE Compare = std::less,
-        ITL_COMBINE Combine = itl::inplace_plus,
+        ITL_COMBINE Combine = ITL_INPLACE_PLUS(DataT),
         ITL_ALLOC   Alloc   = std::allocator 
     >
     class map: private std::map<KeyT, DataT, Compare<KeyT>, 
@@ -120,7 +120,6 @@ namespace boost{namespace itl
 
         typedef itl::map<KeyT,DataT,itl::neutron_absorber,Compare,Combine,Alloc> 
                                                                neutron_absorber_type;
-
         typedef Traits traits;
 
     public:
@@ -131,8 +130,10 @@ namespace boost{namespace itl
         typedef DataT                                      codomain_type;
         typedef std::pair<const KeyT, DataT>               value_type;
         typedef Compare<KeyT>                              key_compare;
-        typedef Combine<DataT>                             data_combine;
-        typedef typename base_type::value_compare          value_compare;
+        typedef ITL_COMBINE_CODOMAIN(Combine,DataT)        data_combine;
+		typedef typename inverse<Combine,DataT>::type      inverse_data_combine;
+		typedef inplace_star<DataT>                        data_intersect;
+		typedef typename base_type::value_compare          value_compare;
 
     public:
         typedef typename base_type::pointer                pointer;
@@ -217,9 +218,9 @@ namespace boost{namespace itl
             not exist in the map.    
             If \c value_pairs's key value exists in the map, it's data
             value is added to the data value already found in the map. */
-        iterator add(const value_type& value_pair) { return add<Combine>(value_pair); }
+        iterator add(const value_type& value_pair) { return add<data_combine>(value_pair); }
 
-        template<ITL_COMBINE Combiner>
+        template<class Combiner>
         iterator add(const value_type& value_pair);
 
         iterator operator += (const value_type& value_pair) { return add(value_pair); }
@@ -238,7 +239,7 @@ namespace boost{namespace itl
         { 
             if(Traits::emits_neutrons)
                 const_FORALL(typename map, it_, x2)
-                    this->add<inplace_minus>(*it_);
+                    this->add<inverse_data_combine>(*it_);
             else Set::subtract(*this, x2); 
             return *this; 
         }
@@ -366,7 +367,7 @@ namespace boost{namespace itl
     }
 
     template <typename KeyT, typename DataT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-        template <ITL_COMBINE Combiner>
+        template <class Combiner>
     typename map<KeyT,DataT,Traits,Compare,Combine,Alloc>::iterator
         map<KeyT,DataT,Traits,Compare,Combine,Alloc>::add(const value_type& val)
     {
@@ -377,7 +378,7 @@ namespace boost{namespace itl
         if(Traits::emits_neutrons)
         {
             DataT added_val = DataT();
-            Combiner<DataT>()(added_val, val.CONT_VALUE);
+            Combiner()(added_val, val.CONT_VALUE);
             insertion = insert(value_type(val.KEY_VALUE, added_val));
         }
         else // Existential case
@@ -388,7 +389,7 @@ namespace boost{namespace itl
         else
         {
             iterator it = insertion.ITERATOR;
-            Combiner<DataT>()((*it).CONT_VALUE, val.CONT_VALUE);
+            Combiner()((*it).CONT_VALUE, val.CONT_VALUE);
 
             if(Traits::absorbs_neutrons && (*it).CONT_VALUE == DataT())
             {
@@ -425,7 +426,7 @@ namespace boost{namespace itl
         map<KeyT,DataT,Traits,Compare,Combine,Alloc>::subtract(const value_type& val)
     {
         if(Traits::emits_neutrons)
-            return add<inplace_minus>(val);
+            return add<inverse_data_combine>(val);
         else
         {
             iterator it_ = find(val.KEY_VALUE);
