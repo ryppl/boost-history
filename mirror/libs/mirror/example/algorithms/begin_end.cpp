@@ -49,10 +49,11 @@ typedef is_even_attrib_templ<mpl::int_<1> > is_odd_attrib;
 
 struct is_integral_attrib
 {
-
 	template <class MetaAttribute>
 	struct apply : is_integral<
-		typename MetaAttribute::type
+		typename MetaAttribute::
+			type::
+			reflected_type
 	>::type { };
 };
 

@@ -31,6 +31,11 @@ namespace detail {
 template <typename T>
 struct is_typelist_null_type : ::boost::false_type { };
 
+// mpl::void_ is a type_list null type
+template <>
+struct is_typelist_null_type< ::boost::mpl::void_ >
+	: ::boost::true_type { };
+
 template <typename ArgTypeList>
 struct template_args_type_list_wo_nulls
 {

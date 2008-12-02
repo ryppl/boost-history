@@ -36,6 +36,13 @@ struct deref
 
 namespace detail {
 
+	/** This is the declaration of the base iterator template.
+	 *  Every iterator knows the reflected type and the variant,
+	 *  the meta-objec-sequence and the current position,
+	 *  the beginning position and the end position,
+	 *  the direction of the iteraton, an unary predicate
+	 *  and a meta-object selector
+	 */
 	template <
 		class ReflectedType, 
 		class VariantTag,
@@ -49,12 +56,15 @@ namespace detail {
 	>
 	struct meta_object_iterator_base_templ;
 
+	/** This allows to get the initial or the next iterator.
+	 */
 	template <
 		class ReflectedType, 
 		class VariantTag,
 		class MetaObjectSequence,
-		class DummyPosition,
+		class CurrentPosition,
 		class BeginPos,
+		class BeforeEndPos,
 		class EndPos,
 		class Direction,
 		class UnaryPredicate,
@@ -68,7 +78,7 @@ namespace detail {
 			VariantTag,
 			MetaObjectSequence,
 			typename mpl::int_<mpl::plus<
-				DummyPosition,
+				CurrentPosition,
 				mpl::times<
 					Direction,
 					mpl::int_<I>
@@ -97,11 +107,62 @@ namespace detail {
 		> ::type type;
 	};
 
+
 	template <
 		class ReflectedType, 
 		class VariantTag,
 		class MetaObjectSequence,
 		class BeginPos,
+		class BeforeEndPos,
+		class EndPos,
+		class Direction,
+		class UnaryPredicate,
+		class Selector,
+		int I
+	>
+	struct meta_object_iterator_base_templ_get_ioni_apply<
+		ReflectedType, 
+		VariantTag,
+		MetaObjectSequence,
+		BeforeEndPos,
+		BeginPos,
+		BeforeEndPos,
+		EndPos,
+		Direction,
+		UnaryPredicate,
+		Selector,
+		I
+	>
+	{
+		/** if we are on the last element right before end
+		 *  don't apply the predicate on the result of the
+		 *  next iterator.
+		 */
+		typedef meta_object_iterator_base_templ<
+			ReflectedType, 
+			VariantTag,
+			MetaObjectSequence,
+			typename mpl::int_<mpl::plus<
+				BeforeEndPos,
+				mpl::times<
+					Direction,
+					mpl::int_<I>
+				>
+			>::value>,
+			BeginPos,
+			EndPos,
+			Direction,
+			UnaryPredicate,
+			Selector
+		> type;
+	};
+
+	template <
+		class ReflectedType, 
+		class VariantTag,
+		class MetaObjectSequence,
+		class BeginPos,
+		class BeforeEndPos,
 		class EndPos,
 		class Direction,
 		class UnaryPredicate,
@@ -114,6 +175,7 @@ namespace detail {
 		MetaObjectSequence,
 		EndPos,
 		BeginPos,
+		BeforeEndPos,
 		EndPos,
 		Direction,
 		UnaryPredicate,
@@ -179,14 +241,14 @@ namespace detail {
 		// the current iterator getter
 		struct get_this_iterator
 		{
-			template <typename DummyPosition>
+			template <typename CurrentPosition>
 			struct apply
 			{
 				typedef meta_object_iterator_base_templ<
 					ReflectedType, 
 					VariantTag,
 					MetaObjectSequence,
-					DummyPosition,
+					CurrentPosition,
 					BeginPos,
 					EndPos,
 					Direction,
@@ -199,7 +261,7 @@ namespace detail {
 		// the prior iterator getter
 		struct get_prior_iterator
 		{
-			template <typename DummyPosition>
+			template <typename CurrentPosition>
 			struct apply
 			{
 				typedef meta_object_iterator_base_templ<
@@ -207,7 +269,7 @@ namespace detail {
 					VariantTag,
 					MetaObjectSequence,
 					typename mpl::int_<mpl::minus<
-						DummyPosition,
+						CurrentPosition,
 						mpl::times<
 							Direction,
 							mpl::int_<1>
@@ -227,14 +289,25 @@ namespace detail {
 		template <int I>
 		struct get_initial_or_next_iterator
 		{
+			typedef typename mpl::int_<
+				mpl::minus<
+					EndPos,
+					mpl::times<
+						Direction,
+						mpl::int_<1>
+					>
+				>::value
+			>::type before_end_pos;
 
-			template <typename DummyPosition>
+
+			template <typename CurrentPosition>
 			struct apply : meta_object_iterator_base_templ_get_ioni_apply<
 				ReflectedType, 
 				VariantTag,
 				MetaObjectSequence,
-				DummyPosition,
+				CurrentPosition,
 				BeginPos,
+				before_end_pos,
 				EndPos,
 				Direction,
 				UnaryPredicate,

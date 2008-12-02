@@ -19,22 +19,22 @@ namespace test {
 namespace feature {
 namespace detail {
 
-struct foo_impl;
+struct foo_impl { };
 
 } // namespace detail
 
-struct foo;
+struct foo { };
 
 } // namespace feature
 
-struct bar;
+struct bar { };
 
 typedef feature::foo foobar;
 
 } // namespace test
 
 // type on the global scope
-struct baz;
+struct baz { };
 
 namespace boost { 
 namespace mirror {
