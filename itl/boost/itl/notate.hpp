@@ -77,18 +77,18 @@ namespace boost{namespace itl
 // (4) Being able to check template template parameter variants against
 //     template type parameter variants.
 
-#define ITL_USE_COMBINE_TEMPLATE
+//#define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 
 //------------------------------------------------------------------------------
 #define ITL_COMPARE  template<class>class
 #define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
 
 //------------------------------------------------------------------------------
-#ifdef ITL_USE_COMBINE_TEMPLATE
+#ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 #define ITL_COMBINE  template<class>class
 #define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 
 #define ITL_INPLACE_PLUS(codomain_type) itl::inplace_plus 
-#else
+#else//ITL_USE_COMBINE_TEMPLATE_TYPE
 #define ITL_COMBINE  class
 #define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
 #define ITL_INPLACE_PLUS(codomain_type) itl::inplace_plus<codomain_type> 

@@ -226,59 +226,7 @@ public:
     typedef typename itl::map<DomainT,CodomainT,
                               Traits,Compare,Combine,Alloc> atomized_type;
 //@}
-
-private:
-	struct access : SubType
-	{
-		static bool contains(const SubType& subject, const typename SubType::value_type& operand)
-		{
-			 bool (SubType::*fp)(const typename SubType::value_type&)const = &access::contains_;
-			 return (subject.*fp)(operand);
-		}
-
-		template<class OperandT, class Combiner>
-		static void add(SubType& subject, const OperandT& operand, const Combiner& combine)
-		{
-			 void (SubType::*fp)(const OperandT&, const Combiner&) = &access::add_;
-			 (subject.*fp)(operand, combine);
-		}
-
-		template<class OperandT, class Combiner>
-		static void subtract(SubType& subject, const OperandT& operand, const Combiner& combine)
-		{
-			 void (SubType::*fp)(const OperandT&, const Combiner&) = &access::subtract_;
-			 (subject.*fp)(operand, combine);
-		}
-
-		template<class OperandT>
-		static void add(SubType& subject, const OperandT& operand)
-		{
-			 void (SubType::*fp)(const OperandT&) = &access::add_;
-			 (subject.*fp)(operand);
-		}
-
-		template<class OperandT>
-		static void subtract(SubType& subject, const OperandT& operand)
-		{
-			 void (SubType::*fp)(const OperandT&) = &access::subtract_;
-			 (subject.*fp)(operand);
-		}
-
-		template<class OperandT>
-		static void insert(SubType& subject, const OperandT& operand)
-		{
-			 void (SubType::*fp)(const OperandT&) = &access::insert_;
-			 (subject.*fp)(operand);
-		}
-
-		template<class OperandT>
-		static void erase(SubType& subject, const OperandT& operand)
-		{
-			 void (SubType::*fp)(const OperandT&) = &access::erase_;
-			 (subject.*fp)(operand);
-		}
-	};
-
+	
 public:
     inline static bool has_symmetric_difference() 
     { return is_set<codomain_type>::value || !traits::absorbs_neutrons || traits::emits_neutrons; }
@@ -548,7 +496,7 @@ public:
     */
     SubType& insert(const base_pair_type& x) 
     { 
-		access::insert(*that(), value_type(interval_type(x.key), x.data) ); 
+		that()->insert(value_type(interval_type(x.key), x.data)); 
         return *that();
     }
 
@@ -564,7 +512,7 @@ public:
         \c insert(x) is equivalent to \c add<inplace_identity>(x)
     */
     SubType& insert(const value_type& x)
-	{ access::insert(*that(), x); return *that(); }
+	{ that()->insert_(x); return *that(); }
 
     /// Erase a base value pair from the map
     /** Erase a base value pair <tt>x=(k,y)</tt>.

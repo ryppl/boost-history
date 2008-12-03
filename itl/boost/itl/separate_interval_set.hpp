@@ -165,7 +165,9 @@ public:
             this->_set.insert(*it); 
     }
 
-protected:
+private:
+	friend class base_type;
+
     /// Does the set contain the interval  <tt>x</tt>?
     bool contains_(const interval_type& x)const;
 
