@@ -162,6 +162,7 @@
 		08AA90690EAD46A000409A2E /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08AB471E0EE72D7F0068375D /* io_component.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = io_component.hpp; sourceTree = "<group>"; };
 		08AB471F0EE72D940068375D /* test_io_component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_io_component.cpp; sourceTree = "<group>"; };
+		08AB47EC0EE73B1E0068375D /* my_ports_with_context.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_ports_with_context.hpp; sourceTree = "<group>"; };
 		08AB81AA0EC7A1F700A2B98A /* traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = traits.hpp; sourceTree = "<group>"; };
 		08AB81AB0EC7A20200A2B98A /* static_vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_vector.hpp; sourceTree = "<group>"; };
 		08AB81BB0EC7A50200A2B98A /* test_static_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_static_vector.cpp; sourceTree = "<group>"; };
@@ -383,7 +384,6 @@
 			isa = PBXGroup;
 			children = (
 				08D6B0BA0EDE06A8005821A8 /* test_entities.cpp */,
-				08B3CC220EC8B7D3002D2124 /* my_framework_with_context.hpp */,
 				08A77B060E4FC58D00B8793E /* Jamfile */,
 				08DD9DFA0E7B22DD008DC46A /* test_default_framework_of.cpp */,
 				08B8F1D00E513569000545B8 /* test_framework.cpp */,
@@ -395,7 +395,9 @@
 				08982F6D0E8C5F8F008C1918 /* test_port_binary_operation.cpp */,
 				0826E32F0EA53E360090AB4E /* test_operation.cpp */,
 				089A28B10E8D96F2000FCCC9 /* my_framework.hpp */,
+				08B3CC220EC8B7D3002D2124 /* my_framework_with_context.hpp */,
 				089A28B50E8D9772000FCCC9 /* my_ports.hpp */,
+				08AB47EC0EE73B1E0068375D /* my_ports_with_context.hpp */,
 				089A28D80E8D99BC000FCCC9 /* my_entity.hpp */,
 				0826E2DC0EA52A850090AB4E /* my_connect.hpp */,
 				08AB81BF0EC7A52F00A2B98A /* my_static_vector.hpp */,

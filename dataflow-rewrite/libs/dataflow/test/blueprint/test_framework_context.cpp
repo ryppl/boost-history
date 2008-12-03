@@ -7,14 +7,14 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/blueprint/framework_object.hpp>
+#include <boost/dataflow/blueprint/framework_context.hpp>
 #include <boost/dataflow/blueprint/operation_adapter.hpp>
 #include <boost/dataflow/blueprint/port_binary_operation.hpp>
 
 #include "my_blueprint_ports.hpp"
 #include "../generic/my_connect.hpp"
 
-#include "../generic/my_framework_with_object.hpp"
+#include "../generic/my_framework_with_context.hpp"
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -25,7 +25,7 @@ namespace df = boost::dataflow;
 
 BOOST_AUTO_TEST_CASE( test ) 
 {
-    df::blueprint::framework_object<my_blueprint_framework> object;
+    df::blueprint::framework_context<my_blueprint_framework> object;
     
     object.register_operation<my_port_producer, my_port_consumer, connect>();
     BOOST_CHECK((object.has_registered_operation<my_port_producer, my_port_consumer, connect>()));
@@ -42,9 +42,9 @@ BOOST_AUTO_TEST_CASE( test )
 
 BOOST_AUTO_TEST_CASE( test_framework_with_object ) 
 {
-    typedef df::blueprint::framework<my_framework_with_object> my_blueprint_framework_with_object;
+    typedef df::blueprint::framework<my_framework_with_context> my_blueprint_framework_with_object;
     
-    df::blueprint::framework_object<my_blueprint_framework_with_object> object;
+    df::blueprint::framework_context<my_blueprint_framework_with_object> object;
 
     object.object();
 }

@@ -6,32 +6,32 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-#ifndef BOOST__DATAFLOW__TEST__GENERIC__MY_PORT_HPP
-#define BOOST__DATAFLOW__TEST__GENERIC__MY_PORT_HPP
+#ifndef BOOST__DATAFLOW__TEST__GENERIC__MY_PORTS_WITH_CONTEXT_HPP
+#define BOOST__DATAFLOW__TEST__GENERIC__MY_PORTS_WITH_CONTEXT_HPP
 
 #include <boost/dataflow/generic/port/port.hpp>
 
-#include "my_framework.hpp"
+#include "my_framework_with_context.hpp"
 
 namespace df=boost::dataflow;
 
-typedef df::port_traits<df::ports::producer, my_framework> my_port_producer_traits;
+typedef df::port_traits<df::ports::producer_consumer, my_framework_with_context> my_port_with_context_traits;
 
-struct my_port_producer : public df::port<my_port_producer_traits>
+struct my_port_with_context : public df::port<my_port_with_context_traits>
 {
-    my_port_producer()
+    my_port_with_context(my_object)
         : int_value(0)
         , double_value(0)
     {}
-    my_port_producer(int i)
+    my_port_with_context(my_object, int i)
         : int_value(i)
         , double_value(0)
     {}
-    my_port_producer(double d)
+    my_port_with_context(my_object, double d)
         : int_value(0)
         , double_value(d)
     {}    
-    my_port_producer(int i, double d)
+    my_port_with_context(my_object, int i, double d)
         : int_value(i)
         , double_value(d)
     {}    
@@ -40,9 +40,4 @@ struct my_port_producer : public df::port<my_port_producer_traits>
     double double_value;
 };
 
-typedef df::port_traits<df::ports::consumer, my_framework> my_port_consumer_traits;
-
-struct my_port_consumer : public df::port<my_port_consumer_traits>
-{};
-
-#endif // BOOST__DATAFLOW__TEST__GENERIC__MY_PORT_HPP
+#endif // BOOST__DATAFLOW__TEST__GENERIC__MY_PORTS_WITH_CONTEXT_HPP

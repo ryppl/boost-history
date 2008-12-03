@@ -12,6 +12,7 @@
 
 #include <boost/dataflow/blueprint/framework_entity.hpp>
 #include <boost/dataflow/blueprint/framework_context.hpp>
+#include <boost/dataflow/utility/is_type.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -59,6 +60,7 @@ class framework_entity_adapter<BlueprintFramework, EntityOrRef, Base,
     typename enable_if<typename BlueprintFramework::framework_has_object>::type>
     : public Base
 {
+    typedef typename is_reference<EntityOrRef>::type is_reference;
 public:
     typedef typename remove_reference<EntityOrRef>::type entity_type;
     
@@ -66,18 +68,28 @@ public:
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object())
     {}
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, entity_type &t)
+        : Base(fo, typeid(m_entity))
+        , m_entity(t)
+    {}
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const entity_type &t)
+        : Base(fo, typeid(m_entity))
+        , m_entity(t)
+    {}
     template<typename T>
     framework_entity_adapter(framework_context<BlueprintFramework> &fo, const T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object(), t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t,
+        typename disable_if<mpl::and_<utility::is_type<T>, is_reference> >::type* dummy = 0)
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object(), t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const entity_type &t)
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t,
+        typename enable_if<mpl::and_<utility::is_type<T>, is_reference> >::type* dummy = 0)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}

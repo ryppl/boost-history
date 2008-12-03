@@ -16,7 +16,7 @@
 struct my_object
 {};
 
-struct my_framework_with_object
+struct my_framework_with_context
     : public df::framework<void, my_object>
 {};
 
