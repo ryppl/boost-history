@@ -270,11 +270,18 @@ remove_edges(undirected_graph<VL,EL,VS,ES,IS>& g,
              typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor u,
              typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
 {
-    // There doesn't seem to be a very clean implementation other than to
-    // iterate over all the incident edges of u, find the corresponding edges
-    // in v, and then erase all of the edge descriptors.
+    // Remove all edges u connected to v, while erasing the corresponding edge
+    // from the edge set. Then the the same for v.
     incs::erase_all(vs::edges(g.v, u), v, detail::erase_edges(g.e));
     incs::erase_all(vs::edges(g.v, v), u);
+}
+
+/** Remove all edges incident to the given vertex. */
+template <typename VL, typename EL, typename VS, typename ES, typename IS>
+inline void
+remove_edges(undirected_graph<VL,EL,VS,ES,IS>& g,
+             typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
+{
 }
 
 /** Return the number of edges in the graph. */
