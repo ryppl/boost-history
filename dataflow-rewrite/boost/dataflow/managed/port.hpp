@@ -10,6 +10,7 @@
 #include <boost/dataflow/generic/port.hpp>
 #include <boost/dataflow/managed/component.hpp>
 #include <boost/dataflow/managed/support.hpp>
+#include <boost/dataflow/managed/network.hpp>
 #include <set>
 #include <stdexcept>
 

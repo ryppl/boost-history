@@ -13,6 +13,7 @@
 #include <boost/dataflow/blueprint/framework_entity_adapter.hpp>
 #include <boost/dataflow/blueprint/port_adapter.hpp>
 #include <boost/dataflow/blueprint/vector.hpp>
+#include <boost/dataflow/generic/entities.hpp>
 
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
