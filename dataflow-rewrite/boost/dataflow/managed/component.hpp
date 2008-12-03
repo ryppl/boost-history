@@ -14,7 +14,7 @@ class component
 {
 public:
     component(network &network_context);
-    virtual ~component(){}
+    virtual ~component();
     network &network_context()
     {   return m_network_context; }
     virtual void invoke(){};

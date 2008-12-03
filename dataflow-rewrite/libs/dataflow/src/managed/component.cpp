@@ -13,5 +13,11 @@ component::component(network &network_context) : m_network_context(network_conte
     network_context.register_component(this);
 };
 
+component::~component()
+{
+    m_network_context.unregister_component(this);
+}
+
+
 }}}
 

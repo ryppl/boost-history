@@ -46,6 +46,13 @@ public:
         m_descriptor_map[c]=v;
         std::cout << m_descriptor_map.size() << std::endl;
     }
+    void unregister_component(component *c)
+    {
+        std::cout << this << " unregistering " << c << std::endl;
+        BOOST_ASSERT(m_descriptor_map.find(c) != m_descriptor_map.end());
+        graph_type::vertex_descriptor v = m_descriptor_map[c];
+        remove_vertex(v, m_graph);
+    }
     void notify_connect(component &producer, component &consumer)
     {
         std::cout << this << " connecting " << &producer << " and " << &consumer << std::endl;

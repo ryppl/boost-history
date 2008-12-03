@@ -69,10 +69,15 @@ public:
     template<typename T>
     framework_entity_adapter(framework_context<BlueprintFramework> &fo, const T &t)
         : Base(fo, typeid(m_entity))
-        , m_entity(t)
+        , m_entity(fo.object(), t)
     {}
     template<typename T>
     framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t)
+        : Base(fo, typeid(m_entity))
+        , m_entity(fo.object(), t)
+    {}
+    template<typename T>
+    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const entity_type &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
