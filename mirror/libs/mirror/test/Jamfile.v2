@@ -41,5 +41,8 @@ test-suite "mirror"
          [ run classes_rt_05.cpp ]
          [ run classes_rt_06.cpp ]
          [ run classes_rt_07.cpp ]
+         [ compile concepts_ct_01.cpp ]
+         [ compile concepts_ct_02.cpp ]
+         [ compile concepts_ct_03.cpp ]
     ;
 
