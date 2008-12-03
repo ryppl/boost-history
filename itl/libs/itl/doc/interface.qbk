@@ -8,6 +8,17 @@
 
 [section Interface]
 
+[table Associated types of sets
+[[Aspects]  []        [type]            [interval_sets]             [interval]        [itl::set]        [std::set]]
+[[abstract] [data]    [domain_type]     [DomainT]                   [DomainT]         [DomainT]         []]
+[[]         [ordering][domain_compare]  [Compare<DomainT>]          [Compare<DomainT>][Compare<DomainT>][]]
+[[iterative][data]    [interval_type]   [Interval<Compare<DomainT>>][][][]]
+[[]         []        [key_type]        [Interval<Compare<DomainT>>][][]                                [_Key]]
+[[]         []        [value_type]      [Interval<Compare<DomainT>>][][]                                [_Key]]
+[[]         [ordering][interval_compare][exclusive_less<interval_type>][][]                             []]
+[[]         []        [key_compare]     [exclusive_less<interval_type>][][]                             [_Compare]]
+]
+
 [table
 [[Placeholder]                  [Argument types]          [Description]]             
 [[[#element_type]         [*e]] [T::domain_type]          [the element type of the container]]
