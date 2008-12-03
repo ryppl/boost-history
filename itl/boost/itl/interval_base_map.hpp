@@ -49,15 +49,15 @@ namespace boost{namespace itl
 {
 
 template<class DomainT, class CodomainT>
-struct base_pair
+struct mapping_pair
 {
     DomainT   key;
     CodomainT data;
 
-    base_pair(const DomainT& key_value, const CodomainT& data_value)
+    mapping_pair(const DomainT& key_value, const CodomainT& data_value)
         :key(key_value), data(data_value){}
 
-    base_pair(const std::pair<DomainT,CodomainT>& std_pair)
+    mapping_pair(const std::pair<DomainT,CodomainT>& std_pair)
         :key(std_pair.first), data(std_pair.second){}
 };
 
@@ -171,9 +171,9 @@ public:
     /// Domain type (type of the keys) of the map
     typedef CodomainT codomain_type;
     /// basic value type
-    typedef std::pair<domain_type,codomain_type> base_value_type;
+    typedef std::pair<domain_type,codomain_type> mapping_type;
     /// Auxiliary type to help the compiler resolve ambiguities when using std::make_pair
-    typedef base_pair<domain_type,codomain_type> base_pair_type;
+    typedef mapping_pair<domain_type,codomain_type> mapping_pair_type;
     /// The interval type of the map
     typedef Interval<DomainT,Compare> interval_type;
 
@@ -272,7 +272,7 @@ public:
 
     //--- contains: map view ------------------------------------------------------
     /// Does the map contain the element pair <tt>x = (key_element,value)</tt>?
-    bool contains(const base_pair_type& x)const
+    bool contains(const mapping_pair_type& x)const
 	{ return that()->contains_(value_type(interval_type(x.key), x.data));    }
 
     /// Does the map contain all element value pairs represented by the interval-value pair sub?
@@ -322,7 +322,7 @@ public:
 
     /// Addition of a base value pair using a Combinator operation.
     /** Addition of a base value pair <tt>x := pair(k,y)</tt> where 
-        <tt>base_value_type:=pair<DomainT,CodomainT></tt>
+        <tt>mapping_type:=pair<DomainT,CodomainT></tt>
     
         This adds (inserts) a value <tt>y</tt> for a single key <tt>k</tt> into the map.
         If <tt>k</tt> already has a value <tt>y0</tt> associated with it, <tt>y0</tt>
@@ -331,15 +331,9 @@ public:
         If Combinator implements addition (+=) associated values will contain sums.
         If Combinator implements max, associated values will contain maximal values and so on.
     */
-    //template<class Combiner>
-    //CL? SubType& add(const base_pair_type& x, const Combiner& combine) 
-    //{ 
-    //    access::add(*that(), value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine);
-    //    return *that();
-    //}
 
     /// Addition of a value pair using a Combinator operation.
-    /** Addition of a value pair <tt>x := pair(I,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
+    /** Addition of a value pair <tt>x := pair(I,y)</tt> where <tt>mapping_type:=pair<DomainT,CodomainT></tt>
     
         This adds (inserts) a value <tt>y</tt> an interval <tt>I</tt> into the map.
 
@@ -365,7 +359,7 @@ private:
 
 public:
     /// Addition of a base value pair.
-    /** Addition of a base value pair <tt>x := pair(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
+    /** Addition of a base value pair <tt>x := pair(k,y)</tt> where <tt>mapping_type:=pair<DomainT,CodomainT></tt>
     
         This adds (inserts) a value <tt>y</tt> for a single key <tt>k</tt> into the map.
         If <tt>k</tt> already has a value <tt>y0</tt> associated with it, <tt>y0</tt>
@@ -374,7 +368,7 @@ public:
         Addition and subtraction are reversible as follows:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
-    SubType& add(const base_pair_type& x) 
+    SubType& add(const mapping_pair_type& x) 
     { return add( value_type(interval_type(x.key), x.data) ); }
 
     /// Addition of a base value pair.
@@ -413,12 +407,6 @@ public:
         A Combinator for subtract is usually an inverse function of
         the corresponding add<Combinator>. 
     */
-    //template<class Combiner>
-    //CL? SubType& subtract(const base_pair_type& x, const Combiner& combine)
-    //{ 
-    //    that()->subtract_(value_type(interval_type(x.KEY_VALUE), x.CONT_VALUE), combine); 
-    //    return *that();
-    //}
 
     /// Subtraction of an interval value pair using a Combinator operation
     /** Subtraction of an interval value pair  <tt>x=(I,y)</tt> 
@@ -437,7 +425,7 @@ private:
 
 public:
     /// Subtraction of a base value pair.
-    /** Subtraction of a base value pair <tt>x=(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
+    /** Subtraction of a base value pair <tt>x=(k,y)</tt> where <tt>mapping_type:=pair<DomainT,CodomainT></tt>
 
         This subtracts a value <tt>y</tt> for a single key <tt>k</tt> from the map.
         If <tt>k</tt> already has a value <tt>y0</tt> associated with it, <tt>y0</tt>
@@ -449,7 +437,7 @@ public:
         Insertion and subtraction are reversible as follows:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
-    SubType& subtract(const base_pair_type& x)
+    SubType& subtract(const mapping_pair_type& x)
     { 
 		return subtract( value_type(interval_type(x.key), x.data) ); 
     }
@@ -486,14 +474,14 @@ public:
 //@{
 
     /// Insertion of a base value pair.
-    /** Insertion of a base value pair <tt>x=(k,y)</tt> where <tt>base_value_type:=pair<DomainT,CodomainT></tt>
+    /** Insertion of a base value pair <tt>x=(k,y)</tt> where <tt>mapping_type:=pair<DomainT,CodomainT></tt>
     
         This inserts a value <tt>y</tt> for a single key <tt>k</tt> into the map.
         Insertion is done only if there is no value \c y0 in the map for key \c k.
 
         This is the insertion semantics known from std::map::insert.
     */
-    SubType& insert(const base_pair_type& x) 
+    SubType& insert(const mapping_pair_type& x) 
     { 
 		that()->insert(value_type(interval_type(x.key), x.data)); 
         return *that();
@@ -518,7 +506,7 @@ public:
         This does erase a base value pair <tt>x=(k,y)</tt> form the map, if
         a value \c y is stored for key \c k.
     */
-    SubType& erase(const base_pair_type& x) 
+    SubType& erase(const mapping_pair_type& x) 
     { 
 		that()->erase_(value_type(interval_type(x.key), x.data));
         return *that();
@@ -616,7 +604,7 @@ public:
     void add_intersection(interval_base_map& section, const domain_type& x)const
     { add_intersection(section, interval_type(x)); }
 
-    void add_intersection(interval_base_map& section, const base_pair_type& x)const
+    void add_intersection(interval_base_map& section, const mapping_pair_type& x)const
     { add_intersection(section, value_type(interval_type(x.key), x.data)); }
 
     /// Intersection with an interval value pair
@@ -1232,7 +1220,7 @@ inline bool operator < (const interval_base_map<SubType,DomainT,CodomainT,Traits
 {
     return std::lexicographical_compare(
         lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-        Compare<std::pair<Interval<DomainT,Compare>, CodomainT> >() //NOTE DESIGN TTP: Why template template parameter Compare is needed
+        Compare<std::pair<Interval<DomainT,Compare>,CodomainT> >()//NOTE DESIGN TTP: Why template template parameter Compare is needed
         );
 }
 

@@ -601,7 +601,9 @@ inline bool operator < (const interval_base_set<SubType,DomainT,Interval,Compare
                         const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& rhs)
 {
     return std::lexicographical_compare(
-        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), Compare<Interval<DomainT,Compare> >());
+        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
+		Compare<Interval<DomainT,Compare> >()//NOTE DESIGN TTP: Why Compare is needs to be ttp
+		);
 }
 
 template<class SubType,

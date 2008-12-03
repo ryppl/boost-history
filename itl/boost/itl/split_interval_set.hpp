@@ -415,20 +415,6 @@ namespace boost{namespace itl
         return Set::lexicographical_equal(lhs, rhs);
     }
 
-	/*CL?
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator < (const split_interval_set<DomainT,Interval,Compare,Alloc>& lhs,
-                            const split_interval_set<DomainT,Interval,Compare,Alloc>& rhs)
-    {
-        split_interval_set<DomainT,Interval,Compare,Alloc> lhs_joined = lhs, rhs_joined = rhs;
-        lhs_joined.join(); rhs_joined.join(); //JODO EFFI
-        return std::lexicographical_compare(
-            lhs_joined.begin(), lhs_joined.end(), 
-            rhs_joined.begin(), rhs_joined.end(), 
-            Compare<Interval<DomainT,Compare> >());
-    }
-	*/
-
     template <class Type>
     struct is_set<itl::split_interval_set<Type> >
     { enum{value = true}; };

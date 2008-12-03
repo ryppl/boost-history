@@ -81,6 +81,9 @@ namespace boost{namespace itl
 #define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 
 //------------------------------------------------------------------------------
+// template parameter Compare can not be a template type parameter as long as
+// Compare<Interval<DomainT,Compare> >() is called in std::lexicographical_compare
+// implementing operator< for interval_base_{set,map}. see NOTE DESIGN TTP
 #ifdef ITL_USE_COMPARE_TEMPLATE_TEMPLATE
 #   define ITL_COMPARE template<class>class
 #   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
@@ -94,6 +97,7 @@ namespace boost{namespace itl
 #endif
 
 //------------------------------------------------------------------------------
+// template parameter Combine could be a template type parameter.
 #ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 #   define ITL_COMBINE template<class>class
 #   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 

@@ -97,8 +97,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_assign_4_ordered_types
     T v1 = unon<T>::value();
     U u1 = unon<U>::value();
 
-    base_pair<T,U> v0_u1(v0,u1);
-    base_pair<T,U> v1_u1(v1,u1);
+    mapping_pair<T,U> v0_u1(v0,u1);
+    mapping_pair<T,U> v1_u1(v1,u1);
 
     SplitIntervalMapT split_map;
     IntervalMapT      join_map;
@@ -234,9 +234,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_add_4_bicremental_type
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
     std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
     std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
-    base_pair<T,U> v1_1(v1, u1);
-    base_pair<T,U> v3_1(v3, u1);
-    base_pair<T,U> v5_1(v5, u1);
+    mapping_pair<T,U> v1_1(v1, u1);
+    mapping_pair<T,U> v3_1(v3, u1);
+    mapping_pair<T,U> v5_1(v5, u1);
 
     SplitIntervalMapT split_map;
     split_map.add(I1_3D_1).add(I2_4D_1);
@@ -789,15 +789,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     split_A.clear();
     split_A.add(I0_3D_1).add(I6_9D_1);
     split_AB = split_A;
-    split_AB *= base_pair<T,U>(v1,u1);
+    split_AB *= mapping_pair<T,U>(v1,u1);
     split_ab.clear();
-    split_ab.add(base_pair<T,U>(v1,u2));
+    split_ab.add(mapping_pair<T,U>(v1,u2));
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB *= base_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
-    split_AB *= base_pair<T,U>(v1,u1);
+    //(split_AB *= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
+    split_AB *= mapping_pair<T,U>(v1,u1);
     split_AB += make_pair(interval<T>::open(v1,v7), u2);
     split_ab2.clear();
     split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u2);
@@ -889,12 +889,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     split_AB = split_A;
     split_AB *= v1;
     split_ab.clear();
-    split_ab.add(base_pair<T,U>(v1,u1));
+    split_ab.add(mapping_pair<T,U>(v1,u1));
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB *= base_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
+    //(split_AB *= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
     split_AB *= interval<T>(v1);
     split_AB += make_pair(interval<T>::open(v1,v7), u1);
     split_ab2.clear();

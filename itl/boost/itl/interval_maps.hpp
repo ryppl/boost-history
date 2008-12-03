@@ -80,7 +80,7 @@ operator +=
     return object.add(operand); 
 }
 
-//--- base_value_type ---------------------------------------------------------
+//--- mapping_type ---------------------------------------------------------
 // Addition (+=) of a base value pair.
 /* Addition of an value pair <tt>x=(I,y)</tt>
 
@@ -114,7 +114,7 @@ operator +=
                       Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Combine,Alloc>::base_pair_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::mapping_pair_type& operand
 )
 {
     return object.add(operand); 
@@ -191,7 +191,7 @@ operator -=
     return object.subtract(operand); 
 }
 
-//--- base_value_type ---------------------------------------------------------
+//--- mapping_type ---------------------------------------------------------
 template 
 <
     class DomainT, class CodomainT,
@@ -211,7 +211,7 @@ operator -=
                       Traits,Interval,Compare,Combine,Alloc>& object,
     const typename 
           IntervalMap<DomainT,CodomainT,
-                      Traits,Interval,Compare,Combine,Alloc>::base_pair_type& operand
+                      Traits,Interval,Compare,Combine,Alloc>::mapping_pair_type& operand
 )
 {
     return object.subtract(operand); 
