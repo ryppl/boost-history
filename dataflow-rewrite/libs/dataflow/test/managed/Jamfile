@@ -15,4 +15,4 @@ project dataflow/test/managed
 
 run test_port.cpp ;
 run test_network.cpp ;
-run test_fusion_component.cpp ;
+run test_io_component.cpp ;

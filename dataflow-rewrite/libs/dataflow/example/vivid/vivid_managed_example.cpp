@@ -13,7 +13,7 @@
 #include <boost/guigl/application.hpp>
 #include <boost/guigl/widget/button.hpp>
 
-#include <boost/dataflow/managed/fusion_component.hpp>
+#include <boost/dataflow/managed/io_component.hpp>
 #include <boost/dataflow/managed/network.hpp>
 
 #include <boost/assign/std/vector.hpp>
@@ -22,17 +22,17 @@ namespace df=boost::dataflow;
 namespace blueprint=boost::dataflow::blueprint;
 namespace guigl=boost::guigl;
 
-using df::managed::fusion_component;
+using df::managed::io_component;
 
 typedef df::blueprint::framework<df::managed::framework> managed_blueprint_framework;
 
 // the input/output component (link between GUI and dataflow network)
-class io : public fusion_component<bool>, public guigl::widget::button
+class io : public io_component<bool>, public guigl::widget::button
 {
 public:
     typedef guigl::widget::button runtime_base_class_type;
     io(df::managed::network &network)
-        : fusion_component<bool>(network)
+        : io_component<bool>(network)
         , guigl::widget::button(guigl::_size(100,100))
     {
 //        anchor(glv::Place::CL);
@@ -54,11 +54,11 @@ public:
 };
 
 // logical NOT component.
-class not_operation : public fusion_component<bool>
+class not_operation : public io_component<bool>
 {
 public:
     not_operation(df::managed::network &network)
-        : fusion_component<bool>(network)
+        : io_component<bool>(network)
     {}
     void invoke()
     {
@@ -68,10 +68,10 @@ public:
 };
 
 // logical AND component.
-class and_operation : public fusion_component<boost::mpl::vector<bool,bool>,bool>
+class and_operation : public io_component<boost::mpl::vector<bool,bool>,bool>
 {
 public:
-    typedef fusion_component<boost::mpl::vector<bool,bool>,bool> base_type;
+    typedef io_component<boost::mpl::vector<bool,bool>,bool> base_type;
     
     and_operation(df::managed::network &network)
         : base_type(network)
@@ -86,10 +86,10 @@ public:
 };
 
 // logical OR component.
-class or_operation : public fusion_component<boost::mpl::vector<bool,bool>,bool>
+class or_operation : public io_component<boost::mpl::vector<bool,bool>,bool>
 {
 public:
-    typedef fusion_component<boost::mpl::vector<bool,bool>,bool> base_type;
+    typedef io_component<boost::mpl::vector<bool,bool>,bool> base_type;
     
     or_operation(df::managed::network &network)
         : base_type(network)
@@ -104,11 +104,11 @@ public:
 };
 
 // This component requests a network update.
-class update_network : public fusion_component<bool>
+class update_network : public io_component<bool>
 {
 public:
     update_network(df::managed::network &network)
-        : fusion_component<bool>(network)
+        : io_component<bool>(network)
     {}
     void invoke()
     {
