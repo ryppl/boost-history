@@ -15,7 +15,10 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/functional/factory.hpp>
+#include <boost/function_types/function_type.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/joint_view.hpp>
 
 #include <map>
 #include <memory>
@@ -47,14 +50,31 @@ public:
     friend class boost::iterator_core_access;
 };
 
-template<typename BlueprintFramework>
+template<typename BlueprintFramework, typename AdditionalArgs=mpl::vector<> >
 class factory
 {
+public:
     typedef typename BlueprintFramework::framework_type framework_type;
     typedef framework_entity<BlueprintFramework> entity_type;
-    typedef boost::function<entity_type * (framework_context<BlueprintFramework> &)> function_type;
+    typedef framework_entity<BlueprintFramework> framework_entity_type;
+    typedef framework_context<BlueprintFramework> framework_context_type;
+    typedef
+        typename function_types::function_type
+        <
+            typename mpl::joint_view
+            <
+                mpl::vector
+                <
+                    framework_entity_type *,
+                    framework_context_type &
+                >,
+                AdditionalArgs
+            >::type
+        >::type signature_type;
+
+    typedef boost::function<signature_type> function_type;
     typedef std::map<std::string, function_type> map_type;
-public:
+
     typedef key_iterator<map_type> iterator;
     
     std::auto_ptr<entity_type> make(const std::string &key)
@@ -79,7 +99,10 @@ public:
     {
         m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, T> *>(), _1, t0);
     }
-
+    void add_entity(const std::string &s, const function_type &f)
+    {
+        m_components[s] = f;
+    }
 protected:
     map_type m_components;
 };
