@@ -68,23 +68,25 @@ namespace boost{namespace itl
     */
     template 
     <
-        typename KeyT, 
-        ITL_COMPARE Compare = std::less,
+        typename DomainT, 
+        ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
         ITL_ALLOC   Alloc   = std::allocator 
     >
-    class set: private std::set<KeyT, Compare<KeyT>, Alloc<KeyT> >
+    class set: private std::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
     {
     public:
-        typedef typename itl::set<KeyT, Compare,       Alloc >       type;
-        typedef typename std::set<KeyT, Compare<KeyT>, Alloc<KeyT> > base_type;
+        typedef typename itl::set<DomainT, Compare,       Alloc >       type;
+        typedef typename std::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
 
     public:
-        typedef KeyT     key_type;
-        typedef KeyT     value_type;
-        typedef KeyT     data_type;
-        typedef Compare<KeyT> key_compare;
-        typedef Compare<KeyT> value_compare;
-        typedef Alloc<KeyT>   allocator_type;
+        typedef DomainT     domain_type;
+        typedef DomainT     key_type;
+        typedef DomainT     value_type;
+        typedef DomainT     data_type;
+        typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+        typedef ITL_COMPARE_DOMAIN(Compare,DomainT) key_compare;
+        typedef ITL_COMPARE_DOMAIN(Compare,DomainT) value_compare;
+        typedef Alloc<DomainT>   allocator_type;
 
     public:        
         typedef typename base_type::pointer                pointer;
@@ -100,8 +102,8 @@ namespace boost{namespace itl
 
     public:
         set(){}
-        set(const Compare<KeyT>& comp): 
-            std::set<KeyT, Compare<KeyT>, Alloc<KeyT> >(comp){}
+        set(const domain_compare& comp): 
+            std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
 
         template <class InputIterator>
         set(InputIterator f, InputIterator l): std::set<InputIterator>(f,l) {}
@@ -142,7 +144,7 @@ namespace boost{namespace itl
 
         //JODO concept set
         /// Checks if the element \c x is in the set
-        bool contains(const KeyT& x)const { return !(find(x) == end()); }
+        bool contains(const DomainT& x)const { return !(find(x) == end()); }
 
         /** Is <tt>*this</tt> contained in <tt>super</tt>? */
         bool contained_in(const set& super)const { return Set::contained_in(*this, super); }
@@ -213,50 +215,50 @@ namespace boost{namespace itl
 
     /** Standard equality, which is lexicographical equality of the sets
         as sequences, that are given by their Compare order. */
-    template <typename KeyT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator == (const itl::set<KeyT,Compare,Alloc>& lhs,
-                             const itl::set<KeyT,Compare,Alloc>& rhs)
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator == (const itl::set<DomainT,Compare,Alloc>& lhs,
+                             const itl::set<DomainT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Element equality. Two sets are equal if they contain the same 
         elements */
-    template <typename KeyT, ITL_COMPARE Compare, 
+    template <typename DomainT, ITL_COMPARE Compare, 
                              ITL_ALLOC Alloc>
-    inline bool is_element_equal(const itl::set<KeyT,Compare,Alloc>& lhs,
-                                 const itl::set<KeyT,Compare,Alloc>& rhs)
+    inline bool is_element_equal(const itl::set<DomainT,Compare,Alloc>& lhs,
+                                 const itl::set<DomainT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Strict weak less ordering which is given by the Compare order */
-    template <typename KeyT, ITL_COMPARE Compare, 
+    template <typename DomainT, ITL_COMPARE Compare, 
                              ITL_ALLOC Alloc>
-    inline bool operator < (const itl::set<KeyT,Compare,Alloc>& lhs,
-                            const itl::set<KeyT,Compare,Alloc>& rhs)
+    inline bool operator < (const itl::set<DomainT,Compare,Alloc>& lhs,
+                            const itl::set<DomainT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Partial ordering which is induced by Compare */
-    template <typename KeyT, ITL_COMPARE Compare, 
+    template <typename DomainT, ITL_COMPARE Compare, 
                              ITL_ALLOC Alloc>
-    inline bool operator <= (const itl::set<KeyT,Compare,Alloc>& lhs,
-        const itl::set<KeyT,Compare,Alloc>& rhs)
+    inline bool operator <= (const itl::set<DomainT,Compare,Alloc>& lhs,
+        const itl::set<DomainT,Compare,Alloc>& rhs)
     {
-        typedef std::set<KeyT,Compare<KeyT>,Alloc<KeyT> > base_type;
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
     }
 
 
-    template <typename KeyT, ITL_COMPARE Compare, 
+    template <typename DomainT, ITL_COMPARE Compare, 
                              ITL_ALLOC Alloc>
-    typename set<KeyT,Compare,Alloc>::iterator
-        set<KeyT,Compare,Alloc>::subtract(const value_type& val)
+    typename set<DomainT,Compare,Alloc>::iterator
+        set<DomainT,Compare,Alloc>::subtract(const value_type& val)
     {
         iterator it_ = find(val);
         if(it_ != end())
@@ -266,24 +268,24 @@ namespace boost{namespace itl
     }
 
 
-    template <typename KeyT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    std::string set<KeyT,Compare,Alloc>::as_string(const char* sep)const
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    std::string set<DomainT,Compare,Alloc>::as_string(const char* sep)const
     { 
         const_iterator it_ = begin();
         
         if(it_ == end()) return std::string();
         else
         {
-            std::string y = to_string<KeyT>::apply(*it_++);
-            while(it_ != end()) { y += sep; y += to_string<KeyT>::apply(*it_++); }
+            std::string y = to_string<DomainT>::apply(*it_++);
+            while(it_ != end()) { y += sep; y += to_string<DomainT>::apply(*it_++); }
             return y;
         }
     }
 
 
-    template <typename KeyT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
         template <class Predicate>
-    set<KeyT,Compare,Alloc>& set<KeyT,Compare,Alloc>
+    set<DomainT,Compare,Alloc>& set<DomainT,Compare,Alloc>
         ::erase_if(const Predicate& pred)
     {
         iterator it = begin();
@@ -295,10 +297,10 @@ namespace boost{namespace itl
 
     }
 
-    template <typename KeyT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
         template <class Predicate>
-    set<KeyT,Compare,Alloc>& set<KeyT,Compare,Alloc>
-        ::assign_if(const set<KeyT,Compare,Alloc>& src, const Predicate& pred)
+    set<DomainT,Compare,Alloc>& set<DomainT,Compare,Alloc>
+        ::assign_if(const set<DomainT,Compare,Alloc>& src, const Predicate& pred)
     {
         clear();
         const_iterator it = src.begin();
@@ -310,20 +312,20 @@ namespace boost{namespace itl
     }
 
     //-------------------------------------------------------------------------
-    template <typename KeyT,
+    template <typename DomainT,
               ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    set<KeyT,Compare,Alloc>& 
-        insert(      set<KeyT,Compare,Alloc>& object, 
-               const set<KeyT,Compare,Alloc>& insertee) 
+    set<DomainT,Compare,Alloc>& 
+        insert(      set<DomainT,Compare,Alloc>& object, 
+               const set<DomainT,Compare,Alloc>& insertee) 
     {
         return object += insertee; 
     }
 
-    template <typename KeyT,
+    template <typename DomainT,
               ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    set<KeyT,Compare,Alloc>& 
-        erase(      set<KeyT,Compare,Alloc>& object, 
-              const set<KeyT,Compare,Alloc>& erasee) 
+    set<DomainT,Compare,Alloc>& 
+        erase(      set<DomainT,Compare,Alloc>& object, 
+              const set<DomainT,Compare,Alloc>& erasee) 
     {
         return object -= erasee; 
     }

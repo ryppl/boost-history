@@ -103,7 +103,7 @@ template
     typename             SubType,
     typename             DomainT, 
     template<class, ITL_COMPARE>class Interval = itl::interval,
-    ITL_COMPARE Compare  = std::less,
+    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_ALLOC   Alloc    = std::allocator
 > 
 #ifdef USE_CONCEPTS
@@ -135,7 +135,7 @@ public:
 
 
     /// Comparison functor for domain values
-    typedef Compare<DomainT> domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     /// Comparison functor for intervals
     typedef exclusive_less<interval_type> interval_compare;
 
@@ -155,7 +155,7 @@ public:
     typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
     /// Container type for the implementation 
-    typedef typename itl::set<interval_type,exclusive_less,Alloc> ImplSetT;
+    typedef typename itl::set<interval_type,ITL_EXCLUSIVE_LESS(interval_type),Alloc> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;

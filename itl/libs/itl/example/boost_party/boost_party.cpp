@@ -71,7 +71,7 @@ typedef interval_map<ptime, GuestSetT> BoostPartyAttendenceHistoryT;
 #ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 typedef interval_map<ptime, int, neutron_absorber, interval, less, inplace_max > BoostPartyHeightHistoryT;
 #else
-typedef interval_map<ptime, int, neutron_absorber, interval, less, inplace_max<int> > BoostPartyHeightHistoryT;
+typedef interval_map<ptime, int, neutron_absorber, interval, less<ptime>, inplace_max<int> > BoostPartyHeightHistoryT;
 #endif
 
 void boost_party()

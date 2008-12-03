@@ -108,8 +108,8 @@ template
     typename CodomainT,
     class Traits = itl::neutron_absorber,
     template<class,ITL_COMPARE>class Interval = itl::interval,
-    ITL_COMPARE Compare  = std::less,
-    ITL_COMBINE Combine  = ITL_INPLACE_PLUS(CodomainT),
+    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
+    ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
     ITL_ALLOC   Alloc    = std::allocator
 >
 class interval_map:

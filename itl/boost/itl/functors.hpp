@@ -158,7 +158,7 @@ namespace boost{namespace itl
 
 	//--------------------------------------------------------------------------
 	// Inverse functor
-#ifdef ITL_USE_COMBINE_TEMPLATE
+#ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 	template<template<class>class Functor, class Type> struct inverse;
 
 	template<class Type> 
@@ -185,7 +185,7 @@ namespace boost{namespace itl
 	struct inverse<itl::inplace_min, Type>
 	{ typedef itl::inplace_max<Type> type; };
 
-#else //ITL_USE_COMBINE_TYPE
+#else //ITL_USE_COMBINE_TEMPLATE_TYPE
 	template<class Functor, class Type> struct inverse;
 
 	template<class Type> 

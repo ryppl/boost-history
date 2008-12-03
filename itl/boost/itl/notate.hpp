@@ -77,21 +77,31 @@ namespace boost{namespace itl
 // (4) Being able to check template template parameter variants against
 //     template type parameter variants.
 
-//#define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
+#define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
+#define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 
 //------------------------------------------------------------------------------
-#define ITL_COMPARE  template<class>class
-#define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
+#ifdef ITL_USE_COMPARE_TEMPLATE_TEMPLATE
+#   define ITL_COMPARE template<class>class
+#   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
+#   define ITL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance
+#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less
+#else//ITL_USE_COMPARE_TEMPLATE_TYPE
+#   define ITL_COMPARE class
+#   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare 
+#   define ITL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance<domain_type> 
+#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less<interval_type>
+#endif
 
 //------------------------------------------------------------------------------
 #ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-#define ITL_COMBINE  template<class>class
-#define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 
-#define ITL_INPLACE_PLUS(codomain_type) itl::inplace_plus 
+#   define ITL_COMBINE template<class>class
+#   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 
+#   define ITL_COMBINE_INSTANCE(compare_instance,codomain_type) compare_instance
 #else//ITL_USE_COMBINE_TEMPLATE_TYPE
-#define ITL_COMBINE  class
-#define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
-#define ITL_INPLACE_PLUS(codomain_type) itl::inplace_plus<codomain_type> 
+#   define ITL_COMBINE class
+#   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
+#   define ITL_COMBINE_INSTANCE(compare_instance,codomain_type) compare_instance<codomain_type>
 #endif
 
 //------------------------------------------------------------------------------

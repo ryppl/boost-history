@@ -136,8 +136,8 @@ template
     typename CodomainT,
     class Traits = itl::neutron_absorber,
     template<class,ITL_COMPARE>class Interval = itl::interval,
-    ITL_COMPARE Compare  = std::less,
-    ITL_COMBINE Combine  = ITL_INPLACE_PLUS(CodomainT),
+    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
+	ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
     ITL_ALLOC   Alloc    = std::allocator
 >
 #ifdef USE_CONCEPTS
@@ -184,9 +184,8 @@ public:
     typedef typename interval_type::size_type size_type;
 
     /// Comparison functor for domain values
-    typedef Compare<DomainT> domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     /// Combine functor for codomain values
-    //typedef Combine<CodomainT> codomain_combine;
     typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT) codomain_combine;
     /// Comparison functor for intervals which are keys as well
     typedef exclusive_less<interval_type> interval_compare;
@@ -200,7 +199,7 @@ public:
 
     /// Container type for the implementation 
     typedef itl::map<interval_type,codomain_type,Traits,
-                     exclusive_less,Combine,Alloc> ImplMapT;
+                     ITL_EXCLUSIVE_LESS(interval_type),Combine,Alloc> ImplMapT;
 
     /// key type of the implementing container
     typedef typename ImplMapT::key_type   key_type;
@@ -1233,7 +1232,7 @@ inline bool operator < (const interval_base_map<SubType,DomainT,CodomainT,Traits
 {
     return std::lexicographical_compare(
         lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-        Compare<std::pair<Interval<DomainT,Compare>, CodomainT> >()
+        Compare<std::pair<Interval<DomainT,Compare>, CodomainT> >() //NOTE DESIGN TTP: Why template template parameter Compare is needed
         );
 }
 

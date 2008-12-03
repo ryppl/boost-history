@@ -89,7 +89,7 @@ namespace boost{namespace itl
     <
         typename             DomainT, 
         template<class,ITL_COMPARE>class Interval = itl::interval,
-        ITL_COMPARE Compare  = std::less,
+        ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
         ITL_ALLOC   Alloc    = std::allocator
     > 
     class split_interval_set: 
@@ -112,7 +112,7 @@ namespace boost{namespace itl
         typedef Interval<DomainT,Compare> interval_type;
 
         /// Comparison functor for domain values
-        typedef Compare<DomainT> domain_compare;
+        typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
         /// Comparison functor for intervals
         typedef exclusive_less<interval_type> interval_compare;
 
@@ -132,7 +132,7 @@ namespace boost{namespace itl
         typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
         /// Container type for the implementation 
-        typedef typename itl::set<interval_type,exclusive_less,Alloc> ImplSetT;
+        typedef typename itl::set<interval_type,ITL_EXCLUSIVE_LESS(interval_type),Alloc> ImplSetT;
 
         /// key type of the implementing container
         typedef typename ImplSetT::key_type   key_type;
@@ -415,18 +415,19 @@ namespace boost{namespace itl
         return Set::lexicographical_equal(lhs, rhs);
     }
 
-
+	/*CL?
     template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     inline bool operator < (const split_interval_set<DomainT,Interval,Compare,Alloc>& lhs,
                             const split_interval_set<DomainT,Interval,Compare,Alloc>& rhs)
     {
         split_interval_set<DomainT,Interval,Compare,Alloc> lhs_joined = lhs, rhs_joined = rhs;
-        lhs_joined.join(); rhs_joined.join();
+        lhs_joined.join(); rhs_joined.join(); //JODO EFFI
         return std::lexicographical_compare(
             lhs_joined.begin(), lhs_joined.end(), 
             rhs_joined.begin(), rhs_joined.end(), 
             Compare<Interval<DomainT,Compare> >());
     }
+	*/
 
     template <class Type>
     struct is_set<itl::split_interval_set<Type> >

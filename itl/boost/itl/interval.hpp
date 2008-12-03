@@ -300,7 +300,7 @@ namespace boost{namespace itl
 
     @author  Joachim Faulhaber
 */
-template <class DomainT, ITL_COMPARE Compare = std::less>
+template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
 class interval
 {
 public:
@@ -311,7 +311,7 @@ public:
     /// Domain type or element type
     typedef DomainT domain_type;
 	/// Compare order on the data
-    typedef Compare<DomainT> domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
 
     /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename itl::difference<DomainT>::type difference_type;
@@ -511,7 +511,7 @@ public:
     { 
         if(empty()) 
             return itl::neutron<size_type>::value();
-        else if(is_closed() && data_equal(_lwb, _upb))
+        else if(is_closed() && domain_equal(_lwb, _upb))
             return itl::unon<size_type>::value();
         else 
             return std::numeric_limits<size_type>::infinity();
@@ -577,13 +577,13 @@ public:
 public:
     typedef typename boost::call_traits<DomainT>::param_type DomainP;
 
-	inline static bool data_less(DomainP left, DomainP right)       
+	inline static bool domain_less(DomainP left, DomainP right)       
 	{return domain_compare()(left, right) ;}
 
-	inline static bool data_less_equal(DomainP left, DomainP right) 
+	inline static bool domain_less_equal(DomainP left, DomainP right) 
 	{return !domain_compare()(right, left );}
 
-	inline static bool data_equal(DomainP left, DomainP right)
+	inline static bool domain_equal(DomainP left, DomainP right)
 	{return !domain_compare()(left, right) && !domain_compare()(right, left);}
 
 private:
@@ -636,9 +636,9 @@ struct continuous_type
     typedef typename boost::call_traits<domain_type>::param_type DomainP;
 
 	static bool open_bound_less_equal(DomainP x, DomainP y) 
-	{ return IntervalT::data_less_equal(x,y); } //{ return x <= y; }
+	{ return IntervalT::domain_less_equal(x,y); } //{ return x <= y; }
     static bool open_bound_less      (DomainP x, DomainP y) 
-	{ return IntervalT::data_less(x,y); } //{ return x < y; }
+	{ return IntervalT::domain_less(x,y); } //{ return x < y; }
 };
 
 template<class IntervalT> 
@@ -648,9 +648,9 @@ struct discrete_type
     typedef typename boost::call_traits<domain_type>::param_type DomainP;
 
     static bool open_bound_less_equal(DomainP x, DomainP y) 
-	{ return IntervalT::data_less_equal(x, succ(y)); } //{ return      x  <= succ(y); }
+	{ return IntervalT::domain_less_equal(x, succ(y)); } //{ return      x  <= succ(y); }
     static bool open_bound_less      (DomainP x, DomainP y) 
-	{ return IntervalT::data_less(succ(x),y); }        //{ return succ(x) <       y ; }
+	{ return IntervalT::domain_less(succ(x),y); }        //{ return succ(x) <       y ; }
 };
 
 template <class DomainT, ITL_COMPARE Compare>
@@ -658,9 +658,9 @@ bool interval<DomainT,Compare>::empty()const
 {
     using namespace boost::mpl;
 
-    if(rightbound_closed() && leftbound_closed()) return data_less(_upb, _lwb);       //_upb <  _lwb;
-    if(rightbound_open()   && leftbound_closed()) return data_less_equal(_upb, _lwb); //_upb <= _lwb;
-    if(rightbound_closed() && leftbound_open())   return data_less_equal(_upb, _lwb); //_upb <= _lwb;
+    if(rightbound_closed() && leftbound_closed()) return domain_less(_upb, _lwb);       //_upb <  _lwb;
+    if(rightbound_open()   && leftbound_closed()) return domain_less_equal(_upb, _lwb); //_upb <= _lwb;
+    if(rightbound_closed() && leftbound_open())   return domain_less_equal(_upb, _lwb); //_upb <= _lwb;
 
     // OTHERWISE (rightbound_open() && leftbound_open())
     return 
@@ -709,23 +709,23 @@ struct discrete_interval
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
     { 
         if(x1.leftbound_open() &&  x2.leftbound_closed()) 
-			 return IntervalT::data_equal(succ(x1.lower()),     x2.lower() );
-        else return IntervalT::data_equal(     x1.lower(), succ(x2.lower()));
+			 return IntervalT::domain_equal(succ(x1.lower()),     x2.lower() );
+        else return IntervalT::domain_equal(     x1.lower(), succ(x2.lower()));
     }
 
     static bool unaligned_upb_equal(const IntervalT& x1, const IntervalT& x2)
     { 
         if(x1.rightbound_closed() && x2.rightbound_open())  
-             return IntervalT::data_equal(succ(x1.upper()),      x2.upper() );
-        else return IntervalT::data_equal(     x1.upper(),  succ(x2.upper()));
+             return IntervalT::domain_equal(succ(x1.upper()),      x2.upper() );
+        else return IntervalT::domain_equal(     x1.upper(),  succ(x2.upper()));
     }
 
     static bool has_equal_border_touch(const IntervalT& x1, const IntervalT& x2)
     {
         if(x1.rightbound_closed() && x2.leftbound_closed()) 
-            return IntervalT::data_equal(succ(x1.upper()), x2.lower());
+            return IntervalT::domain_equal(succ(x1.upper()), x2.lower());
         if(x1.rightbound_open()  && x2.leftbound_open() ) 
-			return IntervalT::data_equal(x1.upper(), succ(x2.lower()));
+			return IntervalT::domain_equal(x1.upper(), succ(x2.lower()));
         return false;    
     }
 
@@ -737,9 +737,9 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::exclusive_less(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(rightbound_closed() && x2.leftbound_closed()) return data_less(_upb, x2._lwb); //_upb < x2._lwb
-    if(rightbound_open()   && x2.leftbound_closed()) return data_less_equal(_upb, x2._lwb); //_upb <= x2._lwb;
-    if(rightbound_closed() && x2.leftbound_open() )  return data_less_equal(_upb, x2._lwb); //_upb <= x2._lwb;
+    if(rightbound_closed() && x2.leftbound_closed()) return domain_less(_upb, x2._lwb); //_upb < x2._lwb
+    if(rightbound_open()   && x2.leftbound_closed()) return domain_less_equal(_upb, x2._lwb); //_upb <= x2._lwb;
+    if(rightbound_closed() && x2.leftbound_open() )  return domain_less_equal(_upb, x2._lwb); //_upb <= x2._lwb;
 
     return 
         if_<
@@ -755,9 +755,9 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::lower_less(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(leftbound_closed() && x2.leftbound_closed()) return data_less(_lwb, x2._lwb);
-    if(leftbound_open()   && x2.leftbound_open())   return data_less(_lwb, x2._lwb);
-    if(leftbound_closed() && x2.leftbound_open())   return data_less_equal(_lwb, x2._lwb);//data_less_equal(_lwb, x2._lwb);
+    if(leftbound_closed() && x2.leftbound_closed()) return domain_less(_lwb, x2._lwb);
+    if(leftbound_open()   && x2.leftbound_open())   return domain_less(_lwb, x2._lwb);
+    if(leftbound_closed() && x2.leftbound_open())   return domain_less_equal(_lwb, x2._lwb);//domain_less_equal(_lwb, x2._lwb);
 
     // OTHERWISE (leftbound_open()  && x2.leftbound_closed())
     return 
@@ -773,9 +773,9 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::upper_less(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(rightbound_closed() && x2.rightbound_closed()) return data_less(_upb, x2._upb);
-    if(rightbound_open()   && x2.rightbound_open())   return data_less(_upb, x2._upb);
-    if(rightbound_open()   && x2.rightbound_closed()) return data_less_equal(_upb, x2._upb);//data_less_equal(_upb, x2._upb);
+    if(rightbound_closed() && x2.rightbound_closed()) return domain_less(_upb, x2._upb);
+    if(rightbound_open()   && x2.rightbound_open())   return domain_less(_upb, x2._upb);
+    if(rightbound_open()   && x2.rightbound_closed()) return domain_less_equal(_upb, x2._upb);//domain_less_equal(_upb, x2._upb);
 
     // OTHERWISE (rightbound_closed()  && x2.rightbound_open())
     return 
@@ -792,9 +792,9 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::lower_less_equal(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(leftbound_closed() && x2.leftbound_closed()) return data_less_equal(_lwb, x2._lwb);
-    if(leftbound_open()   && x2.leftbound_open())   return data_less_equal(_lwb, x2._lwb);
-    if(leftbound_open()   && x2.leftbound_closed()) return data_less(_lwb, x2._lwb);
+    if(leftbound_closed() && x2.leftbound_closed()) return domain_less_equal(_lwb, x2._lwb);
+    if(leftbound_open()   && x2.leftbound_open())   return domain_less_equal(_lwb, x2._lwb);
+    if(leftbound_open()   && x2.leftbound_closed()) return domain_less(_lwb, x2._lwb);
 
     // OTHERWISE (leftbound_closed() && x2.leftbound_open())
     return 
@@ -811,9 +811,9 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::upper_less_equal(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(rightbound_closed() && x2.rightbound_closed()) return data_less_equal(_upb, x2._upb);
-    if(rightbound_open()   && x2.rightbound_open())   return data_less_equal(_upb, x2._upb);
-    if(rightbound_closed() && x2.rightbound_open())   return data_less(_upb, x2._upb);
+    if(rightbound_closed() && x2.rightbound_closed()) return domain_less_equal(_upb, x2._upb);
+    if(rightbound_open()   && x2.rightbound_open())   return domain_less_equal(_upb, x2._upb);
+    if(rightbound_closed() && x2.rightbound_open())   return domain_less(_upb, x2._upb);
 
     // OTHERWISE (rightbound_open()  && x2.rightbound_closed())
     return 
@@ -832,8 +832,8 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::lower_equal(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(leftbound_closed() && x2.leftbound_closed()) return data_equal(_lwb, x2._lwb);
-    if(leftbound_open()   && x2.leftbound_open()  ) return data_equal(_lwb, x2._lwb);
+    if(leftbound_closed() && x2.leftbound_closed()) return domain_equal(_lwb, x2._lwb);
+    if(leftbound_open()   && x2.leftbound_open()  ) return domain_equal(_lwb, x2._lwb);
 
     return 
         if_<
@@ -850,8 +850,8 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::upper_equal(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(rightbound_closed() && x2.rightbound_closed()) return data_equal(_upb, x2._upb);
-    if(rightbound_open()   && x2.rightbound_open()  ) return data_equal(_upb, x2._upb);
+    if(rightbound_closed() && x2.rightbound_closed()) return domain_equal(_upb, x2._upb);
+    if(rightbound_open()   && x2.rightbound_open()  ) return domain_equal(_upb, x2._upb);
 
     return 
         if_<
@@ -921,8 +921,8 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::touches(const interval& x2)const
 {
     using namespace boost::mpl;
-    if(rightbound_open() && x2.leftbound_closed()) return data_equal(_upb, x2._lwb);
-    if(rightbound_closed() && x2.leftbound_open()) return data_equal(_upb, x2._lwb);
+    if(rightbound_open() && x2.leftbound_closed()) return domain_equal(_upb, x2._lwb);
+    if(rightbound_closed() && x2.leftbound_open()) return domain_equal(_upb, x2._lwb);
 
     return 
         if_<
@@ -936,10 +936,10 @@ bool interval<DomainT,Compare>::touches(const interval& x2)const
 template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::contains(const DomainT& x)const
 {
-    if(rightbound_closed() && leftbound_closed()) return data_less_equal(_lwb, x) && data_less_equal(x, _upb);
-    if(rightbound_closed() && leftbound_open()  ) return data_less(_lwb, x)       && data_less_equal(x, _upb);
-    if(rightbound_open()   && leftbound_closed()) return data_less_equal(_lwb, x) && data_less(x, _upb);
-                                                  return data_less(_lwb, x)       && data_less(x, _upb);
+    if(rightbound_closed() && leftbound_closed()) return domain_less_equal(_lwb, x) && domain_less_equal(x, _upb);
+    if(rightbound_closed() && leftbound_open()  ) return domain_less(_lwb, x)       && domain_less_equal(x, _upb);
+    if(rightbound_open()   && leftbound_closed()) return domain_less_equal(_lwb, x) && domain_less(x, _upb);
+                                                  return domain_less(_lwb, x)       && domain_less(x, _upb);
 }
 
 template <class DomainT, ITL_COMPARE Compare>
