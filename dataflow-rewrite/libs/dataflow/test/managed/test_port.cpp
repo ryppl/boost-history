@@ -14,6 +14,8 @@ int test_main(int, char* [])
     using namespace boost;
     namespace df=boost::dataflow;
     
+    BOOST_CHECK((df::has_framework_context<df::managed::framework>::value));
+
     df::managed::network network;
     df::managed::component input_component(network);
     df::managed::component output_component(network);

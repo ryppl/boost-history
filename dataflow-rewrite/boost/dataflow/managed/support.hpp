@@ -10,7 +10,9 @@
 
 namespace boost { namespace dataflow { namespace managed {
 
-struct framework : public dataflow::framework<operations::connect> {};
+class network;
+
+struct framework : public dataflow::framework<operations::connect, network> {};
 
 } } }
 

@@ -6,12 +6,12 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-#ifndef BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_OBJECT_HPP
-#define BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_OBJECT_HPP
+#ifndef BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_CONTEXT_HPP
+#define BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_CONTEXT_HPP
 
 #include <map>
 #include <typeinfo>
-#include <boost/dataflow/blueprint/framework_object_fwd.hpp>
+#include <boost/dataflow/blueprint/framework_context_fwd.hpp>
 #include <boost/dataflow/blueprint/port_binary_operation_implementation_adapter.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -66,14 +66,14 @@ public:
 };
 
 template<typename BlueprintFramework>
-class framework_object_base
+class framework_context_base
 {
     BOOST_MPL_ASSERT((is_blueprint_framework<BlueprintFramework>));
 
     typedef shared_ptr<port_binary_operation_implementation<BlueprintFramework> > implementation_ptr;
     typedef port<BlueprintFramework> port_type;
 public:
-    bool operator == (const framework_object_base &rhs) const
+    bool operator == (const framework_context_base &rhs) const
     {
         return this == &rhs;
     }
@@ -113,16 +113,16 @@ private:
 
 
 template<typename BlueprintFramework, typename Enable>
-class framework_object
-    : public framework_object_base<BlueprintFramework>
+class framework_context
+    : public framework_context_base<BlueprintFramework>
 {};
 
 template<typename BlueprintFramework>
-class framework_object<BlueprintFramework,
-    typename boost::enable_if<has_framework_object<typename BlueprintFramework::framework_type> >::type>
-    : public framework_object_base<BlueprintFramework>
+class framework_context<BlueprintFramework,
+    typename boost::enable_if<has_framework_context<typename BlueprintFramework::framework_type> >::type>
+    : public framework_context_base<BlueprintFramework>
 {
-    typedef typename BlueprintFramework::framework_type::framework_object_type object_type;
+    typedef typename BlueprintFramework::framework_type::framework_context_type object_type;
 public:
     object_type &object()
     {   return m_object; }
@@ -136,4 +136,4 @@ private:
 } } } // namespace boost::dataflow::blueprint
 
 
-#endif // BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_OBJECT_HPP
+#endif // BOOST__DATAFLOW__BLUEPRINT__FRAMEWORK_CONTEXT_HPP
