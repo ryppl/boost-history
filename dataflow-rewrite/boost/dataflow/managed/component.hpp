@@ -14,6 +14,7 @@ class component
 {
 public:
     component(network &network_context);
+    component(const component &other);
     virtual ~component();
     network &network_context()
     {   return m_network_context; }
