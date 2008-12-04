@@ -3,8 +3,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP
-#define BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP
+#ifndef BOOST_DATAFLOW_MANAGED_IO_COMPONENT_HPP
+#define BOOST_DATAFLOW_MANAGED_IO_COMPONENT_HPP
 
 #include <boost/dataflow/detail/make_ref.hpp>
 #include <boost/dataflow/generic/static_vector.hpp>
@@ -14,6 +14,7 @@
 #include <boost/dataflow/utility/forced_sequence.hpp>
 //#include <boost/fusion/container/lazy_sequence.hpp>
 #include <boost/fusion/include/as_vector.hpp>
+#include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/size.hpp>
 #include <boost/fusion/include/transform.hpp>
 #include <boost/mpl/map.hpp>
@@ -78,11 +79,24 @@ namespace detail {
         
         mutable result_type m_component;
     };
+    
+    struct set_port_context
+    {
+        set_port_context(component &c)
+            : c(&c)
+        {}
+        
+        void operator()(port_base &p) const
+        {
+            c->claim_port(p);
+        }
+        component *c;
+    };
 
 }
 
 template<typename InTypes, typename OutTypes=InTypes>
-class fusion_component : public component
+class io_component : public component
 {
 public:
     typedef typename dataflow::utility::forced_sequence<InTypes>::type in_types_sequence;
@@ -91,10 +105,16 @@ public:
     typedef component_traits<in_types_sequence, out_types_sequence> dataflow_traits;
     typedef typename detail::make_fusion_ports<in_types_sequence, out_types_sequence>::type ports_type;
     
-    fusion_component(network &n)
+    io_component(network &n)
         : component(n)
         , m_ports(fusion::transform(mpl::range_c<int,0,fusion::result_of::size<ports_type>::type::value>(), detail::component_f(*this)))
     {}
+    io_component(const io_component &other)
+        : component(static_cast<const component &>(other))
+        , m_ports(other.m_ports)
+    {
+        fusion::for_each(m_ports, set_port_context(*this)); 
+    }
     template<int Index>
     typename fusion::result_of::at_c<ports_type, Index>::type port()
     {   return fusion::at_c<Index>(m_ports); }
@@ -102,6 +122,7 @@ public:
     {   return m_ports; }
 protected:
     ports_type m_ports;
+    friend class detail::set_port_context;
 };
 
 }
@@ -138,4 +159,4 @@ namespace extension {
 
 } }
 
-#endif // BOOST_DATAFLOW_MANAGED_FUSION_COMPONENT_HPP
+#endif // BOOST_DATAFLOW_MANAGED_IO_COMPONENT_HPP

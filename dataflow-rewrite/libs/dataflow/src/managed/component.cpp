@@ -5,6 +5,7 @@
 
 #include <boost/dataflow/managed/component.hpp>
 #include <boost/dataflow/managed/network.hpp>
+#include <boost/dataflow/managed/port.hpp>
 
 namespace boost { namespace dataflow { namespace managed {
 
@@ -21,6 +22,11 @@ component::component(const component &other) : m_network_context(other.m_network
 component::~component()
 {
     m_network_context.unregister_component(this);
+}
+
+void component::claim_port(port_base &p)
+{
+    p.set_component_context(*this);
 }
 
 

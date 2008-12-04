@@ -9,6 +9,7 @@
 namespace boost { namespace dataflow { namespace managed {
 
 class network;
+class port_base;
 
 class component
 {
@@ -27,6 +28,7 @@ public:
     {
         return m_topological_sort_index;
     }
+    void claim_port(port_base &p);
 private:
     network &m_network_context;
     unsigned m_topological_sort_index;

@@ -9,8 +9,8 @@ project dataflow/test/managed
     : requirements 
       <include>../../../..
       <define>BOOST_ALL_NO_LIB=1
-#      <library>/dataflow/managed//dataflow_managed/<link>static
-      <library>../../build/managed//dataflow_managed/<link>static
+#      <library>/dataflow/managed//dataflow_managed
+      <library>../../build/managed//dataflow_managed
     ;
 
 run test_port.cpp ;

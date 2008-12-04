@@ -7,23 +7,22 @@
 -----------------------------------------------===============================*/
 
 
-#include <boost/dataflow/managed/fusion_component.hpp>
+#include <boost/dataflow/managed/io_component.hpp>
 #include <boost/dataflow/managed/network.hpp>
 
-#include <boost/test/included/test_exec_monitor.hpp>
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( test ) 
 {
     using namespace boost;
     using boost::fusion::at_c;
     namespace df=boost::dataflow;
     df::managed::network network;
-    df::managed::fusion_component<bool> c(network);
+    df::managed::io_component<bool> c(network);
 
     BOOST_CHECK_EQUAL(&at_c<0>(df::entities(c)), &c.port<0>());
     BOOST_CHECK_EQUAL(&at_c<1>(df::entities(c)), &c.port<1>());
-
-    return 0;
 } // int test_main(int, char* [])
 
 

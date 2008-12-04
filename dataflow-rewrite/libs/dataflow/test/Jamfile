@@ -12,7 +12,7 @@ import testing ;
 project dataflow/test
     : requirements
       <define>BOOST_ALL_NO_LIB=1
-      <library>/boost/test//boost_unit_test_framework/<link>static
+      <library>/boost/test//boost_unit_test_framework
     ;
 
 build-project generic ;

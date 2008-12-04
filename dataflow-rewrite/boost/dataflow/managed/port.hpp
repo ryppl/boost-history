@@ -19,14 +19,16 @@ namespace boost { namespace dataflow { namespace managed {
 class port_base
 {
 public:
-    port_base(component &component_context) : m_component_context(component_context)
+    port_base(component &component_context) : m_component_context(&component_context)
     {
-        
     };
     component &component_context()
-    {   return m_component_context; }
+    {   return *m_component_context; }
 private:
-    component &m_component_context;
+    void set_component_context(component &c)
+    {   m_component_context = &c; }
+    component *m_component_context;
+    friend class component;
 };
 
 template<typename T, typename PortCategory>

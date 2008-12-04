@@ -7,9 +7,10 @@
 #include <boost/dataflow/managed/port.hpp>
 #include <boost/dataflow/managed/network.hpp>
 
-#include <boost/test/included/test_exec_monitor.hpp>
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( test ) 
 {
     using namespace boost;
     namespace df=boost::dataflow;
@@ -37,7 +38,6 @@ int test_main(int, char* [])
     BOOST_CHECK_EQUAL(network.changed_components().size(), 1u);
     BOOST_CHECK_EQUAL(*network.changed_components().begin(), &input_component);
     
-    return 0;
 } // int test_main(int, char* [])
 
 

@@ -8,7 +8,8 @@
 #include <boost/dataflow/managed/network.hpp>
 #include <boost/assign/std/vector.hpp>
 
-#include <boost/test/included/test_exec_monitor.hpp>
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
 namespace df=boost::dataflow;
 
@@ -66,7 +67,7 @@ public:
     unsigned invoke_count;
 };
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( test ) 
 {
     // our network
     df::managed::network network;
@@ -137,7 +138,6 @@ int test_main(int, char* [])
     BOOST_CHECK_EQUAL(CplusD.invoke_count, 2u);
     BOOST_CHECK_EQUAL(ApBtimesCpD.invoke_count, 3u);
     
-    return 0;
 } // int test_main(int, char* [])
 
 
