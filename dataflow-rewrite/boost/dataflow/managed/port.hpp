@@ -121,7 +121,7 @@ namespace extension {
         typedef void result_type;
         
         template<typename Producer, typename Consumer>
-        result_type operator()(Producer &producer, Consumer &consumer)
+        result_type operator()(Producer &producer, Consumer &consumer, operations::connect op=operations::connect())
         {
             managed::connect(producer, consumer);
         }
