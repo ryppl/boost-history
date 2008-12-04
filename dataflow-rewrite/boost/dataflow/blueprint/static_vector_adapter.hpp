@@ -83,7 +83,7 @@ namespace detail
 }
 
 
-template<typename BlueprintFramework, typename VectorOrRef, typename Base=framework_entity<BlueprintFramework> >
+template<typename BlueprintFramework, typename VectorOrRef, typename Base=vector<BlueprintFramework> >
 class static_vector_adapter : public framework_entity_adapter<BlueprintFramework, VectorOrRef, Base>
 {
     typedef framework_entity_adapter<BlueprintFramework, VectorOrRef, Base> base_type;
