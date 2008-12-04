@@ -34,7 +34,7 @@ typedef df::blueprint::factory<my_blueprint_framework, boost::mpl::vector<int> >
 
 struct constructor_int
 {
-    factory_int_type::framework_entity_type *operator()(factory_int_type::framework_context_type &c, int x) const
+    factory_int_type::produced_type *operator()(factory_int_type::framework_context_type &c, int x) const
     {
         return new df::blueprint::port_adapter<my_blueprint_framework, my_port_producer>(c);
     }

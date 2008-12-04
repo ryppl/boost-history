@@ -50,13 +50,12 @@ public:
     friend class boost::iterator_core_access;
 };
 
-template<typename BlueprintFramework, typename AdditionalArgs=mpl::vector<> >
+template<typename BlueprintFramework, typename AdditionalArgs=mpl::vector<>, typename ProducedType=framework_entity<BlueprintFramework> >
 class factory
 {
 public:
     typedef typename BlueprintFramework::framework_type framework_type;
-    typedef framework_entity<BlueprintFramework> entity_type;
-    typedef framework_entity<BlueprintFramework> framework_entity_type;
+    typedef ProducedType produced_type;
     typedef framework_context<BlueprintFramework> framework_context_type;
     typedef
         typename function_types::function_type
@@ -65,7 +64,7 @@ public:
             <
                 mpl::vector
                 <
-                    framework_entity_type *,
+                    produced_type *,
                     framework_context_type &
                 >,
                 AdditionalArgs
@@ -77,9 +76,9 @@ public:
 
     typedef key_iterator<map_type> iterator;
     
-    std::auto_ptr<entity_type> make(const std::string &key)
+    std::auto_ptr<produced_type> make(const std::string &key)
     {
-        std::auto_ptr<entity_type> ret(m_components[key]());
+        std::auto_ptr<produced_type> ret(m_components[key]());
         return ret;
     }
     key_iterator<map_type> begin()
