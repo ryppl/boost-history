@@ -596,7 +596,7 @@
 			<fn_param concept="Class" name="instance"/>
 			<fn_param concept="TypeReference" name="dest_ref"/>
 		</member_function>
-		<member_function concept="TypeReference" name="query">
+		<member_function concept="TypeReference" name="set">
 			<desc>Generic attribute value setter. Assigns the new_value to the reflected class attribute, when given an instance of the class that the attribute belongs to.</desc>
 			<fn_param concept="Class" name="instance"/>
 			<fn_param concept="Type" name="new_value"/>
