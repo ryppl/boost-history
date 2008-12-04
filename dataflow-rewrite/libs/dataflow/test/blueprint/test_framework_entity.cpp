@@ -38,4 +38,6 @@ BOOST_AUTO_TEST_CASE( test )
     
     // test copy construction
     df::blueprint::framework_entity_adapter<my_blueprint_framework_with_context, my_port_with_context> context_copy_construction(fcc, pwc);
+    // test copy construction
+    df::blueprint::framework_entity_adapter<my_blueprint_framework_with_context, my_port_with_context> context_const_copy_construction(fcc, my_port_with_context(fcc.object()));
 }

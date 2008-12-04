@@ -52,6 +52,7 @@ public:
         BOOST_ASSERT(m_descriptor_map.find(c) != m_descriptor_map.end());
         graph_type::vertex_descriptor v = m_descriptor_map[c];
         remove_vertex(v, m_graph);
+        m_descriptor_map.erase(c);
     }
     void notify_connect(component &producer, component &consumer)
     {
