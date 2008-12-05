@@ -24,8 +24,16 @@ Distributed under the Boost Software License, Version 1.0.
 [def __Itvs__         [classref boost::itl::interval Intervals]]
 [def __itv_set__      [classref boost::itl::interval_set interval_set]]
 [def __itv_sets__     [classref boost::itl::interval_set interval_sets]]
+[def __itv_bset__     [classref boost::itl::interval_base_set interval_set]]
+[def __Itv_bset__     [classref boost::itl::interval_base_set Interval_set]]
 [def __itv_bsets__    [classref boost::itl::interval_base_set interval_sets]]
 [def __Itv_bsets__    [classref boost::itl::interval_base_set Interval_sets]]
+
+[def __ele_set__      [classref boost::itl::set set]]
+[def __ele_sets__     [classref boost::itl::set sets]]
+[def __itl_set__      [classref boost::itl::set itl::set]]
+[def __itl_sets__     [classref boost::itl::set itl::sets]]
+
 
 [def __Itv_set__      [classref boost::itl::interval_set Interval_set]]
 [def __spl_itv_set__  [classref boost::itl::split_interval_set split_interval_set]]
@@ -35,11 +43,20 @@ Distributed under the Boost Software License, Version 1.0.
 [def __Sep_itv_set__  [classref boost::itl::separate_interval_set Separate_interval_set]]
 [def __itv_map__      [classref boost::itl::interval_map interval_map]]
 [def __itv_maps__     [classref boost::itl::interval_map interval_maps]]
+[def __itv_map_s__    [classref boost::itl::interval_map interval_map's]]
+[def __itv_bmap__     [classref boost::itl::interval_base_map interval_map]]
+[def __Itv_bmap__     [classref boost::itl::interval_base_map Interval_map]]
 [def __itv_bmaps__    [classref boost::itl::interval_base_map interval_maps]]
 [def __Itv_bmaps__    [classref boost::itl::interval_base_map Interval_maps]]
 [def __Itv_map__      [classref boost::itl::interval_map Interval_map]]
 [def __spl_itv_map__  [classref boost::itl::split_interval_map split_interval_map]]
 [def __Spl_itv_map__  [classref boost::itl::split_interval_map Split_interval_map]]
+[def __spl_itv_maps__ [classref boost::itl::split_interval_map split_interval_maps]]
+
+[def __ele_map__      [classref boost::itl::map map]]
+[def __ele_maps__     [classref boost::itl::map maps]]
+[def __itl_map__      [classref boost::itl::map itl::map]]
+[def __itl_maps__     [classref boost::itl::map itl::maps]]
 
 [def __itv_bse_set__  [classref boost::itl::interval_base_set interval_base_set]]
 [def __e              [link element_type *e*]]
@@ -70,20 +87,22 @@ Distributed under the Boost Software License, Version 1.0.
 
 [section Definition and Basic Example]
 
-The Interval Template Library (ITL) offers *intervals* and two kinds of 
-interval containers: *interval_sets* and *interval_maps*.
+The ['*Interval Template Library (ITL)*] provides __itvs__ and two kinds of 
+interval containers: __itv_sets__ and __itv_maps__.
 
-An __itv_bsets__ implements a [*set] ['(of elements)] using a ['*set*] of intervals.[br]
-An __itv_bmaps__ implements a [*map] ['(of element value pairs)] using a ['*map*] of interval value pairs.
+* An __itv_bset__ implements a [*set] as a set of intervals.
+* An __itv_bmap__ implements a [*map] as a map of interval value pairs.
 
-__Itv_bsets__ and __itv_bmaps__ thus expose two different aspects in
+[h4 Two Aspects]
+
+__Itv_bsets__ and __itv_bmaps__ expose two different aspects in
 their interfaces: (1) The functionality of a set or a map, which is the more 
-['abstract aspect]. And (2) the functionality of an interval container which
+['abstract aspect]. And (2) the functionality of a container of intervals which
 is the more specific and ['implementation related aspect]. In practice both 
 aspects are useful and are therefore supported. 
 
 The first aspect, that will be called ['*conceptual aspect*], is the more important one.
-It means that we will commonly use any interval_set or interval_map like a normal
+It means that we can use any __itv_set__ or __itv_map__ like a normal
 set or map ['*of elements*].
 
 ``
@@ -93,19 +112,20 @@ bool has_answer = mySet.contains(42);
 ``
 
 The second aspect, that will be called ['*iterative aspect*], allows to exploit the
-fact, that the elements of __itv_sets__ and __itv_maps__ are commonly clustered in
+fact, that the elements of __itv_sets__ and __itv_maps__ are clustered in
 __itvs__ that we can iterate over.
 
 ``
 // Switch on my favorite telecasts using an interval_set
 interval<seconds> news(make_seconds("20:00:00"), make_seconds("20:15:00"));
 interval<seconds> talk_show(make_seconds("22:45:30"), make_seconds("23:30:50"));
-interval_set<seconds> myTvProgam;
+interval_set<seconds> myTvProgram;
 myTVProgram.add(news).add(talk_show);
 
-// Iterating over elements (seconds) would be silly
+// Iterating over elements (seconds) would be silly ...
 for(interval_set<seconds>::iterator telecast = myTvProgam.begin(); 
     telecast != myTvProgam.end(); ++telecast)
+	//...so this iterates over intervals
    TV.switch_on(*telecast);
 ``
 
@@ -113,7 +133,24 @@ Working with interval_sets and interval_maps can be
 beneficial whenever the elements of 
 sets appear in contiguous chunks: __itvs__. This is obviously the 
 case in many problem domains, namely in fields that deal with problems 
-related to date and time. 
+related to date and time.
+
+[h4 Addabitlity and Subtractability]
+
+Unlike std::sets and maps, __itv_sets__ and __itv_maps__ implement
+concept Addable and Subtractable. So __itv_sets__ define an 
+`operator +=` that is naturally implemented as ['*set union*] and an
+`operator -=` that is consequently implemented as ['*set difference*].
+In the *itl* also __itv_maps__ are Addable and Subtractable. 
+It turned out to be a very fruitful concept to propagate the
+addition or subtraction to the __itv_map_s__ associated values
+in cases where the insertion of an interval value pair into an
+__itv_map__ resulted in a collision of the inserted interval
+value pare with intervals value pairs, that were already in the 
+__itv_map__. This operation propagation is called ['*aggregate on overlap*].
+
+  
+[h4 Aggregate on Overlap]
 
 This is a first motivating example of a very small party, demonstrationg the 
 ['*aggregate on overlap*] principle ['*(aggrovering)*] on __itv_maps__:
@@ -121,7 +158,7 @@ This is a first motivating example of a very small party, demonstrationg the
 In the example Mary enters the party first. She attends during the 
 time interval [20:00,22:00). Harry enters later he stays within [21:00,23:00).
 ``
-typedef set<string> guests;
+typedef itl::set<string> guests;
 interval_map<time, guests> party; 
 party += make_pair(interval<time>::rightopen(20:00, 22:00), guests("Mary"));
 party += make_pair(interval<time>::rightopen(21:00, 23:00), guests("Harry")); 
@@ -132,12 +169,49 @@ party += make_pair(interval<time>::rightopen(21:00, 23:00), guests("Harry"));
 ``
 On overlap of intervals, the corresponding name sets are accumulated. At
 the points of overlap the intervals are split. The accumulation of content on
-overlap of intervals is done via an operator += that has to be implemented
-for the content parameter of the __itv_map__.
+overlap of intervals is done via an `operator +=` that has to be implemented
+for the associated values of the __itv_map__. In the example
+the associated values are guest sets. This set has thus to implement
+`operator +=` as set union. 
 
 As can be seen from the example an __itv_map__ has both 
 a ['*decompositional behavior*] (on the time dimension) as well as 
 an ['*accumulative one*] (on the associated values). 
+[endsect]
+
+[section Itl's class templates]
+
+In completion to interval containers the *itl* provides element containers
+__itl_set__ and __itl_map__. 
+
+* An __itl_set__ is behavioral equal to __itv_bsets__ 
+  except for iteration. That is to say behavioral equal on 
+  the conceptual aspect.
+
+* An __itl_map__ is behavioral equal to __itv_bmaps__ 
+  except for iteration, that is on the conceptional
+  aspect. Specifically a __itl_map__
+  implements ['*aggregate on overlap*], which is
+  named ['*aggregate on collision*] for an element container.
+
+The following tabel gives an overview over the main
+class templates provided by the *itl*.  
+
+[table Synopsis over the itl's class templates
+[[granularity][style]     [sets]           [maps]           ]
+[[interval]   []          [__itv__]        []               ]            
+[[]           [joining]   [__itv_set__]    [__itv_set__]    ]
+[[]           [separating][__sep_itv_set__][]               ]
+[[]           [splitting] [__spl_itv_set__][__spl_itv_set__]]
+[[element]    []          [__ele_set__]    [__ele_map__]    ]
+]                                   
+
+__Itv__ is placed deliberately in column *sets* because an
+interval is a set as well. Column ['*style*] refers to
+the different ways in which interval containers digest added
+intervals. These combining styles are described in the next
+section.
+
 [endsect]
 
 [section Interval Combining Styles]
@@ -212,8 +286,8 @@ and =interval_maps= /D/ and /E/ represent the same map of elements [^{1->1, 2->2
 __Itv_set__ and __itv_map__ are always 
 in a ['*minimal representation*]. This is useful in many cases, where the 
 points of insertion or intersecton of intervals are not relevant. So in most 
-instances [classref boost::itl::interval_set interval_set] and 
-[classref boost::itl::interval_map Interval_map] will be the first choice 
+instances __itv_set__ and 
+__itv_map__ will be the first choice 
 for an interval container.
 
 [h4 Splitting interval containers]

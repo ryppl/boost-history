@@ -89,21 +89,45 @@ as aggregation function.
 [section Interval]
 
 Example *interval* shows some basic functionality of __itvs__. 
-Different instances of __itvs__ for integral ([^int, Time]) and
-continuous types ([^double, std::string]) are used and some
-intersing functions calls on open intervals are tested e.g.:
-``interval<double>::rightopen(1/sqrt(2.0), sqrt(2.0)).contains(sqrt(2.0));``
+
+* Different instances of __itvs__ for integral ([^int, Time]) and
+  continuous types ([^double, std::string]) are used.
+
+* The examples uses open and closed intervals bounds.
+
+* Some borderline functions calls on open interval borders are tested e.g.:
+  `interval<double>::rightopen(1/sqrt(2.0), sqrt(2.0)).contains(sqrt(2.0));`
 
 [import ../example/interval/interval.cpp]
 [example_interval]
 [endsect]
 
 [section Interval container]
+
+Example [*interval container] demonstrates the characteristic behaviors
+of different interval containers that are also summarized
+in the introductory [link boost.itl.introduction.interval_combining_styles Interval Combining Styles].
+
 [import ../example/interval_container/interval_container.cpp]
 [example_interval_container]
 [endsect]
 
 [section Time grids for months and weeks]
+
+A __spl_itv_set__ preserves all interval borders on insertion
+and intersection operations. So given a __spl_itv_set__
+``
+x =  {[1,     3)}
+x.add(     [2,     4)) then
+x == {[1,2)[2,3)[3,4)}
+``
+Using this property we can intersect __spl_itv_maps__ in
+order to iterate over intervals accounting for all occurring
+changes of interval borders.
+
+In this example we provide an intersection of two __spl_itv_sets__
+representing a month and week time grid. 
+
 [import ../example/month_and_week_grid/month_and_week_grid.cpp]
 [example_month_and_week_grid]
 [endsect]
