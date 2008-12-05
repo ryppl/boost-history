@@ -1,0 +1,132 @@
+Synopsis
+========
+
+This paper describes a safety problem with rvalue references.  The underlying
+issue has been known for some time, but recently-discovered examples have made
+its seriousness much more apparent.  We also propose a solution to the problem.
+
+Example
+=======
+
+Consider::
+
+  template <class Cont>
+  void assign(queue<Cont>& dest, Cont const& src); // #1: copy src into dest
+
+  std::vector<int> x;
+  queue<std::vector<int> > q;
+
+  assign(q, x);                                    // copy from lvalue
+  assign(q, std::vector<int>(10));                 // copy from rvalue
+
+The Move/Copy Overload Idiom
+============================
+
+In order to optimize the 2nd call to assign, we can add move semantics support
+with the following typical idiomatic use of rvalue references::
+
+  template <class Cont>
+  void assign(queue<Cont>& dest, Cont&& src);      // #2: move from src rvalues into dest
+
+Although moving from src changes it, assign is still logically non-mutating on
+its second argument.  The optimization that moves from the argument is only
+applied when that argument is an unnamed temporary and thus inaccessible and
+invisible to the rest of the program.
+
+How Move-Only Types Work
+========================
+
+A movable but non-copyable argument type follows the same binding pattern as
+std::vector<int> does: rvalue arguments, which can be safely moved from, select
+overload #2::
+
+  queue<move_only_container> q2;
+  assign(q2, move_only_container());
+
+As before, lvalue arguments select overload #1::
+
+  move_only_container y;
+  assign(q2, y);
+
+However, since the argument type is noncopyable, the body of #1 fails
+compilation when it attempts to make a copy.
+
+The Problem
+===========
+
+The problem is that the lvalue/rvalue overload set doesn't degrade safely.  If
+overload #1 is removed from consideration, overload #2 will match both rvalues
+and lvalues, moving silently from all mutable arguments.
+
+When Will That Happen? 
+======================
+
+There are a number of possible reasons for such a removal, but simple programmer
+blunders may be the most likely causes.  For example, an errant finger might hit
+the delete key when overload #1 is selected.  
+
+Some mistakes are not nearly so obvious.  For example, suppose we want the
+ability to control allocation when we know the source container is going to be
+copied.  We might modify overload #1 as follows::
+
+  // #1 with optional allocator
+  template <class Cont>
+  void assign(queue<Cont>& dest, Cont const& src, 
+              typename Cont::allocator_type = src.allocator());
+
+All is well until the user forgets to define a nested allocator_type in his
+container and SFINAE eliminates overload #1, again moving from lvalues.
+
+Adding Concept Constraints
+==========================
+
+To use our assign function in a constrained context, we'll need to add
+concept constraints for the operations performed in the function body::
+
+  template <class Cont>
+  requires CopyAssignable<Cont>
+  void assign(queue<Cont>& dest, Cont const& src);  #1
+
+  template <class Cont>
+  requires MoveAssignable<Cont>
+  void assign(queue<Cont>& dest, Cont&& src);       #2
+
+Passing an argument that doesn't meet the CopyAssignable constraint causes
+overload #1 to be removed via SFINAE.  In other words, *any* move-only argument,
+even an lvalue, will select overload #2.
+
+Why This Happens
+================
+
+There is no precedent in const-correct code for a non-mutating call to become
+mutating when an overload is removed from the set.  So why does it happen here?
+
+In C++03 overload sets where only one overload mutates data (see
+set<T>::operator[]), the mutating operation always binds less liberally to
+arguments than the non-mutating operation.  Non-const operations never attract
+const arguments.  Rvalue references, however, *will* attract lvalues.
+
+Proposed Solution
+=================
+
+Because an rvalue reference in a function signature is used as a signal that we
+can move, lvalues must not be allowed to bind to rvalue references.  
+
+Note: this change does not impact perfect forwarding.
+
+  template <class T>
+  void f(T&& x) { ... forward<T>(x) ... }
+
+When an lvalue of type U is passed to f, T is deduced as U&, and since U& && is
+U&, the actual reference being bound is an lvalue reference.
+
+Impact
+======
+
+The existing definition of std::move takes advantage of the current liberal
+binding rule, so we'd need to add an overload to support lvalues.  We'd also
+need to decide whether it makes sense to preserve the new functionality
+supporting rvalue streams.  If so, all the streaming operators that were changed
+for C++0x to take an rvalue reference first argument would need a second
+overload.  If not, we should revert these operators to their original
+definitions.
