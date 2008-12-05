@@ -14,6 +14,8 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
 
+#include <boost/foreach.hpp>
+
 namespace boost { namespace dataflow { namespace managed {
 
 
@@ -39,20 +41,22 @@ class network
 public:
     void register_component(component *c)
     {
-        std::cout << this << " registering " << c << std::endl;
         graph_type::vertex_descriptor v = add_vertex(m_graph);
+        std::cout << this << " registering " << c << " with descriptor " << v << std::endl;
         m_graph[v].ptr = c;
-        std::cout << m_descriptor_map.size() << std::endl;
         m_descriptor_map[c]=v;
-        std::cout << m_descriptor_map.size() << std::endl;
     }
     void unregister_component(component *c)
     {
-        std::cout << this << " unregistering " << c << std::endl;
         BOOST_ASSERT(m_descriptor_map.find(c) != m_descriptor_map.end());
         graph_type::vertex_descriptor v = m_descriptor_map[c];
+        std::cout << this << " unregistering " << c << " with descriptor " << v << std::endl;
         remove_vertex(v, m_graph);
         m_descriptor_map.erase(c);
+        // vertex_descriptors have been adjusted
+        BOOST_FOREACH(descriptor_map_type::value_type &pair, m_descriptor_map)
+            if(pair.second >= v)
+                pair.second--;
     }
     void notify_connect(component &producer, component &consumer)
     {
@@ -89,7 +93,6 @@ public:
             m_graph[*it].ptr->topological_sort_index(it - topological_sort.begin());
         for(std::vector<graph_type::vertex_descriptor>::iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
             m_changed.insert(m_graph[*it].ptr);
-
     }
     void update()
     {
@@ -102,7 +105,8 @@ public:
     }
 private:
     graph_type m_graph;
-    std::map<component *, graph_type::vertex_descriptor> m_descriptor_map;
+    typedef std::map<component *, graph_type::vertex_descriptor> descriptor_map_type;
+    descriptor_map_type m_descriptor_map;
     changed_type m_changed;
 };
 

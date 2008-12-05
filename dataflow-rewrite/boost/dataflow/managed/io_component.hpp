@@ -113,7 +113,7 @@ public:
         : component(static_cast<const component &>(other))
         , m_ports(other.m_ports)
     {
-        fusion::for_each(m_ports, set_port_context(*this)); 
+        fusion::for_each(m_ports, detail::set_port_context(*this)); 
     }
     template<int Index>
     typename fusion::result_of::at_c<ports_type, Index>::type port()
