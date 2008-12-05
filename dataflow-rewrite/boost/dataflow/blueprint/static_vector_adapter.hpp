@@ -88,19 +88,19 @@ class static_vector_adapter : public framework_entity_adapter<BlueprintFramework
 {
     typedef framework_entity_adapter<BlueprintFramework, VectorOrRef, Base> base_type;
 public:
-    static_vector_adapter(framework_context<BlueprintFramework> &fo)
+    static_vector_adapter(blueprint::framework_context<BlueprintFramework> &fo)
         : base_type(fo)
     {
         initialize_ports();
     }
     template<typename T>
-    static_vector_adapter(framework_context<BlueprintFramework> &fo, const T &t)
+    static_vector_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
         : base_type(fo, t)
     {
         initialize_ports();
     }
     template<typename T>
-    static_vector_adapter(framework_context<BlueprintFramework> &fo, T &t)
+    static_vector_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t)
         : base_type(fo, t)
     {
         initialize_ports();

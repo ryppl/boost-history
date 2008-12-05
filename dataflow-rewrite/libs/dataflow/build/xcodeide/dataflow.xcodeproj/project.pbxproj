@@ -136,6 +136,9 @@
 		089A28B10E8D96F2000FCCC9 /* my_framework.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_framework.hpp; sourceTree = "<group>"; };
 		089A28B50E8D9772000FCCC9 /* my_ports.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_ports.hpp; sourceTree = "<group>"; };
 		089A28D80E8D99BC000FCCC9 /* my_entity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = my_entity.hpp; sourceTree = "<group>"; };
+		089F03530EE9615200C88FE5 /* shared_ptr_to_element.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = shared_ptr_to_element.hpp; sourceTree = "<group>"; };
+		089F03570EE96BA800C88FE5 /* test_shared_ptr_to_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_shared_ptr_to_element.cpp; sourceTree = "<group>"; };
+		089F03590EE96BEB00C88FE5 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A0FF8A0E8B4012000F0F8F /* file_template.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = file_template.py; sourceTree = "<group>"; };
 		08A227910EAE417000F70466 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A227930EAE417C00F70466 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
@@ -293,6 +296,15 @@
 			path = examples;
 			sourceTree = "<group>";
 		};
+		089F03560EE96B8E00C88FE5 /* utility */ = {
+			isa = PBXGroup;
+			children = (
+				089F03570EE96BA800C88FE5 /* test_shared_ptr_to_element.cpp */,
+				089F03590EE96BEB00C88FE5 /* Jamfile */,
+			);
+			path = utility;
+			sourceTree = "<group>";
+		};
 		08A2277C0EAE3E6D00F70466 /* vivid */ = {
 			isa = PBXGroup;
 			children = (
@@ -378,6 +390,7 @@
 				0826E3370EA53F0C0090AB4E /* guarded_enable_if_type.hpp */,
 				08A77AEE0E4FB4C800B8793E /* is_type.hpp */,
 				0826E33A0EA53F4C0090AB4E /* all_of.hpp */,
+				089F03530EE9615200C88FE5 /* shared_ptr_to_element.hpp */,
 			);
 			path = utility;
 			sourceTree = "<group>";
@@ -529,6 +542,7 @@
 		08C675960C13A03E00D85379 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				089F03560EE96B8E00C88FE5 /* utility */,
 				08B3CC230EC8B823002D2124 /* managed */,
 				08AA90400EAD43AD00409A2E /* vivid */,
 				08ED9F2B0E9AFE0F00894656 /* blueprint */,

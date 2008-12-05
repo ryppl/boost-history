@@ -6,7 +6,8 @@
 project dataflow/managed 
     : source-location ../../src/managed
     : requirements
-        <library>/boost/system//boost_system    
+        <library>/boost/system//boost_system
+        <define>BOOST_ALL_NO_LIB=1
     : usage-requirements
         <library>/boost/system//boost_system
     ;

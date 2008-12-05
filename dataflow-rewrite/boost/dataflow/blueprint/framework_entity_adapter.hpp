@@ -25,16 +25,16 @@ class framework_entity_adapter : public Base
 public:
     typedef typename remove_reference<EntityOrRef>::type entity_type;
     
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo)
         : Base(fo, typeid(m_entity))
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const T &t)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
@@ -64,31 +64,31 @@ class framework_entity_adapter<BlueprintFramework, EntityOrRef, Base,
 public:
     typedef typename remove_reference<EntityOrRef>::type entity_type;
     
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo)
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object())
     {}
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, entity_type &t)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, entity_type &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const entity_type &t)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, const entity_type &t)
         : Base(fo, typeid(m_entity))
         , m_entity(t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, const T &t)
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object(), t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t,
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t,
         typename disable_if<mpl::and_<utility::is_type<T>, is_reference> >::type* dummy = 0)
         : Base(fo, typeid(m_entity))
         , m_entity(fo.object(), t)
     {}
     template<typename T>
-    framework_entity_adapter(framework_context<BlueprintFramework> &fo, T &t,
+    framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t,
         typename enable_if<mpl::and_<utility::is_type<T>, is_reference> >::type* dummy = 0)
         : Base(fo, typeid(m_entity))
         , m_entity(t)

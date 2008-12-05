@@ -18,7 +18,7 @@ namespace boost { namespace dataflow { namespace blueprint {
 template<typename BlueprintFramework>
 class framework_entity : public castable_polymorphic_object
 {
-    typedef framework_context<BlueprintFramework> framework_context_type;
+    typedef blueprint::framework_context<BlueprintFramework> framework_context_type;
 public:
     struct dataflow_traits
     {

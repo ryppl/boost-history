@@ -18,6 +18,7 @@ project dataflow/test
 build-project generic ;
 build-project blueprint ;
 build-project managed ;
+build-project utility ;
 
 if $(guigl_present)
 {

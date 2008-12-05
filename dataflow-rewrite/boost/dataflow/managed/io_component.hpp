@@ -122,7 +122,7 @@ public:
     {   return m_ports; }
 protected:
     ports_type m_ports;
-    friend class detail::set_port_context;
+    friend struct detail::set_port_context;
 };
 
 }
