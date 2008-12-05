@@ -6,6 +6,8 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #----------------------------------------------===============================*/
 
+import feature ;
+
 lib glut : : <name>glut <link>shared ;
 
 project boost/guigl 
@@ -20,6 +22,15 @@ project boost/guigl
         <define>BOOST_ALL_NO_LIB=1
     ;
 
+feature.feature guigl_binding : glut fltk : propagated ;
+feature.set-default guigl_binding : glut ;
+
+lib boost_guigl_binding
+    :
+        window.cpp
+    : <guigl_binding>fltk:<define>BOOST_GUIGL_USE_FLTK_GLUT
+    ;
+
 SOURCES =
     window application
     widget/button widget/labeled_button
@@ -29,4 +40,7 @@ SOURCES =
 lib boost_guigl
     : $(SOURCES).cpp
     [ obj widget_window_obj : widget/window.cpp ]
+    : : : <library>boost_guigl_binding
     ;
+
+
