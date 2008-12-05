@@ -6,6 +6,7 @@
 #ifndef BOOST_DATAFLOW_MANAGED_COMPONENT_HPP
 #define BOOST_DATAFLOW_MANAGED_COMPONENT_HPP
 
+
 namespace boost { namespace dataflow { namespace managed {
 
 class network;

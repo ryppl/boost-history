@@ -9,15 +9,20 @@
 #include <vector>
 #include <set>
 
-#include <iostream>
+#include <boost/dataflow/generic/port.hpp>
 #include <boost/dataflow/managed/component.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 
-#include <boost/foreach.hpp>
+
+namespace boost { namespace asio { class io_service; }}
 
 namespace boost { namespace dataflow { namespace managed {
 
+template<typename T, typename PortCategory>
+class port;
 
 namespace detail {
     struct component_ptr_cmp
@@ -26,6 +31,22 @@ namespace detail {
         {
             return lhs->topological_sort_index() < rhs->topological_sort_index();
         }
+    };
+    
+    template<typename T>
+    struct set_port_value
+    {
+        set_port_value(port<T, ports::producer> &port, const T &t)
+            : port(port), t(t)
+        {}
+        
+        void operator()()
+        {
+            port.set(t);
+        }
+    private:
+        port<T, ports::producer> &port;
+        T t;
     };
 }
 
@@ -39,32 +60,13 @@ class network
         boost::vecS, boost::vecS, boost::bidirectionalS, node_t> graph_type;
 
 public:
-    void register_component(component *c)
-    {
-        graph_type::vertex_descriptor v = add_vertex(m_graph);
-        std::cout << this << " registering " << c << " with descriptor " << v << std::endl;
-        m_graph[v].ptr = c;
-        m_descriptor_map[c]=v;
-    }
-    void unregister_component(component *c)
-    {
-        BOOST_ASSERT(m_descriptor_map.find(c) != m_descriptor_map.end());
-        graph_type::vertex_descriptor v = m_descriptor_map[c];
-        std::cout << this << " unregistering " << c << " with descriptor " << v << std::endl;
-        remove_vertex(v, m_graph);
-        m_descriptor_map.erase(c);
-        // vertex_descriptors have been adjusted
-        BOOST_FOREACH(descriptor_map_type::value_type &pair, m_descriptor_map)
-            if(pair.second >= v)
-                pair.second--;
-    }
-    void notify_connect(component &producer, component &consumer)
-    {
-        std::cout << this << " connecting " << &producer << " and " << &consumer << std::endl;
-        std::cout << m_descriptor_map.size() << std::endl;
-        add_edge(m_descriptor_map[&producer], m_descriptor_map[&consumer], m_graph);
-        update_topological_sort();
-    }
+    network(boost::shared_ptr<asio::io_service> service=boost::shared_ptr<asio::io_service>())
+        : m_io_service(service)
+    {}
+    
+    void register_component(component *c);
+    void unregister_component(component *c);
+    void notify_connect(component &producer, component &consumer);
     void notify_change(component &changed)
     {
         m_changed.insert(&changed);
@@ -74,40 +76,29 @@ public:
     {
         return m_changed;
     }
-    typedef std::vector<component *> topological_sort_type;
-    void topological_sort(const topological_sort_type &topological_sort)
+
+    void update_topological_sort();
+    void update();
+    
+    void set_io_service(boost::shared_ptr<asio::io_service> service)
+    {   m_io_service = service; }
+    template<typename T>
+    void async_set_port_value(port<T, ports::producer> &port, const T &t)
     {
-        m_changed.clear();
-        for(topological_sort_type::const_iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
-            (*it)->topological_sort_index(it - topological_sort.begin());
-        for(topological_sort_type::const_iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
-            m_changed.insert(*it);
+        post_async(detail::set_port_value<T>(port, t));
     }
-    void update_topological_sort()
+    asio::io_service &io_service()
     {
-        m_changed.clear();
-        std::vector<graph_type::vertex_descriptor> topological_sort;
-        boost::topological_sort(m_graph, std::back_inserter(topological_sort));
-        std::reverse(topological_sort.begin(), topological_sort.end());
-        for(std::vector<graph_type::vertex_descriptor>::iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
-            m_graph[*it].ptr->topological_sort_index(it - topological_sort.begin());
-        for(std::vector<graph_type::vertex_descriptor>::iterator it=topological_sort.begin(); it!=topological_sort.end(); it++)
-            m_changed.insert(m_graph[*it].ptr);
-    }
-    void update()
-    {
-        while(!m_changed.empty())
-        {
-            component *next = *m_changed.begin();
-            m_changed.erase(m_changed.begin());
-            next->invoke();
-        }
+        return *m_io_service;
     }
 private:
+    void post_async(const boost::function<void()> &f);
+
     graph_type m_graph;
     typedef std::map<component *, graph_type::vertex_descriptor> descriptor_map_type;
     descriptor_map_type m_descriptor_map;
     changed_type m_changed;
+    boost::shared_ptr<asio::io_service> m_io_service;
 };
 
 inline void notify_change(component &c)

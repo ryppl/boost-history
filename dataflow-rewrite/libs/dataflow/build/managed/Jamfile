@@ -5,9 +5,13 @@
 
 project dataflow/managed 
     : source-location ../../src/managed
+    : requirements
+        <library>/boost/system//boost_system    
+    : usage-requirements
+        <library>/boost/system//boost_system
     ;
 
-SOURCES = component ;
+SOURCES = component network ;
 
 lib dataflow_managed : $(SOURCES).cpp 
     :
