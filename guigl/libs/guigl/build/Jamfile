@@ -27,7 +27,7 @@ feature.set-default guigl_binding : glut ;
 
 lib boost_guigl_binding
     :
-        window.cpp
+        [ obj binding_window_obj : window.cpp ]
     : <guigl_binding>fltk:<define>BOOST_GUIGL_USE_FLTK_GLUT
     ;
 
