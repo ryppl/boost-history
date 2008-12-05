@@ -15,7 +15,10 @@
 
 #     include <new>
 #     include <boost/pointee.hpp>
+#     include <boost/none_t.hpp>
 #     include <boost/get_pointer.hpp>
+#     include <boost/non_type.hpp>
+#     include <boost/type_traits/remove_cv.hpp>
 
 #     ifndef BOOST_FUNCTIONAL_FACTORY_MAX_ARITY
 #       define BOOST_FUNCTIONAL_FACTORY_MAX_ARITY 10
@@ -26,88 +29,133 @@
 
 namespace boost
 {
-    template< typename Pointer, class Allocator = std::allocator<void> > 
-    struct factory
+    enum factory_alloc_propagation
     {
+        factory_alloc_for_pointee_and_deleter,
+        factory_passes_alloc_to_smart_pointer
+    };
+
+    template< typename Pointer, class Allocator = boost::none_t,
+        factory_alloc_propagation AP = factory_alloc_for_pointee_and_deleter >
+    class factory;
+
+    //----- ---- --- -- - -  -   -
+
+    template< typename Pointer >
+    class factory<Pointer, boost::none_t> 
+    {
+      public:
         typedef typename boost::remove_cv<Pointer>::type result_type;
         typedef typename boost::pointee<result_type>::type value_type;
-        typedef typename Allocator::template rebind<value_type>::other
-            allocator_type;
-      private:
-        mutable allocator_type obj_allocator;
 
-        class memory;
-      public:
-
-        explicit factory(allocator_type const & a = allocator_type())
-          : obj_allocator(a)
+        factory()
         { }
 
-        inline result_type operator()() const
-        {
-            memory m(this->obj_allocator);
-            result_type result( new(m.get()) value_type() );
-            m.release();
-            return result;
-        }
-
 #     define BOOST_PP_FILENAME_1 <boost/functional/factory.hpp>
-#     define BOOST_PP_ITERATION_LIMITS (1,BOOST_FUNCTIONAL_FACTORY_MAX_ARITY)
+#     define BOOST_PP_ITERATION_LIMITS (0,BOOST_FUNCTIONAL_FACTORY_MAX_ARITY)
 #     include BOOST_PP_ITERATE()
-
     };
 
-    template< typename Pointer, class Allocator > 
-    struct factory<Pointer&, Allocator>;
-    // forbidden, would create a dangling reference
-
-    template< typename Pointer, class Allocator > 
-    class factory<Pointer,Allocator>::memory
-    // implements scope-guarded memory allocation
+    template< class Pointer, class Allocator, factory_alloc_propagation AP >
+    class factory
+        : Allocator::template rebind< typename boost::pointee<
+            typename boost::remove_cv<Pointer>::type >::type >::other
     {
-        allocator_type &  ref_allocator;
-        value_type *      ptr_memory;
+      public:
+        typedef typename boost::remove_cv<Pointer>::type result_type;
+        typedef typename boost::pointee<result_type>::type value_type;
+
+        typedef typename Allocator::template rebind<value_type>::other
+            allocator_type;
+
+        explicit factory(allocator_type const & a = allocator_type())
+          : allocator_type(a)
+        { }
+
+      private:
+
+        struct deleter
+            : allocator_type
+        {
+            inline deleter(allocator_type const& that) 
+              : allocator_type(that)
+            { }
+
+            allocator_type& get_allocator() const
+            {
+                return *const_cast<allocator_type*>(
+                    static_cast<allocator_type const*>(this));
+            }
+
+            void operator()(value_type* ptr) const
+            {
+                if (!! ptr) ptr->~value_type();
+                const_cast<allocator_type*>(static_cast<allocator_type const*>(
+                    this))->deallocate(ptr,1);
+            }
+        };
+
+        inline allocator_type& get_allocator() const
+        {
+            return *const_cast<allocator_type*>(
+                static_cast<allocator_type const*>(this));
+        }
+
+        inline result_type make_pointer(value_type* ptr, boost::non_type<
+            factory_alloc_propagation,factory_passes_alloc_to_smart_pointer>)
+        const
+        {
+            return result_type(ptr,deleter(this->get_allocator()));
+        }
+        inline result_type make_pointer(value_type* ptr, boost::non_type<
+            factory_alloc_propagation,factory_alloc_for_pointee_and_deleter>)
+        const
+        {
+            return result_type(ptr,deleter(this->get_allocator()),
+                this->get_allocator());
+        }
+
       public:
 
-        explicit memory(allocator_type & a)
-          : ref_allocator(a)
-          , ptr_memory(0l)
-        {
-            this->ptr_memory = a.allocate(1);
-        }
-
-        value_type * get() const
-        {
-            return this->ptr_memory;
-        }
-
-        void release()
-        {
-            this->ptr_memory = 0l;
-        }
-
-        ~memory()
-        {
-            if (!! this->ptr_memory)
-                this->ref_allocator.deallocate(this->ptr_memory,1);
-        }
+#     define BOOST_TMP_MACRO
+#     define BOOST_PP_FILENAME_1 <boost/functional/factory.hpp>
+#     define BOOST_PP_ITERATION_LIMITS (0,BOOST_FUNCTIONAL_FACTORY_MAX_ARITY)
+#     include BOOST_PP_ITERATE()
+#     undef BOOST_TMP_MACRO
     };
+
+    template< typename Pointer, class Allocator > 
+    class factory<Pointer&, Allocator>;
+    // forbidden, would create a dangling reference
 }
 
 #     define BOOST_FUNCTIONAL_FACTORY_HPP_INCLUDED
 #   else // defined(BOOST_PP_IS_ITERATING)
 #     define N BOOST_PP_ITERATION()
-
-        template< BOOST_PP_ENUM_PARAMS(N, typename T) >
-        inline result_type operator()(BOOST_PP_ENUM_BINARY_PARAMS(N,T,& a)) const
-        {
-            memory m(this->obj_allocator);
-            result_type result( new(m.get()) value_type(
-                BOOST_PP_ENUM_PARAMS(N, a)) );
-            m.release();
-            return result;
+#     if !defined(BOOST_TMP_MACRO)
+#       if N > 0
+    template< BOOST_PP_ENUM_PARAMS(N, typename T) >
+#       endif
+    inline result_type operator()(BOOST_PP_ENUM_BINARY_PARAMS(N,T,& a)) const
+    {
+        return result_type( new value_type(BOOST_PP_ENUM_PARAMS(N,a)) );
+    }
+#     else // defined(BOOST_TMP_MACRO)
+#       if N > 0
+    template< BOOST_PP_ENUM_PARAMS(N, typename T) >
+#       endif
+    inline result_type operator()(BOOST_PP_ENUM_BINARY_PARAMS(N,T,& a)) const
+    {
+        value_type* memory = this->get_allocator().allocate(1);
+        try
+        { 
+            return make_pointer(
+                new(memory) value_type(BOOST_PP_ENUM_PARAMS(N,a)),
+                boost::non_type<factory_alloc_propagation,AP>() );
         }
-
+        catch (...) { this->get_allocator().deallocate(memory,1); throw; }
+    }
+#     endif
 #     undef N
 #   endif // defined(BOOST_PP_IS_ITERATING)
 
