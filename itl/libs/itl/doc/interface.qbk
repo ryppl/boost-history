@@ -8,16 +8,65 @@
 
 [section Interface]
 
-[table Associated types of sets
-[[Aspects]  []        [type]            [interval_sets]             [interval]        [itl::set]        [std::set]]
-[[abstract] [data]    [domain_type]     [DomainT]                   [DomainT]         [DomainT]         []]
-[[]         [ordering][domain_compare]  [Compare<DomainT>]          [Compare<DomainT>][Compare<DomainT>][]]
-[[iterative][data]    [interval_type]   [Interval<Compare<DomainT>>][][][]]
-[[]         []        [key_type]        [Interval<Compare<DomainT>>][][]                                [_Key]]
-[[]         []        [value_type]      [Interval<Compare<DomainT>>][][]                                [_Key]]
-[[]         [ordering][interval_compare][exclusive_less<interval_type>][][]                             []]
-[[]         []        [key_compare]     [exclusive_less<interval_type>][][]                             [_Compare]]
+Section Interface gives an overview over the types and functions
+of the ITL. Synoptical tables allow to review the overall structure of
+the libraries design and to recognize structural equalities and differences
+with the corresponding containers of the standard template library.
+
+There are two majaor aspects or views of itl containers. The first and predominant
+aspect is called conceptual. The second and minor aspect is called iterative or
+iteration related.
+
+[table
+[[Aspect]    [Abstraction level][]                  []                   [Practical]]
+[[Conceptual][more abstract][concept related]       [iterator idependent][interval_sets(maps) can be used as sets(maps) 
+                                                                          except for element iteration.]]
+[[Iterative] [less abstract][implementation related][iterator dependent] [interval_sets(maps) can be interval iterated]]
 ]
+
+On the conceptual aspect
+
+* in interval implements a set of elements partially.
+* an interval_set implements a set of elements.
+* an interval_map implements a map of element value pairs.
+
+On the iteration related or iterative aspect
+
+* an interval_set implements a set of intervals.
+* an interval_map implements a map of interval value pairs.
+
+
+
+In the table of associated types of interval_sets
+there are types like key_type, value_type and key_compare
+for the iterative aspect.
+
+[section Types]
+
+[table Types and parameter types of sets
+[[]                   [type of elements][order of elements][type of intervals]                         [memory allocation]]
+[[template parameter] [class]  [template<class>class]      [template<class,template<class>class>class] [template<class>class]]    
+[[interval]           [DomainT][Compare = std::less]       []                                          []]
+[[interval_set]       [DomainT][Compare = std::less]       [Interval = itl::interval]                  [Alloc = std::alloc]]
+[[itl::set]           [DomainT][Compare = std::less]       [Interval = itl::interval]                  [Alloc = std::alloc]]
+[[template parameter] [class]  [class]                     [class]                                     [class]]
+[[std::set]           [_Key]   [_Compare = std::less<_Key>][]                                          [Alloc = std::alloc<_Key>]]
+]
+
+[table Associated types of sets
+[[Aspects]    []        [type]            [interval]        [interval_sets]                [itl::set]        [std::set]]
+[[conceptual] [data]    [domain_type]     [DomainT]         [DomainT]                      [DomainT]         []]
+[[]           [ordering][domain_compare]  [Compare<DomainT>][Compare<DomainT>]             [Compare<DomainT>][]]
+[[iterative]  [data]    [interval_type]   []                [Interval<DomainT,Compare>]    []                []]
+[[]           []        [key_type]        []                [Interval<DomainT,Compare>]    []                [_Key]]
+[[]           []        [value_type]      []                [Interval<DomainT,Compare>]    []                [_Key]]
+[[]           [ordering][interval_compare][]                [exclusive_less<interval_type>][]                []]
+[[]           []        [key_compare]     []                [exclusive_less<interval_type>][]                [_Compare]]
+]                                     
+
+[endsect]
+
+[section Function Matrix]
 
 [table
 [[Placeholder]                  [Argument types]          [Description]]             
@@ -76,5 +125,6 @@
 [[J upper_bound(const I&)]           [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
 ]
 
+[endsect]
 
 [endsect]

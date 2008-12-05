@@ -87,6 +87,13 @@ as aggregation function.
 [endsect]
 
 [section Interval]
+
+Example *interval* shows some basic functionality of __itvs__. 
+Different instances of __itvs__ for integral ([^int, Time]) and
+continuous types ([^double, std::string]) are used and some
+intersing functions calls on open intervals are tested e.g.:
+``interval<double>::rightopen(1/sqrt(2.0), sqrt(2.0)).contains(sqrt(2.0));``
+
 [import ../example/interval/interval.cpp]
 [example_interval]
 [endsect]
