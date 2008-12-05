@@ -124,6 +124,14 @@ class framework_context<BlueprintFramework,
 {
     typedef typename BlueprintFramework::framework_type::framework_context_type object_type;
 public:
+    framework_context()
+    {}
+    
+    template<typename T>
+    framework_context(const T &t)
+        : m_object(t)
+    {}
+    
     object_type &object()
     {   return m_object; }
     const object_type &object() const
