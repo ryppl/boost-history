@@ -1,18 +1,21 @@
-++++++++++++++++++++++
- New Iterator Concepts
-++++++++++++++++++++++
-
-.. Version 1.25 of this ReStructuredText document is the same as
-   n1550_, the paper accepted by the LWG.
+===================================================================
+ A Safety Problem with RValue References (and what to do about it)
+===================================================================
 
 :Author: David Abrahams, Doug Gregor
 :Contact: dave@boostpro.com, doug.gregor@gmail.com
-:organization: `BoostPro Computing`_, Apple Computer `Open Systems
+:organization: `BoostPro Computing`_, Apple Computer
 :date: 2008-12-05
 
 :Number: n2812=08-0322
 
 .. _`BoostPro Computing`: http://www.boostpro.com
+
+.. contents:: index
+
+-----------------
+ Working Section
+-----------------
 
 Outline
 =======
@@ -73,7 +76,9 @@ I've tried to bold-ify what I think are the essential points below
   need to do something about it.
 
 
--------------------
+-----------------
+ Written Section
+-----------------
 
 Synopsis
 ========
@@ -96,32 +101,36 @@ Consider::
   assign(q, x);                                    // copy from lvalue
   assign(q, std::vector<int>(10));                 // copy from rvalue
 
+Just to be painfully explicit, we 
+
+.. Note:: ``assign`` does not modify its second argument
+
+
 The Move/Copy Overload Idiom
 ============================
 
 In order to optimize the 2nd call to assign, we can add move semantics support
-with the following typical idiomatic use of rvalue references::
+with the following typical, idiomatic use of rvalue references::
 
   template <class Cont>
   void assign(queue<Cont>& dest, Cont&& src);      // #2: move from src rvalues into dest
 
-Although moving from src changes it, assign is still logically non-mutating on
-its second argument.  The optimization that moves from the argument is only
-applied when that argument is an unnamed temporary and thus inaccessible and
+It's important to note that although move is a mutating operation
+
+.. Admonition:: Logically, Nothing Has Changed 
+
+   ``assign`` does not *detectably* modify its second argument,
+   because an rvalue cannot be observed by any other code.  That's
+   the key to move semantics.
+
+The optimization that moves from the argument is only applied when
+that argument is an unnamed temporary and thus inaccessible and
 invisible to the rest of the program.
 
-.. Annotation:: Thomas Witt
-
-  add a sentence or two explaining the overload and binding
-  behavior. Pointing out that *both* overloads are needed to make it
-  safe. That might not be clear to people not familiar with rvalue
-  references.
-
-  Dave:
-    Technically, only the first overload is needed to make it safe;
-    the second one is needed to make it move.  So I can try to
-    emphasize that the first overload is needed.
-
+This idiom relies on the presence of *both* overloads.  Overload #2
+makes it move, but **overload #1 makes it safe**.  Without overload
+#1, assign will move from lvalues, silently turning a logically
+non-mutating operation into a mutating one.
 
 How Move-Only Types Work
 ========================
@@ -192,7 +201,7 @@ There is no precedent in const-correct code for a non-mutating call to become
 mutating when an overload is removed from the set.  So why does it happen here?
 
 In C++03 overload sets where only one overload mutates data (see
-set<T>::operator[]), the mutating operation always binds less liberally to
+set<T>::operator[]), the mutating operation always binds less-liberally to
 arguments than the non-mutating operation.  Non-const operations never attract
 const arguments.  Rvalue references, however, *will* attract lvalues.
 
@@ -220,4 +229,3 @@ supporting rvalue streams.  If so, all the streaming operators that were changed
 for C++0x to take an rvalue reference first argument would need a second
 overload.  If not, we should revert these operators to their original
 definitions.
-
