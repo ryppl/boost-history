@@ -65,6 +65,15 @@ I've tried to bold-ify what I think are the essential points below
     static_cast, but **a blank prohibition could render even that
     illegal.**
 
+    FWIW, **the && change does not affect the three overload free
+    swap. It only affects the single &&-taking member swap.**
+
+    Also FWIW, and IMHO, swapping with an rvalue is an anti-idiomatic
+    way to express move assignment. **If people feel the need to use
+    swap in this way, there's something wrong with the move assignment
+    operator for the type.**
+
+
 * The first version of the paper mentioned back_insert_iterator and
   how the simple workaround for a problem prevents using it with
   initializer lists, something Doug apparently understood.  Worth
@@ -92,43 +101,34 @@ Example
 
 Consider::
 
-  template <class Cont>
-  void assign(queue<Cont>& dest, Cont const& src); // #1: copy src into dest
+  template <class T>
+  void assign(queue<T>& dest, std::vector<T> const& src); // #1: copy src into dest
 
   std::vector<int> x;
-  queue<std::vector<int> > q;
+  queue<int> q;
 
-  assign(q, x);                                    // copy from lvalue
-  assign(q, std::vector<int>(10));                 // copy from rvalue
-
-Just to be painfully explicit, we 
-
-.. Note:: ``assign`` does not modify its second argument
+  assign(q, x);                                    // case A: copy from lvalue
+  assign(q, std::vector<int>(10));                 // case B: copy from rvalue
 
 
 The Move/Copy Overload Idiom
 ============================
 
-In order to optimize the 2nd call to assign, we can add move semantics support
-with the following typical, idiomatic use of rvalue references::
+Case B above can be optimized using move semantics.  The idea is to
+transfer ownership of the vector's contents into ``q`` instead of
+allocating new memory and making a copy.  We can do that in case B
+because the vector is an unnamed temporary and thus inaccessible and
+invisible to the rest of the program.  If we steal from an rvalue,
+nobody can know the difference: that's the key to move semantics.
 
-  template <class Cont>
-  void assign(queue<Cont>& dest, Cont&& src);      // #2: move from src rvalues into dest
+To add move semantics, we add an ``assign`` overload version that
+takes its second parameter by rvalue reference::
 
-It's important to note that although move is a mutating operation
-
-.. Admonition:: Logically, Nothing Has Changed 
-
-   ``assign`` does not *detectably* modify its second argument,
-   because an rvalue cannot be observed by any other code.  That's
-   the key to move semantics.
-
-The optimization that moves from the argument is only applied when
-that argument is an unnamed temporary and thus inaccessible and
-invisible to the rest of the program.
+  template <class T>
+  void assign(queue<Cont>& dest, std::vector<T>&& src); // #2: move from src into dest
 
 This idiom relies on the presence of *both* overloads.  Overload #2
-makes it move, but **overload #1 makes it safe**.  Without overload
+makes it move, but overload #1 makes it safe.  Without overload
 #1, assign will move from lvalues, silently turning a logically
 non-mutating operation into a mutating one.
 
@@ -171,10 +171,12 @@ copied.  We might modify overload #1 as follows::
   // #1 with optional allocator
   template <class Cont>
   void assign(queue<Cont>& dest, Cont const& src, 
-              typename Cont::allocator_type = src.allocator());
+              typename Cont::allocator_type = typename Cont::allocator_type());
 
-All is well until the user forgets to define a nested allocator_type in his
-container and SFINAE eliminates overload #1, again moving from lvalues.
+For all container types that provide a suitable nested allocator_type,
+all is well. However, if the container type does not provide a nested
+allocator_type, SFINAE eliminates overload #1, causing overload #2 to
+silently move from lvalues.
 
 Adding Concept Constraints
 ==========================
@@ -192,7 +194,8 @@ concept constraints for the operations performed in the function body::
 
 Passing an argument that doesn't meet the CopyAssignable constraint causes
 overload #1 to be removed via SFINAE.  In other words, *any* move-only argument,
-even an lvalue, will select overload #2.
+even an lvalue, will select overload #2... and silently move from lvalues.
+
 
 Why This Happens
 ================
@@ -205,11 +208,29 @@ set<T>::operator[]), the mutating operation always binds less-liberally to
 arguments than the non-mutating operation.  Non-const operations never attract
 const arguments.  Rvalue references, however, *will* attract lvalues.
 
+.. Admonition:: Doug Writes
+
+  I fear that this paragraph is only understood by the people CC'd on
+  this e-mail. In fact, I would probably remove this entire
+  subsection.  It *could* be a discussion of the philosophy that
+  parameters should only permit arguments that are "safe", and that
+  the presence of additional overloads is never a safe way to control
+  what arguments a certain parameter permits. C++03 followed this
+  philosophy, but rvalue references did not.
+
+
 Proposed Solution
 =================
 
 Because an rvalue reference in a function signature is used as a signal that we
 can move, lvalues must not be allowed to bind to rvalue references.  
+
+.. Admonition:: Doug Writes
+
+  Most readers will need more dots connected for them: it means that
+  overload #2 can never be called with an lvalue, regardless of
+  whether #1 is present or not. As noted before, users can certainly
+  explicitly call std::move to force moving from an lvalue.
 
 Note: this change does not impact perfect forwarding.
 
@@ -223,9 +244,51 @@ Impact
 ======
 
 The existing definition of std::move takes advantage of the current liberal
-binding rule, so we'd need to add an overload to support lvalues.  We'd also
-need to decide whether it makes sense to preserve the new functionality
-supporting rvalue streams.  If so, all the streaming operators that were changed
-for C++0x to take an rvalue reference first argument would need a second
-overload.  If not, we should revert these operators to their original
-definitions.
+binding rule, so we'd need to add an overload to support lvalues:
+
+.. Admonition:: Doug Sez
+
+  ::
+
+  > On Sep 24, 2008, at 2:06 PM, David Abrahams wrote:
+  >> on Wed Sep 24 2008, Doug Gregor <dgregor-AT-osl.iu.edu> wrote:
+  >>> That's
+  >>>
+  >>> 	template <class T> T&& move(T& t) { return static_cast<T&&>(t); }
+  >>>
+  >>> without concepts and
+  >>>
+  >>> 	template <RvalueOf T> RvalueOf<T>::type move(T& t) 
+  >>>     { return static_cast<RvalueOf<T>::type>(t); }
+  >>>
+  >>> with concepts, IIUC.
+  >>
+  >> Hmm, if we change the argument above to T&&, couldn't we write move
+  >> with just this single function?
+  >
+  > Oh, right. Be sure to put the remove_reference back into the non-
+  > concepts version. I momentally forgot about the T&& deduction rule.
+
+We'd also need to decide whether it makes sense to preserve the new
+functionality supporting rvalue streams.  If so, all the streaming
+operators that were changed for C++0x to take an rvalue reference
+first argument would need a second overload.  If not, we should revert
+these operators to their original definitions.
+
+.. Admonition:: Doug Sez:
+
+  *I* know this paragraph means, but most readers won't. Please show
+  the use of && in the declaration of operator<<, and how it affects
+  user code.
+
+  Also, we've changed the &'s to &&'s in a lot of member swap()s
+  throughout the library. Those will need to revert back, or be
+  overloaded with & and && versions.
+
+  Plus, the new Iterator concept is affected by this change. It'll
+  need another overload::
+
+          reference operator*(Iter&);
+
+  to handle dereferencing lvalues.
+
