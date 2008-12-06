@@ -125,7 +125,7 @@ To add move semantics, we add an ``assign`` overload version that
 takes its second parameter by rvalue reference::
 
   template <class T>
-  void assign(queue<Cont>& dest, std::vector<T>&& src); // #2: move from src into dest
+  void assign(queue<T>& dest, std::vector<T>&& src); // #2: move from src into dest
 
 This idiom relies on the presence of *both* overloads.  Overload #2
 makes it move, but overload #1 makes it safe.  Without overload
@@ -139,16 +139,16 @@ A movable but non-copyable argument type follows the same binding pattern as
 std::vector<int> does: rvalue arguments, which can be safely moved from, select
 overload #2::
 
-  queue<move_only_container> q2;
-  assign(q2, move_only_container());
+  queue<move_only_type> q2;
+  assign(q2, vector<move_only_type>());
 
 As before, lvalue arguments select overload #1::
 
-  move_only_container y;
+  vector<move_only_type> y;
   assign(q2, y);
 
 However, since the argument type is noncopyable, the body of #1 fails
-compilation when it attempts to make a copy.
+compilation (as desired) when it attempts to make a copy.
 
 The Problem
 ===========
@@ -169,9 +169,14 @@ ability to control allocation when we know the source container is going to be
 copied.  We might modify overload #1 as follows::
 
   // #1 with optional allocator
-  template <class Cont>
-  void assign(queue<Cont>& dest, Cont const& src, 
+  template <class T>
+  void assign(queue<T>& dest, Cont const& src, 
               typename Cont::allocator_type = typename Cont::allocator_type());
+
+
+.. Warning:: The **above is still wrong** because of the deduction
+   rule!!  The rest of the document **still needs to be fixed** so
+   that we're not using a bare ``Cont`` argument!!
 
 For all container types that provide a suitable nested allocator_type,
 all is well. However, if the container type does not provide a nested
