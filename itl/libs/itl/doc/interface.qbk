@@ -19,9 +19,9 @@ iteration related.
 
 [table
 [[Aspect]    [Abstraction level][]                  []                   [Practical]]
-[[Conceptual][more abstract][concept related]       [iterator idependent][interval_sets(maps) can be used as sets(maps) 
+[[Conceptual][more abstract][concept related]       [iterator independent][interval_sets(maps) can be used as sets(maps) 
                                                                           except for element iteration.]]
-[[Iterative] [less abstract][implementation related][iterator dependent] [interval_sets(maps) can be interval iterated]]
+[[Iterative] [less abstract][implementation related][iterator dependent] [interval_sets(maps) iterate over intervals]]
 ]
 
 On the conceptual aspect
@@ -41,17 +41,76 @@ In the table of associated types of interval_sets
 there are types like key_type, value_type and key_compare
 for the iterative aspect.
 
-[section Types]
+[section Class templates]
 
-[table Types and parameter types of sets
-[[]                   [type of elements][order of elements][type of intervals]                         [memory allocation]]
-[[template parameter] [class]  [template<class>class]      [template<class,template<class>class>class] [template<class>class]]    
-[[interval]           [DomainT][Compare = std::less]       []                                          []]
-[[interval_set]       [DomainT][Compare = std::less]       [Interval = itl::interval]                  [Alloc = std::alloc]]
-[[itl::set]           [DomainT][Compare = std::less]       [Interval = itl::interval]                  [Alloc = std::alloc]]
-[[template parameter] [class]  [class]                     [class]                                     [class]]
-[[std::set]           [_Key]   [_Compare = std::less<_Key>][]                                          [Alloc = std::alloc<_Key>]]
+The next two tables give an overview over ['*set class templates*] of
+the itl and compares them to std::set. Included is the __itv__ class
+template, because an interval is considered to be a set as well. 
+
+[/              interval]
+[/          interval_set]
+[/ separate_interval_set]
+[/    split_interval_set]
+[/              itl::set]
+
+[table set class templates
+[[group]        [template]       [instance parameters]]
+[[__itv__]      [__itv__]        [`<DomainT,Compare>`]]
+[[__itv_bsets__][__itv_set__]    [`<DomainT,Compare,Interval,Alloc>`]]
+[[]             [__sep_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
+[[]             [__spl_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
+[[__itl_set__]  [__itl_set__]    [`<DomainT,Compare,Alloc>`]]
+[[=std::set=]   [`std::set`]     [`<_Key,_Compare,_Alloc>`]]
+[[][]]
 ]
+
+Templates and template parameters, given in the preceeding table are 
+described in detail below.
+__Itv_bsets__ represent three
+class templates __itv_set__, __sep_itv_set__ and __spl_itv_set__
+that all have equal template parameters.
+
+[table Parameters of set class templates
+[[]                   [type of elements][order of elements]    [type of intervals]                             [memory allocation]]
+[[template parameter] [`class`]  [`template <class>class`]     [`template <class, template<class>class> class`][`template <class>class`]]    
+[[__itv__]            [`DomainT`][`Compare = std::less`]       []                                              []]
+[[__itv_bsets__]      [`DomainT`][`Compare = std::less`]       [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
+[[__itl_set__]        [`DomainT`][`Compare = std::less`]       []                                              [`Alloc = std::alloc`]]
+[[template parameter] [`class`]  [`class`]                     [`class`]                                       [class]]
+[[=std::set=]         [`_Key`]   [`_Compare = std::less<_Key>`][]                                              [`Alloc = std::alloc<_Key>`]]
+]
+
+The next two tables give an overview over ['*map class templates*] of
+the itl and compares them to =std::map=. 
+
+[/       interval_map]
+[/ split_interval_map]
+[/           itl::map]
+
+[table map class templates
+[[group]        [template]       [instance parameters]]
+[[__itv_bmaps__][__itv_map__]    [`<DomainT,CodomainT,Compare,Combine,Traits,Interval,Alloc>`]]
+[[]             [__spl_itv_map__][`<DomainT,CodomainT,Compare,Combine,Traits,Interval,Alloc>`]]
+[[__itl_map__]  [__itl_map__]    [`<DomainT,CodomainT,Compare,Combine,Traits,Alloc>`]]
+[[=std::map=]   [`std::map`]     [`<_Key,_Data,_Compare,_Alloc>`]]
+]
+
+
+Templates and template parameters, given in the preceeding table are 
+described in detail below.
+__Itv_bmaps__ represent two
+class templates __itv_map__ and __spl_itv_map__
+that all have equal template parameters.
+
+[table Parameters of map class templates
+[[]                   [elements][mapped values][order of elements]          [aggregation]              [traits]                     [type of intervals]                             [memory allocation]]
+[[template parameter] [`class`]  [`class`]    [`template <class>class`]     [`template <class>class`]  [`class`]                    [`template <class, template<class>class> class`][`template <class>class`]]    
+[[__itv_bmaps__]      [`DomainT`][`CodomainT`][`Compare = std::less`]       [`Combine = inplace_plus`] [`Traits = neutron_absorber`][`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
+[[__itl_map__]        [`DomainT`][`CodomainT`][`Compare = std::less`]       [`Combine = inplace_plus`] [`Traits = neutron_absorber`][`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
+[[template parameter] [`class`]  [`class`]    [`class`]                     []                         []                           []                                              [`class`]]
+[[=std::map=]         [`_Key`]   [`_Data`]    [`_Compare = std::less<_Key>`][]                         []                           []                                              [`Alloc = std::alloc<_Key>`]]
+]
+
 
 [table Associated types of sets
 [[Aspects]    []        [type]            [interval]        [interval_sets]                [itl::set]        [std::set]]
