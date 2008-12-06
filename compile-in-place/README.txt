@@ -1,8 +1,14 @@
-[$Id]
+[$Id$]
 
 Note: below is a copy of a mail from 2008-04-29 which started this feature
 branch. This is intended as information for people that want to try this
 feature. Further information follows.
+
+Notes:
+-------
+
+- Compiling often generates a large amount of warnings, but they can be ignored.
+
 
 TODO:
 ------
@@ -10,7 +16,7 @@ TODO:
 - MS Windows needs further work. The problem there is that Borland and MSC do
 auto linking, i.e. select the linked lib during compilation, which conflicts
 with compiling the libraries into the code itself. The goal is to make the
-macro BOOST_<whatever>_INPLACE_COMPILE take that part.
+macro BOOST_<whatever>_COMPILE_IN_PLACE take that part.
 
 - I replaced UINTMAX_C(~0) with static_cast<boost::uintmax_t>(-1) in once.cpp
 but I'm not sure why this was used in the first place. The problem I solved is
