@@ -9,7 +9,7 @@
 #include <complex>
 
 template <typename T>
-int test() {
+int test(double eps) {
   namespace ublas = ::boost::numeric::ublas ;
   namespace mumps = ::boost::numeric::bindings::mumps ;
 
@@ -73,15 +73,15 @@ int test() {
   std::cout << "w : " << w << std::endl ;
   std::cout << "v : " << v << std::endl ;
 
-  if ( norm_2( v - w ) > 1.e-10 * norm_2( v ) ) return 1 ;
+  if ( norm_2( v - w ) > eps * norm_2( v ) ) return 1 ;
 
   return 0 ;
 }
 
 int main() {
-  if ( test<float>() ) return 1 ;
-  if ( test<double>() ) return 2 ;
-  if ( test< std::complex<float> >() ) return 3 ;
-  if ( test< std::complex<double> >() ) return 4 ;
+  if ( test<float>(1e-5) ) return 1 ;
+  if ( test<double>(1e-10) ) return 2 ;
+  if ( test< std::complex<float> >(1e-5) ) return 3 ;
+  if ( test< std::complex<double> >(1e-10) ) return 4 ;
   return 0 ;
 }

@@ -27,6 +27,10 @@ BLAS_LIB  ?= blas ;
 LAPACK_PATH ?= $(NUMERIC_LIB_PATH) ;
 LAPACK_LIB  ?= lapack ;
 
+MUMPS_INCLUDE ?= $(NUMERIC_LIB_PATH)/MUMPS_4.8.1/include ;
+MUMPS_PATH    ?= $(NUMERIC_LIB_PATH)/MUMPS_4.8.1/lib ;
+MUMPS_LIB     ?= mumps_common ;
+
 UMFPACK_INCLUDE ?= $(SUITESPARSE_INCLUDE)/UMFPACK/Include ;
 UFCONFIG_INCLUDE ?= $(SUITESPARSE_INCLUDE)/UFconfig ;
 AMD_INCLUDE ?= $(SUITESPARSE_INCLUDE)/AMD/Include ;
@@ -48,6 +52,18 @@ lib lapack_atlas_lib : fortran_lib : <name>$(LAPACK_ATLAS_LIB) <search>$(ATLAS_P
 
 lib blas_lib   : fortran_lib : <name>$(BLAS_LIB)   <search>$(BLAS_PATH) ;
 lib lapack_lib : fortran_lib : <name>$(LAPACK_LIB) <search>$(LAPACK_PATH) <use>blas_lib : : <library>blas_lib ;
+
+lib pthread ;
+lib mpiseq : : <search>$(MUMPS_PATH)/../libseq ;
+lib pord   : : <search>$(MUMPS_PATH) ;
+lib smumps : : <search>$(MUMPS_PATH) ;
+lib dmumps : : <search>$(MUMPS_PATH) ;
+lib cmumps : : <search>$(MUMPS_PATH) ;
+lib zmumps : : <search>$(MUMPS_PATH) ;
+lib mumps_lib   : smumps dmumps cmumps zmumps pord 
+                  fortran_lib mpiseq blas_lib pthread
+                : <name>$(MUMPS_LIB) <search>$(MUMPS_PATH)
+              : : <include>$(MUMPS_INCLUDE) ;
 
 lib amd_lib : : <name>$(AMD_LIB) <search>$(AMD_PATH)
             : : <include>$(AMD_INCLUDE)
