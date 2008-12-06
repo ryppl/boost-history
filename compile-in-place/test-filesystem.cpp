@@ -12,11 +12,12 @@ $Id$
 */
 
 #define BOOST_FILESYSTEM_COMPILE_IN_PLACE
+// Note: Boost.Filesystem since 1.35 depends on Boost.System
+#define BOOST_SYSTEM_COMPILE_IN_PLACE
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <ostream>
 #include <boost/filesystem/compile_in_place.cpp>
-// Note: Boost.Filesystem since 1.35 depends on Boost.System
 #include <boost/system/compile_in_place.cpp>
 
 using namespace boost::filesystem;
