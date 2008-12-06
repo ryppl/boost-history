@@ -115,10 +115,13 @@ in the introductory [link boost.itl.introduction.interval_combining_styles Inter
 [section Time grids for months and weeks]
 
 A __spl_itv_set__ preserves all interval borders on insertion
-and intersection operations. So given a __spl_itv_set__
+and intersection operations. So given a __spl_itv_set__ and an addition of an interval
 ``
 x =  {[1,     3)}
-x.add(     [2,     4)) then
+x.add(     [2,     4)) 
+``
+then the intervals are split at their borders
+``
 x == {[1,2)[2,3)[3,4)}
 ``
 Using this property we can intersect __spl_itv_maps__ in
@@ -133,16 +136,42 @@ representing a month and week time grid.
 [endsect]
 
 [section Man power]
+
+__Itv_sets__ and __itv_maps__ can be filled and manipulated using
+set style operations such as union `+=`, difference `-=` and 
+intersection `*=`.
+
+In this example [*man power] a number of those operations are
+demonstrated in the process of calculation the available working 
+times (man-power) of a company's employees accounting for weekends,
+holidays, sickness times and vacations.
+
 [import ../example/man_power/man_power.cpp]
 [example_man_power]
 [endsect]
 
 [section User groups]
+
+Example [*user groups] shows the availability of set operations
+on __itv_maps__. 
+
+In the example there is a user group `med_users` of a hospial staff
+that has the authorisation to handle medical data of patients.
+User group `admin_users` has access to aministrative data like
+health inshurance and financial data.
+
+The membership for each user in one of the user groups has a time
+interval of validity. The group membership begins and ends.
+
+* Using a union operation `+=` we can have an overview over the unified
+  user groups and the memebership dates of employees.
+
+* Computing an intersection `*=` shows who is member of both med_users 
+  and admin_users at what times.
+
 [import ../example/user_groups/user_groups.cpp]
 [example_user_groups]
 [endsect]
 
-
 [endsect]
 
- 
