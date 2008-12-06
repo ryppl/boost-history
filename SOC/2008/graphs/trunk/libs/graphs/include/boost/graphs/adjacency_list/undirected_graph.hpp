@@ -245,7 +245,6 @@ remove_edge(undirected_graph<VL,EL,VS,ES,IS>& g,
 namespace detail {
     // This functor automatically erases edges from the edge set when visited
     // during incident edge erasure.
-    // TODO: Make this fail for vectors.
     template <typename EdgeList>
     struct edge_eraser
     {
@@ -276,14 +275,45 @@ remove_edges(undirected_graph<VL,EL,VS,ES,IS>& g,
     incs::erase_all(vs::edges(g.v, v), u);
 }
 
+namespace detail {
+    // Reciprocating and cascading erasure for remove_edges(g,v).
+    // TODO: This is not an efficient solution for multigraphs with sequential
+    // incidence stores. For associative incidence stores, this is probably
+    // fine.
+    template <typename Graph, typename Vertex>
+    struct edge_clearer
+    {
+        edge_clearer(Graph& g, Vertex v)
+            : g(g), v(v)
+        { }
+
+        template <typename Pair>
+        void operator()(Pair const& x)
+        {
+            // Don't erase self-loops. That would modify the sequence that
+            // this functor is visiting - which could have some pretty nasty
+            // side-effects.
+            if(v != x.first) {
+                incs::erase(vs::edges(g.v, x.first), v, x.second);
+            }
+            es::erase(g.e, x.second);
+        }
+
+        Graph& g;
+        Vertex v;
+    };
+
+    template <typename Graph, typename Vertex>
+    edge_clearer<Graph, Vertex> clear_edges(Graph& g, Vertex v)
+    { return edge_clearer<Graph, Vertex>(g, v); }
+}
+
 /** Remove all edges incident to the given vertex. */
 template <typename VL, typename EL, typename VS, typename ES, typename IS>
 inline void
 remove_edges(undirected_graph<VL,EL,VS,ES,IS>& g,
              typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
-{
-    incs::clear(vs::edges(g.v, v));
-}
+{ incs::clear(vs::edges(g.v, v), detail::clear_edges(g, v)); }
 
 /** Return the number of edges in the graph. */
 template <typename VL, typename EL, typename VS, typename ES, typename IS>

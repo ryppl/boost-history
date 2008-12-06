@@ -63,7 +63,7 @@ namespace detail {
     { return store.find(v); }
 
     // A default visitor for the erase_all function.
-    struct noop_erase_visitor
+    struct no_edge_erase
     {
         template <typename Pair> inline void operator()(Pair const&) { }
     };
@@ -145,7 +145,22 @@ find(Store const& store, typename incidence_store_traits<Store>::vertex_descript
 { return find(const_cast<Store&>(store), v); }
 //@}
 
-/** Remove the adjacenct/incident pair from the store. */
+// NOTE Reciprocating and Cascading Erasures
+//
+// Reciprocal erasure is the problem where removing an AI pair from one
+// vertex requires its reciprocal erasure from the incidence store of the
+// adjacent vertex.
+//
+// Cascading erasure is the problem where removing an AI pair from one
+// vertex should also require the erasure from the edge set.
+//
+// Note that reciprocating erasure can be fairly inefficient when erasing
+// multi-edges because it will result in multiple iterations of the adjacent
+// vertex's incidence store,
+
+/**
+ * Remove the adjacenct/incident pair from the store.
+ */
 template <typename Store>
 inline void
 erase(Store& store,
@@ -157,10 +172,10 @@ erase(Store& store,
 }
 
 /**
- * Remove all incident edges with the given endpoint. A visitor parameter can
- * be provided to be invoked just prior to erasure.
+ * Remove all incident edges with the given endpoint. This operation supports
+ * cascading erases via a function object. By default, this is disabled.
  */
-template <typename Store, typename Visitor = detail::noop_erase_visitor>
+template <typename Store, typename Visitor = detail::no_edge_erase>
 inline void
 erase_all(Store& store,
           typename incidence_store_traits<Store>::vertex_descriptor v,
@@ -168,19 +183,17 @@ erase_all(Store& store,
 { detail::dispatch_erase_all(store, v, vis, container_category(store)); }
 
 /**
- * Remove all incident edges from the edge set, invoking a visitor just prior
- * to erasing the edge.
+ * Remove all incident edges from the edge set. This operation supports
+ * reciprocation and cascading erases via function object. By default, this is
+ * disabled.
  */
-template <typename Store, typename Visitor = detail::noop_erase_visitor>
+template <typename Store, typename Visitor = detail::no_edge_erase>
 inline void
 clear(Store& store, Visitor vis = Visitor())
 {
-    typename Store::iterator i, end = store.end();
-    for(i = store.begin() ; i != end; ++i) {
-        vis(*i);
-    }
+    std::for_each(store.begin(), store.end(), vis);
+    store.clear();
 }
-
 
 /** Return the size of an adjacency list for the given vertex, its degree. */
 template <typename Store>

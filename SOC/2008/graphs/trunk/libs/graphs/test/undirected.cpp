@@ -4,51 +4,15 @@
 #include <iostream>
 
 #include <boost/assert.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/graphs/adjacency_list/undirected_graph.hpp>
 
+#include "traits.hpp"
+#include "gen/star.hpp"
 
 using namespace std;
 using namespace boost;
 using namespace boost::graphs::adjacency_list;
 
-/** @name Has Mapped Vertices */
-//@{
-template <typename Graph>
-struct _has_mapped_vertices
-{ typedef mpl::false_ type; };
-
-template <
-    typename VL, typename EL,
-    typename K, template <typename> class C, template <typename> class A,
-    typename ES, typename IS>
-struct _has_mapped_vertices<undirected_graph<VL, EL, vertex_map<K,C,A>, ES, IS>>
-{ typedef mpl::true_ type; };
-
-template <typename Graph>
-typename _has_mapped_vertices<Graph>::type
-has_mapped_vertices(Graph const& g)
-{ return typename _has_mapped_vertices<Graph>::type(); }
-//@}
-
-/** @name Can Remove Vertices */
-//@{
-template <typename Graph>
-struct _can_remove_vertices
-{ typedef mpl::true_ type; };
-
-template <
-    typename VL, typename EL,
-    template <typename> class A,
-    typename ES, typename IS>
-struct _can_remove_vertices<undirected_graph<VL, EL, vertex_vector<A>, ES, IS>>
-{ typedef mpl::false_ type; };
-
-template <typename Graph>
-typename _can_remove_vertices<Graph>::type
-can_remove_vertices(Graph const& g)
-{ return typename _can_remove_vertices<Graph>::type(); }
-//@}
 
 struct node
 {
@@ -169,11 +133,19 @@ void test_edges(Graph& g)
 template <typename Graph>
 void test()
 {
+    typedef typename Graph::vertex_descriptor Vertex;
     Graph g;
     BOOST_ASSERT(num_vertices(g) == 0);
 
     test_verts(g, has_mapped_vertices(g));
     test_edges(g);
+
+    Graph h;
+    Vertex v = make_star(h, 5);
+    BOOST_ASSERT(num_vertices(h) == 5);
+    BOOST_ASSERT(num_edges(h) == 4);
+    remove_edges(h, v);
+    BOOST_ASSERT(num_edges(h) == 0);
 }
 
 int main()
