@@ -167,6 +167,21 @@ erase_all(Store& store,
           Visitor vis =  Visitor())
 { detail::dispatch_erase_all(store, v, vis, container_category(store)); }
 
+/**
+ * Remove all incident edges from the edge set, invoking a visitor just prior
+ * to erasing the edge.
+ */
+template <typename Store, typename Visitor = detail::noop_erase_visitor>
+inline void
+clear(Store& store, Visitor vis = Visitor())
+{
+    typename Store::iterator i, end = store.end();
+    for(i = store.begin() ; i != end; ++i) {
+        vis(*i);
+    }
+}
+
+
 /** Return the size of an adjacency list for the given vertex, its degree. */
 template <typename Store>
 inline typename incidence_store_traits<Store>::incident_edges_size_type

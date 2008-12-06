@@ -282,6 +282,7 @@ inline void
 remove_edges(undirected_graph<VL,EL,VS,ES,IS>& g,
              typename undirected_graph<VL,EL,VS,ES,IS>::vertex_descriptor v)
 {
+    incs::clear(vs::edges(g.v, v));
 }
 
 /** Return the number of edges in the graph. */
