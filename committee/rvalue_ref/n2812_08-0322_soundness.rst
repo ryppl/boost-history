@@ -341,61 +341,149 @@ concepts and somewhat dangerous even without concepts.
 Impact on the Standard Library
 ------------------------------
 
-Note: this section still TODO
+The changing in the binding of rvalue references affects the standard
+library in four different areas: the definitions of ``std::move`` and
+``std::forward``, the definition of member ``swap``s, the formulation
+of the stream insertion/extraction operators, and the description of
+the ``Iterator`` concept.
 
-* std::move
-* std::forward
-* swap()
-* rvalue operator<<
+Both ``std::move`` and ``std::forward`` rely on the ability of an
+rvalue reference to bind to an lvalue. For ``std::move``, this binding
+is used to return the argument ``x`` (which is always treated as an
+lvalue) from the function::
 
-The existing definition of std::move takes advantage of the current liberal
-binding rule, so we'd need to add an overload to support lvalues:
+   template<typename T>
+     inline typename std::remove_reference<T>::type&& move(T&& x)
+     { return x; }
 
-.. Admonition:: Doug Sez
+With our proposed change, a new formulation of ``std::move`` is
+required. It explicitly casts the lvalue to an rvalue reference type
+(making it an rvalue), which can bind to the rvalue-reference result
+type::
 
-  ::
+   template<typename T>
+     inline typename std::remove_reference<T>::type&& move(T&& x)
+     { return static_cast<typename std::remove_reference<T>::type&&>(x); }
 
-  > On Sep 24, 2008, at 2:06 PM, David Abrahams wrote:
-  >> on Wed Sep 24 2008, Doug Gregor <dgregor-AT-osl.iu.edu> wrote:
-  >>> That's
-  >>>
-  >>> 	template <class T> T&& move(T& t) { return static_cast<T&&>(t); }
-  >>>
-  >>> without concepts and
-  >>>
-  >>> 	template <RvalueOf T> RvalueOf<T>::type move(T& t) 
-  >>>     { return static_cast<RvalueOf<T>::type>(t); }
-  >>>
-  >>> with concepts, IIUC.
-  >>
-  >> Hmm, if we change the argument above to T&&, couldn't we write move
-  >> with just this single function?
-  >
-  > Oh, right. Be sure to put the remove_reference back into the non-
-  > concepts version. I momentally forgot about the T&& deduction rule.
+''std::forward'' relies on the binding of lvalues to rvalue references
+in its argument type, since it is typically invoked with lvalues::
 
-We'd also need to decide whether it makes sense to preserve the new
-functionality supporting rvalue streams.  If so, all the streaming
-operators that were changed for C++0x to take an rvalue reference
-first argument would need a second overload.  If not, we should revert
-these operators to their original definitions.
+   template<typename T>
+     inline T&& forward(typename std::identity<T>::type&& x)
+     { return x; }
 
-.. Admonition:: Doug Sez:
+With our proposed change to the binding rules for rvalue references,
+we need make two changes. First, we add a second, lvalue-reference
+overload of ``std::forward`` (that forwards lvalues as lvalues)::
 
-  *I* know this paragraph means, but most readers won't. Please show
-  the use of && in the declaration of operator<<, and how it affects
-  user code.
+   template<typename T>
+     inline T& forward(typename std::identity<T>::type& x)
+     { return x; }
 
-  Also, we've changed the &'s to &&'s in a lot of member swap()s
-  throughout the library. Those will need to revert back, or be
-  overloaded with & and && versions.
+Second, we need to make sure that the two definitions of
+``std::forward`` never produce identical function types, by banning
+the original ``std::forward`` from being instantiated with lvalue
+references::
 
-  Plus, the new Iterator concept is affected by this change. It'll
-  need another overload::
+   template<typename T>
+     inline typename disable_if<is_lvalue_reference<T>, T&&>::type
+     forward(typename std::identity<T>::type&& x) { return x; }
+  
+Note that, with these changes to both ``std::move`` and
+``std::forward``, the idiomatic uses of these functions still work, so
+that user code will not need to change. Only the definitions of
+``std::move`` and ``std::forward`` are affected.
 
-          reference operator*(Iter&);
+Each of the member ``swap`` functions in the standard library is
+described in terms of rvalue references, e.g.,::
 
-  to handle dereferencing lvalues.
+  void swap(vector<T,Alloc>&&);
+
+With our proposed change, these ``swap`` functions will no longer
+accept lvalues, which would break a significant amount of
+code. Therefore, we will need to introduce overloads of the member
+``swap`` functions that accept lvalues::
+
+  void swap(vector<T,Alloc>&);
+
+In fact, due to library issue 884_, it is possible that we will want
+to eliminate the rvalue-reference versions of member ``swap``
+entirely.
+
+With the introduction of rvalue references into the standard
+library, the stream insertion and extraction operators were changed to
+accept both lvalue and rvalue streams, e.g.,::
+
+  template<class charT, class traits, class Allocator> 
+    basic_ostream<charT, traits>& 
+    operator<<(basic_ostream<charT, traits>&& os, const basic_string<charT,traits,Allocator>& str); 
+
+This change made it possible to create a temporary stream and use it
+within one expression, e.g.,::
+
+  std::ofstream("out.txt") << "Hello!"; // ill-formed in C++03, okay in C++0x
+
+With our proposed change to rvalue references, each of the stream
+insertion and extraction operators will need to use an lvalue
+reference to their stream argument to bind to lvalues streams,
+effectively reverting streams to their C++03 behavior::
+
+  template<class charT, class traits, class Allocator> 
+    basic_ostream<charT, traits>& 
+    operator<<(basic_ostream<charT, traits>& os, const basic_string<charT,traits,Allocator>& str); 
+
+If we determine that the use case above for temporary streams is
+important, we could extend the library with the following two function
+templates::
+
+  template<typename _CharT, typename _Traits, typename _Tp>
+  inline basic_ostream<_CharT, _Traits>&
+  operator<<(basic_ostream<_CharT, _Traits>&& __stream, const _Tp& __x)
+  {
+    __stream << __x;
+    return __stream;
+  }
+
+  // Input via an rvalue stream
+  template<typename _CharT, typename _Traits, typename _Tp>
+  inline basic_istream<_CharT, _Traits>&
+  operator>>(basic_istream<_CharT, _Traits>&& __stream, _Tp& __x)
+  {
+    __stream >> __x;
+    return __stream;
+  }
+
+These templates allow stream insertion and extraction with an rvalue
+stream, forwarding the stream as an lvalue to use whatever stream
+insertion/extraction operator already exists. Thus, we still support
+the use of rvalue streams throughout the library, and use cases like
+the following will work in C++0x::
+
+  std::ofstream("out.txt") << "Hello!"; // okay: uses rvalue-stream template above
+
+Finally, the current definition of the ``Iterator`` concept has a
+dereference operator that uses rvalue references to accept both
+lvalue and rvalue iterators::
+
+  reference operator*(Iter&&);
+
+We will need to augment the ``Iterator`` concept with a second
+overload of ``operator*``::
+
+  reference operator*(Iter&);
+
+Note that we use a non-const lvalue reference for this overload,
+because it is common with output iterators to deference non-const
+iterator lvalues (and the dereference operators often return non-const
+references to the same type).
+
+Overall, despite the fact that our proposed change to the binding of
+rvalue references will affect several different parts of the library,
+we are able to maintain the same user experience through the
+introduction of additional overloads and a different implementation of
+``std::move``/``std::forward``. Thus, our proposed change improves the
+safety of the library and of user code while maintaining backward
+compatibility with C++03 and with the new features added into C++0x.
 
 Impact on Implementations
 -------------------------
