@@ -4,12 +4,14 @@
 
 :Author: David Abrahams, Doug Gregor
 :Contact: dave@boostpro.com, doug.gregor@gmail.com
-:organization: `BoostPro Computing`_, Apple Computer
+:organization: `BoostPro Computing`_, Apple
 :date: 2008-12-05
 
 :Number: n2812=08-0322
 
 .. _`BoostPro Computing`: http://www.boostpro.com
+.. _patch: http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00436.html
+.. _884: http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#884
 
 .. contents:: index
 
@@ -227,26 +229,124 @@ const arguments.  Rvalue references, however, *will* attract lvalues.
 Proposed Solution
 =================
 
-Because an rvalue reference in a function signature is used as a signal that we
-can move, lvalues must not be allowed to bind to rvalue references.  
+We propose to prohibit rvalue references from binding to
+lvalues. Therefore, an rvalue reference will always refer to an rvalue
+or to an lvalue that the user has explicitly transformed into an
+rvalue (e.g., through the use of ``std::move``). For example, with
+this change, given just a single function template ``enqueue``::
 
-.. Admonition:: Doug Writes
+  template <class T, typename Cont>
+  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #1
 
-  Most readers will need more dots connected for them: it means that
-  overload #2 can never be called with an lvalue, regardless of
-  whether #1 is present or not. As noted before, users can certainly
-  explicitly call std::move to force moving from an lvalue.
+calling ``enqueue`` with an rvalue succeeds while calling it with an
+lvalue fails::
 
-Note: this change does not impact perfect forwarding.
+  void f(queue<int, list<int>> dest, queue<int, list<int>>& src) {
+    enqueue(dest, queue<int, list<int>>()); // okay: rvalue reference binds to rvalue
+    enqueue(dest, src); // error: rvalue reference cannot bind to lvalue
+    enqueue(dest, std::move(src)); // okay: rvalue reference binds to an lvalue that is explicitly treated as an rvalue
+  }
 
-  template <class T>
-  void f(T&& x) { ... forward<T>(x) ... }
+We can then add back the previously-problematic overload that allows
+one to copy from the source queue while enqueing its elements, and
+provide an allocator::
 
-When an lvalue of type U is passed to f, T is deduced as U&, and since U& && is
-U&, the actual reference being bound is an lvalue reference.
+  template <class T, typename Cont>
+  void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
+               typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #2
+  
+Now, if we attempt to enqueue elements from an lvalue where the
+queue's container does not have an allocator, we receive an error
+message stating that no ``enqueue`` function can be called, rather than
+silently moving from lvalue::
 
-Impact
-======
+  void g(queue<int, simple_list<int>>& dest, queue<int, simple_list<int>>& src) {
+    enqueue(dest, src); // error: #1 cannot be called because src isn't an lvalue
+                        //        #2 fails template argument deduction
+  }
+
+Impact on Users
+---------------
+
+The most important aspect of this solution is that it does not change
+the common idioms that employ rvalue references. For example,
+when we want to optimize for rvalues (e.g., by implementing move
+semantics), we still implement two overloads: one with an lvalue
+reference to const and one with an rvalue reference, e.g.,::
+
+  void push_back(const value_type& x); // copies x
+  void push_back(value_type&& x); // moves x
+
+With the proposed change, the introduction of concepts into these
+functions does not result in any surprises::
+
+  requires CopyConstructible<value_type>
+    void push_back(const value_type& x); // copies x
+  requires MoveConstructible<value_type>
+    void push_back(value_type&& x); // moves x
+
+For a move-only type ``X``, the first `push_back` will be eliminated
+because template argument deduction fails (``X`` does not meet the
+``CopyConstructible`` requirements), and the second ``push_back``
+only accepts rvalues. Hence, calling `push_back` with an lvalue of
+move-only type ``X`` will result in an error.
+
+The proposed change also does not have any impact on the use
+of rvalue references for perfect forwarding, e.g.,::
+
+  template <class F, class T>
+  void thunk(F f, T&& x) { f(std::forward<T>(x)); }
+
+When an lvalue of type ``U`` is passed to ``f``, the special template
+argument deduction rules for ``T&&`` ensure that ``T`` is deduced as
+``U&``. Then, when substituting ``T=U&`` into ``T&&``, reference
+collapsing transforms the resulting argument type to ``U&``, an lvalue
+reference that is able to bind to the lvalue argument of type
+``U``. Hence, lvalues bind to lvalue references and rvalues bind to
+rvalue references.
+
+The only user code that will be directly affected by the proposed
+change is when a function performs the same operation regardless of
+whether it receives an lvalue or an rvalue. For example, this approach
+has been used with member ``swap`` to permit swapping with rvalues, e.g.,::
+
+  struct mytype {
+    void swap(mytype&& other); // other can be an lvalue or rvalue
+  };
+
+  void f(mytype& m1, mytype& m2) {
+    m.swap(mytype()); // okay: rvalue reference binds to rvalues
+    m1.swap(m2); // okay under the existing rules, ill-formed with the proposed rules
+  }
+
+With the proposed change, the definition of mytype would have to be
+extended to include two ``swap`` overloads, one for lvalues and one for
+rvalues. The rvalue-reference version would merely forward to the
+lvalue-reference version, e.g.,::
+
+  struct mytype {
+    void swap(mytype& other);
+    void swap(mytype&& other) { swap(other); } // 'other' is treated as an lvalue
+  };
+
+Since the vast majority of uses of rvalue references fall into one of
+the first two idioms---paired overloads for move semantics and the use
+of ``std::forward`` for perfect forwarding---and the workaround for the
+few functions like ``swap`` that depend on the current behavior is very
+simple, we do not expect any significant impact on user code. On the
+other hand, the proposed change eliminates a particularly vexing
+problem with rvalue references that makes them almost unusable with
+concepts and somewhat dangerous even without concepts.
+
+Impact on the Standard Library
+------------------------------
+
+Note: this section still TODO
+
+* std::move
+* std::forward
+* swap()
+* rvalue operator<<
 
 The existing definition of std::move takes advantage of the current liberal
 binding rule, so we'd need to add an overload to support lvalues:
@@ -297,3 +397,150 @@ these operators to their original definitions.
 
   to handle dereferencing lvalues.
 
+Impact on Implementations
+-------------------------
+
+We have produced an implementation of the proposed solution in the GNU
+C++ compiler, which is available as a patch_ against GCC 4.3.2. The
+actual implementation of the language change is trivial---we merely
+check whether the binding computed would bind an lvalue to an rvalue
+reference, and reject the binding in this case. The changes to the
+standard library are slightly more involved, because we needed to
+implement the changes described in the section 'Impact on the Standard
+Library'_. We do not anticipate that this change will have any
+significant impact on compilers or standard library
+implementations. The GCC implementation required a day's effort to
+update both the language and the library, although more effort would
+certainly be required to update the test cases associated with this
+feature.
+
+Alternative Solutions
+======================
+
+Two alternatives to our proposed solution have been proposed. One
+alternative is actually an extension to the proposed solution, which
+adds a third kind of reference type; the other modifies the behavior
+of concepts to preserve more of the overloading behavior of
+unconstrained templates. Although we describe these two alternatives
+here, we do not propose either of them.
+
+Add A Third Reference Type
+--------------------------
+
+With the removal of the binding from rvalue references to lvalues,
+certain functions that work equally well on both lvalues and
+rvalues---such as ``swap`` or the stream insertion/extraction
+operators---will need to provide additional overloads, e.g.,::
+
+  void swap(mytype&&);
+
+becomes::
+
+  void swap(mytype&);
+  void swap(mytype&& other) { swap(other); }
+
+If there were multiple parameters that could be either lvalues or
+rvalues, the number of required overloads would grow expentially. For
+example, a non-member ``swap`` that supports all combinations of lvalues
+and rvalues would go from::
+
+  void swap(mytype&&, mytype&&);
+
+to::
+
+  void swap(mytype&, mytype&);
+  void swap(mytype&  x, mytype&& y) { swap(x, y); }
+  void swap(mytype&& x, mytype&  y) { swap(x, y); }
+  void swap(mytype&& x, mytype&& y) { swap(x, y); }
+
+To address this issue, one could extend our proposed resolution to
+support a third kind of reference (spelled ``&&&``) that binds to
+either lvalues or rvalues, effectively providing the current behavior
+of ``&&`` but with a new spelling. Thus, the above swap could be written
+as::
+
+  void swap(mytype&&&, mytype&&&);
+
+Interestingly, the current working paper's definition of non-member
+``swap`` would not benefit from the addition of ``&&&``. The working
+paper provides three overloads of each non-member swap, prohibiting
+rvalue-rvalue swaps:: 
+
+  void swap(mytype& , mytype&);
+  void swap(mytype&&, mytype&);
+  void swap(mytype& , mytype&&);
+
+This overload set works the same way regardless of whether rvalue
+references bind to lvalues. Moreover, an LWG straw poll in San
+Francisco voted to revert from using three non-member swaps back to
+having only a single, lvalue-lvalue swap::
+
+  void swap(mytype&, mytype&);
+
+due to library issue 884_. Thus, ``&&&`` is not likely to be used in the
+working paper for non-member ``swap``. For member ``swap``, the number of
+extra overloads (one per existing ``swap``) required is not sufficient to
+motivate the addition of another kind of reference. 
+
+With the stream insertion and extraction operators, the introduction
+of the ``operator>>`` and ``operator>>`` templates described in
+section 'Impact on the Standard Library'_ eliminates the need for the
+use of ``&&&``. We expect that most other uses of ``&&&`` can be
+addressed using this approach.
+
+
+Deleting Functions that Fail Concept Constraints
+------------------------------------------------
+
+Another alternative solution that has been proposed to address the
+problem posed by the conceptualized version of ``push_back`` is to
+delete functions that fail to meet their concept requirements. That
+way, these functions remain in the overload set but any attempt to use
+them will result in an error. Recall the ``push_back`` overloads and
+their concept constraints::
+
+  requires CopyConstructible<value_type>
+    void push_back(const value_type& x); // copies x
+  requires MoveConstructible<value_type>
+    void push_back(value_type&& x); // moves x
+
+When instantiated with a move-only type ``X`` for ``value_type``, the
+proposed solution would result in the following two functions::
+
+  void push_back(const X& x) = delete; // X isn't CopyConstructible
+  void push_back(X&& x); // okay: X is MoveConstructible
+
+This approach solves the problem for this example, because lvalues
+passed to ``push_back`` will still be attracted to the lvalue
+reference, and the compiler will produce a suitable error rather than
+silently moving from an lvalue.
+
+The main problem with this approach is that it only solves the problem
+in those cases where the concept requirements of a template are not
+satisfied but SFINAE does not eliminate the template from
+consideration. For example, it does not solve the problem with the
+``enqueue`` function described above (which doesn't involve concepts):
+
+  template <class T, typename Cont>
+    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #1
+  template <class T, typename Cont>
+    void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
+                 typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #2
+
+It also does not solve the problem with a conceptualized version of
+the ``enqueue`` function::
+
+  template <class T, Container Cont>
+    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #1
+  template <class T, ContainerWithAllocator Cont>
+    void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
+                 Cont::allocator_type alloc = Cont::allocator_type()); // #2
+
+The conceptualized formulation of ``enqueue`` suffers from the same
+problem as the pre-concepts version: since ``Cont`` is not a
+``ContainerWithAllocator``, we cannot form the signature of the
+deleted ``enqueue`` function, so only function #1 will enter the
+overload set.  Since it is the only function available, it will move
+from lvalues. Thus, the proposal to replace functions that fail their
+concept requirements with deleted functions does not solve the general
+problem, either with or without concepts.
