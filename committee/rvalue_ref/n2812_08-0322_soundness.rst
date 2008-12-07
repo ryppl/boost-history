@@ -632,3 +632,10 @@ overload set.  Since it is the only function available, it will move
 from lvalues. Thus, the proposal to replace functions that fail their
 concept requirements with deleted functions does not solve the general
 problem, either with or without concepts.
+
+Acknowledgments
+===============
+The authors thank Peter Dimov, Howard Hinnant, Jaakko Jarvi, and
+Thomas Witt for many lively discussions on the topic of rvalue
+references and concepts, where many of the ideas in this paper
+originated.
