@@ -10,15 +10,16 @@
 #define BOOST__GUIGL__APPLICATION_HPP
 
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/signals.hpp>
 
 namespace boost { namespace guigl {
 
 class application {
 public:
-    static void run();
-    static boost::signal<void()> &on_idle();
-    static void timeout(const boost::function<void()> &, unsigned milliseconds);
+    BOOST_EXPORT_SYMBOLS static void run();
+    BOOST_EXPORT_SYMBOLS static boost::signal<void()> &on_idle();
+    BOOST_EXPORT_SYMBOLS static void timeout(const boost::function<void()> &, unsigned milliseconds);
 };
 
 }}

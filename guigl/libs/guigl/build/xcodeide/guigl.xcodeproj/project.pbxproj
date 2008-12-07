@@ -165,6 +165,7 @@
 		08B213E60EB91BF1006F0C30 /* geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = geometry.hpp; sourceTree = "<group>"; };
 		08B919780EB682BC00F743E3 /* delayed_constructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = delayed_constructor.hpp; sourceTree = "<group>"; };
 		08B9197C0EB6885C00F743E3 /* test_delayed_constructor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_delayed_constructor.cpp; sourceTree = "<group>"; };
+		08CD92110EEB51120047AE90 /* export_symbols.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = export_symbols.hpp; sourceTree = "<group>"; };
 		08D0F2550E6712E90026C6DF /* active_colored.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = active_colored.hpp; sourceTree = "<group>"; };
 		08D0F25D0E67139E0026C6DF /* active_colored.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = active_colored.hpp; sourceTree = "<group>"; };
 		08D5606D0E52901F005A2391 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window.cpp; sourceTree = "<group>"; };
@@ -350,6 +351,7 @@
 				089791BA0E5DC06400C79062 /* event.hpp */,
 				08B213E50EB91BD9006F0C30 /* draw.hpp */,
 				08B213E60EB91BF1006F0C30 /* geometry.hpp */,
+				08CD92110EEB51120047AE90 /* export_symbols.hpp */,
 			);
 			name = guigl;
 			path = ../../../../boost/guigl;

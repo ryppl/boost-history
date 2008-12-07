@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__WIDGET__COMPOUND_HPP
 #define BOOST__GUIGL__WIDGET__COMPOUND_HPP
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/view/compound.hpp>
 #include <boost/guigl/view/positioned.hpp>
 #include <boost/guigl/view/solid_background.hpp>
@@ -33,8 +34,8 @@ public:
     {}
 
 protected:
-    void draw();
-    bool on_event(const event_type &event_info);
+    BOOST_EXPORT_SYMBOLS void draw();
+    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
 };
 
 }}}

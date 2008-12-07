@@ -10,6 +10,7 @@
 #define BOOST__GUIGL__WINDOW_HPP
 
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/access.hpp>
 #include <boost/guigl/event.hpp>
 #include <boost/guigl/parameters.hpp>
@@ -32,8 +33,8 @@ public:
     /// Constructor taking named parameters.
     /** \param args A pack of named parameters (accepts _label, _size, _position, _background).
     */
-    window(const argument_pack_type &args);
-    ~window();
+    BOOST_EXPORT_SYMBOLS window(const argument_pack_type &args);
+    BOOST_EXPORT_SYMBOLS ~window();
 
     static void redraw(const view::positioned<> &v);
     

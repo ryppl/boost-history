@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__WIDGET__SLIDER_HPP
 #define BOOST__GUIGL__WIDGET__SLIDER_HPP
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/view/active_colored.hpp>
 #include <boost/guigl/view/draggable.hpp>
 #include <boost/guigl/view/positioned.hpp>
@@ -48,8 +49,8 @@ public:
     /// Sets the value of the slider.
     void set_value(double value);
 protected:
-    BOOST_GUIGL_WIDGET_DRAW
-    bool on_event(const event_type &event_info);
+    BOOST_EXPORT_SYMBOLS BOOST_GUIGL_WIDGET_DRAW
+    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
 
 private:
     double m_value;

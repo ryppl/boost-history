@@ -8,7 +8,13 @@
 
 project boost/guigl/example
     : requirements
-        <library>$(TOP)/libs/guigl/build//boost_guigl/<link>static
+        <library>$(TOP)/libs/guigl/build//boost_guigl
     ;
 
 exe window_example : window_example.cpp two_spheres.cpp two_buttons.cpp ;
+
+install window_example_stage : window_example
+           : <install-dependencies>on <install-type>EXE
+             <install-type>LIB <location>$(TOP)/bin.v2/stage/window_example
+           ;
+ 

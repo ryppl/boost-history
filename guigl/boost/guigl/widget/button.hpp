@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__WIDGET__BUTTON_HPP
 #define BOOST__GUIGL__WIDGET__BUTTON_HPP
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/view/active_colored.hpp>
 #include <boost/guigl/view/clickable.hpp>
 #include <boost/guigl/view/positioned.hpp>
@@ -47,8 +48,8 @@ public:
     }
     boost::signal<void()> on_click;
 protected:
-    BOOST_GUIGL_WIDGET_DRAW
-    bool on_event(const event_type &event_info);
+    BOOST_EXPORT_SYMBOLS BOOST_GUIGL_WIDGET_DRAW
+    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
 
 private:
     void clickable_button_down(bool state);

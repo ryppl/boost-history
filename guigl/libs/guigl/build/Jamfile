@@ -25,22 +25,16 @@ project boost/guigl
 feature.feature guigl_binding : glut fltk : propagated ;
 feature.set-default guigl_binding : glut ;
 
-lib boost_guigl_binding
-    :
-        [ obj binding_window_obj : window.cpp ]
-    : <guigl_binding>fltk:<define>BOOST_GUIGL_USE_FLTK_GLUT
-    ;
-
 SOURCES =
-    window application
+    application
     widget/button widget/labeled_button
     widget/slider widget/labeled_slider
     widget/compound widget/label ;
 
 lib boost_guigl
     : $(SOURCES).cpp
+    [ obj binding_window_obj : window.cpp/<guigl_binding>fltk:<define>BOOST_GUIGL_USE_FLTK_GLUT ]
     [ obj widget_window_obj : widget/window.cpp ]
-    : : : <library>boost_guigl_binding
     ;
 
 

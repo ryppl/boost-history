@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__WIDGET__WINDOW_HPP
 #define BOOST__GUIGL__WIDGET__WINDOW_HPP
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/view/compound.hpp>
 #include <boost/guigl/view/mouse_tracking.hpp>
 #include <boost/guigl/view/window.hpp>
@@ -31,9 +32,8 @@ public:
     {}
     
 protected:
-    void draw();
-
-    bool on_event(const event_type &event_info);
+    BOOST_EXPORT_SYMBOLS void draw();
+    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
 };
 
 }}}

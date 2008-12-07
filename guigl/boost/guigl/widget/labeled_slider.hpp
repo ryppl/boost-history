@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__WIDGET__LABELED_SLIDER_HPP
 #define BOOST__GUIGL__WIDGET__LABELED_SLIDER_HPP
 
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/view/colored.hpp>
 #include <boost/guigl/view/labeled.hpp>
 #include <boost/guigl/widget/slider.hpp>
@@ -30,8 +31,8 @@ public:
     {}
 
 protected:
-    void draw();
-    bool on_event(const event_type &event_info);
+    BOOST_EXPORT_SYMBOLS void draw();
+    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
     friend class guigl::access;
 };
 
