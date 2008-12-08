@@ -93,12 +93,11 @@ I've tried to bold-ify what I think are the essential points below
 Synopsis
 ========
 
-This paper describes a safety problem with rvalue references, where
-code can inadvertently move resources from lvalues.  The underlying
-issue has been known for some time, but recently-discovered examples
-have made its seriousness much more apparent.  We also propose a
-solution to the problem, which has been implemented in the GNU C++
-compiler.
+This paper describes a safety problem with rvalue references that can
+cause unintentional modification of lvalues.  The underlying issue has
+been known for some time, but recently-discovered examples have made
+its seriousness much more apparent.  We also propose a solution to the
+problem, which has been implemented in the GNU C++ compiler.
 
 Motivating Example
 ==================
@@ -109,9 +108,10 @@ example is the conceptualized version of the ``push_back`` functions
 in, e.g., ``std::list``::
 
   requires CopyConstructible<value_type>
-    void push_back(const value_type& a);    // #1: copies a
+  void push_back(const value_type& a);    // #1: copies a
+
   requires MoveConstructible<value_type>
-    void push_back(value_type&& a);         // #2: moves from a
+  void push_back(value_type&& a);         // #2: moves from a
 
 Recall that it's okay for #2 to modify its argument (by moving its
 resources into the list) because changes to rvalues can't be observed
@@ -119,17 +119,18 @@ by other code. The safety problem here is that, if ``std::list`` is
 instantiated with a movable but non-copyable type like ``std::unique_ptr<int>``, one can
 silently move from *lvalues*. For example::
 
-  void push_back2(std::list<std::unique_ptr<int>>& lx, X a)
+  void push_back2(
+    std::list<std::unique_ptr<int>>& l, std::unique_ptr<int> a)
   {
-    lx.push_back(a); // oops: moves from the lvalue 'a', silently!
-    lx.push_back(a); // oops: 'a' no longer has its original value
+    l.push_back(a); // oops: moves from the lvalue 'a', silently!
+    l.push_back(a); // oops: 'a' no longer has its original value
   }
 
-Rvalue references were formulated to make the operation "move a value
-from ``x``" safe (in the case of temporary values) or explicit
-(users must write ``std::move(x)``). However, the example above
-illustrates that one can subvert the intended safety without an
-explicit ``std::move``.
+The operation “move a value from *x*\ ” is always safe when *x* is an
+unnamed temporary.  Rvalue references were designed so that users must
+*explicitly* write ``std::move(x)`` otherwise.  However, the example
+above illustrates that the intended safety mechanism can disappear
+without an explicit ``std::move``.
 
 What Happened?
 --------------
@@ -142,40 +143,51 @@ required by #1, the only ``push_back`` function that exists in
 
   void push_back(std::unique_ptr<int>&& a);                // #2: moves from a
 
-The call ``lx.push_back(x)`` succeeds because rvalue references bind
+The call ``l.push_back(x)`` succeeds because rvalue references bind
 liberally to lvalues.  Then, ``push_back`` treats the lvalue as if it
 were an rvalue, silently moving from it and destroying the value of
 ``x``.
 
+Note that without concept requirements, two ``push_back`` overloads
+are always available:
+
+  void push_back(const X& a); // #1: copies a
+  void push_back(X&& a);      // #2: moves from a
+
+With both overloads in play, the lvalue reference in #1 is a better
+match for lvalue arguments than the rvalue reference in #2.
+Instantiation of #1 finally fails only when it attempts to copy its
+argument.
+
 The Move/Copy Overload Idiom
 ============================
 
-To understand how we ended up silently moving from lvalues, we step
-back to study the use of rvalue references and overload resolution to
-implement move semantics. In C++03, ``std::list`` only provides a
-single ``push_back`` operation::
+To understand how we ended up silently moving from lvalues, let's
+review the canonical implementation of move semantics. In C++03,
+``std::list`` only provides a single ``push_back`` operation::
 
   void push_back(const value_type& x); // #1
 
-This operation copies the value ``x`` into the list. If the value
+This operation copies the value ``x`` into the list.  If the value
 provided for ``x`` is actually a temporary value that is expensive to
-copy (say, a large string or a container of strings), much of the work
-of copying ``x`` is wasted effort: we're making an expensive copy of
-something (the temporary) that will be destroyed anyway.
+copy (say, a large string or a container of strings), copying ``x`` is
+wasted effort: we're making an expensive copy of something that will be
+destroyed anyway.
 
-That's where move semantics come in. The idea is to
-transfer ownership of ``x``'s contents into the list instead of
-allocating new memory and making a copy.  We can do that when the
-argument is a temporary, e.g.,
+That's where move semantics come in. The idea is to *transfer
+ownership* of ``x``'s contents into the list instead of allocating new
+memory and making a copy.  We can do that when the argument is a
+temporary, e.g.,
 
 ::
 
-  std::list<std::string> lx;
-  lx.push_back(string("temporary"));
+  std::list<std::string> l;
+  l.push_back(string("temporary"));
 
 because the string is an unnamed temporary and thus inaccessible and
-invisible to the rest of the program.  If we steal from an rvalue,
-nobody can know the difference: that's the key to move semantics.
+invisible to the rest of the program and .  If we steal from an
+rvalue, nobody can know the difference: that's the key to move
+semantics.
 
 To add move semantics, we add a ``push_back`` overload version that
 takes its second parameter by rvalue reference::
