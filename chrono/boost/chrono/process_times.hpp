@@ -57,7 +57,10 @@ namespace boost
 //                                 process_timer                                   //
 //---------------------------------------------------------------------------------//
 
-    class process_timer
+    class BOOST_CHRONO_DECL process_timer
+    // BOOST_CHRONO_DECL is required to quiet compiler warnings even though
+    // process_timer has no dynamically linked members, because process_timer is
+    // used as a base class for run_timer, which does have dynamically linked members.
     {
     public:
 

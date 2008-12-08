@@ -908,7 +908,8 @@ template <class Clock, class Duration>
       typedef chrono::time_point<system_clock>     time_point;
       static const bool is_monotonic =             false;
 
-      static time_point  now( system::error_code & ec = system::throws );
+      static time_point  now();                         // throws on error
+      static time_point  now(system::error_code & ec);  // never throws
 
       static std::time_t to_time_t(const time_point& t);
       static time_point  from_time_t(std::time_t t);
@@ -927,7 +928,8 @@ template <class Clock, class Duration>
       typedef chrono::time_point<monotonic_clock>  time_point;
       static const bool is_monotonic =             true;
 
-      static time_point now( system::error_code & ec = system::throws );
+      static time_point  now();                         // throws on error
+      static time_point  now(system::error_code & ec);  // never throws
   };
 
 //----------------------------------------------------------------------------//
