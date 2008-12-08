@@ -23,8 +23,8 @@ template<typename Traits1, typename Traits2>
 struct port_binary_operation_impl<Traits1, Traits2, blueprint::operation,
     typename enable_if<
         mpl::and_<
-            blueprint::is_blueprint_framework<typename traits_of<Traits1>::type::framework>,
-            blueprint::is_blueprint_framework<typename traits_of<Traits2>::type::framework>
+            blueprint::is_blueprint_framework<typename Traits1::framework>,
+            blueprint::is_blueprint_framework<typename Traits2::framework>
         >
     >::type>
 {
@@ -42,8 +42,8 @@ template<typename Traits1, typename Traits2>
 struct port_binary_operation_will_succeed_impl<Traits1, Traits2, blueprint::operation,
     typename enable_if<
         mpl::and_<
-            blueprint::is_blueprint_framework<typename traits_of<Traits1>::type::framework>,
-            blueprint::is_blueprint_framework<typename traits_of<Traits2>::type::framework>
+            blueprint::is_blueprint_framework<typename Traits1::framework>,
+            blueprint::is_blueprint_framework<typename Traits2::framework>
         >
     >::type>
 {

@@ -6,6 +6,8 @@
 #ifndef BOOST_DATAFLOW_MANAGED_COMPONENT_HPP
 #define BOOST_DATAFLOW_MANAGED_COMPONENT_HPP
 
+#include <boost/dataflow/utility/export_symbols.hpp>
+
 
 namespace boost { namespace dataflow { namespace managed {
 
@@ -15,9 +17,9 @@ class port_base;
 class component
 {
 public:
-    component(network &network_context);
-    component(const component &other);
-    virtual ~component();
+    BOOST_EXPORT_SYMBOLS component(network &network_context);
+    BOOST_EXPORT_SYMBOLS component(const component &other);
+    virtual BOOST_EXPORT_SYMBOLS ~component();
     network &network_context()
     {   return m_network_context; }
     virtual void invoke(){};
@@ -29,7 +31,7 @@ public:
     {
         return m_topological_sort_index;
     }
-    void claim_port(port_base &p);
+    void BOOST_EXPORT_SYMBOLS claim_port(port_base &p);
 private:
     network &m_network_context;
     unsigned m_topological_sort_index;

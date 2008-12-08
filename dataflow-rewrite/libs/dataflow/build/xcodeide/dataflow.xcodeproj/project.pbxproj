@@ -147,6 +147,7 @@
 		08A2279D0EAE427700F70466 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A227A00EAE429600F70466 /* graph_framework.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = graph_framework.hpp; sourceTree = "<group>"; };
 		08A227A90EAE434300F70466 /* port.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port.hpp; sourceTree = "<group>"; };
+		08A48FC20EE9D64B002D6374 /* export_symbols.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = export_symbols.hpp; sourceTree = "<group>"; };
 		08A53F850EAC07E6000B9C17 /* blueprint_component.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = blueprint_component.hpp; sourceTree = "<group>"; };
 		08A53F8E0EAC0AC1000B9C17 /* factory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = factory.hpp; sourceTree = "<group>"; };
 		08A53F920EAC14A4000B9C17 /* test_factory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_factory.cpp; sourceTree = "<group>"; };
@@ -391,6 +392,7 @@
 				08A77AEE0E4FB4C800B8793E /* is_type.hpp */,
 				0826E33A0EA53F4C0090AB4E /* all_of.hpp */,
 				089F03530EE9615200C88FE5 /* shared_ptr_to_element.hpp */,
+				08A48FC20EE9D64B002D6374 /* export_symbols.hpp */,
 			);
 			path = utility;
 			sourceTree = "<group>";

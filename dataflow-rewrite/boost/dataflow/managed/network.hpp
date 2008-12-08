@@ -11,6 +11,7 @@
 
 #include <boost/dataflow/generic/port.hpp>
 #include <boost/dataflow/managed/component.hpp>
+#include <boost/dataflow/utility/export_symbols.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
 #include <boost/shared_ptr.hpp>
@@ -64,9 +65,9 @@ public:
         : m_io_service(service)
     {}
     
-    void register_component(component *c);
-    void unregister_component(component *c);
-    void notify_connect(component &producer, component &consumer);
+    void BOOST_EXPORT_SYMBOLS register_component(component *c);
+    void BOOST_EXPORT_SYMBOLS unregister_component(component *c);
+    void BOOST_EXPORT_SYMBOLS notify_connect(component &producer, component &consumer);
     void notify_change(component &changed)
     {
         m_changed.insert(&changed);
@@ -77,8 +78,8 @@ public:
         return m_changed;
     }
 
-    void update_topological_sort();
-    void update();
+    void BOOST_EXPORT_SYMBOLS update_topological_sort();
+    void BOOST_EXPORT_SYMBOLS update();
     
     void set_io_service(boost::shared_ptr<asio::io_service> service)
     {   m_io_service = service; }
@@ -92,7 +93,7 @@ public:
         return *m_io_service;
     }
 private:
-    void post_async(const boost::function<void()> &f);
+    void BOOST_EXPORT_SYMBOLS post_async(const boost::function<void()> &f);
 
     graph_type m_graph;
     typedef std::map<component *, graph_type::vertex_descriptor> descriptor_map_type;
