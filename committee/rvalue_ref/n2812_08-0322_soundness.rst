@@ -663,7 +663,7 @@ motivate the addition of another kind of reference.
 
 With the stream insertion and extraction operators, the introduction
 of the ``operator>>`` and ``operator>>`` templates described in
-section 'Impact on the Standard Library'_ eliminates the need for the
+section `Impact on the Standard Library`_ eliminates the need for the
 use of ``&&&``. We expect that most other uses of ``&&&`` can be
 addressed using this approach.
 
