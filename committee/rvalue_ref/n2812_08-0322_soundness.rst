@@ -272,6 +272,54 @@ exist. This is a SFINAE case, so #3b is removed from consideration and
 the overload set only contains #4. The rvalue reference parameter of
 #4 binds to the lvalue ``src``, and we silently move from an lvalue.
 
+The Principle at Stake
+======================
+
+Fundamentally, the problem we've described occurs because the rvalue
+reference binding rules violate an important principle of type safety:
+
+.. Admonition:: Principle of Typesafe Overloading (PTO)
+
+   Every function must be typesafe in isolation, *without regard to
+   how it has been overloaded.*
+
+This violation of principle manifests itself in several ways:
+
+From an author's point-of-view, we have been forced *add* a new
+overload to *remove* unwanted behavior.  
+
+From a client's point-of-view, under the current rules, a function
+that accepts an rvalue reference does not crisply state its contract
+in the type system::
+
+  void f(X&&);
+
+From looking at ``f``, is not clear whether it is 
+
+a. meant to mutate rvalues *and lvalues*, or
+b. responsible for moving from rvalues as part of a
+   logically-non-mutating overload set
+
+The contract can be expressed as documentation, but to put it in code
+may require the addition of a second ``f`` overload, e.g.,::
+
+  void f(value_type const&) = delete;
+
+to ban the use of lvalues.  Taken to its logical extreme, a client may
+need to see *all* the code in the translation unit in order to know
+whether this function is capable of mutating its argument.  There is
+no precedent in const-correct code for such a dispersal of semantic
+information, or for a non-mutating call to become mutating when an
+overload is removed from the set.
+
+So why is this happening now?  Before we had rvalue references, it was
+easy to adhere to the PTO without giving it any special attention.
+Move semantics, however, introduce a special case: we need to *modify*
+an rvalue argument as part of a *logically non-mutating* operation.
+This paradox is only possible because of a special property of
+rvalues: that they can be modified with assurance that the
+modification can't be observed.
+
 Proposed Solution
 =================
 
@@ -550,54 +598,6 @@ implementations. The GCC implementation required a day's effort to
 update both the language and the library, although more effort would
 certainly be required to update the test cases associated with this
 feature.
-
-The Principle at Stake
-======================
-
-Fundamentally, the problem we've described occurs because the rvalue
-reference binding rules violate an important principle of type safety:
-
-.. Admonition:: Principle of Typesafe Overloading (PTO)
-
-   Every function must be typesafe in isolation, *without regard to
-   how it has been overloaded.*
-
-This violation of principle manifests itself in several ways:
-
-From an author's point-of-view, we have been forced *add* a new
-overload to *remove* unwanted behavior.  
-
-From a client's point-of-view, under the current rules, a function
-that accepts an rvalue reference does not crisply state its contract
-in the type system::
-
-  void f(X&&);
-
-From looking at ``f``, is not clear whether it is 
-
-a. meant to mutate rvalues *and lvalues*, or
-b. responsible for moving from rvalues as part of a
-   logically-non-mutating overload set
-
-The contract can be expressed as documentation, but to put it in code
-may require the addition of a second ``f`` overload, e.g.,::
-
-  void f(value_type const&) = delete;
-
-to ban the use of lvalues.  Taken to its logical extreme, a client may
-need to see *all* the code in the translation unit in order to know
-whether this function is capable of mutating its argument.  There is
-no precedent in const-correct code for such a dispersal of semantic
-information, or for a non-mutating call to become mutating when an
-overload is removed from the set.
-
-So why is this happening now?  Before we had rvalue references, it was
-easy to adhere to the PTO without giving it any special attention.
-Move semantics, however, introduce a special case: we need to *modify*
-an rvalue argument as part of a *logically non-mutating* operation.
-This paradox is only possible because of a special property of
-rvalues: that they can be modified with assurance that the
-modification can't be observed.
 
 Alternative Solutions
 ======================
