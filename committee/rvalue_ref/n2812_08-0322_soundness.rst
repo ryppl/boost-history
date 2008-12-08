@@ -551,43 +551,53 @@ update both the language and the library, although more effort would
 certainly be required to update the test cases associated with this
 feature.
 
-Philosophical View of Rvalue Reference Binding
-==============================================
+The Principle at Stake
+======================
 
-The safety problem described in this paper was known for a while, but
-the objections to rvalue referencings binding to lvalues were
-primarily philosphical. In particular, the issue is that a function
-``f`` that accepts an rvalue reference isn't properly stating its
-contract in the type system::
+Fundamentally, the problem we've described occurs because the rvalue
+reference binding rules violate an important principle of type safety:
 
- void f(X&&);
+.. Admonition:: Principle of Typesafe Overloading (PTO)
 
-From looking at ``f`` in isolation, it is not clear whether ``f`` is
-meant to accept lvalues or not. The contract can be expressed as
-documentation, but to put it in code requires the addition of a second
-``f`` overload, e.g.,::
+   Every function must be typesafe in isolation, *without regard to
+   how it has been overloaded.*
 
-  void f(value_type&) = delete;
+This violation of principle manifests itself in several ways:
 
-to ban the use of lvalues entirely or::
+From an author's point-of-view, we have been forced *add* a new
+overload to *remove* unwanted behavior.  
 
-   void f(value_type&) { ... }
+From a client's point-of-view, under the current rules, a function
+that accepts an rvalue reference does not crisply state its contract
+in the type system::
 
-to provide a different implementation for lvalues. The philosophical
-issue, then, is that rvalue references forced one to *add* new
-overloads to *remove* unwanted behavior. While there is some precedent
-for adding overloads to suppress behavior (e.g., to avoid unsafe
-implicit conversions), there is no precedent in const-correct code for
-a non-mutating call to become mutating when an overload is removed
-from the set. So why does it happen here?
+  void f(X&&);
 
-In C++03 overload sets where only one overload mutates data (see
-``set<T>::operator[]``), the mutating operation always binds less-liberally to
-arguments than the non-mutating operation.  Non-const operations never attract
-const arguments.  Rvalue references, however, *will* attract lvalues,
-so the removal of an overload can change an (apparently) non-mutating
-call into a mutating call. SFINAE and concepts can both cause the
-removal of overloads from the overload set, triggering the problem.
+From looking at ``f``, is not clear whether it is 
+
+a. meant to mutate rvalues *and lvalues*, or
+b. responsible for moving from rvalues as part of a
+   logically-non-mutating overload set
+
+The contract can be expressed as documentation, but to put it in code
+may require the addition of a second ``f`` overload, e.g.,::
+
+  void f(value_type const&) = delete;
+
+to ban the use of lvalues.  Taken to its logical extreme, a client may
+need to see *all* the code in the translation unit in order to know
+whether this function is capable of mutating its argument.  There is
+no precedent in const-correct code for such a dispersal of semantic
+information, or for a non-mutating call to become mutating when an
+overload is removed from the set.
+
+So why is this happening now?  Before we had rvalue references, it was
+easy to adhere to the PTO without giving it any special attention.
+Move semantics, however, introduce a special case: we need to *modify*
+an rvalue argument as part of a *logically non-mutating* operation.
+This paradox is only possible because of a special property of
+rvalues: that they can be modified with assurance that the
+modification can't be observed.
 
 Alternative Solutions
 ======================
