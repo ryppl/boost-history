@@ -108,62 +108,61 @@ example is the conceptualized version of the ``push_back`` functions
 in ``std::list``::
 
   requires CopyConstructible<value_type>
-    void push_back(const value_type& x); // #1: copies x
+  void push_back(const value_type& a);    // #1: copies a
+
   requires MoveConstructible<value_type>
-    void push_back(value_type&& x); // #2: moves x
+  void push_back(value_type&& a);         // #2: moves from a
 
-The safety problem here is that, if ``std::list`` is instantiated with
-a move-only type ``X``, one can silently move from lvalues of type
-``X``. For example::
+Recall that it's okay for #2 to modify its argument (by moving its
+resources into the list) because changes to rvalues can't be observed
+by other code. The safety problem here is that, if ``std::list`` is
+instantiated with a movable but non-copyable type ``X``, one can
+silently move from *lvalues*. For example::
 
-  X f(std::list<X>& lx, X x) {
-    lx.push_back(x); // oops: moves from the lvalue 'x', silently!
-    std::cout << x; // oops: 'x' no longer has a value, because we've moved from it
+  void push_back2(std::list<X>& lx, X a)
+  {
+    lx.push_back(a); // oops: moves from the lvalue 'a', silently!
+    lx.push_back(a); // oops: 'a' no longer has its original value
   }
 
 What Happened?
 ==============
 
-When we instantiate ``std::list<X>``, only those declarations of
-``push_back`` whose concept requirements are satisfied will be
-available. Since ``X`` is a move-only type, it meets the requirements
-of the ``MoveConstructible`` concept (used by the second
-``push_back``) but not the ``CopyConstructible`` concept (used by the
-first ``push_back``). Thus, the only ``push_back`` function that
-exists in ``std::list<X>`` is::
+When ``std::list`` is instantiated, the compiler eliminates any
+declarations whose concept requirements cannot be satisfied.  Since
+``X`` does not satisfy ``CopyConstructible`` as required by #1, the
+only ``push_back`` function that exists in ``std::list<X>`` is::
 
-  void push_back(X&&); // moves x
+  void push_back(X&& a);                // #2: moves from a
 
-The call ``lx.push_back(x)`` succeeds because rvalue references are
-allowed to bind to lvalues. Then, ``push_back`` treats the lvalue as
-if it were an rvalue, silently moving from it and destroying the value
-of ``x``.
+The call ``lx.push_back(x)`` succeeds because rvalue references bind
+liberally to lvalues.  Then, ``push_back`` treats the lvalue as if it
+were an rvalue, silently moving from it and destroying the value of
+``x``.
 
-Why didn't this happen prior to concepts? Well, before we had concepts
-we would always have the same two ``push_back`` overloads:
+Note that without concept requirements, two ``push_back`` overloads
+are always available:
 
-  void push_back(const X& x); // #1: copies x
-  void push_back(X&& x); // #2: moves from x
+  void push_back(const X& a); // #1: copies a
+  void push_back(X&& a);      // #2: moves from a
 
-In this case, the lvalue reference in #1 attracts the lvalue in
-``lx.push_back(x)`` more strongly than the rvalue reference in #2, so
-overload resolution selects #1 even for the move-only type
-``X``. Then, later on, instantiation of #1 will fail because ``X``
-does not support copy construction. 
+With both overloads in play, the lvalue reference in #1 is a better
+match for lvalue arguments than the rvalue reference in #2.
+Instantiation of #1 finally fails only when it attempts to copy its
+argument.
 
 Rvalue References and SFINAE
 ============================
 
 The most dire examples of this problem tend to involve concepts, but
-the problem manifests itself even without the presence of
-concepts. The same issues occur when the lvalue-reference overload is
-removed from consideration due to other factors, such as a template
-argument deduction failure (SFINAE). For example, consider an
-"enqueue" function that moves the elements from a source queue into a
-destination queue::
+the problem manifests itself even without concept requirements. The
+same issues occur when an lvalue-reference overload is eliminated *for
+any reason*, such as a template argument deduction failure
+(SFINAE). [#SFINAE]_ For example, consider an "enqueue" function that
+moves the elements from a source queue into a destination queue::
 
   template <class T, typename Cont>
-    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #3
+  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #3
 
 To make sure that the ``enqueue`` function does not move from lvalues,
 one would add a second version of ``enqueue`` whose ``src`` parameter
@@ -172,8 +171,9 @@ queue to another, it may also make sense to provide an optional
 allocator::
 
   template <class T, typename Cont>
-    void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
-                 typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #4
+  void enqueue(
+    queue<T, Cont>& dest, const queue<T, Cont>& src,
+    typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #4
 
 Now, we've followed the typical idiom of providing both a copying
 version and a moving version of the same algorithm, allowing
@@ -198,7 +198,6 @@ type ``simple_list<string>::allocator_type``, which does not
 exist. This is a SFINAE case, so #4 is removed from consideration and
 the overload set only contains #3. The rvalue reference parameter of
 #3 binds to the lvalue ``src``, and we silently move from an lvalue.
-
 
 Proposed Solution
 =================
@@ -651,3 +650,8 @@ The authors thank Peter Dimov, Howard Hinnant, Jaakko Jarvi, and
 Thomas Witt for many lively discussions on the topic of rvalue
 references and concepts, where many of the ideas in this paper
 originated.
+
+-------------------
+
+.. [#SFINAE] “Substitution Failure Is Not An Error.”  See Josuttis &
+   Vandevoorde, *C++ Templates*.
