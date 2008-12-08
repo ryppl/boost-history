@@ -736,7 +736,7 @@ problem, either with or without concepts.
 
 Acknowledgments
 ===============
-The authors thank Peter Dimov, Howard Hinnant, Jaakko Jarvi, and
+The authors thank Peter Dimov, Howard Hinnant, Jaakko Jarvi, Mat Marcus, and
 Thomas Witt for many lively discussions on the topic of rvalue
 references and concepts, where many of the ideas in this paper
 originated.
