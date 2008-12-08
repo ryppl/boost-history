@@ -199,27 +199,6 @@ exist. This is a SFINAE case, so #4 is removed from consideration and
 the overload set only contains #3. The rvalue reference parameter of
 #3 binds to the lvalue ``src``, and we silently move from an lvalue.
 
-Why This Happens
-================
-
-There is no precedent in const-correct code for a non-mutating call to become
-mutating when an overload is removed from the set.  So why does it happen here?
-
-In C++03 overload sets where only one overload mutates data (see
-set<T>::operator[]), the mutating operation always binds less-liberally to
-arguments than the non-mutating operation.  Non-const operations never attract
-const arguments.  Rvalue references, however, *will* attract lvalues.
-
-.. Admonition:: Doug Writes
-
-  I fear that this paragraph is only understood by the people CC'd on
-  this e-mail. In fact, I would probably remove this entire
-  subsection.  It *could* be a discussion of the philosophy that
-  parameters should only permit arguments that are "safe", and that
-  the presence of additional overloads is never a safe way to control
-  what arguments a certain parameter permits. C++03 followed this
-  philosophy, but rvalue references did not.
-
 
 Proposed Solution
 =================
@@ -496,6 +475,44 @@ implementations. The GCC implementation required a day's effort to
 update both the language and the library, although more effort would
 certainly be required to update the test cases associated with this
 feature.
+
+Philosophical View of Rvalue Reference Binding
+==============================================
+
+The safety problem described in this paper was known for a while, but
+the objections to rvalue referencings binding to lvalues were
+primarily philosphical. In particular, the issue is that a function
+``f`` that accepts an rvalue reference isn't properly stating its
+contract in the type system::
+
+ void f(X&&);
+
+From looking at ``f`` in isolation, it is not clear whether ``f`` is
+meant to accept lvalues or not. The contract can be expressed as
+documentation, but to put it in code requires the addition of a second
+``f`` overload, e.g.,::
+
+  void f(value_type&) = delete;
+
+to ban the use of lvalues entirely or::
+
+   void f(value_type&) { ... }
+
+to provide a different implementation for lvalues. The philosophical
+issue, then, is that rvalue references forced one to *add* new
+overloads to *remove* unwanted behavior. While there is some precedent
+for adding overloads to suppress behavior (e.g., to avoid unsafe
+implicit conversions), there is no precedent in const-correct code for
+a non-mutating call to become mutating when an overload is removed
+from the set. So why does it happen here?
+
+In C++03 overload sets where only one overload mutates data (see
+set<T>::operator[]), the mutating operation always binds less-liberally to
+arguments than the non-mutating operation.  Non-const operations never attract
+const arguments.  Rvalue references, however, *will* attract lvalues,
+so the removal of an overload can change an (apparently) non-mutating
+call into a mutating call. SFINAE and concepts can both cause the
+removal of overloads from the overload set, triggering the problem.
 
 Alternative Solutions
 ======================
