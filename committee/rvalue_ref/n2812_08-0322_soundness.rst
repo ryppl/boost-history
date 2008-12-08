@@ -15,17 +15,14 @@
 
 .. contents:: index
 
-Synopsis
-========
+Introduction
+============
 
 This paper describes a safety problem with rvalue references that can
 cause unintentional modification of lvalues.  The underlying issue has
 been known for some time, but recently-discovered examples have made
 its seriousness much more apparent.  We also propose a solution to the
 problem, which has been implemented in the GNU C++ compiler.
-
-Motivating Example
-==================
 
 The example that made this safety problem with rvalue references
 critical involves both rvalue references and concepts. The simplest
@@ -57,10 +54,7 @@ unnamed temporary.  Rvalue references were designed so that users must
 above illustrates that the intended safety mechanism can disappear
 without an explicit ``std::move``.
 
-What Happened?
---------------
-
-When ``std::list`` is instantiated, the compiler eliminates any
+What happened? When ``std::list`` is instantiated, the compiler eliminates any
 declarations whose concept requirements cannot be satisfied.  Since
 ``std::unique_ptr<int>`` does not satisfy ``CopyConstructible`` as
 required by #1, the only ``push_back`` function that exists in
