@@ -149,7 +149,7 @@ were an rvalue, silently moving from it and destroying the value of
 ``x``.
 
 Note that without concept requirements, two ``push_back`` overloads
-are always available:
+are always available::
 
   void push_back(const X& a); // #1: copies a
   void push_back(X&& a);      // #2: moves from a
@@ -185,7 +185,7 @@ temporary, e.g.,
   l.push_back(string("temporary"));
 
 because the string is an unnamed temporary and thus inaccessible and
-invisible to the rest of the program and .  If we steal from an
+invisible to the rest of the program.  If we steal from an
 rvalue, nobody can know the difference: that's the key to move
 semantics.
 
@@ -240,8 +240,9 @@ the typical copy/move idiom::
 
   template <class T, typename Cont>
   void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src) // #3a
+
   template <class T, typename Cont>
-    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #4
+  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #4
 
 Now, in the case where we're copying from one queue to another, it
 might make sense to provide an optional allocator, so we replace #3a
@@ -290,9 +291,9 @@ The Principle at Stake
 Fundamentally, the problem we've described occurs because the rvalue
 reference binding rules violate an important principle of type safety:
 
-.. Admonition:: Principle of Typesafe Overloading (PTO)
+.. Admonition:: Principle of Type-safe Overloading (PTO)
 
-   Every function must be typesafe in isolation, *without regard to
+   Every function must be type-safe in isolation, *without regard to
    how it has been overloaded.*
 
 This violation of principle manifests itself in several ways:
@@ -313,7 +314,9 @@ b. responsible for moving from rvalues as part of a
    logically-non-mutating overload set
 
 The contract can be expressed as documentation, but to put it in code
-may require the addition of a second ``f`` overload, e.g.,::
+may require the addition of a second ``f`` overload, e.g.,
+
+::
 
   void f(value_type const&) = delete;
 
@@ -372,6 +375,9 @@ silently moving from lvalue::
   enqueue(dest, src); // error: #3b fails template argument deduction
                       //        #4  cannot be called because src isn't an lvalue
 
+Our proposed solution retains the behavior of the copy/move idiom
+while still adhering to the principle of type-safe overloading and
+eliminating the safety hole that allowed silently moves from lvalues.
 
 Impact on Users
 ---------------
@@ -427,7 +433,7 @@ has been used with member ``swap`` to permit swapping with rvalues, e.g.,::
     m1.swap(m2); // okay under the existing rules, ill-formed with the proposed rules
   }
 
-With the proposed change, the definition of mytype would have to be
+With the proposed change, the definition of ``mytype`` would have to be
 extended to include two ``swap`` overloads, one for lvalues and one for
 rvalues. The rvalue-reference version would merely forward to the
 lvalue-reference version, e.g.,::
