@@ -100,7 +100,7 @@ have made its seriousness much more apparent.  We also propose a
 solution to the problem, which has been implemented in the GNU C++
 compiler.
 
-The Killer Example
+Motivating Example
 ==================
 
 The example that made this safety problem with rvalue references
@@ -109,18 +109,17 @@ example is the conceptualized version of the ``push_back`` functions
 in, e.g., ``std::list``::
 
   requires CopyConstructible<value_type>
-  void push_back(const value_type& a);    // #1: copies a
-
+    void push_back(const value_type& a);    // #1: copies a
   requires MoveConstructible<value_type>
-  void push_back(value_type&& a);         // #2: moves from a
+    void push_back(value_type&& a);         // #2: moves from a
 
 Recall that it's okay for #2 to modify its argument (by moving its
 resources into the list) because changes to rvalues can't be observed
 by other code. The safety problem here is that, if ``std::list`` is
-instantiated with a movable but non-copyable type ``X``, one can
+instantiated with a movable but non-copyable type like ``std::unique_ptr<int>``, one can
 silently move from *lvalues*. For example::
 
-  void push_back2(std::list<X>& lx, X a)
+  void push_back2(std::list<std::unique_ptr<int>>& lx, X a)
   {
     lx.push_back(a); // oops: moves from the lvalue 'a', silently!
     lx.push_back(a); // oops: 'a' no longer has its original value
@@ -133,60 +132,126 @@ illustrates that one can subvert the intended safety without an
 explicit ``std::move``.
 
 What Happened?
-==============
+--------------
 
 When ``std::list`` is instantiated, the compiler eliminates any
 declarations whose concept requirements cannot be satisfied.  Since
-``X`` does not satisfy ``CopyConstructible`` as required by #1, the
-only ``push_back`` function that exists in ``std::list<X>`` is::
+``std::unique_ptr<int>`` does not satisfy ``CopyConstructible`` as
+required by #1, the only ``push_back`` function that exists in
+``std::list<std::unique_ptr<int>>`` is:: 
 
-  void push_back(X&& a);                // #2: moves from a
+  void push_back(std::unique_ptr<int>&& a);                // #2: moves from a
 
 The call ``lx.push_back(x)`` succeeds because rvalue references bind
 liberally to lvalues.  Then, ``push_back`` treats the lvalue as if it
 were an rvalue, silently moving from it and destroying the value of
 ``x``.
 
-Note that without concept requirements, two ``push_back`` overloads
-are always available:
-
-  void push_back(const X& a); // #1: copies a
-  void push_back(X&& a);      // #2: moves from a
-
-With both overloads in play, the lvalue reference in #1 is a better
-match for lvalue arguments than the rvalue reference in #2.
-Instantiation of #1 finally fails only when it attempts to copy its
-argument.
-
-Rvalue References and SFINAE
+The Move/Copy Overload Idiom
 ============================
 
-The most dire examples of this problem tend to involve concepts, but
-the problem manifests itself even without concept requirements. The
-same issues occur when an lvalue-reference overload is eliminated *for
-any reason*, such as a template argument deduction failure
-(SFINAE). [#SFINAE]_ For example, consider an "enqueue" function that
-moves the elements from a source queue into a destination queue::
+To understand how we ended up silently moving from lvalues, we step
+back to study the use of rvalue references and overload resolution to
+implement move semantics. In C++03, ``std::list`` only provides a
+single ``push_back`` operation::
+
+  void push_back(const value_type& x); // #1
+
+This operation copies the value ``x`` into the list. If the value
+provided for ``x`` is actually a temporary value that is expensive to
+copy (say, a large string or a container of strings), much of the work
+of copying ``x`` is wasted effort: we're making an expensive copy of
+something (the temporary) that will be destroyed anyway.
+
+That's where move semantics come in. The idea is to
+transfer ownership of ``x``'s contents into the list instead of
+allocating new memory and making a copy.  We can do that when the
+argument is a temporary, e.g.,
+
+::
+
+  std::list<std::string> lx;
+  lx.push_back(string("temporary"));
+
+because the string is an unnamed temporary and thus inaccessible and
+invisible to the rest of the program.  If we steal from an rvalue,
+nobody can know the difference: that's the key to move semantics.
+
+To add move semantics, we add a ``push_back`` overload version that
+takes its second parameter by rvalue reference::
+
+  void push_back(value_type&& x); // #2
+
+This idiom relies on the presence of *both* overloads.  Overload #2
+makes it move, but overload #1 makes it safe by attracting lvalues.
+Without overload #1, ``push_back`` will move from lvalues, silently
+turning a logically non-mutating operation into a mutating one.
+
+How Move-Only Types Work
+------------------------
+
+A movable-but-noncopyable ``value_type`` follows the same binding
+pattern as any other ``value_type``: rvalue arguments, which can be
+safely moved from, always select overload #2::
+
+  std::list<std::unique_ptr<int>> l;
+  l.push_back(std::unique_ptr<int>(new int));
+
+As before, lvalue arguments select overload #1::
+
+  void f(std::list<std::unique_ptr<int>> l, std::unique_ptr<int> p) {
+    l.push_back(p); // calls #1
+  }
+
+However, since the argument type is noncopyable, the body of #1 fails
+compilation (as desired) when it attempts to make a copy of the
+``unique_ptr``.
+
+The Problem
+===========
+
+The problem with the formulation of the move/copy idiom is that the
+lvalue/rvalue overload set doesn't degrade safely.  If overload #1 is
+removed from consideration, overload #2 will match both rvalues and
+lvalues, moving silently from all mutable arguments. 
+
+There are a number of possible reasons for such a removal, but simple
+programmer blunders may be the most likely causes.  For example, an errant
+finger might hit the delete key when overload #1 is selected.  Some
+mistakes are not nearly so obvious, because overloads can be removed
+due to template argument deduction failure (SFINAE) [#SFINAE]_ or
+because certain concept requirements are not satisfied.
+
+For example, consider an "enqueue" function that either copies or
+moves the elements from a source queue into a destination queue, using
+the typical copy/move idiom::
 
   template <class T, typename Cont>
-  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #3
+  void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src) // #3a
+  template <class T, typename Cont>
+    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #4
 
-To make sure that the ``enqueue`` function does not move from lvalues,
-one would add a second version of ``enqueue`` whose ``src`` parameter
-is an lvalue-reference to const. However, when we're copying from one
-queue to another, it may also make sense to provide an optional
-allocator::
+Now, in the case where we're copying from one queue to another, it
+might make sense to provide an optional allocator, so we replace #3a
+with::
 
   template <class T, typename Cont>
   void enqueue(
     queue<T, Cont>& dest, const queue<T, Cont>& src,
-    typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #4
+    typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #3b
 
-Now, we've followed the typical idiom of providing both a copying
-version and a moving version of the same algorithm, allowing
-overloading to pick the appropriate version. However, not all
-container types ``Cont`` have allocators, and we can run into trouble
-again::
+This overload set will move from rvalues and copy from lvalues in most
+common cases, e.g.,
+
+::
+
+  queue<string, list<string>> dest;
+  queue<string, list<string>> src;
+  enqueue(dest, src); // okay, calls #3b to copy from src into dest
+  enqueue(dest, queue<string, list<string>>()); // okay, calls #4 to move from src to dest
+
+However, not all container types ``Cont`` have allocators, and we can
+run into trouble again::
 
   class simple_list {
     // ... no allocator_type ...
@@ -194,17 +259,18 @@ again::
 
   queue<string, simple_list<string>> dest;
   queue<string, simple_list<string>> src;
-  enqueue(dest, src); // oops: calls #3, silently moving from the lvalue 'src'
+  enqueue(dest, src); // oops: calls #4, silently moving from the lvalue 'src'
 
-What happened here is similar to what happened with ``push_back``, but
-this time concepts are not involved. In this case, template argument
-deduction for the call to #4 deduces ``T=string`` and
+What happened here is similar to what happened with the conceptualized
+verison of ``push_back``, but this time concepts are not involved. In
+this case, template argument 
+deduction for the call to #3b deduces ``T=string`` and
 ``Cont=simple_list<string>``. Then, while substituting those deduced
-template arguments into the signature of #4, we attempt to look up the
+template arguments into the signature of #3b, we attempt to look up the
 type ``simple_list<string>::allocator_type``, which does not
-exist. This is a SFINAE case, so #4 is removed from consideration and
-the overload set only contains #3. The rvalue reference parameter of
-#3 binds to the lvalue ``src``, and we silently move from an lvalue.
+exist. This is a SFINAE case, so #3b is removed from consideration and
+the overload set only contains #4. The rvalue reference parameter of
+#4 binds to the lvalue ``src``, and we silently move from an lvalue.
 
 Proposed Solution
 =================
@@ -212,38 +278,40 @@ Proposed Solution
 We propose to prohibit rvalue references from binding to
 lvalues. Therefore, an rvalue reference will always refer to an rvalue
 or to an lvalue that the user has explicitly transformed into an
-rvalue (e.g., through the use of ``std::move``). For example, with
-this change, given just a single function template ``enqueue``::
+rvalue (e.g., through the use of ``std::move``). This makes the
+overload sets used in the copy/move idiom degrade safely when either
+of the overloads is removed for any reason. For example, with this
+change, given just a single function template ``enqueue``::
 
   template <class T, typename Cont>
-  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #3
+    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #4
 
 calling ``enqueue`` with an rvalue succeeds while calling it with an
 lvalue fails::
 
-  void f(queue<int, list<int>> dest, queue<int, list<int>>& src) {
-    enqueue(dest, queue<int, list<int>>()); // okay: rvalue reference binds to rvalue
-    enqueue(dest, src); // error: rvalue reference cannot bind to lvalue
-    enqueue(dest, std::move(src)); // okay: rvalue reference binds to an lvalue that is explicitly treated as an rvalue
-  }
+  queue<string, list<string>> dest;
+  queue<string, list<string>> src;
+  enqueue(dest, src); // okay, calls #3b to copy from src into dest
+  enqueue(dest, queue<string, list<string>>()); // okay, calls #4 to move from src to dest
 
 We can then add back the previously-problematic overload that allows
 one to copy from the source queue while enqueing its elements, and
 provide an allocator::
 
   template <class T, typename Cont>
-  void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
-               typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #4
+    void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
+                 typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #3b
   
 Now, if we attempt to enqueue elements from an lvalue where the
 queue's container does not have an allocator, we receive an error
 message stating that no ``enqueue`` function can be called, rather than
 silently moving from lvalue::
 
-  void g(queue<int, simple_list<int>>& dest, queue<int, simple_list<int>>& src) {
-    enqueue(dest, src); // error: #3 cannot be called because src isn't an lvalue
-                        //        #4 fails template argument deduction
-  }
+  queue<string, simple_list<string>> dest;
+  queue<string, simple_list<string>> src;
+  enqueue(dest, src); // error: #3b fails template argument deduction
+                      //        #4  cannot be called because src isn't an lvalue
+
 
 Impact on Users
 ---------------
