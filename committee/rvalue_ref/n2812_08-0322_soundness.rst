@@ -96,113 +96,108 @@ Synopsis
 
 This paper describes a safety problem with rvalue references.  The underlying
 issue has been known for some time, but recently-discovered examples have made
-its seriousness much more apparent.  We also propose a solution to the problem.
+its seriousness much more apparent.  We also propose a solution to the
+problem, which has been implemented in the GNU C++ compiler.
 
-Example
-=======
+The Killer Example
+==================
 
-Consider::
+The example that made this safety problem with rvalue references
+critical involves both rvalue references and concepts. The simplest
+example is the conceptualized version of the ``push_back`` functions
+in ``std::list``::
 
-  template <class T>
-  void assign(queue<T>& dest, std::vector<T> const& src); // #1: copy src into dest
+  requires CopyConstructible<value_type>
+    void push_back(const value_type& x); // #1: copies x
+  requires MoveConstructible<value_type>
+    void push_back(value_type&& x); // #2: moves x
 
-  std::vector<int> x;
-  queue<int> q;
+The safety problem here is that, if ``std::list`` is instantiated with
+a move-only type ``X``, one can silently move from lvalues of type
+``X``. For example::
 
-  assign(q, x);                                    // case A: copy from lvalue
-  assign(q, std::vector<int>(10));                 // case B: copy from rvalue
+  X f(std::list<X>& lx, X x) {
+    lx.push_back(x); // oops: moves from the lvalue 'x', silently!
+    std::cout << x; // oops: 'x' no longer has a value, because we've moved from it
+  }
 
+What Happened?
+==============
 
-The Move/Copy Overload Idiom
+When we instantiate ``std::list<X>``, only those declarations of
+``push_back`` whose concept requirements are satisfied will be
+available. Since ``X`` is a move-only type, it meets the requirements
+of the ``MoveConstructible`` concept (used by the second
+``push_back``) but not the ``CopyConstructible`` concept (used by the
+first ``push_back``). Thus, the only ``push_back`` function that
+exists in ``std::list<X>`` is::
+
+  void push_back(X&&); // moves x
+
+The call ``lx.push_back(x)`` succeeds because rvalue references are
+allowed to bind to lvalues. Then, ``push_back`` treats the lvalue as
+if it were an rvalue, silently moving from it and destroying the value
+of ``x``.
+
+Why didn't this happen prior to concepts? Well, before we had concepts
+we would always have the same two ``push_back`` overloads:
+
+  void push_back(const X& x); // #1: copies x
+  void push_back(X&& x); // #2: moves from x
+
+In this case, the lvalue reference in #1 attracts the lvalue in
+``lx.push_back(x)`` more strongly than the rvalue reference in #2, so
+overload resolution selects #1 even for the move-only type
+``X``. Then, later on, instantiation of #1 will fail because ``X``
+does not support copy construction. 
+
+Rvalue References and SFINAE
 ============================
 
-Case B above can be optimized using move semantics.  The idea is to
-transfer ownership of the vector's contents into ``q`` instead of
-allocating new memory and making a copy.  We can do that in case B
-because the vector is an unnamed temporary and thus inaccessible and
-invisible to the rest of the program.  If we steal from an rvalue,
-nobody can know the difference: that's the key to move semantics.
+The most dire examples of this problem tend to involve concepts, but
+the problem manifests itself even without the presence of
+concepts. The same issues occur when the lvalue-reference overload is
+removed from consideration due to other factors, such as a template
+argument deduction failure (SFINAE). For example, consider an
+"enqueue" function that moves the elements from a source queue into a
+destination queue::
 
-To add move semantics, we add an ``assign`` overload version that
-takes its second parameter by rvalue reference::
+  template <class T, typename Cont>
+    void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #3
 
-  template <class T>
-  void assign(queue<T>& dest, std::vector<T>&& src); // #2: move from src into dest
+To make sure that the ``enqueue`` function does not move from lvalues,
+one would add a second version of ``enqueue`` whose ``src`` parameter
+is an lvalue-reference to const. However, when we're copying from one
+queue to another, it may also make sense to provide an optional
+allocator::
 
-This idiom relies on the presence of *both* overloads.  Overload #2
-makes it move, but overload #1 makes it safe.  Without overload
-#1, assign will move from lvalues, silently turning a logically
-non-mutating operation into a mutating one.
+  template <class T, typename Cont>
+    void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
+                 typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #4
 
-How Move-Only Types Work
-========================
+Now, we've followed the typical idiom of providing both a copying
+version and a moving version of the same algorithm, allowing
+overloading to pick the appropriate version. However, not all
+container types ``Cont`` have allocators, and we can run into trouble
+again::
 
-A movable but non-copyable argument type follows the same binding pattern as
-std::vector<int> does: rvalue arguments, which can be safely moved from, select
-overload #2::
+  class simple_list {
+    // ... no allocator_type ...
+  };
 
-  queue<move_only_type> q2;
-  assign(q2, vector<move_only_type>());
+  queue<string, simple_list<string>> dest;
+  queue<string, simple_list<string>> src;
+  enqueue(dest, src); // oops: calls #3, silently moving from the lvalue 'src'
 
-As before, lvalue arguments select overload #1::
-
-  vector<move_only_type> y;
-  assign(q2, y);
-
-However, since the argument type is noncopyable, the body of #1 fails
-compilation (as desired) when it attempts to make a copy.
-
-The Problem
-===========
-
-The problem is that the lvalue/rvalue overload set doesn't degrade safely.  If
-overload #1 is removed from consideration, overload #2 will match both rvalues
-and lvalues, moving silently from all mutable arguments.
-
-When Will That Happen? 
-======================
-
-There are a number of possible reasons for such a removal, but simple programmer
-blunders may be the most likely causes.  For example, an errant finger might hit
-the delete key when overload #1 is selected.  
-
-Some mistakes are not nearly so obvious.  For example, suppose we want the
-ability to control allocation when we know the source container is going to be
-copied.  We might modify overload #1 as follows::
-
-  // #1 with optional allocator
-  template <class T>
-  void assign(queue<T>& dest, Cont const& src, 
-              typename Cont::allocator_type = typename Cont::allocator_type());
-
-
-.. Warning:: The **above is still wrong** because of the deduction
-   rule!!  The rest of the document **still needs to be fixed** so
-   that we're not using a bare ``Cont`` argument!!
-
-For all container types that provide a suitable nested allocator_type,
-all is well. However, if the container type does not provide a nested
-allocator_type, SFINAE eliminates overload #1, causing overload #2 to
-silently move from lvalues.
-
-Adding Concept Constraints
-==========================
-
-To use our assign function in a constrained context, we'll need to add
-concept constraints for the operations performed in the function body::
-
-  template <class Cont>
-  requires CopyAssignable<Cont>
-  void assign(queue<Cont>& dest, Cont const& src);  #1
-
-  template <class Cont>
-  requires MoveAssignable<Cont>
-  void assign(queue<Cont>& dest, Cont&& src);       #2
-
-Passing an argument that doesn't meet the CopyAssignable constraint causes
-overload #1 to be removed via SFINAE.  In other words, *any* move-only argument,
-even an lvalue, will select overload #2... and silently move from lvalues.
-
+What happened here is similar to what happened with ``push_back``, but
+this time concepts are not involved. In this case, template argument
+deduction for the call to #4 deduces ``T=string`` and
+``Cont=simple_list<string>``. Then, while substituting those deduced
+template arguments into the signature of #4, we attempt to look up the
+type ``simple_list<string>::allocator_type``, which does not
+exist. This is a SFINAE case, so #4 is removed from consideration and
+the overload set only contains #3. The rvalue reference parameter of
+#3 binds to the lvalue ``src``, and we silently move from an lvalue.
 
 Why This Happens
 ================
