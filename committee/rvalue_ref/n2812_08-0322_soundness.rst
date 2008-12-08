@@ -86,7 +86,6 @@ I've tried to bold-ify what I think are the essential points below
   reasons I'm not sure if that vote had any legal force, so we may
   need to do something about it.
 
-
 -----------------
  Written Section
 -----------------
@@ -94,10 +93,12 @@ I've tried to bold-ify what I think are the essential points below
 Synopsis
 ========
 
-This paper describes a safety problem with rvalue references.  The underlying
-issue has been known for some time, but recently-discovered examples have made
-its seriousness much more apparent.  We also propose a solution to the
-problem, which has been implemented in the GNU C++ compiler.
+This paper describes a safety problem with rvalue references, where
+code can inadvertently move resources from lvalues.  The underlying
+issue has been known for some time, but recently-discovered examples
+have made its seriousness much more apparent.  We also propose a
+solution to the problem, which has been implemented in the GNU C++
+compiler.
 
 The Killer Example
 ==================
@@ -105,7 +106,7 @@ The Killer Example
 The example that made this safety problem with rvalue references
 critical involves both rvalue references and concepts. The simplest
 example is the conceptualized version of the ``push_back`` functions
-in ``std::list``::
+in, e.g., ``std::list``::
 
   requires CopyConstructible<value_type>
   void push_back(const value_type& a);    // #1: copies a
@@ -124,6 +125,12 @@ silently move from *lvalues*. For example::
     lx.push_back(a); // oops: moves from the lvalue 'a', silently!
     lx.push_back(a); // oops: 'a' no longer has its original value
   }
+
+Rvalue references were formulated to make the operation "move a value
+from ``x``" safe (in the case of temporary values) or explicit
+(users must write ``std::move(x)``). However, the example above
+illustrates that one can subvert the intended safety without an
+explicit ``std::move``.
 
 What Happened?
 ==============
@@ -209,7 +216,7 @@ rvalue (e.g., through the use of ``std::move``). For example, with
 this change, given just a single function template ``enqueue``::
 
   template <class T, typename Cont>
-  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #1
+  void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #3
 
 calling ``enqueue`` with an rvalue succeeds while calling it with an
 lvalue fails::
@@ -226,7 +233,7 @@ provide an allocator::
 
   template <class T, typename Cont>
   void enqueue(queue<T, Cont>& dest, const queue<T, Cont>& src,
-               typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #2
+               typename Cont::allocator_type alloc = typename Cont::allocator_type()); // #4
   
 Now, if we attempt to enqueue elements from an lvalue where the
 queue's container does not have an allocator, we receive an error
@@ -234,8 +241,8 @@ message stating that no ``enqueue`` function can be called, rather than
 silently moving from lvalue::
 
   void g(queue<int, simple_list<int>>& dest, queue<int, simple_list<int>>& src) {
-    enqueue(dest, src); // error: #1 cannot be called because src isn't an lvalue
-                        //        #2 fails template argument deduction
+    enqueue(dest, src); // error: #3 cannot be called because src isn't an lvalue
+                        //        #4 fails template argument deduction
   }
 
 Impact on Users
@@ -258,10 +265,10 @@ functions does not result in any surprises::
   requires MoveConstructible<value_type>
     void push_back(value_type&& x); // moves x
 
-For a move-only type ``X``, the first `push_back` will be eliminated
+For a move-only type ``X``, the first ``push_back`` will be eliminated
 because template argument deduction fails (``X`` does not meet the
 ``CopyConstructible`` requirements), and the second ``push_back``
-only accepts rvalues. Hence, calling `push_back` with an lvalue of
+only accepts rvalues. Hence, calling ``push_back`` with an lvalue of
 move-only type ``X`` will result in an error.
 
 The proposed change also does not have any impact on the use
@@ -314,9 +321,9 @@ concepts and somewhat dangerous even without concepts.
 Impact on the Standard Library
 ------------------------------
 
-The changing in the binding of rvalue references affects the standard
+The change in the binding of rvalue references affects the standard
 library in four different areas: the definitions of ``std::move`` and
-``std::forward``, the definition of member ``swap``s, the formulation
+``std::forward``, the definition of member ``swap``, the formulation
 of the stream insertion/extraction operators, and the description of
 the ``Iterator`` concept.
 
@@ -338,7 +345,7 @@ type::
      inline typename std::remove_reference<T>::type&& move(T&& x)
      { return static_cast<typename std::remove_reference<T>::type&&>(x); }
 
-''std::forward'' relies on the binding of lvalues to rvalue references
+``std::forward`` relies on the binding of lvalues to rvalue references
 in its argument type, since it is typically invoked with lvalues::
 
    template<typename T>
@@ -360,7 +367,8 @@ references::
 
    template<typename T>
      inline typename disable_if<is_lvalue_reference<T>, T&&>::type
-     forward(typename std::identity<T>::type&& x) { return x; }
+     forward(typename std::identity<T>::type&& x) 
+     { return static_cast<T&&>(x); }
   
 Note that, with these changes to both ``std::move`` and
 ``std::forward``, the idiomatic uses of these functions still work, so
@@ -398,7 +406,7 @@ within one expression, e.g.,::
 
 With our proposed change to rvalue references, each of the stream
 insertion and extraction operators will need to use an lvalue
-reference to their stream argument to bind to lvalues streams,
+reference to their stream argument to bind to lvalue streams,
 effectively reverting streams to their C++03 behavior::
 
   template<class charT, class traits, class Allocator> 
@@ -467,8 +475,8 @@ actual implementation of the language change is trivial---we merely
 check whether the binding computed would bind an lvalue to an rvalue
 reference, and reject the binding in this case. The changes to the
 standard library are slightly more involved, because we needed to
-implement the changes described in the section 'Impact on the Standard
-Library'_. We do not anticipate that this change will have any
+implement the changes described in the section `Impact on the Standard
+Library`_. We do not anticipate that this change will have any
 significant impact on compilers or standard library
 implementations. The GCC implementation required a day's effort to
 update both the language and the library, although more effort would
@@ -506,7 +514,7 @@ a non-mutating call to become mutating when an overload is removed
 from the set. So why does it happen here?
 
 In C++03 overload sets where only one overload mutates data (see
-set<T>::operator[]), the mutating operation always binds less-liberally to
+``set<T>::operator[]``), the mutating operation always binds less-liberally to
 arguments than the non-mutating operation.  Non-const operations never attract
 const arguments.  Rvalue references, however, *will* attract lvalues,
 so the removal of an overload can change an (apparently) non-mutating
@@ -539,7 +547,7 @@ becomes::
   void swap(mytype&& other) { swap(other); }
 
 If there were multiple parameters that could be either lvalues or
-rvalues, the number of required overloads would grow expentially. For
+rvalues, the number of required overloads would grow exponentially. For
 example, a non-member ``swap`` that supports all combinations of lvalues
 and rvalues would go from::
 
@@ -552,7 +560,11 @@ to::
   void swap(mytype&& x, mytype&  y) { swap(x, y); }
   void swap(mytype&& x, mytype&& y) { swap(x, y); }
 
-To address this issue, one could extend our proposed resolution to
+At this point, we know of no use cases that would involve more than
+two parameters that can either be lvalues or rvalues, other than those
+that are actually versions of perfect forwarding (and which are,
+therefore, not affected by the proposed change). Nonetheless, to
+address this issue, one could extend our proposed resolution to 
 support a third kind of reference (spelled ``&&&``) that binds to
 either lvalues or rvalues, effectively providing the current behavior
 of ``&&`` but with a new spelling. Thus, the above swap could be written
@@ -618,7 +630,7 @@ The main problem with this approach is that it only solves the problem
 in those cases where the concept requirements of a template are not
 satisfied but SFINAE does not eliminate the template from
 consideration. For example, it does not solve the problem with the
-``enqueue`` function described above (which doesn't involve concepts):
+``enqueue`` function described above (which doesn't involve concepts)::
 
   template <class T, typename Cont>
     void enqueue(queue<T, Cont>& dest, queue<T, Cont>&& src); // #1
