@@ -14,12 +14,12 @@ namespace boost { namespace dataflow { namespace managed {
 class network;
 class port_base;
 
-class component
+class BOOST_EXPORT_SYMBOLS component
 {
 public:
-    BOOST_EXPORT_SYMBOLS component(network &network_context);
-    BOOST_EXPORT_SYMBOLS component(const component &other);
-    virtual BOOST_EXPORT_SYMBOLS ~component();
+    component(network &network_context);
+    component(const component &other);
+    virtual ~component();
     network &network_context()
     {   return m_network_context; }
     virtual void invoke(){};
@@ -31,7 +31,7 @@ public:
     {
         return m_topological_sort_index;
     }
-    void BOOST_EXPORT_SYMBOLS claim_port(port_base &p);
+    void claim_port(port_base &p);
 private:
     network &m_network_context;
     unsigned m_topological_sort_index;
