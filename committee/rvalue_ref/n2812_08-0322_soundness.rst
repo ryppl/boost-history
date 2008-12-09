@@ -273,8 +273,8 @@ lvalue fails::
 
   queue<string, list<string>> dest;
   queue<string, list<string>> src;
-  enqueue(dest, src); // okay, calls #3b to copy from src into dest
-  enqueue(dest, queue<string, list<string>>()); // okay, calls #4 to move from src to dest
+  enqueue(dest, src); // error: cannot bind rvalue reference in #4 to lvalue 'src'
+  enqueue(dest, queue<string, list<string>>()); // okay, calls #4 to move from temporary to dest
 
 We can then add back the previously-problematic overload that allows
 one to copy from the source queue while enqueing its elements, and
