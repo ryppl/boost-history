@@ -20,7 +20,15 @@ project
            : # requirements
                    <link>static
          ]
-         [ run ../example/time2_demo.cpp
+         [ run ../example/time2_demo.cpp ../../system/build
            :  :  :  : time2_demo_dll
+         ]
+         [ run run_timer_test.cpp
+           :  :  : <link>static
+         ]
+         [ run run_timer_test.cpp ../../system/build
+           :  :  :  : run_timer_test_dll
+         ]
+         [ run ../example/run_timer_example.cpp  ../../system/build
          ]
          ;

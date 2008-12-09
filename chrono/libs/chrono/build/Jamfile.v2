@@ -10,17 +10,17 @@
 project boost/chrono
     : source-location ../src
     : usage-requirements  # pass these requirement to dependents (i.e. users)
-      <link>shared:<define>BOOST_CHRONO_DYN_LINK
-      <link>static:<define>BOOST_CHRONO_STATIC_LINK
+      <link>shared:<define>BOOST_CHRONO_DYN_LINK=1
+      <link>static:<define>BOOST_CHRONO_STATIC_LINK=1
     ;
 
-SOURCES = chrono ;
+SOURCES = chrono process_clock run_timer run_timer_static ;
 
 lib boost_chrono
    : $(SOURCES).cpp
      ../../system/build//boost_system
-   : <link>shared:<define>BOOST_ALL_DYN_LINK
-     <link>static:<define>BOOST_All_STATIC_LINK
+   : <link>shared:<define>BOOST_ALL_DYN_LINK=1
+     <link>static:<define>BOOST_All_STATIC_LINK=1
    ;
 
 boost-install boost_chrono ;

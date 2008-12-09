@@ -177,7 +177,7 @@ namespace
 
     boost::chrono::process_timer t;
 
-    for (long i = 0; i < 1000000L; ++i)
+    for (long i = 0; i < 10000000L; ++i)
     {
       std::sqrt( static_cast<double>(i) );
     }

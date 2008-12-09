@@ -15,11 +15,11 @@
 //  BOOST_CHRONO_POSIX_API, BOOST_CHRONO_MAC_API, or BOOST_CHRONO_WINDOWS_API
 //  can be defined by the user to specify which API should be used
 
-#ifdef BOOST_CHRONO_WINDOWS_API
+#if defined(BOOST_CHRONO_WINDOWS_API)
 # warning Boost.Chrono will use the Windows API
-#elif BOOST_CHRONO_MAC_API
+#elif defined(BOOST_CHRONO_MAC_API)
 # warning Boost.Chrono will use the Mac API
-#elif BOOST_CHRONO_POSIX_API
+#elif defined(BOOST_CHRONO_POSIX_API)
 # warning Boost.Chrono will use the POSIX API
 #endif
 

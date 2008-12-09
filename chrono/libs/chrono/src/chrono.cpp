@@ -241,8 +241,7 @@ monotonic_clock::now()
 //----------------------------------------------------------------------------//
 #elif defined(BOOST_CHRONO_POSIX_API)
 
-//#include <sys/time.h>
-#include <time.h>
+#include <time.h>  // for clock_gettime
 
 namespace boost
 {
@@ -281,7 +280,7 @@ namespace chrono
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
     {
       ec.assign( errno, system::system_category );
-      return time_point(0);
+      return time_point();
     }
 
     ec.clear();
@@ -322,7 +321,7 @@ namespace chrono
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
       ec.assign( errno, system::system_category );
-      return time_point(duration(0));
+      return time_point();
     }
 
     ec.clear();
