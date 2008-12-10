@@ -36,10 +36,15 @@ class interval_base_map
 
 #include <limits>
 #include <boost/itl/notate.hpp>
+
+#ifdef USE_CONCEPTS
+#include <bits/concepts.h>
+#endif
+
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/interval_sets.hpp>
-#include <boost/itl/interval.hpp>
+//CL #include <boost/itl/interval.hpp>
 
 
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
@@ -141,12 +146,7 @@ template
     ITL_ALLOC   Alloc    = std::allocator
 >
 #ifdef USE_CONCEPTS
-//conceptgcc is still too buggy
-//requires 
-//{
-//    std::LessThanComparable<DomainT>,
-//  std::EqualityComparable<Codomain>
-//}
+	requires std::LessThanComparable<DomainT>
 #endif
 class interval_base_map
 {
@@ -458,7 +458,7 @@ public:
     */
     SubType& subtract(const value_type& x)
     {
-		typedef inverse<Combine,CodomainT>::type InverseCombine;
+		typedef typename inverse<Combine,CodomainT>::type InverseCombine;
         if(Traits::emits_neutrons)
 			that()->template add_<InverseCombine>(x); 
         else 
@@ -622,7 +622,7 @@ public:
         template
         <    
             class DomT, 
-			template<class DomT, ITL_COMPARE Comp>class Interv, 
+			template<class DomT2, ITL_COMPARE>class Interv, 
             ITL_COMPARE Comp, ITL_ALLOC Allc
         >
         class IntervalSet
@@ -651,7 +651,7 @@ public:
         template
         <    
             class DomT, class CodomT, 
-            class Trts, template<class DomT,ITL_COMPARE Comp>class Interv, 
+            class Trts, template<class DomT2,ITL_COMPARE>class Interv, 
             ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_ALLOC Allc
         >
         class IntervalMap
@@ -711,7 +711,7 @@ public:
     <
         template
         <    
-            class DomT, template<class DomT,ITL_COMPARE Comp>class Interv, 
+            class DomT, template<class DomT2,ITL_COMPARE>class Interv, 
             ITL_COMPARE Comp, ITL_ALLOC Allc
         >
         class IntervalSet
@@ -917,7 +917,7 @@ template
         template
         <    
             class DomT, class CodomT, 
-            class Trts, template<class DomT,ITL_COMPARE Comp>class Interv, 
+            class Trts, template<class DomT2,ITL_COMPARE>class Interv, 
             ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_ALLOC Allc
         >
         class IntervalMap

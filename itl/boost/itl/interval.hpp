@@ -30,6 +30,10 @@ DEALINGS IN THE SOFTWARE.
 #ifndef __itl_interval_JOFA_000626_H__
 #define __itl_interval_JOFA_000626_H__
 
+#ifdef USE_CONCEPTS
+#include <bits/concepts.h>
+#endif
+
 #include <ostream>
 #include <functional>
 #include <limits>
@@ -301,6 +305,9 @@ namespace boost{namespace itl
     @author  Joachim Faulhaber
 */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
+#ifdef USE_CONCEPTS
+	requires std::LessThanComparable<DomainT>
+#endif
 class interval
 {
 public:
@@ -560,8 +567,8 @@ public:
 //@{
     /// Maximum Interval
     static interval always()
-    { return interval<T>::closed(std::numeric_limits<DomainT>::min(), 
-                             std::numeric_limits<DomainT>::max()); }
+    { return interval<DomainT>::closed(std::numeric_limits<DomainT>::min(), 
+                                       std::numeric_limits<DomainT>::max()); }
 //@}
 
     void set_lwb(DomainT lw) { _lwb=lw; }

@@ -111,7 +111,6 @@ namespace boost{namespace itl
 //------------------------------------------------------------------------------
 #define ITL_ALLOC    template<class>class
 
-
 #endif // __itl_NOTATE_H_JOFA_990119__
 
 

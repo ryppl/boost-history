@@ -134,6 +134,8 @@ public:
     typedef typename base_type::mapping_pair_type mapping_pair_type;
     typedef typename base_type::ImplMapT ImplMapT;
 
+	typedef typename base_type::codomain_combine codomain_combine;
+
     typedef interval_set<DomainT,Interval,Compare,Alloc> interval_set_type;
     typedef interval_set_type set_type;
 
@@ -182,7 +184,9 @@ private:
 	// For funx_ want to be used in the base class via derived SubType pointer:
 	// that()->funx_. So they must be either public or made accessible by a
 	// friend declaration:
-	friend class base_type;
+	friend class
+        interval_base_map <interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>, 
+                                        DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>;
 
     bool contains_(const value_type& x)const;
 
@@ -267,7 +271,7 @@ typename interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>::
     ::joint_insert(iterator& left_it, const iterator& right_it)
 {
     // both left and right are in the set and they are neighbours
-    BOOST_ASSERT(right_it != _map.end());
+    BOOST_ASSERT(right_it != this->_map.end());
     BOOST_ASSERT(left_it->KEY_VALUE.exclusive_less(right_it->KEY_VALUE));
     BOOST_ASSERT(left_it->KEY_VALUE.touches(right_it->KEY_VALUE));
 

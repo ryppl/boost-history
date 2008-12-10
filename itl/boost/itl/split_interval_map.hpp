@@ -155,6 +155,8 @@ namespace boost{namespace itl
         typedef typename base_type::mapping_pair_type  mapping_pair_type;
         typedef typename base_type::ImplMapT ImplMapT;
 
+        typedef typename base_type::codomain_combine codomain_combine;
+
         typedef interval_set<DomainT,Interval,Compare,Alloc> interval_set_type;
         typedef interval_set_type set_type;
 
@@ -195,7 +197,10 @@ namespace boost{namespace itl
 		// For funx_ want to be used in the base class via derived SubType pointer:
 		// that()->funx_. So they must be either public or made accessible by a
 		// friend declaration:
-		friend class base_type;
+        friend class  
+			interval_base_map
+			<split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>, 
+                                DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc  >;
 
         bool contains_(const value_type& x)const;
 

@@ -28,8 +28,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef __itl_functors_H_JOFA_080315__
 #define __itl_functors_H_JOFA_080315__
 
-#include <boost/itl/type_traits/neutron.hpp>
 #include <functional>
+#include <boost/itl/type_traits/neutron.hpp>
 
 namespace boost{namespace itl
 {

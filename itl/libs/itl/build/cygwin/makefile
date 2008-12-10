@@ -19,13 +19,18 @@ MAKE_PATH = .
 # build.itl.libs.itl
 ITL_ROOT_PATH = ../../../..
 #--- root directory of the interval template library --------------------------
-ITL_SRC_PATH  = $(ITL_ROOT_PATH)/boost/itl
-ITL_LIBS_PATH = $(ITL_ROOT_PATH)/libs/itl
-ITL_EXAMPLE_PATH = $(ITL_LIBS_PATH)/example
-ITL_TEST_PATH = $(ITL_LIBS_PATH)/test
+ITL_SRC_PATH        = $(ITL_ROOT_PATH)/boost/itl
+ITL_XT_SRC_PATH     = $(ITL_ROOT_PATH)/boost/itl_xt
+ITL_LIBS_PATH       = $(ITL_ROOT_PATH)/libs/itl
+ITL_XT_LIBS_PATH    = $(ITL_ROOT_PATH)/libs/itl_xt
+ITL_EXAMPLE_PATH    = $(ITL_LIBS_PATH)/example
+ITL_XT_EXAMPLE_PATH = $(ITL_XT_LIBS_PATH)/example
+ITL_TEST_PATH       = $(ITL_LIBS_PATH)/test
+ITL_XT_TEST_PATH    = $(ITL_XT_LIBS_PATH)/test
 
 #BOOST_PATH = /usr/include/boost-1_33_1
-BOOST_PATH = /usr/include/boost_1_35_0
+#BOOST_PATH = /usr/include/boost_1_35_0
+BOOST_PATH = $(ITL_ROOT_PATH)
 
 #--- binaries -----------------------------------------------------------------
 BIN_PATH = $(ITL_ROOT_PATH)/bin
@@ -37,7 +42,7 @@ BOOST_INCL = $(addprefix -I,$(BOOST_PATH))
 STD_INCL = -I/usr/include
 #GCC_INCL = $(addprefix -I,$(CMP_PATH))/include
 #CONCEPTGCC_INCL = -I/opt/conceptgcc-boostcon/include
-CONCEPTGCC_INCL = -I/opt/conceptgcc-4.3.0-alpha-7/include
+CONCEPTGCC_INCL = -I/opt/conceptgcc-4.3.0-alpha-7/include/c++/4.3.0
 
 INCLUDE  = $(CONCEPTGCC_INCL) $(ITL_INCL) $(BOOST_INCL)
 #NCLUDE  = $(STD_INCL) $(ITL_INCL) $(BOOST_INCL)
@@ -53,7 +58,7 @@ LOAD_FLAGS = $(LOAD_LIBS) -lstdc++
 LOAD_FLAGS4BOOST = $(LOAD_FLAGS) -lboost_date_time-gcc-mt-s 
 
 #--- compileflags ---------------------------------------------------
-# COMPILE_FLAGS = -o2 -DUSE_CONCEPTS
+#COMPILE_FLAGS = -O2 -DUSE_CONCEPTS
 COMPILE_FLAGS = -O2
 
 #--- compiler -----------------------------------------------------------------
@@ -75,7 +80,7 @@ all_concept:
 	make examples
 	make itvset_shell
 	make splititvmap_shell
-	make auto_itv_test
+#	make auto_itv_test
 	
 examples:
 	make party
@@ -146,7 +151,7 @@ overlap_counter:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(overlap_counter_SOURCES) $(LOAD_FLAGS) -o $(overlap_counter_TARGET)
 
 #--- project history --------------------------------------------------
-history_PATH = $(ITL_EXAMPLE_PATH)/history
+history_PATH = $(ITL_XT_EXAMPLE_PATH)/history
 history_MAIN = $(history_PATH)/history.cpp
 history_SOURCES = $(history_MAIN)
 history_TARGET  = $(BIN_PATH)/history$(EXE_TAG)
@@ -155,7 +160,7 @@ history:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(history_SOURCES) $(LOAD_FLAGS) -o $(history_TARGET)
 
 #--- project amount_cube --------------------------------------------------
-amount_cube_PATH = $(ITL_EXAMPLE_PATH)/amount_cube
+amount_cube_PATH = $(ITL_XT_EXAMPLE_PATH)/amount_cube
 amount_cube_MAIN = $(amount_cube_PATH)/amount_cube.cpp
 amount_cube_SOURCES = $(amount_cube_MAIN)
 amount_cube_TARGET  = $(BIN_PATH)/amount_cube$(EXE_TAG)
@@ -200,10 +205,8 @@ man_power:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(man_power_SOURCES) $(LOAD_FLAGS4BOOST) -o $(man_power_TARGET)
 
 	
-	
-#--- group tests --------------------------------------------------------------
 #--- project itvset_shell -----------------------------------------------------
-itvset_shell_PATH = $(ITL_TEST_PATH)/itvset_shell
+itvset_shell_PATH = $(ITL_EXAMPLE_PATH)/itvset_shell
 itvset_shell_MAIN = $(itvset_shell_PATH)/itvset_shell.cpp
 itvset_shell_SOURCES = $(itvset_shell_MAIN)
 itvset_shell_TARGET  = $(BIN_PATH)/itvset_shell$(EXE_TAG)
@@ -212,7 +215,7 @@ itvset_shell:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(itvset_shell_SOURCES) $(LOAD_FLAGS) -o $(itvset_shell_TARGET)
 
 #--- project splititvmap_shell ------------------------------------------------
-splititvmap_shell_PATH = $(ITL_TEST_PATH)/splititvmap_shell
+splititvmap_shell_PATH = $(ITL_EXAMPLE_PATH)/splititvmap_shell
 splititvmap_shell_MAIN = $(splititvmap_shell_PATH)/splititvmap_shell.cpp
 splititvmap_shell_SOURCES = $(splititvmap_shell_MAIN)
 splititvmap_shell_TARGET  = $(BIN_PATH)/splititvmap_shell$(EXE_TAG)
@@ -220,8 +223,10 @@ splititvmap_shell_TARGET  = $(BIN_PATH)/splititvmap_shell$(EXE_TAG)
 splititvmap_shell:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(splititvmap_shell_SOURCES) $(LOAD_FLAGS) -o $(splititvmap_shell_TARGET)
 
+	
+#--- group tests --------------------------------------------------------------
 #--- project auto_itv_test -----------------------------------------------------
-auto_itv_test_PATH = $(ITL_TEST_PATH)/auto_itv_test
+auto_itv_test_PATH = $(ITL_XT_TEST_PATH)/auto_itv_test
 auto_itv_test_MAIN = $(auto_itv_test_PATH)/auto_itv_test.cpp
 auto_itv_test_SOURCES = $(auto_itv_test_MAIN)
 auto_itv_test_TARGET  = $(BIN_PATH)/auto_itv_test$(EXE_TAG)

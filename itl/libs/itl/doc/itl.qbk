@@ -73,6 +73,10 @@ Distributed under the Boost Software License, Version 1.0.
 [def __eiS            [link element_type *e*] [link interval_type *i*] [link interval_set_types *S*]]
 [def __bpM            [link element_mapping_type *b*] [link interval_mapping_type *p*] [link interval_map_types *M*]]
 
+[def __conceptual__   functional]
+[def __Conceptual__   Functional]
+[def __iterative__    sequential]
+[def __Itervative__   Sequential]
 
 [/ Cited Boost resources ]
 
@@ -102,15 +106,15 @@ their interfaces: (1) The functionality of a set or a map, which is the more
 is the more specific and ['implementation related aspect]. In practice both 
 aspects are useful and are therefore supported. 
 
-The first aspect, that will be called ['*conceptual aspect*], is the more important one.
-It means that we can use any __itv_set__ or __itv_map__ like a normal
-set or map ['*of elements*].
-
+The first aspect, that will be called ['*__conceptual__ aspect*], is the more important one.
+It means that we can use an __itv_set__ or __itv_map__ like a 
+set or map ['*of elements*]. The it exposes the same functions.
 ``
 interval_set<int> mySet;
 mySet.insert(42);
 bool has_answer = mySet.contains(42);
 ``
+
 
 The second aspect, that will be called ['*iterative aspect*], allows to exploit the
 fact, that the elements of __itv_sets__ and __itv_maps__ are clustered in
@@ -187,7 +191,7 @@ __itl_set__ and __itl_map__.
 
 * An __itl_set__ is behavioral equal to __itv_bsets__ 
   except for iteration. That is to say behavioral equal on 
-  the conceptual aspect.
+  the __conceptual__ aspect.
 
 * An __itl_map__ is behavioral equal to __itv_bmaps__ 
   except for iteration, that is on the conceptional

@@ -191,7 +191,7 @@ namespace boost{namespace itl
     bool var_permutation<varCountV>::insert(VarEnumTD var, int pos)
     {
         //JODO URG untested
-        BOOST_ASSERT(!contains(var)) //var_permutation has to be unique;
+        BOOST_ASSERT(!contains(var)); //var_permutation has to be unique;
         if(varCountV <= var || varCountV == m_Size)
             return false;
 

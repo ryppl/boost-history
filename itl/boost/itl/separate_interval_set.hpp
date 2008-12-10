@@ -166,7 +166,9 @@ public:
     }
 
 private:
-	friend class base_type;
+	friend class 
+		interval_base_set<separate_interval_set<DomainT,Interval,Compare,Alloc>,
+                                                DomainT,Interval,Compare,Alloc>;
 
     /// Does the set contain the interval  <tt>x</tt>?
     bool contains_(const interval_type& x)const;
