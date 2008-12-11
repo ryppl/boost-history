@@ -53,6 +53,7 @@ public:
     
     void destroy_window(int id)
     {
+        m_windows.erase(id);
         glutDestroyWindow(id);
     }
 private:
@@ -147,6 +148,8 @@ void window::redraw(const view::positioned<> &v)
 void glut::display()
 {
     int id = glutGetWindow();
+    if(window::impl::s_glut->m_windows.find(id)==window::impl::s_glut->m_windows.end())
+        return;
     window::impl::s_glut->m_windows[id]->display();
     glutSwapBuffers();
 }
@@ -154,18 +157,24 @@ void glut::display()
 void glut::mouse(int button, int state, int x, int y)
 {
     int id = glutGetWindow();
+    if(window::impl::s_glut->m_windows.find(id)==window::impl::s_glut->m_windows.end())
+        return;
     window::impl::s_glut->m_windows[id]->mouse(button, state, x, y);
 }
 
 void glut::movement(int x, int y)
 {
     int id = glutGetWindow();
+    if(window::impl::s_glut->m_windows.find(id)==window::impl::s_glut->m_windows.end())
+        return;
     window::impl::s_glut->m_windows[id]->movement(x, y);
 }
 
 void glut::entry(int state)
 {
     int id = glutGetWindow();
+    if(window::impl::s_glut->m_windows.find(id)==window::impl::s_glut->m_windows.end())
+        return;
     window::impl::s_glut->m_windows[id]->entry_exit(state);
 }
 
