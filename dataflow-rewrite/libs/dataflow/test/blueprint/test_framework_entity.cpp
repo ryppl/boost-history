@@ -9,6 +9,7 @@
 
 #include <boost/dataflow/blueprint/framework_entity.hpp>
 #include <boost/dataflow/blueprint/framework_entity_adapter.hpp>
+#include <boost/dataflow/utility/containing_ptr.hpp>
 
 #include "my_blueprint_framework.hpp"
 #include "../generic/my_ports.hpp"
@@ -25,8 +26,8 @@ BOOST_AUTO_TEST_CASE( test )
     my_blueprint_framework_context fo;
 
     my_port_producer p;
-    df::blueprint::framework_entity_adapter<my_blueprint_framework, my_port_producer &> ref_entity(fo, p);
-    df::blueprint::framework_entity_adapter<my_blueprint_framework, my_port_producer> composition_entity(fo);
+    df::blueprint::framework_entity_adapter<my_blueprint_framework, my_port_producer *> ref_entity(fo, &p);
+    df::blueprint::framework_entity_adapter<my_blueprint_framework, df::utility::containing_ptr<my_port_producer> > composition_entity(fo);
     
     BOOST_CHECK(ref_entity.type_info() == typeid(p));
     BOOST_CHECK_EQUAL(&ref_entity.entity(), &p);
@@ -37,7 +38,7 @@ BOOST_AUTO_TEST_CASE( test )
     my_port_with_context pwc(context);
     
     // test copy construction
-    df::blueprint::framework_entity_adapter<my_blueprint_framework_with_context, my_port_with_context> context_copy_construction(fcc, pwc);
+    df::blueprint::framework_entity_adapter<my_blueprint_framework_with_context, df::utility::containing_ptr<my_port_with_context> > context_copy_construction(fcc, pwc);
     // test copy construction
-    df::blueprint::framework_entity_adapter<my_blueprint_framework_with_context, my_port_with_context> context_const_copy_construction(fcc, my_port_with_context(fcc.object()));
+    df::blueprint::framework_entity_adapter<my_blueprint_framework_with_context, df::utility::containing_ptr<my_port_with_context> > context_const_copy_construction(fcc, my_port_with_context(fcc.object()));
 }

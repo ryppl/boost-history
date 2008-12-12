@@ -75,7 +75,7 @@ namespace detail
         template<typename Entity>
         void operator()(Entity &entity) const
         {
-            m_ports.push_back(new port_adapter<BlueprintFramework, Entity &>(m_fo, entity));
+            m_ports.push_back(new port_adapter<BlueprintFramework, Entity *>(m_fo, &entity));
         }
         ptr_vector<port<BlueprintFramework> > &m_ports;
         framework_context<BlueprintFramework> &m_fo;

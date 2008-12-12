@@ -12,3 +12,4 @@ project dataflow/test/utility
     ;
 
 run test_shared_ptr_to_element.cpp ;
+run test_containing_ptr.cpp ;

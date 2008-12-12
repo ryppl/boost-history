@@ -8,10 +8,23 @@
 
 
 #include <boost/dataflow/blueprint/port_adapter.hpp>
+#include <boost/dataflow/utility/containing_ptr.hpp>
 
 #include "my_blueprint_framework.hpp"
 #include "../generic/my_ports.hpp"
 
+typedef
+    df::blueprint::port_adapter
+    <
+        my_blueprint_framework,
+        df::utility::containing_ptr<my_port_producer>
+    >
+        my_blueprint_port_producer;
 
-typedef df::blueprint::port_adapter<my_blueprint_framework, my_port_producer> my_blueprint_port_producer;
-typedef df::blueprint::port_adapter<my_blueprint_framework, my_port_consumer> my_blueprint_port_consumer;
+typedef
+    df::blueprint::port_adapter
+    <
+        my_blueprint_framework,
+        df::utility::containing_ptr<my_port_consumer>
+    >
+        my_blueprint_port_consumer;

@@ -11,6 +11,7 @@
 
 
 #include <boost/dataflow/blueprint/port_adapter.hpp>
+#include <boost/dataflow/utility/containing_ptr.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
@@ -91,12 +92,12 @@ public:
     template<typename T>
     void add_port(const std::string &s)
     {
-        m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, T> *>(), _1);
+        m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, utility::containing_ptr<T> > *>(), _1);
     }
     template<typename T, typename T0>
     void add_port(const std::string &s, const T0 &t0)
     {
-        m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, T> *>(), _1, t0);
+        m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, utility::containing_ptr<T> > *>(), _1, t0);
     }
     void add_entity(const std::string &s, const function_type &f)
     {

@@ -36,7 +36,7 @@ struct constructor_int
 {
     factory_int_type::produced_type *operator()(factory_int_type::framework_context_type &c, int x) const
     {
-        return new df::blueprint::port_adapter<my_blueprint_framework, my_port_producer>(c);
+        return new df::blueprint::port_adapter<my_blueprint_framework, df::utility::containing_ptr<my_port_producer> >(c);
     }
 };
 
@@ -46,5 +46,6 @@ BOOST_AUTO_TEST_CASE( test_signature )
     factory.add_entity("my_port_producer_int", constructor_int());
     
     df::blueprint::framework_context<my_blueprint_framework> fo;
-    df::blueprint::framework_entity<my_blueprint_framework> *entity = factory["my_port_producer_int"](fo, 1);
+    df::blueprint::framework_entity<my_blueprint_framework> * entity = factory["my_port_producer_int"](fo, 1);
+    entity->type_info();
 }

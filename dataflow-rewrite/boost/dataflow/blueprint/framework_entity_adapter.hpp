@@ -15,48 +15,48 @@
 #include <boost/dataflow/utility/is_type.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
-
+#include <boost/pointee.hpp>
 
 namespace boost { namespace dataflow { namespace blueprint {
 
-template<typename BlueprintFramework, typename EntityOrRef, typename Base=framework_entity<BlueprintFramework>, typename Enable=void >
+template<typename BlueprintFramework, typename Dereferencable, typename Base=framework_entity<BlueprintFramework>, typename Enable=void >
 class framework_entity_adapter : public Base
 {
 public:
-    typedef typename remove_reference<EntityOrRef>::type entity_type;
+    typedef typename pointee<Dereferencable>::type entity_type;
     
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo)
-        : Base(fo, typeid(m_entity))
+        : Base(fo, typeid(*m_entity))
     {}
     template<typename T>
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
-        : Base(fo, typeid(m_entity))
+        : Base(fo, typeid(*m_entity))
         , m_entity(t)
     {}
     template<typename T>
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t)
-        : Base(fo, typeid(m_entity))
+        : Base(fo, typeid(*m_entity))
         , m_entity(t)
     {}
 
     entity_type &entity()
     {
-        return m_entity;
+        return *m_entity;
     }
     const entity_type &entity() const
     {
-        return m_entity;
+        return *m_entity;
     }
 private:
     virtual void *get_ptr()
     {
-        return &m_entity;
+        return &*m_entity;
     };
-    EntityOrRef m_entity;
+    Dereferencable m_entity;
 };
 
-template<typename BlueprintFramework, typename EntityOrRef, typename Base>
-class framework_entity_adapter<BlueprintFramework, EntityOrRef, Base,
+/*template<typename BlueprintFramework, typename Dereferencable, typename Base>
+class framework_entity_adapter<BlueprintFramework, Dereferencable, Base,
     typename enable_if<typename BlueprintFramework::framework_has_object>::type>
     : public Base
 {
@@ -107,7 +107,7 @@ private:
         return &m_entity;
     };
     EntityOrRef m_entity;
-};
+};*/
 
 } } } // namespace boost::dataflow::blueprint
 
