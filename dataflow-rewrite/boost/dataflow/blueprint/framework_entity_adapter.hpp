@@ -26,16 +26,16 @@ public:
     typedef typename pointee<Dereferencable>::type entity_type;
     
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo)
-        : Base(fo, typeid(*m_entity))
+        : Base(fo, typeid(entity_type))
     {}
     template<typename T>
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
-        : Base(fo, typeid(*m_entity))
+        : Base(fo, typeid(entity_type))
         , m_entity(t)
     {}
     template<typename T>
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t)
-        : Base(fo, typeid(*m_entity))
+        : Base(fo, typeid(entity_type))
         , m_entity(t)
     {}
 
