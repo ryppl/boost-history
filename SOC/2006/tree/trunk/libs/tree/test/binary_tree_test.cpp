@@ -253,8 +253,8 @@ BOOST_AUTO_TEST_CASE( binary_tree_test )
     *c = tmp;
     BOOST_CHECK(bt == bt0);
     
-    c = bt0.inorder_first();
-    BOOST_CHECK_EQUAL(*c, 1);
+//    c = bt0.inorder_first();
+//    BOOST_CHECK_EQUAL(*c, 1);
     c = bt0.root();
     //back(inorder(), c);
     //BOOST_CHECK_EQUAL(*c, 14);    

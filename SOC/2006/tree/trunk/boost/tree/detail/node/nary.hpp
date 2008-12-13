@@ -31,10 +31,6 @@ using boost::array;
 //struct node_base;
 /*
  * node_with_parent_base
- * node_base<N> leitet v. node_with_parent_base ab
- * node_base<2> auch.
- * 
- * we might want nodes that are based on other types of containers, right?
  */
  
 class node_with_parent_base {
@@ -107,10 +103,10 @@ class node_with_parent_base {
 //    }
 //};
 
-//template <>
-class node_base//<binary_array>
-: public node_with_parent_base/*, public binary_array<node_base<binary_array>*>*/ {
-    typedef node_base/*<binary_array>*/ self_type;
+
+class node_base
+: public node_with_parent_base {
+    typedef node_base self_type;
     
 public:
  
@@ -205,18 +201,16 @@ public:
     
 };
 
-template <typename T/*, template <typename> class Container*/>
-class node : public node_base/*<Container>*/ {
+template <typename T>
+class node : public node_base {
  public:
     typedef T value_type;
-    
-//    typedef Container<node_base/*<Container>*/*> container_type;
 
-    typedef node<value_type/*, Container*/> node_type;
+    typedef node<value_type> node_type;
     typedef node_type* node_pointer;
     typedef node_type& node_reference;
-    //typedef node_pointer position_type;
-    typedef node_base/*<Container>*/ base_type;
+
+    typedef node_base base_type;
     typedef base_type* base_pointer;
     typedef base_type const* const_base_pointer;
     

@@ -13,7 +13,6 @@
 #define BOOST_TREE_BINARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
 #include <boost/tree/insert_cursor.hpp>
 
@@ -44,7 +43,7 @@ class binary_tree {
     typedef typename Alloc::template rebind<value_type>::other allocator_type;
 
  private:        
-    typedef node<value_type/*, detail::binary_array*/> node_type;
+    typedef node<value_type> node_type;
     
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;
@@ -164,36 +163,36 @@ class binary_tree {
         return const_cursor(&m_header, 0);
     }
     
-    /**
-     * Returns a read/write ("mutable") cursor to the first (inorder) value.
-     */      
-    cursor inorder_first()
-    {
-        return cursor(m_header.m_children[1], 0);
-    }
-    
-    /**
-     * Returns a read-only const_cursor to the first (inorder) value.
-     */      
-    const_cursor inorder_first() const
-    {
-        return inorder_cfirst();
-    }
-
-    /**
-     * Returns a read-only const_cursor to the first (inorder) value.
-     */      
-    const_cursor inorder_cfirst() const
-    {
-        return const_cursor(m_header.m_children[1], 0);
-    }
+//    /**
+//     * Returns a read/write ("mutable") cursor to the first (inorder) value.
+//     */      
+//    cursor inorder_first()
+//    {
+//        return cursor(&m_header, 1);
+//    }
+//    
+//    /**
+//     * Returns a read-only const_cursor to the first (inorder) value.
+//     */      
+//    const_cursor inorder_first() const
+//    {
+//        return inorder_cfirst();
+//    }
+//
+//    /**
+//     * Returns a read-only const_cursor to the first (inorder) value.
+//     */      
+//    const_cursor inorder_cfirst() const
+//    {
+//        return const_cursor(&m_header, 1);
+//    }
     
     /**
      * Returns true if the %binary_tree is empty.
      */
     bool empty() const
     {
-        return m_header.m_children[1] == &m_header;
+        return root().empty(); //m_header.m_children[1] == &m_header;
     }
     
     // Hierarchy-specific
@@ -221,8 +220,8 @@ class binary_tree {
         pos.attach(p_node);
 
         // Readjust begin
-        if ((pos == this->inorder_first()))
-            m_header.m_children[1] = p_node; 
+//        if ((pos == this->inorder_first()))
+//            m_header.m_children[1] = p_node; 
 
         return pos; 
     }
@@ -234,9 +233,9 @@ class binary_tree {
      * @brief       Inserts val in front of @a pos, or, if @a pos' parent is
      *              already full, creates a new child node containing @a val 
      *              instead.
-     * @param pos   The %binary_tree inorder iterator in front of which to insert.
+     * @param pos   The %binary_tree cursor in front of which to insert.
      * @param val   The value to insert.
-     * @return      An inorder iterator that points to the inserted data.
+     * @return      An cursor that points to the inserted data.
      */
     template <class InputCursor>
     cursor insert(cursor pos, InputCursor subtree)
@@ -414,8 +413,8 @@ class binary_tree {
     void splice(cursor position, binary_tree& x)
     {
         if (!x.empty()) {
-            if (position == inorder_first()) // Readjust inorder_first to x's
-                m_header.m_children[1] = x.m_header.m_children[1];
+//            if (position == inorder_first()) // Readjust inorder_first to x's
+//                m_header.m_children[1] = x.m_header.m_children[1];
                 
             position.base_node()->m_children[position.m_pos] = x.m_header.m_children[0];
             //TODO: replace the following by some temporary-swapping?
@@ -586,7 +585,7 @@ inline void swap(binary_tree<T, Alloc>& x, binary_tree<T, Alloc>& y)
  *
  *  This is an equivalence relation.  It is linear in the size of the
  *  binary trees. Binary trees are considered equivalent if their sizes are equal,
- *  their shapes are equal,  and if corresponding elements compare equal.
+ *  their shapes are equal, and if corresponding elements compare equal.
  */
 template <class Tp, class Alloc>
 inline bool operator==(binary_tree<Tp, Alloc> const& x 
