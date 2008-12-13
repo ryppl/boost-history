@@ -21,13 +21,24 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
-
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 
 namespace boost {
 namespace mirror {
 
 template <class Class /*, class VariantTag*/ >
 struct meta_constructors;
+
+
+#define BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTORS_BEGIN(TEMPLATE, TEMPL_ARG_COUNT) \
+template < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, typename T) >  \
+struct meta_constructors< \
+	TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
+> \
+{ \
+        typedef mpl::vector0<>
+
 
 #define BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN(CLASS) \
 template <> \
@@ -92,18 +103,23 @@ inline static const ::std::wstring& get_param_name( \
                 BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) \
         >::type
 
-#define BOOST_MIRROR_REG_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ) \
+#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, TYPENAME_KW) \
         param_type_lists_ ## CONSTR_INDEX ; \
         typedef BOOST_PP_CAT(mpl::vector, BOOST_PP_SEQ_SIZE(PARAM_SEQ)) < \
                 BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_CONSTR_EXTRACT_PARAM_TYPE, 0, PARAM_SEQ) \
         > BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) ;\
         BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_CONSTR_REG_CALL_PARAM_NAME, CONSTR_INDEX, PARAM_SEQ) \
-        typedef mpl::push_back< \
+        typedef TYPENAME_KW mpl::push_back< \
                 BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX), \
                 BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) \
         >::type
 
-
+#define BOOST_MIRROR_REG_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ) \
+	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, BOOST_PP_EMPTY())
+ 
+#define BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ) \
+	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, typename)
+ 
 #define BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(TYPE)\
 BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( TYPE ) \
         BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(0) \

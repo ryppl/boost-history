@@ -14,6 +14,7 @@
 #include <boost/mirror/meta_types/boost/tuples/tuple.hpp>
 #include <boost/mirror/detail/static_int_to_str.hpp>
 #include <boost/mirror/detail/unnamed_attribs.hpp>
+#include <boost/mirror/meta_constructors.hpp>
 
 namespace boost {
 namespace mirror {
@@ -103,6 +104,22 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	//
 	typedef template_params
 BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_END
+
+BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTORS_BEGIN( ::boost::tuples::tuple, 10)
+        BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(0)
+        BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTOR(1,
+        ((T0)(_0))
+        ((T1)(_1))
+        ((T2)(_2))
+        ((T3)(_3))
+        ((T4)(_4))
+        ((T5)(_5))
+        ((T6)(_6))
+        ((T7)(_7))
+        ((T8)(_8))
+        ((T9)(_9))
+)
+BOOST_MIRROR_REG_CONSTRUCTORS_END
 
 
 } // namespace mirror
