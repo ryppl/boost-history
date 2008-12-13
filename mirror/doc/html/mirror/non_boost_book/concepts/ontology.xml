@@ -341,9 +341,9 @@
 	>
 	</role>
 
-	<!-- MetaScope is MetaNamedObject  -->
+	<!-- MetaScope is MetaNamedScopedObject  -->
 	<role 
-		subject="MetaNamedObject" 
+		subject="MetaNamedScopedObject" 
 		type="Specialization" 
 		object="MetaScope"
 	>

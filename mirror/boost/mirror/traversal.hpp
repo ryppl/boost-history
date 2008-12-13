@@ -31,7 +31,7 @@ private:
 	>::type* InstancePtr;
 public:
 	template <class VisitorType>
-	static void accept(
+	static inline void accept(
 		VisitorType visitor,
 		InstancePtr ptr_to_inst = 0
 	)
@@ -40,7 +40,7 @@ public:
 	}
 
 	template <class VisitorType>
-	static void accept(
+	static inline void accept(
 		reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst = 0
 	)
@@ -49,7 +49,7 @@ public:
 	}
 private:
 	template <class VisitorType>
-	static void do_accept(
+	static inline void do_accept(
 		reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst
 	)
@@ -100,7 +100,7 @@ private:
 	>::type* InstancePtr;
 public:
 	template <class VisitorType>
-	static void accept(
+	static inline void accept(
 		VisitorType visitor,
 		InstancePtr ptr_to_inst = 0
 	)
@@ -108,7 +108,7 @@ public:
 		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
 	}
 	template <class VisitorType>
-	static void accept(
+	static inline void accept(
 		reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst = 0
 	)
@@ -117,7 +117,7 @@ public:
 	}
 private:
 	template <class VisitorType>
-	static void do_accept(
+	static inline void do_accept(
 		reference_wrapper<VisitorType> visitor, 
 		InstancePtr ptr_to_inst
 	)

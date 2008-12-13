@@ -77,7 +77,7 @@ protected:
 	}
 public:
 	template <bool FullName, typename CharT>
-	static const ::std::basic_string<CharT>& get_name(
+	static inline const ::std::basic_string<CharT>& get_name(
 		mpl::bool_<FullName> full_or_base,
 		::std::char_traits<CharT> _cht
 	)

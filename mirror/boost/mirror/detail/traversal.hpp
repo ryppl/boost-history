@@ -50,7 +50,7 @@ namespace detail {
 		class attribute_traversal
 		{
 		public:
-			attribute_traversal(
+			inline attribute_traversal(
 				reference_wrapper<VisitorType> _visitor,
 				InstancePtr _ptr_to_inst
 			)
@@ -67,7 +67,7 @@ namespace detail {
 				);
 			}
 	
-			~attribute_traversal(void)
+			inline ~attribute_traversal(void)
 			{
 				visitor.leave_attributes(
 					MetaClass(), 
@@ -80,7 +80,7 @@ namespace detail {
 			}
 	
 			template <class MetaAttribute>
-			void operator ()(MetaAttribute ma) const
+			inline void operator ()(MetaAttribute ma) const
 			{
 				// update the traversal context
 				typename mpl::push_back<
@@ -101,7 +101,7 @@ namespace detail {
 
 			// process single attribute WITH an instance
 			template <class MetaAttribute, class AttribsNodePath>
-			void process_single(
+			void inline process_single(
 				MetaAttribute ma, 
 				AttribsNodePath path, 
 				mpl::bool_<true>
@@ -144,7 +144,7 @@ namespace detail {
 
 			// process single attribute W/O an instance
 			template <class MetaAttribute, class AttribsNodePath>
-			void process_single(
+			void inline process_single(
 				MetaAttribute ma, 
 				AttribsNodePath path, 
 				mpl::bool_<false>
@@ -195,7 +195,7 @@ namespace detail {
 		class base_class_traversal
 		{
 		public:
-			base_class_traversal(
+			inline base_class_traversal(
 				reference_wrapper<VisitorType> _visitor,
 	                        InstancePtr _ptr_to_inst
 			)
@@ -212,7 +212,7 @@ namespace detail {
 				);
 			}
 	
-			~base_class_traversal(void)
+			inline ~base_class_traversal(void)
 			{
 				visitor.leave_base_classes(
 					MetaClass(), 
@@ -225,7 +225,7 @@ namespace detail {
 			}
 	
 			template <class MetaInheritance>
-			void operator ()(MetaInheritance mbc) const
+			inline void operator ()(MetaInheritance mbc) const
 			{
 				typedef typename mpl::push_back<
 					ClassNodePath,

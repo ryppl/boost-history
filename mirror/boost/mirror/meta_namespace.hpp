@@ -133,6 +133,7 @@ namespace namespace_ {
 template < >
 struct meta_namespace< namespace_ :: _ > : namespace_ :: _ 
 { 
+	typedef meta_namespace< namespace_ :: _ > scope;
 	typedef mpl::vector0<> ancestors;
 };
 
@@ -191,7 +192,7 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 				_, \
 				BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
 			) :: _ parent_placeholder; /* -4- */ \
-			static const ::std::string& get_name( \
+			static inline const ::std::string& get_name( \
 				mpl::false_, \
 				::std::char_traits<char> \
 			) \
@@ -203,7 +204,7 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 				)); \
 				return s_name; \
 			} \
-			static const ::std::wstring& get_name( \
+			static inline const ::std::wstring& get_name( \
 				mpl::false_, \
 				::std::char_traits<wchar_t> \
 			) \

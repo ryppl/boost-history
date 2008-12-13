@@ -371,7 +371,7 @@ namespace detail {
 		 	 *  attributes from the base classes.
 		 	 */
 			template <int I, typename CharT>
-			static const ::std::basic_string<CharT>& get_name(
+			static inline const ::std::basic_string<CharT>& get_name(
 				mpl::int_<I> pos, 
 				mpl::false_ full_name,
 				::std::char_traits<CharT> cht,
@@ -391,7 +391,7 @@ namespace detail {
 			}
 
 			template <int I, typename CharT>
-			static const ::std::basic_string<CharT>& get_name(
+			static inline const ::std::basic_string<CharT>& get_name(
 				mpl::int_<I> pos, 
 				mpl::false_ full_name,
 				::std::char_traits<CharT> cht,
@@ -413,7 +413,7 @@ namespace detail {
 		 	 *  from the base classes.
 		 	 */
 			template <class Class, int I>
-			static typename result_of_get<I>::type
+			static inline typename result_of_get<I>::type
 			get(Class instance, mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
@@ -425,7 +425,7 @@ namespace detail {
 
 			}
 			template <class Class, int I>
-			static typename result_of_get<I>::type
+			static inline typename result_of_get<I>::type
 			get(Class instance, mpl::int_<I> pos, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
@@ -438,7 +438,7 @@ namespace detail {
 		 	 *  from the base classes.
 		 	 */
 			template <class Class, int I, typename DestType>
-			static DestType&
+			static inline DestType&
 			query(Class instance, mpl::int_<I> pos, DestType& dest, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
@@ -451,7 +451,7 @@ namespace detail {
 			}
 
 			template <class Class, int I, typename DestType>
-			static DestType&
+			static inline DestType&
 			query(Class instance, mpl::int_<I> pos, DestType& dest, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
@@ -464,7 +464,7 @@ namespace detail {
 		 	 *  from the base classes.
 		 	 */
 			template <class Class, int I, typename ValueType>
-			static void
+			static inline void
 			set(Class& instance, mpl::int_<I> pos, ValueType value, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
@@ -476,7 +476,7 @@ namespace detail {
 			}
 
 			template <class Class, int I, typename ValueType>
-			static void
+			static inline void
 			set(Class& instance, mpl::int_<I> pos, ValueType value, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
@@ -587,7 +587,7 @@ namespace detail {
 		 *  the inherited ones)
 		 */
 		template <int I, typename CharT>
-		static const ::std::basic_string<CharT>& get_name(
+		static inline const ::std::basic_string<CharT>& get_name(
 			mpl::int_<I> pos, 
 			mpl::false_ full_name,
 			::std::char_traits<CharT> cht
@@ -605,7 +605,7 @@ namespace detail {
 		 *  the inherited ones)
 		 */
 		template <class Class, int I>
-		static typename detail::template result_of_get<I>::type
+		static inline typename detail::template result_of_get<I>::type
 		get(Class instance, mpl::int_<I> pos)
 		{
 			return detail::get(
@@ -619,7 +619,7 @@ namespace detail {
 		 *  the inherited ones)
 		 */
 		template <class Class, int I, typename DestType>
-		static DestType&
+		static inline DestType&
 		query(Class instance, mpl::int_<I> pos, DestType& dest)
 		{
 			return detail::query(
@@ -634,7 +634,7 @@ namespace detail {
 		 *  the inherited ones)
 		 */
 		template <class Class, int I, typename ValueType>
-		static void
+		static inline void
 		set(Class& instance, mpl::int_<I> pos, ValueType value)
 		{
 			detail::set(

@@ -55,7 +55,7 @@ struct meta_type
 };
 
 #define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPE_NAME_STRING) \
-	static const ::std::string& get_name( \
+	static inline const ::std::string& get_name( \
 		mpl::false_, \
 		::std::char_traits<char> \
 	)\
@@ -63,7 +63,7 @@ struct meta_type
 		static ::std::string s_name(TYPE_NAME_STRING); \
 		return s_name; \
 	} \
-	static const ::std::wstring& get_name( \
+	static inline const ::std::wstring& get_name( \
 		mpl::false_, \
 		::std::char_traits<wchar_t> \
 	)\

@@ -10,6 +10,9 @@
 #ifndef BOOST_MIRROR_INTRINSIC_SIZE_HPP
 #define BOOST_MIRROR_INTRINSIC_SIZE_HPP
 
+#include <boost/mirror/meta_attributes.hpp>
+#include <boost/mirror/meta_inheritance.hpp>
+
 namespace boost {
 namespace mirror {
 namespace detail {

@@ -36,7 +36,7 @@ struct function_type_name_base : argument_type_list_builder
 {
 public:
 	template <bool FullName, typename CharT>
-	inline static ::std::basic_string<CharT> build_name(
+	static ::std::basic_string<CharT> build_name(
 		mpl::bool_<FullName> full_or_base,
 		::std::basic_string<CharT>& left, 
 		::std::basic_string<CharT>& right,

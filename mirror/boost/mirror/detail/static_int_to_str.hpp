@@ -72,7 +72,7 @@ struct static_int_to_str
 		do_copy_to(_str, mpl::int_<J - 1>());
 	}
 	//
-	static CharT* convert(CharT* _str, size_t _max_len)
+	static inline CharT* convert(CharT* _str, size_t _max_len)
 	{
 		assert(_max_len > size_t(length::value));
 		do_copy_to(_str, length());
@@ -88,7 +88,7 @@ struct static_int_to_str<CharT, 0>
 	typedef static_int_to_str_constants<CharT> base_class;
 
 	typedef mpl::int_<1>::type length;
-	static CharT* convert(CharT* _str, size_t _max_len)
+	static inline CharT* convert(CharT* _str, size_t _max_len)
 	{
 		assert(_max_len > 1);
 		_str[0] = base_class::zero();
