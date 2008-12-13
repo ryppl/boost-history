@@ -37,6 +37,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders)
     test_traversal(Order(), l.begin(), l.end());
 }
 
+BOOST_AUTO_TEST_CASE( test_foreach_subtree3 )
+{
+    boost::tree::for_each(
+        preorder(),
+        bt.root().begin(), 
+        boost::lambda::bind(&std::list<int>::push_back, &l, boost::lambda::_1)
+    );
+    test_subtree_traversal(preorder(), l.begin(), l.end(), 1);
+    BOOST_CHECK_EQUAL(l.size(), 5);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, Order, orders)
 {
     boost::tree::copy(Order(), bt.root(), o);

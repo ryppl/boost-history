@@ -25,108 +25,6 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE( iterator_algorithms_test, test_binary_tree_with_list_fixture<int> )
 
-//template <class Cursor, class Op>
-//void underefed_for_each_recursive(Cursor s, Op& f)
-//{
-//    Cursor t = s.end();
-//    f(s);            // Caution: f(s) comes before s.to_begin(), as opposed to
-//    s.to_begin();    // "normal" preorder for_each
-//    do
-//        if (!s.empty())
-//            underefed_for_each_recursive(s, f);
-//    while (s++ != t);
-//}
-//
-//template <class Cursor, class Op>
-//Op underefed_for_each(Cursor s, Op f)
-//{
-//    Cursor t = s.end();
-//    f(s);            // Caution: f(s) comes before s.to_begin(), as opposed to
-//    s.to_begin();    // "normal" preorder for_each
-//    do
-//        if (!s.empty())
-//            underefed_for_each_recursive(s, f);
-//    while (s++ != t);
-//
-//    return f;
-//}
-//
-//template <class Order>
-//void comparisons_using_ac(binary_tree<int>::cursor c) {
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(c));
-//}
-//
-//template <class Order>
-//void comparisons_using_rtc(binary_tree<int>::cursor c) {
-//    compare_cursor_to_iterator_traversal(Order(), c);
-//}
-
-/** 
- * Check all iterator traversals by comparing them to a recursive cursor
- * algorithm output. Do that at different stages of the tree while adding
- * elements to it, so different tree shapes are checked to be catered for
- * by the iterator algorithms.
- * 
- * Afterwards, do all that using iterators wrapped around
- * "explicit stack"-based cursors also.
- * 
- * FIXME: This depends too much on the correct behavior of cursor algorithms.
- * Do check algorithms, but with ready-made, differently shaped trees. 
- */
-//void compare_cursor_to_iterator_traversal() {
-//BOOST_AUTO_TEST_CASE_TEMPLATE( compare_cursor_to_iterator_traversal_test, Order, orders )
-//{
-//    binary_tree<int> test_tree2;
-//    //test::compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//
-//    binary_tree<int>::cursor c = test_tree2.insert(test_tree2.root(), 8);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//
-//    c = test_tree2.insert(c.to_begin(), 3);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//        
-//    test_tree2.insert(c.to_begin(), 1);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    c = test_tree2.insert(++c, 6);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    test_tree2.insert(c.to_begin(), 4);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    test_tree2.insert(++c, 7);    
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    c = test_tree2.insert(test_tree2.root().end(), 10);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    c = test_tree2.insert(test_tree2.root().end().end(), 14);    
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    c = test_tree2.insert(c.to_begin(), 13);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    c = test_tree2.insert(c.to_begin(), 11);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    c = test_tree2.insert(++c, 12);
-//    compare_cursor_to_iterator_traversal(Order(), test_tree2.root());
-//    compare_cursor_to_iterator_traversal(Order(), make_ascending_cursor(test_tree2.root()));
-//    
-//    underefed_for_each(test_tree2.root(), comparisons_using_ac<Order>);
-//    underefed_for_each(test_tree2.root(), comparisons_using_rtc<Order>);
-//}
-
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_algorithms, Order, orders )
 {
     test_traversal(Order(), begin(Order(), bt.root())
@@ -149,6 +47,60 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_algorithms, Order, orders )
     BOOST_CHECK_EQUAL(std::distance(
                         begin(Order(), make_ascending_cursor(bt.root())) 
                       , end(Order(), make_ascending_cursor(bt.root()))), 11);
+}
+
+BOOST_AUTO_TEST_CASE( test_subtree3_iterator_algorithms )
+{
+    test_subtree_traversal(preorder(), begin(preorder(), bt.root().begin())
+                                     , end(preorder(), bt.root().begin()), 1);
+    BOOST_CHECK_EQUAL(std::distance(begin(preorder(), bt.root().begin())
+                                  , end(preorder(), bt.root().begin())), 5);
+
+    test_subtree_traversal(inorder(), begin(inorder(), bt.root().begin())
+                                    , end(inorder(), bt.root().begin()), 0);
+    BOOST_CHECK_EQUAL(std::distance(begin(inorder(), bt.root().begin())
+                                  , end(inorder(), bt.root().begin())), 5);
+
+    test_subtree_traversal(postorder(), begin(postorder(), bt.root().begin())
+                                      , end(postorder(), bt.root().begin()), 0);
+    BOOST_CHECK_EQUAL(std::distance(begin(postorder(), bt.root().begin())
+                                  , end(postorder(), bt.root().begin())), 5);
+}
+
+BOOST_AUTO_TEST_CASE( test_subtree6_iterator_algorithms )
+{
+    test_subtree_traversal(preorder(), begin(preorder(), bt.root().begin().end())
+                                     , end(preorder(), bt.root().begin().end()), 3);
+    BOOST_CHECK_EQUAL(std::distance(begin(preorder(), bt.root().begin().end())
+                                  , end(preorder(), bt.root().begin().end())), 3);
+
+    test_subtree_traversal(inorder(), begin(inorder(), bt.root().begin().end())
+                                    , end(inorder(), bt.root().begin().end()), 2);
+    BOOST_CHECK_EQUAL(std::distance(begin(inorder(), bt.root().begin().end())
+                                  , end(inorder(), bt.root().begin().end())), 3);
+
+    test_subtree_traversal(postorder(), begin(postorder(), bt.root().begin().end())
+                                      , end(postorder(), bt.root().begin().end()), 1);
+    BOOST_CHECK_EQUAL(std::distance(begin(postorder(), bt.root().begin().end())
+                                  , end(postorder(), bt.root().begin().end())), 3);
+}
+
+BOOST_AUTO_TEST_CASE( test_subtree10_iterator_algorithms )
+{
+    test_subtree_traversal(preorder(), begin(preorder(), bt.root().end())
+                                     , end(preorder(), bt.root().end()), 6);
+    BOOST_CHECK_EQUAL(std::distance(begin(preorder(), bt.root().end())
+                                  , end(preorder(), bt.root().end())), 5);
+
+    test_subtree_traversal(inorder(), begin(inorder(), bt.root().end())
+                                    , end(inorder(), bt.root().end()), 6);
+    BOOST_CHECK_EQUAL(std::distance(begin(inorder(), bt.root().end())
+                                  , end(inorder(), bt.root().end())), 5);
+
+    test_subtree_traversal(postorder(), begin(postorder(), bt.root().end())
+                                      , end(postorder(), bt.root().end()), 5);
+    BOOST_CHECK_EQUAL(std::distance(begin(postorder(), bt.root().end())
+                                  , end(postorder(), bt.root().end())), 5);
 }
 
 BOOST_AUTO_TEST_CASE( test_ascending_iterator_algorithms )

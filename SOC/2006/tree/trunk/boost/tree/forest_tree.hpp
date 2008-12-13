@@ -157,13 +157,13 @@ Op for_each(preorder, forest_cursor<Cursor> s, Op f)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (preorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t, Op op)
 {
-    return transform(preorder(), InCursor(s), InCursor(t), op);
+    return transform(preorder(), InCursor(s), OutCursor(t), op);
 }
 
 template <class InCursor, class OutCursor>
 OutCursor copy (preorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t)
 {
-    return copy(preorder(), InCursor(s), InCursor(t));
+    return copy(preorder(), InCursor(s), OutCursor(t));
 }
 
 /// Postoder - inorder
@@ -177,13 +177,13 @@ Op for_each(postorder, forest_cursor<Cursor> s, Op f)
 template <class InCursor, class OutCursor, class Op>
 OutCursor transform (postorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t, Op op)
 {
-    return transform(inorder(), InCursor(s), InCursor(t), op);
+    return transform(inorder(), InCursor(s), OutCursor(t), op);
 }
 
 template <class InCursor, class OutCursor>
 OutCursor copy (postorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t)
 {
-    return copy(inorder(), InCursor(s), InCursor(t));
+    return copy(inorder(), InCursor(s), OutCursor(t));
 }
 
 } // namespace tree

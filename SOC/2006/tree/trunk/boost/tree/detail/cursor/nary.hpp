@@ -62,7 +62,6 @@ private:
     typedef node_type* node_pointer;
     
 public:
-
     typedef typename mpl::eval_if<
                         is_const<Node>
                        , add_const<typename Node::value_type>

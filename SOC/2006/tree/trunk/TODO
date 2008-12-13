@@ -14,6 +14,9 @@
 [section TODO]
 
 General:
+* Rename node/nary.hpp back to node/binary.hpp, and cleanup.
+* Extend and parametrize subtree tests (subtree root, subtree size).
+* Clean up node/cursor/binary_tree implementation.
 * Fix forest copy
 * Fix cursor archetypes: *order copy checks don't compile
 * Test insert_cursor independently of algorithms.

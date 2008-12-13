@@ -44,7 +44,7 @@ class binary_tree {
     typedef typename Alloc::template rebind<value_type>::other allocator_type;
 
  private:        
-    typedef node<value_type, detail::binary_array> node_type;
+    typedef node<value_type/*, detail::binary_array*/> node_type;
     
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;

@@ -62,7 +62,7 @@ class nary_tree {
         {}
     };
     
-    typedef node<value_type, mycontainer> node_type;
+    typedef node<value_type/*, mycontainer*/> node_type;
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;
     typedef typename node_traits<node_type>::node_base_type node_base_type;
@@ -86,11 +86,11 @@ class nary_tree {
     explicit nary_tree (allocator_type const& alloc = allocator_type())
     : m_header(), m_value_alloc(alloc)
     {
-        m_header.push_back(node_base_type::nil());
-        m_header.push_back(&m_header);
+//        m_header.push_back(node_base_type::nil());
+//        m_header.push_back(&m_header);
         
-//        m_header[0] = node_base_type::nil();
-//        m_header[1] = &m_header;
+        m_header.m_children[0] = node_base_type::nil();
+        m_header.m_children[1] = &m_header;
     }
 
     explicit nary_tree (size_type n, value_type const& value = value_type(), 
