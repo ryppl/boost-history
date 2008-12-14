@@ -74,7 +74,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename HermA, typename MatrB, typename IVec>
-      inline
       int hpsv (HermA& a, IVec& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -113,7 +112,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename MatrB>
-    inline
     int hpsv (HermA& a, MatrB& b) {
       // with 'internal' pivot vector
 
@@ -161,7 +159,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename IVec> 
-    inline
     int hptrf (HermA& a, IVec& i) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -215,7 +212,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename MatrB, typename IVec>
-    inline
     int hptrs (HermA const& a, IVec const& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK

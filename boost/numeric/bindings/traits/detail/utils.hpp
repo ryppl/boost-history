@@ -23,8 +23,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   namespace detail {
 
     // complex array => real & imaginary arrays
-    template <typename CIt, typename RIt> 
-    inline 
+    template <typename CIt, typename RIt>
     void disentangle (CIt c, CIt c_end, RIt rr, RIt ri) {
       for (; c != c_end; ++c, ++rr, ++ri) {
         *rr = traits::real (*c); 
@@ -32,8 +31,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       }
     }
     // real & imaginary arrays => complex array
-    template <typename RIt, typename CIt> 
-    inline 
+    template <typename RIt, typename CIt>
     void interlace (RIt r, RIt r_end, RIt ri, CIt c) {
       typedef typename std::iterator_traits<CIt>::value_type cmplx_t;
 #ifdef BOOST_NUMERIC_BINDINGS_BY_THE_BOOK

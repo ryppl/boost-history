@@ -96,7 +96,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmMatrA, typename MatrB>
-      inline
       int posv (char const uplo, SymmMatrA& a, MatrB& b) {
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
@@ -192,7 +191,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmMatrA> 
-      inline
       int potrf (char const uplo, SymmMatrA& a) {
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
@@ -283,7 +281,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmMatrA, typename MatrB>
-      inline
       int potrs (char const uplo, SymmMatrA const& a, MatrB& b) {
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));

@@ -76,7 +76,7 @@ namespace boost { namespace numeric { namespace bindings {
 
 			// gelsd for real type
 			template <typename MatrA, typename MatrB, typename VecS, typename Work>
-			inline int gelsd(MatrA& A, MatrB& B, VecS& s, Work& work)
+			int gelsd(MatrA& A, MatrB& B, VecS& s, Work& work)
 			{
 				typedef typename MatrA::value_type val_t;
 				typedef typename traits::type_traits<val_t>::real_type real_t;
@@ -126,7 +126,7 @@ namespace boost { namespace numeric { namespace bindings {
 			// gelsd for complex type
 			template <typename MatrA, typename MatrB, typename VecS, 
 						typename Work, typename RWork>
-			inline int gelsd(MatrA& A, MatrB& B, VecS& s, Work& work, RWork& rwork)
+			int gelsd(MatrA& A, MatrB& B, VecS& s, Work& work, RWork& rwork)
 			{
 				typedef typename MatrA::value_type val_t;
 				typedef typename traits::type_traits<val_t>::real_type real_t;
@@ -182,7 +182,7 @@ namespace boost { namespace numeric { namespace bindings {
 			struct Gelsd<1>
 			{
 				template <typename MatrA, typename MatrB, typename VecS>
-				inline int operator() (MatrA& A, MatrB& B, VecS& s, minimal_workspace) const
+				int operator() (MatrA& A, MatrB& B, VecS& s, minimal_workspace) const
 				{
 					typedef typename MatrA::value_type val_t;
 
@@ -207,7 +207,7 @@ namespace boost { namespace numeric { namespace bindings {
 				}
 
 				template <typename MatrA, typename MatrB, typename VecS>
-				inline int operator() (MatrA& A, MatrB& B, VecS& s, optimal_workspace) const
+				int operator() (MatrA& A, MatrB& B, VecS& s, optimal_workspace) const
 				{
 					typedef typename MatrA::value_type val_t;
 					typedef typename traits::type_traits<val_t>::real_type real_t;
@@ -253,7 +253,7 @@ namespace boost { namespace numeric { namespace bindings {
 				}
 
 				template <typename MatrA, typename MatrB, typename VecS, typename Work>
-				inline int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace1<Work> workspace) const
+				int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace1<Work> workspace) const
 				{
 					const int m = traits::matrix_size1(A);
 					const int n = traits::matrix_size2(A);
@@ -272,7 +272,7 @@ namespace boost { namespace numeric { namespace bindings {
 			struct Gelsd<2>
 			{
 				template <typename MatrA, typename MatrB, typename VecS>
-				inline int operator() (MatrA& A, MatrB& B, VecS& s, minimal_workspace) const
+				int operator() (MatrA& A, MatrB& B, VecS& s, minimal_workspace) const
 				{
 					typedef typename MatrA::value_type val_t;
 					typedef typename traits::type_traits<val_t>::real_type real_t;
@@ -300,7 +300,7 @@ namespace boost { namespace numeric { namespace bindings {
 				}
 
 				template <typename MatrA, typename MatrB, typename VecS>
-				inline int operator() (MatrA& A, MatrB& B, VecS& s, optimal_workspace) const
+				int operator() (MatrA& A, MatrB& B, VecS& s, optimal_workspace) const
 				{
 					typedef typename MatrA::value_type val_t;
 					typedef typename traits::type_traits<val_t>::real_type real_t;
@@ -357,7 +357,7 @@ namespace boost { namespace numeric { namespace bindings {
 				}
 
 				template <typename MatrA, typename MatrB, typename VecS, typename Work, typename RWork>
-				inline int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace2<Work, RWork> workspace) const
+				int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace2<Work, RWork> workspace) const
 				{
 					const int m = traits::matrix_size1(A);
 					const int n = traits::matrix_size2(A);
@@ -381,7 +381,7 @@ namespace boost { namespace numeric { namespace bindings {
 		//  workspace:	either optimal, minimal, or user supplied
 		//
 		template <typename MatrA, typename MatrB, typename VecS, typename Work>
-		inline int gelsd(MatrA& A, MatrB& B, VecS& s, Work workspace)
+		int gelsd(MatrA& A, MatrB& B, VecS& s, Work workspace)
 		{
 			typedef typename MatrA::value_type val_t;
 
@@ -395,7 +395,7 @@ namespace boost { namespace numeric { namespace bindings {
 		//	workspace:	either optimal, minimal, or user supplied
 		//
 		template <typename MatrA, typename MatrB, typename Work>
-		inline int gelsd(MatrA& A, MatrB& B, Work workspace)
+		int gelsd(MatrA& A, MatrB& B, Work workspace)
 		{
 			typedef typename MatrA::value_type val_t;
 			typedef typename traits::type_traits<val_t>::real_type real_t;

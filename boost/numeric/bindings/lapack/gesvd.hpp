@@ -158,7 +158,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA> 
-    inline
     int gesvd_work (char const q, 
                     char const jobu, char const jobvt, MatrA const& a) 
     {
@@ -220,7 +219,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA> 
-    inline
     int gesvd_rwork (MatrA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -244,7 +242,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename VecS, 
               typename MatrU, typename MatrV, typename VecW>
-    inline
     int gesvd (char const jobu, char const jobvt, 
                MatrA& a, VecS& s, MatrU& u, MatrV& vt, VecW& w) 
     {
@@ -320,7 +317,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename VecS, 
               typename MatrU, typename MatrV, typename VecW, typename VecRW>
-    inline
     int gesvd (char const jobu, char const jobvt, 
                MatrA& a, VecS& s, MatrU& u, MatrV& vt, VecW& w, VecRW& rw) 
     {
@@ -387,7 +383,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA, typename VecS, typename MatrU, typename MatrV>
-    inline
     int gesvd (char const opt, char const jobu, char const jobvt, 
                MatrA& a, VecS& s, MatrU& u, MatrV& vt) 
     {
@@ -484,7 +479,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename MatrA, typename VecS> 
-    inline
     int gesvd (MatrA& a, VecS& s) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 

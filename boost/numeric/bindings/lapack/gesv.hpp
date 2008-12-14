@@ -93,7 +93,6 @@ namespace boost { namespace numeric { namespace bindings {
     } //namespace detail
 
     template <typename MatrA, typename MatrB, typename IVec>
-    inline
     int gesv (MatrA& a, IVec& ipiv, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -124,7 +123,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename MatrA, typename MatrB>
-    inline
     int gesv (MatrA& a, MatrB& b) {
       // with 'internal' pivot vector 
       
@@ -185,7 +183,6 @@ namespace boost { namespace numeric { namespace bindings {
     } //namespace detail
 
     template <typename MatrA, typename IVec>
-    inline
     int getrf (MatrA& a, IVec& ipiv) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -258,7 +255,6 @@ namespace boost { namespace numeric { namespace bindings {
     } // namespace detail
 
     template <typename MatrA, typename MatrB, typename IVec>
-    inline
     int getrs (char const trans, MatrA const& a, IVec const& ipiv, MatrB& b) 
     {
       assert (trans == 'N' || trans == 'T' || trans == 'C'); 
@@ -347,7 +343,6 @@ namespace boost { namespace numeric { namespace bindings {
 			
 			
       template <typename MatrA, typename IVec, typename Work>
-      inline
       int getri (MatrA& a, IVec const& ipiv, Work& work) 
       {
 	#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -408,7 +403,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 		
     template <typename MatrA, typename IVec>
-    inline
     int getri(MatrA& a, IVec& ipiv, minimal_workspace)
     {
       typedef typename MatrA::value_type value_type;
@@ -423,7 +417,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     // optimal workspace allocation
     template <typename MatrA, typename IVec>
-    inline
     int getri(MatrA& a, IVec& ipiv, optimal_workspace)
     {
       typedef typename MatrA::value_type value_type;

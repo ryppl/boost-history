@@ -71,7 +71,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename SymmA>
-    inline
     int sytrf_block (char const q, char const ul, SymmA const& a) 
     {
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -96,7 +95,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA>
-    inline
     int sytrf_block (char const q, SymmA const& a) 
     {
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -121,7 +119,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA>
-    inline
     int sytrf_work (char const q, char const ul, SymmA const& a) 
     {
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -150,7 +147,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA>
-    inline
     int sytrf_work (char const q, SymmA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -251,7 +247,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmA, typename MatrB, typename IVec, typename Work>
-      inline
       int sysv (char const ul, SymmA& a, IVec& i, MatrB& b, Work& w) 
       {
         int const n = traits::matrix_size1 (a);
@@ -316,7 +311,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename MatrB>
-    inline
     int sysv (char const ul, SymmA& a, MatrB& b) 
     {
       // with 'internal' pivot and work vectors 
@@ -355,7 +349,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename MatrB>
-    inline
     int sysv (SymmA& a, MatrB& b) 
     {
       // with 'internal' pivot and work vectors 
@@ -442,7 +435,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmA, typename IVec, typename Work>
-      inline
       int sytrf (char const ul, SymmA& a, IVec& i, Work& w) {
 
         int const n = traits::matrix_size1 (a);
@@ -495,7 +487,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename Ivec>
-    inline
     int sytrf (char const ul, SymmA& a, Ivec& i) 
     {
       // with 'internal' work vector
@@ -524,7 +515,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename Ivec>
-    inline
     int sytrf (SymmA& a, Ivec& i) 
     {
       // with 'internal' work vector 
@@ -600,7 +590,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmA, typename MatrB, typename IVec>
-      inline
       int sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
 
         int const n = traits::matrix_size1 (a);
@@ -702,7 +691,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmA, typename IVec, typename Work>
-      inline
       int sytri (char const ul, SymmA& a, IVec const& ipiv, Work& work) 
       {
         assert (ul == 'U' || ul == 'L'); 
@@ -731,7 +719,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     //Internal allocation of workspace, general matrix with up/low tag
     template <typename SymmA, typename IVec>
-    inline
     int sytri (char const ul, SymmA& a, IVec const& ipiv) 
     {
       assert (ul == 'U' || ul == 'L'); 
@@ -760,7 +747,6 @@ namespace boost { namespace numeric { namespace bindings {
       symmetric packed matrices.
       */  
     template <typename SymmA, typename IVec>
-    inline
     int sytri (SymmA& a, IVec const& ipiv) 
     {
 

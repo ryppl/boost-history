@@ -86,7 +86,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     // Compute Schur factorization with Schur vectors
     template <typename MatrT, typename VL, typename VR, typename Work>
-    inline
     int trevc (char const side, char const howmny, MatrT& t, VL& vl, VR& vr, Work& work) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 

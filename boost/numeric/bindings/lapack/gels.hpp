@@ -141,7 +141,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 			// query for recommended workspace
 			template <typename MatrA, typename VecB>
-			inline
 			int gels_optimal_work(const char trans, MatrA& A, VecB& b)
 			{
 				typename MatrA::value_type work;
@@ -168,7 +167,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
 		template <typename MatrA, typename VecB>
-		inline
 		int gels(const char trans, MatrA& A, VecB& b, optimal_workspace)
 		{
 			// query optimal workspace size
@@ -179,7 +177,6 @@ namespace boost { namespace numeric { namespace bindings {
 		}
 
 		template <typename MatrA, typename VecB>
-		inline
 		int gels(const char trans, MatrA& A, VecB& b, minimal_workspace)
 		{
 			const int m = traits::matrix_size1(A);
@@ -196,7 +193,6 @@ namespace boost { namespace numeric { namespace bindings {
 		}
 
 		template <typename MatrA, typename VecB, typename Work>
-		inline
 		int gels(const char trans, MatrA& A, VecB& b, detail::workspace1<Work> workspace)
 		{
 			return detail::gels(trans, A, b, workspace.w_);

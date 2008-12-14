@@ -22,7 +22,6 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   // op (A) == A || A^T || A^H
   // ! CAUTION this function assumes that all matrices involved are column-major matrices
   template < typename matrix_type, typename vector_type_x, typename vector_type_y, typename value_type >
-  inline
   void gemv(const char TRANS, 
 	    const value_type& alpha, 
 	    const matrix_type &a, 
@@ -56,7 +55,6 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   // A <- alpha * x * trans(y) ( outer product ), alpha, x and y are real-valued 
   // ! CAUTION this function assumes that all matrices involved are column-major matrices
   template < typename vector_type_x, typename vector_type_y, typename value_type, typename matrix_type >
-  inline
   void ger( const value_type& alpha, 
             const vector_type_x &x, 
             const vector_type_y &y,
@@ -87,7 +85,6 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 /*
   // A <- alpha * x * trans(y) ( outer product ), alpha, x and y are complex-valued 
   template < typename vector_type_x, typename vector_type_y, typename value_type, typename matrix_type >
-  inline
   void geru( const value_type& alpha, 
              const vector_type_x &x, 
              const vector_type_y &y,
@@ -120,7 +117,6 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   /*
   // y <- alpha * A * x + beta * y 
   template < typename matrix_type, typename vector_type_x, typename vector_type_y >
-  inline 
   void gemv(const typename traits::matrix_traits<matrix_type>::value_type &alpha, 
 	    const matrix_type &a, 
 	    const vector_type_x &x, 
@@ -134,7 +130,6 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
   // y <- A * x
   template < typename matrix_type, typename vector_type_x, typename vector_type_y >
-  inline 
   void gemv(const matrix_type &a, const vector_type_x &x, vector_type_y &y)
   {
     typedef typename traits::matrix_traits<matrix_type>::value_type val_t; 

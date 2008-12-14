@@ -131,7 +131,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
       template <typename A, typename Tau, typename C, typename Work>
-      inline
       int ormqr (char side, char trans, const A& a, const Tau& tau, C& c,
                  Work& work) {
 
@@ -179,7 +178,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     // Function that allocates temporary arrays for optimal execution time.
     template <typename A, typename Tau, typename C>
-    inline
     int ormqr (char side, char trans, const A& a, const Tau& tau, C& c, optimal_workspace ) {
        typedef typename A::value_type                              value_type ;
 
@@ -194,7 +192,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     // Function that allocates temporary arrays with minimal size
     template <typename A, typename Tau, typename C>
-    inline
     int ormqr (char side, char trans, const A& a, const Tau& tau, C& c, minimal_workspace ) {
        typedef typename A::value_type                              value_type ;
 
@@ -211,7 +208,6 @@ namespace boost { namespace numeric { namespace bindings {
     // The calling sequence is ormqr(side, trans, a, tau, c, workspace( work_array ) )
     // where work_array is an array with the same value_type as a and c .
     template <typename A, typename Tau, typename C, typename Work>
-    inline
     int ormqr (char side, char trans, const A& a, const Tau& tau, C& c, detail::workspace1<Work> workspace ) {
        typedef typename A::value_type                              value_type ;
 

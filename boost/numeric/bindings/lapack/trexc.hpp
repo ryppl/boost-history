@@ -100,7 +100,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     // Reorder Schur factorization with Schur vectors
     template <typename MatrT, typename Q, typename Work>
-    inline
     int trexc (char const compq, MatrT& t, Q& q, int& ifst, int& ilst, Work& work) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 

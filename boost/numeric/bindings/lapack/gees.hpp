@@ -126,7 +126,6 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
        /// Compute Schur factorization, passing one work array.
        template <typename MatrA, typename SchVec, typename EigVal, typename Work>
-       inline
        int gees (char jobvs, MatrA& a, EigVal& w, SchVec& vs, Work& work) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -170,7 +169,6 @@ namespace boost { namespace numeric { namespace bindings {
        /// Compute Schur factorization, passing two work arrays.
        template <typename MatrA, typename SchVec, typename EigVal,
                  typename Work, typename RWork>
-       inline
        int gees (char jobvs, MatrA& a, EigVal& w, SchVec& vs,
 		 Work& work, RWork& rwork) {
 
@@ -223,7 +221,6 @@ namespace boost { namespace numeric { namespace bindings {
        template <>
        struct Gees< 2 > {
           template <typename MatrA, typename SchVec, typename EigVal>
-          inline
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, optimal_workspace ) const {
              typedef typename MatrA::value_type                            value_type ;
              typedef typename traits::type_traits< value_type >::real_type real_type ;
@@ -237,7 +234,6 @@ namespace boost { namespace numeric { namespace bindings {
           } // gees()
 
           template <typename MatrA, typename SchVec, typename EigVal>
-          inline
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, minimal_workspace ) const {
              typedef typename MatrA::value_type                            value_type ;
              typedef typename traits::type_traits< value_type >::real_type real_type ;
@@ -252,7 +248,6 @@ namespace boost { namespace numeric { namespace bindings {
 
           /// Compute Schur factorization, passing workspace2 as workspace
           template <typename MatrA, typename SchVec, typename EigVal, typename RWork, typename Work>
-          inline
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, workspace2<Work,RWork>& workspace ) const {
              return gees( jobvs, a, w, vs, workspace.w_, workspace.wr_ );
           } // gees()
@@ -262,7 +257,6 @@ namespace boost { namespace numeric { namespace bindings {
        template <>
        struct Gees< 1 > {
           template <typename MatrA, typename SchVec, typename EigVal>
-          inline
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, optimal_workspace ) const {
              typedef typename MatrA::value_type                            value_type ;
              typedef typename traits::type_traits< value_type >::real_type real_type ;
@@ -275,7 +269,6 @@ namespace boost { namespace numeric { namespace bindings {
           } // gees()
 
           template <typename MatrA, typename SchVec, typename EigVal>
-          inline
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, minimal_workspace ) const {
              typedef typename MatrA::value_type                            value_type ;
              typedef typename traits::type_traits< value_type >::real_type real_type ;
@@ -289,7 +282,6 @@ namespace boost { namespace numeric { namespace bindings {
 
           /// Compute Schur factorization, passing workspace1 as workspace
           template <typename MatrA, typename SchVec, typename EigVal, typename Work>
-          inline
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, detail::workspace1<Work> workspace ) const {
              return gees( jobvs, a, w, vs, workspace.w_ );
           } // gees()

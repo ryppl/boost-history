@@ -91,7 +91,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename SymmA, typename MatrB, typename IVec>
-      inline
       int spsv (SymmA& a, IVec& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -130,7 +129,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename MatrB>
-    inline
     int spsv (SymmA& a, MatrB& b) {
       // with 'internal' pivot vector
 
@@ -186,7 +184,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename IVec>
-    inline
     int sptrf (SymmA& a, IVec& i) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -256,7 +253,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmA, typename MatrB, typename IVec>
-    inline
     int sptrs (SymmA const& a, IVec const& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -325,7 +321,6 @@ namespace boost { namespace numeric { namespace bindings {
     } // namespace detail
 
     template <typename SymmA, typename IVec>
-    inline
     int sptri (SymmA& a, IVec& ipiv) 
     {
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK

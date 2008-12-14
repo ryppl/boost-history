@@ -256,7 +256,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA> 
-    inline
     int gesdd_work (char const q, char const jobz, MatrA const& a) 
     {
 
@@ -326,7 +325,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA> 
-    inline
     int gesdd_rwork (char jobz, MatrA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -351,7 +349,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA> 
-    inline
     int gesdd_iwork (MatrA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -368,7 +365,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename VecS, 
               typename MatrU, typename MatrV, typename VecW, typename VecIW>
-    inline
     int gesdd (char const jobz, MatrA& a, 
                VecS& s, MatrU& u, MatrV& vt, VecW& w, VecIW& iw) 
     {
@@ -456,7 +452,6 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename VecS, typename MatrU, 
               typename MatrV, typename VecW, typename VecRW, typename VecIW>
-    inline
     int gesdd (char const jobz, MatrA& a, 
                VecS& s, MatrU& u, MatrV& vt, VecW& w, VecRW& rw, VecIW& iw) 
     {
@@ -536,7 +531,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA, typename VecS, typename MatrU, typename MatrV>
-    inline
     int gesdd (char const opt, char const jobz, 
                MatrA& a, VecS& s, MatrU& u, MatrV& vt) 
     {
@@ -647,7 +641,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename MatrA, typename VecS> 
-    inline
     int gesdd (MatrA& a, VecS& s) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 

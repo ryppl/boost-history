@@ -96,7 +96,7 @@ namespace boost { namespace numeric { namespace bindings {
 	//--------------------------------------------
 
    template <typename A, typename Tau, typename Work>
-   inline int orgqr(A& a, Tau& tau, Work &work) {
+   int orgqr(A& a, Tau& tau, Work &work) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -127,7 +127,6 @@ namespace boost { namespace numeric { namespace bindings {
     // Workspace is allocated dynamically so that the optimization of
     // blas 3 calls is optimal.
     template <typename A, typename Tau>
-    inline
     int orgqr (A& a, Tau& tau, optimal_workspace ) {
        typedef typename A::value_type value_type ;
 	   const int n = traits::matrix_size2 (a);
@@ -140,7 +139,6 @@ namespace boost { namespace numeric { namespace bindings {
     // Workspace is allocated dynamically to its minimum size.
     // Blas 3 calls are not optimal.
     template <typename A, typename Tau>
-    inline
     int orgqr (A& a, Tau& tau, minimal_workspace ) {
        typedef typename A::value_type value_type ;
 	   const int n = traits::matrix_size2 (a);
@@ -152,7 +150,6 @@ namespace boost { namespace numeric { namespace bindings {
     // Workspace is taken from the array in workspace.
    
     template <typename A, typename Tau, typename Work>
-    inline
     int orgqr (A& a, Tau& tau, detail::workspace1<Work> workspace ) {
        typedef typename A::value_type value_type ;
 	   const int n = traits::matrix_size2 (a);

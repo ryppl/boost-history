@@ -82,7 +82,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
       template <typename A, typename W, typename Work, typename RWork>
-      inline
       int heev (char jobz, char uplo, A& a, W& w, Work& work, RWork& rwork) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 

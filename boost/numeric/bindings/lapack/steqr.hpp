@@ -50,7 +50,6 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
 
     template <typename D, typename E, typename Z, typename W>
-    inline
     int steqr( char compz, D& d, E& e, Z& z, W& work ) {
 
       int const n = traits::vector_size (d);
@@ -74,7 +73,6 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
 
     template <typename D, typename E, typename Z>
-    inline
     int steqr( char compz, D& d, E& e, Z& z, optimal_workspace ) {
       int lwork = 0 ;
       if (compz != 'N') lwork = 2 * traits::vector_size( d ) - 2 ;
@@ -86,7 +84,6 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
 
     template <typename D, typename E, typename Z>
-    inline
     int steqr( char compz, D& d, E& e, Z& z, minimal_workspace ) {
       int lwork = 1 ;
       if (compz != 'N') lwork = 2 * traits::vector_size( e ) ;

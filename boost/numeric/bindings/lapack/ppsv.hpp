@@ -95,7 +95,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmMatrA, typename MatrB>
-    inline
     int ppsv (SymmMatrA& a, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -164,7 +163,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmMatrA>
-    inline
     int pptrf (SymmMatrA& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -230,7 +228,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmMatrA, typename MatrB>
-    inline
     int pptrs (SymmMatrA const& a, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -300,7 +297,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename SymmMatrA>
-    inline
     int pptri (SymmMatrA& a) { //ISSUE: More correctly, triangular matrix
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK

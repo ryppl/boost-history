@@ -244,7 +244,7 @@ namespace boost { namespace numeric { namespace bindings {
     } // namespace detail
 
     template <typename A, typename W, typename Work>
-    inline int heevd (
+    int heevd (
       char jobz, char uplo, A& a,
       W& w, Work work = optimal_workspace() ) {
 

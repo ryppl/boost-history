@@ -60,7 +60,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename HermA>
-    inline
     int hetrf_block (char const q, char const ul, HermA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -85,7 +84,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA>
-    inline
     int hetrf_block (char const q, HermA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -110,7 +108,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA>
-    inline
     int hetrf_work (char const q, char const ul, HermA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -139,7 +136,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA>
-    inline
     int hetrf_work (char const q, HermA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -220,7 +216,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename HermA, typename MatrB, typename IVec, typename Work>
-      inline
       int hesv (char const ul, HermA& a, IVec& i, MatrB& b, Work& w) {
 
         int const n = traits::matrix_size1 (a);
@@ -244,7 +239,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename MatrB, typename IVec, typename Work>
-    inline
     int hesv (char const ul, HermA& a, IVec& i, MatrB& b, Work& w) {
 
       assert (ul == 'U' || ul == 'L'); 
@@ -266,7 +260,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename MatrB, typename IVec, typename Work>
-    inline
     int hesv (HermA& a, IVec& i, MatrB& b, Work& w) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -287,7 +280,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename MatrB>
-    inline
     int hesv (char const ul, HermA& a, MatrB& b) {
       // with 'internal' pivot and work vectors 
 
@@ -325,7 +317,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename MatrB>
-    inline
     int hesv (HermA& a, MatrB& b) {
       // with 'internal' pivot and work vectors 
 
@@ -396,7 +387,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename HermA, typename IVec, typename Work>
-      inline
       int hetrf (char const ul, HermA& a, IVec& i, Work& w) {
 
         int const n = traits::matrix_size1 (a);
@@ -416,7 +406,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename IVec, typename Work>
-    inline
     int hetrf (char const ul, HermA& a, IVec& i, Work& w) {
 
       assert (ul == 'U' || ul == 'L'); 
@@ -434,7 +423,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename IVec, typename Work>
-    inline
     int hetrf (HermA& a, IVec& i, Work& w) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -451,7 +439,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename Ivec>
-    inline
     int hetrf (char const ul, HermA& a, Ivec& i) {
       // with 'internal' work vector
 
@@ -479,7 +466,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename HermA, typename Ivec>
-    inline
     int hetrf (HermA& a, Ivec& i) {
       // with 'internal' work vector 
 
@@ -538,7 +524,6 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       template <typename HermA, typename MatrB, typename IVec>
-      inline
       int hetrs (char const ul, HermA const& a, IVec const& i, MatrB& b) {
 
         int const n = traits::matrix_size1 (a);

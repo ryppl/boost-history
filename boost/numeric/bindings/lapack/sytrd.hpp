@@ -50,7 +50,6 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
 
     template <typename A, typename D, typename E, typename Tau, typename W>
-    inline
     int sytrd( char uplo, A& a, D& d, E& e, Tau& tau, W& work ) {
 
       int const n = traits::matrix_size1 (a);
@@ -77,7 +76,6 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
 
     template <typename A, typename D, typename E, typename Tau>
-    inline
     int sytrd( char uplo, A& a, D& d, E& e, Tau& tau, optimal_workspace=optimal_workspace() ) {
       int info; 
       detail::sytrd( uplo, traits::matrix_size1( a ),
@@ -98,7 +96,6 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
 
     template <typename A, typename D, typename E, typename Tau>
-    inline
     int sytrd( char uplo, A& a, D& d, E& e, Tau& tau, minimal_workspace ) {
       int lwork = 1 ;
       traits::detail::array<typename traits::vector_traits<D>::value_type> work( lwork );

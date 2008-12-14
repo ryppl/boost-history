@@ -53,7 +53,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename MatrA, typename IVec>
-    inline
     int gbtrf (MatrA& a, IVec& ipiv) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
@@ -122,7 +121,6 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA, typename MatrB, typename IVec>
-    inline
     int gbtrs (char const trans, MatrA const& a, IVec const& ipiv, MatrB& b) 
     {
       assert (trans == 'N' || trans == 'T' || trans == 'C'); 

@@ -76,7 +76,7 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename D, typename E, typename B>
-    inline int ptsv( D& d, E& e, B& b ) {
+    int ptsv( D& d, E& e, B& b ) {
       int const n = traits::vector_size(d) ;
       assert( n==traits::vector_size(e)+1 ) ;
       assert( n==traits::matrix_num_rows(b) ) ;
@@ -126,7 +126,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename D, typename E>
-    inline
     int pttrf (D& d, E& e) {
       int const n = traits::vector_size (d);
       assert (n == traits::vector_size (e) + 1);
@@ -186,7 +185,6 @@ namespace boost { namespace numeric { namespace bindings {
     }
 
     template <typename D, typename E, typename MatrB>
-    inline
     int pttrs (char uplo, D const& d, E const& e, MatrB& b) {
       int const n = traits::vector_size (d);
       assert (n == traits::vector_size (e) + 1);

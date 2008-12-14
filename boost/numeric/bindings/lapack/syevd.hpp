@@ -15,7 +15,8 @@ namespace boost { namespace numeric { namespace bindings {
   namespace lapack {
 
     template <typename A, typename W, typename Work>
-    inline int syevd (
+    inline
+    int syevd (
       char jobz, char uplo, A& a,
       W& w, Work work = optimal_workspace() ) {
 
