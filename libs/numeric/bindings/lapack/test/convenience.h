@@ -98,7 +98,7 @@ template <>
 struct MatrixGenerator<fmat_t>
 {
 	typedef fmat_t Result;
-	inline Result operator() (size_t m, size_t n)
+	Result operator() (size_t m, size_t n)
 	{
 		Result mat(row_size, col_size);
 		mat(0,0) = 8.;    
@@ -119,7 +119,7 @@ template <>
 struct MatrixGenerator<dmat_t>
 {
 	typedef dmat_t Result;
-	inline Result operator() (size_t m, size_t n)
+	Result operator() (size_t m, size_t n)
 	{
 		Result mat(row_size, col_size);
 		mat(0,0) = 8.;    
@@ -140,7 +140,7 @@ template <>
 struct MatrixGenerator<fcmat_t>
 {
 	typedef fcmat_t Result;
-	inline Result operator() (size_t m, size_t n)
+	Result operator() (size_t m, size_t n)
 	{
 		typedef Result::value_type val_t;
 
@@ -163,7 +163,7 @@ template <>
 struct MatrixGenerator<dcmat_t>
 {
 	typedef dcmat_t Result;
-	inline Result operator() (size_t m, size_t n)
+	Result operator() (size_t m, size_t n)
 	{
 		typedef Result::value_type val_t;
 
@@ -191,7 +191,7 @@ template <>
 struct VectorGenerator<fvec_t>
 {
 	typedef fvec_t Result;
-	inline Result operator() (size_t m)
+	Result operator() (size_t m)
 	{
 		typedef Result::value_type val_t;
 		Result v(m);
@@ -210,7 +210,7 @@ template <>
 struct VectorGenerator<dvec_t>
 {
 	typedef dvec_t Result;
-	inline Result operator() (size_t m)
+	Result operator() (size_t m)
 	{
 		typedef Result::value_type val_t;
 		Result v(m);
@@ -229,7 +229,7 @@ template <>
 struct VectorGenerator<fcvec_t>
 {
 	typedef fcvec_t Result;
-	inline Result operator() (size_t m)
+	Result operator() (size_t m)
 	{
 		typedef Result::value_type val_t;
 		Result v(m);
@@ -248,7 +248,7 @@ template <>
 struct VectorGenerator<dcvec_t>
 {
 	typedef dcvec_t Result;
-	inline Result operator() (size_t m)
+	Result operator() (size_t m)
 	{
 		typedef Result::value_type val_t;
 		Result v(m);
