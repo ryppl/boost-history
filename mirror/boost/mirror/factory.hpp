@@ -12,6 +12,9 @@
 #define BOOST_MIRROR_FACTORY_HPP
 
 #include <boost/mirror/meta_constructors.hpp>
+#include <boost/mpl/accumulate.hpp>
+#include <boost/mirror/detail/argument_type_list.hpp>
+
 
 namespace boost {
 namespace mirror {
@@ -236,6 +239,44 @@ BOOST_PP_REPEAT(12, BOOST_MIRROR_DO_IMPLEMENT_BASE_FACTORY, 0)
 #undef BOOST_MIRROR_DECLARE_FACTORY_CONSTRUCTOR
 #undef BOOST_MIRROR_CALL_FACTORY_FUNCTOR
 
+template <class TypeList>
+struct base_factory_remove_type_list_null_types
+{
+	typedef typename mpl::remove_if<
+		TypeList,
+		detail::is_typelist_null_type<
+			mpl::_
+		>
+	>::type type;
+};
+
+template <
+        template <class> class Manufacturer,
+        class Product
+> struct make_base_factory
+{
+	typedef typename meta_constructors<Product>::param_type_lists
+		raw_param_type_lists;
+
+	typedef typename mpl::accumulate<
+		raw_param_type_lists,
+		mpl::vector0<>,
+		mpl::push_back<
+			mpl::_1,
+			base_factory_remove_type_list_null_types<
+				mpl::_2
+			>
+		>
+	>::type param_type_lists;
+
+	typedef base_factory<
+	        Manufacturer,
+	        Product,
+	        param_type_lists,
+	        mpl::int_< mpl::size< param_type_lists >::value >
+	> type;
+};
+
 } // namespace detail
 
 /** the factory template
@@ -243,28 +284,10 @@ BOOST_PP_REPEAT(12, BOOST_MIRROR_DO_IMPLEMENT_BASE_FACTORY, 0)
 template <
         template <class> class Manufacturer,
         class Product
-> struct factory
- : ::boost::mirror::detail::base_factory<
-        Manufacturer,
-        Product,
-        typename meta_constructors<Product>::param_type_lists,
-        mpl::int_<
-                mpl::size<
-                        typename meta_constructors<Product>::param_type_lists
-                >::value
-        >
->
+> struct factory : detail::make_base_factory<Manufacturer, Product>::type
 {
-        typedef ::boost::mirror::detail::base_factory<
-                Manufacturer,
-                Product,
-                typename meta_constructors<Product>::param_type_lists,
-                mpl::int_<
-                        mpl::size<
-                                typename meta_constructors<Product>::param_type_lists
-                        >::value
-                >
-        > base_class;
+        typedef typename detail::make_base_factory<Manufacturer, Product>::type
+        	base_class;
 
 	factory(void)
 	 : base_class(0, 0)

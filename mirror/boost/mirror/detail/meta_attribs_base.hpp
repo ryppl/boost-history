@@ -26,6 +26,20 @@
 namespace boost {
 namespace mirror {
 
+namespace detail {
+
+/** Allows to detect the type of the member attribute.
+ *  Thanks to Jean-Louis Leroy for suggesting this
+ */
+template<typename Class, typename Type>
+Type detect_class_member_attrib_type(Type (Class::*));
+
+template <typename Type>
+Type detect_class_member_attrib_type(Type*);
+
+
+} // namespace detail
+
 /** Forward declaration of the meta_class_attributes<> template
  */
 template <class Class, class VariantTag = detail::default_meta_class_variant>
@@ -395,6 +409,24 @@ struct meta_class_attribute_traits<
 	TYPE, \
 	NAME, \
 	typename \
+)
+
+
+/** Macro used for registering meta-data about class' attribute
+ *  that can be accessed from the outside directly without
+ *  getter / setter functions. This version automatically
+ *  detects the type of the member attribute .
+ *  Thanks to Jean-Louis Leroy for suggesting the auto-detection
+ *  mechanism.
+ */
+#define BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(\
+	SPECIFIERS, \
+	NAME \
+) BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB( \
+	SPECIFIERS, \
+	BOOST_TYPEOF( ::boost::mirror::detail::detect_class_member_attrib_type( \
+	&Class :: NAME)), \
+	NAME \
 )
 
 /** Macro used for registering meta-data about class' or template's 

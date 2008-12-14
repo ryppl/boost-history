@@ -94,14 +94,18 @@ inline static const ::std::wstring& get_param_name( \
                 BOOST_PP_SEQ_HEAD(BOOST_PP_SEQ_TAIL(TYPE_AND_NAME)) \
         )
 
+#define BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(CONSTR_INDEX, TYPENAME_KW) \
+        typedef TYPENAME_KW mpl::push_back< \
+                BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX), \
+                BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) \
+	>::type
+
+
 #define BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(CONSTR_INDEX) \
         param_type_lists_ ## CONSTR_INDEX ; \
         typedef mpl::vector0< \
         > BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) ;\
-        typedef mpl::push_back< \
-                BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX), \
-                BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) \
-        >::type
+	BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(CONSTR_INDEX, BOOST_PP_EMPTY()) 
 
 #define BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, TYPENAME_KW) \
         param_type_lists_ ## CONSTR_INDEX ; \
@@ -109,10 +113,7 @@ inline static const ::std::wstring& get_param_name( \
                 BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_CONSTR_EXTRACT_PARAM_TYPE, 0, PARAM_SEQ) \
         > BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) ;\
         BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_CONSTR_REG_CALL_PARAM_NAME, CONSTR_INDEX, PARAM_SEQ) \
-        typedef TYPENAME_KW mpl::push_back< \
-                BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX), \
-                BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) \
-        >::type
+	BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(CONSTR_INDEX, TYPENAME_KW) 
 
 #define BOOST_MIRROR_REG_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ) \
 	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, BOOST_PP_EMPTY())
