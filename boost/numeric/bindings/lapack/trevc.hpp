@@ -19,7 +19,6 @@
 #include <boost/numeric/bindings/traits/type_traits.hpp>
 #include <boost/numeric/bindings/lapack/lapack.h>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
-// #include <boost/numeric/bindings/traits/std_vector.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  include <boost/static_assert.hpp>

@@ -13,7 +13,9 @@
 
 namespace boost { namespace numeric { namespace bindings {
   namespace lapack {
+
     template <typename A, typename T, typename W, typename Z, typename IFail, typename Work>
+    inline
     int syevx (
       char jobz, char range, A& a, T vl, T vu, int il, int iu, T abstol, int& m,
       W& w, Z& z, IFail& ifail, Work work = optimal_workspace() ) {

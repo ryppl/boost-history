@@ -11,7 +11,6 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_HSEQR_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_HSEQR_HPP
 
-#include <iostream>
 #include <complex>
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <boost/numeric/bindings/traits/matrix_traits.hpp>
@@ -99,8 +98,6 @@ namespace boost { namespace numeric { namespace bindings {
                 float* wr, float* wi, float* Z, const int ldz, float* work,
                 const int* lwork){
             int info;
-//          std::cout << "I'm inside lapack::detail::hseqr_backend for floats"
-//              << std::endl;
             LAPACK_SHSEQR(job, compz, n, &ilo, &ihi, H, &ldH, wr, wi,
                     Z, &ldz, work, lwork, &info);
             return info;
@@ -113,8 +110,6 @@ namespace boost { namespace numeric { namespace bindings {
                 double* wr, double* wi, double* Z, const int ldz, double* work,
                 const int* lwork){
             int info;
-//          std::cout << "I'm inside lapack::detail::hseqr_backend for doubles"
-//              << std::endl;
             LAPACK_DHSEQR(job, compz, n, &ilo, &ihi, H, &ldH, wr, wi,
                     Z, &ldz, work, lwork, &info);
             return info;
@@ -127,8 +122,6 @@ namespace boost { namespace numeric { namespace bindings {
                 traits::complex_f* w, traits::complex_f* Z, int ldz,
                 traits::complex_f* work, const int* lwork){
             int info;
-//          std::cout << "I'm inside lapack::detail::hseqr_backend for complex<float>"
-//              << std::endl;
             LAPACK_CHSEQR(job, compz, n, &ilo, &ihi,
                     traits::complex_ptr(H), &ldH,
                     traits::complex_ptr(w),
@@ -144,8 +137,6 @@ namespace boost { namespace numeric { namespace bindings {
                 traits::complex_d* w, traits::complex_d* Z, int ldz,
                 traits::complex_d* work, const int* lwork){
             int info;
-//          std::cout << "I'm inside lapack::detail::hseqr_backend for complex<double>"
-//              << std::endl;
             LAPACK_ZHSEQR(job, compz, n, &ilo, &ihi,
                     traits::complex_ptr(H), &ldH,
                     traits::complex_ptr(w),
@@ -161,7 +152,6 @@ namespace boost { namespace numeric { namespace bindings {
         struct Hseqr< 1 >{
             template < typename A, typename W, typename V>
             int operator() ( const char job, const char compz, A& H, W& w, V& Z ){
-//              std::cout << "Inside Hseqr<1>." << std::endl;
 
                 int n = traits::matrix_size1(H);
                 typedef typename A::value_type value_type;
@@ -202,7 +192,6 @@ namespace boost { namespace numeric { namespace bindings {
         struct Hseqr< 2 >{
             template < typename A, typename W, typename V>
             int operator() ( const char job, const char compz, A& H, W& w, V& Z ){
-//              std::cout << "Inside Hseqr<2>." << std::endl;
 
                 int n = traits::matrix_size1(H);
                 typedef typename A::value_type value_type;
@@ -234,7 +223,6 @@ namespace boost { namespace numeric { namespace bindings {
 
         template < typename A, typename W, typename V>
         int hseqr( const char job, const char compz, A& H, W& w, V& Z ){
-//          std::cout << "I'm inside lapack::detail::hseqr." << std::endl;
 
             assert ( job == 'E' || job == 'S' );
             assert ( compz == 'N' || compz == 'I' || compz == 'V' );

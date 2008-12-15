@@ -15,6 +15,7 @@ namespace boost { namespace numeric { namespace bindings {
   namespace lapack {
 
     template <typename A, typename B, typename W, typename Work>
+    inline
     int sygv (int itype, char jobz, char uplo, A& a, B& b, W& w, Work work = optimal_workspace()) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
