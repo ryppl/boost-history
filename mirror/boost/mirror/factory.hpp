@@ -13,6 +13,7 @@
 
 #include <boost/mirror/meta_constructors.hpp>
 #include <boost/mpl/accumulate.hpp>
+#include <boost/mpl/push_back.hpp>
 #include <boost/mirror/detail/argument_type_list.hpp>
 
 

@@ -12,6 +12,9 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/accumulate.hpp>
+#include <boost/mpl/push_back.hpp>
+
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/size.hpp>
@@ -23,6 +26,9 @@
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/stringize.hpp>
+#include <boost/preprocessor/wstringize.hpp>
+
 
 namespace boost {
 namespace mirror {
@@ -127,7 +133,6 @@ BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( TYPE ) \
         BOOST_MIRROR_REG_CONSTRUCTOR(1, ((TYPE)(init))) \
 BOOST_MIRROR_REG_CONSTRUCTORS_END 
 
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(void)
 BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(bool)
 BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(char)
 BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(unsigned char)
