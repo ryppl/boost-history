@@ -66,7 +66,7 @@ int do_memory_type(int n, W workspace) {
            >= safety_factor*10.0* norm_frobenius( a2 ) * std::numeric_limits< real_type >::epsilon() ) return 255 ;
 
    lapack::gees( a2, e2, workspace ) ;
-   if (norm_2( e1 - e2 ) > norm_2( e1 ) * std::numeric_limits< real_type >::epsilon()) return 255 ;
+   if (norm_2( e1 - e2 ) > safety_factor*norm_2( e1 ) * std::numeric_limits< real_type >::epsilon()) return 255 ;
 
    if (norm_frobenius( a2 - a )
            >= safety_factor*10.0* norm_frobenius( a2 ) * std::numeric_limits< real_type >::epsilon() ) return 255 ;
