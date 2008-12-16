@@ -11,7 +11,6 @@
  */
 
 #include <math.h>
-#include <cstdlib>
 
 #include <boost/char_type_switch/iostream.hpp>
 #include <boost/mirror/factory.hpp>

@@ -56,6 +56,17 @@ template < \
                 param \
         ) { } \
  \
+        template <class Functor> \
+        void operator()(Functor func)  \
+        { \
+                func( \
+                        BOOST_PP_ENUM( \
+                                PARAM_COUNT, \
+                                BOOST_MIRROR_BASE_FUNCTION_CALLER_CALL_FACTORY, \
+                                0 \
+                        ) \
+                ); \
+        } \
         template <class Functor, class Consumer> \
         Consumer& operator()(Functor func, Consumer& consumer)  \
         { \

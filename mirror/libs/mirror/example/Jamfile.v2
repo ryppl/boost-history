@@ -38,6 +38,7 @@ exe tvrsl_meta_path_visitor    : traversal/sample_meta_path.cpp ;
 # configurable factories
 #
 exe fctry_tetrahedron		: factories/tetrahedron.cpp ;
+exe fn_call_inserter		: factories/inserter.cpp ;
 #
 # cooperation with Boost.Serialization
 #

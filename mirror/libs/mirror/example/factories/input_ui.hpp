@@ -32,7 +32,7 @@ struct input_ui
 		template <class Context, class ConstrIndex, class ParamIndex>
 		banner(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
 		{
-			::std::cout << 
+			::boost::cts::bcout() << 
 				::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
 				BOOST_CTS_LIT("Construct ") << 
 				BOOST_MIRRORED_TYPE(Product)::full_name() << 
@@ -58,36 +58,49 @@ struct input_ui
 	}
 };
 
-/** Specialization of the input interface, used to produce
- *  doubles by prompting the user to enter a value on the 
+/** Implementation of the input interface, used to produce
+ *  values by prompting the user to enter a value on the 
  *  console.
  */
-template <> 
-struct input_ui<double>
+template <class Product> 
+struct console_input_ui
 {
-	double x;
+	Product x;
 
 	template <class Context, class ConstrIndex, class ParamIndex>
-	input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
+	console_input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
 	{
-                ::std::cout <<
+                ::boost::cts::bcout() <<
 			::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
                         BOOST_CTS_LIT("Enter ") << 
-			BOOST_MIRRORED_TYPE(double)::full_name() << 
+			BOOST_MIRRORED_TYPE(Product)::full_name() << 
 			BOOST_CTS_LIT(" ") << 
 			boost::mirror::meta_constructors<
 				Context
 			>::base_param_name(ci, pi) <<
 			BOOST_CTS_LIT(" = ") <<
                         ::std::flush;
-		::std::cin >> x;
+		::boost::cts::bcin() >> x;
 	}
 
-	inline double operator()(void)
+	inline Product operator()(void)
 	{
 		return x;
 	}
 };
+
+#define BOOST_MIRROR_EXAMPLES_SPECIALIZE_CONSOLE_INPUT_UI(TYPE) \
+template <>  \
+struct input_ui< TYPE > : console_input_ui< TYPE > \
+{ \
+	template <class Context, class ConstrIndex, class ParamIndex> \
+	input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi) \
+	 : console_input_ui< TYPE >(tabs, pc, ci, pi) \
+	{ } \
+}; 
+
+BOOST_MIRROR_EXAMPLES_SPECIALIZE_CONSOLE_INPUT_UI(double)
+BOOST_MIRROR_EXAMPLES_SPECIALIZE_CONSOLE_INPUT_UI(::std::string)
 
 /** A manager of this input user interface, which picks the 
  *  constructor that will be used by the means of the result
@@ -106,7 +119,7 @@ struct input_ui<void>
 	input_ui(const ::boost::cts::bchar* names[], int factory_index)
 	 : tabs(0)
 	{
-		::std::cout << 
+		::boost::cts::bcout() << 
 			BOOST_CTS_LIT("Create ") << 
 			names[factory_index]  << ::std::endl;
 	}
