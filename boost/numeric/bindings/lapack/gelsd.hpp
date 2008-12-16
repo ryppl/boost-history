@@ -255,13 +255,13 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS, typename Work>
                 int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace1<Work> workspace) const
                 {
-                    const int m = traits::matrix_size1(A);
-                    const int n = traits::matrix_size2(A);
-                    const int nrhs = traits::matrix_size2(B);
+                    //const int m = traits::matrix_size1(A);
+                    //const int n = traits::matrix_size2(A);
+                    //const int nrhs = traits::matrix_size2(B);
 
-                    const int minmn = std::min(m, n);           // minmn = m < n ? m : n
-                    const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
-                    const int maxmnr = std::max(maxmn, nrhs);   // maxmnr = maxmn > nrhs ? maxmn : nrhs
+                    //const int minmn = std::min(m, n);           // minmn = m < n ? m : n
+                    //const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
+                    //const int maxmnr = std::max(maxmn, nrhs);   // maxmnr = maxmn > nrhs ? maxmn : nrhs
 
                     return gelsd(A, B, s, workspace.w_);
                 }
@@ -359,13 +359,13 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS, typename Work, typename RWork>
                 int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace2<Work, RWork> workspace) const
                 {
-                    const int m = traits::matrix_size1(A);
-                    const int n = traits::matrix_size2(A);
-                    const int nrhs = traits::matrix_size2(B);
+                    //const int m = traits::matrix_size1(A);
+                    //const int n = traits::matrix_size2(A);
+                    //const int nrhs = traits::matrix_size2(B);
 
-                    const int minmn = std::min(m, n);           // minmn = m < n ? m : n
-                    const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
-                    const int maxmnr = std::max(maxmn, nrhs);   // maxmnr = maxmn > nrhs ? maxmn : nrhs
+                    //const int minmn = std::min(m, n);           // minmn = m < n ? m : n
+                    //const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
+                    //const int maxmnr = std::max(maxmn, nrhs);   // maxmnr = maxmn > nrhs ? maxmn : nrhs
 
                     return gelsd(A, B, s, workspace.w_, workspace.wr_);
                 }
