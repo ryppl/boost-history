@@ -29,6 +29,7 @@
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/wstringize.hpp>
 
+#include <boost/char_type_switch/string.hpp>
 
 namespace boost {
 namespace mirror {
