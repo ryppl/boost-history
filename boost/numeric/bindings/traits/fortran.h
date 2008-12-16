@@ -1,8 +1,8 @@
 //
-//  Copyright (C) 2002, 2003 Si-Lab b.v.b.a., Toon Knapen and Kresimir Fresl 
+//  Copyright (C) 2002, 2003 Si-Lab b.v.b.a., Toon Knapen and Kresimir Fresl
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
@@ -26,7 +26,7 @@
 
 #endif
 
-// Next we define macro's to convert our symbols to 
+// Next we define macro's to convert our symbols to
 // the current convention
 #if defined(BIND_FORTRAN_LOWERCASE_UNDERSCORE)
 #define FORTRAN_ID( id ) id##_
@@ -34,6 +34,12 @@
 #define FORTRAN_ID( id ) id
 #else
 #error do not know how to bind to fortran calling convention
+#endif
+
+// As long as f2c return conventions are the common case,
+// we turn them on unless requested otherwise
+#ifndef BIND_FORTRAN_NO_F2C_RETURN_CONVENTIONS
+#define BIND_FORTRAN_F2C_RETURN_CONVENTIONS
 #endif
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_FORTRAN_H

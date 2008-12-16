@@ -32,7 +32,11 @@ extern "C"
   void   BLAS_CAXPY(const int *n, const fcomplex_t* alpha, const fcomplex_t* x, const int* incx,  fcomplex_t* y, const int* incy);
   void   BLAS_ZAXPY(const int *n, const dcomplex_t* alpha, const dcomplex_t* x, const int* incx,  dcomplex_t* y, const int* incy);
 
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
   float  BLAS_SDOT (const int *n, const float  *x, const int *incx, const float  *y, const int *incy);
+#else
+  double BLAS_SDOT (const int *n, const float  *x, const int *incx, const float  *y, const int *incy);
+#endif
   double BLAS_DDOT (const int *n, const double *x, const int *incx, const double *y, const int *incy);
 
   void   BLAS_CDOTU(fcomplex_t* ret, const int *n, const fcomplex_t *x, const int *incx, const fcomplex_t *y, const int *incy);
@@ -41,14 +45,30 @@ extern "C"
   void   BLAS_CDOTC(fcomplex_t* ret, const int *n, const fcomplex_t *x, const int *incx, const fcomplex_t *y, const int *incy);
   void   BLAS_ZDOTC(dcomplex_t* ret, const int *n, const dcomplex_t *x, const int *incx, const dcomplex_t *y, const int *incy);
 
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
   float   BLAS_SNRM2(const int *n, const float  *x, const int *incx);
+#else
+  double  BLAS_SNRM2(const int *n, const float  *x, const int *incx);
+#endif
   double  BLAS_DNRM2(const int *n, const double *x, const int *incx);
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
   float   BLAS_SCNRM2(const int *n, const fcomplex_t  *x, const int *incx);
+#else
+  double  BLAS_SCNRM2(const int *n, const fcomplex_t  *x, const int *incx);
+#endif
   double  BLAS_DZNRM2(const int *n, const dcomplex_t *x, const int *incx);
 
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
   float   BLAS_SASUM(const int *n, const float  *x, const int *incx);
+#else
+  double  BLAS_SASUM(const int *n, const float  *x, const int *incx);
+#endif
   double  BLAS_DASUM(const int *n, const double *x, const int *incx);
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
   float   BLAS_SCASUM(const int *n, const fcomplex_t  *x, const int *incx);
+#else
+  double  BLAS_SCASUM(const int *n, const fcomplex_t  *x, const int *incx);
+#endif
   double  BLAS_DZASUM(const int *n, const dcomplex_t *x, const int *incx);
 
   void BLAS_SCOPY( const int *n, const float  *x, const int *incx, float  *y, const int *incy);
