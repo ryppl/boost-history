@@ -241,22 +241,23 @@ struct TwoVectorOperations< std::complex<float>, V>
   template <typename W>
   int operator()(W& w) const {
      using namespace boost::numeric::bindings::blas ;
+     real_type safety_factor (1.5);
 
      copy_vector( w );
 
      // Test blas routines
      value_type prod = dotc( this->v_, w );
      if ( std::abs(prod - inner_prod( conj(this->v1_ref_), this->v2_ref_ ))
-          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+          > safety_factor*std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
      prod = dotu( this->v_, w );
      if ( std::abs(prod - inner_prod( this->v1_ref_, this->v2_ref_ ))
-          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+          > safety_factor*std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
      axpy( value_type(2.0), this->v_, w );
      for (size_t i=0; i<this->size(); ++i)
         if ( std::abs(w[i] - (this->v2_ref_(i) + value_type(2.0)*this->v1_ref_(i)))
-          > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+          > safety_factor*std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
 
      scal( value_type(0.0), w ) ;
      copy( this->v_, w ) ;
@@ -285,22 +286,23 @@ struct TwoVectorOperations< std::complex<double>, V>
   template <typename W>
   int operator()(W& w) const {
      using namespace boost::numeric::bindings::blas ;
+     real_type safety_factor (1.5);
 
      copy_vector( w );
 
      // Test blas routines
      value_type prod = dotc( this->v_, w );
      if ( std::abs(prod - inner_prod( conj(this->v1_ref_), this->v2_ref_ ))
-          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+          > safety_factor*std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
      prod = dotu( this->v_, w );
      if ( std::abs(prod - inner_prod( this->v1_ref_, this->v2_ref_ ))
-          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+          > safety_factor*std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
      axpy( value_type(2.0), this->v_, w );
      for (size_t i=0; i<this->size(); ++i)
         if ( std::abs(w[i] - (this->v2_ref_(i) + value_type(2.0)*this->v1_ref_(i)))
-          > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+          > safety_factor*std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
 
      scal( value_type(0.0), w ) ;
      copy( this->v_, w ) ;
