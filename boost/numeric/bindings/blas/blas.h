@@ -39,11 +39,27 @@ extern "C"
 #endif
   double BLAS_DDOT (const int *n, const double *x, const int *incx, const double *y, const int *incy);
 
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  fcomplex_t BLAS_CDOTU(const int *n, const fcomplex_t *x, const int *incx, const fcomplex_t *y, const int *incy);
+#else
   void   BLAS_CDOTU(fcomplex_t* ret, const int *n, const fcomplex_t *x, const int *incx, const fcomplex_t *y, const int *incy);
+#endif
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  dcomplex_t BLAS_ZDOTU(const int *n, const dcomplex_t *x, const int *incx, const dcomplex_t *y, const int *incy);
+#else
   void   BLAS_ZDOTU(dcomplex_t* ret, const int *n, const dcomplex_t *x, const int *incx, const dcomplex_t *y, const int *incy);
+#endif
 
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  fcomplex_t BLAS_CDOTC(const int *n, const fcomplex_t *x, const int *incx, const fcomplex_t *y, const int *incy);
+#else
   void   BLAS_CDOTC(fcomplex_t* ret, const int *n, const fcomplex_t *x, const int *incx, const fcomplex_t *y, const int *incy);
+#endif
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  dcomplex_t BLAS_ZDOTC(const int *n, const dcomplex_t *x, const int *incx, const dcomplex_t *y, const int *incy);
+#else
   void   BLAS_ZDOTC(dcomplex_t* ret, const int *n, const dcomplex_t *x, const int *incx, const dcomplex_t *y, const int *incy);
+#endif
 
 #ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
   float   BLAS_SNRM2(const int *n, const float  *x, const int *incx);

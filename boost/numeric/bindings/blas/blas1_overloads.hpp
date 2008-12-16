@@ -34,12 +34,28 @@ namespace boost { namespace numeric { namespace bindings { namespace blas { name
   inline double dot(const int& n, const double* x, const int& incx, const double* y, const int& incy) { return BLAS_DDOT( &n, x, &incx, y, &incy ) ; }
 
   // x^T . y
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  inline void dotu(complex_f& ret, const int& n, const complex_f* x, const int& incx, const complex_f* y, const int& incy) { ret = complex_ret( BLAS_CDOTU( &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ) ; }
+#else
   inline void dotu(complex_f& ret, const int& n, const complex_f* x, const int& incx, const complex_f* y, const int& incy) { BLAS_CDOTU( complex_ptr( &ret ), &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ; }
+#endif
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  inline void dotu(complex_d& ret, const int& n, const complex_d* x, const int& incx, const complex_d* y, const int& incy) { ret = complex_ret( BLAS_ZDOTU( &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ) ; }
+#else
   inline void dotu(complex_d& ret, const int& n, const complex_d* x, const int& incx, const complex_d* y, const int& incy) { BLAS_ZDOTU( complex_ptr( &ret ), &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ; }
+#endif
 
   // x^H . y
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  inline void dotc(complex_f& ret, const int& n, const complex_f* x, const int& incx, const complex_f* y, const int& incy) { ret = complex_ret( BLAS_CDOTC( &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ) ; }
+#else
   inline void dotc(complex_f& ret, const int& n, const complex_f* x, const int& incx, const complex_f* y, const int& incy) { BLAS_CDOTC( complex_ptr( &ret ), &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ; }
+#endif
+#ifndef BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+  inline void dotc(complex_d& ret, const int& n, const complex_d* x, const int& incx, const complex_d* y, const int& incy) { ret = complex_ret( BLAS_ZDOTC( &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ) ; }
+#else
   inline void dotc(complex_d& ret, const int& n, const complex_d* x, const int& incx, const complex_d* y, const int& incy) { BLAS_ZDOTC( complex_ptr( &ret ), &n, complex_ptr( x ), &incx, complex_ptr( y ), &incy ) ; }
+#endif
 
   // euclidean norm
   inline float  nrm2(const int& n, const float*   x, const int& incx) { return BLAS_SNRM2( &n, x, &incx ) ; }

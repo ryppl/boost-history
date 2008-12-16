@@ -55,6 +55,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   inline       fcomplex_t*  complex_ptr(      complex_f* c) { return reinterpret_cast<      fcomplex_t*>( c ) ; }
   inline       dcomplex_t*  complex_ptr(      complex_d* c) { return reinterpret_cast<      dcomplex_t*>( c ) ; }
 
+  inline complex_f complex_ret(const fcomplex_t& ret) { return reinterpret_cast<const complex_f&>( ret ) ; }
+  inline complex_d complex_ret(const dcomplex_t& ret) { return reinterpret_cast<const complex_d&>( ret ) ; }
+
 }}}}
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_TYPE_TRAITS_HPP

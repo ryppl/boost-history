@@ -17,8 +17,14 @@
 
 #ifndef BOOST_NUMERIC_BINDINGS_USE_COMPLEX_STRUCT 
 
-typedef float  fcomplex_t ;
-typedef double dcomplex_t ;
+#if defined(__GNUC__)
+typedef _Complex float  fcomplex_t ;
+typedef _Complex double dcomplex_t ;
+#else
+#include <complex>
+typedef std::complex<float>  fcomplex_t ;
+typedef std::complex<double> dcomplex_t ;
+#endif
 
 #else
 

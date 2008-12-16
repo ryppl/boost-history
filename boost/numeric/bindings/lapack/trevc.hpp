@@ -68,7 +68,7 @@ namespace boost { namespace numeric { namespace bindings {
                  int const mm, int& m, traits::complex_f* work, int& info)
       {
         LAPACK_CTREVC (&side, &howmny, select, &n, traits::complex_ptr(t), &ldt, traits::complex_ptr(vl), &ldvl,
-                        traits::complex_ptr(vr), &ldvr, &mm, &m, traits::complex_ptr(work+n), traits::complex_ptr(work), &info);
+                        traits::complex_ptr(vr), &ldvr, &mm, &m, traits::complex_ptr(work+n), reinterpret_cast<float*>(work), &info);
       }
 
       inline
@@ -78,7 +78,7 @@ namespace boost { namespace numeric { namespace bindings {
       {
         LAPACK_ZTREVC (&side, &howmny, select, &n, traits::complex_ptr(t), &ldt,
                        traits::complex_ptr(vl), &ldvl, traits::complex_ptr(vr), &ldvr,
-                       &mm, &m, traits::complex_ptr(work+n), traits::complex_ptr(work), &info);
+                       &mm, &m, traits::complex_ptr(work+n), reinterpret_cast<double*>(work), &info);
       }
 
     }
