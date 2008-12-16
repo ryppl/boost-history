@@ -47,6 +47,7 @@ int do_memory_type(int n, W workspace) {
 
    typedef ublas::matrix<T, ublas::column_major> matrix_type ;
    typedef ublas::vector<complex_type>           vector_type ;
+   double safety_factor (1.5);
 
    // Set matrix
    matrix_type a( n, n );
@@ -62,13 +63,13 @@ int do_memory_type(int n, W workspace) {
 
    // Check Schur factorization
    if (norm_frobenius( prod( a2, z ) - prod( z, a ) )
-           >= 10.0* norm_frobenius( a2 ) * std::numeric_limits< real_type >::epsilon() ) return 255 ;
+           >= safety_factor*10.0* norm_frobenius( a2 ) * std::numeric_limits< real_type >::epsilon() ) return 255 ;
 
    lapack::gees( a2, e2, workspace ) ;
    if (norm_2( e1 - e2 ) > norm_2( e1 ) * std::numeric_limits< real_type >::epsilon()) return 255 ;
 
    if (norm_frobenius( a2 - a )
-           >= 10.0* norm_frobenius( a2 ) * std::numeric_limits< real_type >::epsilon() ) return 255 ;
+           >= safety_factor*10.0* norm_frobenius( a2 ) * std::numeric_limits< real_type >::epsilon() ) return 255 ;
 
 
    return 0 ;

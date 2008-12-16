@@ -226,7 +226,7 @@ int test_square_gelsd(StreamType& oss)
 	MatType mat(MatrixGenerator<MatType>()(row_size, col_size));
 	VecType vec(VectorGenerator<VecType>()(row_size));
 	
-	const int m = traits::matrix_size1(mat);
+	//const int m = traits::matrix_size1(mat);
 	const int n = traits::matrix_size2(mat);
 
 #if USE_OPTIMAL_WORKSPACE
@@ -281,7 +281,7 @@ int test_under_gelsd(StreamType& oss)
 	MatType mat(MatrixGenerator<MatType>()(row_range, col_size));
 	VecType vec(VectorGenerator<VecType>()(row_size));
 
-	const int m = traits::matrix_size1(mat);
+	//const int m = traits::matrix_size1(mat);
 	const int n = traits::matrix_size2(mat);
 
 #if USE_OPTIMAL_WORKSPACE
@@ -336,7 +336,7 @@ int test_over_gelsd(StreamType& oss)
 	MatType mat(MatrixGenerator<MatType>()(row_size, col_range));
 	VecType vec(VectorGenerator<VecType>()(row_size));
 
-	const int m = traits::matrix_size1(mat);
+	//const int m = traits::matrix_size1(mat);
 	const int n = traits::matrix_size2(mat);
 
 #if USE_OPTIMAL_WORKSPACE
@@ -393,7 +393,7 @@ int test_multiple_gelsd(StreamType& oss)
 	ublas::column(vec, 0) = VectorGenerator<VecType>()(mat.size1());
 	ublas::column(vec, 1) = VectorGenerator<VecType>()(mat.size1());
 
-	const int m = traits::matrix_size1(mat);
+	//const int m = traits::matrix_size1(mat);
 	const int n = traits::matrix_size2(mat);
 	const int nrhs = traits::matrix_size2(vec);
 
