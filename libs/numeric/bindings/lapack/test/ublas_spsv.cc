@@ -100,7 +100,7 @@ int main (int argc, char **argv) {
 
   // part 2 
 
-  std::vector<int> ipiv (n); 
+  std::vector<integer_t> ipiv (n); 
 
   int err = lapack::spsv (sal1, ipiv, bl1);  
   print_m (sal1, "sal1 factored"); 

@@ -103,7 +103,7 @@ int main (int argc, char **argv) {
 
   // part 2 
 
-  std::vector<int> ipiv (n); 
+  std::vector<integer_t> ipiv (n); 
   std::vector<real_t> work (1); 
 
   int err = lapack::sysv ('L', al1, ipiv, bl1, work);  

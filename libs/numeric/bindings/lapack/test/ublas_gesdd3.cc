@@ -69,7 +69,7 @@ int main() {
 
   size_t liw = lapack::gesdd_iwork (a);
   cout << "liw: " << liw << endl << endl; 
-  std::vector<int> iw (liw);
+  std::vector<integer_t> iw (liw);
 
   lapack::gesdd ('A', a, s, u, vt, w, iw);
 

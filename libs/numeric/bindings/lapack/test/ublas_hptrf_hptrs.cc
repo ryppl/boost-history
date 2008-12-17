@@ -66,7 +66,7 @@ int main() {
   print_m (cbu, "cbu"); 
   cout << endl; 
 
-  std::vector<int> ipiv (3); 
+  std::vector<integer_t> ipiv (3); 
 
   int ierr = lapack::hptrf (hcal, ipiv); 
   if (ierr == 0) {

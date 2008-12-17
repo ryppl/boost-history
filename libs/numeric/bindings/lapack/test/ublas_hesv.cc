@@ -77,7 +77,7 @@ int main() {
          << ierr << endl;
   cout << endl; 
 
-  std::vector<int> ipiv (3); 
+  std::vector<integer_t> ipiv (3); 
   std::vector<cmplx_t> cwork (3*64); 
   // 3*64 -- optimal size
 

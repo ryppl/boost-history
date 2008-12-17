@@ -93,7 +93,7 @@ int main (int argc, char **argv) {
   m_t al1 (al), au1 (au);  // for part 2
   m_t bl1 (bl), bu1 (bu); 
 
-  std::vector<int> ipiv (n); 
+  std::vector<integer_t> ipiv (n); 
   
   int err = lapack::sytrf (sal, ipiv);  
   if (err == 0) {

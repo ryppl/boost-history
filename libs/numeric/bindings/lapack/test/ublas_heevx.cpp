@@ -43,8 +43,8 @@ int do_memory_uplo(int n, W& workspace ) {
    matrix_type z( a );
 
    // Compute Schur decomposition.
-   int m;
-   ublas::vector<int> ifail(n);
+   integer_t m;
+   ublas::vector<integer_t> ifail(n);
    
    hermitian_type h_a( a );
    lapack::heevx( 'V', 'A', h_a, real_type(0.0), real_type(1.0), 2, n-1, real_type(1e-28), m,
@@ -67,7 +67,7 @@ int do_memory_uplo(int n, W& workspace ) {
    matrix_range a_r( a, r, r );
    matrix_range z_r( z, r, r );
    ublas::vector_range< vector_type> e_r( e1, r );
-   ublas::vector<int> ifail_r(n-2);
+   ublas::vector<integer_t> ifail_r(n-2);
 
    hermitian_range_type h_a_r( a_r );
    lapack::heevx( 'V', 'A', h_a_r, real_type(0.0), real_type(1.0), 2, n-1, real_type(1e-28), m,
@@ -93,7 +93,7 @@ int do_memory_type(int n, W workspace) {
 template <typename T>
 struct Workspace {
    typedef ublas::vector< T >                                               array_type ;
-   typedef ublas::vector< int >                                             int_array_type ;
+   typedef ublas::vector< integer_t >                                       int_array_type ;
    typedef lapack::detail::workspace1< array_type >                         first_type;
    typedef lapack::detail::workspace1< int_array_type >                     second_type;
    typedef std::pair<first_type, second_type>                               type ;
@@ -115,7 +115,7 @@ template <typename T>
 struct Workspace< std::complex<T> > {
    typedef ublas::vector< std::complex<T> >                                 complex_array_type ;
    typedef ublas::vector< T >                                               real_array_type ;
-   typedef ublas::vector< int >                                             int_array_type ;
+   typedef ublas::vector< integer_t >                                       int_array_type ;
    typedef lapack::detail::workspace2< complex_array_type,real_array_type > first_type;
    typedef lapack::detail::workspace1< int_array_type >                     second_type;
    typedef std::pair<first_type, second_type>                               type ;

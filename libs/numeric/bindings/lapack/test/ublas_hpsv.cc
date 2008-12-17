@@ -75,7 +75,7 @@ int main() {
          << ierr << endl;
   cout << endl; 
 
-  std::vector<int> ipiv (3); 
+  std::vector<integer_t> ipiv (3); 
 
   ierr = lapack::hpsv (hcau, ipiv, cbu); 
   if (ierr == 0) {

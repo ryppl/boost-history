@@ -9,7 +9,7 @@ int do_value_type()
   //boost::numeric::ublas::vector< value_type > z(10) ; 
   value_type z ;
   boost::numeric::ublas::vector< value_type > cy(10) ; 
-  int nz;
+  integer_t nz;
   boost::numeric::bindings::amos::besi( z, 1.0, 1, cy, nz ) ;
 
   return 0;

@@ -64,8 +64,8 @@ int do_memory_uplo(int n, W& workspace ) {
 
    ublas::hermitian_adaptor<banded_type, UPLO> h( a ), h2( a2 );
    real_type vl = 0, vu = 1, abstol = 1e-28;
-   int il = 1, iu = n-1, m;
-   ublas::vector<int> ifail(n);
+   integer_t il = 1, iu = n-1, m;
+   ublas::vector<integer_t> ifail(n);
 
 
    // Compute Schur decomposition.
@@ -86,7 +86,7 @@ int do_memory_uplo(int n, W& workspace ) {
    ublas::hermitian_adaptor< banded_range, UPLO> h_r( a_r );
    ublas::vector_range< vector_type> e_r( e1, r );
    ublas::matrix_range< matrix_type> z_r( z, r, r );
-   ublas::vector<int> ifail_r(n-2);
+   ublas::vector<integer_t> ifail_r(n-2);
 
    lapack::hbevx( 'V', 'A', h_r, q, vl, vu, il, iu, abstol, m, e_r, z_r, ifail_r, workspace ) ;
 
@@ -110,7 +110,7 @@ int do_memory_type(int n, W workspace) {
 template <typename T>
 struct Workspace {
    typedef ublas::vector< T >                                               array_type ;
-   typedef ublas::vector< int >                                             int_array_type ;
+   typedef ublas::vector< integer_t >                                       int_array_type ;
    typedef lapack::detail::workspace1< array_type >                         first_type;
    typedef lapack::detail::workspace1< int_array_type >                     second_type;
    typedef std::pair<first_type, second_type>                               type ;
@@ -132,7 +132,7 @@ template <typename T>
 struct Workspace< std::complex<T> > {
    typedef ublas::vector< std::complex<T> >                                 complex_array_type ;
    typedef ublas::vector< T >                                               real_array_type ;
-   typedef ublas::vector< int >                                             int_array_type ;
+   typedef ublas::vector< integer_t >                                       int_array_type ;
    typedef lapack::detail::workspace2< complex_array_type,real_array_type > first_type;
    typedef lapack::detail::workspace1< int_array_type >                     second_type;
    typedef std::pair<first_type, second_type>                               type ;

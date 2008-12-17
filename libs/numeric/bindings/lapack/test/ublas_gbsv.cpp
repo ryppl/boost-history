@@ -15,7 +15,7 @@ static const char TRANSPOSE = 'T';
 template <typename MatrA, typename MatrB>
 void InPlaceSolve(MatrA& a, MatrB& b)
 {
-  std::vector<int> piv(a.size1());
+  std::vector<integer_t> piv(a.size1());
   int ret = lapack::gbtrf(a, piv);
   if (ret < 0) {
     //CStdString err;

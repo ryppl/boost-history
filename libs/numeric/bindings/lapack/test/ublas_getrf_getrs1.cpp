@@ -10,7 +10,7 @@ void test_getrf_getrs(matrix_type& lu, matrix_type& x)
 
   numerics::matrix< value_type > a( lu ) ; // tmp to verify result
   numerics::matrix< value_type > b( x ) ;  // tmp to verify result
-  std::vector< int > ipiv( x.size1() ) ;
+  std::vector< integer_t > ipiv( x.size1() ) ;
 
   boost::numeric::bindings::lapack::getrf( lu, ipiv ) ;
   matrix_type ia( lu );

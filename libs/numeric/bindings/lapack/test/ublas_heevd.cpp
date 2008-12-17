@@ -79,7 +79,7 @@ int do_memory_type(int n, W workspace) {
 template <typename T>
 struct Workspace {
    typedef ublas::vector< T >                                               array_type ;
-   typedef ublas::vector< int >                                             int_array_type ;
+   typedef ublas::vector< integer_t >                                       int_array_type ;
    typedef lapack::detail::workspace1< array_type >                         first_type;
    typedef lapack::detail::workspace1< int_array_type >                     second_type;
    typedef std::pair<first_type, second_type>                               type ;
@@ -101,7 +101,7 @@ template <typename T>
 struct Workspace< std::complex<T> > {
    typedef ublas::vector< std::complex<T> >                                 complex_array_type ;
    typedef ublas::vector< T >                                               real_array_type ;
-   typedef ublas::vector< int >                                             int_array_type ;
+   typedef ublas::vector< integer_t >                                       int_array_type ;
    typedef lapack::detail::workspace2< complex_array_type,real_array_type > first_type;
    typedef lapack::detail::workspace1< int_array_type >                     second_type;
    typedef std::pair<first_type, second_type>                               type ;
