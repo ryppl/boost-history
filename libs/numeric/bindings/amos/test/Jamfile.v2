@@ -8,5 +8,8 @@ project libs/numeric/bindings/amos/test : requirements
         <include>$(B_ROOT)
         <library>/numeric-bindings//amos_lib ;
 
-exe amos : amos.cpp ;
+import testing ;
 
+alias bindings-blas-tests :
+    [ run amos.cpp ]
+;
