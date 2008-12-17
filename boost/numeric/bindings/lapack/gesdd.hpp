@@ -153,6 +153,7 @@ namespace boost { namespace numeric { namespace bindings {
         int m3 = 3 * minmn;
         int m4 = 4 * minmn;
         int minw;
+        assert(jobz == 'N' || jobz == 'O' || jobz == 'S' || jobz == 'A');
         if (jobz == 'N') {
           // leading comments:
           //   LWORK >= 3*min(M,N) + max(max(M,N), 6*min(M,N))
@@ -177,7 +178,7 @@ namespace boost { namespace numeric { namespace bindings {
           minw += m3 * minmn;
         }
         else {
-          std::cerr << "Invalid option passed to gesdd" << std::endl ;
+          assert(false);
           return 0 ;
         }
         return minw;

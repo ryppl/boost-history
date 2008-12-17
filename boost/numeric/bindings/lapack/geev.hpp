@@ -20,6 +20,7 @@
 #include <boost/numeric/bindings/lapack/lapack.h>
 #include <boost/numeric/bindings/lapack/workspace.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
+#include <boost/numeric/bindings/traits/detail/utils.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  include <boost/static_assert.hpp>
@@ -169,8 +170,10 @@ namespace boost { namespace numeric { namespace bindings {
                               vl_real, &ldvl, vr_real, &ldvr,
                               work.storage(), &lwork);
 
-        for (int i = 0; i < n; i++)
-          traits::vector_storage(w)[i] = std::complex<value_type>(wr[i], wi[i]);
+        traits::detail::interlace(traits::vector_storage(wr),
+                                  traits::vector_storage(wr)+n,
+                                  traits::vector_storage(wi),
+                                  traits::vector_storage(w));
         return result;
       }
 
@@ -223,27 +226,28 @@ namespace boost { namespace numeric { namespace bindings {
           ldvr = traits::matrix_size2(*vr);
         }
 
+        typedef std::complex<value_type> cmplx_t;
         for (int i = 0; i < n; i++)
         {
-          traits::vector_storage(w)[i] = std::complex<value_type>(wr[i], wi[i]);
+          traits::vector_storage(w)[i] = cmplx_t(wr[i], wi[i]);
           if (wi[i] != 0)
           {
             assert(i+1 < n);
             assert(wr[i+1] == wr[i]);
             assert(wi[i+1] == -wi[i]);
 
-            traits::vector_storage(w)[i+1] = std::complex<value_type>(wr[i+1], wi[i+1]);
+            traits::vector_storage(w)[i+1] = cmplx_t(wr[i+1], wi[i+1]);
             for (int j = 0; j < n; j++)
             {
               if (vl)
               {
-                vl_stor[i*ldvl+j] = std::complex<value_type>(vl2[i*n+j], vl2[(i+1)*n+j]);
-                vl_stor[(i+1)*ldvl+j] = std::complex<value_type>(vl2[i*n+j], -vl2[(i+1)*n+j]);
+                vl_stor[i*ldvl+j] = cmplx_t(vl2[i*n+j], vl2[(i+1)*n+j]);
+                vl_stor[(i+1)*ldvl+j] = cmplx_t(vl2[i*n+j], -vl2[(i+1)*n+j]);
               }
               if (vr)
               {
-                vr_stor[i*ldvr+j] = std::complex<value_type>(vr2[i*n+j], vr2[(i+1)*n+j]);
-                vr_stor[(i+1)*ldvr+j] = std::complex<value_type>(vr2[i*n+j], -vr2[(i+1)*n+j]);
+                vr_stor[i*ldvr+j] = cmplx_t(vr2[i*n+j], vr2[(i+1)*n+j]);
+                vr_stor[(i+1)*ldvr+j] = cmplx_t(vr2[i*n+j], -vr2[(i+1)*n+j]);
               }
             }
 

@@ -18,6 +18,7 @@
 #include <boost/numeric/bindings/lapack/lapack.h>
 #include <boost/numeric/bindings/lapack/workspace.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
+#include <boost/numeric/bindings/traits/detail/utils.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  include <boost/static_assert.hpp>
@@ -115,7 +116,7 @@ namespace boost { namespace numeric { namespace bindings {
             return info;
         }
 
-        // complex<float>
+        // complex_f
         inline
         int hseqr_backend(const char* job, const char* compz, int* n,
                 const int ilo, const int ihi, traits::complex_f* H, const int ldH,
@@ -130,7 +131,7 @@ namespace boost { namespace numeric { namespace bindings {
             return info;
         }
 
-        // complex<double>
+        // complex_d
         inline
         int hseqr_backend(const char* job, const char* compz, int* n,
                 const int ilo, const int ihi, traits::complex_d* H, const int ldH,
@@ -180,10 +181,10 @@ namespace boost { namespace numeric { namespace bindings {
                                             traits::matrix_storage(Z),
                                             traits::leading_dimension(Z),
                                             work.storage(), &lwork);
-
-                for (int i = 0; i < n; i++)
-                    w[i] = std::complex<value_type>(wr[i], wi[i]);
-
+                traits::detail::interlace(traits::vector_storage(wr),
+                                          traits::vector_storage(wr)+n,
+                                          traits::vector_storage(wi),
+                                          traits::vector_storage(w));
                 return result;
             }
         };
