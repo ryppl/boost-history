@@ -754,7 +754,7 @@ int test_main(int, char*[])
 	    }	// for
     }   // for
 
-    std::cout << "\nTest of rcombo.hpp is complete." << std::endl;
+    std::cout << "\nTest of combinatorial.hpp is complete." << std::endl;
 
     return boost::minimal_test::errors_counter() > 0 ? EXIT_FAILURE : EXIT_SUCCESS;
 
