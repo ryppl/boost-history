@@ -129,9 +129,89 @@ This choice has been made, because template parameters have to be
 instantiated with different types inside itl class templates. This problem
 is described in detail in section JODO.
 
-Required Concepts
+[endsect][/ Class templates]
+
+[section Required Concepts]
+
+There are uniform requirements for the template parameters 
+across *itl's* class templates that are summarized in the
+table below.
+
+[table 
+[[Kind]      [Parameter]  [requires]                                                  ]
+[[`typename`][`DomainT`]  [`Regular<DomainT> && LessThanComparable<DomainT,Compare>` 
+                           `&& (IsIncrementable<DomainT>||HasUnon<DomainT>)`] ]
+[[][]                     [`if(IsIntegral<DomainT>) IsIncrementable<DomainT> && IsDecrementable<DomainT>`] ] 
+[[`typename`][`CodomainT`][`EqualityComparable<CodomainT>` 
+                           `&& Addable<CodomainT,Combine>` 
+                           `&& Subtractable<CodomainT,Inverse<Combine> >`]            ]
+[[`template`][`Compare`]  [`LessThanComparable<DomainT,Compare>`]                     ]
+[[`template`][`Combine`]  [`Addable<CodomainT,Combine>` 
+                           `&& Subtractable<CodomainT,Inverse<Combine> >`]]
+]
+
+[h5 Requirements on DomainT]
+
+A domain type `DomainT` for intervals and interval conainer
+has to satisfy the requirements of concept `Regular` which
+implies among other properties the existence of a copy and
+a default constructor. In addition `IsIncrementable`
+*or* `HasUnon` is required for `DomainT`.
+
+In the *itl* we represent an empty interval by a closed
+interval `[b,a]` where `a < b` (here `<` is represents `Compare<DomainT>()`). 
+To construct one of these empty intervals as default constructor
+for any type `DomainT` we choose `[1,0]`, where `0` is a null-value or `neutron`
+and `1` is a one-value or `unon`:
+`` 
+interval() := [unon<DomainT>::value(), neutron<DomainT>::value()]
+``
+`Neutrons` are implemented via call of the default constructor of
+`DomainT`. An `unon<T>::value()` is implemented by default as a `neutron`, 
+that is incremented once. 
+``
+template <class Type> 
+inline Type unon<Type>::value(){ return succ(neutron<Type>::value()); };
+``
+So a type `DomainT` that is `incrementable` will
+also have an `unon`. If it does not, an `unon` can be provided.
+An `unon` can be any value, that is greater as the neutron value
+in the Compare order given.
+
+An example of a type, that has a neutron but no increment is
+string. So for std::string an unon is implemented like this:
+``
+// Smallest 'visible' string that is greater than the empty string.
+template <>    
+inline std::string unon<std::string>::value(){ return std::string(" "); };
+``
+
+Just as the `_Key` type of std::sets and maps 
+`DomainT` is required to be 
+`LessThanComparable<DomainT,Compare>` wich means, that
+`Compare` has to be a
+[@http://en.wikipedia.org/wiki/Strict_weak_ordering strict weak ordering] on `DomainT`.
+
+Finally, if `DomainT` is an integral type, `DomainT` needs to
+be `incrementable` and `decrementable`. This in(de)crementability
+needs to be implemented on the smallest possible unit of the
+integral type. This seems like being trivial but there are types like e.g.
+`boost::date_time::ptime`, that are integral in nature but do
+not provide the required in(de)cementation.
+
+For __itl_itvs__ incementation and decementation is used
+for moving open to closed interval borders like e.g.
+`[2,43) == [2,42]`. Such operations always need only
+one in(de)crementation, if `DomainT` is an integral type. 
+
+[h5 Requirements on CodomainT]
 
 
+
+[endsect][/ Required Concepts]
+
+
+[section Associated Types]
 
 [table Associated types of sets
 [[Aspects]        []        [type]            [interval]                  [interval_sets]                 [itl::set]        [std::set]]
@@ -146,7 +226,7 @@ Required Concepts
 [[]               []        [difference_type] [difference <DomainT>::type][interval_type:: difference_type][std::size_t]     []]
 ]                                     
 
-[endsect]
+[endsect][/ Associated Types]
 
 [section Function Matrix]
 
