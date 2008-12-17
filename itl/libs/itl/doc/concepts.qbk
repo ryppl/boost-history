@@ -1,0 +1,310 @@
+[/
+    Copyright (c) 2008-2009 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Concepts]
+
+[section Aspects]
+
+There are two major ['*aspects*] or ['*views*] of itl containers. The first and predominant
+aspect is called __bi_conceptual__. The second and minor aspect is called __bi_iterative__ or
+iteration related.
+
+[/ table
+[[Aspect]    [Abstraction level][]                  []                    [Practical]]
+[[__Conceptual__][more abstract][concept related]       [iterator independent][interval_sets(maps) can be used as sets(maps) 
+                                                                           except for element iteration.]]
+[[__Iterative__] [less abstract][implementation related][iterator dependent]  [interval_sets(maps) iterate over intervals]]
+]
+
+[table
+[[][__Conceptual__][__Iterative__]]
+[[Abstraction level][more abstract][less abstract]]
+[[][sequence of elements is irrelevant][sequence of elements is relevant]]
+[[][iterator independent][iterator dependent]]
+[[Informs about][membership of elements][sequence of intervals (segmentation)]]
+[[Equality][equality of elements][lexicographical equality]]
+[[Practical][interval_sets(maps) can be used as sets(maps) 
+             of elements(element value pairs)             ]
+                                                           [Segmentation information is available. 
+                                                            See e.g. [link boost_itl.examples.month_and_week_grid Timegrids for months and weeks]]]
+[[]         [no iteration over elements]                   [iteration over intervals]]
+]
+
+On the __conceptual__ aspect
+
+* in __itv__ implements a set of elements partially.
+* an __itv_set__ implements a set of elements.
+* an __itv_map__ implements a map of element value pairs.
+
+On the iteration related or __iterative__ aspect
+
+* an __itv_set__ implements a set of intervals.
+* an __itv_map__ implements a map of interval value pairs.
+
+[endsect][/ Aspects]
+
+
+[section Sets and Maps]
+
+[h5 A Set Concept]
+
+On the __conceptual__ aspect the __itl_set__ and all __itv_bsets__ are models 
+of a concept `Set`.
+The `Set` concept of the Interval Template Library refers to the
+mathematical notion of a set.
+
+[table
+[[Function]        [Variant][implemented as]                                 ]  
+[[empty set   ]    []       [`Set::Set()`]                                   ]
+[[subset relation] []       [`bool Set::contained_in(const Set& s2)const`]   ]
+[[equality       ] []       [`bool is_element_equal(const Set& s1, const Set& s2)`]]
+[[set union]       [inplace][`Set& operator += (Set& s1, const Set& s2)`]    ]
+[[]                []       [`Set  operator +  (const Set& s1, const Set& s2)`]]
+[[set difference]  [inplace][`Set& operator -= (Set& s1, const Set& s2)`]        ]
+[[]                []       [`Set  operator -  (const Set& s1, const Set& s2)`]]
+[[set intersection][inplace][`Set& operator *= (Set& s1, const Set& s2)`]        ]
+[[]                []       [`Set  operator *  (const Set& s1, const Set& s2)`]]
+]
+
+Equality on `Sets` is not implemented as `operator ==`, because `operator ==`
+is used for the stronger lexicographical equality, that takes the 
+sequence of elements into account. The sequence of elements belongs to
+the __iterative__ aspect. 
+
+Being models of concept `Set`, __itl_set__ and all __itv_bsets__ 
+implement these 
+operations and obey the associated laws on `Sets`. See e.g. 
+[@http://en.wikipedia.org/wiki/Algebra_of_sets an algebra of sets here].
+
+[h5 Making intervals complete]
+
+An __itv__ is considered to be a set of elements as well. 
+With respect to the `Set` concept
+presented above __itv__ implements the concept only partially. The reason for
+that is that addition `operator +=` and subtraction `operator -=` can not
+be defined on __itvs__. Two intervals `[1,2]` and `[4,5]` are not addable to
+a single new __itv__. In other words __itvs__ are incomplete w.r.t. union and
+difference. __Itv_sets__ can be defined as the ['*completion*] of intervals
+for the union and difference operations.
+
+[h5 A Map Concept]
+
+On the __conceptual__ aspect __itl_map__ and all __itv_bmaps__ are models of a 
+concept `Map`.
+Since a `map` is a `set of pairs`, we try to design the `Map` concept in accordance
+to the `Set` concept above. 
+
+[table
+[[Function]        [Variant][implemented as]                                 ]  
+[[empty map   ]    []       [`Map::Map()`]                                   ]
+[[subset relation] []       [`bool Map::contained_in(const Map& s2)const`]   ]
+[[equality       ] []       [`bool is_element_equal(const Map& s1, const Map& s2)`]]
+[[set union]       [inplace][`Map& operator += (Map& s1, const Map& s2)`]        ]
+[[]                []       [`Map  operator +  (const Map& s1, const Map& s2)`]]
+[[set difference]  [inplace][`Map& operator -= (Map& s1, const Map& s2)`]        ]
+[[]                []       [`Map  operator -  (const Map& s1, const Map& s2)`]]
+[[set intersection][inplace][`Map& operator *= (Map& s1, const Map& s2)`]        ]
+[[]                []       [`Map  operator *  (const Map& s1, const Map& s2)`]]
+]
+
+As one can see, on the abstract kernel the signatures of the itl's `Set` and `Map`
+concepts are identical, except for the typename. This is not a trivial 
+signature since the major
+operations that are used in fundamental axioms that make up the semantics
+of the concepts are given. While signatures are identical
+The sets of valid laws are different, which will be discussed in more detail 
+in section JODO.
+
+[/ This is due to the fact, that Map::operator+= is not just adding and
+Map::operator-= is not only removing ... liegt and der implementierung von 
+add und subtract.] 
+
+[/ Auf dem Kern sind die Signaturen (fast) gleich. Unterschiede Semantik.
+vor allem +=, -= und erst recht *=]
+
+These semantical differences are mainly based on the implementation
+of the pivotal memberfunctions `add` and `subtract` for elements 
+and intervals that again serve for implementing 
+`operator +=` and `operator -=`.
+[endsect][/ Abstract Sets and Maps]
+
+[section Addability, Subtractability and Aggregate on Overlap]
+
+While addition and subtraction on `Sets` implement set union and
+set difference, for `Maps` we want to implement ['*aggregation*] on
+the associated values for the case of collision (of key elements)
+or overlap (of key intervals), which has been refered to as 
+['*aggregate on overlap*] or ['*aggrovering*] above.
+
+This kind of `Addability` and `Subtractability` allows to compute
+a lot of useful aggregation results on an __itv_map_s__ associated
+values, just by adding and subtracting value pairs. 
+Various examples of ['*aggrovering*] are given in 
+[link boost_itl.examples section examples].
+In addition this concept of `Addability` and `Subtractability`
+contains the classical `Insertability` and `Erasability` of
+key value pairs as a special case so it provides a broader
+new semantics without loss of the /classical/ one.
+
+Aggregation is implemented for functions `add` and `subtract`
+by propagating a `Combiner` functor to combine associated values
+of type `CodomainT`. The standard `Combiner` is set as
+default template parameter 
+`template<class>class Combine = inplace_plus`, which
+is again generically implemented by `operator +=` for all
+Addable types. 
+
+For `Combine` functors, the Itl provides an __inverse__ functor.
+
+[table
+[[Combine<T>]          [inverse<Combine<T> >::type]]
+[[__ip_plus__`<T>`]    [__ip_minus__`<T>`]  ]
+[[__ip_star__`<T>`]    [__ip_div__`<T>`]    ]
+[[__ip_max__`<T>`]     [__ip_min__`<T>`]    ]
+[[__ip_identity__`<T>`][__ip_erasure__`<T>`]]
+[[`Functor`]           [__ip_erasure__`<T>`]]
+]
+
+The meta function __inverse__ is mutually implemented for
+all but the default functor `Functor`
+such that e.g.
+`inverse<inplace_minus<T> >::type` yields `inplace_plus<T>`.
+Not in every case, e.g. `max/min`, does the __inverse__ functor
+invert the effect of it's antetype. But for the default
+it does:
+
+[table
+[[]         [`add<Combine<CodomainT> >((k,x))`] [`subtract<inverse<Combine<CodomainT> >::type>((k,x))`]]
+[[Instance] [`add<inplace_plus<int> >((k,x))`]  [`subtract<inplace_minus<int> >((k,x))`]]
+[[Inversion][adds `x` on overlap. This inverts a preceeding `subtract` of `x` on `k`][subtracts `x` on overlap. This inverts a preceeding `add` of `x` on `k`]]
+]
+
+
+As already mentioned aggregating `Addability` and `Subtractability` 
+on `Maps` contains the /classical/ `Insertability` and `Erasability` of
+key value pairs as a special case:
+
+[table
+[[aggregating function][equivalent /classical/ function]]
+[[`add<inplace_identity<CodomainT> >(const value_type&)`]    [`insert(const value_type&)`]]
+[[`subtract<inplace_erasure<CodomainT> >(const value_type&)`][`erase(const value_type&)`]]
+]
+
+The aggregating member function templates `add` and `subtract`
+are not in the public interface of __itv_bmaps__, because
+the `Combine` functor is intended to be an invariant 
+of __itv_bmap_s__
+template instance to avoid, that clients
+spoil the aggregation by accidently calling 
+variing aggregation functors.
+But you could instantiate an __itv_map__ to have 
+`insert/erase` semantics this way:
+``
+interval_map<int,int,neutron_absorber,interval,
+             std::less,
+             inplace_identity //Combine parameter specified
+            > m; 
+interval<int> itv = interval<int>::rightopen(2,7);
+m.add(make_pair(itv,42));      //same as insert
+m.subtract(make_pair(itv,42)); //same as erase 
+``  
+
+This is, of course, only a clarifying example. Member functions
+`insert` and `erase` are available in __itv_bmap_s__ interface 
+so they can be called directly.
+
+[endsect][/ Addability, Subtractability and Aggregation on Overlap]
+
+
+[section Kind of nuclear: Map Traits]
+
+Itl maps differ in their behavior dependent on how they handle
+['*neutral elements*] of the associated type `CodomainT`. This 
+section became ['kind of nuclear] at least in wording. 
+But rest assured `itl::Maps` won't contaminate your software.
+
+In the itl we call ['*neutral elements*] `neutrons` and all values
+that [*are not] `neutrons` we call `protons`. The way, in which
+`neutrons` are dealt with in maps can be specified by the template parameter
+`Traits`. In the pseudo code snipplets below `0` will be used to denote
+`neutrons`, which can be 
+different objects like `const double 0.0`, empty sets, empty strings, 
+null-vectors etc. dependent of the instance type for parameter `CodomainT`.
+The existence of a ['*neutral element*] wrt. an `operator+=` is a requirement
+for template type `CodomainT`. 
+
+[table
+[[Trait][]]
+[[__absorber__][value pairs that carry neutrons `(x,0)` are never stored]]
+[[__enricher__][value pairs that carry neutrons `(x,0)` are never deleted by subtract]]
+[[__emitter__] [all value pairs that don't carry protons have neutrons as mapped values.]]
+]
+
+[h4 Neutron Absorber]
+
+From a pragmatic perspective value pairs that carry `neutrons` as 
+mapped values can often be deleted. If we count, for instance,
+the number of overlaps of inserted intervals in an __itv_map__
+(see example [overlap_counter]), most of the time, we are not
+interested in whether an overlap has been counted `0` times or
+has not been counted at all.
+
+A Map that does never insert
+associated neutrons or deletes them when they emerge, is called
+__absorber__. To be a __absorber__ is the default setting
+for the Trait parameter. Moreover a __absorber__ is able
+to erase a pair `(x,y)` from a map `{(x,y)}` by calling 
+`subtract((x,y))` or `operator -`:
+
+``{(x,y)} - (x,y) == {}`` 
+
+[h4 Neutron Enricher]
+
+With a __enricher__, on the contrary, subtraction of a 
+pair `(x,y)` that is in the map results in a pair `(x,0)`.
+`{(x,y)} - (x,y) == {(x,0)}`. Mapping pairs that carry
+`neutrons` may emerge as a result of computations and they can
+not be erased by subtractions, so they are /enriched/ in the map.
+
+A neutron enricher carries the information, if values have
+been added or aggregated for certain keys and resulted in a `neutron` 
+value or if they have not been aggregated at all: No values
+exists for a key. 
+
+The following distinction can *not* be made for a __absorber__ map
+but it can be made for an __enricher__ map:
+[pre
+(k,y) does not exist in the map: Pair (k,y) has NOT been dealt with
+(k,0) key k carries 0          : Pair (k,y) has     been dealt with resulting in y=0
+]
+
+Sometimes this subtle distiction is needed. Then a __enricher__
+is the right choice. Also, If we want to give two `itl::Maps`
+a common set of keys in order to, say, iterate synchronously
+over both maps, we need __enricher__ s. 
+
+[h4 Neutron Emitter]
+
+The third neutronic Trait is called __emitter__.
+A map that is a __emitter__ is defined on every value
+of it's domain. It emits a 
+neutron value for every key value, that has not been set or 
+aggregated to a value unequal to the `neutron` value.
+
+That way a __emitter__ map is an ['*infinite vector*], that
+is always initialized with neutron values.
+
+Of course those initial neutronic values for all keys of the
+maps domain is *not* stored on the __emitter__ map. So it's
+implementation is as minimal as the implementation of a
+__absorber__.
+
+[endsect] [/ kind of nuclear]
+
+[endsect][/ Concepts]
+

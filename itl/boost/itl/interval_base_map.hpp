@@ -228,7 +228,9 @@ public:
 	
 public:
     inline static bool has_symmetric_difference() 
-    { return is_set<codomain_type>::value || !traits::absorbs_neutrons || traits::emits_neutrons; }
+    { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::emits_neutrons); }
+
+	enum{ is_itl_container = true };
 
 public:
 /** @name B: Constructors, destructors, assignment 
@@ -458,7 +460,7 @@ public:
     */
     SubType& subtract(const value_type& x)
     {
-		typedef typename inverse<Combine,CodomainT>::type InverseCombine;
+		typedef typename inverse<Combine<CodomainT> >::type InverseCombine;
         if(Traits::emits_neutrons)
 			that()->template add_<InverseCombine>(x); 
         else 

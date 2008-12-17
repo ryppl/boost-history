@@ -112,11 +112,9 @@ void user_groups()
           from_string("2008-02-01"), from_string("2008-10-15")), 
           director_of_admin);
 
-    MembershipT all_users = med_users;
-    all_users += admin_users;
+    MembershipT all_users   = med_users + admin_users;
 
-    MembershipT super_users = med_users;
-    super_users *= admin_users;
+    MembershipT super_users = med_users * admin_users;
 
     MembershipT::iterator med_ = med_users.begin();
     cout << "----- Membership of medical staff -----------------------------------\n";

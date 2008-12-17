@@ -16,26 +16,11 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/validate/laws/order.h>
 #include <boost/validate/laws/pushouts.h>
 #include <boost/validate/lawvalidater.h>
+#include <boost/validate/algebra_validater.hpp>
 
 namespace boost{namespace itl
 {
     typedef WeightedNumberGentor<int> ChoiceT;
-
-    class AlgebraValidater
-    {
-    public:
-        virtual ~AlgebraValidater(){}
-        // the choice probability, and also the availability of laws is individual to each type
-        // Somehow it has to be defined in conjunction to every type. So it is an aspect of
-        // type traits.
-        virtual void setProfile()=0;
-        virtual void validate()=0;
-        virtual void addFrequencies(ValidationCounterT&)=0;
-        virtual void addViolations(ViolationCounterT&, ViolationMapT&)=0;
-
-        virtual bool hasValidProfile()const{ return true; }
-    };
-
 
     // ------------------------------------------------------------------------
     // Orderings

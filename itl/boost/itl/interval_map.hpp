@@ -237,6 +237,7 @@ private:
     void insert_rear(const interval_type& x_itv, const CodomainT& x_val, iterator& it);
 
     void erase_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it);
+
 } ;
 
 
@@ -395,7 +396,10 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT added_val = CodomainT();
         Combiner()(added_val, value.CONT_VALUE);
-        insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
+		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+			return this->_map.end();
+		else
+            insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
     }
     else
         insertion = this->_map.insert(value);
@@ -423,7 +427,10 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT added_val = CodomainT();
         Combiner()(added_val, value.CONT_VALUE);
-        insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
+		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+			return this->_map.end();
+		else
+            insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
     }
     else
         insertion = this->_map.insert(value);
@@ -455,7 +462,10 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT added_val = CodomainT();
         Combiner()(added_val, x_val);
-        insertion = this->_map.insert(value_type(x_itv, added_val));
+		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+			return;
+		else
+			insertion = this->_map.insert(value_type(x_itv, added_val));
     }
     else
         insertion = this->_map.insert(x);

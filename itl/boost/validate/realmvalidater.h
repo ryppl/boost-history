@@ -13,19 +13,10 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <stdio.h>
 #include <time.h>
 #include <boost/validate/typevalidater.h>
-
-#define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
+#include <boost/validate/utility.hpp>
 
 namespace boost{namespace itl
 {
-    std::string location(const std::string& file, int line, const std::string& message)
-    {
-        std::string result = file;
-        result += "(" + to_string<int>::apply(line) + "): ";
-        result += message;
-        return result;
-    }
-
     namespace RootType 
     {
         enum RootTypes 
@@ -44,6 +35,11 @@ namespace boost{namespace itl
     namespace CodomainType 
     {
         enum CodomainTypes { Int, Double, set_int, CodomainTypes_size };
+    }
+
+    namespace NeutronHandlerType 
+    {
+        enum NeutronHandlerTypes { absorber, enricher, emitter, NeutronHandlerTypes_size };
     }
 
     
@@ -98,13 +94,13 @@ namespace boost{namespace itl
             _isValid = true;
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 14;
-            _rootChoice[RootType::interval_set]          = 14;
-            _rootChoice[RootType::separate_interval_set] = 14;
-            _rootChoice[RootType::split_interval_set]    = 14;
-            _rootChoice[RootType::itl_map]               = 14;
-            _rootChoice[RootType::interval_map]          = 15;
-            _rootChoice[RootType::split_interval_map]    = 15;
+            _rootChoice[RootType::itl_set]               = 0;
+            _rootChoice[RootType::interval_set]          = 0;
+            _rootChoice[RootType::separate_interval_set] = 0;
+            _rootChoice[RootType::split_interval_set]    = 0;
+            _rootChoice[RootType::itl_map]               = 33;
+            _rootChoice[RootType::interval_map]          = 33;
+            _rootChoice[RootType::split_interval_map]    = 34;
             setRootTypeNames();
             _rootChoice.init();
 
@@ -145,12 +141,17 @@ namespace boost{namespace itl
 
         void validate()
         {
-            srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
-            //srand(static_cast<unsigned>(1)); //Same numbers each run (std)
+            //srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
+            srand(static_cast<unsigned>(1)); //Same numbers each run (std)
             //srand(static_cast<unsigned>(4711)); //Same numbers each run (varying)
 
             for(int idx=0; hasValidProfile(); idx++)
             {
+				if(_frequencies.size() == 402)
+				{
+					reportFrequencies("freq402.txt");
+					break;
+				}
                 if(idx>0 && idx % 100 == 0)
                     reportFrequencies();
                 validateType();
@@ -316,6 +317,17 @@ namespace boost{namespace itl
             }
             if(!_violations.empty())
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
+        }
+
+		void reportFrequencies(const std::string& filename)
+        {
+			FILE* fp = fopen(filename.c_str(), "w");
+            int valid_count = 1;
+            FORALL(ValidationCounterT, it, _frequencies)
+            {
+                fprintf(fp, "%3d %-66s\n", valid_count, it->KEY_VALUE.c_str());
+                valid_count++;
+            }
         }
 
         void reportTypeChoiceError(const std::string& location, int rootChoice, const ChoiceT& chooser)const

@@ -6,159 +6,16 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section Concepts]
-
-[section Abstract Sets and Maps]
-
-On the __conceptual__ aspect the __itl_set__ and all __itv_bset__ are a model 
-of a concept Set.
-The Set concept of the Interval Template Library refers to the
-mathematical notion of a set.
-
-[table
-[[Function]        [Variant][implemented as]                                 ]  
-[[empty set   ]    []       [`Set::Set()`]                                   ]
-[[subset relation] []       [`bool Set::contained_in(const Set& s2)const`]   ]
-[[equality       ] []       [`bool is_element_equal(const Set& s1, const Set& s2)`]]
-[[set union]       [inplace][`Set& operator += (Set& s1, const Set& s2)`]    ]
-[[]                []       [`Set  operator +  (const Set& s1, const Set& s2)`]]
-[[set difference]  [inplace][`Set& operator -= (Set& s1, const Set& s2)`]        ]
-[[]                []       [`Set  operator -  (const Set& s1, const Set& s2)`]]
-[[set intersection][inplace][`Set& operator *= (Set& s1, const Set& s2)`]        ]
-[[]                []       [`Set  operator *  (const Set& s1, const Set& s2)`]]
-]
-
-Equality on Sets is not implemented as `operator ==`, because `==` is used for
-the stronger lexicographical equality, that takes the sequence of elements into 
-account.
-
-Being models of concept Set, __itl_set__ and all __itv_bsets__ and __itl_set__ 
-implement these 
-operations and obey the associated laws on Sets. See e.g. 
-[@http://en.wikipedia.org/wiki/Algebra_of_sets an algebra of sets here].
-
-
-On the __conceptual__ aspect __itl_map__ and all __itv_bmaps__ are models of a 
-concept Map.
-Since a map is a set of pairs, we try to design the map concept in accordance
-to the Set concept above. 
-
-[table
-[[Function]        [Variant][implemented as]                                 ]  
-[[empty map   ]    []       [`Map::Map()`]                                   ]
-[[subset relation] []       [`bool Map::contained_in(const Map& s2)const`]   ]
-[[equality       ] []       [`bool is_element_equal(const Map& s1, const Map& s2)`]]
-[[set union]       [inplace][`Map& operator += (Map& s1, const Map& s2)`]        ]
-[[]                []       [`Map  operator +  (const Map& s1, const Map& s2)`]]
-[[set difference]  [inplace][`Map& operator -= (Map& s1, const Map& s2)`]        ]
-[[]                []       [`Map  operator -  (const Map& s1, const Map& s2)`]]
-[[set intersection][inplace][`Map& operator *= (Map& s1, const Map& s2)`]        ]
-[[]                []       [`Map  operator *  (const Map& s1, const Map& s2)`]]
-]
-
-As one can see, on the abstract kernel the signatures of the itl's Set and Map
-concepts are identical, except for the typename. This is not a trivial 
-signature since the major
-operations that are used in fundamental axioms that make up the semantics
-of the concepts are given. Interestingly, while signatures are identical
-The set of valid laws are different.
-
-[/ This is due to the fact, that Map::operator+= is not just adding and
-Map::operator-= is not only removing ... liegt and der implementierung von 
-add und subtract.] 
-
-[/ Auf dem Kern sind die Signaturen (fast) gleich. Unterschiede Semantik.
-vor allem +=, -= und erst recht *=]
-
-[/ insert = add<inplace_identity>]
-[/ erase  = subtract<inplace_identity>]
-
-[/ Kind of nuclear]
-
-Itl maps differ in their behavior dependent on how they handle
-neutral elements of the associated value type CodomainT. In the
-itl we call neutral elements neutrons. The way, in which
-neutrons are dealt with can be specified by the template parameter
-Traits.
-
-[/ Tabellchen absorber, enricher, emitter]
-
-From a pragmatic perspective value pairs that carry neutrons as 
-mapped values can often be deleted. A Map that does never insert
-associated neutrons or deletes them when they emerge, is called
-a neutron_absorber. To be a neutron_absorber is the default setting
-for the Trait parameter. Moreover a neutron_absorber is able
-to erase a pair (x,y) from a map {(x,y)} by calling subtract((x,y)) 
-{(x,y)}.subtract((x,y)) == {}. 
-
-With a neutron_enricher, on the contrary, subtraction of a 
-pair (x,y) that is in the map results in a pair (x,0).
-{(x,y)}.subtract((x,y)) == {(x,0)}. Mapping pairs that carry
-neutrons may emerge as a result of computations and they can
-not be erased by subtractions, so they are enriched in the map.
-
-A neutron enricher carries the information, if values have
-been aggregated for certain keys and resulted in a neutron value
-or if they have not been aggregated at all: No values
-exists for a key. 
-
-For a neutron_absorber this distinction can not be made:
-# key k exists and associated value is a neutron: 
-  There where aggregations.
-# key k does not exist: No aggregation at all for k.
-
-Sometimes this distictin is needed. Then a neutron_enricher
-is the right choice. Also, If we want to give to itl::Maps
-A common set of keys in order to say iterate synchroniously
-over both maps, we need neutron_enrichers. 
-
-The third neutronic trait is called neutron_emitter.
-A map that is a neutron_emitter is defined on every value
-of it's domain. It emits a neutron value for
-every key value, that has not been set or aggregated to
-a values unequal to the neutron value.
-
-That way a neutron emitter map is an infinite array, that
-is always initialized with neutron values.
-
-[endsect]
-
-[endsect]
-
 [section Interface]
 
-Section Interface gives an overview over the types and functions
-of the ITL. Synoptical tables allow to review the overall structure of
+Section *Interface* gives an overview over the types and functions
+of the *Itl*. Synoptical tables allow to review the overall structure of
 the libraries design and to recognize structural equalities and differences
 with the corresponding containers of the standard template library.
 
-There are two majaor aspects or views of itl containers. The first and predominant
-aspect is called __conceptual__. The second and minor aspect is called iterative or
-iteration related.
-
-[table
-[[Aspect]    [Abstraction level][]                  []                    [Practical]]
-[[__Conceptual__][more abstract][concept related]       [iterator independent][interval_sets(maps) can be used as sets(maps) 
-                                                                           except for element iteration.]]
-[[Iterative] [less abstract][implementation related][iterator dependent]  [interval_sets(maps) iterate over intervals]]
-]
-
-On the __conceptual__ aspect
-
-* in interval implements a set of elements partially.
-* an interval_set implements a set of elements.
-* an interval_map implements a map of element value pairs.
-
-On the iteration related or iterative aspect
-
-* an interval_set implements a set of intervals.
-* an interval_map implements a map of interval value pairs.
-
-
-
 In the table of associated types of interval_sets
 there are types like key_type, value_type and key_compare
-for the iterative aspect.
+for the __iterative__ aspect.
 
 [section Class templates]
 

@@ -23,7 +23,7 @@
 	[[basic]   [[link boost_itl.examples.interval_container Interval container]]
 		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__]
 	                               [basic charactersistics of interval container]]
-	[[basic]   [overlap_counter][__itv_map__][The most simple application of an interval map: Counting
+	[[basic]   [[link boost_itl.examples.overlap_counter overlap counter]][__itv_map__][The most simple application of an interval map: Counting
 	                                          the overlaps of added intervals.]]
 	[[advanced][[link boost_itl.examples.month_and_week_grid Timegrids for months and weeks]]
 	                            [__spl_itv_set__]
@@ -106,7 +106,7 @@ Example *interval* shows some basic functionality of __itvs__.
 
 Example [*interval container] demonstrates the characteristic behaviors
 of different interval containers that are also summarized
-in the introductory [link boost.itl.introduction.interval_combining_styles Interval Combining Styles].
+in the introductory [link boost_itl.introduction.interval_combining_styles Interval Combining Styles].
 
 [import ../example/interval_container/interval_container.cpp]
 [example_interval_container]

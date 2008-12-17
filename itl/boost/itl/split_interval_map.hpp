@@ -285,7 +285,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT added_val = CodomainT();
         Combiner()(added_val, value.CONT_VALUE);
-        this->_map.insert(value_type(value.KEY_VALUE, added_val));
+
+		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+			return;
+		else
+            this->_map.insert(value_type(value.KEY_VALUE, added_val));
     }
     else
         this->_map.insert(value);
@@ -314,6 +318,11 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         CodomainT added_val = CodomainT();
         Combiner()(added_val, x_val);
         insertion = this->_map.insert(value_type(x_itv, added_val));
+
+		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+			return;
+		else
+			insertion = this->_map.insert(value_type(x_itv, added_val));
     }
     else
         insertion = this->_map.insert(x);

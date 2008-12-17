@@ -158,60 +158,32 @@ namespace boost{namespace itl
 
 	//--------------------------------------------------------------------------
 	// Inverse functor
-#ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-	template<template<class>class Functor, class Type> struct inverse;
+	template<class Functor> struct inverse;
 
 	template<class Type> 
-	struct inverse<itl::inplace_plus, Type>
+	struct inverse<itl::inplace_plus<Type> >
 	{ typedef itl::inplace_minus<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_minus, Type>
+	struct inverse<itl::inplace_minus<Type> >
 	{ typedef itl::inplace_plus<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_star, Type>
+	struct inverse<itl::inplace_star<Type> >
 	{ typedef itl::inplace_div<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_div, Type>
+	struct inverse<itl::inplace_div<Type> >
 	{ typedef itl::inplace_star<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_max, Type>
+	struct inverse<itl::inplace_max<Type> >
 	{ typedef itl::inplace_min<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_min, Type>
+	struct inverse<itl::inplace_min<Type> >
 	{ typedef itl::inplace_max<Type> type; };
 
-#else //ITL_USE_COMBINE_TEMPLATE_TYPE
-	template<class Functor, class Type> struct inverse;
-
-	template<class Type> 
-	struct inverse<itl::inplace_plus<Type>, Type>
-	{ typedef itl::inplace_minus<Type> type; };
-
-	template<class Type> 
-	struct inverse<itl::inplace_minus<Type>, Type>
-	{ typedef itl::inplace_plus<Type> type; };
-
-	template<class Type> 
-	struct inverse<itl::inplace_star<Type>, Type>
-	{ typedef itl::inplace_div<Type> type; };
-
-	template<class Type> 
-	struct inverse<itl::inplace_div<Type>, Type>
-	{ typedef itl::inplace_star<Type> type; };
-
-	template<class Type> 
-	struct inverse<itl::inplace_max<Type>, Type>
-	{ typedef itl::inplace_min<Type> type; };
-
-	template<class Type> 
-	struct inverse<itl::inplace_min<Type>, Type>
-	{ typedef itl::inplace_max<Type> type; };
-#endif
 
 }} // namespace itl boost
 

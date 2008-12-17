@@ -341,7 +341,7 @@ namespace boost{namespace itl
 
     public:
 
-        bool holds()
+		bool holds() 
         {
             // --- left hand side ------------------------
             Type a_plus_b = this->template getInputValue<operand_a>();
@@ -368,6 +368,7 @@ namespace boost{namespace itl
 
             return Equality<Type>()(lhs, rhs);
         }
+
 
         bool debug_holds()
         {

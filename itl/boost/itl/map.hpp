@@ -123,29 +123,29 @@ namespace boost{namespace itl
         typedef Traits traits;
 
     public:
-        typedef DomainT                                    domain_type;
-        typedef DomainT                                    key_type;
-        typedef CodomainT                                  codomain_type;
-        typedef CodomainT                                  mapped_type;
-        typedef CodomainT                                  data_type;
-        typedef std::pair<const DomainT, CodomainT>        value_type;
-        typedef ITL_COMPARE_DOMAIN(Compare,DomainT)                           key_compare;
-        typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)    data_combine;
-		typedef typename inverse<Combine,CodomainT>::type  inverse_data_combine;
-		typedef inplace_star<CodomainT>                    data_intersect;
-		typedef typename base_type::value_compare          value_compare;
+        typedef DomainT                                     domain_type;
+        typedef DomainT                                     key_type;
+        typedef CodomainT                                   codomain_type;
+        typedef CodomainT                                   mapped_type;
+        typedef CodomainT                                   data_type;
+        typedef std::pair<const DomainT, CodomainT>         value_type;
+        typedef ITL_COMPARE_DOMAIN(Compare,DomainT)         key_compare;
+        typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)     data_combine;
+		typedef typename inverse<Combine<CodomainT> >::type inverse_data_combine;
+		typedef inplace_star<CodomainT>                     data_intersect;
+		typedef typename base_type::value_compare           value_compare;
 
     public:
-        typedef typename base_type::pointer                pointer;
-        typedef typename base_type::const_pointer          const_pointer;
-        typedef typename base_type::reference              reference;
-        typedef typename base_type::const_reference        const_reference;
-        typedef typename base_type::iterator               iterator;
-        typedef typename base_type::const_iterator         const_iterator;
-        typedef typename base_type::size_type              size_type;
-        typedef typename base_type::difference_type        difference_type;
-        typedef typename base_type::reverse_iterator       reverse_iterator;
-        typedef typename base_type::const_reverse_iterator const_reverse_iterator;
+        typedef typename base_type::pointer                 pointer;
+        typedef typename base_type::const_pointer           const_pointer;
+        typedef typename base_type::reference               reference;
+        typedef typename base_type::const_reference         const_reference;
+        typedef typename base_type::iterator                iterator;
+        typedef typename base_type::const_iterator          const_iterator;
+        typedef typename base_type::size_type               size_type;
+        typedef typename base_type::difference_type         difference_type;
+        typedef typename base_type::reverse_iterator        reverse_iterator;
+        typedef typename base_type::const_reverse_iterator  const_reverse_iterator;
         
     public:
         map(){}
@@ -188,7 +188,7 @@ namespace boost{namespace itl
 
     public:
         inline static bool has_symmetric_difference() 
-        { return itl::is_set<codomain_type>::value || !traits::absorbs_neutrons || traits::emits_neutrons; }
+		{ return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::emits_neutrons); }
 
     public:
         // --------------------------------------------------------------------

@@ -25,7 +25,7 @@ doxygen itldoc
         <doxygen:param>MACRO_EXPANSION=NO
         <doxygen:param>EXPAND_ONLY_PREDEF=YES
         <doxygen:param>SEARCH_INCLUDES=NO
-        <reftitle>"Interval Template Library DocTest"
+        <reftitle>"Interval Template Library Reference"
     ;
 
 
