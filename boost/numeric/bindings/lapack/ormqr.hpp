@@ -65,11 +65,11 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void ormqr (char const side, char const trans, int const m, int const n,
-                 int const k, const float* a, int const lda,
+      void ormqr (char const side, char const trans, integer_t const m, integer_t const n,
+                 integer_t const k, const float* a, integer_t const lda,
                  const float* tau, float* c,
-                 int const ldc, float* work, int const lwork,
-                 int& info)
+                 integer_t const ldc, float* work, integer_t const lwork,
+                 integer_t& info)
       {
         assert ( trans=='N' || trans=='T' );
         LAPACK_SORMQR (&side, &trans, &m, &n, &k,
@@ -81,11 +81,11 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void ormqr (char const side, char const trans, int const m, int const n,
-                 int const k, const double* a, int const lda,
+      void ormqr (char const side, char const trans, integer_t const m, integer_t const n,
+                 integer_t const k, const double* a, integer_t const lda,
                  const double* tau, double* c,
-                 int const ldc, double* work, int const lwork,
-                 int& info)
+                 integer_t const ldc, double* work, integer_t const lwork,
+                 integer_t& info)
       {
         assert ( trans=='N' || trans=='T' );
         LAPACK_DORMQR (&side, &trans, &m, &n, &k,
@@ -97,11 +97,11 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void ormqr (char const side, char const trans, int const m, int const n,
-                 int const k, const traits::complex_f* a, int const lda,
+      void ormqr (char const side, char const trans, integer_t const m, integer_t const n,
+                 integer_t const k, const traits::complex_f* a, integer_t const lda,
                  const traits::complex_f* tau, traits::complex_f* c,
-                 int const ldc, traits::complex_f* work, int const lwork,
-                 int& info)
+                 integer_t const ldc, traits::complex_f* work, integer_t const lwork,
+                 integer_t& info)
       {
         assert ( trans=='N' || trans=='C' );
         LAPACK_CUNMQR (&side, &trans, &m, &n, &k,
@@ -113,11 +113,11 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void ormqr (char const side, char const trans, int const m, int const n,
-                 int const k, const traits::complex_d* a, int const lda,
+      void ormqr (char const side, char const trans, integer_t const m, integer_t const n,
+                 integer_t const k, const traits::complex_d* a, integer_t const lda,
                  const traits::complex_d* tau, traits::complex_d* c,
-                 int const ldc, traits::complex_d* work, int const lwork,
-                 int& info)
+                 integer_t const ldc, traits::complex_d* work, integer_t const lwork,
+                 integer_t& info)
       {
         assert ( trans=='N' || trans=='C' );
         LAPACK_ZUNMQR (&side, &trans, &m, &n, &k,
@@ -144,10 +144,10 @@ namespace boost { namespace numeric { namespace bindings {
         >::value));
 #endif
 
-        int const m = traits::matrix_size1 (c);
-        int const n = traits::matrix_size2 (c);
-        int const k = traits::vector_size (tau);
-        int const lwork = traits::vector_size (work);
+        integer_t const m = traits::matrix_size1 (c);
+        integer_t const n = traits::matrix_size2 (c);
+        integer_t const k = traits::vector_size (tau);
+        integer_t const lwork = traits::vector_size (work);
 
         assert ( side=='L' || side=='R' );
         assert ( (side=='L' ?  m >= k : n >= k ) );
@@ -160,7 +160,7 @@ namespace boost { namespace numeric { namespace bindings {
         assert ( (side=='L' ?
                   lwork >= n : lwork >= m ) );
 
-        int info;
+        integer_t info;
         ormqr (side, trans, m, n, k,
                        traits::matrix_storage (a),
                        traits::leading_dimension (a),
@@ -180,10 +180,10 @@ namespace boost { namespace numeric { namespace bindings {
     int ormqr (char side, char trans, const A& a, const Tau& tau, C& c, optimal_workspace ) {
        typedef typename A::value_type                              value_type ;
 
-       int const n_w = (side=='L' ? traits::matrix_size2 (c)
+       std::ptrdiff_t const n_w = (side=='L' ? traits::matrix_size2 (c)
                                   : traits::matrix_size1 (c) );
 
-       traits::detail::array<value_type> work( std::max(1,n_w*32) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,n_w*32) );
 
        return detail::ormqr( side, trans, a, tau, c, work );
     }
@@ -194,10 +194,10 @@ namespace boost { namespace numeric { namespace bindings {
     int ormqr (char side, char trans, const A& a, const Tau& tau, C& c, minimal_workspace ) {
        typedef typename A::value_type                              value_type ;
 
-       int const n_w = (side=='L' ? traits::matrix_size2 (c)
+       std::ptrdiff_t const n_w = (side=='L' ? traits::matrix_size2 (c)
                                   : traits::matrix_size1 (c) );
 
-       traits::detail::array<value_type> work( std::max(1,n_w) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,n_w) );
 
        return detail::ormqr( side, trans, a, tau, c, work );
     }

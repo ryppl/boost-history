@@ -36,6 +36,12 @@
 #error do not know how to bind to fortran calling convention
 #endif
 
+
+// "g77" or clapack or "gfortran -ff2c"
+//#define BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+// "g77 -fno-f2c" or "gfortran"
+//#define BIND_FORTRAN_NO_F2C_RETURN_CONVENTIONS
+
 // As long as f2c return conventions are the common case,
 // we turn them on unless requested otherwise
 #ifndef BIND_FORTRAN_NO_F2C_RETURN_CONVENTIONS

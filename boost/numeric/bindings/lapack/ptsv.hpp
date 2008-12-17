@@ -44,31 +44,31 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void ptsv ( int const n, int const nrhs,
-                 float* d, float* e, float* b, int const ldb, int* info)
+      void ptsv ( integer_t const n, integer_t const nrhs,
+                 float* d, float* e, float* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_SPTSV (&n, &nrhs, d, e, b, &ldb, info);
       }
 
       inline
-      void ptsv ( int const n, int const nrhs,
-                 double* d, double* e, double* b, int const ldb, int* info)
+      void ptsv ( integer_t const n, integer_t const nrhs,
+                 double* d, double* e, double* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_DPTSV (&n, &nrhs, d, e, b, &ldb, info);
       }
 
       inline
-      void ptsv ( int const n, int const nrhs,
-                 float* d, traits::complex_f* e, traits::complex_f* b, int const ldb,
-                 int* info)
+      void ptsv ( integer_t const n, integer_t const nrhs,
+                 float* d, traits::complex_f* e, traits::complex_f* b, integer_t const ldb,
+                 integer_t* info)
       {
         LAPACK_CPTSV (&n, &nrhs, d, traits::complex_ptr(e), traits::complex_ptr(b), &ldb, info);
       }
 
       inline
-      void ptsv ( int const n, int const nrhs,
-                 double* d, traits::complex_d* e, traits::complex_d* b, int const ldb,
-                 int* info)
+      void ptsv ( integer_t const n, integer_t const nrhs,
+                 double* d, traits::complex_d* e, traits::complex_d* b, integer_t const ldb,
+                 integer_t* info)
       {
         LAPACK_ZPTSV (&n, &nrhs, d, traits::complex_ptr(e), traits::complex_ptr(b), &ldb, info);
       }
@@ -77,11 +77,11 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename D, typename E, typename B>
     int ptsv( D& d, E& e, B& b ) {
-      int const n = traits::vector_size(d) ;
+      integer_t const n = traits::vector_size(d) ;
       assert( n==traits::vector_size(e)+1 ) ;
       assert( n==traits::matrix_num_rows(b) ) ;
 
-      int info ;
+      integer_t info ;
       detail::ptsv( n, traits::matrix_num_columns (b)
                   , traits::vector_storage(d)
                   , traits::vector_storage(e)
@@ -102,23 +102,23 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void pttrf ( int const n, float* d, float* e, int* info) {
+      void pttrf ( integer_t const n, float* d, float* e, integer_t* info) {
         LAPACK_SPTTRF ( &n, d, e, info) ;
       }
 
       inline
-      void pttrf ( int const n, double* d, double* e, int* info) {
+      void pttrf ( integer_t const n, double* d, double* e, integer_t* info) {
         LAPACK_DPTTRF ( &n, d, e, info);
       }
 
       inline
-      void pttrf ( int const n, float* d, traits::complex_f* e, int* info)
+      void pttrf ( integer_t const n, float* d, traits::complex_f* e, integer_t* info)
       {
         LAPACK_CPTTRF ( &n, d, traits::complex_ptr(e), info);
       }
 
       inline
-      void pttrf ( int const n, double* d, traits::complex_d* e, int* info)
+      void pttrf ( integer_t const n, double* d, traits::complex_d* e, integer_t* info)
       {
         LAPACK_ZPTTRF ( &n, d, traits::complex_ptr(e), info);
       }
@@ -127,9 +127,9 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename D, typename E>
     int pttrf (D& d, E& e) {
-      int const n = traits::vector_size (d);
+      integer_t const n = traits::vector_size (d);
       assert (n == traits::vector_size (e) + 1);
-      int info;
+      integer_t info;
       detail::pttrf ( n, traits::vector_storage(d), traits::vector_storage(e), &info);
       return info;
     }
@@ -147,24 +147,24 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void pttrs (char const uplo, int const n, int const nrhs,
-                  float const* d, float const* e, float* b, int const ldb, int* info)
+      void pttrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  float const* d, float const* e, float* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_SPTTRS (&n, &nrhs, d, e, b, &ldb, info);
       }
 
       inline
-      void pttrs (char const uplo, int const n, int const nrhs,
-                  double const* d, double const* e, double* b, int const ldb, int* info)
+      void pttrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  double const* d, double const* e, double* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_DPTTRS (&n, &nrhs, d, e, b, &ldb, info);
       }
 
       inline
-      void pttrs (char const uplo, int const n, int const nrhs,
+      void pttrs (char const uplo, integer_t const n, integer_t const nrhs,
                   float const* d,
                   traits::complex_f const* e, 
-                  traits::complex_f* b, int const ldb, int* info)
+                  traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CPTTRS (&uplo, &n, &nrhs, d,
                        traits::complex_ptr (e),
@@ -172,10 +172,10 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void pttrs (char const uplo, int const n, int const nrhs,
+      void pttrs (char const uplo, integer_t const n, integer_t const nrhs,
                   double const* d,
                   traits::complex_d const* e,
-                  traits::complex_d* b, int const ldb, int* info)
+                  traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZPTTRS (&uplo, &n, &nrhs, d,
                        traits::complex_ptr (e),
@@ -186,11 +186,11 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename D, typename E, typename MatrB>
     int pttrs (char uplo, D const& d, E const& e, MatrB& b) {
-      int const n = traits::vector_size (d);
+      integer_t const n = traits::vector_size (d);
       assert (n == traits::vector_size (e) + 1);
       assert (n == traits::matrix_num_rows (b));
 
-      int info;
+      integer_t info;
       detail::pttrs (uplo, n, traits::matrix_num_columns (b),
                      traits::vector_storage (d),
                      traits::vector_storage (e),

@@ -48,14 +48,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }    
 
 
-    // converts real/complex to int
-    inline int to_int (float f) { return static_cast<int> (f); }
-    inline int to_int (double d) { return static_cast<int> (d); }
-    inline int to_int (traits::complex_f const& cf) { 
-      return static_cast<int> (traits::real (cf)); 
+    // converts real/complex to integer_t
+    inline integer_t to_int (float f) { return static_cast<integer_t> (f); }
+    inline integer_t to_int (double d) { return static_cast<integer_t> (d); }
+    inline integer_t to_int (traits::complex_f const& cf) { 
+      return static_cast<integer_t> (traits::real (cf)); 
     }
-    inline int to_int (traits::complex_d const& cd) { 
-      return static_cast<int> (traits::real (cd)); 
+    inline integer_t to_int (traits::complex_d const& cd) { 
+      return static_cast<integer_t> (traits::real (cd)); 
     }
 
   }

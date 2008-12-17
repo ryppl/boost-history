@@ -56,10 +56,10 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void heev (char const jobz, char const uplo, int const n,
-                 traits::complex_f* a, int const lda,
-                 float* w, traits::complex_f* work, int const lwork,
-                 float* rwork, int& info)
+      void heev (char const jobz, char const uplo, integer_t const n,
+                 traits::complex_f* a, integer_t const lda,
+                 float* w, traits::complex_f* work, integer_t const lwork,
+                 float* rwork, integer_t& info)
       {
         LAPACK_CHEEV (&jobz, &uplo, &n,
                       traits::complex_ptr(a), &lda, w,
@@ -68,10 +68,10 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void heev (char const jobz, char const uplo, int const n,
-                 traits::complex_d* a, int const lda,
-                 double* w, traits::complex_d* work, int const lwork,
-                 double* rwork, int& info)
+      void heev (char const jobz, char const uplo, integer_t const n,
+                 traits::complex_d* a, integer_t const lda,
+                 double* w, traits::complex_d* work, integer_t const lwork,
+                 double* rwork, integer_t& info)
       {
         LAPACK_ZHEEV (&jobz, &uplo, &n,
                       traits::complex_ptr(a), &lda, w,
@@ -90,7 +90,7 @@ namespace boost { namespace numeric { namespace bindings {
         >::value));
 #endif
 
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert (traits::matrix_size2 (a)==n);
         assert (traits::vector_size (w)==n);
         assert (2*n-1 <= traits::vector_size (work));
@@ -98,7 +98,7 @@ namespace boost { namespace numeric { namespace bindings {
         assert ( uplo=='U' || uplo=='L' );
         assert ( jobz=='N' || jobz=='V' );
 
-        int info;
+        integer_t info;
         detail::heev (jobz, uplo, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -118,10 +118,10 @@ namespace boost { namespace numeric { namespace bindings {
        typedef typename A::value_type                              value_type ;
        typedef typename traits::type_traits<value_type>::real_type real_type ;
 
-       int const n = traits::matrix_size1 (a);
+       std::ptrdiff_t const n = traits::matrix_size1 (a);
 
-       traits::detail::array<value_type> work( std::max(1,2*n-1) );
-       traits::detail::array<real_type> rwork( std::max(3*n-1,1) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,2*n-1) );
+       traits::detail::array<real_type> rwork( std::max<std::ptrdiff_t>(1,3*n-1) );
 
        return detail::heev( jobz, uplo, a, w, work, rwork );
     }
@@ -133,10 +133,10 @@ namespace boost { namespace numeric { namespace bindings {
        typedef typename A::value_type                              value_type ;
        typedef typename traits::type_traits<value_type>::real_type real_type ;
 
-       int const n = traits::matrix_size1 (a);
+       std::ptrdiff_t const n = traits::matrix_size1 (a);
 
-       traits::detail::array<value_type> work( std::max(1,33*n) );
-       traits::detail::array<real_type> rwork( std::max(3*n-1,1) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,33*n) );
+       traits::detail::array<real_type> rwork( std::max<std::ptrdiff_t>(1,3*n-1) );
 
        return detail::heev( jobz, uplo, a, w, work, rwork );
     }

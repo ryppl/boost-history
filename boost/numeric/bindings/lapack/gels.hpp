@@ -69,26 +69,26 @@ namespace boost { namespace numeric { namespace bindings {
 
         namespace detail {
 
-            inline void gels(char const trans, const int m, const int n,
-                             const int nrhs, float *a, const int lda,
-                             float *b, const int ldb, float *work,
-                             const int lwork, int *info)
+            inline void gels(char const trans, const integer_t m, const integer_t n,
+                             const integer_t nrhs, float *a, const integer_t lda,
+                             float *b, const integer_t ldb, float *work,
+                             const integer_t lwork, integer_t *info)
             {
                 LAPACK_SGELS(&trans, &m, &n, &nrhs, a, &lda, b, &ldb, work, &lwork, info);
             }
 
-            inline void gels(char const trans, const int m, const int n,
-                             const int nrhs, double *a, const int lda,
-                             double *b, const int ldb, double *work,
-                             const int lwork, int *info)
+            inline void gels(char const trans, const integer_t m, const integer_t n,
+                             const integer_t nrhs, double *a, const integer_t lda,
+                             double *b, const integer_t ldb, double *work,
+                             const integer_t lwork, integer_t *info)
             {
                 LAPACK_DGELS(&trans, &m, &n, &nrhs, a, &lda, b, &ldb, work, &lwork, info);
             }
 
-            inline void gels(char const trans, const int m, const int n,
-                             const int nrhs, traits::complex_f *a, const int lda,
-                             traits::complex_f *b, const int ldb, traits::complex_f *work,
-                             const int lwork, int *info)
+            inline void gels(char const trans, const integer_t m, const integer_t n,
+                             const integer_t nrhs, traits::complex_f *a, const integer_t lda,
+                             traits::complex_f *b, const integer_t ldb, traits::complex_f *work,
+                             const integer_t lwork, integer_t *info)
             {
                 LAPACK_CGELS(&trans, &m, &n, &nrhs,
                              traits::complex_ptr(a), &lda,
@@ -96,10 +96,10 @@ namespace boost { namespace numeric { namespace bindings {
                              traits::complex_ptr(work), &lwork, info);
             }
 
-            inline void gels(char const trans, const int m, const int n,
-                             const int nrhs, traits::complex_d *a, const int lda,
-                             traits::complex_d *b, const int ldb, traits::complex_d *work,
-                             const int lwork, int *info)
+            inline void gels(char const trans, const integer_t m, const integer_t n,
+                             const integer_t nrhs, traits::complex_d *a, const integer_t lda,
+                             traits::complex_d *b, const integer_t ldb, traits::complex_d *work,
+                             const integer_t lwork, integer_t *info)
             {
                 LAPACK_ZGELS(&trans, &m, &n, &nrhs,
                              traits::complex_ptr(a), &lda,
@@ -111,10 +111,12 @@ namespace boost { namespace numeric { namespace bindings {
             template <typename MatrA, typename VecB, typename Work>
             int gels(const char trans, MatrA& A, VecB& b, Work& work)
             {
-                const int m = traits::matrix_size1(A);
-                const int n = traits::matrix_size2(A);
-                const int mrhs = traits::matrix_size1(b);
-                const int nrhs = traits::matrix_size2(b);
+#ifndef NDEBUG
+                const std::ptrdiff_t m = traits::matrix_size1(A);
+                const std::ptrdiff_t n = traits::matrix_size2(A);
+                const std::ptrdiff_t mrhs = traits::matrix_size1(b);
+                const std::ptrdiff_t nrhs = traits::matrix_size2(b);
+#endif
 
                 // sanity checks
                 assert(trans == 'N' || trans == 'T' || trans == 'C');
@@ -123,7 +125,7 @@ namespace boost { namespace numeric { namespace bindings {
                 assert(traits::leading_dimension(A) >= 1 && traits::leading_dimension(b) >= 1);
                 assert(mrhs == std::max(m, n));
 
-                int info;
+                integer_t info;
                 detail::gels(trans,
                              traits::matrix_size1(A),
                              traits::matrix_size2(A),
@@ -141,10 +143,10 @@ namespace boost { namespace numeric { namespace bindings {
 
             // query for recommended workspace
             template <typename MatrA, typename VecB>
-            int gels_optimal_work(const char trans, MatrA& A, VecB& b)
+            integer_t gels_optimal_work(const char trans, MatrA& A, VecB& b)
             {
                 typename MatrA::value_type work;
-                int info;
+                integer_t info;
                 detail::gels(trans,
                     traits::matrix_size1(A),
                     traits::matrix_size2(A),
@@ -159,7 +161,7 @@ namespace boost { namespace numeric { namespace bindings {
 
                 assert(info == 0);
 
-                int lwork = traits::detail::to_int(work);
+                integer_t lwork = traits::detail::to_int(work);
 
                 return lwork;
             }
@@ -170,7 +172,7 @@ namespace boost { namespace numeric { namespace bindings {
         int gels(const char trans, MatrA& A, VecB& b, optimal_workspace)
         {
             // query optimal workspace size
-            int work_size = detail::gels_optimal_work(trans, A, b);
+            integer_t work_size = detail::gels_optimal_work(trans, A, b);
             traits::detail::array<typename MatrA::value_type> work(work_size);
 
             return detail::gels(trans, A, b, work);
@@ -179,15 +181,15 @@ namespace boost { namespace numeric { namespace bindings {
         template <typename MatrA, typename VecB>
         int gels(const char trans, MatrA& A, VecB& b, minimal_workspace)
         {
-            const int m = traits::matrix_size1(A);
-            const int n = traits::matrix_size2(A);
-            const int r = traits::matrix_size2(b);
+            const std::ptrdiff_t m = traits::matrix_size1(A);
+            const std::ptrdiff_t n = traits::matrix_size2(A);
+            const std::ptrdiff_t r = traits::matrix_size2(b);
 
-            const int minmn = std::min(m, n);       //m < n ? m : n;
-            const int maxmn = std::max(m, n);       // m > n ? m : n;
-            const int maxdim = std::max(maxmn, r);  // maxmn > r ? maxmn : r;
+            const std::ptrdiff_t minmn = std::min(m, n);       //m < n ? m : n;
+            const std::ptrdiff_t maxmn = std::max(m, n);       // m > n ? m : n;
+            const std::ptrdiff_t maxdim = std::max(maxmn, r);  // maxmn > r ? maxmn : r;
 
-            traits::detail::array<typename MatrA::value_type> work(minmn + std::max(1, maxdim));
+            traits::detail::array<typename MatrA::value_type> work(minmn + std::max<std::ptrdiff_t>(1, maxdim));
 
             return detail::gels(trans, A, b, work);
         }

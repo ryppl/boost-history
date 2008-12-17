@@ -55,25 +55,25 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void gesv (int const n, int const nrhs,
-                 float* a, int const lda, int* ipiv,
-                 float* b, int const ldb, int* info)
+      void gesv (integer_t const n, integer_t const nrhs,
+                 float* a, integer_t const lda, integer_t* ipiv,
+                 float* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_SGESV (&n, &nrhs, a, &lda, ipiv, b, &ldb, info);
       }
 
       inline
-      void gesv (int const n, int const nrhs,
-                 double* a, int const lda, int* ipiv,
-                 double* b, int const ldb, int* info)
+      void gesv (integer_t const n, integer_t const nrhs,
+                 double* a, integer_t const lda, integer_t* ipiv,
+                 double* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_DGESV (&n, &nrhs, a, &lda, ipiv, b, &ldb, info);
       }
 
       inline
-      void gesv (int const n, int const nrhs,
-                 traits::complex_f* a, int const lda, int* ipiv,
-                 traits::complex_f* b, int const ldb, int* info)
+      void gesv (integer_t const n, integer_t const nrhs,
+                 traits::complex_f* a, integer_t const lda, integer_t* ipiv,
+                 traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CGESV (&n, &nrhs,
                       traits::complex_ptr (a), &lda, ipiv,
@@ -81,9 +81,9 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void gesv (int const n, int const nrhs,
-                 traits::complex_d* a, int const lda, int* ipiv,
-                 traits::complex_d* b, int const ldb, int* info)
+      void gesv (integer_t const n, integer_t const nrhs,
+                 traits::complex_d* a, integer_t const lda, integer_t* ipiv,
+                 traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZGESV (&n, &nrhs,
                       traits::complex_ptr (a), &lda, ipiv,
@@ -106,12 +106,12 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const n = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size1 (a);
       assert (n == traits::matrix_size2 (a));
       assert (n == traits::matrix_size1 (b));
       assert (n == traits::vector_size (ipiv));
 
-      int info;
+      integer_t info;
       detail::gesv (n, traits::matrix_size2 (b),
                     traits::matrix_storage (a),
                     traits::leading_dimension (a),
@@ -131,8 +131,8 @@ namespace boost { namespace numeric { namespace bindings {
       //   if (info < 0), the -info argument had an illegal value
       //   -- we will use -101 if allocation fails
       //   if (info > 0), U(i-1,i-1) is exactly zero
-      int info = -101;
-      traits::detail::array<int> ipiv (traits::matrix_size1 (a));
+      integer_t info = -101;
+      traits::detail::array<integer_t> ipiv (traits::matrix_size1 (a));
       if (ipiv.valid())
         info = gesv (a, ipiv, b);
       return info;
@@ -151,31 +151,31 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void getrf (int const n, int const m,
-                  float* a, int const lda, int* ipiv, int* info)
+      void getrf (integer_t const n, integer_t const m,
+                  float* a, integer_t const lda, integer_t* ipiv, integer_t* info)
       {
         LAPACK_SGETRF (&n, &m, a, &lda, ipiv, info);
       }
 
       inline
-      void getrf (int const n, int const m,
-                  double* a, int const lda, int* ipiv, int* info)
+      void getrf (integer_t const n, integer_t const m,
+                  double* a, integer_t const lda, integer_t* ipiv, integer_t* info)
       {
         LAPACK_DGETRF (&n, &m, a, &lda, ipiv, info);
       }
 
       inline
-      void getrf (int const n, int const m,
-                  traits::complex_f* a, int const
-                  lda, int* ipiv, int* info)
+      void getrf (integer_t const n, integer_t const m,
+                  traits::complex_f* a, integer_t const
+                  lda, integer_t* ipiv, integer_t* info)
       {
         LAPACK_CGETRF (&n, &m, traits::complex_ptr (a), &lda, ipiv, info);
       }
 
       inline
-      void getrf (int const n, int const m,
-                  traits::complex_d* a, int const lda,
-                  int* ipiv, int* info)
+      void getrf (integer_t const n, integer_t const m,
+                  traits::complex_d* a, integer_t const lda,
+                  integer_t* ipiv, integer_t* info)
       {
         LAPACK_ZGETRF (&n, &m, traits::complex_ptr (a), &lda, ipiv, info);
       }
@@ -192,11 +192,11 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const n = traits::matrix_size1 (a);
-      int const m = traits::matrix_size2 (a);
+      integer_t const n = traits::matrix_size1 (a);
+      integer_t const m = traits::matrix_size2 (a);
       assert (traits::vector_size (ipiv) == (m < n ? m : n));
 
-      int info;
+      integer_t info;
       detail::getrf (n, m,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -215,26 +215,26 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void getrs (char const trans, int const n, int const nrhs,
-                  float const* a, int const lda, int const* ipiv,
-                  float* b, int const ldb, int* info)
+      void getrs (char const trans, integer_t const n, integer_t const nrhs,
+                  float const* a, integer_t const lda, integer_t const* ipiv,
+                  float* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_SGETRS (&trans, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
       }
 
       inline
-      void getrs (char const trans, int const n, int const nrhs,
-                  double const* a, int const lda, int const* ipiv,
-                  double* b, int const ldb, int* info)
+      void getrs (char const trans, integer_t const n, integer_t const nrhs,
+                  double const* a, integer_t const lda, integer_t const* ipiv,
+                  double* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_DGETRS (&trans, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
       }
 
       inline
-      void getrs (char const trans, int const n, int const nrhs,
-                  traits::complex_f const* a, int const lda,
-                  int const* ipiv,
-                  traits::complex_f* b, int const ldb, int* info)
+      void getrs (char const trans, integer_t const n, integer_t const nrhs,
+                  traits::complex_f const* a, integer_t const lda,
+                  integer_t const* ipiv,
+                  traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CGETRS (&trans, &n, &nrhs,
                        traits::complex_ptr (a), &lda, ipiv,
@@ -242,10 +242,10 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void getrs (char const trans, int const n, int const nrhs,
-                  traits::complex_d const* a, int const lda,
-                  int const* ipiv,
-                  traits::complex_d* b, int const ldb, int* info)
+      void getrs (char const trans, integer_t const n, integer_t const nrhs,
+                  traits::complex_d const* a, integer_t const lda,
+                  integer_t const* ipiv,
+                  traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZGETRS (&trans, &n, &nrhs,
                        traits::complex_ptr (a), &lda, ipiv,
@@ -270,12 +270,12 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const n = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size1 (a);
       assert (n == traits::matrix_size2 (a));
       assert (n == traits::matrix_size1 (b));
       assert (n == traits::vector_size (ipiv));
 
-      int info;
+      integer_t info;
       detail::getrs (trans, n, traits::matrix_size2 (b),
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                      traits::matrix_storage (a),
@@ -309,32 +309,32 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void getri (int const n, float* a, int const lda, int const* ipiv,
-                  float* work, int const lwork, int* info)
+      void getri (integer_t const n, float* a, integer_t const lda, integer_t const* ipiv,
+                  float* work, integer_t const lwork, integer_t* info)
       {
         LAPACK_SGETRI (&n, a, &lda, ipiv, work, &lwork, info);
       }
 
       inline
-      void getri (int const n, double* a, int const lda, int const* ipiv,
-                  double* work, int const lwork, int* info)
+      void getri (integer_t const n, double* a, integer_t const lda, integer_t const* ipiv,
+                  double* work, integer_t const lwork, integer_t* info)
       {
         LAPACK_DGETRI (&n, a, &lda, ipiv, work, &lwork, info);
       }
 
       inline
-      void getri (int const n, traits::complex_f* a, int const lda,
-          int const* ipiv, traits::complex_f* work, int const lwork,
-          int* info)
+      void getri (integer_t const n, traits::complex_f* a, integer_t const lda,
+          integer_t const* ipiv, traits::complex_f* work, integer_t const lwork,
+          integer_t* info)
       {
         LAPACK_CGETRI (&n, traits::complex_ptr (a), &lda, ipiv,
             traits::complex_ptr (work), &lwork, info);
       }
 
       inline
-      void getri (int const n, traits::complex_d* a, int const lda,
-          int const* ipiv, traits::complex_d* work, int const lwork,
-          int* info)
+      void getri (integer_t const n, traits::complex_d* a, integer_t const lda,
+          integer_t const* ipiv, traits::complex_d* work, integer_t const lwork,
+          integer_t* info)
       {
         LAPACK_ZGETRI (&n, traits::complex_ptr (a), &lda, ipiv,
             traits::complex_ptr (work), &lwork, info);
@@ -352,14 +352,14 @@ namespace boost { namespace numeric { namespace bindings {
               >::value));
         #endif
 
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert (n > 0);
         assert (n <= traits::leading_dimension (a));
         assert (n == traits::matrix_size2 (a));
         assert (n == traits::vector_size (ipiv));
         assert (n <= traits::vector_size (work)); //Minimal workspace size
 
-        int info;
+        integer_t info;
         //double* dummy = traits::matrix_storage (a);
         detail::getri (n, traits::matrix_storage (a),
             traits::leading_dimension (a),
@@ -376,25 +376,25 @@ namespace boost { namespace numeric { namespace bindings {
 
 
       inline
-      int getri_block(float)
+      integer_t getri_block(float)
       {
         return lapack::ilaenv(1, "sgetri", "");
       }
 
       inline
-      int getri_block(double)
+      integer_t getri_block(double)
       {
         return lapack::ilaenv(1, "dgetri", "");
       }
 
       inline
-      int getri_block(traits::complex_f)
+      integer_t getri_block(traits::complex_f)
       {
         return lapack::ilaenv(1, "cgetri", "");
       }
 
       inline
-      int getri_block(traits::complex_d)
+      integer_t getri_block(traits::complex_d)
       {
         return lapack::ilaenv(1, "zgetri", "");
       }
@@ -407,8 +407,8 @@ namespace boost { namespace numeric { namespace bindings {
     {
       typedef typename MatrA::value_type value_type;
 
-      int n = traits::matrix_size1(a);
-      traits::detail::array<value_type> work(std::max<int>(1,n));
+      std::ptrdiff_t n = traits::matrix_size1(a);
+      traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1,n));
 
       return detail::getri(a, ipiv, work);
 
@@ -421,9 +421,9 @@ namespace boost { namespace numeric { namespace bindings {
     {
       typedef typename MatrA::value_type value_type;
 
-      int n = traits::matrix_size1(a);
-      int nb = detail::getri_block(value_type());
-      traits::detail::array<value_type> work(std::max<int>(1,n*nb));
+      std::ptrdiff_t n = traits::matrix_size1(a);
+      std::ptrdiff_t nb = detail::getri_block(value_type());
+      traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1,n*nb));
 
       return detail::getri(a, ipiv, work);
     }

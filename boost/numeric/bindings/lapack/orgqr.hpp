@@ -56,34 +56,34 @@ namespace boost { namespace numeric { namespace bindings {
 
 
       inline
-      void orgqr(int const m, int const n, int const k,
-                 float* a, int const lda,
-                 float* tau, float* work, int const lwork, int& info)
+      void orgqr(integer_t const m, integer_t const n, integer_t const k,
+                 float* a, integer_t const lda,
+                 float* tau, float* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_SORGQR (&m, &n, &k, a, &lda, tau, work, &lwork, &info);
       }
 
       inline
-      void orgqr(int const m, int const n, int const k,
-                 double* a, int const lda,
-                 double* tau, double* work, int const lwork, int& info)
+      void orgqr(integer_t const m, integer_t const n, integer_t const k,
+                 double* a, integer_t const lda,
+                 double* tau, double* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_DORGQR (&m, &n, &k, a, &lda, tau, work, &lwork, &info);
       }
 
       inline
-      void orgqr(int const m, int const n, int const k,
-                 traits::complex_f* a, int const lda,
-                 traits::complex_f* tau, traits::complex_f* work, int const lwork, int& info)
+      void orgqr(integer_t const m, integer_t const n, integer_t const k,
+                 traits::complex_f* a, integer_t const lda,
+                 traits::complex_f* tau, traits::complex_f* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_CUNGQR (&m, &n, &k, traits::complex_ptr(a), &lda, traits::complex_ptr(tau),
                        traits::complex_ptr(work), &lwork, &info);
       }
 
       inline
-      void orgqr(int const m, int const n, int const k,
-                 traits::complex_d* a, int const lda,
-                 traits::complex_d* tau, traits::complex_d* work, int const lwork, int& info)
+      void orgqr(integer_t const m, integer_t const n, integer_t const k,
+                 traits::complex_d* a, integer_t const lda,
+                 traits::complex_d* tau, traits::complex_d* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_ZUNGQR (&m, &n, &k, traits::complex_ptr(a), &lda, traits::complex_ptr(tau),
                        traits::complex_ptr(work), &lwork, &info);
@@ -104,14 +104,14 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      const int m = traits::matrix_size1 (a);
-      const int n = traits::matrix_size2 (a);
-      const int k = n;
+      const integer_t m = traits::matrix_size1 (a);
+      const integer_t n = traits::matrix_size2 (a);
+      const integer_t k = n;
 
-      assert (std::min<int>(m,n) <= traits::vector_size (tau));
+      assert (std::min<integer_t>(m,n) <= traits::vector_size (tau));
       assert (n <= traits::vector_size (work));
 
-      int info;
+      integer_t info;
       detail::orgqr (m, n, k,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -128,8 +128,8 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename Tau>
     int orgqr (A& a, Tau& tau, optimal_workspace ) {
        typedef typename A::value_type value_type ;
-       const int n = traits::matrix_size2 (a);
-       traits::detail::array<value_type> work(std::max<int>(1, n*32));
+       const std::ptrdiff_t n = traits::matrix_size2 (a);
+       traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n*32));
        return orgqr( a, tau, work );
 
     }
@@ -140,8 +140,8 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename Tau>
     int orgqr (A& a, Tau& tau, minimal_workspace ) {
        typedef typename A::value_type value_type ;
-       const int n = traits::matrix_size2 (a);
-       traits::detail::array<value_type> work(std::max<int>(1, n));
+       const std::ptrdiff_t n = traits::matrix_size2 (a);
+       traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n));
        return orgqr( a, tau, work );
     }
 
@@ -151,8 +151,8 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename Tau, typename Work>
     int orgqr (A& a, Tau& tau, detail::workspace1<Work> workspace ) {
        typedef typename A::value_type value_type ;
-       const int n = traits::matrix_size2 (a);
-       traits::detail::array<value_type> work(std::max<int>(1, n));
+       const std::ptrdiff_t n = traits::matrix_size2 (a);
+       traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n));
        return orgqr( a, tau, workspace.w_ );
     }
 

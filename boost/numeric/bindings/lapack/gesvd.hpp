@@ -58,11 +58,11 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void gesvd (char const jobu, char const jobvt,
-                  int const m, int const n, float* a, int const lda,
-                  float* s, float* u, int const ldu,
-                  float* vt, int const ldvt,
-                  float* work, int const lwork, float* /* dummy */,
-                  int* info)
+                  integer_t const m, integer_t const n, float* a, integer_t const lda,
+                  float* s, float* u, integer_t const ldu,
+                  float* vt, integer_t const ldvt,
+                  float* work, integer_t const lwork, float* /* dummy */,
+                  integer_t* info)
       {
         LAPACK_SGESVD (&jobu, &jobvt, &m, &n, a, &lda,
                        s, u, &ldu, vt, &ldvt, work, &lwork, info);
@@ -70,11 +70,11 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void gesvd (char const jobu, char const jobvt,
-                  int const m, int const n, double* a, int const lda,
-                  double* s, double* u, int const ldu,
-                  double* vt, int const ldvt,
-                  double* work, int const lwork, double* /* dummy */,
-                  int* info)
+                  integer_t const m, integer_t const n, double* a, integer_t const lda,
+                  double* s, double* u, integer_t const ldu,
+                  double* vt, integer_t const ldvt,
+                  double* work, integer_t const lwork, double* /* dummy */,
+                  integer_t* info)
       {
         LAPACK_DGESVD (&jobu, &jobvt, &m, &n, a, &lda,
                        s, u, &ldu, vt, &ldvt, work, &lwork, info);
@@ -82,12 +82,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void gesvd (char const jobu, char const jobvt,
-                  int const m, int const n,
-                  traits::complex_f* a, int const lda,
-                  float* s, traits::complex_f* u, int const ldu,
-                  traits::complex_f* vt, int const ldvt,
-                  traits::complex_f* work, int const lwork,
-                  float* rwork, int* info)
+                  integer_t const m, integer_t const n,
+                  traits::complex_f* a, integer_t const lda,
+                  float* s, traits::complex_f* u, integer_t const ldu,
+                  traits::complex_f* vt, integer_t const ldvt,
+                  traits::complex_f* work, integer_t const lwork,
+                  float* rwork, integer_t* info)
       {
         LAPACK_CGESVD (&jobu, &jobvt, &m, &n,
                        traits::complex_ptr (a), &lda, s,
@@ -98,12 +98,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void gesvd (char const jobu, char const jobvt,
-                  int const m, int const n,
-                  traits::complex_d* a, int const lda,
-                  double* s, traits::complex_d* u, int const ldu,
-                  traits::complex_d* vt, int const ldvt,
-                  traits::complex_d* work, int const lwork,
-                  double* rwork, int* info)
+                  integer_t const m, integer_t const n,
+                  traits::complex_d* a, integer_t const lda,
+                  double* s, traits::complex_d* u, integer_t const ldu,
+                  traits::complex_d* vt, integer_t const ldvt,
+                  traits::complex_d* work, integer_t const lwork,
+                  double* rwork, integer_t* info)
       {
         LAPACK_ZGESVD (&jobu, &jobvt, &m, &n,
                        traits::complex_ptr (a), &lda, s,
@@ -113,44 +113,44 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      int gesvd_min_work (float, int m, int n) {
-        int minmn = m < n ? m : n;
-        int maxmn = m < n ? n : m;
-        int m3x = 3 * minmn + maxmn;
-        int m5 = 5 * minmn;
+      integer_t gesvd_min_work (float, integer_t m, integer_t n) {
+        integer_t minmn = m < n ? m : n;
+        integer_t maxmn = m < n ? n : m;
+        integer_t m3x = 3 * minmn + maxmn;
+        integer_t m5 = 5 * minmn;
         return m3x < m5 ? m5 : m3x;
       }
       inline
-      int gesvd_min_work (double, int m, int n) {
-        int minmn = m < n ? m : n;
-        int maxmn = m < n ? n : m;
-        int m3x = 3 * minmn + maxmn;
-        int m5 = 5 * minmn;
+      integer_t gesvd_min_work (double, integer_t m, integer_t n) {
+        integer_t minmn = m < n ? m : n;
+        integer_t maxmn = m < n ? n : m;
+        integer_t m3x = 3 * minmn + maxmn;
+        integer_t m5 = 5 * minmn;
         return m3x < m5 ? m5 : m3x;
       }
       inline
-      int gesvd_min_work (traits::complex_f, int m, int n) {
-        int minmn = m < n ? m : n;
-        int maxmn = m < n ? n : m;
+      integer_t gesvd_min_work (traits::complex_f, integer_t m, integer_t n) {
+        integer_t minmn = m < n ? m : n;
+        integer_t maxmn = m < n ? n : m;
         return 2 * minmn + maxmn;
       }
       inline
-      int gesvd_min_work (traits::complex_d, int m, int n) {
-        int minmn = m < n ? m : n;
-        int maxmn = m < n ? n : m;
+      integer_t gesvd_min_work (traits::complex_d, integer_t m, integer_t n) {
+        integer_t minmn = m < n ? m : n;
+        integer_t maxmn = m < n ? n : m;
         return 2 * minmn + maxmn;
       }
 
       inline
-      int gesvd_rwork (float, int, int) { return 1; }
+      integer_t gesvd_rwork (float, integer_t, integer_t) { return 1; }
       inline
-      int gesvd_rwork (double, int, int) { return 1; }
+      integer_t gesvd_rwork (double, integer_t, integer_t) { return 1; }
       inline
-      int gesvd_rwork (traits::complex_f, int m, int n) {
+      integer_t gesvd_rwork (traits::complex_f, integer_t m, integer_t n) {
         return 5 * (m < n ? m : n);
       }
       inline
-      int gesvd_rwork (traits::complex_d, int m, int n) {
+      integer_t gesvd_rwork (traits::complex_d, integer_t m, integer_t n) {
         return 5 * (m < n ? m : n);
       }
 
@@ -158,7 +158,7 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA>
-    int gesvd_work (char const q,
+    integer_t gesvd_work (char const q,
                     char const jobu, char const jobvt, MatrA const& a)
     {
 
@@ -178,9 +178,9 @@ namespace boost { namespace numeric { namespace bindings {
       assert (jobvt == 'N' || jobvt == 'O' || jobvt == 'A' || jobvt == 'S');
       assert (!(jobu == 'O' && jobvt == 'O'));
 
-      int const m = traits::matrix_size1 (a);
-      int const n = traits::matrix_size2 (a);
-      int lw = -13;
+      integer_t const m = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size2 (a);
+      integer_t lw = -13;
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<MatrA>::value_type val_t;
@@ -196,7 +196,7 @@ namespace boost { namespace numeric { namespace bindings {
       if (q == 'O') {
         // traits::detail::array<val_t> w (0);
         val_t w;
-        int info;
+        integer_t info;
         detail::gesvd (jobu, jobvt, m, n,
                        traits::matrix_storage (a2),
                        traits::leading_dimension (a2),
@@ -219,7 +219,7 @@ namespace boost { namespace numeric { namespace bindings {
 
 
     template <typename MatrA>
-    int gesvd_rwork (MatrA const& a) {
+    integer_t gesvd_rwork (MatrA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -270,10 +270,10 @@ namespace boost { namespace numeric { namespace bindings {
         >::value));
 #endif
 
-      int const m = traits::matrix_size1 (a);
-      int const n = traits::matrix_size2 (a);
+      integer_t const m = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size2 (a);
 #ifndef NDEBUG /* this variable is only used in assertions below */
-      int const minmn = m < n ? m : n;
+      integer_t const minmn = m < n ? m : n;
 #endif
 
       assert (minmn == traits::vector_size (s));
@@ -298,7 +298,7 @@ namespace boost { namespace numeric { namespace bindings {
 #endif 
       assert (traits::vector_size(w) >= detail::gesvd_min_work(val_t(),m,n));
 
-      int info;
+      integer_t info;
       detail::gesvd (jobu, jobvt, m, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -336,10 +336,10 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const m = traits::matrix_size1 (a);
-      int const n = traits::matrix_size2 (a);
+      integer_t const m = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size2 (a);
 #ifndef NDEBUG /* this variable is only used in assertions below */
-      int const minmn = m < n ? m : n;
+      integer_t const minmn = m < n ? m : n;
 #endif
 
       assert (minmn == traits::vector_size (s));
@@ -365,7 +365,7 @@ namespace boost { namespace numeric { namespace bindings {
       assert (traits::vector_size(w) >= detail::gesvd_min_work(val_t(),m,n));
       assert (traits::vector_size(rw) >= detail::gesvd_rwork(val_t(),m,n));
 
-      int info;
+      integer_t info;
       detail::gesvd (jobu, jobvt, m, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -402,10 +402,10 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const m = traits::matrix_size1 (a);
-      int const n = traits::matrix_size2 (a);
+      integer_t const m = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size2 (a);
 #ifndef NDEBUG /* this variable is only used in assertions below */
-      int const minmn = m < n ? m : n;
+      integer_t const minmn = m < n ? m : n;
 #endif
 
       assert (minmn == traits::vector_size (s));
@@ -437,15 +437,15 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
       typedef typename traits::type_traits<val_t>::real_type real_t;
 
-      int const lw = gesvd_work (opt, jobu, jobvt, a);
+      integer_t const lw = gesvd_work (opt, jobu, jobvt, a);
       traits::detail::array<val_t> w (lw);
       if (!w.valid()) return -101;
 
-      int const lrw = gesvd_rwork (a);
+      integer_t const lrw = gesvd_rwork (a);
       traits::detail::array<real_t> rw (lrw);
       if (!rw.valid()) return -102;
 
-      int info;
+      integer_t info;
       detail::gesvd (jobu, jobvt, m, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -488,10 +488,10 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const m = traits::matrix_size1 (a);
-      int const n = traits::matrix_size2 (a);
+      integer_t const m = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size2 (a);
 #ifndef NDEBUG /* this variable is only used in assertions below */
-      int const minmn = m < n ? m : n;
+      integer_t const minmn = m < n ? m : n;
 #endif
 
       assert (minmn == traits::vector_size (s));
@@ -503,15 +503,15 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
       typedef typename traits::type_traits<val_t>::real_type real_t;
 
-      int const lw = gesvd_work ('O', 'N', 'N', a);
+      integer_t const lw = gesvd_work ('O', 'N', 'N', a);
       traits::detail::array<val_t> w (lw);
       if (!w.valid()) return -101;
 
-      int const lrw = gesvd_rwork (a);
+      integer_t const lrw = gesvd_rwork (a);
       traits::detail::array<real_t> rw (lrw);
       if (!rw.valid()) return -102;
 
-      int info;
+      integer_t info;
       detail::gesvd ('N', 'N', m, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),

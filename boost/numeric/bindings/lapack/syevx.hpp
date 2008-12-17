@@ -17,7 +17,7 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename T, typename W, typename Z, typename IFail, typename Work>
     inline
     int syevx (
-      char jobz, char range, A& a, T vl, T vu, int il, int iu, T abstol, int& m,
+      char jobz, char range, A& a, T vl, T vu, integer_t il, integer_t iu, T abstol, integer_t& m,
       W& w, Z& z, IFail& ifail, Work work = optimal_workspace() ) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK

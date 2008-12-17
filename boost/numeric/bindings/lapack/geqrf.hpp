@@ -53,26 +53,26 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void geqrf (int const m, int const n,
-                 float* a, int const lda,
-                 float* tau, float* work, int const lwork, int& info)
+      void geqrf (integer_t const m, integer_t const n,
+                 float* a, integer_t const lda,
+                 float* tau, float* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_SGEQRF (&m, &n, a, &lda, tau, work, &lwork, &info);
       }
 
       inline
-      void geqrf (int const m, int const n,
-                 double* a, int const lda,
-                 double* tau, double* work, int const lwork, int& info)
+      void geqrf (integer_t const m, integer_t const n,
+                 double* a, integer_t const lda,
+                 double* tau, double* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_DGEQRF (&m, &n, a, &lda, tau, work, &lwork, &info);
       }
 
       inline
-      void geqrf (int const m, int const n,
-                  traits::complex_f* a, int const lda,
+      void geqrf (integer_t const m, integer_t const n,
+                  traits::complex_f* a, integer_t const lda,
                   traits::complex_f* tau, traits::complex_f* work,
-                  int const lwork, int& info)
+                  integer_t const lwork, integer_t& info)
       {
         LAPACK_CGEQRF (&m, &n,
                       traits::complex_ptr (a), &lda,
@@ -82,10 +82,10 @@ namespace boost { namespace numeric { namespace bindings {
 
 
       inline
-      void geqrf (int const m, int const n,
-                  traits::complex_d* a, int const lda,
+      void geqrf (integer_t const m, integer_t const n,
+                  traits::complex_d* a, integer_t const lda,
                   traits::complex_d* tau, traits::complex_d* work,
-                  int const lwork, int& info)
+                  integer_t const lwork, integer_t& info)
       {
         LAPACK_ZGEQRF (&m, &n,
                       traits::complex_ptr (a), &lda,
@@ -105,12 +105,12 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const m = traits::matrix_size1 (a);
-      int const n = traits::matrix_size2 (a);
-      assert (std::min<int>(m,n) <= traits::vector_size (tau));
+      integer_t const m = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size2 (a);
+      assert (std::min<integer_t>(m,n) <= traits::vector_size (tau));
       assert (n <= traits::vector_size (work));
 
-      int info;
+      integer_t info;
       detail::geqrf (m, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -127,8 +127,8 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename Tau>
     int geqrf (A& a, Tau& tau, optimal_workspace ) {
        typedef typename A::value_type value_type ;
-       const int n = traits::matrix_size2 (a);
-       traits::detail::array<value_type> work(std::max<int>(1, n*32));
+       const std::ptrdiff_t n = traits::matrix_size2 (a);
+       traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n*32));
        return geqrf( a, tau, work );
     }
 
@@ -138,8 +138,8 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename Tau>
     int geqrf (A& a, Tau& tau, minimal_workspace ) {
        typedef typename A::value_type value_type ;
-       const int n = traits::matrix_size2 (a);
-       traits::detail::array<value_type> work(std::max<int>(1, n));
+       const std::ptrdiff_t n = traits::matrix_size2 (a);
+       traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n));
        return geqrf( a, tau, work );
     }
 
@@ -151,8 +151,8 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename A, typename Tau, typename Work>
     int geqrf (A& a, Tau& tau, detail::workspace1<Work> workspace ) {
        typedef typename A::value_type value_type ;
-       const int n = traits::matrix_size2 (a);
-       traits::detail::array<value_type> work(std::max<int>(1, n));
+       const std::ptrdiff_t n = traits::matrix_size2 (a);
+       traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n));
        return geqrf( a, tau, workspace.w_ );
     }
 

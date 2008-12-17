@@ -35,13 +35,13 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     namespace detail {
 
       inline
-      void sytrd ( char uplo, int n, float* a, int lda, float* d, float* e, float* tau, float* work, int lwork, int& info )
+      void sytrd ( char uplo, integer_t n, float* a, integer_t lda, float* d, float* e, float* tau, float* work, integer_t lwork, integer_t& info )
       {
         LAPACK_SSYTRD( &uplo, &n, a, &lda, d, e, tau, work, &lwork, &info ) ;
       }
 
       inline
-      void sytrd ( char uplo, int n, double* a, int lda, double* d, double* e, double* tau, double* work, int lwork, int& info )
+      void sytrd ( char uplo, integer_t n, double* a, integer_t lda, double* d, double* e, double* tau, double* work, integer_t lwork, integer_t& info )
       {
         LAPACK_DSYTRD( &uplo, &n, a, &lda, d, e, tau, work, &lwork, &info ) ;
       }
@@ -52,17 +52,17 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     template <typename A, typename D, typename E, typename Tau, typename W>
     int sytrd( char uplo, A& a, D& d, E& e, Tau& tau, W& work ) {
 
-      int const n = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size1 (a);
       assert( traits::matrix_size2 (a) == n );
       assert( traits::vector_size (d) == n );
       assert( traits::vector_size (e) == n-1 );
       assert( traits::vector_size (tau) == n-1 );
       assert( uplo=='U' || uplo=='L' );
 
-      int lwork = traits::vector_size( work ) ;
+      integer_t lwork = traits::vector_size( work ) ;
       assert( lwork >= 1 );
 
-      int info;
+      integer_t info;
       detail::sytrd( uplo, n,
                      traits::matrix_storage( a ),
                      traits::leading_dimension( a ),
@@ -77,7 +77,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     template <typename A, typename D, typename E, typename Tau>
     int sytrd( char uplo, A& a, D& d, E& e, Tau& tau, optimal_workspace=optimal_workspace() ) {
-      int info;
+      integer_t info;
       detail::sytrd( uplo, traits::matrix_size1( a ),
                      traits::matrix_storage( a ),
                      traits::leading_dimension( a ),
@@ -87,7 +87,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
                      traits::vector_storage( tau ), -1,
                      info ) ;
       if (info) return info ;
-      int lwork = * traits::vector_storage( tau ) ;
+      integer_t lwork = * traits::vector_storage( tau ) ;
 
       traits::detail::array<typename traits::vector_traits<D>::value_type> work( lwork );
 
@@ -97,7 +97,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     template <typename A, typename D, typename E, typename Tau>
     int sytrd( char uplo, A& a, D& d, E& e, Tau& tau, minimal_workspace ) {
-      int lwork = 1 ;
+      integer_t lwork = 1 ;
       traits::detail::array<typename traits::vector_traits<D>::value_type> work( lwork );
 
       return sytrd( uplo, a, d, e, tau, work ) ;

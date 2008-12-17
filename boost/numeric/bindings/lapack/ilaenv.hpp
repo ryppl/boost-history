@@ -26,9 +26,9 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
    */
   
   inline
-  int ilaenv (int const ispec, const char* name, const char* opts,
-              int const n1 = -1, int const n2 = -1,
-              int const n3 = -1, int const n4 = -1)
+  integer_t ilaenv (integer_t const ispec, const char* name, const char* opts,
+              integer_t const n1 = -1, integer_t const n2 = -1,
+              integer_t const n3 = -1, integer_t const n4 = -1)
   {
     return ::LAPACK_ILAENV (&ispec, name, opts, &n1, &n2, &n3, &n4,
                           std::strlen (name), std::strlen (opts));

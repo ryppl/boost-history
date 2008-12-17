@@ -27,15 +27,15 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
             matrix_type_c &c
             )
   {
-    const int m = TRANSA == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) ;
-    const int n = TRANSB == traits::NO_TRANSPOSE ? traits::matrix_size2( b ) : traits::matrix_size1( b );
-    const int k = TRANSA == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
+    const integer_t m = TRANSA == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) ;
+    const integer_t n = TRANSB == traits::NO_TRANSPOSE ? traits::matrix_size2( b ) : traits::matrix_size1( b );
+    const integer_t k = TRANSA == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
     assert( k ==  ( TRANSB == traits::NO_TRANSPOSE ? traits::matrix_size1( b ) : traits::matrix_size2( b ) ) ) ;
     assert( m == traits::matrix_size1( c ) );
     assert( n == traits::matrix_size2( c ) );
-    const int lda = traits::leading_dimension( a );
-    const int ldb = traits::leading_dimension( b );
-    const int ldc = traits::leading_dimension( c );
+    const integer_t lda = traits::leading_dimension( a );
+    const integer_t ldb = traits::leading_dimension( b );
+    const integer_t ldc = traits::leading_dimension( c );
 
     const value_type *a_ptr = traits::matrix_storage( a ) ;
     const value_type *b_ptr = traits::matrix_storage( b ) ;
@@ -75,12 +75,12 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   template < typename value_type, typename matrix_type_a, typename matrix_type_c >
   void syrk( char uplo, char trans, const value_type& alpha, const matrix_type_a& a,
              const value_type& beta, matrix_type_c& c) {
-     const int n = traits::matrix_size1( c );
+     const integer_t n = traits::matrix_size1( c );
      assert( n == traits::matrix_size2( c ) );
-     const int k = trans == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
+     const integer_t k = trans == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
      assert( n == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) );
-     const int lda = traits::leading_dimension( a );
-     const int ldc = traits::leading_dimension( c );
+     const integer_t lda = traits::leading_dimension( a );
+     const integer_t ldc = traits::leading_dimension( c );
 
      const value_type *a_ptr = traits::matrix_storage( a ) ;
      value_type *c_ptr = traits::matrix_storage( c ) ;
@@ -96,12 +96,12 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
              const real_type& beta, matrix_type_c& c) {
      typedef typename matrix_type_c::value_type value_type ;
 
-     const int n = traits::matrix_size1( c );
+     const integer_t n = traits::matrix_size1( c );
      assert( n == traits::matrix_size2( c ) );
-     const int k = trans == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
+     const integer_t k = trans == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
      assert( n == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) );
-     const int lda = traits::leading_dimension( a );
-     const int ldc = traits::leading_dimension( c );
+     const integer_t lda = traits::leading_dimension( a );
+     const integer_t ldc = traits::leading_dimension( c );
 
      const value_type *a_ptr = traits::matrix_storage( a ) ;
      value_type *c_ptr = traits::matrix_storage( c ) ;
@@ -114,8 +114,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   // op( A ) = A, A^T, A^H
   template < class T, class A, class B >
   void trsm( char side, char uplo, char transa, char diag, T const& alpha, A const& a, B& b ) {
-     const int m = traits::matrix_size1( b ) ;
-     const int n = traits::matrix_size2( b ) ;
+     const integer_t m = traits::matrix_size1( b ) ;
+     const integer_t n = traits::matrix_size2( b ) ;
      assert( ( side=='L' && m==traits::matrix_size2( a ) && m==traits::matrix_size1( a ) ) ||
              ( side=='R' && n==traits::matrix_size2( a ) && n==traits::matrix_size1( a ) ) ) ;
      assert( side=='R' || side=='L' ) ;

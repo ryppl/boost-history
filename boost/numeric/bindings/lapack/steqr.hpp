@@ -35,13 +35,13 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     namespace detail {
 
       inline
-      void steqr ( char compz, int n, float* d, float* e, float* z, int ldz, float* work, int& info )
+      void steqr ( char compz, integer_t n, float* d, float* e, float* z, integer_t ldz, float* work, integer_t& info )
       {
         LAPACK_SSTEQR( &compz, &n, d, e, z, &ldz, work, &info ) ;
       }
 
       inline
-      void steqr ( char compz, int n, double* d, double* e, double* z, int ldz, double* work, int& info )
+      void steqr ( char compz, integer_t n, double* d, double* e, double* z, integer_t ldz, double* work, integer_t& info )
       {
         LAPACK_DSTEQR( &compz, &n, d, e, z, &ldz, work, &info ) ;
       }
@@ -52,15 +52,15 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     template <typename D, typename E, typename Z, typename W>
     int steqr( char compz, D& d, E& e, Z& z, W& work ) {
 
-      int const n = traits::vector_size (d);
+      integer_t const n = traits::vector_size (d);
       assert( traits::vector_size (e) == n-1 );
       assert( traits::matrix_size1 (z) == n );
       assert( traits::matrix_size2 (z) == n );
       assert( compz=='N' || compz=='V' || compz=='I' );
 
-      int lwork = traits::vector_size( work ) ;
+      integer_t lwork = traits::vector_size( work ) ;
 
-      int info;
+      integer_t info;
       detail::steqr( compz, n,
                      traits::vector_storage( d ),
                      traits::vector_storage( e ),
@@ -74,7 +74,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     template <typename D, typename E, typename Z>
     int steqr( char compz, D& d, E& e, Z& z, optimal_workspace ) {
-      int lwork = 0 ;
+      integer_t lwork = 0 ;
       if (compz != 'N') lwork = 2 * traits::vector_size( d ) - 2 ;
 
       traits::detail::array<typename traits::vector_traits<D>::value_type> work( lwork );
@@ -85,7 +85,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     template <typename D, typename E, typename Z>
     int steqr( char compz, D& d, E& e, Z& z, minimal_workspace ) {
-      int lwork = 1 ;
+      integer_t lwork = 1 ;
       if (compz != 'N') lwork = 2 * traits::vector_size( e ) ;
 
       traits::detail::array<typename traits::vector_traits<D>::value_type> work( lwork );

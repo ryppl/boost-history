@@ -62,10 +62,10 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline void heevd (
-        char const jobz, char const uplo, int const n,
-        float* a, int const lda,
-        float* w, float* work, int const lwork,
-        int* iwork, int const liwork, int& info)
+        char const jobz, char const uplo, integer_t const n,
+        float* a, integer_t const lda,
+        float* w, float* work, integer_t const lwork,
+        integer_t* iwork, integer_t const liwork, integer_t& info)
       {
         LAPACK_SSYEVD (
           &jobz, &uplo, &n,
@@ -75,10 +75,10 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline void heevd (
-        char const jobz, char const uplo, int const n,
-        double* a, int const lda,
-        double* w, double* work, int const lwork,
-        int* iwork, int const liwork, int& info)
+        char const jobz, char const uplo, integer_t const n,
+        double* a, integer_t const lda,
+        double* w, double* work, integer_t const lwork,
+        integer_t* iwork, integer_t const liwork, integer_t& info)
       {
         LAPACK_DSYEVD (
           &jobz, &uplo, &n,
@@ -88,10 +88,10 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline void heevd (
-        char const jobz, char const uplo, int const n,
-        traits::complex_f* a, int const lda,
-        float* w, traits::complex_f* work, int const lwork,
-        float* rwork, int const lrwork, int* iwork, int const liwork, int& info)
+        char const jobz, char const uplo, integer_t const n,
+        traits::complex_f* a, integer_t const lda,
+        float* w, traits::complex_f* work, integer_t const lwork,
+        float* rwork, integer_t const lrwork, integer_t* iwork, integer_t const liwork, integer_t& info)
       {
         LAPACK_CHEEVD (
           &jobz, &uplo, &n,
@@ -102,10 +102,10 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline void heevd (
-        char const jobz, char const uplo, int const n,
-        traits::complex_d* a, int const lda,
-        double* w, traits::complex_d* work, int const lwork,
-        double* rwork, int const lrwork, int* iwork, int const liwork, int& info)
+        char const jobz, char const uplo, integer_t const n,
+        traits::complex_d* a, integer_t const lda,
+        double* w, traits::complex_d* work, integer_t const lwork,
+        double* rwork, integer_t const lrwork, integer_t* iwork, integer_t const liwork, integer_t& info)
       {
         LAPACK_ZHEEVD (
           &jobz, &uplo, &n,
@@ -127,12 +127,12 @@ namespace boost { namespace numeric { namespace bindings {
         // Function that allocates temporary arrays
         template <typename T, typename R>
         void operator() (
-          char const jobz, char const uplo, int const n,
-          T* a, int const lda,
-          R* w, minimal_workspace, int& info) {
+          char const jobz, char const uplo, integer_t const n,
+          T* a, integer_t const lda,
+          R* w, minimal_workspace, integer_t& info) {
 
           traits::detail::array<T> work( jobz=='N' ? 1+2*n : 1+6*n+2*n*n );
-          traits::detail::array<int> iwork( jobz=='N' ? 1 : 3+5*n );
+          traits::detail::array<integer_t> iwork( jobz=='N' ? 1 : 3+5*n );
 
           heevd( jobz, uplo, n, a, lda, w,
             traits::vector_storage (work), traits::vector_size (work),
@@ -142,11 +142,11 @@ namespace boost { namespace numeric { namespace bindings {
         // Function that allocates temporary arrays
         template <typename T, typename R>
         void operator() (
-          char const jobz, char const uplo, int const n,
-          T* a, int const lda,
-          R* w, optimal_workspace, int& info) {
+          char const jobz, char const uplo, integer_t const n,
+          T* a, integer_t const lda,
+          R* w, optimal_workspace, integer_t& info) {
 
-          traits::detail::array<int> iwork( jobz=='N' ? 1 : 3+5*n );
+          traits::detail::array<integer_t> iwork( jobz=='N' ? 1 : 3+5*n );
 
           T workspace_query;
           heevd( jobz, uplo, n, a, lda, w,
@@ -164,9 +164,9 @@ namespace boost { namespace numeric { namespace bindings {
         // Function that uses given workarrays
         template <typename T, typename R, typename W, typename WI>
         void operator() (
-          char const jobz, char const uplo, int const n,
-          T* a, int const lda,
-          R* w, std::pair<detail::workspace1<W>, detail::workspace1<WI> > work, int& info) {
+          char const jobz, char const uplo, integer_t const n,
+          T* a, integer_t const lda,
+          R* w, std::pair<detail::workspace1<W>, detail::workspace1<WI> > work, integer_t& info) {
 
           assert (traits::vector_size (work.first.w_) >= jobz=='N' ? 1+2*n : 1+6*n+2*n*n);
           assert (traits::vector_size (work.second.w_) >= jobz=='N' ? 1 : 3+5*n);
@@ -184,13 +184,13 @@ namespace boost { namespace numeric { namespace bindings {
         // Function that allocates temporary arrays
         template <typename T, typename R>
         void operator() (
-          char const jobz, char const uplo, int const n,
-          T* a, int const lda,
-          R* w, minimal_workspace, int& info) {
+          char const jobz, char const uplo, integer_t const n,
+          T* a, integer_t const lda,
+          R* w, minimal_workspace, integer_t& info) {
 
           traits::detail::array<T> work( jobz=='N' ? 1+n : 2*n+n*n );
           traits::detail::array<R> rwork( jobz=='N' ? n : 1+5*n+2*n*n );
-          traits::detail::array<int> iwork( jobz=='N' ? 1 : 3+5*n );
+          traits::detail::array<integer_t> iwork( jobz=='N' ? 1 : 3+5*n );
 
           heevd( jobz, uplo, n, a, lda, w,
             traits::vector_storage (work), traits::vector_size (work),
@@ -201,12 +201,12 @@ namespace boost { namespace numeric { namespace bindings {
         // Function that allocates temporary arrays
         template <typename T, typename R>
         void operator() (
-          char const jobz, char const uplo, int const n,
-          T* a, int const lda,
-          R* w, optimal_workspace, int& info) {
+          char const jobz, char const uplo, integer_t const n,
+          T* a, integer_t const lda,
+          R* w, optimal_workspace, integer_t& info) {
 
           traits::detail::array<R> rwork( jobz=='N' ? n : 1+5*n+2*n*n );
-          traits::detail::array<int> iwork( jobz=='N' ? 1 : 3+5*n );
+          traits::detail::array<integer_t> iwork( jobz=='N' ? 1 : 3+5*n );
 
           T workspace_query;
           heevd( jobz, uplo, n, a, lda, w,
@@ -226,9 +226,9 @@ namespace boost { namespace numeric { namespace bindings {
         // Function that uses given workarrays
         template <typename T, typename R, typename WC, typename WR, typename WI>
         void operator() (
-          char const jobz, char const uplo, int const n,
-          T* a, int const lda,
-          R* w, std::pair<detail::workspace2<WC,WR>, detail::workspace1<WI> > work, int& info) {
+          char const jobz, char const uplo, integer_t const n,
+          T* a, integer_t const lda,
+          R* w, std::pair<detail::workspace2<WC,WR>, detail::workspace1<WI> > work, integer_t& info) {
 
           assert (traits::vector_size (work.first.w_) >= jobz=='N' ? 1+n : 2*n+n*n);
           assert (traits::vector_size (work.first.wr_) >= jobz=='N' ? n : 1+5*n+2*n*n);
@@ -255,13 +255,13 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const n = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size1 (a);
       assert (traits::matrix_size2 (a) == n);
       assert (traits::vector_size (w) == n);
       assert ( uplo=='U' || uplo=='L' );
       assert ( jobz=='N' || jobz=='V' );
 
-      int info;
+      integer_t info;
       detail::Heevd< n_workspace_args<typename A::value_type>::value >() (
         jobz, uplo, n,
         traits::matrix_storage (a),

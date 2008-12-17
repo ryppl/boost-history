@@ -27,10 +27,10 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     BOOST_STATIC_ASSERT( ( boost::is_same< typename vector_x_type::value_type, typename vector_y_type::value_type >::value ) ) ;
 #endif
 
-    const int n =  traits::vector_size( x ) ;
+    const integer_t n =  traits::vector_size( x ) ;
     assert( n==traits::vector_size( y ) ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
     typename traits::vector_traits<vector_x_type>::value_type const *x_ptr = traits::vector_storage( x ) ;
     typename traits::vector_traits<vector_y_type>::value_type *y_ptr = traits::vector_storage( y ) ;
 
@@ -48,8 +48,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     BOOST_STATIC_ASSERT( ( boost::is_same< value_type, typename vector_type::value_type >::value ) ) ;
 #endif
 
-    const int n =  traits::vector_size( x ) ;
-    const int stride = traits::vector_stride( x ) ;
+    const integer_t n =  traits::vector_size( x ) ;
+    const integer_t stride = traits::vector_stride( x ) ;
     value_type *x_ptr = traits::vector_storage( x ) ;
 
     detail::scal( n, alpha, x_ptr, stride ) ;
@@ -69,9 +69,9 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #endif
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
-    const int n = traits::vector_size( x ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t n = traits::vector_size( x ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
     const value_type *x_ptr = traits::vector_storage( x ) ;
     value_type *y_ptr = traits::vector_storage( y ) ;
 
@@ -104,9 +104,9 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #endif
     value_type ;
 
-    const int n = traits::vector_size( x ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t n = traits::vector_size( x ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
 
     const value_type *x_ptr = traits::vector_storage( x ) ;
     const value_type *y_ptr = traits::vector_storage( y ) ;
@@ -138,9 +138,9 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #endif
     value_type ;
 
-    const int n = traits::vector_size( x ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t n = traits::vector_size( x ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
     const value_type *x_ptr = traits::vector_storage( x ) ;
     const value_type *y_ptr = traits::vector_storage( y ) ;
 
@@ -173,9 +173,9 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #endif
     value_type ;
 
-    const int n = traits::vector_size( x ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t n = traits::vector_size( x ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
     const value_type *x_ptr = traits::vector_storage( x ) ;
     const value_type *y_ptr = traits::vector_storage( y ) ;
 
@@ -199,8 +199,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 #else
     typedef vector_type::value_type value_type ;
 #endif
-    const int n = traits::vector_size( x ) ;
-    const int stride_x = traits::vector_stride( x ) ;
+    const integer_t n = traits::vector_size( x ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
     const value_type *x_ptr = traits::vector_storage( x ) ;
 
     return detail::nrm2( n, x_ptr, stride_x ) ;
@@ -224,8 +224,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     typedef vector_type::value_type value_type ;
 #endif
 
-    const int n = traits::vector_size( x ) ;
-    const int stride_x = traits::vector_stride( x ) ;
+    const integer_t n = traits::vector_size( x ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
     const value_type *x_ptr = traits::vector_storage( x ) ;
 
     return detail::asum( n, x_ptr, stride_x ) ;

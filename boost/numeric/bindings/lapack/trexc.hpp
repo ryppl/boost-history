@@ -43,53 +43,53 @@ namespace boost { namespace numeric { namespace bindings {
 
     namespace detail {
       inline
-      int trexc_work_size( int const n, float ) {return n;}
+      integer_t trexc_work_size( integer_t const n, float ) {return n;}
 
       inline
-      int trexc_work_size( int const n, double ) {return n;}
+      integer_t trexc_work_size( integer_t const n, double ) {return n;}
 
       inline
-      int trexc_work_size( int const n, traits::complex_f ) {return 0;}
+      integer_t trexc_work_size( integer_t const n, traits::complex_f ) {return 0;}
 
       inline
-      int trexc_work_size( int const n, traits::complex_d ) {return 0;}
+      integer_t trexc_work_size( integer_t const n, traits::complex_d ) {return 0;}
     }
 
     // Get the minimum size of the work array.
     template <typename MatrT>
-    int trexc_work_size(const MatrT& t) {
+    integer_t trexc_work_size(const MatrT& t) {
        return detail::trexc_work_size( traits::matrix_size1(t), typename MatrT::value_type() );
     }
 
     namespace detail {
       inline
-      void trexc (char const compq, int const n,
-                 float* t, int const ldt, float* q, int const ldq, int& ifst, int& ilst,
-                 float* work, int& info)
+      void trexc (char const compq, integer_t const n,
+                 float* t, integer_t const ldt, float* q, integer_t const ldq, integer_t& ifst, integer_t& ilst,
+                 float* work, integer_t& info)
       {
         LAPACK_STREXC (&compq, &n, t, &ldt, q, &ldq, &ifst, &ilst, work, &info);
       }
 
       inline
-      void trexc (char const compq, int const n,
-                 double* t, int const ldt, double* q, int const ldq, int& ifst, int& ilst,
-                 double* work, int& info)
+      void trexc (char const compq, integer_t const n,
+                 double* t, integer_t const ldt, double* q, integer_t const ldq, integer_t& ifst, integer_t& ilst,
+                 double* work, integer_t& info)
       {
         LAPACK_DTREXC (&compq, &n, t, &ldt, q, &ldq, &ifst, &ilst, work, &info);
       }
 
       inline
-      void trexc (char const compq, int const n,
-                 traits::complex_f* t, int const ldt, traits::complex_f* q, int const ldq, int& ifst, int& ilst,
-                 float* work, int& info)
+      void trexc (char const compq, integer_t const n,
+                 traits::complex_f* t, integer_t const ldt, traits::complex_f* q, integer_t const ldq, integer_t& ifst, integer_t& ilst,
+                 float* work, integer_t& info)
       {
         LAPACK_CTREXC (&compq, &n, traits::complex_ptr(t), &ldt, traits::complex_ptr(q), &ldq, &ifst, &ilst, &info);
       }
 
       inline
-      void trexc (char const compq, int const n,
-                 traits::complex_d* t, int const ldt, traits::complex_d* q, int const ldq, int& ifst, int& ilst,
-                 double* work, int& info)
+      void trexc (char const compq, integer_t const n,
+                 traits::complex_d* t, integer_t const ldt, traits::complex_d* q, integer_t const ldq, integer_t& ifst, integer_t& ilst,
+                 double* work, integer_t& info)
       {
         LAPACK_ZTREXC (&compq, &n, traits::complex_ptr(t), &ldt, traits::complex_ptr(q), &ldq, &ifst, &ilst, &info);
       }
@@ -98,7 +98,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     // Reorder Schur factorization with Schur vectors
     template <typename MatrT, typename Q, typename Work>
-    int trexc (char const compq, MatrT& t, Q& q, int& ifst, int& ilst, Work& work) {
+    int trexc (char const compq, MatrT& t, Q& q, integer_t& ifst, integer_t& ilst, Work& work) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -111,13 +111,13 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif 
 
-      int const n = traits::matrix_size1 (t);
+      integer_t const n = traits::matrix_size1 (t);
       assert (n == traits::matrix_size2 (t));
       assert (n == traits::matrix_size1 (q));
       assert (n == traits::matrix_size2 (q));
       assert (trexc_work_size(t) <= traits::vector_size (work));
 
-      int info;
+      integer_t info;
       detail::trexc (compq, n,
                     traits::matrix_storage (t),
                     traits::leading_dimension (t),

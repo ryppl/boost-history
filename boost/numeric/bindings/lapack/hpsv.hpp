@@ -54,9 +54,9 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void hpsv (char const uplo, int const n, int const nrhs,
-                 traits::complex_f* ap, int* ipiv,
-                 traits::complex_f* b, int const ldb, int* info)
+      void hpsv (char const uplo, integer_t const n, integer_t const nrhs,
+                 traits::complex_f* ap, integer_t* ipiv,
+                 traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CHPSV (&uplo, &n, &nrhs,
                       traits::complex_ptr (ap), ipiv,
@@ -64,9 +64,9 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void hpsv (char const uplo, int const n, int const nrhs,
-                 traits::complex_d* ap, int* ipiv,
-                 traits::complex_d* b, int const ldb, int* info)
+      void hpsv (char const uplo, integer_t const n, integer_t const nrhs,
+                 traits::complex_d* ap, integer_t* ipiv,
+                 traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZHPSV (&uplo, &n, &nrhs,
                       traits::complex_ptr (ap), ipiv,
@@ -87,12 +87,12 @@ namespace boost { namespace numeric { namespace bindings {
         >::value));
 #endif
 
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
         assert (n == traits::matrix_size1 (b));
 
         char uplo = traits::matrix_uplo_tag (a);
-        int info; 
+        integer_t info; 
         hpsv (uplo, n, traits::matrix_size2 (b),
               traits::matrix_storage (a),
               traits::vector_storage (i),
@@ -115,8 +115,8 @@ namespace boost { namespace numeric { namespace bindings {
     int hpsv (HermA& a, MatrB& b) {
       // with 'internal' pivot vector
 
-      int info = -101;
-      traits::detail::array<int> i (traits::matrix_size1 (a));
+      integer_t info = -101;
+      traits::detail::array<integer_t> i (traits::matrix_size1 (a));
 
       if (i.valid())
         info = detail::hpsv (a, i, b);
@@ -137,22 +137,22 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void hptrf (char const uplo, int const n,
-                  traits::complex_f* ap, int* ipiv, int* info)
+      void hptrf (char const uplo, integer_t const n,
+                  traits::complex_f* ap, integer_t* ipiv, integer_t* info)
       {
         LAPACK_CHPTRF (&uplo, &n, traits::complex_ptr (ap), ipiv, info);
       }
 
       inline
-      void hptrf (char const uplo, int const n,
-                  traits::complex_d* ap, int* ipiv, int* info)
+      void hptrf (char const uplo, integer_t const n,
+                  traits::complex_d* ap, integer_t* ipiv, integer_t* info)
       {
         LAPACK_ZHPTRF (&uplo, &n, traits::complex_ptr (ap), ipiv, info);
       }
 
       template <typename HermA, typename IVec, typename Work>
       inline
-      int hptrf (char const ul, HermA& a, IVec& i, Work& w, int const lw) {
+      int hptrf (char const ul, HermA& a, IVec& i, Work& w, integer_t const lw) {
 
       }
 
@@ -168,12 +168,12 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const n = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size1 (a);
       assert (n == traits::matrix_size2 (a));
       assert (n == traits::vector_size (i));
 
       char uplo = traits::matrix_uplo_tag (a);
-      int info;
+      integer_t info;
       detail::hptrf (uplo, n, traits::matrix_storage (a),
                      traits::vector_storage (i), &info);
       return info;
@@ -190,9 +190,9 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void hptrs (char const uplo, int const n, int const nrhs,
-                  traits::complex_f const* ap, int const* ipiv,
-                  traits::complex_f* b, int const ldb, int* info)
+      void hptrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  traits::complex_f const* ap, integer_t const* ipiv,
+                  traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CHPTRS (&uplo, &n, &nrhs,
                        traits::complex_ptr (ap), ipiv,
@@ -200,9 +200,9 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void hptrs (char const uplo, int const n, int const nrhs,
-                  traits::complex_d const* ap, int const* ipiv,
-                  traits::complex_d* b, int const ldb, int* info)
+      void hptrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  traits::complex_d const* ap, integer_t const* ipiv,
+                  traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZHPTRS (&uplo, &n, &nrhs,
                        traits::complex_ptr (ap), ipiv,
@@ -225,13 +225,13 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int const n = traits::matrix_size1 (a);
+      integer_t const n = traits::matrix_size1 (a);
       assert (n == traits::matrix_size2 (a));
       assert (n == traits::matrix_size1 (b));
       assert (n == traits::vector_size (i));
 
       char uplo = traits::matrix_uplo_tag (a);
-      int info;
+      integer_t info;
       detail::hptrs (uplo, n, traits::matrix_size2 (b),
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                      traits::matrix_storage (a),

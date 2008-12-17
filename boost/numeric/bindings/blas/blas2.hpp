@@ -37,13 +37,13 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
                            >::value ) ) ;
     */
 
-    const int m = traits::matrix_size1( a ) ;
-    const int n = traits::matrix_size2( a ) ;
+    const integer_t m = traits::matrix_size1( a ) ;
+    const integer_t n = traits::matrix_size2( a ) ;
     assert ( traits::vector_size( x ) >= (TRANS == traits::NO_TRANSPOSE ? n : m) ) ;
     assert ( traits::vector_size( y ) >= (TRANS == traits::NO_TRANSPOSE ? m : n) ) ;
-    const int lda = traits::leading_dimension( a ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t lda = traits::leading_dimension( a ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
 
     const value_type *a_ptr = traits::matrix_storage( a ) ;
     const value_type *x_ptr = traits::vector_storage( x ) ;
@@ -68,13 +68,13 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
                            >::value ) ) ;
     */
 
-    const int m = traits::matrix_size1( a ) ;
-    const int n = traits::matrix_size2( a ) ;
+    const integer_t m = traits::matrix_size1( a ) ;
+    const integer_t n = traits::matrix_size2( a ) ;
     assert ( traits::vector_size( x ) <= m ) ;
     assert ( traits::vector_size( y ) <= n ) ;
-    const int lda = traits::leading_dimension( a ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t lda = traits::leading_dimension( a ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
 
     const value_type *x_ptr = traits::vector_storage( x ) ;
     const value_type *y_ptr = traits::vector_storage( y ) ;
@@ -99,13 +99,13 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
 
 //    BOOST_STATIC_ASSERT( ( boost::is_same< x.value_type(), FEMTown::Complex() >::value ) ) ;
-    const int m = traits::matrix_size1( a ) ;
-    const int n = traits::matrix_size2( a ) ;
+    const integer_t m = traits::matrix_size1( a ) ;
+    const integer_t n = traits::matrix_size2( a ) ;
     assert ( traits::vector_size( x ) <= m ) ;
     assert ( traits::vector_size( y ) <= n ) ;
-    const int lda = traits::leading_dimension( a ) ;
-    const int stride_x = traits::vector_stride( x ) ;
-    const int stride_y = traits::vector_stride( y ) ;
+    const integer_t lda = traits::leading_dimension( a ) ;
+    const integer_t stride_x = traits::vector_stride( x ) ;
+    const integer_t stride_y = traits::vector_stride( y ) ;
 
     const value_type *x_ptr = traits::vector_storage( x ) ;
     const value_type *y_ptr = traits::vector_storage( y ) ;

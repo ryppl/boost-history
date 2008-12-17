@@ -65,12 +65,12 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
       inline
       void hbevx (
-        char const jobz, char const range, char const uplo, int const n, int const kd,
-        float* ab, int const ldab, float* q, int const ldq,
-        float const vl, float const vu, int const il, int const iu,
-        float const abstol, int& m,
-        float* w, float* z, int const ldz,
-        float* work, int* iwork, int* ifail, int& info)
+        char const jobz, char const range, char const uplo, integer_t const n, integer_t const kd,
+        float* ab, integer_t const ldab, float* q, integer_t const ldq,
+        float const vl, float const vu, integer_t const il, integer_t const iu,
+        float const abstol, integer_t& m,
+        float* w, float* z, integer_t const ldz,
+        float* work, integer_t* iwork, integer_t* ifail, integer_t& info)
       {
         LAPACK_SSBEVX (
           &jobz, &range, &uplo, &n, &kd, ab, &ldab, q, &ldq,
@@ -81,12 +81,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void hbevx (
-        char const jobz, char const range, char const uplo, int const n, int const kd,
-        double* ab, int const ldab, double* q, int const ldq,
-        double const vl, double const vu, int const il, int const iu,
-        double const abstol, int& m,
-        double* w, double* z, int const ldz,
-        double* work, int* iwork, int* ifail, int& info)
+        char const jobz, char const range, char const uplo, integer_t const n, integer_t const kd,
+        double* ab, integer_t const ldab, double* q, integer_t const ldq,
+        double const vl, double const vu, integer_t const il, integer_t const iu,
+        double const abstol, integer_t& m,
+        double* w, double* z, integer_t const ldz,
+        double* work, integer_t* iwork, integer_t* ifail, integer_t& info)
       {
         LAPACK_DSBEVX (
           &jobz, &range, &uplo, &n, &kd, ab, &ldab, q, &ldq,
@@ -97,12 +97,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void hbevx (
-        char const jobz, char const range, char const uplo, int const n, int const kd,
-        traits::complex_f* ab, int const ldab, traits::complex_f* q, int const ldq,
-        float const vl, float const vu, int const il, int const iu,
-        float const abstol, int& m,
-        float* w, traits::complex_f* z, int const ldz,
-        traits::complex_f* work, float* rwork, int* iwork, int* ifail, int& info)
+        char const jobz, char const range, char const uplo, integer_t const n, integer_t const kd,
+        traits::complex_f* ab, integer_t const ldab, traits::complex_f* q, integer_t const ldq,
+        float const vl, float const vu, integer_t const il, integer_t const iu,
+        float const abstol, integer_t& m,
+        float* w, traits::complex_f* z, integer_t const ldz,
+        traits::complex_f* work, float* rwork, integer_t* iwork, integer_t* ifail, integer_t& info)
       {
         LAPACK_CHBEVX (
           &jobz, &range, &uplo, &n, &kd, traits::complex_ptr(ab), &ldab,
@@ -114,12 +114,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline
       void hbevx (
-        char const jobz, char const range, char const uplo, int const n, int const kd,
-        traits::complex_d* ab, int const ldab, traits::complex_d* q, int const ldq,
-        double const vl, double const vu, int const il, int const iu,
-        double const abstol, int& m,
-        double* w, traits::complex_d* z, int const ldz,
-        traits::complex_d* work, double* rwork, int* iwork, int* ifail, int& info)
+        char const jobz, char const range, char const uplo, integer_t const n, integer_t const kd,
+        traits::complex_d* ab, integer_t const ldab, traits::complex_d* q, integer_t const ldq,
+        double const vl, double const vu, integer_t const il, integer_t const iu,
+        double const abstol, integer_t& m,
+        double* w, traits::complex_d* z, integer_t const ldz,
+        traits::complex_d* work, double* rwork, integer_t* iwork, integer_t* ifail, integer_t& info)
       {
         LAPACK_ZHBEVX (
           &jobz, &range, &uplo, &n, &kd, traits::complex_ptr(ab), &ldab,
@@ -140,14 +140,14 @@ namespace boost { namespace numeric { namespace bindings {
       template <>
       struct Hbevx< 1 > {
         template <typename T, typename R>
-        void operator() (char const jobz, char const range, char const uplo, int const n,
-          int const kd, T* ab, int const ldab, T* q, int const ldq,
-          R vl, R vu, int const il, int const iu, R abstol, int& m,
-          R* w, T* z, int const ldz,
-          minimal_workspace, int* ifail, int& info ) const {
+        void operator() (char const jobz, char const range, char const uplo, integer_t const n,
+          integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
+          R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
+          R* w, T* z, integer_t const ldz,
+          minimal_workspace, integer_t* ifail, integer_t& info ) const {
 
           traits::detail::array<T> work( 7*n );
-          traits::detail::array<int> iwork( 5*n );
+          traits::detail::array<integer_t> iwork( 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
@@ -157,14 +157,14 @@ namespace boost { namespace numeric { namespace bindings {
         }
 
         template <typename T, typename R>
-        void operator() (char const jobz, char const range, char const uplo, int const n,
-          int const kd, T* ab, int const ldab, T* q, int const ldq,
-          R vl, R vu, int const il, int const iu, R abstol, int& m,
-          R* w, T* z, int const ldz,
-          optimal_workspace, int* ifail, int& info ) const {
+        void operator() (char const jobz, char const range, char const uplo, integer_t const n,
+          integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
+          R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
+          R* w, T* z, integer_t const ldz,
+          optimal_workspace, integer_t* ifail, integer_t& info ) const {
 
           traits::detail::array<T> work( 7*n );
-          traits::detail::array<int> iwork( 5*n );
+          traits::detail::array<integer_t> iwork( 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
@@ -174,12 +174,12 @@ namespace boost { namespace numeric { namespace bindings {
         }
 
         template <typename T, typename R, typename W, typename WI>
-        void operator() (char const jobz, char const range, char const uplo, int const n,
-          int const kd, T* ab, int const ldab, T* q, int const ldq,
-          R vl, R vu, int const il, int const iu, R abstol, int& m,
-          R* w, T* z, int const ldz,
+        void operator() (char const jobz, char const range, char const uplo, integer_t const n,
+          integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
+          R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
+          R* w, T* z, integer_t const ldz,
           std::pair<detail::workspace1<W>, detail::workspace1<WI> > work,
-          int* ifail, int& info ) const {
+          integer_t* ifail, integer_t& info ) const {
 
           assert( traits::vector_size( work.first.w_ ) >= 7*n );
           assert( traits::vector_size( work.second.w_ ) >= 5*n );
@@ -197,15 +197,15 @@ namespace boost { namespace numeric { namespace bindings {
       template <>
       struct Hbevx< 2 > {
         template <typename T, typename R>
-        void operator() (char const jobz, char const range, char const uplo, int const n,
-          int const kd, T* ab, int const ldab, T* q, int const ldq,
-          R vl, R vu, int const il, int const iu, R abstol, int& m,
-          R* w, T* z, int const ldz,
-          minimal_workspace, int* ifail, int& info ) const {
+        void operator() (char const jobz, char const range, char const uplo, integer_t const n,
+          integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
+          R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
+          R* w, T* z, integer_t const ldz,
+          minimal_workspace, integer_t* ifail, integer_t& info ) const {
 
           traits::detail::array<T> work( n );
           traits::detail::array<R> rwork( 7*n );
-          traits::detail::array<int> iwork( 5*n );
+          traits::detail::array<integer_t> iwork( 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
@@ -216,15 +216,15 @@ namespace boost { namespace numeric { namespace bindings {
         }
 
         template <typename T, typename R>
-        void operator() (char const jobz, char const range, char const uplo, int const n,
-          int const kd, T* ab, int const ldab, T* q, int const ldq,
-          R vl, R vu, int const il, int const iu, R abstol, int& m,
-          R* w, T* z, int const ldz,
-          optimal_workspace, int* ifail, int& info ) const {
+        void operator() (char const jobz, char const range, char const uplo, integer_t const n,
+          integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
+          R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
+          R* w, T* z, integer_t const ldz,
+          optimal_workspace, integer_t* ifail, integer_t& info ) const {
 
           traits::detail::array<T> work( n );
           traits::detail::array<R> rwork( 7*n );
-          traits::detail::array<int> iwork( 5*n );
+          traits::detail::array<integer_t> iwork( 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
@@ -235,12 +235,12 @@ namespace boost { namespace numeric { namespace bindings {
         }
 
         template <typename T, typename R, typename W, typename RW, typename WI>
-        void operator() (char const jobz, char const range, char const uplo, int const n,
-          int const kd, T* ab, int const ldab, T* q, int const ldq,
-          R vl, R vu, int const il, int const iu, R abstol, int& m,
-          R* w, T* z, int const ldz,
+        void operator() (char const jobz, char const range, char const uplo, integer_t const n,
+          integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
+          R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
+          R* w, T* z, integer_t const ldz,
           std::pair<detail::workspace2<W,RW>, detail::workspace1<WI> > work,
-          int* ifail, int& info ) const {
+          integer_t* ifail, integer_t& info ) const {
 
           assert( traits::vector_size( work.first.w_ ) >= n );
           assert( traits::vector_size( work.first.wr_ ) >= 7*n );
@@ -257,7 +257,7 @@ namespace boost { namespace numeric { namespace bindings {
     } // namespace detail
 
     template <typename AB, typename Q, typename R, typename Z, typename W, typename IFail, typename Work>
-    int hbevx( char const jobz, char const range, AB& ab, Q& q, R vl, R vu, int il, int iu, R abstol, int& m,
+    int hbevx( char const jobz, char const range, AB& ab, Q& q, R vl, R vu, integer_t il, integer_t iu, R abstol, integer_t& m,
       W& w, Z& z, IFail& ifail, Work work ) {
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -268,13 +268,13 @@ namespace boost { namespace numeric { namespace bindings {
 
       typedef typename AB::value_type                            value_type ;
 
-      int const n = traits::matrix_size2 (ab);
+      integer_t const n = traits::matrix_size2 (ab);
       assert (n == traits::matrix_size1 (z));
       assert (n == traits::vector_size (w));
       assert (n == traits::vector_size (ifail));
       assert ( jobz=='N' || jobz=='V' );
 
-      int info ;
+      integer_t info ;
       detail::Hbevx< n_workspace_args<value_type>::value >() (jobz, range,
         traits::matrix_uplo_tag( ab ), n,
         traits::matrix_upper_bandwidth(ab),

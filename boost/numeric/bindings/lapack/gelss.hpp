@@ -31,26 +31,26 @@ namespace boost { namespace numeric { namespace bindings {
 
         namespace detail {
 
-            inline void gelss(const int m, const int n, const int nrhs,
-                              float *a, const int lda, float *b, const int ldb,
-                              float *s, const float rcond, int *rank, float *work,
-                              const int lwork, int *info)
+            inline void gelss(const integer_t m, const integer_t n, const integer_t nrhs,
+                              float *a, const integer_t lda, float *b, const integer_t ldb,
+                              float *s, const float rcond, integer_t *rank, float *work,
+                              const integer_t lwork, integer_t *info)
             {
                 LAPACK_SGELSS(&m, &n, &nrhs, a, &lda, b, &ldb, s, &rcond, rank, work, &lwork, info);
             }
 
-            inline void gelss(const int m, const int n, const int nrhs,
-                              double *a, const int lda, double *b, const int ldb,
-                              double *s, const double rcond, int *rank, double *work,
-                              const int lwork, int *info)
+            inline void gelss(const integer_t m, const integer_t n, const integer_t nrhs,
+                              double *a, const integer_t lda, double *b, const integer_t ldb,
+                              double *s, const double rcond, integer_t *rank, double *work,
+                              const integer_t lwork, integer_t *info)
             {
                 LAPACK_DGELSS(&m, &n, &nrhs, a, &lda, b, &ldb, s, &rcond, rank, work, &lwork, info);
             }
 
-            inline void gelss(const int m, const int n, const int nrhs,
-                              traits::complex_f *a, const int lda, traits::complex_f *b,
-                              const int ldb, float *s, const float rcond, int *rank,
-                              traits::complex_f *work, const int lwork, float *rwork, int *info)
+            inline void gelss(const integer_t m, const integer_t n, const integer_t nrhs,
+                              traits::complex_f *a, const integer_t lda, traits::complex_f *b,
+                              const integer_t ldb, float *s, const float rcond, integer_t *rank,
+                              traits::complex_f *work, const integer_t lwork, float *rwork, integer_t *info)
             {
                 LAPACK_CGELSS(&m, &n, &nrhs, traits::complex_ptr(a),
                               &lda, traits::complex_ptr(b), &ldb, s,
@@ -58,10 +58,10 @@ namespace boost { namespace numeric { namespace bindings {
                               &lwork, rwork, info);
             }
 
-            inline void gelss(const int m, const int n, const int nrhs,
-                              traits::complex_d *a, const int lda, traits::complex_d *b,
-                              const int ldb, double *s, const double rcond, int *rank,
-                              traits::complex_d *work, const int lwork, double *rwork, int *info)
+            inline void gelss(const integer_t m, const integer_t n, const integer_t nrhs,
+                              traits::complex_d *a, const integer_t lda, traits::complex_d *b,
+                              const integer_t ldb, double *s, const double rcond, integer_t *rank,
+                              traits::complex_d *work, const integer_t lwork, double *rwork, integer_t *info)
             {
                 LAPACK_ZGELSS(&m, &n, &nrhs, traits::complex_ptr(a),
                               &lda, traits::complex_ptr(b), &ldb, s,
@@ -76,23 +76,23 @@ namespace boost { namespace numeric { namespace bindings {
                 typedef typename MatrA::value_type val_t;
                 typedef typename traits::type_traits<val_t>::real_type real_t;
 
-                const int m = traits::matrix_size1(A);
-                const int n = traits::matrix_size2(A);
-                const int nrhs = traits::matrix_size2(B);
-                const int maxmn = std::max(m, n);
-                const int minmn = std::min(m, n);
+                const std::ptrdiff_t m = traits::matrix_size1(A);
+                const std::ptrdiff_t n = traits::matrix_size2(A);
+                const std::ptrdiff_t nrhs = traits::matrix_size2(B);
+                const std::ptrdiff_t maxmn = std::max(m, n);
+                const std::ptrdiff_t minmn = std::min(m, n);
 
                 // sanity checks
                 assert(m >= 0 && n >= 0);
                 assert(nrhs >= 0);
-                assert(traits::leading_dimension(A) >= std::max(1, m));
-                assert(traits::leading_dimension(B) >= std::max(1, maxmn));
+                assert(traits::leading_dimension(A) >= std::max<std::ptrdiff_t>(1, m));
+                assert(traits::leading_dimension(B) >= std::max<std::ptrdiff_t>(1, maxmn));
                 assert(traits::vector_size(work) >= 1);
-                assert(traits::vector_size(s) >= std::max(1, minmn));
+                assert(traits::vector_size(s) >= std::max<std::ptrdiff_t>(1, minmn));
 
-                int info;
+                integer_t info;
                 const real_t rcond = -1;    // use machine precision
-                int rank;
+                integer_t rank;
 
                 detail::gelss(traits::matrix_size1(A),
                               traits::matrix_size2(A),
@@ -118,23 +118,23 @@ namespace boost { namespace numeric { namespace bindings {
                 typedef typename MatrA::value_type val_t;
                 typedef typename traits::type_traits<val_t>::real_type real_t;
 
-                const int m = traits::matrix_size1(A);
-                const int n = traits::matrix_size2(A);
-                const int nrhs = traits::matrix_size2(B);
-                const int maxmn = std::max(m, n);
-                const int minmn = std::min(m, n);
+                const std::ptrdiff_t m = traits::matrix_size1(A);
+                const std::ptrdiff_t n = traits::matrix_size2(A);
+                const std::ptrdiff_t nrhs = traits::matrix_size2(B);
+                const std::ptrdiff_t maxmn = std::max(m, n);
+                const std::ptrdiff_t minmn = std::min(m, n);
 
                 // sanity checks
                 assert(m >= 0 && n >= 0);
                 assert(nrhs >= 0);
-                assert(traits::leading_dimension(A) >= std::max(1, m));
-                assert(traits::leading_dimension(B) >= std::max(1, maxmn));
+                assert(traits::leading_dimension(A) >= std::max<std::ptrdiff_t>(1, m));
+                assert(traits::leading_dimension(B) >= std::max<std::ptrdiff_t>(1, maxmn));
                 assert(traits::vector_size(work) >= 1);
-                assert(traits::vector_size(s) >= std::max(1, minmn));
+                assert(traits::vector_size(s) >= std::max<std::ptrdiff_t>(1, minmn));
 
-                int info;
+                integer_t info;
                 const real_t rcond = -1;    // use machine precision
-                int rank;
+                integer_t rank;
 
                 detail::gelss(traits::matrix_size1(A),
                               traits::matrix_size2(A),
@@ -167,13 +167,13 @@ namespace boost { namespace numeric { namespace bindings {
                 {
                     typedef typename MatrA::value_type val_t;
 
-                    const int m = traits::matrix_size1(A);
-                    const int n = traits::matrix_size2(A);
-                    const int rhs = traits::matrix_size2(B);
+                    const std::ptrdiff_t m = traits::matrix_size1(A);
+                    const std::ptrdiff_t n = traits::matrix_size2(A);
+                    const std::ptrdiff_t rhs = traits::matrix_size2(B);
 
-                    const int minmn = std::min(m, n);           // minmn = m < n ? m : n
-                    const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
-                    const int maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
+                    const std::ptrdiff_t minmn = std::min(m, n);           // minmn = m < n ? m : n
+                    const std::ptrdiff_t maxmn = std::max(m, n);           // maxmn = m > n ? m : n
+                    const std::ptrdiff_t maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
 
                     traits::detail::array<val_t> work(3*minmn + std::max(2*minmn, maxmnr));
 
@@ -186,19 +186,19 @@ namespace boost { namespace numeric { namespace bindings {
                     typedef typename MatrA::value_type val_t;
                     typedef typename traits::type_traits<val_t>::real_type real_t;
 
-                    //const int m = traits::matrix_size1(A);
-                    //const int n = traits::matrix_size2(A);
-                    //const int rhs = traits::matrix_size2(B);
+                    //const std::ptrdiff_t m = traits::matrix_size1(A);
+                    //const std::ptrdiff_t n = traits::matrix_size2(A);
+                    //const std::ptrdiff_t rhs = traits::matrix_size2(B);
 
-                    //const int minmn = std::min(m, n);           // minmn = m < n ? m : n
-                    //const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
-                    //const int maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
+                    //const std::ptrdiff_t minmn = std::min(m, n);           // minmn = m < n ? m : n
+                    //const std::ptrdiff_t maxmn = std::max(m, n);           // maxmn = m > n ? m : n
+                    //const std::ptrdiff_t maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
 
                     val_t temp_work;
 
                     const real_t rcond = -1;
-                    int rank;
-                    int info;
+                    integer_t rank;
+                    integer_t info;
 
                     // query for optimal workspace size
                     detail::gelss(traits::matrix_size1(A),
@@ -217,7 +217,7 @@ namespace boost { namespace numeric { namespace bindings {
 
                     assert(info == 0);
 
-                    const int lwork = traits::detail::to_int(temp_work);
+                    const integer_t lwork = traits::detail::to_int(temp_work);
 
                     traits::detail::array<val_t> work(lwork);
 
@@ -241,16 +241,16 @@ namespace boost { namespace numeric { namespace bindings {
                     typedef typename MatrA::value_type val_t;
                     typedef typename traits::type_traits<val_t>::real_type real_t;
 
-                    const int m = traits::matrix_size1(A);
-                    const int n = traits::matrix_size2(A);
-                    const int rhs = traits::matrix_size2(B);
+                    const std::ptrdiff_t m = traits::matrix_size1(A);
+                    const std::ptrdiff_t n = traits::matrix_size2(A);
+                    const std::ptrdiff_t rhs = traits::matrix_size2(B);
 
-                    const int minmn = std::min(m, n);           // minmn = m < n ? m : n
-                    const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
-                    const int maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
+                    const std::ptrdiff_t minmn = std::min(m, n);           // minmn = m < n ? m : n
+                    const std::ptrdiff_t maxmn = std::max(m, n);           // maxmn = m > n ? m : n
+                    const std::ptrdiff_t maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
 
                     traits::detail::array<val_t> work(2*minmn + maxmnr);
-                    traits::detail::array<real_t> rwork(std::max(1, (5*minmn)));
+                    traits::detail::array<real_t> rwork(std::max<std::ptrdiff_t>(1, (5*minmn)));
 
                     return gelss(A, B, s, work, rwork);
                 }
@@ -261,20 +261,20 @@ namespace boost { namespace numeric { namespace bindings {
                     typedef typename MatrA::value_type val_t;
                     typedef typename traits::type_traits<val_t>::real_type real_t;
 
-                    const int m = traits::matrix_size1(A);
-                    const int n = traits::matrix_size2(A);
-                    //const int rhs = traits::matrix_size2(B);
+                    const std::ptrdiff_t m = traits::matrix_size1(A);
+                    const std::ptrdiff_t n = traits::matrix_size2(A);
+                    //const std::ptrdiff_t rhs = traits::matrix_size2(B);
 
-                    const int minmn = std::min(m, n);           // minmn = m < n ? m : n
-                    //const int maxmn = std::max(m, n);           // maxmn = m > n ? m : n
-                    //const int maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
+                    const std::ptrdiff_t minmn = std::min(m, n);           // minmn = m < n ? m : n
+                    //const std::ptrdiff_t maxmn = std::max(m, n);           // maxmn = m > n ? m : n
+                    //const std::ptrdiff_t maxmnr = std::max(maxmn, rhs);    // maxmnr = maxmn > rhs ? maxmn : rhs
 
                     val_t temp_work;
                     real_t temp_rwork;
 
                     const real_t rcond = -1;
-                    int rank;
-                    int info;
+                    integer_t rank;
+                    integer_t info;
 
                     // query for optimal workspace size
                     detail::gelss(traits::matrix_size1(A),
@@ -294,10 +294,10 @@ namespace boost { namespace numeric { namespace bindings {
 
                     assert(info == 0);
 
-                    const int lwork = traits::detail::to_int(temp_work);
+                    const integer_t lwork = traits::detail::to_int(temp_work);
 
                     traits::detail::array<val_t> work(lwork);
-                    traits::detail::array<real_t> rwork(std::max(1, (5*minmn)));
+                    traits::detail::array<real_t> rwork(std::max<std::ptrdiff_t>(1, (5*minmn)));
 
                     return gelss(A, B, s, work, rwork);
                 }
@@ -338,10 +338,10 @@ namespace boost { namespace numeric { namespace bindings {
             typedef typename MatrA::value_type val_t;
             typedef typename traits::type_traits<val_t>::real_type real_t;
 
-            const int m = traits::matrix_size1(A);
-            const int n = traits::matrix_size2(A);
+            const std::ptrdiff_t m = traits::matrix_size1(A);
+            const std::ptrdiff_t n = traits::matrix_size2(A);
 
-            const int s_size = std::max(1, std::min(m,n));
+            const std::ptrdiff_t s_size = std::max<std::ptrdiff_t>(1, std::min(m,n));
             traits::detail::array<real_t> s(s_size);
 
             return detail::Gelss<n_workspace_args<val_t>::value>() (A, B, s, workspace);

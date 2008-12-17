@@ -94,11 +94,11 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
         // float
         inline
-        int hseqr_backend(const char* job, const char* compz, const int* n,
-                const int ilo, const int ihi, float* H, const int ldH,
-                float* wr, float* wi, float* Z, const int ldz, float* work,
-                const int* lwork){
-            int info;
+        int hseqr_backend(const char* job, const char* compz, const integer_t* n,
+                const integer_t ilo, const integer_t ihi, float* H, const integer_t ldH,
+                float* wr, float* wi, float* Z, const integer_t ldz, float* work,
+                const integer_t* lwork){
+            integer_t info;
             LAPACK_SHSEQR(job, compz, n, &ilo, &ihi, H, &ldH, wr, wi,
                     Z, &ldz, work, lwork, &info);
             return info;
@@ -106,11 +106,11 @@ namespace boost { namespace numeric { namespace bindings {
 
         // double
         inline
-        int hseqr_backend(const char* job, const char* compz, const int* n,
-                const int ilo, const int ihi, double* H, const int ldH,
-                double* wr, double* wi, double* Z, const int ldz, double* work,
-                const int* lwork){
-            int info;
+        int hseqr_backend(const char* job, const char* compz, const integer_t* n,
+                const integer_t ilo, const integer_t ihi, double* H, const integer_t ldH,
+                double* wr, double* wi, double* Z, const integer_t ldz, double* work,
+                const integer_t* lwork){
+            integer_t info;
             LAPACK_DHSEQR(job, compz, n, &ilo, &ihi, H, &ldH, wr, wi,
                     Z, &ldz, work, lwork, &info);
             return info;
@@ -118,11 +118,11 @@ namespace boost { namespace numeric { namespace bindings {
 
         // complex_f
         inline
-        int hseqr_backend(const char* job, const char* compz, int* n,
-                const int ilo, const int ihi, traits::complex_f* H, const int ldH,
-                traits::complex_f* w, traits::complex_f* Z, int ldz,
-                traits::complex_f* work, const int* lwork){
-            int info;
+        int hseqr_backend(const char* job, const char* compz, integer_t* n,
+                const integer_t ilo, const integer_t ihi, traits::complex_f* H, const integer_t ldH,
+                traits::complex_f* w, traits::complex_f* Z, integer_t ldz,
+                traits::complex_f* work, const integer_t* lwork){
+            integer_t info;
             LAPACK_CHSEQR(job, compz, n, &ilo, &ihi,
                     traits::complex_ptr(H), &ldH,
                     traits::complex_ptr(w),
@@ -133,11 +133,11 @@ namespace boost { namespace numeric { namespace bindings {
 
         // complex_d
         inline
-        int hseqr_backend(const char* job, const char* compz, int* n,
-                const int ilo, const int ihi, traits::complex_d* H, const int ldH,
-                traits::complex_d* w, traits::complex_d* Z, int ldz,
-                traits::complex_d* work, const int* lwork){
-            int info;
+        int hseqr_backend(const char* job, const char* compz, integer_t* n,
+                const integer_t ilo, const integer_t ihi, traits::complex_d* H, const integer_t ldH,
+                traits::complex_d* w, traits::complex_d* Z, integer_t ldz,
+                traits::complex_d* work, const integer_t* lwork){
+            integer_t info;
             LAPACK_ZHSEQR(job, compz, n, &ilo, &ihi,
                     traits::complex_ptr(H), &ldH,
                     traits::complex_ptr(w),
@@ -154,13 +154,13 @@ namespace boost { namespace numeric { namespace bindings {
             template < typename A, typename W, typename V>
             int operator() ( const char job, const char compz, A& H, W& w, V& Z ){
 
-                int n = traits::matrix_size1(H);
+                integer_t n = traits::matrix_size1(H);
                 typedef typename A::value_type value_type;
                 traits::detail::array<value_type> wr(n);
                 traits::detail::array<value_type> wi(n);
 
                 // workspace query
-                int lwork = -1;
+                integer_t lwork = -1;
                 value_type work_temp;
                 int result = detail::hseqr_backend(&job, &compz, &n, 1, n,
                                             traits::matrix_storage(H),
@@ -172,7 +172,7 @@ namespace boost { namespace numeric { namespace bindings {
 
                 if( result !=0 ) return result;
 
-                lwork = (int) work_temp;
+                lwork = traits::detail::to_int(work_temp);
                 traits::detail::array<value_type> work(lwork);
                 result = detail::hseqr_backend(&job, &compz, &n, 1, n,
                                             traits::matrix_storage(H),
@@ -194,11 +194,11 @@ namespace boost { namespace numeric { namespace bindings {
             template < typename A, typename W, typename V>
             int operator() ( const char job, const char compz, A& H, W& w, V& Z ){
 
-                int n = traits::matrix_size1(H);
+                integer_t n = traits::matrix_size1(H);
                 typedef typename A::value_type value_type;
 
                 // workspace query
-                int lwork = -1;
+                integer_t lwork = -1;
                 value_type work_temp;
                 int result = detail::hseqr_backend(&job, &compz, &n, 1, n,
                         traits::matrix_storage(H),
@@ -209,7 +209,7 @@ namespace boost { namespace numeric { namespace bindings {
 
                 if( result !=0 ) return result;
 
-                lwork = (int) std::real(work_temp);
+                lwork = traits::detail::to_int(work_temp);
                 traits::detail::array<value_type> work(lwork);
                 result = detail::hseqr_backend(&job, &compz, &n, 1, n,
                         traits::matrix_storage(H),
@@ -249,7 +249,7 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
 #ifndef NDEBUG
-        int const n = traits::matrix_size1(H);
+        std::ptrdiff_t const n = traits::matrix_size1(H);
 #endif
 
         typedef typename A::value_type value_type;
@@ -274,7 +274,7 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
 #ifndef NDEBUG
-        int const n = traits::matrix_size1(H);
+        std::ptrdiff_t const n = traits::matrix_size1(H);
 #endif
 
         typedef typename A::value_type value_type;

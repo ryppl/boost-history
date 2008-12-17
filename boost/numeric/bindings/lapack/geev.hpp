@@ -72,32 +72,32 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      int geev_backend(const char* jobvl, const char* jobvr, const int* n, float* a,
-               const int* lda, float* wr, float* wi, float* vl, const int* ldvl,
-               float* vr, const int* ldvr, float* work, const int* lwork)
+      int geev_backend(const char* jobvl, const char* jobvr, const integer_t* n, float* a,
+               const integer_t* lda, float* wr, float* wi, float* vl, const integer_t* ldvl,
+               float* vr, const integer_t* ldvr, float* work, const integer_t* lwork)
       {
-        int info;
+        integer_t info;
         LAPACK_SGEEV(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, work, lwork, &info);
         return info;
       }
 
       inline
-      int geev_backend(const char* jobvl, const char* jobvr, const int* n, double* a,
-               const int* lda, double* wr, double* wi, double* vl, const int* ldvl,
-               double* vr, const int* ldvr, double* work, const int* lwork)
+      int geev_backend(const char* jobvl, const char* jobvr, const integer_t* n, double* a,
+               const integer_t* lda, double* wr, double* wi, double* vl, const integer_t* ldvl,
+               double* vr, const integer_t* ldvr, double* work, const integer_t* lwork)
       {
-        int info;
+        integer_t info;
         LAPACK_DGEEV(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, work, lwork, &info);
         return info;
       }
 
       inline
-      int geev_backend(const char* jobvl, const char* jobvr, const int* n, traits::complex_f* a,
-               const int* lda, traits::complex_f* w, traits::complex_f* vl, const int* ldvl,
-               traits::complex_f* vr, const int* ldvr, traits::complex_f* work, const int* lwork,
+      int geev_backend(const char* jobvl, const char* jobvr, const integer_t* n, traits::complex_f* a,
+               const integer_t* lda, traits::complex_f* w, traits::complex_f* vl, const integer_t* ldvl,
+               traits::complex_f* vr, const integer_t* ldvr, traits::complex_f* work, const integer_t* lwork,
                float* rwork)
       {
-        int info;
+        integer_t info;
         LAPACK_CGEEV(jobvl, jobvr, n,
                      traits::complex_ptr(a), lda,
                      traits::complex_ptr(w),
@@ -109,12 +109,12 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      int geev_backend(const char* jobvl, const char* jobvr, const int* n, traits::complex_d* a,
-               const int* lda, traits::complex_d* w, traits::complex_d* vl, const int* ldvl,
-               traits::complex_d* vr, const int* ldvr, traits::complex_d* work, const int* lwork,
+      int geev_backend(const char* jobvl, const char* jobvr, const integer_t* n, traits::complex_d* a,
+               const integer_t* lda, traits::complex_d* w, traits::complex_d* vl, const integer_t* ldvl,
+               traits::complex_d* vr, const integer_t* ldvr, traits::complex_d* work, const integer_t* lwork,
                double* rwork)
       {
-        int info;
+        integer_t info;
         LAPACK_ZGEEV(jobvl, jobvr, n,
                      traits::complex_ptr(a), lda,
                      traits::complex_ptr(w),
@@ -138,7 +138,7 @@ namespace boost { namespace numeric { namespace bindings {
       int geev(real_case, const char jobvl, const char jobvr, A& a, W& w,
                V* vl, V *vr)
       {
-        int const n = traits::matrix_size1(a);
+        integer_t const n = traits::matrix_size1(a);
         typedef typename A::value_type value_type;
         traits::detail::array<value_type> wr(n);
         traits::detail::array<value_type> wi(n);
@@ -146,13 +146,13 @@ namespace boost { namespace numeric { namespace bindings {
         traits::detail::array<value_type> vl2(vl ? 0 : n);
         traits::detail::array<value_type> vr2(vr ? 0 : n);
         value_type* vl_real = vl ? traits::matrix_storage(*vl) : vl2.storage();
-        const int ldvl = vl ? traits::matrix_size2(*vl) : 1;
+        const integer_t ldvl = vl ? traits::matrix_size2(*vl) : 1;
         value_type* vr_real = vr ? traits::matrix_storage(*vr) : vr2.storage();
-        const int ldvr = vr ? traits::matrix_size2(*vr) : 1;
+        const integer_t ldvr = vr ? traits::matrix_size2(*vr) : 1;
 
 
         // workspace query
-        int lwork = -1;
+        integer_t lwork = -1;
         value_type work_temp;
         int result = geev_backend(&jobvl, &jobvr, &n,
                                   traits::matrix_storage(a), &n,
@@ -162,7 +162,7 @@ namespace boost { namespace numeric { namespace bindings {
         if (result != 0)
           return result;
 
-        lwork = (int) work_temp;
+        lwork = traits::detail::to_int(work_temp);
         traits::detail::array<value_type> work(lwork);
         result = geev_backend(&jobvl, &jobvr, &n,
                               traits::matrix_storage(a), &n,
@@ -182,18 +182,18 @@ namespace boost { namespace numeric { namespace bindings {
       int geev(mixed_case, const char jobvl, const char jobvr, A& a, W& w,
                V* vl, V *vr)
       {
-        int const n = traits::matrix_size1(a);
+        integer_t const n = traits::matrix_size1(a);
         typedef typename A::value_type value_type;
         traits::detail::array<value_type> wr(n);
         traits::detail::array<value_type> wi(n);
 
         traits::detail::array<value_type> vl2(vl ? n*n : n);
         traits::detail::array<value_type> vr2(vr ? n*n : n);
-        const int ldvl2 = vl ? n : 1;
-        const int ldvr2 = vr ? n : 1;
+        const integer_t ldvl2 = vl ? n : 1;
+        const integer_t ldvr2 = vr ? n : 1;
 
         // workspace query
-        int lwork = -1;
+        integer_t lwork = -1;
         value_type work_temp;
         int result = geev_backend(&jobvl, &jobvr, &n,
                                   traits::matrix_storage(a), &n,
@@ -203,7 +203,7 @@ namespace boost { namespace numeric { namespace bindings {
         if (result != 0)
           return result;
 
-        lwork = (int) work_temp;
+        lwork = traits::detail::to_int(work_temp);
         traits::detail::array<value_type> work(lwork);
         result = geev_backend(&jobvl, &jobvr, &n,
                               traits::matrix_storage(a), &n,
@@ -214,7 +214,7 @@ namespace boost { namespace numeric { namespace bindings {
         typedef typename V::value_type vec_value_type;
         vec_value_type* vl_stor = NULL;
         vec_value_type* vr_stor = NULL;
-        int ldvl = 0, ldvr = 0;
+        integer_t ldvl = 0, ldvr = 0;
         if (vl)
         {
           vl_stor = traits::matrix_storage(*vl);
@@ -227,7 +227,7 @@ namespace boost { namespace numeric { namespace bindings {
         }
 
         typedef std::complex<value_type> cmplx_t;
-        for (int i = 0; i < n; i++)
+        for (std::ptrdiff_t i = 0; i < n; i++)
         {
           traits::vector_storage(w)[i] = cmplx_t(wr[i], wi[i]);
           if (wi[i] != 0)
@@ -237,7 +237,7 @@ namespace boost { namespace numeric { namespace bindings {
             assert(wi[i+1] == -wi[i]);
 
             traits::vector_storage(w)[i+1] = cmplx_t(wr[i+1], wi[i+1]);
-            for (int j = 0; j < n; j++)
+            for (std::ptrdiff_t j = 0; j < n; j++)
             {
               if (vl)
               {
@@ -255,7 +255,7 @@ namespace boost { namespace numeric { namespace bindings {
           }
           else
           {
-            for (int j = 0; j < n; j++)
+            for (std::ptrdiff_t j = 0; j < n; j++)
             {
               if (vl)
                 vl_stor[i*ldvl+j] = vl2[i*n+j];
@@ -275,18 +275,18 @@ namespace boost { namespace numeric { namespace bindings {
         typedef typename A::value_type value_type;
         typedef typename traits::type_traits<value_type>::real_type real_type;
 
-        int const n = traits::matrix_size1(a);
+        integer_t const n = traits::matrix_size1(a);
         traits::detail::array<real_type> rwork(2*n);
 
         traits::detail::array<value_type> vl2(vl ? 0 : n);
         traits::detail::array<value_type> vr2(vr ? 0 : n);
         value_type* vl_real = vl ? traits::matrix_storage(*vl) : vl2.storage();
-        const int ldvl = vl ? traits::matrix_size2(*vl) : 1;
+        const integer_t ldvl = vl ? traits::matrix_size2(*vl) : 1;
         value_type* vr_real = vr ? traits::matrix_storage(*vr) : vr2.storage();
-        const int ldvr = vr ? traits::matrix_size2(*vr) : 1;
+        const integer_t ldvr = vr ? traits::matrix_size2(*vr) : 1;
 
         // workspace query
-        int lwork = -1;
+        integer_t lwork = -1;
         value_type work_temp;
         int result = geev_backend(&jobvl, &jobvr, &n,
                                   traits::matrix_storage(a), &n,
@@ -296,7 +296,7 @@ namespace boost { namespace numeric { namespace bindings {
         if (result != 0)
           return result;
 
-        lwork = (int) std::real(work_temp);
+        lwork = traits::detail::to_int(work_temp);
         traits::detail::array<value_type> work(lwork);
         result = geev_backend(&jobvl, &jobvr, &n,
                               traits::matrix_storage(a), &n,
@@ -324,7 +324,7 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
 #ifndef NDEBUG
-      int const n = traits::matrix_size1(a);
+      std::ptrdiff_t const n = traits::matrix_size1(a);
 #endif
 
       assert(traits::matrix_size2(a)==n);

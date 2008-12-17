@@ -56,17 +56,17 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void syev (char const jobz, char const uplo, int const n,
-                 float* a, int const lda,
-                 float* w, float* work, int const lwork, int& info)
+      void syev (char const jobz, char const uplo, integer_t const n,
+                 float* a, integer_t const lda,
+                 float* w, float* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_SSYEV (&jobz, &uplo, &n, a, &lda, w, work, &lwork, &info);
       }
 
       inline
-      void syev (char const jobz, char const uplo, int const n,
-                 double* a, int const lda,
-                 double* w, double* work, int const lwork, int& info)
+      void syev (char const jobz, char const uplo, integer_t const n,
+                 double* a, integer_t const lda,
+                 double* w, double* work, integer_t const lwork, integer_t& info)
       {
         LAPACK_DSYEV (&jobz, &uplo, &n, a, &lda, w, work, &lwork, &info);
       }
@@ -82,7 +82,7 @@ namespace boost { namespace numeric { namespace bindings {
         >::value));
 #endif
 
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert ( n>0 );
         assert (traits::matrix_size2 (a)==n);
         assert (traits::leading_dimension (a)>=n);
@@ -91,7 +91,7 @@ namespace boost { namespace numeric { namespace bindings {
         assert ( uplo=='U' || uplo=='L' );
         assert ( jobz=='N' || jobz=='V' );
 
-        int info;
+        integer_t info;
         detail::syev (jobz, uplo, n,
                      traits::matrix_storage (a),
                      traits::leading_dimension (a),
@@ -109,9 +109,9 @@ namespace boost { namespace numeric { namespace bindings {
     int syev (char jobz, char uplo, A& a, W& w, optimal_workspace ) {
        typedef typename A::value_type value_type ;
 
-       int const n = traits::matrix_size1 (a);
+       std::ptrdiff_t const n = traits::matrix_size1 (a);
 
-       traits::detail::array<value_type> work( std::max<int>(1,34*n) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,34*n) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
 
@@ -121,9 +121,9 @@ namespace boost { namespace numeric { namespace bindings {
     int syev (char jobz, char uplo, A& a, W& w, minimal_workspace ) {
        typedef typename A::value_type value_type ;
 
-       int const n = traits::matrix_size1 (a);
+       std::ptrdiff_t const n = traits::matrix_size1 (a);
 
-       traits::detail::array<value_type> work( std::max<int>(1,3*n-1) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,3*n-1) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
 
@@ -150,7 +150,7 @@ namespace boost { namespace numeric { namespace bindings {
     int syev (char jobz, A& a, W& w, optimal_workspace ) {
        typedef typename A::value_type value_type ;
 
-       int const n = traits::matrix_size1 (a);
+       std::ptrdiff_t const n = traits::matrix_size1 (a);
        char uplo = traits::matrix_uplo_tag( a ) ;
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
        typedef typename traits::matrix_traits<A>::matrix_structure matrix_structure ;
@@ -160,7 +160,7 @@ namespace boost { namespace numeric { namespace bindings {
                           ) ;
 #endif
 
-       traits::detail::array<value_type> work( std::max<int>(1,34*n) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,34*n) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
 
@@ -170,7 +170,7 @@ namespace boost { namespace numeric { namespace bindings {
     int syev (char jobz, A& a, W& w, minimal_workspace ) {
        typedef typename A::value_type value_type ;
 
-       int const n = traits::matrix_size1 (a);
+       std::ptrdiff_t const n = traits::matrix_size1 (a);
        char uplo = traits::matrix_uplo_tag( a ) ;
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
        typedef typename traits::matrix_traits<A>::matrix_structure matrix_structure ;
@@ -179,7 +179,7 @@ namespace boost { namespace numeric { namespace bindings {
                                             >::value)
                           ) ;
 #endif
-       traits::detail::array<value_type> work( std::max<int>(1,3*n-1) );
+       traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,3*n-1) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
 

@@ -60,25 +60,25 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void posv (char const uplo, int const n, int const nrhs,
-                 float* a, int const lda,
-                 float* b, int const ldb, int* info)
+      void posv (char const uplo, integer_t const n, integer_t const nrhs,
+                 float* a, integer_t const lda,
+                 float* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_SPOSV (&uplo, &n, &nrhs, a, &lda, b, &ldb, info);
       }
 
       inline
-      void posv (char const uplo, int const n, int const nrhs,
-                 double* a, int const lda,
-                 double* b, int const ldb, int* info)
+      void posv (char const uplo, integer_t const n, integer_t const nrhs,
+                 double* a, integer_t const lda,
+                 double* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_DPOSV (&uplo, &n, &nrhs, a, &lda, b, &ldb, info);
       }
 
       inline
-      void posv (char const uplo, int const n, int const nrhs,
-                 traits::complex_f* a, int const lda,
-                 traits::complex_f* b, int const ldb, int* info)
+      void posv (char const uplo, integer_t const n, integer_t const nrhs,
+                 traits::complex_f* a, integer_t const lda,
+                 traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CPOSV (&uplo, &n, &nrhs,
                       traits::complex_ptr (a), &lda,
@@ -86,9 +86,9 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void posv (char const uplo, int const n, int const nrhs,
-                 traits::complex_d* a, int const lda,
-                 traits::complex_d* b, int const ldb, int* info)
+      void posv (char const uplo, integer_t const n, integer_t const nrhs,
+                 traits::complex_d* a, integer_t const lda,
+                 traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZPOSV (&uplo, &n, &nrhs,
                       traits::complex_ptr (a), &lda,
@@ -97,10 +97,10 @@ namespace boost { namespace numeric { namespace bindings {
 
       template <typename SymmMatrA, typename MatrB>
       int posv (char const uplo, SymmMatrA& a, MatrB& b) {
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
         assert (n == traits::matrix_size1 (b));
-        int info;
+        integer_t info;
         posv (uplo, n, traits::matrix_size2 (b),
               traits::matrix_storage (a),
               traits::leading_dimension (a),
@@ -163,38 +163,38 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void potrf (char const uplo, int const n,
-                  float* a, int const lda, int* info)
+      void potrf (char const uplo, integer_t const n,
+                  float* a, integer_t const lda, integer_t* info)
       {
         LAPACK_SPOTRF (&uplo, &n, a, &lda, info);
       }
 
       inline
-      void potrf (char const uplo, int const n,
-                  double* a, int const lda, int* info)
+      void potrf (char const uplo, integer_t const n,
+                  double* a, integer_t const lda, integer_t* info)
       {
         LAPACK_DPOTRF (&uplo, &n, a, &lda, info);
       }
 
       inline
-      void potrf (char const uplo, int const n,
-                  traits::complex_f* a, int const lda, int* info)
+      void potrf (char const uplo, integer_t const n,
+                  traits::complex_f* a, integer_t const lda, integer_t* info)
       {
         LAPACK_CPOTRF (&uplo, &n, traits::complex_ptr (a), &lda, info);
       }
 
       inline
-      void potrf (char const uplo, int const n,
-                  traits::complex_d* a, int const lda, int* info)
+      void potrf (char const uplo, integer_t const n,
+                  traits::complex_d* a, integer_t const lda, integer_t* info)
       {
         LAPACK_ZPOTRF (&uplo, &n, traits::complex_ptr (a), &lda, info);
       }
 
       template <typename SymmMatrA>
       int potrf (char const uplo, SymmMatrA& a) {
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
-        int info;
+        integer_t info;
         potrf (uplo, n, traits::matrix_storage (a),
                traits::leading_dimension (a), &info);
         return info;
@@ -245,25 +245,25 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline
-      void potrs (char const uplo, int const n, int const nrhs,
-                  float const* a, int const lda,
-                  float* b, int const ldb, int* info)
+      void potrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  float const* a, integer_t const lda,
+                  float* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_SPOTRS (&uplo, &n, &nrhs, a, &lda, b, &ldb, info);
       }
 
       inline
-      void potrs (char const uplo, int const n, int const nrhs,
-                  double const* a, int const lda,
-                  double* b, int const ldb, int* info)
+      void potrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  double const* a, integer_t const lda,
+                  double* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_DPOTRS (&uplo, &n, &nrhs, a, &lda, b, &ldb, info);
       }
 
       inline
-      void potrs (char const uplo, int const n, int const nrhs,
-                  traits::complex_f const* a, int const lda,
-                  traits::complex_f* b, int const ldb, int* info)
+      void potrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  traits::complex_f const* a, integer_t const lda,
+                  traits::complex_f* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_CPOTRS (&uplo, &n, &nrhs,
                        traits::complex_ptr (a), &lda,
@@ -271,9 +271,9 @@ namespace boost { namespace numeric { namespace bindings {
       }
 
       inline
-      void potrs (char const uplo, int const n, int const nrhs,
-                  traits::complex_d const* a, int const lda,
-                  traits::complex_d* b, int const ldb, int* info)
+      void potrs (char const uplo, integer_t const n, integer_t const nrhs,
+                  traits::complex_d const* a, integer_t const lda,
+                  traits::complex_d* b, integer_t const ldb, integer_t* info)
       {
         LAPACK_ZPOTRS (&uplo, &n, &nrhs,
                        traits::complex_ptr (a), &lda,
@@ -282,10 +282,10 @@ namespace boost { namespace numeric { namespace bindings {
 
       template <typename SymmMatrA, typename MatrB>
       int potrs (char const uplo, SymmMatrA const& a, MatrB& b) {
-        int const n = traits::matrix_size1 (a);
+        integer_t const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
         assert (n == traits::matrix_size1 (b));
-        int info;
+        integer_t info;
         potrs (uplo, n, traits::matrix_size2 (b),
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                traits::matrix_storage (a),
