@@ -9,9 +9,82 @@
 
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/algorithm.hpp>
-#include <boost/tree/cursor.hpp>
+#include <boost/tree/output_iterator_cursor.hpp>
+
+//#include <boost/array.hpp>
 
 #include <list>
+#include <vector>
+
+template <class T>
+struct mock_tree;
+
+template <class T>
+struct mock_tree {
+    mock_tree(T const& v = T()) : value(v), m(2) {}
+
+    typedef std::vector< mock_tree<T> > children_type;
+    
+    T value; 
+    children_type m;
+};
+
+template <class T>
+struct mock_tree_cursor {
+    typedef typename mock_tree<T>::children_type cur; 
+    cur c;
+    //bool pos;
+    
+    T const& operator*() const
+    {
+        return c->value;
+    }
+
+    T& operator*()
+    {
+        return c->value;
+    }
+    
+    void to_begin()
+    {
+        c = c->m.begin();
+    }
+    
+    void to_end()
+    {
+        c = c->m.end();
+    }
+    
+    mock_tree_cursor& operator++()
+    {
+        ++c;
+    }
+    
+    mock_tree_cursor& operator--()
+    {
+        --c;
+    }
+};
+
+mock_tree<int> mock_tree_data()
+{
+    mock_tree<int> mt;
+    
+    mt.m[0] = 8;
+    mt.m[0].m[0] = 3;
+    mt.m[0].m[0].m[0] = 1;
+    mt.m[0].m[1] = 6;
+    mt.m[0].m[1].m[0] = 4;
+    mt.m[0].m[1].m[1] = 7;
+
+    mt.m[0].m[1] = 10;
+    mt.m[0].m[1].m[1] = 14;
+    mt.m[0].m[1].m[1].m[0] = 13;
+    mt.m[0].m[1].m[1].m[0].m[0] = 11;
+    mt.m[0].m[1].m[1].m[0].m[0].m[1] = 12;
+
+    return mt;
+}
 
 template <class T = int>
 struct test_binary_tree_fixture {
@@ -51,36 +124,36 @@ struct test_binary_tree_fixture {
         cur = ret.insert(++cur.to_begin(), value_type(12));
     }
     
-    static void validate_test_dataset1_tree(boost::tree::binary_tree<T>& ret)
+    static void validate_test_dataset1_tree(typename boost::tree::binary_tree<T>::const_cursor cur)
     {
-        BOOST_CHECK_EQUAL(*ret.root().begin(), 8);
-        BOOST_CHECK_EQUAL(*ret.root().begin().begin(), 3);    
-        BOOST_CHECK_EQUAL(*ret.root().begin().begin().begin(), 1);  //Leaf
-        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin(), 6);        
-        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin().begin(), 4); //Leaf
-        BOOST_CHECK_EQUAL(*ret.root().begin().end().end().begin(), 7); //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin(), 8);
+        BOOST_CHECK_EQUAL(*cur.begin().begin(), 3);    
+        BOOST_CHECK_EQUAL(*cur.begin().begin().begin(), 1);  //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 6);        
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin().begin(), 4); //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end().end().begin(), 7); //Leaf
     
-        BOOST_CHECK_EQUAL(*ret.root().end().begin(), 10);
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin(), 14);
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 13);
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 11); 
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 12); //Leaf
+        BOOST_CHECK_EQUAL(*cur.end().begin(), 10);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin(), 14);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 13);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().begin(), 11); 
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end().begin(), 12); //Leaf
     }
 
-    static void validate_test_dataset1_minus_1_tree(boost::tree::binary_tree<T>& ret)
+    static void validate_test_dataset1_minus_1_tree(typename boost::tree::binary_tree<T>::const_cursor cur)
     {
-        BOOST_CHECK_EQUAL(*ret.root().begin(), 7);
-        BOOST_CHECK_EQUAL(*ret.root().begin().begin(), 2);    
-        BOOST_CHECK_EQUAL(*ret.root().begin().begin().begin(), 0);  //Leaf
-        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin(), 5);        
-        BOOST_CHECK_EQUAL(*ret.root().begin().end().begin().begin(), 3); //Leaf
-        BOOST_CHECK_EQUAL(*ret.root().begin().end().end().begin(), 6); //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin(), 7);
+        BOOST_CHECK_EQUAL(*cur.begin().begin(), 2);    
+        BOOST_CHECK_EQUAL(*cur.begin().begin().begin(), 0);  //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 5);        
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin().begin(), 3); //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end().end().begin(), 6); //Leaf
     
-        BOOST_CHECK_EQUAL(*ret.root().end().begin(), 9);
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin(), 13);
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin(), 12);
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().begin(), 10); 
-        BOOST_CHECK_EQUAL(*ret.root().end().end().begin().begin().end().begin(), 11); //Leaf
+        BOOST_CHECK_EQUAL(*cur.end().begin(), 9);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin(), 13);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 12);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().begin(), 10); 
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end().begin(), 11); //Leaf
     }
     
     boost::tree::binary_tree<T> bt, bt2;

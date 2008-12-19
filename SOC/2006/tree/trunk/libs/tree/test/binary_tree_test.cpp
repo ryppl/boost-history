@@ -128,23 +128,23 @@ void create_test_dataset2_tree(Tree& mytree)
 
 }
 
-template <class Tree>
-void validate_test_dataset2_tree(Tree const& mytree)
+template <class Cursor>
+void validate_test_dataset2_tree(Cursor cur)
 {
-    typename Tree::const_cursor c = mytree.root();
+    Cursor c = cur;
 
     BOOST_CHECK(!c.empty());
     
     c.to_begin();
-    BOOST_CHECK(c.parent() == mytree.root());
+    BOOST_CHECK(c.parent() == cur);
     BOOST_CHECK_EQUAL(*c, 14);
     
     c.to_begin();
-    BOOST_CHECK(c.parent() == mytree.root().begin());
+    BOOST_CHECK(c.parent() == cur.begin());
     BOOST_CHECK_EQUAL(*c, 2);
     
     ++c;
-    BOOST_CHECK(c.parent() == mytree.root().begin());
+    BOOST_CHECK(c.parent() == cur.begin());
     BOOST_CHECK_EQUAL(*c.begin(), 4);
     
 }
@@ -191,35 +191,35 @@ BOOST_AUTO_TEST_CASE( swap_binary_tree_test )
     
     // Filling with test data.
     create_test_dataset2_tree(tree1);
-    validate_test_dataset2_tree(tree1);
+    validate_test_dataset2_tree(tree1.root());
 
     // Swap tree1 with empty tree2
     swap(tree1, tree2);
-    validate_test_dataset2_tree(tree2);
+    validate_test_dataset2_tree(tree2.root());
     BOOST_CHECK(tree1.empty());
     
     // Swap back
     swap(tree1, tree2);
-    validate_test_dataset2_tree(tree1);
+    validate_test_dataset2_tree(tree1.root());
     BOOST_CHECK(tree2.empty());
     
     // Swap with tree containing different data
     swap(tree1, bt);
-    validate_test_dataset1_tree(tree1);
-    validate_test_dataset2_tree(bt);
+    validate_test_dataset1_tree(tree1.root());
+    validate_test_dataset2_tree(bt.root());
 }
 
 BOOST_AUTO_TEST_CASE( insert_subtree_test )
 {
     binary_tree<int> bt0;
     binary_tree<int>::cursor c = bt0.insert(bt0.root(), bt.root());    
-    validate_test_dataset1_tree(bt0);
+    validate_test_dataset1_tree(bt0.root());
 }
 
 BOOST_AUTO_TEST_CASE( copy_constructor_test )
 {
     binary_tree<int> bt0(bt);
-    validate_test_dataset1_tree(bt0);
+    validate_test_dataset1_tree(bt0.root());
 }
 
 BOOST_AUTO_TEST_CASE( comparison_operator_test )
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE( splice_test )
     bt0.splice(bt0.root(), bt);
 
     BOOST_CHECK(bt.empty());    
-    validate_test_dataset1_tree(bt0);
+    validate_test_dataset1_tree(bt0.root());
 }
 
 BOOST_AUTO_TEST_CASE( binary_tree_test )

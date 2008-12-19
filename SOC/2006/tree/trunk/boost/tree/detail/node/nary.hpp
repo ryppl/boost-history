@@ -34,24 +34,26 @@ using boost::array;
  */
  
 class node_with_parent_base {
-    typedef node_with_parent_base self_type;
-    typedef self_type* base_pointer;
-    typedef self_type const* const_base_pointer;
+//    typedef node_with_parent_base self_type;
+//    typedef self_type* base_pointer;
+//    typedef self_type const* const_base_pointer;
 
- public:
-    base_pointer m_parent; // TODO: protect?
+public:
+    node_with_parent_base* m_parent; // TODO: protect?
     
     node_with_parent_base()
     {
         m_parent = this;
     }
     
-    base_pointer parent()
+    node_with_parent_base(node_with_parent_base* p) : m_parent(p) {}
+    
+    node_with_parent_base* parent()
     {
         return m_parent;
     }
     
-    base_pointer const parent() const
+    node_with_parent_base* const parent() const
     {
         return m_parent;
     }
@@ -103,22 +105,32 @@ class node_with_parent_base {
 //    }
 //};
 
+class node_base;
+
+class node_with_children_base {
+public:
+    typedef array<node_base*, 2> children_type;
+    
+//protected:
+    children_type m_children;
+};
 
 class node_base
-: public node_with_parent_base {
+: public node_with_parent_base, public node_with_children_base {
     typedef node_base self_type;
     
 public:
- 
-    typedef array<node_base*, 2> base_type;
+    //typedef node_with_children_base::base_type base_type;
     typedef self_type* base_pointer;
     typedef self_type const* const_base_pointer;
-    
-    base_type m_children;
-    
-    node_base() : node_with_parent_base()
+        
+    node_base() : node_with_parent_base(), node_with_children_base()
     { }
-    
+
+    node_base(node_with_parent_base* p)
+    : node_with_parent_base(p), node_with_children_base()
+    { }
+        
     static base_pointer nil()
     {
         static self_type m_nil_obj;
@@ -128,19 +140,19 @@ public:
     
     void init()
     {
-        for (base_type::size_type i=0; i<base_type::max_size(); ++i)
+        for (children_type::size_type i=0; i<children_type::max_size(); ++i)
             m_children[i] = nil();
     }
 
     // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
-    bool const empty() const
-    {
-        return (this == nil());
-    }
+//    bool const empty() const
+//    {
+//        return (this == nil());
+//    }
     
     // Binary specific
     
-    base_type::size_type rotate(base_type::size_type const& c)
+    children_type::size_type rotate(children_type::size_type const& c)
     {
         //TODO: Optimise.
         base_pointer q = m_children[c];
@@ -154,7 +166,7 @@ public:
         B->m_parent = this;
         q->m_parent = this->m_parent;
 
-        base_type::size_type qp = get_index();
+        children_type::size_type qp = get_index();
         static_cast<base_pointer>(q->m_parent)->m_children[qp] = q;
         this->m_parent = q;
         q->m_children[(c ? 0 : 1)] = this;
@@ -162,7 +174,7 @@ public:
         //return (c ? 0 : 1);
     }
     
-    base_pointer detach(base_type::size_type m_pos)
+    base_pointer detach(children_type::size_type m_pos)
     {
         base_pointer q = m_children[m_pos];
         m_children[m_pos] = 
@@ -174,8 +186,8 @@ public:
     }
     
     // TODO: actually implement this.
-    base_pointer detach(base_type::size_type index, 
-                        base_type::size_type other_index, 
+    base_pointer detach(children_type::size_type index, 
+                        children_type::size_type other_index, 
                         base_pointer other)
     {
         //Node::pre_splice(q, r);
@@ -186,7 +198,7 @@ public:
         static_cast<base_pointer>(other->m_parent)->m_children[other_index] = this;
         m_parent = other->m_parent;
 
-        for (base_type::size_type i=0; i<base_type::max_size(); ++i) {
+        for (children_type::size_type i=0; i<children_type::max_size(); ++i) {
             m_children[i] = other->m_children[i];
             m_children[i]->m_parent = this;
         }
@@ -194,11 +206,15 @@ public:
     }
     
     // O(1)
-    base_type::size_type const get_index() const
+    children_type::size_type const get_index() const
     {
         return (static_cast<base_pointer>(this->m_parent)->m_children[0] == this ? 0 : 1);
     }
     
+};
+
+class descending_node_base
+: public node_with_children_base {
 };
 
 template <typename T>
@@ -228,6 +244,8 @@ class node : public node_base {
     const_reference operator*() const { return *m_data; } 
     
     node(pointer data) : base_type(), m_data(data) {}
+ 
+    node(pointer data, base_pointer p) : base_type(p), m_data(data) {}
     
     pointer data()
     {

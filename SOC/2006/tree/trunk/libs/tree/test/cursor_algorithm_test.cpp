@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_trees, Order, orders)
     BOOST_CHECK(bt != bt2);
     boost::tree::copy(Order(), bt.root(), bt2.root());
     BOOST_CHECK(bt == bt2);
-    validate_test_dataset1_tree(bt2);
+    validate_test_dataset1_tree(bt2.root());
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE ( test_desc_copy_using_insert_cursor, Order, orders )
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_desc_copy_using_insert_cursor, Order, order
     boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
                     , boost::forward_traversal_tag());
 
-    validate_test_dataset1_tree(bt2);
+    validate_test_dataset1_tree(bt2.root());
     BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root()));
 }
 
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_asc_copy_using_insert_cursor, Order, orders
     boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
                     , boost::bidirectional_traversal_tag());
 
-    validate_test_dataset1_tree(bt2);
+    validate_test_dataset1_tree(bt2.root());
     BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root())); 
 }
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform_trees, Order, orders)
     BOOST_CHECK(bt != bt2);
     boost::tree::transform(Order(), bt.root(), bt2.root()
                          , std::bind2nd(std::minus<int>(),1));
-    validate_test_dataset1_minus_1_tree(bt2);
+    validate_test_dataset1_minus_1_tree(bt2.root());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

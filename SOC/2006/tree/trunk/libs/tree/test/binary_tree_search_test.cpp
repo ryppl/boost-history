@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( binary_tree_search_test )
     //BOOST_CHECK(next(inorder(), c, 2) == d);
     
     *c.to_parent() = 6;
-    validate_test_dataset1_tree(bt);
+    validate_test_dataset1_tree(bt.root());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
