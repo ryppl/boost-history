@@ -198,7 +198,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 void codomain_test()
 {
-	typedef interval_map<int,NoPlus> NoplumT; 
+	typedef split_interval_map<int,NoPlus> NoplumT; 
 	NoplumT noplum;
 	//noplum.insert(mapping_pair<int,NoPlus>(47,NoPlus(11)));
 	//noplum.insert(mapping_pair<int,NoPlus>(42,NoPlus(14)));

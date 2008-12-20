@@ -264,7 +264,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return;
-    if(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT())
+    if(Traits::absorbs_neutrons && value.CONT_VALUE == codomain_combine::neutron())
         return;
     this->_map.insert(value);
 }
@@ -278,12 +278,12 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return;
-    if(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT())
+    if(Traits::absorbs_neutrons && value.CONT_VALUE == Combiner::neutron())
         return;
 
     if(Traits::emits_neutrons)
     {
-        CodomainT added_val = CodomainT();
+        CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
 
 		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
@@ -309,13 +309,13 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==Combiner::neutron()) 
         return;
 
     std::pair<iterator,bool> insertion;
     if(Traits::emits_neutrons)
     {
-        CodomainT added_val = CodomainT();
+        CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, x_val);
         insertion = this->_map.insert(value_type(x_itv, added_val));
 
@@ -404,7 +404,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         Combiner()(it->CONT_VALUE, x_val);
         fill_gap<Combiner>(value_type(gap, x_val));
 
-        if(Traits::absorbs_neutrons && it->CONT_VALUE == CodomainT())
+        if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
             this->_map.erase(it++);
         else it++;
 
@@ -462,7 +462,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==Combiner::neutron()) 
         return;
 
     iterator fst_it = this->_map.lower_bound(x_itv);
@@ -523,7 +523,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         CodomainT& cur_val = (*it).CONT_VALUE ;
         Combiner()(cur_val, x_val);
 
-        if(Traits::absorbs_neutrons && cur_val==CodomainT())
+        if(Traits::absorbs_neutrons && cur_val==Combiner::neutron())
             this->_map.erase(it++); 
         else it++;
 
@@ -540,7 +540,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT& cur_val = (*it).CONT_VALUE ;
         Combiner()(cur_val, x_val);
-        if(Traits::absorbs_neutrons && cur_val==CodomainT())
+        if(Traits::absorbs_neutrons && cur_val==Combiner::neutron())
             this->_map.erase(it);
     }
     else
@@ -572,7 +572,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+	if(Traits::absorbs_neutrons && x_val == codomain_combine::neutron()) 
         return;
 
     std::pair<typename ImplMapT::iterator,bool> 
@@ -590,7 +590,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 
         interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
-        fill_gap<codomain_combine>(value_type(leadGap, x_val));
+        fill(value_type(leadGap, x_val));
 
         // only for the first there can be a leftResid: a part of *it left of x
         interval_type leftResid;  fst_itv.left_surplus(leftResid, x_itv);
@@ -605,7 +605,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         {
             interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
-            fill_gap<codomain_combine>(value_type(endGap, x_val));
+            fill(value_type(endGap, x_val));
         }
         else
         {
@@ -632,7 +632,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         cur_itv = (*it).KEY_VALUE ;            
         x_rest.left_surplus(gap, cur_itv);
-        fill_gap<codomain_combine>(value_type(gap, x_val));
+        fill(value_type(gap, x_val));
         // shrink interval
         x_rest.left_subtract(cur_itv);
     }
@@ -650,14 +650,14 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
 
     interval_type left_gap;
     x_rest.left_surplus(left_gap, cur_itv);
-    fill_gap<codomain_combine>(value_type(left_gap, x_val));
+    fill(value_type(left_gap, x_val));
 
     interval_type common;
     cur_itv.intersect(common, x_rest);
 
     interval_type end_gap; 
     x_rest.right_surplus(end_gap, cur_itv);
-    fill_gap<codomain_combine>(value_type(end_gap, x_val));
+    fill(value_type(end_gap, x_val));
 }
 
 
@@ -673,7 +673,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==codomain_combine::neutron()) 
         return;
 
     iterator fst_it = this->_map.lower_bound(x_itv);

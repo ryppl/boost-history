@@ -30,6 +30,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <functional>
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/unon.hpp>
 
 namespace boost{namespace itl
 {
