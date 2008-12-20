@@ -203,7 +203,8 @@ private:
     bool insertable(const value_type& value)const
     { 
         return !value.KEY_VALUE.empty() 
-            && !(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT()); 
+			&& !(Traits::absorbs_neutrons && value.CONT_VALUE == codomain_combine::neutron()); 
+            //CL && !(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT()); 
     }
 
     bool join_left(iterator& it);
@@ -348,7 +349,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return this->_map.end();
-    if(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT())
+    if(Traits::absorbs_neutrons && value.CONT_VALUE == codomain_combine::neutron())
         return this->_map.end();
 
     std::pair<iterator,bool> insertion = this->_map.insert(value);
@@ -367,7 +368,7 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return this->_map.end();
-    if(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT())
+    if(Traits::absorbs_neutrons && value.CONT_VALUE == codomain_combine::neutron())
         return this->_map.end();
 
     std::pair<iterator,bool> insertion = this->_map.insert(value);
@@ -388,13 +389,13 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return this->_map.end();
-    if(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT())
+    if(Traits::absorbs_neutrons && value.CONT_VALUE == Combiner::neutron())
         return this->_map.end();
 
     std::pair<iterator,bool> insertion;
     if(Traits::emits_neutrons)
     {
-        CodomainT added_val = CodomainT();
+        CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
 		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
 			return this->_map.end();
@@ -419,13 +420,13 @@ interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     //collision free insert is asserted
     if(value.KEY_VALUE.empty())
         return this->_map.end();
-    if(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT())
+    if(Traits::absorbs_neutrons && value.CONT_VALUE == Combiner::neutron())
         return this->_map.end();
 
     std::pair<iterator,bool> insertion;
     if(Traits::emits_neutrons)
     {
-        CodomainT added_val = CodomainT();
+        CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
 		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
 			return this->_map.end();
@@ -454,13 +455,13 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==Combiner::neutron()) 
         return;
 
     std::pair<iterator,bool> insertion;
     if(Traits::emits_neutrons)
     {
-        CodomainT added_val = CodomainT();
+        CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, x_val);
 		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
 			return;
@@ -562,7 +563,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         Combiner()(it->CONT_VALUE, x_val);
         fill_gap_join_left<Combiner>(value_type(left_gap, x_val)); //A posteriori
 
-        if(Traits::absorbs_neutrons && it->CONT_VALUE == CodomainT())
+        if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
             this->_map.erase(it++);
         else
         {
@@ -632,7 +633,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==Combiner::neutron()) 
         return;
 
     iterator fst_it = this->_map.lower_bound(x_itv);
@@ -702,7 +703,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         CodomainT& cur_val = (*it).CONT_VALUE ;
         Combiner()(cur_val, x_val);
 
-        if(Traits::absorbs_neutrons && cur_val==CodomainT())
+        if(Traits::absorbs_neutrons && cur_val==Combiner::neutron())
             this->_map.erase(it++); 
         else
         {
@@ -723,7 +724,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
     {
         CodomainT& cur_val = (*it).CONT_VALUE ;
         Combiner()(cur_val, x_val);
-        if(Traits::absorbs_neutrons && cur_val==CodomainT())
+        if(Traits::absorbs_neutrons && cur_val==Combiner::neutron())
             this->_map.erase(it);
         else
         {
@@ -771,7 +772,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==codomain_combine::neutron()) 
         return;
 
     std::pair<typename ImplMapT::iterator,bool> 
@@ -894,7 +895,7 @@ void interval_map<DomainT,CodomainT,Traits,Interval,Compare,Combine,Alloc>
         return;
 
     const CodomainT& x_val = x.CONT_VALUE;
-    if(Traits::absorbs_neutrons && x_val==CodomainT()) 
+    if(Traits::absorbs_neutrons && x_val==codomain_combine::neutron()) 
         return;
 
     iterator fst_it = this->_map.lower_bound(x_itv);

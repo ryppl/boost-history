@@ -21,6 +21,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __itv__          [classref boost::itl::interval interval]]
 [def __Itv__          [classref boost::itl::interval Interval]]
 [def __itvs__         [classref boost::itl::interval intervals]]
+[def __itl_itvs__     [classref boost::itl::interval itl::intervals]]
 [def __Itvs__         [classref boost::itl::interval Intervals]]
 [def __itv_set__      [classref boost::itl::interval_set interval_set]]
 [def __itv_sets__     [classref boost::itl::interval_set interval_sets]]

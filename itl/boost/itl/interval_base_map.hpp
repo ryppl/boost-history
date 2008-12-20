@@ -143,6 +143,7 @@ template
     template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
 	ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
+	//ITL_SECTION Section= ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
     ITL_ALLOC   Alloc    = std::allocator
 >
 #ifdef USE_CONCEPTS

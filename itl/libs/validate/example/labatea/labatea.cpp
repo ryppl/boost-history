@@ -20,8 +20,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/validate/gentor/gentorprofile.h>
 #include <boost/validate/gentor/rangegentor.h>
 
-#include <boost/validate/typevalidater.h>
-//#include <boost/validate/realmvalidater.h>
+//#include <boost/validate/typevalidater.h>
+#include <boost/validate/realmvalidater.h>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/setgentor.hpp>
@@ -82,20 +82,20 @@ void test_Validater()
 
 void test_realmvalidater()
 {
-//    RealmValidater validater;
+    RealmValidater validater;
     cout << 
     ">> ------------------------------------------------------ <<\n"
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"
     ">> Output will be generated in a few seconds\n"
     ">> terminate by typing <CTRL>C\n"
     ">> ------------------------------------------------------ <<\n";
-//    validater.validate();
+    validater.validate();
 };
 
 
 int main()
 {
-    test_Validater();
-    //test_realmvalidater();
+    //test_Validater();
+    test_realmvalidater();
     return 0;
 }

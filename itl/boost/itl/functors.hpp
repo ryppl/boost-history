@@ -34,10 +34,25 @@ DEALINGS IN THE SOFTWARE.
 namespace boost{namespace itl
 {
     // ------------------------------------------------------------------------
-    template <typename Type> struct inplace_identity 
+    template <typename Type> struct neutron_based_inplace_combine 
         : public std::binary_function<Type&, const Type&, void>
     {
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+    };
+
+    // ------------------------------------------------------------------------
+    template <typename Type> struct unon_based_inplace_combine 
+        : public std::binary_function<Type&, const Type&, void>
+    {
+		static Type neutron() { return boost::itl::unon<Type>::value(); }
+    };
+
+    // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_identity 
+        : public neutron_based_inplace_combine<Type>
+    {
         void operator()(Type& object, const Type& operand)const{}
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -46,13 +61,14 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_erasure 
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         { 
             if(object == operand)
                 object = Type();
         }
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -61,7 +77,7 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_plus 
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         typedef Type type;
 
@@ -74,11 +90,13 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_minus 
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         typedef Type type;
         void operator()(Type& object, const Type& operand)const
         { object -= operand; }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -86,10 +104,12 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inserter
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         { insert(object,operand); }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -97,10 +117,12 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct eraser
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         { erase(object,operand); }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -108,35 +130,41 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_star
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         { object *= operand; }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
     inline std::string unary_template_to_string<inplace_star>::apply() { return "*="; }
 
     // ------------------------------------------------------------------------
-    template <typename Type> struct inplace_div
-        : public std::binary_function<Type&, const Type&, void>
+    template <typename Type> struct inplace_slash
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         { object /= operand; }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
-    inline std::string unary_template_to_string<inplace_div>::apply() { return "/="; }
+    inline std::string unary_template_to_string<inplace_slash>::apply() { return "/="; }
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_max
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         {
             if(object < operand)
                 object = operand;
         }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -144,13 +172,15 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_min
-        : public std::binary_function<Type&, const Type&, void>
+        : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
         {
             if(object > operand)
                 object = operand;
         }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -170,10 +200,10 @@ namespace boost{namespace itl
 
 	template<class Type> 
 	struct inverse<itl::inplace_star<Type> >
-	{ typedef itl::inplace_div<Type> type; };
+	{ typedef itl::inplace_slash<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_div<Type> >
+	struct inverse<itl::inplace_slash<Type> >
 	{ typedef itl::inplace_star<Type> type; };
 
 	template<class Type> 

@@ -23,7 +23,7 @@ typedef ::boost::mpl::list<
     ,short, int, long
     ,float, double
     ,boost::rational<int>
-//    ,boost::posix_time::ptime
+    ,boost::posix_time::ptime
 //    ,boost::gregorian::date
 > bicremental_types;
 
@@ -45,7 +45,7 @@ typedef ::boost::mpl::list<
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
     ,short, int, long
-//    ,boost::posix_time::ptime
+    ,boost::posix_time::ptime
 //    ,boost::gregorian::date
 > discrete_types;
 

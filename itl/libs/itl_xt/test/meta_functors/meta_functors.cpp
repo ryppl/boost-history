@@ -33,9 +33,13 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/placeholders.hpp>
 
+#include <boost/itl/interval_map.hpp>
+#include <boost/itl/split_interval_map.hpp>
+
 using namespace std;
 using namespace boost;
 using namespace boost::mpl::placeholders;
+using namespace boost::itl;
 
 template<class T>struct unary{
   void speak(){ cout<<"unary"<<endl; }
@@ -162,11 +166,68 @@ public:
 }
 */
 
+class NoPlus
+{
+	//NoPlus(const NoPlus& val):_value(val._value){}
+public:
+	NoPlus():_value(0){}
+	NoPlus(int value):_value(value){}
+
+	bool operator < (const NoPlus& rhs)const
+	{ return _value < rhs._value; }
+
+	bool operator == (const NoPlus& rhs)const
+	{ return _value == rhs._value; }
+
+	int value()const { return _value; }
+
+	std::string as_string()const
+	{ return to_string<int>::apply(_value); }
+
+private:
+	int _value;
+};
+
+template<class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>& operator <<
+  (std::basic_ostream<CharType, CharTraits>& stream, 
+   const NoPlus& object)
+{
+	return stream << object.value();
+}
+
+void codomain_test()
+{
+	typedef interval_map<int,NoPlus> NoplumT; 
+	NoplumT noplum;
+	//noplum.insert(mapping_pair<int,NoPlus>(47,NoPlus(11)));
+	//noplum.insert(mapping_pair<int,NoPlus>(42,NoPlus(14)));
+	//noplum.erase(mapping_pair<int,NoPlus>(42,NoPlus(14)));
+	
+	noplum.insert(make_pair(interval<int>::rightopen(2,6),NoPlus(1)));
+	noplum.insert(make_pair(interval<int>::rightopen(4,8),NoPlus(2)));
+
+	cout << noplum << endl;
+}
+
+
+void string_codomain_test()
+{
+	typedef interval_map<int,std::string> ConcaMapT; 
+	ConcaMapT cat_map;
+	cat_map += make_pair(interval<int>::rightopen(1,5),std::string("Hello"));
+	cat_map += make_pair(interval<int>::rightopen(3,7),std::string(" World"));
+	
+	cout << "cat_map: " << cat_map << endl;
+}
+
+
 int main()
 {
     cout << ">> Interval Template Library: Test meta_functors     <<\n";
     cout << "-------------------------------------------------------\n";
 
+	/*
 	unator1<int, unary>      untor1; untor1.speak();
 	unator2<int, unary<_> >  untor2; untor2.speak();
 	binator1<int, int, binary>     bintor1; bintor1.speak();
@@ -175,7 +236,9 @@ int main()
 	PairSet1_int ps1;
 
 	template_default_problem();
-
+	*/
+	codomain_test();
+	string_codomain_test();
     return 0;
 }
 
