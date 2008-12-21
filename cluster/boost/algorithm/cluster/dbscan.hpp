@@ -3,7 +3,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#if ! defined BOOST_ALGORITHM_CLUSTER_DBSCAN_HPP
+#if ! defined(BOOST_ALGORITHM_CLUSTER_DBSCAN_HPP)
 #define BOOST_ALGORITHM_CLUSTER_DBSCAN_HPP
 
 #include <boost/algorithm/cluster/cluster_data.hpp>
@@ -151,4 +151,4 @@ using namespace cluster;
 
 } // End of namespace boost
 
-#endif // BOOST_ALGORITHM_CLUSTER_DBSCAN_HPP
+#endif

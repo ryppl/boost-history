@@ -1,195 +1,225 @@
-/*****
-** References
-** - J. MacQueen, "Some methods for classification and analysis
-**   of multivariate observations", Fifth Berkeley Symposium on
-**   Math Statistics and Probability, 281-297, 1967.
-** - I.S. Dhillon and D.S. Modha, "A data-clustering algorithm
-**   on distributed memory multiprocessors",
-**   Large-Scale Parallel Data Mining, 245-260, 1999.
-** Yuanming Chen, 2008-05-08
-*/
+/*
+ * References
+ * - J. MacQueen, "Some methods for classification and analysis
+ *   of multivariate observations", Fifth Berkeley Symposium on
+ *   Math Statistics and Probability, 281-297, 1967.
+ * - I.S. Dhillon and D.S. Modha, "A data-clustering algorithm
+ *   on distributed memory multiprocessors",
+ *   Large-Scale Parallel Data Mining, 245-260, 1999.
+ * Yuanming Chen, 2008-05-08
+ */
 
-#ifndef BOOST_ALGORITHM_CLUSTER_K_MEANS_HPP
+#if ! defined(BOOST_ALGORITHM_CLUSTER_K_MEANS_HPP)
 #define BOOST_ALGORITHM_CLUSTER_K_MEANS_HPP
 
+#include <cassert>
 #include <cmath>
 #include <float.h>
-//#include "common.hpp"
-#include <vector>
 #include <list>
-#include <cassert>
+#include <vector>
 
-namespace boost {
-  namespace algorithm {
-      namespace cluster {
-          namespace detail {  
-                template<typename AttributeType, typename differenceType>
-                //The original C function
-                int *k_means(AttributeType **data, int n, int m, int k, differenceType eps, AttributeType **centroids)
-                {
-                   /* output cluster label for each data point */
-                   int *labels = (int*)calloc(n, sizeof(int));
+namespace boost
+{
+namespace algorithm
+{
+namespace cluster
+{
+namespace detail
+{
 
-                   int h, i, j; /* loop counters, of course :) */
-                   int *counts = (int*)calloc(k, sizeof(int)); /* size of each cluster */
-                   AttributeType old_error, error = FLT_MAX; /* sum of squared euclidean distance */
-                   AttributeType **c = centroids ? centroids : (AttributeType**)calloc(k, sizeof(AttributeType*));
-                   AttributeType **c1 = (AttributeType**)calloc(k, sizeof(AttributeType*)); /* temp centroids */
+// The original C function
+template<typename AttributeType, typename differenceType>
+int *k_means(AttributeType **data,
+             int n,
+             int m,
+             int k,
+             differenceType eps,
+             AttributeType **centroids)
+{
+  // Output cluster label for each data point.
+  int *labels = (int*)calloc(n, sizeof(int));
 
-                   //assert(data && k > 0 && k <= n && m > 0 && t >= 0); /* for debugging */
+  int h, i, j; // loop counters, of course :) 
+  // size of each cluster.
+  int *counts = (int*)calloc(k, sizeof(int));
+  // sum of squared euclidean distance.
+  AttributeType old_error, error = FLT_MAX;
+  AttributeType **c = (centroids) ?
+    centroids :
+    (AttributeType**)calloc(k, sizeof(AttributeType*));
+  // temp centroids.
+  AttributeType **c1 = (AttributeType**)calloc(k, sizeof(AttributeType*));
 
-                   /****
-                   ** initialization */
+  //assert(data && k > 0 && k <= n && m > 0 && t >= 0); // for debugging.
 
-                   for (h = i = 0; i < k; h += n / k, i++) {
-                      c1[i] = (AttributeType*)calloc(m, sizeof(AttributeType));
-                      if (!centroids) {
-                         c[i] = (AttributeType*)calloc(m, sizeof(AttributeType));
-                      }
-                      /* pick k points as initial centroids */
-                      for (j = m; j-- > 0; c[i][j] = data[h][j]);
-                   }
+  // initialization
+  for (h = i = 0; i < k; h += n / k, i++)
+  {
+    c1[i] = (AttributeType*)calloc(m, sizeof(AttributeType));
+    if (!centroids)
+    {
+      c[i] = (AttributeType*)calloc(m, sizeof(AttributeType));
+    }
+    /* pick k points as initial centroids */
+    for (j = m; j-- > 0; c[i][j] = data[h][j]);
+  }
 
-                   /****
-                   ** main loop */
+  // main loop
+  do
+  {
+    // save error from last step.
+    old_error = error, error = 0;
 
-                   do {
-                      /* save error from last step */
-                      old_error = error, error = 0;
+    // clear old counts and temp centroids.
+    for (i = 0; i < k; counts[i++] = 0)
+    {
+      for (j = 0; j < m; c1[i][j++] = 0);
+    }
 
-                      /* clear old counts and temp centroids */
-                      for (i = 0; i < k; counts[i++] = 0) {
-                         for (j = 0; j < m; c1[i][j++] = 0);
-                      }
+    for (h = 0; h < n; h++)
+    {
+      // identify the closest cluster.
+      AttributeType min_distance = FLT_MAX;
+      for (i = 0; i < k; i++)
+      {
+        AttributeType distance = 0;
+        for (j = m; j-- > 0; distance += pow(data[h][j] - c[i][j], 2));
+        if (distance < min_distance)
+        {
+          labels[h] = i;
+          min_distance = distance;
+        }
+      }
+      // update size and temp centroid of the destination cluster.
+      for (j = m; j-- > 0; c1[labels[h]][j] += data[h][j]);
+      counts[labels[h]]++;
+      // update standard error.
+      error += min_distance;
+    }
 
-                      for (h = 0; h < n; h++) {
-                         /* identify the closest cluster */
-                         AttributeType min_distance = FLT_MAX;
-                         for (i = 0; i < k; i++) {
-                            AttributeType distance = 0;
-                            for (j = m; j-- > 0; distance += pow(data[h][j] - c[i][j], 2));
-                            if (distance < min_distance) {
-                               labels[h] = i;
-                               min_distance = distance;
-                            }
-                         }
-                         /* update size and temp centroid of the destination cluster */
-                         for (j = m; j-- > 0; c1[labels[h]][j] += data[h][j]);
-                         counts[labels[h]]++;
-                         /* update standard error */
-                         error += min_distance;
-                      }
+    for (i = 0; i < k; i++)
+    {
+      // update all centroids.
+      for (j = 0; j < m; j++)
+      {
+        c[i][j] = (counts[i]) ? c1[i][j] / counts[i] : c1[i][j];
+      }
+    }
 
-                      for (i = 0; i < k; i++) { /* update all centroids */
-                         for (j = 0; j < m; j++) {
-                            c[i][j] = counts[i] ? c1[i][j] / counts[i] : c1[i][j];
-                         }
-                      }
+  } while (fabs(error - old_error) > eps);
 
-                   } while (fabs(error - old_error) > eps);
+  // housekeeping.
+  for (i = 0; i < k; ++i)
+  {
+    if (! centroids)
+      free(c[i]);
+    free(c1[i]);
+  }
 
-                   /****
-                   ** housekeeping */
+  if (! centroids)
+    free(c);
+  free(c1);
 
-                   for (i = 0; i < k; i++) {
-                      if (!centroids) {
-                         free(c[i]);
-                      }
-                      free(c1[i]);
-                   }
+  free(counts);
 
-                   if (!centroids) {
-                      free(c);
-                   }
-                   free(c1);
+  return labels;
+} // k_means
 
-                   free(counts);
+} // End of namespace detail.
 
-                   return labels;
-                }
-          } //End of details namespace
+template<typename PointType>
+struct KMeansCluster {
+  PointType centroid;
+  std::vector<int> points; //The indice of points are stored here 
+};
 
-            template<typename PointType>
-            struct KMeansCluster {
-                PointType centroid;
-                std::vector<int> points; //The indice of points are stored here 
-            };
+template <typename KMeansCluster> 
+struct KMeansClustering { 
+  typedef std::vector< KMeansCluster > type; 
+  type clusters;
+};
 
-            template <typename KMeansCluster> 
-            struct KMeansClustering { 
-                typedef std::vector< KMeansCluster > type; 
-                type clusters;
-            };
+/** 
+ * @param first Iterator for the first data point.
+ * @param last Iterator for the last data point.
+ * @param k The number of clusters.
+ * @param eps The epsilon value for the k-means algorithm.
+ * @return A clustering of the input data.
+ */
+template <typename NTupleIter>
+KMeansClustering<KMeansCluster<typename NTupleIter::value_type> >
+k_means(NTupleIter first,
+        NTupleIter last,
+        unsigned k, 
+        typename NTupleIter::difference_type const & eps)
+{
+  typedef typename NTupleIter::difference_type DistanceType;
+  typedef typename NTupleIter::value_type PointType;
+  // For the c funtion test, AttributeType will be a double.
+  typedef typename PointType::value_type AttributeType;
+  // knumOfPoints is the n variable in the C function.
+  const DistanceType knumOfPoints = last - first;
+  // knDimension is the m variable in the C function
+  const std::size_t knDimension = PointType::size();
 
-            /** 
-            * @param first: the first data point's iterator
-            * @param last: the last data point's iterator
-            * @param k: the k value for the k-mean algorithm
-            * @return collections of clusters
-            */
-            template <typename NTupleIter>
-            typename KMeansClustering< typename KMeansCluster<typename NTupleIter::value_type> >
-            k_means(NTupleIter first, NTupleIter last, unsigned k, 
-                   typename NTupleIter::difference_type const & eps)
-            {
-                typedef NTupleIter::difference_type DistanceType;
-                typedef NTupleIter::value_type PointType;
-                typedef PointType::value_type AttributeType; //For the c funtion test, it will be a double type
-                const DistanceType knumOfPoints = last - first; //The n variable in the C function
-                const std::size_t knDimension = PointType::size(); //The m variable in the C function
+  AttributeType** ppData = new AttributeType* [knumOfPoints];
+  AttributeType** centroids = new AttributeType* [k]; 
+  // Pre-allocate the result array.
+  for(std::size_t nCentroid = 0; nCentroid < k; nCentroid++)
+  {
+    centroids[nCentroid] = new AttributeType[knDimension];
+  }
 
-                AttributeType** ppData = new AttributeType* [knumOfPoints];
-                AttributeType** centroids = new AttributeType* [k]; 
-                //Pre-allocate the result array
-                for(std::size_t nCentroid = 0; nCentroid < k; nCentroid++)
-                {
-                    centroids[nCentroid] = new AttributeType[knDimension];
-                }
+  int nIndex = 0;
+  for(NTupleIter iter = first; iter != last; iter++, nIndex++)
+  {
+    PointType& pt= *iter; //A point TODO: Make this const?
+    ppData[nIndex] = new AttributeType[knDimension];
+    for(unsigned int nAttribute = 0; nAttribute < knDimension; nAttribute++)
+    {
+      ppData[nIndex][nAttribute] = pt[nAttribute];
+    }
+  }
 
-                int nIndex = 0;
-                for(NTupleIter iter = first; iter != last; iter++, nIndex++)
-                {
-                    PointType& pt= *iter; //A point
-                    ppData[nIndex] = new AttributeType[knDimension];
-                    for(unsigned int nAttribute = 0; nAttribute < knDimension; nAttribute++)
-                    {
-                        ppData[nIndex][nAttribute] = pt[nAttribute];
-                    }
-                }
+  int* labels = detail::k_means(ppData,
+                                (int) knumOfPoints,
+                                (int) knDimension,
+                                k,
+                                eps,
+                                centroids);
 
-                int* labels = detail::k_means(ppData, (int) knumOfPoints, (int) knDimension, k, eps, centroids);
+  typedef KMeansCluster<PointType> KMeansClusterType;
+  KMeansClustering< KMeansClusterType > clustering;
+  for(std::size_t nCentroid = 0; nCentroid < k; nCentroid++)
+  {
+    
+    KMeansClusterType cluster;
+    PointType centroid;
+    for(unsigned int nAttribute = 0; nAttribute < knDimension; nAttribute++)
+    {
+      centroid[nAttribute] = centroids[nCentroid][nAttribute];
+    }
+    cluster.centroid = centroid;
+    clustering.clusters.push_back(cluster);
+    delete[] centroids[nCentroid];
+  }
 
-                typedef KMeansCluster<PointType> KMeansClusterType;
-                KMeansClustering< KMeansClusterType > clustering;
-                for(std::size_t nCentroid = 0; nCentroid < k; nCentroid++)
-                {
-                    
-                    KMeansClusterType cluster;
-                    PointType centroid;
-                    for(unsigned int nAttribute = 0; nAttribute < knDimension; nAttribute++)
-                    {
-                        centroid[nAttribute] = centroids[nCentroid][nAttribute];
-                    }
-                    cluster.centroid = centroid;
-                    clustering.clusters.push_back(cluster);
-                    delete[] centroids[nCentroid];
-                }
+  for(int nPoint = 0; nPoint < knumOfPoints; nPoint++)
+  {
+    int nCentroidIndex = labels[nPoint];
+    clustering.clusters[nCentroidIndex].points.push_back(nPoint);
+    delete[] ppData[nPoint];
+  }
 
-                for(int nPoint = 0; nPoint < knumOfPoints; nPoint++)
-                {
-                    int nCentroidIndex = labels[nPoint];
-                    clustering.clusters[nCentroidIndex].points.push_back(nPoint);
-                    delete[] ppData[nPoint];
-                }
+  delete[] centroids;
+  delete[] ppData;
+  delete[] labels;
 
-                delete[] centroids;
-                delete[] ppData;
-                delete[] labels;
+  return clustering;
+} // k_means
 
-                return clustering;
-            }
-        } //End of cluster namespace
-    } //End of algorithm namespace
+} //End of cluster namespace
+} //End of algorithm namespace
 } //End of boost namespace
 
-#endif // BOOST_ALGORITHM_CLUSTER_K_MEANS_HPP
+#endif

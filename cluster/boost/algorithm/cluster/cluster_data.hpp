@@ -3,7 +3,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#if ! defined BOOST_ALGORITHM_CLUSTER_CLUSTER_DATA_HPP
+#if ! defined(BOOST_ALGORITHM_CLUSTER_CLUSTER_DATA_HPP)
 #define BOOST_ALGORITHM_CLUSTER_CLUSTER_DATA_HPP
 
 #include <boost/shared_ptr.hpp>
@@ -74,4 +74,4 @@ using namespace cluster;
 
 } // End of namespace boost
 
-#endif // BOOST_ALGORITHM_CLUSTER_CLUSTER_DATA_HPP
+#endif

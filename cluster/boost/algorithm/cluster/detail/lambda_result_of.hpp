@@ -28,7 +28,7 @@
 #include <boost/tuple/tuple.hpp>
 
 
-#if !defined(BOOST_LAMBDA_RESULT_OF_MAX_ARITY)
+#if ! defined(BOOST_LAMBDA_RESULT_OF_MAX_ARITY)
 #define BOOST_LAMBDA_RESULT_OF_MAX_ARITY 3
 #endif
 

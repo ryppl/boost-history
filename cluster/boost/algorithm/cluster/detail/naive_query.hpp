@@ -3,7 +3,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#if ! defined BOOST_ALGORITHM_CLUSTER_DETAIL_NAIVE_QUERY_HPP
+#if ! defined(BOOST_ALGORITHM_CLUSTER_DETAIL_NAIVE_QUERY_HPP)
 #define BOOST_ALGORITHM_CLUSTER_DETAIL_NAIVE_QUERY_HPP
 
 #include <boost/algorithm/cluster/cluster_data.hpp>
@@ -47,4 +47,4 @@ static void naive_query(
 } // End of namespace algorithm
 } // End of namespace boost
 
-#endif // BOOST_ALGORITHM_CLUSTER_DETAIL_NAIVE_QUERY_HPP
+#endif
