@@ -12,9 +12,10 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -160,9 +161,10 @@ void interval_map_fundamentals_4_ordered_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -222,9 +224,10 @@ void interval_map_ctor_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -276,9 +279,10 @@ void interval_map_add_sub_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -308,9 +312,10 @@ void interval_map_distinct_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -358,9 +363,10 @@ void interval_map_distinct_4_bicremental_continuous_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -410,9 +416,10 @@ void interval_map_isolate_4_bicremental_continuous_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -453,9 +460,10 @@ void interval_map_contains_4_bicremental_types()
 
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -516,9 +524,10 @@ void interval_map_operators_4_bicremental_types()
 // Test for nontrivial intersection of interval maps with intervals and values
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -628,9 +637,10 @@ void interval_map_base_intersect_4_bicremental_types()
 // Test for nontrivial erasure of interval maps with intervals and interval sets
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>
@@ -744,9 +754,10 @@ void interval_map_base_erase_4_bicremental_types()
 // Test first_collision
 template <template<class T, class U,
                    class Traits = neutron_absorber,
-                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap, 
           class T, class U>

@@ -105,6 +105,7 @@ namespace boost{namespace itl
         class Traits = itl::neutron_absorber,
         ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
         ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
+		ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, CodomainT), 
         ITL_ALLOC   Alloc   = std::allocator 
     >
     class map: private std::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), 
@@ -113,12 +114,12 @@ namespace boost{namespace itl
     public:
         typedef Alloc<typename std::pair<const DomainT, CodomainT> >  allocator_type;
 
-        typedef typename itl::map<DomainT,CodomainT,Traits, Compare,Combine,Alloc> type;
+        typedef typename itl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
         typedef typename std::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
                                   allocator_type>              base_type;
         typedef typename itl::set<DomainT, Compare, Alloc >       set_type;
 
-        typedef itl::map<DomainT,CodomainT,itl::neutron_absorber,Compare,Combine,Alloc> 
+        typedef itl::map<DomainT,CodomainT,itl::neutron_absorber,Compare,Combine,Section,Alloc> 
                                                                neutron_absorber_type;
         typedef Traits traits;
 
@@ -316,60 +317,60 @@ namespace boost{namespace itl
 
     /** Standard equality, which is lexicographical equality of the sets
         as sequences, that are given by their Compare order. */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    inline bool operator == (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& lhs,
-                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& rhs)
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator == (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
     {
         typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     //JODO comment... 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& lhs,
-                                 const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& rhs)
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                                 const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
     {
         typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Protonic equality is equality on all elements that do not carry a neutron as content. */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    inline bool is_protonic_equal (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& lhs,
-                                   const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& rhs)
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool is_protonic_equal (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                                   const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
     {
         //JODO: Efficient implementation.
         typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
 
-        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc> lhs0 = lhs;
-        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc> rhs0 = rhs;
+        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> lhs0 = lhs;
+        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> rhs0 = rhs;
         lhs0.absorb_neutrons();
         rhs0.absorb_neutrons();
         return operator==((const base_type&)lhs0, (const base_type&)rhs0);
     }
 
     /** Strict weak less ordering which is given by the Compare order */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    inline bool operator < (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& lhs,
-        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& rhs)
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator < (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
     {
         typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
     /** Partial ordering which is induced by Compare */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    inline bool operator <= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& lhs,
-        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& rhs)
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator <= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
     {
         typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
         template <class Combiner>
-    typename map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>::iterator
-        map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>::add(const value_type& val)
+    typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
+        map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::add(const value_type& val)
     {
         if(Traits::absorbs_neutrons && val.CONT_VALUE == CodomainT())
             return end();
@@ -401,9 +402,9 @@ namespace boost{namespace itl
         }
     }
 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    typename map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>::size_type 
-        map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::size_type 
+        map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
         ::erase(const value_type& value_pair)
     {
         if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == CodomainT())
@@ -421,9 +422,9 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    typename map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>::iterator
-        map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>::subtract(const value_type& val)
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
+        map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
     {
         if(Traits::emits_neutrons)
             return add<inverse_data_combine>(val);
@@ -447,8 +448,8 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    std::string map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>::as_string()const
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    std::string map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::as_string()const
     { 
         std::string repr;
         const_FORALL_THIS(it) {
@@ -463,9 +464,9 @@ namespace boost{namespace itl
         return repr;
     }
 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
         template<class Predicate>
-    map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
         ::erase_if(const Predicate& pred)
     {
         iterator it = begin();
@@ -477,10 +478,10 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
         template<class Predicate>
-    map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>
-        ::assign_if(const map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& src, const Predicate& pred)
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+        ::assign_if(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& src, const Predicate& pred)
     {
         clear();
         const_iterator it = src.begin();
@@ -492,12 +493,12 @@ namespace boost{namespace itl
     }
     //-------------------------------------------------------------------------
     template <typename DomainT, typename CodomainT, class Traits, 
-              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& 
-        insert(map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& object, 
-               const map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& insertee) 
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& 
+        insert(map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object, 
+               const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& insertee) 
     {
-        typedef map<DomainT,CodomainT,Traits,Compare,Combine,Alloc> map_type;
+        typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> map_type;
 
         const_FORALL(typename map_type, elem_, insertee) 
             object.insert(*elem_); 
@@ -506,12 +507,12 @@ namespace boost{namespace itl
     }
 
     template <typename DomainT, typename CodomainT, class Traits, 
-              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_ALLOC Alloc>
-    map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& 
-        erase(map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& object, 
-              const map<DomainT,CodomainT,Traits,Compare,Combine,Alloc>& erasee) 
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& 
+        erase(map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object, 
+              const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& erasee) 
     {
-        typedef map<DomainT,CodomainT,Traits,Compare,Combine,Alloc> map_type;
+        typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> map_type;
 
         const_FORALL(typename map_type, elem_, erasee) 
             object.erase(*elem_); 

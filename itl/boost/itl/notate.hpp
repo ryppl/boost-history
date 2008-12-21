@@ -79,6 +79,7 @@ namespace boost{namespace itl
 
 #define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
 #define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
+#define ITL_USE_SECTION_TEMPLATE_TEMPLATE
 
 //------------------------------------------------------------------------------
 // template parameter Compare can not be a template type parameter as long as
@@ -106,6 +107,18 @@ namespace boost{namespace itl
 #   define ITL_COMBINE class
 #   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
 #   define ITL_COMBINE_INSTANCE(compare_instance,codomain_type) compare_instance<codomain_type>
+#endif
+
+//------------------------------------------------------------------------------
+// template parameter Section could be a template type parameter.
+#ifdef ITL_USE_SECTION_TEMPLATE_TEMPLATE
+#   define ITL_SECTION template<class>class
+#   define ITL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect<codomain_type> 
+#   define ITL_SECTION_INSTANCE(section_instance,codomain_type) section_instance
+#else//ITL_USE_SECTION_TEMPLATE_TYPE
+#   define ITL_SECTION class
+#   define ITL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect 
+#   define ITL_SECTION_INSTANCE(section_instance,codomain_type) section_instance<codomain_type>
 #endif
 
 //------------------------------------------------------------------------------

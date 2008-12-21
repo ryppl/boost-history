@@ -7,9 +7,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 +----------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------
-itl_ptime provides adapter code for boost::posix_time::ptime.
-It implements incrementation (++) decrementation (--) and a neutral element
-w.r.t. addition (neutron()).
+itl_rational provides adapter code for boost::rational.
 -----------------------------------------------------------------------------*/
 
 #ifndef __itl_rational_JOFA_080913_H__
