@@ -472,21 +472,16 @@ template
 <
     class SubType, class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, template<class,ITL_COMPARE>class, 
-        ITL_COMPARE, ITL_ALLOC
-    >
-    class IntervalSet
+    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
 operator -=
 (
           interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalSet<DomainT,Interval,Compare,Alloc>& erasure
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& erasure
 )
 {
-    typedef IntervalSet<DomainT,Interval,Compare,Alloc> set_type;
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> set_type;
     const_FORALL(typename set_type, interval_, erasure) 
         object.erase(*interval_); 
 
@@ -497,18 +492,13 @@ template
 <
     class SubType, class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, template<class,ITL_COMPARE>class, 
-        ITL_COMPARE, ITL_ALLOC
-    >
-    class IntervalSet
+    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
 operator -
 (
     const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalSet<DomainT,Interval,Compare,Alloc>& operand
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
 )
 {
 	typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
@@ -786,26 +776,19 @@ bool is_disjoint
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits,
- 
-    ITL_COMPARE Compare, ITL_ALLOC Alloc,
-    template
-    <    
-        class, template<class,ITL_COMPARE>class, 
-        ITL_COMPARE, ITL_ALLOC
-    >
-    class IntervalSet
+    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 //JODO boost::enable_if
 bool is_disjoint
 (
           interval_base_map<SubType,DomainT,CodomainT,
                             Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalSet<DomainT,Interval,Compare,Alloc>& operand
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
 )
 {
     typedef interval_base_map<SubType,DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Interval,Alloc> object_type;
-    typedef IntervalSet<DomainT,Interval,Compare,Alloc> operand_type;
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
     object_type intersection;
 
     if(operand.empty())
@@ -839,24 +822,19 @@ template
         ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
     >
     class IntervalMap,
-    template
-    <    
-        class, template<class,ITL_COMPARE>class, 
-        ITL_COMPARE, ITL_ALLOC
-    >
-    class IntervalSet
+    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 //JODO boost::enable_if
 bool is_disjoint
 (
     const IntervalMap<DomainT,CodomainT,
                       Traits,Compare,Combine,Section,Interval,Alloc>&  object,
-    const IntervalSet<DomainT,Interval,Compare,Alloc>& operand
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
 )
 {
     typedef IntervalMap<DomainT,CodomainT,
                         Traits,Compare,Combine,Section,Interval,Alloc> object_type;
-    typedef IntervalSet<DomainT,Interval,Compare,Alloc> operand_type;
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
     object_type intersection;
 
     if(operand.empty())
@@ -889,17 +867,12 @@ template
         ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
     >
     class IntervalMap,
-    template
-    <    
-        class, template<class,ITL_COMPARE>class, 
-        ITL_COMPARE, ITL_ALLOC
-    >
-    class IntervalSet
+    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 //JODO boost::enable_if
 bool is_disjoint
 (
-    const IntervalSet<DomainT,Interval,Compare,Alloc>& left,
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& left,
     const IntervalMap<DomainT,CodomainT,
                       Traits,Compare,Combine,Section,Interval,Alloc>&  right
 )

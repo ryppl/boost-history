@@ -223,7 +223,7 @@ public:
 
 
     // Corresponding abstract interval set type
-    //typedef interval_base_set<SetSubType,DomainT,Interval,Compare,Alloc> interval_base_set_type;
+    //typedef interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc> interval_base_set_type;
 
     /// The atomized type is elementbased map that is equivalent to the interval map
     typedef typename itl::map<DomainT,CodomainT,
@@ -551,9 +551,9 @@ public:
         All values within the scope of the interval set \c x will be erased.
     */
     template<class SetSubType>
-    SubType& erase(const interval_base_set<SetSubType,DomainT,Interval,Compare,Alloc>& x)
+    SubType& erase(const interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc>& x)
     {
-        typedef interval_base_set<SetSubType,DomainT,Interval,Compare,Alloc> interval_base_set_type;
+        typedef interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc> interval_base_set_type;
         for(typename interval_base_set_type::const_iterator x_ = x.begin(); x_ != x.end(); ++x_)
             erase(*x_);
     
@@ -626,20 +626,16 @@ public:
     template
     <
         template
-        <    
-            class DomT, 
-			template<class DomT2, ITL_COMPARE>class Interv, 
-            ITL_COMPARE Comp, ITL_ALLOC Allc
-        >
+        <class DomT, ITL_COMPARE Comp, template<class DomT2, ITL_COMPARE>class Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
     void add_intersection
     (
               interval_base_map& section, 
-        const IntervalSet<DomainT,Interval,Compare,Alloc>& sectant
+        const IntervalSet<DomainT,Compare,Interval,Alloc>& sectant
     )const
     {
-        typedef IntervalSet<DomainT,Interval,Compare,Alloc> set_type;
+        typedef IntervalSet<DomainT,Compare,Interval,Alloc> set_type;
         if(sectant.empty()) return;
 
         // THINK JODO optimize using the ordering: if intervalls are beyond borders we can terminate
@@ -716,13 +712,10 @@ public:
     template 
     <
         template
-        <    
-            class DomT, template<class DomT2,ITL_COMPARE>class Interv, 
-            ITL_COMPARE Comp, ITL_ALLOC Allc
-        >
+        <class DomT, ITL_COMPARE Comp, template<class DomT2, ITL_COMPARE>class Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
-    void domain(IntervalSet<DomainT,Interval,Compare,Alloc>& dom)const 
+    void domain(IntervalSet<DomainT,Compare,Interval,Alloc>& dom)const 
     { 
         dom.clear(); 
         const_FOR_IMPLMAP(it) 

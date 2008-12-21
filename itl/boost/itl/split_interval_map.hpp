@@ -158,7 +158,7 @@ namespace boost{namespace itl
 
         typedef typename base_type::codomain_combine codomain_combine;
 
-        typedef interval_set<DomainT,Interval,Compare,Alloc> interval_set_type;
+        typedef interval_set<DomainT,Compare,Interval,Alloc> interval_set_type;
         typedef interval_set_type set_type;
 
         /// Default constructor for the empty map 

@@ -67,23 +67,23 @@ namespace boost{namespace itl
 template 
 <
     typename                         DomainT, 
-    template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_COMPARE                      Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
+    template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_ALLOC                        Alloc    = std::allocator
 > 
 class separate_interval_set: 
-    public interval_base_set<separate_interval_set<DomainT,Interval,Compare,Alloc>,
-                             DomainT,Interval,Compare,Alloc>
+    public interval_base_set<separate_interval_set<DomainT,Compare,Interval,Alloc>,
+                             DomainT,Compare,Interval,Alloc>
 {
 public:
     // inherit all typedefs
 
-    typedef interval_base_set<itl::separate_interval_set<DomainT,Interval,Compare,Alloc>,
-                              DomainT,Interval,Compare,Alloc> base_type;
+    typedef interval_base_set<itl::separate_interval_set<DomainT,Compare,Interval,Alloc>,
+                              DomainT,Compare,Interval,Alloc> base_type;
 
-    typedef separate_interval_set<DomainT,Interval,Compare,Alloc> type;
+    typedef separate_interval_set<DomainT,Compare,Interval,Alloc> type;
 
-    typedef interval_set<DomainT,Interval,Compare,Alloc> joint_type;
+    typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
 
     /// The domain type of the set
     typedef DomainT   domain_type;
@@ -140,7 +140,7 @@ public:
     /// Copy constructor for base_type
     template<class SubType>
     separate_interval_set
-        (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
+        (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     { assign(src); }
 
     /// Constructor for a single element
@@ -151,14 +151,14 @@ public:
     /// Assignment operator
     template<class SubType>
     separate_interval_set& operator =
-        (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
+        (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     { assign(src); return *this; }
 
     /// Assignment from a base interval_set.
     template<class SubType>
-    void assign(const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
+    void assign(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     {
-        typedef interval_base_set<SubType,DomainT,Interval,Compare,Alloc> base_set_type;
+        typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
         this->clear();
         // Can be implemented via _set.insert: Interval joining not necessary.
         const_FORALL(typename base_set_type, it, src) 
@@ -167,8 +167,8 @@ public:
 
 private:
 	friend class 
-		interval_base_set<separate_interval_set<DomainT,Interval,Compare,Alloc>,
-                                                DomainT,Interval,Compare,Alloc>;
+		interval_base_set<separate_interval_set<DomainT,Compare,Interval,Alloc>,
+                                                DomainT,Compare,Interval,Alloc>;
 
     /// Does the set contain the interval  <tt>x</tt>?
     bool contains_(const interval_type& x)const;
@@ -185,8 +185,8 @@ private:
 } ;
 
 
-template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
+template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+bool separate_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
 {
     if(interv.empty()) 
         return true;
@@ -197,8 +197,8 @@ bool separate_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const inte
 }
 
 
-template<class DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_type& x)
+template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& x)
 {
     if(x.empty()) return;
 
@@ -230,8 +230,8 @@ void separate_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_typ
 }
 
 
-template<class DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-void separate_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const value_type& x)
+template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& x)
 {
     if(x.empty()) return;
     typename ImplSetT::iterator fst_it = this->_set.lower_bound(x);

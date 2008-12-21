@@ -88,20 +88,20 @@ namespace boost{namespace itl
     template 
     <
         typename             DomainT, 
-        template<class,ITL_COMPARE>class Interval = itl::interval,
         ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
+        template<class,ITL_COMPARE>class Interval = itl::interval,
         ITL_ALLOC   Alloc    = std::allocator
     > 
     class split_interval_set: 
-        public interval_base_set<split_interval_set<DomainT,Interval,Compare,Alloc>, 
-                                 DomainT,Interval,Compare,Alloc>
+        public interval_base_set<split_interval_set<DomainT,Compare,Interval,Alloc>, 
+                                 DomainT,Compare,Interval,Alloc>
     {
     public:
-        typedef interval_base_set<itl::split_interval_set<DomainT,Interval,Compare,Alloc>,
-                                  DomainT,Interval,Compare,Alloc> base_type;
+        typedef interval_base_set<itl::split_interval_set<DomainT,Compare,Interval,Alloc>,
+                                  DomainT,Compare,Interval,Alloc> base_type;
 
-        typedef split_interval_set<DomainT,Interval,Compare,Alloc> type;
-        typedef interval_set<DomainT,Interval,Compare,Alloc> joint_type;
+        typedef split_interval_set<DomainT,Compare,Interval,Alloc> type;
+        typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
 
         /// The domain type of the set
         typedef DomainT   domain_type;
@@ -157,7 +157,7 @@ namespace boost{namespace itl
         /// Copy constructor for base_type
         template<class SubType>
         split_interval_set
-            (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
+            (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
         { assign(src); }
 
         /// Constructor for a single element
@@ -168,14 +168,14 @@ namespace boost{namespace itl
         /// Assignment operator
         template<class SubType>
         split_interval_set& operator =
-            (const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
+            (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
         { assign(src); return *this; }
 
         /// Assignment from a base interval_set.
         template<class SubType>
-        void assign(const interval_base_set<SubType,DomainT,Interval,Compare,Alloc>& src)
+        void assign(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
         {
-            typedef interval_base_set<SubType,DomainT,Interval,Compare,Alloc> base_set_type;
+            typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
             this->clear();
             // Can be implemented via _set.insert: Interval joining not necessary.
             const_FORALL(typename base_set_type, it, src) 
@@ -184,8 +184,8 @@ namespace boost{namespace itl
         
 	private:
 		friend class 
-			interval_base_set<split_interval_set<DomainT,Interval,Compare,Alloc>,
-										         DomainT,Interval,Compare,Alloc>;
+			interval_base_set<split_interval_set<DomainT,Compare,Interval,Alloc>,
+										         DomainT,Compare,Interval,Alloc>;
 
         /// Does the set contain the interval  <tt>x</tt>?
         bool contains_(const interval_type& x)const;
@@ -204,8 +204,8 @@ namespace boost{namespace itl
         void subtract_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
     } ;
 
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    bool split_interval_set<DomainT,Interval,Compare,Alloc>::contains_(const interval_type& interv)const
+    template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    bool split_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
     {
         if(interv.empty()) 
             return true;
@@ -216,8 +216,8 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    void split_interval_set<DomainT,Interval,Compare,Alloc>::add_(const value_type& x)
+    template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& x)
     {
         if(x.empty()) return;
 
@@ -278,8 +278,8 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    void split_interval_set<DomainT,Interval,Compare,Alloc>::insert_rest(const interval_type& x_itv, iterator& it, iterator& end_it)
+    template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(const interval_type& x_itv, iterator& it, iterator& end_it)
     {
         iterator nxt_it = it; nxt_it++;
 
@@ -319,8 +319,8 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    void split_interval_set<DomainT,Interval,Compare,Alloc>::subtract_(const value_type& x)
+    template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& x)
     {
         if(x.empty()) return;
         if(this->_set.empty()) return;
@@ -370,8 +370,8 @@ namespace boost{namespace itl
 
 
 
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    void split_interval_set<DomainT,Interval,Compare,Alloc>::subtract_rest(const interval_type& x_itv, iterator& snd_it, iterator& end_it)
+    template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_rest(const interval_type& x_itv, iterator& snd_it, iterator& end_it)
     {
         iterator it=snd_it, nxt_it=snd_it; nxt_it++;
 
@@ -405,9 +405,9 @@ namespace boost{namespace itl
         NOTE: This is not inline with the mathematical view.
         We have a distiction between 'element equality' and 'lexicographical 
         equality'.    */
-    template <typename DomainT, template<class,ITL_COMPARE>class Interval, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator == (const split_interval_set<DomainT,Interval,Compare,Alloc>& lhs,
-                             const split_interval_set<DomainT,Interval,Compare,Alloc>& rhs)
+    template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    inline bool operator == (const split_interval_set<DomainT,Compare,Interval,Alloc>& lhs,
+                             const split_interval_set<DomainT,Compare,Interval,Alloc>& rhs)
     {
         //MEMO PORT: This implemetation worked with stlport, sgi and gnu 
         // implementations of the stl. But using MSVC-implementation
