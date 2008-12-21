@@ -10,7 +10,7 @@
 
 Section *Interface* gives an overview over the types and functions
 of the *Itl*. Synoptical tables allow to review the overall structure of
-the libraries design and to recognize structural equalities and differences
+the libraries design and to focus on structural equalities and differences
 with the corresponding containers of the standard template library.
 
 In the table of associated types of interval_sets
@@ -35,9 +35,8 @@ template, because an interval is considered to be a set as well.
 [[__itv_bsets__][__itv_set__]    [`<DomainT,Compare,Interval,Alloc>`]]
 [[]             [__sep_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
 [[]             [__spl_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
-[[__itl_set__]  [__itl_set__]    [`<DomainT,Compare,Alloc>`]]
-[[=std::set=]   [`std::set`]     [`<_Key,_Compare,_Alloc>`]]
-[[][]]
+[[__itl_set__]  [__itl_set__]    [`<DomainT,Compare,         Alloc>`]]
+[[=std::set=]   [`std::set`]     [`<_Key,  _Compare,        _Alloc>`]]
 ]
 
 Templates and template parameters, given in the preceeding table are 
@@ -65,10 +64,10 @@ the itl and compares them to =std::map=.
 
 [table map class templates
 [[group]        [template]       [instance parameters]]
-[[__itv_bmaps__][__itv_map__]    [`<DomainT,CodomainT,Compare,Combine,Traits,Interval,Alloc>`]]
-[[]             [__spl_itv_map__][`<DomainT,CodomainT,Compare,Combine,Traits,Interval,Alloc>`]]
-[[__itl_map__]  [__itl_map__]    [`<DomainT,CodomainT,Compare,Combine,Traits,Alloc>`]]
-[[=std::map=]   [`std::map`]     [`<_Key,_Data,_Compare,_Alloc>`]]
+[[__itv_bmaps__][__itv_map__]    [`<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>`]]
+[[]             [__spl_itv_map__][`<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>`]]
+[[__itl_map__]  [__itl_map__]    [`<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>`]]
+[[=std::map=]   [`std::map`]     [`<_Key,   _Data,          _Compare,               _Alloc>`]]
 ]
 
 
@@ -79,12 +78,12 @@ class templates __itv_map__ and __spl_itv_map__
 that all have equal template parameters.
 
 [table Parameters of map class templates
-[[]                   [elements][mapped values][order of elements]          [aggregation]              [traits]                     [type of intervals]                             [memory allocation]]
-[[template parameter] [`class`]  [`class`]    [`template <class>class`]     [`template <class>class`]  [`class`]                    [`template <class, template<class>class> class`][`template <class>class`]]    
-[[__itv_bmaps__]      [`DomainT`][`CodomainT`][`Compare = std::less`]       [`Combine = inplace_plus`] [`Traits = neutron_absorber`][`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[__itl_map__]        [`DomainT`][`CodomainT`][`Compare = std::less`]       [`Combine = inplace_plus`] [`Traits = neutron_absorber`][`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[template parameter] [`class`]  [`class`]    [`class`]                     []                         []                           []                                              [`class`]]
-[[=std::map=]         [`_Key`]   [`_Data`]    [`_Compare = std::less<_Key>`][]                         []                           []                                              [`Alloc = std::alloc<_Key>`]]
+[[]                   [elements][mapped values][traits]                      [order of elements]           [aggregation propagation]  [intersection propagation]                      [type of intervals]                             [memory allocation]]
+[[template parameter] [`class`]  [`class`]     [`class`]                     [`template <class>class`]     [`template <class>class`]  [`template <class, template<class>class> class`][`template <class, template<class>class> class`][`template <class>class`]]    
+[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_star`]                 [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
+[[__itl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_star`]                 [`Alloc = std::alloc`]]
+[[template parameter] [`class`]  [`class`]     []                            [`class`]                     []                         []                                              []                                              [`class`]]
+[[=std::map=]         [`_Key`]   [`_Data`]     []                            [`_Compare = std::less<_Key>`][]                         []                                              []                                              [`Alloc = std::alloc<_Key>`]]
 ]
 
 Using the following placeholders,
@@ -92,10 +91,11 @@ Using the following placeholders,
 ``
 D  := class DomainT,
 C  := class CodomainT,
+T  := class Traits,
 Cp := class Compare = std::less<DomainT>,
 cp := template<class D>class Compare = std::less,
 cb := template<class C>class Combine = itl::inplace_plus,
-T  := class Traits,
+s  := template<class C>class Section = itl::inplace_star,
 i  := template<class D,template<class>class cp>class Interval = itl::interval
 Ad := class Alloc = std::allocator<DomainT>
 Av := class Alloc = std::allocator<std::pair<DomainT,CodomainT> >
@@ -105,13 +105,13 @@ a  := template<class>class Alloc = std::allocator
 we arrive at a final synoptical matrix of class templates and their parameters.
 
 [pre
-interval     <D,    cp,             >
-interval_sets<D,    cp,        i, a >
-itl::set     <D,    cp,           a >
-std::set     <D,    Cp,           Ad>
-interval_maps<D, C, cp, cb, T, i, a >
-itl::map     <D, C, cp, cb, T,    a >
-std::map     <D, C  Cp,           Av>
+interval     <D,       cp,             >
+interval_sets<D,       cp,        i, a >
+itl::set     <D,       cp,           a >
+std::set     <D,       Cp,           Ad>
+interval_maps<D, C, T, cp, cb, s, i, a >
+itl::map     <D, C, T, cp, cb, s,    a >
+std::map     <D, C     Cp,           Av>
 ]
 
 The choice of parameters and their positions follow the std::containers
@@ -139,26 +139,28 @@ be grouped with respect to those requirements.
 
 [table 
 [[]                    [used in]             [Kind]        [Parameter]  [Instance]                     [Description] ]
-[[Domain order]        [`interval, Sets, Maps`][`typename`][`DomainT`]  []                             [For the type `DomainT` of key elements]]
-[[]                    []                    [`template`]  [`Compare`]  [`Compare<DomainT>`]           [there is an order `Compare`] ]
-[[Interval type]       [`interval_sets/maps`][`template`]  [`Interval`] [`Interval<DomainT,Compare>`]  [the `Interval` parameter has to use the same element type and order ] ]
-[[Codomain aggregation][`Maps`]              [`typename`]  [`CodomainT`][]                             [For the type `CodomainT` of associated values]]
-[[]                    []                    [`template`]  [`Combine`]  [`Combine<CodomainT>`]         [there is a binary functor `Combine<CodomainT>()` to combine them ] ]
-[[]                    []                    []            []           [`Inverse<Combine<CodomainT>>`][and implicity an `Inverse` functor to inversely combine them.  ] ]
+[[Domain order]        [`interval, Sets, Maps`][`typename`][`DomainT`]  []                             [For the type `DomainT` of key elements `...`]]
+[[]                    []                    [`template`]  [`Compare`]  [`Compare<DomainT>`]           [`...` there is an order `Compare`] ]
+[[Interval type]       [`interval_sets/maps`][`template`]  [`Interval`] [`Interval<DomainT,Compare>`]  [`...` the `Interval` parameter has to use the same element type and order. ] ]
+[[Codomain aggregation][`Maps`]              [`typename`]  [`CodomainT`][]                             [For the type `CodomainT` of associated values `...`]]
+[[]                    []                    [`template`]  [`Combine`]  [`Combine<CodomainT>`]         [`...` there is a binary functor `Combine<CodomainT>()` to combine them ] ]
+[[]                    []                    []            []           [`Inverse<Combine<CodomainT>>`][`...` and implicity an `Inverse` functor to inversely combine them.  ] ]
+[[]                    []                    [`template`]  [`Section`]  [`Section<CodomainT>`]         [For a intersection operation intersection is propagated to CodomainT values via functor `Section<CodomainT>()`] ]
 [[Memory allocation]   [`Sets, Maps`]        [`template`]  [`Alloc`]    [`Alloc<`/various/`>`]         [An allocator can be chosen for memory allocation.]]
 ]
 
 [/ table 
-[[Kind]      [Parameter]  [Condition]                   [Requirement]                                             ]
-[[`typename`][`DomainT`]  []                            [`Regular<DomainT> && LessThanComparable<DomainT,Compare>` 
-                                                         `&& (IsIncrementable<DomainT>||HasUnon<DomainT>)`] ]
-[[][]                     [`IsIntegral<DomainT>`]       [`IsIncrementable<DomainT> && IsDecrementable<DomainT>`] ] 
+[[Kind]      [Parameter]  [Condition]                              [Requirement]                                             ]
+[[`typename`][`DomainT`]  []                                       [`Regular<DomainT> && LessThanComparable<DomainT,Compare>` 
+                                                                    `&& (IsIncrementable<DomainT>||HasUnon<DomainT>)`] ]
+[[][]                     [`IsIntegral<DomainT>`]                  [`IsIncrementable<DomainT> && IsDecrementable<DomainT>`] ] 
 [[`typename`][`CodomainT`][`Combine` and `Inverse<Combine>` unused]         []]
-[[][]                     [only `Combine` used ]        [`EqualityComparable<CodomainT> && Addable<CodomainT,Combine>`] ] 
-[[][]                     [also `Inverse<Combine>` used][`&& Subtractable<CodomainT,Inverse<Combine> >`] ] 
-[[`template`][`Compare`]  []                            [`LessThanComparable<DomainT,Compare>`]                     ]
-[[`template`][`Combine`]  [only `Combine` used]         [`Addable<CodomainT,Combine>`]] 
-[[][]                     [also `Inverse<Combine>` used][`&& Subtractable<CodomainT,Inverse<Combine> >`] ] 
+[[][]                     [only `Combine` used ]                   [`EqualityComparable<CodomainT> && Addable<CodomainT,Combine>`] ] 
+[[][]                     [also `Inverse<Combine>` used]           [`&& Subtractable<CodomainT,Inverse<Combine> >`] ] 
+[[`template`][`Compare`]  []                                       [`LessThanComparable<DomainT,Compare>`]                     ]
+[[`template`][`Combine`]  [only `Combine` used]                    [`Addable<CodomainT,Combine>`]] 
+[[][]                     [and `Inverse<Combine>` used]            [`&& Subtractable<CodomainT,Inverse<Combine> >`] ] 
+[[][]                     [`Section` used and `CodomainT` is a set][`Intersectable<CodomainT,Section>`] ] 
 ]
 
 [h4 Requirements on DomainT]
@@ -235,21 +237,22 @@ contains the operators and functions required for `CodomainT`, if we are
 using the default combiner `Combine = itl::inplace_plus`.
 
 [table 
-[[Parameter]  [Condition]                  [Operators]        [Requirement]                                 ]
-[[`CodomainT`][`add` and `subtract` unused][`CodomainT(), ==`][`Regular<CodomainT>` which implies]          ]
-[[]           []                           []                 [`DefaultConstructible<CodomainT> && EqualityComparable<CodomainT>`]          ] 
-[[]           [only `add` used ]           [`+=`]             [`&& Combinable<CodomainT,Combine>`]          ] 
-[[]           [also `subtract` used]       [`-=`]             [`&& Combinable<CodomainT,Inverse<Combine> >`]] 
+[[Parameter]  [Condition]                              [Operators]        [Requirement]                                 ]
+[[`CodomainT`][`add`, `subtract`, `intersect` unused]  [`CodomainT(), ==`][`Regular<CodomainT>` which implies]          ]
+[[]           []                                       []                 [`DefaultConstructible<CodomainT> && EqualityComparable<CodomainT>`]          ] 
+[[]           [only `add` used ]                       [`+=`]             [`&& Combinable<CodomainT,Combine>`]          ] 
+[[]           [... and also `subtract` used]           [`-=`]             [`&& Combinable<CodomainT,Inverse<Combine> >`]] 
+[[]           [`Section` used and `CodomainT` is a set][`*=`]             [`&& Intersectable<CodomainT,Section>`] ] 
 ]
 
 The requirements on the type `CodomainT` of associated values for a __itl_map__ or __itv_map__
 depend on the usage of their aggregation functionality. If aggregation on overlap
-is never used, that is to say neither `+, +=, add` nor `-, -=, subtract` are used on the 
-__itv_map__, then `CodomainT` only needs to be `Regular`.  
-Concept
-[@http://www.generic-programming.org/languages/conceptcpp/issues/concepts-closed.html `Regular` is under construction]
-but it can be said that it expresses the properties of common ['*regular*]
-object semantics that particularly implies `DefaultConstructible` and
+is never used, that is to say that none of the addition, subtraction and intersection
+operations (`+, +=, add`, `-, -=, subtract`, *, *=, add_intersection) are used on the 
+__itv_map__, then `CodomainT` only needs to be 
+[@http://www.generic-programming.org/languages/conceptcpp/issues/concepts-closed.html Regular].
+['*Regular*]
+object semantics implies `DefaultConstructible` and
 `EqualityComparable` which means it has 
 a default ctor `CodomainT()` and an `operator ==`.
 

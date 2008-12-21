@@ -57,14 +57,22 @@ Distributed under the Boost Software License, Version 1.0.
 [def __spl_itv_maps__ [classref boost::itl::split_interval_map split_interval_maps]]
 
 [def __inverse__      [classref boost::itl::inverse inverse]]
-[def __ip_plus__      [classref boost::itl::inplace_plus inplace_plus]]
-[def __ip_minus__     [classref boost::itl::inplace_minus inplace_minus]]
-[def __ip_star__      [classref boost::itl::inplace_star inplace_star]]
-[def __ip_div__       [classref boost::itl::inplace_div inplace_div]]
-[def __ip_min__       [classref boost::itl::inplace_min inplace_min]]
-[def __ip_max__       [classref boost::itl::inplace_max inplace_max]]
+[def __ip_cross__     [classref boost::itl::inplace_cross    inplace_cross]]
+[def __ip_dash__      [classref boost::itl::inplace_dash     inplace_dash]]
+[def __ip_plus__      [classref boost::itl::inplace_plus     inplace_plus]]
+[def __ip_minus__     [classref boost::itl::inplace_minus    inplace_minus]]
+[def __ip_star__      [classref boost::itl::inplace_star     inplace_star]]
+[def __ip_slash__     [classref boost::itl::inplace_slash    inplace_slash]]
+[def __ip_times__     [classref boost::itl::inplace_times    inplace_times]]
+[def __ip_divide__    [classref boost::itl::inplace_divide   inplace_divide]]
+[def __ip_pipe__      [classref boost::itl::inplace_pipe     inplace_pipe]]
+[def __ip_et__        [classref boost::itl::inplace_et       inplace_et]]
+[def __ip_min__       [classref boost::itl::inplace_min      inplace_min]]
+[def __ip_max__       [classref boost::itl::inplace_max      inplace_max]]
 [def __ip_identity__  [classref boost::itl::inplace_identity inplace_identity]]
-[def __ip_erasure__   [classref boost::itl::inplace_erasure inplace_erasure]]
+[def __ip_erasure__   [classref boost::itl::inplace_erasure  inplace_erasure]]
+[def __ip_bitset_union__      [classref boost::itl::inplace_bitset_union      inplace_bitset_union]]
+[def __ip_bitset_difference__ [classref boost::itl::inplace_bitset_difference inplace_bitset_difference]]
 
 [def __itv_bmap_add__ [memberref boost::itl::interval_base_map::add add]]
 
@@ -76,6 +84,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 [def __absorber__     [classref boost::itl::neutron_absorber neutron_absorber]]
 [def __enricher__     [classref boost::itl::neutron_enricher neutron_enricher]]
+[def __enrichers__    [classref boost::itl::neutron_enricher neutron_enrichers]]
 [def __emitter__      [classref boost::itl::neutron_emitter neutron_emitter]]
 
 [def __itv_bse_set__  [classref boost::itl::interval_base_set interval_base_set]]

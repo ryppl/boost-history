@@ -162,9 +162,9 @@ Addable types.
 For `Combine` functors, the Itl provides an __inverse__ functor.
 
 [table
-[[Combine<T>]          [inverse<Combine<T> >::type]]
+[[`Combine<T>`]        [`inverse<Combine<T> >::type`]]
 [[__ip_plus__`<T>`]    [__ip_minus__`<T>`]  ]
-[[__ip_star__`<T>`]    [__ip_div__`<T>`]    ]
+[[__ip_star__`<T>`]    [__ip_slash__`<T>`]    ]
 [[__ip_max__`<T>`]     [__ip_min__`<T>`]    ]
 [[__ip_identity__`<T>`][__ip_erasure__`<T>`]]
 [[`Functor`]           [__ip_erasure__`<T>`]]
@@ -205,7 +205,7 @@ variing aggregation functors.
 But you could instantiate an __itv_map__ to have 
 `insert/erase` semantics this way:
 ``
-interval_map<int,int,neutron_absorber,interval,
+interval_map<int,int,neutron_absorber,
              std::less,
              inplace_identity //Combine parameter specified
             > m; 
@@ -245,12 +245,40 @@ for template type `CodomainT`.
 [[__emitter__] [all value pairs that don't carry protons have neutrons as mapped values.]]
 ]
 
+Note, that a neutron is defined in relation to a combiner operation. In many cases
+this relation is straight and often covered by the default parameters of itl `Maps`.
+
+[table
+[[type]     [operation]     [neutron]]
+[[`int`]    [addition]      [`0`]    ]
+[[`string`] [concatenation] [`""`]   ]
+[[`set<T>`] [union]         [`{}`]   ]
+]
+
+In those cases the `neutron` value is delivered by the default constructor
+of a type. But there are well known exceptions like for numeric multiplication:
+
+[table
+[[type]   [operation]        [neutron]]
+[[`int`]  [multiplication]   [`1`]    ]
+]
+
+Therefore an itl functor implements a static function `neutron()` to make
+shure that the correct `neutron()` is used, which is used in the implementation
+of ['aggregate on overlap].
+``
+inplace_times<int>::neutron() == 1
+// or more general
+inplace_times<T>::neutron() == unon<T>::value()
+``
+
 [h4 Neutron Absorber]
 
 From a pragmatic perspective value pairs that carry `neutrons` as 
 mapped values can often be deleted. If we count, for instance,
 the number of overlaps of inserted intervals in an __itv_map__
-(see example [overlap_counter]), most of the time, we are not
+(see example [link boost_itl.examples.overlap_counter overlap counter]), 
+most of the time, we are not
 interested in whether an overlap has been counted `0` times or
 has not been counted at all.
 
@@ -286,7 +314,7 @@ but it can be made for an __enricher__ map:
 Sometimes this subtle distiction is needed. Then a __enricher__
 is the right choice. Also, If we want to give two `itl::Maps`
 a common set of keys in order to, say, iterate synchronously
-over both maps, we need __enricher__ s. 
+over both maps, we need __enrichers__. 
 
 [h4 Neutron Emitter]
 
@@ -300,8 +328,8 @@ That way a __emitter__ map is an ['*infinite vector*], that
 is always initialized with neutron values.
 
 Of course those initial neutronic values for all keys of the
-maps domain is *not* stored on the __emitter__ map. So it's
-implementation is as minimal as the implementation of a
+maps domain are *not* stored on the __emitter__ map. So it's
+implementation is as minimal as the implementation of an
 __absorber__.
 
 [endsect] [/ kind of nuclear]
