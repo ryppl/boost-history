@@ -16,7 +16,6 @@
 
 #include <cassert>
 #include <cmath>
-#include <float.h>
 #include <list>
 #include <vector>
 
@@ -30,7 +29,7 @@ namespace cluster
 template<typename PointType>
 struct KMeansCluster {
   PointType centroid;
-  std::vector<int> points; //The indice of points are stored here 
+  std::vector<int> points; // The indices of points are stored here.
 };
 
 template <typename KMeansCluster> 
@@ -71,9 +70,9 @@ k_means(NTupleIter first,
   }
 
   int nIndex = 0;
-  for(NTupleIter iter = first; iter != last; iter++, nIndex++)
+  for(NTupleIter iter = first; iter != last; ++iter, ++nIndex)
   {
-    PointType& pt= *iter; //A point TODO: Make this const?
+    PointType const & pt(*iter); // The current point.
     ppData[nIndex] = new AttributeType[knDimension];
     for(unsigned int nAttribute = 0; nAttribute < knDimension; nAttribute++)
     {

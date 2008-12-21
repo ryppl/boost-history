@@ -40,7 +40,7 @@ double euclid_dist(T1 const & t1, T2 const & t2)
         boost::fusion::transform(t1, t2, std::minus<double>()), 
         boost::bind(std::multiplies<double>(), _1, _1)
       ), 
-      0,
+      0.,
       std::plus<double>()
     ) 
   );
@@ -58,7 +58,7 @@ double euclid_dist_pretty(T1 const & t1, T2 const & t2)
       boost::fusion::fold
       ( 
         boost::fusion::transform(t1, t2, (_1 * _1)(_1 - _2)), 
-        0,
+        0.,
         _1 + _2
       )
     )
@@ -75,7 +75,7 @@ double manhattan_dist(T1 const & t1, T2 const & t2)
   return boost::fusion::fold
   (
     boost::fusion::transform(t1, t2, detail::abs_diff<double>()), 
-    0,
+    0.,
     _1 + _2
   );
 }
