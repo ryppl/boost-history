@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Filesystem Home</title>
+<link rel="stylesheet" type="text/css" href="minimal.css">
+</head>
+
+<body>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="710">
+  <tr>
+    <td width="277">
+<a href="../../../index.htm">
+<img src="boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
+    <td width="410" align="middle">
+    <font size="7">Filesystem Library V3 Prototype Design</font>
+    </td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
+  <tr>
+    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp;
+    <a href="index.htm">Library Home</a>&nbsp; &nbsp; <a href="#tutorial">Tutorial</a>&nbsp; &nbsp; <a href="reference.html">
+    Reference</a>&nbsp;&nbsp; <a href="faq.htm">FAQ</a></td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" align="right">
+  <tr>
+    <td width="100%" bgcolor="#D7EEFF" align="center">
+      <i><b>Contents</b></i></td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#E8F5FF">
+    <a href="#Introduction">Introduction</a><br>
+    &nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#D7EEFF" align="center">
+      <i><b>Other Documents</b></i></td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#E8F5FF">
+    &nbsp;</td>
+  </tr>
+</table>
+
+<h2><a name="Introduction">Introduction</a></h2>
+
+<p>During the review of Boost.Filesystem V2 (Internationalization), Peter Dimov 
+suggested that the class basic_path template was unwieldy, and that a single 
+path type that accommodated multiple character types and encodings would be more 
+flexible. Although I wasn't willing then to stop development at that time to 
+explore how this idea might be implemented, or to break from the pattern for 
+Internationalization used the C++ standard library, I've often thought about 
+Peter's suggestion. With the advent of C++0x char16_t and char32_t character 
+types, the basic_path class template approach becomes even more unwieldy, so it 
+is time to revisit the problem.</p>
+
+<h2><b><a name="Problem">Problem</a></b></h2>
+
+<p>Say a user needs to take a path argument to a user defined function, and 
+wishes to accommodate all applicable character types and encodings.
+<span style="background-color: #FFFF00">Must write template. Must provide 
+do-the-right-thing overloads.</span></p>
+
+<h2><a name="Solution">Solution</a></h2>
+
+<p>The solution explored here:</p>
+<ul>
+  <li>A single class path.</li>
+  <li>Conversions from and to applicable character types and encodings.</li>
+  <li>Internally, the path is held in a string_type appropriate to the operating 
+  system; std::string for POSIX, std::wstring for Windows.</li>
+</ul>
+
+<h2><a name="Prototype">Prototype</a></h2>
+
+<p>Windows only. Incomplete. Not thoroughly tested. Should not be used for 
+production work.</p>
+
+<hr>
+<p>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->25 September, 2008<!--webbot bot="Timestamp" endspan i-checksum="39353" --></p>
+
+<p>© Copyright Beman Dawes, 2008</p>
+<p> Use, modification, and distribution are subject to the Boost Software 
+License, Version 1.0. See <a href="http://www.boost.org/LICENSE_1_0.txt">
+www.boost.org/LICENSE_1_0.txt</a></p>
+
+</body>
+
+</html>
