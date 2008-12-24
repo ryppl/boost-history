@@ -159,6 +159,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Executing test $(TargetName).exe..."
 				CommandLine="&quot;$(TargetDir)\$(TargetName).exe&quot;"
 			/>
 		</Configuration>

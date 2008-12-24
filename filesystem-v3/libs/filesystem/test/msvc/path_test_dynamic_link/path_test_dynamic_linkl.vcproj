@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="tchar_example"
-	ProjectGUID="{2D4CD761-6DF6-40AC-B4A5-F169D5F93226}"
-	RootNamespace="tchar_example"
+	Name="path_test_dynamic_link"
+	ProjectGUID="{54347DE3-6AA2-4466-A2EC-7176E0EC1110}"
+	RootNamespace="path_test_dynamic_link"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,6 @@
 			OutputDirectory="$(TEMP)\$(SolutionName)\$(ConfigurationName)"
 			IntermediateDirectory="$(TEMP)\$(SolutionName)\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,9 +41,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="..\..\..\..\.."
+				PreprocessorDefinitions="BOOST_ALL_NO_LIB;BOOST_SYSTEM_DYN_LINK;BOOST_FILESYSTEM_DYN_LINK;WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
+				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -96,7 +96,6 @@
 			OutputDirectory="$(TEMP)\$(SolutionName)\$(ConfigurationName)"
 			IntermediateDirectory="$(TEMP)\$(SolutionName)\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -119,7 +118,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="..\..\..\..\.."
+				PreprocessorDefinitions="BOOST_ALL_NO_LIB;BOOST_SYSTEM_DYN_LINK;BOOST_FILESYSTEM_DYN_LINK;WIN32;NDEBUG;_CONSOLE"
+				ExceptionHandling="2"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -178,19 +179,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\..\system\src\error_code.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\operations.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\path.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\example\tchar.cpp"
+				RelativePath="..\..\path_test.cpp"
 				>
 			</File>
 		</Filter>
