@@ -1,0 +1,22 @@
+;------------------------------------------------------------------------------
+;  boost::shared_ptr
+;------------------------------------------------------------------------------
+
+boost::shared_ptr<*>{
+	preview
+	( 
+		#(	"shared_ptr ",
+			(*(($T1 *)$c.px) )
+			, " count = ", $c.pn.pi_->use_count_
+		 )
+	)
+	children
+	( 
+		#( 
+			ptr: (*(($T1 *)$c.px)) ,
+			count: $c.pn.pi_->use_count_ ,
+			weak_count: $c.pn.pi_->weak_count_
+		)
+	)
+}
+
