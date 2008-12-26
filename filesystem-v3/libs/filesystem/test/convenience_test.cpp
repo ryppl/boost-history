@@ -1,4 +1,4 @@
-//  libs/filesystem/test/convenience_test.cpp  -------------------------------//
+//  libs/filesystem/test/convenience_test.cpp  -----------------------------------------//
 
 //  Copyright Beman Dawes, 2002
 //  Copyright Vladimir Prus, 2002

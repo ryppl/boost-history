@@ -1,4 +1,4 @@
-//  boost/filesystem/config.hpp  ---------------------------------------------//
+//  boost/filesystem/config.hpp  -------------------------------------------------------//
 
 //  Copyright Beman Dawes 2003
 
@@ -7,14 +7,14 @@
 
 //  See library home page at http://www.boost.org/libs/filesystem
 
-//----------------------------------------------------------------------------// 
+//--------------------------------------------------------------------------------------// 
 
 #ifndef BOOST_FILESYSTEM_CONFIG_HPP
 #define BOOST_FILESYSTEM_CONFIG_HPP
 
 #define BOOST_FILESYSTEM_I18N  // aid users wishing to compile several versions
 
-//  ability to change namespace aids path_table.cpp  ------------------------// 
+//  ability to change namespace aids path_table.cpp  ----------------------------------// 
 #ifndef BOOST_FILESYSTEM_NAMESPACE
 # define BOOST_FILESYSTEM_NAMESPACE filesystem
 #endif
@@ -25,7 +25,7 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp> 
 
-//  determine platform  ------------------------------------------------------//
+//  determine platform  ----------------------------------------------------------------//
 
 //  BOOST_POSIX_API or BOOST_WINDOWS_API specify which API to use
 
@@ -57,13 +57,13 @@
 #   define BOOST_WINDOWS_PATH
 # endif
 
-//  narrow support only for badly broken compilers or libraries  -------------//
+//  narrow support only for badly broken compilers or libraries  -----------------------//
 
 # if defined(BOOST_NO_STD_WSTRING) || defined(BOOST_NO_SFINAE) || defined(BOOST_NO_STD_LOCALE) || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x592))
 #   define BOOST_FILESYSTEM_NARROW_ONLY
 # endif
 
-//  enable dynamic linking on Windows  ---------------------------------------//
+//  enable dynamic linking on Windows  -------------------------------------------------//
 
 #  if (defined(BOOST_ALL_DYN_LINK) || defined(BOOST_FILESYSTEM_DYN_LINK)) && defined(__BORLANDC__) && defined(__WIN32__)
 #    error Dynamic linking Boost.Filesystem does not work for Borland; use static linking instead
@@ -89,7 +89,7 @@
 #define BOOST_FILESYSTEM_DECL
 #endif
 
-//  enable automatic library variant selection  ------------------------------// 
+//  enable automatic library variant selection  ----------------------------------------// 
 
 #if !defined(BOOST_FILESYSTEM_SOURCE) && !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_FILESYSTEM_NO_LIB)
 //

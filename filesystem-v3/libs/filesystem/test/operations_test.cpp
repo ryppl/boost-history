@@ -1,4 +1,4 @@
-//  Boost operations_test.cpp  -----------------------------------------------//
+//  Boost operations_test.cpp  ---------------------------------------------------------//
 
 //  Copyright Beman Dawes 2002.
 

@@ -1,4 +1,4 @@
-//  Example use of Microsoft TCHAR  ------------------------------------------//
+//  Example use of Microsoft TCHAR  ----------------------------------------------------//
 
 //  Copyright Beman Dawes 2008
 

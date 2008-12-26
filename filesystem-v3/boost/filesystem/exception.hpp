@@ -1,4 +1,4 @@
-//  boost/filesystem/exception.hpp  -------------------------------------------//
+//  boost/filesystem/exception.hpp  -----------------------------------------------------//
 
 //  Copyright Beman Dawes 2003
 //  Use, modification, and distribution is subject to the Boost Software

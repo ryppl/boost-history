@@ -1,4 +1,4 @@
-//  portability.cpp  ---------------------------------------------------------//
+//  portability.cpp  -------------------------------------------------------------------//
 
 //  Copyright 2002-2005 Beman Dawes
 //  Use, modification, and distribution is subject to the Boost Software
@@ -7,7 +7,7 @@
 
 //  See library home page at http://www.boost.org/libs/filesystem
 
-//----------------------------------------------------------------------------// 
+//--------------------------------------------------------------------------------------// 
 
 // define BOOST_FILESYSTEM_SOURCE so that <boost/filesystem/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
@@ -24,7 +24,7 @@ namespace fs = boost::filesystem;
     namespace std { using ::strerror; }
 # endif
 
-//----------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
 namespace
 {

@@ -1,4 +1,4 @@
-//  filesystem3 path_unit_test.cpp  ----------------------------------------  //
+//  filesystem3 path_unit_test.cpp  --------------------------------------------------  //
 
 //  Copyright Beman Dawes 2008
 
@@ -7,7 +7,7 @@
 
 //  See library home page at http://www.boost.org/libs/filesystem
 
-//  ------------------------------------------------------------------------  //
+//  ----------------------------------------------------------------------------------  //
 //
 //  The purpose of this test is to ensure that each function in the public
 //  interface can be called with arguments of the appropriate types. It does
@@ -17,7 +17,7 @@
 //  For full functionality tests, including probes with many different argument
 //  values, see path_test.cpp and other test programs. 
 //
-//  ------------------------------------------------------------------------  //
+//  ----------------------------------------------------------------------------------  //
 
 #include <boost/filesystem/path.hpp>
 
@@ -122,7 +122,7 @@ namespace
   wstring ws(L"wstring iterators");
 # endif  // narrow only
 
-  //  test_constructors  -----------------------------------------------------//
+  //  test_constructors  ---------------------------------------------------------------//
 
   void test_constructors()
   {
@@ -161,7 +161,7 @@ namespace
 # endif
   }
 
-  //  test_use_cases  --------------------------------------------------------//
+  //  test_use_cases  ------------------------------------------------------------------//
 
   string use( const path & p ) { return p; }
 
@@ -182,7 +182,7 @@ namespace
 # endif
   }
 
-  //  test_conversion_operators  ---------------------------------------------//
+  //  test_conversion_operators  -------------------------------------------------------//
 
   void test_conversion_operators()
   {
@@ -214,7 +214,7 @@ namespace
 
   }
 
-//  //  test_assignments  ------------------------------------------------------//
+//  //  test_assignments  ----------------------------------------------------------------//
 //
 //  void test_assignments()
 //  {
@@ -276,7 +276,7 @@ namespace
 //
 //   }
 //
-//  //  test_observers  --------------------------------------------------------//
+//  //  test_observers  ------------------------------------------------------------------//
 //
 //  void test_observers()
 //  {
@@ -303,7 +303,7 @@ namespace
 //# endif 
 //  }
 //
-//  //  test_appends  ----------------------------------------------------------//
+//  //  test_appends  --------------------------------------------------------------------//
 //
 //  void test_appends()
 //  {
@@ -311,7 +311,7 @@ namespace
 //
 //  }
 //
-//  //  test_relationals  ------------------------------------------------------//
+//  //  test_relationals  ----------------------------------------------------------------//
 //
 //  void test_relationals()
 //  {
@@ -361,7 +361,7 @@ namespace
 //    CHECK( p2 >= p );
 //}
 //
-//  //  test_other_non_members  ------------------------------------------------//
+//  //  test_other_non_members  ----------------------------------------------------------//
 //
 //  void test_other_non_members()
 //  {
@@ -397,7 +397,7 @@ namespace
 //
 //  }
 //
-//  //  test_modifiers  --------------------------------------------------------//
+//  //  test_modifiers  ------------------------------------------------------------------//
 //
 //  void test_modifiers()
 //  {
@@ -405,7 +405,7 @@ namespace
 //
 //  }
 //
-//  //  test_iterators  --------------------------------------------------------//
+//  //  test_iterators  ------------------------------------------------------------------//
 //
 //  void test_iterators()
 //  {
@@ -434,7 +434,7 @@ namespace
 //
 //  }
 //
-//  //  test_decompositions  ---------------------------------------------------//
+//  //  test_decompositions  -------------------------------------------------------------//
 //
 //  void test_decompositions()
 //  {
@@ -482,7 +482,7 @@ namespace
 //    CHECK( path("/foo/bar.woo/baz").extension().string() == "" );
 //  }
 //
-//  //  test_queries  ----------------------------------------------------------//
+//  //  test_queries  --------------------------------------------------------------------//
 //
 //  void test_queries()
 //  {
@@ -511,7 +511,7 @@ namespace
 //
 //  }
 //
-//  //  test_locales  ----------------------------------------------------------//
+//  //  test_locales  --------------------------------------------------------------------//
 //
 //  void test_locales()
 //  {
@@ -521,7 +521,7 @@ namespace
 
 }  // unnamed namespace
 
-// --------------------------------  main  -----------------------------------//
+// --------------------------------  main  ---------------------------------------------//
 
 int main( int, char*[] )
 {

@@ -1,4 +1,4 @@
-//  path_test program  -------------------------------------------------------//
+//  path_test program  -----------------------------------------------------------------//
 
 //  Copyright Beman Dawes 2002
 //  Copyright Vladimir Prus 2002

@@ -1,4 +1,4 @@
-//  boost/filesystem/fstream.hpp  --------------------------------------------//
+//  boost/filesystem/fstream.hpp  ------------------------------------------------------//
 
 //  Copyright Beman Dawes 2002.
 //  Use, modification, and distribution is subject to the Boost Software
@@ -7,7 +7,7 @@
 
 //  See library home page at http://www.boost.org/libs/filesystem
 
-//----------------------------------------------------------------------------// 
+//--------------------------------------------------------------------------------------// 
 
 #ifndef BOOST_FILESYSTEM_FSTREAM_HPP
 #define BOOST_FILESYSTEM_FSTREAM_HPP
@@ -255,7 +255,7 @@ namespace boost
     
 # ifndef BOOST_FILESYSTEM_NARROW_ONLY
 
-//  basic_filebuf definitions  -----------------------------------------------//
+//  basic_filebuf definitions  ---------------------------------------------------------//
 
     template <class charT, class traits>
     template<class Path>
@@ -277,7 +277,7 @@ namespace boost
       return this->BOOST_NESTED_TEMPLATE open<wpath>( file_ph, mode );
     }
 
-//  basic_ifstream definitions  ----------------------------------------------//
+//  basic_ifstream definitions  --------------------------------------------------------//
 
     template <class charT, class traits> template<class Path>
     basic_ifstream<charT,traits>::basic_ifstream(const Path & file_ph,
@@ -343,7 +343,7 @@ namespace boost
           mode ).c_str(), mode | std::ios_base::in );
     }
 
-//  basic_ofstream definitions  ----------------------------------------------//
+//  basic_ofstream definitions  --------------------------------------------------------//
 
     template <class charT, class traits> template<class Path>
     basic_ofstream<charT,traits>::basic_ofstream(const Path & file_ph,
@@ -409,7 +409,7 @@ namespace boost
           mode ).c_str(), mode | std::ios_base::out );
     }
 
-//  basic_fstream definitions  -----------------------------------------------//
+//  basic_fstream definitions  ---------------------------------------------------------//
 
     template <class charT, class traits> template<class Path>
     basic_fstream<charT,traits>::basic_fstream(const Path & file_ph,
