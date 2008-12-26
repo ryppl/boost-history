@@ -1190,6 +1190,12 @@ namespace
 
 } // unnamed namespace
 
+  //------------------------------------------------------------------------------------//
+  //                                                                                    //
+  //                                  test_main                                         //
+  //                                                                                    //
+  //------------------------------------------------------------------------------------//
+
 int test_main( int, char*[] )
 {
   // The choice of platform is make at runtime rather than compile-time

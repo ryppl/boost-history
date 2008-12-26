@@ -54,7 +54,7 @@
        -- the preferred separator
        -- the generic separator <-- makes it easier to write portable code
    * Should the preferred native separator be available?
-                                                                              */
+                                                                                        */
 //--------------------------------------------------------------------------------------// 
 
 #ifndef BOOST_FILESYSTEM_PATH_HPP
@@ -684,7 +684,8 @@ namespace filesystem
 
     //  -----  locale  -----
 
-    static std::locale imbue( const std::locale & loc )
+    static std::locale imbue( const std::locale & loc,
+                              system::error_code & ec = system::throws )
     {
       std::locale tmp;
       tmp = *detail::path_locale;
@@ -767,6 +768,32 @@ namespace filesystem
                                          // m_pos == m_path_ptr->m_path.size()
   }; // path::iterator
 
+  //------------------------------------------------------------------------------------//
+  //                                                                                    //
+  //                            class scoped_path_locale                                //
+  //                                                                                    //
+  //------------------------------------------------------------------------------------//
+ 
+  class scoped_path_locale
+  {
+  public:
+    scoped_path_locale( const std::locale & loc,
+                        system::error_code & ec = system::throws )
+                      : m_saved_locale(loc)
+    {
+      path::imbue( loc, ec );
+    }
+
+    ~scoped_path_locale()   // never throws
+    {
+      system::error_code ec;
+      path::imbue( m_saved_locale, ec );
+    };
+
+  private:
+    std::locale m_saved_locale;
+  };
+   
   //------------------------------------------------------------------------------------//
   //                                                                                    //
   //                              non-member functions                                  //

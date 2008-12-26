@@ -5,5 +5,5 @@
 //  License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-//  This header is no long used. The contents have been moved to path.hpp.
+//  This header is no longer used. The contents have been moved to path.hpp.
 //  It is provided so that user code #includes do not have to be changed.

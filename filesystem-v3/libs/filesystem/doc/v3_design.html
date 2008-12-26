@@ -55,12 +55,12 @@
 <p>During the review of Boost.Filesystem V2 (Internationalization), Peter Dimov 
 suggested that the class basic_path template was unwieldy, and that a single 
 path type that accommodated multiple character types and encodings would be more 
-flexible. Although I wasn't willing then to stop development at that time to 
+flexible. Although I wasn't willing to stop development at that time to 
 explore how this idea might be implemented, or to break from the pattern for 
 Internationalization used the C++ standard library, I've often thought about 
 Peter's suggestion. With the advent of C++0x char16_t and char32_t character 
 types, the basic_path class template approach becomes even more unwieldy, so it 
-is time to revisit the problem.</p>
+is time to revisit the problem in light of Peter's suggestion.</p>
 
 <h2><b><a name="Problem">Problem</a></b></h2>
 
@@ -71,22 +71,68 @@ do-the-right-thing overloads.</span></p>
 
 <h2><a name="Solution">Solution</a></h2>
 
-<p>The solution explored here:</p>
 <ul>
   <li>A single class path.</li>
   <li>Conversions from and to applicable character types and encodings.</li>
-  <li>Internally, the path is held in a string_type appropriate to the operating 
+  <li>Internally, the path is held in an object of a string type appropriate to the operating 
   system; std::string for POSIX, std::wstring for Windows.</li>
 </ul>
 
+<p>An object of class <code>path</code> holds its contents as a basic_string of 
+the preferred character type used by the operating system for paths, i.e. 
+std::string for POSIX-like systems, std::wstring for Windows-like systems.</p>
+<blockquote>
+  <p>Thus a path object's c_str() returns a string of the native character type 
+  and encoding that can be passed to operating system API calls without 
+  conversion.</p>
+</blockquote>
+<p>Strings representing paths passed as arguments to objects of class path 
+undergo no conversion if they are of the native API's preferred character type.</p>
+<blockquote>
+  <p>This mimics native OS API calls; no conversion are performed. For example, 
+  POSIX specifies that path strings are passed unchanged by the&nbsp; API. Note 
+  that this is different from the POSIX command line utilities, some of which 
+  are specified to convert according to a locale.</p>
+</blockquote>
+<p>&nbsp;</p>
+
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+  <tr>
+    <td width="33%" colspan="3">
+    <p align="center"><i><b>Conversions</b></i></td>
+  </tr>
+  <tr>
+    <td width="33%">
+    <p align="center"><i><b>Host system</b></i></td>
+    <td width="33%">
+    <p align="center"><i><b>char string path arguments</b></i></td>
+    <td width="34%">
+    <p align="center"><i><b>wide string path arguments</b></i></td>
+  </tr>
+  <tr>
+    <td width="33%">Systems with char as the preferred path character type (i.e. 
+    POSIX-like systems)</td>
+    <td width="33%">No conversion.</td>
+    <td width="34%">Conversion occurs, performed by the current path locale's 
+    codecvt facet.</td>
+  </tr>
+  <tr>
+    <td width="33%">Systems with wchar_t as the preferred path character type 
+    (i.e. Windows-like systems).</td>
+    <td width="33%">Conversion occurs, performed by the current path locale's 
+    codecvt facet.</td>
+    <td width="34%">No conversion.</td>
+  </tr>
+</table>
+
 <h2><a name="Prototype">Prototype</a></h2>
 
-<p>Windows only. Incomplete. Not thoroughly tested. Should not be used for 
+<p>Currently incomplete. Not thoroughly tested. Should not be used for 
 production work.</p>
 
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->25 September, 2008<!--webbot bot="Timestamp" endspan i-checksum="39353" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->26 December, 2008<!--webbot bot="Timestamp" endspan i-checksum="38522" --></p>
 
 <p>© Copyright Beman Dawes, 2008</p>
 <p> Use, modification, and distribution are subject to the Boost Software 

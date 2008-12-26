@@ -8,6 +8,14 @@
 
 //  See library home page at http://www.boost.org/libs/filesystem
 
+//--------------------------------------------------------------------------------------//
+/*
+                              TO DO
+
+   * Add test for scoped_path_locale.
+                                                                                        */
+//--------------------------------------------------------------------------------------//
+
 #include <boost/config/warning_disable.hpp>
 
 //  See deprecated_test for tests of deprecated features
@@ -118,7 +126,11 @@ namespace
 
 } // unnamed namespace
 
-//  test_main  ---------------------------------------------------------------//
+  //------------------------------------------------------------------------------------//
+  //                                                                                    //
+  //                                  test_main                                         //
+  //                                                                                    //
+  //------------------------------------------------------------------------------------//
 
 int test_main( int argc, char * /*argv*/[] )
 {
