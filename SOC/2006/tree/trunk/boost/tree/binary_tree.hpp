@@ -240,7 +240,7 @@ class binary_tree {
     template <class InputCursor>
     cursor insert(cursor pos, InputCursor subtree)
     {
-//    // Optimise insert_cursor before using this
+//    // Optimise insert_cursor (or introduce another class) before using this
 //    return cursor(boost::tree::copy(boost::tree::preorder()
 //                , subtree 
 //                , boost::tree::tree_inserter(*this, pos)

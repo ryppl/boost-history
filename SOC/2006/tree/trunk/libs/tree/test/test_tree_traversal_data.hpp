@@ -9,82 +9,10 @@
 
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/algorithm.hpp>
-#include <boost/tree/output_iterator_cursor.hpp>
-
-//#include <boost/array.hpp>
 
 #include <list>
-#include <vector>
 
-template <class T>
-struct mock_tree;
-
-template <class T>
-struct mock_tree {
-    mock_tree(T const& v = T()) : value(v), m(2) {}
-
-    typedef std::vector< mock_tree<T> > children_type;
-    
-    T value; 
-    children_type m;
-};
-
-template <class T>
-struct mock_tree_cursor {
-    typedef typename mock_tree<T>::children_type cur; 
-    cur c;
-    //bool pos;
-    
-    T const& operator*() const
-    {
-        return c->value;
-    }
-
-    T& operator*()
-    {
-        return c->value;
-    }
-    
-    void to_begin()
-    {
-        c = c->m.begin();
-    }
-    
-    void to_end()
-    {
-        c = c->m.end();
-    }
-    
-    mock_tree_cursor& operator++()
-    {
-        ++c;
-    }
-    
-    mock_tree_cursor& operator--()
-    {
-        --c;
-    }
-};
-
-mock_tree<int> mock_tree_data()
-{
-    mock_tree<int> mt;
-    
-    mt.m[0] = 8;
-    mt.m[0].m[0] = 3;
-    mt.m[0].m[0].m[0] = 1;
-    mt.m[0].m[1] = 6;
-    mt.m[0].m[1].m[0] = 4;
-    mt.m[0].m[1].m[1] = 7;
-
-    mt.m[0].m[1] = 10;
-    mt.m[0].m[1].m[1] = 14;
-    mt.m[0].m[1].m[1].m[0] = 13;
-    mt.m[0].m[1].m[1].m[0].m[0] = 11;
-    mt.m[0].m[1].m[1].m[0].m[0].m[1] = 12;
-
-    return mt;
-}
+#include "helpers.hpp"
 
 template <class T = int>
 struct test_binary_tree_fixture {
@@ -124,15 +52,15 @@ struct test_binary_tree_fixture {
         cur = ret.insert(++cur.to_begin(), value_type(12));
     }
     
-    static void validate_test_dataset1_tree(typename boost::tree::binary_tree<T>::const_cursor cur)
+    template <class Cursor>
+    static void validate_test_dataset1_tree(Cursor cur)
     {
         BOOST_CHECK_EQUAL(*cur.begin(), 8);
-        BOOST_CHECK_EQUAL(*cur.begin().begin(), 3);    
+        BOOST_CHECK_EQUAL(*cur.begin().begin(), 3);
         BOOST_CHECK_EQUAL(*cur.begin().begin().begin(), 1);  //Leaf
-        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 6);        
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 6);
         BOOST_CHECK_EQUAL(*cur.begin().end().begin().begin(), 4); //Leaf
         BOOST_CHECK_EQUAL(*cur.begin().end().end().begin(), 7); //Leaf
-    
         BOOST_CHECK_EQUAL(*cur.end().begin(), 10);
         BOOST_CHECK_EQUAL(*cur.end().end().begin(), 14);
         BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 13);
@@ -161,16 +89,11 @@ struct test_binary_tree_fixture {
 
 template <class T = int>
 struct test_binary_tree_with_list_fixture
-: public test_binary_tree_fixture<T> {
-    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-    typedef boost::tree::output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
-    
+: public test_binary_tree_fixture<T>
+, public test_with_list_fixture {
     test_binary_tree_with_list_fixture()
-    : test_binary_tree_fixture<T>(), l(), i(l), o(i) { }
-    
-    std::list<int> l;
-    back_insert_iter_list_int i;
-    oc_bi_lst_type o;
+    : test_binary_tree_fixture<T>()
+    , test_with_list_fixture() {}
 };
 
 template <class Tree>

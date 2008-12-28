@@ -12,10 +12,12 @@
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 
-#include "helpers.hpp"
+//#include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
 BOOST_AUTO_TEST_SUITE( basic_binary_tree_test )
+
+using boost::tree::binary_tree;
 
 BOOST_AUTO_TEST_CASE( constructors_test )
 {

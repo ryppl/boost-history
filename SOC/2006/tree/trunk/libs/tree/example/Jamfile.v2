@@ -51,3 +51,12 @@ rule test_all
 }
 
 test-suite test_example : [ test_all r ] ; 
+
+#install dist
+#    :
+#    test_example
+#    :
+#    <location>./doc
+#    :
+#    release
+#    ;

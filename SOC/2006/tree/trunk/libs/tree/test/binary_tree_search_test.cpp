@@ -26,9 +26,10 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(binary_tree_search_test, test_binary_tree_with_list_fixture<int>)
 
-void search_single_element(binary_tree<int>::const_cursor r, int v)
+template <class Cursor>
+void search_single_element(Cursor r, int v)
 {
-    binary_tree<int>::const_cursor c, d;
+    Cursor c, d;
     c = lower_bound(r, v);
     d = upper_bound(r, v); 
     

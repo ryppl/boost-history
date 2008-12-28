@@ -16,10 +16,12 @@
 #include <list>
 #include <iterator>
 
+#include <boost/tree/balanced_tree.hpp>
+
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
 
-typedef augmented_type< int, boost::default_color_type > data_type;
+typedef boost::tree::augmented_type< int, boost::default_color_type > data_type;
 
 BOOST_FIXTURE_TEST_SUITE(graph_algorithms_test, test_binary_tree_with_list_fixture<data_type>)
 

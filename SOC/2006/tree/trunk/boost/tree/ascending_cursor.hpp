@@ -62,6 +62,7 @@ private:
     typedef ascending_cursor<DescendingCursor> self_type;
 public:
     typedef typename DescendingCursor::value_type value_type;
+    typedef typename DescendingCursor::reference reference;
 
     // Container-specific:
     typedef typename DescendingCursor::size_type size_type;
@@ -111,7 +112,7 @@ private:
     
     std::stack<DescendingCursor> m_s; // pimpl?
      
-    value_type& dereference() const
+    reference dereference() const
     {
         return *m_s.top();
     }

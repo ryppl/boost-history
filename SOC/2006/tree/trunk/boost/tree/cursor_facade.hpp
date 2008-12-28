@@ -59,7 +59,7 @@ public:
     }
 
     template <class Facade>
-    static typename Facade::size_type par(Facade const& f)
+    static typename Facade::size_type idx(Facade const& f)
     {
         return f.idx();
     }
@@ -158,7 +158,7 @@ public:
 
     size_type const index() const
     {
-        return cursor_core_access::par(this->derived());
+        return cursor_core_access::idx(this->derived());
     }
 
     Derived& to_begin()

@@ -15,12 +15,11 @@
 
 General:
 * Rename node -> ascending_node; implement descending_node; and corresponding cursors.
-* Fix freestanding parity().
+* Fix freestanding index() and members (esp. wrt cursor facade and adaptor!)
 * Redo all that balance(==balanced_tree)/searcher stuff. Avoid redundancy, that is, make them both use 
   balanceRs for whatever they're up to, but don't make searcher depend on balance.
 * Add a congruence check algorithm (compare shapes of subtrees; call it "similar()"?).
-* I'd like to make algorithm checks more independent of the sanity of binary_tree; so a mock object
-  would be really useful. Maybe something like a map of maps or a property_tree?
+* Finish moving algorithm checks etc. to fake_binary_tree.
 * Revisit binary_tree . Can it be usable for both balanced and forest trees and still be
   "light-weight" at the same time? Solution: Introduce an "inorder_optimised_binary_tree" 
   (with O(1) inorder first and last cursors, and possibly
