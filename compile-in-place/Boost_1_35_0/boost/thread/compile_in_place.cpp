@@ -23,10 +23,10 @@ get linker errors. */
 
 
 #if defined(BOOST_THREAD_PLATFORM_WIN32)
-#  include "../../libs/thread/src/pthread/exceptions.cpp"
-#  include "../../libs/thread/src/pthread/thread.cpp"
-#  include "../../libs/thread/src/pthread/tss_dll.cpp"
-#  include "../../libs/thread/src/pthread/tss_pe.cpp"
+#  include "../../libs/thread/src/win32/exceptions.cpp"
+#  include "../../libs/thread/src/win32/thread.cpp"
+#  include "../../libs/thread/src/win32/tss_dll.cpp"
+#  include "../../libs/thread/src/win32/tss_pe.cpp"
 #elif defined(BOOST_THREAD_PLATFORM_PTHREAD)
 #  include "../../libs/thread/src/pthread/exceptions.cpp"
 #  include "../../libs/thread/src/pthread/once.cpp"
