@@ -20,7 +20,7 @@ General:
 * Make Order the last (instead of first) parameter in algorithms? That way, we could
   assume reasonable defaults while offering explicit choice (eg for size(), find(), 
   maybe even copy(): default to preorder).
-* Rename node -> ascending_node; implement descending_node; and corresponding cursors.
+* Implement descending_node; and corresponding cursor.
 * Fix freestanding index() and members (esp. wrt cursor facade and adaptor!)
 * Redo all that balance(==balanced_tree)/searcher stuff. Avoid redundancy, that is, make them both use 
   balanceRs for whatever they're up to, but don't make searcher depend on balance.
@@ -118,6 +118,7 @@ General:
   the STL's linear algorithms should there be a hierarchical version?
 
 Pre-release:
+* Make directory structure reflect namespaces and vice versa.
 * Cleanup headers/ #include dependencies.
 * Run Boost Inspect.
 

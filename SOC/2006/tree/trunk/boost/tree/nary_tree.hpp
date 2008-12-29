@@ -25,7 +25,7 @@
 namespace boost {
 namespace tree {
 
-using detail::node;
+using detail::ascending_node;
 using detail::ascending_nary_cursor;
 
 /** 
@@ -62,7 +62,7 @@ class nary_tree {
         {}
     };
     
-    typedef node<value_type/*, mycontainer*/> node_type;
+    typedef ascending_node<value_type/*, mycontainer*/> node_type;
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;
     typedef typename node_traits<node_type>::node_base_type node_base_type;

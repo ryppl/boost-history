@@ -24,7 +24,7 @@
 namespace boost {
 namespace tree {
 
-using detail::node;
+using detail::ascending_node;
 using detail::ascending_nary_cursor;
 
 // TODO: Remove shoot() remains (was m_header->m_parent)
@@ -43,7 +43,7 @@ class binary_tree {
     typedef typename Alloc::template rebind<value_type>::other allocator_type;
 
  private:        
-    typedef node<value_type> node_type;
+    typedef ascending_node<value_type> node_type;
     
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;

@@ -33,7 +33,7 @@ void search_single_element(binary_tree<int>::const_cursor r, int v)
     d = upper_bound(r, v); 
     
     BOOST_CHECK_EQUAL(*c, v);
-    //BOOST_CHECK_EQUAL(inorder::next(c) , d);
+    //BOOST_CHECK_EQUAL(next(inorder(), c) , d);
 }
 
 BOOST_AUTO_TEST_CASE( binary_tree_search_test )

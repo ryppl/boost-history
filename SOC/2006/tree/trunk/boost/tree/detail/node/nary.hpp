@@ -218,11 +218,11 @@ class descending_node_base
 };
 
 template <typename T>
-class node : public node_base {
+class ascending_node : public node_base {
  public:
     typedef T value_type;
 
-    typedef node<value_type> node_type;
+    typedef ascending_node<value_type> node_type;
     typedef node_type* node_pointer;
     typedef node_type& node_reference;
 
@@ -243,9 +243,9 @@ class node : public node_base {
 
     const_reference operator*() const { return *m_data; } 
     
-    node(pointer data) : base_type(), m_data(data) {}
+    ascending_node(pointer data) : base_type(), m_data(data) {}
  
-    node(pointer data, base_pointer p) : base_type(p), m_data(data) {}
+    ascending_node(pointer data, base_pointer p) : base_type(p), m_data(data) {}
     
     pointer data()
     {
