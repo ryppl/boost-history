@@ -29,8 +29,8 @@ namespace tree {
 
 template <class Order, class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>))
-    ((AscendingCursor<Cursor>)),
+    ((Descendor<Cursor>))
+    ((Ascendor<Cursor>)),
     (Op)) // return type
 for_each(Order, Cursor is, Op f, ascending_vertical_traversal_tag)
 {
@@ -47,10 +47,10 @@ for_each(Order, Cursor is, Op f, ascending_vertical_traversal_tag)
 
 template <class Order, class InCursor, class OutCursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<InCursor>))
-    ((AscendingCursor<InCursor>))
-    ((DescendingCursor<OutCursor>))
-    ((AscendingCursor<OutCursor>)),
+    ((Descendor<InCursor>))
+    ((Ascendor<InCursor>))
+    ((Descendor<OutCursor>))
+    ((Ascendor<OutCursor>)),
     (OutCursor)) // return type
 transform (Order, InCursor is, OutCursor t, Op op
                    , ascending_vertical_traversal_tag)

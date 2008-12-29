@@ -17,68 +17,79 @@
 
 namespace boost_concepts {
 
-// TODO: Adapt concept requirements for algorithms according to archetypes!
-
-
-// Even split up into two types: one with only to_begin() and to_end(), and
-// one with also begin() and end() ?
-// I think we're lacking some requirements imposed on the return types of these
-// member functions, but that might overlap with iterator requirements. 
+/** 
+ * @brief Descendor concept
+ * Note that the existence of begin() and end() member functions follows quite
+ * naturally from the existence of to_begin() and to_end(), plus
+ * CopyConstructibility of X, which is quite a natural requirement for
+ * cursors.
+ */
 template <class X>
 struct Descendor
 {
 public:
     BOOST_CONCEPT_USAGE(Descendor)
     {
-        d.to_begin();
-        d.begin();
-        d.to_end();
-        d.end();
+        X& rb = d.to_begin();
+        rb.to_begin();  // Avoid compiler warning about unused variable
+
+        X b = d.begin();
+
+        X& re = d.to_end();
+        re.to_end();    // Avoid compiler warning about unused variable
+        
+        X e = d.end();
+
+        bool m = b.empty();
+        m = false;      // Avoid compiler warning about unused variable
     }
     
 private:
     X d;
-    
 };
 
-template <class X>
-struct DescendingCursor
-  : Descendor<X>, LvalueIterator<X>
-{
-};
 
-// Derive from DescendingCursor or not?
-// See eg Knuth 2.3.3, p 353.
+/** 
+ * @brief Ascendor concept
+ * Note that the existence of a parent() member function follows quite
+ * naturally from the existence of to_parent(), plus
+ * CopyConstructibility of X, which is quite a natural requirement for
+ * cursors.
+ * 
+ * Ascendor is not derived from Descendor, as there is no obviuos requirement
+ * for it, so these things are best kept separate. For a use case of an
+ * Ascendor-but-not-Descendor, see eg Knuth 2.3.3, (page 353)
+ */
 template <class X>
 struct Ascendor
 {
 public:
     BOOST_CONCEPT_USAGE(Ascendor)
     {
-        a.to_parent();
-        a.parent();
+        X& rp = a.to_parent();
+        rp.to_parent();     // Avoid compiler warning about unused variable
+
+        X p = a.parent();
     }
 private:
     X a;
 };
 
+/** 
+ * @brief RootTracker concept
+ * Keeps track of a (subtree) root.
+ */
 template <class X>
-struct AscendingCursor
-  : Ascendor<X>, LvalueIterator<X>
+struct RootTracker
+  : Ascendor<X>
 {
-};
-
-template <class X>
-struct RootTrackingCursor
-  : AscendingCursor<X>
-{
-    BOOST_CONCEPT_USAGE(RootTrackingCursor)
+    BOOST_CONCEPT_USAGE(RootTracker)
     {
-        b = r.is_root();
+        bool b = r.is_root();
+        b = false;          // Avoid compiler warning about unused variable
     }
 private:
     X r;
-    bool b;
 };
 
 } // namespace boost_concepts

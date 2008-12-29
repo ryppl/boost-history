@@ -14,6 +14,7 @@
 [section TODO]
 
 General:
+* Improve cursor_archetype. Currently, there's trouble eg with constructors.
 * Remove a cursor's cursor, const_cursor, iterator and const_iterator typedefs?
   The latter two only make sense in a range algorithm context, where they might actually be
   useful. (The former two are just aliases for completeness' sake.)
@@ -179,6 +180,8 @@ Implementation:
 
 Documentation:
 
+* Make docs more coherent. If we're using doxygen for API documentation, don't
+  duplicate that information via quickbook!
 * Include examples output (requires some Jamfile tweaking)!
 * Add a tree visualisation of the documentation structure (as some kind of frontispiece)
   to the docs!

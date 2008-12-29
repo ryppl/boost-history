@@ -82,8 +82,12 @@ Cursor last(Cursor c)
     return c;
 }
 
-template <class AscendingCursor>
-typename AscendingCursor::size_type index(AscendingCursor const& cur)
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((Descendor<Cursor>))
+    ((Ascendor<Cursor>)),
+    (typename Cursor::size_type)) // return type
+index(Cursor const& cur)
 {
     return std::distance(cur.parent().begin(), cur);
 }
@@ -96,8 +100,13 @@ void to_forest_end(BinaryCursor& c)
         c.to_end();
 }
 
+
 template <class BinaryCursor>
-void to_forest_parent(BinaryCursor& c)
+BOOST_CONCEPT_REQUIRES(
+    ((Descendor<BinaryCursor>))
+    ((Ascendor<BinaryCursor>)),
+    (void)) // return type
+to_forest_parent(BinaryCursor& c)
 {
     while (index(c))
         c.to_parent();

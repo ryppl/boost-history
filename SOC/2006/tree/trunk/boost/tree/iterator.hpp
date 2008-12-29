@@ -43,7 +43,7 @@ class iterator
       , boost::use_default
       , typename Order::iterator_category
     > {
-BOOST_CONCEPT_ASSERT((RootTrackingCursor<Cursor>));
+BOOST_CONCEPT_ASSERT((RootTracker<Cursor>));
 
  private:
     struct enabler {};
@@ -92,7 +92,7 @@ BOOST_CONCEPT_ASSERT((RootTrackingCursor<Cursor>));
  */
 template <class Order, class Cursor>
 BOOST_CONCEPT_REQUIRES(
-    ((AscendingCursor<Cursor>)),
+    ((Ascendor<Cursor>)),
     (iterator< Order, root_tracking_cursor<Cursor> >)) // return type
 //iterator< Order, root_tracking_cursor<Cursor> >
 begin(Order, Cursor c)
@@ -110,7 +110,7 @@ begin(Order, Cursor c)
  */
 template <class Order, class Cursor>
 BOOST_CONCEPT_REQUIRES(
-    ((AscendingCursor<Cursor>)),
+    ((Ascendor<Cursor>)),
     (iterator< Order, root_tracking_cursor<Cursor> >)) // return type
 //iterator<Order, root_tracking_cursor<Cursor> >
 end(Order, Cursor c)

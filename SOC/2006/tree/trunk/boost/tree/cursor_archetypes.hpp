@@ -62,6 +62,7 @@ class cursor_archetype
 
 // Ideally derive from ascendor_archetype.
 // The problem: begin() and end() return the wrong type! 
+// FIXME: constructors etc
 template <
     class Value
   , class AccessCategory
@@ -75,7 +76,7 @@ class cursor_archetype<Value
 //, public descendor_archetype
 {
 private:
-    typedef class cursor_archetype<Value
+    typedef cursor_archetype<Value
                      , AccessCategory
                      , HorizontalTraversal
                      , descending_vertical_traversal_tag> self_type;
@@ -104,7 +105,7 @@ class cursor_archetype<Value
 //, public ascendor_archetype
 {
 private:
-    typedef class cursor_archetype<Value
+    typedef cursor_archetype<Value
                      , AccessCategory
                      , HorizontalTraversal
                      , ascending_vertical_traversal_tag> self_type;

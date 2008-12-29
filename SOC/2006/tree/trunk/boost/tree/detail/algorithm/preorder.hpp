@@ -37,8 +37,8 @@ struct preorder {
 template <typename Cursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>))
-    ((RootTrackingCursor<Cursor>)),
+    ((Descendor<Cursor>))
+    ((RootTracker<Cursor>)),
     (void)) // return type
 forward(preorder, Cursor& c)
 {
@@ -78,8 +78,8 @@ forward(preorder, Cursor& c)
 template <class Cursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>))
-    ((RootTrackingCursor<Cursor>)),
+    ((Descendor<Cursor>))
+    ((RootTracker<Cursor>)),
     (void)) // return type
 back(preorder, Cursor& c)
 {
@@ -113,7 +113,7 @@ back(preorder, Cursor& c)
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((Descendor<Cursor>)),
     (void)) // return type
 to_first(preorder, Cursor& c)
 {
@@ -142,7 +142,7 @@ void to_last(preorder, Cursor& c)
  */
 template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((Descendor<Cursor>)),
     (void)) // return type
 for_each_recursive(preorder, Cursor s, Op& f)
 {
@@ -170,7 +170,7 @@ for_each_recursive(preorder, Cursor s, Op& f)
  */
 template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((Descendor<Cursor>)),
     (Op)) // return type
 for_each(preorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
@@ -205,8 +205,8 @@ for_each(preorder, Cursor s, Op f, descending_vertical_traversal_tag)
  */
 template <class InCursor, class OutCursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<InCursor>))
-    ((DescendingCursor<OutCursor>)),
+    ((Descendor<InCursor>))
+    ((Descendor<OutCursor>)),
     (OutCursor)) // return type
 transform(preorder, InCursor s, OutCursor t, Op op, descending_vertical_traversal_tag)
 {
