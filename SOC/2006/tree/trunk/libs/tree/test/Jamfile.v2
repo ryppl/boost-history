@@ -27,6 +27,7 @@ test-suite tree :
 	[ run binary_tree_search_test.cpp ]
 #	[ run key_search_binary_tree_test.cpp ]	
 #	[ run rank_search_binary_tree_test.cpp ]
+	[ run insert_cursor_test.cpp ]
 	[ run algorithm_concepts_test.cpp ]	
 	[ run cursor_algorithm_test.cpp ]
 	[ run iterator_algorithm_test.cpp ]

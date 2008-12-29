@@ -134,7 +134,7 @@ private:
     
     void advance(typename ascending_cursor::cursor_facade_::difference_type n)
     {
-            m_s.top() += n;
+        m_s.top() += n;
     }
     
     typename ascending_cursor::cursor_facade_::difference_type

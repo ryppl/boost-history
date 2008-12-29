@@ -14,20 +14,31 @@
 #include "helpers.hpp"
 
 template <class T>
-struct fake_binary_tree_cursor;
+struct fake_descending_binary_cursor;
+
+template <class T>
+struct fake_ascending_binary_cursor;
 
 /// See http://en.wikipedia.org/wiki/Binary_Tree#Methods_for_storing_binary_trees
 template <class T>
 struct fake_binary_tree {
-    typedef fake_binary_tree_cursor<T> cursor;
-    typedef fake_binary_tree_cursor<T const> const_cursor;
+    typedef fake_descending_binary_cursor<T> descending_cursor;
+    typedef fake_descending_binary_cursor<T const> const_descending_cursor;
+
+    typedef fake_ascending_binary_cursor<T> ascending_cursor;
+    typedef fake_ascending_binary_cursor<T const> const_ascending_cursor;
         
     fake_binary_tree(typename std::vector<T>::size_type s) : m_data(s)
     { }
     
-    cursor root()
+    descending_cursor descending_root()
     {
-        return cursor(*this, 0);
+        return descending_cursor(*this, 0);
+    }
+
+    ascending_cursor ascending_root()
+    {
+        return ascending_cursor(*this, 0);
     }
 
     typedef std::vector<T> children_type;
@@ -52,9 +63,9 @@ bool operator!=(fake_binary_tree<T> const& x, fake_binary_tree<T> const& y)
     return !(x == y);
 }
 
-// Make this use cursor_adaptor. Yes, even if that means relying on it.
+// Make this use cursor_facade. Yes, even if that means relying on it.
 template <class T>
-struct fake_binary_tree_cursor {
+struct fake_descending_binary_cursor {
     typedef boost::forward_traversal_tag vertical_traversal;
     typedef boost::bidirectional_traversal_tag horizontal_traversal;
     typedef horizontal_traversal iterator_category;
@@ -65,21 +76,21 @@ struct fake_binary_tree_cursor {
 
     typedef typename fake_binary_tree<T>::size_type size_type;
     
-    typedef fake_binary_tree_cursor<T> cursor;
-    typedef fake_binary_tree_cursor<T const> const_cursor;
-    
-    
-    //typedef typename fake_binary_tree<T>::children_type::value_type cur; 
-    //cur c;
+    typedef fake_descending_binary_cursor<T> cursor;
+    typedef fake_descending_binary_cursor<T const> const_cursor;
+
     fake_binary_tree<T>& m_tree;
     typename fake_binary_tree<T>::size_type m_pos;
     
-    explicit fake_binary_tree_cursor(fake_binary_tree<T>& t, size_type p = 0) : m_tree(t), m_pos(p) {}
-    //fake_binary_tree_cursor(fake_binary_tree_cursor const& mtc) : c(mtc.c), bgn(false) {}
+    explicit fake_descending_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
+    : m_tree(t), m_pos(p) {}
+    
+    fake_descending_binary_cursor(fake_descending_binary_cursor<T> const& other)
+    : m_tree(other.m_tree), m_pos(other.m_pos) {}
     
     T const& operator*() const
     {
-        return m_tree.m_data[m_pos];
+        return m_tree.m_data[(m_pos-1)/2];
     }
 
     T& operator*()
@@ -87,41 +98,41 @@ struct fake_binary_tree_cursor {
         return m_tree.m_data[(m_pos-1)/2];
     }
     
-    fake_binary_tree_cursor& to_begin()
+    fake_descending_binary_cursor& to_begin()
     {
         m_pos <<= 1;
         ++m_pos;
         return *this;
     }
     
-    fake_binary_tree_cursor begin()
+    fake_descending_binary_cursor begin()
     {
-        fake_binary_tree_cursor tmp(*this);
+        fake_descending_binary_cursor tmp(*this);
         tmp.to_begin();
         return tmp;
     }
 
-    fake_binary_tree_cursor& to_end()
+    fake_descending_binary_cursor& to_end()
     {
         ++m_pos;
         m_pos <<= 1;
         return *this;
     }
 
-    fake_binary_tree_cursor end()
+    fake_descending_binary_cursor end()
     {
-        fake_binary_tree_cursor tmp(*this);
+        fake_descending_binary_cursor tmp(*this);
         tmp.to_end();
         return tmp;
     }
     
-    fake_binary_tree_cursor& operator++()
+    fake_descending_binary_cursor& operator++()
     {
         ++m_pos;
         return *this;
     }
     
-    fake_binary_tree_cursor& operator--()
+    fake_descending_binary_cursor& operator--()
     {
         --m_pos;
         return *this;
@@ -143,31 +154,34 @@ struct fake_binary_tree_cursor {
 };
 
 template <class T>
-bool operator==(fake_binary_tree_cursor<T> const& x, fake_binary_tree_cursor<T> const& y)
+bool operator==(fake_descending_binary_cursor<T> const& x, fake_descending_binary_cursor<T> const& y)
 {
     return (x.m_tree == y.m_tree) && (x.m_pos == y.m_pos);
 }
 
 template <class T>
-bool operator!=(fake_binary_tree_cursor<T> const& x, fake_binary_tree_cursor<T> const& y)
+bool operator!=(fake_descending_binary_cursor<T> const& x, fake_descending_binary_cursor<T> const& y)
 {
     return !(x==y);
 }
 
 template <class T>
-struct fake_ascending_binary_tree_cursor;
+struct fake_ascending_binary_cursor;
 
 template <class T>
-struct fake_ascending_binary_tree_cursor
-: public boost::tree::cursor_adaptor<fake_ascending_binary_tree_cursor<T>
-                                   , fake_binary_tree_cursor<T> >
+struct fake_ascending_binary_cursor
+: public boost::tree::cursor_adaptor<fake_ascending_binary_cursor<T>
+                                   , fake_descending_binary_cursor<T>
+                                   , boost::use_default
+                                   , boost::use_default
+                                   , boost::bidirectional_traversal_tag >
 {
-    typedef fake_ascending_binary_tree_cursor<T> cursor;
-    typedef fake_ascending_binary_tree_cursor<T const> const_cursor;
+    typedef fake_ascending_binary_cursor<T> cursor;
+    typedef fake_ascending_binary_cursor<T const> const_cursor;
 
-    fake_ascending_binary_tree_cursor(fake_binary_tree<T>& t
+    fake_ascending_binary_cursor(fake_binary_tree<T>& t
                                     , typename fake_binary_tree<T>::size_type p)
-    : fake_ascending_binary_tree_cursor::cursor_adaptor_(fake_binary_tree_cursor<T>(t, p)) {}
+    : fake_ascending_binary_cursor::cursor_adaptor_(fake_descending_binary_cursor<T>(t, p)) {}
 
 private: 
     friend class boost::iterator_core_access;
@@ -181,22 +195,22 @@ private:
 };
 
 //template <class T>
-//struct fake_ascending_binary_tree_cursor
-//: public fake_binary_tree_cursor<T> {
-//    fake_ascending_binary_tree_cursor(fake_binary_tree<T>& t
+//struct fake_ascending_binary_cursor
+//: public fake_descending_binary_cursor<T> {
+//    fake_ascending_binary_cursor(fake_binary_tree<T>& t
 //                                    , typename fake_binary_tree<T>::size_type p)
-//    : fake_binary_tree_cursor<T>(t, p) {}
+//    : fake_descending_binary_cursor<T>(t, p) {}
 //    
-//    fake_ascending_binary_tree_cursor& to_parent()
+//    fake_ascending_binary_cursor& to_parent()
 //    {
-//        --fake_binary_tree_cursor<T>::m_pos;
-//        fake_binary_tree_cursor<T>::m_pos >>= 1;
+//        --fake_descending_binary_cursor<T>::m_pos;
+//        fake_descending_binary_cursor<T>::m_pos >>= 1;
 //        return *this;
 //    }
 //    
-//    fake_ascending_binary_tree_cursor parent()
+//    fake_ascending_binary_cursor parent()
 //    {
-//        fake_ascending_binary_tree_cursor tmp(*this);
+//        fake_ascending_binary_cursor tmp(*this);
 //        tmp.to_parent();
 //        return tmp;
 //    }
@@ -223,7 +237,7 @@ fake_binary_tree<int> generate_fake_binary_tree()
 
 template <class T = int>
 struct fake_binary_tree_fixture {
-    fake_binary_tree_fixture() : mbt1(generate_fake_binary_tree()), mbt2(57) {}
+    fake_binary_tree_fixture() : fbt1(generate_fake_binary_tree()), fbt2(57) {}
     
     template <class Cursor>
     static void validate_test_dataset1_tree(Cursor cur)
@@ -258,7 +272,7 @@ struct fake_binary_tree_fixture {
         BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end().begin(), 11); //Leaf
     }
     
-    fake_binary_tree<T> mbt1, mbt2;
+    fake_binary_tree<T> fbt1, fbt2;
 };
 
 template <class T = int>
