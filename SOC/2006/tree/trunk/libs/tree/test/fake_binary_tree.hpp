@@ -66,7 +66,7 @@ bool operator!=(fake_binary_tree<T> const& x, fake_binary_tree<T> const& y)
 // Make this use cursor_facade. Yes, even if that means relying on it.
 template <class T>
 struct fake_descending_binary_cursor {
-    typedef boost::forward_traversal_tag vertical_traversal;
+    typedef boost::tree::descending_vertical_traversal_tag vertical_traversal;
     typedef boost::bidirectional_traversal_tag horizontal_traversal;
     typedef horizontal_traversal iterator_category;
     typedef typename fake_binary_tree<T>::value_type value_type;
@@ -174,7 +174,7 @@ struct fake_ascending_binary_cursor
                                    , fake_descending_binary_cursor<T>
                                    , boost::use_default
                                    , boost::use_default
-                                   , boost::bidirectional_traversal_tag >
+                                   , boost::tree::ascending_vertical_traversal_tag >
 {
     typedef fake_ascending_binary_cursor<T> cursor;
     typedef fake_ascending_binary_cursor<T const> const_cursor;

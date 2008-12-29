@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders )
     cursor_archetype< boost::null_archetype<>
                       , boost::iterator_archetypes::readable_lvalue_iterator_t // Really lvalue?
                       , boost::forward_traversal_tag
-                      , boost::forward_traversal_tag
+                      , boost::tree::descending_vertical_traversal_tag
                       > c;
     boost::unary_function_archetype< boost::null_archetype<> , boost::null_archetype<> > 
       f(dummy_cons);
@@ -56,12 +56,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders )
 //    cursor_archetype< boost::null_archetype<>
 //                      , boost::iterator_archetypes::readable_iterator_t // Really lvalue?
 //                      , boost::forward_traversal_tag
-//                      , boost::forward_traversal_tag
+//                      , boost::tree::descending_vertical_traversal_tag
 //                      > i;
 //    cursor_archetype< boost::assignable_archetype<>
 //                      , boost::iterator_archetypes::writable_iterator_t // Really lvalue?
 //                      , boost::forward_traversal_tag
-//                      , boost::forward_traversal_tag
+//                      , boost::tree::descending_vertical_traversal_tag
 //                      > o;
 //    
 //    boost::tree::copy(Order(), i, o);
@@ -73,12 +73,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach, Order, orders )
 //    cursor_archetype< boost::null_archetype<>
 //                      , boost::iterator_archetypes::readable_lvalue_iterator_t // Really lvalue?
 //                      , boost::forward_traversal_tag
-//                      , boost::forward_traversal_tag
+//                      , boost::tree::descending_vertical_traversal_tag
 //                      > i;
 //    cursor_archetype< boost::assignable_archetype<>
 //                      , boost::iterator_archetypes::writable_lvalue_iterator_t // Really lvalue?
 //                      , boost::forward_traversal_tag
-//                      , boost::forward_traversal_tag
+//                      , boost::tree::descending_vertical_traversal_tag
 //                      > o;
 //    boost::unary_function_archetype< boost::null_archetype<> , boost::null_archetype<> > 
 //      f(dummy_cons);

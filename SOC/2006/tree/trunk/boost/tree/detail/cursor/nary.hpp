@@ -12,6 +12,7 @@
 #ifndef BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 #define BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 
+#include <boost/tree/cursor.hpp>
 #include <boost/tree/cursor_adaptor.hpp>
 #include <boost/tree/detail/node/nary.hpp>
 
@@ -42,7 +43,7 @@ class ascending_nary_cursor
                   , mpl::identity<typename Node::value_type>
                 >::type
       , random_access_traversal_tag
-      , bidirectional_traversal_tag
+      , ascending_vertical_traversal_tag
     > {
 
 private:

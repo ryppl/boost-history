@@ -244,7 +244,7 @@ class binary_tree {
 //    return cursor(boost::tree::copy(boost::tree::preorder()
 //                , subtree 
 //                , boost::tree::tree_inserter(*this, pos)
-//                , forward_traversal_tag()));
+//                , descending_vertical_traversal_tag()));
 
         subtree.to_begin();
         insert(pos, *subtree);
@@ -311,7 +311,7 @@ class binary_tree {
 //    return cursor(boost::tree::for_each(boost::tree::postorder()
 //                , direct_cursor(position)
 //                , destroy_node
-//                , forward_traversal_tag()));
+//                , descending_vertical_traversal_tag()));
 
          if (!position.empty()) {
              node_pointer pos_node = 

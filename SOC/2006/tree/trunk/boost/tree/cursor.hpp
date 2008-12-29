@@ -24,6 +24,9 @@ using std::forward_iterator_tag;
 using std::bidirectional_iterator_tag;
 using std::random_access_iterator_tag;
 
+struct descending_vertical_traversal_tag {};
+struct ascending_vertical_traversal_tag {};
+
 template <class Cursor>
 struct cursor_value {
     typedef typename Cursor::value_type type;
@@ -77,12 +80,12 @@ struct cursor_vertical_traversal {
 template <class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
           class Ptr = T*, class Ref = T&>
 struct cursor {
-    typedef Cat        cursor_category;
-    typedef T        value_type;
+    typedef Cat     cursor_category;
+    typedef T       value_type;
     typedef Dist    difference_type;
     typedef Size    size_type;
-    typedef Ptr        pointer;
-    typedef Ref        reference;    
+    typedef Ptr     pointer;
+    typedef Ref     reference;    
 };
 
 // Deprecate?

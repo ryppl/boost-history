@@ -39,7 +39,7 @@ template <
   , class Base
   , class Value                         = use_default
   , class HorizontalTraversalOrCategory = use_default
-  , class VerticalTraversalOrCategory   = use_default
+  , class VerticalTraversal             = use_default
   , class Reference                     = use_default
   , class Difference                    = use_default
   , class Size                          = use_default
@@ -51,12 +51,6 @@ class cursor_adaptor_base
                          , HorizontalTraversalOrCategory
                          , Reference
                          , Difference>
-, private iterator_adaptor<dummy 
-                         , Base
-                         , Value
-                         , VerticalTraversalOrCategory
-                         , Reference
-                         , Difference>
 {
 private:
     cursor_adaptor_base() {} // This class is used for typedefs only.
@@ -64,16 +58,12 @@ private:
     typedef typename iterator_adaptor<Derived, Base, Value
                                     , HorizontalTraversalOrCategory, Reference
                                     , Difference>::super_t h_super_t;
-    typedef typename iterator_adaptor<dummy, Base, Value
-                                    , VerticalTraversalOrCategory, Reference
-                                    , Difference>::super_t v_super_t;
 public:
     typedef typename h_super_t::value_type value_type;    
     typedef typename h_super_t::reference reference;
     typedef typename h_super_t::difference_type difference_type;
     typedef typename h_super_t::pointer pointer;
     typedef typename h_super_t::iterator_category iterator_category;
-    typedef typename v_super_t::iterator_category vertical_traversal;
     
     // size_type isn't in iterator_adaptor or _facade, 
     // so we have to calculate it on our own: 
@@ -82,6 +72,13 @@ public:
       , boost::tree::cursor_size<Base>
       , mpl::identity<Size>
     >::type size_type;
+
+    // Same for vertical_traversal
+    typedef typename mpl::eval_if<
+        is_same<VerticalTraversal, use_default>
+      , boost::tree::cursor_vertical_traversal<Base>
+      , mpl::identity<VerticalTraversal>
+    >::type vertical_traversal;
     
     typedef cursor_facade<Derived
                         , value_type
@@ -97,7 +94,7 @@ template <
   , class Base
   , class Value                         = use_default
   , class HorizontalTraversalOrCategory = use_default
-  , class VerticalTraversalOrCategory   = use_default
+  , class VerticalTraversal   = use_default
   , class Reference                     = use_default
   , class Difference                    = use_default
   , class Size                          = use_default
@@ -107,19 +104,19 @@ class cursor_adaptor
                             , Base
                             , Value
                             , HorizontalTraversalOrCategory
-                            , VerticalTraversalOrCategory
+                            , VerticalTraversal
                             , Reference
                             , Difference
                             , Size >::type
 {
 protected:
     typedef cursor_adaptor<Derived, Base, Value, HorizontalTraversalOrCategory,
-                           VerticalTraversalOrCategory, Reference, Difference,
+                           VerticalTraversal, Reference, Difference,
                            Size> cursor_adaptor_;
     
     typedef typename cursor_adaptor_base<Derived, Base, Value 
                                        , HorizontalTraversalOrCategory
-                                       , VerticalTraversalOrCategory
+                                       , VerticalTraversal
                                        , Reference
                                        , Difference
                                        , Size>::type cursor_facade_;

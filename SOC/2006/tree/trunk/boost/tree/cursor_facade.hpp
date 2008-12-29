@@ -132,8 +132,10 @@ public:
     typedef typename 
         iterator_category_to_traversal<iterator_category>::type
         horizontal_traversal; 
-    typedef typename 
-        iterator_category_to_traversal<VerticalCategoryOrTraversal>::type
+    typedef //typename 
+        //iterator_category_to_traversal<
+        VerticalCategoryOrTraversal
+        //>::type
         vertical_traversal; 
 
     bool const empty() const

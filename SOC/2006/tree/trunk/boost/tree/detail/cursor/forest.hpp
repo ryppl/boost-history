@@ -34,7 +34,7 @@ class forest_cursor
       , Cursor
       , boost::use_default
       , bidirectional_traversal_tag
-      , bidirectional_traversal_tag
+      , ascending_vertical_traversal_tag
     > {
 
 private:

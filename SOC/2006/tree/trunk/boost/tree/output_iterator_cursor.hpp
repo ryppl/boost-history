@@ -5,131 +5,23 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file cursor.hpp
- * Cursor traits structs, traversal tags, ...
+ * @file output_iterator_cursor.hpp
+ * Cursor wrapper around a given output iterator.
  */
  
-#ifndef BOOST_TREE_CURSOR_HPP
-#define BOOST_TREE_CURSOR_HPP
+#ifndef BOOST_TREE_OUTPUT_ITERATOR_CURSOR_HPP
+#define BOOST_TREE_OUTPUT_ITERATOR_CURSOR_HPP
 
-#include <boost/iterator/iterator_facade.hpp>
-#include <boost/iterator/iterator_adaptor.hpp>
-
-#include <stddef.h>
-#include <iterator>
-
-using std::input_iterator_tag;
-using std::output_iterator_tag;
-using std::forward_iterator_tag;
-using std::bidirectional_iterator_tag;
-using std::random_access_iterator_tag;
+#include <boost/tree/cursor.hpp>
 
 namespace boost {
 namespace tree {
-
-
-template <class Cursor>
-struct cursor_value {
-    typedef typename Cursor::value_type type;
-};
-
-template <class Cursor>
-struct cursor_reference {
-    typedef typename Cursor::reference type;
-};
-
-template <class Cursor>
-struct cursor_const_reference {
-    typedef typename Cursor::const_reference type;
-};
-
-template <class Cursor>
-struct cursor_pointer {
-    typedef typename Cursor::pointer type;
-};
-
-template <class Cursor>
-struct cursor_difference {
-    typedef typename Cursor::difference_type type;
-};
-
-template <class Cursor>
-struct cursor_size {
-    typedef typename Cursor::size_type type;
-};
-
-template <class T>
-struct cursor_size<T*> {
-    typedef std::size_t type;
-};
-
-template <class Cursor>
-struct cursor_category {
-    typedef typename Cursor::cursor_category type;
-};
-
-template <class Cursor>
-struct cursor_horizontal_traversal {
-    typedef typename Cursor::horizontal_traversal type;
-};
-
-template <class Cursor>
-struct cursor_vertical_traversal {
-    typedef typename Cursor::vertical_traversal type;
-};
-
-template <class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
-          class Ptr = T*, class Ref = T&>
-struct cursor {
-    typedef Cat        cursor_category;
-    typedef T        value_type;
-    typedef Dist    difference_type;
-    typedef Size    size_type;
-    typedef Ptr        pointer;
-    typedef Ref        reference;    
-};
-
-// Deprecate?
-struct cursor_tag {};
-
-struct descending_tag {}; 
-struct descending_cursor_tag
-    : public cursor_tag, public descending_tag, 
-      public input_iterator_tag, public output_iterator_tag {};
-struct descending_forward_cursor_tag
-    : public cursor_tag, public descending_tag, public forward_iterator_tag {};
-struct descending_bidirectional_cursor_tag
-    : public cursor_tag, public descending_tag, public bidirectional_iterator_tag {};
-struct descending_random_access_cursor_tag
-    : public cursor_tag, public descending_tag, public random_access_iterator_tag {};
-
-struct ascending_tag {};
-struct ascending_cursor_tag
-    : public descending_cursor_tag, public ascending_tag {};
-struct ascending_forward_cursor_tag
-    : public descending_forward_cursor_tag, public ascending_tag {};
-struct ascending_bidirectional_cursor_tag
-    : public descending_bidirectional_cursor_tag, public ascending_tag {};
-struct ascending_random_access_cursor_tag
-    : public descending_random_access_cursor_tag, public ascending_tag {};
-
-/*
-template <class Hor, class Vert>
-struct produce_cursor_category;
-
-template <>
-struct produce_cursor_category<> {
-    typedef descending_cursor_tag type;
-};
-*/
-
-//define freestanding begin, end, size, empty using cursor's member fns?
 
 template <
     class OutputIterator
 //  , class Value                         
 //  , class HorizontalTraversalOrCategory 
-//  , class VerticalTraversalOrCategory
+//  , class VerticalTraversal
 //  , class Reference                     
 //  , class Difference                
 //  , class Size                          
@@ -152,7 +44,7 @@ template <
     class OutputIterator
 //  , class Value                         = use_default
 //  , class HorizontalTraversalOrCategory = use_default
-//  , class VerticalTraversalOrCategory   = bidirectional_traversal_tag
+//  , class VerticalTraversal   = bidirectional_traversal_tag
 //  , class Reference                     = use_default
 //  , class Difference                    = use_default
 //  , class Size                          = use_default
@@ -175,9 +67,9 @@ public:
     typedef output_iterator_cursor<OutputIterator> value_type;
     typedef std::size_t size_type;
     typedef output_iterator_cursor<OutputIterator> const_cursor;
-    typedef forward_traversal_tag horizontal_traversal;
-    typedef bidirectional_traversal_tag vertical_traversal;
-    typedef forward_traversal_tag iterator_category;
+    typedef boost::forward_traversal_tag horizontal_traversal;
+    typedef boost::tree::ascending_vertical_traversal_tag vertical_traversal;
+    typedef boost::forward_traversal_tag iterator_category;
     typedef std::ptrdiff_t difference_type;
     typedef value_type* pointer;
     typedef value_type& reference;
@@ -266,4 +158,4 @@ outputter_cursor_iterator_wrapper(OutputIterator o)
 } // namespace boost
 
 
-#endif // BOOST_TREE_CURSOR_HPP
+#endif // BOOST_TREE_OUTPUT_ITERATOR_CURSOR_HPP

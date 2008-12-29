@@ -55,7 +55,7 @@ class ascending_cursor
 : public cursor_facade<ascending_cursor<DescendingCursor>
       , typename cursor_value<DescendingCursor>::type
       , random_access_traversal_tag
-      , bidirectional_traversal_tag
+      , ascending_vertical_traversal_tag
     > {
 private:
     struct enabler {};
@@ -194,7 +194,7 @@ class root_tracking_cursor< ascending_cursor<Cursor> >
                       , boost::use_default
                       , typename cursor_horizontal_traversal<
                               ascending_cursor<Cursor> >::type
-                      , bidirectional_traversal_tag
+                      , ascending_vertical_traversal_tag
     > {
  private:
     struct enabler {};

@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_desc_copy_using_insert_cursor, Order, order
     bt2.clear();
 
     boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
-                    , boost::forward_traversal_tag());
+                    , boost::tree::descending_vertical_traversal_tag());
 //    fill_subtree_with_data(tree_inserter(bt2, bt2.root())); //FIXME
 
     validate_test_dataset1_tree(bt2.root());
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_asc_copy_using_insert_cursor, Order, orders
     bt2.clear();
         
     boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
-                    , boost::bidirectional_traversal_tag());
+                    , boost::tree::ascending_vertical_traversal_tag());
 
     validate_test_dataset1_tree(bt2.root());
     BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root())); 

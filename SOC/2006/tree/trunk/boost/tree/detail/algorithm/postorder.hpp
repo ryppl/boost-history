@@ -177,7 +177,7 @@ template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>)),
     (Op)) // return type
-for_each(postorder, Cursor s, Op f, forward_traversal_tag)
+for_each(postorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
@@ -211,7 +211,7 @@ BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<InCursor>))
     ((DescendingCursor<OutCursor>)),
     (OutCursor)) // return type
-transform(postorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
+transform(postorder, InCursor s, OutCursor t, Op op, descending_vertical_traversal_tag)
 {
     InCursor r = s;
     s.to_begin();
@@ -220,11 +220,11 @@ transform(postorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
     
     for (; s != r.end(); ++s, ++t)
         if (!s.empty())
-            transform(postorder(), s, t, op, forward_traversal_tag());
+            transform(postorder(), s, t, op, descending_vertical_traversal_tag());
 
     // Multiway cursor
     if (!s.empty())
-        transform(postorder(), s, t, op, forward_traversal_tag());
+        transform(postorder(), s, t, op, descending_vertical_traversal_tag());
     
     *t2 = op(*r.to_begin());
     return t;

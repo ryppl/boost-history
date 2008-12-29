@@ -149,7 +149,7 @@ template <class MultiwayCursor, class Op>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>)),
     (Op)) // return type
-for_each(inorder, MultiwayCursor s, Op f, forward_traversal_tag)
+for_each(inorder, MultiwayCursor s, Op f, descending_vertical_traversal_tag)
 {
     MultiwayCursor t = s.end();
 
@@ -184,7 +184,7 @@ BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<OutCursor>))
     /*((UnaryFunction<Op>))*/,
     (OutCursor)) // return type
-transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
+transform(inorder, InCursor s, OutCursor t, Op op, descending_vertical_traversal_tag)
 {
     InCursor r = s.end();
 
@@ -193,13 +193,13 @@ transform(inorder, InCursor s, OutCursor t, Op op, forward_traversal_tag)
     
     for (; s != r; ++s, ++t) {
         if (!s.empty())
-            transform(inorder(), s, t, op, forward_traversal_tag());
+            transform(inorder(), s, t, op, descending_vertical_traversal_tag());
         *t=op(*s);
     }
 
     // Multiway cursor
     if (!r.empty())
-        transform(inorder(), r, t, op, forward_traversal_tag());
+        transform(inorder(), r, t, op, descending_vertical_traversal_tag());
     return t;
 }
 

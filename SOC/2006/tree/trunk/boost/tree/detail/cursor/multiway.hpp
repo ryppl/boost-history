@@ -33,7 +33,7 @@ class const_multiway_tree_cursor
       , Cursor const
       , boost::use_default
       , bidirectional_traversal_tag
-      , forward_traversal_tag
+      , descending_vertical_traversal_tag
     > {
  private:
     struct enabler {};
@@ -95,7 +95,7 @@ class multiway_tree_cursor
       , Cursor
       , boost::use_default
       , bidirectional_traversal_tag
-      , forward_traversal_tag
+      , descending_vertical_traversal_tag
     > {
  private:
     struct enabler {};

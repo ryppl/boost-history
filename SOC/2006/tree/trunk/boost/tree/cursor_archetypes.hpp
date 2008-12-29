@@ -5,68 +5,118 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file cursor_concepts.hpp
- * Cursor concepts
+ * @file cursor_archetypes.hpp
+ * Cursor archetypes
  */
  
-#ifndef BOOST_TREE_CURSOR_CONCEPTS_HPP
-#define BOOST_TREE_CURSOR_CONCEPTS_HPP
+#ifndef BOOST_TREE_CURSOR_ARCHETYPES_HPP
+#define BOOST_TREE_CURSOR_ARCHETYPES_HPP
 
-#include <boost/concept_check.hpp>
+#include <boost/iterator/iterator_archetypes.hpp>
+#include <boost/tree/cursor.hpp>
 
 namespace boost {
 namespace tree {
 
-template <class X>
-struct DescendingCursor
+class descendor_archetype
 {
 public:
-    typedef typename cursor_value<X>::type value_type;
-
-    BOOST_CONCEPT_USAGE(DescendingCursor)
-    {
-        d.to_begin();
-        d.begin();
-        d.to_end();
-        d.end();
-    }
+    typedef descending_vertical_traversal_tag vertical_traversal;
     
+    descendor_archetype& to_begin() { return *this; }
+    descendor_archetype& to_end() { return *this; }
+
+    descendor_archetype begin() const { return *this; }
+    descendor_archetype end() const { return *this; }
+    
+    bool empty() const { return true; }
+};
+
+class ascendor_archetype
+{
+public:
+    ascendor_archetype& to_parent() { return *this; }
+
+    ascendor_archetype parent() const { return *this; }
+};
+
+template <
+    class Value
+  , class AccessCategory
+  , class HorizontalTraversal
+  , class VerticalTraversal
+> 
+class cursor_archetype;
+
+template <
+    class Value
+  , class AccessCategory
+  , class HorizontalTraversal
+  , class VerticalTraversal
+>
+class cursor_archetype
+: public iterator_archetype<Value, AccessCategory, HorizontalTraversal>
+{
+
+};
+
+// Ideally derive from ascendor_archetype.
+// The problem: begin() and end() return the wrong type! 
+template <
+    class Value
+  , class AccessCategory
+  , class HorizontalTraversal
+>
+class cursor_archetype<Value
+                     , AccessCategory
+                     , HorizontalTraversal
+                     , descending_vertical_traversal_tag>
+: public iterator_archetype<Value, AccessCategory, HorizontalTraversal>
+//, public descendor_archetype
+{
 private:
-    X d;
+    typedef class cursor_archetype<Value
+                     , AccessCategory
+                     , HorizontalTraversal
+                     , descending_vertical_traversal_tag> self_type;
+public:
+    typedef descending_vertical_traversal_tag vertical_traversal;
     
+    self_type& to_begin() { return *this; }
+    self_type& to_end() { return *this; }
+
+    self_type begin() const { return *this; }
+    self_type end() const { return *this; }
+    
+    bool empty() const { return true; }
 };
 
-template <class T>
-class descending_cursor_archetype
+template <
+    class Value
+  , class AccessCategory
+  , class HorizontalTraversal
+>
+class cursor_archetype<Value
+                     , AccessCategory
+                     , HorizontalTraversal
+                     , ascending_vertical_traversal_tag>
+: public iterator_archetype<Value, AccessCategory, HorizontalTraversal>
+//, public ascendor_archetype
 {
-public:
-    void to_begin() {}
-    void to_end() {}
-};
-
-// Derive from DescendingCursor or not?
-template <class X>
-struct AscendingCursor
-{
-public:
-    BOOST_CONCEPT_USAGE(AscendingCursor)
-    {
-        a.to_parent();
-        a.parent();
-    }
-    
 private:
-    X a;
-};
-
-template <class T>
-class ascending_cursor_archetype
-{
+    typedef class cursor_archetype<Value
+                     , AccessCategory
+                     , HorizontalTraversal
+                     , ascending_vertical_traversal_tag> self_type;
 public:
-    void to_parent() {}
+    typedef ascending_vertical_traversal_tag vertical_traversal;
+    
+    self_type& to_parent() { return *this; }
+
+    self_type parent() const { return *this; }
 };
 
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_CURSOR_CONCEPTS_HPP
+#endif // BOOST_TREE_CURSOR_ARCHETYPES_HPP

@@ -32,7 +32,7 @@ BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
     ((AscendingCursor<Cursor>)),
     (Op)) // return type
-for_each(Order, Cursor is, Op f, bidirectional_traversal_tag)
+for_each(Order, Cursor is, Op f, ascending_vertical_traversal_tag)
 {
     root_tracking_cursor<Cursor> s(is);
     root_tracking_cursor<Cursor> s2(s);
@@ -53,7 +53,7 @@ BOOST_CONCEPT_REQUIRES(
     ((AscendingCursor<OutCursor>)),
     (OutCursor)) // return type
 transform (Order, InCursor is, OutCursor t, Op op
-                   , bidirectional_traversal_tag)
+                   , ascending_vertical_traversal_tag)
 {
     root_tracking_cursor<InCursor> s(is);
     root_tracking_cursor<InCursor> s2(s);
