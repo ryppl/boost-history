@@ -29,8 +29,8 @@ using boost::iterator_core_access;
 using boost::tree::cursor_core_access;
 
 template <class Node> 
-class nary_tree_cursor
- : public cursor_adaptor<nary_tree_cursor<Node>
+class ascending_nary_cursor
+ : public cursor_adaptor<ascending_nary_cursor<Node>
       , typename mpl::eval_if<
                         is_const<Node>
                       , add_const<typename Node::base_type>
@@ -69,11 +69,11 @@ public:
                     >::type value_type;
 
     // Container-specific:
-    typedef typename nary_tree_cursor::cursor_adaptor_::size_type size_type;
+    typedef typename ascending_nary_cursor::cursor_adaptor_::size_type size_type;
 
     // Cursor-specific
-    typedef nary_tree_cursor<node_type> cursor;
-    typedef nary_tree_cursor<node_type const> const_cursor;
+    typedef ascending_nary_cursor<node_type> cursor;
+    typedef ascending_nary_cursor<node_type const> const_cursor;
     typedef std::size_t subtree_size_type;
     
     // Container-specific:
@@ -82,24 +82,24 @@ public:
     
     template <class OtherValue>
     struct rebind {
-        typedef nary_tree_cursor<OtherValue> other;
+        typedef ascending_nary_cursor<OtherValue> other;
     };
     
-    nary_tree_cursor()
-      : nary_tree_cursor::cursor_adaptor_(0), m_pos(0) {}
+    ascending_nary_cursor()
+      : ascending_nary_cursor::cursor_adaptor_(0), m_pos(0) {}
 
-    explicit nary_tree_cursor(base_pointer p, size_type pos) 
-    : nary_tree_cursor::cursor_adaptor_(p), m_pos(pos) {}
+    explicit ascending_nary_cursor(base_pointer p, size_type pos) 
+    : ascending_nary_cursor::cursor_adaptor_(p), m_pos(pos) {}
 
     template <class OtherNode>
-    nary_tree_cursor(
-        nary_tree_cursor<OtherNode> const& other
+    ascending_nary_cursor(
+        ascending_nary_cursor<OtherNode> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherNode*, node_type*>
           , enabler
         >::type = enabler()
     )
-    : nary_tree_cursor::cursor_adaptor_(other.base()), m_pos(other.m_pos) {}
+    : ascending_nary_cursor::cursor_adaptor_(other.base()), m_pos(other.m_pos) {}
 
      size_type m_pos;
 
@@ -132,14 +132,14 @@ private:
         //this->base_reference() -= sizeof(node_type);
     }    
     
-    void advance(typename nary_tree_cursor::cursor_facade_::difference_type n)
+    void advance(typename ascending_nary_cursor::cursor_facade_::difference_type n)
     {
         m_pos += n;
         //this->base_reference() += n * sizeof(node_type);
     }
     
-    typename nary_tree_cursor::cursor_facade_::difference_type
-    distance_to(nary_tree_cursor z) const //FIXME: convertible to instead of nary_tree_cursor
+    typename ascending_nary_cursor::cursor_facade_::difference_type
+    distance_to(ascending_nary_cursor z) const //FIXME: convertible to instead of ascending_nary_cursor
     {
         return (z.m_pos - this->m_pos);
         //return (z.base_reference() - this->base_reference()) / sizeof(node_type); 
@@ -244,8 +244,8 @@ public:
 } // namespace detail
 
 template <class Node>
-typename detail::nary_tree_cursor<Node>::size_type
-index(detail::nary_tree_cursor<Node> const& cur)
+typename detail::ascending_nary_cursor<Node>::size_type
+index(detail::ascending_nary_cursor<Node> const& cur)
 {
     return cur.index();
 }

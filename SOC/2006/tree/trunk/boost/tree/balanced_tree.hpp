@@ -32,7 +32,7 @@ namespace boost {
 namespace tree {
 
 using detail::node;
-using detail::nary_tree_cursor;
+using detail::ascending_nary_cursor;
 
 using detail::augmented_iterator;
 

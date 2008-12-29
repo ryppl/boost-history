@@ -14,6 +14,12 @@
 [section TODO]
 
 General:
+* Remove a cursor's cursor, const_cursor, iterator and const_iterator typedefs?
+  The latter two only make sense in a range algorithm context, where they might actually be
+  useful. (The former two are just aliases for completeness' sake.)
+* Make Order the last (instead of first) parameter in algorithms? That way, we could
+  assume reasonable defaults while offering explicit choice (eg for size(), find(), 
+  maybe even copy(): default to preorder).
 * Rename node -> ascending_node; implement descending_node; and corresponding cursors.
 * Fix freestanding index() and members (esp. wrt cursor facade and adaptor!)
 * Redo all that balance(==balanced_tree)/searcher stuff. Avoid redundancy, that is, make them both use 
@@ -111,7 +117,13 @@ General:
 * Start an RFC: what subtree algorithms should there be? In particular, of which of
   the STL's linear algorithms should there be a hierarchical version?
 
+Pre-release:
+* Cleanup headers/ #include dependencies.
+* Run Boost Inspect.
+
 Future: 
+* Exception safety?
+* Thread safety?
 * Add cool constructors/assignment à la C++0x, ie (nested) parentheses or Boost.Assign.
 * Do we need cursors that are not iterators, ie that provide to_begin() and to_end 
   (and possibly to_parent()) operations, but not operator++() and --?
