@@ -167,6 +167,13 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 
 namespace
 {
+
+# ifdef BOOST_WINDOWS_PATH
+  const wchar_t dot = L'.';
+# else
+  const char dot = '.';
+# endif
+
   const std::size_t buf_size( 128 );
   const error_code ok;
 
@@ -1518,9 +1525,9 @@ namespace detail
     {
       it.m_imp->dir_entry.assign( p / filename,
         file_stat, symlink_file_stat );
-      if ( filename[0] == detail::dot // dot or dot-dot
+      if ( filename[0] == dot // dot or dot-dot
         && (filename.size() == 1
-          || (filename[1] == detail::dot
+          || (filename[1] == dot
             && filename.size() == 2)) )
         {  it.increment(); }
     }
@@ -1552,9 +1559,9 @@ namespace detail
       }
 
       if ( it.m_imp->handle == 0 ) { it.m_imp.reset(); return; } // eof, make end
-      if ( !(filename[0] == detail::dot // !(dot or dot-dot)
+      if ( !(filename[0] == dot // !(dot or dot-dot)
         && (filename.size() == 1
-          || (filename[1] == detail::dot
+          || (filename[1] == dot
             && filename.size() == 2))) )
       {
         it.m_imp->dir_entry.replace_filename(

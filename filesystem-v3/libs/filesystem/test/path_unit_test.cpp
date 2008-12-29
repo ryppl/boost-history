@@ -214,95 +214,95 @@ namespace
 
   }
 
-//  //  test_assignments  ----------------------------------------------------------------//
-//
-//  void test_assignments()
-//  {
-//    std::cout << "testing assignments..." << std::endl;
-//
-//    y = "path y";                                      // #2
-//    PATH_IS(y, L"path y");
-//
-//    x = y;                                             // #1
-//    PATH_IS(x, L"path y");
-//
-//    x = "const char *";                                // #2
-//    PATH_IS(x, L"const char *");
-//
-//    x = L"const wchar_t *";                            // #2
-//    PATH_IS(x, L"const wchar_t *");
-//
-//    x = string("std::string::iterator").begin();       // #2 w/iterator 
-//    PATH_IS(x, L"std::string::iterator");
-//
-//    x = wstring(L"std::wstring::iterator").begin();    // #2 w/iterator
-//    PATH_IS(x, L"std::wstring::iterator");
-//
-//    y.assign("path y w/o ec");                         // #3 w/o ec
-//    PATH_IS(y, L"path y w/o ec");
-//
-//    ec = ng;
-//    y.assign("path y w/ec", ec);                       // #3 w/ec
-//    PATH_IS(y, L"path y w/ec");
-//    IS(ec, ok);
-//
-//    x.assign(s.begin(), s.end());                      // #4
-//    PATH_IS(x, L"string iterators");
-//
-//    ec = ng;
-//    x.assign(s.begin(), s.end(), ec);                  // #4 w/ec
-//    PATH_IS(x, L"string iterators");
-//    IS(ec, ok);
-//
-//    x.assign(ws.begin(), ws.end());                    // #4
-//    PATH_IS(x, L"wstring iterators");
-//
-//    x = string("std::string");                         // #5
-//    PATH_IS(x, L"std::string");
-//
-//    x = wstring(L"std::wstring");                      // #5
-//    PATH_IS(x, L"std::wstring");
-//
-//    x.assign(string("std::string"));                   // #6
-//    PATH_IS(x, L"std::string");
-//
-//    x.assign(wstring(L"std::wstring"));                // #6
-//    PATH_IS(x, L"std::wstring");
-//
-//    ec = ng;
-//    x.assign(string("std::string"), ec);               // #6 w/ec
-//    PATH_IS(x, L"std::string");
-//    IS(ec, ok);
-//
-//   }
-//
-//  //  test_observers  ------------------------------------------------------------------//
-//
-//  void test_observers()
-//  {
-//    std::cout << "testing observers..." << std::endl;
-//
-//# ifdef BOOST_WINDOWS_PATH
-//
-//    path p( "abc\\def/ghi" );
-//
-//    CHECK( wstring( p.c_str() ) == L"abc\\def/ghi" );
-//
-//    CHECK( p.string() == "abc\\def/ghi" );
-//    CHECK( p.wstring() == L"abc\\def/ghi" );
-//
-//    CHECK( p.generic().string() == "abc/def/ghi" );
-//    CHECK( p.generic().wstring() == L"abc/def/ghi" );
-//
-//    CHECK( p.native().string() == "abc\\def\\ghi" );
-//    CHECK( p.native().wstring() == L"abc\\def\\ghi" );
-//
-//# else  // BOOST_POSIX_PATH
-//
-//
-//# endif 
-//  }
-//
+  //  test_assignments  ----------------------------------------------------------------//
+
+  void test_assignments()
+  {
+    std::cout << "testing assignments..." << std::endl;
+
+    y = "path y";                                      // #2
+    PATH_IS(y, L"path y");
+
+    x = y;                                             // #1
+    PATH_IS(x, L"path y");
+
+    x = "const char *";                                // #2
+    PATH_IS(x, L"const char *");
+
+    x = L"const wchar_t *";                            // #2
+    PATH_IS(x, L"const wchar_t *");
+
+    x = string("std::string::iterator").begin();       // #2 w/iterator 
+    PATH_IS(x, L"std::string::iterator");
+
+    x = wstring(L"std::wstring::iterator").begin();    // #2 w/iterator
+    PATH_IS(x, L"std::wstring::iterator");
+
+    y.assign("path y w/o ec");                         // #3 w/o ec
+    PATH_IS(y, L"path y w/o ec");
+
+    ec = ng;
+    y.assign("path y w/ec", ec);                       // #3 w/ec
+    PATH_IS(y, L"path y w/ec");
+    IS(ec, ok);
+
+    x.assign(s.begin(), s.end());                      // #4
+    PATH_IS(x, L"string iterators");
+
+    ec = ng;
+    x.assign(s.begin(), s.end(), ec);                  // #4 w/ec
+    PATH_IS(x, L"string iterators");
+    IS(ec, ok);
+
+    x.assign(ws.begin(), ws.end());                    // #4
+    PATH_IS(x, L"wstring iterators");
+
+    x = string("std::string");                         // #5
+    PATH_IS(x, L"std::string");
+
+    x = wstring(L"std::wstring");                      // #5
+    PATH_IS(x, L"std::wstring");
+
+    x.assign(string("std::string"));                   // #6
+    PATH_IS(x, L"std::string");
+
+    x.assign(wstring(L"std::wstring"));                // #6
+    PATH_IS(x, L"std::wstring");
+
+    ec = ng;
+    x.assign(string("std::string"), ec);               // #6 w/ec
+    PATH_IS(x, L"std::string");
+    IS(ec, ok);
+
+   }
+
+  //  test_observers  ------------------------------------------------------------------//
+
+  void test_observers()
+  {
+    std::cout << "testing observers..." << std::endl;
+
+# ifdef BOOST_WINDOWS_PATH
+
+    path p( "abc\\def/ghi" );
+
+    CHECK( wstring( p.c_str() ) == L"abc\\def/ghi" );
+
+    CHECK( p.string() == "abc\\def/ghi" );
+    CHECK( p.wstring() == L"abc\\def/ghi" );
+
+    CHECK( p.generic().string() == "abc/def/ghi" );
+    CHECK( p.generic().wstring() == L"abc/def/ghi" );
+
+    CHECK( p.native().string() == "abc\\def\\ghi" );
+    CHECK( p.native().wstring() == L"abc\\def\\ghi" );
+
+# else  // BOOST_POSIX_PATH
+
+
+# endif 
+  }
+
 //  //  test_appends  --------------------------------------------------------------------//
 //
 //  void test_appends()
@@ -310,93 +310,93 @@ namespace
 //    std::cout << "testing appends..." << std::endl;
 //
 //  }
-//
-//  //  test_relationals  ----------------------------------------------------------------//
-//
-//  void test_relationals()
-//  {
-//    std::cout << "testing relationals..." << std::endl;
-//
-//    const path p( "bar" );
-//    const path p2( "baz" );
-//
-//    CHECK( !(p < p) );
-//    CHECK( p < p2 );
-//    CHECK( !(p2 < p) );
-//    CHECK( p < "baz" );
-//    CHECK( p < string("baz") );
-//    CHECK( p < L"baz" );
-//    CHECK( p < wstring(L"baz") );
-//    CHECK( !("baz" < p) );
-//    CHECK( !(string("baz") < p) );
-//    CHECK( !(L"baz" < p) );
-//    CHECK( !(wstring(L"baz") < p) );
-//
-//    CHECK( p == p );
-//    CHECK( !(p == p2) );
-//    CHECK( !(p2 == p) );
-//    CHECK( p2 == "baz" );
-//    CHECK( p2 == string("baz") );
-//    CHECK( p2 == L"baz" );
-//    CHECK( p2 == wstring(L"baz") );
-//    CHECK( "baz" == p2 );
-//    CHECK( string("baz") == p2 );
-//    CHECK( L"baz" == p2 );
-//    CHECK( wstring(L"baz") == p2 );
-//
-//    CHECK( !(p != p) );
-//    CHECK( p != p2 );
-//    CHECK( p2 != p );
-//
-//    CHECK( p <= p );
-//    CHECK( p <= p2 );
-//    CHECK( !(p2 <= p) );
-//
-//    CHECK( !(p > p) );
-//    CHECK( !(p > p2) );
-//    CHECK( p2 > p );
-//
-//    CHECK( p >= p );
-//    CHECK( !(p >= p2) );
-//    CHECK( p2 >= p );
-//}
-//
-//  //  test_other_non_members  ----------------------------------------------------------//
-//
-//  void test_other_non_members()
-//  {
-//    std::cout << "testing other_non_members..." << std::endl;
-//
-//    path p1("foo");
-//    path p2("bar");
-//
-//    //  operator /
-//
-//    CHECK( p1 / p2 == path( "foo/bar" ).native() );
-//    CHECK( "foo" / p2 == path( "foo/bar" ).native() );
-//    CHECK( L"foo" / p2 == path( "foo/bar" ).native() );
-//    CHECK( string( "foo" ) / p2 == path( "foo/bar" ).native() );
-//    CHECK( wstring( L"foo" ) / p2 == path( "foo/bar" ).native() );
-//    CHECK( p1 / "bar" == path( "foo/bar" ).native() );
-//    CHECK( p1 / L"bar" == path( "foo/bar" ).native() );
-//    CHECK( p1 / string( "bar" ) == path( "foo/bar" ).native() );
-//    CHECK( p1 / wstring( L"bar" ) == path( "foo/bar" ).native() );
-//
-//    swap( p1, p2 );
-//    //  swap
-//
-//    CHECK( p1 == "bar" );
-//    CHECK( p2 == "foo" );
-//
-//    // swap( p1, "baz" );   // should fail to compile
-//    // swap( p1, L"baz" );  // should fail to compile
-//
-//    CHECK( path( "" ).remove_filename() == "" );
-//    CHECK( path( "foo" ).remove_filename() == "" );
-//    CHECK( path( "foo/bar" ).remove_filename() == "foo/" );
-//
-//  }
-//
+
+  //  test_relationals  ----------------------------------------------------------------//
+
+  void test_relationals()
+  {
+    std::cout << "testing relationals..." << std::endl;
+
+    const path p( "bar" );
+    const path p2( "baz" );
+
+    CHECK( !(p < p) );
+    CHECK( p < p2 );
+    CHECK( !(p2 < p) );
+    CHECK( p < "baz" );
+    CHECK( p < string("baz") );
+    CHECK( p < L"baz" );
+    CHECK( p < wstring(L"baz") );
+    CHECK( !("baz" < p) );
+    CHECK( !(string("baz") < p) );
+    CHECK( !(L"baz" < p) );
+    CHECK( !(wstring(L"baz") < p) );
+
+    CHECK( p == p );
+    CHECK( !(p == p2) );
+    CHECK( !(p2 == p) );
+    CHECK( p2 == "baz" );
+    CHECK( p2 == string("baz") );
+    CHECK( p2 == L"baz" );
+    CHECK( p2 == wstring(L"baz") );
+    CHECK( "baz" == p2 );
+    CHECK( string("baz") == p2 );
+    CHECK( L"baz" == p2 );
+    CHECK( wstring(L"baz") == p2 );
+
+    CHECK( !(p != p) );
+    CHECK( p != p2 );
+    CHECK( p2 != p );
+
+    CHECK( p <= p );
+    CHECK( p <= p2 );
+    CHECK( !(p2 <= p) );
+
+    CHECK( !(p > p) );
+    CHECK( !(p > p2) );
+    CHECK( p2 > p );
+
+    CHECK( p >= p );
+    CHECK( !(p >= p2) );
+    CHECK( p2 >= p );
+}
+
+  //  test_other_non_members  ----------------------------------------------------------//
+
+  void test_other_non_members()
+  {
+    std::cout << "testing other_non_members..." << std::endl;
+
+    path p1("foo");
+    path p2("bar");
+
+    //  operator /
+
+    CHECK( p1 / p2 == path( "foo/bar" ).native() );
+    CHECK( "foo" / p2 == path( "foo/bar" ).native() );
+    CHECK( L"foo" / p2 == path( "foo/bar" ).native() );
+    CHECK( string( "foo" ) / p2 == path( "foo/bar" ).native() );
+    CHECK( wstring( L"foo" ) / p2 == path( "foo/bar" ).native() );
+    CHECK( p1 / "bar" == path( "foo/bar" ).native() );
+    CHECK( p1 / L"bar" == path( "foo/bar" ).native() );
+    CHECK( p1 / string( "bar" ) == path( "foo/bar" ).native() );
+    CHECK( p1 / wstring( L"bar" ) == path( "foo/bar" ).native() );
+
+    swap( p1, p2 );
+    //  swap
+
+    CHECK( p1 == "bar" );
+    CHECK( p2 == "foo" );
+
+    // swap( p1, "baz" );   // should fail to compile
+    // swap( p1, L"baz" );  // should fail to compile
+
+    CHECK( path( "" ).remove_filename() == "" );
+    CHECK( path( "foo" ).remove_filename() == "" );
+    CHECK( path( "foo/bar" ).remove_filename() == "foo/" );
+
+  }
+
 //  //  test_modifiers  ------------------------------------------------------------------//
 //
 //  void test_modifiers()
@@ -404,119 +404,159 @@ namespace
 //    std::cout << "testing modifiers..." << std::endl;
 //
 //  }
-//
-//  //  test_iterators  ------------------------------------------------------------------//
-//
-//  void test_iterators()
-//  {
-//    std::cout << "testing iterators..." << std::endl;
-//
-//    path p1;
-//    CHECK( p1.begin() == p1.end() );
-//
-//    path p2("/");
-//    CHECK( p2.begin() != p2.end() );
-//    CHECK( *p2.begin() == "/" );
-//    CHECK( ++p2.begin() == p2.end() );
-//
-//    path p3("foo/bar/baz");
-//
-//    path::iterator it(p3.begin());
-//    CHECK( p3.begin() != p3.end() );
-//    CHECK( *it == "foo" );
-//    CHECK( *++it == "bar" );
-//    CHECK( *++it == "baz" );
-//    CHECK( *--it == "bar" );
-//    CHECK( *--it == "foo" );
-//    CHECK( *++it == "bar" );
-//    CHECK( *++it == "baz" );
-//    CHECK( ++it == p3.end() );
-//
-//  }
-//
-//  //  test_decompositions  -------------------------------------------------------------//
-//
-//  void test_decompositions()
-//  {
-//    std::cout << "testing decompositions..." << std::endl;
-//
-//    CHECK( path("").root_name().string() == "" );
-//    CHECK( path("foo").root_name().string() == "" );
-//    CHECK( path("/").root_name().string() == "" );
-//    CHECK( path("/foo").root_name().string() == "" );
-//    CHECK( path("//netname").root_name().string() == "//netname" );
-//    CHECK( path("//netname/foo").root_name().string() == "//netname" );
-//
-//    CHECK( path("").root_directory().string() == "" );
-//    CHECK( path("foo").root_directory().string() == "" );
-//    CHECK( path("/").root_directory().string() == "/" );
-//    CHECK( path("/foo").root_directory().string() == "/" );
-//    CHECK( path("//netname").root_directory().string() == "" );
-//    CHECK( path("//netname/foo").root_directory().string() == "/" );
-//
-//    CHECK( path("").root_path().string() == "" );
-//    CHECK( path("/").root_path().string() == "/" );
-//    CHECK( path("/foo").root_path().string() == "/" );
-//    CHECK( path("//netname").root_path().string() == "//netname" );
-//    CHECK( path("//netname/foo").root_path().string() == "//netname/" );
-//
-//#   ifdef BOOST_WINDOWS_API
-//    CHECK( path("c:/foo").root_path().string() == "c:/" );
-//#   endif
-//
-//    CHECK( path("").relative_path().string() == "" );
-//    CHECK( path("/").relative_path().string() == "" );
-//    CHECK( path("/foo").relative_path().string() == "foo" );
-//
-//    CHECK( path("").parent_path().string() == "" );
-//    CHECK( path("/").parent_path().string() == "" );
-//    CHECK( path("/foo").parent_path().string() == "/" );
-//    CHECK( path("/foo/bar").parent_path().string() == "/foo" );
-//
-//    CHECK( path("/foo/bar/baz.zoo").filename().string() == "baz.zoo" );
-//
-//    CHECK( path("/foo/bar/baz.zoo").stem().string() == "baz" );
-//    CHECK( path("/foo/bar.woo/baz").stem().string() == "baz" );
-//
-//    CHECK( path("/foo/bar/baz.zoo").extension().string() == ".zoo" );
-//    CHECK( path("/foo/bar.woo/baz").extension().string() == "" );
-//  }
-//
-//  //  test_queries  --------------------------------------------------------------------//
-//
-//  void test_queries()
-//  {
-//    std::cout << "testing queries..." << std::endl;
-//
-//    path p1( "" );
-//    path p2( "//netname/foo" );
-//
-//    CHECK( p1.empty() );
-//    CHECK( !p1.has_root_path() );
-//    CHECK( !p1.has_root_name() );
-//    CHECK( !p1.has_root_directory() );
-//    CHECK( !p1.has_relative_path() );
-//    CHECK( !p1.has_parent_path() );
-//    CHECK( !p1.has_filename() );
-//    CHECK( !p1.is_complete() );
-//
-//    CHECK( !p2.empty() );
-//    CHECK( p2.has_root_path() );
-//    CHECK( p2.has_root_name() );
-//    CHECK( p2.has_root_directory() );
-//    CHECK( p2.has_relative_path() );
-//    CHECK( p2.has_parent_path() );
-//    CHECK( p2.has_filename() );
-//    CHECK( p2.is_complete() );
-//
-//  }
-//
+
+  //  test_iterators  ------------------------------------------------------------------//
+
+  void test_iterators()
+  {
+    std::cout << "testing iterators..." << std::endl;
+
+    path p1;
+    CHECK( p1.begin() == p1.end() );
+
+    path p2("/");
+    CHECK( p2.begin() != p2.end() );
+    CHECK( *p2.begin() == "/" );
+    CHECK( ++p2.begin() == p2.end() );
+
+    path p3("foo/bar/baz");
+
+    path::iterator it(p3.begin());
+    CHECK( p3.begin() != p3.end() );
+    CHECK( *it == "foo" );
+    CHECK( *++it == "bar" );
+    CHECK( *++it == "baz" );
+    CHECK( *--it == "bar" );
+    CHECK( *--it == "foo" );
+    CHECK( *++it == "bar" );
+    CHECK( *++it == "baz" );
+    CHECK( ++it == p3.end() );
+
+  }
+
+  //  test_decompositions  -------------------------------------------------------------//
+
+  void test_decompositions()
+  {
+    std::cout << "testing decompositions..." << std::endl;
+
+    CHECK( path("").root_name().string() == "" );
+    CHECK( path("foo").root_name().string() == "" );
+    CHECK( path("/").root_name().string() == "" );
+    CHECK( path("/foo").root_name().string() == "" );
+    CHECK( path("//netname").root_name().string() == "//netname" );
+    CHECK( path("//netname/foo").root_name().string() == "//netname" );
+
+    CHECK( path("").root_directory().string() == "" );
+    CHECK( path("foo").root_directory().string() == "" );
+    CHECK( path("/").root_directory().string() == "/" );
+    CHECK( path("/foo").root_directory().string() == "/" );
+    CHECK( path("//netname").root_directory().string() == "" );
+    CHECK( path("//netname/foo").root_directory().string() == "/" );
+
+    CHECK( path("").root_path().string() == "" );
+    CHECK( path("/").root_path().string() == "/" );
+    CHECK( path("/foo").root_path().string() == "/" );
+    CHECK( path("//netname").root_path().string() == "//netname" );
+    CHECK( path("//netname/foo").root_path().string() == "//netname/" );
+
+#   ifdef BOOST_WINDOWS_API
+    CHECK( path("c:/foo").root_path().string() == "c:/" );
+#   endif
+
+    CHECK( path("").relative_path().string() == "" );
+    CHECK( path("/").relative_path().string() == "" );
+    CHECK( path("/foo").relative_path().string() == "foo" );
+
+    CHECK( path("").parent_path().string() == "" );
+    CHECK( path("/").parent_path().string() == "" );
+    CHECK( path("/foo").parent_path().string() == "/" );
+    CHECK( path("/foo/bar").parent_path().string() == "/foo" );
+
+    CHECK( path("/foo/bar/baz.zoo").filename().string() == "baz.zoo" );
+
+    CHECK( path("/foo/bar/baz.zoo").stem().string() == "baz" );
+    CHECK( path("/foo/bar.woo/baz").stem().string() == "baz" );
+
+    CHECK( path("/foo/bar/baz.zoo").extension().string() == ".zoo" );
+    CHECK( path("/foo/bar.woo/baz").extension().string() == "" );
+  }
+
+  //  test_queries  --------------------------------------------------------------------//
+
+  void test_queries()
+  {
+    std::cout << "testing queries..." << std::endl;
+
+    path p1( "" );
+    path p2( "//netname/foo" );
+
+    CHECK( p1.empty() );
+    CHECK( !p1.has_root_path() );
+    CHECK( !p1.has_root_name() );
+    CHECK( !p1.has_root_directory() );
+    CHECK( !p1.has_relative_path() );
+    CHECK( !p1.has_parent_path() );
+    CHECK( !p1.has_filename() );
+    CHECK( !p1.is_complete() );
+
+    CHECK( !p2.empty() );
+    CHECK( p2.has_root_path() );
+    CHECK( p2.has_root_name() );
+    CHECK( p2.has_root_directory() );
+    CHECK( p2.has_relative_path() );
+    CHECK( p2.has_parent_path() );
+    CHECK( p2.has_filename() );
+    CHECK( p2.is_complete() );
+
+  }
+
 //  //  test_locales  --------------------------------------------------------------------//
 //
 //  void test_locales()
 //  {
 //    std::cout << "testing locales..." << std::endl;
 //
+//  }
+
+//  //  test_user_supplied_type  ---------------------------------------------------------//
+//
+//  typedef std::basic_string<long long> llstring;
+//
+//}  // unnamed namespace
+//
+//namespace boost
+//{
+//  namespace filesystem
+//  {
+//    template<> struct pathable_iterator<const long long *> { static const bool value = true; };
+//    template<> struct pathable_iterator<long long *> { static const bool value = true; };
+//    template<> struct pathable_iterator<llstring::iterator> { static const bool value = true; };
+//    template<> struct pathable_iterator<llstring::const_iterator> { static const bool value = true; };
+//    template<> struct pathable_container<llstring> { static const bool value = true; };
+//  }
+//}
+//
+//namespace
+//{
+//
+//  void test_user_supplied_type()
+//  {
+//    std::cout << "testing user supplied type..." << std::endl;
+//
+//    long long ll_c_str[] = { 'a', 'b', 'c', 0 };
+//    llstring ll_str( ll_c_str );
+//
+//    path p1( ll_c_str );
+//    CHECK( p1 == path("abc") );
+//    CHECK( p1 == "abc" );
+//    llstring t1( p1.string<llstring>() );
+//    CHECK( t1 == ll_str );
+//
+//    //path p2( ll_str );
+//
+//
+//    //path p3( ll_str.begin(), ll_str.end() );
 //  }
 
 }  // unnamed namespace
@@ -532,16 +572,17 @@ int main( int, char*[] )
   test_constructors();
   test_use_cases();
   test_conversion_operators();
-  //test_assignments();
-  //test_observers();
+  test_assignments();
+  test_observers();
   ////test_appends();
-  //test_relationals();
-  //test_other_non_members();
+  test_relationals();
+  test_other_non_members();
   //test_modifiers();
-  //test_iterators();
-  //test_decompositions();
-  //test_queries();
+  test_iterators();
+  test_decompositions();
+  test_queries();
   ////test_locales();
+  //test_user_supplied_type();
  
   cout << errors << " errors detected\n";
   

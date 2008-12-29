@@ -17,6 +17,7 @@
                               TO DO
 
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
+   * Windows, POSIX, conversions for user-defined types.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
    * test case: relational on paths differing only in trailing separator. rationale?
    * Behavior of root_path() has been changed. Change needs to be propagated to trunk.
@@ -137,70 +138,22 @@ namespace filesystem
 
     BOOST_FILESYSTEM_DECL extern const std::locale * path_locale;
 
-#   ifdef BOOST_WINDOWS_PATH
-
-    const wchar_t separator = L'/';
-    const wchar_t preferred_separator = L'\\';
-    const wchar_t * const separators = L"/\\";
-    const wchar_t colon = L':';
-    const wchar_t dot = L'.';
-
-#   else  // BOOST_POSIX_PATH
-
-    const char separator = '/';
-    const char preferred_separator = '/';
-    const char * const separators = "/";
-    const char colon = ':';
-    const char dot = '.';
-
-#   endif
-
 #   ifdef BOOST_WINDOWS_API
 
     typedef std::wstring             string_type;
     typedef string_type::value_type  value_type;
     typedef string_type::size_type   size_type;
 
-    //  class path has a number of generic functions that are implemented by
-    //  detail::convert_append() or detail::convert(). detail::convert_append()
-    //  functions called indirectly via detail::convert_append_helper() functions
-    //  to reduce the number of overloads required. Overloads are supplied
-    //  for all supported character array types to string_type. 
-
-    //  -----  char[] to wstring  -----
-
     BOOST_FILESYSTEM_DECL
-    void convert_append( const char * begin,
+    void append( const char * begin,
                          const char * end,      // 0 for null terminated MBCS
                          std::wstring & target,
                          system::error_code & ec );
 
-    inline void convert_append( const char * begin, std::wstring & target,
-      system::error_code & ec )
-    { 
-      convert_append( begin, 0, target, ec );
-    }
-
-    //  -----  wchar_t[] to wstring  -----  
-
-    inline void convert_append( const wchar_t * begin, const wchar_t * end,
-      std::wstring & target, system::error_code & ec )
-    {
-      ec.clear(); 
-      target.assign( begin, end ); // but what if throws bad_alloc?
-    }
-
-    inline void convert_append( const wchar_t * begin, std::wstring & target,
-      system::error_code & ec )
-    {
-      ec.clear(); 
-      target += begin; // but what if throws bad_alloc?
-    }
-
     //  ----- convert ----
 
     BOOST_FILESYSTEM_DECL
-    std::string convert( const std::wstring & src, system::error_code & ec ); 
+    std::string convert_to_string( const std::wstring & src, system::error_code & ec ); 
 
 # else   // BOOST_POSIX_API
  
@@ -212,7 +165,7 @@ namespace filesystem
 
     //  -----  char[] to string  -----
 
-    inline void convert_append( const char * begin,
+    inline void append( const char * begin,
                          const char * end,      // 0 for null terminated MBCS
                          std::string & target,
                          system::error_code & ec )
@@ -221,7 +174,7 @@ namespace filesystem
       target.assign( begin, end ); // but what if this throws bad_alloc?
     }
 
-    inline void convert_append( const char * begin, std::string & target,
+    inline void append( const char * begin, std::string & target,
       system::error_code & ec )
     {
       ec.clear(); 
@@ -232,120 +185,126 @@ namespace filesystem
 
     //  -----  wchar_t[] to string  -----  
 
-    inline void convert_append( const wchar_t * begin, const wchar_t * end,
+    inline void append( const wchar_t * begin, const wchar_t * end,
       std::string & target, system::error_code & ec );
 
-    inline void convert_append( const wchar_t * begin, std::string & target,
+    inline void append( const wchar_t * begin, std::string & target,
       system::error_code & ec )
     { 
-      convert_append( begin, 0, target, ec );
+      append( begin, 0, target, ec );
     }
 
     //  ----- convert ----
 
     BOOST_FILESYSTEM_DECL
-    std::wstring convert( const std::string & src, system::error_code & ec ); 
+    std::wstring convert_to_wstring( const std::string & src, system::error_code & ec ); 
 
 #   endif
 
 # endif  // BOOST_POSIX_API
 
-  //  helpers  ---------------------------------------------------------------//
-
-    inline bool is_separator( value_type c )
-    {
-      return c == separator
-#       ifdef BOOST_WINDOWS_PATH
-        || c == L'\\'
-#       endif
-        ;
-    }
-
-    //  These helpers factor out common code, convert iterators to pointers,
-    //  and add the locale. Thus they reduce the number of detail::convert_append
-    //  overloads required.
-
-    template< class InputIterator >
-    inline void convert_append_helper( InputIterator begin,
-      string_type & target, system::error_code & ec )
-    {
-      BOOST_ASSERT( &*begin );
-      convert_append( &*begin, target, ec );
-    }
-
-    template< class FowardIterator >
-    inline void convert_append_helper( FowardIterator begin, FowardIterator end,
-      string_type & target, system::error_code & ec )
-    { 
-      if ( begin == end ) return;
-      BOOST_ASSERT( &*begin );
-      convert_append( &*begin,
-        &*begin + std::distance( begin, end ), // avoid dereference of end iterator
-        target, ec );
-    }
-
-    BOOST_FILESYSTEM_DECL
-    void first_element(
-        const string_type & src,
-        size_type & element_pos,
-        size_type & element_size,
-  #     if !BOOST_WORKAROUND( BOOST_MSVC, <= 1310 ) // VC++ 7.1
-        size_type size = string_type::npos
-  #     else
-        size_type size = -1
-  #     endif
-      );
-
-    BOOST_FILESYSTEM_DECL
-    bool is_non_root_separator( const string_type & str, size_type pos );
-                                // pos is position of the separator
-
-    BOOST_FILESYSTEM_DECL
-    size_type filename_pos( const string_type & str,
-                            size_type end_pos ); // end_pos is past-the-end position
-    //  Returns: 0 if str itself is filename (or empty)
-
-    BOOST_FILESYSTEM_DECL
-    size_type root_directory_start( const string_type & path, size_type size );
-    //  Returns:  npos if no root_directory found
-
 }  // namespace detail
 
   //------------------------------------------------------------------------------------//
   //                                                                                    //
-  //                             traits and conversions                                 //
+  //                                path_traits                                         //
   //                                                                                    //
-  //         users are permitted to add specializations for user defined types          //                                                  //
+  //   Specializations are provided for char, wchar_t, char16_t, and char32_t value     //
+  //   types and their related string and iterator types.                               //
+  //                                                                                    //
+  //   Users are permitted to add specializations for additional types.                 //
   //                                                                                    //
   //------------------------------------------------------------------------------------//
 
-  template< class T > struct pathable_iterator { static const bool value = false; };
-  template<> struct pathable_iterator<const char *> { static const bool value = true; };
-  template<> struct pathable_iterator<char *> { static const bool value = true; };
-  template<> struct pathable_iterator<std::string::iterator> { static const bool value = true; };
-  template<> struct pathable_iterator<std::string::const_iterator> { static const bool value = true; };
+namespace path_traits
+{
 
-  template< class T > struct pathable_container { static const bool value = false; };
-  template<> struct pathable_container<std::string> { static const bool value = true; };
+  template< class I > struct is_iterator { static const bool value = false; };
+  template< class C > struct is_container { static const bool value = false; };
 
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
-  template<> struct pathable_iterator<const wchar_t *> { static const bool value = true; };
-  template<> struct pathable_iterator<wchar_t *> { static const bool value = true; };
-  template<> struct pathable_iterator<std::wstring::iterator> { static const bool value = true; };
-  template<> struct pathable_iterator<std::wstring::const_iterator> { static const bool value = true; };
+  template< class charT >   // specialization optional
+  inline void append( const charT * begin,   // requires: null termination
+    detail::string_type & target, system::error_code & ec )
+  {
+    append( begin, 0, target, ec );
+  }
 
-  template<> struct pathable_container<std::wstring> { static const bool value = true; };
-# endif
+  template< class charT >   // specialization required
+  void append( const charT * begin, const charT * end,
+               detail::string_type & target, system::error_code & ec );
 
-  template< class T >
-  T convert( const detail::string_type & src, system::error_code & ec );
+  //template< class S >   // specialization required
+  //S convert( const detail::string_type & source, system::error_code & ec );
+
+  //------------------------------------------------------------------------------------//
+  //                              specializations                                       //
+  //------------------------------------------------------------------------------------//
+
+  template<> struct is_iterator<const char *> { static const bool value = true; };
+  template<> struct is_iterator<char *> { static const bool value = true; };
+  template<> struct is_iterator<std::string::iterator> { static const bool value = true; };
+  template<> struct is_iterator<std::string::const_iterator> { static const bool value = true; };
+  template<> struct is_container<std::string> { static const bool value = true; };
+
+  template<> struct is_iterator<const wchar_t *> { static const bool value = true; };
+  template<> struct is_iterator<wchar_t *> { static const bool value = true; };
+  template<> struct is_iterator<std::wstring::iterator> { static const bool value = true; };
+  template<> struct is_iterator<std::wstring::const_iterator> { static const bool value = true; };
+  template<> struct is_container<std::wstring> { static const bool value = true; };
 
 # ifdef BOOST_WINDOWS_API
-  template<> inline std::string convert<std::string>( const std::wstring & s, system::error_code & ec )
-    { return detail::convert( s, ec ); }
-  template<> inline std::wstring convert<std::wstring>( const std::wstring & s, system::error_code & ec )
-    { return s; }
+
+  template<>
+  inline void append<char>( const char * begin, const char * end,
+    std::wstring & target, system::error_code & ec )
+  {
+    detail::append( begin, end, target, ec );
+  }
+
+  template<>
+  inline void append<char>( const char * begin, std::wstring & target,
+     system::error_code & ec )
+  { 
+    detail::append( begin, 0, target, ec );
+  }
+
+  template<>
+  inline void append<wchar_t>( const wchar_t * begin, const wchar_t * end,
+    std::wstring & target, system::error_code & ec )
+  {
+    ec.clear(); 
+    target.assign( begin, end ); // but what if throws bad_alloc?
+  }
+
+  template<>
+  inline void append<wchar_t>( const wchar_t * begin, std::wstring & target,
+    system::error_code & ec )
+  {
+    ec.clear(); 
+    target += begin; // but what if throws bad_alloc?
+  }
+
+  //template<>
+  //inline std::string convert<std::string>( const std::wstring & s,
+  //  system::error_code & ec )
+  //{
+  //  return detail::convert_to_string( s, ec );
+  //}
+
+  //template<>
+  //inline std::wstring convert<std::wstring>( const std::wstring & s,
+  //  system::error_code & ec )
+  //{ 
+  //  return s;
+  //}
+
 # endif
+
+#   ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
+      ...
+#   endif
+
+}  // namespace path_traits
 
   //------------------------------------------------------------------------------------//
   //                                                                                    //
@@ -435,8 +394,8 @@ namespace filesystem
     template< class InputIterator >
       path( InputIterator begin,
         system::error_code & ec = system::throws,
-        typename boost::enable_if<pathable_iterator<InputIterator> >::type* dummy=0 )  // #3
-          { detail::convert_append_helper( begin, m_path, ec ); }
+        typename boost::enable_if<path_traits::is_iterator<InputIterator> >::type* dummy=0 )  // #3
+          { m_append( begin, m_path, ec ); }
 
     //  construct from (potentially) multi-byte character string, which may have
     //  embedded nulls. Embedded null support is required for some Asian languages on
@@ -445,7 +404,7 @@ namespace filesystem
     template< class ForwardIterator >
       path( ForwardIterator begin, ForwardIterator end,
         system::error_code & ec = system::throws )                                 // #4
-          { detail::convert_append_helper( begin, end, m_path, ec ); }
+          { m_append( begin, end, m_path, ec ); }
 
     //  construct from container of (potentially) multi-byte character string,
     //  which may have embedded nulls.  Embedded null support is required for
@@ -454,8 +413,8 @@ namespace filesystem
     template< class Container >
       path( const Container & ctr,
         system::error_code & ec = system::throws,
-        typename boost::enable_if<pathable_container<Container> >::type* dummy=0 )  // #5
-          { detail::convert_append_helper( ctr.begin(), ctr.end(), m_path, ec ); }
+        typename boost::enable_if<path_traits::is_container<Container> >::type* dummy=0 )  // #5
+          { m_append( ctr.begin(), ctr.end(), m_path, ec ); }
 
 
     //  -----  assignments  -----
@@ -467,21 +426,21 @@ namespace filesystem
     }
 
     template< class InputIterator >
-      typename boost::enable_if<pathable_iterator<InputIterator>, path &>::type
+      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
         operator=( InputIterator begin )                                   // #2
     {
       m_path.clear();
-      detail::convert_append_helper( begin, m_path, system::throws );
+      m_append( begin, m_path, system::throws );
       return *this;
     }
 
     template< class InputIterator >
-      typename boost::enable_if<pathable_iterator<InputIterator>, path &>::type
+      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
         assign( InputIterator begin,
           system::error_code & ec = system::throws )                       // #3
     {
       m_path.clear();
-      detail::convert_append_helper( begin, m_path, ec );
+      m_append( begin, m_path, ec );
       return *this;
     }
 
@@ -490,26 +449,26 @@ namespace filesystem
         system::error_code & ec = system::throws )                         // #4
     { 
       m_path.clear();
-      detail::convert_append_helper( begin, end, m_path, ec );
+      m_append( begin, end, m_path, ec );
       return *this;
     }
  
     template< class Container >
-      typename boost::enable_if<pathable_container<Container>, path &>::type 
+      typename boost::enable_if<path_traits::is_container<Container>, path &>::type 
         operator=( const Container & ctr )                                 // #5
     { 
       m_path.clear();
-      detail::convert_append_helper( ctr.begin(), ctr.end(), m_path, system::throws );
+      m_append( ctr.begin(), ctr.end(), m_path, system::throws );
       return *this;
     }
  
     template< class Container >
-      typename boost::enable_if<pathable_container<Container>, path &>::type
+      typename boost::enable_if<path_traits::is_container<Container>, path &>::type
         assign( const Container & ctr,
         system::error_code & ec = system::throws )                         // #6
     { 
       m_path.clear();
-      detail::convert_append_helper( ctr.begin(), ctr.end(), m_path, ec );
+      m_append( ctr.begin(), ctr.end(), m_path, ec );
       return *this;
     }
 
@@ -523,21 +482,21 @@ namespace filesystem
     }
 
     template< class InputIterator >
-      typename boost::enable_if<pathable_iterator<InputIterator>, path &>::type
+      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
         operator/=( InputIterator begin )                                  // #2
     {
       append_separator_if_needed_();
-      detail::convert_append_helper( begin, m_path, system::throws );
+      m_append( begin, m_path, system::throws );
       return *this;
     }
 
     template< class InputIterator >
-      typename boost::enable_if<pathable_iterator<InputIterator>, path &>::type
+      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
         append( InputIterator begin,
           system::error_code & ec = system::throws )                       // #3
     {
       append_separator_if_needed_();
-      detail::convert_append_helper( begin, m_path, ec );
+      m_append( begin, m_path, ec );
       return *this;
     }
 
@@ -546,26 +505,26 @@ namespace filesystem
         system::error_code & ec = system::throws )                         // #4
     { 
       append_separator_if_needed_();
-      detail::convert_append_helper( begin, end, m_path, ec );
+      m_append( begin, end, m_path, ec );
       return *this;
     }
  
     template< class Container >
-      typename boost::enable_if<pathable_container<Container>, path &>::type
+      typename boost::enable_if<path_traits::is_container<Container>, path &>::type
         operator/=( const Container & ctr )                                // #5
     { 
       append_separator_if_needed_();
-      detail::convert_append_helper( ctr.begin(), ctr.end(), m_path, system::throws );
+      m_append( ctr.begin(), ctr.end(), m_path, system::throws );
       return *this;
     }
  
     template< class Container >
-      typename boost::enable_if<pathable_container<Container>, path &>::type
+      typename boost::enable_if<path_traits::is_container<Container>, path &>::type
         append( const Container & ctr,
         system::error_code & ec = system::throws )                         // #6
     { 
       append_separator_if_needed_();
-      detail::convert_append_helper( ctr.begin(), ctr.end(), m_path, ec );
+      m_append( ctr.begin(), ctr.end(), m_path, ec );
       return *this;
     }
 
@@ -581,12 +540,7 @@ namespace filesystem
 #     endif
     }
 
-    path & remove_filename()
-    {
-      m_path.erase(
-        detail::filename_pos( m_path, m_path.size() ) );
-      return *this;
-    }
+    path & remove_filename();
 
     //  -----  conversion operators  -----
 
@@ -594,8 +548,13 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    operator const std::string() const    { return detail::convert( m_path, system::throws ); }
+    operator const std::string() const    { return detail::convert_to_string( m_path, system::throws ); }
     operator const std::wstring&() const  { return m_path; }
+
+# ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
+    operator const std::u16string() const { return detail::convert_to_u16string( m_path, system::throws ); }
+    operator const std::u32string() const { return detail::convert_to_u32string( m_path, system::throws ); }
+# endif
 
 #   else   // BOOST_POSIX_API
 
@@ -609,7 +568,7 @@ namespace filesystem
     //  -----  observers  -----
   
     //  For operating systems that format file paths differently than directory
-    //  paths, returns from observers are formatted as file names unless there
+    //  paths, return values from observers are formatted as file names unless there
     //  is a trailing separator, in which case returns are formatted as directory
     //  paths. POSIX and Windows make no such distinction.
 
@@ -621,14 +580,18 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    //  return formatted "as input"
-    const std::string     string( system::error_code & ec = system::throws ) const { return detail::convert( m_path, ec ); }
+    //  return value is formatted "as input"
+    const std::string     string( system::error_code & ec = system::throws ) const { return detail::convert_to_string( m_path, ec ); }
     const std::wstring &  wstring() const                                          { return m_path; }
     const std::wstring &  wstring( system::error_code & ec ) const                 { ec.clear(); return m_path; }
 
+#   ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
+     ...
+#   endif
+
 #   else   // BOOST_POSIX_API
 
-    //  return formatted "as input"
+    //  return value is formatted "as input"
     const std::string &  string() const                                            { return m_path; }
     const std::string &  string( system::error_code & ec ) const                   { ec.clear(); return m_path; }
 #     ifndef BOOST_FILESYSTEM_NARROW_ONLY
@@ -637,14 +600,15 @@ namespace filesystem
 #   endif
 
     
-    //  return formatted as indicated by function name
 #   ifdef BOOST_WINDOWS_PATH
 
+    //  return value is formatted as indicated by function name
     const path  native() const;
     const path  generic() const;
 
 #   else // BOOST_POSIX_PATH
 
+    //  return value is formatted as indicated by function name
     const path  native() const   { return m_path; }
     const path  generic() const  { return m_path; }
 
@@ -703,6 +667,10 @@ namespace filesystem
     iterator begin() const;
     iterator end() const;
 
+  //------------------------------------------------------------------------------------//
+  //                          class path private members                                //
+  //------------------------------------------------------------------------------------//
+
   private:
 
     //  m_path has the type, encoding, and format required by the native
@@ -714,6 +682,25 @@ namespace filesystem
 
     string_type  m_path;  // Windows: backslashes NOT converted to slashes
 
+    //  These helpers factor out common code and convert iterators to pointers.
+    template< class InputIterator >
+    inline void m_append( InputIterator begin,
+      string_type & target, system::error_code & ec )
+    {
+      BOOST_ASSERT( &*begin );
+      path_traits::append( &*begin, target, ec );
+    }
+
+    template< class FowardIterator >
+    inline void m_append( FowardIterator begin, FowardIterator end,
+      string_type & target, system::error_code & ec )
+    { 
+      if ( begin == end ) return;
+      BOOST_ASSERT( &*begin );
+      path_traits::append( &*begin,
+        &*begin + std::distance( begin, end ), // avoid dereference of end iterator
+        target, ec );
+    }
 
     void append_separator_if_needed_();
 
@@ -728,12 +715,10 @@ namespace filesystem
     // see path::iterator::increment/decrement comment below
     static void m_path_iterator_increment( path::iterator & it );
     static void m_path_iterator_decrement( path::iterator & it );
-  };
- 
+  };  // class path
+
   //------------------------------------------------------------------------------------//
-  //                                                                                    //
-  //                              class path::iterator                                  //
-  //                                                                                    //
+  //                            class path::iterator                                    //
   //------------------------------------------------------------------------------------//
  
   class path::iterator

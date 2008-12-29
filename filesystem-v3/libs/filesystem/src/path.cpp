@@ -1,4 +1,4 @@
-//  filesystem path.cpp  ---------------------------------------------------  //
+//  filesystem path.cpp  -------------------------------------------------------------  //
 
 //  Copyright Beman Dawes 2008
 
@@ -21,178 +21,92 @@
 
 namespace fs = boost::filesystem;
 
-using std::string;
+using fs::path;
 
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
-  using std::wstring;
-# endif
+using std::string;
+using std::wstring;
+
+using boost::system::error_code;
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                class path helpers                                    //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 namespace
 {
 
+  typedef path::size_type    size_type;
+  typedef path::string_type  string_type;
+  typedef path::value_type   value_type;
+
 # ifdef BOOST_WINDOWS_PATH
 
+  const wchar_t separator = L'/';
+  const wchar_t preferred_separator = L'\\';
+  const wchar_t * const separators = L"/\\";
   const wchar_t * separator_string = L"/";
   const wchar_t * preferred_separator_string = L"\\";
+  const wchar_t colon = L':';
+  const wchar_t dot = L'.';
   const fs::path dot_path( L"." );
 
 # else
 
+  const char separator = '/';
+  const char preferred_separator = '/';
+  const char * const separators = "/";
   const char * separator_string = "/";
   const char * preferred_separator_string = "/";
+  const char colon = ':';
+  const char dot = '.';
   const fs::path dot_path( "." );
 
 # endif
 
-# ifdef BOOST_WINDOWS_API
-
-  const std::locale windows_default;  // only use is to take address
-
-  void windows_convert_append( const char * begin, const char * end,
-                                 // end == 0 for null terminated MBCS
-                                 std::wstring & target, boost::system::error_code & ec );
-
-  void locale_convert_append( const char * begin, const char * end,
-                                // end == 0 for null terminated MBCS
-                              std::wstring & target, boost::system::error_code & ec );
-# else   // BOOST_POSIX_API
-
-
-
-# endif
-
-}
-
-namespace boost
-{
-namespace filesystem
-{
-
-# ifdef BOOST_WINDOWS_API
-
-namespace detail
-{
-  const std::locale * path_locale( &windows_default );
-
-  //  convert_append  --------------------------------------------------------//
-
-  void convert_append( const char * begin, const char * end,
-                       std::wstring & target, system::error_code & ec )
+  inline bool is_separator( fs::path::value_type c )
   {
-    if ( path_locale == &windows_default )
-      windows_convert_append( begin, end, target, ec );
-    else
-      locale_convert_append( begin, end, target, ec );
+    return c == separator
+#     ifdef BOOST_WINDOWS_PATH
+      || c == preferred_separator
+#     endif
+      ;
   }
 
-  //  convert  ---------------------------------------------------------------//
+  bool is_non_root_separator( const string_type & str, size_type pos );
+    // pos is position of the separator
 
-  BOOST_FILESYSTEM_DECL
-  string convert( const wstring & src, system::error_code & ec )
-  {
-    if ( src.empty() ) return std::string();
+  size_type filename_pos( const string_type & str,
+                          size_type end_pos ); // end_pos is past-the-end position
+  //  Returns: 0 if str itself is filename (or empty)
 
-    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
+  size_type root_directory_start( const string_type & path, size_type size );
+  //  Returns:  npos if no root_directory found
 
-    //  buffer management strategy; use a probably large enough default buffer,
-    //  but fallback to an explict allocation if the default buffer is too small
-
-    const std::size_t default_buf_sz = MAX_PATH+1;
-    char buf[default_buf_sz+1];
-    int count;
-
-    if ( (count = ::WideCharToMultiByte( codepage, WC_NO_BEST_FIT_CHARS, src.c_str(),
-      src.size(), buf, default_buf_sz, 0, 0 )) != 0 ) // success
-    {
-      ec.clear();
-      buf[count] = '\0';
-      return std::string( buf );
-    }
-
-    // TODO: implement fallback
-    BOOST_ASSERT(0);
-    throw "path::native_string() error handling not implemented yet";
-    return std::string();
-  }
-
-}  // namespace detail
-}  // namespace filesystem
-}  // namespace boost
-
-namespace
-{
-
-  void locale_convert_append( const char * begin, const char * end,
-                                // end == 0 for null terminated MBCS
-                                std::wstring & target, boost::system::error_code & ec )
-  {
-    BOOST_ASSERT( 0 && "not implemented yet" );
-  }
-
-
-  void windows_convert_append( const char * begin, const char * end,
-    std::wstring & target, boost::system::error_code & ec )
-  {
-    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
-    int size( end == 0 ? -1 : (end - begin) );
-
-    //  buffer management:
-    //
-    //    if path prefixed by "\\?\" (Windows 'long path' prefix)
-    //       then use dynamic allocation, else use automatic allocation
-
-    bool dynamic_allocation = target.find( L"\\\\?\\" ) == 0
-      || ( target.empty()
-      && ( (size >= 4 && std::memcmp( begin, "\\\\?\\", 4 ) == 0)
-      || (size == -1 && std::strcmp( begin, "\\\\?\\" ) == 0) ) );
-
-    wchar_t                         stack_buf[MAX_PATH+1];
-    boost::scoped_array< wchar_t >  heap_buf;
-    wchar_t *                       buf = stack_buf;
-    int                             buf_size = sizeof(stack_buf)/sizeof(wchar_t) - 1;      
-
-    if ( dynamic_allocation )
-    {
-      //  get the allocation size for the buffer
-      //     rationale for calling MultiByteToWideChar: begin may point to a
-      //     multi-byte encoded string with embedded nulls, so a simplistic
-      //     computation of the size can fail
-      
-      buf_size = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, begin, size, 0, 0 );
-      heap_buf.reset( new wchar_t [buf_size] );
-      buf = heap_buf.get();
-    }
-
-    //  perform the conversion
-
-    if ( (buf_size = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, begin,
-      size, buf, buf_size )) == 0 ) 
-    {
-      // conversion failed
-      ec = boost::system::error_code( ::GetLastError(), boost::system::system_category );
-      return;
-    }
-
-    ec.clear();
-
-    //  perform the append
-
-    buf[buf_size] = L'\0';
-    target += buf;
-  }
+  void first_element(
+      const string_type & src,
+      size_type & element_pos,
+      size_type & element_size,
+#    if !BOOST_WORKAROUND( BOOST_MSVC, <= 1310 ) // VC++ 7.1
+      size_type size = string_type::npos
+#    else
+      size_type size = -1
+#    endif
+    );
 
 }  // unnamed namespace
 
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                   class path                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 namespace boost
 {
 namespace filesystem
 {
-
-# else   // BOOST_POSIX_API
-
-# endif  // BOOST_POSIX_API
-
-//----------------------  class path member functions  -----------------------//
 
 # ifdef BOOST_WINDOWS_PATH
 
@@ -225,7 +139,10 @@ namespace filesystem
 
     return tmp;
   }
-# endif  // BOOST_WINDOWS_PATH
+
+# else   // BOOST_POSIX_API
+  ...
+# endif  // BOOST_POSIX_API
 
   //  append_separator_if_needed_  -------------------------------------------//
 
@@ -233,11 +150,11 @@ namespace filesystem
   {
     if ( !m_path.empty() &&
 #   ifdef BOOST_WINDOWS_PATH
-      *(m_path.end()-1) != detail::colon && 
+      *(m_path.end()-1) != colon && 
 #   endif
-      !detail::is_separator( *(m_path.end()-1) ) )
+      !is_separator( *(m_path.end()-1) ) )
     {
-      m_path += detail::preferred_separator;
+      m_path += preferred_separator;
     }
   }
 
@@ -257,11 +174,11 @@ namespace filesystem
     return ( itr.m_pos != m_path.size()
       && (
           ( itr.m_element.m_path.size() > 1
-            && detail::is_separator( itr.m_element.m_path[0] )
-            && detail::is_separator( itr.m_element.m_path[1] )
+            && is_separator( itr.m_element.m_path[0] )
+            && is_separator( itr.m_element.m_path[1] )
           )
 #       ifdef BOOST_WINDOWS_PATH
-        || itr.m_element.m_path[itr.m_element.m_path.size()-1] == detail::colon
+        || itr.m_element.m_path[itr.m_element.m_path.size()-1] == colon
 #       endif
          ) )
       ? itr.m_element
@@ -270,7 +187,7 @@ namespace filesystem
 
   path path::root_directory() const
   {
-    size_type pos( detail::root_directory_start( m_path, m_path.size() ) );
+    size_type pos( root_directory_start( m_path, m_path.size() ) );
 
     return pos == string_type::npos
       ? path()
@@ -282,9 +199,9 @@ namespace filesystem
     iterator itr( begin() );
 
     for ( ; itr.m_pos != m_path.size()
-      && ( detail::is_separator( itr.m_element.m_path[0] )
+      && ( is_separator( itr.m_element.m_path[0] )
 #       ifdef BOOST_WINDOWS_PATH
-      || itr.m_element.m_path[itr.m_element.m_path.size()-1] == detail::colon
+      || itr.m_element.m_path[itr.m_element.m_path.size()-1] == colon
 #       endif
            ); ++itr ) {}
 
@@ -293,17 +210,17 @@ namespace filesystem
 
   path path::parent_path() const
   {
-    size_type end_pos( detail::filename_pos( m_path, m_path.size() ) );
+    size_type end_pos( filename_pos( m_path, m_path.size() ) );
 
     bool filename_was_separator( m_path.size()
-      && detail::is_separator( m_path[end_pos] ) );
+      && is_separator( m_path[end_pos] ) );
 
     // skip separators unless root directory
-    size_type root_dir_pos( detail::root_directory_start( m_path, end_pos ) );
+    size_type root_dir_pos( root_directory_start( m_path, end_pos ) );
     for ( ; 
       end_pos > 0
       && (end_pos-1) != root_dir_pos
-      && detail::is_separator( m_path[end_pos-1] )
+      && is_separator( m_path[end_pos-1] )
       ;
       --end_pos ) {}
 
@@ -314,11 +231,11 @@ namespace filesystem
 
   path path::filename() const
   {
-    size_type pos( detail::filename_pos( m_path, m_path.size() ) );
+    size_type pos( filename_pos( m_path, m_path.size() ) );
     return (m_path.size()
               && pos
-              && detail::is_separator( m_path[pos] )
-              && detail::is_non_root_separator(m_path, pos))
+              && is_separator( m_path[pos] )
+              && is_non_root_separator(m_path, pos))
       ? dot_path
       : path( m_path.c_str() + pos );
   }
@@ -326,7 +243,7 @@ namespace filesystem
   path path::stem() const
   {
     path name( filename() );
-    size_type pos( name.m_path.rfind( detail::dot ) );
+    size_type pos( name.m_path.rfind( dot ) );
     return pos == string_type::npos
       ? name
       : path( name.m_path.c_str(), name.m_path.c_str() + pos );
@@ -335,20 +252,32 @@ namespace filesystem
   path path::extension() const
   {
     path name( filename() );
-    size_type pos( name.m_path.rfind( detail::dot ) );
+    size_type pos( name.m_path.rfind( dot ) );
     return pos == string_type::npos
       ? path()
       : path( name.m_path.c_str() + pos );
   }
-  
-  //----------------------  namespace detail functions  -----------------------//
 
-namespace detail
+  path & path::remove_filename()
+  {
+    m_path.erase( filename_pos( m_path, m_path.size() ) );
+    return *this;
+  }
+
+}  // namespace filesystem
+}  // namespace boost
+  
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                          class path helper implementation                            //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+namespace
 {
-                                                                    
+
   //  is_non_root_separator  -------------------------------------------------//
 
-  BOOST_FILESYSTEM_DECL
   bool is_non_root_separator( const string_type & str, size_type pos )
     // pos is position of the separator
   {
@@ -370,7 +299,6 @@ namespace detail
 
   //  filename_pos  ----------------------------------------------------------//
 
-  BOOST_FILESYSTEM_DECL
   size_type filename_pos( const string_type & str,
                           size_type end_pos ) // end_pos is past-the-end position
     // return 0 if str itself is filename (or empty)
@@ -400,7 +328,6 @@ namespace detail
 
   //  root_directory_start  --------------------------------------------------//
 
-  BOOST_FILESYSTEM_DECL
   size_type root_directory_start( const string_type & path, size_type size )
   // return npos if no root_directory found
   {
@@ -500,21 +427,25 @@ namespace detail
     return;
   }
 
-}  // namespace detail
+}  // unnammed namespace
 
-  //--------------------------------------------------------------------------//
-  //                                                                          //
-  //                     path::iterator implementation                        //
-  //                                                                          //
-  //--------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                               class path::iterator                                   //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
+namespace boost
+{
+namespace filesystem
+{
 
   path::iterator path::begin() const
   {
     iterator itr;
     itr.m_path_ptr = this;
     detail::size_type element_size;
-    detail::first_element( m_path, itr.m_pos, element_size );
+    first_element( m_path, itr.m_pos, element_size );
     itr.m_element = m_path.substr( itr.m_pos, element_size );
     if ( itr.m_element.m_path == preferred_separator_string )
       itr.m_element.m_path = separator_string;  // needed for Windows, harmless on POSIX
@@ -545,33 +476,33 @@ namespace detail
 
     // both POSIX and Windows treat paths that begin with exactly two separators specially
     bool was_net( it.m_element.m_path.size() > 2
-      && detail::is_separator( it.m_element.m_path[0] )
-      && detail::is_separator( it.m_element.m_path[1] )
-      && !detail::is_separator( it.m_element.m_path[2] ) );
+      && is_separator( it.m_element.m_path[0] )
+      && is_separator( it.m_element.m_path[1] )
+      && !is_separator( it.m_element.m_path[2] ) );
 
     // process separator (Windows drive spec is only case not a separator)
-    if ( detail::is_separator( it.m_path_ptr->m_path[it.m_pos] ) )
+    if ( is_separator( it.m_path_ptr->m_path[it.m_pos] ) )
     {
       // detect root directory
       if ( was_net
 #       ifdef BOOST_WINDOWS_PATH
         // case "c:/"
-        || it.m_element.m_path[it.m_element.m_path.size()-1] == detail::colon
+        || it.m_element.m_path[it.m_element.m_path.size()-1] == colon
 #       endif
          )
       {
-        it.m_element.m_path = detail::separator;
+        it.m_element.m_path = separator;
         return;
       }
 
       // bypass separators
       while ( it.m_pos != it.m_path_ptr->m_path.size()
-        && detail::is_separator( it.m_path_ptr->m_path[it.m_pos] ) )
+        && is_separator( it.m_path_ptr->m_path[it.m_pos] ) )
         { ++it.m_pos; }
 
       // detect trailing separator, and treat it as ".", per POSIX spec
       if ( it.m_pos == it.m_path_ptr->m_path.size()
-        && detail::is_non_root_separator( it.m_path_ptr->m_path, it.m_pos-1 ) ) 
+        && is_non_root_separator( it.m_path_ptr->m_path, it.m_pos-1 ) ) 
       {
         --it.m_pos;
         it.m_element = dot_path;
@@ -580,7 +511,7 @@ namespace detail
     }
 
     // get next element
-    size_type end_pos( it.m_path_ptr->m_path.find_first_of( detail::separators, it.m_pos ) );
+    size_type end_pos( it.m_path_ptr->m_path.find_first_of( separators, it.m_pos ) );
     if ( end_pos == string_type::npos ) end_pos = it.m_path_ptr->m_path.size();
     it.m_element = it.m_path_ptr->m_path.substr( it.m_pos, end_pos - it.m_pos );
   }
@@ -594,8 +525,8 @@ namespace detail
     // if at end and there was a trailing non-root '/', return "."
     if ( it.m_pos == it.m_path_ptr->m_path.size()
       && it.m_path_ptr->m_path.size() > 1
-      && detail::is_separator( it.m_path_ptr->m_path[it.m_pos-1] )
-      && detail::is_non_root_separator( it.m_path_ptr->m_path, it.m_pos-1 ) 
+      && is_separator( it.m_path_ptr->m_path[it.m_pos-1] )
+      && is_non_root_separator( it.m_path_ptr->m_path, it.m_pos-1 ) 
        )
     {
       --it.m_pos;
@@ -603,18 +534,18 @@ namespace detail
       return;
     }
 
-    size_type root_dir_pos( detail::root_directory_start( it.m_path_ptr->m_path, end_pos ) );
+    size_type root_dir_pos( root_directory_start( it.m_path_ptr->m_path, end_pos ) );
 
     // skip separators unless root directory
     for ( 
       ; 
       end_pos > 0
       && (end_pos-1) != root_dir_pos
-      && detail::is_separator( it.m_path_ptr->m_path[end_pos-1] )
+      && is_separator( it.m_path_ptr->m_path[end_pos-1] )
       ;
       --end_pos ) {}
 
-    it.m_pos = detail::filename_pos( it.m_path_ptr->m_path, end_pos );
+    it.m_pos = filename_pos( it.m_path_ptr->m_path, end_pos );
     it.m_element = it.m_path_ptr->m_path.substr( it.m_pos, end_pos - it.m_pos );
     if ( it.m_element.m_path == preferred_separator_string )
       it.m_element.m_path = separator_string;  // needed for Windows, harmless on POSIX
@@ -633,3 +564,154 @@ namespace detail
 
 }  // namespace filesystem
 }  // namespace boost
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                  path_traits                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+namespace
+{
+
+# ifdef BOOST_WINDOWS_API
+
+  const std::locale windows_default;  // only use is to take address
+
+  void windows_append( const char * begin, const char * end,
+                                 // end == 0 for null terminated MBCS
+                                 wstring & target, error_code & ec );
+
+  void locale_append( const char * begin, const char * end,
+                                // end == 0 for null terminated MBCS
+                              wstring & target, error_code & ec );
+# else   // BOOST_POSIX_API
+
+  ...
+
+# endif
+
+}  // unnamed namespace
+
+namespace boost
+{
+namespace filesystem
+{
+
+namespace detail
+{
+  const std::locale * path_locale( &windows_default );
+
+  //------------------------------------------------------------------------------------//
+  //                                   append                                           //
+  //------------------------------------------------------------------------------------//
+
+  void append( const char * begin, const char * end,
+                       wstring & target, error_code & ec )
+  {
+    if ( path_locale == &windows_default )
+      windows_append( begin, end, target, ec );
+    else
+      locale_append( begin, end, target, ec );
+  }
+
+  //------------------------------------------------------------------------------------//
+  //                                  convert                                           //
+  //------------------------------------------------------------------------------------//
+
+  BOOST_FILESYSTEM_DECL
+  string convert_to_string( const wstring & src, error_code & ec )
+  {
+    if ( src.empty() ) return std::string();
+
+    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
+
+    //  buffer management strategy; use a probably large enough default buffer,
+    //  but fallback to an explict allocation if the default buffer is too small
+
+    const std::size_t default_buf_sz = MAX_PATH+1;
+    char buf[default_buf_sz+1];
+    int count;
+
+    if ( (count = ::WideCharToMultiByte( codepage, WC_NO_BEST_FIT_CHARS, src.c_str(),
+      src.size(), buf, default_buf_sz, 0, 0 )) != 0 ) // success
+    {
+      ec.clear();
+      buf[count] = '\0';
+      return std::string( buf );
+    }
+
+    // TODO: implement fallback
+    BOOST_ASSERT(0);
+    throw "path::native_string() error handling not implemented yet";
+    return std::string();
+  }
+
+}  // namespace detail
+}  // namespace filesystem
+}  // namespace boost
+
+namespace
+{
+
+  void locale_append( const char * begin, const char * end,
+                                // end == 0 for null terminated MBCS
+                                 wstring & target,  error_code & ec )
+  {
+    BOOST_ASSERT( 0 && "not implemented yet" );
+  }
+
+
+  void windows_append( const char * begin, const char * end,
+     wstring & target,  error_code & ec )
+  {
+    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
+    int size( end == 0 ? -1 : (end - begin) );
+
+    //  buffer management:
+    //
+    //    if path prefixed by "\\?\" (Windows 'long path' prefix)
+    //       then use dynamic allocation, else use automatic allocation
+
+    bool dynamic_allocation = target.find( L"\\\\?\\" ) == 0
+      || ( target.empty()
+      && ( (size >= 4 && std::memcmp( begin, "\\\\?\\", 4 ) == 0)
+      || (size == -1 && std::strcmp( begin, "\\\\?\\" ) == 0) ) );
+
+    wchar_t                         stack_buf[MAX_PATH+1];
+    boost::scoped_array< wchar_t >  heap_buf;
+    wchar_t *                       buf = stack_buf;
+    int                             buf_size = sizeof(stack_buf)/sizeof(wchar_t) - 1;      
+
+    if ( dynamic_allocation )
+    {
+      //  get the allocation size for the buffer
+      //     rationale for calling MultiByteToWideChar: begin may point to a
+      //     multi-byte encoded string with embedded nulls, so a simplistic
+      //     computation of the size can fail
+      
+      buf_size = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, begin, size, 0, 0 );
+      heap_buf.reset( new wchar_t [buf_size] );
+      buf = heap_buf.get();
+    }
+
+    //  perform the conversion
+
+    if ( (buf_size = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, begin,
+      size, buf, buf_size )) == 0 ) 
+    {
+      // conversion failed
+      ec =  error_code( ::GetLastError(), boost::system::system_category );
+      return;
+    }
+
+    ec.clear();
+
+    //  perform the append
+
+    buf[buf_size] = L'\0';
+    target += buf;
+  }
+
+}  // unnamed namespace
+
