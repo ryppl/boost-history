@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE ( test_desc_copy_using_insert_cursor, Order, order
 
     boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
                     , boost::forward_traversal_tag());
-//    fill_subtree_with_data(tree_inserter(bt2, bt2.root()));
+//    fill_subtree_with_data(tree_inserter(bt2, bt2.root())); //FIXME
 
     validate_test_dataset1_tree(bt2.root());
     BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root()));
