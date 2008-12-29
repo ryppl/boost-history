@@ -364,7 +364,6 @@ namespace
   //   sets pos and len of first element, excluding extra separators
   //   if src.empty(), sets pos,len, to 0,0.
 
-  BOOST_FILESYSTEM_DECL
   void first_element(
       const string_type & src,
       size_type & element_pos,
@@ -444,7 +443,7 @@ namespace filesystem
   {
     iterator itr;
     itr.m_path_ptr = this;
-    detail::size_type element_size;
+    path::size_type element_size;
     first_element( m_path, itr.m_pos, element_size );
     itr.m_element = m_path.substr( itr.m_pos, element_size );
     if ( itr.m_element.m_path == preferred_separator_string )

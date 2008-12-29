@@ -91,6 +91,7 @@ namespace boost
 {
 namespace filesystem
 {
+
   //  exception classes  -----------------------------------------------------//
 
   //  filesystem_error is not used because errors are sometimes thrown during 
@@ -140,17 +141,12 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    typedef std::wstring             string_type;
-    typedef string_type::value_type  value_type;
-    typedef string_type::size_type   size_type;
-
     BOOST_FILESYSTEM_DECL
     void append( const char * begin,
-                         const char * end,      // 0 for null terminated MBCS
-                         std::wstring & target,
-                         system::error_code & ec );
+                 const char * end,      // 0 for null terminated MBCS
+                 std::wstring & target, system::error_code & ec );
 
-    //  ----- convert ----
+    //  ----- convert -----
 
     BOOST_FILESYSTEM_DECL
     std::string convert_to_string( const std::wstring & src, system::error_code & ec ); 
@@ -219,22 +215,29 @@ namespace filesystem
 namespace path_traits
 {
 
+  // path representation type
+#ifdef BOOST_WINDOWS_API
+  typedef std::wstring string_type;  
+#else 
+  typedef std::string string_type;
+#endif
+
   template< class I > struct is_iterator { static const bool value = false; };
   template< class C > struct is_container { static const bool value = false; };
 
   template< class charT >   // specialization optional
   inline void append( const charT * begin,   // requires: null termination
-    detail::string_type & target, system::error_code & ec )
+    string_type & target, system::error_code & ec )
   {
-    append( begin, 0, target, ec );
+    path_traits::append<charT>( begin, 0, target, ec );
   }
 
   template< class charT >   // specialization required
   void append( const charT * begin, const charT * end,
-               detail::string_type & target, system::error_code & ec );
+               string_type & target, system::error_code & ec );
 
-  //template< class S >   // specialization required
-  //S convert( const detail::string_type & source, system::error_code & ec );
+  template< class String >   // specialization required
+  String convert( const string_type & source, system::error_code & ec );
 
   //------------------------------------------------------------------------------------//
   //                              specializations                                       //
@@ -251,6 +254,28 @@ namespace path_traits
   template<> struct is_iterator<std::wstring::iterator> { static const bool value = true; };
   template<> struct is_iterator<std::wstring::const_iterator> { static const bool value = true; };
   template<> struct is_container<std::wstring> { static const bool value = true; };
+
+  template<>
+  inline void append<string_type::value_type>( const string_type::value_type * begin,
+    const string_type::value_type * end, string_type & target, system::error_code & ec )
+  {
+    ec.clear(); 
+    target.assign( begin, end ); // but what if throws bad_alloc?
+  }
+
+  template<>
+  inline void append<string_type::value_type>( const string_type::value_type * begin,
+    string_type & target, system::error_code & ec )
+  {
+    ec.clear(); 
+    target += begin; // but what if throws bad_alloc?
+  }
+
+  template<>
+  inline string_type convert<string_type>( const string_type & s, system::error_code & ec )
+  { 
+    return s;
+  }
 
 # ifdef BOOST_WINDOWS_API
 
@@ -269,34 +294,11 @@ namespace path_traits
   }
 
   template<>
-  inline void append<wchar_t>( const wchar_t * begin, const wchar_t * end,
-    std::wstring & target, system::error_code & ec )
-  {
-    ec.clear(); 
-    target.assign( begin, end ); // but what if throws bad_alloc?
-  }
-
-  template<>
-  inline void append<wchar_t>( const wchar_t * begin, std::wstring & target,
+  inline std::string convert<std::string>( const std::wstring & s,
     system::error_code & ec )
   {
-    ec.clear(); 
-    target += begin; // but what if throws bad_alloc?
+    return detail::convert_to_string( s, ec );
   }
-
-  //template<>
-  //inline std::string convert<std::string>( const std::wstring & s,
-  //  system::error_code & ec )
-  //{
-  //  return detail::convert_to_string( s, ec );
-  //}
-
-  //template<>
-  //inline std::wstring convert<std::wstring>( const std::wstring & s,
-  //  system::error_code & ec )
-  //{ 
-  //  return s;
-  //}
 
 # endif
 
@@ -322,9 +324,9 @@ namespace path_traits
     //  Thus string_type is std::string for POSIX and std::wstring for Windows.
     //  value_type is char for POSIX and wchar_t for Windows.
 
-    typedef detail::string_type      string_type;
-    typedef string_type::value_type  value_type;
-    typedef string_type::size_type   size_type;
+    typedef path_traits::string_type  string_type;
+    typedef string_type::value_type   value_type;
+    typedef string_type::size_type    size_type;
 
     //  ----- character encoding conversions -----
 
@@ -576,7 +578,9 @@ namespace path_traits
 
     template< class T >
     T string( system::error_code & ec = system::throws ) const
-      { return convert<T>( m_path, ec ); }
+    {
+      return path_traits::convert<T>( m_path, ec );
+    }
 
 #   ifdef BOOST_WINDOWS_API
 
