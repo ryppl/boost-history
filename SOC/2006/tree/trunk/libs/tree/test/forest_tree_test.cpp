@@ -56,57 +56,57 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    
 //    forest_tree<int> ft0;
 //
-//    forest_tree<int>::cursor c = ft0.insert(ft0.root().end(), 8);
+//    forest_tree<int>::cursor c = ft0.insert(ft0.end(), 8); //FIXME
 //    
 //    BOOST_CHECK_EQUAL(*c, 8);
-//    BOOST_CHECK(c == ft0.root().begin());
-//    BOOST_CHECK(++c == ft0.root().end());
-//    BOOST_CHECK(ft0.root().begin().parent() == ft0.root());
-//    BOOST_CHECK(!ft0.root().empty());
-//    BOOST_CHECK(ft0.root().begin().empty());
+//    BOOST_CHECK(c == ft0.begin());
+//    BOOST_CHECK(++c == ft0.end());
+////    BOOST_CHECK(ft0.begin().parent() == ft0.root());
+//    BOOST_CHECK(!ft0.empty());
+//    BOOST_CHECK(ft0.begin().empty());
 //    
-//    c = ft0.insert(ft0.root().end(), 6);
+//    c = ft0.insert(ft0.end(), 6);
 //    BOOST_CHECK_EQUAL(*c, 6);
-//    BOOST_CHECK(ft0.root().begin() != ft0.root().end());
-//    BOOST_CHECK(c != ft0.root().end());
-//    BOOST_CHECK(c.base() == ft0.root().base().begin().end());
-//    BOOST_CHECK(c.parent() == ft0.root());
-//    BOOST_CHECK(!ft0.root().empty());
-//    BOOST_CHECK(++c == ft0.root().end()); 
+//    BOOST_CHECK(ft0.begin() != ft0.end());
+//    BOOST_CHECK(c != ft0.end());
+////    BOOST_CHECK(c.base() == ft0.begin().end());
+////    BOOST_CHECK(c.parent() == ft0.root());
+//    BOOST_CHECK(!ft0.empty());
+//    BOOST_CHECK(++c == ft0.end()); 
 //    ----c;
-//    BOOST_CHECK(c == ft0.root().begin());
+//    BOOST_CHECK(c == ft0.begin());
 //    BOOST_CHECK_EQUAL(*c, 8);
 //
-//    c = ft0.insert(ft0.root().end(), 7);  
+//    c = ft0.insert(ft0.end(), 7);  
 //    BOOST_CHECK_EQUAL(*c, 7);
-//    BOOST_CHECK(c.parent() == ft0.root());
-//    BOOST_CHECK(!ft0.root().empty());
-//    BOOST_CHECK(++c == ft0.root().end());
+////    BOOST_CHECK(c.parent() == ft0.root());
+//    BOOST_CHECK(!ft0.empty());
+//    BOOST_CHECK(++c == ft0.end());
 //    ----c;
 //    BOOST_CHECK_EQUAL(*c, 6);
-//    BOOST_CHECK(c.parent() == ft0.root());
+////    BOOST_CHECK(c.parent() == ft0.root());
 //    --c;
-//    BOOST_CHECK(c == ft0.root().begin());
-//    BOOST_CHECK(c.parent() == ft0.root());
+//    BOOST_CHECK(c == ft0.begin());
+////    BOOST_CHECK(c.parent() == ft0.root());
 //    BOOST_CHECK_EQUAL(*c, 8);
-//    c = ft0.root().begin().begin();
-//    BOOST_CHECK(c.parent() == ft0.root().begin());
+//    c = ft0.begin().begin();
+//    BOOST_CHECK(c.parent() == ft0.begin());
 //
-//    c = ft0.insert(ft0.root().begin().begin(), 3);
+//    c = ft0.insert(ft0.begin().begin(), 3);
 //    BOOST_CHECK_EQUAL(*c, 3);
-//    BOOST_CHECK(c == ft0.root().begin().begin());
-//    BOOST_CHECK(ft0.root().begin().begin().parent() == ft0.root().begin());
+//    BOOST_CHECK(c == ft0.begin().begin());
+//    BOOST_CHECK(ft0.begin().begin().parent() == ft0.begin());
 //
 //    // Need more checks after this line...
-//    c = ft0.insert(ft0.root().begin().begin().begin(), 1);
-//    c = ft0.root().begin();
+//    c = ft0.insert(ft0.begin().begin().begin(), 1);
+//    c = ft0.begin();
 //    (++c).to_end();
 //
 //    c = ft0.insert(c, 4);
 //    BOOST_CHECK_EQUAL(*c, 4);
-//    BOOST_CHECK(--(c.to_parent()) == ft0.root().begin());
+//    BOOST_CHECK(--(c.to_parent()) == ft0.begin());
 //
-//    c = ft0.root().begin();
+//    c = ft0.begin();
 //    BOOST_CHECK_EQUAL(*c, 8);
 //    BOOST_CHECK_EQUAL(*c.to_begin(), 3);
 //    BOOST_CHECK_EQUAL(*c.to_begin(), 1);

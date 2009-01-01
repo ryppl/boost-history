@@ -22,6 +22,14 @@ project :
 	;
 	
 test-suite tree :
+# Algorithms
+	[ run to_first_test.cpp ]
+	[ run successor_test.cpp ]
+	[ run predecessor_test.cpp ]
+	[ run for_each_test.cpp ]
+	[ run copy_test.cpp ]
+	[ run transform_test.cpp ]
+#
 	[ run range_helpers_test.cpp ]
 	[ run binary_tree_test.cpp ]
 	[ run binary_tree_search_test.cpp ]

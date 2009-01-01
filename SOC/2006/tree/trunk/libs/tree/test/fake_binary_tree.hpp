@@ -19,6 +19,9 @@ struct fake_descending_binary_cursor;
 template <class T>
 struct fake_ascending_binary_cursor;
 
+template <class T>
+struct fake_root_tracking_binary_cursor;
+
 /// See http://en.wikipedia.org/wiki/Binary_Tree#Methods_for_storing_binary_trees
 template <class T>
 struct fake_binary_tree {
@@ -27,6 +30,9 @@ struct fake_binary_tree {
 
     typedef fake_ascending_binary_cursor<T> ascending_cursor;
     typedef fake_ascending_binary_cursor<T const> const_ascending_cursor;
+
+    typedef fake_root_tracking_binary_cursor<T> root_tracking_cursor;
+    typedef fake_root_tracking_binary_cursor<T const> const_root_tracking_cursor;
         
     fake_binary_tree(typename std::vector<T>::size_type s) : m_data(s)
     { }
@@ -39,6 +45,11 @@ struct fake_binary_tree {
     ascending_cursor ascending_root()
     {
         return ascending_cursor(*this, 0);
+    }
+
+    root_tracking_cursor root_tracking_root()
+    {
+        return root_tracking_cursor(*this, 0);
     }
 
     typedef std::vector<T> children_type;
@@ -191,6 +202,36 @@ private:
     {
         --this->base_reference().m_pos;
         this->base_reference().m_pos >>= 1;
+    }
+
+public:
+    bool is_root() const
+    {
+        return this->base_reference().m_pos == 0;
+    }
+};
+
+template <class T>
+struct fake_root_tracking_binary_cursor
+: public boost::tree::cursor_adaptor<fake_root_tracking_binary_cursor<T>
+                                   , fake_ascending_binary_cursor<T>
+                                    >
+{
+    typedef fake_root_tracking_binary_cursor<T> cursor;
+    typedef fake_root_tracking_binary_cursor<T const> const_cursor;
+
+    fake_root_tracking_binary_cursor(fake_binary_tree<T>& t
+                                    , typename fake_binary_tree<T>::size_type p)
+    : fake_root_tracking_binary_cursor::cursor_adaptor_(fake_ascending_binary_cursor<T>(t, p)) {}
+
+private: 
+    friend class boost::iterator_core_access;
+    friend class boost::tree::cursor_core_access;
+
+public:
+    bool is_root() const
+    {
+        return this->base_reference().is_root();
     }
 };
 
