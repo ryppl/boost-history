@@ -30,7 +30,7 @@ struct ascending {
  * @ingroup    traversal
  */
 template <class MultiwayCursor>
-inline void forward(ascending, MultiwayCursor& c)
+inline void successor(ascending, MultiwayCursor& c)
 {
     c.to_parent();
     return;

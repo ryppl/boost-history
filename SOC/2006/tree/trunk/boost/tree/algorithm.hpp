@@ -37,7 +37,7 @@ inline Cursor next(Cursor c
                  , typename Cursor::difference_type n = 1)
 {
     for (; n!=0; --n)
-        forward<Order>(c);
+        successor<Order>(c);
     return c;
 }
 
@@ -52,7 +52,7 @@ inline Cursor prior(Cursor c
                   , typename Cursor::difference_type n = 1)
 {
     for (; n!=0; --n)
-        back<Order>(c);
+        predecessor<Order>(c);
     return c;
 }
 

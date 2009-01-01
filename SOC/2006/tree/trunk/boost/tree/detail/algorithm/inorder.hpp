@@ -43,7 +43,7 @@ BOOST_CONCEPT_REQUIRES(
     ((Descendor<MultiwayCursor>))
     ((RootTracker<MultiwayCursor>)),
     (void)) // return type
-forward(inorder, MultiwayCursor& c)
+successor(inorder, MultiwayCursor& c)
 {
     if (!(++c).empty()) {
         while (!c.to_begin().empty());
@@ -65,7 +65,7 @@ BOOST_CONCEPT_REQUIRES(
     ((Descendor<MultiwayCursor>))
     ((RootTracker<MultiwayCursor>)),
     (void)) // return type
-back(inorder, MultiwayCursor& c)
+predecessor(inorder, MultiwayCursor& c)
 {
     if (!c.empty()) {
         while (!c.to_end().empty());

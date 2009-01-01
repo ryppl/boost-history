@@ -40,7 +40,7 @@ for_each(Order, Cursor is, Op f, ascending_vertical_traversal_tag)
     to_last(Order(), s2);
     while (s!=s2) {
         f(*s);
-        forward(Order(), s);
+        successor(Order(), s);
     }
     return f;
 }
@@ -65,7 +65,7 @@ transform (Order, InCursor is, OutCursor t, Op op
 
     while (cc.in()!=s2) {
         *cc.out() = op(*cc.in());
-        forward(Order(), cc);
+        successor(Order(), cc);
     }
     return cc.out();
 }

@@ -40,7 +40,7 @@ BOOST_CONCEPT_REQUIRES(
     ((Descendor<Cursor>))
     ((RootTracker<Cursor>)),
     (void)) // return type
-forward(preorder, Cursor& c)
+successor(preorder, Cursor& c)
 {
     // If we have a left child, go there.
     if (!c.empty()) {
@@ -81,7 +81,7 @@ BOOST_CONCEPT_REQUIRES(
     ((Descendor<Cursor>))
     ((RootTracker<Cursor>)),
     (void)) // return type
-back(preorder, Cursor& c)
+predecessor(preorder, Cursor& c)
 {
     if (!c.is_root()) {
         c.to_parent();

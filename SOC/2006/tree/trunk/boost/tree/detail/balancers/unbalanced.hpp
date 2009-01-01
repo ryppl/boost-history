@@ -32,7 +32,7 @@ class unbalanced {
         //typename Tree::cursor y = x;
         if (x.begin().empty() || x.end().empty())
              return x;
-         //forward(inorder, x);
+         //successor(inorder, x);
          return next(inorder(), x);
     }
         
