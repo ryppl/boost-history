@@ -1,4 +1,4 @@
-//  Copyright (c) 2006-2008, Bernhard Reiter
+//  Copyright (c) 2006-2009, Bernhard Reiter
 //
 //  Distributed under the Boost Software License, Version 1.0.
 //  (See accompanying file LICENSE_1_0.txt or copy at
@@ -33,6 +33,22 @@ void fill_subtree_with_data(Cursor cur)
     *cur.begin() = 8;
     *cur.begin().begin() = 3;
     *cur.begin().begin().begin() = 1;  //Leaf
+    *cur.begin().end().begin() = 6;
+    *cur.begin().end().begin().begin() = 4; //Leaf
+    *cur.begin().end().end().begin() = 7; //Leaf
+    *cur.end().begin() = 10;
+    *cur.end().end().begin() = 14;
+    *cur.end().end().begin().begin() = 13;
+    *cur.end().end().begin().begin().begin() = 11; 
+    *cur.end().end().begin().begin().end().begin() = 12; //Leaf
+}
+
+template <class Cursor>
+void fill_subtree_with_data_in_preorder(Cursor cur)
+{
+    *cur.to_begin() = 8;
+    *cur.to_begin() = 3;
+    *cur.to_begin() = 1;  //Leaf
     *cur.begin().end().begin() = 6;
     *cur.begin().end().begin().begin() = 4; //Leaf
     *cur.begin().end().end().begin() = 7; //Leaf

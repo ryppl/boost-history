@@ -1,41 +1,23 @@
-//  Copyright (c) 2006-2008, Bernhard Reiter
+//  Copyright (c) 2006-2009, Bernhard Reiter
 //
 //  Distributed under the Boost Software License, Version 1.0.
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/tree/binary_tree.hpp>
-//[ for_each_include_algorithm
-#include <boost/tree/algorithm.hpp>
-//]
-
-#include <iostream>
-
-#include "../test/test_tree_traversal_data.hpp"
-
-using namespace boost::tree;
-
-//[ for_each_example
-void to_cout(int i) {
-    std::cout << ' ' << i;
-    return;
-}
+#include <vector>
+#include <algorithm>
+#include <cassert>
 
 int main() {
-    binary_tree<int> bt;
-    
-    // Fill it with data...
-    test_binary_tree_fixture<int>::create_test_dataset1_tree(bt);
+//[ stl_lower_bound_example
+    std::vector<int> v(1, 1066); // c contains one element: 1066
+    std::vector<int>::const_iterator ci996  = std::lower_bound(v.begin(), v.end(),  996);
+    std::vector<int>::const_iterator ci1066 = std::lower_bound(v.begin(), v.end(), 1066);
+    std::vector<int>::const_iterator ci2006 = std::lower_bound(v.begin(), v.end(), 2006);
 
-    std::cout << "Preorder:";
-    for_each(preorder(), bt.root(), to_cout);
-    
-    std::cout << std::endl << "Inorder:";
-    for_each(inorder(), bt.root(), to_cout);
-    
-    std::cout << std::endl << "Postorder:";
-    for_each(postorder(), bt.root(), to_cout);
-
+    assert(ci996  == v.begin());
+    assert(ci1066 == v.begin());
+    assert(ci2006 == v.end());
+//]
     return 0;
 }
-//]

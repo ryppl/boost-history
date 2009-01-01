@@ -1,5 +1,5 @@
 [/
- /  Copyright (c) 2006-2008, Bernhard Reiter
+ /  Copyright (c) 2006-2009, Bernhard Reiter
  /
  /  Distributed under the Boost Software License, Version 1.0.
  /  (See accompanying file LICENSE_1_0.txt or copy at
@@ -14,7 +14,7 @@
 [library Boost.Tree
     [quickbook 1.4]
     [authors [Reiter, Bernhard]]
-    [copyright 2006-2008 Bernhard Reiter]
+    [copyright 2006-2009 Bernhard Reiter]
     [purpose Generic tree framework]
     [license
     		
