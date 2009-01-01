@@ -36,6 +36,9 @@ using boost::system::error_code;
 
 namespace
 {
+  //------------------------------------------------------------------------------------//
+  //                        miscellaneous class path helpers                            //
+  //------------------------------------------------------------------------------------//
 
   typedef path::size_type    size_type;
   typedef path::string_type  string_type;
@@ -99,7 +102,7 @@ namespace
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                                   class path                                         //
+//                            class path implementation                                 //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
@@ -269,7 +272,7 @@ namespace filesystem
   
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                          class path helper implementation                            //
+//                         class path helpers implementation                            //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
@@ -430,7 +433,7 @@ namespace
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                               class path::iterator                                   //
+//                        class path::iterator implementation                           //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
@@ -566,52 +569,216 @@ namespace filesystem
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                                  path_traits                                         //
+//                                 detail helpers                                       //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
 namespace
 {
+  //------------------------------------------------------------------------------------//
+  //                                                                                    //
+  //                     class windows_file_api_codecvt_facet                           //
+  //                                                                                    //
+  //  Warning: partial implementation; only do_in and do_out meet the standard library  //
+  //  specifications, and even these do not set from_next.                              //
+  //------------------------------------------------------------------------------------//
 
-# ifdef BOOST_WINDOWS_API
+  class windows_file_api_codecvt_facet
+    : public std::codecvt< wchar_t, char, std::mbstate_t >  
+  {
+  public:
+    explicit windows_file_api_codecvt_facet()
+        : std::codecvt<wchar_t, char, std::mbstate_t>(0) {}
+  protected:
 
-  const std::locale windows_default;  // only use is to take address
+    virtual bool do_always_noconv() const throw() { return false; }
 
-  void windows_append( const char * begin, const char * end,
-                                 // end == 0 for null terminated MBCS
-                                 wstring & target, error_code & ec );
+    //  seems safest to assume variable number of characters since we don't
+    //  actually know what codepage is active
+    virtual int do_encoding() const throw() { return 0; }
 
-  void locale_append( const char * begin, const char * end,
-                                // end == 0 for null terminated MBCS
-                              wstring & target, error_code & ec );
-# else   // BOOST_POSIX_API
+    virtual std::codecvt_base::result do_in( std::mbstate_t& state, 
+      const char * from, const char * from_end, const char *& from_next,
+      wchar_t * to, wchar_t * to_end, wchar_t *& to_next ) const;
 
-  ...
+    virtual std::codecvt_base::result do_out( std::mbstate_t & state,
+      const wchar_t * from, const wchar_t * from_end, const wchar_t *& from_next,
+      char * to, char * to_end, char *& to_next ) const;
 
-# endif
+    virtual std::codecvt_base::result do_unshift( std::mbstate_t&,
+        char * from, char * /*to*/, char * & next) const  { return ok; } 
+
+    virtual int do_length( std::mbstate_t &,
+      const char * from, const char * from_end, std::size_t max ) const  { return 0; }
+
+    virtual int do_max_length() const throw () { return 0; }
+  };
+
+  std::codecvt_base::result windows_file_api_codecvt_facet::do_in(
+    std::mbstate_t & state, 
+    const char * from, const char * from_end, const char *& from_next,
+    wchar_t * to, wchar_t * to_end, wchar_t *& to_next ) const
+  {
+    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
+
+    int count;
+    if ( (count = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, from,
+      from_end - from, to, to_end - to )) == 0 ) 
+    {
+      return error;  // conversion failed
+    }
+
+    to_next = to + count;
+    *to_next = L'\0';
+    return ok;
+ }
+
+  std::codecvt_base::result windows_file_api_codecvt_facet::do_out(
+    std::mbstate_t & state,
+    const wchar_t * from, const wchar_t * from_end, const wchar_t*  & from_next,
+    char * to, char * to_end, char * & to_next ) const
+  {
+    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
+
+    int count;
+    if ( (count = ::WideCharToMultiByte( codepage, WC_NO_BEST_FIT_CHARS, from,
+      from_end - from, to, to_end - to, 0, 0 )) == 0 )
+    {
+      return error;  // conversion failed
+    }
+
+    to_next = to + count;
+    *to_next = '\0';
+    return ok;
+  }
+
+  //------------------------------------------------------------------------------------//
+  //                              locale helpers                                        //
+  //------------------------------------------------------------------------------------//
+
+  // std::locale construction can throw (if LC_MESSAGES is wrong, for example),
+  // so a static at function scope is used to ensure that exceptions can be
+  // caught. (A previous version was at namespace scope, so initialization
+  // occurred before main(), preventing exceptions from being caught.)
+
+  std::locale default_locale()
+  {
+    std::locale global_loc = std::locale();
+    std::locale loc( global_loc, new windows_file_api_codecvt_facet );
+    return loc;
+  }
+
+  std::locale & path_locale()
+  {
+    // ISO C calls this "the locale-specific native environment":
+    static std::locale loc( default_locale() );
+    return loc;
+  }
+
+  const std::codecvt<wchar_t, char, std::mbstate_t> *&
+  wchar_t_codecvt_facet()
+  {
+   static const std::codecvt<wchar_t, char, std::mbstate_t> *
+     facet(
+       &std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >
+        ( path_locale() ) );
+   return facet;
+  }
 
 }  // unnamed namespace
+
+//--------------------------------------------------------------------------------------//
+//                           path::imbue implementation                                 //
+//--------------------------------------------------------------------------------------//
 
 namespace boost
 {
 namespace filesystem
 {
 
+  std::locale path::imbue( const std::locale & loc )
+  {
+    std::locale temp( path_locale() );
+    path_locale() = loc;
+    wchar_t_codecvt_facet() = &std::use_facet
+        <std::codecvt<wchar_t, char, std::mbstate_t> >( path_locale() );
+    return temp;
+  }
+
+  std::locale path::imbue( const std::locale & loc, system::error_code & ec )
+  {
+    try
+    {
+      std::locale temp( path_locale() );
+      path_locale() = loc;
+      wchar_t_codecvt_facet() = &std::use_facet
+          <std::codecvt<wchar_t, char, std::mbstate_t> >( path_locale() );
+      ec.clear();
+      return temp;
+    }
+    catch (...)
+    {
+      assert( 0 && "not implemented yet" );  // TODO
+    }
+  }
+
+//--------------------------------------------------------------------------------------//
+//                              detail implementation                                   //
+//--------------------------------------------------------------------------------------//
+
 namespace detail
 {
-  const std::locale * path_locale( &windows_default );
 
   //------------------------------------------------------------------------------------//
   //                                   append                                           //
   //------------------------------------------------------------------------------------//
 
-  void append( const char * begin, const char * end,
-                       wstring & target, error_code & ec )
+  void append_error( const char * begin, const char * end )
   {
-    if ( path_locale == &windows_default )
-      windows_append( begin, end, target, ec );
+    assert( false && "not implemented yet" );
+  }
+
+  void append( const char * begin, const char * end, wstring & target, error_code & ec )
+  {
+    if ( !end ) 
+      end = begin + std::strlen(begin);
+
+    if ( begin == end )
+    {
+      if ( &ec != &system::throws ) ec.clear();
+      return;
+    }
+
+    std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
+    const char * from_next;
+    wchar_t * to_next;
+    std::size_t buf_size = end - begin;  // perhaps too large, but that's OK
+    const std::size_t max_size = 128;
+
+    //  dynamically allocate a buffer only if source is unusually large
+    if ( buf_size <= max_size )
+    {
+      wchar_t buf[max_size];
+      if ( wchar_t_codecvt_facet()->in( state, begin, end,
+            from_next, buf, buf+max_size, to_next ) != std::codecvt_base::ok )
+        append_error( begin, end );
+      else {
+        target.append( buf, to_next ); 
+        if ( &ec != &system::throws ) ec.clear();
+      }
+    }
     else
-      locale_append( begin, end, target, ec );
+    {
+      boost::scoped_array< wchar_t > buf( new wchar_t [ buf_size] ); 
+      if ( wchar_t_codecvt_facet()->in( state, begin, end,
+            from_next, buf.get(), buf.get()+buf_size, to_next ) != std::codecvt_base::ok )
+        append_error( begin, end );
+      else {
+        target.append( buf.get(), to_next ); 
+        if ( &ec != &system::throws ) ec.clear();
+      }
+    }
+
   }
 
   //------------------------------------------------------------------------------------//
@@ -649,68 +816,3 @@ namespace detail
 }  // namespace detail
 }  // namespace filesystem
 }  // namespace boost
-
-namespace
-{
-
-  void locale_append( const char * begin, const char * end,
-                                // end == 0 for null terminated MBCS
-                                 wstring & target,  error_code & ec )
-  {
-    BOOST_ASSERT( 0 && "not implemented yet" );
-  }
-
-
-  void windows_append( const char * begin, const char * end,
-     wstring & target,  error_code & ec )
-  {
-    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
-    int size( end == 0 ? -1 : (end - begin) );
-
-    //  buffer management:
-    //
-    //    if path prefixed by "\\?\" (Windows 'long path' prefix)
-    //       then use dynamic allocation, else use automatic allocation
-
-    bool dynamic_allocation = target.find( L"\\\\?\\" ) == 0
-      || ( target.empty()
-      && ( (size >= 4 && std::memcmp( begin, "\\\\?\\", 4 ) == 0)
-      || (size == -1 && std::strcmp( begin, "\\\\?\\" ) == 0) ) );
-
-    wchar_t                         stack_buf[MAX_PATH+1];
-    boost::scoped_array< wchar_t >  heap_buf;
-    wchar_t *                       buf = stack_buf;
-    int                             buf_size = sizeof(stack_buf)/sizeof(wchar_t) - 1;      
-
-    if ( dynamic_allocation )
-    {
-      //  get the allocation size for the buffer
-      //     rationale for calling MultiByteToWideChar: begin may point to a
-      //     multi-byte encoded string with embedded nulls, so a simplistic
-      //     computation of the size can fail
-      
-      buf_size = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, begin, size, 0, 0 );
-      heap_buf.reset( new wchar_t [buf_size] );
-      buf = heap_buf.get();
-    }
-
-    //  perform the conversion
-
-    if ( (buf_size = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, begin,
-      size, buf, buf_size )) == 0 ) 
-    {
-      // conversion failed
-      ec =  error_code( ::GetLastError(), boost::system::system_category );
-      return;
-    }
-
-    ec.clear();
-
-    //  perform the append
-
-    buf[buf_size] = L'\0';
-    target += buf;
-  }
-
-}  // unnamed namespace
-

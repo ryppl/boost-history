@@ -29,6 +29,7 @@
    * Document leading //: no longer treated specially.
    * reference.html: operator /= is underspecified as to when a "/" is appended, and
      whether a '/' or '\' is appended.
+   * path.cpp: locale and detail append/convert need error handling.
    * path_unit_test needs to probe error handling, verify exceptions are thrown when
      requested.
    * Provide the name check functions for more character types. Templatize?
@@ -85,14 +86,14 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-//--------------------------------------------------------------------------------------//
-
 namespace boost
 {
 namespace filesystem
 {
 
-  //  exception classes  -----------------------------------------------------//
+  //------------------------------------------------------------------------------------//
+  //                              class path_error                                      //
+  //------------------------------------------------------------------------------------//
 
   //  filesystem_error is not used because errors are sometimes thrown during 
   //  path construction when there isn't a complete path to include.
@@ -102,6 +103,7 @@ namespace filesystem
   //  exception class is templated on the string type.
   
   //  path_error can be caught when further type distinctions aren't needed.
+
   class path_error : public std::runtime_error
   {
   public:
@@ -129,15 +131,11 @@ namespace filesystem
   };
 
   //------------------------------------------------------------------------------------//
-  //                                                                                    //
   //                           implementation details                                   //
-  //                                                                                    //
   //------------------------------------------------------------------------------------//
 
   namespace detail
   {
-
-    BOOST_FILESYSTEM_DECL extern const std::locale * path_locale;
 
 #   ifdef BOOST_WINDOWS_API
 
@@ -145,8 +143,6 @@ namespace filesystem
     void append( const char * begin,
                  const char * end,      // 0 for null terminated MBCS
                  std::wstring & target, system::error_code & ec );
-
-    //  ----- convert -----
 
     BOOST_FILESYSTEM_DECL
     std::string convert_to_string( const std::wstring & src, system::error_code & ec ); 
@@ -652,16 +648,8 @@ namespace path_traits
 
     //  -----  locale  -----
 
-    static std::locale imbue( const std::locale & loc,
-                              system::error_code & ec = system::throws )
-    {
-      std::locale tmp;
-      tmp = *detail::path_locale;
-      detail::path_locale = &loc;
-      return tmp;
-    }
-
-    static std::locale getloc() { return *detail::path_locale; }
+    static std::locale imbue( const std::locale & loc );
+    static std::locale imbue( const std::locale & loc, system::error_code & ec );
 
     //  -----  iterators  -----
 

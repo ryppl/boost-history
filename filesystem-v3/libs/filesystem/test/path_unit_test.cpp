@@ -20,6 +20,7 @@
 //  ----------------------------------------------------------------------------------  //
 
 #include <boost/filesystem/path.hpp>
+#include "../src/utf8_codecvt_facet.hpp"  // for imbue tests
 
 #include <iostream>
 #include <string>
@@ -511,6 +512,37 @@ namespace
 
   }
 
+  //  test_imbue_locale  ---------------------------------------------------------------//
+
+  void test_imbue_locale()
+  {
+    std::cout << "testing imbue locale..." << std::endl;
+
+    //  \u2722 and \xE2\x9C\xA2 are UTF-16 and UTF-8 FOUR TEARDROP-SPOKED ASTERISK
+
+    path p0( L"\u2722" );  // for tests that depend on detail::convert_to_string
+    CHECK( p0.string() != "\xE2\x9C\xA2" );
+
+    path p1( "\xE2\x9C\xA2" );
+    CHECK( p1 != L"\u2722" );
+
+    // So that tests are run with known encoding, use Boost UTF-8 codecvt
+    std::locale global_loc = std::locale();
+    std::locale loc( global_loc, new fs::detail::utf8_codecvt_facet );
+    std::locale old_loc = path::imbue( loc );
+
+    CHECK( p0.string() == "\xE2\x9C\xA2" );
+    path p2( "\xE2\x9C\xA2" );
+    CHECK( p2 == L"\u2722" );
+
+    path::imbue( old_loc );
+
+    CHECK( p0.string() != "\xE2\x9C\xA2" );
+    path p3( "\xE2\x9C\xA2" );
+    CHECK( p3 != L"\u2722" );
+
+  }
+
 //  //  test_locales  --------------------------------------------------------------------//
 //
 //  void test_locales()
@@ -598,7 +630,8 @@ int main( int, char*[] )
   test_iterators();
   test_decompositions();
   test_queries();
-  ////test_locales();
+  test_imbue_locale();
+  //test_convert_with_locale();
   test_user_supplied_type();
  
   cout << errors << " errors detected\n";
