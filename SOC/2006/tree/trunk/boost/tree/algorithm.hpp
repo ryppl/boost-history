@@ -20,7 +20,7 @@
 #include <boost/tree/detail/algorithm/postorder.hpp>
 
 //#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/algorithm/iterative.hpp>
+#include <boost/tree/detail/iterative.hpp>
 //#endif
 
 namespace boost {
