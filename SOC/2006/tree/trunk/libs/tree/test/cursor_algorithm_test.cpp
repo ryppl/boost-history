@@ -21,6 +21,52 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_with_list_fixture<int>)
 
+BOOST_AUTO_TEST_CASE( test_to_first_preorder )
+{
+    fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
+    boost::tree::to_first(preorder(), c);
+    BOOST_CHECK_EQUAL(*c, 8);
+}
+
+BOOST_AUTO_TEST_CASE( test_to_first_inorder )
+{
+    fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
+    boost::tree::to_first(inorder(), c);
+    BOOST_CHECK_EQUAL(*c, 1);
+}
+
+BOOST_AUTO_TEST_CASE( test_to_first_postorder )
+{
+    fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
+    boost::tree::to_first(postorder(), c);
+    BOOST_CHECK_EQUAL(*c, 1);
+}
+
+// The following require RootTracker.
+
+//BOOST_AUTO_TEST_CASE( test_successor_preorder )
+//{
+//    fake_binary_tree<int>::ascending_cursor c = fbt1.ascending_root().begin();
+//    boost::tree::successor(preorder(), c);
+//    BOOST_CHECK_EQUAL(*c, 3);
+//}
+//
+//BOOST_AUTO_TEST_CASE( test_successor_inorder )
+//{
+//    fake_binary_tree<int>::ascending_cursor c = fbt1.ascending_root().begin();
+//    boost::tree::successor(inorder(), c);
+//    BOOST_CHECK_EQUAL(*c, 10);
+//}
+//
+//BOOST_AUTO_TEST_CASE( test_successor_postorder )
+//{
+//    fake_binary_tree<int>::ascending_cursor c = fbt1.ascending_root().begin();
+//    boost::tree::successor(postorder(), c);
+//    BOOST_CHECK(c == fbt1.ascending_root());
+//}
+
+// Also add tests for predecessor!
+
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_foreach_descending, Order, orders)
 {
     boost::tree::for_each(
