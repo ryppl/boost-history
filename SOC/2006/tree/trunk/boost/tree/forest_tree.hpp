@@ -63,20 +63,20 @@ BOOST_CONCEPT_ASSERT((Descendor< typename binary_tree<T>::const_cursor >));
      *  @brief    The default constructor creates one element at the root.
      *  @param    val   The value the root will be assigned. 
      */
-    forest_tree(value_type const& val = value_type()) : h(Hierarchy())
-    {
-        h.insert(h.root(), val);
-    }
+//    forest_tree(/*value_type const& val = value_type()*/) : h(Hierarchy())
+//    {
+//        //h.insert(h.root(), val);
+//    }
 
     /**
      *  @brief    The default constructor creates no elements.
      *  @param    hier    A hierarchy object that will be used as a base to
      *                    construct this forest_tree.
      */
-    explicit forest_tree(Hierarchy const& hier) : h(hier)
+    explicit forest_tree(Hierarchy const& hier = Hierarchy()) : h(hier)
     {
-        if (h.empty())
-            h.insert(h.root(), value_type());
+//        if (h.empty())
+//            h.insert(h.root(), value_type());
     }
 
     /**
@@ -88,27 +88,63 @@ BOOST_CONCEPT_ASSERT((Descendor< typename binary_tree<T>::const_cursor >));
     }
     
     /**
-     * Returns a read/write ("mutable") cursor to the %forest_tree's root.
+     * Returns a read/write ("mutable") cursor to the %forest_tree's 
+     * first element.
      */     
-    cursor root()
+    cursor begin()
     {
-        return cursor(h.root());
+        cursor c(h.root());
+        return c.begin();
     }
 
     /**
-     * Returns a read-only const_cursor to the %forest_tree's root.
+     * Returns a read-only const_cursor to the %forest_tree's
+     * first element.
      */     
-    const_cursor root() const
+    const_cursor begin() const
     {
-        return croot();
+        return cbegin();
     }
     
     /**
-     * Returns a read-only const_cursor to the %forest_tree's root.
+     * Returns a read-only const_cursor to the %forest_tree's
+     * first element.
      */     
-    const_cursor croot() const
+    const_cursor cbegin() const
     {
-        return const_cursor(h.croot());
+        const_cursor c(h.croot());
+        return c.begin();
+    }
+
+    // TODO: end.
+
+    /**
+     * Returns a read/write ("mutable") cursor past the %forest_tree's
+     * last element.
+     */     
+    cursor end()
+    {
+        cursor c(h.root());
+        return c.end();
+    }
+
+    /**
+     * Returns a read-only const_cursor past the %forest_tree's
+     * last element.
+     */     
+    const_cursor end() const
+    {
+        return cend();
+    }
+    
+    /**
+     * Returns a read-only const_cursor past the %forest_tree's
+     * last element.
+     */     
+    const_cursor cend() const
+    {
+        const_cursor c(h.croot());
+        return c.end();
     }
 
     /**
