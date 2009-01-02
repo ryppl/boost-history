@@ -117,6 +117,10 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 
 BOOST_AUTO_TEST_SUITE_END()
 
+//BOOST_FIXTURE_TEST_SUITE(forest_fixture_test, fake_binary_tree_with_list_fixture<int>)
+//
+//BOOST_AUTO_TEST_SUITE_END()
+
 //BOOST_FIXTURE_TEST_SUITE(forest_algorithms_test, test_binary_tree_with_list_fixture<int>)
 //
 //// Test *order correspondence:

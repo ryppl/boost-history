@@ -33,29 +33,3 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_first_equals_last, Order, orders )
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_with_list_fixture<int>)
-
-//BOOST_AUTO_TEST_CASE_TEMPLATE ( test_desc_copy_using_insert_cursor, Order, orders )
-//{
-//    bt2.clear();
-//
-//    boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
-//                    , boost::forward_traversal_tag());
-//
-//    validate_test_dataset1_tree(bt2.root());
-//    BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root()));
-//}
-//
-//BOOST_AUTO_TEST_CASE_TEMPLATE ( test_asc_copy_using_insert_cursor, Order, orders )
-//{    
-//    bt2.clear();
-//        
-//    boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
-//                    , boost::bidirectional_traversal_tag());
-//
-//    validate_test_dataset1_tree(bt2.root());
-//    BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root())); 
-//}
-
-BOOST_AUTO_TEST_SUITE_END()

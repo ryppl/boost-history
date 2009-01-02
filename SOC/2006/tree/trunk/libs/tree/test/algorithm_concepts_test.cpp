@@ -15,7 +15,11 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 
-#include "helpers.hpp"
+#include <boost/mpl/list.hpp>
+
+typedef boost::mpl::list<boost::tree::preorder
+                        ,boost::tree::inorder
+                        ,boost::tree::postorder> orders;
 
 using namespace boost::tree;
 

@@ -15,8 +15,6 @@
 
 #include <boost/tree/output_iterator_cursor.hpp>
 
-#include <boost/mpl/list.hpp>
-
 #include <list>
 
 struct test_with_list_fixture
@@ -31,10 +29,6 @@ struct test_with_list_fixture
     back_insert_iter_list_int i;
     oc_bi_lst_type o;
 };
-
-typedef boost::mpl::list<boost::tree::preorder
-                        ,boost::tree::inorder
-                        ,boost::tree::postorder> orders;
 
 //using namespace boost::tree;
 //

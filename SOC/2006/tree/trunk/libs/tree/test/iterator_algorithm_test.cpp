@@ -7,8 +7,8 @@
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
-#include <boost/tree/ascending_cursor.hpp>
-#include <boost/tree/root_tracking_cursor.hpp>
+//#include <boost/tree/ascending_cursor.hpp>
+//#include <boost/tree/root_tracking_cursor.hpp>
 
 #include <list>
 #include <iterator>
@@ -22,6 +22,9 @@
 #include "test_tree_traversal_data.hpp"
 
 using namespace boost::tree;
+
+// We should actually just check if operators++ and -- call next and prior
+// Pretty simple -- any actual need for a test file? 
 
 BOOST_FIXTURE_TEST_SUITE( iterator_algorithms_test, fake_binary_tree_with_list_fixture<int> )
 
@@ -89,18 +92,6 @@ BOOST_AUTO_TEST_CASE( test_subtree10_iterator_algorithms )
                                       , end(postorder(), fbt1.ascending_root().end()), 5);
     BOOST_CHECK_EQUAL(std::distance(begin(postorder(), fbt1.ascending_root().end())
                                   , end(postorder(), fbt1.ascending_root().end())), 5);
-}
-
-BOOST_AUTO_TEST_CASE( test_ascending_iterator_algorithms )
-{
-    typedef fake_ascending_binary_cursor<int> cursor;
-    cursor c = fbt1.ascending_root();
-    typedef boost::tree::root_tracking_cursor<cursor> rtc;
-    typedef boost::tree::iterator<ascending, rtc> ai;
-    c.to_begin().to_end().to_begin().to_begin();
-    BOOST_CHECK_EQUAL(*c, 4);
-
-    test_traversal_from_leaf4(ai(rtc(c)), ai(rtc(cursor(fbt1,0))));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

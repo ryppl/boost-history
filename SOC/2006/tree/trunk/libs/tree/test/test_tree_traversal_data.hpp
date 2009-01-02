@@ -12,7 +12,13 @@
 
 #include <vector>
 
+#include <boost/mpl/list.hpp>
+
 #include "helpers.hpp"
+
+typedef boost::mpl::list<boost::tree::preorder
+                        ,boost::tree::inorder
+                        ,boost::tree::postorder> orders;
 
 template <class T = int>
 struct test_binary_tree_fixture {
