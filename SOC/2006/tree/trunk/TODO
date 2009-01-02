@@ -14,11 +14,14 @@
 [section TODO]
 
 General:
+* Add checks for correspondence of concepts and archetypes!
 * Re-do forest (again!). No root(); begin() and end() instead. No default element at
   construction time (that would really suck). Rename forest_tree to forest, 
   as it's going to be a forest, not just "one" tree.
   This seems to raise one issue, though: subtree algorithms operate on subtree root cursors,
   not ranges. (They might, however, work for "subforests".)
+  They also work for the important special case in which forest consists of only one
+  subtree!
 * Improve cursor_archetype. Currently, there's trouble eg with constructors.
 * Remove a cursor's cursor, const_cursor, iterator and const_iterator typedefs?
   The latter two only make sense in a range algorithm context, where they might actually be
@@ -185,6 +188,7 @@ Implementation:
 
 Documentation:
 
+* Add a rationale for binary tree cursor semantics.
 * Make docs more coherent. If we're using doxygen for API documentation, don't
   duplicate that information via quickbook!
 * Include examples output (requires some Jamfile tweaking)!

@@ -12,15 +12,19 @@
 #ifndef BOOST_TREE_ALGORITHM_HPP
 #define BOOST_TREE_ALGORITHM_HPP
 
-#include <boost/tree/detail/algorithm/general.hpp>
-#include <boost/tree/detail/algorithm/ascending.hpp>
+#include <boost/tree/general_algorithms.hpp>
+#include <boost/tree/ascending_algorithms.hpp>
 
-#include <boost/tree/detail/algorithm/preorder.hpp>
-#include <boost/tree/detail/algorithm/inorder.hpp>
-#include <boost/tree/detail/algorithm/postorder.hpp>
+#include <boost/tree/preorder_algorithms.hpp>
+#include <boost/tree/inorder_algorithms.hpp>
+#include <boost/tree/postorder_algorithms.hpp>
+
+#include <boost/tree/detail/recursive_preorder_algorithms.hpp>
+#include <boost/tree/detail/recursive_inorder_algorithms.hpp>
+#include <boost/tree/detail/recursive_postorder_algorithms.hpp>
 
 //#ifndef BOOST_RECURSIVE_ORDER_ALGORITHMS
-#include <boost/tree/detail/iterative.hpp>
+#include <boost/tree/detail/iterative_algorithms.hpp>
 //#endif
 
 namespace boost {
@@ -93,7 +97,10 @@ index(Cursor const& cur)
 }
 
 template <class BinaryCursor>
-void to_forest_end(BinaryCursor& c)
+BOOST_CONCEPT_REQUIRES(
+    ((Descendor<BinaryCursor>)),
+    (void)) // return type
+to_forest_end(BinaryCursor& c)
 {
     c.to_begin();
     while (!c.empty())
@@ -129,8 +136,8 @@ template <class Order, class Cursor, class Op>
 Op for_each(Order, Cursor s, Op f)
 //]
 {
-    return for_each(Order(), s, f
-                  , typename cursor_vertical_traversal<Cursor>::type());
+    return detail::for_each(Order(), s, f
+                          , typename cursor_vertical_traversal<Cursor>::type());
 }
 
 /**
@@ -152,8 +159,8 @@ template <class Order, class InCursor, class OutCursor, class Op>
 OutCursor transform (Order, InCursor s, OutCursor t, Op op)
 //]
 {
-    return transform(Order(), s, t, op
-                  , typename cursor_vertical_traversal<InCursor>::type());
+    return detail::transform(Order(), s, t, op
+                           , typename cursor_vertical_traversal<InCursor>::type());
     // What about OutCursor?
 }
 
@@ -166,8 +173,8 @@ T identity (T const& x)
 template <class Order, class InCursor, class OutCursor, class Traversal>
 OutCursor copy(Order, InCursor s, OutCursor t, Traversal tr)
 {
-    return transform(Order(), s, t
-                   , identity<typename cursor_value<InCursor>::type>, tr);
+    return detail::transform(Order(), s, t
+                           , identity<typename cursor_value<InCursor>::type>, tr);
 }
 
 /**

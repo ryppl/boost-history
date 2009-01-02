@@ -8,7 +8,7 @@
 #define BOOST_TREE_BALANCERS_UNBALANCED_HPP
 
 #include <boost/tree/detail/cursor/nary.hpp>
-#include <boost/tree/detail/algorithm/inorder.hpp>
+#include <boost/tree/inorder_algorithms.hpp>
 
 namespace boost {
 namespace tree {
