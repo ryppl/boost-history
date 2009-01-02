@@ -16,7 +16,7 @@
 //#include <boost/tree/cursor.hpp>
 //#include <boost/tree/binary_tree.hpp>
 
-#include <boost/tree/detail/cursor/multiway.hpp>
+#include <boost/tree/detail/multiway_cursor.hpp>
 
 #include <boost/tree/nary_tree.hpp>
 

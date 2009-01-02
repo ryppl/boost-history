@@ -13,7 +13,7 @@
 #ifndef BOOST_TREE_BALANCERS_TREAP_HPP
 #define BOOST_TREE_BALANCERS_TREAP_HPP
 
-#include <boost/tree/detail/cursor/nary.hpp>
+#include <boost/tree/detail/nary_cursor.hpp>
 
 #include <limits.h>
 #include <stdlib.h>

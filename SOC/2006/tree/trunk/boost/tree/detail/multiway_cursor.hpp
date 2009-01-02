@@ -4,10 +4,13 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-// TODO: Use TR1 type_traits (integral_constant)
+/** 
+ * @file multiway_cursor.hpp
+ * Multiway cursor template
+ */
 
-#ifndef BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
-#define BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
+#ifndef BOOST_TREE_DETAIL_MULTIWAY_CURSOR_HPP
+#define BOOST_TREE_DETAIL_MULTIWAY_CURSOR_HPP
 
 #include <boost/tree/detail/nary_cursor.hpp>
 
@@ -175,4 +178,4 @@ public:
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
+#endif // BOOST_TREE_DETAIL_MULTIWAY_CURSOR_HPP

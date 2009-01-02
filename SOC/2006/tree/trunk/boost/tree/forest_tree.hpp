@@ -12,7 +12,7 @@
 #ifndef BOOST_TREE_FOREST_TREE_HPP
 #define BOOST_TREE_FOREST_TREE_HPP
 
-#include <boost/tree/detail/cursor/forest.hpp>
+#include <boost/tree/detail/forest_cursor.hpp>
 
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/algorithm.hpp>

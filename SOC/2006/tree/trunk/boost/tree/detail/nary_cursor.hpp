@@ -5,12 +5,12 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file nary.hpp
+ * @file nary_cursor.hpp
  * Nary cursor implementation
  */
 
-#ifndef BOOST_TREE_DETAIL_CURSOR_NARY_HPP
-#define BOOST_TREE_DETAIL_CURSOR_NARY_HPP
+#ifndef BOOST_TREE_DETAIL_NARY_CURSOR_HPP
+#define BOOST_TREE_DETAIL_NARY_CURSOR_HPP
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/cursor_adaptor.hpp>
@@ -255,4 +255,4 @@ index(detail::ascending_nary_cursor<Node> const& cur)
 } // namespace boost
 
 
-#endif // BOOST_TREE_DETAIL_CURSOR_NARY_HPP
+#endif // BOOST_TREE_DETAIL_NARY_CURSOR_HPP

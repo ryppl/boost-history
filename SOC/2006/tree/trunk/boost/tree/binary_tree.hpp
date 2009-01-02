@@ -16,8 +16,8 @@
 #include <boost/tree/algorithm.hpp>
 #include <boost/tree/insert_cursor.hpp>
 
-#include <boost/tree/detail/node/traits.hpp>
-#include <boost/tree/detail/cursor/nary.hpp>
+#include <boost/tree/detail/node_traits.hpp>
+#include <boost/tree/detail/nary_cursor.hpp>
 
 #include <memory>
 
@@ -47,9 +47,9 @@ class binary_tree {
     
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;
-    typedef typename node_traits<node_type>::node_base_type node_base_type;
+    typedef typename detail::node_traits<node_type>::node_base_type node_base_type;
     typedef node_base_type* node_base_pointer;
-    typedef typename node_traits<node_type>::node_pointer node_pointer;
+    typedef typename detail::node_traits<node_type>::node_pointer node_pointer;
     
  public:
     typedef ascending_nary_cursor<node_type> cursor;
