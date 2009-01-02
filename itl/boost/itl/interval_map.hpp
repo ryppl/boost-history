@@ -398,7 +398,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
-		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+		if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
 			return this->_map.end();
 		else
             insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
@@ -429,7 +429,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
-		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+		if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
 			return this->_map.end();
 		else
             insertion = this->_map.insert(value_type(value.KEY_VALUE, added_val));
@@ -464,7 +464,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, x_val);
-		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+		if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
 			return;
 		else
 			insertion = this->_map.insert(value_type(x_itv, added_val));
@@ -1009,14 +1009,14 @@ struct is_interval_container<itl::interval_map<KeyT,DataT,Traits> >
 
 template <class KeyT, class DataT, class Traits>
 struct is_interval_splitter<itl::interval_map<KeyT,DataT,Traits> >
-{ enum{value = true}; };
+{ enum{value = false}; };
 
 template <class KeyT, class DataT, class Traits>
-struct is_neutron_absorber<itl::interval_map<KeyT,DataT,Traits> >
+struct absorbs_neutrons<itl::interval_map<KeyT,DataT,Traits> >
 { enum{value = Traits::absorbs_neutrons}; };
 
 template <class KeyT, class DataT, class Traits>
-struct is_neutron_emitter<itl::interval_map<KeyT,DataT,Traits> >
+struct emits_neutrons<itl::interval_map<KeyT,DataT,Traits> >
 { enum{value = Traits::emits_neutrons}; };
 
 template <class KeyT, class DataT, class Traits>

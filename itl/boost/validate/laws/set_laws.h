@@ -17,25 +17,30 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-    template <typename Type, template<class>class Equality = itl::std_equal>
-    class InplaceUnionInvertability 
-        : public Law<InplaceUnionInvertability<Type>, 
+    template <typename Type, 
+              template<class>class Combiner = inplace_plus,
+		      template<class>class Equality = itl::std_equal>
+    class InplaceSelfRemovability 
+        : public Law<InplaceSelfRemovability<Type,Combiner,Equality>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_2(Type,Type)>
     {
-        /** a - a == 0
-        computed using inplace operators +=
-        Input  = (a := inVal1, b := inVal2)
-        Output = (lhs_result, rhs_result)
-        */
+        //a - a == 0
+        //computed using inplace operators +=
+        //Input  = (a := inVal1, b := inVal2)
+        //Output = (lhs_result, rhs_result)
 
     public:
-        std::string name()const { return "InplaceUnionInvertability"; }
+		typedef typename inverse<Combiner<Type> >::type InverseCombinerT;
+
+        std::string name()const { return "InplaceSelfRemovability"; }
         std::string formula()const { return "a -= a; a == 0"; }
 
         std::string typeString()const
         {
-            return "UnionInvertability<"+type_to_string<Type>::apply()+","
-                                        +unary_template_to_string<Equality>::apply()+">";
+            return "SelfRemovability<"+type_to_string<Type>::apply()+","
+                                      +unary_template_to_string<Combiner>::apply()+","
+                                      +unary_template_to_string<Equality>::apply()
+									  +">";
         }
 
     public:
@@ -43,9 +48,9 @@ namespace boost{namespace itl
         bool holds()
         {
             Type lhs = this->template getInputValue<operand_a>();
-            lhs -= this->template getInputValue<operand_a>();
+            InverseCombinerT()(lhs, this->template getInputValue<operand_a>());
 
-            Type rhs = Type();
+            Type rhs = Combiner<Type>::neutron();
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -53,10 +58,68 @@ namespace boost{namespace itl
             return Equality<Type>()(lhs, rhs);
         }
 
-        bool debug_holds(){ return holds(); }
+        bool debug_holds()
+		{ 
+			return holds();
+		}
 
         size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
     };
+
+
+    template <typename Type, 
+              template<class>class Combiner = inplace_plus,
+		      template<class>class Equality = itl::std_equal>
+    class InplaceInverseRemovability 
+        : public Law<InplaceInverseRemovability<Type,Combiner,Equality>, 
+                     LOKI_TYPELIST_1(Type), LOKI_TYPELIST_2(Type,Type)>
+    {
+        //(0 - a) + a == 0
+        //computed using inplace operators +=
+        //Input  = (a := inVal1, b := inVal2)
+        //Output = (lhs_result, rhs_result)
+
+    public:
+		typedef typename inverse<Combiner<Type> >::type InverseCombinerT;
+
+        std::string name()const { return "InplaceInverseRemovability"; }
+        std::string formula()const { return "a -= a; a == 0"; }
+
+        std::string typeString()const
+        {
+            return "InverseRemovability<"+type_to_string<Type>::apply()+","
+                                      +unary_template_to_string<Combiner>::apply()+","
+                                      +unary_template_to_string<Equality>::apply()
+									  +">";
+        }
+
+    public:
+
+        bool holds()
+        {
+			Type lhs = Combiner<Type>::neutron(); 
+			Type value_a = this->template getInputValue<operand_a>();
+			// lhs = (0 - a)
+            InverseCombinerT()(lhs, value_a);
+			// lhs = (0 - a) + a
+			Combiner<Type>()(lhs, value_a);
+
+            Type rhs = Combiner<Type>::neutron();
+
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+
+            return Equality<Type>()(lhs, rhs);
+        }
+
+        bool debug_holds()
+		{ 
+			return holds();
+		}
+
+        size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
+    };
+
 
     // ---------------------------------------------------------------------------
     template <typename Type, template<class>class Operator1 = inplace_plus, 
@@ -226,7 +289,8 @@ namespace boost{namespace itl
     // ---------------------------------------------------------------------------
     template <typename Type, 
               template<class>class Operator1 = inplace_plus, 
-              template<class>class Operator2 = inplace_minus>
+              template<class>class Operator2 = inplace_minus,
+              template<class>class Equality = itl::std_equal>
     class InplaceRightDistributivity 
         : public Law<InplaceRightDistributivity<Type,Operator1,Operator2>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -244,7 +308,8 @@ namespace boost{namespace itl
         {
             return "RightDistributivity<"+type_to_string<Type>::apply()+","
                                          +unary_template_to_string<Operator1>::apply()+","
-                                         +unary_template_to_string<Operator2>::apply()+">";
+                                         +unary_template_to_string<Operator2>::apply()+","
+			                             +unary_template_to_string<Equality>::apply() +">";
         }
 
     public:
@@ -280,7 +345,7 @@ namespace boost{namespace itl
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-            return lhs == rhs;
+            return Equality<Type>()(lhs, rhs);
         }
 
         bool debug_holds()
@@ -314,7 +379,7 @@ namespace boost{namespace itl
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-            return lhs == rhs;
+            return Equality<Type>()(lhs, rhs);
         }
     };
 
@@ -466,6 +531,99 @@ namespace boost{namespace itl
             return 
                 value_size<MapT>::apply(this->template getInputValue<operand_a>())+
                 value_size<typename MapT::set_type>::apply(this->template getInputValue<operand_b>());
+        }
+    };
+
+    // ---------------------------------------------------------------------------
+    template <typename MapT>
+    class ProtonicEquality 
+        : public Law<ProtonicEquality<MapT>, 
+                     LOKI_TYPELIST_2(MapT,MapT), LOKI_TYPELIST_2(bool,bool)>
+    {
+        /** (a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)
+        Input  = (a := inVal1, b := inVal2)
+        Output = (lhs_result, rhs_result)
+        */
+    public:
+        std::string name()const { return "ProtonicEquality"; }
+        std::string formula()const { return "(a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)"; }
+
+        std::string typeString()const
+        {
+            return "ProtonicEquality<"+type_to_string<MapT>::apply()+">";
+        }
+
+    public:
+
+        bool holds()
+        {
+            // (a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)
+            // --- left hand side ------------------------
+            // lhs := (a.absorb_neutrons() == b.absorb_neutrons())
+            MapT a = this->template getInputValue<operand_a>();
+            MapT a_protonic = a;
+			a_protonic.absorb_neutrons();
+            MapT b = this->template getInputValue<operand_b>();
+            MapT b_protonic = b;
+			b_protonic.absorb_neutrons();
+
+            bool lhs = a_protonic == b_protonic;
+
+            // --- right hand side -----------------------
+            // rhs := is_protonic_equal(a, b)
+            bool rhs = is_protonic_equal(a, b);
+
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+
+            return lhs == rhs;
+        }
+
+        bool debug_holds()
+		{ 
+            // (a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)
+            // --- left hand side ------------------------
+            // lhs := (a.absorb_neutrons() == b.absorb_neutrons())
+
+			cout << name() << "::debug_holds():" << endl;
+			cout << "Instance: " << typeString() << endl;
+			cout << "Formula: " << formula() << endl;
+
+            MapT a = this->template getInputValue<operand_a>();
+            MapT b = this->template getInputValue<operand_b>();
+
+			cout << "a: " << a.as_string() << endl;
+			cout << "b: " << b.as_string() << endl;
+
+            MapT a_protonic = a;
+			a_protonic.absorb_neutrons();
+            MapT b_protonic = b;
+			b_protonic.absorb_neutrons();
+
+			cout << "a.absorb_neutrons(): " << a_protonic.as_string() << endl;
+			cout << "b.absorb_neutrons(): " << b_protonic.as_string() << endl;
+
+            bool lhs = a_protonic == b_protonic;
+
+			cout << "lhs := (a.absorb_neutrons() == b.absorb_neutrons()): " << lhs << endl;
+
+            // --- right hand side -----------------------
+            // rhs := is_protonic_equal(a, b)
+            bool rhs = is_protonic_equal(a, b);
+
+			cout << "rhs := is_protonic_equal(a, b): " << rhs << endl;
+
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+
+            return lhs == rhs;
+		}
+
+        size_t size()const 
+        { 
+            return 
+                value_size<MapT>::apply(this->template getInputValue<operand_a>())+
+                value_size<MapT>::apply(this->template getInputValue<operand_b>());
         }
     };
 

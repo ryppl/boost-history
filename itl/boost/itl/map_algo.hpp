@@ -105,9 +105,9 @@ namespace boost{namespace itl
                 {
                     result.insert(*x1_);
                     if(is_set<typename MapType::data_type>::value)
-						result.template add<MapType::data_intersect>(*x2_); //MEMO template cast for gcc
+						result.template add<MapType::codomain_intersect>(*x2_); //MEMO template cast for gcc
                     else
-                        result.template add<MapType::data_combine>(*x2_);//JODO URG
+                        result.template add<MapType::codomain_combine>(*x2_);//JODO URG
                 }
                 x1_++;
             }
@@ -154,6 +154,45 @@ namespace boost{namespace itl
             intersect(tmp, result, x2);
             tmp.swap(result);
         }
+
+		template<class MapType>
+		typename MapType::const_iterator next_proton(typename MapType::const_iterator& iter_, const MapType& object)
+		{
+			while(   iter_ != object.end() 
+				  && iter_->CONT_VALUE == neutron<typename MapType::codomain_type>::value())
+				++iter_;
+
+			return iter_;
+		}
+
+		/** Function template <tt>lexicographical_equal</tt> implements 
+        lexicographical equality except for neutronic content values. */
+        template<class MapType>
+		bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
+        {
+            if(&left == &right)        
+				return true;
+
+            typename MapType::const_iterator left_  = left.begin();
+            typename MapType::const_iterator right_ = right.begin();
+
+			left_  = next_proton(left_,  left);
+			right_ = next_proton(right_, right);
+
+            while(left_ != left.end() && right_ != right.end())
+            {
+                if(!(left_->KEY_VALUE == right_->KEY_VALUE && left_->CONT_VALUE == right_->CONT_VALUE))
+                    return false;
+
+				++left_;
+				++right_;
+				left_  = next_proton(left_,  left);
+				right_ = next_proton(right_, right);
+            }
+
+			return left_ == left.end() && right_ == right.end();
+        }
+
 
     } // namespace Map
 }} // namespace boost itl

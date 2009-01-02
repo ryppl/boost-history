@@ -430,11 +430,11 @@ namespace boost{namespace itl
     { enum{value = true}; };
 
     template <class Type>
-    struct is_neutron_absorber<itl::split_interval_set<Type> >
+    struct absorbs_neutrons<itl::split_interval_set<Type> >
     { enum{value = false}; };
 
     template <class Type>
-    struct is_neutron_emitter<itl::split_interval_set<Type> >
+    struct emits_neutrons<itl::split_interval_set<Type> >
     { enum{value = false}; };
 
     template <class Type>

@@ -104,6 +104,60 @@ namespace boost{namespace itl
     inline std::string unary_template_to_string<inplace_minus>::apply() { return "-="; }
 
     // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_bit_add
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef Type type;
+
+        void operator()(Type& object, const Type& operand)const
+        { object |= operand; }
+    };
+
+    template<>
+    inline std::string unary_template_to_string<inplace_bit_add>::apply() { return "b|="; }
+
+    // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_bit_subtract
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef Type type;
+        void operator()(Type& object, const Type& operand)const
+        { object &= ~operand; }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+    };
+
+    template<>
+    inline std::string unary_template_to_string<inplace_bit_subtract>::apply() { return "b-="; }
+
+    // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_bit_and
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef Type type;
+
+        void operator()(Type& object, const Type& operand)const
+        { object &= operand; }
+    };
+
+    template<>
+    inline std::string unary_template_to_string<inplace_bit_and>::apply() { return "b&="; }
+
+    // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_bit_xor
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef Type type;
+        void operator()(Type& object, const Type& operand)const
+        { object ^= operand; }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+    };
+
+    template<>
+    inline std::string unary_template_to_string<inplace_bit_xor>::apply() { return "b^="; }
+
+    // ------------------------------------------------------------------------
     template <typename Type> struct inserter
         : public neutron_based_inplace_combine<Type>
     {
@@ -198,6 +252,22 @@ namespace boost{namespace itl
 	template<class Type> 
 	struct inverse<itl::inplace_minus<Type> >
 	{ typedef itl::inplace_plus<Type> type; };
+
+	template<class Type> 
+	struct inverse<itl::inplace_bit_add<Type> >
+	{ typedef itl::inplace_bit_subtract<Type> type; };
+
+	template<class Type> 
+	struct inverse<itl::inplace_bit_subtract<Type> >
+	{ typedef itl::inplace_bit_add<Type> type; };
+
+	template<class Type> 
+	struct inverse<itl::inplace_bit_and<Type> >
+	{ typedef itl::inplace_bit_xor<Type> type; };
+
+	template<class Type> 
+	struct inverse<itl::inplace_bit_xor<Type> >
+	{ typedef itl::inplace_bit_and<Type> type; };
 
 	template<class Type> 
 	struct inverse<itl::inplace_star<Type> >

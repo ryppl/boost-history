@@ -465,7 +465,7 @@ public:
     SubType& subtract(const value_type& x)
     {
 		typedef typename inverse<Combine<CodomainT> >::type InverseCombine;
-        if(Traits::emits_neutrons)
+		if(Traits::emits_neutrons && !is_set<codomain_type>::value)
 			that()->template add_<InverseCombine>(x); 
         else 
 			that()->template subtract_<InverseCombine>(x); 
@@ -1077,7 +1077,7 @@ template
 >
 CodomainT interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::sum()const
 {
-    CodomainT sum = CodomainT();
+	CodomainT sum = codomain_combine::neutron();
     const_FOR_IMPLMAP(it) 
         sum += (*it).CONT_VALUE;
     return sum;
@@ -1196,13 +1196,7 @@ template
 inline bool is_protonic_equal(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
                               const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
 {
-    interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> lhs0 = lhs;
-    interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> rhs0 = rhs;
-
-    lhs0.absorb_neutrons();
-    rhs0.absorb_neutrons();
-
-    return Set::lexicographical_equal(lhs0, rhs0);
+	return Map::lexicographical_protonic_equal(lhs, rhs);
 }
 
 

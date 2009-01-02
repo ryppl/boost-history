@@ -270,11 +270,11 @@ struct is_interval_splitter<itl::separate_interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>
-struct is_neutron_absorber<itl::separate_interval_set<Type> >
+struct absorbs_neutrons<itl::separate_interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>
-struct is_neutron_emitter<itl::separate_interval_set<Type> >
+struct emits_neutrons<itl::separate_interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>

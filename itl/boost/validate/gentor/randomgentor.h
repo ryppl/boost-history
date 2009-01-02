@@ -10,6 +10,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #pragma once
 
 
+#include <boost/itl/notate.hpp>
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/setgentor.hpp>
 #include <boost/itl_xt/mapgentor.hpp>
@@ -28,6 +29,7 @@ namespace boost{namespace itl
     // ----------------------------------------------------------
     template <class ValueT> class RandomGentor;
     template <> class RandomGentor<int> : public NumberGentorT<int> {};
+    template <> class RandomGentor<nat> : public NumberGentorT<nat> {};
     template <> class RandomGentor<double> : public NumberGentorT<double> {};
 
     // ----- sets ----------------------------------------------------------------
@@ -117,6 +119,16 @@ namespace boost{namespace itl
         {
             // Set the range within which the sizes of the generated object varies.
             gentor.setRange(GentorProfileSgl::it()->range_int());
+        }
+    };
+
+    template <> 
+    struct Calibrater<nat, RandomGentor>
+    {
+        static void apply(RandomGentor<nat>& gentor)
+        {
+            // Set the range within which the sizes of the generated object varies.
+            gentor.setRange(GentorProfileSgl::it()->range_nat());
         }
     };
 

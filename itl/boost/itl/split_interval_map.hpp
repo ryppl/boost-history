@@ -286,8 +286,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
-
-		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+		if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
 			return;
 		else
             this->_map.insert(value_type(value.KEY_VALUE, added_val));
@@ -318,9 +317,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, x_val);
-        insertion = this->_map.insert(value_type(x_itv, added_val));
-
-		if(Traits::absorbs_neutrons && added_val == neutron<CodomainT>::value())
+		if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
 			return;
 		else
 			insertion = this->_map.insert(value_type(x_itv, added_val));
@@ -790,11 +787,11 @@ struct is_interval_splitter<itl::split_interval_map<KeyT,DataT,Traits> >
 { enum{value = true}; };
 
 template <class KeyT, class DataT, class Traits>
-struct is_neutron_absorber<itl::split_interval_map<KeyT,DataT,Traits> >
+struct absorbs_neutrons<itl::split_interval_map<KeyT,DataT,Traits> >
 { enum{value = Traits::absorbs_neutrons}; };
 
 template <class KeyT, class DataT, class Traits>
-struct is_neutron_emitter<itl::split_interval_map<KeyT,DataT,Traits> >
+struct emits_neutrons<itl::split_interval_map<KeyT,DataT,Traits> >
 { enum{value = Traits::emits_neutrons}; };
 
 template <class KeyT, class DataT, class Traits>

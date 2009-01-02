@@ -41,8 +41,8 @@ for concepts InplaceAddable and InplaceSubtractable
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
-#include <boost/itl/type_traits/is_neutron_absorber.hpp>
-#include <boost/itl/type_traits/is_neutron_emitter.hpp>
+#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/emits_neutrons.hpp>
 #include <boost/itl/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
 
@@ -80,6 +80,7 @@ namespace boost{namespace itl
 
     public:
         typedef DomainT     domain_type;
+        typedef DomainT     codomain_type;
         typedef DomainT     key_type;
         typedef DomainT     value_type;
         typedef DomainT     data_type;
@@ -223,10 +224,8 @@ namespace boost{namespace itl
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    /** Element equality. Two sets are equal if they contain the same 
-        elements */
-    template <typename DomainT, ITL_COMPARE Compare, 
-                             ITL_ALLOC Alloc>
+    /** Element equality. Two sets are equal if they contain the same elements */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     inline bool is_element_equal(const itl::set<DomainT,Compare,Alloc>& lhs,
                                  const itl::set<DomainT,Compare,Alloc>& rhs)
     {
@@ -235,8 +234,7 @@ namespace boost{namespace itl
     }
 
     /** Strict weak less ordering which is given by the Compare order */
-    template <typename DomainT, ITL_COMPARE Compare, 
-                             ITL_ALLOC Alloc>
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     inline bool operator < (const itl::set<DomainT,Compare,Alloc>& lhs,
                             const itl::set<DomainT,Compare,Alloc>& rhs)
     {
@@ -245,8 +243,7 @@ namespace boost{namespace itl
     }
 
     /** Partial ordering which is induced by Compare */
-    template <typename DomainT, ITL_COMPARE Compare, 
-                             ITL_ALLOC Alloc>
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     inline bool operator <= (const itl::set<DomainT,Compare,Alloc>& lhs,
         const itl::set<DomainT,Compare,Alloc>& rhs)
     {
@@ -255,8 +252,7 @@ namespace boost{namespace itl
     }
 
 
-    template <typename DomainT, ITL_COMPARE Compare, 
-                             ITL_ALLOC Alloc>
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     typename set<DomainT,Compare,Alloc>::iterator
         set<DomainT,Compare,Alloc>::subtract(const value_type& val)
     {
@@ -346,11 +342,11 @@ namespace boost{namespace itl
     { enum{value = false}; };
 
     template <class Type>
-    struct is_neutron_absorber<itl::set<Type> >
+    struct absorbs_neutrons<itl::set<Type> >
     { enum{value = false}; };
 
     template <class Type>
-    struct is_neutron_emitter<itl::set<Type> >
+    struct emits_neutrons<itl::set<Type> >
     { enum{value = false}; };
 
     template <class Type>

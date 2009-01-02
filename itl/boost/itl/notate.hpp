@@ -126,6 +126,12 @@ namespace boost{namespace itl
 //------------------------------------------------------------------------------
 #define ITL_ALLOC    template<class>class
 
+//------------------------------------------------------------------------------
+namespace boost{namespace itl
+{
+	typedef unsigned int nat;
+}} // namespace itl boost
+
 #endif // __itl_NOTATE_H_JOFA_990119__
 
 

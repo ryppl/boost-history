@@ -124,8 +124,8 @@ namespace boost{namespace itl
 
     // ---------------------------------------------------------------------------
     template <typename Type, template<class>class Relation>
-    class Antisymmetry2 
-        : public Law<Antisymmetry2<Type,Relation>, 
+    class Asymmetry 
+        : public Law<Asymmetry<Type,Relation>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_1(Type)> 
     {
         /** a < b  => !(b < a) 
@@ -133,13 +133,13 @@ namespace boost{namespace itl
         Output = ()
         */
     public:
-        std::string name()const { return "Antisymmetry2"; }
+        std::string name()const { return "Asymmetry"; }
         std::string formula()const { return " a < b  => !(b < a)"; }
 
         std::string typeString()const
         {
-            return "Antisymmetry2<"+type_to_string<Type>::apply()+","
-                                   +unary_template_to_string<Relation>::apply()+">";
+            return "Asymmetry<"+type_to_string<Type>::apply()+","
+                               +unary_template_to_string<Relation>::apply()+">";
         }
 
     public:

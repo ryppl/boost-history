@@ -35,6 +35,7 @@ class itl::map
 
 #include <string>
 #include <boost/itl/notate.hpp>
+#include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
@@ -75,14 +76,14 @@ namespace boost{namespace itl
     template<> 
     inline std::string type_to_string<neutron_emitter>::apply() { return "^0"; }
 
-    struct neutron_emitter_and_enricher
+    struct neutron_polluter
     {
         enum { absorbs_neutrons = false };
         enum { emits_neutrons = true };
     };
 
     template<> 
-    inline std::string type_to_string<neutron_emitter_and_enricher>::apply() { return "e^0"; }
+    inline std::string type_to_string<neutron_polluter>::apply() { return "e^0"; }
 
 
     /*JODO move this comment to concept InplaceAddable, InplaceSubtractable, InplaceCombinable
@@ -130,10 +131,11 @@ namespace boost{namespace itl
         typedef CodomainT                                   mapped_type;
         typedef CodomainT                                   data_type;
         typedef std::pair<const DomainT, CodomainT>         value_type;
-        typedef ITL_COMPARE_DOMAIN(Compare,DomainT)         key_compare;
-        typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)     data_combine;
-		typedef typename inverse<Combine<CodomainT> >::type inverse_data_combine;
-		typedef inplace_star<CodomainT>                     data_intersect;
+        typedef ITL_COMPARE_DOMAIN(Compare,DomainT)         domain_compare;
+        typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)     codomain_combine;
+        typedef domain_compare                              key_compare;
+		typedef typename inverse<codomain_combine >::type   inverse_codomain_combine;
+		typedef inplace_star<CodomainT>                     codomain_intersect;
 		typedef typename base_type::value_compare           value_compare;
 
     public:
@@ -209,7 +211,7 @@ namespace boost{namespace itl
 
         std::pair<iterator,bool> insert(const value_type& value_pair)
         {
-            if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == CodomainT()) 
+            if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == codomain_combine::neutron()) 
                 return std::pair<iterator,bool>(end(),true);
             else
                 return base_type::insert(value_pair);
@@ -219,7 +221,7 @@ namespace boost{namespace itl
             not exist in the map.    
             If \c value_pairs's key value exists in the map, it's data
             value is added to the data value already found in the map. */
-        iterator add(const value_type& value_pair) { return add<data_combine>(value_pair); }
+        iterator add(const value_type& value_pair) { return add<codomain_combine>(value_pair); }
 
         template<class Combiner>
         iterator add(const value_type& value_pair);
@@ -238,9 +240,9 @@ namespace boost{namespace itl
             in \c *this, subtract the contents using <tt>operator -=</tt>. */
         map& operator -= (const map& x2) 
         { 
-            if(Traits::emits_neutrons)
+			if(Traits::emits_neutrons && !is_set<codomain_type>::value)
                 const_FORALL(typename map, it_, x2)
-                    this->add<inverse_data_combine>(*it_);
+                    this->add<inverse_codomain_combine>(*it_);
             else Set::subtract(*this, x2); 
             return *this; 
         }
@@ -372,13 +374,13 @@ namespace boost{namespace itl
     typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
         map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::add(const value_type& val)
     {
-        if(Traits::absorbs_neutrons && val.CONT_VALUE == CodomainT())
+        if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
             return end();
 
         std::pair<iterator, bool> insertion;
         if(Traits::emits_neutrons)
         {
-            CodomainT added_val = CodomainT();
+            CodomainT added_val = Combiner::neutron();
             Combiner()(added_val, val.CONT_VALUE);
             insertion = insert(value_type(val.KEY_VALUE, added_val));
         }
@@ -392,7 +394,7 @@ namespace boost{namespace itl
             iterator it = insertion.ITERATOR;
             Combiner()((*it).CONT_VALUE, val.CONT_VALUE);
 
-            if(Traits::absorbs_neutrons && (*it).CONT_VALUE == CodomainT())
+            if(Traits::absorbs_neutrons && (*it).CONT_VALUE == Combiner::neutron())
             {
                 erase(it);
                 return end();
@@ -407,7 +409,7 @@ namespace boost{namespace itl
         map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
         ::erase(const value_type& value_pair)
     {
-        if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == CodomainT())
+        if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == codomain_combine::neutron())
             return 0; // neutrons are never contained 'substantially' 
                       // only 'virually'.
 
@@ -426,8 +428,8 @@ namespace boost{namespace itl
     typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
         map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
     {
-        if(Traits::emits_neutrons)
-            return add<inverse_data_combine>(val);
+        if(Traits::emits_neutrons && !is_set<codomain_type>::value)
+            return add<inverse_codomain_combine>(val);
         else
         {
             iterator it_ = find(val.KEY_VALUE);
@@ -435,7 +437,7 @@ namespace boost{namespace itl
             {
                 (*it_).CONT_VALUE -= val.CONT_VALUE;
 
-                if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == CodomainT())
+                if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == codomain_combine::neutron())
                 {
                     erase(it_);
                     return end();
@@ -520,7 +522,17 @@ namespace boost{namespace itl
         return object; 
     }
 
-    //-------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------
+	// type traits
+	//-----------------------------------------------------------------------------
+	template <class KeyT, class DataT, class Traits>
+	struct is_set<itl::map<KeyT,DataT,Traits> >
+	{ enum{value = true}; };
+
+	template <class KeyT, class DataT, class Traits>
+	struct is_map<itl::map<KeyT,DataT,Traits> >
+	{ enum{value = true}; };
+
     template <class DomainT, class CodomainT, class Traits>
     struct is_interval_container<itl::map<DomainT,CodomainT,Traits> >
     { enum{value = true}; };
@@ -530,11 +542,11 @@ namespace boost{namespace itl
     { enum{value = false}; };
 
     template <class DomainT, class CodomainT, class Traits>
-    struct is_neutron_absorber<itl::map<DomainT,CodomainT,Traits> >
+    struct absorbs_neutrons<itl::map<DomainT,CodomainT,Traits> >
     { enum{value = Traits::absorbs_neutrons}; };
 
     template <class DomainT, class CodomainT, class Traits>
-    struct is_neutron_emitter<itl::map<DomainT,CodomainT,Traits> >
+    struct emits_neutrons<itl::map<DomainT,CodomainT,Traits> >
     { enum{value = Traits::emits_neutrons}; };
 
     template <class DomainT, class CodomainT, class Traits>

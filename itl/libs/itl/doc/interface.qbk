@@ -228,6 +228,23 @@ for computations between open to closed interval borders like e.g.
 `[2,43) == [2,42]`. Such computations always need only
 one in- or decrementation, if `DomainT` is an integral type. 
 
+[h5 Requirements on Interval]
+
+Requirements on the `Interval` parameter are closely related to the 
+`DomainT` parameter. `template Interval` has two template parameters
+itself for an element type and a compare order and it is of course
+internally always instantiated as `Interval<DomainT,Compare>`.
+`Interval<DomainT,Compare>` then has to implement an order called
+`exclusive_less`. Two intervals `x, y` are exclusive_less 
+``x.exclusive_less(y)``
+if all `DomainT` elements of `x` are less than elements of `y` in the
+`Compare` order. 
+ 
+[table 
+[[Parameter]  [Operators]                     [Requirement]                                              ]
+[[`Interval`] [`exclusive_less`]              [`IsExclusiveLessComparable<Interval<DomainT,Compare> >`]   ] 
+]
+
 [h4 Requirements on CodomainT]
 
 Summarized in the next table are requirements for template parameter
