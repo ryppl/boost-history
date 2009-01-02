@@ -12,8 +12,8 @@
  /]
 
 [import ../../../boost/tree/algorithm.hpp]
-[import ../../../boost/tree/detail/algorithm/general.hpp]
-[import ../../../boost/tree/detail/algorithm/inorder.hpp]
+[import ../../../boost/tree/general_algorithms.hpp]
+[import ../../../boost/tree/inorder_algorithms.hpp]
 [import ../example/for_each.cpp]
 
 [section Algorithms]

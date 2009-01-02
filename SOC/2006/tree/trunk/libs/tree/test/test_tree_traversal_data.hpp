@@ -10,7 +10,7 @@
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#include <list>
+#include <vector>
 
 #include "helpers.hpp"
 

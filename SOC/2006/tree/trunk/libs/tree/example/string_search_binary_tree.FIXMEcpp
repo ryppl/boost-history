@@ -10,9 +10,9 @@
 
 #include <boost/tree/balancers/unbalanced.hpp>
 
-#include <boost/tree/comparators/string.hpp>
-
 #include <boost/multi_index/identity.hpp>
+
+#include "string_comparator.hpp"
 
 #include <string>
 
