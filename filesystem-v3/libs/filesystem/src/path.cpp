@@ -28,6 +28,10 @@ using std::wstring;
 
 using boost::system::error_code;
 
+#ifndef BOOST_FILESYSTEM_CODECVT_BUF_SIZE
+# define BOOST_FILESYSTEM_CODECVT_BUF_SIZE 256
+#endif
+
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
 //                                class path helpers                                    //
@@ -43,6 +47,8 @@ namespace
   typedef path::size_type    size_type;
   typedef path::string_type  string_type;
   typedef path::value_type   value_type;
+
+  const std::size_t default_codecvt_buf_size = BOOST_FILESYSTEM_CODECVT_BUF_SIZE;
 
 # ifdef BOOST_WINDOWS_PATH
 
@@ -579,8 +585,8 @@ namespace
   //                                                                                    //
   //                     class windows_file_api_codecvt_facet                           //
   //                                                                                    //
-  //  Warning: partial implementation; only do_in and do_out meet the standard library  //
-  //  specifications, and even these do not set from_next.                              //
+  //  Warning: partial implementation; even do_in and do_out only partially meet the    //
+  //  standard library specifications; the "to" buffer must hold the entire result.     //
   //------------------------------------------------------------------------------------//
 
   class windows_file_api_codecvt_facet
@@ -628,6 +634,7 @@ namespace
       return error;  // conversion failed
     }
 
+    from_next = from_end;
     to_next = to + count;
     *to_next = L'\0';
     return ok;
@@ -647,6 +654,7 @@ namespace
       return error;  // conversion failed
     }
 
+    from_next = from_end;
     to_next = to + count;
     *to_next = '\0';
     return ok;
@@ -733,11 +741,27 @@ namespace detail
   //                                   append                                           //
   //------------------------------------------------------------------------------------//
 
-  void append_error( const char * begin, const char * end )
+  //  actual append done here to factor it out from messy buffer management code;
+  //  this function just assumes the buffer is large enough.
+  inline void do_append( const char * from, const char * from_end,
+                   wchar_t * to, wchar_t * to_end,
+                   wstring & target, error_code & ec )
   {
-    assert( false && "not implemented yet" );
+    std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
+    const char * from_next;
+    wchar_t * to_next;
+
+    if ( wchar_t_codecvt_facet()->in( state, from, from_end, from_next,
+           to, to_end, to_next ) != std::codecvt_base::ok )
+    {
+      assert( 0 && "append error handling not implemented yet" );
+      throw "append error handling not implemented yet";
+    }
+    if ( &ec != &system::throws ) ec.clear();
+    target.append( to, to_next ); 
   }
 
+  BOOST_FILESYSTEM_DECL
   void append( const char * begin, const char * end, wstring & target, error_code & ec )
   {
     if ( !end ) 
@@ -749,68 +773,72 @@ namespace detail
       return;
     }
 
-    std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const char * from_next;
-    wchar_t * to_next;
     std::size_t buf_size = end - begin;  // perhaps too large, but that's OK
-    const std::size_t max_size = 128;
 
     //  dynamically allocate a buffer only if source is unusually large
-    if ( buf_size <= max_size )
+    if ( buf_size > default_codecvt_buf_size )
     {
-      wchar_t buf[max_size];
-      if ( wchar_t_codecvt_facet()->in( state, begin, end,
-            from_next, buf, buf+max_size, to_next ) != std::codecvt_base::ok )
-        append_error( begin, end );
-      else {
-        target.append( buf, to_next ); 
-        if ( &ec != &system::throws ) ec.clear();
-      }
+      boost::scoped_array< wchar_t > buf( new wchar_t [buf_size] );
+      do_append( begin, end, buf.get(), buf.get()+buf_size, target, ec );
     }
     else
     {
-      boost::scoped_array< wchar_t > buf( new wchar_t [ buf_size] ); 
-      if ( wchar_t_codecvt_facet()->in( state, begin, end,
-            from_next, buf.get(), buf.get()+buf_size, to_next ) != std::codecvt_base::ok )
-        append_error( begin, end );
-      else {
-        target.append( buf.get(), to_next ); 
-        if ( &ec != &system::throws ) ec.clear();
-      }
+      wchar_t buf[default_codecvt_buf_size];
+      do_append( begin, end, buf, buf+buf_size, target, ec );
     }
-
   }
 
   //------------------------------------------------------------------------------------//
   //                                  convert                                           //
   //------------------------------------------------------------------------------------//
 
+  //  actual convert done here to factor it out from messy buffer management code;
+  //  this function just assumes the buffer is large enough.
+  inline string  do_convert( const wchar_t * from, const wchar_t * from_end,
+                            char * to, char * to_end, error_code & ec )
+  {
+    std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
+    const wchar_t * from_next;
+    char * to_next;
+
+    if ( wchar_t_codecvt_facet()->out( state, from, from_end,
+          from_next, to, to_end, to_next ) != std::codecvt_base::ok )
+    {
+      assert( 0 && "convert error handling not implemented yet" );
+      throw "convert error handling not implemented yet";
+    }
+    if ( &ec != &system::throws ) ec.clear();
+    return string( to, to_next ); 
+  }
+
   BOOST_FILESYSTEM_DECL
   string convert_to_string( const wstring & src, error_code & ec )
   {
-    if ( src.empty() ) return std::string();
-
-    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
-
-    //  buffer management strategy; use a probably large enough default buffer,
-    //  but fallback to an explict allocation if the default buffer is too small
-
-    const std::size_t default_buf_sz = MAX_PATH+1;
-    char buf[default_buf_sz+1];
-    int count;
-
-    if ( (count = ::WideCharToMultiByte( codepage, WC_NO_BEST_FIT_CHARS, src.c_str(),
-      src.size(), buf, default_buf_sz, 0, 0 )) != 0 ) // success
+    if ( src.empty() )
     {
-      ec.clear();
-      buf[count] = '\0';
-      return std::string( buf );
+      if ( &ec != &system::throws ) ec.clear();
+      return std::string();
     }
 
-    // TODO: implement fallback
-    BOOST_ASSERT(0);
-    throw "path::native_string() error handling not implemented yet";
-    return std::string();
+    //  The codecvt length functions may not be implemented, and I don't reall
+    //  understand them either. Thus this code is really just a guess; it it turns
+    //  out the buffer is too small then an error will be reported and the code
+    //  will have to be fixed.
+    std::size_t buf_size = src.size() * 4;
+    buf_size += 4;  // encodings like shift-JIS need some prefix space
+
+    //  dynamically allocate a buffer only if source is unusually large
+    if ( buf_size > default_codecvt_buf_size )
+    {
+      boost::scoped_array< char > buf( new char [buf_size] );
+      return do_convert( src.c_str(), src.c_str()+src.size(),
+        buf.get(), buf.get()+buf_size, ec );
+    }
+    else
+    {
+      char buf[default_codecvt_buf_size];
+      return do_convert( src.c_str(), src.c_str()+src.size(), buf, buf+buf_size, ec );
+    }
   }
 
 }  // namespace detail

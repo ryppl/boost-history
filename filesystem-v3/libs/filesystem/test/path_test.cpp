@@ -1258,12 +1258,12 @@ int test_main( int, char*[] )
   p5 /= "";
   PATH_CHECK( p5, "foo/bar\\" );
   char bf[]= "bar/foo";
-  p5.assign( bf, bf + sizeof(bf) ); 
+  p5.assign( bf, bf + sizeof(bf) - 1 ); 
   PATH_CHECK( p5, bf );
-  p5.append( bf, bf + sizeof(bf) ); 
+  p5.append( bf, bf + sizeof(bf) - 1 ); 
   PATH_CHECK( p5, "bar/foo\\bar/foo" );
 
-  // this code, courtesy of David Whetstone, detected a now fixed bug that
+  // this code, courtesy of David Whetstone, detects a now fixed bug that
   // derefereced the end iterator (assuming debug build with checked itors)
   std::vector<char> v1;
   p5.assign( v1.begin(), v1.end() );

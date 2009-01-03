@@ -522,9 +522,11 @@ namespace
 
     path p0( L"\u2722" );  // for tests that depend on detail::convert_to_string
     CHECK( p0.string() != "\xE2\x9C\xA2" );
+    string p0_string( p0.string() );
 
     path p1( "\xE2\x9C\xA2" );
     CHECK( p1 != L"\u2722" );
+    wstring p1_wstring( p1.wstring() );
 
     // So that tests are run with known encoding, use Boost UTF-8 codecvt
     std::locale global_loc = std::locale();
@@ -534,13 +536,14 @@ namespace
     CHECK( p0.string() == "\xE2\x9C\xA2" );
     path p2( "\xE2\x9C\xA2" );
     CHECK( p2 == L"\u2722" );
+    CHECK( p2.wstring() == L"\u2722" );
 
     path::imbue( old_loc );
 
-    CHECK( p0.string() != "\xE2\x9C\xA2" );
+    CHECK( p0.string() == p0_string );
     path p3( "\xE2\x9C\xA2" );
     CHECK( p3 != L"\u2722" );
-
+    CHECK( p3.wstring() == p1_wstring );
   }
 
 //  //  test_locales  --------------------------------------------------------------------//

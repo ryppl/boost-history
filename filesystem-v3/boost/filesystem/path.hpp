@@ -18,6 +18,7 @@
 
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
    * Windows, POSIX, conversions for user-defined types.
+   * Need an error category for codecvt errors. Seed path.cpp detail::append, etc.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
    * test case: relational on paths differing only in trailing separator. rationale?
    * Behavior of root_path() has been changed. Change needs to be propagated to trunk.
