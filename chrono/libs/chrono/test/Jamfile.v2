@@ -9,26 +9,27 @@
 
 project
     : requirements
-      <library>/boost/chrono//boost_chrono
+#      <library>/boost/chrono//boost_chrono
       <toolset>msvc:<asynch-exceptions>on
     ;
 
    test-suite "chrono"
-       : [ run ../example/time2_demo.cpp
-           : # command line
-           : # input files
-           : # requirements
-                   <link>static
-         ]
-         [ run ../example/time2_demo.cpp ../../system/build
-           :  :  :  : time2_demo_dll
-         ]
-         [ run run_timer_test.cpp
-           :  :  : <link>static
-         ]
-         [ run run_timer_test.cpp ../../system/build
-           :  :  :  : run_timer_test_dll
-         ]
-         [ run ../example/run_timer_example.cpp  ../../system/build
-         ]
+       :
+#         [ run ../example/time2_demo.cpp
+#           : # command line
+#           : # requirements
+#                   <link>static
+#         ]
+#         [ run ../example/time2_demo.cpp ../../system/build
+#           :  :  :  : time2_demo_dll
+#         ]
+#         [ run run_timer_test.cpp
+#           :  :  : <link>static
+#         ]
+#         [ run run_timer_test.cpp ../../system/build
+#           :  :  :  : run_timer_test_dll
+#         ]
+#         [ run ../example/run_timer_example.cpp  ../../system/build
+#         ]
+         [ compile-fail ratio_fail_test1.cpp ]
          ;

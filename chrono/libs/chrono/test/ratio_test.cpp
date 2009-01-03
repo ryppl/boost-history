@@ -7,7 +7,14 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/ratio.hpp>
+#include <boost/chrono/chrono.hpp>
 #include <iostream>
+
+//  Test the case described in library working group issue 948.
+
+typedef boost::ratio<0x7FFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFF0> R1;
+typedef boost::ratio<8, 7> R2;
+typedef boost::ratio_multiply<R1, R2>::type RT;
 
 //////////////////////////////////////////////////////////
 //////////////////// User1 Example ///////////////////////
@@ -187,7 +194,7 @@ int main()
     std::cout << "* testUser1 *\n";
     std::cout << "*************\n";
     User1::Distance d( User1::mile(110) );
-    User1::Time t( std::chrono::hours(2) );
+    User1::Time t( boost::chrono::hours(2) );
     User1::Speed s = d / t;
     std::cout << "Speed = " << s.get() << " meters/sec\n";
     User1::Acceleration a = User1::Distance( User1::foot(32.2) ) / User1::Time() / User1::Time();

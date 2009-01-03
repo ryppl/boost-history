@@ -34,6 +34,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chrono_dll", "chrono_dll\ch
 		{8E1660C2-6981-4D39-ACF4-1594D6BEB212} = {8E1660C2-6981-4D39-ACF4-1594D6BEB212}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ratio_fail_test1", "ratio_fail_test1\ratio_fail_test1.vcproj", "{82C1FB41-A270-4ED5-986F-C3C97588E6C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -66,6 +68,10 @@ Global
 		{724599F0-7DB3-4D37-A8F6-D905020C2D8F}.Debug|Win32.Build.0 = Debug|Win32
 		{724599F0-7DB3-4D37-A8F6-D905020C2D8F}.Release|Win32.ActiveCfg = Release|Win32
 		{724599F0-7DB3-4D37-A8F6-D905020C2D8F}.Release|Win32.Build.0 = Release|Win32
+		{82C1FB41-A270-4ED5-986F-C3C97588E6C8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82C1FB41-A270-4ED5-986F-C3C97588E6C8}.Debug|Win32.Build.0 = Debug|Win32
+		{82C1FB41-A270-4ED5-986F-C3C97588E6C8}.Release|Win32.ActiveCfg = Release|Win32
+		{82C1FB41-A270-4ED5-986F-C3C97588E6C8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
