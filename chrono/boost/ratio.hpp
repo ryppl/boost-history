@@ -288,31 +288,73 @@ public:
 template <class R1, class R2>
 struct ratio_add
 {
-    typedef ratio<detail::ll_add<detail::ll_mul<R1::num, R2::den>::value,
-                  detail::ll_mul<R1::den, R2::num>::value>::value,
-                  detail::ll_mul<R1::den, R2::den>::value> type;
+private:
+   static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
+   static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+public:
+   typedef typename ratio_multiply
+       <
+           ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
+           ratio
+           <
+               detail::ll_add
+               <
+                   detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
+                   detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
+               >::value,
+               R2::den
+           >
+       >::type type;
 };
 
 template <class R1, class R2>
 struct ratio_subtract
 {
-    typedef ratio<detail::ll_sub<detail::ll_mul<R1::num, R2::den>::value,
-                  detail::ll_mul<R1::den, R2::num>::value>::value,
-                  detail::ll_mul<R1::den, R2::den>::value> type;
+private:
+   static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
+   static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+public:
+   typedef typename ratio_multiply
+       <
+           ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
+           ratio
+           <
+               detail::ll_sub
+               <
+                   detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
+                   detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
+               >::value,
+               R2::den
+           >
+       >::type type;
 };
 
 template <class R1, class R2>
 struct ratio_multiply
 {
-    typedef ratio<detail::ll_mul<R1::num, R2::num>::value,
-                  detail::ll_mul<R1::den, R2::den>::value> type;
+private:
+   static const boost::intmax_t gcd_n1_d2 = detail::static_gcd<R1::num, R2::den>::value;
+   static const boost::intmax_t gcd_d1_n2 = detail::static_gcd<R1::den, R2::num>::value;
+public:
+   typedef ratio
+       <
+           detail::ll_mul<R1::num / gcd_n1_d2, R2::num / gcd_d1_n2>::value,
+           detail::ll_mul<R2::den / gcd_n1_d2, R1::den / gcd_d1_n2>::value
+       > type;
 };
 
 template <class R1, class R2>
 struct ratio_divide
 {
-    typedef ratio<detail::ll_mul<R1::num, R2::den>::value,
-                  detail::ll_mul<R1::den, R2::num>::value> type;
+private:
+   static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
+   static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+public:
+   typedef ratio
+       <
+           detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
+           detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
+       > type;
 };
 
 // ratio_equal
