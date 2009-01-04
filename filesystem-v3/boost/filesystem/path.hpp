@@ -18,6 +18,7 @@
 
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
    * Windows, POSIX, conversions for user-defined types.
+   * Fix inserter/extractor problems; see comments in commented out code below.
    * Need an error category for codecvt errors. Seed path.cpp detail::append, etc.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
    * test case: relational on paths differing only in trailing separator. rationale?
@@ -132,73 +133,6 @@ namespace filesystem
   };
 
   //------------------------------------------------------------------------------------//
-  //                           implementation details                                   //
-  //------------------------------------------------------------------------------------//
-
-  namespace detail
-  {
-
-#   ifdef BOOST_WINDOWS_API
-
-    BOOST_FILESYSTEM_DECL
-    void append( const char * begin,
-                 const char * end,      // 0 for null terminated MBCS
-                 std::wstring & target, system::error_code & ec );
-
-    BOOST_FILESYSTEM_DECL
-    std::string convert_to_string( const std::wstring & src, system::error_code & ec ); 
-
-# else   // BOOST_POSIX_API
- 
-    typedef std::string              string_type;
-    typedef string_type::value_type  value_type;
-    typedef string_type::size_type   size_type;
-
-    //  See comment at equivalent location in Windows API detail above
-
-    //  -----  char[] to string  -----
-
-    inline void append( const char * begin,
-                         const char * end,      // 0 for null terminated MBCS
-                         std::string & target,
-                         system::error_code & ec )
-    {
-      ec.clear(); 
-      target.assign( begin, end ); // but what if this throws bad_alloc?
-    }
-
-    inline void append( const char * begin, std::string & target,
-      system::error_code & ec )
-    {
-      ec.clear(); 
-      target += begin; // but what if throws bad_alloc?
-    }
-
-#   ifndef BOOST_FILESYSTEM_NARROW_ONLY
-
-    //  -----  wchar_t[] to string  -----  
-
-    inline void append( const wchar_t * begin, const wchar_t * end,
-      std::string & target, system::error_code & ec );
-
-    inline void append( const wchar_t * begin, std::string & target,
-      system::error_code & ec )
-    { 
-      append( begin, 0, target, ec );
-    }
-
-    //  ----- convert ----
-
-    BOOST_FILESYSTEM_DECL
-    std::wstring convert_to_wstring( const std::string & src, system::error_code & ec ); 
-
-#   endif
-
-# endif  // BOOST_POSIX_API
-
-}  // namespace detail
-
-  //------------------------------------------------------------------------------------//
   //                                                                                    //
   //                                path_traits                                         //
   //                                                                                    //
@@ -211,13 +145,14 @@ namespace filesystem
 
 namespace path_traits
 {
-
-  // path representation type
+  
 #ifdef BOOST_WINDOWS_API
-  typedef std::wstring string_type;  
+  typedef std::wstring  string_type;  // path internal representation type
 #else 
-  typedef std::string string_type;
+  typedef std::string   string_type;
 #endif
+
+  typedef string_type::value_type           value_type;
 
   template< class I > struct is_iterator { static const bool value = false; };
   template< class C > struct is_container { static const bool value = false; };
@@ -236,10 +171,39 @@ namespace path_traits
   template< class String >   // specialization required
   String convert( const string_type & source, system::error_code & ec );
 
+}  // namespace path_traits
+  
   //------------------------------------------------------------------------------------//
-  //                              specializations                                       //
+  //                           implementation details                                   //
   //------------------------------------------------------------------------------------//
 
+namespace detail
+{
+#ifdef BOOST_WINDOWS_API
+  typedef std::string   extern_string_type; 
+#else 
+  typedef std::wstring  extern_string_type; 
+#endif
+
+  typedef extern_string_type::value_type  extern_value_type;
+
+  BOOST_FILESYSTEM_DECL
+  void append( const extern_value_type * begin,
+               const extern_value_type * end,      // 0 for null terminated MBCS
+               path_traits::string_type & target, system::error_code & ec );
+
+  BOOST_FILESYSTEM_DECL
+  extern_string_type convert_to_string( const path_traits::string_type & src,
+                                 system::error_code & ec ); 
+
+}  // namespace detail
+
+  //------------------------------------------------------------------------------------//
+  //                             path_traits specializations                            //
+  //------------------------------------------------------------------------------------//
+
+namespace path_traits
+{
   template<> struct is_iterator<const char *> { static const bool value = true; };
   template<> struct is_iterator<char *> { static const bool value = true; };
   template<> struct is_iterator<std::string::iterator> { static const bool value = true; };
@@ -257,7 +221,7 @@ namespace path_traits
     const string_type::value_type * end, string_type & target, system::error_code & ec )
   {
     ec.clear(); 
-    target.assign( begin, end ); // but what if throws bad_alloc?
+    target.assign( begin, end ); // TODO: what if throws bad_alloc?
   }
 
   template<>
@@ -265,39 +229,37 @@ namespace path_traits
     string_type & target, system::error_code & ec )
   {
     ec.clear(); 
-    target += begin; // but what if throws bad_alloc?
+    target += begin; // TODO:  what if throws bad_alloc?
   }
 
   template<>
   inline string_type convert<string_type>( const string_type & s, system::error_code & ec )
   { 
+    if ( &ec != &system::throws ) ec.clear();
     return s;
   }
 
-# ifdef BOOST_WINDOWS_API
-
   template<>
-  inline void append<char>( const char * begin, const char * end,
-    std::wstring & target, system::error_code & ec )
+  inline void append<char>( const detail::extern_value_type * begin,
+    const detail::extern_value_type * end,
+    string_type & target, system::error_code & ec )
   {
     detail::append( begin, end, target, ec );
   }
 
   template<>
-  inline void append<char>( const char * begin, std::wstring & target,
-     system::error_code & ec )
+  inline void append<char>( const detail::extern_value_type * begin,
+    string_type & target, system::error_code & ec )
   { 
     detail::append( begin, 0, target, ec );
   }
 
   template<>
-  inline std::string convert<std::string>( const std::wstring & s,
+  inline detail::extern_string_type convert<std::string>( const string_type & s,
     system::error_code & ec )
   {
     return detail::convert_to_string( s, ec );
   }
-
-# endif
 
 #   ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
       ...
@@ -545,24 +507,16 @@ namespace path_traits
 
     //  return formatted "as input"
 
-#   ifdef BOOST_WINDOWS_API
-
-    operator const std::string() const    { return detail::convert_to_string( m_path, system::throws ); }
-    operator const std::wstring&() const  { return m_path; }
+    operator const string_type&() const  { return m_path; }
+    operator const detail::extern_string_type() const
+    { 
+      return detail::convert_to_string( m_path, system::throws );
+    }
 
 # ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
     operator const std::u16string() const { return detail::convert_to_u16string( m_path, system::throws ); }
     operator const std::u32string() const { return detail::convert_to_u32string( m_path, system::throws ); }
 # endif
-
-#   else   // BOOST_POSIX_API
-
-    operator const std::string&() const   { return m_path; }
-#     ifndef BOOST_FILESYSTEM_NARROW_ONLY
-    operator const std::wstring() const   { return detail::convert( m_path, system::throws ); }
-#     endif
-
-#   endif
 
     //  -----  observers  -----
   
@@ -586,17 +540,13 @@ namespace path_traits
     const std::wstring &  wstring() const                                          { return m_path; }
     const std::wstring &  wstring( system::error_code & ec ) const                 { ec.clear(); return m_path; }
 
-#   ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
-     ...
-#   endif
-
 #   else   // BOOST_POSIX_API
 
     //  return value is formatted "as input"
     const std::string &  string() const                                            { return m_path; }
     const std::string &  string( system::error_code & ec ) const                   { ec.clear(); return m_path; }
 #     ifndef BOOST_FILESYSTEM_NARROW_ONLY
-    const std::wstring   wstring( system::error_code & ec = system::throws ) const { return detail::convert( m_path, ec ); }
+    const std::wstring   wstring( system::error_code & ec = system::throws ) const { return detail::convert_to_string( m_path, ec ); }
 #     endif    
 #   endif
 

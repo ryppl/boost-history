@@ -149,9 +149,7 @@ namespace filesystem
     return tmp;
   }
 
-# else   // BOOST_POSIX_API
-  ...
-# endif  // BOOST_POSIX_API
+# endif  // BOOST_WINDOWS_PATH
 
   //  append_separator_if_needed_  -------------------------------------------//
 
@@ -581,6 +579,8 @@ namespace filesystem
 
 namespace
 {
+# ifdef BOOST_WINDOWS_API
+
   //------------------------------------------------------------------------------------//
   //                                                                                    //
   //                     class windows_file_api_codecvt_facet                           //
@@ -659,6 +659,7 @@ namespace
     *to_next = '\0';
     return ok;
   }
+# endif  // BOOST_WINDOWS_API
 
   //------------------------------------------------------------------------------------//
   //                              locale helpers                                        //
@@ -671,9 +672,14 @@ namespace
 
   std::locale default_locale()
   {
+# ifdef BOOST_WINDOWS_API
     std::locale global_loc = std::locale();
     std::locale loc( global_loc, new windows_file_api_codecvt_facet );
     return loc;
+# else
+    // ISO C calls this "the locale-specific native environment":
+    return std::locale loc("");
+# endif
   }
 
   std::locale & path_locale()
@@ -736,6 +742,13 @@ namespace filesystem
 
 namespace detail
 {
+# ifdef BOOST_WINDOWS_API
+#  define APPEND_DIRECTION in
+#  define CONVERT_DIRECTION out
+# else
+#  define APPEND_DIRECTION out
+#  define CONVERT_DIRECTION in
+# endif
 
   //------------------------------------------------------------------------------------//
   //                                   append                                           //
@@ -743,15 +756,16 @@ namespace detail
 
   //  actual append done here to factor it out from messy buffer management code;
   //  this function just assumes the buffer is large enough.
-  inline void do_append( const char * from, const char * from_end,
-                   wchar_t * to, wchar_t * to_end,
-                   wstring & target, error_code & ec )
+  inline void do_append(
+                   const extern_value_type * from, const extern_value_type * from_end,
+                   value_type * to, value_type * to_end,
+                   string_type & target, error_code & ec )
   {
     std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const char * from_next;
-    wchar_t * to_next;
+    const extern_value_type * from_next;
+    value_type * to_next;
 
-    if ( wchar_t_codecvt_facet()->in( state, from, from_end, from_next,
+    if ( wchar_t_codecvt_facet()->APPEND_DIRECTION( state, from, from_end, from_next,
            to, to_end, to_next ) != std::codecvt_base::ok )
     {
       assert( 0 && "append error handling not implemented yet" );
@@ -762,7 +776,8 @@ namespace detail
   }
 
   BOOST_FILESYSTEM_DECL
-  void append( const char * begin, const char * end, wstring & target, error_code & ec )
+  void append( const extern_value_type * begin, const extern_value_type * end,
+  string_type & target, error_code & ec )
   {
     if ( !end ) 
       end = begin + std::strlen(begin);
@@ -783,7 +798,7 @@ namespace detail
     }
     else
     {
-      wchar_t buf[default_codecvt_buf_size];
+      value_type buf[default_codecvt_buf_size];
       do_append( begin, end, buf, buf+buf_size, target, ec );
     }
   }
@@ -801,7 +816,7 @@ namespace detail
     const wchar_t * from_next;
     char * to_next;
 
-    if ( wchar_t_codecvt_facet()->out( state, from, from_end,
+    if ( wchar_t_codecvt_facet()->CONVERT_DIRECTION( state, from, from_end,
           from_next, to, to_end, to_next ) != std::codecvt_base::ok )
     {
       assert( 0 && "convert error handling not implemented yet" );
@@ -812,7 +827,7 @@ namespace detail
   }
 
   BOOST_FILESYSTEM_DECL
-  string convert_to_string( const wstring & src, error_code & ec )
+  extern_string_type convert_to_string( const string_type & src, error_code & ec )
   {
     if ( src.empty() )
     {
@@ -830,13 +845,13 @@ namespace detail
     //  dynamically allocate a buffer only if source is unusually large
     if ( buf_size > default_codecvt_buf_size )
     {
-      boost::scoped_array< char > buf( new char [buf_size] );
+      boost::scoped_array< char > buf( new extern_value_type [buf_size] );
       return do_convert( src.c_str(), src.c_str()+src.size(),
         buf.get(), buf.get()+buf_size, ec );
     }
     else
     {
-      char buf[default_codecvt_buf_size];
+      extern_value_type buf[default_codecvt_buf_size];
       return do_convert( src.c_str(), src.c_str()+src.size(), buf, buf+buf_size, ec );
     }
   }
