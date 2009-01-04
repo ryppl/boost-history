@@ -15,6 +15,9 @@
 
 __boost_interthreads__ extends __boost_thread__ adding some features:
 
+* threader/joiner: A Threader runs a unary function in its own thread. A Joiner is used to synchronise with and pick
+up the result from the unary function.
+
 * thread decorator: thread_decorator allows to define setup/cleanup functions which will be called only once by thread: 
 setup before the thread function and cleanup at thread exit. 
 
@@ -38,9 +41,13 @@ the first, using for that the set_once synchronizer.
 * thread_group_once: an extension of the boost::thread_group which allows to join the thread finishing 
 the first, using for that the set_once synchronizer.
 
-(thread_decorator and thread_specific_shared_ptr) are based on the original implementation of 
-[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming [*threadalert]] written by Roland Schwarz.
+thread_decorator and thread_specific_shared_ptr are based on the original implementation of 
+[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming [*threadalert]] 
+written by Roland Schwarz.
 
+threader/joiner are based on the original idea of Kevlin Henney 
+[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf Preliminary Threading Library 
+Proposal for TR2]
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -68,7 +75,7 @@ provides additional background or rationale.]
 
 Finally, you can mentally add the following to any code fragments in this document:
 
-    // Include all of Proto
+    // Include all of InterThreads
     #include <boost/interthreads/interthreads.hpp>
 
     // Create a namespace aliases

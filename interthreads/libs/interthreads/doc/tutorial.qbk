@@ -73,7 +73,7 @@ Initialization can be done
 * explicitly on the curret thread. Basically it works like a thread local storage from inside the thread.
 
     bith::thread_specific_shared_ptr<myclass> ptr;
-
+    void func() {
     { // current thread
         // ...
         ptr.reset(p);
@@ -83,40 +83,81 @@ Initialization can be done
 * When we associate a thread decoration to the thread_specific_shared_ptr<> we can initialize all the decorations either calling 
 decorate or creating a thread wrapping the function with the thread thread_decorator functor.
 
+    bith::thread_specific_shared_ptr<myclass> ptr;
     void myclass_init() {
         ptr.reset(new myclass(any specific parameters));
     }
-    bith::thread_decoratio myclass_decoration(myclass_init);
+    bith::thread_decoration myclass_decoration(myclass_init);
+
+    void func() {
+    { // current thread
+        // ...
+        ptr.reset(p);
+        // ...
+    }
+
+    boost::thread th=bith::make_decorated_thread(func);
 
 [endsect]
 
 [section Obtain the pointer to the thread-specific object on the current thread]
 [/==========================================================================================]
 
-All functions known from boost::thread_specific_ptr are available, and so its semantics from inside the thread.
+All functions known from boost::thread_specific_ptr are available except release, and so its 
+semantics from inside the thread.
 The value for the current thread can be obtained using the `get()` member function, or by using
 the `*` and `->` pointer deference operators.
 
+    void func() {
+    { // current thread
+        // ...
+        if (ptr.get()==0) ptr.reset(new myclass);
+        // ...
+        ptr->someFct();
+    }
+
+
 [endsect]
 
-[section Waiting for the seeting of the thread-specific object from another thread]
-[/==========================================================================================]
-
-The setting of a thread specific context must be done on a thread. When access the thread specific shared context of another thread it can be NULL.
-The library provides a wait_and_get() function that allows a thread tosynchonize with the setting from another thread.
-
-    shared_ptr<myclass> shp = ptr.wait_and_get(th->get_id());
-    
-where `th` is a `boost::thread*`.    
 
 [section Obtain the pointer to the thread-specific object of another thread]
 [/==========================================================================================]
 
 Besides this another thread can get access to the data when it can get the thread::id by:
 
-    shared_ptr<myclass> shp = ptr[th->get_id()]->foo();
+    boost::thread th=bith::make_decorated_thread(func);
 
-where `th` is a `boost::thread*` and `foo()` is a function of `myclass`.
+    ptr[th->get_id()]->foo();
+
+where `foo()` is a function of `myclass`.
+
+This could work or not. the issue apears as we can get a reference to a thread before the threads has started, 
+so the setting of the threads specific context could be not done yet. One way to manage with this error is to 
+get the shared pointer and check if it contains something or not.
+
+
+    shared_ptr<myclass> shp = ptr[th->get_id()]->foo();
+    if (shp.get() != 0) shp->foo();
+    else ...    
+    
+When we need this we can pool:
+
+    shared_ptr<myclass> shp;
+    do {
+        shp = ptr[th->get_id()]->foo();
+    } while(shp.get() == 0);
+    shp->foo();
+
+
+The library provides a synchonization mechanism to solve this issue. 
+The wait_and_get() function allows a thread to synchronize with the setting from another thread.
+
+    shared_ptr<myclass> shp = ptr.wait_and_get(th->get_id());
+    shp->foo();
+or
+
+    ptr.wait_and_get(th->get_id()->foo();
+
 
 The lifetime of the myclass instance is managed by a shared_ptr. One reference is held by the thread (by means of a tss), a second is
 held by the thread::id to shared_ptr<T> map and additional references might be held by other threads that obtained it by `*pmyclass[th]`.

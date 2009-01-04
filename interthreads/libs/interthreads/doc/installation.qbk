@@ -14,8 +14,10 @@
 [heading Getting Boost.InterThreads]
 [/=================================]
 
-You can get __Boost_InterThreads__ by downloading [^interthreads.zip] from
-[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Vault]
+You can get the last stable release of __Boost_InterThreads__ by downloading [^interthreads.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Boost Vault]
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/interthreads Boost Sandbox].
 
 [/==================================]
 [heading Building Boost.InterThreads]
@@ -69,7 +71,9 @@ All functions in the library are exception-safe except:
 Currently, __Boost_InterThreads__ has been tested in the following compilers/platforms:
 
 *  GCC 3.4.4 Cygwin
+*  GCC 3.4.6 Linux
 *  GCC 4.3.2 Cygwin
+*  GCC 4.1.2 Linux
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
