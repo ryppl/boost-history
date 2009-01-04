@@ -142,7 +142,7 @@ namespace detail {
 
 
 
-#ifdef BOOST_THREAD_EXT_KEEP_ALIVE_TEST					
+#ifdef BOOST_INTERTHREADS_KEEP_ALIVE_TEST					
 	struct in_nb_kills {
 		unsigned 	kills_;
 		in_nb_kills();
