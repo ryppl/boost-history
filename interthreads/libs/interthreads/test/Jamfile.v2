@@ -21,27 +21,34 @@ import testing ;
 
 project
     : requirements <library>/boost/test//boost_unit_test_framework/<link>static
-            <library>/boost/thread//boost_thread/<link>static
+    <library>../build//boost_interthreads
+            
+      <include>.
       <include>../../..
       <threading>multi
       <target-os>cygwin
       <threadapi>pthread
       <variant>debug
+      <define>BOOST_THREAD_HAS_THREAD_ATTR
 
     ;
 
-rule interthreads-run ( sources )
+rule interthreads-run ( sources * )
 {
     return 
-    [ run $(sources) ../build//boost_interthreads ]
-#    [ run $(sources) ../build//boost_interthreads/<link>static 
-#        : : : : $(sources[1]:B)_lib ]
+    [ run $(sources)  :  :  : <link>static ]
+#    [ run $(sources)  ../../../../libs/thread/build//boost_thread  :  :  :              : $(sources[1]:B)_lib ]
     ;
 }    
+
+
 
 {
     test-suite "tests"
         : 
+          [ interthreads-run test_basic_threader.cpp ]
+          [ interthreads-run test_launcher.cpp ]
+          [ interthreads-run test_threader.cpp ]
           [ interthreads-run test_thread_decorator.cpp ]
           [ interthreads-run test_thread_shared_ptr.cpp ]
     ;
@@ -49,7 +56,7 @@ rule interthreads-run ( sources )
         : 
           [ interthreads-run ../example/hello_world.cpp ]
           [ interthreads-run ../example/mono_thread_id.cpp ]
-          [ interthreads-run ../example/basic_keep_alive.cpp ]
+          [ interthreads-run ../example/basic_keep_alive.cpp ../example/async_ostream.cpp ]
           [ interthreads-run ../example/multiple_algorithms.cpp ]
           
           
