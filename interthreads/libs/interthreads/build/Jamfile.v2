@@ -40,13 +40,15 @@ import path ;
 project boost/interthreads
     : source-location ../src
     : requirements <threading>multi
-      <target-os>cygwin
+#      <target-os>cygwin
 #      <threadapi>pthread
-      <variant>debug
+#      <variant>debug
+      <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
-      <link>static:<define>BOOST_THREAD_BUILD_LIB=1
-      <link>shared:<define>BOOST_THREAD_BUILD_DLL=1
+      <link>static:<define>BOOST_INTERTHREADS_BUILD_LIB=1
+      <link>shared:<define>BOOST_INTERTHREADS_BUILD_DLL=1 
+#      <link>shared:<library>/boost/thread//boost_thread/<link>shared
       -<tag>@$(BOOST_JAMROOT_MODULE)%$(BOOST_JAMROOT_MODULE).tag
       <tag>@$(__name__).tag
 #      <library>$(BOOST_ROOT)/libs/thread/build//boost_thread/<link>shared
@@ -129,7 +131,7 @@ rule win32_pthread_paths ( properties * )
             if  ! $(.notified)
             {
                 echo "************************************************************" ;
-                echo "Trying to build Boost.ThreadExt with pthread support."           ;
+                echo "Trying to build Boost.InterThread with pthread support."           ;
                 echo "But the library" $(libname) "could not be found in path"      ;
                 echo $(PTW32_LIB)                                                   ;
                 echo "************************************************************" ;
@@ -200,12 +202,15 @@ explicit interthreads_sources ;
 
 
 
-static-lib boost_interthreads
+lib boost_interthreads
     : thread_decorator.cpp  thread_keep_alive.cpp interthreads_sources
+    ../../../../libs/thread/build//boost_thread
     : <conditional>@requirements
     :
-    : <link>shared:<define>BOOST_THREAD_USE_DLL=1
-      <link>static:<define>BOOST_THREAD_USE_LIB=1
+    : <link>shared:<define>BOOST_INTERTHREADS_USE_DLL=1
+      <link>static:<define>BOOST_INTERTHREADS_USE_LIB=1
+#      <link>static:<library>/boost/thread//boost_thread/<link>static
       <conditional>@usage-requirements
             
     ;
+
