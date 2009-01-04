@@ -94,7 +94,7 @@ template <
   , class VerticalCategoryOrTraversal
   , class Reference   = Value&
   , class Difference  = std::ptrdiff_t
-  , class Size          = std::size_t
+  , class Size        = std::size_t
 >
 class cursor_facade 
  : public iterator_facade<Derived, Value, HorizontalCategoryOrTraversal, 

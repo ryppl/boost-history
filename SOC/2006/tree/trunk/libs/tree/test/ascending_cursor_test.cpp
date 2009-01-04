@@ -22,15 +22,13 @@ BOOST_AUTO_TEST_CASE( test_ascending_cursor )
 
     ac.to_begin().to_end().to_begin().to_begin();
 
-// FIXME
-//    BOOST_CHECK_EQUAL(*ac, 4);
+    BOOST_CHECK_EQUAL(*ac, 4);
     ac.to_parent();
-//    BOOST_CHECK_EQUAL(*ac, 6);
-//    ac.to_parent();
-//    BOOST_CHECK_EQUAL(*ac, 3);
-//    ac.to_parent();
-//    BOOST_CHECK_EQUAL(*ac, 8);
-
+    BOOST_CHECK_EQUAL(*ac, 6);
+    ac.to_parent();
+    BOOST_CHECK_EQUAL(*ac, 3);
+    ac.to_parent();
+    BOOST_CHECK_EQUAL(*ac, 8);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -7,6 +7,7 @@
 #ifndef LIBS_TREE_TEST_FAKE_BINARY_TREE_HPP
 #define LIBS_TREE_TEST_FAKE_BINARY_TREE_HPP
 
+#include <boost/tree/cursor_facade.hpp>
 #include <boost/tree/cursor_adaptor.hpp>
 
 #include <vector>
@@ -74,82 +75,69 @@ bool operator!=(fake_binary_tree<T> const& x, fake_binary_tree<T> const& y)
     return !(x == y);
 }
 
-// Make this use cursor_facade. Yes, even if that means relying on it.
-template <class T>
-struct fake_descending_binary_cursor {
-    typedef boost::tree::descending_vertical_traversal_tag vertical_traversal;
-    typedef boost::bidirectional_traversal_tag horizontal_traversal;
-    typedef horizontal_traversal iterator_category;
-    typedef typename fake_binary_tree<T>::value_type value_type;
-    typedef typename fake_binary_tree<T>::difference_type difference_type;
-    typedef typename fake_binary_tree<T>::pointer pointer;
-    typedef typename fake_binary_tree<T>::reference reference;
-
-    typedef typename fake_binary_tree<T>::size_type size_type;
-    
-    typedef fake_descending_binary_cursor<T> cursor;
+template <class T> 
+class fake_descending_binary_cursor
+: public boost::tree::cursor_facade<
+        fake_descending_binary_cursor<T>
+      , T
+      , boost::bidirectional_traversal_tag
+      , boost::tree::descending_vertical_traversal_tag
+    >
+{
+public:
+    typedef fake_descending_binary_cursor<T>cursor;
     typedef fake_descending_binary_cursor<T const> const_cursor;
 
-    fake_binary_tree<T>& m_tree;
-    typename fake_binary_tree<T>::size_type m_pos;
-    
+    typedef typename fake_descending_binary_cursor<T>::cursor_facade_::size_type size_type;
+
     explicit fake_descending_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
     : m_tree(t), m_pos(p) {}
     
     fake_descending_binary_cursor(fake_descending_binary_cursor<T> const& other)
     : m_tree(other.m_tree), m_pos(other.m_pos) {}
-    
-    T const& operator*() const
+
+    fake_binary_tree<T>& m_tree;
+    typename fake_binary_tree<T>::size_type m_pos;
+
+private:
+    friend class boost::iterator_core_access;
+    friend class boost::tree::cursor_core_access;
+
+    typename fake_descending_binary_cursor<T>::cursor_facade_::reference
+    dereference() const
     {
         return m_tree.m_data[(m_pos-1)/2];
     }
 
-    T& operator*()
+    bool equal(fake_descending_binary_cursor<T> const& other) const
     {
-        return m_tree.m_data[(m_pos-1)/2];
-    }
-    
-    fake_descending_binary_cursor& to_begin()
-    {
-        m_pos <<= 1;
-        ++m_pos;
-        return *this;
-    }
-    
-    fake_descending_binary_cursor begin()
-    {
-        fake_descending_binary_cursor tmp(*this);
-        tmp.to_begin();
-        return tmp;
+        return (this->m_tree == other.m_tree) 
+            && (this->m_pos == other.m_pos);
     }
 
-    fake_descending_binary_cursor& to_end()
+    void increment()
     {
         ++m_pos;
-        m_pos <<= 1;
-        return *this;
-    }
-
-    fake_descending_binary_cursor end()
-    {
-        fake_descending_binary_cursor tmp(*this);
-        tmp.to_end();
-        return tmp;
     }
     
-    fake_descending_binary_cursor& operator++()
-    {
-        ++m_pos;
-        return *this;
-    }
-    
-    fake_descending_binary_cursor& operator--()
+    void decrement()
     {
         --m_pos;
-        return *this;
+    }  
+
+    void left()
+    {
+        m_pos <<= 1;
+        ++m_pos;
+    }
+
+    void right()
+    {
+        ++m_pos;
+        m_pos <<= 1;
     }
     
-    bool empty() const
+    bool const empty_() const
     {
         if (m_pos >= m_tree.m_data.size())
             return true;
@@ -157,27 +145,12 @@ struct fake_descending_binary_cursor {
             return false;
         return (m_tree.m_data[m_pos] == 0);
     }
-    
-    size_type index() const
+
+    size_type const idx() const
     {
         return (m_pos + 1) % 2;
     }
-};
-
-template <class T>
-bool operator==(fake_descending_binary_cursor<T> const& x, fake_descending_binary_cursor<T> const& y)
-{
-    return (x.m_tree == y.m_tree) && (x.m_pos == y.m_pos);
-}
-
-template <class T>
-bool operator!=(fake_descending_binary_cursor<T> const& x, fake_descending_binary_cursor<T> const& y)
-{
-    return !(x==y);
-}
-
-template <class T>
-struct fake_ascending_binary_cursor;
+};        
 
 template <class T>
 struct fake_ascending_binary_cursor
