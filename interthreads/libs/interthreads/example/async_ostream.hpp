@@ -19,7 +19,6 @@
 
 #include <iosfwd>                           // std::streamsize
 #include <iostream>                         // std::ostream
-#include <iostream>                         // std::cout
 
 
 namespace boost {

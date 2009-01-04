@@ -78,15 +78,15 @@ void sleep(int sec)
         boost::thread* th1 = tgo.create_thread(my_thread1);
         boost::thread* th2 = tgo.create_thread(my_thread2);
         boost::thread* th3 = tgo.create_thread(my_thread3);
-        boost::thread* res_tgo= tgo.join_first();
-        std::cout << "Algotithm " << res_tgo << " " << th2 << " finished the first with thread_group_once::join_first" << std::endl;
+        boost::thread* res_tgo= tgo.join_any();
+        std::cout << "Algotithm " << res_tgo << " " << th2 << " finished the first with thread_group_once::join_any" << std::endl;
         
        
-        bith::thread_and_join_all(my_thread1, my_thread2, my_thread3);
-        std::cout << "All finished thread_and_join_all" << std::endl;
+        bith::conc_join_all(my_thread1, my_thread2, my_thread3);
+        std::cout << "All finished conc_join_all" << std::endl;
 
-        unsigned res = bith::thread_and_join_first_then_interrupt(my_thread1, my_thread2, my_thread3);
-        std::cout << "Algotithm " << res+1 << " finished the first with thread_and_join_first_then_interrupt" << std::endl;
+        unsigned res = bith::conc_join_any(my_thread1, my_thread2, my_thread3);
+        std::cout << "Algotithm " << res+1 << " finished the first with conc_join_any" << std::endl;
 #endif        
         
         return 0;

@@ -12,6 +12,7 @@
 
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread.hpp>
+          
 boost::mutex out_global_mutex2;
 
 void sleep(int sec)
@@ -23,9 +24,11 @@ void sleep(int sec)
 }
 
 
+//    #include <boost/interthreads/threader.hpp>
+//    #include <boost/interthreads/joiner_tuple.hpp>
     #include <boost/interthreads/thread_decorator.hpp>
     #include <boost/interthreads/thread_keep_alive.hpp>
-    #include "./async_ostream.cpp"
+//    #include "./async_ostream.cpp"
     #include "./async_ostream.hpp"
     #include <boost/thread/thread.hpp>
     #include <iostream>
@@ -33,6 +36,10 @@ void sleep(int sec)
         
     namespace bith = boost::interthreads;
 
+    int my_thread1() {
+        sleep(2);
+        return 1;
+    }
     void my_thread() {
         bith::this_thread::enable_keep_alive enabler;
         for (int i=0; i<10; i++) {
@@ -40,7 +47,7 @@ void sleep(int sec)
 
             boost::thread::id id= boost::this_thread::get_id();
             std::stringstream sss;
-#define COUT_
+//#define COUT_
 #ifdef COUT_
             bith::cout_ << "TID=" << i << " " << id << std::endl;
             bith::cout_.flush();
@@ -55,6 +62,19 @@ void sleep(int sec)
     }
     
     int main() {
+        #if 0
+        bith::threader MyThreader;
+        {
+        bith::joiner<void> MyJoiner(MyThreader.fork(my_thread));
+        MyJoiner.join();
+        std::cout << "end" << std::endl;
+        }
+        {
+        bith::joiner<int> MyJoiner(MyThreader.fork(my_thread1));
+        int i = MyJoiner.get();
+            std::cout << "i=" << i << std::endl;
+        }
+        #endif
         boost::thread th1(bith::make_decorator(my_thread));
         boost::thread th2(bith::make_decorator(my_thread));
         boost::thread th3(bith::make_decorator(my_thread));
