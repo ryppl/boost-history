@@ -16,6 +16,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/interthreads/set_once.hpp>
 #include <utility>
+#include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace interthreads {
@@ -26,7 +27,7 @@ namespace interthreads {
     	inline thread_group_once() {}
         inline ~thread_group_once() { 
 #if 0            
-            grp().detach();
+            detach_all();
 #endif            
         }
 
@@ -42,13 +43,11 @@ namespace interthreads {
             grp().remove_thread(thrd);
         }
 
-        void join() {
+        void join_all() {
         	once().wait();
             grp().join_all();
         }
 
-        inline void join_all() { join(); }
-        
 #if 0        
         bool joinable() const {
         	return grp.joinable();
@@ -56,52 +55,42 @@ namespace interthreads {
 #endif        
 
 #if 0 
-        bool timed_join(const system_time& wait_until) {
+        bool join_all_until(const system_time& wait_until) {
         	return grp.timed_join(wait_until);
         }
-        inline bool timed_join_all(const system_time& wait_until) { 
-            return timed_join(wait_until);
-        }
 
         template<typename TimeDuration>
-        inline bool timed_join(TimeDuration const& rel_time)
+        inline bool join_all_for(TimeDuration const& rel_time)
         {
-            return timed_join(get_system_time()+rel_time);
+            return join_all_until(get_system_time()+rel_time);
         }
 
-        template<typename TimeDuration>
-        inline bool timed_join_all(TimeDuration const& rel_time) { 
-            return timed_join(rel_time);
-        }
 #endif
-        thread* join_first() {
+        thread* join_any() {
         	return once().get();
         }
 
-        std::pair<bool,thread*> timed_join_first(const system_time& wait_until) {
-        	return once().timed_get(wait_until);
+        std::pair<bool,thread*> join_any_until(const system_time& wait_until) {
+        	return once().get_until(wait_until);
         }
 
         template<typename TimeDuration>
-        inline std::pair<bool,thread*> timed_join_first(TimeDuration const& rel_time)
+        inline std::pair<bool,thread*> join_any_for(TimeDuration const& rel_time)
         {
-            return timed_join_first(get_system_time()+rel_time);
+            return join_any_until(get_system_time()+rel_time);
         }
 
 #if 0        
-        void detach() {
+        void detach_all() {
         	grp().detach();
         }
 
-        inline void detach_all() { detach(); }
 #endif
             
-        void interrupt() {
+        void interrupt_all() {
         	grp().interrupt_all();
         }
 
-        inline void interrupt_all() { interrupt(); }
-        
 #if 0        
         bool interruption_requested() const {
         	grp().interruption_requested();
@@ -128,6 +117,7 @@ namespace interthreads {
 
 }    
 }   // namespace boost
+#include <boost/config/abi_suffix.hpp>
 
 
 #endif

@@ -25,7 +25,7 @@
 #include <boost/thread.hpp>
 #include <map>
 
-//#include <boost/config/abi_prefix.hpp>
+#include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace interthreads {
@@ -217,6 +217,6 @@ namespace interthreads {
 }
 }
 
-//#include <boost/config/abi_suffix.hpp>
+#include <boost/config/abi_suffix.hpp>
 
 #endif

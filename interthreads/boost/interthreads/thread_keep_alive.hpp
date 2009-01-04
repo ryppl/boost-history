@@ -12,13 +12,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 #include <memory>
-
+#include <boost/interthreads/detail/config.hpp>
 #include <boost/thread/thread.hpp>
+
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost {
 namespace interthreads {
     typedef void (*on_dead_thread_type)(thread::id, thread*); 
 	namespace detail {
-		struct thread_keep_alive_internal {
+		struct BOOST_INTERTHREADS_DECL thread_keep_alive_internal {
 			bool 		enabled_;
 			std::size_t periods_;
 			std::size_t checkins_;
@@ -31,7 +34,7 @@ namespace interthreads {
 	}
 namespace this_thread 	{
 
-    class enable_keep_alive
+    class BOOST_INTERTHREADS_DECL enable_keep_alive
     {
     	enable_keep_alive(const enable_keep_alive&);
     	enable_keep_alive& operator=(const enable_keep_alive&);
@@ -43,7 +46,7 @@ namespace this_thread 	{
         ~enable_keep_alive();
     };
     
-    class disable_keep_alive
+    class BOOST_INTERTHREADS_DECL disable_keep_alive
     {
         disable_keep_alive(const disable_keep_alive&);
         disable_keep_alive& operator=(const disable_keep_alive&);
@@ -55,19 +58,21 @@ namespace this_thread 	{
         ~disable_keep_alive();
     };
 
-    void keep_alive_point();
-    bool keep_alive_enabled();
+    void BOOST_INTERTHREADS_DECL keep_alive_point();
+    bool BOOST_INTERTHREADS_DECL keep_alive_enabled();
 
-    void set_on_dead_thread(on_dead_thread_type fct, thread* th=0); 
+    void BOOST_INTERTHREADS_DECL set_on_dead_thread(on_dead_thread_type fct, thread* th=0); 
      
 }
 
-    bool keep_alive_enabled(thread::id);
+    bool BOOST_INTERTHREADS_DECL keep_alive_enabled(thread::id);
 
-	void set_on_dead_thread(thread::id, on_dead_thread_type fct, thread* th=0); 	
+	void BOOST_INTERTHREADS_DECL set_on_dead_thread(thread::id, on_dead_thread_type fct, thread* th=0); 	
 
 }
 }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif
 

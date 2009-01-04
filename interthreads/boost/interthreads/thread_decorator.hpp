@@ -15,14 +15,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#include <boost/interthreads/detail/config.hpp>
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/utility/result_of.hpp>
 
-//#define BOOST_INTERTHREADS_THREAD_DECORATION_MOVE
 //#define BOOST_INTERTHREADS_THREAD_DECORATOR_MOVE
+
+#include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace interthreads {
@@ -34,7 +37,7 @@ namespace interthreads {
         };
         
         template<typename F>
-        struct decorator_function : decorator_function_base {
+        struct BOOST_INTERTHREADS_DECL decorator_function : decorator_function_base {
             F f;
 #ifdef BOOST_INTERTHREADS_THREAD_DECORATION_MOVE
 #ifdef BOOST_HAS_RVALUE_REFS
@@ -122,7 +125,7 @@ namespace interthreads {
  	    ~thread_decoration() {
             delete setup_;
         }
-        static void decorate();
+        static void BOOST_INTERTHREADS_DECL decorate();
 
     private:
         friend class thread_decorator;
@@ -143,7 +146,6 @@ namespace interthreads {
         thread_decorator& operator=(const thread_decorator& other) {
             thread_decorator tmp(other);
             tmp.swap(*this);
-//            func_=other.func_;
             return *this;
         }
 
@@ -268,10 +270,22 @@ namespace interthreads {
 
     inline static void decorate() {thread_decoration::decorate();}
   
+    template <typename AE, typename Decorator>
+    struct asynchronous_executor_decorator : AE {
+        //typedef typename boost::result_of<F()>::type result_type;
+        template <typename F>
+        typename AE::template handle< typename boost::result_of<F()>::type >::type 
+        fork( F fn ) {
+            return this->AE::fork(Decorator(fn));
+        }
+    };
+
+    //typedef asynchronous_executor_decorator<threader,thread_decorator> threader_decorator;
     
 }
 }
 
+#include <boost/config/abi_suffix.hpp>
 
 
 #endif
