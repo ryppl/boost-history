@@ -251,7 +251,7 @@ void test_subtree_traversal(boost::tree::inorder, Iterator a, Iterator b
 template <class Iterator>
 void test_traversal(boost::tree::postorder, Iterator a, Iterator b)
 {    
-    BOOST_CHECK_EQUAL(*a++, 1);    
+    BOOST_CHECK_EQUAL(*a++, 1); 
     BOOST_CHECK_EQUAL(*a++, 4);
     BOOST_CHECK_EQUAL(*a++, 7);
     BOOST_CHECK_EQUAL(*a++, 6);

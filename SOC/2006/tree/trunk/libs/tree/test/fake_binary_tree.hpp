@@ -208,28 +208,6 @@ public:
     }
 };
 
-//template <class T>
-//struct fake_ascending_binary_cursor
-//: public fake_descending_binary_cursor<T> {
-//    fake_ascending_binary_cursor(fake_binary_tree<T>& t
-//                                    , typename fake_binary_tree<T>::size_type p)
-//    : fake_descending_binary_cursor<T>(t, p) {}
-//    
-//    fake_ascending_binary_cursor& to_parent()
-//    {
-//        --fake_descending_binary_cursor<T>::m_pos;
-//        fake_descending_binary_cursor<T>::m_pos >>= 1;
-//        return *this;
-//    }
-//    
-//    fake_ascending_binary_cursor parent()
-//    {
-//        fake_ascending_binary_cursor tmp(*this);
-//        tmp.to_parent();
-//        return tmp;
-//    }
-//};
-
 fake_binary_tree<int> generate_fake_binary_tree()
 {
     fake_binary_tree<int> mt(57);
