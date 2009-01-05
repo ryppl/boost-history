@@ -7,7 +7,6 @@
 
 #include <boost/partition_point/partition_point.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
-#include <boost/iterator/iterator_traits.hpp>
 #include <boost/bind.hpp> // for bind
 
 namespace boost {
