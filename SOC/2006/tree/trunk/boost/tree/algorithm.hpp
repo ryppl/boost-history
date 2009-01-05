@@ -88,8 +88,8 @@ Cursor last(Cursor c)
 
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<Cursor>))
-    ((Ascendor<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((AscendingCursor<Cursor>)),
     (typename Cursor::size_type)) // return type
 index(Cursor const& cur)
 {
@@ -98,7 +98,7 @@ index(Cursor const& cur)
 
 template <class BinaryCursor>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<BinaryCursor>)),
+    ((DescendingCursor<BinaryCursor>)),
     (void)) // return type
 to_forest_end(BinaryCursor& c)
 {
@@ -110,8 +110,8 @@ to_forest_end(BinaryCursor& c)
 
 template <class BinaryCursor>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<BinaryCursor>))
-    ((Ascendor<BinaryCursor>)),
+    ((DescendingCursor<BinaryCursor>))
+    ((AscendingCursor<BinaryCursor>)),
     (void)) // return type
 to_forest_parent(BinaryCursor& c)
 {

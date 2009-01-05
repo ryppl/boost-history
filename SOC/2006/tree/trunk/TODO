@@ -14,6 +14,11 @@
 [section TODO]
 
 General:
+* preorder_insert_cursor: hopefully easy to implement...
+* Fix insert cursor to work with filling procedure as of insert_cursor_test.cpp
+* Fix insert cursor (test) to work with fake_binary_tree
+* Fix binary tree/node: empty() -> root.begin() == root.end() !
+* Check forest/binary_tree correspondence in a hard wired fashion.
 * Add checks for correspondence of concepts and archetypes!
 * Re-do forest (again!). No root(); begin() and end() instead. No default element at
   construction time (that would really suck). Rename forest_tree to forest, 
@@ -188,6 +193,8 @@ Implementation:
 
 Documentation:
 
+* algorithms.qbk is rather pointless right now. Better use doygen for
+  an algorithm group.
 * Add a rationale for binary tree cursor semantics.
 * Make docs more coherent. If we're using doxygen for API documentation, don't
   duplicate that information via quickbook!

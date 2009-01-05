@@ -37,8 +37,8 @@ template <class T, class Hierarchy = binary_tree<T> >
 class forest_tree {
 
 BOOST_CONCEPT_ASSERT((DefaultConstructible<T>));
-BOOST_CONCEPT_ASSERT((Descendor< typename binary_tree<T>::cursor >));
-BOOST_CONCEPT_ASSERT((Descendor< typename binary_tree<T>::const_cursor >));
+BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::cursor >));
+BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >));
 //BOOST_CONCEPT_ASSERT((SameType<T, typename Hierarchy::value_type>)); 
 // Is there a SameType concept in BCCL?
 

@@ -18,26 +18,26 @@
 namespace boost {
 namespace tree {
 
-class descendor_archetype
+class descendingCursor_archetype
 {
 public:
     typedef descending_vertical_traversal_tag vertical_traversal;
     
-    descendor_archetype& to_begin() { return *this; }
-    descendor_archetype& to_end() { return *this; }
+    descendingCursor_archetype& to_begin() { return *this; }
+    descendingCursor_archetype& to_end() { return *this; }
 
-    descendor_archetype begin() const { return *this; }
-    descendor_archetype end() const { return *this; }
+    descendingCursor_archetype begin() const { return *this; }
+    descendingCursor_archetype end() const { return *this; }
     
     bool empty() const { return true; }
 };
 
-class ascendor_archetype
+class ascendingCursor_archetype
 {
 public:
-    ascendor_archetype& to_parent() { return *this; }
+    ascendingCursor_archetype& to_parent() { return *this; }
 
-    ascendor_archetype parent() const { return *this; }
+    ascendingCursor_archetype parent() const { return *this; }
 };
 
 template <
@@ -60,7 +60,7 @@ class cursor_archetype
 
 };
 
-// Ideally derive from ascendor_archetype.
+// Ideally derive from ascendingCursor_archetype.
 // The problem: begin() and end() return the wrong type! 
 // FIXME: constructors etc
 template <
@@ -73,7 +73,7 @@ class cursor_archetype<Value
                      , HorizontalTraversal
                      , descending_vertical_traversal_tag>
 : public iterator_archetype<Value, AccessCategory, HorizontalTraversal>
-//, public descendor_archetype
+//, public descendingCursor_archetype
 {
 private:
     typedef cursor_archetype<Value
@@ -102,7 +102,7 @@ class cursor_archetype<Value
                      , HorizontalTraversal
                      , ascending_vertical_traversal_tag>
 : public iterator_archetype<Value, AccessCategory, HorizontalTraversal>
-//, public ascendor_archetype
+//, public ascendingCursor_archetype
 {
 private:
     typedef cursor_archetype<Value

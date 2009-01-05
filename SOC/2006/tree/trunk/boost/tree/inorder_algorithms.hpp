@@ -40,8 +40,8 @@ struct inorder {
 template <class MultiwayCursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<MultiwayCursor>))
-    ((RootTracker<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>))
+    ((RootTrackingCursor<MultiwayCursor>)),
     (void)) // return type
 successor(inorder, MultiwayCursor& c)
 {
@@ -62,8 +62,8 @@ successor(inorder, MultiwayCursor& c)
 template <class MultiwayCursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<MultiwayCursor>))
-    ((RootTracker<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>))
+    ((RootTrackingCursor<MultiwayCursor>)),
     (void)) // return type
 predecessor(inorder, MultiwayCursor& c)
 {
@@ -87,7 +87,7 @@ predecessor(inorder, MultiwayCursor& c)
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<Cursor>)),
+    ((DescendingCursor<Cursor>)),
     (void)) // return type
 to_first(inorder, Cursor& c)
 {
@@ -122,7 +122,7 @@ void to_last(inorder, Cursor& c)
 //[ lower_bound
 template <class MultiwayCursor, class T>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>)),
     (MultiwayCursor)) // return type
 lower_bound(MultiwayCursor x, T const& val)
 //]
@@ -150,7 +150,7 @@ lower_bound(MultiwayCursor x, T const& val)
 //[ lower_bound_cmp
 template <class MultiwayCursor, class T, class Cmp>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<MultiwayCursor>))
+    ((DescendingCursor<MultiwayCursor>))
     /*((LessThanComparable<Cmp>))*/, // Problem with balanced_tree
     (MultiwayCursor)) // return type
 lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
@@ -178,7 +178,7 @@ lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //[ upper_bound
 template <class MultiwayCursor, class T>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>)),
     (MultiwayCursor)) // return type
 upper_bound(MultiwayCursor x, T const& val)
 //]
@@ -206,7 +206,7 @@ upper_bound(MultiwayCursor x, T const& val)
 //[ upper_bound_cmp
 template <class MultiwayCursor, class T, class Cmp>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<MultiwayCursor>))
+    ((DescendingCursor<MultiwayCursor>))
     ((LessThanComparable<Cmp>)),
     (MultiwayCursor)) // return type
 upper_bound(MultiwayCursor x, T const& val, Cmp cmp)

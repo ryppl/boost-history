@@ -36,7 +36,7 @@ struct ascending {
 template <class MultiwayCursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((Ascendor<MultiwayCursor>)),
+    ((AscendingCursor<MultiwayCursor>)),
     (void)) // return type
 successor(ascending, MultiwayCursor& c)
 {

@@ -18,17 +18,17 @@
 namespace boost_concepts {
 
 /** 
- * @brief Descendor concept
+ * @brief DescendingCursor concept
  * Note that the existence of begin() and end() member functions follows quite
  * naturally from the existence of to_begin() and to_end(), plus
  * CopyConstructibility of X, which is quite a natural requirement for
  * cursors.
  */
 template <class X>
-struct Descendor
+struct DescendingCursor
 {
 public:
-    BOOST_CONCEPT_USAGE(Descendor)
+    BOOST_CONCEPT_USAGE(DescendingCursor)
     {
         X& rb = d.to_begin();
         rb.to_begin();  // Avoid compiler warning about unused variable
@@ -50,21 +50,21 @@ private:
 
 
 /** 
- * @brief Ascendor concept
+ * @brief AscendingCursor concept
  * Note that the existence of a parent() member function follows quite
  * naturally from the existence of to_parent(), plus
  * CopyConstructibility of X, which is quite a natural requirement for
  * cursors.
  * 
- * Ascendor is not derived from Descendor, as there is no obviuos requirement
+ * AscendingCursor is not derived from DescendingCursor, as there is no obviuos requirement
  * for it, so these things are best kept separate. For a use case of an
- * Ascendor-but-not-Descendor, see eg Knuth 2.3.3, (page 353)
+ * AscendingCursor-but-not-DescendingCursor, see eg Knuth 2.3.3, (page 353)
  */
 template <class X>
-struct Ascendor
+struct AscendingCursor
 {
 public:
-    BOOST_CONCEPT_USAGE(Ascendor)
+    BOOST_CONCEPT_USAGE(AscendingCursor)
     {
         X& rp = a.to_parent();
         rp.to_parent();     // Avoid compiler warning about unused variable
@@ -76,14 +76,14 @@ private:
 };
 
 /** 
- * @brief RootTracker concept
+ * @brief RootTrackingCursor concept
  * Keeps track of a (subtree) root.
  */
 template <class X>
-struct RootTracker
-  : Ascendor<X>
+struct RootTrackingCursor
+  : AscendingCursor<X>
 {
-    BOOST_CONCEPT_USAGE(RootTracker)
+    BOOST_CONCEPT_USAGE(RootTrackingCursor)
     {
         bool b = r.is_root();
         b = false;          // Avoid compiler warning about unused variable

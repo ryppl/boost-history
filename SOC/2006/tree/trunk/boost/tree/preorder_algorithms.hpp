@@ -37,8 +37,8 @@ struct preorder {
 template <typename Cursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<Cursor>))
-    ((RootTracker<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((RootTrackingCursor<Cursor>)),
     (void)) // return type
 successor(preorder, Cursor& c)
 {
@@ -78,8 +78,8 @@ successor(preorder, Cursor& c)
 template <class Cursor>
 inline
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<Cursor>))
-    ((RootTracker<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((RootTrackingCursor<Cursor>)),
     (void)) // return type
 predecessor(preorder, Cursor& c)
 {
@@ -113,7 +113,7 @@ predecessor(preorder, Cursor& c)
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
-    ((Descendor<Cursor>)),
+    ((DescendingCursor<Cursor>)),
     (void)) // return type
 to_first(preorder, Cursor& c)
 {
