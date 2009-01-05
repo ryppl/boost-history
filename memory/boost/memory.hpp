@@ -45,7 +45,7 @@
 
 NS_BOOST_MEMORY_BEGIN
 
-inline void winx_call swap(void* a, void* b, size_t cb)
+inline void swap(void* a, void* b, size_t cb)
 {
 	void* t = _alloca(cb);
 	memcpy(t, a, cb);
@@ -54,7 +54,7 @@ inline void winx_call swap(void* a, void* b, size_t cb)
 }
 
 template <class Type>
-void winx_call swap_object(Type* a, Type* b) {
+void swap_object(Type* a, Type* b) {
 	swap(a, b, sizeof(Type));
 }
 
