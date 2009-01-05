@@ -23,6 +23,7 @@ test-suite "move-fail" :
     [ compile-fail rvalue_by_ref_fail.cpp ]
     [ compile-fail const_rvalue_by_ref_fail.cpp ]
     [ compile-fail const_lvalue_by_ref_fail.cpp ]
+    [ compile-fail noncopyable_copy_const_fail.cpp ]
 ;
 
 # Tests from the old version of Boost.Move that haven't been converted:
