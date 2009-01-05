@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/intrinsic/size.hpp
+ * \file boost/mirror/intrinsic/empty.hpp
  * Gets count of meta-attributes/meta-inheritences/etc.
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,10 +7,10 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_INTRINSIC_SIZE_HPP
-#define BOOST_MIRROR_INTRINSIC_SIZE_HPP
+#ifndef BOOST_MIRROR_INTRINSIC_EMPTY_HPP
+#define BOOST_MIRROR_INTRINSIC_EMPTY_HPP
 
-#include <boost/mpl/size.hpp>
+#include <boost/mpl/empty.hpp>
 
 #include <boost/mirror/meta_attributes.hpp>
 #include <boost/mirror/meta_inheritance.hpp>
@@ -23,14 +23,14 @@ namespace detail {
 	 *  helper template.
 	 */
 	template <class MetaObjectSequence>
-	struct size_impl { };
+	struct empty_impl { };
 
 	/** Specialization of at_impl<MetaObjectSequence>
 	 *  for meta_class_attributes<>
 	 */
 	template <class Class, class VariantTag>
-	struct size_impl<meta_class_attributes<Class, VariantTag> >
-	: mpl::size<
+	struct empty_impl<meta_class_attributes<Class, VariantTag> >
+	: mpl::empty<
 			typename meta_class_attributes<
 				Class, 
 				VariantTag
@@ -41,8 +41,8 @@ namespace detail {
 	 *  for meta_class_all_attributes<>
 	 */
 	template <class Class, class VariantTag>
-	struct size_impl<meta_class_all_attributes<Class, VariantTag> >
-	: mpl::size<
+	struct empty_impl<meta_class_all_attributes<Class, VariantTag> >
+	: mpl::empty<
 			typename meta_class_all_attributes<
 				Class, 
 				VariantTag
@@ -53,8 +53,8 @@ namespace detail {
 	 *  for meta_base_classes<>
 	 */
 	template <class Class, class VariantTag>
-	struct size_impl<meta_base_classes<Class, VariantTag> >
-	: mpl::size<
+	struct empty_impl<meta_base_classes<Class, VariantTag> >
+	: mpl::empty<
 			typename meta_base_classes<
 				Class, 
 				VariantTag
@@ -64,7 +64,7 @@ namespace detail {
 } // namespace detail
 
 template <class MetaObjectSequence>
-struct size : detail::size_impl<MetaObjectSequence> { };
+struct empty : detail::empty_impl<MetaObjectSequence> { };
 
 } // namespace mirror
 } // namespace boost

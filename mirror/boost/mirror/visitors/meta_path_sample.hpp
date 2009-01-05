@@ -18,8 +18,9 @@
 // traits
 #include <boost/mirror/traits/reflects_virtual_inheritance.hpp>
 #include <boost/mirror/traits/reflects_global_scope.hpp>
-// container size
+// container size and emptiness
 #include <boost/mirror/intrinsic/size.hpp>
+#include <boost/mirror/intrinsic/empty.hpp>
 //
 // meta-path related stuff
 #include <boost/mirror/meta_path/export_paths_and_nodes.hpp>
@@ -149,7 +150,7 @@ public:
 	template <class MetaClass, class BaseClasses, class Context>
 	inline void enter_base_classes(MetaClass, BaseClasses, Context)
 	{
-		if(!mpl::empty<BaseClasses>::value)
+		if(!empty<BaseClasses>::value)
 			print_node(BaseClasses(), Context());
 	}
 	
@@ -172,7 +173,7 @@ public:
 	template <class MetaClass, class MetaAttributes, class Context>
 	void enter_attributes(MetaClass, MetaAttributes, Context)
 	{
-		if(!mpl::empty<MetaAttributes>::value)
+		if(!empty<MetaAttributes>::value)
 			print_node(MetaAttributes(), Context());
 	}
 

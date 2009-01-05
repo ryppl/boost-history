@@ -213,7 +213,7 @@ private:
 		print_indentation();
 		cts::bcout() << 
 			"<value depth='" <<
-			mpl::size<Context>::value << 
+			mpl::size<typename Context::paths_and_nodes >::value << 
 			"'>" <<
 			*ptr_to_inst << 
 			"</value>" << 

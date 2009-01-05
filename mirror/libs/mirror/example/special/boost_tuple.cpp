@@ -81,7 +81,7 @@ int main(void)
 	typedef B (C)(char, wchar_t);
 	typedef A D[2][3];
         typedef ::boost::optional< ::boost::any> Z;
-        typedef ::boost::variant< A, B, C, D> V;
+        typedef ::boost::variant< A, B, C&, D> V;
 	typedef tuple<int, double, const string *> T1;
 	typedef tuple<const A, volatile B, C&, D, V, Z> T2;
 	typedef pair<T1, T2> T3;
