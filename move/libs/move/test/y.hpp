@@ -8,6 +8,7 @@
 # include <boost/move/move.hpp>
 # include <boost/assert.hpp>
 # include "say.hpp"
+# include "./generic_tests.hpp"
 
 //
 // A sample movable class.
@@ -33,7 +34,7 @@ class Y
     {
         BOOST_ASSERT(rhs.source.resource <= cnt); // check for garbage
         SAY("MOVE #" << resource);
-        BOOST_ASSERT(move_expected);
+        test::moved();
         rhs.source.resource = 0;
         BOOST_ASSERT(resource);
     }
@@ -45,7 +46,7 @@ class Y
         release();
         resource = rhs.resource;
         SAY("MOVE #" << resource);
-        BOOST_ASSERT(move_expected);
+        test::moved();
         rhs.resource = 0;
         BOOST_ASSERT(resource);
         return *this;
@@ -55,13 +56,11 @@ class Y
     {
         return boost::move_from<Y>(*this);
     }
-    
+
+    int value() const { return resource; }
+ 
     static int copies;  // count the number of copies
-    static int suboptimal_copies; // count the number of copies that should've been avoidable
-    
-    static void expect_copy() { copy_expected = true; move_expected = false; }
-    static void expect_move() { copy_expected = false; move_expected = true; }
-    
+ 
  private: // helper functions
     void release()
     {
@@ -77,15 +76,7 @@ class Y
     {
         BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         SAY("copy #" << this->resource << " <- #" << rhs.resource);
-        if (!copy_expected)
-        {
-            SAY("***** SUBOPTIMAL COPY ******");
-            ++suboptimal_copies;
-        }
-        else
-        {
-            move_expected = true; // OK to move now
-        }
+        test::copied();
         ++copies;
     }
     
@@ -93,14 +84,9 @@ class Y
     int resource;
     
     static int cnt;  // count the number of resources
-    static bool copy_expected;
-    static bool move_expected;
 };
 
 int Y::cnt;
 int Y::copies;
-int Y::suboptimal_copies;
-bool Y::copy_expected;
-bool Y::move_expected;
 
 #endif // Y_DWA2004410_HPP

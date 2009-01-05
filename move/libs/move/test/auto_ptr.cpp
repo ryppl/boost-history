@@ -9,6 +9,7 @@
 #include <boost/static_assert.hpp>
 #include <memory>
 #include "say.hpp"
+#include "./generic_tests.hpp"
 
 //
 // A noncopyable class to be stored in an auto_ptr.
@@ -32,6 +33,7 @@ class Noncopyable
     static int copies;  // count the number of copies
 
     int tag;
+    int resource;
     
  private: // helper functions
 
@@ -43,7 +45,6 @@ class Noncopyable
     }
 
  private:   // Data members
-    int resource;
     static int cnt;  // count the number of resources
 };
 
@@ -51,6 +52,14 @@ int Noncopyable::cnt;
 int Noncopyable::copies;
 
 typedef std::auto_ptr<Noncopyable> Ptr;
+
+struct extract_auto_ptr_value {
+    int operator()(Ptr const& x) {
+        return x->resource;
+    }
+};
+
+typedef test::generic_tests<Ptr, extract_auto_ptr_value> generic_ptr_tests;
 
 //
 // Some functions we can use to test the passing of Ys in and out of
@@ -87,13 +96,15 @@ void sink3(Ptr&)
 }
 
 template <class T>
-void tsink(T)
+void template_sink(T)
 {
     SAY("in templated rvalue sink");
 }
 
 int main()
 {
+    generic_ptr_tests::move_tests();
+
     BOOST_STATIC_ASSERT((boost::is_same<boost::custom_move_tag,
             boost::move_type<Ptr>::type>::value));
 
@@ -150,7 +161,7 @@ int main()
     //sink2(z7);
 
     SAY(" ------ test 17, pass rvalue by value to template param ------- ");
-    tsink(source(17));
+    template_sink(source(17));
 
     //SAY(" ------ test 18, direct initialize a const Ptr with an Ptr ------- ");
     //typedef Ptr const YC;

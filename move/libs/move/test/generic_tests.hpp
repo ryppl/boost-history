@@ -6,10 +6,23 @@
 #if !defined(BOOST_MOVE_TEST_GENERIC_TESTS_HEADER)
 #define BOOST_MOVE_TEST_GENERIC_TESTS_HEADER
 
-#include <boost/move.hpp>
+#include <boost/move/move.hpp>
 #include "say.hpp"
 
 namespace test {
+    bool copy_allowed = false;
+    int suboptimal_copies = 0;
+
+    void copied() {
+        if(!copy_allowed) {
+            SAY("***** SUBOPTIMAL COPY ******");
+            ++suboptimal_copies;
+        }
+    }
+
+    void moved() {
+    }
+
     template <class T>
     void tsink(T)
     {
@@ -17,6 +30,13 @@ namespace test {
     }
 
     template <class X>
+    struct default_extract_value {
+        int operator()(X const& x) {
+            return x.value();
+        }
+    };
+
+    template <class X, class ExtractValue = default_extract_value<X> >
     struct generic_tests {
 
         //
@@ -57,7 +77,7 @@ namespace test {
         static void move_tests()
         {
             SAY("****** Move Tests *****");
-            X::expect_move();
+            copy_allowed = false;
 
             SAY(" ------ test 1, direct init from rvalue ------- ");
             X z2(source());
@@ -71,8 +91,8 @@ namespace test {
             SAY(" ------ test 3, pass rvalue by-value ------- ");
             sink(source());
 
-            // TODO: This is failing for my noncopyable type. I'm not sure if
-            // this is right or wrong.
+            // TODO: This is failing for my noncopyable type.
+            // Maybe it should be moved into a separate test.
             //SAY(" ------ test 4, pass const rvalue by-value ------- ");
             //sink(csource());
 
@@ -105,8 +125,7 @@ namespace test {
         static void copy_tests()
         {
             SAY("****** Copy Tests *****");
-
-            X::expect_copy();
+            copy_allowed = false;
 
             SAY(" ------ test 3, copy init from lvalue ------- ");
             X z4;
