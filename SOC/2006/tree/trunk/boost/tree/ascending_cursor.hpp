@@ -30,6 +30,7 @@ namespace boost {
 namespace tree {
 
 /** \addtogroup cursor_adaptors
+ * Predefined cursor adaptors equip a given cursor with additional properties.
  *  \@{ */
  
 struct ascending;

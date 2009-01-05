@@ -15,7 +15,6 @@
 
 General:
 * preorder_insert_cursor: hopefully easy to implement...
-* Fix insert cursor to work with filling procedure as of insert_cursor_test.cpp
 * Fix insert cursor (test) to work with fake_binary_tree
 * Fix binary tree/node: empty() -> root.begin() == root.end() !
 * Check forest/binary_tree correspondence in a hard wired fashion.

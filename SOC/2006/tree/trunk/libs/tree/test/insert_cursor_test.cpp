@@ -29,6 +29,7 @@ BOOST_FIXTURE_TEST_SUITE(insert_cursor_test, test_binary_tree_fixture<int>)
 template <class Cursor>
 void fill_subtree_with_data(Cursor cur)
 {
+    //cur.to_begin();
     *cur.begin() = 8;
     *cur.begin().begin() = 3;
     *cur.begin().begin().begin() = 1;  //Leaf
@@ -148,7 +149,13 @@ BOOST_AUTO_TEST_CASE ( test_desc_copy_using_insert_cursor_postorder )
     validate_test_dataset1_tree(bt2.root());
 }
 
-// FIXME: Should also work with fill_subtree_with_data
+BOOST_AUTO_TEST_CASE ( test_desc_copy_using_insert_cursor )
+{
+    bt2.clear();
+    fill_subtree_with_data(tree_inserter(bt2, bt2.root()));
+
+    validate_test_dataset1_tree(bt2.root());
+}
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE ( test_asc_copy_using_insert_cursor, Order, orders )
 //{    

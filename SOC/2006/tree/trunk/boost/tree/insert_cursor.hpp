@@ -63,6 +63,9 @@ public:
     explicit insert_cursor(Tr& x, typename Tr::cursor cur)
     : insert_cursor::cursor_adaptor_(cur), tree(x) {}
 
+    insert_cursor(insert_cursor const& other)
+    : insert_cursor::cursor_adaptor_(other.base()), tree(other.tree) {}
+
     // Cursor-specific
     typedef insert_cursor<typename Tr::cursor> cursor;
     typedef insert_cursor<typename Tr::const_cursor> const_cursor;
@@ -88,8 +91,9 @@ private:
 
     void left()
     {
-        this->base_reference() = 
-            tree.insert(this->base_reference(), typename Tr::value_type());
+        if (this->base_reference().empty())
+            this->base_reference() = 
+                tree.insert(this->base_reference(), typename Tr::value_type());
         this->base_reference().to_begin();
     }
 };
