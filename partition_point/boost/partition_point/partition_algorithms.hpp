@@ -6,15 +6,11 @@
 #ifndef BOOST_PARTITION_ALGORITHMS_HPP
 #define BOOST_PARTITION_ALGORITHMS_HPP
 
-#ifdef _MSC_VER
-#if(_MSC_VER>=1200)
+#if defined(_MSC_VER)&&(_MSC_VER>=1200)
 #pragma once
 #endif
-#pragma warning( push )
-#pragma warning( disable: 4244 )
-#endif
 
-#include "partition_point.hpp"
+#include <boost/partition_point/partition_point.hpp>
 #include <boost/ref.hpp> // for boost::cref
 #include <boost/bind.hpp> // for bind
 #include <functional> // for std::less
@@ -92,9 +88,5 @@ namespace boost {
 	using namespace partition_algorithms_adl_barrier;
 
 } // namespace boost
-
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif // BOOST_PARTITION_ALGORITHMS_HPP

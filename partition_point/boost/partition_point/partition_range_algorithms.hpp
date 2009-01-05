@@ -1,20 +1,15 @@
 #ifndef BOOST_PARTITION_RANGE_ALGORITHMS_HPP
 #define BOOST_PARTITION_RANGE_ALGORITHMS_HPP
 
-#ifdef _MSC_VER
-#if(_MSC_VER>=1200)
+#if defined(_MSC_VER)&&(_MSC_VER>=1200)
 #pragma once
-#endif
 #endif
 
 #include <boost/partition_point/partition_algorithms.hpp>
 #include <boost/config.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#pragma warning( push )
-#pragma warning( disable: 4018 )
 #include <boost/range/sub_range.hpp>
-#pragma warning( pop )
 #include <boost/partition_point/detail/lazy_typedef.hpp>
 
 namespace boost {
