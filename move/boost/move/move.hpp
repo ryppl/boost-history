@@ -29,7 +29,9 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/move/detail/config.hpp>
-#include <boost/move/detail/has_swap_overload.hpp>
+
+// This is needed if you want to use move by swap by default:
+//#include <boost/move/detail/has_swap_overload.hpp>
 
 /*************************************************************************************************/
 
@@ -159,11 +161,19 @@ struct custom_move_tag {};
 \brief The move_type trait is used to identify which move technique should be
 used for this type.
 */
+
 template <typename T, class Enable = void>
 struct move_type :
-    boost::mpl::if_<is_boost_movable<T>, boost_move_tag,
-        typename boost::mpl::if_<boost::detail::has_swap_overload<T>,
-            swap_tag, copy_tag>::type > {};
+    boost::mpl::if_<is_boost_movable<T>, boost_move_tag, copy_tag> {};
+
+// I'm not automatically moving by swap for now, but this is how it
+// was implemented:
+//
+//template <typename T, class Enable = void>
+//struct move_type :
+//    boost::mpl::if_<is_boost_movable<T>, boost_move_tag,
+//        typename boost::mpl::if_<boost::detail::has_swap_overload<T>,
+//            swap_tag, copy_tag>::type > {};
 
 /*!
 \ingroup move_related

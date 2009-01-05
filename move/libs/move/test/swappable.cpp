@@ -86,6 +86,14 @@ class Swappable
     static bool move_expected;
 };
 
+// Tell boost to move by swap.
+// We probably need a better customization hook.
+
+namespace boost {
+	template <>
+	struct move_type<Swappable> { typedef boost::swap_tag type; };
+}
+
 int Swappable::cnt;
 int Swappable::copies;
 int Swappable::suboptimal_copies;
@@ -226,6 +234,7 @@ int main()
     Swappable::expect_move();
     Swappable z11 = boost::move(z9);
     
+    // TODO: This is failing:
     SAY(" ------ test 24, move assign from movable lvalue ------- ");
     Swappable::expect_move();
     z10 = boost::move(z8);

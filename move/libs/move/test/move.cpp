@@ -144,7 +144,7 @@ int main()
     z10 = boost::move(z8);
     
     SAY(" ------ test 25, request move construct from non-movable lvalue ------- ");
-    BOOST_STATIC_ASSERT(boost::is_movable<std::string>::value);
+    BOOST_STATIC_ASSERT(!boost::is_movable<std::string>::value);
     std::string s1("hello");
     std::string s2(boost::move(s1));
 

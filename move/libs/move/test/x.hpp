@@ -62,6 +62,8 @@ class X
     static void expect_copy() { copy_expected = true; move_expected = false; }
     static void expect_move() { copy_expected = false; move_expected = true; }
     
+    operator boost::move_from<X>() { return *this; }
+    
  private: // helper functions
     void release()
     {
