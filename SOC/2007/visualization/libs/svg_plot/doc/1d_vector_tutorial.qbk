@@ -1,0 +1,27 @@
+[section:1d_vector_tutorial 1-D Vector Example]
+
+[import ..\example\demo_1d_vector.cpp]
+[demo_1d_vector_1]
+[demo_1d_vector_2]
+
+The output is not very exciting in this case:
+[demo_1d_vector_output]
+
+You can view the svg file [@..\images\demo_1d_vector.svg demo_1d_vector.svg]
+with most internet browsers, and other programs too. 
+You can view the SVG source using browsers (View, Source)
+or use your favorite editor like Notepad, TextPad etc.
+[/ image as .png of svg?]
+[/$images/2d_simple.png]
+
+See [@../../example/demo_1d_vector.cpp demo_1d_vector.cpp]
+for full source code.
+
+[endsect] [/section:1d_vector_tutorial.qbk 1-D Vector Example.]
+
+[/ 1d_vector_tutorial.qbk
+  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
