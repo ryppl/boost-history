@@ -4,8 +4,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #define DEBUG_MOVE
-#include "x.hpp"
-#include "y.hpp"
+#include "movable.hpp"
+#include "noncopyable.hpp"
 
 #include <boost/static_assert.hpp>
 #include "./generic_tests.hpp"

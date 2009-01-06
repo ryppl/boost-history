@@ -6,7 +6,7 @@
 #include <boost/move/move.hpp>
 #include <boost/static_assert.hpp>
 #include "say.hpp"
-#include "x.hpp"
+#include "movable.hpp"
 
 //
 // Some functions we can use to test the passing of Xs in and out of
