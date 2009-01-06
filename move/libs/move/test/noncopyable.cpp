@@ -15,32 +15,32 @@
 // Some functions we can use to test the passing of Ys in and out of
 // functions.
 //
-Y y_source()
+noncopyable y_source()
 {
-    return Y();
+    return noncopyable();
 }
 
-Y const y_csource()
+noncopyable const y_csource()
 {
-    return Y();
+    return noncopyable();
 }
 
-void y_sink(Y)
+void y_sink(noncopyable)
 {
     SAY("in rvalue sink");
 }
 
-void y_sink2(Y&)
+void y_sink2(noncopyable&)
 {
     SAY("in non-const lvalue sink2");
 }
 
-void y_sink2(Y const&)
+void y_sink2(noncopyable const&)
 {
     SAY("in const lvalue sink2");
 }
 
-void y_sink3(Y&)
+void y_sink3(noncopyable&)
 {
     SAY("in non-const lvalue sink3");
 }
@@ -53,43 +53,43 @@ void y_tsink(T)
 
 int main()
 {
-    test::generic_tests<Y>::move_tests();
+    test::generic_tests<noncopyable>::move_tests();
 
     // SAY(" ------ test 1, direct init from rvalue ------- ");
-    //Y::expect_move();
-    Y z2(y_source());
+    //noncopyable::expect_move();
+    noncopyable z2(y_source());
 
     // SAY(" ------ test 2, copy init from rvalue ------- ");
-    //Y::expect_move();
-    Y z4 = Y();
+    //noncopyable::expect_move();
+    noncopyable z4 = noncopyable();
 
     //SAY(" ------ test 3, copy init from lvalue ------- ");
-    //Y::expect_copy();
-    //Y z5 = z4;
+    //noncopyable::expect_copy();
+    //noncopyable z5 = z4;
 
     //SAY(" ------ test 4, direct init from lvalue ------- ");
-    //Y::expect_copy();
-    //Y z6(z4);
+    //noncopyable::expect_copy();
+    //noncopyable z6(z4);
 
     // SAY(" ------ test 5, construct const ------- ");
-    Y const z7;
+    noncopyable const z7;
 
     //SAY(" ------ test 6, copy init from lvalue ------- ");
-    //Y::expect_copy();
-    //Y z8 = z7;
-    Y z8;
+    //noncopyable::expect_copy();
+    //noncopyable z8 = z7;
+    noncopyable z8;
 
     //SAY(" ------ test 7, direct init from lvalue ------- ");
-    //Y::expect_copy();
-    //Y z9(z7);
-    Y z9;
+    //noncopyable::expect_copy();
+    //noncopyable z9(z7);
+    noncopyable z9;
 
     //SAY(" ------ test 8, pass rvalue by-value ------- ");
-    //Y::expect_move();
+    //noncopyable::expect_move();
     //y_sink(y_source());
 
     //SAY(" ------ test 9, pass const rvalue by-value ------- ");
-    //Y::expect_move();
+    //noncopyable::expect_move();
     //y_sink(y_csource());
 
     // http://lists.boost.org/Archives/boost/2008/06/138884.php
@@ -112,49 +112,49 @@ int main()
     //y_sink(z5);
 
     //SAY(" ------ test 14, pass const lvalue by-value ------- ");
-    //Y::expect_copy();
+    //noncopyable::expect_copy();
     //y_sink(z7);
 
     SAY(" ------ test 15, pass lvalue by-reference ------- ");
-    //Y::expect_copy();
+    //noncopyable::expect_copy();
     y_sink2(z4);
 
     SAY(" ------ test 16, pass const lvalue by const reference ------- ");
-    //Y::expect_copy();
+    //noncopyable::expect_copy();
     y_sink2(z7);
 
     SAY(" ------ test 17, pass rvalue by value to template param ------- ");
-    //Y::expect_move();
+    //noncopyable::expect_move();
     y_tsink(y_source());
 
-    //SAY(" ------ test 18, direct initialize a const Y with an Y ------- ");
-    //Y::expect_move();
-    //typedef Y const YC;
-    //y_sink2(YC(Y()));
+    //SAY(" ------ test 18, direct initialize a const noncopyable with an noncopyable ------- ");
+    //noncopyable::expect_move();
+    //typedef noncopyable const YC;
+    //y_sink2(YC(noncopyable()));
 
     //SAY(" ------ test 19, assign from non-const lvalue ------- ");
-    //Y::expect_copy();
+    //noncopyable::expect_copy();
     //z4 = z5;
 
     //SAY(" ------ test 20, assign from const lvalue ------- ");
-    //Y::expect_copy();
+    //noncopyable::expect_copy();
     //z4 = z7;
 
     SAY(" ------ test 21, assign from rvalue ------- ");
-    //Y::expect_move();
+    //noncopyable::expect_move();
     z4 = y_source();
 
     SAY(" ------ test 22, explicit move direct init from movable lvalue ------- ");
-    BOOST_STATIC_ASSERT(boost::is_movable<Y>::value);
-    //Y::expect_move();
-    Y z10(boost::move(z2));
+    BOOST_STATIC_ASSERT(boost::is_movable<noncopyable>::value);
+    //noncopyable::expect_move();
+    noncopyable z10(boost::move(z2));
     
     SAY(" ------ test 23, explicit move copy init from movable lvalue ------- ");
-    //Y::expect_move();
-    Y z11 = boost::move(z9);
+    //noncopyable::expect_move();
+    noncopyable z11 = boost::move(z9);
     
     SAY(" ------ test 24, move assign from movable lvalue ------- ");
-    //Y::expect_move();
+    //noncopyable::expect_move();
     z10 = boost::move(z8);
 
     SAY("----- done, with " << test::suboptimal_copies << " suboptimal copies -----");

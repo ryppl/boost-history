@@ -6,6 +6,6 @@
 #include "noncopyable.hpp"
 
 int main() {
-    Y const y_const;
-    Y y(y_const);
+    noncopyable const y_const;
+    noncopyable y(y_const);
 }

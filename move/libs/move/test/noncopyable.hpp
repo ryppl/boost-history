@@ -13,23 +13,23 @@
 //
 // A sample movable class.
 //
-class Y
+class noncopyable
 {
-    Y(Y& rhs);
+    noncopyable(noncopyable& rhs);
  public: // "Ordinary" stuff
-    Y() : resource(++cnt)
+    noncopyable() : resource(++cnt)
     {
-        SAY("Y() #" << resource);
+        SAY("noncopyable() #" << resource);
     }
 
-    ~Y()
+    ~noncopyable()
     {
         release();
     }
 
  public: // Move stuff
     // move constructor
-    Y(boost::move_from<Y> rhs)
+    noncopyable(boost::move_from<noncopyable> rhs)
       : resource(rhs.source.resource)
     {
         BOOST_ASSERT(rhs.source.resource <= cnt); // check for garbage
@@ -40,7 +40,7 @@ class Y
     }
 
     // move assignment
-    Y& operator=(Y rhs)
+    noncopyable& operator=(noncopyable rhs)
     {
         BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         release();
@@ -52,9 +52,9 @@ class Y
         return *this;
     }
 
-    operator boost::move_from<Y>()
+    operator boost::move_from<noncopyable>()
     {
-        return boost::move_from<Y>(*this);
+        return boost::move_from<noncopyable>(*this);
     }
 
     int value() const { return resource; }
@@ -72,7 +72,7 @@ class Y
         resource = 0;
     }
 
-    void copy(Y const& rhs)
+    void copy(noncopyable const& rhs)
     {
         BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         SAY("copy #" << this->resource << " <- #" << rhs.resource);
@@ -86,7 +86,7 @@ class Y
     static int cnt;  // count the number of resources
 };
 
-int Y::cnt;
-int Y::copies;
+int noncopyable::cnt;
+int noncopyable::copies;
 
 #endif // Y_DWA2004410_HPP

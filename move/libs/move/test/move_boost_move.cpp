@@ -11,6 +11,6 @@
 #include "./generic_tests.hpp"
 
 int main() {
-    test::generic_tests<X>::copy_and_move_tests();
-    test::generic_tests<Y>::move_tests();
+    test::generic_tests<movable>::copy_and_move_tests();
+    test::generic_tests<noncopyable>::move_tests();
 }

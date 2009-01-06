@@ -12,20 +12,20 @@
 //
 // A sample movable class.
 //
-class X
+class movable
 {
  public: // "Ordinary" stuff
-    X() : resource(++cnt)
+    movable() : resource(++cnt)
     {
-        SAY("X() #" << resource);
+        SAY("movable() #" << resource);
     }
 
-    X(X const& rhs) : resource(++cnt)
+    movable(movable const& rhs) : resource(++cnt)
     {
         copy(rhs);
     }
 
-    ~X()
+    ~movable()
     {
         release();
     }
@@ -34,7 +34,7 @@ class X
     
  public: // Move stuff
     // move constructor
-    X(boost::move_from<X> rhs)
+    movable(boost::move_from<movable> rhs)
       : resource(rhs.source.resource)
     {
         BOOST_ASSERT(rhs.source.resource <= cnt); // check for garbage
@@ -45,7 +45,7 @@ class X
     }
 
     // move assignment
-    X& operator=(X rhs)
+    movable& operator=(movable rhs)
     {
         BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         release();
@@ -59,7 +59,7 @@ class X
     
     static int copies;  // count the number of copies
     
-    operator boost::move_from<X>() { return *this; }
+    operator boost::move_from<movable>() { return *this; }
 
     int value() const { return resource; }
     
@@ -74,7 +74,7 @@ class X
         resource = 0;
     }
 
-    void copy(X const& rhs)
+    void copy(movable const& rhs)
     {
         BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         SAY("copy #" << this->resource << " <- #" << rhs.resource);
@@ -88,11 +88,11 @@ class X
     static int cnt;  // count the number of resources
 };
 
-int X::cnt;
-int X::copies;
+int movable::cnt;
+int movable::copies;
 
 struct X_source {
-    X operator()() { return X(); }
+    movable operator()() { return movable(); }
 };
 
 #endif // X_DWA2004410_HPP
