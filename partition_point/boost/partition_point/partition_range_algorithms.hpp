@@ -23,12 +23,12 @@ namespace boost {
 		// default
 		//////////////////////////////////////////////////////////////////////////
 	    
-		namespace detail {
+		namespace detail { namespace range {
 			BOOST_DECLARE_LAZY_TYPEDEF( const_iterator )
-		}
+		}}
 
 		template< typename C >
-		struct range_const_iterator: detail::lazy_typedef_const_iterator<C>
+		struct range_const_iterator: detail::range::lazy_typedef_const_iterator<C>
 		{};
 	    
 		//////////////////////////////////////////////////////////////////////////
@@ -55,12 +55,12 @@ namespace boost {
 		// default
 		//////////////////////////////////////////////////////////////////////////
 	    
-		namespace detail {
+		namespace detail { namespace range {
 			BOOST_DECLARE_LAZY_TYPEDEF( iterator )
-		}
+		}}
 
 		template< typename C >
-		struct range_mutable_iterator: detail::lazy_typedef_iterator<C>
+		struct range_mutable_iterator: detail::range::lazy_typedef_iterator<C>
 		{};
 	    
 		//////////////////////////////////////////////////////////////////////////

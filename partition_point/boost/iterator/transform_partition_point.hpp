@@ -26,6 +26,6 @@ transform_iterator<UnaryFunc, Iterator> partition_point( transform_iterator<Unar
   );
 }
 
-}; /* namespace */
+}; // namespace boost
 
 #endif // BOOST_TRANSFORM_PARTITION_POINT_HPP

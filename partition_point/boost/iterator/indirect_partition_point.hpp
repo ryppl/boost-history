@@ -15,7 +15,7 @@ namespace boost {
 // so a pointer-to-member cannot be used. There is also no functor defined 
 // in std for the dereference operator, so we define our own.
 // It takes the functor by value just like boost::bind.
-namespace detail {
+namespace detail { namespace iterator {
 	template< class UnaryPred >
 	struct chain_dereference {
 	private:
@@ -30,7 +30,7 @@ namespace detail {
 			return m_pred( *t );
 		}
 	};
-}
+}} // namespace detail::iterator
 
 /* Template functions lower_bound, upper_bound, equal_range and binary_search
 expressed in terms of partition_point, special version for indirect_iterator */
@@ -41,7 +41,7 @@ indirect_iterator<Iterator> partition_point( indirect_iterator<Iterator> itBegin
     partition_point(
       itBegin.base(),
       itEnd.base(),
-	  detail::chain_dereference<UnaryPred>( pred ) 
+	  detail::iterator::chain_dereference<UnaryPred>( pred ) 
     )
   );
 }

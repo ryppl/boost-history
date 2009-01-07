@@ -25,6 +25,6 @@ shared_container_iterator<UnaryFunc, Iterator> partition_point( shared_container
   );
 }
 
-}; /* namespace */
+}; // namespace boost
 
 #endif // BOOST_SHARED_CONTAINER_PARTITION_POINT_HPP

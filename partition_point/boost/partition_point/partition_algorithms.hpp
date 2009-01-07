@@ -18,14 +18,14 @@
 
 namespace boost {
 
-	namespace detail {
+	namespace detail { namespace partition_point {
 		struct generic_less {
 			template< class T1, class T2 >
 			bool operator()( T1 const& t1, T2 const& t2 ) const {
 				return t1 < t2;
 			}
 		};
-	}
+	}} // namespace detail::partition_point
 
 	namespace partition_algorithms_adl_barrier {
 
@@ -66,22 +66,22 @@ namespace boost {
 
 		template< typename It, typename Val >
 		It lower_bound(It itBegin,It itEnd,Val const& x) {
-			return boost::lower_bound( itBegin, itEnd, x, ::boost::detail::generic_less() );
+			return boost::lower_bound( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
 		}
 
 		template< typename It, typename Val >
 		It upper_bound(It itBegin,It itEnd,Val const& x) {
-			return boost::upper_bound( itBegin, itEnd, x, ::boost::detail::generic_less() );
+			return boost::upper_bound( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
 		}
 
 		template< typename It, typename Val >
 		bool binary_search(It itBegin,It itEnd,Val const& x) {
-			return boost::binary_search( itBegin, itEnd, x, ::boost::detail::generic_less() );
+			return boost::binary_search( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
 		}
 
 		template< typename It, typename Val >
 		std::pair<It,It> equal_range(It itBegin,It itEnd,Val const& x) {
-			return boost::equal_range( itBegin, itEnd, x, ::boost::detail::generic_less() );
+			return boost::equal_range( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
 		}
 	}
 
