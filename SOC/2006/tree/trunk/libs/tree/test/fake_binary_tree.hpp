@@ -26,8 +26,18 @@ struct fake_root_tracking_binary_cursor;
 /// See http://en.wikipedia.org/wiki/Binary_Tree#Methods_for_storing_binary_trees
 template <class T>
 struct fake_binary_tree {
+    typedef std::vector<T> children_type;
+    typedef typename children_type::size_type size_type;
+    typedef typename children_type::value_type value_type;
+    typedef typename children_type::difference_type difference_type;
+    typedef typename children_type::pointer pointer;
+    typedef typename children_type::reference reference;
+
     typedef fake_descending_binary_cursor<T> descending_cursor;
-    typedef fake_descending_binary_cursor<T const> const_descending_cursor;
+    typedef fake_descending_binary_cursor<T/* const*/> const_descending_cursor; //FIXME
+
+    typedef descending_cursor cursor;
+    typedef const_descending_cursor const_cursor;
 
     typedef fake_ascending_binary_cursor<T> ascending_cursor;
     typedef fake_ascending_binary_cursor<T const> const_ascending_cursor;
@@ -35,12 +45,22 @@ struct fake_binary_tree {
     typedef fake_root_tracking_binary_cursor<T> root_tracking_cursor;
     typedef fake_root_tracking_binary_cursor<T const> const_root_tracking_cursor;
         
-    fake_binary_tree(typename std::vector<T>::size_type s) : m_data(s)
+    fake_binary_tree(typename std::vector<T>::size_type s = 0) : m_data(s)
     { }
     
     descending_cursor descending_root()
     {
         return descending_cursor(*this, 0);
+    }
+
+    descending_cursor root()
+    {
+        return descending_cursor(*this, 0);
+    }
+
+    const_descending_cursor root() const
+    {
+        return const_descending_cursor(*this, 0);
     }
 
     ascending_cursor ascending_root()
@@ -53,12 +73,23 @@ struct fake_binary_tree {
         return root_tracking_cursor(*this, 0);
     }
 
-    typedef std::vector<T> children_type;
-    typedef typename children_type::size_type size_type;
-    typedef typename children_type::value_type value_type;
-    typedef typename children_type::difference_type difference_type;
-    typedef typename children_type::pointer pointer;
-    typedef typename children_type::reference reference;
+    descending_cursor insert(descending_cursor c, value_type const& v)
+    {
+        m_data[c.m_pos] = v;
+        return c;
+    }
+
+//    ascending_cursor insert(ascending_cursor c, value_type const& v)
+//    {
+//        m_data[c.m_pos] = v;
+//        return c;
+//    }
+//
+//    root_tracking_cursor insert(root_tracking_cursor c, value_type const& v)
+//    {
+//        m_data[c.m_pos] = v;
+//        return c;
+//    }
     
     children_type m_data;  
 };
@@ -86,15 +117,20 @@ class fake_descending_binary_cursor
 {
 public:
     typedef fake_descending_binary_cursor<T>cursor;
-    typedef fake_descending_binary_cursor<T const> const_cursor;
+    typedef fake_descending_binary_cursor<T/* const*/> const_cursor;
 
     typedef typename fake_descending_binary_cursor<T>::cursor_facade_::size_type size_type;
 
     explicit fake_descending_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
     : m_tree(t), m_pos(p) {}
+
+//    explicit fake_descending_binary_cursor(fake_binary_tree<T> const& t, size_type p = 0)
+//    : m_tree(t), m_pos(p) {}
     
     fake_descending_binary_cursor(fake_descending_binary_cursor<T> const& other)
     : m_tree(other.m_tree), m_pos(other.m_pos) {}
+
+//    fake_descending_binary_cursor<T> operator=(fake_descending_binary_cursor<T> const&)
 
     fake_binary_tree<T>& m_tree;
     typename fake_binary_tree<T>::size_type m_pos;
@@ -151,6 +187,13 @@ private:
         return (m_pos + 1) % 2;
     }
 };        
+
+template <class T>
+typename fake_descending_binary_cursor<T>::size_type
+index(fake_descending_binary_cursor<T> const& cur)
+{
+    return cur.index();
+}
 
 template <class T>
 struct fake_ascending_binary_cursor

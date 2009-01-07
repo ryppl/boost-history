@@ -15,7 +15,6 @@
 
 General:
 * preorder_insert_cursor: hopefully easy to implement...
-* Fix insert cursor (test) to work with fake_binary_tree
 * Fix binary tree/node: empty() -> root.begin() == root.end() !
 * Check forest/binary_tree correspondence in a hard wired fashion.
 * Add checks for correspondence of concepts and archetypes!
@@ -131,8 +130,11 @@ General:
   the STL's linear algorithms should there be a hierarchical version?
 
 Pre-release:
+* Look into 
+  * boost/graph/tree_traits.hpp
+  * Matt Austern's segmented iterators paper (maybe relevant for level order algos).
 * Make directory structure reflect namespaces and vice versa.
-* Cleanup headers/ #include dependencies.
+* Cleanup headers/ #include dependencies, whitespace, indentation.
 * Run Boost Inspect.
 
 Future: 

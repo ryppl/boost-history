@@ -23,9 +23,6 @@
 
 using namespace boost::tree;
 
-BOOST_FIXTURE_TEST_SUITE(insert_cursor_test, test_binary_tree_fixture<int>)
-
-
 template <class Cursor>
 void fill_subtree_with_data(Cursor cur)
 {
@@ -125,47 +122,45 @@ void fill_subtree_with_data_in_postorder(Cursor cur)
     *c8 = 8;
 }
 
+BOOST_FIXTURE_TEST_SUITE(insert_cursor_test, fake_binary_tree_fixture<int>)
+
 BOOST_AUTO_TEST_CASE ( test_desc_copy_using_insert_cursor_preorder )
 {
-    bt2.clear();
-    fill_subtree_with_data_in_preorder(tree_inserter(bt2, bt2.root()));
+    fill_subtree_with_data_in_preorder(tree_inserter(fbt2, fbt2.descending_root()));
 
-    validate_test_dataset1_tree(bt2.root());
+    validate_test_dataset1_tree(fbt2.descending_root());
 }
 
 BOOST_AUTO_TEST_CASE ( test_desc_copy_using_insert_cursor_inorder )
 {
-    bt2.clear();
-    fill_subtree_with_data_in_inorder(tree_inserter(bt2, bt2.root()));
+    fill_subtree_with_data_in_inorder(tree_inserter(fbt2, fbt2.descending_root()));
 
-    validate_test_dataset1_tree(bt2.root());
+    validate_test_dataset1_tree(fbt2.descending_root());
 }
 
 BOOST_AUTO_TEST_CASE ( test_desc_copy_using_insert_cursor_postorder )
 {
-    bt2.clear();
-    fill_subtree_with_data_in_postorder(tree_inserter(bt2, bt2.root()));
+    fill_subtree_with_data_in_postorder(tree_inserter(fbt2, fbt2.descending_root()));
 
-    validate_test_dataset1_tree(bt2.root());
+    validate_test_dataset1_tree(fbt2.descending_root());
 }
 
 BOOST_AUTO_TEST_CASE ( test_desc_copy_using_insert_cursor )
 {
-    bt2.clear();
-    fill_subtree_with_data(tree_inserter(bt2, bt2.root()));
+    fill_subtree_with_data(tree_inserter(fbt2, fbt2.descending_root()));
 
-    validate_test_dataset1_tree(bt2.root());
+    validate_test_dataset1_tree(fbt2.descending_root());
 }
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE ( test_asc_copy_using_insert_cursor, Order, orders )
 //{    
-//    bt2.clear();
+//    fbt2.clear();
 //        
-//    boost::tree::copy(Order(), bt.root(), tree_inserter(bt2, bt2.root())
+//    boost::tree::copy(Order(), bt.root(), tree_inserter(fbt2, fbt2.root())
 //                    , boost::tree::ascending_vertical_traversal_tag());
 //
-//    validate_test_dataset1_tree(bt2.root());
-//    BOOST_CHECK_EQUAL(size(bt2.root()), size(bt.root())); 
+//    validate_test_dataset1_tree(fbt2.root());
+//    BOOST_CHECK_EQUAL(size(fbt2.root()), size(bt.root())); 
 //}
 
 BOOST_AUTO_TEST_SUITE_END()

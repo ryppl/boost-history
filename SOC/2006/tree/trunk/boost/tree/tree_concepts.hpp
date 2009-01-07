@@ -25,14 +25,12 @@ public:
 
     BOOST_CONCEPT_USAGE(Tree)
     {
-        c = t.root();
-        cc = t.root();
+        cursor c = t.root();
+        const_cursor cc = t.root(); // FIXME
     }
     
 private:
     X t;
-    cursor c;
-    const_cursor cc;
     
 };
 

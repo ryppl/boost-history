@@ -89,28 +89,28 @@ struct cursor {
 };
 
 // Deprecate?
-struct cursor_tag {};
-
-struct descending_tag {}; 
-struct descending_cursor_tag
-    : public cursor_tag, public descending_tag, 
-      public input_iterator_tag, public output_iterator_tag {};
-struct descending_forward_cursor_tag
-    : public cursor_tag, public descending_tag, public forward_iterator_tag {};
-struct descending_bidirectional_cursor_tag
-    : public cursor_tag, public descending_tag, public bidirectional_iterator_tag {};
-struct descending_random_access_cursor_tag
-    : public cursor_tag, public descending_tag, public random_access_iterator_tag {};
-
-struct ascending_tag {};
-struct ascending_cursor_tag
-    : public descending_cursor_tag, public ascending_tag {};
-struct ascending_forward_cursor_tag
-    : public descending_forward_cursor_tag, public ascending_tag {};
-struct ascending_bidirectional_cursor_tag
-    : public descending_bidirectional_cursor_tag, public ascending_tag {};
-struct ascending_random_access_cursor_tag
-    : public descending_random_access_cursor_tag, public ascending_tag {};
+//struct cursor_tag {};
+//
+//struct descending_tag {}; 
+//struct descending_cursor_tag
+//    : public cursor_tag, public descending_tag, 
+//      public input_iterator_tag, public output_iterator_tag {};
+//struct descending_forward_cursor_tag
+//    : public cursor_tag, public descending_tag, public forward_iterator_tag {};
+//struct descending_bidirectional_cursor_tag
+//    : public cursor_tag, public descending_tag, public bidirectional_iterator_tag {};
+//struct descending_random_access_cursor_tag
+//    : public cursor_tag, public descending_tag, public random_access_iterator_tag {};
+//
+//struct ascending_tag {};
+//struct ascending_cursor_tag
+//    : public descending_cursor_tag, public ascending_tag {};
+//struct ascending_forward_cursor_tag
+//    : public descending_forward_cursor_tag, public ascending_tag {};
+//struct ascending_bidirectional_cursor_tag
+//    : public descending_bidirectional_cursor_tag, public ascending_tag {};
+//struct ascending_random_access_cursor_tag
+//    : public descending_random_access_cursor_tag, public ascending_tag {};
 
 /*
 template <class Hor, class Vert>

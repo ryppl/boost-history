@@ -41,7 +41,6 @@ class insert_cursor;
  * in saving keystrokes.
  */
 // TODO: Complete this.
-// Shouldn't we be using cursor_facade?
 template <class Tr>
 class insert_cursor
 : public cursor_adaptor<insert_cursor<Tr>
@@ -81,9 +80,9 @@ private:
 
     typename insert_cursor::cursor_adaptor_::reference dereference() const
     {
-        if (index(this->base_reference())) {
-            const_cast<typename Tr::cursor&>(this->base_reference())
-            = tree.insert(this->base_reference(), typename Tr::value_type());
+        if (this->base_reference().index()) { // FIXME: use freestanding index!
+            //const_cast<typename Tr::cursor&>(this->base_reference()) =
+            tree.insert(this->base_reference(), typename Tr::value_type());
             const_cast<typename Tr::cursor&>(this->base_reference()).to_begin();
         }
         return *this->base_reference();
@@ -92,7 +91,7 @@ private:
     void left()
     {
         if (this->base_reference().empty())
-            this->base_reference() = 
+//            this->base_reference() = 
                 tree.insert(this->base_reference(), typename Tr::value_type());
         this->base_reference().to_begin();
     }
