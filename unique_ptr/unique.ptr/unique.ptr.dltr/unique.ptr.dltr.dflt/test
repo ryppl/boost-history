@@ -1,0 +1,79 @@
+#!/bin/bash
+# Copyright 2009 Howard Hinnant.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+# See http://www.boost.org/libs/foreach for documentation
+
+if [ -z $CC ]
+then
+    echo "Please export CC"
+    exit 1
+fi
+
+if [ -z $BOOST_INCLUDE ]
+then
+    echo "Please export BOOST_INCLUDE"
+    exit 1
+fi
+
+if [ -z $SOURCE_INCLUDE ]
+then
+    echo "Please export SOURCE_INCLUDE"
+    exit 1
+fi
+
+FAIL=0
+
+echo "Testing in `pwd`"
+
+if (ls *.fail.cpp &> /dev/null)
+then
+    for FILE in $(ls *.fail.cpp); do
+        if $CC $BOOST_INCLUDE $SOURCE_INCLUDE $OPTIONS $FILE &> /dev/null
+        then
+            echo "$FILE should not compile"
+            let "FAIL+=1"
+        fi
+    done
+fi
+
+if (ls *.pass.cpp &> /dev/null)
+then
+    for FILE in $(ls *.pass.cpp); do
+        if $CC $BOOST_INCLUDE $SOURCE_INCLUDE $OPTIONS $FILE
+        then
+            if ./a.out
+            then
+                rm ./a.out
+            else
+                echo "$FILE failed at run time"
+                let "FAIL+=1"
+                rm ./a.out
+            fi
+        else
+            echo "$FILE failed to compile"
+            let "FAIL+=1"
+        fi
+    done
+fi
+
+for FILE in *
+do
+    if [ -d "$FILE" ];
+    then
+        cd $FILE
+        ./test
+        let "FAIL+=$?"
+        cd ..
+    fi
+done
+
+if [ "$FAIL" -gt 0 ]
+then
+	echo "failed $FAIL tests in `pwd`"
+else
+	echo "pass in `pwd`"
+fi
+
+exit $FAIL

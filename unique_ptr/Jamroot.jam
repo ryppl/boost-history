@@ -1,0 +1,59 @@
+# Jamroot.jam
+#
+# Copyright (c) 2009
+# Steven Watanabe
+#
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import path ;
+
+BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+if ! $(BOOST_ROOT)
+{
+   EXIT "error: BOOST_ROOT not set" ;
+}
+BOOST_ROOT = [ path.root [ path.make $(BOOST_ROOT) ] [ path.pwd ] ] ;
+
+project unique_ptr
+  :
+    requirements <include>. <include>$(BOOST_ROOT)
+  :
+    build-dir bin
+;
+
+rule create-targets ( )
+{
+    import path ;
+    import regex ;
+    import project ;
+
+    local pass = [ glob "*.pass.cpp" ] ;
+    local fail = [ glob "*.fail.cpp" ] ;
+
+    for p in $(pass)
+    {
+        run $(p) ;
+    }
+
+    for f in $(fail)
+    {
+        compile-fail $(f) ;
+    }
+
+    local current-project = [ project.current ] ;
+    local project-module = [ $(current-project).project-module ] ;
+    local subprojects = [ glob "*/Jamfile.v2" ] ;
+    for local s in $(subprojects)
+    {
+        s = [ regex.match "([^/]*)/Jamfile.v2" : $(s) ] ;
+        modules.poke $(project-module) : next-project : $(s) ;
+        module $(project-module)
+        {
+            build-project $(next-project) ;
+        }
+    }
+}
+
+create-targets ;
