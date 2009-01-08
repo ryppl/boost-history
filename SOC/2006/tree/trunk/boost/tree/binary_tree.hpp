@@ -68,23 +68,13 @@ class binary_tree {
     explicit binary_tree (allocator_type const& alloc = allocator_type())
     : m_header(), m_value_alloc(alloc)
     {
-        m_header.m_children[0] = node_base_type::nil();
-        m_header.m_children[1] = &m_header;
     }
-
-//    explicit binary_tree (size_type n, value_type const& value = value_type(), 
-//        allocator_type const& alloc = allocator_type())
-//    : m_header(), m_value_alloc(alloc)
-//    {}
 
     template <class InputCursor>
         binary_tree (InputCursor subtree,
             allocator_type const& alloc = allocator_type())
             : m_header(), m_value_alloc(alloc)
     {
-        m_header.m_children[0] = node_base_type::nil();
-        m_header.m_children[1] = &m_header;
-
         insert(root(), subtree);
     }
     
@@ -98,9 +88,6 @@ class binary_tree {
     binary_tree (self_type const& x)
     : m_header(), m_value_alloc(x.m_value_alloc)
     {
-        m_header.m_children[0] = node_base_type::nil();
-        m_header.m_children[1] = &m_header;
-        
         if (!x.empty())
             insert(root(), x.root());
     }
@@ -207,14 +194,10 @@ class binary_tree {
      */
     cursor insert(cursor pos, value_type const& val)
     {
-        void* val_hint = 0;//TODO: need some method to obtain hints from cursor
         void* node_hint = 0;
         
-        pointer p_val = m_value_alloc.allocate(1, val_hint);
-        m_value_alloc.construct(p_val, val);
-        
         node_pointer p_node = m_node_alloc.allocate(1, node_hint);
-        m_node_alloc.construct(p_node, p_val);
+        m_node_alloc.construct(p_node, val);
         p_node->init();
         
         pos.attach(p_node);
@@ -316,9 +299,6 @@ class binary_tree {
          if (!position.empty()) {
              node_pointer pos_node = 
                  static_cast<node_pointer>(position.base_node()->m_children[position.m_pos]);
-             // delete the value position points to    
-             m_value_alloc.destroy(pos_node->data());
-             m_value_alloc.deallocate(pos_node->data(), 1);
              
             // recurse
              clear(position.begin());
@@ -357,7 +337,7 @@ class binary_tree {
             m_header.m_children[1] = other.m_header.m_children[1];
             //m_header.m_parent = other.m_header.m_parent;
             
-            other.m_header.m_children[0] = node_base_type::nil();
+            other.m_header.m_children[0] = 0;
             other.m_header.m_children[1] = &other.m_header;
             //other.m_header.m_parent = &other.m_header;
             
@@ -371,7 +351,7 @@ class binary_tree {
             other.m_header.m_children[1] = m_header.m_children[1];
             //other.m_header.m_parent = m_header.m_parent;
             
-            m_header.m_children[0] = node_base_type::nil();
+            m_header.m_children[0] = 0;
             m_header.m_children[1] = &m_header;
             //m_header.m_parent = &m_header;
             
@@ -391,9 +371,9 @@ class binary_tree {
      */
      void clear()
      {
-         clear(this->root());
-         m_header.m_parent = &m_header;
-         m_header.m_children[0] = node_base_type::nil();
+        clear(this->root());
+        m_header.m_parent = &m_header;
+        m_header.m_children[0] = 0;
         m_header.m_children[1] = &m_header;
      }
      
@@ -418,7 +398,7 @@ class binary_tree {
                 
             position.base_node()->m_children[position.m_pos] = x.m_header.m_children[0];
             //TODO: replace the following by some temporary-swapping?
-            x.m_header.m_children[0] = node_base_type::nil();
+            x.m_header.m_children[0] = 0;
             x.m_header.m_children[1] = &x.m_header;
             x.m_header.m_parent = &x.m_header;
         }
@@ -444,12 +424,12 @@ class binary_tree {
                 
             position.base_node()->node_base_type::operator[](position.m_pos) = root.base_node();
             
-            root.base_node()->m_children[0] = node_base_type::nil();
+            root.base_node()->m_children[0] = 0;
             if (root == x.root()) {
                 x.m_header.m_children[1] = &x.m_header;
                 x.m_header.m_parent = &x.m_header;            
             } else
-                root.base_node()->m_children[1] = node_base_type::nil();
+                root.base_node()->m_children[1] = 0;
         }        
     }
     

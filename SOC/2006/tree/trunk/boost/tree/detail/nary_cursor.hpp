@@ -149,7 +149,8 @@ private:
     // Container specific
     bool empty_() const
     {
-        return this->base_reference()->m_children[m_pos] == node_type::nil(); //->empty();
+        return //this->base_reference()->m_children[m_pos] == node_type::nil() ||
+        this->base_reference()->m_children[m_pos] == 0; //->empty()
         //return this->base_reference()->get_index();
     }
     

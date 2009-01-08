@@ -110,6 +110,16 @@ class node_with_children_base {
 public:
     typedef array<node_base*, 2> children_type;
     
+    node_with_children_base()
+    {
+        init();
+    }
+
+    inline void init()
+    {
+        for (children_type::size_type i=0; i<children_type::size(); ++i)
+            m_children[i] = 0;
+    }
 //protected:
     children_type m_children;
 };
@@ -124,24 +134,24 @@ public:
     typedef self_type const* const_base_pointer;
         
     node_base() : node_with_parent_base(), node_with_children_base()
-    { }
+    {
+//        m_children[0] = 0;
+//        m_children[1] = 0;
+    }
 
     node_base(node_with_parent_base* p)
     : node_with_parent_base(p), node_with_children_base()
-    { }
+    {
+//        m_children[0] = 0;
+//        m_children[1] = 0;
+    }
         
-    static base_pointer nil()
-    {
-        static self_type m_nil_obj;
-        static base_pointer m_nil = &m_nil_obj;
-        return m_nil;
-    }
-    
-    void init()
-    {
-        for (children_type::size_type i=0; i<children_type::max_size(); ++i)
-            m_children[i] = nil();
-    }
+//    static base_pointer nil()
+//    {
+//        static self_type m_nil_obj;
+//        static base_pointer m_nil = &m_nil_obj;
+//        return m_nil;
+//    }
 
     // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
 //    bool const empty() const
@@ -179,7 +189,7 @@ public:
         m_children[m_pos] = 
             m_children[m_pos]
           ->m_children[((m_children[m_pos])
-          ->m_children[0] == node_base::nil() ? 1 : 0)];
+          ->m_children[0] == 0 /*node_base::nil()*/ ? 1 : 0)];
         m_children[m_pos]->m_parent = this;
         return q;
     }
@@ -235,24 +245,17 @@ class ascending_node : public node_base {
 
     //enum size_t { first = 0, second = 1 };
     //typedef std::size_t size_type;
-        
-    // TODO: add observers.
 
-    reference operator*() { return *m_data; } 
+    reference operator*() { return m_data; } 
 
-    const_reference operator*() const { return *m_data; } 
+    const_reference operator*() const { return m_data; } 
     
-    ascending_node(pointer data) : base_type(), m_data(data) {}
+    ascending_node(value_type data) : base_type(), m_data(data) {}
  
-    ascending_node(pointer data, base_pointer p) : base_type(p), m_data(data) {}
+    ascending_node(value_type data, base_pointer p) : base_type(p), m_data(data) {}
     
-    pointer data()
-    {
-        return m_data;
-    }
-    
- private:
-    pointer m_data;
+private:
+    value_type m_data;
 };
 
 } // namespace detail

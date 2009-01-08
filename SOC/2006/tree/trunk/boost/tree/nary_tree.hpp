@@ -89,8 +89,8 @@ class nary_tree {
 //        m_header.push_back(node_base_type::nil());
 //        m_header.push_back(&m_header);
         
-        m_header.m_children[0] = node_base_type::nil();
-        m_header.m_children[1] = &m_header;
+//        m_header.m_children[0] = node_base_type::nil();
+//        m_header.m_children[1] = &m_header;
     }
 
     explicit nary_tree (size_type n, value_type const& value = value_type(), 

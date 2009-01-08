@@ -24,7 +24,6 @@ BOOST_AUTO_TEST_CASE( constructors_test )
     binary_tree<int> bt0;
     BOOST_CHECK(bt0.root().empty());
     //BOOST_CHECK(bt0.root().begin() == bt0.root().end()); //FIXME
-    
     // test with allocator? 
 }
 
@@ -58,7 +57,6 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     BOOST_CHECK(bt0.root().begin().begin().empty());
     
     BOOST_CHECK(++c == bt0.root().begin().end());
-    //BOOST_CHECK_EQUAL(1, 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -127,7 +125,6 @@ void create_test_dataset2_tree(Tree& mytree)
     
     //c1 = mytree.erase(c1);
     //BOOST_CHECK_EQUAL(*c1, 2);
-
 }
 
 template <class Cursor>
