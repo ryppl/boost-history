@@ -227,8 +227,8 @@ void print_m_data (M const& m, char const* ch = 0) {
     std::cout << ch << " data:\n"; 
 //#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
   size_t sz = 
-    boost::numeric::bindings::traits::matrix_traits<M const>
-    ::storage_size (m); 
+    boost::numeric::bindings::traits::matrix_traits<M const>::num_rows(m)*
+    boost::numeric::bindings::traits::matrix_traits<M const>::num_columns(m);
   typename 
     boost::numeric::bindings::traits::matrix_traits<M const>::pointer st = 
     boost::numeric::bindings::traits::matrix_traits<M const>::storage (m); 
