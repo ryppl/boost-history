@@ -148,7 +148,7 @@ namespace boost { namespace numeric { namespace bindings {
        typedef typename A::value_type                              value_type ;
        typedef typename traits::type_traits<value_type>::real_type real_type ;
 
-       return detail::heev( jobz, uplo, a, w, workspace.w_, workspace.wr_ );
+       return detail::heev( jobz, uplo, a, w, workspace.select( value_type() ), workspace.select( real_type() ) );
     }
 
   }

@@ -181,13 +181,16 @@ namespace boost { namespace numeric { namespace bindings {
           std::pair<detail::workspace1<W>, detail::workspace1<WI> > work,
           integer_t* ifail, integer_t& info ) const {
 
-          assert( traits::vector_size( work.first.w_ ) >= 7*n );
-          assert( traits::vector_size( work.second.w_ ) >= 5*n );
+          typedef typename traits::vector_traits<W>::value_type  w_value_type ;
+          typedef typename traits::vector_traits<WI>::value_type wi_value_type ;
+
+          assert( traits::vector_size( work.first.select(T()) ) >= 7*n );
+          assert( traits::vector_size( work.second.select(R()) ) >= 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
-            traits::vector_storage( work.first.w_ ),
-            traits::vector_storage( work.second.w_ ),
+            traits::vector_storage( work.first.select(T()) ),
+            traits::vector_storage( work.second.select(R()) ),
             ifail, info );
         }
       }; // Hbevx< 1 >
@@ -242,15 +245,15 @@ namespace boost { namespace numeric { namespace bindings {
           std::pair<detail::workspace2<W,RW>, detail::workspace1<WI> > work,
           integer_t* ifail, integer_t& info ) const {
 
-          assert( traits::vector_size( work.first.w_ ) >= n );
-          assert( traits::vector_size( work.first.wr_ ) >= 7*n );
-          assert( traits::vector_size( work.second.w_ ) >= 5*n );
+          assert( traits::vector_size( work.first.select(T()) ) >= n );
+          assert( traits::vector_size( work.first.select(R()) ) >= 7*n );
+          assert( traits::vector_size( work.second.select(integer_t()) ) >= 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
-            traits::vector_storage( work.first.w_ ),
-            traits::vector_storage( work.first.wr_ ),
-            traits::vector_storage( work.second.w_ ),
+            traits::vector_storage( work.first.select(T()) ),
+            traits::vector_storage( work.first.select(R()) ),
+            traits::vector_storage( work.second.select(integer_t()) ),
             ifail, info );
         }
       }; // Hbevx< 2 >

@@ -153,7 +153,7 @@ namespace boost { namespace numeric { namespace bindings {
        typedef typename A::value_type value_type ;
        const std::ptrdiff_t n = traits::matrix_size2 (a);
        traits::detail::array<value_type> work(std::max<std::ptrdiff_t>(1, n));
-       return geqrf( a, tau, workspace.w_ );
+       return geqrf( a, tau, workspace.select(value_type()) );
     }
 
     // Function without workarray as argument

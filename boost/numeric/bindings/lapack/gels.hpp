@@ -197,7 +197,7 @@ namespace boost { namespace numeric { namespace bindings {
         template <typename MatrA, typename VecB, typename Work>
         int gels(const char trans, MatrA& A, VecB& b, detail::workspace1<Work> workspace)
         {
-            return detail::gels(trans, A, b, workspace.w_);
+            return detail::gels(trans, A, b, workspace.select(typename traits::vector_traits<VecB>::value_type()));
         }
 
     } // namespace lapack

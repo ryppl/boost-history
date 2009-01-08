@@ -149,10 +149,10 @@ namespace boost { namespace numeric { namespace bindings {
                            integer_t const kd, T* ab, integer_t const ldab, R* w, T* z,
                            integer_t const ldz, detail::workspace1<W> work,
                            integer_t& info ) const {
-             assert( traits::vector_size( work.w_ ) >= 3*n-2 );
+             assert( traits::vector_size( work.select(T()) ) >= 3*n-2 );
 
              hbev( jobz, uplo, n, kd, ab, ldab, w, z, ldz,
-                   traits::vector_storage( work.w_ ),
+                   traits::vector_storage( work.select(T()) ),
                    info );
           }
        }; // Hbev< 1 >
@@ -192,12 +192,12 @@ namespace boost { namespace numeric { namespace bindings {
                            integer_t const kd, T* ab, integer_t const ldab, R* w, T* z,
                            integer_t const ldz, detail::workspace2<W,RW> work,
                            integer_t& info ) const {
-             assert( traits::vector_size( work.wr_ ) >= 3*n-2 );
-             assert( traits::vector_size( work.w_ ) >= n );
+             assert( traits::vector_size( work.select(R()) ) >= 3*n-2 );
+             assert( traits::vector_size( work.select(T()) ) >= n );
 
              hbev( jobz, uplo, n, kd, ab, ldab, w, z, ldz,
-                   traits::vector_storage( work.w_ ),
-                   traits::vector_storage( work.wr_ ),
+                   traits::vector_storage( work.select(T()) ),
+                   traits::vector_storage( work.select(R()) ),
                    info );
           }
        }; // Hbev< 2 >
@@ -266,9 +266,8 @@ namespace boost { namespace numeric { namespace bindings {
            typename traits::matrix_traits<Z>::matrix_structure,
            traits::general_t
          >::value));
-         std::ptrdiff_t const n = traits::matrix_size2 (ab);
-          assert (n == traits::matrix_size1 (z));
-          assert (n == traits::matrix_size2 (z));
+          assert (traits::matrix_size2 (ab) == traits::matrix_size1 (z));
+          assert (traits::matrix_size2 (ab) == traits::matrix_size2 (z));
           return detail::hbev( 'V', ab, w, z, work );
        } // hbev()
 

@@ -68,7 +68,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static std::ptrdiff_t num_rows (matrix_type& m) { return m.size1(); } 
     static std::ptrdiff_t num_columns (matrix_type& m) { return m.size2(); }
-    static std::ptrdiff_t storage_size (matrix_type& m) { return m.size1() * m.size2(); }
     static std::ptrdiff_t leading_dimension (matrix_type& m) {
       // g++ 2.95.4 and 3.0.4 (with -pedantic) dislike 
       //   identifier_type::functor_type::size2()
@@ -324,7 +323,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (matrix_type& m) { return m.data(); }
     static std::ptrdiff_t num_rows (matrix_type& m) { return m.size1(); } 
     static std::ptrdiff_t num_columns (matrix_type& m) { return m.size2(); }
-    static std::ptrdiff_t storage_size (matrix_type& m) { return M * N; }
     static std::ptrdiff_t leading_dimension (matrix_type& m) { return N; }
 
     // stride1 == distance (m (i, j), m (i+1, j)) 

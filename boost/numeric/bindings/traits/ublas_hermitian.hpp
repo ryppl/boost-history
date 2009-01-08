@@ -59,9 +59,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static std::ptrdiff_t num_rows (matrix_type& hm) { return hm.size1(); } 
     static std::ptrdiff_t num_columns (matrix_type& hm) { return hm.size2(); }
-    static std::ptrdiff_t storage_size (matrix_type& hm) { 
-      return (num_rows (hm) + 1) * num_columns (hm) / 2; 
-    }
   }; 
 
 
@@ -106,9 +103,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static std::ptrdiff_t num_rows (matrix_type& hm) { return hm.size1(); } 
     static std::ptrdiff_t num_columns (matrix_type& hm) { return hm.size2(); }
-    static std::ptrdiff_t storage_size (matrix_type& hm) { 
-      return num_rows (hm) * num_columns (hm); 
-    }
     static std::ptrdiff_t leading_dimension (matrix_type& hm) {
       return matrix_traits<m_type>::leading_dimension (hm.data()); 
     }

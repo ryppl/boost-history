@@ -22,8 +22,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   template <typename V>
   BOOST_UBLAS_INLINE
-  int vector_size (const V &v) {
-    return (int) v.size();
+  std::ptrdiff_t vector_size (const V &v) {
+    return (std::ptrdiff_t) v.size();
   }
 
   ////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   // MSVC seems to dislike overloads if there is `generic' template 
   template <typename V>
   BOOST_UBLAS_INLINE
-  int vector_size (const ublas::vector_reference<V> &v) {
+  std::ptrdiff_t vector_size (const ublas::vector_reference<V> &v) {
     return vector_size (v.expression());
   }
 #endif 
@@ -44,30 +44,30 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   // MSVC seems to dislike overloads if there is `generic' template 
   template <typename V>
   BOOST_UBLAS_INLINE
-  int vector_stride (const V &v) { return 1; }
+  std::ptrdiff_t vector_stride (const V &v) { return 1; }
 #endif 
   template <typename T, typename A>
   BOOST_UBLAS_INLINE
-  int vector_stride (const ublas::vector<T,A> &v) { return 1; }
+  std::ptrdiff_t vector_stride (const ublas::vector<T,A> &v) { return 1; }
   template <typename V>
   BOOST_UBLAS_INLINE
-  int vector_stride (const ublas::vector_reference<V> &v) {
-    return (int) vector_stride (v.expression());
+  std::ptrdiff_t vector_stride (const ublas::vector_reference<V> &v) {
+    return (std::ptrdiff_t) vector_stride (v.expression());
   }
   template <typename T, std::size_t N>
   BOOST_UBLAS_INLINE
-  int vector_stride (const ublas::c_vector<T, N> &v) { return 1; }
+  std::ptrdiff_t vector_stride (const ublas::c_vector<T, N> &v) { return 1; }
   template <typename V>
-  int vector_stride (const ublas::vector_slice<V>&);
+  std::ptrdiff_t vector_stride (const ublas::vector_slice<V>&);
   template <typename V>
   BOOST_UBLAS_INLINE
-  int vector_stride (const ublas::vector_range<V> &v) {
-    return (int) vector_stride (v.data());
+  std::ptrdiff_t vector_stride (const ublas::vector_range<V> &v) {
+    return (std::ptrdiff_t) vector_stride (v.data());
   }
   template <typename V>
   BOOST_UBLAS_INLINE
-  int vector_stride (const ublas::vector_slice<V> &v) {
-    return (int) (v.stride() * vector_stride (v.data()));
+  std::ptrdiff_t vector_stride (const ublas::vector_slice<V> &v) {
+    return (std::ptrdiff_t) (v.stride() * vector_stride (v.data()));
   }
 
 
@@ -226,7 +226,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   template <typename T, typename A>
   BOOST_UBLAS_INLINE
-  int vector_stride (const std::vector<T,A> &v) { return 1; }
+  std::ptrdiff_t vector_stride (const std::vector<T,A> &v) { return 1; }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename T, typename A>
@@ -252,7 +252,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   template <typename T>
   BOOST_UBLAS_INLINE
-  int vector_stride (const detail::array<T> &a) { return 1; }
+  std::ptrdiff_t vector_stride (const detail::array<T> &a) { return 1; }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename T> 

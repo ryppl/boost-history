@@ -75,12 +75,12 @@ namespace boost { namespace numeric { namespace bindings {
       template <typename A, typename W, typename Work>
       int syev (char jobz, char uplo, A& a, W& w, Work& work) {
 
-#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+/*#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
         BOOST_STATIC_ASSERT((boost::is_same<
           typename traits::matrix_traits<A>::matrix_structure,
           traits::general_t
         >::value));
-#endif
+#endif*/
 
         integer_t const n = traits::matrix_size1 (a);
         assert ( n>0 );
@@ -131,9 +131,9 @@ namespace boost { namespace numeric { namespace bindings {
     // Function that allocates work arrays
     template <typename A, typename W, typename Work>
     int syev (char jobz, char uplo, A& a, W& w, detail::workspace1<Work> workspace ) {
-       typedef typename A::value_type value_type ;
+       typedef typename traits::matrix_traits<A>::value_type value_type ;
 
-       return detail::syev(jobz, uplo, a, w, workspace.w_);
+       return detail::syev(jobz, uplo, a, w, workspace.select(value_type()));
     } // syev()
 
     // Function without workarray as argument
@@ -144,7 +144,8 @@ namespace boost { namespace numeric { namespace bindings {
     } // syev()
 
     //
-    // With UPLO integrated in matrix type
+    // With UPLO integrated in matrix type (this is not possible
+    // since a contains the eigenvectors afterwards and thus A cannot be symmetric)
     //
     template <typename A, typename W>
     int syev (char jobz, A& a, W& w, optimal_workspace ) {
@@ -152,13 +153,13 @@ namespace boost { namespace numeric { namespace bindings {
 
        std::ptrdiff_t const n = traits::matrix_size1 (a);
        char uplo = traits::matrix_uplo_tag( a ) ;
-#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+/*#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
        typedef typename traits::matrix_traits<A>::matrix_structure matrix_structure ;
        BOOST_STATIC_ASSERT( (boost::mpl::or_< boost::is_same< matrix_structure, traits::symmetric_t >
                                             , boost::is_same< matrix_structure, traits::hermitian_t >
                                             >::value)
                           ) ;
-#endif
+#endif*/
 
        traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,34*n) );
        return detail::syev(jobz, uplo, a, w, work);
@@ -172,13 +173,13 @@ namespace boost { namespace numeric { namespace bindings {
 
        std::ptrdiff_t const n = traits::matrix_size1 (a);
        char uplo = traits::matrix_uplo_tag( a ) ;
-#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+/*#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
        typedef typename traits::matrix_traits<A>::matrix_structure matrix_structure ;
        BOOST_STATIC_ASSERT( (boost::mpl::or_< boost::is_same< matrix_structure, traits::symmetric_t >
                                             , boost::is_same< matrix_structure, traits::hermitian_t >
                                             >::value)
                           ) ;
-#endif
+#endif*/
        traits::detail::array<value_type> work( std::max<std::ptrdiff_t>(1,3*n-1) );
        return detail::syev(jobz, uplo, a, w, work);
     } // syev()
@@ -196,7 +197,7 @@ namespace boost { namespace numeric { namespace bindings {
                                             >::value)
                           ) ;
 #endif
-       return detail::syev(jobz, uplo, a, w, workspace.w_);
+       return detail::syev(jobz, uplo, a, w, workspace.select(value_type()));
     } // syev()
 
     // Function without workarray as argument

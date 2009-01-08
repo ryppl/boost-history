@@ -46,23 +46,63 @@ namespace boost { namespace numeric { namespace bindings {
      namespace detail {
 
         template <typename W>
-        struct workspace1 {
-           W& w_ ;
+        class workspace1 {
+          public:
+            workspace1(W& w)
+            : w_( w )
+            {}
 
-           workspace1(W& w)
-           : w_( w )
-           {}
+          public:
+            typedef typename traits::vector_traits<W>::value_type value_type ;
+            W& select( value_type const& ) { return w_ ; }
+
+          private:
+            W& w_ ;
         }; // struct workspace1
 
-        template <typename W, typename WR>
-        struct workspace2 {
-           W& w_ ;
-           WR& wr_ ;
+        template <typename W, typename WRI>
+        class workspace2 {
+          public:
+            workspace2(W& w, WRI& wri)
+            : w_(w)
+            , wri_(wri)
+            {}
 
-           workspace2(W& w, WR& wr)
-           : w_(w)
-           , wr_(wr)
-           {}
+          public:
+            typedef typename traits::vector_traits<W>::value_type w_value_type ;
+            W& select( w_value_type const& ) { return w_ ; }
+
+            typedef typename traits::vector_traits<WRI>::value_type wri_value_type ;
+            WRI& select( wri_value_type const& ) { return wri_ ; }
+
+          private:
+            W& w_ ;
+            WRI& wri_ ;
+        }; // struct workspace2
+
+        template <typename W, typename WR, typename WI>
+        class workspace3 {
+          public:
+            workspace3(W& w, WR& wr, WI& wi)
+            : w_(w)
+            , wr_(wr)
+            , wi_(wi)
+            {}
+
+          public:
+            typedef typename traits::vector_traits<W>::value_type w_value_type ;
+            W& select( w_value_type const& ) { return w_ ; }
+
+            typedef typename traits::vector_traits<WR>::value_type wr_value_type ;
+            WR& select( wr_value_type const& ) { return wr_ ; }
+
+            typedef typename traits::vector_traits<WI>::value_type wi_value_type ;
+            WI& select( wi_value_type const& ) { return wi_ ; }
+
+          private:
+            W& w_ ;
+            WR& wr_ ;
+            WI& wi_ ;
         }; // struct workspace2
 
      }
@@ -72,9 +112,22 @@ namespace boost { namespace numeric { namespace bindings {
         return detail::workspace1<W>(w) ;
      } // workspace()
 
-     template <typename W, typename WR>
-     detail::workspace2<W,WR> workspace(W& w, WR& wr) {
-        return detail::workspace2<W,WR>(w, wr) ;
+     //
+     // Two situations:
+     //   Real valued: workspace( real array, integer array )
+     //   Complex valued: workspace( complex array, real array )
+     //
+     template <typename W, typename WRI>
+     detail::workspace2<W,WRI> workspace(W& w, WRI& wri) {
+        return detail::workspace2<W,WRI>(w, wri) ;
+     } // workspace()
+
+     //
+     //   Complex valued: workspace( complex array, real array, integer array )
+     //
+     template <typename W, typename WR, typename WI>
+     detail::workspace3<W,WR,WI> workspace(W& w, WR& wr, WI& wi) {
+        return detail::workspace3<W,WR,WI>(w, wr,wi) ;
      } // workspace()
 
 

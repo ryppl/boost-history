@@ -58,7 +58,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static std::ptrdiff_t num_rows (matrix_type& v) { return v.size(); } 
     static std::ptrdiff_t num_columns (matrix_type&) { return 1; }
-    static std::ptrdiff_t storage_size (matrix_type& v) { return v.size(); }
 //    static std::ptrdiff_t stride1 (matrix_type& v) { return vector_traits<V>::stride (v); } 
 //    static std::ptrdiff_t stride2 (matrix_type&) { return 1; }
     static std::ptrdiff_t leading_dimension (matrix_type& v) { return v.size(); }
@@ -90,7 +89,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static std::ptrdiff_t num_rows (matrix_type& v) { return v.size(); } 
     static std::ptrdiff_t num_columns (matrix_type&) { return 1; }
-    static std::ptrdiff_t storage_size (matrix_type& v) { return v.size(); }
 //    static std::ptrdiff_t stride1 (matrix_type& v) { return vector_traits<V>::stride (v); } 
 //    static std::ptrdiff_t stride2 (matrix_type&) { return 1; }
     static std::ptrdiff_t leading_dimension (matrix_type& v) { return v.size(); }
@@ -122,9 +120,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static pointer storage (matrix_type& v) { return v.data(); }
     static std::ptrdiff_t num_rows (matrix_type&) { return 1; } 
     static std::ptrdiff_t num_columns (matrix_type& v) { return v.size(); }
-//    static std::ptrdiff_t stride1 (matrix_type& v) { return vector_traits<V>::stride (v); } 
-//    static std::ptrdiff_t stride2 (matrix_type&) { return 1; }
-    static std::ptrdiff_t storage_size (matrix_type&) { return N; }
     static std::ptrdiff_t leading_dimension (matrix_type&) { return N; }
   }; 
 

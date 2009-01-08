@@ -208,9 +208,9 @@ namespace boost { namespace numeric { namespace bindings {
     // where work_array is an array with the same value_type as a and c .
     template <typename A, typename Tau, typename C, typename Work>
     int ormqr (char side, char trans, const A& a, const Tau& tau, C& c, detail::workspace1<Work> workspace ) {
-       typedef typename A::value_type                              value_type ;
+       typedef typename traits::matrix_traits<A>::value_type                              value_type ;
 
-       return detail::ormqr( side, trans, a, tau, c, workspace.w_ );
+       return detail::ormqr( side, trans, a, tau, c, workspace.select(value_type()) );
     }
 
   }

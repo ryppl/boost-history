@@ -193,12 +193,12 @@ namespace boost { namespace numeric { namespace bindings {
           R abstol, integer_t& m,
           R* w, T* z, integer_t const ldz, std::pair<detail::workspace1<W>, detail::workspace1<WI> > work, integer_t* ifail, integer_t& info) {
 
-          assert (traits::vector_size (work.first.w_) >= 8*n);
-          assert (traits::vector_size (work.second.w_) >= 5*n);
+          assert (traits::vector_size (work.first.select(T())) >= 8*n);
+          assert (traits::vector_size (work.second.select(integer_t())) >= 5*n);
 
           heevx( jobz, range, uplo, n, a, lda, vl, vu, il, iu, abstol, m, w, z, ldz,
-            traits::vector_storage (work.first.w_), traits::vector_size (work.first.w_),
-            traits::vector_storage (work.second.w_),
+            traits::vector_storage (work.first.select(T())), traits::vector_size (work.first.select(T())),
+            traits::vector_storage (work.second.select(integer_t())),
             ifail, info);
         }
       };
@@ -261,14 +261,14 @@ namespace boost { namespace numeric { namespace bindings {
           R abstol, integer_t& m,
           R* w, T* z, integer_t const ldz, std::pair<detail::workspace2<WC,WR>, detail::workspace1<WI> > work, integer_t* ifail, integer_t& info) {
 
-          assert (traits::vector_size (work.first.w_) >= 2*n);
-          assert (traits::vector_size (work.first.wr_) >= 7*n);
-          assert (traits::vector_size (work.second.w_) >= 5*n);
+          assert (traits::vector_size (work.first.select(T())) >= 2*n);
+          assert (traits::vector_size (work.first.select(R())) >= 7*n);
+          assert (traits::vector_size (work.second.select(integer_t())) >= 5*n);
 
           heevx( jobz, range, uplo, n, a, lda, vl, vu, il, iu, abstol, m, w, z, ldz,
-            traits::vector_storage (work.first.w_), traits::vector_size (work.first.w_),
-            traits::vector_storage (work.first.wr_),
-            traits::vector_storage (work.second.w_),
+            traits::vector_storage (work.first.select(T())), traits::vector_size (work.first.select(T())),
+            traits::vector_storage (work.first.select(R())),
+            traits::vector_storage (work.second.select(integer_t())),
             ifail, info);
         }
       };

@@ -20,7 +20,6 @@
 #include <boost/numeric/bindings/traits/detail/array.hpp>
 #include "boost/numeric/bindings/traits/ublas_symmetric.hpp"
 #include <boost/numeric/bindings/lapack/ilaenv.hpp>
-#include <boost/numeric/bindings/lapack/workspace.hpp>
 
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK

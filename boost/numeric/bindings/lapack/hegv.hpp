@@ -194,10 +194,10 @@ namespace boost { namespace numeric { namespace bindings {
                  T *a, integer_t const lda, T *b, integer_t const ldb,
                  R *w, detail::workspace1<W> work, integer_t& info ) {
 
-           assert (traits::vector_size (work.w_) >= 3*n-1);
+           assert (traits::vector_size (work.select(T())) >= 3*n-1);
 
            detail::hegv(itype, jobz, uplo, n, a, lda, b, ldb, w,
-             traits::vector_storage (work.w_), traits::vector_size (work.w_), info);
+             traits::vector_storage (work.select(T())), traits::vector_size (work.select(T())), info);
         }
       };
 
@@ -239,12 +239,12 @@ namespace boost { namespace numeric { namespace bindings {
                  T *a, integer_t const lda, T *b, integer_t const ldb,
                  R *w, detail::workspace2<WC,WR> work, integer_t& info ) {
 
-           assert (traits::vector_size (work.w_) >= 2*n-1);
-           assert (traits::vector_size (work.wr_) >= 3*n-2);
+           assert (traits::vector_size (work.select( T() )) >= 2*n-1);
+           assert (traits::vector_size (work.select( R() )) >= 3*n-2);
 
            detail::hegv(itype, jobz, uplo, n, a, lda, b, ldb, w,
-             traits::vector_storage (work.w_), traits::vector_size (work.w_),
-             traits::vector_storage (work.wr_), info);
+             traits::vector_storage (work.select(T())), traits::vector_size (work.select(T())),
+             traits::vector_storage (work.select(R())), info);
         }
       };    } // namespace detail
 

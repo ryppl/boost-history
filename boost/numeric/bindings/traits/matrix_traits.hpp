@@ -59,7 +59,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     //   std::ptrdiff_t num_columns()
     //   std::ptrdiff_t lower_bandwidth()  // only banded matrix types 
     //   std::ptrdiff_t upper_bandwidth()  // only banded matrix types 
-    //   std::ptrdiff_t storage_size()  // not all matrix types
     //   std::ptrdiff_t leading_dimension()  // not all matrix types 
   }; 
 
@@ -101,10 +100,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   template <typename M>
   inline
   std::ptrdiff_t matrix_num_columns (M& m) { return matrix_traits<M>::num_columns (m); }
-  
-  template <typename M>
-  inline
-  std::ptrdiff_t matrix_storage_size (M& m) { return matrix_traits<M>::storage_size (m); }
   
   template <typename M>
   inline

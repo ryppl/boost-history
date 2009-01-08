@@ -24,12 +24,23 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     struct ublas_uplo {};
     
     template<> 
-    struct ublas_uplo<boost::numeric::ublas::lower> {
+    struct ublas_uplo<boost::numeric::ublas::lower_tag> {
       typedef lower_t type; 
     };
+
     template<> 
-    struct ublas_uplo<boost::numeric::ublas::upper> {
+    struct ublas_uplo<boost::numeric::ublas::upper_tag> {
       typedef upper_t type; 
+    };
+
+    template<typename I> 
+    struct ublas_uplo< boost::numeric::ublas::basic_upper<I> > {
+      typedef upper_t type; 
+    };
+
+    template<typename I> 
+    struct ublas_uplo< boost::numeric::ublas::basic_lower<I> > {
+      typedef lower_t type; 
     };
 
   }

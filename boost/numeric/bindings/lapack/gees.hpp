@@ -249,7 +249,9 @@ namespace boost { namespace numeric { namespace bindings {
           /// Compute Schur factorization, passing workspace2 as workspace
           template <typename MatrA, typename SchVec, typename EigVal, typename RWork, typename Work>
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, workspace2<Work,RWork>& workspace ) const {
-             return gees( jobvs, a, w, vs, workspace.w_, workspace.wr_ );
+            typedef typename traits::matrix_traits<MatrA>::value_type     value_type ;
+            typedef typename traits::type_traits<value_type>::real_type real_type ;
+             return gees( jobvs, a, w, vs, workspace.select(value_type()), workspace.select(real_type()) );
           } // gees()
        }; // Gees<2>
 
@@ -283,7 +285,8 @@ namespace boost { namespace numeric { namespace bindings {
           /// Compute Schur factorization, passing workspace1 as workspace
           template <typename MatrA, typename SchVec, typename EigVal, typename Work>
           int operator() (char jobvs, MatrA& a, EigVal& w, SchVec& vs, detail::workspace1<Work> workspace ) const {
-             return gees( jobvs, a, w, vs, workspace.w_ );
+            typedef typename traits::matrix_traits<MatrA>::value_type         value_type ;
+            return gees( jobvs, a, w, vs, workspace.select(value_type()) );
           } // gees()
        }; // Gees<1>
 

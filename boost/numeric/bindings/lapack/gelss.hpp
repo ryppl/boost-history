@@ -165,7 +165,7 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS>
                 int operator() (MatrA& A, MatrB& B, VecS& s, minimal_workspace) const
                 {
-                    typedef typename MatrA::value_type val_t;
+                    typedef typename traits::matrix_traits<MatrA>::value_type val_t;
 
                     const std::ptrdiff_t m = traits::matrix_size1(A);
                     const std::ptrdiff_t n = traits::matrix_size2(A);
@@ -183,7 +183,7 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS>
                 int operator() (MatrA& A, MatrB& B, VecS& s, optimal_workspace) const
                 {
-                    typedef typename MatrA::value_type val_t;
+                    typedef typename traits::matrix_traits<MatrA>::value_type val_t;
                     typedef typename traits::type_traits<val_t>::real_type real_t;
 
                     //const std::ptrdiff_t m = traits::matrix_size1(A);
@@ -227,7 +227,7 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS, typename Work>
                 int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace1<Work> workspace) const
                 {
-                    return gelss(A, B, s, workspace.w_);
+                    return gelss(A, B, s, workspace.select(typename traits::matrix_traits<MatrA>::value_type()));
                 }
             };
 
@@ -238,7 +238,7 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS>
                 int operator() (MatrA& A, MatrB& B, VecS& s, minimal_workspace) const
                 {
-                    typedef typename MatrA::value_type val_t;
+                    typedef typename traits::matrix_traits<MatrA>::value_type val_t;
                     typedef typename traits::type_traits<val_t>::real_type real_t;
 
                     const std::ptrdiff_t m = traits::matrix_size1(A);
@@ -305,7 +305,9 @@ namespace boost { namespace numeric { namespace bindings {
                 template <typename MatrA, typename MatrB, typename VecS, typename Work, typename RWork>
                 int operator() (MatrA& A, MatrB& B, VecS& s, detail::workspace2<Work, RWork> workspace) const
                 {
-                    return gelss(A, B, s, workspace.w_, workspace.wr);
+                  typedef typename traits::matrix_traits<MatrA>::value_type    value_type ;
+                  typedef typename traits::type_traits<value_type>::real_type real_type ;
+                    return gelss(A, B, s, workspace.select(value_type()), workspace.select(real_type()));
                 }
             };
 
@@ -321,7 +323,7 @@ namespace boost { namespace numeric { namespace bindings {
         template <typename MatrA, typename MatrB, typename VecS, typename Work>
         int gelss(MatrA& A, MatrB& B, VecS& s, Work workspace)
         {
-            typedef typename MatrA::value_type val_t;
+            typedef typename traits::matrix_traits<MatrA>::value_type val_t;
 
             return detail::Gelss<n_workspace_args<val_t>::value>() (A, B, s, workspace);
         }
@@ -335,7 +337,7 @@ namespace boost { namespace numeric { namespace bindings {
         template <typename MatrA, typename MatrB, typename Work>
         int gelss(MatrA& A, MatrB& B, Work workspace)
         {
-            typedef typename MatrA::value_type val_t;
+            typedef typename traits::matrix_traits<MatrA>::value_type val_t;
             typedef typename traits::type_traits<val_t>::real_type real_t;
 
             const std::ptrdiff_t m = traits::matrix_size1(A);

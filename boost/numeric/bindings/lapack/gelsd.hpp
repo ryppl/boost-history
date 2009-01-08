@@ -263,7 +263,8 @@ namespace boost { namespace numeric { namespace bindings {
                     //const std::ptrdiff_t maxmn = std::max(m, n);           // maxmn = m > n ? m : n
                     //const std::ptrdiff_t maxmnr = std::max(maxmn, nrhs);   // maxmnr = maxmn > nrhs ? maxmn : nrhs
 
-                    return gelsd(A, B, s, workspace.w_);
+                    typedef typename traits::vector_traits<VecS>::value_type value_type ;
+                    return gelsd(A, B, s, workspace.select(value_type()));
                 }
             };
 
@@ -367,7 +368,9 @@ namespace boost { namespace numeric { namespace bindings {
                     //const std::ptrdiff_t maxmn = std::max(m, n);           // maxmn = m > n ? m : n
                     //const std::ptrdiff_t maxmnr = std::max(maxmn, nrhs);   // maxmnr = maxmn > nrhs ? maxmn : nrhs
 
-                    return gelsd(A, B, s, workspace.w_, workspace.wr_);
+                    typedef typename traits::vector_traits<VecS>::value_type    value_type ;
+                    typedef typename traits::type_traits<value_type>::real_type real_type ;
+                    return gelsd(A, B, s, workspace.select(value_type()), workspace.select(real_type()));
                 }
             };
 

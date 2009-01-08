@@ -417,8 +417,7 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      std::ptrdiff_t const lw = traits::vector_size (w);
-      assert (lw >= 1);
+      assert (traits::vector_size (w) >= 1);
       return detail::hetrf (ul, a, i, w);
     }
 

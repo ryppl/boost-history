@@ -69,7 +69,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static std::ptrdiff_t num_columns (matrix_type& m) { return m.size2(); }
     static std::ptrdiff_t lower_bandwidth (matrix_type& m) { return m.lower() ; }
     static std::ptrdiff_t upper_bandwidth (matrix_type& m) { return m.upper() ; }
-    static std::ptrdiff_t storage_size (matrix_type& m) { return size1 (m) * size2 (m); }
     static std::ptrdiff_t leading_dimension (matrix_type& m) {
       typedef typename identifier_type::orientation_category                      orientation_category; 
       return detail::ublas_banded_ordering<orientation_category>::leading_dimension(m) ;
