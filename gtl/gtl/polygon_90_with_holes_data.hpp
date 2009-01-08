@@ -18,6 +18,8 @@ public:
   typedef typename polygon_90_data<T>::compact_iterator_type compact_iterator_type;
   typedef typename std::list<polygon_90_data<coordinate_type> >::const_iterator iterator_holes_type;
   typedef polygon_90_data<coordinate_type> hole_type; 
+  typedef typename coordinate_traits<T>::area_type area_type;
+  typedef point_data<T> point_type;
 
   /// default constructor of point does not initialize x and y
   inline polygon_90_with_holes_data(){;} //do nothing default constructor

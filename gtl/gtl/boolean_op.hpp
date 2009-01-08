@@ -10,169 +10,6 @@
 namespace gtl {
 namespace boolean_op {
 
-  template <typename Unit>
-  class ScanEventNew{
-  private:
-    typedef std::vector<std::pair<Unit, int> > EventData;
-    mutable EventData eventData_;
-    mutable bool dirty_;
-    class lessEventDataElement : public std::binary_function<const std::pair<Unit, int>&, const std::pair<Unit, int>&, bool> {
-    public:
-      inline lessEventDataElement() {}
-      inline bool operator () (const std::pair<Unit, int>& elem1, const std::pair<Unit, int>& elem2) const {
-        return elem1.first < elem2.first;
-      }
-    };
-  public:
-
-    // The ScanEvent::iterator is a lazy algorithm that accumulates
-    // polygon intersection count as it is incremented through the
-    // scan event data structure.
-    // The iterator provides a forward iterator semantic only.
-    class iterator {
-    private:
-      typename EventData::const_iterator i_;
-      Unit prevPos_;
-      int count_;
-    public:
-      inline iterator() {}
-      inline iterator(typename EventData::const_iterator i, 
-                      Unit prevPos, int count) : i_(i), 
-                                                 prevPos_(prevPos), 
-                                                 count_(count) {}
-      inline iterator(const iterator& that) : i_(that.i_), 
-                                              prevPos_(that.prevPos_), 
-                                              count_(that.count_) {}
-      inline iterator& operator=(const iterator& that) {
-        //std::cout << "iterator assign\n";
-        i_ = that.i_;
-        prevPos_ = that.prevPos_;
-        count_ = that.count_;
-        return *this;
-      }
-      inline bool operator==(const iterator& that) { return i_ == that.i_; }
-      inline bool operator!=(const iterator& that) { return i_ != that.i_; }
-      inline iterator& operator++() {
-        //std::cout << "iterator increment\n";
-        prevPos_ = (*i_).first;
-        count_ += (*i_).second;
-        ++i_;
-        return *this;
-      }
-      inline iterator operator++(int) {
-        iterator tmp = *this;
-        ++(*this);
-        return tmp;
-      }
-      inline std::pair<interval_data<Unit>, int> operator*() {
-        //std::cout << "iterator dereference\n";
-        if(count_ == 0) ++(*this);
-        std::pair<interval_data<Unit>, int> retVal;
-        retVal.first = interval_data<Unit>(prevPos_, (*i_).first);
-        retVal.second = count_;
-        return retVal;
-      }
-    };
-
-    inline ScanEventNew() {}
-    template<class iT>
-    inline ScanEventNew(iT begin, iT end){
-      for( ; begin != end; ++begin){
-        insert(*begin);
-      }
-    }
-    inline ScanEventNew(const ScanEventNew& that) : eventData_(that.eventData_), dirty_(that.dirty_) {}
-    inline ScanEventNew& operator=(const ScanEventNew& that) {
-      if(that.dirty_) that.clean();
-      eventData_ = that.eventData_;
-      dirty_ = that.dirty_;
-      return *this;
-    } 
-
-    //Insert and interval intersection count change into the EventData
-    inline void insert(const std::pair<interval_data<Unit>, int>& intervalCount) {
-      insert(intervalCount.first.low(), intervalCount.second);
-      insert(intervalCount.first.high(), -intervalCount.second);
-    }
-
-    //Insert and position and change int change in intersection count into EventData
-    inline void insert(Unit pos, int count) {
-      eventData_.push_back(std::pair<Unit, int>());
-      eventData_.back().first = pos;
-      eventData_.back().second = count;
-      //std::cout << "Insert: " << eventData_.size() << std::endl;
-      dirty_ = true;
-    }
-
-    //merge this scan event with that by inserting its data
-    inline void insert(const ScanEventNew& that) {
-      typename EventData::const_iterator itr;
-      for(itr = that.eventData_.begin(); itr != that.eventData_.end(); ++itr) {
-        insert((*itr).first, (*itr).second);
-      }
-    }
-
-    inline void clean() const {
-      //std::cout << "Clean\n";
-      if(eventData_.empty()) return;
-      std::sort(eventData_.begin(), eventData_.end(), lessEventDataElement());
-      std::vector<std::pair<Unit, int> > collapse;
-      collapse.reserve(eventData_.size());
-      Unit pos = eventData_[0].first;
-      int count = eventData_[0].second;
-      unsigned int i = 1;
-      for( ; i < eventData_.size(); ++i) {
-        if(pos == eventData_[i].first) {
-          count += eventData_[i].second;
-        } else {
-          if(count != 0) {
-            //std::cout << "collapse insert\n";
-            collapse.push_back(std::pair<Unit, int>());
-            collapse.back().first = pos;
-            collapse.back().second = count;
-          }
-          pos = eventData_[i].first;
-          count = eventData_[i].second;
-        }
-      }
-      //std::cout << "collapse insert\n";
-      if(count != 0) {
-        collapse.push_back(std::pair<Unit, int>());
-        collapse.back().first = pos;
-        collapse.back().second = count;
-      }
-      //std::cout << "data size: " << eventData_.size() << std::endl;
-      //std::cout << "collapse size: " << collapse.size() << std::endl;
-      eventData_ = std::vector<std::pair<Unit, int> >();
-      eventData_.insert(eventData_.end(), collapse.begin(), collapse.end());
-      dirty_ = false;
-    }
-
-    //Get the begin iterator over event data
-    inline iterator begin() const {
-      if(dirty_) clean();
-      if(eventData_.empty()) return end();
-      Unit pos = eventData_[0].first;
-      int count = eventData_[0].second;
-      typename EventData::const_iterator itr = eventData_.begin();
-      ++itr;
-      return iterator(itr, pos, count);
-    }
-
-    //Get the end iterator over event data
-    inline iterator end() const {
-      if(dirty_) clean();
-      return iterator(eventData_.end(), 0, 0);
-    }
-
-    inline void clear() { eventData_.clear(); }
-
-    inline interval_data<Unit> extents() const { 
-      if(eventData_.empty()) return interval_data<Unit>();
-      return interval_data<Unit>((*(eventData_.begin())).first, (*(eventData_.rbegin())).first);
-    }
-  };
-
   //BooleanOp is the generic boolean operation scanline algorithm that provides
   //all the simple boolean set operations on manhattan data.  By templatizing
   //the intersection count of the input and algorithm internals it is extensible
@@ -516,16 +353,18 @@ namespace boolean_op {
     return true;
   }
 
-  template <class T, typename Unit>
+  template <class T, typename Unit, typename iterator_type_1, typename iterator_type_2>
   inline void applyBooleanBinaryOp(std::vector<std::pair<Unit, std::pair<Unit, int> > >& output,
-                                   const std::vector<std::pair<Unit, std::pair<Unit, int> > >& input1,
-                                   const std::vector<std::pair<Unit, std::pair<Unit, int> > >& input2,
+                                   //const std::vector<std::pair<Unit, std::pair<Unit, int> > >& input1,
+                                   //const std::vector<std::pair<Unit, std::pair<Unit, int> > >& input2,
+                                   iterator_type_1 itr1, iterator_type_1 itr1_end,
+                                   iterator_type_2 itr2, iterator_type_2 itr2_end,
                                    T defaultCount) {
     BooleanOp<T, Unit> boolean(defaultCount);
-    typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::const_iterator itr1 = input1.begin();
-    typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::const_iterator itr2 = input2.begin();
+    //typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::const_iterator itr1 = input1.begin();
+    //typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::const_iterator itr2 = input2.begin();
     std::vector<std::pair<interval_data<Unit>, int> > container;
-    output.reserve(std::max(input1.size(), input2.size()));
+    //output.reserve(std::max(input1.size(), input2.size()));
 
     //consider eliminating dependecy on limits with bool flag for initial state
     Unit UnitMax = std::numeric_limits<Unit>::max();
@@ -533,12 +372,12 @@ namespace boolean_op {
     Unit prevPosition = UnitMax;
     T count(defaultCount);
     //define the starting point
-    if(itr1 != input1.end()) {
+    if(itr1 != itr1_end) {
       prevCoord = (*itr1).first;
       prevPosition = (*itr1).second.first;
       count[0] += (*itr1).second.second;
     }
-    if(itr2 != input2.end()) {
+    if(itr2 != itr2_end) {
       if((*itr2).first < prevCoord || 
          ((*itr2).first == prevCoord && (*itr2).second.first < prevPosition)) {
         prevCoord = (*itr2).first;
@@ -549,24 +388,24 @@ namespace boolean_op {
       } else if((*itr2).first == prevCoord && (*itr2).second.first == prevPosition) {
         count[1] += (*itr2).second.second;
         ++itr2;
-        if(itr1 != input1.end())++itr1;
+        if(itr1 != itr1_end) ++itr1;
       } else {
-        if(itr1 != input1.end())++itr1;
+        if(itr1 != itr1_end) ++itr1;
       }
     } else {
-      if(itr1 != input1.end())++itr1;
+      if(itr1 != itr1_end) ++itr1;
     }
-   
-    while(itr1 != input1.end() || itr2 != input2.end()) {
+    
+    while(itr1 != itr1_end || itr2 != itr2_end) {
       Unit curCoord = UnitMax;
       Unit curPosition = UnitMax;
       T curCount(defaultCount);
-      if(itr1 != input1.end()) {
+      if(itr1 != itr1_end) {
         curCoord = (*itr1).first;
         curPosition = (*itr1).second.first;
         curCount[0] += (*itr1).second.second;
       }
-      if(itr2 != input2.end()) {
+      if(itr2 != itr2_end) {
         if((*itr2).first < curCoord || 
            ((*itr2).first == curCoord && (*itr2).second.first < curPosition)) {
           curCoord = (*itr2).first;
@@ -577,9 +416,9 @@ namespace boolean_op {
         } else if((*itr2).first == curCoord && (*itr2).second.first == curPosition) {
           curCount[1] += (*itr2).second.second;
           ++itr2;
-          if(itr1 != input1.end())++itr1;
+          if(itr1 != itr1_end) ++itr1;
         } else {
-          if(itr1 != input1.end())++itr1;
+          if(itr1 != itr1_end) ++itr1;
         }
       } else {
         ++itr1;
@@ -680,7 +519,7 @@ namespace boolean_op {
     input.insert(input.end(), output.begin(), output.end());
   }
 
-};
+}
 
 }
 #endif

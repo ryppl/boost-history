@@ -10,10 +10,168 @@
 #define GTL_POLYGON_90_WITH_HOLES_CONCEPT_HPP
 namespace gtl {
 
-struct polygon_90_with_holes_concept : polygon_90_concept {
+struct polygon_90_with_holes_concept {
 public:
-  inline polygon_90_with_holes_concept() {}
 
+   template <typename T>
+  struct coordinate_type {
+    typedef typename polygon_traits<T>::coordinate_type type;
+  };
+
+  template <typename T>
+  struct area_type {
+    typedef typename polygon_traits<T>::area_type type;
+  };
+
+  template <typename T>
+  struct coordinate_difference {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_difference type;
+  };
+
+  template <typename T>
+  struct coordinate_distance {
+    typedef typename coordinate_traits<typename coordinate_type<T>::type>::coordinate_distance type;
+  };
+
+  template <typename T>
+  struct point_type {
+    typedef typename polygon_traits<T>::iterator_type iterator;
+    typedef typename std::iterator_traits<iterator>::value_type type;
+  };
+
+  template<typename polygon_type, typename compact_iterator_type>
+  static void set_compact(polygon_type& polygon, compact_iterator_type input_begin, compact_iterator_type input_end) {
+    polygon_traits<polygon_type>::set_compact(polygon, input_begin, input_end);
+  }
+
+  template<typename polygon_type, typename rectangle_type>
+  static void set_rectangle(polygon_type& polygon, const rectangle_type& rect) {
+    typename polygon_traits<polygon_type>::coordinate_type coords[4] = 
+      {rectangle_concept::xl(rect), rectangle_concept::yl(rect),
+       rectangle_concept::xh(rect), rectangle_concept::yh(rect)};
+    set_compact(polygon, coords, coords+4);
+  }
+   
+  template<typename polygon_type, typename point_iterator_type>
+  static void set(polygon_type& polygon, point_iterator_type begin_point, point_iterator_type end_point) {
+    polygon_traits<polygon_type>::set(polygon, begin_point, end_point);
+  }
+
+  template <typename polygon_type>
+  static typename polygon_traits<polygon_type>::iterator_type 
+  begin(const polygon_type& polygon) {
+    return polygon_traits<polygon_type>::begin(polygon);
+  }
+  
+  template <typename polygon_type>
+  static typename polygon_traits<polygon_type>::iterator_type 
+  end(const polygon_type& polygon) {
+    return polygon_traits<polygon_type>::end(polygon);
+  }
+  
+  template <typename polygon_type>
+  static typename polygon_traits<polygon_type>::compact_iterator_type 
+  begin_compact(const polygon_type& polygon) {
+    return polygon_traits<polygon_type>::begin_compact(polygon);
+  }
+  
+  template <typename polygon_type>
+  static typename polygon_traits<polygon_type>::compact_iterator_type 
+  end_compact(const polygon_type& polygon) {
+    return polygon_traits<polygon_type>::end_compact(polygon);
+  }
+  
+  template<typename T, class iT>
+  static T construct(iT inputBegin, iT inputEnd) { return polygon_traits<T>::construct(inputBegin, inputEnd); }
+
+  template<typename polygon_type, typename rectangle_type>
+  static polygon_type construct_from_rectangle(const rectangle_type& rect) {
+    polygon_type poly;
+    set_rectangle(poly, rect);
+    return poly;
+  }
+
+  template <typename polygon_type>
+  static std::size_t size(const polygon_type& polygon) {
+    return polygon_traits<polygon_type>::size(polygon);
+  }
+
+  template <typename polygon_type>
+  static direction_1d winding(const polygon_type& polygon){
+    winding_direction wd = polygon_traits<polygon_type>::winding(polygon);
+    if(wd != unknown_winding) {
+      return wd == clockwise_winding ? LOW: HIGH;
+    }
+    direction_1d dir = HIGH;
+    typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<polygon_type>::compact_iterator_type iterator;
+    iterator itr = begin_compact(polygon);
+    coordinate_type firstx = *itr;
+    coordinate_type minX = firstx;
+    ++itr;
+    iterator end_itr = end_compact(polygon);
+    if(itr == end_itr) return dir; 
+    coordinate_type prevy = *itr;
+    coordinate_type firsty = *itr;
+    ++itr;
+    for( ; itr != end_itr; ++itr) {
+      coordinate_type x = *itr;
+      ++itr;
+      if(itr == end_itr) break;
+      coordinate_type y = *itr;
+      if(x <= minX) {
+        minX = x;
+        //edge directed downward on left side of figure is counterclockwise
+        dir = y < prevy ? HIGH : LOW;
+      }
+      prevy = y;
+    }
+    if(firstx <= minX) {
+      dir = firsty < prevy ? HIGH : LOW;
+    }
+    return dir;
+  }
+
+  template <typename polygon_type, typename rectangle_type>
+  static bool
+  extents(rectangle_type& bounding_box, const polygon_type& polygon) {
+    typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<polygon_type>::compact_iterator_type iterator;
+    coordinate_type xmin = 0;
+    coordinate_type ymin = 0;
+    coordinate_type xmax = 0;
+    coordinate_type ymax = 0;
+    bool first_iteration = true;
+    iterator itr_end = end_compact(polygon);
+    for(iterator itr = begin_compact(polygon); itr != itr_end; ++itr) {
+      coordinate_type x = *itr;
+      ++itr;
+      if(itr == itr_end) break;
+      coordinate_type y = *itr;
+      if(first_iteration) {
+        xmin = xmax = x;
+        ymin = ymax = x;
+        first_iteration = false;
+      }
+      xmin = std::min(xmin, x);
+      xmax = std::max(xmax, x);
+      ymin = std::min(ymin, y);
+      ymax = std::max(ymax, y);
+    }
+    if(first_iteration) return false;
+    bounding_box = rectangle_concept::construct<rectangle_type>(xmin, ymin, xmax, ymax);
+    return true;
+  }
+
+  template <typename point_type, typename polygon_type>
+  static bool
+  center(point_type& center_point, const polygon_type& polygon) {
+    rectangle_data<typename coordinate_type<polygon_type>::type> bounding_box;
+    if(extents(bounding_box, polygon))
+      return rectangle_concept::center(center_point, bounding_box);
+    return false;
+  }
+ 
   template<typename polygon_with_holes_type, typename hole_iterator_type>
   static void set_holes(polygon_with_holes_type& polygon, hole_iterator_type holes_begin, hole_iterator_type holes_end) {
     polygon_with_holes_traits<polygon_with_holes_type>::set_holes(polygon, holes_begin, holes_end);
@@ -44,10 +202,25 @@ public:
     return polygon_with_holes_traits<polygon_with_holes_type>::size_holes(polygon);
   }
 
+  template <typename polygon_with_holes_type_1, typename geometry_type_2>
+  static polygon_with_holes_type_1& assign(polygon_with_holes_type_1& lvalue, const geometry_type_2& rvalue) {
+    polygon_90_with_holes_concept::assign(lvalue, rvalue, typename geometry_concept<geometry_type_2>::type());
+    set_holes(lvalue, begin_holes(rvalue), end_holes(rvalue));
+    return lvalue;
+  }
+
   template <typename polygon_with_holes_type_1, typename polygon_with_holes_type_2>
-  static polygon_with_holes_type_1& assign(polygon_with_holes_type_1& lvalue, const polygon_with_holes_type_2& rvalue) {
+  static polygon_with_holes_type_1& assign(polygon_with_holes_type_1& lvalue, const polygon_with_holes_type_2& rvalue,
+                                           polygon_90_with_holes_concept tag) {
     polygon_90_concept::assign(lvalue, rvalue);
     set_holes(lvalue, begin_holes(rvalue), end_holes(rvalue));
+    return lvalue;
+  }
+
+  template <typename polygon_with_holes_type_1, typename polygon_type_2>
+  static polygon_with_holes_type_1& assign(polygon_with_holes_type_1& lvalue, const polygon_type_2& rvalue,
+                                           polygon_90_concept tag) {
+    polygon_90_concept::assign(lvalue, rvalue);
     return lvalue;
   }
 
@@ -157,6 +330,75 @@ public:
     }
     return polygon;
   }
+
+  template <typename polygon_type>
+  static polygon_type& scale_up(polygon_type& polygon, 
+                                typename coordinate_traits<typename coordinate_type<polygon_type>::type>::unsigned_area_type factor) {
+    typedef typename polygon_with_holes_traits<polygon_type>::hole_type hole_type;
+    std::vector<hole_type> holes;
+    holes.reserve(size_holes(polygon));
+    typename polygon_with_holes_traits<polygon_type>::iterator_holes_type b, e;
+    e = end_holes(polygon);
+    for(b = begin_holes(polygon); b != e; ++b) {
+      holes.push_back(*b);
+      polygon_90_concept::scale_up(holes.back(), factor);
+    }
+    set_holes(polygon, holes.begin(), holes.end());
+    polygon_90_concept::scale_up(polygon, factor);
+    return polygon;
+  }
+
+  template <typename polygon_type>
+  static polygon_type& scale_down(polygon_type& polygon, 
+                                    typename coordinate_traits<typename coordinate_type<polygon_type>::type>::unsigned_area_type factor) {
+    typedef typename polygon_with_holes_traits<polygon_type>::hole_type hole_type;
+    std::vector<hole_type> holes;
+    holes.reserve(size_holes(polygon));
+    typename polygon_with_holes_traits<polygon_type>::iterator_holes_type b, e;
+    e = end_holes(polygon);
+    for(b = begin_holes(polygon); b != e; ++b) {
+      holes.push_back(*b);
+      polygon_90_concept::scale_down(holes.back(), factor);
+    }
+    set_holes(polygon, holes.begin(), holes.end());
+    polygon_90_concept::scale_down(polygon, factor);
+    return polygon;
+  }
+
+  template <typename polygon_type, typename scaling_type>
+  static polygon_type& scale(polygon_type& polygon, 
+                              const scaling_type& scaling) {
+    typedef typename polygon_with_holes_traits<polygon_type>::hole_type hole_type;
+    std::vector<hole_type> holes;
+    holes.reserve(size_holes(polygon));
+    typename polygon_with_holes_traits<polygon_type>::iterator_holes_type b, e;
+    e = end_holes(polygon);
+    for(b = begin_holes(polygon); b != e; ++b) {
+      holes.push_back(*b);
+      polygon_90_concept::scale(holes.back(), scaling);
+    }
+    set_holes(polygon, holes.begin(), holes.end());
+    polygon_90_concept::scale(polygon, scaling);
+    return polygon;
+  }
+
+  template <typename polygon_type, typename transformation_type>
+  static polygon_type& transform(polygon_type& polygon,
+                               const transformation_type& transformation) {
+    typedef typename polygon_with_holes_traits<polygon_type>::hole_type hole_type;
+    std::vector<hole_type> holes;
+    holes.reserve(size_holes(polygon));
+    typename polygon_with_holes_traits<polygon_type>::iterator_holes_type b, e;
+    e = end_holes(polygon);
+    for(b = begin_holes(polygon); b != e; ++b) {
+      holes.push_back(*b);
+      polygon_90_concept::transform(holes.back(), transformation);
+    }
+    set_holes(polygon, holes.begin(), holes.end());
+    polygon_90_concept::transform(polygon, transformation);
+    return polygon;
+  }
+
 };
 
 template <typename T>

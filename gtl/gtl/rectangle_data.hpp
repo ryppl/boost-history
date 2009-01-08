@@ -9,14 +9,23 @@
 #define GTL_RECTANGLE_DATA_HPP
 namespace gtl {
 
-struct rectangle_concept;
+#include "isotropy.hpp"
+//interval
+#include "interval_data.hpp"
 
 template <typename T>
 class rectangle_data {
 public:
-  typedef rectangle_concept geometry_type;
   typedef T coordinate_type;
+  typedef interval_data<T> interval_type;
+
   inline rectangle_data() {}
+  inline rectangle_data(T xl, T yl, T xh, T yh) {
+    if(xl > xh) std::swap(xl, xh);
+    if(yl > yh) std::swap(yl, yh);
+    ranges_[HORIZONTAL] = interval_data<T>(xl, xh);
+    ranges_[VERTICAL] = interval_data<T>(yl, yh);
+  }
   template <typename interval_type_1, typename interval_type_2>
   inline rectangle_data(const interval_type_1& hrange,
                         const interval_type_2& vrange) {
@@ -43,8 +52,8 @@ public:
   inline void set(direction_2d dir, coordinate_type value) {
     return ranges_[orientation_2d(dir).to_int()].set(direction_1d(dir), value);
   }
-  template <typename interval_type>
-  inline void set(orientation_2d orient, const interval_type& interval); 
+  template <typename interval_type_1>
+  inline void set(orientation_2d orient, const interval_type_1& interval); 
 private:
   interval_data<coordinate_type> ranges_[2]; 
 };

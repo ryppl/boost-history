@@ -283,6 +283,10 @@ namespace polygon_formation {
   template<bool orientT, typename Unit>
   class PolyLinePolygonData;
 
+  //forward declaration
+  template<bool orientT, typename Unit>
+  class PolyLinePolygonWithHolesData;
+
   /**
    * @brief ActiveTail represents an edge of an incomplete polygon.
    *
@@ -392,7 +396,7 @@ namespace polygon_formation {
         }
         return *this;
       }
-      inline iterator operator++(int) {
+      inline const iterator operator++(int) {
         iterator tmp(*this);
         ++(*this);
         return tmp;
@@ -526,8 +530,8 @@ namespace polygon_formation {
      * returns a handle to a hole if one is closed
      */
     static ActiveTail* joinChains(ActiveTail* at1, ActiveTail* at2, bool solid, std::vector<Unit>& outBufferTmp);
-    template <bool orientT>
-    static ActiveTail* joinChains(ActiveTail* at1, ActiveTail* at2, bool solid, typename std::vector<PolyLinePolygonData<orientT, Unit> >& outBufferTmp);
+    template <typename PolygonT>
+    static ActiveTail* joinChains(ActiveTail* at1, ActiveTail* at2, bool solid, typename std::vector<PolygonT>& outBufferTmp);
 
     /**
      * @brief deallocate temp buffer
@@ -556,14 +560,11 @@ namespace polygon_formation {
   template <typename Unit>
   void destroyActiveTail(ActiveTail<Unit>* aTail);
      
-  struct polygon_90_concept;
-
   template<bool orientT, typename Unit>
   class PolyLineHoleData {
   private:
     ActiveTail<Unit>* p_;
   public:
-    typedef polygon_90_concept geometry_type;
     typedef Unit coordinate_type;
     typedef typename ActiveTail<Unit>::iterator compact_iterator_type;
     typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;
@@ -575,6 +576,7 @@ namespace polygon_formation {
     inline iterator_type begin() const { return iterator_type(begin_compact(), end_compact()); }
     inline iterator_type end() const { return iterator_type(end_compact(), end_compact()); }
     inline unsigned int size() const { return 0; }
+    inline ActiveTail<Unit>* yield() { return p_; }
     template<class iT>
     inline PolyLineHoleData& set(iT inputBegin, iT inputEnd) {
       return *this;
@@ -586,18 +588,16 @@ namespace polygon_formation {
    
   };
 
-  struct polygon_90_with_holes_concept;
-
   template<bool orientT, typename Unit>
-  class PolyLinePolygonData {
+  class PolyLinePolygonWithHolesData {
   private:
     ActiveTail<Unit>* p_;
   public:
-    typedef polygon_90_with_holes_concept geometry_type;
     typedef Unit coordinate_type;
     typedef typename ActiveTail<Unit>::iterator compact_iterator_type;
     typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;
     typedef PolyLineHoleData<orientT, Unit> hole_type;
+    typedef typename coordinate_traits<Unit>::area_type area_type;
     class iteratorHoles {
     private:
       typename ActiveTail<Unit>::iteratorHoles itr_;
@@ -609,7 +609,7 @@ namespace polygon_formation {
         ++itr_;
         return *this;
       }
-      inline iteratorHoles operator++(int) {
+      inline const iteratorHoles operator++(int) {
         iteratorHoles tmp(*this);
         ++(*this);
         return tmp;
@@ -624,8 +624,8 @@ namespace polygon_formation {
     };
     typedef iteratorHoles iterator_holes_type;
 
-    inline PolyLinePolygonData() : p_(0) {}
-    inline PolyLinePolygonData(ActiveTail<Unit>* p) : p_(p) {}
+    inline PolyLinePolygonWithHolesData() : p_(0) {}
+    inline PolyLinePolygonWithHolesData(ActiveTail<Unit>* p) : p_(p) {}
     //use default copy and assign
     inline compact_iterator_type begin_compact() const { return p_->begin(false, (orientT ? VERTICAL : HORIZONTAL)); }
     inline compact_iterator_type end_compact() const { return p_->end(); }
@@ -638,18 +638,18 @@ namespace polygon_formation {
     inline unsigned int size_holes() const { return 0; }
     inline unsigned int size() const { return 0; }
     template<class iT>
-    inline PolyLinePolygonData& set(iT inputBegin, iT inputEnd) {
+    inline PolyLinePolygonWithHolesData& set(iT inputBegin, iT inputEnd) {
       return *this;
     }
     template<class iT>
-    inline PolyLinePolygonData& set_compact(iT inputBegin, iT inputEnd) {
+    inline PolyLinePolygonWithHolesData& set_compact(iT inputBegin, iT inputEnd) {
       return *this;
     }
    
     /// initialize a polygon from x,y values, it is assumed that the first is an x
     /// and that the input is a well behaved polygon
     template<class iT>
-    inline PolyLinePolygonData& set_holes(iT inputBegin, iT inputEnd) {
+    inline PolyLinePolygonWithHolesData& set_holes(iT inputBegin, iT inputEnd) {
       return *this;
     }
   };
@@ -658,15 +658,32 @@ namespace polygon_formation {
   /**
    * @brief ScanLine does all the work of stitching together polygons from incoming vertical edges
    */
+  struct ERROR {};
+  template <bool orientT, typename Unit, typename polygon_concept_type>
+  struct PolyLineType { };
   template <bool orientT, typename Unit>
+  struct PolyLineType<orientT, Unit, polygon_90_with_holes_concept> { typedef PolyLinePolygonWithHolesData<orientT, Unit> type; };
+  template <bool orientT, typename Unit>
+  struct PolyLineType<orientT, Unit, polygon_45_with_holes_concept> { typedef PolyLinePolygonWithHolesData<orientT, Unit> type; };
+  template <bool orientT, typename Unit>
+  struct PolyLineType<orientT, Unit, polygon_with_holes_concept> { typedef PolyLinePolygonWithHolesData<orientT, Unit> type; };
+  template <bool orientT, typename Unit>
+  struct PolyLineType<orientT, Unit, polygon_90_concept> { typedef PolyLineHoleData<orientT, Unit> type; };
+  template <bool orientT, typename Unit>
+  struct PolyLineType<orientT, Unit, polygon_45_concept> { typedef PolyLineHoleData<orientT, Unit> type; };
+  template <bool orientT, typename Unit>
+  struct PolyLineType<orientT, Unit, polygon_concept> { typedef PolyLineHoleData<orientT, Unit> type; };
+
+  template <bool orientT, typename Unit, typename polygon_concept_type>
   class ScanLineToPolygonItrs {
   private:
     /** @brief a map of horizontal edges of incomplete polygons by their y value coordinate */
     std::map<Unit, ActiveTail<Unit>*> tailMap_;
-    std::vector<PolyLinePolygonData<orientT, Unit> > outputPolygons_;
+    typedef typename PolyLineType<orientT, Unit, polygon_concept_type>::type PolyLinePolygonData;
+    std::vector<PolyLinePolygonData> outputPolygons_;
     bool fractureHoles_;
   public:
-    typedef typename std::vector<PolyLinePolygonData<orientT, Unit> >::iterator iterator; 
+    typedef typename std::vector<PolyLinePolygonData>::iterator iterator; 
     inline ScanLineToPolygonItrs() {}
     /** @brief construct a scanline with the proper offsets, protocol and options */
     inline ScanLineToPolygonItrs(bool fractureHoles) : fractureHoles_(fractureHoles) {}
@@ -685,46 +702,46 @@ namespace polygon_formation {
   /**
    * @brief ScanLine does all the work of stitching together polygons from incoming vertical edges
    */
-  template <typename Unit>
-  class ScanLineToPolygons {
-  private:
-    ScanLineToPolygonItrs<true, Unit> scanline_;
-  public:
-    inline ScanLineToPolygons() : scanline_() {}
-    /** @brief construct a scanline with the proper offsets, protocol and options */
-    inline ScanLineToPolygons(bool fractureHoles) : scanline_(fractureHoles) {}
+//   template <typename Unit, typename polygon_concept_type>
+//   class ScanLineToPolygons {
+//   private:
+//     ScanLineToPolygonItrs<true, Unit> scanline_;
+//   public:
+//     inline ScanLineToPolygons() : scanline_() {}
+//     /** @brief construct a scanline with the proper offsets, protocol and options */
+//     inline ScanLineToPolygons(bool fractureHoles) : scanline_(fractureHoles) {}
    
-    /** @brief process all vertical edges, left and right, at a unique x coordinate, edges must be sorted low to high */
-    inline void processEdges(std::vector<Unit>& outBufferTmp, Unit currentX, std::vector<interval_data<Unit> >& leftEdges, 
-                             std::vector<interval_data<Unit> >& rightEdges) {
-      typename ScanLineToPolygonItrs<true, Unit>::iterator itr, endItr;
-      scanline_.processEdges(itr, endItr, currentX, leftEdges, rightEdges);
-      //copy data into outBufferTmp
-      while(itr != endItr) {
-        typename PolyLinePolygonData<true, Unit>::iterator pditr;
-        outBufferTmp.push_back(0);
-        unsigned int sizeIndex = outBufferTmp.size() - 1;
-        int count = 0;
-        for(pditr = (*itr).begin(); pditr != (*itr).end(); ++pditr) {
-          outBufferTmp.push_back(*pditr);
-          ++count;
-        }
-        outBufferTmp[sizeIndex] = count;
-        typename PolyLinePolygonData<true, Unit>::iteratorHoles pdHoleItr;
-        for(pdHoleItr = (*itr).beginHoles(); pdHoleItr != (*itr).endHoles(); ++pdHoleItr) {
-          outBufferTmp.push_back(0);
-          unsigned int sizeIndex2 = outBufferTmp.size() - 1;
-          int count2 = 0;
-          for(pditr = (*pdHoleItr).begin(); pditr != (*pdHoleItr).end(); ++pditr) {
-            outBufferTmp.push_back(*pditr);
-            ++count2;
-          }
-          outBufferTmp[sizeIndex2] = -count;
-        }
-        ++itr;
-      }
-    }
-  };
+//     /** @brief process all vertical edges, left and right, at a unique x coordinate, edges must be sorted low to high */
+//     inline void processEdges(std::vector<Unit>& outBufferTmp, Unit currentX, std::vector<interval_data<Unit> >& leftEdges, 
+//                              std::vector<interval_data<Unit> >& rightEdges) {
+//       typename ScanLineToPolygonItrs<true, Unit>::iterator itr, endItr;
+//       scanline_.processEdges(itr, endItr, currentX, leftEdges, rightEdges);
+//       //copy data into outBufferTmp
+//       while(itr != endItr) {
+//         typename PolyLinePolygonData<true, Unit>::iterator pditr;
+//         outBufferTmp.push_back(0);
+//         unsigned int sizeIndex = outBufferTmp.size() - 1;
+//         int count = 0;
+//         for(pditr = (*itr).begin(); pditr != (*itr).end(); ++pditr) {
+//           outBufferTmp.push_back(*pditr);
+//           ++count;
+//         }
+//         outBufferTmp[sizeIndex] = count;
+//         typename PolyLinePolygonData<true, Unit>::iteratorHoles pdHoleItr;
+//         for(pdHoleItr = (*itr).beginHoles(); pdHoleItr != (*itr).endHoles(); ++pdHoleItr) {
+//           outBufferTmp.push_back(0);
+//           unsigned int sizeIndex2 = outBufferTmp.size() - 1;
+//           int count2 = 0;
+//           for(pditr = (*pdHoleItr).begin(); pditr != (*pdHoleItr).end(); ++pditr) {
+//             outBufferTmp.push_back(*pditr);
+//             ++count2;
+//           }
+//           outBufferTmp[sizeIndex2] = -count;
+//         }
+//         ++itr;
+//       }
+//     }
+//   };
 
   const int VERTICAL_HEAD = 1, HEAD_TO_TAIL = 2, TAIL_TO_TAIL = 4, SOLID_TO_RIGHT = 8;
 
@@ -1319,9 +1336,9 @@ namespace polygon_formation {
 
   //solid indicates if it was joined by a solit or a space
   template <typename Unit>
-  template <bool orientT>
+  template <typename PolygonT>
   inline ActiveTail<Unit>* ActiveTail<Unit>::joinChains(ActiveTail<Unit>* at1, ActiveTail<Unit>* at2, bool solid, 
-                                                        std::vector<PolyLinePolygonData<orientT, Unit> >& outBufferTmp) {
+                                                        std::vector<PolygonT>& outBufferTmp) {
     //checks to see if we closed a figure
     if(at1->isOtherTail(*at2)){
       //value of solid tells us if we closed solid or hole
@@ -1508,8 +1525,8 @@ namespace polygon_formation {
   //    The currentTail vertical edge turns right and is added to the horizontal edges data.
   //    The horizontal edge from the left turns upward and becomes the currentTail vertical edge
   //
-  template <bool orientT, typename Unit>
-  inline void ScanLineToPolygonItrs<orientT, Unit>::
+  template <bool orientT, typename Unit, typename polygon_concept_type>
+  inline void ScanLineToPolygonItrs<orientT, Unit, polygon_concept_type>::
   processEdges(iterator& beginOutput, iterator& endOutput, 
                Unit currentX, std::vector<interval_data<Unit> >& leftEdges, 
                std::vector<interval_data<Unit> >& rightEdges) {
@@ -1520,7 +1537,6 @@ namespace polygon_formation {
     unsigned int rightIndex = 0;
     bool bottomAlreadyProcessed = false;
     ActiveTail<Unit>* currentTail = 0;
-    bool holePassThrough = false;
     const Unit UnitMax = std::numeric_limits<Unit>::max();
     while(leftIndex < leftEdges.size() || rightIndex < rightEdges.size()) {
       interval_data<Unit>  edges[2] = {interval_data<Unit> (UnitMax, UnitMax), interval_data<Unit> (UnitMax, UnitMax)};
@@ -1538,7 +1554,7 @@ namespace polygon_formation {
       interval_data<Unit> & nextEdge = edges[!trailingEdge];
       //process this edge
       if(!bottomAlreadyProcessed) {
-        //assert currentTail = 0 || holePassThrough == true
+        //assert currentTail = 0 
 
         //process the bottom end of this edge
         typename std::map<Unit, ActiveTail<Unit>*>::iterator thisMapItr = findAtNext(tailMap_, nextMapItr, edge.get(LOW));
@@ -1547,10 +1563,8 @@ namespace polygon_formation {
           //it needs to turn upward and become the current tail
           ActiveTail<Unit>* tail = thisMapItr->second;
           if(currentTail) {
-            //assert holePassThrough == true
             //stitch currentTail into this tail
             currentTail = tail->addHole(currentTail, fractureHoles_);
-            holePassThrough = false;
             if(!fractureHoles_)
               currentTail->pushCoordinate(currentX);
           } else {
@@ -1624,7 +1638,6 @@ namespace polygon_formation {
           //thisMapItr is pointing to a horizontal edge in the map at the top of this vertical edge
           //we need to join them and potentially close a figure
           //assert currentTail != 0
-          //assert holePassThrough = false
           ActiveTail<Unit>* tail = thisMapItr->second;
           //pass the opositve of trailing edge to mean that they are joined because of solid to the right
           currentTail = ActiveTail<Unit>::joinChains(currentTail, tail, !trailingEdge, outputPolygons_);
@@ -1674,8 +1687,8 @@ namespace polygon_formation {
     endOutput = outputPolygons_.end();
   } //end function
 
-  template<bool orientT, typename Unit>
-  inline void ScanLineToPolygonItrs<orientT, Unit>::clearOutput_() {
+  template<bool orientT, typename Unit, typename polygon_concept_type>
+  inline void ScanLineToPolygonItrs<orientT, Unit, polygon_concept_type>::clearOutput_() {
     for(unsigned int i = 0; i < outputPolygons_.size(); ++i) {
       ActiveTail<Unit>* at1 = outputPolygons_[i].yield();
       const std::list<ActiveTail<Unit>*>& holes = at1->getHoles();
@@ -1694,7 +1707,17 @@ namespace polygon_formation {
     outputPolygons_.clear();
   }
 
-}; //polygon_formation namespace
+} //polygon_formation namespace
+
+  template <bool orientT, typename Unit>
+  struct geometry_concept<polygon_formation::PolyLinePolygonWithHolesData<orientT, Unit> > {
+    typedef polygon_90_with_holes_concept type;
+  };
+
+  template <bool orientT, typename Unit>
+  struct geometry_concept<polygon_formation::PolyLineHoleData<orientT, Unit> > {
+    typedef polygon_90_concept type;
+  };
 
   //public API to access polygon formation algorithm
   template <typename output_container, typename iterator_type, typename concept_type>
@@ -1704,8 +1727,9 @@ namespace polygon_formation {
     typedef typename iterator_type::value_type::first_type coordinate_type;
     polygon_type poly;
     unsigned int countPolygons = 0;
-    polygon_formation::ScanLineToPolygonItrs<true, coordinate_type> scanlineToPolygonItrsV(fracture_holes);
-    polygon_formation::ScanLineToPolygonItrs<false, coordinate_type> scanlineToPolygonItrsH(fracture_holes);
+    typedef typename geometry_concept<polygon_type>::type polygon_concept_type;
+    polygon_formation::ScanLineToPolygonItrs<true, coordinate_type, polygon_concept_type> scanlineToPolygonItrsV(fracture_holes);
+    polygon_formation::ScanLineToPolygonItrs<false, coordinate_type, polygon_concept_type> scanlineToPolygonItrsH(fracture_holes);
     std::vector<interval_data<coordinate_type> > leftEdges;
     std::vector<interval_data<coordinate_type> > rightEdges;
     coordinate_type prevPos = std::numeric_limits<coordinate_type>::max();
@@ -1716,19 +1740,19 @@ namespace polygon_formation {
       coordinate_type pos = (*itr).first;
       if(pos != prevPos) {
         if(orient == VERTICAL) {
-          typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type>::iterator itrPoly, itrPolyEnd;
+          typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type, polygon_concept_type>::iterator itrPoly, itrPolyEnd;
           scanlineToPolygonItrsV.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
           for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
             ++countPolygons;
-            concept_type::assign(poly, *itrPoly);
+            assign(poly, *itrPoly);
             container.insert(container.end(), poly);
           }
         } else {
-          typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type>::iterator itrPoly, itrPolyEnd;
+          typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type, polygon_concept_type>::iterator itrPoly, itrPolyEnd;
           scanlineToPolygonItrsH.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
           for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
             ++countPolygons;
-            concept_type::assign(poly, *itrPoly);
+            assign(poly, *itrPoly);
             container.insert(container.end(), poly);
           }
         }
@@ -1744,13 +1768,13 @@ namespace polygon_formation {
         std::pair<interval_data<coordinate_type>, int> element(interval_data<coordinate_type>(prevY, y), count);
         if(element.second == 1) {
           if(leftEdges.size() && leftEdges.back().high() == element.first.low()) {
-            interval_concept::encompass(leftEdges.back(), element.first, interval_concept());
+            encompass(leftEdges.back(), element.first);
           } else {
             leftEdges.push_back(element.first);
           }
         } else {
           if(rightEdges.size() && rightEdges.back().high() == element.first.low()) {
-            interval_concept::encompass(rightEdges.back(), element.first, interval_concept());
+            encompass(rightEdges.back(), element.first);
           } else {
             rightEdges.push_back(element.first);
           }
@@ -1761,19 +1785,19 @@ namespace polygon_formation {
       count += (*itr).second.second;
     }
     if(orient == VERTICAL) {
-      typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type>::iterator itrPoly, itrPolyEnd;
+      typename polygon_formation::ScanLineToPolygonItrs<true, coordinate_type, polygon_concept_type>::iterator itrPoly, itrPolyEnd;
       scanlineToPolygonItrsV.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
       for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
         ++countPolygons;
-        concept_type::assign(poly, *itrPoly);
+        assign(poly, *itrPoly);
         container.insert(container.end(), poly);
       }
     } else {
-      typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type>::iterator itrPoly, itrPolyEnd;
+      typename polygon_formation::ScanLineToPolygonItrs<false, coordinate_type, polygon_concept_type>::iterator itrPoly, itrPolyEnd;
       scanlineToPolygonItrsH.processEdges(itrPoly, itrPolyEnd, prevPos, leftEdges, rightEdges);
       for( ; itrPoly != itrPolyEnd; ++ itrPoly) {
         ++countPolygons;
-        concept_type::assign(poly, *itrPoly);
+        assign(poly, *itrPoly);
         container.insert(container.end(), poly);
       }
     }

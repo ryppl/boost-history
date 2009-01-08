@@ -18,7 +18,7 @@ namespace rectangle_formation {
     typedef rectangle_data<coordinate_type> scan_rect_type;
   private:
     
-    typedef std::set<scan_rect_type, rectangle_concept::less<scan_rect_type, scan_rect_type> > ScanData;
+    typedef std::set<scan_rect_type, less_rectangle_concept<scan_rect_type, scan_rect_type> > ScanData;
     ScanData scanData_;
     bool haveCurrentRect_;
     scan_rect_type currentRect_;
@@ -30,7 +30,7 @@ namespace rectangle_formation {
     inline ScanLineToRects(orientation_2d orient, rectangle_type model) :
       scanData_(orientation_2d(orient.to_int() ? VERTICAL : HORIZONTAL)),
       haveCurrentRect_(false), orient_(orient) {
-      rectangle_concept::assign(currentRect_, model);
+      assign(currentRect_, model);
       currentCoordinate_ = std::numeric_limits<coordinate_type>::max();
     }
     
@@ -72,7 +72,7 @@ namespace rectangle_formation {
           const rectangle_type& rect = *dataIter;
           //if the rectangle data intersects the edge at all
           if(rect.get(orient).get(HIGH) >= edge.get(LOW)) {
-            if(interval_concept::contains(rect.get(orient), edge, true, interval_concept())) {
+            if(contains(rect.get(orient), edge, true)) {
               //this is a closing edge
               //we need to write out the intersecting rectangle and
               //insert between 0 and 2 rectangles into the scanData
@@ -85,7 +85,7 @@ namespace rectangle_formation {
                 tmpRect.set(orient.get_perpendicular().get_direction(HIGH),
                             currentCoordinate);
                 result_type result;
-                rectangle_concept::assign(result, tmpRect);
+                assign(result, tmpRect);
                 rectangles.insert(rectangles.end(), result);
               }
               //erase the rectangle from the scan data
@@ -124,7 +124,7 @@ namespace rectangle_formation {
                 tmpRect.set(orient.get_perpendicular().get_direction(HIGH),
                             currentCoordinate);
                 result_type result;
-                rectangle_concept::assign(result, tmpRect);
+                assign(result, tmpRect);
                 rectangles.insert(rectangles.end(), result);
               }
               //erase the rectangle from the scan data
@@ -173,7 +173,7 @@ namespace rectangle_formation {
               edgeProcessed = true;
               continue;
             }
-            edgeProcessed = true;
+            //edgeProcessed = true;
           }
           ++dataIter;
         } //end while edge intersects rectangle data 
@@ -227,13 +227,13 @@ namespace rectangle_formation {
   }
 
 
-}; //namespace rectangle_formation
+} //namespace rectangle_formation
   
   template <typename output_container, typename iterator_type, typename rectangle_concept>
   void get_rectangles(output_container& output, iterator_type begin, iterator_type end,
                       orientation_2d orient, rectangle_concept tag) {
     typedef typename output_container::value_type rectangle_type;
-    typedef typename rectangle_concept::template coordinate_type<rectangle_type>::type Unit;
+    typedef typename rectangle_traits<rectangle_type>::coordinate_type Unit;
     rectangle_data<Unit> model;
     Unit prevPos = std::numeric_limits<Unit>::max();
     rectangle_formation::ScanLineToRects<rectangle_type> scanlineToRects(orient, model);
@@ -245,10 +245,11 @@ namespace rectangle_formation {
         prevPos = pos;
       }
       Unit lowy = (*itr).second.first;
+      iterator_type tmp_itr = itr;
       ++itr;
       Unit highy = (*itr).second.first;
       scanlineToRects.processEdge(output, interval_data<Unit>(lowy, highy));
-      if(abs((*itr).second.second) > 1) --itr; //next edge begins from this vertex
+      if(abs((*itr).second.second) > 1) itr = tmp_itr; //next edge begins from this vertex
     }
   }
 }

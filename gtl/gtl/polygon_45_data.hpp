@@ -15,21 +15,19 @@ public:
   typedef polygon_45_concept geometry_type;
   typedef T coordinate_type;
   typedef typename std::vector<point_data<coordinate_type> >::const_iterator iterator_type;
-  typedef iterator_points_to_compact<iterator_type, point_data<coordinate_type> > compact_iterator_type;
+  typedef typename coordinate_traits<T>::coordinate_distance area_type;
+  typedef point_data<T> point_type;
 
   inline polygon_45_data(){;} //do nothing default constructor
+
+  template<class iT>
+  inline polygon_45_data(iT input_begin, iT input_end) : coords_(input_begin, input_end) {}
 
   template<class iT>
   inline polygon_45_data& set(iT input_begin, iT input_end) {
     coords_.clear();  //just in case there was some old data there
     coords_.insert(coords_.end(), input_begin, input_end);
     return *this;
-  }
-
-  template<typename iT>
-  inline polygon_45_data& set_compact(iT input_begin, iT input_end) {
-    typedef iterator_compact_to_points<iT, point_data<coordinate_type> > iTC;
-    return set(iTC(input_begin, input_end), iTC(input_end, input_end));
   }
 
   /// copy constructor (since we have dynamic memory)
@@ -44,17 +42,21 @@ public:
   template <typename T2>
   inline polygon_45_data& operator=(const T2& rvalue);
 
+  inline bool operator==(const polygon_45_data& that) const {
+    if(coords_.size() != that.coords_.size()) return false;
+    for(unsigned int i = 0; i < coords_.size(); ++i) {
+      if(coords_[i] != that.coords_[i]) return false;
+    }
+    return true;
+  }
+
+  inline bool operator!=(const polygon_45_data& that) const { return !((*this) == that); }
+
   /// get begin iterator, returns a pointer to a const Unit
   inline iterator_type begin() const { return coords_.begin(); }
 
   /// get end iterator, returns a pointer to a const Unit
   inline iterator_type end() const { return coords_.end(); }
-
-  /// get begin iterator, returns a pointer to a const Unit
-  inline compact_iterator_type begin_compact() const { return compact_iterator_type(begin()); }
-
-  /// get end iterator, returns a pointer to a const Unit
-  inline compact_iterator_type end_compact() const { return compact_iterator_type(begin()); }
 
   inline std::size_t size() const { return coords_.size(); }
 
@@ -62,6 +64,18 @@ private:
   std::vector<point_data<coordinate_type> > coords_; 
 };
 
+  template <typename T>
+  std::ostream& operator<<(std::ostream& o, const polygon_45_data<T>& poly) {
+    o << "Polygon { ";
+    for(typename polygon_45_data<T>::iterator_type itr = poly.begin(); 
+        itr != poly.end(); ++itr) {
+      if(itr != poly.begin()) o << ", ";
+      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
+    } 
+    o << " } ";
+    return o;
+  }
 }
+
 #endif
 

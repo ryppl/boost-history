@@ -28,10 +28,10 @@ public:
     iter_(iter), iter_end_(iter_end), orient_(HORIZONTAL) {
     if(iter_ != iter_end_) {
       firstX_ = *iter_;
-      point_concept::set<HORIZONTAL>(pt_, firstX_);
+      x(pt_, firstX_);
       ++iter_;
       if(iter_ != iter_end_) {
-        point_concept::set<VERTICAL>(pt_, *iter_);
+        y(pt_, *iter_);
       }
     }
   }
@@ -40,17 +40,17 @@ public:
     iterator_type prev_iter = iter_;
     ++iter_;
     if(iter_ == iter_end_) {
-      if(point_concept::get<HORIZONTAL>(pt_) != firstX_) {
+      if(x(pt_) != firstX_) {
         iter_ = prev_iter;
-        point_concept::set<HORIZONTAL>(pt_, firstX_);
+        x(pt_, firstX_);
       }
     } else {
-      point_concept::set(pt_, orient_, *iter_);
+      set(pt_, orient_, *iter_);
       orient_.turn_90();
     }
     return *this;
   }
-  inline iterator_compact_to_points operator++(int) {
+  inline const iterator_compact_to_points operator++(int) {
     iterator_compact_to_points tmp(*this);
     ++(*this);
     return tmp;

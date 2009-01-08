@@ -9,46 +9,32 @@
 #define GTL_POLYGON_SET_DATA_HPP
 namespace gtl {
 
+  //foward declare view
+  template <typename ltype, typename rtype, int op_type> class polygon_set_view;
+
   template <typename T>
   class polygon_set_data {
   public:
     typedef T coordinate_type;
-    typedef std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > > value_type;
-    typedef typename std::vector<std::pair<coordinate_type, std::pair<coordinate_type, int> > >::const_iterator iterator_type;
+    typedef point_data<T> point_type;
+    typedef std::pair<point_type, point_type> edge_type;
+    typedef std::pair<edge_type, int> element_type;
+    typedef std::vector<element_type> value_type;
+    typedef typename value_type::const_iterator iterator_type;
     typedef polygon_set_data operator_arg_type;
-    typedef operator_provides_storage operator_storage_tag;
 
     /// default constructor
-    inline polygon_set_data() : orient_(HORIZONTAL), dirty_(false), unsorted_(false) {}
+    inline polygon_set_data() : dirty_(false), unsorted_(false), is_45_(true) {}
 
-    /// constructor
-    inline polygon_set_data(orientation_2d orient) : orient_(orient), dirty_(false), unsorted_(false) {}
-
-    /// constructor from an iterator pair over vertex data
+    /// constructor from an iterator pair over edge data
     template <typename iT>
-    inline polygon_set_data(orientation_2d orient, iT input_begin, iT input_end) {
-      dirty_ = true;
-      unsorted_ = true;
+    inline polygon_set_data(iT input_begin, iT input_end) {
       for( ; input_begin != input_end; ++input_begin) { insert(*input_begin); }
     }
 
     /// copy constructor
     inline polygon_set_data(const polygon_set_data& that) : 
-      orient_(that.orient_), data_(that.data_), dirty_(that.dirty_), unsorted_(that.unsorted_) {}
-
-    /// copy with orientation change constructor
-    inline polygon_set_data(orientation_2d orient, const polygon_set_data& that) : 
-      orient_(orient), dirty_(false), unsorted_(false) {
-      if(that.orient() == orient) { (*this) = that; }
-      else if(!that.data_.empty()) {
-        dirty_ = unsorted_ = true;
-        iterator_vertex_orient_conversion<iterator_type> itr1(that.data_.begin()), iter2(that.data_.end());
-        data_.resize(that.data_.size());
-        for( ; itr1 != iter2; ++itr1) {
-          data_.push_back(*itr1);
-        }
-      }
-    }
+      data_(that.data_), dirty_(that.dirty_), unsorted_(that.unsorted_), is_45_(that.is_45_) {}
 
     /// destructor
     inline ~polygon_set_data() {}
@@ -56,17 +42,16 @@ namespace gtl {
     /// assignement operator
     inline polygon_set_data& operator=(const polygon_set_data& that) {
       if(this == &that) return *this;
-      orient_ = that.orient_;
       data_ = that.data_;
       dirty_ = that.dirty_;
       unsorted_ = that.unsorted_;
+      is_45_ = that.is_45_;
       return *this;
     }
 
-    template <typename ltype, typename rtype, typename op_type, typename ltag, typename rtag>
-    inline polygon_set_data& operator=(const polygon_set_view<ltype, rtype, op_type, ltag, rtag>& that) {
-      orient_ = that.orient();
-      data_ = that.value();
+    template <typename ltype, typename rtype, int op_type>
+    inline polygon_set_data& operator=(const polygon_set_view<ltype, rtype, op_type>& geometry) {
+      (*this) = geometry.value();
       dirty_ = false;
       unsorted_ = false;
       return *this;
@@ -79,43 +64,111 @@ namespace gtl {
       return *this;
     }
 
-    template <typename geometry_object>
-    inline polygon_set_data& operator=(const  polygon_set_const_wrapper<geometry_object>& geometry) {
-      data_.clear();
-      insert(geometry.begin(), geometry.end());
-      return *this;
-    }
-
     /// insert iterator range
     template <typename iT>
     inline void insert(iT input_begin, iT input_end) {
-      for( ; input_begin != input_end; ++input_begin) {
+      if(input_begin == input_end) return;
+      for(; input_begin != input_end; ++input_begin) {
         insert(*input_begin);
       }
     }
 
     template <typename geometry_type>
-    inline void insert(const geometry_type& geometry_object) {
-      iterator_geometry_to_set<typename geometry_concept<geometry_type>::type, geometry_type>
-        begin_input(geometry_object, LOW, orient_), end_input(geometry_object, HIGH, orient_);
-      insert(begin_input, end_input);
+    inline void insert(const geometry_type& geometry_object, bool is_hole = false) {
+      insert(geometry_object, is_hole, typename geometry_concept<geometry_type>::type());
     }
 
-    inline void insert(const std::pair<coordinate_type, std::pair<coordinate_type, int> >& vertex) {
-      data_.push_back(vertex);
+    template <typename polygon_type>
+    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_concept tag) {
+      bool first_iteration = true;
+      point_type first_point;
+      point_type previous_point;
+      point_type current_point;
+      direction_1d winding_dir = winding(polygon_object);
+      int multiplier = winding_dir == COUNTERCLOCKWISE ? 1 : -1;
+      if(is_hole) multiplier *= -1;
+      for(typename polygon_traits<polygon_type>::iterator_type itr = begin_points(polygon_object);
+          itr != end_points(polygon_object); ++itr) {
+        assign(current_point, *itr);
+        if(first_iteration) {
+          first_iteration = false;
+          first_point = previous_point = current_point;
+        } else {
+          if(previous_point != current_point) {
+            element_type elem(edge_type(previous_point, current_point), 
+                              ( previous_point.get(HORIZONTAL) == current_point.get(HORIZONTAL) ? -1 : 1) * multiplier);
+            insert_clean(elem);
+          }
+        }
+        previous_point = current_point;
+      }
+      current_point = first_point;
+      if(!first_iteration) {
+        if(previous_point != current_point) {
+          element_type elem(edge_type(previous_point, current_point), 
+                            ( previous_point.get(HORIZONTAL) == current_point.get(HORIZONTAL) ? -1 : 1) * multiplier);
+          insert_clean(elem);
+        }
+        dirty_ = true;
+        unsorted_ = true;
+      }
+    }
+
+    template <typename coordinate_type_2>
+    inline void insert(const polygon_45_set_data<coordinate_type_2>& ps) {
+      std::vector<polygon_45_with_holes_data<coordinate_type_2> > polys;
+      assign(polys, ps);
+      insert(polys.begin(), polys.end());
+    }
+
+    template <typename polygon_type>
+    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_45_concept tag) {
+      insert(polygon_object, is_hole, polygon_concept()); }
+
+    template <typename polygon_type>
+    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_90_concept tag) {
+      insert(polygon_object, is_hole, polygon_concept()); }
+
+    template <typename polygon_with_holes_type>
+    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, polygon_with_holes_concept tag) {
+      insert(polygon_with_holes_object, is_hole, polygon_concept());
+      for(typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type itr = 
+            begin_holes(polygon_with_holes_object);
+          itr != end_holes(polygon_with_holes_object); ++itr) {
+        insert(*itr, !is_hole, polygon_concept());
+      }
+    }
+
+    template <typename polygon_with_holes_type>
+    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, polygon_45_with_holes_concept tag) {
+      insert(polygon_with_holes_object, is_hole, polygon_with_holes_concept()); }
+
+    template <typename polygon_with_holes_type>
+    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, polygon_90_with_holes_concept tag) {
+      insert(polygon_with_holes_object, is_hole, polygon_with_holes_concept()); }
+
+    template <typename rectangle_type>
+    inline void insert(const rectangle_type& rectangle_object, bool is_hole, rectangle_concept tag) {
+      polygon_90_data<coordinate_type> poly;
+      assign(poly, rectangle_object);
+      insert(poly, is_hole, polygon_concept());
+    }
+
+    inline void insert_clean(const element_type& edge) {
+      if( ! scanline_base<coordinate_type>::is_45_degree(edge.first) &&
+          ! scanline_base<coordinate_type>::is_horizontal(edge.first) &&
+          ! scanline_base<coordinate_type>::is_vertical(edge.first) ) is_45_ = false;
+      data_.push_back(edge);
+      if(data_.back().first.second < data_.back().first.first) {
+        std::swap(data_.back().first.second, data_.back().first.first);
+        data_.back().second *= -1;
+      }
+    }
+
+    inline void insert(const element_type& edge) {
+      insert_clean(edge);
       dirty_ = true;
       unsorted_ = true;
-    }
-
-    inline void insert(coordinate_type major_coordinate, const std::pair<interval_data<coordinate_type>, int>& edge) {
-      std::pair<coordinate_type, std::pair<coordinate_type, int> > vertex;
-      vertex.first = major_coordinate;
-      vertex.second.first = edge.first.get(LOW);
-      vertex.second.second = edge.second;
-      insert(vertex);
-      vertex.second.first = edge.first.get(HIGH);
-      vertex.second.second *= -1;
-      insert(vertex);
     }
 
     template <typename output_container>
@@ -125,13 +178,9 @@ namespace gtl {
 
     /// equivalence operator 
     inline bool operator==(const polygon_set_data& p) const {
-      if(orient_ == p.orient()) {
-        clean();
-        p.clean();
-        return data_ == p.data_;
-      } else {
-        return false;
-      }
+      clean();
+      p.clean();
+      return data_ == p.data_;
     }
 
     /// inequivalence operator 
@@ -165,120 +214,183 @@ namespace gtl {
     /// find out if Polygon set is clean
     inline bool dirty() const { return dirty_; }
 
-    /// get the scanline orientation of the polygon set
-    inline orientation_2d orient() const { return orient_; }
+    void clean() const;
 
-    void clean() const {
-      if(unsorted_) sort();
-      if(dirty_) {
-        boolean_op::applyBooleanOr(data_);
-        dirty_ = false;
+    void sort() const{
+      if(unsorted_) {
+        std::sort(data_.begin(), data_.end());
+        unsorted_ = false;
       }
     }
 
-    void sort() const{
-      std::sort(data_.begin(), data_.end());
-      unsorted_ = false;
-    }
-
     template <typename input_iterator_type>
-    void set(input_iterator_type input_begin, input_iterator_type input_end, orientation_2d orient) {
-      data_.clear();
-      data_.insert(data_.end(), input_begin, input_end);
-      orient_ = orient;
+    void set(input_iterator_type input_begin, input_iterator_type input_end) {
+      clear();
+      insert(input_begin, input_end);
+      dirty_ = true;
+      unsorted_ = true;
     }
 
-    void set(const value_type& value, orientation_2d orient) {
+    void set(const value_type& value) {
       data_ = value; 
-      orient_ = orient;
+      dirty_ = true;
+      unsorted_ = true;
     }
+
+    template <typename rectangle_type>
+    bool extents(rectangle_type& rect) {
+      clean();
+      if(empty()) return false;
+      bool first_iteration = true;
+      for(iterator_type itr = begin();
+          itr != end(); ++itr) {
+        rectangle_type edge_box;
+        set_points(edge_box, (*itr).first.first, (*itr).first.second);
+        if(first_iteration)
+          rect = edge_box;
+        else
+          encompass(rect, edge_box);
+      }
+      return true;
+    }
+
+    template <typename transform_type>
+    inline polygon_set_data& 
+    transform(const transform_type& tr) {
+      for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
+        ::gtl::transform((*itr).first.first, tr);
+        ::gtl::transform((*itr).first.second, tr);
+      }
+      unsorted_ = true;
+      dirty_ = true;
+      return *this;
+    }
+
+    inline polygon_set_data& 
+    scale_up(typename coordinate_traits<coordinate_type>::unsigned_area_type factor) {
+      for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
+        ::gtl::scale_up((*itr).first.first, factor);
+        ::gtl::scale_up((*itr).first.second, factor);
+      }
+      return *this;
+    }
+    
+    inline polygon_set_data& 
+    scale_down(typename coordinate_traits<coordinate_type>::unsigned_area_type factor) {
+      for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
+        ::gtl::scale_down((*itr).first.first, factor);
+        ::gtl::scale_down((*itr).first.second, factor);
+      }
+      unsorted_ = true;
+      dirty_ = true;
+      return *this;
+    }
+    
+    template <typename scaling_type>
+    inline polygon_set_data& scale(polygon_set_data& polygon_set, 
+                                   const scaling_type& scaling) {
+      for(typename value_type::iterator itr = begin(); itr != end(); ++itr) {
+        ::gtl::scale((*itr).first.first, scaling);
+        ::gtl::scale((*itr).first.second, scaling);
+      }
+      unsorted_ = true;
+      dirty_ = true;
+      return *this;
+    }
+
+    inline bool downcast(polygon_45_set_data<coordinate_type>& result) const {
+      if(!is_45_) return false;
+      for(iterator_type itr = begin(); itr != end(); ++itr) {
+        const element_type& elem = *itr;
+        int count = elem.second;
+        int rise = 1; //up sloping 45
+        if(scanline_base<coordinate_type>::is_horizontal(elem.first)) rise = 0;
+        else if(scanline_base<coordinate_type>::is_vertical(elem.first)) rise = 2;
+        else {
+          if(!scanline_base<coordinate_type>::is_45_degree(elem.first)) {
+            is_45_ = false;
+            return false; //consider throwing because is_45_ has be be wrong
+          }
+          if(elem.first.first.y() > elem.first.second.y()) rise = -1; //down sloping 45
+        }
+        typename polygon_45_set_data<coordinate_type>::Vertex45Compact vertex(elem.first.first, rise, count);
+        result.insert(vertex);
+        typename polygon_45_set_data<coordinate_type>::Vertex45Compact vertex2(elem.first.second, rise, -count);
+        result.insert(vertex2);
+      }
+      return true;
+    }
+
+    inline GEOMETRY_CONCEPT_ID concept_downcast() const {
+      typedef typename coordinate_traits<coordinate_type>::coordinate_difference delta_type;
+      bool is_45 = false;
+      for(iterator_type itr = begin(); itr != end(); ++itr) {
+        const element_type& elem = *itr;
+        delta_type h_delta = euclidean_distance(elem.first.first, elem.first.second, HORIZONTAL);
+        delta_type v_delta = euclidean_distance(elem.first.first, elem.first.second, VERTICAL);
+        if(h_delta != 0 || v_delta != 0) {
+          //neither delta is zero and the edge is not MANHATTAN
+          if(v_delta != h_delta && v_delta != -h_delta) return POLYGON_SET_CONCEPT;
+          else is_45 = true;
+        }
+      }
+      if(is_45) return POLYGON_45_SET_CONCEPT;
+      return POLYGON_90_SET_CONCEPT;
+    }
+
   private:
-    orientation_2d orient_;
     mutable value_type data_;
     mutable bool dirty_;
     mutable bool unsorted_;
-  
+    mutable bool is_45_;
+
   private:
     //functions
+
+    //TODO write trapezoidization function, object, concept and hook up
+    //template <typename output_container>
+    //void get_dispatch(output_container& output, rectangle_concept tag) {
+    //  clean();
+    //  get_rectangles(output, data_.begin(), data_.end(), orient_, tag);
+    //}
     template <typename output_container>
-    void get_dispatch(output_container& output, rectangle_concept tag) {
-      clean();
-      get_rectangles(output, data_.begin(), data_.end(), orient_, tag);
-    }
-    template <typename output_container>
-    void get_dispatch(output_container& output, polygon_90_concept tag) {
+    void get_dispatch(output_container& output, polygon_concept tag) const {
       get_fracture(output, true, tag);
     }
     template <typename output_container>
-    void get_dispatch(output_container& output, polygon_90_with_holes_concept tag) {
+    void get_dispatch(output_container& output, polygon_with_holes_concept tag) const {
       get_fracture(output, false, tag);
     }
     template <typename output_container, typename concept_type>
-    void get_fracture(output_container& container, bool fracture_holes, concept_type tag) {
+    void get_fracture(output_container& container, bool fracture_holes, concept_type tag) const {
       clean();
-      get_polygons(container, data_.begin(), data_.end(), orient_, fracture_holes, tag);
+      polygon_arbitrary_formation<coordinate_type> pf(fracture_holes);
+      typedef typename polygon_arbitrary_formation<coordinate_type>::vertex_half_edge vertex_half_edge;
+      std::vector<vertex_half_edge> data;
+      for(iterator_type itr = data_.begin(); itr != data_.end(); ++itr){
+        data.push_back(vertex_half_edge((*itr).first.first, (*itr).first.second, (*itr).second));
+        data.push_back(vertex_half_edge((*itr).first.second, (*itr).first.first, -1 * (*itr).second));
+      }
+      std::sort(data.begin(), data.end());
+      pf.scan(container, data.begin(), data.end());
     }
   };
 
   template <typename T>
-  struct polygon_set_traits<polygon_set_data<T> > {
-    typedef typename polygon_set_data<T>::coordinate_type coordinate_type;
-    typedef typename polygon_set_data<T>::iterator_type iterator_type;
-    typedef typename polygon_set_data<T>::operator_arg_type operator_arg_type;
-    typedef typename polygon_set_data<T>::operator_storage_tag operator_storage_tag;
-
-    static inline iterator_type begin(const polygon_set_data<T>& polygon_set) {
-      return polygon_set.begin();
+  std::ostream& operator << (std::ostream& o, const polygon_set_data<T>& r)
+  {
+    o << "Polygon Set Data { ";
+    for(typename polygon_set_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
+      o << "<" << (*itr).first.first << ", " << (*itr).first.second << ">:" << (*itr).second << " ";
     }
+    o << "} ";
+    return o;
+  }
 
-    static inline iterator_type end(const polygon_set_data<T>& polygon_set) {
-      return polygon_set.end();
-    }
-
-    template <typename input_iterator_type>
-    static inline void set(polygon_set_data<T>& polygon_set, 
-                           input_iterator_type input_begin, input_iterator_type input_end, 
-                           orientation_2d orient) {
-      polygon_set.set(input_begin, input_end, orient);
-    }
-
-    static inline orientation_2d orient(const polygon_set_data<T>& polygon_set) { return polygon_set.orient(); }
-
-    static inline bool dirty(const polygon_set_data<T>& polygon_set) { return polygon_set.dirty(); }
-
-    static inline bool sorted(const polygon_set_data<T>& polygon_set) { return polygon_set.sorted(); }
-
-  };
-
-
-  
-  template <typename coordinate_type, typename property_type>
-  class property_merge {
-  private:
-    std::vector<std::pair<property_merge_point<coordinate_type>, std::pair<property_type, int> > > pmd_;
-  public:
-    inline property_merge() {}
-    inline property_merge(const property_merge& that) : pmd_(that.pmd_) {}
-    inline property_merge& operator=(const property_merge& that) { pmd_ = that.pmd_; }
-    inline void insert(const polygon_set_data<coordinate_type>& ps, const property_type& property) {
-      merge_scanline<coordinate_type, property_type, polygon_set_data<coordinate_type> >::
-        populate_property_merge_data(pmd_, ps.begin(), ps.end(), property, ps.orient());
-    }
-    template <class GeoObjT>
-    inline void insert(const GeoObjT& geoObj, const property_type& property) {
-      polygon_set_data<coordinate_type> ps;
-      ps.insert(geoObj);
-      insert(ps, property);
-    }
-    //merge properties of input geometries and store the resulting geometries of regions
-    //with unique sets of merged properties to polygons sets in a map keyed by sets of properties
-    // T = std::map<std::set<property_type>, polygon_set_data<coordiante_type> > or
-    // T = std::map<std::vector<property_type>, polygon_set_data<coordiante_type> >
-    template <typename ResultType> 
-    inline void merge(ResultType& result) {
-      merge_scanline<coordinate_type, property_type, polygon_set_data<coordinate_type>, typename ResultType::key_type> ms;
-      ms.perform_merge(result, pmd_);
-    }
+  struct polygon_set_concept;
+  template <typename T>
+  struct geometry_concept<polygon_set_data<T> > {
+    typedef polygon_set_concept type;
   };
 
 }

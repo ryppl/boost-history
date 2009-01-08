@@ -7,21 +7,26 @@
 */
 #ifndef GTL_POINT_TRAITS_HPP
 #define GTL_POINT_TRAITS_HPP
+
 namespace gtl {
-template <typename T>
-struct point_traits {
-  typedef typename T::coordinate_type coordinate_type;
+  template <typename T>
+  struct point_traits {
+    typedef typename T::coordinate_type coordinate_type;
   
-  static inline coordinate_type get(const T& point, orientation_2d orient) {
-    return point.get(orient); 
-  }
-  static inline void set(T& point, orientation_2d orient, coordinate_type value) {
-    point.set(orient, value); 
-  }
-  static inline T construct(coordinate_type x_value, coordinate_type y_value) {
-    return T(x_value, y_value); 
-  }
-};
+    static inline coordinate_type get(const T& point, orientation_2d orient) {
+      return point.get(orient); 
+    }
+  };
+
+  template <typename T>
+  struct point_mutable_traits {
+    static inline void set(T& point, orientation_2d orient, typename point_traits<T>::coordinate_type value) {
+      point.set(orient, value); 
+    }
+    static inline T construct(typename point_traits<T>::coordinate_type x_value, typename point_traits<T>::coordinate_type y_value) {
+      return T(x_value, y_value); 
+    }
+  };
 
 }
 #endif

@@ -15,22 +15,28 @@ public:
   typedef polygon_45_with_holes_concept geometry_type;
   typedef T coordinate_type;
   typedef typename polygon_45_data<T>::iterator_type iterator_type;
-  typedef typename polygon_45_data<T>::compact_iterator_type compact_iterator_type;
   typedef typename std::list<polygon_45_data<coordinate_type> >::const_iterator iterator_holes_type;
   typedef polygon_45_data<coordinate_type> hole_type; 
+  typedef typename coordinate_traits<T>::coordinate_distance area_type;
+  typedef point_data<T> point_type;
 
   /// default constructor of point does not initialize x and y
   inline polygon_45_with_holes_data(){;} //do nothing default constructor
 
   template<class iT>
-  inline polygon_45_with_holes_data& set(iT input_begin, iT input_end) {
-    self_.set(input_begin, input_end);
-    return *this;
+  inline polygon_45_with_holes_data(iT input_begin, iT input_end) {
+    set(input_begin, input_end);
+  }
+
+  template<class iT, typename hiT>
+  inline polygon_45_with_holes_data(iT input_begin, iT input_end, hiT holes_begin, hiT holes_end) {
+    set(input_begin, input_end);
+    set_holes(holes_begin, holes_end);
   }
 
   template<class iT>
-  inline polygon_45_with_holes_data& set_compact(iT input_begin, iT input_end) {
-    self_.set_compact(input_begin, input_end);
+  inline polygon_45_with_holes_data& set(iT input_begin, iT input_end) {
+    self_.set(input_begin, input_end);
     return *this;
   }
 
@@ -65,16 +71,6 @@ public:
   /// get end iterator, returns a pointer to a const coordinate_type
   inline const iterator_type end() const {
     return self_.end();
-  }
-
-  /// get begin iterator, returns a pointer to a const coordinate_type
-  inline const compact_iterator_type begin_compact() const {
-    return self_.begin_compact();
-  }
-
-  /// get end iterator, returns a pointer to a const coordinate_type
-  inline const compact_iterator_type end_compact() const {
-    return self_.end_compact();
   }
 
   inline unsigned int size() const {

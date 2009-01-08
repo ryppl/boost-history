@@ -33,7 +33,7 @@ public:
     orient_.turn_90();
     return *this;
   }
-  inline iterator_points_to_compact operator++(int) {
+  inline const iterator_points_to_compact operator++(int) {
     iT tmp(*this);
     ++(*this);
     return tmp;
@@ -44,7 +44,7 @@ public:
   inline bool operator!=(const iterator_points_to_compact& that) const {
     return (iter_ != that.iter_);
   }
-  inline reference operator*() const { return coord_ = point_concept::get(*iter_, orient_); }
+  inline reference operator*() const { return coord_ = get(*iter_, orient_); }
 };
 
 }
