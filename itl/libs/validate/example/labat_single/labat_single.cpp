@@ -47,10 +47,10 @@ void test_LawValidater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-	typedef InplaceSymmetricDifference<interval_map<int, itl::set<int>, neutron_polluter >, std_equal> TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
-	test_law.setTrialsCount(1000);
-	test_law.run();
+	//typedef InplaceSymmetricDifference<split_interval_map<int, int, neutron_emitter >, std_equal> TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+	//test_law.setTrialsCount(1000);
+	//test_law.run();
 
 	//typedef InplaceDistributivity
 	//	<split_interval_map<int, itl::set<int>, neutron_absorber >, 

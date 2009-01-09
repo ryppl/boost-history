@@ -223,9 +223,23 @@ void string_codomain_test()
 
 void quantifier_intersect_test()
 {
-	interval_map<int,int,neutron_emitter> sec_map;
+	typedef interval_map<int,int> QuantifierT;
+	QuantifierT sec_map;
 	sec_map += make_pair(interval<int>::rightopen(1,5), 1);
 	sec_map *= make_pair(interval<int>::rightopen(3,7), 1);
+	//sec_map *= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
+	
+	cout << "sec_map: " << sec_map << endl;
+}
+
+void quantifier_subtract_test()
+{
+	typedef interval_map<int,nat> QuantifierT;
+	QuantifierT sec_map;
+	sec_map += make_pair(interval<int>::rightopen(1,5), 1);
+	sec_map -= make_pair(interval<int>::rightopen(3,7), 2);
+	sec_map += make_pair(interval<int>::rightopen(3,7), 3);
+	//sec_map *= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
 	
 	cout << "sec_map: " << sec_map << endl;
 }
@@ -248,7 +262,7 @@ int main()
 	*/
 	//codomain_test();
 	//string_codomain_test();
-	quantifier_intersect_test();
+	quantifier_subtract_test();
     return 0;
 }
 

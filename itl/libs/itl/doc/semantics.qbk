@@ -501,6 +501,8 @@ called /neutron enrichers/, there are marginal semantical differences.
 
 [section Quantifiers: Maps of Numbers]
 
+[h5 Subtraction on Quantifiers]
+
 With `Sets` and `Collectors` the semantics of  
 `operator -` is
 that of /set difference/ which means, that you can
@@ -533,17 +535,30 @@ As commented in the example, subtraction of a key value
 pair (k,v) can obviously defined as adding the ['*inverse element*]
 for that key (k,-v), if the key is not yet stored in the map.
 
-Another model, that we can think of, is that in a `Quantifier` 
+[h4 Partial and Total Quantifiers and Infinite Vectors]
+
+Another concept, that we can think of, is that in a `Quantifier` 
 every `key_value` is initially quantified `0`-times, where `0` stands
 for the neutral element of the numeric `CodomainT` type.
 Such a `Quantifier` would be totally defined on all values of
 it's `DomainT` type.
-So a `Quantifier` that has a signed numerical codomain type can be
-conceived as an `InfiniteVector`. 
+Such a `Quantifier` can be conceived as an `InfiniteVector`. 
 
-To become an infinite vector
+To create an infinite vector
 that is totally defined on it's domain we can set
 the map's `Trait` parameter to the value __emitter__.
+The __emitter__ trait fits specifically well with
+a `Quantifier` if it's `CodomainT` has an inverse 
+element, like all signed numerical type have.
+
+As we can see later in this section this kind of 
+a total `Quantifier` has the basic properties that
+elements of a 
+vector space 
+do provide.
+
+We will use the terms `TotalQuantifier` and
+`PartialQuantifier` for those objects. 
 
 [table
 [[Trait]           [CodomainT as number] [CodomainT more abstract] [Concept for Quanifier Map]]
@@ -551,22 +566,49 @@ the map's `Trait` parameter to the value __emitter__.
 [[!emits_neutrons] [unsigned number]     [commutative monoid]      [hybrid type]]  
 ]
 
+[h5 Intersection on Quantifiers]
+
 Another difference between `Collectors` and `Quantifiers`
-is the semantics of `operator *`, that has the meaing of
+is the semantics of `operator *`, that has the meaning of
 set intersection for `Collectors`.
 
-For the aggregate on overlap principle the operation `*`
+For the /aggregate on overlap principle/ the operation `*`
 has to be passed to combine associated values on overlap
 of intervals or collision of keys. This can not be done
 for `Quantifiers`, since numeric types do not implement
 intersection.
 
-[/ JODO * degeneriert zu +, + wird vector addition, - wird vector subraction, scalarprodukt kann definiert werden]
+For `CodomainT` types that are not models of `Sets` 
+`operator *` is defined as aggregation on the intersection
+of the domains.
+``
+//Pseudocode example:
+interval_map<int,int> p, q;
+p   = {[1     3)->1   };
+q   = {   ([2    4)->1};
+p*q =={    [2 3)->2   };
+``
+So an addition or aggregation of associated values is
+done like for `operator +` but value pairs that have
+no common keys are not added to the result.
 
-[/ JODO nur den InfiniteVector Fall beschreiben? Wie könnte man denn den hybrid benennen??
-        gibt es interessante nicht numerische Beispiele für Quantifier?
-        Was ist mit Quantifier of Quantifier
-]
+For `Quantifier` that is a model of an `InfiniteVector`
+and which is therefore defined for every key value of
+the `DomainT` type, this definition of `operator *`
+degenerates to the same sematics that `operaotor +`
+implements:
+``
+//Pseudocode example:
+interval_map<int,int> p, q;
+p   = {[min   1)[1      3)[3         max]};
+          ->0      ->1         ->0
+q   = {[min        2)[2      4)[4    max]};
+            ->0         ->1       ->0
+p*q =={[min   1)[1  2)[2 3)[3 4)[4   max]};
+          ->0    ->1   ->2  ->1    ->0
+``
+
+
 
 [h5 Laws on set union, set intersection and set difference]
 
@@ -589,8 +631,8 @@ RightNeutrality<Q,-,== >  : Q a:   a-Q() ==  a
 SelfRemovability<Q,-,=v= >: Q a:   a - a =v= Q()
 ``
 
-For a `Quantifier Map` the same basic laws apply that are
-valid for `Collector Maps`:
+For a `Quantifier` the same basic laws apply that are
+valid for `Collectors`:
 
 ``
                                     +    *    -
@@ -599,6 +641,18 @@ Neutrality                          ==        ==
 Commutativity                       ==   ==
 SelfRemovability absorbs_neutrons             ==
                  enriches_neutrons            =p=
+``
+
+In addition also symmetrical difference is valid for 
+`Qunatifiers` and the 
+modified `operator *`.
+``
+SymmetricDifference<Q,== > : Q a,b,c: (a + b) - (a * b) == (a - b) + (b - a)
+``
+For a `TotalQuantifier` `Qt` symmetrical difference degenerates to 
+a trivial form since `operator *` and `operator +` become identical
+``
+SymmetricDifference<Qt,== > : Qt a,b,c: (a + b) - (a + b) == (a - b) + (b - a) == 0
 ``
 
 

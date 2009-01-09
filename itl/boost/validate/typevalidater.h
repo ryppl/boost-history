@@ -550,8 +550,8 @@ namespace boost{namespace itl
             }
             else // !is_set && emits_neutrons  //JODO && is_abelian_group<Type::value>
             {
-                _lawChoice[inplaceSetBaseLaws]         = 85;
-                _lawChoice[inplaceSymmetricDifference] = 0;
+                _lawChoice[inplaceSetBaseLaws]         = 80;
+                _lawChoice[inplaceSymmetricDifference] = 5;
                 _lawChoice[inplaceSelfRemovability]    = 5;
                 _lawChoice[inplaceInverseRemovability] = 5;
                 _lawChoice[sectionAbsorbtion]          = 5;

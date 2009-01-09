@@ -260,7 +260,10 @@ namespace boost{namespace itl
         /** Intersect map \c x2 and \c *this.
             So \c *this becomes the intersection of \c *this and \c x2 */
         map& operator *= (const map& x2) 
-        { Map::intersect(*this, x2); return *this; }
+        {
+			if(Traits::emits_neutrons) return *this += x2;
+			else{ Map::intersect(*this, x2); return *this; }
+		}
 
         /** Intersect set \c x2 and \c *this.
             So \c *this becomes the intersection of \c *this and \c x2 */

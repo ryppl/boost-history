@@ -25,33 +25,6 @@ class interval_map;
 //-----------------------------------------------------------------------------
 // addition +=
 //-----------------------------------------------------------------------------
-/*CL
-template 
-<
-    class SubType, class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
-operator +=
-(
-          interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
-)
-{
-    typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
-    const_FORALL(typename operand_type, elem_, operand) 
-        object.add(*elem_); 
-
-    return object; 
-}
-*/
 template 
 <
 	class ObjectT,

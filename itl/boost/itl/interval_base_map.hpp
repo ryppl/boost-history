@@ -186,8 +186,10 @@ public:
 
     /// Comparison functor for domain values
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
-    /// Combine functor for codomain values
+    /// Combine functor for codomain value aggregation
     typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT) codomain_combine;
+	/// Inverse Combine functor for codomain value aggregation
+	typedef typename inverse<codomain_combine>::type inverse_codomain_combine;
     /// Intersection functor for codomain values
     typedef ITL_SECTION_CODOMAIN(Section,CodomainT) codomain_intersect;
 
@@ -403,6 +405,7 @@ public:
     */
     SubType& add(const value_type& x) 
 	{ that()->template add_<codomain_combine>(x); return *that(); }
+
 //@}
 
 
@@ -472,11 +475,11 @@ public:
     */
     SubType& subtract(const value_type& x)
     {
-		typedef typename inverse<Combine<CodomainT> >::type InverseCombine;
+		//CL typedef typename inverse<Combine<CodomainT> >::type InverseCombine;
 		if(Traits::emits_neutrons && !is_set<codomain_type>::value)
-			that()->template add_<InverseCombine>(x); 
+			that()->template add_<inverse_codomain_combine>(x); 
         else 
-			that()->template subtract_<InverseCombine>(x); 
+			that()->template subtract_<inverse_codomain_combine>(x); 
     
         return *that();
     }
@@ -952,15 +955,24 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     typedef IntervalMap<DomainT,CodomainT,
                         Traits,Compare,Combine,Section,Interval,Alloc> sectant_type;
-    if(sectant.empty()) 
-        return;
-    typename sectant_type::const_iterator common_lwb;
-    typename sectant_type::const_iterator common_upb;
-    if(!Set::common_range(common_lwb, common_upb, sectant, *this))
-        return;
-    typename sectant_type::const_iterator it = common_lwb;
-    while(it != common_upb)
-        add_intersection(intersection, *it++);
+
+	if(Traits::emits_neutrons)
+	{
+		intersection = *this;
+		intersection += sectant;
+	}
+	else
+	{
+		if(sectant.empty()) 
+			return;
+		typename sectant_type::const_iterator common_lwb;
+		typename sectant_type::const_iterator common_upb;
+		if(!Set::common_range(common_lwb, common_upb, sectant, *this))
+			return;
+		typename sectant_type::const_iterator it = common_lwb;
+		while(it != common_upb)
+			add_intersection(intersection, *it++);
+	}
 }
 
 template 
@@ -973,26 +985,34 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                     const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                     ::value_type& sectant)const
 {
-    interval_type sectant_interval = sectant.KEY_VALUE;
-    if(sectant_interval.empty()) return;
+	if(Traits::emits_neutrons)
+	{
+		section = *this;
+		section.add(sectant);
+	}
+	else
+	{
+		interval_type sectant_interval = sectant.KEY_VALUE;
+		if(sectant_interval.empty()) return;
 
-    typename ImplMapT::const_iterator fst_it = _map.lower_bound(sectant_interval);
-    typename ImplMapT::const_iterator end_it = _map.upper_bound(sectant_interval);
+		typename ImplMapT::const_iterator fst_it = _map.lower_bound(sectant_interval);
+		typename ImplMapT::const_iterator end_it = _map.upper_bound(sectant_interval);
 
-    for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
-    {
-        interval_type common_interval; 
-        (*it).KEY_VALUE.intersect(common_interval, sectant_interval);
+		for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
+		{
+			interval_type common_interval; 
+			(*it).KEY_VALUE.intersect(common_interval, sectant_interval);
 
-        if(!common_interval.empty())
-        {
-            section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
-            if(is_set<CodomainT>::value)
-                section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.CONT_VALUE)); 
-            else
-                section.that()->template add<codomain_combine>(value_type(common_interval, sectant.CONT_VALUE));
-        }
-    }
+			if(!common_interval.empty())
+			{
+				section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
+				if(is_set<CodomainT>::value)
+					section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.CONT_VALUE)); 
+				else
+					section.that()->template add<codomain_combine>(value_type(common_interval, sectant.CONT_VALUE));
+			}
+		}
+	}
 }
 
 
