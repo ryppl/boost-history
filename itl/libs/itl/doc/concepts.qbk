@@ -240,13 +240,16 @@ for template type `CodomainT`.
 
 [table
 [[Trait][]]
-[[__absorber__][value pairs that carry neutrons `(x,0)` are never stored]]
-[[__enricher__][value pairs that carry neutrons `(x,0)` are never deleted by subtract]]
-[[__emitter__] [all value pairs that don't carry protons have neutrons as mapped values.]]
+[[__absorber__][Value pairs that carry neutrons `(x,0)` are never stored]]
+[[__enricher__][Value pairs that carry neutrons `(x,0)` are never deleted by subtract]]
+[[__emitter__] [All value pairs that don't carry protons are mapped to neutrons as a default. 
+                But those neutrons are not stored in the map.]]
+[[__polluter__][All value pairs that don't carry protons are mapped to neutrons as a default.
+                In addition, associated neutrons that emerge from aggregations are stored.]]
 ]
 
 Note, that a neutron is defined in relation to a combiner operation. In many cases
-this relation is straight and often covered by the default parameters of itl `Maps`.
+this relation is provided by the default parameters of itl `Maps`.
 
 [table
 [[type]     [operation]     [neutron]]
@@ -256,7 +259,7 @@ this relation is straight and often covered by the default parameters of itl `Ma
 ]
 
 In those cases the `neutron` value is delivered by the default constructor
-of a type. But there are well known exceptions like for numeric multiplication:
+of a type. But there are well known exceptions like e.g. numeric multiplication:
 
 [table
 [[type]   [operation]        [neutron]]
@@ -287,7 +290,7 @@ associated neutrons or deletes them when they emerge, is called
 __absorber__. To be a __absorber__ is the default setting
 for the Trait parameter. Moreover a __absorber__ is able
 to erase a pair `(x,y)` from a map `{(x,y)}` by calling 
-`subtract((x,y))` or `operator -`:
+`subtract((x,y))` or `operator - ` .
 
 ``{(x,y)} - (x,y) == {}`` 
 
@@ -324,13 +327,32 @@ of it's domain. It emits a
 neutron value for every key value, that has not been set or 
 aggregated to a value unequal to the `neutron` value.
 
-That way a __emitter__ map is an ['*infinite vector*], that
+That way a __emitter__ map is a ['*large*] or 
+theoretically ['*infinite vector*], that
 is always initialized with neutron values.
 
 Of course those initial neutronic values for all keys of the
 maps domain are *not* stored on the __emitter__ map. So it's
 implementation is as minimal as the implementation of an
 __absorber__.
+
+[h4 Neutron Polluter]
+
+A __polluter__ combines the characteristics of a __emitter__
+and a __enticher__. Value pairs, that emerged due to aggregations
+and carry `neutron` values are actually stored. All value pairs,
+that are not represented carry `neutrons` via default but are not stored.
+
+['Neutronic traits] can be summarized as follows
+
+[table
+[[]                 []      [absorbs neutrons] []]
+[[]                 []      [true]             [false]]
+[[[*emits neutrons]][false] [__absorber__]     [__enricher__]]
+[[]                 [true]  [__emitter__]      [__polluter__]]
+]
+
+
 
 [endsect] [/ kind of nuclear]
 

@@ -202,6 +202,13 @@ public:
     /// is the container empty
     bool empty()const { return _set.empty(); }
 
+    /// Find the interval value pair, that contains element \c x
+    const_iterator find(const DomainT& x)const
+    { 
+        typename ImplSetT::const_iterator it = this->_map.find(interval_type(x)); 
+        return it; 
+    }
+
     /// Does the container contain the element \c x
     bool contains(const DomainT& x)const
 	{ return that()->contains_(interval_type(x)); }

@@ -41,6 +41,7 @@ for concepts InplaceAddable and InplaceSubtractable
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
+#include <boost/itl/type_traits/is_interval_separator.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/emits_neutrons.hpp>
 #include <boost/itl/set_algo.hpp>

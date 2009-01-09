@@ -266,6 +266,10 @@ struct is_interval_container<itl::separate_interval_set<Type> >
 { enum{value = true}; };
 
 template <class Type>
+struct is_interval_separator<itl::separate_interval_set<Type> >
+{ enum{value = true}; };
+
+template <class Type>
 struct is_interval_splitter<itl::separate_interval_set<Type> >
 { enum{value = false}; };
 
@@ -281,7 +285,7 @@ template <class Type>
 struct type_to_string<itl::separate_interval_set<Type> >
 {
     static std::string apply()
-    { return "separate_interval_set<"+ type_to_string<Type>::apply() +">"; }
+    { return "se_itv_set<"+ type_to_string<Type>::apply() +">"; }
 };
 
 }} // namespace itl boost

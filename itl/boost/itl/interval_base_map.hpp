@@ -268,6 +268,14 @@ public:
     /// is the map empty?
     bool empty()const { return _map.empty(); }
 
+    //--- find --------------------------------------------------------------------
+    /// Find the interval value pair, that contains element \c x
+    const_iterator find(const DomainT& x)const
+    { 
+        typename ImplMapT::const_iterator it = _map.find(interval_type(x)); 
+        return it; 
+    }
+
     //--- contains: set view ------------------------------------------------------
     /// Does the map contain the key element \c x
     bool contains(const DomainT& x)const
@@ -507,6 +515,21 @@ public:
     SubType& insert(const value_type& x)
 	{ that()->insert_(x); return *that(); }
 
+
+    SubType& set(const mapping_pair_type& x) 
+    { 
+		that()->set(value_type(interval_type(x.key), x.data)); 
+        return *that();
+    }
+
+    SubType& set(const value_type& x)
+	{ 
+		that()->erase_(x.KEY_VALUE); 
+		that()->insert_(x); 
+		return *that(); 
+	}
+
+
     /// Erase a base value pair from the map
     /** Erase a base value pair <tt>x=(k,y)</tt>.
         This does erase a base value pair <tt>x=(k,y)</tt> form the map, if
@@ -665,7 +688,6 @@ public:
     )const;
 
 //@}
-
         
     iterator lower_bound(const key_type& interval)
     { return _map.lower_bound(interval); }
@@ -966,7 +988,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
         {
             section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
             if(is_set<CodomainT>::value)
-                section.that()->template add<inplace_star<CodomainT> >(value_type(common_interval, sectant.CONT_VALUE)); 
+                section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.CONT_VALUE)); 
             else
                 section.that()->template add<codomain_combine>(value_type(common_interval, sectant.CONT_VALUE));
         }

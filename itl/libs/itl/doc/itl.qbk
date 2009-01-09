@@ -86,6 +86,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __enricher__     [classref boost::itl::neutron_enricher neutron_enricher]]
 [def __enrichers__    [classref boost::itl::neutron_enricher neutron_enrichers]]
 [def __emitter__      [classref boost::itl::neutron_emitter neutron_emitter]]
+[def __polluter__     [classref boost::itl::neutron_emitter neutron_polluter]]
 
 [def __itv_bse_set__  [classref boost::itl::interval_base_set interval_base_set]]
 [def __e              [link element_type *e*]]
@@ -127,6 +128,7 @@ Distributed under the Boost Software License, Version 1.0.
 [include introduction.qbk]
 [include examples.qbk]
 [include concepts.qbk]
+[include semantics.qbk]
 [include interface.qbk]
 [include acknowledgments.qbk]
 [xinclude itldoc.xml]

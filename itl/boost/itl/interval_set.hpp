@@ -401,7 +401,7 @@ template <class Type>
 struct type_to_string<itl::interval_set<Type> >
 {
     static std::string apply()
-    { return "interval_set<"+ type_to_string<Type>::apply() +">"; }
+    { return "itv_set<"+ type_to_string<Type>::apply() +">"; }
 };
 
 }} // namespace itl boost

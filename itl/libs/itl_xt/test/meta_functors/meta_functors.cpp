@@ -221,6 +221,15 @@ void string_codomain_test()
 	cout << "cat_map: " << cat_map << endl;
 }
 
+void quantifier_intersect_test()
+{
+	interval_map<int,int,neutron_emitter> sec_map;
+	sec_map += make_pair(interval<int>::rightopen(1,5), 1);
+	sec_map *= make_pair(interval<int>::rightopen(3,7), 1);
+	
+	cout << "sec_map: " << sec_map << endl;
+}
+
 
 int main()
 {
@@ -237,8 +246,9 @@ int main()
 
 	template_default_problem();
 	*/
-	codomain_test();
-	string_codomain_test();
+	//codomain_test();
+	//string_codomain_test();
+	quantifier_intersect_test();
     return 0;
 }
 

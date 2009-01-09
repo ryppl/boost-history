@@ -213,7 +213,7 @@ namespace boost{namespace itl
               template<class>class Accumulator = inplace_plus, 
               template<class>class Equality = itl::std_equal>
     class InplaceAssociativity 
-        : public Law<InplaceAssociativity<Type,Accumulator>, 
+        : public Law<InplaceAssociativity<Type,Accumulator,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** (a o b) o c == a o (b o c) 'inplace'
@@ -227,7 +227,8 @@ namespace boost{namespace itl
         std::string typeString()const
         {
             return "Associativity<"+type_to_string<Type>::apply()+","
-                                   +unary_template_to_string<Accumulator>::apply()+">";
+                                   +unary_template_to_string<Accumulator>::apply()+","
+                                   +unary_template_to_string<Equality>::apply()+">";
         }
 
     public:

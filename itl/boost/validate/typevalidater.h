@@ -275,20 +275,10 @@ namespace boost{namespace itl
             case strictWeakStdOrder:         return _lessValidater.chooseValidater();
             case partialStdOrder:            return _lessEqualValidater.chooseValidater();
             case containedInOrder:           return _containedInValidater.chooseValidater();
-            case inplacePlusAssociativity:   
-                if(    itl::is_interval_container<Type>::value && itl::is_interval_splitter<Type>::value
-                    && absorbs_neutrons<Type>::value && emits_neutrons<Type>::value)
-                    return new LawValidater<InplaceAssociativity<Type, inplace_plus, element_equal>, RandomGentor>;
-                else
-                    return new LawValidater<InplaceAssociativity<Type>, RandomGentor>;
+            case inplacePlusAssociativity:   return new LawValidater<InplaceAssociativity<Type>, RandomGentor>;
             case inplacePlusNeutrality:      return new LawValidater<InplaceNeutrality<Type>, RandomGentor>;
             case inplacePlusCommutativity:   return new LawValidater<InplaceCommutativity<Type>, RandomGentor>;
-            case inplaceStarAssociativity:
-                if(    is_interval_container<Type>::value && is_interval_splitter<Type>::value
-                    && absorbs_neutrons<Type>::value && emits_neutrons<Type>::value)
-                    return new LawValidater<InplaceAssociativity<Type, inplace_star, element_equal>, RandomGentor>;
-                else
-                    return new LawValidater<InplaceAssociativity<Type, inplace_star>, RandomGentor>;
+            case inplaceStarAssociativity:   return new LawValidater<InplaceAssociativity<Type, inplace_star>, RandomGentor>;
             case inplaceStarCommutativity:   return new LawValidater<InplaceCommutativity<Type, inplace_star>, RandomGentor>;
             default: return NULL;
             }
@@ -417,7 +407,8 @@ namespace boost{namespace itl
 				return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_star, itl::std_equal>, RandomGentor>;
 
             case inplaceStarDeMorgan:        
-                if(    itl::is_interval_container<Type>::value && itl::is_interval_splitter<Type>::value)
+                if(     itl::is_interval_container<Type>::value 
+					&& (itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value))
 					return new LawValidater<InplaceDeMorgan<Type, inplace_star, inplace_plus, itl::element_equal>, RandomGentor>;
 				else
 					return new LawValidater<InplaceDeMorgan<Type, inplace_star, inplace_plus, itl::std_equal>, RandomGentor>;
@@ -460,7 +451,8 @@ namespace boost{namespace itl
 				return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_star, itl::std_equal>, RandomGentor>;
 
             case inplaceStarDeMorgan:        
-                if(    itl::is_interval_container<Type>::value && itl::is_interval_splitter<Type>::value)
+                if(     itl::is_interval_container<Type>::value 
+					&& (itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value))
 					return new LawValidater<InplaceDeMorgan<Type, inplace_star, inplace_plus, itl::element_equal>, RandomGentor>;
 				else
 					return new LawValidater<InplaceDeMorgan<Type, inplace_star, inplace_plus, itl::std_equal>, RandomGentor>;

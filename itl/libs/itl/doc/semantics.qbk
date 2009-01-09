@@ -1,0 +1,608 @@
+[/
+    Copyright (c) 2008-2008 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Semantics]
+
+In the *itl* we follow the notion, that the semantics of a ['*concept*] or an
+['*abstract data type*] can be expressed by ['*laws*]. In the *itl* we formulate
+laws over interval containers that can be evaluated for a given
+instantiation of the variables contained in the law. The following
+pseudocode gives a shorthand notation of such a law.
+``
+Commutativity<typename T>
+T a, b: a + b == b + a;
+``
+This can of course be coded as a proper c++ class template which has 
+been done for the validation of the *itl*. For sake of simplicity 
+we will use pseudocode here.
+
+The laws that describe the semantics of the *itl's* class templates
+were validated using the Law based Test Automaton ['*LaBatea*],
+a tool that generates instances for the law's variables and then
+tests it's validity.  
+
+Since the *itl* deals with sets, maps and orderings, that are
+well known objects from mathematics, the laws that we are
+using are mostly /recycled/ ones. Also some of those laws are grouped
+in notions like e.g. /orderings/ or /algebras/.
+
+[section Orderings and Equivalences]
+
+[h4 Lexicographical Ordering and Equality]
+
+On all set and map containers of the itl, there is an `operator <`
+that implements a
+[@http://www.sgi.com/tech/stl/StrictWeakOrdering.html strict weak ordering]
+(see also [@http://en.wikipedia.org/wiki/Strict_weak_ordering here]).
+The semantics of `operator <` is the same as for the stl's
+AssociativeContainer, especially stl::set and stl::map:
+``
+Irreflexivity<T,< > : T a;     !(a<a)
+Asymmetry<T,< >     : T a,b;   a<b implies !(b<a)
+Transitivity<T,< >  : T a,b,c; a<b && b<c implies a<c
+``
+
+`Operator <` depends on the itl::container's template parameter
+`Compare` that implements a ['strict weak ordering] for the container's
+`key_type`.
+For a given `Compare` ordering, `operator <` implements a 
+lexicographical comparison on itl::containers, that uses the 
+`Compare` order to establish a unique sequence of values in 
+the container. 
+
+The induced equivalence of `operator <` is lexicographical
+equality which is implementd as `operator ==`. 
+``
+//equivalence induced by strict weak ordering <
+!(a<b) && !(b<a) implies a == b;
+``
+Again this
+follows the semantics of the *stl*.
+Lexicographical equality is finer than the equality
+of elements. Two containers that contain the same elements
+can be lexicographically unqueal, if their elements are
+differently sorted.
+
+Lexicographical comparison belongs to the __iterative__
+aspect. Of all the different sequences that are valid 
+for unordered sets and maps, one such sequence is
+selected by the Compare order of elements. Based on
+this selection a unique iteration is possible.
+
+[h4 Subset Ordering and Element Equality]
+
+On the __conceptual__ aspect only membeship of elements
+matters, not their sequence. So there are functions
+`contained_in` and `element_equal` that implement
+the subset relation and the equality on elements.
+
+Yet, `contained_in` and `is_element_equal` functions are not
+really working on the level of elements. They also
+work on the basis of the containers templates
+`Compare` parameter. In practical terms we need to
+distinguish between lexicographical equality 
+`operator ==` and equality of elements `is_element_equal`,
+if we work with interval splitting interval containers:
+``
+split_interval_set<time> w1, w2; //Pseudocode
+w1 = {[Mon       ..       Sun)}; //split_interval_set containing a week
+w2 = {[Mon .. Fri)[Sat .. Sun)}; //Same week split in work and week end parts.
+w1 == w2;                        //false: Different segmentation
+is_element_equal(w1,w2);         //true:  Same elements contained  
+``   
+
+So for a constant `Compare` order on key elements,
+memberfuntion `contained_in` that is defined for all 
+itl::containers implements a
+[@http://en.wikipedia.org/wiki/Partially_ordered_set partial order]
+on itl::containers.
+
+``
+with <= for contained_in,
+      = for is_element_equal:
+Reflexivity<T,<= >   : T a;     a<=a
+Antisymmetry<T,<=,=> : T a,b;   a<=b && b<=a implies a=b 
+Transitivity<T,<= >  : T a,b,c; a<=b && b<=c implies a<c
+``
+
+The induced equivalence is the equality of elements that
+is implemented via function `is_element_equal`.
+``
+//equivalence induced by the partial ordering contained_in on itl::container a,b
+a.contained_in(b) && b.conainted_in(a) implies is_element_equal(a, b);
+``
+
+[endsect][/ Orderings and Equivalences]
+
+[section Sets]
+
+For all set types `S` that are models concept `Set`  
+(__itl_set__, __itv_set__, __sep_itv_set__ and __spl_itv_set__)
+most of the well known mathematical 
+[@http://en.wikipedia.org/wiki/Algebra_of_sets laws on sets]
+were successfully checked via LaBatea. The next tables 
+are giving an overview over the checked laws ordered by
+operations. If possible, the laws are formulated with
+the stronger lexicographical equality (`operator ==`)
+which implies the the laws validity for the weaker
+element equality `is_element_equal`. Throughout this
+chapter we will denote element equality as `=e=` instead
+of `is_element_equal` where a short notation is advantageous.
+
+[h5 Laws on set union]
+
+For the operation ['*set union*] available as 
+`operator +, +=, |, |=` and the neutral element
+`neutron<S>::value()` which is the empty set `T()`
+these laws hold:
+``
+Associativity<S,+,== >: S a,b,c: a+(b+c) == (a+b)+c
+Neutrality<S,+,== >   : S a:       a+S() == a
+Commutativity<S,+,== >: S a,b:       a+b == b+a
+``
+
+[h5 Laws on set intersection]
+
+For the operation ['*set intersection*] available as 
+`operator *, *=, &, &=` these laws were validated:
+
+``
+Associativity<S,*,== >: S a,b,c: a*(b*c) == (a*b)*c
+Commutativity<S,*,== >: S a,b:       a*b == b*a
+``
+
+Neutrality has *not* been validated to avoid 
+additional requirements on the sets template
+parameters. 
+
+[h5 Laws on set difference]
+
+For set difference there are only these laws. It is
+not associative and not commutative. It's neutrality
+is non symmetrical.
+
+``
+RightNeutrality<S,-,== > : S a:   a-S() == a
+SelfRemovability<S,-,== >: S a:   a - a == S()
+``
+
+Summarized in the next table are laws that use `+`, `*` and `-`
+as a single operation. For all validated laws,
+the left and right hand sides of the equations
+are lexicographically equal, as denoted by `==` in the cells
+of the table.
+
+``
+                 +    *   -
+Associativity    ==   == 
+Neutrality       ==       ==
+Commutativity    ==   ==
+SelfRemovability          ==
+``
+
+[h5 Distributivity Laws]
+
+Laws, like distributivity, that use more than one operation can
+sometimes be instantiated for different sequences of operators
+as can be seen below. In the two instantiations of the distributivity
+laws operators `+` and `*` are swapped. So we can have small operator
+signatures like `+,*` and `*,+` to describe such instantiations,
+which will be used below.
+Not all instances of distributivity laws hold for lexicographical equality.
+Therefore they are denoted using a /variable/ equality `=v=` below.
+
+``
+     Distributivity<S,+,*,=v= > : S a,b,c: a + (b * c) =v= (a + b) * (a + c)
+     Distributivity<S,*,+,=v= > : S a,b,c: a * (b + c) =v= (a * b) + (a * c)
+RightDistributivity<S,+,-,=v= > : S a,b,c: (a + b) - c =v= (a - c) + (b - c)
+RightDistributivity<S,*,-,=v= > : S a,b,c: (a * b) - c =v= (a - c) * (b - c)
+``
+
+The next table shows the relationship between 
+law instances, 
+[link boost_itl.introduction.interval_combining_styles interval combining style]
+and the 
+used equality relation.
+
+``
+                                  +,*    *,+
+     Distributivity  joining      ==     ==
+                     separating   ==     ==
+                     splitting    =e=    =e=
+                     
+                                  +,-    *,-
+RightDistributivity  joining      ==     ==
+                     separating   ==     ==
+                     splitting    =e=    ==
+``
+
+The table gives an overview over 12 instantiations of
+the four distributivity laws and shows the equalities 
+which the instantiations holds for. For instance
+`RightDistributivity` with operator signature `+,-`
+instantiated for __spl_itv_sets__ holds only for
+element equality (denoted as `=e=`):
+``
+RightDistributivity<S,+,-,=e= > : S a,b,c; (a + b) - c =e= (a - c) + (b - c)
+``
+The remaining five instantiations of `RightDistributivity`
+are valid for lexicographical equality (demoted as `==`) as well.
+
+[link boost_itl.introduction.interval_combining_styles Interval combining styles]
+correspond to containers according to
+``
+style       set
+joining     interval_set, itl::set
+separating  separate_interval_set
+splitting   split_interval_set
+``
+where the __itl_set__ of elements can be subsumed in the `joining` rows.
+
+
+Finally there are two laws that combine all three major set operations:
+De Mogans Law and Symmetric Difference.
+
+[h5 DeMorgan's Law]
+
+De Morgans Law is better known in an incarnation where the unary
+complement operation `~` is used. `~(a+b) == ~a * ~b`. The version
+below is an adaption for the binary set difference `-`, which is 
+also called ['*relative complement*].
+``
+DeMorgan<S,+,*,=v= > : S a,b,c: a - (b + c) =v= (a - b) * (a - c)
+DeMorgan<S,*,+,=v= > : S a,b,c: a - (b * c) =v= (a - b) + (a - c)
+``
+
+``
+                         +,*     *,+
+DeMorgan  joining        ==      ==
+          separating     ==      =e=
+          splitting      ==      =e=
+``
+
+Again not all law instances are valid for lexicographical equality.
+The second instantiations only holds for element equality, if
+the interval sets are non joining.
+
+[h5 Symmetric Difference]
+
+``
+SymmetricDifference<S,== > : S a,b,c: (a + b) - (a * b) == (a - b) + (b - a)
+``
+
+Finally Symmetrical Difference holds for all of itl set types and
+lexicographical equality.
+
+[/ pushout laws]
+
+[endsect][/ Sets]
+
+[section Maps]
+
+By definition a map is set of pairs. So we would expect maps to
+obey the same laws that are valid for sets. Yet
+the semantics of the *itl's* maps may be a different one, because
+of it's aggregating facilities, where the aggregating combiner
+operations are passed to combine the map's associated values.
+
+It turnes out, that the aggregation on overlap principle
+induces semantical properties to itl maps in such a way,
+that the set of equations that are valid will depend on
+the semantics of the type `CodomainT` of the map's associated
+values.
+
+This is less magical as it might seem at first glance.
+If for instance, if we instantiate an __itv_map__ to 
+collect and concatenate
+`std::strings` associated to intervals,
+
+``	
+interval_map<int,std::string> cat_map;
+cat_map += make_pair(interval<int>::rightopen(1,5),std::string("Hello"));
+cat_map += make_pair(interval<int>::rightopen(3,7),std::string(" World"));
+cout << "cat_map: " << cat_map << endl;
+``
+
+we won't be able to apply `operator -=` 
+``
+// This will not compile because string::operator -= is missing.
+cat_map -= make_pair(interval<int>::rightopen(3,7),std::string(" World"));
+``
+because, as std::sting does not implement `-=` itself, this won't compile.
+So all *laws*, that rely on `operator -=` or `-` not only will not be valid they 
+can not even be stated.
+This reduces the set of laws that can be valid for a richer `CodomainT`
+type to a smaller set of laws and thus to a less restricted semantics. 
+
+Currently we have investigated and validated two major instantiations 
+of itl::Maps,
+
+* ['*Maps of Sets*] that will be called ['*Collectors*]  and
+* ['*Maps of Numbers*] which will be called ['*Quantifiers*]
+
+both of which seem to have many interesting usecases for practical
+applications. The semantics associated with the term /Numbers/ 
+is a 
+[@http://en.wikipedia.org/wiki/Monoid commutative monoid] 
+for unsigned numbers
+and a 
+[@http://en.wikipedia.org/wiki/Abelian_group commutative or abelian group]
+for signed numbers.
+From a practical point of view we can think
+of numbers as counting or quantifying the key values 
+of the map.
+
+
+[h4 Summary of Collector and Quantifier Semantics]
+
+Itl `Maps of Sets` of `Collectors`
+are models of a concept `Set` which implies that all laws that have been
+stated as a semantics for `itl::Sets` in the previous chapter also hold for
+`Maps of Sets`.
+
+Itl `Maps of Numbers` of `Quantifiers` on the contrary are not models of concept `Set`.
+But there is a substantial intersection of laws that apply both for
+`Collectors` and `Quantifiers`. `Maps of Numbers` appear to be a models
+of a concept `InfiniteVector` instead.
+
+[table
+[[Kind of Map]    [Alias]     [Behavior]                             ]
+[[Maps of Sets]   [Collector] [Collects items *for* key values]      ]
+[[Maps of Numbers][Quantifier][Counts or quantifies *the* key values]]
+]
+
+In the next two sections the law based semantics of `Maps of Sets` (Collectors)
+and `Maps of Numbers` (Quantifiers) will be described in more detail.
+
+[endsect][/ Maps]
+
+[section Collectors: Maps of Sets]
+
+`Itl Maps of Sets` or `Collectors`, behave like `Sets`. 
+This can be understood easily, if we consider, that
+ervery map of sets can be transformed to an equivalent
+set of pairs.
+For instance 
+``
+//Pseudocode:
+itl::map<int,set<int> >  m = {(1->{1,2}), (2->{1})}; //is equivalent to 
+itl::set<pair<int,int> > s = {(1,1),(1,2),   //representing 1->{1,2}
+                              (2,1)       }; //representing 2->{1}
+`` 
+
+Also the results of add, subtract and other operations on `map m` and `set s`
+preserves the equivalence of the containers ['*almost*] perfectly:
+``
+m += (1,3); 
+m == {(1->{1,2,3}), (2->{1})}; //aggregated on collision of key value 1
+s += (1,3);
+s == {(1,1),(1,2),(1,3),   //representing 1->{1,2,3}
+      (2,1)             }; //representing 2->{1}
+``
+
+The equivalence of `m` and `s` is only violated if an 
+empty set occures in `m` by subtraction of a value pair:
+``
+m -= (2,1); 
+m == {(1->{1,2,3}), (2->{})}; //aggregated on collision of key value 2
+s -= (2,1);
+s == {(1,1),(1,2),(1,3)   //representing 1->{1,2,3}
+                       }; //2->{} is not represented in s
+``
+
+This problem can be dealt with in two ways. 
+
+# Deleting value pairs form the Collector, if it's associated value 
+  becomes a neutral value or `neutron`.
+# Using a different equality, called protonic equality in the laws
+  to validate. Protonic equality `is_protonic_equal` or `=p=` only 
+  accounts for value pairs that that carry values unequal to the `neutron` value. 
+
+Solution (1) led to the introduction of map traits, particularly trait
+neutron_absorber trait which is the default setting in all itl's map
+templates.
+
+Solution (2), is applied to check the semantics of itl::Maps for the
+neutron_enricher trait that does not delete value pairs that carry
+neutrons. Protonic equality is implemented by a non member function
+called `is_protonic_equal`. Througout this chapter
+protonic equality in pseudocode and law denotations is denoted
+as `=p=` operator.
+
+The validity of the sets of laws that make up `Set` semantics
+should now be quite evident. So the following text shows the
+laws that are validated for all `Collector` types `C`. Which are
+__itl_map__`<D,S,T>`, __itv_map__`<D,S,T>` and __spl_itv_map__`<D,S,T>`
+where `CodomainT` type `S` is a model of `Set` and `Trait` type `T` is either 
+__absorber__ or __enricher__.
+
+
+[h5 Laws on set union, set intersection and set difference]
+
+``
+Associativity<C,+,== >: C a,b,c: a+(b+c) == (a+b)+c
+Neutrality<C,+,== >   : C a:       a+C() == a
+Commutativity<C,+,== >: C a,b:       a+b == b+a
+
+Associativity<C,*,== >: C a,b,c: a*(b*c) ==(a*b)*c
+Commutativity<C,*,== >: C a,b:       a*b == b*a
+
+RightNeutrality<C,-,== >  : C a:   a-C() ==  a
+SelfRemovability<C,-,=v= >: C a:   a - a =v= C()
+``
+
+All the fundamental laws could be validated for all 
+itl Maps in their instantiation as Maps of Sets or Collectors.
+As expected SelfRmovability only holds for protonic equality,
+if the map is not a `neutron_absorber`.
+
+``
+                                   +    *    -
+Associativity                      ==   == 
+Neutrality                         ==        ==
+Commutativity                      ==   ==
+SelfRemovability neutron_absorber            ==
+                 neutron_enricher            =p=
+``
+
+[h5 Distributivity Laws]
+
+``
+     Distributivity<C,+,*,=v= > : C a,b,c: a + (b * c) =v= (a + b) * (a + c)
+     Distributivity<C,*,+,=v= > : C a,b,c: a * (b + c) =v= (a * b) + (a * c)
+RightDistributivity<C,+,-,=v= > : C a,b,c: (a + b) - c =v= (a - c) + (b - c)
+RightDistributivity<C,*,-,=v= > : C a,b,c: (a * b) - c =v= (a - c) * (b - c)
+``
+
+Results for the distributivity laws are almost identical to 
+the validation of sets except that
+for a `neutron_enricher map` the law `(a * b) - c == (a - c) * (b - c)`
+holds for lexicographical equality.
+
+``
+                                                   +,*    *,+
+     Distributivity  joining                       ==     ==
+                     splitting   neutron_absorber  =e=    =e=
+                                 neutron_enricher  =e=    ==                     
+                     
+                                                   +,-    *,-
+RightDistributivity  joining                       ==     ==
+                     splitting                     =e=    ==
+``
+
+[h5 DeMorgan's Law and Symmetric Difference]
+
+``
+DeMorgan<C,+,*,=v= > : C a,b,c: a - (b + c) =v= (a - b) * (a - c)
+DeMorgan<C,*,+,=v= > : C a,b,c: a - (b * c) =v= (a - b) + (a - c)
+``
+
+``
+                         +,*     *,+
+DeMorgan  joining        ==      ==
+          splitting      ==      =e=
+``
+
+``
+SymmetricDifference<C,== > : C a,b,c: (a + b) - (a * b) == (a - b) + (b - a)
+``
+
+Reviewing the validity tables above shows, that the sets of valid laws for
+`itl Sets` and `itl Maps of Sets` that are /neutron absorbing/ are exactly the same.
+As expected, only for Maps of Sets that represent empty sets as associated values,
+called /neutron enrichers/, there are marginal semantical differences.
+
+[endsect][/ Collectors]
+
+[section Quantifiers: Maps of Numbers]
+
+With `Sets` and `Collectors` the semantics of  
+`operator -` is
+that of /set difference/ which means, that you can
+only subtract what has been put into the container before.
+With `Quantifiers` that ['*count*] or ['*quantify*]
+their key values in some way, 
+the semantics of `operator -` may be different.
+
+The question is how subtraction should be defined here?
+``
+//Pseudocode:
+itl::map<int,some_number> q = {(1->1)};
+q -= (2->1);
+`` 
+If type `some_number` is `unsigned` a /set difference/ kind of
+still subtraction make sense 
+``
+itl::map<int,some_number> q = {(1->1)};
+q -= (2->1);   // key 2 is not not in the map so  
+q == {(1->1)}; // q is unchanged by 'aggregate on collision'
+`` 
+If `some_number` is a `signed` numerical type
+the result can also be this
+``
+itl::map<int,some_number> q = {(1->1)};
+q -= (2->1);             // subtracting works like  
+q == {(1->1), (2-> -1)}; // adding the inverse element
+`` 
+As commented in the example, subtraction of a key value
+pair (k,v) can obviously defined as adding the ['*inverse element*]
+for that key (k,-v), if the key is not yet stored in the map.
+
+Another model, that we can think of, is that in a `Quantifier` 
+every `key_value` is initially quantified `0`-times, where `0` stands
+for the neutral element of the numeric `CodomainT` type.
+Such a `Quantifier` would be totally defined on all values of
+it's `DomainT` type.
+So a `Quantifier` that has a signed numerical codomain type can be
+conceived as an `InfiniteVector`. 
+
+To become an infinite vector
+that is totally defined on it's domain we can set
+the map's `Trait` parameter to the value __emitter__.
+
+[table
+[[Trait]           [CodomainT as number] [CodomainT more abstract] [Concept for Quanifier Map]]
+[[emits_neutrons]  [signed number]       [commutative group]       [InfiniteVector]]
+[[!emits_neutrons] [unsigned number]     [commutative monoid]      [hybrid type]]  
+]
+
+Another difference between `Collectors` and `Quantifiers`
+is the semantics of `operator *`, that has the meaing of
+set intersection for `Collectors`.
+
+For the aggregate on overlap principle the operation `*`
+has to be passed to combine associated values on overlap
+of intervals or collision of keys. This can not be done
+for `Quantifiers`, since numeric types do not implement
+intersection.
+
+[/ JODO * degeneriert zu +, + wird vector addition, - wird vector subraction, scalarprodukt kann definiert werden]
+
+[/ JODO nur den InfiniteVector Fall beschreiben? Wie könnte man denn den hybrid benennen??
+        gibt es interessante nicht numerische Beispiele für Quantifier?
+        Was ist mit Quantifier of Quantifier
+]
+
+[h5 Laws on set union, set intersection and set difference]
+
+Again, we are pacing the parade of laws, this time for
+`Quantifier` types `Q` which are
+__itl_map__`<D,N,T>`, __itv_map__`<D,N,T>` and __spl_itv_map__`<D,N,T>`
+where `CodomainT` type `N` is a `Number` and `Trait` type `T` is one of
+the itl's map traits. 
+
+
+``
+Associativity<Q,+,== >: Q a,b,c: a+(b+c) == (a+b)+c
+Neutrality<Q,+,== >   : Q a:       a+Q() == a
+Commutativity<Q,+,== >: Q a,b:       a+b == b+a
+
+Associativity<Q,*,== >: Q a,b,c: a*(b*c) ==(a*b)*c
+Commutativity<Q,*,== >: Q a,b:       a*b == b*a
+
+RightNeutrality<Q,-,== >  : Q a:   a-Q() ==  a
+SelfRemovability<Q,-,=v= >: Q a:   a - a =v= Q()
+``
+
+For a `Quantifier Map` the same basic laws apply that are
+valid for `Collector Maps`:
+
+``
+                                    +    *    -
+Associativity                       ==   == 
+Neutrality                          ==        ==
+Commutativity                       ==   ==
+SelfRemovability absorbs_neutrons             ==
+                 enriches_neutrons            =p=
+``
+
+
+
+[endsect][/ Quantifiers]
+
+[endsect][/ Semantics]

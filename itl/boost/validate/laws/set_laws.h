@@ -83,7 +83,7 @@ namespace boost{namespace itl
 		typedef typename inverse<Combiner<Type> >::type InverseCombinerT;
 
         std::string name()const { return "InplaceInverseRemovability"; }
-        std::string formula()const { return "a -= a; a == 0"; }
+        std::string formula()const { return "(0-a) + a == 0"; }
 
         std::string typeString()const
         {
@@ -130,6 +130,7 @@ namespace boost{namespace itl
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** a + (b * c) == (a + b) * (a + c)
+            a(1)(b(2)c) == (a(1)b)(2)(a(1)c)
         computed using inplace operators +=, += and *=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
@@ -229,6 +230,7 @@ namespace boost{namespace itl
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** a - (b + c) == (a - b) * (a - c)
+		    a - (b(1)c) == (a - b)(2)(a - c)
         computed using inplace operators +=, += and *=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
@@ -296,7 +298,7 @@ namespace boost{namespace itl
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** (a + b) - c == (a - c) + (b - c)
-        computed using inplace operators +=, += and *=
+        computed using inplace operators +=, -= and *=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
         */
