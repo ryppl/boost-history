@@ -202,6 +202,7 @@ public:
     struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
 };
 
+/*
 template<> class stl_allocator<void, gc_alloc>
 {
 public:
@@ -212,6 +213,7 @@ public:
     template <class U>
     struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
 };
+*/
 
 #endif
 
