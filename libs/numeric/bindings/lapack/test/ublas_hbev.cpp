@@ -111,7 +111,7 @@ struct Workspace {
    {}
 
    type operator() () {
-      return type( work_ );
+      return lapack::workspace(work_) ;
    }
 
    array_type work_ ;
@@ -130,7 +130,7 @@ struct Workspace< std::complex<T> > {
    {}
 
    type operator() () {
-      return type( work_, rwork_ );
+      return lapack::workspace(work_, rwork_) ;
    }
 
    complex_array_type work_ ;

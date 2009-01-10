@@ -87,7 +87,7 @@ struct Workspace {
    {}
 
    type operator() () {
-      return type( work_ );
+      return lapack::workspace(work_) ;
    }
 
    array_type work_ ;
