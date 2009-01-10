@@ -178,19 +178,16 @@ namespace boost { namespace numeric { namespace bindings {
           integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
           R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
           R* w, T* z, integer_t const ldz,
-          std::pair<detail::workspace1<W>, detail::workspace1<WI> > work,
+          detail::workspace2<W, WI> work,
           integer_t* ifail, integer_t& info ) const {
 
-          typedef typename traits::vector_traits<W>::value_type  w_value_type ;
-          typedef typename traits::vector_traits<WI>::value_type wi_value_type ;
-
-          assert( traits::vector_size( work.first.select(T()) ) >= 7*n );
-          assert( traits::vector_size( work.second.select(R()) ) >= 5*n );
+          assert( traits::vector_size( work.select(T()) )         >= 7*n );
+          assert( traits::vector_size( work.select(integer_t()) ) >= 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
-            traits::vector_storage( work.first.select(T()) ),
-            traits::vector_storage( work.second.select(R()) ),
+            traits::vector_storage( work.select(T()) ),
+            traits::vector_storage( work.select(integer_t()) ),
             ifail, info );
         }
       }; // Hbevx< 1 >
@@ -242,18 +239,18 @@ namespace boost { namespace numeric { namespace bindings {
           integer_t const kd, T* ab, integer_t const ldab, T* q, integer_t const ldq,
           R vl, R vu, integer_t const il, integer_t const iu, R abstol, integer_t& m,
           R* w, T* z, integer_t const ldz,
-          std::pair<detail::workspace2<W,RW>, detail::workspace1<WI> > work,
+          detail::workspace3<W, RW, WI> work,
           integer_t* ifail, integer_t& info ) const {
 
-          assert( traits::vector_size( work.first.select(T()) ) >= n );
-          assert( traits::vector_size( work.first.select(R()) ) >= 7*n );
-          assert( traits::vector_size( work.second.select(integer_t()) ) >= 5*n );
+          assert( traits::vector_size( work.select(T()) ) >= n );
+          assert( traits::vector_size( work.select(R()) ) >= 7*n );
+          assert( traits::vector_size( work.select(integer_t()) ) >= 5*n );
           hbevx( jobz, range, uplo, n, kd, ab, ldab, q, ldq,
             vl, vu, il, iu, abstol, m,
             w, z, ldz,
-            traits::vector_storage( work.first.select(T()) ),
-            traits::vector_storage( work.first.select(R()) ),
-            traits::vector_storage( work.second.select(integer_t()) ),
+            traits::vector_storage( work.select(T()) ),
+            traits::vector_storage( work.select(R()) ),
+            traits::vector_storage( work.select(integer_t()) ),
             ifail, info );
         }
       }; // Hbevx< 2 >

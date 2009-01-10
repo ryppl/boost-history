@@ -166,14 +166,14 @@ namespace boost { namespace numeric { namespace bindings {
         void operator() (
           char const jobz, char const uplo, integer_t const n,
           T* a, integer_t const lda,
-          R* w, std::pair<detail::workspace1<W>, detail::workspace1<WI> > work, integer_t& info) {
+          R* w, detail::workspace2<W, WI> work, integer_t& info) {
 
-          assert (traits::vector_size (work.first.select(T())) >= jobz=='N' ? 1+2*n : 1+6*n+2*n*n);
-          assert (traits::vector_size (work.second.select(integer_t())) >= jobz=='N' ? 1 : 3+5*n);
+          assert (traits::vector_size (work.select(T())) >= jobz=='N' ? 1+2*n : 1+6*n+2*n*n);
+          assert (traits::vector_size (work.select(integer_t())) >= jobz=='N' ? 1 : 3+5*n);
 
           heevd( jobz, uplo, n, a, lda, w,
-            traits::vector_storage (work.first.select(T())), traits::vector_size (work.first.select(T())),
-            traits::vector_storage (work.second.select(integer_t())), traits::vector_size (work.second.select(integer_t())),
+            traits::vector_storage (work.select(T())), traits::vector_size (work.select(T())),
+            traits::vector_storage (work.select(integer_t())), traits::vector_size (work.select(integer_t())),
             info);
         }
       };
@@ -228,20 +228,20 @@ namespace boost { namespace numeric { namespace bindings {
         void operator() (
           char const jobz, char const uplo, integer_t const n,
           T* a, integer_t const lda,
-          R* w, std::pair<detail::workspace2<WC,WR>, detail::workspace1<WI> > work, integer_t& info) {
+          R* w, detail::workspace3<WC, WR, WI> work, integer_t& info) {
 
-          assert (traits::vector_size (work.first.select(T())) >= jobz=='N' ? 1+n : 2*n+n*n);
-          assert (traits::vector_size (work.first.select(R())) >= jobz=='N' ? n : 1+5*n+2*n*n);
-          assert (traits::vector_size (work.second.select(integer_t())) >= jobz=='N' ? 1 : 3+5*n);
+          assert (traits::vector_size (work.select(T())) >= jobz=='N' ? 1+n : 2*n+n*n);
+          assert (traits::vector_size (work.select(R())) >= jobz=='N' ? n : 1+5*n+2*n*n);
+          assert (traits::vector_size (work.select(integer_t())) >= jobz=='N' ? 1 : 3+5*n);
 
           typedef typename traits::vector_traits<WR>::value_type wr_value_type ;
           typedef typename traits::vector_traits<WI>::value_type wi_value_type ;
           typedef typename traits::vector_traits<WC>::value_type wc_value_type ;
 
           heevd( jobz, uplo, n, a, lda, w,
-            traits::vector_storage (work.first.select(T())), traits::vector_size (work.first.select(T())),
-            traits::vector_storage (work.first.select(R())), traits::vector_size (work.first.select(R())),
-            traits::vector_storage (work.second.select(integer_t())), traits::vector_size (work.second.select(integer_t())),
+            traits::vector_storage (work.select(T())), traits::vector_size (work.select(T())),
+            traits::vector_storage (work.select(R())), traits::vector_size (work.select(R())),
+            traits::vector_storage (work.select(integer_t())), traits::vector_size (work.select(integer_t())),
             info);
         }
       };
