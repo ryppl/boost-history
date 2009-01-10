@@ -109,11 +109,9 @@ int do_memory_type(int n, W workspace) {
 
 template <typename T>
 struct Workspace {
-   typedef ublas::vector< T >                                               array_type ;
-   typedef ublas::vector< integer_t >                                       int_array_type ;
-   typedef lapack::detail::workspace1< array_type >                         first_type;
-   typedef lapack::detail::workspace1< int_array_type >                     second_type;
-   typedef std::pair<first_type, second_type>                               type ;
+   typedef ublas::vector< T >                                      array_type ;
+   typedef ublas::vector< integer_t >                              int_array_type ;
+   typedef lapack::detail::workspace2<array_type, int_array_type > type ;
 
    Workspace(size_t n)
    : work_( 7*n )
@@ -121,21 +119,20 @@ struct Workspace {
    {}
 
    type operator() () {
-      return type( first_type( work_ ), second_type( iwork_ ) );
+      return lapack::workspace(work_ , iwork_) ;
    }
 
    array_type work_ ;
-   int_array_type     iwork_ ;
+   int_array_type iwork_ ;
 };
 
 template <typename T>
 struct Workspace< std::complex<T> > {
-   typedef ublas::vector< std::complex<T> >                                 complex_array_type ;
-   typedef ublas::vector< T >                                               real_array_type ;
-   typedef ublas::vector< integer_t >                                       int_array_type ;
-   typedef lapack::detail::workspace2< complex_array_type,real_array_type > first_type;
-   typedef lapack::detail::workspace1< int_array_type >                     second_type;
-   typedef std::pair<first_type, second_type>                               type ;
+   typedef ublas::vector< std::complex<T> >                 complex_array_type ;
+   typedef ublas::vector< T >                               real_array_type ;
+   typedef ublas::vector< integer_t >                       int_array_type ;
+   typedef lapack::detail::workspace3<
+      complex_array_type, real_array_type, int_array_type > type ;
 
    Workspace(size_t n)
    : work_( n )
@@ -144,7 +141,7 @@ struct Workspace< std::complex<T> > {
    {}
 
    type operator() () {
-      return type( first_type( work_, rwork_ ), second_type( iwork_ ) );
+      return lapack::workspace(work_, rwork_, iwork_) ;
    }
 
    complex_array_type work_ ;
