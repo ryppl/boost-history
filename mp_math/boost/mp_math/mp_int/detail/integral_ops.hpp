@@ -132,18 +132,18 @@ integral_ops_impl<IntegralT, MpInt, false>::assign(MpInt& lhs, IntegralT rhs)
     static const int dd = MpInt::valid_bits;
     static const int m = dd < ud ? dd : ud;
     static const int h = m / 2;
-    /* set h bits at a time */
+    // set h bits at a time
     for (int i = 0; i < ud / h; ++i)
     {
-      /* shift the number up h bits */
+      // shift the number up h bits
       lhs <<= h;
       // TODO optimize shift. only need to call grow_capacity once here
       // then use lower level shift_left(lhs.digits_, h);
 
-      /* OR in the top h bits of the source */
+      // OR in the top h bits of the source
       lhs[0] |= (rhs >> (ud-h)) & (power<IntegralT,2,h>::value - 1);
 
-      /* shift the source up to the next h bits */
+      // shift the source up to the next h bits
       rhs <<= h;
     }
     lhs.clamp();
@@ -190,9 +190,9 @@ template<typename IntegralT, class MpInt>
 bool
 integral_ops_impl<IntegralT, MpInt, true>::equal(const MpInt& lhs, IntegralT rhs)
 {
-  const int r_sign = rhs < 0 ? -1 : 1;
+  const int rhs_sign = rhs < 0 ? -1 : 1;
 
-  if (lhs.sign() != r_sign)
+  if (lhs.sign() != rhs_sign)
     return false;
 
   if (lhs.size() > q)
@@ -224,8 +224,12 @@ integral_ops_impl<IntegralT, MpInt, true>::less(const MpInt& lhs, IntegralT rhs)
   if (lhs.sign() == 1 && rhs < 0)
     return false;
 
-  if (lhs.size() > q)
-    return false;
+  static const typename MpInt::size_type rhs_precision =
+    static_cast<typename MpInt::size_type>(
+        std::numeric_limits<IntegralT>::digits);
+
+  if (lhs.precision() > rhs_precision)
+    return lhs.sign() == -1;
 
   return lhs.template to_integral<IntegralT>() < rhs;
 }

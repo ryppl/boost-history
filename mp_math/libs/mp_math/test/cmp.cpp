@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -106,10 +106,29 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_eq_to_integral_type5, mp_int_type, mp_i
   BOOST_CHECK_EQUAL(x, -32101);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_lt_integral_type, mp_int_type, mp_int_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_lt_integral_type1, mp_int_type, mp_int_types)
 {
   const mp_int_type x("123456789");
   BOOST_CHECK_LT(x, 123456790);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_lt_integral_type2, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("0x100000000");
+  BOOST_CHECK_LE(1, x);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_lt_integral_type3, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("-0x100000000");
+  BOOST_CHECK_LT(x, -1);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_lt_integral_type4, mp_int_type, mp_int_types)
+{
+  mp_int_type x(std::numeric_limits<int>::min());
+  x -= 1;
+  BOOST_CHECK_LT(x, std::numeric_limits<int>::min());
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_lt_unsigned_integral_type, mp_int_type, mp_int_types)
@@ -128,12 +147,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_le_integral_type2, mp_int_type, mp_int_
 {
   const mp_int_type x("32101");
   BOOST_CHECK_LE(x, 32102);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_le_integral_type3, mp_int_type, mp_int_types)
-{
-  const mp_int_type x("0x100000000");
-  BOOST_CHECK_LE(1, x);
 }
 
 
