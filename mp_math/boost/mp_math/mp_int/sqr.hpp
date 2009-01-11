@@ -174,15 +174,35 @@ void mp_int<A,T>::karatsuba_sqr()
 template<class A, class T>
 void mp_int<A,T>::comba_sqr()
 {
-  mp_int tmp;
-  tmp.grow_capacity(size_ + size_);
+  if (size() < 16U)
+  {
+    grow_capacity(size() + size());
+    
+    digit_type Z[32];
+    
+    ops_type::comba_sqr(Z, digits(), size());
+    
+    std::memcpy(digits(), Z, (size() + size()) * sizeof(digit_type));
+    
+    set_size(size() + size());
+    
+    if (!digits()[size()-1])
+      pop();
+  }
+  else
+  {
+    mp_int tmp;
+    tmp.grow_capacity(size() + size());
 
-  ops_type::comba_sqr(tmp.digits(), digits(), size_);
+    ops_type::comba_sqr(tmp.digits(), digits(), size());
 
-  tmp.size_ = size_ + size_;
-  
-  tmp.clamp();
-  swap(tmp);
+    tmp.set_size(size() + size());
+
+    if (!tmp[tmp.size()-1])
+      tmp.pop();
+
+    *this = tmp;
+  }
 }
 
 // computes *this = *this * *this

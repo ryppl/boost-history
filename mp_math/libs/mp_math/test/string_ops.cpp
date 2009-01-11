@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(op_assign4, mp_int_type, mp_int_types)
 {
   mp_int_type x;
   x = "0";
-  BOOST_CHECK_EQUAL(x.is_zero(), true);
+  BOOST_CHECK_EQUAL(!x, true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(op_assign5, mp_int_type, mp_int_types)

@@ -18,7 +18,8 @@ void mp_int<A,T>::multiply_by_digit(digit_type x)
   // make sure we can hold the result
   grow_capacity(size_ + 1);
   
-  const digit_type carry = ops_type::multiply_by_digit(digits_, digits_, size_, x);
+  const digit_type carry =
+    ops_type::multiply_by_digit(digits(), digits(), size(), x);
 
   if (carry)
     push(carry);
@@ -30,27 +31,11 @@ void mp_int<A,T>::multiply_by_2()
 {
   grow_capacity(size_ + 1);
 
-  digit_type carry = 0;
-  for (iterator d = begin(); d != end(); ++d)
-  {
-    // get what will be the *next* carry bit from the 
-    // MSB of the current digit 
-    const digit_type rr = *d >> (static_cast<digit_type>(valid_bits - 1));
-    
-    // now shift up this digit, add in the carry [from the previous]
-    *d = (*d << digit_type(1)) | carry;
- 
-    // copy the carry that would be from the source 
-    // digit into the next iteration 
-    carry = rr;
-  }
+  const digit_type carry =
+    ops_type::multiply_by_two(digits(), digits(), size());
 
-  // new leading digit?
   if (carry)
-  {
-    // add a MSB which is always 1 at this point
-    push(1);
-  }
+    push(carry);
 }
 
 
@@ -310,8 +295,10 @@ void mp_int<A,T>::mul_digits(const mp_int& b, size_type digs)
   }
 
   tmp.clamp();
-  if (tmp.is_zero())
+
+  if (!tmp)
     tmp.set_sign(1);
+
   swap(tmp);
 }
 
@@ -350,8 +337,10 @@ void mp_int<A,T>::mul_high_digits(const mp_int& b, size_type num)
   }
 
   tmp.clamp();
-  if (tmp.is_zero())
+
+  if (!tmp)
     tmp.set_sign(1);
+
   swap(tmp);
 }
 

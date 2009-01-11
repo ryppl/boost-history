@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_decimal_string3, mp_int_type, mp_int_typ
 BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_decimal_string4, mp_int_type, mp_int_types)
 {
   const mp_int_type y("0");
-  BOOST_CHECK_EQUAL(y.is_zero(), true);
+  BOOST_CHECK_EQUAL(!y, true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_positive_decimal_string1, mp_int_type, mp_int_types)
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_octal_string1, mp_int_type, mp_int_types
 BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_octal_string2, mp_int_type, mp_int_types)
 {
   const mp_int_type y("000000000000000000000000000000000");
-  BOOST_CHECK_EQUAL(y.is_zero(), true);
+  BOOST_CHECK_EQUAL(!y, true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_octal_string3, mp_int_type, mp_int_types)

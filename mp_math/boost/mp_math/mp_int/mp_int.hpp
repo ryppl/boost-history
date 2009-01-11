@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -20,6 +20,7 @@
 #include <boost/random.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mp_math/mp_int/detail/div.hpp>
 #include <boost/mp_math/mp_int/detail/string_conversion_constants.hpp>
 #include <boost/mp_math/mp_int/detail/integral_ops.hpp>
 #include <boost/mp_math/mp_int/detail/meta_math.hpp>
@@ -29,8 +30,6 @@
 namespace boost {
 namespace mp_math {
 
-// digits are stored in least significant order
-
 template<
   class Allocator,
   class Traits
@@ -39,40 +38,60 @@ struct mp_int
 :
   Allocator::template rebind<typename Traits::digit_type>::other
 {
-  typedef Allocator                     allocator_type;
-  typedef Traits                        traits_type;
-  typedef typename Allocator::size_type size_type;
+private:
+
+  typedef typename Allocator::template
+    rebind<typename Traits::digit_type>::other base_allocator_type;
+
+public:
+
+  typedef Allocator                               allocator_type;
+  typedef Traits                                  traits_type;
+  typedef typename base_allocator_type::size_type size_type;
 
   mp_int();
 
+  explicit mp_int(const allocator_type& a);
+
   template<typename IntegralT>
-  mp_int(IntegralT, typename enable_if<is_integral<IntegralT> >::type* dummy = 0);
+  mp_int(IntegralT,
+         const allocator_type& a = allocator_type(),
+         typename enable_if<is_integral<IntegralT> >::type* dummy = 0);
 
   template<typename charT>
-  mp_int(const charT*);
+  mp_int(const charT*, const allocator_type& a = allocator_type());
 
   template<typename charT>
-  mp_int(const charT*, std::ios_base::fmtflags);
+  mp_int(const charT*,
+         std::ios_base::fmtflags,
+         const allocator_type& a = allocator_type());
 
   template<typename charT, class traits, class Alloc>
-  mp_int(const std::basic_string<charT,traits,Alloc>&);
-  
+  mp_int(const std::basic_string<charT,traits,Alloc>&,
+         const allocator_type& a = allocator_type());
+
   template<typename charT, class traits, class Alloc>
-  mp_int(const std::basic_string<charT,traits,Alloc>&, std::ios_base::fmtflags);
-  
+  mp_int(const std::basic_string<charT,traits,Alloc>&,
+         std::ios_base::fmtflags,
+         const allocator_type& a = allocator_type());
+
   template<typename RandomAccessIterator>
-  mp_int(RandomAccessIterator first, RandomAccessIterator last);
-  
+  mp_int(RandomAccessIterator first,
+         RandomAccessIterator last,
+         const allocator_type& a = allocator_type());
+
   template<typename RandomAccessIterator>
-  mp_int(RandomAccessIterator first, RandomAccessIterator last,
-         std::ios_base::fmtflags f);
+  mp_int(RandomAccessIterator first,
+         RandomAccessIterator last,
+         std::ios_base::fmtflags f,
+         const allocator_type& a = allocator_type());
 
   mp_int(const mp_int& copy);
 
   #ifdef BOOST_HAS_RVALUE_REFS
   mp_int(mp_int&& copy);
   #endif
-  
+
   ~mp_int();
 
   mp_int& operator = (const mp_int& rhs);
@@ -80,7 +99,7 @@ struct mp_int
   #ifdef BOOST_HAS_RVALUE_REFS
   mp_int& operator = (mp_int&& rhs);
   #endif
-  
+
   template<typename IntegralT>
   mp_int& operator = (IntegralT rhs);
 
@@ -95,8 +114,8 @@ struct mp_int
 
   template<typename charT, class traits, class Alloc>
   void assign(const std::basic_string<charT,traits,Alloc>&,
-              std::ios_base::fmtflags);  
-  
+              std::ios_base::fmtflags);
+
   template<typename RandomAccessIterator>
   void assign(RandomAccessIterator first, RandomAccessIterator last,
               std::ios_base::fmtflags);
@@ -169,7 +188,7 @@ public:
 
   operator unspecified_bool_type() const
   {
-	  return is_zero() ? 0 : &mp_int::size_;
+	  return !(size_ == 1 && digits_[0] == 0) ? &mp_int::size_ : 0;
   }
 
   bool is_even() const { return (digits_[0] & digit_type(1)) == 0; }
@@ -224,13 +243,14 @@ public: // low level interface
 
   digit_type&       operator[](size_type i)       { return digits_[i]; }
   const digit_type& operator[](size_type i) const { return digits_[i]; }
-  
+
   digit_type&       at(size_type i)
   {
     if (i >= size_)
       throw std::out_of_range("mp_int::at: array subscript out of range");
     return digits_[i];
   }
+
   const digit_type& at(size_type i) const
   {
     if (i >= size_)
@@ -247,7 +267,7 @@ public: // low level interface
   void print(bool all=false) const;
   bool test_invariants() const;
 
-  bool is_uninitialized() const { return size_ == 0U; }
+  bool is_uninitialized() const { return !size_; }
 
   size_type size() const { return size_; }
   size_type capacity() const
@@ -281,6 +301,7 @@ public: // low level interface
 
   void grow_capacity(size_type n);
   void clamp();
+  void clamp_high_digit();
 
   int compare_magnitude(const mp_int& rhs) const;
   int compare_to_digit(digit_type) const;
@@ -289,7 +310,6 @@ public: // low level interface
   void add_magnitude(const mp_int& rhs);
   void sub_smaller_magnitude(const mp_int& rhs);
 
-  bool is_zero() const;
   bool is_power_of_two() const;
   void add_digit(digit_type);
   void sub_digit(digit_type);
@@ -312,7 +332,6 @@ public: // low level interface
   void comba_sqr();
 
   digit_type divide_by_digit(digit_type); // returns remainder
-  void divide(const mp_int& divisor, mp_int* remainder);
   void divide_by_2();
   digit_type divide_by_3();
   void modulo_2_to_the_power_of(size_type);
@@ -326,12 +345,21 @@ public: // low level interface
   {
     digits_[0] |= digit_type(1);
   }
-  
+
   void set_bit(size_type bit)
   {
-    digits_[bit / valid_bits] |=
-      digit_type(1) << digit_type(bit % valid_bits);
+    digits_[bit / valid_bits] |= digit_type(1) << (bit % valid_bits);
   }
+
+  void clear_bit(size_type bit)
+  {
+    digits_[bit / valid_bits] &= ~(digit_type(1) << (bit % valid_bits));
+  }
+
+  void set_bits(size_type beg, size_type end);
+  void clear_bits(size_type beg, size_type end);
+
+  void truncate(size_type prec);
 
   template<class A, class T>
   friend bool operator == (const mp_int<A,T>&, const mp_int<A,T>&);
@@ -343,7 +371,7 @@ public: // low level interface
   void from_string(Iter first, Iter last, unsigned radix);
 
 private:
-  
+
   digit_type* digits_;
   size_type size_, capacity_;
 };
@@ -364,7 +392,7 @@ void mp_int<A,T>::print(bool all) const
       cout << ",";
   }
   cout << "}";
-  
+
   if (all)
   {
     cout << capacity() - size_ << "{";
@@ -388,7 +416,7 @@ bool mp_int<A,T>::test_invariants() const
       return false;
     if (digits_[size_-1] == 0U)
       return false;
-    if (is_zero() && sign() != 1)
+    if (!*this && sign() != 1)
       return false;
   }
   return true;
@@ -417,7 +445,8 @@ mp_int<A,T>& mp_int<A,T>::operator = (mp_int<A,T>&& rhs)
 {
   if (this != &rhs)
   {
-    this->deallocate(digits_, capacity());
+    if (digits_)
+      this->deallocate(digits_, capacity());
     digits_ = 0;
     size_ = 0;
     capacity_ = 0;
@@ -592,15 +621,16 @@ void mp_int<A,T>::grow_capacity(size_type n)
 template<class A, class T>
 void mp_int<A,T>::clamp()
 {
-  // decrease size_ while the most significant digit is zero.
   while (size_ > 1 && digits_[size_-1] == 0)
     --size_;
 }
 
+// For when we know that only one leading zero digit may exist.
 template<class A, class T>
-inline bool mp_int<A,T>::is_zero() const
+inline void mp_int<A,T>::clamp_high_digit()
 {
-  return size_ == 1 && digits_[0] == 0;
+  if (size_ > 1 && digits_[size_-1] == 0)
+    --size_;
 }
 
 // disregards the sign of the numbers
@@ -613,7 +643,7 @@ int mp_int<A,T>::compare_magnitude(const mp_int& rhs) const
   // compare based on # of non-zero digits
   if (size_ > rhs.size_)
     return 1;
-  
+
   if (size_ < rhs.size_)
     return -1;
 
@@ -660,7 +690,7 @@ int mp_int<A,T>::compare(const mp_int& rhs) const
     else
       return 1;
   }
-  
+
   if (is_negative())
     // if negative compare opposite direction
     return rhs.compare_magnitude(*this);
@@ -705,7 +735,7 @@ void mp_int<A,T>::shift_digits_right(size_type b)
 
   // zero the top digits
   std::memset(digits_ + size_ - b, 0, b * sizeof(digit_type));
-  
+
   // remove excess digits
   size_ -= b;
 }
@@ -716,7 +746,7 @@ mp_int<A,T>::precision() const
 {
   // get number of digits and add that
   size_type r = (size_ - 1) * valid_bits;
-  
+
   // take the last digit and count the bits in it
   digit_type q = digits_[size_ - 1];
   while (q > 0U)
@@ -736,7 +766,7 @@ mp_int<A,T>::count_lsb() const
     4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0
   };
 
-  if (is_zero())
+  if (!*this)
     return 0;
 
   // scan lower digits until non-zero
@@ -765,6 +795,67 @@ template<typename IntegralT>
 inline IntegralT mp_int<A,T>::to_integral() const
 {
   return detail::integral_ops<IntegralT>::convert(*this);
+}
+
+template<class A, class T>
+void mp_int<A,T>::set_bits(size_type beg, size_type end)
+{
+  const size_type beg_index  = beg / digit_bits;
+  const size_type end_index  = end / digit_bits;
+  const size_type first_bits = beg % digit_bits;
+  const size_type last_bits  = end % digit_bits;
+
+  static const digit_type z = ~digit_type(0);
+
+  digit_type mask = z << first_bits;
+  if (beg_index == end_index && last_bits)
+    mask &= z >> (digit_bits - last_bits);
+
+  digits_[beg_index] |= mask;
+
+  for (size_type i = beg_index + ((beg % digit_bits) ? 1 : 0); i < end_index; ++i)
+    digits_[i] = digit_max;
+
+  if (beg_index != end_index && last_bits)
+    digits_[end_index] |= z >> (digit_bits - last_bits);
+}
+
+template<class A, class T>
+void mp_int<A,T>::clear_bits(size_type beg, size_type end)
+{
+  const size_type beg_index  = beg / digit_bits;
+  const size_type end_index  = end / digit_bits;
+  const size_type first_bits = beg % digit_bits;
+  const size_type last_bits  = end % digit_bits;
+
+  static const digit_type z = ~digit_type(0);
+
+  digit_type mask;
+  if (first_bits)
+    mask = z >> (digit_bits - first_bits);
+  else
+    mask = 0;
+
+  if (beg_index == end_index)
+    mask |= z << last_bits;
+
+  digits_[beg_index] &= mask;
+
+  if (beg_index != end_index)
+  {
+    std::memset(digits_ + beg_index + 1, 0,
+        sizeof(digit_type) * (end_index - beg_index - 1));
+
+    digits_[end_index] &= z << last_bits;
+  }
+}
+
+template<class A, class T>
+void mp_int<A,T>::truncate(size_type prec)
+{
+  set_size((prec + digit_bits - 1)/digit_bits);
+  const size_type last_bits = prec % digit_bits;
+  digits_[size()] &= ~digit_type(0) << (digit_bits - last_bits);
 }
 
 

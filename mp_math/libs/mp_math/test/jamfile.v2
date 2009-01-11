@@ -1,4 +1,4 @@
-# Copyright Kevin Sopp 2008.
+# Copyright Kevin Sopp 2008 - 2009.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -7,18 +7,19 @@ alias boost_test
 : $(BOOST_ROOT)/libs/test/build//boost_unit_test_framework/<link>shared ;
 
 alias boost_serialization
-:  $(BOOST_ROOT)/libs/serialization/build//boost_serialization/<link>shared ;
+: $(BOOST_ROOT)/libs/serialization/build//boost_serialization/<link>shared ;
 
 project
-    : requirements
-      <include>../../..
-      <link>static
-      <define>BOOST_TEST_DYN_LINK
-      <define>BOOST_TEST_MAIN
-      #<define>BOOST_MP_MATH_MP_INT_USE_ASM
-    ;
+  : requirements
+    <include>../../..
+    <link>static
+    <define>BOOST_TEST_DYN_LINK
+    <define>BOOST_TEST_MAIN
+    <define>BOOST_MP_MATH_MP_INT_USE_ASM
+  ;
 
 unit-test add             : add.cpp             boost_test ;
+unit-test bitmanipulation : bitmanipulation.cpp boost_test ;
 unit-test bitwise_ops     : bitwise_ops.cpp     boost_test ;
 unit-test bool_conversion : bool_conversion.cpp boost_test ;
 unit-test cmp             : cmp.cpp             boost_test ;

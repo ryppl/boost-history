@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -42,7 +42,7 @@ struct integral_ops_impl<IntegralT, MpInt, false>
 
   static bool equal   (const MpInt& lhs, IntegralT rhs);
   static bool less    (const MpInt& lhs, IntegralT rhs);
-  
+
   static void add     (MpInt& lhs, IntegralT rhs);
   static void subtract(MpInt& lhs, IntegralT rhs);
   static void multiply(MpInt& lhs, IntegralT rhs);
@@ -82,7 +82,7 @@ struct integral_ops_impl<IntegralT, MpInt, true>
 
   static bool equal   (const MpInt& lhs, IntegralT rhs);
   static bool less    (const MpInt& lhs, IntegralT rhs);
-  
+
   static void add     (MpInt& lhs, IntegralT rhs);
   static void subtract(MpInt& lhs, IntegralT rhs);
   static void multiply(MpInt& lhs, IntegralT rhs);
@@ -98,7 +98,7 @@ private:
   typedef typename make_unsigned<IntegralT>::type unsigned_type;
 
   static const typename MpInt::size_type q =
-    std::numeric_limits<IntegralT>::digits + (MpInt::valid_bits - 1)
+    (std::numeric_limits<IntegralT>::digits + (MpInt::valid_bits - 1))
     / MpInt::valid_bits;
 
   static bool equal_to_integral_type(const MpInt& x, IntegralT y)
@@ -121,12 +121,13 @@ void
 integral_ops_impl<IntegralT, MpInt, false>::assign(MpInt& lhs, IntegralT rhs)
 {
   lhs.zero();
-  
+
+  typedef typename MpInt::digit_type digit_type;
+
   if (rhs <= MpInt::digit_max)
-    lhs[0] = rhs;
+    lhs[0] = static_cast<digit_type>(rhs);
   else
   {
-    typedef typename MpInt::digit_type digit_type;
     static const int ud = std::numeric_limits<IntegralT>::digits;
     static const int dd = MpInt::valid_bits;
     static const int m = dd < ud ? dd : ud;
@@ -181,7 +182,7 @@ integral_ops_impl<IntegralT, MpInt, false>::equal(const MpInt& lhs, IntegralT rh
 {
   if (lhs.size() > q)
     return false;
-  
+
   return equal_to_integral_type(lhs, rhs);
 }
 
@@ -190,7 +191,7 @@ bool
 integral_ops_impl<IntegralT, MpInt, true>::equal(const MpInt& lhs, IntegralT rhs)
 {
   const int r_sign = rhs < 0 ? -1 : 1;
-  
+
   if (lhs.sign() != r_sign)
     return false;
 
@@ -219,7 +220,7 @@ integral_ops_impl<IntegralT, MpInt, true>::less(const MpInt& lhs, IntegralT rhs)
 {
   if (lhs.sign() == -1 && rhs >= 0)
     return true;
-  
+
   if (lhs.sign() == 1 && rhs < 0)
     return false;
 
@@ -414,7 +415,7 @@ void
 integral_ops_impl<IntegralT, MpInt, false>::bitwise_or(MpInt& lhs, IntegralT rhs)
 {
   if (rhs <= MpInt::digit_max)
-    lhs[0] |= rhs;
+    lhs[0] |= static_cast<typename MpInt::digit_type>(rhs);
   else
     lhs |= MpInt(rhs);
 }
@@ -441,7 +442,7 @@ void
 integral_ops_impl<IntegralT, MpInt, false>::bitwise_and(MpInt& lhs, IntegralT rhs)
 {
   if (rhs <= MpInt::digit_max)
-    lhs[0] &= rhs;
+    lhs[0] &= static_cast<typename MpInt::digit_type>(rhs);
   else
     lhs &= MpInt(rhs);
 }
@@ -467,7 +468,7 @@ void
 integral_ops_impl<IntegralT, MpInt, false>::bitwise_xor(MpInt& lhs, IntegralT rhs)
 {
   if (rhs <= MpInt::digit_max)
-    lhs[0] ^= rhs;
+    lhs[0] ^= static_cast<typename MpInt::digit_type>(rhs);
   else
     lhs ^= MpInt(rhs);
 }
@@ -507,7 +508,7 @@ struct integral_ops2<IntegralT, MpInt, true, true>
 {
   typedef std::numeric_limits<IntegralT> integral_type_limits;
   typedef typename make_unsigned<IntegralT>::type unsigned_type;
-  
+
   static IntegralT to_integral(const MpInt& x);
 };
 
@@ -516,7 +517,7 @@ struct integral_ops2<IntegralT, MpInt, true, false>
 {
   typedef std::numeric_limits<IntegralT> integral_type_limits;
   typedef typename make_unsigned<IntegralT>::type unsigned_type;
-  
+
   static IntegralT to_integral(const MpInt& x);
 };
 
@@ -524,7 +525,7 @@ template<typename IntegralT, class MpInt>
 struct integral_ops2<IntegralT, MpInt, false, true>
 {
   typedef std::numeric_limits<IntegralT> integral_type_limits;
-  
+
   static IntegralT apply_shift(const MpInt& x);
   static IntegralT to_integral(const MpInt& x);
 };
@@ -533,7 +534,7 @@ template<typename IntegralT, class MpInt>
 struct integral_ops2<IntegralT, MpInt, false, false>
 {
   typedef std::numeric_limits<IntegralT> integral_type_limits;
-  
+
   static IntegralT apply_shift(const MpInt& x);
   static IntegralT to_integral(const MpInt& x);
 };
@@ -572,7 +573,7 @@ IntegralT integral_ops2<IntegralT, MpInt, false, true>::apply_shift(const MpInt&
 {
   int shift_count = 0;
   IntegralT tmp = 0;
-  
+
   for (typename MpInt::const_reverse_iterator digit = x.rbegin();
       digit != x.rend(); ++digit)
   {
@@ -597,7 +598,7 @@ IntegralT integral_ops2<IntegralT, MpInt, false, true>::to_integral(const MpInt&
   else
     throw std::overflow_error(
         "to_integral: cannot convert negative number to unsigned integral type");
-  
+
   return apply_shift(x);
 }
 
@@ -631,13 +632,13 @@ struct integral_ops
   {
     return integral_ops2<IntegralT, mp_int<A,T> >::to_integral(x);
   }
-  
+
   template<class A, class T>
   static void assign(mp_int<A,T>& lhs, IntegralT rhs)
   {
     integral_ops_impl<IntegralT, mp_int<A,T> >::assign(lhs, rhs);
   }
-  
+
   template<class A, class T>
   static bool equal(const mp_int<A,T>& lhs, IntegralT rhs)
   {
@@ -667,7 +668,7 @@ struct integral_ops
   {
     integral_ops_impl<IntegralT, mp_int<A,T> >::multiply(lhs, rhs);
   }
-  
+
   template<class A, class T>
   static void divide(mp_int<A,T>& lhs, IntegralT rhs)
   {

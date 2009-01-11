@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -20,7 +20,7 @@ mp_int<A,T> sqrt(const mp_int<A,T>& x)
 
   mp_int<A,T> t1;
 
-  if (x.is_zero())
+  if (!x)
   {
     t1.zero();
     return t1;
@@ -49,35 +49,39 @@ mp_int<A,T> sqrt(const mp_int<A,T>& x)
 }
 
 
-// find the n'th root of an integer 
-//
-// Result found such that (c)**b <= a and (c+1)**b > a 
-//
-// This algorithm uses Newton's approximation 
-// x[i+1] = x[i] - f(x[i])/f'(x[i]) 
-// which will find the root in log(N) time where 
-// each step involves a fair bit.  This is not meant to 
-// find huge roots [square and cube, etc].
+// Uses Newton-Raphson approximation.
 template<class A, class T>
 mp_int<A,T> nth_root(const mp_int<A,T>& x, typename mp_int<A,T>::digit_type n)
 {
   if ((n & 1) == 0 && x.is_negative())
     throw std::domain_error("nth_root: argument must be positive if n is even");
 
+  if (n == 0U)
+    throw std::domain_error("nth_root: n must not be zero");
+  else if (n == 1U)
+    return x;
+
   // if x is negative fudge the sign but keep track
   const int neg = x.sign();
   const_cast<mp_int<A,T>*>(&x)->set_sign(1);
 
   mp_int<A,T> t1, t2, t3;
-  
-  t2 = typename mp_int<A,T>::digit_type(2);
+
+  typedef typename mp_int<A,T>::size_type size_type;
+
+  // initial approximation
+  const size_type result_precision = (x.precision() - 1) / n + 1;
+  t2.grow_capacity(1);
+  t2.set_size(1);
+  t2[0] = 0;
+  t2.set_bits(0, result_precision + 1);
 
   do
   {
     t1 = t2;
 
     // t2 = t1 - ((t1**n - x) / (n * t1**(n-1)))
-    
+
     // t3 = t1**(n-1)
     t3 = pow(t1, n-1);
 
@@ -97,7 +101,7 @@ mp_int<A,T> nth_root(const mp_int<A,T>& x, typename mp_int<A,T>::digit_type n)
 
     t2 = t1 - t3;
   } while (t1 != t2);
-  
+
   // result can be off by a few so check
   for (;;)
   {
@@ -132,15 +136,26 @@ mp_int<A,T> nth_root(const mp_int<A,T>& x, const mp_int<A,T>& n)
   const_cast<mp_int<A,T>*>(&x)->set_sign(1);
 
   mp_int<A,T> t1, t2, t3;
-  
-  t2 = typename mp_int<A,T>::digit_type(2);
+
+  typedef typename mp_int<A,T>::size_type size_type;
+
+  static const size_type digit_bits = mp_int<A,T>::digit_bits;
+
+  const size_type result_precision = (x.precision() - 1)
+                                   / n.template to_integral<size_type>() + 1;
+
+  t2.grow_capacity((result_precision + digit_bits - 1) / digit_bits);
+  t2.set_size     ((result_precision + digit_bits - 1) / digit_bits);
+
+  t2[t2.size()-1] = 0;
+  t2.set_bits(0, result_precision + 1);
 
   do
   {
     t1 = t2;
 
     // t2 = t1 - ((t1**n - x) / (n * t1**(n-1)))
-    
+
     // t3 = t1**(n-1)
     t3 = pow(t1, n-1);
 
@@ -160,7 +175,7 @@ mp_int<A,T> nth_root(const mp_int<A,T>& x, const mp_int<A,T>& n)
 
     t2 = t1 - t3;
   } while (t1 != t2);
-  
+
   // result can be off by a few so check
   for (;;)
   {

@@ -20,7 +20,8 @@ void mp_int<A,T>::modulo_2_to_the_power_of(size_type b)
   digits_[b / valid_bits] &= mask;
   
   clamp();
-  if (is_zero())
+
+  if (!*this)
     set_sign(1);
 }
 

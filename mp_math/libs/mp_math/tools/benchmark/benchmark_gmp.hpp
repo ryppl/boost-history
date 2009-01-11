@@ -84,7 +84,7 @@ struct benchmark_gmp : benchmark<mpz_class>
     explicit square_op(base& ba) : b(ba) {}
     void operator()(unsigned int i) const
     {
-      mpz_pow_ui(b.dst[i].get_mpz_t(), b.src1[i].get_mpz_t(), 2);
+      b.dst[i] = b.src1[i] * b.src1[i];
     }
   };
 

@@ -130,6 +130,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_le_integral_type2, mp_int_type, mp_int_
   BOOST_CHECK_LE(x, 32102);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_le_integral_type3, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("0x100000000");
+  BOOST_CHECK_LE(1, x);
+}
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(cmp_mp_int_le_unsigned_integral_type, mp_int_type, mp_int_types)
 {

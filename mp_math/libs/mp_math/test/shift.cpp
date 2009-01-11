@@ -40,3 +40,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(right_shift2, mp_int_type, mp_int_types)
   x >>= 17;
   BOOST_CHECK_EQUAL(x, "0");
 }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(right_shift3, mp_int_type, mp_int_types)
+{
+  mp_int_type x("14222200");
+  x >>= 8;
+  BOOST_CHECK_EQUAL(x, "55555");
+}

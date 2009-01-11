@@ -283,7 +283,7 @@ mp_int<A,T>& mp_int<A,T>::operator <<= (size_type b)
     }
     
     if (carry)
-      digits_[size_++] = carry;
+      push(carry);
   }
 
   clamp();
@@ -301,7 +301,7 @@ inline mp_int<A,T>& mp_int<A,T>::operator >>= (size_type b)
 template<class A, class T>
 inline mp_int<A,T>& mp_int<A,T>::operator - ()
 {
-  if (!is_zero())
+  if (*this)
     set_sign(sign() == 1 ? -1 : 1);
   return *this;
 }
@@ -341,7 +341,8 @@ mp_int<A,T>& mp_int<A,T>::operator += (const mp_int<A,T>& rhs)
     size_ = x->size_;
 
     clamp();
-    if (is_zero())
+
+    if (!*this)
       set_sign(1);
   }
   return *this;
@@ -378,7 +379,8 @@ mp_int<A,T>& mp_int<A,T>::operator -= (const mp_int<A,T>& rhs)
     size_ = x->size_;
     
     clamp();
-    if (is_zero())
+
+    if (!*this)
       set_sign(1);
   }
   return *this;
@@ -420,18 +422,19 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
 
     tmp.size_ = size_ + rhs.size_;
     tmp.clamp();
-    swap(tmp);
+    *this = tmp;
   }
 
-  set_sign(is_zero() ? 1 : neg);
+  set_sign(!*this ? 1 : neg);
 
   return *this;
 }
 
 template<class A, class T>
-inline mp_int<A,T>& mp_int<A,T>::operator /= (const mp_int<A,T>& rhs)
+mp_int<A,T>& mp_int<A,T>::operator /= (const mp_int<A,T>& rhs)
 {
-  divide(rhs, 0);
+  const mp_int<A,T> tmp(*this);
+  detail::classic_divide(tmp, rhs, *this);
   return *this;
 }
 
@@ -439,9 +442,8 @@ inline mp_int<A,T>& mp_int<A,T>::operator /= (const mp_int<A,T>& rhs)
 template<class A, class T>
 mp_int<A,T>& mp_int<A,T>::operator %= (const mp_int<A,T>& rhs)
 {
-  mp_int<A,T> remainder;
-  divide(rhs, &remainder);
-  swap(remainder);
+  mp_int<A,T> quotient;
+  detail::classic_divide(*this, rhs, quotient, this);
   return *this;
 }
 

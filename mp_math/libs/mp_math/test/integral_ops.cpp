@@ -9,7 +9,7 @@
 BOOST_AUTO_TEST_CASE_TEMPLATE(construct_from_zero, mp_int_type, mp_int_types)
 {
   const mp_int_type x(0);
-  BOOST_CHECK_EQUAL(x.is_zero(), true);
+  BOOST_CHECK_EQUAL(!x, true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(equal_signed_char_min, mp_int_type, mp_int_types)
@@ -190,6 +190,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiply_by_negative_zero1, mp_int_type, mp_int_ty
   BOOST_CHECK_EQUAL(z, "0");
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(divide_by_unsigned_char1, mp_int_type, mp_int_types)
+{
+  const unsigned char y = 16;
+  const mp_int_type x("10000001");
+  const mp_int_type z = x / y;
+  BOOST_CHECK_EQUAL(z, "625000");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(divide_by_unsigned_char2, mp_int_type, mp_int_types)
+{
+  const unsigned char y = 128;
+  const mp_int_type x("14222200");
+  const mp_int_type z = x / y;
+  BOOST_CHECK_EQUAL(z, "111110");
+}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(divide_by_signed_integral1, mp_int_type, mp_int_types)
 {

@@ -23,7 +23,7 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   if (p <= digit_type(0))
     throw std::domain_error("jacobi: p must be greater than 0");
 
-  if (a.is_zero())
+  if (!a)
     return 0;
   
   if (a == digit_type(1))

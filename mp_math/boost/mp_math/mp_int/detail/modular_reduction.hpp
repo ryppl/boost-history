@@ -103,7 +103,8 @@ void montgomery_reduce(mp_int<A,T>& x,
 
   // x = x/base**m.size()
   x.clamp();
-  if (x.is_zero())
+
+  if (!x)
     x.set_sign(1);
 
   x.shift_digits_right(m.size());
@@ -186,7 +187,8 @@ top:
     std::memset(x.digits() + m + 1, 0, (x.size() - (m + 1)) * sizeof(digit_type));
 
   x.clamp();
-  if (x.is_zero())
+
+  if (!x)
     x.set_sign(1);
 
   if (x.compare_magnitude(n) != -1)

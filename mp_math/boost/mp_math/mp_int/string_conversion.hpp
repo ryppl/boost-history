@@ -64,17 +64,18 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
       
       if (offset >= valid_bits)
       {
-        digits_[size_++] = result;
+        push(result);
         offset -= valid_bits;
         result = static_cast<digit_type>(x >> (sc.radix_storage_bits - offset));
       }
     }
     
-    if (result || !size_)
-      digits_[size_++] = result;
+    if (result || is_uninitialized())
+      push(result);
     
     clamp();
-    if (is_zero())
+
+    if (!*this)
       set_sign(1);
   }
   else // radix can only be 10 at this point
@@ -112,16 +113,16 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
         carry += ops_type::add_single_digit(digits_, digits_, size_, result);
         
         if (carry)
-          digits_[size_++] = carry;
+          push(carry);
       }
       else
-        digits_[size_++] = result;
+        push(result);
     }
 
     // one last round for the remaining decimal digits
     if (first != last)
     {
-      word_type radix_power = 1U;
+      digit_type radix_power = 1U;
       digit_type result = 0U;
       
       while (first != last)
@@ -141,10 +142,10 @@ void mp_int<A,T>::from_string(Iter first, Iter last, unsigned radix)
         carry += ops_type::add_single_digit(digits_, digits_, size_, result);
 
         if (carry)
-          digits_[size_++] = carry;
+          push(carry);
       }
       else
-        digits_[size_++] = result;
+        push(result);
     }
   }
 }
@@ -174,7 +175,7 @@ StringT mp_int<A,T>::to_string(std::ios_base::fmtflags f) const
 
   StringT s;
 
-  if (!size_)
+  if (is_uninitialized())
     return s;
 
   digit_type radix;
@@ -212,7 +213,7 @@ StringT mp_int<A,T>::to_string(std::ios_base::fmtflags f) const
 
   const int prefix_offset = p - prefix;
 
-  if (is_zero())
+  if (!*this)
   {
     s.reserve(prefix_offset + 1);
     for (int i = 0; i < prefix_offset; ++i)
@@ -258,7 +259,7 @@ StringT mp_int<A,T>::to_string(std::ios_base::fmtflags f) const
                           ? uppercase_tab
                           : lowercase_tab;
     
-    const digit_type mask = (1 << sc.radix_storage_bits) - 1;
+    const digit_type mask = (digit_type(1) << sc.radix_storage_bits) - 1;
 
     int offset = total_bits % valid_bits;
     if (!offset)
@@ -288,14 +289,18 @@ StringT mp_int<A,T>::to_string(std::ios_base::fmtflags f) const
     
     mp_int tmp = abs(*this);
     
-    while (!tmp.is_zero())
+    while (tmp)
     {
-      digit_type remainder = tmp.divide_by_digit(sc.max_power_value);
-      
+      digit_type remainder = ops_type::divide_by_digit(tmp.digits(),
+                                                       tmp.digits(),
+                                                       tmp.size(),
+                                                       sc.max_power_value);
+      tmp.clamp_high_digit();
+
       for (digit_type i = 0; i < m; ++i)
       {
-        if (remainder || !tmp.is_zero())
-          *c++ = '0' + remainder % 10U;
+        if (remainder || tmp)
+          *c++ = static_cast<char_type>('0' + remainder % 10U);
         remainder /= 10U;
       }
     }

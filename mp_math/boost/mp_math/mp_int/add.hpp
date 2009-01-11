@@ -19,7 +19,7 @@ void mp_int<A,T>::add_digit(digit_type b)
     if (digits_[0] >= b) // example: -16 + 5 = -11; or -5 + 5 = 0
     {
       digits_[0] -= b;
-      if (is_zero())
+      if (!*this)
         set_sign(1);
     }
     else
@@ -77,10 +77,7 @@ void mp_int<A,T>::add_magnitude(const mp_int& rhs)
     return;
   }
   else if (carry) // at this point n equals x->size_
-  {
-    digits_[n] = carry;
-    ++n;
-  }
+    digits_[n++] = carry;
 
   size_ = n;
 }

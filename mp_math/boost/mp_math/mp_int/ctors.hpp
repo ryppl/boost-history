@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -13,11 +13,23 @@ mp_int<A,T>::mp_int()
 }
 
 template<class A, class T>
+mp_int<A,T>::mp_int(const allocator_type& a)
+:
+  base_allocator_type(a),
+  digits_(0),
+  size_(0),
+  capacity_(0)
+{
+}
+
+template<class A, class T>
 template<typename IntegralT>
 mp_int<A,T>::mp_int(
     IntegralT b,
+    const allocator_type& a,
     typename enable_if<is_integral<IntegralT> >::type*)
 :
+  base_allocator_type(a),
   digits_(0),
   size_(0),
   capacity_(0)
@@ -50,10 +62,10 @@ void mp_int<A,T>::init(RandomAccessIterator c, RandomAccessIterator last)
       ++c;
     sign = 1;
   }
- 
+
   // detect the radix
   unsigned int radix;
-  
+
   if (c != last)
   {
     if (*c == '0') // octal
@@ -111,7 +123,7 @@ void mp_int<A,T>::init(RandomAccessIterator c,
     }
     set_sign(1);
   }
-  
+
   const bool uppercase = f & std::ios_base::uppercase;
   const bool showbase  = f & std::ios_base::showbase;
 
@@ -158,8 +170,11 @@ void mp_int<A,T>::init(RandomAccessIterator c,
 
 template<class A, class T>
 template<typename RandomAccessIterator>
-mp_int<A,T>::mp_int(RandomAccessIterator first, RandomAccessIterator last)
+mp_int<A,T>::mp_int(RandomAccessIterator first,
+                    RandomAccessIterator last,
+                    const allocator_type& a)
 :
+  base_allocator_type(a),
   digits_(0),
   size_(0),
   capacity_(0)
@@ -169,8 +184,9 @@ mp_int<A,T>::mp_int(RandomAccessIterator first, RandomAccessIterator last)
 
 template<class A, class T>
 template<typename charT>
-mp_int<A,T>::mp_int(const charT* s)
+mp_int<A,T>::mp_int(const charT* s, const allocator_type& a)
 :
+  base_allocator_type(a),
   digits_(0),
   size_(0),
   capacity_(0)
@@ -180,8 +196,11 @@ mp_int<A,T>::mp_int(const charT* s)
 
 template<class A, class T>
 template<typename charT>
-mp_int<A,T>::mp_int(const charT* s, std::ios_base::fmtflags f)
+mp_int<A,T>::mp_int(const charT* s,
+                    std::ios_base::fmtflags f,
+                    const allocator_type& a)
 :
+  base_allocator_type(a),
   digits_(0),
   size_(0),
   capacity_(0)
@@ -191,8 +210,10 @@ mp_int<A,T>::mp_int(const charT* s, std::ios_base::fmtflags f)
 
 template<class A, class T>
 template<typename charT, class traits, class Alloc>
-mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s)
+mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s,
+                    const allocator_type& a)
 :
+  base_allocator_type(a),
   digits_(0),
   size_(0),
   capacity_(0)
@@ -203,8 +224,10 @@ mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s)
 template<class A, class T>
 template<typename charT, class traits, class Alloc>
 mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s,
-                    std::ios_base::fmtflags f)
+                    std::ios_base::fmtflags f,
+                    const allocator_type& a)
 :
+  base_allocator_type(a),
   digits_(0),
   size_(0),
   capacity_(0)
@@ -215,6 +238,8 @@ mp_int<A,T>::mp_int(const std::basic_string<charT,traits,Alloc>& s,
 
 template<class A, class T>
 mp_int<A,T>::mp_int(const mp_int& copy)
+:
+  base_allocator_type(copy.get_allocator())
 {
   digits_ = this->allocate(copy.size_);
   std::memcpy(digits_, copy.digits_, copy.size_ * sizeof(digit_type));
@@ -241,6 +266,7 @@ mp_int<A,T>::mp_int(mp_int&& copy)
 template<class A, class T>
 mp_int<A,T>::~mp_int()
 {
-  this->deallocate(digits_, capacity());
+  if (digits_)
+    this->deallocate(digits_, capacity());
 }
 

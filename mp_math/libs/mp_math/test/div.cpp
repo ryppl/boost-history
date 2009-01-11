@@ -30,6 +30,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(divide3, mp_int_type, mp_int_types)
   BOOST_CHECK_EQUAL(z, "2137");
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(divide4, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("0x89ab89745cc653de58eecc8f8a874120065ea545f6f5f");
+  const mp_int_type y("0x1889ba8a789456adfc8005b1");
+  const mp_int_type z = x / y;
+  BOOST_CHECK_EQUAL(z, "0x59c48aa7a1446110b31f70");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(divide5, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("0x1889ba8a789456adfc8005b1");
+  const mp_int_type y("0x1889ba8a789456adfc8005b2");
+  const mp_int_type z = x / y;
+  BOOST_CHECK_EQUAL(z, "0");
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(divide_by_2, mp_int_type, mp_int_types)
 {
   mp_int_type x("263825472");
