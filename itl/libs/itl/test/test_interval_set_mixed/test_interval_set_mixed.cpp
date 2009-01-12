@@ -532,21 +532,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_basic_intersect_4_bicr
     // split_interval_set
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
-    //         OP_INPLACE_INTERSECT      [1                8)
+    //         &=      [1                8)
     //split_AB ->      [1   3)       [6  8)
-    //         OP_INPLACE_INTERSECT        [2             7)     
+    //         &=        [2             7)     
     //         ->        [2 3)       [6 7)
     split_interval_set<T>    split_A, split_B, split_AB, split_ab, split_ab2;
 
     split_A.add(I0_3D).add(I6_9D);
     split_AB = split_A;
-    split_AB OP_INPLACE_INTERSECT I1_8D;
+    split_AB &= I1_8D;
     split_ab.add(I1_3D).add(I6_8D);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB OP_INPLACE_INTERSECT I1_8D) OP_INPLACE_INTERSECT I2_7D;
+    (split_AB &= I1_8D) &= I2_7D;
     split_ab2.add(I2_3D).add(I6_7D);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab2 );
@@ -554,20 +554,20 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_basic_intersect_4_bicr
 
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
-    //         OP_INPLACE_INTERSECT       1
+    //         &=       1
     //split_AB ->      [1]
     //         +=         (1             7)     
     //         ->      [1](1             7)
     split_A.add(I0_3D).add(I6_9D);
     split_AB = split_A;
-    split_AB OP_INPLACE_INTERSECT v1;
+    split_AB &= v1;
     split_ab.clear();
     split_ab.add(v1);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB OP_INPLACE_INTERSECT v1) += interval<T>::open(v1,v7);
+    (split_AB &= v1) += interval<T>::open(v1,v7);
     split_ab2.clear();
     split_ab2 += interval<T>::rightopen(v1,v7);
 
@@ -600,7 +600,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
     // split_interval_set
     //--------------------------------------------------------------------------
     //split_A      [0          3)       [6   9)
-    //split_B  OP_INPLACE_INTERSECT      [1 2)[2    4) [5    8)
+    //split_B  &=      [1 2)[2    4) [5    8)
     //split_AB ->      [1 2)[2 3)       [6 8)
     split_interval_set<T>    split_A, split_B, split_AB, split_ab, split_ab_jn;
     separate_interval_set<T> sep_A,   sep_B,   sep_AB,   sep_ab;
@@ -611,25 +611,25 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
     split_ab.add(I1_2D).add(I2_3D).add(I6_8D);
     split_ab_jn.add(I1_3D).add(I6_8D);
     split_AB = split_A;
-    split_AB OP_INPLACE_INTERSECT split_B;
+    split_AB &= split_B;
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 3 );
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     //split_A      [0          3)       [6   9)
-    //sep_B    OP_INPLACE_INTERSECT      [1 2)[2    4) [5    8)
+    //sep_B    &=      [1 2)[2    4) [5    8)
     //split_AB ->      [1 2)[2 3)       [6 8)
     split_AB = split_A;
     sep_B = split_B;
-    split_AB OP_INPLACE_INTERSECT sep_B;
+    split_AB &= sep_B;
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 3 );
     BOOST_CHECK_EQUAL( split_AB, split_ab );
     
     //split_A      [0          3)       [6   9)
-    //join_B   OP_INPLACE_INTERSECT      [1         4) [5    8)
+    //join_B   &=      [1         4) [5    8)
     //split_AB ->      [1      3)       [6 8)
     split_AB = split_A;
     join_B = split_B;
-    split_AB OP_INPLACE_INTERSECT join_B;
+    split_AB &= join_B;
 
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( split_AB, split_ab_jn );
@@ -638,34 +638,34 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
     // separate_interval_set
     //--------------------------------------------------------------------------
     //sep_A      [0          3)       [6   9)
-    //sep_B  OP_INPLACE_INTERSECT      [1 2)[2    4) [5    8)
+    //sep_B  &=      [1 2)[2    4) [5    8)
     //sep_AB ->      [1 2)[2 3)       [6 8)
     sep_ab = split_ab;
     BOOST_CHECK_EQUAL( sep_ab.iterative_size(), 3 );
 
     sep_AB = split_A;
     sep_B  = split_B;
-    sep_AB OP_INPLACE_INTERSECT sep_B;
+    sep_AB &= sep_B;
 
     BOOST_CHECK_EQUAL( sep_AB.iterative_size(), 3 );
     BOOST_CHECK_EQUAL( sep_AB, sep_ab );
     
     //sep_A       [0          3)       [6   9)
-    //split_B OP_INPLACE_INTERSECT      [1 2)[2    4) [5    8)
+    //split_B &=      [1 2)[2    4) [5    8)
     //sep_AB  ->      [1 2)[2 3)       [6 8)
     sep_AB = split_A;
-    sep_AB OP_INPLACE_INTERSECT split_B;
+    sep_AB &= split_B;
 
     BOOST_CHECK_EQUAL( sep_AB.iterative_size(), 3 );
     BOOST_CHECK_EQUAL( sep_AB, sep_ab );
     
     //sep_A       [0         3)        [6   9)
-    //join_B OP_INPLACE_INTERSECT      [1          4) [5    8)
+    //join_B &=      [1          4) [5    8)
     //sep_AB ->      [1      3)        [6 8)
     separate_interval_set<T> sep_ab_jn = split_ab_jn;
     sep_AB = split_A;
     join_B = split_B;
-    sep_AB OP_INPLACE_INTERSECT join_B;
+    sep_AB &= join_B;
 
     BOOST_CHECK_EQUAL( sep_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( sep_AB, sep_ab_jn );
@@ -674,32 +674,32 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
     // separate_interval_set
     //--------------------------------------------------------------------------
     //join_A      [0          3)       [6   9)
-    //join_B  OP_INPLACE_INTERSECT      [1         4) [5    8)
+    //join_B  &=      [1         4) [5    8)
     //join_AB ->      [1      3)       [6 8)
     join_ab = split_ab;
     BOOST_CHECK_EQUAL( join_ab.iterative_size(), 2 );
 
     join_AB = split_A;
     join_B  = split_B;
-    join_AB OP_INPLACE_INTERSECT sep_B;
+    join_AB &= sep_B;
 
     BOOST_CHECK_EQUAL( join_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( join_AB, join_ab );
     
     //join_A      [0          3)       [6   9)
-    //split_B  OP_INPLACE_INTERSECT     [1 2)[2    4) [5    8)
+    //split_B  &=     [1 2)[2    4) [5    8)
     //join_AB  ->     [1      3)       [6 8)
     join_AB = split_A;
-    join_AB OP_INPLACE_INTERSECT split_B;
+    join_AB &= split_B;
 
     BOOST_CHECK_EQUAL( join_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( join_AB, join_ab );
     
     //join_A      [0          3)       [6   9)
-    //sep_B    OP_INPLACE_INTERSECT     [1 2)[2    4) [5    8)
+    //sep_B    &=     [1 2)[2    4) [5    8)
     //join_AB  ->     [1      3)       [6 8)
     join_AB = split_A;
-    join_AB OP_INPLACE_INTERSECT sep_B;
+    join_AB &= sep_B;
 
     BOOST_CHECK_EQUAL( join_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( join_AB, join_ab );

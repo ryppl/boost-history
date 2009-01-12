@@ -226,8 +226,8 @@ void quantifier_intersect_test()
 	typedef interval_map<int,int> QuantifierT;
 	QuantifierT sec_map;
 	sec_map += make_pair(interval<int>::rightopen(1,5), 1);
-	sec_map *= make_pair(interval<int>::rightopen(3,7), 1);
-	//sec_map *= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
+	sec_map &= make_pair(interval<int>::rightopen(3,7), 1);
+	//sec_map &= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
 	
 	cout << "sec_map: " << sec_map << endl;
 }

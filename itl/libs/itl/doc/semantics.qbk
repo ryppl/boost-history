@@ -39,8 +39,12 @@ On all set and map containers of the itl, there is an `operator <`
 that implements a
 [@http://www.sgi.com/tech/stl/StrictWeakOrdering.html strict weak ordering]
 (see also [@http://en.wikipedia.org/wiki/Strict_weak_ordering here]).
-The semantics of `operator <` is the same as for the stl's
-AssociativeContainer, especially stl::set and stl::map:
+The semantics of `operator <` is the same as for an stl's
+[@http://www.sgi.com/tech/stl/SortedAssociativeContainer.html SortedAssociativeContainer], 
+especially 
+[@http://www.sgi.com/tech/stl/set.html stl::set] 
+and 
+[@http://www.sgi.com/tech/stl/map.html stl::map]:
 ``
 Irreflexivity<T,< > : T a;     !(a<a)
 Asymmetry<T,< >     : T a,b;   a<b implies !(b<a)
@@ -55,23 +59,22 @@ lexicographical comparison on itl::containers, that uses the
 `Compare` order to establish a unique sequence of values in 
 the container. 
 
-The induced equivalence of `operator <` is lexicographical
-equality which is implementd as `operator ==`. 
+The induced equivalence of `operator <` is 
+lexicographical equality 
+which is implementd as `operator ==`. 
 ``
 //equivalence induced by strict weak ordering <
 !(a<b) && !(b<a) implies a == b;
 ``
 Again this
 follows the semantics of the *stl*.
-Lexicographical equality is finer than the equality
+Lexicographical equality is stronger than the equality
 of elements. Two containers that contain the same elements
 can be lexicographically unqueal, if their elements are
-differently sorted.
-
-Lexicographical comparison belongs to the __iterative__
-aspect. Of all the different sequences that are valid 
+differently sorted. Lexicographical comparison belongs to 
+the __bi_iterative__ aspect. Of all the different sequences that are valid 
 for unordered sets and maps, one such sequence is
-selected by the Compare order of elements. Based on
+selected by the `Compare` order of elements. Based on
 this selection a unique iteration is possible.
 
 [h4 Subset Ordering and Element Equality]

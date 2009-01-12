@@ -84,13 +84,13 @@ void interval_set_fundamentals_4_ordered_types()
     //insecting emptieness
     //mt_set.insect(mt_interval).insect(mt_interval);
     //BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
-    (mt_set OP_INPLACE_INTERSECT mt_interval) OP_INPLACE_INTERSECT mt_interval;
+    (mt_set &= mt_interval) &= mt_interval;
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
     //insecting emptieness with elements
-    (mt_set OP_INPLACE_INTERSECT v1) OP_INPLACE_INTERSECT v0;
+    (mt_set &= v1) &= v0;
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
     //insecting emptieness with intervals
-    (mt_set OP_INPLACE_INTERSECT I1_1I) OP_INPLACE_INTERSECT I0_1I;
+    (mt_set &= I1_1I) &= I0_1I;
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
 
     //-------------------------------------------------------------------------
@@ -411,7 +411,7 @@ void interval_set_operators_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_disjoint(left, right), false );
 
     (all += left) += right;
-    (section += left) OP_INPLACE_INTERSECT right;
+    (section += left) &= right;
     (complement += all) -= section;
     (all2 += section) += complement; 
 
@@ -466,21 +466,21 @@ void interval_set_base_intersect_4_bicremental_types()
     // IntervalSet
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
-    //         OP_INPLACE_INTERSECT      [1                8)
+    //         &=      [1                8)
     //split_AB ->      [1   3)       [6  8)
-    //         OP_INPLACE_INTERSECT        [2             7)     
+    //         &=        [2             7)     
     //         ->        [2 3)       [6 7)
     IntervalSet<T>    split_A, split_B, split_AB, split_ab, split_ab2;
 
     split_A.add(I0_3D).add(I6_9D);
     split_AB = split_A;
-    split_AB OP_INPLACE_INTERSECT I1_8D;
+    split_AB &= I1_8D;
     split_ab.add(I1_3D).add(I6_8D);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB OP_INPLACE_INTERSECT I1_8D) OP_INPLACE_INTERSECT I2_7D;
+    (split_AB &= I1_8D) &= I2_7D;
     split_ab2.add(I2_3D).add(I6_7D);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab2 );
@@ -488,20 +488,20 @@ void interval_set_base_intersect_4_bicremental_types()
 
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
-    //         OP_INPLACE_INTERSECT       1
+    //         &=       1
     //split_AB ->      [1]
     //         +=         (1             7)     
     //         ->      [1](1             7)
     split_A.add(I0_3D).add(I6_9D);
     split_AB = split_A;
-    split_AB OP_INPLACE_INTERSECT v1;
+    split_AB &= v1;
     split_ab.clear();
     split_ab.add(v1);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB OP_INPLACE_INTERSECT v1) += interval<T>::open(v1,v7);
+    (split_AB &= v1) += interval<T>::open(v1,v7);
     split_ab2.clear();
     split_ab2 += interval<T>::rightopen(v1,v7);
 

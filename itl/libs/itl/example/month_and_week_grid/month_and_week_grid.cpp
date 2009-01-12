@@ -56,7 +56,7 @@ date_grid month_grid(const interval<date>& scope)
     for(; month_iter <= scope.last(); ++month_iter)
         month_grid += interval<date>::rightopen(*month_iter, *month_iter + months(1));
 
-    month_grid *= scope; // cut off the surplus
+    month_grid &= scope; // cut off the surplus
 
     return month_grid;
 }
@@ -74,7 +74,7 @@ date_grid week_grid(const interval<date>& scope)
     for(; week_iter <= scope.last(); ++week_iter)
         week_grid.insert(interval<date>::rightopen(*week_iter, *week_iter + weeks(1)));
 
-    week_grid *= scope; // cut off the surplus
+    week_grid &= scope; // cut off the surplus
 
     return week_grid;
 }
@@ -92,7 +92,7 @@ void month_and_time_grid()
     // Compute a month grid
     date_grid month_and_week_grid = month_grid(itv);
     // Intersection of the month and week grids:
-    month_and_week_grid *= week_grid(itv);
+    month_and_week_grid &= week_grid(itv);
 
     cout << "interval : " << itv.first() << " - " << itv.last() 
          << " month and week partitions:" << endl;

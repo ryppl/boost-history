@@ -755,21 +755,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     // split_interval_map
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
-    //         *=      [1                8)
+    //         &=      [1                8)
     //split_AB ->      [1   3)       [6  8)
-    //         *=        [2             7)     
+    //         &=        [2             7)     
     //         ->        [2 3)       [6 7)
     SplitIntervalMapT split_A, split_B, split_AB, split_ab, split_ab2;
 
     split_A.add(I0_3D_1).add(I6_9D_1);
     split_AB = split_A;
-    split_AB *= I1_8D_1;
+    split_AB &= I1_8D_1;
     split_ab.add(I1_3D_2).add(I6_8D_2);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB *= I1_8D_1) *= I2_7D_1;
+    (split_AB &= I1_8D_1) &= I2_7D_1;
     split_ab2.add(I2_3D_3).add(I6_7D_3);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab2 );
@@ -778,7 +778,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
     //                  1                1
-    //         *=       1
+    //         &=       1
     //                  1
     //split_AB ->      [1]
     //                  2
@@ -789,15 +789,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     split_A.clear();
     split_A.add(I0_3D_1).add(I6_9D_1);
     split_AB = split_A;
-    split_AB *= mapping_pair<T,U>(v1,u1);
+    split_AB &= mapping_pair<T,U>(v1,u1);
     split_ab.clear();
     split_ab.add(mapping_pair<T,U>(v1,u2));
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB *= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
-    split_AB *= mapping_pair<T,U>(v1,u1);
+    //(split_AB &= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
+    split_AB &= mapping_pair<T,U>(v1,u1);
     split_AB += make_pair(interval<T>::open(v1,v7), u2);
     split_ab2.clear();
     split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u2);
@@ -854,21 +854,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     // split_interval_map
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
-    //         *=      [1                8)
+    //         &=      [1                8)
     //split_AB ->      [1   3)       [6  8)
-    //         *=        [2             7)     
+    //         &=        [2             7)     
     //         ->        [2 3)       [6 7)
     SplitIntervalMapT split_A, split_B, split_AB, split_ab, split_ab2;
 
     split_A.add(I0_3D_1).add(I6_9D_1);
     split_AB = split_A;
-    split_AB *= I1_8D;
+    split_AB &= I1_8D;
     split_ab.add(I1_3D_1).add(I6_8D_1);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB *= I1_8D) *= I2_7D;
+    (split_AB &= I1_8D) &= I2_7D;
     split_ab2.add(I2_3D_1).add(I6_7D_1);
 
     BOOST_CHECK_EQUAL( split_AB, split_ab2 );
@@ -876,7 +876,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     //--------------------------------------------------------------------------
     //split_A      [0       3)       [6    9)
     //                  1                1
-    //         *=       1
+    //         &=       1
     //                  1
     //split_AB ->      [1]
     //                  2
@@ -887,15 +887,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     split_A.clear();
     split_A.add(I0_3D_1).add(I6_9D_1);
     split_AB = split_A;
-    split_AB *= v1;
+    split_AB &= v1;
     split_ab.clear();
     split_ab.add(mapping_pair<T,U>(v1,u1));
 
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB *= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
-    split_AB *= interval<T>(v1);
+    //(split_AB &= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
+    split_AB &= interval<T>(v1);
     split_AB += make_pair(interval<T>::open(v1,v7), u1);
     split_ab2.clear();
     split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u1);
@@ -953,7 +953,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect_4_bicrementa
     //--------------------------------------------------------------------------
     //split_A      [0          3)       [6   9)
     //                    1                1
-    //split_B  *=      [1 2)[2    4) [5    8)
+    //split_B  &=      [1 2)[2    4) [5    8)
     //                   1     1         1
     //split_AB ->      [1 2)[2 3)       [6 8)
     //                   2    2           2
@@ -965,19 +965,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect_4_bicrementa
     split_ab.add(I1_2D_2).add(I2_3D_2).add(I6_8D_2);
     split_ab_jn.add(I1_3D_2).add(I6_8D_2);
     split_AB = split_A;
-    split_AB *= split_B;
+    split_AB &= split_B;
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 3 );
     BOOST_CHECK_EQUAL( split_AB, split_ab );
     
     //split_A      [0          3)       [6   9)
     //                    1                1
-    //join_B   *=      [1         4) [5    8)
+    //join_B   &=      [1         4) [5    8)
     //                        1         1
     //split_AB ->      [1      3)       [6 8)
     //                      2             2
     split_AB = split_A;
     join_B = split_B;
-    split_AB *= join_B;
+    split_AB &= join_B;
 
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( split_AB, split_ab_jn );
@@ -1034,7 +1034,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect2_4_bicrement
     //--------------------------------------------------------------------------
     //split_A      [0          3)       [6   9)
     //                    1                1
-    //split_B  *=      [1 2)[2    4) [5    8)
+    //split_B  &=      [1 2)[2    4) [5    8)
     //split_AB ->      [1 2)[2 3)       [6 8)
     //                   1    1           1
     SplitIntervalMapT    split_A, split_AB, split_ab, split_ab_jn;
@@ -1047,18 +1047,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_intersect2_4_bicrement
     split_ab.add(I1_2D_1).add(I2_3D_1).add(I6_8D_1);
     split_ab_jn.add(I1_3D_1).add(I6_8D_1);
     split_AB = split_A;
-    split_AB *= split_B;
+    split_AB &= split_B;
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 3 );
     BOOST_CHECK_EQUAL( split_AB, split_ab );
     
     //split_A      [0          3)       [6   9)
     //                    1                1
-    //join_B   *=      [1         4) [5    8)
+    //join_B   &=      [1         4) [5    8)
     //split_AB ->      [1      3)       [6 8)
     //                      1             1
     split_AB = split_A;
     join_B = split_B;
-    split_AB *= join_B;
+    split_AB &= join_B;
 
     BOOST_CHECK_EQUAL( split_AB.iterative_size(), 2 );
     BOOST_CHECK_EQUAL( split_AB, split_ab_jn );

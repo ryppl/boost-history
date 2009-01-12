@@ -1165,7 +1165,7 @@ struct exclusive_less {
 // operators
 // ----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare>
-itl::interval<DomainT,Compare>& operator OP_INPLACE_INTERSECT (      itl::interval<DomainT,Compare>& section, 
+itl::interval<DomainT,Compare>& operator &= (      itl::interval<DomainT,Compare>& section, 
                                    const itl::interval<DomainT,Compare>& sectant)
 {
     section.intersect(section, sectant);

@@ -52,7 +52,7 @@ interval_set<date> weekends(const interval<date>& scope)
     for(; week_iter <= scope.last(); ++week_iter)
         weekends += interval<date>::rightopen(*week_iter, *week_iter + days(2));
 
-    weekends *= scope; // cut off the surplus
+    weekends &= scope; // cut off the surplus
 
     return weekends;
 }
@@ -96,7 +96,7 @@ void man_power()
 
     // But Claudia only works 8 hours on regular working days so we do
     // an intersection of the interval_map with the interval_set worktime:
-    claudias_working_hours *= worktime;
+    claudias_working_hours &= worktime;
 
     // Yet, in addition Claudia has her own absence times like
     interval<date> claudias_seminar (from_string("2008-09-16"), 
@@ -119,7 +119,7 @@ void man_power()
     bodos_working_hours += make_pair(scope, 4);
 
     // Bodo works only on regular working days
-    bodos_working_hours *= worktime;
+    bodos_working_hours &= worktime;
 
     // Bodos additional absence times
     interval<date> bodos_flu(from_string("2008-09-19"), from_string("2008-09-29"));

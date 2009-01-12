@@ -239,33 +239,33 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_intersect_4_bicremental_types, T
     interval<T> I3_7D = interval<T>::rightopen(v3,v7);
 
     interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    section = I3_7D; section OP_INPLACE_INTERSECT I0_3D;
+    section = I3_7D; section &= I0_3D;
     BOOST_CHECK_EQUAL( I0_3D.is_disjoint(I3_7D), true );
     BOOST_CHECK_EQUAL( section.empty(), true );
     BOOST_CHECK_EQUAL( section, interval<T>() );
 
     interval<T> I0_5D = interval<T>::rightopen(v0,v5);
-    section = I3_7D; section OP_INPLACE_INTERSECT I0_5D;
+    section = I3_7D; section &= I0_5D;
     BOOST_CHECK_EQUAL( section, interval<T>::rightopen(v3, v5) );
 
     interval<T> I0_9D = interval<T>::rightopen(v0,v9);
-    section = I3_7D; section OP_INPLACE_INTERSECT I0_9D;
+    section = I3_7D; section &= I0_9D;
     BOOST_CHECK_EQUAL( section, I3_7D );
 
     interval<T> I4_5I = interval<T>::closed(v4,v5);
-    section = I3_7D; section OP_INPLACE_INTERSECT I4_5I;
+    section = I3_7D; section &= I4_5I;
     BOOST_CHECK_EQUAL( section, I4_5I );
 
     interval<T> C4_6D = interval<T>::open(v4,v6);
-    section = I3_7D; section OP_INPLACE_INTERSECT C4_6D;
+    section = I3_7D; section &= C4_6D;
     BOOST_CHECK_EQUAL( section, C4_6D );
 
     interval<T> C4_9I = interval<T>::leftopen(v4,v9);
-    section = I3_7D; section OP_INPLACE_INTERSECT C4_9I;
+    section = I3_7D; section &= C4_9I;
     BOOST_CHECK_EQUAL( section, interval<T>::open(v4,v7) );
 
     interval<T> I7_9I = interval<T>::closed(v7,v9);
-    section = I3_7D; section OP_INPLACE_INTERSECT I7_9I;
+    section = I3_7D; section &= I7_9I;
     BOOST_CHECK_EQUAL( I3_7D.exclusive_less(I7_9I), true );
     BOOST_CHECK_EQUAL( I3_7D.is_disjoint(I7_9I), true );
     BOOST_CHECK_EQUAL( section.empty(), true );

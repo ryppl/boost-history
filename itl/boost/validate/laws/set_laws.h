@@ -415,7 +415,7 @@ namespace boost{namespace itl
             a_plus_b += this->template getInputValue<operand_b>();
 
             Type a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b OP_INPLACE_INTERSECT this->template getInputValue<operand_b>();
+            a_sec_b &= this->template getInputValue<operand_b>();
 
             Type lhs = a_plus_b;
             lhs -= a_sec_b;
@@ -446,7 +446,7 @@ namespace boost{namespace itl
             std::cout << "a_plus_b=" << a_plus_b.as_string() << std::endl;
 
             Type a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b OP_INPLACE_INTERSECT this->template getInputValue<operand_b>();
+            a_sec_b &= this->template getInputValue<operand_b>();
 
             std::cout << "a_sec_b=" << a_sec_b.as_string() << std::endl;
 
@@ -511,7 +511,7 @@ namespace boost{namespace itl
             // --- left hand side ------------------------
             // lhs := a - (a & b)
             MapT a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b OP_INPLACE_INTERSECT  this->template getInputValue<operand_b>();
+            a_sec_b &=  this->template getInputValue<operand_b>();
             MapT lhs =  this->template getInputValue<operand_a>();
             lhs -= a_sec_b;
 
