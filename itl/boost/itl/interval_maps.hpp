@@ -579,7 +579,7 @@ template
     class SectanT
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
-operator *=
+operator OP_INPLACE_INTERSECT
 (
           interval_base_map<SubType,DomainT,CodomainT,
                             Traits,Compare,Combine,Section,Interval,Alloc>& object,
@@ -601,14 +601,14 @@ template
     class SectanT
 >
 interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-operator *
+operator OP_INTERSECT
 (
     const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
     const SectanT& operand
 )
 {
 	typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) *= operand; 
+	return ObjectT(object) OP_INPLACE_INTERSECT operand; 
 }
 //-----------------------------------------------------------------------------
 
@@ -624,7 +624,7 @@ template
     class IntervalMap
 >
 IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
-operator *=
+operator OP_INPLACE_INTERSECT
 (
           IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
     const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
@@ -650,14 +650,14 @@ template
     class IntervalMap
 >
 IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> 
-operator *
+operator OP_INTERSECT
 (
     const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
     const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
 )
 {
 	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) *= operand; 
+	return ObjectT(object) OP_INPLACE_INTERSECT operand; 
 }
 //-----------------------------------------------------------------------------
 

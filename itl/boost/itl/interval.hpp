@@ -162,7 +162,7 @@ namespace boost{namespace itl
     \subsection user_groups_subsec User Groups: Union and intersecion of histories
 
     Example user_groups.cpp shows how interval_maps can be unified (+=) or 
-    intersected (*=) to calculate desired informations. 
+    intersected (&=) to calculate desired informations. 
 	
 	We have a group of
     admin users and    of medcial staff, who have different authorisations in
@@ -1165,7 +1165,7 @@ struct exclusive_less {
 // operators
 // ----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare>
-itl::interval<DomainT,Compare>& operator *= (      itl::interval<DomainT,Compare>& section, 
+itl::interval<DomainT,Compare>& operator OP_INPLACE_INTERSECT (      itl::interval<DomainT,Compare>& section, 
                                    const itl::interval<DomainT,Compare>& sectant)
 {
     section.intersect(section, sectant);

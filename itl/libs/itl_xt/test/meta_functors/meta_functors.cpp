@@ -241,6 +241,12 @@ void quantifier_subtract_test()
 	sec_map += make_pair(interval<int>::rightopen(3,7), 3);
 	//sec_map *= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
 	
+	QuantifierT sec_map2;
+
+	if(sec_map != sec_map2)
+		cout << "geht doch\n";
+
+
 	cout << "sec_map: " << sec_map << endl;
 }
 

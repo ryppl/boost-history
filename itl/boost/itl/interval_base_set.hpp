@@ -338,7 +338,7 @@ public:
     /** Perform intersection of <tt>*this</tt> and <tt>x</tt>; assign result
         to <tt>*this</tt>
 
-        Aufruf <tt>x *= y</tt> bedeutet <tt>x = x geschnitten mit y </tt>
+        Aufruf <tt>x &= y</tt> bedeutet <tt>x = x geschnitten mit y </tt>
     */
 //@}
 

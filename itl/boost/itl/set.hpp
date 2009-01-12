@@ -172,7 +172,7 @@ namespace boost{namespace itl
 
         /** Intersect set \c x2 \c *this.
             So \c *this becomes the intersection of \c *this and \c x2 */
-        set& operator *= (const set& x) { Set::intersect(*this, x); return *this; }
+        set& operator OP_INPLACE_INTERSECT (const set& x) { Set::intersect(*this, x); return *this; }
 
         /** \c key_value allows for a uniform access to \c key_values which is
             is used for common algorithms on sets and maps. */

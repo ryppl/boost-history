@@ -386,7 +386,7 @@ with respect to the `Combine` functor. This `neutron`
 [[['*Intersection*]]                 [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
 [[void intersect(T&, const P&)const] [__i]  [__eiS][__eiS __bpM][ ]      [ ]      [ ]      [ ]]
 [[void add_intersection(T&, const P&)const][][__eiS][__eiS __bpM][ ]     [ ]      [ ]      [ ]]
-[[T& operator*=(T&, const P&)]       [__i]  [__eiS][__eiS __bpM][?__eS][?__bM]    [ ]      [ ]]
+[[T& operator&=(T&, const P&)]       [__i]  [__eiS][__eiS __bpM][?__eS][?__bM]    [ ]      [ ]]
 [[['*Iterator related*]]             [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
 [[J begin()]                         [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
 [[J end()]                           [ ]       [2]      [2]     [2]      [2]      [2]      [2]]

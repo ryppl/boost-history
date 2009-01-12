@@ -250,7 +250,7 @@ template
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
-operator *=
+operator OP_INPLACE_INTERSECT
 (
           interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
     const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
@@ -291,14 +291,14 @@ template
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-operator *
+operator OP_INTERSECT
 (
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
     const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
 )
 {
 	typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> ObjectT;
-	return ObjectT(object) *= operand; 
+	return ObjectT(object) OP_INPLACE_INTERSECT operand; 
 }
 //-----------------------------------------------------------------------------
 
@@ -310,7 +310,7 @@ template
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 IntervalSet<DomainT,Compare,Interval,Alloc>& 
-operator *=
+operator OP_INPLACE_INTERSECT
 (
     IntervalSet<DomainT,Compare,Interval,Alloc>& object,
     const typename IntervalSet<DomainT,Compare,Interval,Alloc>::interval_type& interval
@@ -337,14 +337,14 @@ template
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 IntervalSet<DomainT,Compare,Interval,Alloc> 
-operator *
+operator OP_INTERSECT
 (
     const IntervalSet<DomainT,Compare,Interval,Alloc>& object,
     const typename IntervalSet<DomainT,Compare,Interval,Alloc>::interval_type& operand
 )
 {
 	typedef IntervalSet<DomainT,Compare,Interval,Alloc> ObjectT;
-	return ObjectT(object) *= operand; 
+	return ObjectT(object) OP_INPLACE_INTERSECT operand; 
 }
 //-----------------------------------------------------------------------------
 
@@ -356,7 +356,7 @@ template
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 IntervalSet<DomainT,Compare,Interval,Alloc>& 
-operator *=
+operator OP_INPLACE_INTERSECT
 (
     IntervalSet<DomainT,Compare,Interval,Alloc>& object,
     const DomainT& value
@@ -364,7 +364,7 @@ operator *=
 {
     typedef typename IntervalSet<DomainT,Compare,Interval,Alloc>
         ::interval_type interval_type;
-    return object *= interval_type(value);
+    return object OP_INPLACE_INTERSECT interval_type(value);
 }
 
 template 
@@ -374,14 +374,14 @@ template
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 IntervalSet<DomainT,Compare,Interval,Alloc>
-operator *
+operator OP_INTERSECT
 (
     const IntervalSet<DomainT,Compare,Interval,Alloc>& object,
     const DomainT& operand
 )
 {
 	typedef IntervalSet<DomainT,Compare,Interval,Alloc> ObjectT;
-	return ObjectT(object) *= operand; 
+	return ObjectT(object) OP_INPLACE_INTERSECT operand; 
 }
 //-----------------------------------------------------------------------------
 

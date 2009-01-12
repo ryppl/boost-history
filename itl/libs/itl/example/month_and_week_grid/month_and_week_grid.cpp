@@ -81,7 +81,7 @@ date_grid week_grid(const interval<date>& scope)
 
 // For a period of two months, starting from today, the function
 // computes a partitioning for months and weeks using intersection
-// operator *= on split_interval_sets.
+// operator &= on split_interval_sets.
 void month_and_time_grid()
 {
     date someday = day_clock::local_day();

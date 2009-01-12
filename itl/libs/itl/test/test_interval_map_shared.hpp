@@ -99,9 +99,9 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
 
     //insecting emptieness
-    (mt_map *= mt_u1) *= mt_u1;
+    (mt_map OP_INPLACE_INTERSECT mt_u1) OP_INPLACE_INTERSECT mt_u1;
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
-    (mt_map *= mt_interval) *= mt_interval;
+    (mt_map OP_INPLACE_INTERSECT mt_interval) OP_INPLACE_INTERSECT mt_interval;
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
 
     
@@ -489,7 +489,7 @@ void interval_map_operators_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_disjoint(left, right), false );
 
     (all += left) += right;
-    (section += left) *= right;
+    (section += left) OP_INPLACE_INTERSECT right;
     all -= section;
     complement += all;
     //complement.erase(I3_5I);
@@ -497,7 +497,7 @@ void interval_map_operators_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_disjoint(section, complement), true );
 
     //JODO: There seems to be no intersection on maps of non set codomain type
-    // that can be implemented via *= propagation. Intersectin on those types
+    // that can be implemented via OP_INPLACE_INTERSECT propagation. Intersectin on those types
     // could be dome elementic defining it via intersection on the set of pairs.
     //if(boost::is_same<T,int>::value)
     //{
@@ -569,23 +569,23 @@ void interval_map_base_intersect_4_bicremental_types()
     //--------------------------------------------------------------------------
     //map_A        [0       3)       [6    9)
     //                     1           1
-    //         *=      [1                8)
+    //         OP_INPLACE_INTERSECT      [1                8)
     //map_AB   ->      [1   3)       [6  8)
     //                     1           1
-    //         *=        [2             7)     
+    //         OP_INPLACE_INTERSECT        [2             7)     
     //         ->        [2 3)       [6 7)
     //                     1           1
     IntervalMap<T,U> map_A, map_AB, map_ab, map_ab2;
     interval_set<T>  set_B;
     map_A.add(I0_3D_1).add(I6_9D_1);
     map_AB = map_A;
-    map_AB *= I1_8D;
+    map_AB OP_INPLACE_INTERSECT I1_8D;
     map_ab.add(I1_3D_1).add(I6_8D_1);
 
     BOOST_CHECK_EQUAL( map_AB, map_ab );
 
     map_AB = map_A;
-    (map_AB *= I1_8D) *= I2_7D;
+    (map_AB OP_INPLACE_INTERSECT I1_8D) OP_INPLACE_INTERSECT I2_7D;
     map_ab2.add(I2_3D_1).add(I6_7D_1);
 
     BOOST_CHECK_EQUAL( map_AB, map_ab2 );
@@ -593,10 +593,10 @@ void interval_map_base_intersect_4_bicremental_types()
     //--------------------------------------------------------------------------
     //map_A        [0       3)       [6    9)
     //                     1           1
-    //         *=      [1     4)  [5     8)
+    //         OP_INPLACE_INTERSECT      [1     4)  [5     8)
     //map_AB   ->      [1   3)       [6  8)
     //                     1           1
-    //         *=        [2   4)  [5    7)     
+    //         OP_INPLACE_INTERSECT        [2   4)  [5    7)     
     //         ->        [2 3)       [6 7)
     //                     1           1
     map_A.clear(); 
@@ -604,7 +604,7 @@ void interval_map_base_intersect_4_bicremental_types()
     set_B.add(I1_4D).add(I5_8D);
     map_AB = map_A;
 
-    map_AB *= set_B;
+    map_AB OP_INPLACE_INTERSECT set_B;
     map_ab.clear();
     map_ab.add(I1_3D_1).add(I6_8D_1);
     BOOST_CHECK_EQUAL( map_AB, map_ab );
@@ -612,7 +612,7 @@ void interval_map_base_intersect_4_bicremental_types()
     //--------------------------------------------------------------------------
     //map_A      [0       3)       [6       9)
     //                1                1
-    //         *=     1
+    //         OP_INPLACE_INTERSECT     1
     //map_AB ->      [1]
     //                1
 
@@ -620,7 +620,7 @@ void interval_map_base_intersect_4_bicremental_types()
     //map_A.clear();
     //map_A.add(I0_3D_1).add(I6_9D_1);
     //map_AB = map_A;
-    //map_AB *= v1;
+    //map_AB OP_INPLACE_INTERSECT v1;
     //map_ab.clear();
     //map_ab.add(v1);
 

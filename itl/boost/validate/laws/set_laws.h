@@ -131,7 +131,7 @@ namespace boost{namespace itl
     {
         /** a + (b * c) == (a + b) * (a + c)
             a(1)(b(2)c) == (a(1)b)(2)(a(1)c)
-        computed using inplace operators +=, += and *=
+        computed using inplace operators +=, += and &=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
         */
@@ -229,15 +229,15 @@ namespace boost{namespace itl
         : public Law<InplaceDeMorgan<Type,Operator1,Operator2,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
-        /** a - (b + c) == (a - b) * (a - c)
+        /** a - (b + c) == (a - b) & (a - c)
 		    a - (b(1)c) == (a - b)(2)(a - c)
-        computed using inplace operators +=, += and *=
+        computed using inplace operators +=, += and &=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
         */
     public:
         std::string name()const { return "InplacePlusDeMorgan"; }
-        std::string formula()const { return "a - (b + c) == (a - b) * (a - c) 'inplace'"; }
+        std::string formula()const { return "a - (b + c) == (a - b) & (a - c) 'inplace'"; }
 
         std::string typeString()const
         {
@@ -251,7 +251,7 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            // a - (b + c) == (a - b) * (a - c)
+            // a - (b + c) == (a - b) & (a - c)
             // --- left hand side ------------------------
             Type b_plus_c = this->template getInputValue<operand_b>();
             Operator1<Type>()(b_plus_c, this->template getInputValue<operand_c>());
@@ -267,7 +267,7 @@ namespace boost{namespace itl
             Type a_minus_c = this->template getInputValue<operand_a>();
             a_minus_c -= this->template getInputValue<operand_c>();
 
-            // rhs := (a - b) * (a - c)
+            // rhs := (a - b) & (a - c)
             Type rhs = a_minus_b;
             Operator2<Type>()(rhs, a_minus_c);
 
@@ -298,7 +298,7 @@ namespace boost{namespace itl
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** (a + b) - c == (a - c) + (b - c)
-        computed using inplace operators +=, -= and *=
+        computed using inplace operators +=, -= and &=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
         */
@@ -391,14 +391,14 @@ namespace boost{namespace itl
         : public Law<InplaceSymmetricDifference<Type>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
-        /** (a + b) - (a * b) == (a - b) + (b - a)
-        computed using inplace operators +=, += and *=
+        /** (a + b) - (a & b) == (a - b) + (b - a)
+        computed using inplace operators +=, += and &=
         Input  = (a := inVal1, b := inVal2)
         Output = (lhs_result, rhs_result)
         */
     public:
         std::string name()const { return "Inplace Symmetric Difference"; }
-        std::string formula()const { return "(a+b) - (a*b) == (a-b) + (b-a) 'inplace'"; }
+        std::string formula()const { return "(a+b) - (a&b) == (a-b) + (b-a) 'inplace'"; }
 
         std::string typeString()const
         {
@@ -415,7 +415,7 @@ namespace boost{namespace itl
             a_plus_b += this->template getInputValue<operand_b>();
 
             Type a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b *= this->template getInputValue<operand_b>();
+            a_sec_b OP_INPLACE_INTERSECT this->template getInputValue<operand_b>();
 
             Type lhs = a_plus_b;
             lhs -= a_sec_b;
@@ -446,7 +446,7 @@ namespace boost{namespace itl
             std::cout << "a_plus_b=" << a_plus_b.as_string() << std::endl;
 
             Type a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b *= this->template getInputValue<operand_b>();
+            a_sec_b OP_INPLACE_INTERSECT this->template getInputValue<operand_b>();
 
             std::cout << "a_sec_b=" << a_sec_b.as_string() << std::endl;
 
@@ -488,14 +488,14 @@ namespace boost{namespace itl
         : public Law<SectionAbsorbtion<MapT>, 
                      LOKI_TYPELIST_2(MapT, typename MapT::set_type), LOKI_TYPELIST_2(MapT,MapT)>
     {
-        /** a - (a * b) == a - b
-        computed using inplace operators -= and *=
+        /** a - (a & b) == a - b
+        computed using inplace operators -= and &=
         Input  = (a := inVal1, b := inVal2)
         Output = (lhs_result, rhs_result)
         */
     public:
         std::string name()const { return "SectionAbsorbtion"; }
-        std::string formula()const { return "map a, set b: a - (a * b) == a - b 'inplace'"; }
+        std::string formula()const { return "map a, set b: a - (a & b) == a - b 'inplace'"; }
 
         std::string typeString()const
         {
@@ -507,11 +507,11 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            // a - (a * b) == a - b
+            // a - (a & b) == a - b
             // --- left hand side ------------------------
-            // lhs := a - (a * b)
+            // lhs := a - (a & b)
             MapT a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b *=  this->template getInputValue<operand_b>();
+            a_sec_b OP_INPLACE_INTERSECT  this->template getInputValue<operand_b>();
             MapT lhs =  this->template getInputValue<operand_a>();
             lhs -= a_sec_b;
 

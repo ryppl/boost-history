@@ -126,6 +126,9 @@ namespace boost{namespace itl
 //------------------------------------------------------------------------------
 #define ITL_ALLOC    template<class>class
 
+#define OP_INTERSECT &
+#define OP_INPLACE_INTERSECT &=
+
 //------------------------------------------------------------------------------
 namespace boost{namespace itl
 {

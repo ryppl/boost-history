@@ -707,7 +707,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /** @name H.mor: Morphic modifiers */
-//@{
+
 
     /// Removal of neutral element values
     /** All value pairs \c (I,y) that have neutral elements \c y==codomain_type()
@@ -746,7 +746,7 @@ public:
         const_FOR_IMPLMAP(it) 
             dom += (*it).KEY_VALUE; 
     } 
-//@}
+
  
 
 
@@ -757,7 +757,7 @@ public:
         as a generalized find operation on interval maps.
     
         All find operations can be expressed by means of intersection \ref intersect
-        or \ref operator *=. Searching for an interval in an interval map yields
+        or \ref operator &=. Searching for an interval in an interval map yields
         an interval map anyway in the general case.
     */
 //@}
@@ -814,27 +814,23 @@ public:
     std::string as_string() const;
 //@}
     
-/** @name T: For discrete domain datatypes only that implement operators <tt>++</tt> 
-        and <tt>--</tt>
-    */
-//@{
 
-    /** Smallest element of the map (wrt. the partial ordering on DomainT).
+    /* Smallest element of the map (wrt. the partial ordering on DomainT).
         first() does not exist for continuous datatypes and open interval bounds.
     */
     DomainT first()const { return (*(_map.begin())).KEY_VALUE.first(); }  // JODO NONCONT
 
-    /** Largest element of the map (wrt. the partial ordering on DomainT).
+    /* Largest element of the map (wrt. the partial ordering on DomainT).
         first() does not exist for continuous datatypes and open interval bounds.
     */
     DomainT last()const { return (*(_map.rbegin())).KEY_VALUE.last(); } // JODO NONCONT
 
 
-    /** Sum of associated elements of the map
+    /* Sum of associated elements of the map
         <b>Nicht getestet</b> */
     CodomainT sum()const;
 
-    /**    Set interval bounds to the type <tt>bt</tt> for intervals in the map.
+    /**  Set interval bounds to the type <tt>bt</tt> for intervals in the map.
 
         Interval bounds of different types are created by opeations on
         interval maps. This function allows to reset them uniformly without,
@@ -844,10 +840,6 @@ public:
     void uniformBounds( typename interval<DomainT>::bound_types bt);
 
     void closeLeftBounds();
-//@}
-
-    void recJoin();
-
 
     template<typename IteratorT>
     static const key_type& key_value(IteratorT& value_){ return (*value_).first; }
@@ -1229,6 +1221,18 @@ inline bool operator == (const interval_base_map<SubType,DomainT,CodomainT,Trait
     //return std::equal(lhs.begin(), lhs.end(), rhs.begin());
     return Set::lexicographical_equal(lhs, rhs);
 }
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+inline bool operator != (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
+                         const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
+{
+    return !(lhs == rhs);
+}
+
 
 template 
 <

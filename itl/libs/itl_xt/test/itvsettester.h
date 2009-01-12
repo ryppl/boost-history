@@ -509,7 +509,7 @@ bool ItvSetTesterT<ItvSetTV>::hasSymmetricDifference
     xx_uni_yy += yy;
 
     xx_sec_yy = xx;
-    xx_sec_yy *= yy;
+    xx_sec_yy OP_INPLACE_INTERSECT yy;
 
     lhs = xx_uni_yy;
     lhs -= xx_sec_yy;

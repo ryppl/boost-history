@@ -37,7 +37,7 @@ iteration related.
 
 On the __conceptual__ aspect
 
-* in __itv__ implements a set of elements partially.
+* an __itv__ implements a set of elements partially.
 * an __itv_set__ implements a set of elements.
 * an __itv_map__ implements a map of element value pairs.
 
@@ -67,8 +67,8 @@ mathematical notion of a set.
 [[]                []       [`Set  operator +  (const Set& s1, const Set& s2)`]]
 [[set difference]  [inplace][`Set& operator -= (Set& s1, const Set& s2)`]        ]
 [[]                []       [`Set  operator -  (const Set& s1, const Set& s2)`]]
-[[set intersection][inplace][`Set& operator *= (Set& s1, const Set& s2)`]        ]
-[[]                []       [`Set  operator *  (const Set& s1, const Set& s2)`]]
+[[set intersection][inplace][`Set& operator &= (Set& s1, const Set& s2)`]        ]
+[[]                []       [`Set  operator &  (const Set& s1, const Set& s2)`]]
 ]
 
 Equality on `Sets` is not implemented as `operator ==`, because `operator ==`
@@ -108,8 +108,8 @@ to the `Set` concept above.
 [[]                []       [`Map  operator +  (const Map& s1, const Map& s2)`]]
 [[set difference]  [inplace][`Map& operator -= (Map& s1, const Map& s2)`]        ]
 [[]                []       [`Map  operator -  (const Map& s1, const Map& s2)`]]
-[[set intersection][inplace][`Map& operator *= (Map& s1, const Map& s2)`]        ]
-[[]                []       [`Map  operator *  (const Map& s1, const Map& s2)`]]
+[[set intersection][inplace][`Map& operator &= (Map& s1, const Map& s2)`]        ]
+[[]                []       [`Map  operator &  (const Map& s1, const Map& s2)`]]
 ]
 
 As one can see, on the abstract kernel the signatures of the itl's `Set` and `Map`

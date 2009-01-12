@@ -114,7 +114,7 @@ void user_groups()
 
     MembershipT all_users   = med_users + admin_users;
 
-    MembershipT super_users = med_users * admin_users;
+    MembershipT super_users = med_users & admin_users;
 
     MembershipT::iterator med_ = med_users.begin();
     cout << "----- Membership of medical staff -----------------------------------\n";

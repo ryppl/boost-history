@@ -259,7 +259,7 @@ namespace boost{namespace itl
         //JODO
         /** Intersect map \c x2 and \c *this.
             So \c *this becomes the intersection of \c *this and \c x2 */
-        map& operator *= (const map& x2) 
+        map& operator OP_INPLACE_INTERSECT (const map& x2) 
         {
 			if(Traits::emits_neutrons) return *this += x2;
 			else{ Map::intersect(*this, x2); return *this; }
@@ -267,7 +267,7 @@ namespace boost{namespace itl
 
         /** Intersect set \c x2 and \c *this.
             So \c *this becomes the intersection of \c *this and \c x2 */
-        map& operator *= (const set_type& x2) 
+        map& operator OP_INPLACE_INTERSECT (const set_type& x2) 
         { Map::intersect(*this, x2); return *this; }
 
         /** \c key_value allows for a uniform access to \c key_values which is

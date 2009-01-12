@@ -188,13 +188,13 @@ namespace boost{namespace itl
         : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
-        { object *= operand; }
+        { object OP_INPLACE_INTERSECT operand; }
 
 		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
-    inline std::string unary_template_to_string<inplace_star>::apply() { return "*="; }
+    inline std::string unary_template_to_string<inplace_star>::apply() { return "&="; }
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_slash
