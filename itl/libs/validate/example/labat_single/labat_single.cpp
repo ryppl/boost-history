@@ -79,10 +79,10 @@ void test_LawValidater()
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
-	//typedef InplaceInverseRemovability
-	//   <split_interval_map<int, int, neutron_enricher>, inplace_plus>  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
-	//test_law.setTrialsCount(1000);
+	typedef InplaceInverseRemovability
+	   <split_interval_map<int, int, neutron_emitter>, inplace_plus>  TestLawT;
+	LawValidater<TestLawT, RandomGentor> test_law;
+	test_law.setTrialsCount(1000);
 
 	std::cout << "Start\n";
 	ptime start(microsec_clock::local_time());

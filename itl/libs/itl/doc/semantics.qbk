@@ -14,8 +14,8 @@ laws over interval containers that can be evaluated for a given
 instantiation of the variables contained in the law. The following
 pseudocode gives a shorthand notation of such a law.
 ``
-Commutativity<typename T>
-T a, b: a + b == b + a;
+Commutativity<T,+>:
+T a, b; a + b == b + a;
 ``
 This can of course be coded as a proper c++ class template which has 
 been done for the validation of the *itl*. For sake of simplicity 
@@ -141,9 +141,9 @@ For the operation ['*set union*] available as
 `neutron<S>::value()` which is the empty set `T()`
 these laws hold:
 ``
-Associativity<S,+,== >: S a,b,c: a+(b+c) == (a+b)+c
-Neutrality<S,+,== >   : S a:       a+S() == a
-Commutativity<S,+,== >: S a,b:       a+b == b+a
+Associativity<S,+,== >: S a,b,c; a+(b+c) == (a+b)+c
+Neutrality<S,+,== >   : S a;       a+S() == a
+Commutativity<S,+,== >: S a,b;       a+b == b+a
 ``
 
 [h5 Laws on set intersection]
@@ -152,8 +152,8 @@ For the operation ['*set intersection*] available as
 `operator *, *=, &, &=` these laws were validated:
 
 ``
-Associativity<S,*,== >: S a,b,c: a*(b*c) == (a*b)*c
-Commutativity<S,*,== >: S a,b:       a*b == b*a
+Associativity<S,*,== >: S a,b,c; a*(b*c) == (a*b)*c
+Commutativity<S,*,== >: S a,b;       a*b == b*a
 ``
 
 Neutrality has *not* been validated to avoid 
@@ -167,8 +167,8 @@ not associative and not commutative. It's neutrality
 is non symmetrical.
 
 ``
-RightNeutrality<S,-,== > : S a:   a-S() == a
-SelfRemovability<S,-,== >: S a:   a - a == S()
+RightNeutrality<S,-,== > : S a;   a-S() == a
+SelfRemovability<S,-,== >: S a;   a - a == S()
 ``
 
 Summarized in the next table are laws that use `+`, `*` and `-`
@@ -197,10 +197,10 @@ Not all instances of distributivity laws hold for lexicographical equality.
 Therefore they are denoted using a /variable/ equality `=v=` below.
 
 ``
-     Distributivity<S,+,*,=v= > : S a,b,c: a + (b * c) =v= (a + b) * (a + c)
-     Distributivity<S,*,+,=v= > : S a,b,c: a * (b + c) =v= (a * b) + (a * c)
-RightDistributivity<S,+,-,=v= > : S a,b,c: (a + b) - c =v= (a - c) + (b - c)
-RightDistributivity<S,*,-,=v= > : S a,b,c: (a * b) - c =v= (a - c) * (b - c)
+     Distributivity<S,+,*,=v= > : S a,b,c; a + (b * c) =v= (a + b) * (a + c)
+     Distributivity<S,*,+,=v= > : S a,b,c; a * (b + c) =v= (a * b) + (a * c)
+RightDistributivity<S,+,-,=v= > : S a,b,c; (a + b) - c =v= (a - c) + (b - c)
+RightDistributivity<S,*,-,=v= > : S a,b,c; (a * b) - c =v= (a - c) * (b - c)
 ``
 
 The next table shows the relationship between 
@@ -254,8 +254,8 @@ complement operation `~` is used. `~(a+b) == ~a * ~b`. The version
 below is an adaption for the binary set difference `-`, which is 
 also called ['*relative complement*].
 ``
-DeMorgan<S,+,*,=v= > : S a,b,c: a - (b + c) =v= (a - b) * (a - c)
-DeMorgan<S,*,+,=v= > : S a,b,c: a - (b * c) =v= (a - b) + (a - c)
+DeMorgan<S,+,*,=v= > : S a,b,c; a - (b + c) =v= (a - b) * (a - c)
+DeMorgan<S,*,+,=v= > : S a,b,c; a - (b * c) =v= (a - b) + (a - c)
 ``
 
 ``
@@ -272,7 +272,7 @@ the interval sets are non joining.
 [h5 Symmetric Difference]
 
 ``
-SymmetricDifference<S,== > : S a,b,c: (a + b) - (a * b) == (a - b) + (b - a)
+SymmetricDifference<S,== > : S a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
 ``
 
 Finally Symmetrical Difference holds for all of itl set types and
@@ -425,15 +425,15 @@ __absorber__ or __enricher__.
 [h5 Laws on set union, set intersection and set difference]
 
 ``
-Associativity<C,+,== >: C a,b,c: a+(b+c) == (a+b)+c
-Neutrality<C,+,== >   : C a:       a+C() == a
-Commutativity<C,+,== >: C a,b:       a+b == b+a
+Associativity<C,+,== >: C a,b,c; a+(b+c) == (a+b)+c
+Neutrality<C,+,== >   : C a;       a+C() == a
+Commutativity<C,+,== >: C a,b;       a+b == b+a
 
-Associativity<C,*,== >: C a,b,c: a*(b*c) ==(a*b)*c
-Commutativity<C,*,== >: C a,b:       a*b == b*a
+Associativity<C,*,== >: C a,b,c; a*(b*c) ==(a*b)*c
+Commutativity<C,*,== >: C a,b;       a*b == b*a
 
-RightNeutrality<C,-,== >  : C a:   a-C() ==  a
-SelfRemovability<C,-,=v= >: C a:   a - a =v= C()
+RightNeutrality<C,-,== >  : C a;   a-C() ==  a
+SelfRemovability<C,-,=v= >: C a;   a - a =v= C()
 ``
 
 All the fundamental laws could be validated for all 
@@ -453,10 +453,10 @@ SelfRemovability neutron_absorber            ==
 [h5 Distributivity Laws]
 
 ``
-     Distributivity<C,+,*,=v= > : C a,b,c: a + (b * c) =v= (a + b) * (a + c)
-     Distributivity<C,*,+,=v= > : C a,b,c: a * (b + c) =v= (a * b) + (a * c)
-RightDistributivity<C,+,-,=v= > : C a,b,c: (a + b) - c =v= (a - c) + (b - c)
-RightDistributivity<C,*,-,=v= > : C a,b,c: (a * b) - c =v= (a - c) * (b - c)
+     Distributivity<C,+,*,=v= > : C a,b,c; a + (b * c) =v= (a + b) * (a + c)
+     Distributivity<C,*,+,=v= > : C a,b,c; a * (b + c) =v= (a * b) + (a * c)
+RightDistributivity<C,+,-,=v= > : C a,b,c; (a + b) - c =v= (a - c) + (b - c)
+RightDistributivity<C,*,-,=v= > : C a,b,c; (a * b) - c =v= (a - c) * (b - c)
 ``
 
 Results for the distributivity laws are almost identical to 
@@ -478,8 +478,8 @@ RightDistributivity  joining                       ==     ==
 [h5 DeMorgan's Law and Symmetric Difference]
 
 ``
-DeMorgan<C,+,*,=v= > : C a,b,c: a - (b + c) =v= (a - b) * (a - c)
-DeMorgan<C,*,+,=v= > : C a,b,c: a - (b * c) =v= (a - b) + (a - c)
+DeMorgan<C,+,*,=v= > : C a,b,c; a - (b + c) =v= (a - b) * (a - c)
+DeMorgan<C,*,+,=v= > : C a,b,c; a - (b * c) =v= (a - b) + (a - c)
 ``
 
 ``
@@ -489,7 +489,7 @@ DeMorgan  joining        ==      ==
 ``
 
 ``
-SymmetricDifference<C,== > : C a,b,c: (a + b) - (a * b) == (a - b) + (b - a)
+SymmetricDifference<C,== > : C a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
 ``
 
 Reviewing the validity tables above shows, that the sets of valid laws for
@@ -554,7 +554,7 @@ element, like all signed numerical type have.
 As we can see later in this section this kind of 
 a total `Quantifier` has the basic properties that
 elements of a 
-vector space 
+[@http://en.wikipedia.org/wiki/Vector_space vector space] 
 do provide.
 
 We will use the terms `TotalQuantifier` and
@@ -620,15 +620,15 @@ the itl's map traits.
 
 
 ``
-Associativity<Q,+,== >: Q a,b,c: a+(b+c) == (a+b)+c
-Neutrality<Q,+,== >   : Q a:       a+Q() == a
-Commutativity<Q,+,== >: Q a,b:       a+b == b+a
+Associativity<Q,+,== >: Q a,b,c; a+(b+c) == (a+b)+c
+Neutrality<Q,+,== >   : Q a;       a+Q() == a
+Commutativity<Q,+,== >: Q a,b;       a+b == b+a
 
-Associativity<Q,*,== >: Q a,b,c: a*(b*c) ==(a*b)*c
-Commutativity<Q,*,== >: Q a,b:       a*b == b*a
+Associativity<Q,*,== >: Q a,b,c; a*(b*c) ==(a*b)*c
+Commutativity<Q,*,== >: Q a,b;       a*b == b*a
 
-RightNeutrality<Q,-,== >  : Q a:   a-Q() ==  a
-SelfRemovability<Q,-,=v= >: Q a:   a - a =v= Q()
+RightNeutrality<Q,-,== >  : Q a;   a-Q() ==  a
+SelfRemovability<Q,-,=v= >: Q a;   a - a =v= Q()
 ``
 
 For a `Quantifier` the same basic laws apply that are
@@ -647,16 +647,62 @@ In addition also symmetrical difference is valid for
 `Qunatifiers` and the 
 modified `operator *`.
 ``
-SymmetricDifference<Q,== > : Q a,b,c: (a + b) - (a * b) == (a - b) + (b - a)
+SymmetricDifference<Q,== > : Q a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
 ``
 For a `TotalQuantifier` `Qt` symmetrical difference degenerates to 
 a trivial form since `operator *` and `operator +` become identical
 ``
-SymmetricDifference<Qt,== > : Qt a,b,c: (a + b) - (a + b) == (a - b) + (b - a) == 0
+SymmetricDifference<Qt,== > : Qt a,b,c; (a + b) - (a + b) == (a - b) + (b - a) == 0
 ``
 
+[h5 Existence of an Inverse]
 
+By now Quantifiers `Q` are 
+commutative monoids 
+with respect to the
+operation `+` and the neutral element Q(). 
+If the Quantifiers `CodomainT` type has an /inverse element/ 
+like e.g. signed numbers do,
+the `CodomainT` type is a 
+commutative or abelian group.
+In this case a `TotalQuantifier` also has an 
+inverse and the following law holds:
 
+``
+InverseElement<Qt,== > : Qt a; (0 - a) + a == 0
+``
+
+Which means that each `TotalQuantifier` over an
+abelian group is an 
+abelian group 
+itself.
+
+This also implies that a `Quantifier` of `Quantifiers` 
+is again a `Quantifiers` and a
+`TotalQuantifier` of `TotalQuantifiers`
+is also a `TotalQuantifier`. 
+
+`TotalQuantifiers` resemble the notion of a
+vector space partially.
+The concept could be completed to a vector space, 
+if a scalar multiplication was added. 
 [endsect][/ Quantifiers]
+
+
+[section Concept Induction]
+
+Obviously we can observe the induction of semantics
+from the `CodomainT` parameter into the instantiations
+of itl maps.
+
+[table
+[[]                          [is model of]        [if]                       [example]]
+[[`Map<D,Monoid>`]           [`Modoid`]           []                         [`interval_map<int,string>`]]
+[[`Map<D,Set,Trait>`]        [`Set`]              [`Trait::absorbs_neutrons`][`interval_map<int,itl::set<int> >`]]
+[[`Map<D,CommutativeMonoid>`][`CommutativeMonoid`][]                         [`interval_map<int,unsigned int>`]]
+[[`Map<D,CommutativeGroup>`] [`CommutativeGroup`] [`Trait::emits_neutrons`]  [`interval_map<int,int,neutron_emitter>`]]
+]
+
+[endsect][/ Concept Induction]
 
 [endsect][/ Semantics]
