@@ -335,7 +335,6 @@ public: // low level interface
   void divide_by_2();
   digit_type divide_by_3();
   void modulo_2_to_the_power_of(size_type);
-  size_type precision() const;
   size_type count_lsb() const;
   void shift_right(size_type b, mp_int* remainder);
 
@@ -360,6 +359,13 @@ public: // low level interface
   void clear_bits(size_type beg, size_type end);
 
   void truncate(size_type prec);
+
+  size_type precision() const;
+
+  void set_precision(size_type bits)
+  {
+    size_ = (bits + (valid_bits - 1)) / valid_bits;
+  }
 
   template<class A, class T>
   friend bool operator == (const mp_int<A,T>&, const mp_int<A,T>&);
@@ -745,16 +751,16 @@ typename mp_int<A,T>::size_type
 mp_int<A,T>::precision() const
 {
   // get number of digits and add that
-  size_type r = (size_ - 1) * valid_bits;
+  size_type p = (size_ - 1) * valid_bits;
 
   // take the last digit and count the bits in it
   digit_type q = digits_[size_ - 1];
   while (q > 0U)
   {
-    ++r;
+    ++p;
     q >>= 1;
   }
-  return r;
+  return p;
 }
 
 // Counts the number of lsbs which are zero before the first one bit
@@ -850,12 +856,18 @@ void mp_int<A,T>::clear_bits(size_type beg, size_type end)
   }
 }
 
+// don't forget to clamp() after truncating!
 template<class A, class T>
 void mp_int<A,T>::truncate(size_type prec)
 {
-  set_size((prec + digit_bits - 1)/digit_bits);
-  const size_type last_bits = prec % digit_bits;
-  digits_[size()] &= ~digit_type(0) << (digit_bits - last_bits);
+  set_precision(prec);
+  const size_type last_bits = prec % valid_bits;
+  if (last_bits)
+  {
+    static const digit_type z = ~digit_type(0);
+    const digit_type mask = z >> (valid_bits - last_bits);
+    digits_[size_ - 1] &= mask;
+  }
 }
 
 

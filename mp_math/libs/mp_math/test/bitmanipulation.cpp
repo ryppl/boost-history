@@ -76,3 +76,43 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(clear_bits5, mp_int_type, mp_int_types)
   BOOST_CHECK_EQUAL(x, "0x80000000");
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(truncate1, mp_int_type, mp_int_types)
+{
+  mp_int_type x("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+  x.truncate(32);
+  x.clamp();
+  BOOST_CHECK_EQUAL(x, "0xFFFFFFFF");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(truncate2, mp_int_type, mp_int_types)
+{
+  mp_int_type x("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+  x.truncate(0);
+  x.clamp();
+  BOOST_CHECK_EQUAL(x, "");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(truncate3, mp_int_type, mp_int_types)
+{
+  mp_int_type x("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+  x.truncate(1);
+  x.clamp();
+  BOOST_CHECK_EQUAL(x, "1");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(truncate4, mp_int_type, mp_int_types)
+{
+  mp_int_type x("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+  x.truncate(31);
+  x.clamp();
+  BOOST_CHECK_EQUAL(x, "0x7FFFFFFF");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(truncate5, mp_int_type, mp_int_types)
+{
+  mp_int_type x("0xFFFFFFFFFFFFFFFFFFFF");
+  x.truncate(80);
+  x.clamp();
+  BOOST_CHECK_EQUAL(x, "0xFFFFFFFFFFFFFFFFFFFF");
+}
+
