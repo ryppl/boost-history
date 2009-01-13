@@ -234,12 +234,12 @@ namespace boost{namespace itl
             iterator cur_it       = fst_it ;
             interval_type cur_itv = *cur_it;
 
-            interval_type leadGap; x.left_surplus(leadGap, cur_itv);
+            interval_type leadGap; x.right_subtract(leadGap, cur_itv);
             // this is a new Interval that is a gap in the current map
             add_(leadGap);
 
             // only for the first there can be a leftResid: a part of *it left of x
-            interval_type leftResid;  cur_itv.left_surplus(leftResid, x);
+            interval_type leftResid;  cur_itv.right_subtract(leftResid, x);
 
             // handle special case for first
             interval_type interSec;
@@ -250,12 +250,12 @@ namespace boost{namespace itl
             {
                 // first == last
 
-                interval_type endGap; x.right_surplus(endGap, cur_itv);
+                interval_type endGap; x.left_subtract(endGap, cur_itv);
                 // this is a new Interval that is a gap in the current map
                 add_(endGap);
 
                 // only for the last there can be a rightResid: a part of *it right of x
-                interval_type rightResid;  (*cur_it).right_surplus(rightResid, x);
+                interval_type rightResid;  (*cur_it).left_subtract(rightResid, x);
 
                 this->_set.erase(cur_it);
                 add_(leftResid);
@@ -285,7 +285,7 @@ namespace boost{namespace itl
 
         interval_type cur_itv = *it;
         
-        interval_type newGap; x_itv.left_surplus(newGap, cur_itv);
+        interval_type newGap; x_itv.right_subtract(newGap, cur_itv);
         // this is a new Interval that is a gap in the current map
         add_(newGap);
 
@@ -294,12 +294,12 @@ namespace boost{namespace itl
 
         if(nxt_it==end_it)
         {
-            interval_type endGap; x_itv.right_surplus(endGap, cur_itv);
+            interval_type endGap; x_itv.left_subtract(endGap, cur_itv);
             // this is a new Interval that is a gap in the current map
             add_(endGap);
 
             // only for the last there can be a rightResid: a part of *it right of x
-            interval_type rightResid;  cur_itv.right_surplus(rightResid, x_itv);
+            interval_type rightResid;  cur_itv.left_subtract(rightResid, x_itv);
 
             this->_set.erase(it);
             add_(interSec);
@@ -341,7 +341,7 @@ namespace boost{namespace itl
         interval_type cur_itv   = *cur_it ;
 
         // only for the first there can be a leftResid: a part of *it left of x
-        interval_type leftResid;  cur_itv.left_surplus(leftResid, x);
+        interval_type leftResid;  cur_itv.right_subtract(leftResid, x);
 
         // handle special case for first
         interval_type interSec;
@@ -352,7 +352,7 @@ namespace boost{namespace itl
         {
             // first == last
             // only for the last there can be a rightResid: a part of *it right of x
-            interval_type rightResid;  (*cur_it).right_surplus(rightResid, x);
+            interval_type rightResid;  (*cur_it).left_subtract(rightResid, x);
 
             this->_set.erase(cur_it);
             add_(leftResid);
@@ -384,7 +384,7 @@ namespace boost{namespace itl
         // it refers the last overlaying intervals of x_itv
         const interval_type&  cur_itv = *it ;
 
-        interval_type rightResid; cur_itv.right_surplus(rightResid, x_itv);
+        interval_type rightResid; cur_itv.left_subtract(rightResid, x_itv);
 
         if(rightResid.empty())
             this->_set.erase(it);

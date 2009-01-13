@@ -212,13 +212,13 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_typ
         typename ImplSetT::iterator end_it = this->_set.upper_bound(x);
 
         typename ImplSetT::iterator it=fst_it, nxt_it=fst_it, victim;
-        interval_type leftResid;  (*it).left_surplus(leftResid,x);
+        interval_type leftResid;  (*it).right_subtract(leftResid,x);
         interval_type rightResid;
 
         while(it!=end_it)
         { 
             if((++nxt_it)==end_it) 
-                (*it).right_surplus(rightResid,x);
+                (*it).left_subtract(rightResid,x);
             victim = it; it++; this->_set.erase(victim);
         }
 
@@ -239,12 +239,12 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const valu
     typename ImplSetT::iterator end_it = this->_set.upper_bound(x);
 
     typename ImplSetT::iterator it=fst_it, nxt_it=fst_it, victim;
-    interval_type leftResid; (*it).left_surplus(leftResid,x);
+    interval_type leftResid; (*it).right_subtract(leftResid,x);
     interval_type rightResid;
 
     while(it!=end_it)
     { 
-        if((++nxt_it)==end_it) (*it).right_surplus(rightResid,x);
+        if((++nxt_it)==end_it) (*it).left_subtract(rightResid,x);
         victim = it; it++; this->_set.erase(victim);
     }
 

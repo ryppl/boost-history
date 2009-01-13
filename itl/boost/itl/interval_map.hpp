@@ -487,13 +487,13 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         CodomainT cur_val     = (*fst_it).CONT_VALUE;
 
 
-        interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
+        interval_type leadGap; x_itv.right_subtract(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
         //The first collision interval may grow by joining neighbours after insertion
 
         // only for the first there can be a leftResid: a part of *it left of x
         interval_type leftResid;  
-        fst_itv.left_surplus(leftResid, x_itv);
+        fst_itv.right_subtract(leftResid, x_itv);
 
         // handle special case for first
 
@@ -509,11 +509,11 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         {
             // first == last
 
-            interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
+            interval_type endGap; x_itv.left_subtract(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
 
             // only for the last there can be a rightResid: a part of *it right of x
-            interval_type rightResid;  (*fst_it).KEY_VALUE.right_surplus(rightResid, x_itv);
+            interval_type rightResid;  (*fst_it).KEY_VALUE.left_subtract(rightResid, x_itv);
 
             this->_map.erase(fst_it);
             fill_join_left(value_type(leftResid,  cur_val));
@@ -559,7 +559,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     while(nxt_it!=end_it)
     {
         cur_itv = (*it).KEY_VALUE ;            
-        x_rest.left_surplus(left_gap, cur_itv);
+        x_rest.right_subtract(left_gap, cur_itv);
 
         Combiner()(it->CONT_VALUE, x_val);
         fill_gap_join_left<Combiner>(value_type(left_gap, x_val)); //A posteriori
@@ -590,7 +590,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     CodomainT     cur_val = (*it).CONT_VALUE ;
 
     interval_type lead_gap;
-    x_rest.left_surplus(lead_gap, cur_itv);
+    x_rest.right_subtract(lead_gap, cur_itv);
 
     interval_type common;
     cur_itv.intersect(common, x_rest);
@@ -599,11 +599,11 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     Combiner()(cmb_val, x_val);
 
     interval_type end_gap; 
-    x_rest.right_surplus(end_gap, cur_itv);
+    x_rest.left_subtract(end_gap, cur_itv);
     
     // only for the last there can be a rightResid: a part of *it right of x
     interval_type right_resid;  
-    cur_itv.right_surplus(right_resid, x_rest);
+    cur_itv.left_subtract(right_resid, x_rest);
 
     this->_map.erase(it);
     if(end_gap.empty() && right_resid.empty())
@@ -648,7 +648,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
     // only for the first there can be a leftResid: a part of *it left of x
     interval_type leftResid;  
-    fst_itv.left_surplus(leftResid, x_itv);
+    fst_itv.right_subtract(leftResid, x_itv);
 
     // handle special case for first
 
@@ -662,7 +662,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     if(snd_it == end_it) 
     {
         // only for the last there can be a rightResid: a part of *it right of x
-        interval_type rightResid;  (*fst_it).KEY_VALUE.right_surplus(rightResid, x_itv);
+        interval_type rightResid;  (*fst_it).KEY_VALUE.left_subtract(rightResid, x_itv);
 
         this->_map.erase(fst_it);
         fill_join_left(value_type(leftResid, fst_val));
@@ -719,7 +719,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     const interval_type& cur_itv = (*it).KEY_VALUE ;
 
     interval_type rightResid; 
-    cur_itv.right_surplus(rightResid, x_itv);
+    cur_itv.left_subtract(rightResid, x_itv);
 
     if(rightResid.empty())
     {
@@ -791,11 +791,11 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         //assert(end_it == this->_map.upper_bound(x_itv));
 
         interval_type fst_itv = (*fst_it).KEY_VALUE ;
-        interval_type leadGap; x_itv.left_surplus(leadGap, fst_itv);
+        interval_type leadGap; x_itv.right_subtract(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
 
         // only for the first there can be a leftResid: a part of *it left of x
-        interval_type leftResid;  fst_itv.left_surplus(leftResid, x_itv);
+        interval_type leftResid;  fst_itv.right_subtract(leftResid, x_itv);
 
         // handle special case for first
 
@@ -809,7 +809,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
             if(!leadGap.empty())
                 fill_join_both(value_type(leadGap, x_val));
 
-            interval_type endGap; x_itv.right_surplus(endGap, fst_itv);
+            interval_type endGap; x_itv.left_subtract(endGap, fst_itv);
             // this is a new Interval that is a gap in the current map
             fill_join_both(value_type(endGap, x_val));
         }
@@ -840,7 +840,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     for(; nxt_it!=end_it; ++it, ++nxt_it)
     {
         cur_itv = (*it).KEY_VALUE ;            
-        x_rest.left_surplus(gap, cur_itv);
+        x_rest.right_subtract(gap, cur_itv);
 
         if(!gap.empty())
         {
@@ -865,7 +865,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     interval_type cur_itv = (*it).KEY_VALUE ;
 
     interval_type left_gap;
-    x_rest.left_surplus(left_gap, cur_itv);
+    x_rest.right_subtract(left_gap, cur_itv);
 
     if(!left_gap.empty())
     {
@@ -878,7 +878,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     cur_itv.intersect(common, x_rest);
 
     interval_type end_gap; 
-    x_rest.right_surplus(end_gap, cur_itv);
+    x_rest.left_subtract(end_gap, cur_itv);
 
     fill_join_both(value_type(end_gap, x_val));
 }
@@ -910,7 +910,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
     // only for the first there can be a leftResid: a part of *it left of x
     interval_type leftResid;  
-    fst_itv.left_surplus(leftResid, x_itv);
+    fst_itv.right_subtract(leftResid, x_itv);
 
     // handle special case for first
 
@@ -921,7 +921,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     if(snd_it == end_it) 
     {
         // only for the last there can be a rightResid: a part of *it right of x
-        interval_type rightResid;  (*fst_it).KEY_VALUE.right_surplus(rightResid, x_itv);
+        interval_type rightResid;  (*fst_it).KEY_VALUE.left_subtract(rightResid, x_itv);
 
         if(!interSec.empty() && fst_val == x_val)
         {
@@ -969,7 +969,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     CodomainT cur_val = (*it).CONT_VALUE;
 
     interval_type rightResid; 
-    cur_itv.right_surplus(rightResid, x_itv);
+    cur_itv.left_subtract(rightResid, x_itv);
 
     if(rightResid.empty())
     {

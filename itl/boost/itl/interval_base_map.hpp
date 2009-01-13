@@ -1159,7 +1159,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     
     typename ImplMapT::iterator it=fst_it, nxt_it=fst_it, victim;
     interval_type leftResid;   // left residual from first overlapping interval of *this
-    (*it).KEY_VALUE.left_surplus(leftResid,x_itv);
+    (*it).KEY_VALUE.right_subtract(leftResid,x_itv);
     interval_type rightResid;  // right residual from last overlapping interval of *this
     
     CodomainT leftResid_ContVal = (*it).CONT_VALUE;
@@ -1169,7 +1169,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     { 
         if((++nxt_it)==end_it) 
         {
-            (*it).KEY_VALUE.right_surplus(rightResid,x_itv);
+            (*it).KEY_VALUE.left_subtract(rightResid,x_itv);
             rightResid_ContVal = (*it).CONT_VALUE;
         }
         victim = it; it++; _map.erase(victim);

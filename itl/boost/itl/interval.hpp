@@ -436,17 +436,6 @@ public:
 	/** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
     void intersect(interval& isec, const interval& x2)const;
 
-    /** subtract \c x2 from \c *this interval on it's right side. Assign the difference 
-		to \c left_over. The result \c left_over is the part of \c *this left of \c x2.
-\code
-left_over = x1 - x2; //on the right side.
-[a      ...  : x1
-     [b ...  : x2; x1.right_subtract(left_over, x2);
-[a  b)       : left_over
-\endcode
-	*/
-    void left_surplus(interval& left_over, const interval& x2)const;
-
     /** subtract \c x2 from \c *this interval on it's left side. Assign the difference 
 		to \c right_over. The result \c right_over is the part of \c *this right of \c x2.
 \code
@@ -456,11 +445,37 @@ right_over = x1 - x2; //on the left.
      [c  d) : right_over
 \endcode
 	*/
-    void right_surplus(interval& rsur, const interval& x2)const;
+    void left_subtract(interval& rsur, const interval& x2)const;
 
+    /** subtract \c x2 from \c *this interval on it's right side. Assign the difference 
+		to \c left_over. The result \c left_over is the part of \c *this left of \c x2.
+\code
+left_over = x1 - x2; //on the right side.
+[a      ...  : x1
+     [b ...  : x2; x1.right_subtract(left_over, x2);
+[a  b)       : left_over
+\endcode
+	*/
+    void right_subtract(interval& left_over, const interval& x2)const;
 
+    /** subtract \c x2 from \c *this interval on it's left side.
+\code
+*this = *this - x2; //on the left.
+...      d) : *this
+... c)      : x2;
+     [c  d) : *this
+\endcode
+	*/
 	interval& left_subtract(const interval& x2);
 
+    /** subtract \c x2 from \c *this interval on it's right side. 
+\code
+*this = *this - x2; //on the right side.
+[a      ...  : *this
+     [b ...  : x2;
+[a  b)       : *this
+\endcode
+	*/
 	interval& right_subtract(const interval& x2);
 
     /** Interval spanning from lower bound of *this interval to the upper bound of rhs.
@@ -973,7 +988,7 @@ void interval<DomainT,Compare>::intersect(interval<DomainT,Compare>& isec, const
 
 
 template <class DomainT, ITL_COMPARE Compare>
-void interval<DomainT,Compare>::left_surplus(interval<DomainT,Compare>& lsur, const interval<DomainT,Compare>& x2)const
+void interval<DomainT,Compare>::right_subtract(interval<DomainT,Compare>& lsur, const interval<DomainT,Compare>& x2)const
 {
     if(lower_less(x2)) {
         lsur.set_lwb( BoundT(_lwb,boundtypes()) );
@@ -986,7 +1001,7 @@ void interval<DomainT,Compare>::left_surplus(interval<DomainT,Compare>& lsur, co
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-void interval<DomainT,Compare>::right_surplus(interval<DomainT,Compare>& rsur, const interval<DomainT,Compare>& x2)const
+void interval<DomainT,Compare>::left_subtract(interval<DomainT,Compare>& rsur, const interval<DomainT,Compare>& x2)const
 {
     if(x2.upper_less(*this)) {
 		if(x2.exclusive_less(*this))
