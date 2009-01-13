@@ -332,15 +332,34 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     interval<T> I0_3D = interval<T>::rightopen(v0,v3);
     interval<T> I2_6D = interval<T>::rightopen(v2,v6);
     interval<T> I4_7D = interval<T>::rightopen(v4,v7);
+    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
     interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+
 	I2_6D.left_surplus(diff_1,I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I2_4D );
-	//diff_2 = I2_6D;
-	//diff_2.left_subtract(I4_7D);
-    //BOOST_CHECK_EQUAL( diff_2, I2_4D );
+
+	diff_2 = I2_6D;
+	diff_2.right_subtract(I4_7D);
+    BOOST_CHECK_EQUAL( diff_2, I2_4D );
 
 	diff_1.clear();
-	I0_3D.left_surplus(diff_1,I4_7D);
+	I0_3D.left_surplus(diff_1, I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I0_3D );
 	
+	// ---------------------------------
+	I4_7D.right_surplus(diff_1, I2_6D);
+    BOOST_CHECK_EQUAL( diff_1, I6_7D );
+
+	diff_2 = I4_7D;
+	diff_2.left_subtract(I2_6D);
+    BOOST_CHECK_EQUAL( diff_2, I6_7D );
+
+	diff_1.clear();
+	I4_7D.right_surplus(diff_1, I0_3D);
+    BOOST_CHECK_EQUAL( diff_1, I4_7D );
+
+	diff_2 = I4_7D;
+	diff_2.left_subtract(I0_3D);
+    BOOST_CHECK_EQUAL( diff_2, I4_7D );
+
 }

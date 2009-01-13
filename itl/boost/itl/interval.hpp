@@ -461,6 +461,8 @@ right_over = x1 - x2; //on the left.
 
 	interval& left_subtract(const interval& x2);
 
+	interval& right_subtract(const interval& x2);
+
     /** Interval spanning from lower bound of *this interval to the upper bound of rhs.
         Bordertypes according to the lower bound of *this and the upper bound of rhs.   */
     interval span(const interval& rhs)const
@@ -948,8 +950,16 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<Doma
 template <class DomainT, ITL_COMPARE Compare>
 inline interval<DomainT,Compare>& interval<DomainT,Compare>::left_subtract(const interval& x2)
 {
-	if(!exclusive_less(x2))
+	if(!x2.exclusive_less(*this))
 		set_lwb( BoundT(x2._upb, x2.succession_bounds()) );
+    return *this; 
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_subtract(const interval& x2)
+{
+	if(!exclusive_less(x2))
+		set_upb( BoundT(x2._lwb, x2.succession_bounds()) );
     return *this; 
 }
 
@@ -979,7 +989,7 @@ template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::right_surplus(interval<DomainT,Compare>& rsur, const interval<DomainT,Compare>& x2)const
 {
     if(x2.upper_less(*this)) {
-		if(exclusive_less(x2))
+		if(x2.exclusive_less(*this))
             rsur.set_lwb( BoundT(_lwb,boundtypes()) ); 
 		else
             rsur.set_lwb(lwb_rightOf(x2)); 
