@@ -298,6 +298,8 @@ namespace boost{namespace itl
             different from \c size(). */
         size_t iterative_size()const { return size(); }
 
+        size_t cardinality()const { return size(); }
+
         void absorb_neutrons()
         {
             //content_is_neutron<key_type, data_type> neutron_dropper;

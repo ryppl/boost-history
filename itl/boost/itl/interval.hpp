@@ -287,7 +287,7 @@ namespace boost{namespace itl
     
 */
 
-/// A class for intervals
+/// A class template for intervals
 /**    Bounds of the interval may be closed or open.
     Discrete or continuous datatypes may be used as domain datatypes DomainT.
 
@@ -301,8 +301,6 @@ namespace boost{namespace itl
     <tt>float, double, Rational etc.</tt> elements. The domain parameter
     may be a built in c++ datatype or a class type. It has to implement
     the interface DomainT.
-
-    @author  Joachim Faulhaber
 */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
 #ifdef USE_CONCEPTS
@@ -312,9 +310,6 @@ class interval
 {
 public:
 
-/** @name A: Type definitions for the template class 
-*/
-//@{ 
     /// Domain type or element type
     typedef DomainT domain_type;
 	/// Compare order on the data
@@ -341,146 +336,133 @@ public:
         CLOSED                   = 0x3,
     } ;
 
-//@}
 
-
-    /// Default constructor; yields an empty interval <tt>[1,0]</tt>
+    /** Default constructor; yields an empty interval <tt>[1,0]</tt> */
     interval() : _lwb(unon<DomainT>::value()), _upb(neutron<DomainT>::value()), 
                  _boundtypes(CLOSED) {}
 
-    // Use compiler generated copy contructor
+    //NOTE: Compiler generated copy constructor is used
 
-    /// Constructor for a closed singleton interval <tt>[val,val]</tt>
+    /** Constructor for a closed singleton interval <tt>[val,val]</tt> */
     explicit interval(const DomainT& val) : 
         _lwb(val), _upb(val), _boundtypes(CLOSED) {}
-    /// Closed interval <tt>[low,up]</tt>
-    interval(const DomainT& low, const DomainT& up) : 
-        _lwb(low), _upb(up), _boundtypes(CLOSED) {}
-    /// Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bt</tt> 
-    interval(const DomainT& low, const DomainT& up, bound_types bt) : 
+
+    /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bt</tt> */
+    interval(const DomainT& low, const DomainT& up, bound_types bt = CLOSED) : 
         _lwb(low), _upb(up), _boundtypes(bt) {}
 
+	/** Closed interval <tt>[low,up]</tt> */
 	static interval closed(const DomainT& low, const DomainT& up)
 	{ return interval(low, up, CLOSED); }
 
+	/** Rightopen interval <tt>[low,up)</tt> */
 	static interval rightopen(const DomainT& low, const DomainT& up)
 	{ return interval(low, up, RIGHT_OPEN); }
 
+	/** Leftopen interval <tt>(low,up]</tt> */
 	static interval leftopen(const DomainT& low, const DomainT& up)
 	{ return interval(low, up, LEFT_OPEN); }
 
+	/** Open interval <tt>(low,up)</tt> */
 	static interval open(const DomainT& low, const DomainT& up)
 	{ return interval(low, up, OPEN); }
 
-    // Use compiler generated assignment operator =
+    //NOTE: Compiler generated assignment operator = used
 
-/** @name E: Selectors
-*/
-//@{
-    /// Lower bound of the interval
+    /** Lower bound of the interval */
     DomainT lower()const { return _lwb; }
-    /// Upper bound of the interval
+    /** Upper bound of the interval */
     DomainT upper()const { return _upb; }
-    /// Typ of interval bounds
+    /** Typ of interval bounds */
     bound_types boundtypes()const { return _boundtypes; }
-//@}
 
-/** @name F.P: Tester, predicates
-*/
-//@{
-    /// Is the interval empty?
+    /** Is the interval empty? */
     bool empty()const;
-    /// Does the interval contain <tt>x</tt>?
+    /** Does the interval contain <tt>x</tt>? */
     bool contains(const DomainT& x)const;
 
-    /// Both closed: <tt>[x,y]</tt> ?
+    /** Both closed: <tt>[x,y]</tt> ? */
     bool is_closed()const { return _boundtypes == CLOSED; }
-    /// Left open right closed: <tt>(x,y]</tt> ?
+    /** Left open right closed: <tt>(x,y]</tt> ? */
     bool is_leftopen()const  { return _boundtypes == LEFT_OPEN; }
-    /// Left closed right open: <tt>[x,y)</tt> ?
+    /** Left closed right open: <tt>[x,y)</tt> ? */
     bool is_rightopen()const  { return _boundtypes == RIGHT_OPEN; }
-    /// Both open: <tt>(x,y)</tt> ?
+    /** Both open: <tt>(x,y)</tt> ? */
     bool is_open()const   { return _boundtypes == OPEN; }
 
-    /// Left bound is open right unknown <tt>(x,y|</tt> ?
+    /** Left bound is open right unknown <tt>(x,y|</tt> ? */
     bool leftbound_open()const { return !leftbound_closed(); }
-
-    /// Right bound is open left unknown <tt>|x,y)</tt> ?
+    /** Right bound is open left unknown <tt>|x,y)</tt> ? */
     bool rightbound_open()const { return !rightbound_closed(); }
-
-    /// Left closed right unknown <tt>[x,y|</tt> ?
+    /** Left closed right unknown <tt>[x,y|</tt> ? */
     bool leftbound_closed()const { return 0 != (_boundtypes & RIGHT_OPEN); }
-
-    /// Right closed left unknown <tt>|x,y]</tt> ?
+    /** Right closed left unknown <tt>|x,y]</tt> */
     bool rightbound_closed()const { return 0 != (_boundtypes & LEFT_OPEN); }
-//@}
 
-/** @name F.R: Tester, relations
-*/
-//@{
-
-    /// <tt>*this</tt> is subset of <tt>super</tt>
+    /** <tt>*this</tt> is subset of <tt>super</tt> */
     bool contained_in(const interval& super)const ;
-    /// <tt>*this</tt> is superset of <tt>sub</tt>
+    /** <tt>*this</tt> is superset of <tt>sub</tt> */
     bool contains(const interval& sub)const;
 
-    /// Equality
+    /** Equality on intervals */
     bool equal(const interval& x2)const
     { return (empty() && x2.empty()) || (lower_equal(x2) && upper_equal(x2)); }
-    //Equality can also be implemented this way:
-    //{ return contained_in(x2) && x2.contained_in(*this); }
 
-    ///  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty
+    /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
     bool is_disjoint(const interval& x2)const
     { return exclusive_less(x2) || x2.exclusive_less(*this); }
-    /// There is no gap between <tt>*this</tt> and <tt>x2</tt> but they have no element in common
+    /** There is no gap between <tt>*this</tt> and <tt>x2</tt> but they have no element in common */
     bool touches(const interval& x2)const;
 
-    /// Exclusive less: maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt>
+    /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> */
     bool exclusive_less(const interval& x2)const;
 
-    /// less on intervals
+    /** Less on intervals */
     bool less(const interval& x2)const
     { return lower_less(x2) || ( lower_equal(x2) && upper_less(x2) ); }
 
-//@}
-
-
-/** @name G: Modificators
-*/
-//@{
-    /// Set the interval empty
+    /** Set the interval empty */
     void clear()
     { set_lwb(unon<DomainT>::value()); set_upb(neutron<DomainT>::value()); _boundtypes=CLOSED; }
 
-    /// Set the intervals values
-    interval& set(const DomainT& lw, const DomainT& up, bound_types bt) 
-    { _lwb=lw; _upb=up; _boundtypes=bt; return *this; }
+	/** Set \c *this interval to from \c low to \c up with boundtypes \c bt */
+    interval& set(const DomainT& low, const DomainT& up, bound_types bt) 
+    { _lwb=low; _upb=up; _boundtypes=bt; return *this; }
 
     /** Extend <tt>*this</tt> to <tt>x2</tt> yielding an interval from the minimum of lower bounds
         to the maximum of upper bounds */
     interval& extend(const interval& x2);
-//@}
 
-
-/** @name H: Combinators and more
-*/
-//@{
-    /// Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt>
+	/** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
     void intersect(interval& isec, const interval& x2)const;
 
-    /// Returns the intersection with the interval  <tt>x2</tt>
-    interval intersect(const interval& x2)const { interval isec; intersect(isec, x2); return isec; }
+    /** subtract \c x2 from \c *this interval on it's right side. Assign the difference 
+		to \c left_over. The result \c left_over is the part of \c *this left of \c x2.
+\code
+left_over = x1 - x2; //on the right side.
+[a      ...  : x1
+     [b ...  : x2; x1.right_subtract(left_over, x2);
+[a  b)       : left_over
+\endcode
+	*/
+    void left_surplus(interval& left_over, const interval& x2)const;
 
-    /// lsur is the part of <tt>*this</tt> that juts out left over <tt>x2</tt>.
-    void left_surplus(interval& lsur, const interval& x2)const;
-
-    /// rsur is the part of <tt>*this</tt> that juts out right over <tt>x2</tt>.
+    /** subtract \c x2 from \c *this interval on it's left side. Assign the difference 
+		to \c right_over. The result \c right_over is the part of \c *this right of \c x2.
+\code
+right_over = x1 - x2; //on the left.
+...      d) : x1
+... c)      : x2; x1.left_subtract(right_over, x2);
+     [c  d) : right_over
+\endcode
+	*/
     void right_surplus(interval& rsur, const interval& x2)const;
 
+
+	interval& left_subtract(const interval& x2);
+
     /** Interval spanning from lower bound of *this interval to the upper bound of rhs.
-        Bordertypes according to the lower bound of *this and the upper bound of rhs.
-    */
+        Bordertypes according to the lower bound of *this and the upper bound of rhs.   */
     interval span(const interval& rhs)const
     {
         if(empty())          return rhs;
@@ -489,23 +471,12 @@ public:
                 interval(_lwb, rhs._upb, span(boundtypes(), rhs.boundtypes()));
     }
 
-    interval& left_subtract(const interval& x2);
-//@}
-
-
-/** @name S: String representation
-    */
-//@{
-    /// Interval as string
+	
+	/// Interval as string
     const std::string as_string()const;
-//@}
 
 
-    // NOTE ------- DISCRETE ONLY ------- DISCRETE ONLY ------- DISCRETE ONLY ------- 
-/** @name T: For discrete domain datatypes only that implement operators <tt>++</tt> 
-        and <tt>--</tt>
-    */
-//@{
+
     /// First (smallest) element of the interval
     DomainT first()const;
     /// Last (largest) element of the interval
@@ -560,20 +531,18 @@ public:
     /** Sets right border open. */
     void open_right_bound();
     
-//@}
 
-/** @name U: Utilities and Limits
-    */
-//@{
-    /// Maximum Interval
+	/// Maximum Interval
     static interval always()
     { return interval<DomainT>::closed(std::numeric_limits<DomainT>::min(), 
                                        std::numeric_limits<DomainT>::max()); }
-//@}
 
+
+private:
     void set_lwb(DomainT lw) { _lwb=lw; }
     void set_upb(DomainT up) { _upb=up; }
 
+public:
     bool lower_less(const interval& x2)const;
     bool upper_less(const interval& x2)const;
     bool lower_less_equal(const interval& x2)const;
@@ -979,7 +948,8 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<Doma
 template <class DomainT, ITL_COMPARE Compare>
 inline interval<DomainT,Compare>& interval<DomainT,Compare>::left_subtract(const interval& x2)
 {
-    set_lwb( BoundT(x2._upb, x2.succession_bounds()) );
+	if(!exclusive_less(x2))
+		set_lwb( BoundT(x2._upb, x2.succession_bounds()) );
     return *this; 
 }
 
@@ -996,8 +966,11 @@ template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::left_surplus(interval<DomainT,Compare>& lsur, const interval<DomainT,Compare>& x2)const
 {
     if(lower_less(x2)) {
-        lsur.set_lwb( BoundT(_lwb,boundtypes()) ); 
-        lsur.set_upb( upb_leftOf(x2) );
+        lsur.set_lwb( BoundT(_lwb,boundtypes()) );
+		if(exclusive_less(x2))
+			lsur.set_upb( BoundT(_upb,boundtypes()) );
+		else
+            lsur.set_upb( upb_leftOf(x2) );
     }
     else lsur.clear();
 }
@@ -1006,7 +979,10 @@ template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::right_surplus(interval<DomainT,Compare>& rsur, const interval<DomainT,Compare>& x2)const
 {
     if(x2.upper_less(*this)) {
-        rsur.set_lwb(lwb_rightOf(x2)); 
+		if(exclusive_less(x2))
+            rsur.set_lwb( BoundT(_lwb,boundtypes()) ); 
+		else
+            rsur.set_lwb(lwb_rightOf(x2)); 
         rsur.set_upb( BoundT(_upb,boundtypes()) );
     }
     else rsur.clear();
@@ -1166,10 +1142,17 @@ struct exclusive_less {
 // ----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare>
 itl::interval<DomainT,Compare>& operator &= (      itl::interval<DomainT,Compare>& section, 
-                                   const itl::interval<DomainT,Compare>& sectant)
+                                             const itl::interval<DomainT,Compare>& sectant)
 {
     section.intersect(section, sectant);
     return section;
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+itl::interval<DomainT,Compare> operator & (const itl::interval<DomainT,Compare>& left, 
+                                           const itl::interval<DomainT,Compare>& right)
+{
+	return itl::interval<DomainT,Compare>(left) &= right;
 }
 
 template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>

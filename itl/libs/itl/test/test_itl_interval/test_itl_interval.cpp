@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_touches_4_integral_types, T, int
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_intersect_4_bicremental_types, T, bicremental_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_inplace_intersect_4_bicremental_types, T, bicremental_types)
 {
     T v0 = make<T>(0);
     T v3 = make<T>(3);
@@ -269,4 +269,78 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_intersect_4_bicremental_types, T
     BOOST_CHECK_EQUAL( I3_7D.exclusive_less(I7_9I), true );
     BOOST_CHECK_EQUAL( I3_7D.is_disjoint(I7_9I), true );
     BOOST_CHECK_EQUAL( section.empty(), true );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_infix_intersect_4_bicremental_types, T, bicremental_types)
+{
+    T v0 = make<T>(0);
+    T v3 = make<T>(3);
+    T v4 = make<T>(4);
+    T v5 = make<T>(5);
+    T v6 = make<T>(6);
+    T v7 = make<T>(7);
+    T v9 = make<T>(9);
+
+    interval<T> section;
+    interval<T> I3_7D = interval<T>::rightopen(v3,v7);
+
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    section = I3_7D & I0_3D;
+    BOOST_CHECK_EQUAL( I0_3D.is_disjoint(I3_7D), true );
+    BOOST_CHECK_EQUAL( section.empty(), true );
+    BOOST_CHECK_EQUAL( section, interval<T>() );
+
+    interval<T> I0_5D = interval<T>::rightopen(v0,v5);
+    section = I3_7D & I0_5D;
+    BOOST_CHECK_EQUAL( section, interval<T>::rightopen(v3, v5) );
+
+    interval<T> I0_9D = interval<T>::rightopen(v0,v9);
+    section = I3_7D & I0_9D;
+    BOOST_CHECK_EQUAL( section, I3_7D );
+
+    interval<T> I4_5I = interval<T>::closed(v4,v5);
+    section = I3_7D & I4_5I;
+    BOOST_CHECK_EQUAL( section, I4_5I );
+
+    interval<T> C4_6D = interval<T>::open(v4,v6);
+    section = I3_7D & C4_6D;
+    BOOST_CHECK_EQUAL( section, C4_6D );
+
+    interval<T> C4_9I = interval<T>::leftopen(v4,v9);
+    section = I3_7D & C4_9I;
+    BOOST_CHECK_EQUAL( section, interval<T>::open(v4,v7) );
+
+    interval<T> I7_9I = interval<T>::closed(v7,v9);
+    section = I3_7D & I7_9I;
+    BOOST_CHECK_EQUAL( I3_7D.exclusive_less(I7_9I), true );
+    BOOST_CHECK_EQUAL( I3_7D.is_disjoint(I7_9I), true );
+    BOOST_CHECK_EQUAL( section.empty(), true );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
+{
+    T v0 = make<T>(0);
+    T v2 = make<T>(2);
+    T v3 = make<T>(3);
+    T v4 = make<T>(4);
+    T v5 = make<T>(5);
+    T v6 = make<T>(6);
+    T v7 = make<T>(7);
+    T v9 = make<T>(9);
+
+    interval<T> diff_1, diff_2;
+    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
+    interval<T> I4_7D = interval<T>::rightopen(v4,v7);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+	I2_6D.left_surplus(diff_1,I4_7D);
+    BOOST_CHECK_EQUAL( diff_1, I2_4D );
+	//diff_2 = I2_6D;
+	//diff_2.left_subtract(I4_7D);
+    //BOOST_CHECK_EQUAL( diff_2, I2_4D );
+
+	diff_1.clear();
+	I0_3D.left_surplus(diff_1,I4_7D);
+    BOOST_CHECK_EQUAL( diff_1, I0_3D );
+	
 }

@@ -79,7 +79,7 @@ public:
 	      _left_end(left_end), _right_end(right_end), 
 		  _compare_codomain(false), _result(result_is_equal)
     {
-		_scope = enclosure(_left).intersect(enclosure(_right));
+		_scope = enclosure(_left) & enclosure(_right);
 	}
 
     enum{firstboth, nextboth, nextleft, nextright, leftaligned, stop};

@@ -200,6 +200,8 @@ namespace boost{namespace itl
             different from \c size(). */
         size_t iterative_size()const { return size(); }
 
+		size_t cardinality()const { return size(); }
+
         /** Erase the elements in *this set to which property \c hasProperty applies. 
         Keep all the rest. */
         template<class Predicate>
