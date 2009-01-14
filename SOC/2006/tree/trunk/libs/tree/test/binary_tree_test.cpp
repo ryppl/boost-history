@@ -14,10 +14,11 @@
 
 //#include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
-
-BOOST_AUTO_TEST_SUITE( basic_binary_tree_test )
+#include "fake_binary_tree.hpp"
 
 using boost::tree::binary_tree;
+
+BOOST_AUTO_TEST_SUITE( basic_binary_tree_test )
 
 BOOST_AUTO_TEST_CASE( constructors_test )
 {
@@ -61,7 +62,25 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_FIXTURE_TEST_SUITE(binary_tree_test, test_binary_tree_with_list_fixture<int>)
+BOOST_FIXTURE_TEST_SUITE( binary_tree_using_fake_binary_tree_test
+                        , fake_binary_tree_fixture<int> )
+
+BOOST_AUTO_TEST_CASE( subtree_constructor_test )
+{
+    binary_tree<int> bt0(fbt1.root());
+    validate_test_dataset1_tree(bt0.root());
+}
+
+BOOST_AUTO_TEST_CASE( insert_subtree_test )
+{
+    binary_tree<int> bt0;
+    binary_tree<int>::cursor c = bt0.insert(bt0.root(), fbt1.root());    
+    validate_test_dataset1_tree(bt0.root());
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE( binary_tree_test, test_binary_tree_with_list_fixture<int> )
 
 using namespace boost::tree;
 
@@ -206,13 +225,6 @@ BOOST_AUTO_TEST_CASE( swap_binary_tree_test )
     swap(tree1, bt);
     validate_test_dataset1_tree(tree1.root());
     validate_test_dataset2_tree(bt.root());
-}
-
-BOOST_AUTO_TEST_CASE( insert_subtree_test )
-{
-    binary_tree<int> bt0;
-    binary_tree<int>::cursor c = bt0.insert(bt0.root(), bt.root());    
-    validate_test_dataset1_tree(bt0.root());
 }
 
 BOOST_AUTO_TEST_CASE( copy_constructor_test )

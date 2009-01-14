@@ -20,6 +20,7 @@
 #include <boost/test/test_case_template.hpp>
 
 #include "test_tree_traversal_data.hpp"
+#include "fake_binary_tree.hpp"
 
 using namespace boost::tree;
 
@@ -117,9 +118,45 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 
 BOOST_AUTO_TEST_SUITE_END()
 
-//BOOST_FIXTURE_TEST_SUITE(forest_fixture_test, fake_binary_tree_with_list_fixture<int>)
-//
-//BOOST_AUTO_TEST_SUITE_END()
+BOOST_FIXTURE_TEST_SUITE(forest_fixture_test, fake_binary_tree_fixture<int>)
+
+BOOST_AUTO_TEST_CASE( binary_tree_constructor_test )
+{
+    forest_tree<int, fake_binary_tree<int> > ft0(fbt1);
+    forest_tree<int, fake_binary_tree<int> >::const_cursor c = ft0.begin();
+   
+    //TODO: validate
+    BOOST_CHECK_EQUAL(*c, 8);
+    BOOST_CHECK_EQUAL(*c.to_begin(), 3);
+    BOOST_CHECK_EQUAL(*++c, 6);
+    BOOST_CHECK_EQUAL(*++c, 7);
+    BOOST_CHECK(++c == ft0.begin().end());
+    
+    c = ft0.begin().begin();
+    BOOST_CHECK_EQUAL(*c.to_begin(), 1);
+    BOOST_CHECK(++c == ft0.begin().begin().end());
+
+    c = ft0.begin().begin();
+    ++c;
+    forest_tree<int, fake_binary_tree<int> >::const_cursor d = c; 
+    BOOST_CHECK_EQUAL(*c.to_begin(), 4);
+    BOOST_CHECK(++c == d.end());
+    
+    c = ft0.begin();
+    BOOST_CHECK_EQUAL(*++c, 10);
+    BOOST_CHECK_EQUAL(*++c, 14);
+    d = c;
+    BOOST_CHECK(++c == ft0.end());
+    c = d;
+    BOOST_CHECK_EQUAL(*c.to_begin(), 13);
+    BOOST_CHECK(++c == d.end());
+    c = d.to_begin();
+    BOOST_CHECK_EQUAL(*c.to_begin(), 11);
+    BOOST_CHECK_EQUAL(*++c, 12);
+    BOOST_CHECK(++c == d.end());
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 
 //BOOST_FIXTURE_TEST_SUITE(forest_algorithms_test, test_binary_tree_with_list_fixture<int>)
 //

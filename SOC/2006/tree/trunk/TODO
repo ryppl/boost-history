@@ -15,8 +15,6 @@
 
 General:
 * preorder_insert_cursor: hopefully easy to implement...
-* Fix binary tree/node: empty() -> root.begin() == root.end() !
-* Check forest/binary_tree correspondence in a hard wired fashion.
 * Add checks for correspondence of concepts and archetypes!
 * Re-do forest (again!). No root(); begin() and end() instead. No default element at
   construction time (that would really suck). Rename forest_tree to forest, 
@@ -146,6 +144,7 @@ Future:
 * Optimise insert_cursor for use with binary_tree insert and copy ctor 
   (preorder copy; ideally, we can guarantee RAII for every single element)
   and clear/dtor (postorder for_each).
+* Deprecate non-preorder insert cursors.
 
 Ask on the mailing list:
 

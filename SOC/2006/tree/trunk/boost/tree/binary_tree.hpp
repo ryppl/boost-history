@@ -197,7 +197,8 @@ class binary_tree {
         void* node_hint = 0;
         
         node_pointer p_node = m_node_alloc.allocate(1, node_hint);
-        m_node_alloc.construct(p_node, val);
+        //m_node_alloc.construct(p_node, val);
+        *p_node = node_type(val);
         p_node->init();
         
         pos.attach(p_node);

@@ -93,8 +93,8 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
      */     
     cursor begin()
     {
-        cursor c(h.root());
-        return c.begin();
+        //cursor c(h.root());
+        return cursor(h.root());
     }
 
     /**
@@ -112,8 +112,8 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
      */     
     const_cursor cbegin() const
     {
-        const_cursor c(h.croot());
-        return c.begin();
+        //const_cursor c(h.croot());
+        return const_cursor(h.croot());
     }
 
     // TODO: end.
@@ -124,8 +124,10 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
      */     
     cursor end()
     {
-        cursor c(h.root());
-        return c.end();
+        base_cursor b(h.root());
+        while (!b.empty())
+            b.to_end();
+        return cursor(b);
     }
 
     /**
@@ -143,8 +145,10 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
      */     
     const_cursor cend() const
     {
-        const_cursor c(h.croot());
-        return c.end();
+        base_const_cursor b(h.croot());
+        while (!b.empty())
+            b.to_end();
+        return const_cursor(b);
     }
 
     /**

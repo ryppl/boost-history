@@ -67,8 +67,8 @@ public:
     forest_cursor(
         forest_cursor<OtherCursor> const& other
       , typename boost::enable_if<
-            boost::is_convertible<OtherCursor*, 
-               typename Cursor::base_pointer>  // is that correct?
+            boost::is_convertible<OtherCursor, 
+               Cursor>  // is that correct?
           , enabler
         >::type = enabler()
     )

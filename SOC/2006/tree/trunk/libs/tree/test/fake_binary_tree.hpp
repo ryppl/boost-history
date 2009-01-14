@@ -75,6 +75,8 @@ struct fake_binary_tree {
 
     descending_cursor insert(descending_cursor c, value_type const& v)
     {
+        if (c.m_pos >= m_data.size())
+            m_data.resize(c.m_pos + 1);
         m_data[c.m_pos] = v;
         return c;
     }
@@ -123,14 +125,16 @@ public:
 
     explicit fake_descending_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
     : m_tree(t), m_pos(p) {}
-
-//    explicit fake_descending_binary_cursor(fake_binary_tree<T> const& t, size_type p = 0)
-//    : m_tree(t), m_pos(p) {}
     
     fake_descending_binary_cursor(fake_descending_binary_cursor<T> const& other)
     : m_tree(other.m_tree), m_pos(other.m_pos) {}
 
-//    fake_descending_binary_cursor<T> operator=(fake_descending_binary_cursor<T> const&)
+    fake_descending_binary_cursor<T>& operator=(fake_descending_binary_cursor<T> const& other)
+    {
+        m_pos = other.m_pos;
+        return *this;
+    }
+    
 
     fake_binary_tree<T>& m_tree;
     typename fake_binary_tree<T>::size_type m_pos;
