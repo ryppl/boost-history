@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
 {
     using namespace boost::tree;
     
-    typedef test_searcher<false, balanced_tree<binary_tree<int>, balancers::unbalanced> > searcher_t;
+    typedef test_searcher<false, balance<binary_tree<int>, balancers::unbalanced> > searcher_t;
     searcher_t my_tree;
     
     searcher_t::iterator c, c1, c2, c3, c4, c5;

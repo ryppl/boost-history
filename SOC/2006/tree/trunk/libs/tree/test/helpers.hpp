@@ -8,7 +8,7 @@
 #define LIBS_TREE_TEST_HELPERS_HPP
 
 //#include <boost/tree/binary_tree.hpp>
-//#include <boost/tree/balanced_tree.hpp>
+//#include <boost/tree/balance.hpp>
 //#include <boost/tree/searcher.hpp>
 //
 //#include <boost/multi_index/identity.hpp>
@@ -41,12 +41,12 @@ struct test_with_list_fixture
 //// TODO: Ctor, dtors
 //template <class Hier, class Balance>
 //struct test_balancer
-// : public balanced_tree<Hier, Balance> {
+// : public balance<Hier, Balance> {
 //     
-//     typedef typename balanced_tree<Hier, Balance>::hierarchy_type hierarchy_type;
+//     typedef typename balance<Hier, Balance>::hierarchy_type hierarchy_type;
 //     
 //    explicit test_balancer(hierarchy_type const& hier = hierarchy_type())
-//    : balanced_tree<Hier, Balance>(hier)
+//    : balance<Hier, Balance>(hier)
 //    {}
 //    
 //    hierarchy_type& hierarchy()

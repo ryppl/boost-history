@@ -4,7 +4,7 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/tree/balanced_tree.hpp>
+#include <boost/tree/balance.hpp>
 #include <boost/tree/detail/balancers/unbalanced.hpp>
 #include <boost/tree/binary_tree.hpp>
 
@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_test )
     using namespace boost::tree;
     
     typedef binary_tree<int> tree_t;
-    typedef balanced_tree<tree_t, balancers::unbalanced> balancer_t;
+    typedef balance<tree_t, balancers::unbalanced> balancer_t;
     balancer_t my_tree; 
     
     balancer_t::iterator c, c1, c2, c3, c4, c5;

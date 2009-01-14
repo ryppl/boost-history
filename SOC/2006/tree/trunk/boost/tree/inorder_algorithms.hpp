@@ -151,7 +151,7 @@ lower_bound(MultiwayCursor x, T const& val)
 template <class MultiwayCursor, class T, class Cmp>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
-    /*((LessThanComparable<Cmp>))*/, // Problem with balanced_tree
+    /*((LessThanComparable<Cmp>))*/, // Problem with balance
     (MultiwayCursor)) // return type
 lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]

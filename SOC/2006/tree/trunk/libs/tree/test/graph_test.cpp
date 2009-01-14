@@ -16,7 +16,7 @@
 #include <list>
 #include <iterator>
 
-#include <boost/tree/balanced_tree.hpp>
+#include <boost/tree/balance.hpp>
 
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
