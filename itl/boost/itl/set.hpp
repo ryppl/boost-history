@@ -227,6 +227,11 @@ namespace boost{namespace itl
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator != (const itl::set<DomainT,Compare,Alloc>& lhs,
+                             const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return !(lhs == rhs); }
+
     /** Element equality. Two sets are equal if they contain the same elements */
     template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     inline bool is_element_equal(const itl::set<DomainT,Compare,Alloc>& lhs,
@@ -245,14 +250,21 @@ namespace boost{namespace itl
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator > (const itl::set<DomainT,Compare,Alloc>& lhs,
+                            const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return rhs < lhs; }
+
     /** Partial ordering which is induced by Compare */
     template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     inline bool operator <= (const itl::set<DomainT,Compare,Alloc>& lhs,
         const itl::set<DomainT,Compare,Alloc>& rhs)
-    {
-        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator<=((const base_type&)lhs, (const base_type&)rhs);
-    }
+	{ return !(lhs > rhs); }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator >= (const itl::set<DomainT,Compare,Alloc>& lhs,
+        const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return !(lhs < rhs); }
 
 
     template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>

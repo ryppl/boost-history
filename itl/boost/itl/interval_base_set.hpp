@@ -604,6 +604,13 @@ inline bool operator == (const interval_base_set<SubType,DomainT,Compare,Interva
 
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+inline bool operator != (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
+                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
+{ return !(lhs == rhs); }
+
+
+template<class SubType,
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline bool operator < (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 {
@@ -615,12 +622,21 @@ inline bool operator < (const interval_base_set<SubType,DomainT,Compare,Interval
 
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+inline bool operator > (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
+                        const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
+{ return rhs < lhs; }
+
+template<class SubType,
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline bool operator <= (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{
-    return lhs < rhs || lhs == rhs;
-}
+{ return !(lhs > rhs); }
 
+template<class SubType,
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+inline bool operator >= (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
+                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
+{ return !(lhs < rhs); }
 
 template<class CharType, class CharTraits, 
     class SubType, class DomainT, 

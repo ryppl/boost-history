@@ -332,6 +332,11 @@ namespace boost{namespace itl
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator != (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+    { return !(lhs == rhs); }
+
     //JODO comment... 
     template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
     inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
@@ -365,14 +370,21 @@ namespace boost{namespace itl
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator > (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+	{ return rhs < lhs; }
+
     /** Partial ordering which is induced by Compare */
     template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
     inline bool operator <= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
         const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-    {
-        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator<=((const base_type&)lhs, (const base_type&)rhs);
-    }
+	{ return !(lhs > rhs); }
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator >= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+	{ return !(lhs < rhs); }
 
     template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
         template <class Combiner>

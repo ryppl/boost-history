@@ -11,6 +11,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/notate.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/interval.hpp>
 
 namespace boost{namespace itl
 {
@@ -19,12 +20,13 @@ template <class IntervalContainerT>
 typename IntervalContainerT::size_type continuous_cardinality(const IntervalContainerT& object)
 {
     typedef typename IntervalContainerT::size_type size_type;
+    typedef typename IntervalContainerT::interval_type interval_type;
 
     size_type size = neutron<size_type>::value();
     size_type interval_size;
     const_FORALL(typename IntervalContainerT, it, object)
     {
-        interval_size = IntervalContainerT::key_value(it).continuous_cardinality();
+		interval_size = continuous_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
         if(interval_size == std::numeric_limits<size_type>::infinity())
             return interval_size;
         else
@@ -37,10 +39,11 @@ template <class IntervalContainerT>
 typename IntervalContainerT::size_type discrete_cardinality(const IntervalContainerT& object)
 {
     typedef typename IntervalContainerT::size_type size_type;
+    typedef typename IntervalContainerT::interval_type interval_type;
 
     size_type size = neutron<size_type>::value();
     const_FORALL(typename IntervalContainerT, it, object)
-        size += IntervalContainerT::key_value(it).discrete_cardinality();
+		size += discrete_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
     return size;
 }
 

@@ -255,6 +255,47 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_add_4_bicremental_type
     BOOST_CHECK_EQUAL( split_map3.iterative_size(), 3 );
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_add2_4_bicremental_types, T, bicremental_types)
+{         
+    typedef int U;
+    typedef interval_map<T,U>        IntervalMapT;
+    typedef split_interval_map<T,U> SplitIntervalMapT;
+    U u1 = make<U>(1);
+
+    T v1 = make<T>(1);
+    T v2 = make<T>(2);
+    T v3 = make<T>(3);
+    T v4 = make<T>(4);
+    T v5 = make<T>(5);
+
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+
+    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
+    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
+    std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
+    mapping_pair<T,U> v1_1(v1, u1);
+    mapping_pair<T,U> v3_1(v3, u1);
+    mapping_pair<T,U> v5_1(v5, u1);
+
+    SplitIntervalMapT split_map;
+    split_map.add(I1_3D_1).add(I2_4D_1);
+    split_map |= I4_5D_1;
+    BOOST_CHECK_EQUAL( split_map.iterative_size(), 4 );
+    IntervalMapT join_map;
+    join_map |= split_map;
+    BOOST_CHECK_EQUAL( join_map.iterative_size(), 3 );
+
+    IntervalMapT join_map3;
+    join_map3.add(v1_1).add(v3_1);
+    join_map3 |= v5_1;
+    BOOST_CHECK_EQUAL( join_map3.iterative_size(), 3 );
+    SplitIntervalMapT split_map3;
+    split_map3 |= join_map3;
+    BOOST_CHECK_EQUAL( split_map3.iterative_size(), 3 );
+}
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_subtract_4_bicremental_types, T, bicremental_types)
 {         

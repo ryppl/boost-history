@@ -40,6 +40,7 @@ DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <boost/assert.hpp> 
 #include <boost/static_assert.hpp> 
+#include <boost/next_prior.hpp> 
 #include <boost/call_traits.hpp> 
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
@@ -404,10 +405,6 @@ public:
     /** <tt>*this</tt> is superset of <tt>sub</tt> */
     bool contains(const interval& sub)const;
 
-    /** Equality on intervals */
-    bool equal(const interval& x2)const
-    { return (empty() && x2.empty()) || (lower_equal(x2) && upper_equal(x2)); }
-
     /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
     bool is_disjoint(const interval& x2)const
     { return exclusive_less(x2) || x2.exclusive_less(*this); }
@@ -416,10 +413,6 @@ public:
 
     /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> */
     bool exclusive_less(const interval& x2)const;
-
-    /** Less on intervals */
-    bool less(const interval& x2)const
-    { return lower_less(x2) || ( lower_equal(x2) && upper_less(x2) ); }
 
     /** Set the interval empty */
     void clear()
@@ -478,8 +471,8 @@ left_over = x1 - x2; //on the right side.
 	*/
 	interval& right_subtract(const interval& x2);
 
-    /** Interval spanning from lower bound of *this interval to the upper bound of rhs.
-        Bordertypes according to the lower bound of *this and the upper bound of rhs.   */
+    /** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
+        Bordertypes according to the lower bound of \c *this and the upper bound of \c rhs.   */
     interval span(const interval& rhs)const
     {
         if(empty())          return rhs;
@@ -489,99 +482,82 @@ left_over = x1 - x2; //on the right side.
     }
 
 	
-	/// Interval as string
+	/** Interval as string */
     const std::string as_string()const;
 
 
 
-    /// First (smallest) element of the interval
+    /** First (smallest) element of the interval */
     DomainT first()const;
-    /// Last (largest) element of the interval
+    /** Last (largest) element of the interval */
     DomainT last()const;
 
-    /// Cardinality of the interval: The number of elements
+    /** Cardinality of the interval: The number of elements */
     size_type cardinality()const;
 
-    size_type continuous_cardinality()const
-    { 
-        if(empty()) 
-            return itl::neutron<size_type>::value();
-        else if(is_closed() && domain_equal(_lwb, _upb))
-            return itl::unon<size_type>::value();
-        else 
-            return std::numeric_limits<size_type>::infinity();
-    }
-
-    size_type discrete_cardinality()const
-    { return empty()? itl::neutron<size_type>::value() : succ(last()-first()); }
-
-
-    /// Arithmetic size of the interval
+    /** Arithmetic size of the interval */
     difference_type length()const;
 
-    difference_type continuous_length()const
-    { return empty() ? itl::neutron<difference_type>::value() : _upb - _lwb; }
-
-    difference_type discrete_length()const
-    {
-        return empty() ? 
-            itl::neutron<difference_type>::value() : 
-            succ(last() - first()); 
-    }
-
-    /// Size of the interval
+    /** Size of the interval */
     size_type size()const { return cardinality(); }
 
-    /// <tt>*this</tt> interval as closed <tt>[x,y]</tt> interval
+    /** <tt>*this</tt> interval as closed <tt>[x,y]</tt> interval. Requires Integral<domain_type>. */
     interval as_closed_interval()const;
-    /// <tt>*this</tt> interval as open  <tt>[x,y]</tt> interval
+
+    /** <tt>*this</tt> interval as open  <tt>[x,y]</tt> interval. Requires Integral<domain_type>. */
     interval as_rightopen_interval()const;
 
     /** Transforms the interval to the bound-type <tt>bound_types bt</tt> without
-        changing it's content
-    */
+        changing it's content. Requires Integral<domain_type>.    */
     void transform_bounds(bound_types bt);
 
-    /** Sets left border closed. */
+    /** Sets left border closed. Requires Integral<domain_type>.*/
     void close_left_bound();
 
-    /** Sets right border open. */
+    /** Sets right border open. Requires Integral<domain_type>. */
     void open_right_bound();
     
 
-	/// Maximum Interval
-    static interval always()
+	/** An interval that covers the complete range of it's domain_type */
+    static interval whole()
     { return interval<DomainT>::closed(std::numeric_limits<DomainT>::min(), 
                                        std::numeric_limits<DomainT>::max()); }
 
 
-private:
-    void set_lwb(DomainT lw) { _lwb=lw; }
-    void set_upb(DomainT up) { _upb=up; }
-
-public:
+	/** First element of \c *this is less than first element of \c x2 */
     bool lower_less(const interval& x2)const;
+	/** Last element of \c *this is less than last element of \c x2 */
     bool upper_less(const interval& x2)const;
+	/** First element of \c *this is less than or equal to the first element of \c x2 */
     bool lower_less_equal(const interval& x2)const;
+	/** Last element of \c *this is less than or equal to the last element of \c x2 */
     bool upper_less_equal(const interval& x2)const;
+	/** First element of \c *this is equal to the first element of \c x2 */
     bool lower_equal(const interval& x2)const;
+	/** Last element of \c *this is equal to the last element of \c x2 */
     bool upper_equal(const interval& x2)const;
 
 public:
     typedef typename boost::call_traits<DomainT>::param_type DomainP;
 
+	/** Less compare of interval elements. */
 	inline static bool domain_less(DomainP left, DomainP right)       
 	{return domain_compare()(left, right) ;}
 
+	/** Less or equal compare of interval elements. */
 	inline static bool domain_less_equal(DomainP left, DomainP right) 
 	{return !domain_compare()(right, left );}
 
+	/** Equality compare of interval elements. */
 	inline static bool domain_equal(DomainP left, DomainP right)
 	{return !domain_compare()(left, right) && !domain_compare()(right, left);}
 
 private:
-    // public?
     typedef std::pair<DomainT, bound_types> BoundT;
+
+private:
+    void set_lwb(DomainT lw) { _lwb=lw; }
+    void set_upb(DomainT up) { _upb=up; }
 
     void set_lwb_type(bound_types bt) 
     { _boundtypes = (unsigned char)((LEFT_OPEN & _boundtypes) | (RIGHT_OPEN & bt)); }
@@ -668,13 +644,23 @@ bool interval<DomainT,Compare>::empty()const
 template<class IntervalT> 
 struct continuous_interval
 {
-    static typename IntervalT::size_type 
-        cardinality(const IntervalT& x) 
-    { return x.continuous_cardinality(); }
+    static typename IntervalT::size_type cardinality(const IntervalT& x) 
+    {
+		typedef typename IntervalT::size_type SizeT;
+		if(x.empty()) 
+			return itl::neutron<SizeT>::value();
+        else if(x.is_closed() && IntervalT::domain_equal(x.lower(), x.upper()))
+            return itl::unon<SizeT>::value();
+        else 
+            return std::numeric_limits<SizeT>::infinity();
+	}
 
     static typename IntervalT::difference_type 
         length(const IntervalT& x) 
-    { return x.continuous_length(); }
+    {
+		return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
+			             : x.upper() - x.lower();
+	}
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
     { return false; }
@@ -693,11 +679,17 @@ struct discrete_interval
 
     static typename IntervalT::size_type 
         cardinality(const IntervalT& x) 
-    { return x.discrete_cardinality(); }
+    { 
+		return x.empty()? itl::neutron<typename IntervalT::size_type>::value() 
+			            : succ(x.last()-x.first());
+	}
 
-    static typename IntervalT::difference_type 
-        length(const IntervalT& x) 
-    { return x.discrete_length(); }
+    static typename IntervalT::difference_type length(const IntervalT& x) 
+    {
+		return x.empty() ? 
+            itl::neutron<typename IntervalT::difference_type>::value() : 
+            succ(x.last() - x.first()); 
+	}
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
     { 
@@ -1123,19 +1115,36 @@ void interval<DomainT,Compare>::open_right_bound()
 }
 
 
-
+/** Equality on intervals */
 template <class DomainT, ITL_COMPARE Compare>
 inline bool operator == (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
 {
-    return lhs.equal(rhs);
+	return (lhs.empty() && rhs.empty()) || (lhs.lower_equal(rhs) && lhs.upper_equal(rhs));
 }
 
 template <class DomainT, ITL_COMPARE Compare>
+inline bool operator != (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
+{ return !(lhs == rhs); }
+
+/** Strict weak less oredering on intervals */
+template <class DomainT, ITL_COMPARE Compare>
 inline bool operator < (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
 {
-    return lhs.less(rhs);
+	if(lhs.empty()) return !rhs.empty();
+	else return lhs.lower_less(rhs) || (lhs.lower_equal(rhs) && lhs.upper_less(rhs)); 
 }
 
+template <class DomainT, ITL_COMPARE Compare>
+inline bool operator > (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
+{ return rhs < lhs; }
+
+template <class DomainT, ITL_COMPARE Compare>
+inline bool operator <= (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
+{ return !(lhs > rhs); }
+
+template <class DomainT, ITL_COMPARE Compare>
+inline bool operator >= (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
+{ return !(lhs < rhs); }
 
 /// Comparison functor on intervals implementing an overlap free less 
 /**    

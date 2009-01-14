@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_integral_types, T, integr
 
 BOOST_AUTO_TEST_CASE(test_itl_interval_ctor_specific)
 {
-    BOOST_CHECK_EQUAL(interval<double>().continuous_length(), 0.0);
+    BOOST_CHECK_EQUAL(interval<double>().length(), 0.0);
     BOOST_CHECK_EQUAL(interval<double>(5.0,5.0).cardinality(), 1);
     BOOST_CHECK_EQUAL(interval<std::string>("test","test").cardinality(), 1);
     BOOST_CHECK_EQUAL(interval<std::string>("best","test").cardinality(), interval<double>(0.0,0.1).cardinality());
@@ -162,6 +162,50 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_integral_types, T, integ
     BOOST_CHECK_EQUAL( C2___8D, C2___8D );    
 }
 
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_less_4_integral_types, T, integral_types)
+{
+    T v2 = make<T>(2);
+    T v3 = make<T>(3);
+    T v4 = make<T>(4);
+    T v7 = make<T>(7);
+    T v8 = make<T>(8);
+    BOOST_CHECK_EQUAL(interval<T>() < interval<T>(v7,v3), false);
+	BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v7), false);
+	BOOST_CHECK_EQUAL(interval<T>::leftopen(v3,v3) < interval<T>::closed(v7,v3), false);
+
+    BOOST_CHECK_EQUAL(interval<T>() < interval<T>(v3,v3), true);
+	BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v8), true);
+
+    //I: (I)nside  = closed bound
+    //C: left open bound
+    //D: right open bound
+    interval<T>  I3_7I  = interval<T>::closed(v3,v7);
+    interval<T>  I4_7I  = interval<T>::closed(v4,v7);
+
+    interval<T>  I3__8D = interval<T>::rightopen(v3,v8);
+    interval<T> C2__7I  = interval<T>::leftopen(v2,v7);
+    interval<T> C2___8D = interval<T>::open(v2,v8);
+
+    BOOST_CHECK_EQUAL(  I3_7I <  I3_7I  , false);    
+    BOOST_CHECK_EQUAL(  I3_7I <  I3__8D , false);    
+    BOOST_CHECK_EQUAL(  I3_7I < C2__7I  , false);    
+    BOOST_CHECK_EQUAL(  I3_7I < C2___8D , false);    
+
+	BOOST_CHECK_EQUAL(  I3_7I <  I4_7I  , true);    
+
+
+    BOOST_CHECK_EQUAL(  I3__8D<  I3__8D , false);    
+    BOOST_CHECK_EQUAL(  I3__8D< C2__7I  , false);    
+    BOOST_CHECK_EQUAL(  I3__8D< C2___8D , false);    
+
+    BOOST_CHECK_EQUAL( C2__7I < C2__7I  , false);    
+    BOOST_CHECK_EQUAL( C2__7I < C2___8D , false);    
+
+    BOOST_CHECK_EQUAL( C2___8D< C2___8D , false);    
+}
+
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_bicremental_continuous_types, T, bicremental_continuous_types)
 {
     T v3 = make<T>(3);
@@ -179,13 +223,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_bicremental_continuous_t
     BOOST_CHECK_EQUAL( I3_7I == I3_7D, false  );    
     BOOST_CHECK_EQUAL( I3_7I == C3_7D, false  );    
     BOOST_CHECK_EQUAL( I3_7I == C3_7D, false );    
+    BOOST_CHECK_EQUAL( I3_7I != I3_7D, true  );    
+    BOOST_CHECK_EQUAL( I3_7I != C3_7D, true  );    
+    BOOST_CHECK_EQUAL( I3_7I != C3_7D, true );    
 
     BOOST_CHECK_EQUAL( I3_7D ,  I3_7D  );    
     BOOST_CHECK_EQUAL( I3_7D == C3_7I, false  );    
     BOOST_CHECK_EQUAL( I3_7D == C3_7D, false );    
+    BOOST_CHECK_EQUAL( I3_7D != C3_7I, true  );    
+    BOOST_CHECK_EQUAL( I3_7D != C3_7D, true );    
 
     BOOST_CHECK_EQUAL( C3_7I ,  C3_7I  );    
     BOOST_CHECK_EQUAL( C3_7I == C3_7D, false );    
+    BOOST_CHECK_EQUAL( C3_7I != C3_7D, true );    
 
     BOOST_CHECK_EQUAL( C3_7D,   C3_7D  );    
 } 
