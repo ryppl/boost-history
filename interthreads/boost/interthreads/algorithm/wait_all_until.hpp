@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -64,8 +64,8 @@ namespace interthreads {
     }
     
     template <typename Sequence>
-    typename result_of::wait_all_until<Sequence> 
-    wait_all_until(Sequence& t, const system_time& abs_time) {
+    typename result_of::wait_all_until<Sequence const> 
+    wait_all_until(Sequence const& t, const system_time& abs_time) {
         bool r = fct::wait_until(abs_time)(fusion::at_c<0>(t));
        	if (r) return true;
         else {
