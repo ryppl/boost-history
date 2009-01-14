@@ -16,11 +16,10 @@
 General:
 * preorder_insert_cursor: hopefully easy to implement...
 * Add checks for correspondence of concepts and archetypes!
-* Re-do forest (again!). No root(); begin() and end() instead. No default element at
-  construction time (that would really suck). Rename forest_tree to forest, 
-  as it's going to be a forest, not just "one" tree.
+* Re-do forest (again!).
   This seems to raise one issue, though: subtree algorithms operate on subtree root cursors,
-  not ranges. (They might, however, work for "subforests".)
+  not ranges. (They might, however, work for "subforests". Consult Austern's segmented 
+  iterators paper!)
   They also work for the important special case in which forest consists of only one
   subtree!
 * Improve cursor_archetype. Currently, there's trouble eg with constructors.

@@ -115,7 +115,7 @@ struct test_binary_tree_with_list_fixture
 };
 
 template <class Tree>
-void validate_corresponding_forest_tree(Tree const& t)
+void validate_corresponding_forest(Tree const& t)
 {
     typename Tree::const_cursor c = t.root().begin();
     BOOST_CHECK_EQUAL(*c, 8);

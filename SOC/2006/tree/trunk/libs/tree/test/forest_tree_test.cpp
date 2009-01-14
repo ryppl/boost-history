@@ -4,7 +4,7 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/tree/forest_tree.hpp>
+#include <boost/tree/forest.hpp>
 #include <boost/tree/algorithm.hpp>
 
 #include <boost/lambda/bind.hpp>
@@ -14,7 +14,7 @@
 
 #include <list>
 
-#define BOOST_TEST_MODULE forest_tree test
+#define BOOST_TEST_MODULE forest test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_SUITE( basic_forest_test )
 
 BOOST_AUTO_TEST_CASE( constructors_test )
 {
-    forest_tree<int> ft0;
+    forest<int> ft0;
     //BOOST_CHECK_EQUAL(*ft0.root(), 0);
     BOOST_CHECK(ft0.empty());
 }
@@ -37,9 +37,9 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //{
 //    using namespace boost::tree;
 //
-////    forest_tree<int> mytree;
+////    forest<int> mytree;
 ////    
-////    forest_tree<int>::cursor c = mytree.root();
+////    forest<int>::cursor c = mytree.root();
 ////    c = mytree.insert(c, 6);
 ////    BOOST_CHECK_EQUAL(*c, 6);
 ////
@@ -55,9 +55,9 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 ////    ++c;
 ////    BOOST_CHECK_EQUAL(*c, 6);
 //    
-//    forest_tree<int> ft0;
+//    forest<int> ft0;
 //
-//    forest_tree<int>::cursor c = ft0.insert(ft0.end(), 8); //FIXME
+//    forest<int>::cursor c = ft0.insert(ft0.end(), 8); //FIXME
 //    
 //    BOOST_CHECK_EQUAL(*c, 8);
 //    BOOST_CHECK(c == ft0.begin());
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    BOOST_CHECK_EQUAL(*c.to_begin(), 1);
 //    BOOST_CHECK(c.empty());
 //    
-//    //validate_corresponding_forest_tree(ft0);
+//    //validate_corresponding_forest(ft0);
 //}
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -122,8 +122,8 @@ BOOST_FIXTURE_TEST_SUITE(forest_fixture_test, fake_binary_tree_fixture<int>)
 
 BOOST_AUTO_TEST_CASE( binary_tree_constructor_test )
 {
-    forest_tree<int, fake_binary_tree<int> > ft0(fbt1);
-    forest_tree<int, fake_binary_tree<int> >::const_cursor c = ft0.begin();
+    forest<int, fake_binary_tree<int> > ft0(fbt1);
+    forest<int, fake_binary_tree<int> >::const_cursor c = ft0.begin();
    
     //TODO: validate
     BOOST_CHECK_EQUAL(*c, 8);
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( binary_tree_constructor_test )
 
     c = ft0.begin().begin();
     ++c;
-    forest_tree<int, fake_binary_tree<int> >::const_cursor d = c; 
+    forest<int, fake_binary_tree<int> >::const_cursor d = c; 
     BOOST_CHECK_EQUAL(*c.to_begin(), 4);
     BOOST_CHECK(++c == d.end());
     
@@ -172,9 +172,9 @@ BOOST_AUTO_TEST_SUITE_END()
 //{
 //    using namespace boost::tree;
 //
-//    forest_tree<int> ft(bt);
+//    forest<int> ft(bt);
 //    
-//    //validate_corresponding_forest_tree(ft);
+//    //validate_corresponding_forest(ft);
 //    
 //    std::list<int> test_list;
 //    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
@@ -197,9 +197,9 @@ BOOST_AUTO_TEST_SUITE_END()
 //{
 //    using namespace boost::tree;
 //
-//    forest_tree<int> ft(bt);
+//    forest<int> ft(bt);
 //    
-//    //validate_corresponding_forest_tree(ft);
+//    //validate_corresponding_forest(ft);
 //    
 //    std::list<int> test_list;
 //    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
@@ -218,9 +218,9 @@ BOOST_AUTO_TEST_SUITE_END()
 //{
 //    using namespace boost::tree;
 //
-//    forest_tree<int> ft(bt);
+//    forest<int> ft(bt);
 //    
-//    //validate_corresponding_forest_tree(ft);
+//    //validate_corresponding_forest(ft);
 //    
 //    std::list<int> test_list;
 //    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
