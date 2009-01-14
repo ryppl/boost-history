@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -122,7 +122,6 @@ namespace detail {
 
 		boost::thread thread_;
 		static once_flag flag;
-//		static keep_alive_mgr* instance_;
 //		keep_alive_mgr(const keep_alive_mgr&);
 		
 	};
@@ -170,7 +169,6 @@ namespace this_thread {
     enable_keep_alive::enable_keep_alive(
             std::size_t periods, std::size_t checkins) 
     {
-    //	if (detail::thread_keep_alive_ctx::instance().get()==0) throw error;
         backup_=detail::thread_keep_alive_ctx::instance()->backup(&data_);
         detail::thread_keep_alive_ctx::instance()->enable_keep_alive(periods, checkins);
     }
@@ -180,7 +178,6 @@ namespace this_thread {
     }
 
     disable_keep_alive::disable_keep_alive() {
-    //	if (detail::thread_keep_alive_ctx::instance().get()==0) throw error;
         backup_=detail::thread_keep_alive_ctx::instance()->backup(&data_);
         detail::thread_keep_alive_ctx::instance()->disable_keep_alive();
     }
@@ -190,19 +187,14 @@ namespace this_thread {
     }
 
 void keep_alive_point() {
-//	if (detail::thread_keep_alive_ctx::instance().get()==0) throw error;
 	detail::thread_keep_alive_ctx::instance()->check_point();
 }
 
 bool keep_alive_enabled() {
-//	if (detail::thread_keep_alive_ctx::instance().get()==0) throw error;
 	return detail::thread_keep_alive_ctx::instance()->enabled();
 }
 
-//void set_on_dead_thread(on_dead_thread_type fct, thread* th) { 
 void set_on_dead_thread(void (*fct)(thread::id, thread*), thread* th) {
-
-//	if (detail::thread_keep_alive_ctx::instance().get()==0) throw error;
 	detail::thread_keep_alive_ctx::instance()->set_on_dead_thread(fct, th);
 }
 

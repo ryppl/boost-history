@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Roland Schwarz 2006. 
-// (C) Copyright Vicente J. Botet Escriba 2008. 
+// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or 
 //  copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,12 +10,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/interthreads/thread_decorator.hpp>
+#include <boost/interthreads/thread_decoration.hpp>
 #include <boost/thread/thread.hpp>
 
 namespace boost {
 namespace interthreads {
-//boost::interthreads::
     thread_decoration* boost::interthreads::thread_decoration::last_ = 0;
 
     void thread_decoration::decorate() {
@@ -27,11 +26,6 @@ namespace interthreads {
             }
 		    p = p->prev_;
 	    }
-    }
-
-    void thread_decorator::operator()() const {
-        decorate();
-        (*func_)();
     }
   
 }
