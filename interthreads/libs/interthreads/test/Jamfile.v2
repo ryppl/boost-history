@@ -1,6 +1,6 @@
 #  (C) Copyright William E. Kempf 2001. 
 #  (C) Copyright 2007 Anthony Williams. 
-#  (C) Copyright 2007 Vicente Botet Escriba. 
+#  (C) Copyright 2008-2009 Vicente Botet Escriba. 
 #  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 #  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
@@ -29,7 +29,7 @@ project
       <target-os>cygwin
       <threadapi>pthread
       <variant>debug
-      <define>BOOST_THREAD_HAS_THREAD_ATTR
+#      <define>BOOST_THREAD_HAS_THREAD_ATTR
 
     ;
 
@@ -46,9 +46,11 @@ rule interthreads-run ( sources * )
 {
     test-suite "tests"
         : 
+          [ interthreads-run move_test.cpp ]
           [ interthreads-run test_basic_threader.cpp ]
           [ interthreads-run test_launcher.cpp ]
           [ interthreads-run test_threader.cpp ]
+          [ interthreads-run test_thread_pool.cpp ]
           [ interthreads-run test_thread_decorator.cpp ]
           [ interthreads-run test_thread_shared_ptr.cpp ]
     ;

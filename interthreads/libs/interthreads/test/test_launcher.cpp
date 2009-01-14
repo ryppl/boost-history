@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -8,69 +8,135 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "boost/interthreads/launcher.hpp"
+#include <boost/interthreads/typeof/launcher.hpp>
+#include <boost/interthreads/typeof/future.hpp>
+#include <boost/interthreads/algorithm.hpp>
 
 #include <iostream>
 #include <boost/test/unit_test.hpp>
+#include <libs/interthreads/test/data_types.hpp>
+#include <libs/interthreads/test/test_ae.hpp>
 
 using namespace boost::unit_test;
 namespace bith = boost::interthreads;
+namespace bfus = boost::fusion;
 
-int test_value;
-int simple_thread() {
-    test_value=999;
-    return test_value;
+void do_test_member_fork() {
+    bith::shared_launcher ae;
+    aetst::do_test_member_fork(ae);
 }
 
-int simple_thread_1(unsigned i) {
-    test_value=i;
-    return test_value;
-}
-
-void test_dir_fork() {
+void do_test_member_fork_move_unique() {
     bith::launcher ae;
-    test_value=0;
-	boost::unique_future<int> fut  = ae.fork(simple_thread);
-    int res_value = fut.get();
-    BOOST_CHECK_EQUAL(test_value, 999);
-    BOOST_CHECK_EQUAL(res_value, 999);
-}    
+    aetst::do_test_member_fork_move(ae);
+}
+void do_test_member_fork_move() {
+    bith::shared_launcher ae;
+    aetst::do_test_member_fork_move(ae);
+}
 
-void test_dir_fork_1() {
+void do_test_member_fork_bind() {
+    bith::shared_launcher ae;
+    aetst::do_test_member_fork_bind(ae);
+}
+
+void do_test_member_fork_bind_move() {
     bith::launcher ae;
     test_value=0;
 	boost::unique_future<int> fut  = ae.fork(boost::bind(simple_thread_1, 2));
     int res_value = fut.get();
     BOOST_CHECK_EQUAL(test_value, 2);
     BOOST_CHECK_EQUAL(res_value, 2);
-}    
+}
 
-void test_indir_fork() {
+void do_test_fork() {
+    bith::shared_launcher ae;
+    aetst::do_test_fork(ae);
+}
+
+void do_test_fork_move() {
     bith::launcher ae;
     test_value=0;
-	boost::unique_future<int> fut = bith::fork(ae, simple_thread);
+    boost::unique_future<int> fut = bith::fork(ae, simple_thread);
     int res_value = fut.get();
     BOOST_CHECK_EQUAL(test_value, 999);
     BOOST_CHECK_EQUAL(res_value, 999);
-}    
+}
 
-void test_indir_fork_1() {
+void do_test_fork_1() {
+    bith::shared_launcher ae;
+    aetst::do_test_fork_1(ae);
+}
+void do_test_fork_1_move() {
     bith::launcher ae;
     test_value=0;
-	boost::unique_future<int> fut = fork(ae, simple_thread_1, 2);
+    boost::unique_future<int> fut = fork(ae, simple_thread_1, 2);
     int res_value = fut.get();
     BOOST_CHECK_EQUAL(test_value, 2);
     BOOST_CHECK_EQUAL(res_value, 2);
-}    
+}
 
+void do_test_creation_through_functor()
+{
+    bith::shared_launcher ae;
+    aetst::do_test_creation_through_functor(ae);
+}
+
+void do_test_creation_through_functor_move()
+{
+    bith::launcher ae;
+    copyable_functor f;
+    boost::unique_future<int> act=bith::fork(ae, f);
+    
+    int res = act.get();
+    BOOST_CHECK_EQUAL(res, 999);
+}
+
+void do_test_creation_through_reference_wrapper()
+{
+    bith::shared_launcher ae;
+    aetst::do_test_creation_through_reference_wrapper(ae);
+}
+
+void do_test_wait_all() {
+    bith::shared_launcher ae;
+    aetst::do_test_wait_all(ae);
+}
+
+void do_test_wait_for_any() {
+    bith::shared_launcher ae;
+    aetst::do_test_wait_for_any(ae);
+}
+
+void do_test_set_all() {
+    bith::shared_launcher ae;
+    aetst::do_test_set_all(ae);
+}
+
+void do_test_wait_for_all() {
+    bith::shared_launcher ae;
+    aetst::do_test_wait_for_all(ae);
+}
 
 test_suite* init_unit_test_suite(int, char*[])
 {
-  test_suite* test = BOOST_TEST_SUITE("launcher");
-  test->add(BOOST_TEST_CASE(&test_dir_fork));
-  test->add(BOOST_TEST_CASE(&test_dir_fork_1));
-  test->add(BOOST_TEST_CASE(&test_indir_fork));
-  test->add(BOOST_TEST_CASE(&test_indir_fork_1));
-  return test;
+    test_suite* test = BOOST_TEST_SUITE("launcher");
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_move));
+    
+    test->add(BOOST_TEST_CASE(&do_test_member_fork));
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_move));
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_bind_move));
+    test->add(BOOST_TEST_CASE(&do_test_fork));
+    test->add(BOOST_TEST_CASE(&do_test_fork_move));
+    test->add(BOOST_TEST_CASE(&do_test_fork_1));
+    test->add(BOOST_TEST_CASE(&do_test_fork_1_move));
+    test->add(BOOST_TEST_CASE(&do_test_creation_through_functor));
+    test->add(BOOST_TEST_CASE(&do_test_creation_through_reference_wrapper));
+    test->add(BOOST_TEST_CASE(&do_test_wait_all));
+    test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
+    test->add(BOOST_TEST_CASE(&do_test_set_all));
+    test->add(BOOST_TEST_CASE(&do_test_wait_for_all));
+    return test;
 }
 
