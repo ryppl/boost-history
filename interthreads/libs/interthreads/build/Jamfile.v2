@@ -1,7 +1,7 @@
 # $Id$
 # Copyright 2006-2007 Roland Schwarz.
 # Copyright 2007 Anthony Williams
-# Copyright 2007 Vicente Botet Escriba
+# Copyright 2008-2009 Vicente Botet Escriba
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -40,10 +40,10 @@ import path ;
 project boost/interthreads
     : source-location ../src
     : requirements <threading>multi
-#      <target-os>cygwin
-#      <threadapi>pthread
-#      <variant>debug
-      <define>BOOST_THREAD_HAS_THREAD_ATTR
+      <target-os>cygwin
+      <threadapi>pthread
+      <variant>debug
+#      <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
       <link>static:<define>BOOST_INTERTHREADS_BUILD_LIB=1
