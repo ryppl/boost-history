@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Vicente J Botet Escriba.
+  (C) Copyright 2008-20009 Vicente J Botet Escriba.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,19 +7,28 @@
 
 [section:changes  Appendix A: History]
 
-[heading [*Version 0.2, December 07, 2008] ['Movable thread tuples, Threader and test on more toolsets]]
+[heading [*Version 0.2, December 07, 2009] Asynchronous execution and test on more toolsets]
 
 [*Features:]
 
-* Make movable thread_tuple_once and thread_group_once
-* Threader/joiner classes
+* Asynchronous executors (AE) and asynchronous completion token (ACT) framework
+    * fork and fork_all functions
+    * wait_for_all, wait_for_any functions
+    * get_all, join_all, ...
+* unique/shared threader (AE) and unique/shared joiner(ACT) classes
+* basic_threader(AE) class
+* unique/shared launcher(AE) class
+* scheduler(AE) class (working with tp::pool(AE) and tp::task (ACT))
+* thread_decorator can now decorate a nullary function in addition to a callable function
+* asynchronous_executor_decorator mixin allows to decorate the functions launched by an asynchronous executor
+* Boost.Typeof registration for the ACT classes
+* The AE/ACT framework comes with significant tests
 
 [*Toolsets:]
 
-* Tested with static and shared lib.
 * Tested on Linux gcc 3.4.6.
 * Tested on Linux gcc 4.1.2.
-* Modification helping Windows.
+* Modification helping Windows (not tested)
 
 [*Bugs:]
 
@@ -36,7 +45,13 @@
  
 [heading [*Bugs:]]
 
-[*v0.1#1: basic_keep_alive example do not link.] 
+[*v0.2#2: Some trouble with the use of tp::pool firectly, use scheduler instead.]
+
+[*v0.2#1: get_all do not work yet, use set_all instead.] 
+get_all do not work because fusion transform sequence function can not take non const sequences.
+Maybe we can emulate it using set_all and a mpl a transformation for a tuple of ACT to a tuple of result_type.
+
+CLOSED [*v0.1#1: basic_keep_alive example do not link.] 
 
 
 

@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Vicente J Botet Escriba.
+  (C) Copyright 2008-20009 Vicente J Botet Escriba.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -13,6 +13,9 @@ adapt his implementation.
 
 Thanks also must go to Jochen Heckl for the ideas given respect to the thread_tuple::wait_first implementation.
 
-You can help me to make this library better! Any feedback  is very welcome. 
+The Threader/Joiner design is taken from [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
+Many thanks to Kevlin Henney to make evident to me the separation between asynchonous executors, and asynchronous completion tokens.
+
+You can help me to make this library better! Any feedback is very welcome. 
 
 [endsect]

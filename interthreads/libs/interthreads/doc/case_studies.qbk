@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Vicente J. Botet Escriba
+  (C) Copyright 2008-20009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -29,13 +29,6 @@ thread_keep_alive.hpp and thread_keep_alive.cpp is a good example of the use of 
 
 [endsect]
 
-[/==================================]
-[section Any ideas on a thread_tuple, thread_tuple_once practical example are welcome?]
-[/==================================]
-
-
-[endsect]
-
 
 [/==================================]
 [section Thread safe deferred traces]
@@ -53,6 +46,7 @@ global mutex
 This mutex could be the bottleneck of the system. Onle one mutex resource for all the user threads.
 
 [pre    
+
         U        U
          \     /
           \   /
@@ -63,7 +57,7 @@ This mutex could be the bottleneck of the system. Onle one mutex resource for al
 ]
 
 
-[$images/star.png]
+[/$images/star.png]
 
 Another approach could be to use a queue of output stream buffers for each thread. 
 Each buffer is timestamped with the creation date and there is concentrator that takes one by one the elements ordered by the timestamp.
@@ -72,9 +66,10 @@ There is a single thread, the concentrator that pops from these queue.
 In this context we can ensure thread safety without locking as far as 
 the queue has at least two messages.
 
-[$images/fourche.png]
+[/$images/fourche.png]
 
 [pre
+
     U ----- R ------+
                      \   
     U ----- R ------\ \
@@ -104,7 +99,7 @@ With this interface the user can use cout_ as it used std::cout.
 
     cout_ << "Hello World!" << std::endl ;
 
-All the magic is in the template class boost::iostreams::stream<>. The parameter must be a model of a sink (See the boost.Iostreams library). 
+All the magic is in the `template class boost::iostreams::stream<>`. The parameter must be a model of a sink (See the Boost.Iostreams library). 
 Here it is.
 
     namespace detail {
@@ -122,7 +117,7 @@ Here it is.
         };
     }
 
-This class declares the just minimum in order to model a sink. In addition as in order to mask the implementation the Piml idiom is used.
+This class declares the just minimum in order to model a sink. In addition as in order to mask the implementation the PImpl idiom is used.
 The implementation of these function is straiforward:
 
     async_ostream::async_ostream(std::ostream& os)
@@ -160,12 +155,13 @@ Let me continue with the handle of the Pimpl pattern:
         static void loop(impl* that);
     };
 
-Of course we need to store a reference to the final ostreanm. 
-The thread_specific_shared_ptr tsss_ is used to encapsulate the logic specific to each thread.
+Of course we need to store a reference to the final ostream. 
+
+The `thread_specific_shared_ptr tsss_` is used to encapsulate the logic specific to each thread.
 
     typedef thread_specific_shared_ptr<async_ostream_thread_ctx> tsss_type;
 
-A priority queue queue_ will be used the concentrator thread to order the stringstreams by date.
+A priority queue `queue_` will be used the concentrator thread to order the stringstreams by date.
 
     template <typename T>
     struct detail::timestamped {
@@ -188,7 +184,7 @@ A priority queue queue_ will be used the concentrator thread to order the string
     typedef timestamped<std::stringstream> element_type;
     typedef std::priority_queue<queue_type*, std::deque<element_type*>, element_type::ptr_comparator_gt> priority_queue_type;
 
-In addition to the timestamp date_ we need a sequence number to order the stringstreams pushed without enough time granularity, e.g. on the same microsecond. 
+In addition to the timestamp `date_` we need a sequence number to order the stringstreams pushed without enough time granularity, e.g. on the same microsecond. 
 
 To finish the field declaration there is the concentrator thread implemented by the loop function.
 
@@ -212,7 +208,7 @@ To avoid optimizations a non const call inc is done while waitig the queue empti
         }
 
 The central sink function is write. Here instead to lock a mutex the function forwards to 
-the thread specific shared pointer. We will see above the how async_ostream_thread_ctx handles this call.
+the thread specific shared pointer. We will see above the how `async_ostream_thread_ctx` handles this call.
 
         std::streamsize write(const char* s, std::streamsize n) {
             return tsss_->write(s, n);
@@ -242,7 +238,7 @@ Each thread has a pointer to the current timestamped stringstream wich is used f
             return n;
         }
 
-Once the user do a flush the current element is enqueued on the queue. The sec_ integer is used as monotonic sequence in conjuntion with the timestamp. 
+Once the user do a flush the current element is enqueued on the queue. The `sec_` integer is used as monotonic sequence in conjuntion with the timestamp. 
 
         void flush() {
             current_->reset_date(seq_);
@@ -309,11 +305,10 @@ The concentrator loop looks like:
 [endsect]
 
 [/============================]
-[section Proposed Case Studies]
+[section Case Studies]
 [/============================]
 
-This section do not includes a complete examples using the library, but some case studies that could use in some way the library.  
-Some case studies, though tricky, are not huge and would be suitable for someone who has a limited time to spend on them. 
+This section do not includes a complete examples using the library, but a case studies that could use in some way the library.  
 I'm curently working on the STM case study. 
 
 [/========================]

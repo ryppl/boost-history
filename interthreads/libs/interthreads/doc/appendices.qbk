@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2008 Vicente J. Botet Escriba
+  (C) Copyright 2008-20009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -25,12 +25,14 @@
 [heading Tasks to do before review]
 [variablelist
 
-[[Add tests] [Currently there are only some examples. There is yet a long way before been able to review the library.]]
+[[Use set_once to implement wait_for_any] [The current implementation uses the Boost.Futures 
+wait_for_any to implement this feauture, which add an superflous constraint be able to get a future to all the AE/ACT.]]
+
+[[Complete the tests] [Even if the current release incluse more test here is yet a long way before been able to review the library.]]
 
 [[Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise] [.]]
-[[Use C++0x variadic templates on compilers supporting it and the Use the preprocesor otherwise] [.]]
 
-[[Add a practical example using thread_tuple, thread_tuple_once] [.]]
+[[Use C++0x variadic templates on compilers supporting it and the Use the preprocesor otherwise] [.]]
 
 [[Complete the STM example] [.]]
 
@@ -39,11 +41,28 @@
 ]
 
 [heading For later releases]
+
 [variablelist
+[
+    [Add Message queues] [Messages queue are the next step concerning the communication between threads on the InterThreads library.]
+]
+[
+    [Add Rendez-vous] 
+    [Concurrent components may interact in different ways: they may access the same objects by, for example, 
+    executing functions of these objects; or they may communicate directly by executing functions of each other. 
+    These library will provide the so-called rendezvous mechanism for handling direct communication between active objects.]
+]
+[
+    [Add a daemon controlling all the keep alive controller threads] [This daemon will send regular keep_alive messages and kill the process when dead]
+]
+[
+    [Generalize both specific pointers in a template class basic_thread_specific_ptr] []
+]
 
-[[Generalize both specific pointers in a template class basic_thread_specific_ptr] [
+]
 
-[*Domain Features]
+
+[section `basic_thread_specific_ptr` Domain Features]
 
 [variablelist
 
@@ -108,14 +127,11 @@ by a mix of fixed/variable mapping which will provide efficient access to the fi
 others keys.
 
 Configuration the fixed/variable/mixed key range, ordered/unordered map, intrusive/extrusive map, shared/exclusive locking.
-]]
 
-[[Add Message queues] [Messages queue are the next step concerning the communication between threads on the InterThreads library.]]
-[[Add a daemon controlling all the keep alive controller threads] [This daemon will send regular keep_alive messages and kill the process when dead]]
 
-]
-
+[endsect]
 [endsect]
 
 [endsect]
+
 

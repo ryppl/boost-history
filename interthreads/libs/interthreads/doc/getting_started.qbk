@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2008 Vicente J. Botet Escriba
+  (C) Copyright 2008-20009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -188,6 +188,12 @@ This example shows the keep_alive basics.
     }
     
     int main() {
+        bith::shared_threader_decorator ae;
+        bith::wait_for_all(ae, my_thread, my_thread);
+        return 0;
+    }
+
+    int main() {
         boost::thread th1(bith::make_decorator(my_thread));
         boost::thread th2(bith::make_decorator(my_thread));
         sleep(2);
@@ -205,10 +211,6 @@ This results on the following output
 [pre
 ]
 
-    int main() {
-        bith::wait_for_all(basic_threader_decorator, my_thread, my_thread);
-        return 0;
-    }
 
 [endsect]
 
@@ -218,9 +220,8 @@ This results on the following output
 
 This example shows how to launch several algorithms and wait only for the more efficient.
 
-    #include <boost/interthreads/thread_tuple_once.hpp>
-    #include <boost/interthreads/thread_and_join.hpp>
-    #include <boost/thread.hpp>
+    #include <boost/interthreads/typeof/threader.hpp>
+    #include <boost/interthreads/wait_for_any.hpp>
     #include <iostream>
         
     namespace bith = boost::interthreads;
@@ -236,8 +237,9 @@ This example shows how to launch several algorithms and wait only for the more e
     }
 
     int main() {
-        unsigned res = bith::conc_join_any(basic_threader(), my_thread1, my_thread2);
-        std::cout << "Algotithm " << res+1 << "finished the first" << std::endl;
+        bith::shared_threader ae;
+        BOOST_AUTO(res,bith::wait_for_any(ae, my_thread, my_thread));
+        std::cout << "Algotithm " << res.first+1 << " finished the first" << std::endl;
         return 0;
     }
 
@@ -246,10 +248,6 @@ This results on the following output
 [pre
 ]
 
-    int main() {
-        std::pair<unsigned,void> res = bith::wait_for_any(launcher, my_thread, my_thread);
-        return 0;
-    }
 
 [endsect]
 

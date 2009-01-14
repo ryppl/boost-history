@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Vicente J Botet Escriba.
+  (C) Copyright 2008-20009 Vicente J Botet Escriba.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 ]
@@ -292,6 +292,7 @@ A metafunction returning the result type of applying fork_all to an asynchronous
 
 [variablelist
 [[Returns:] [The result of the AE::get().]]
+[[Throws:] [if AE::get() throws.]]
 ]
 
 [endsect]
@@ -339,9 +340,9 @@ A metafunction returning the result type of applying get_all to a Sequence of as
 
 
 [variablelist
-[[Returns:] [a fusion tuple of the result of applying get to each one of the asynchronous executors handles in the sequence.]]
-[[Effect:] [Blocks until all the AE handles are ready.]]
-
+[[Returns:] [a fusion tuple of the result of applying `get` to each one of the asynchronous completion token handles in the sequence.]]
+[[Effect:] [Blocks until all the ACT  handles in the Sequence are ready.]]
+[[Throws:] [if some of the  ACT::get operation throws]]
 ]
 
 [endsect]
@@ -518,6 +519,7 @@ blocks until all the AE handles are ready.]]
     namespace boost {
     namespace interthreads {
         class launcher;
+        class shared_launcher;
     }
     }
 
@@ -541,7 +543,7 @@ returning on the fork operation a unique_future to the resulting type of the cal
         fork(F f);
     };
 
-[section Member function `lancher::attributes`] 
+[section Member function `launcher::attributes`] 
 [/==========================================================================================]
 
 Reference to the thread attributes accesor.
@@ -594,6 +596,80 @@ Metafunction that returns the result type of the fork function applied to a laun
 
 [endsect]
 
+[section Class `shared_launcher `] 
+[/==========================================================================================]
+
+Thread shared_launcher using a common configuration managed with the thread attributes and 
+returning on the fork operation a unique_future to the resulting type of the call to the threaded function.
+
+    class shared_launcher {
+    public: 
+        thread::native_handle_attr_type& attr();
+        
+        template <typename T>
+        struct handle {
+            typedef unique_future<T> > type;
+        };
+
+        template <typename F>
+        unique_future<typename result_of<F()>::type> 
+        fork(F f);
+    };
+
+[section Member function `shared_launcher::attributes`] 
+[/==========================================================================================]
+
+Reference to the thread attributes accesor.
+
+        thread::native_handle_attr_type& attributes();
+
+[variablelist
+[[Returns:] [A reference to the thread attributes.]]
+[[Complexity:] [constant.]]
+]
+
+
+[endsect]
+[section Metafunction `shared_launcher::handle<>`] 
+[/==========================================================================================]
+
+Metafunction that returns the result type of the fork function applied to a shared_launcher and the value type.
+
+    template <typename T>
+    struct handle {
+        typedef unique_future<T> > type;
+    };
+
+[variablelist
+[[Expression:] [L::handle<T>::type]]
+[[Return type:] [A unique_future<T>.]]
+[[Complexity:] [constant.]]
+
+]
+
+[endsect]
+
+[section Member function `lancher::fork`] 
+[/==========================================================================================]
+
+        template <typename F>
+        unique_future<typename result_of<F()>::type> 
+        fork(F f);
+
+[variablelist
+[[Returns:] [A unique_future to the result of calling a function F.]]
+[[Effects:] [create a thread executing the function f. 
+		 The result of the function will be stored on the resulting future.]]
+
+]
+
+
+[endsect]
+
+
+[endsect]
+
+
 [endsect]
 
 [/==========================================================================================]
@@ -604,38 +680,46 @@ Metafunction that returns the result type of the fork function applied to a laun
     namespace boost {
     namespace interthreads {
         template <typename ResultType>
-        class joiner;
+        class unique_joiner;
 
         template <typename ResultType>
-        void swap(joiner<ResultType>& lhs,joiner<ResultType>& rhs);
+        void swap(unique_joiner<ResultType>& lhs, unique_joiner<ResultType>& rhs);
 
-        class threader;
+        class unique_threader;
+        
+        template <typename ResultType>
+        class shared_joiner;
+
+        template <typename ResultType>
+        void swap(shared_joiner<ResultType>& lhs, shared_joiner<ResultType>& rhs);
+
+        class shared_threader;
     }
     }
 
 [/==================================================]
-[section Template Class `joiner`] 
+[section Template Class `unique_joiner<>`] 
 [/==========================================================================================]
 
 
 template <typename ResultType>
-class joiner {
-    typedef joiner this_type;
+class unique_joiner {
+    typedef unique_joiner this_type;
 public:
-    joiner(const joiner& rhs) = delete;
-    joiner& operator=(const joiner& rhs) = delete;
+    unique_joiner(const unique_joiner& rhs) = delete;
+    unique_joiner& operator=(const unique_joiner& rhs) = delete;
 
     typedef ResultType result_type;
 
     template <typename Nullary> 
-    joiner(thread::native_handle_attr_type& attr, Nullary f);
+    unique_joiner(thread::native_handle_attr_type& attr, Nullary f);
     template <typename Nullary> 
-    joiner(Nullary f);
+    unique_joiner(Nullary f);
 
-    joiner(boost::detail::thread_move_t<joiner> x);
-    joiner& operator=(boost::detail::thread_move_t<joiner> x);
-    operator boost::detail::thread_move_t<joiner>();
-    boost::detail::thread_move_t<joiner> move();
+    unique_joiner(boost::detail::thread_move_t<unique_joiner> x);
+    unique_joiner& operator=(boost::detail::thread_move_t<unique_joiner> x);
+    operator boost::detail::thread_move_t<unique_joiner>();
+    boost::detail::thread_move_t<unique_joiner> move();
        
     void swap(this_type& x);
         
@@ -664,14 +748,16 @@ public:
     
     typedef platform-specific-type native_handle_type;
     native_handle_type native_handle();
+    
+    unique_future<result_type> get_future();   
 
 };
 
 
-[section:destructor Joiner Destructor]
+[section:destructor unique_joiner Destructor]
 [/==========================================================================================]
 
-    ~joiner();
+    ~unique_joiner();
 
 [variablelist
 [[Effects:] [If `*this` has an associated thread of execution, calls __detach__. Destroys `*this`.]]
@@ -682,7 +768,7 @@ public:
 
 [section:swap Member function `swap()`]
 
-    void swap(joiner& other);
+    void swap(unique_joiner& other);
 
 [variablelist
 [[Effects:] [Exchanges the threads of execution associated with `*this` and `other`, so `*this` is associated with the thread of
@@ -709,7 +795,7 @@ value as `this->get_id()` prior to the call.]]
 If R is void, there is no return value. 
 Otherwise, returns an rvalue-reference to the value stored in the asynchronous result.]]
 [[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
-[[Postconditions:] [It is unspecified what happens when get() is called a second time on the same joiner.]]
+[[Postconditions:] [It is unspecified what happens when get() is called a second time on the same unique_joiner.]]
 [[Thread safety:][unsafe]]
 ]
 [endsect]
@@ -894,7 +980,7 @@ implementation. If no such instance exists, `native_handle()` and `native_handle
 [endsect]
 [section:non_member_swap Non-member function `swap()`]
 
-    void swap(joiner& lhs,joiner& rhs);
+    void swap(unique_joiner& lhs,unique_joiner& rhs);
 
 [variablelist
 
@@ -905,25 +991,25 @@ implementation. If no such instance exists, `native_handle()` and `native_handle
 [endsect]
 
 [/==================================================]
-[section Template Class `threader`] 
+[section Template Class `unique_threader`] 
 [/==========================================================================================]
 
-    class threader {
+    class unique_threader {
     public: 
         thread::native_handle_attr_type& attributes();
 
         template <typename T>
         struct handle {
-            typedef joiner<T> type;
+            typedef unique_joiner<T> type;
         };
 
         template <typename F>
-        joiner<typename result_of<F()>::type> 
+        unique_joiner<typename result_of<F()>::type> 
         fork(F f);
 
     };
 
-[section Member function `threader::attributes()`] 
+[section Member function `unique_threader::attributes()`] 
 [/==========================================================================================]
 
 Reference to the thread attributes accesor.
@@ -937,37 +1023,401 @@ Reference to the thread attributes accesor.
 
 
 [endsect]
-[section Metafunction `threader::handle<>`] 
+[section Metafunction `unique_threader::handle<>`] 
 [/==========================================================================================]
 
-Metafunction that returns the result type of the fork function applied to a threader and the value type.
+Metafunction that returns the result type of the fork function applied to a unique_threader and the value type.
 
         template <typename T>
         struct handle {
-            typedef joiner<T> type;
+            typedef unique_joiner<T> type;
         };
 
 
 [variablelist
 [[Expression:] [L::handle<T>::type]]
-[[Return type:] [A joiner<T>.]]
+[[Return type:] [A unique_joiner<T>.]]
 [[Complexity:] [constant.]]
 
 ]
 
 [endsect]
 
-[section Member function `threader::fork`] 
+[section Member function `unique_threader::fork`] 
 [/==========================================================================================]
 
         template <typename F>
-        joiner<typename result_of<F()>::type> 
+        unique_joiner<typename result_of<F()>::type> 
         fork(F f);
 
 [variablelist
-[[Returns:] [A joiner to the result of calling a function F.]]
+[[Returns:] [A unique_joiner to the result of calling a function F.]]
 [[Effects:] [create a thread executing the function f. 
-		 The result of the function will be stored on the resulting joiner.]]
+		 The result of the function will be stored on the resulting unique_joiner.]]
+
+]
+
+
+[endsect]
+
+[endsect]
+
+[/==================================================]
+[section Template Class `shared_joiner<>`] 
+[/==========================================================================================]
+
+
+template <typename ResultType>
+class shared_joiner {
+    typedef shared_joiner this_type;
+public:
+    shared_joiner(const shared_joiner& rhs);
+    shared_joiner& operator=(const shared_joiner& rhs);
+
+    typedef ResultType result_type;
+
+    template <typename Nullary> 
+    shared_joiner(thread::native_handle_attr_type& attr, Nullary f);
+    template <typename Nullary> 
+    shared_joiner(Nullary f);
+
+    shared_joiner(boost::detail::thread_move_t<shared_joiner> x);
+    shared_joiner& operator=(boost::detail::thread_move_t<shared_joiner> x);
+    operator boost::detail::thread_move_t<shared_joiner>();
+    boost::detail::thread_move_t<shared_joiner> move();
+       
+    void swap(this_type& x);
+        
+    bool joinable() const;
+    void join();
+    bool join_until(const system_time& abs_time);
+    template<typename TimeDuration>
+    inline bool join_for(TimeDuration const& rel_time);
+
+    result_type get();
+    result_type operator()();
+
+    bool is_ready() const;
+    bool has_exception() const;
+    bool has_value() const;
+
+    void wait() const;
+    bool wait_until(const system_time& abs_time) const;
+    template<typename TimeDuration>
+    inline bool wait_for(TimeDuration const& rel_time) const;
+
+    thread::id get_id() const;
+    void detach();
+    void interrupt();
+    bool interruption_requested() const;
+    
+    typedef platform-specific-type native_handle_type;
+    native_handle_type native_handle();
+
+    shared_future<result_type> get_future();
+};
+
+
+[section:destructor shared_joiner Destructor]
+[/==========================================================================================]
+
+    ~shared_joiner();
+
+[variablelist
+[[Effects:] [If `*this` has an associated thread of execution, calls __detach__. Destroys `*this`.]]
+[[Throws:] [Nothing.]]
+]
+
+[endsect]
+
+[section:swap Member function `swap()`]
+
+    void swap(shared_joiner& other);
+
+[variablelist
+[[Effects:] [Exchanges the threads of execution associated with `*this` and `other`, so `*this` is associated with the thread of
+execution associated with `other` prior to the call, and vice-versa.]]
+[[Postconditions:] [`this->get_id()` returns the same value as `other.get_id()` prior to the call. `other.get_id()` returns the same
+value as `this->get_id()` prior to the call.]]
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+
+[section Member Function `get()|operator()()`]
+[/==========================================================================================]
+
+    result_type get();
+    result_type operator()();
+
+[variablelist
+[[Effects:] [Retrieves the value returned by the Nullary function.]]
+[[Sychronization:][The completion of the call to the operator()() the Nullary function happens before get() returns.]]
+[[Returns:] [If the result type R is a reference, returns the stored reference. 
+If R is void, there is no return value. 
+Otherwise, returns an rvalue-reference to the value stored in the asynchronous result.]]
+[[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
+[[Postconditions:] [It is unspecified what happens when get() is called a second time on the same shared_joiner.]]
+[[Thread safety:][unsafe]]
+]
+[endsect]
+
+
+[section Member Function `is_ready()`]
+[/==========================================================================================]
+
+    bool is_ready() const;
+
+[variablelist
+[[Returns:] [true only if the associated state holds a value or an exception ready for retrieval.]]
+[[Remark:] [the return value is unspecified after a call to get().]]
+]
+[endsect]
+
+[section Member Function `has_exception()`]
+[/==========================================================================================]
+
+    bool has_exception() const;
+
+[variablelist
+[[Returns:] [true only if is_ready() == true and the associated state contains an exception.]]
+]
+[endsect]
+
+[section Member Function `has_value()`]
+[/==========================================================================================]
+
+    bool has_value() const;
+
+[variablelist
+[[Returns:] [true only if is_ready() == true and the associated state contains a value.]]
+]
+[endsect]
+
+[section Member Function `wait()`]
+[/==========================================================================================]
+
+    void wait();
+
+[variablelist
+[[Effects:] [Blocks until the Nullariry function ends.]]
+[[Sychronization:][The completion of the call to the operator()() the Nullary function happens before wait() returns.]]
+[[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
+[[Postconditions:] [is_ready() == true.]]
+[[Thread safety:][unsafe]]
+]
+[endsect]
+
+[section Member Function `wait_until()|wait_for()`]
+[/==========================================================================================]
+
+    bool wait_until(const system_time& abs_time);
+    template<typename TimeDuration>
+    bool wait_for(TimeDuration const& rel_time);
+
+
+[variablelist
+[[Effects:] [Blocks until the Nullariry function ends.]]
+[[Sychronization:][The completion of the call to the operator()() the Nullary function happens before wait() returns.]]
+[[Returns:] [If the result type R is a reference, returns the stored reference. 
+If R is void, there is no return value. 
+Otherwise, returns an rvalue-reference to the value stored in the asynchronous result.]]
+[[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
+[[Postconditions:] [is_ready() == true.]]
+[[Thread safety:][unsafe]]
+]
+[endsect]
+
+
+
+[section:joinable Member function `joinable()`]
+[/==========================================================================================]
+
+    bool joinable() const;
+
+[variablelist
+[[Returns:] [`true` if `*this` refers to a thread of execution, `false` otherwise.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+[section:join Member function `join()`]
+[/==========================================================================================]
+
+    void join();
+
+[variablelist
+[[Preconditions:] [`this->get_id()!=boost::this_thread::get_id()`]]
+[[Effects:] [If `*this` refers to a thread of execution, waits for that thread of execution to complete.]]
+[[Postconditions:] [If `*this` refers to a thread of execution on entry, that thread of execution has completed. `*this` no longer refers to any thread of execution.]]
+[[Throws:] [__thread_interrupted__ if the current thread of execution is interrupted.]]
+[[Notes:] [`join()` is one of the predefined __interruption_points__.]]
+]
+
+[endsect]
+
+[section Member function `join_until()|join_for()`]
+[/==========================================================================================]
+
+    bool join_until(const system_time& wait_until);
+
+    template<typename TimeDuration>
+    bool join_for(TimeDuration const& rel_time);
+
+[variablelist
+[[Preconditions:] [`this->get_id()!=boost::this_thread::get_id()`]]
+[[Effects:] [If `*this` refers to a thread of execution, waits for that thread of execution to complete, the time `wait_until` has
+been reach or the specified duration `rel_time` has elapsed. If `*this` doesn't refer to a thread of execution, returns immediately.]]
+[[Returns:] [`true` if `*this` refers to a thread of execution on entry, and that thread of execution has completed before the call
+times out, `false` otherwise.]]
+[[Postconditions:] [If `*this` refers to a thread of execution on entry, and `timed_join` returns `true`, that thread of execution
+has completed, and `*this` no longer refers to any thread of execution. If this call to `timed_join` returns `false`, `*this` is
+unchanged.]]
+[[Throws:] [__thread_interrupted__ if the current thread of execution is interrupted.]]
+[[Notes:] [`timed_join()` is one of the predefined __interruption_points__.]]
+]
+
+[endsect]
+
+[section:detach Member function `detach()`]
+[/==========================================================================================]
+
+    void detach();
+
+[variablelist
+[[Effects:] [If `*this` refers to a thread of execution, that thread of execution becomes detached, and no longer has an associated __thread__ object.]]
+[[Postconditions:] [`*this` no longer refers to any thread of execution.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+
+[section:get_id Member function `get_id()`]
+[/==========================================================================================]
+
+    thread::id get_id() const;
+
+[variablelist
+[[Returns:] [If `*this` refers to a thread of execution, an instance of __thread_id__ that represents that thread. Otherwise returns
+a default-constructed __thread_id__.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+[section:interrupt Member function `interrupt()`]
+[/==========================================================================================]
+
+    void interrupt();
+
+[variablelist
+[[Effects:] [If `*this` refers to a thread of execution, request that the thread will be interrupted the next time it enters one of
+the predefined __interruption_points__ with interruption enabled, or if it is currently __blocked__ in a call to one of the
+predefined __interruption_points__ with interruption enabled .]]
+[[Throws:] [Nothing]]
+]
+        
+
+[endsect]
+
+
+[section:nativehandle Member function `native_handle()`]
+[/==========================================================================================]
+
+    typedef platform-specific-type native_handle_type;
+    native_handle_type native_handle();
+
+[variablelist
+[[Effects:] [Returns an instance of `native_handle_type` that can be used with platform-specific APIs to manipulate the underlying
+implementation. If no such instance exists, `native_handle()` and `native_handle_type` are not present.]]
+[[Throws:] [Nothing.]]
+]
+
+[endsect]
+
+
+
+[endsect]
+[section:non_member_swap Non-member function `swap()`]
+
+    void swap(shared_joiner& lhs,shared_joiner& rhs);
+
+[variablelist
+
+[[Effects:] [[link thread.thread_management.thread.swap `lhs.swap(rhs)`].]]
+
+]
+
+[endsect]
+
+[/==================================================]
+[section Template Class `shared_threader`] 
+[/==========================================================================================]
+
+    class shared_threader {
+    public: 
+        thread::native_handle_attr_type& attributes();
+
+        template <typename T>
+        struct handle {
+            typedef shared_joiner<T> type;
+        };
+
+        template <typename F>
+        shared_joiner<typename result_of<F()>::type> 
+        fork(F f);
+
+    };
+
+[section Member function `shared_threader::attributes()`] 
+[/==========================================================================================]
+
+Reference to the thread attributes accesor.
+
+        thread::native_handle_attr_type& attributes();
+
+[variablelist
+[[Returns:] [A reference to the thread attributes.]]
+[[Complexity:] [constant.]]
+]
+
+
+[endsect]
+[section Metafunction `shared_threader::handle<>`] 
+[/==========================================================================================]
+
+Metafunction that returns the result type of the fork function applied to a shared_threader and the value type.
+
+        template <typename T>
+        struct handle {
+            typedef shared_joiner<T> type;
+        };
+
+
+[variablelist
+[[Expression:] [L::handle<T>::type]]
+[[Return type:] [A shared_joiner<T>.]]
+[[Complexity:] [constant.]]
+
+]
+
+[endsect]
+
+[section Member function `shared_threader::fork`] 
+[/==========================================================================================]
+
+        template <typename F>
+        shared_joiner<typename result_of<F()>::type> 
+        fork(F f);
+
+[variablelist
+[[Returns:] [A shared_joiner to the result of calling a function F.]]
+[[Effects:] [create a thread executing the function f. 
+		 The result of the function will be stored on the resulting shared_joiner.]]
 
 ]
 
@@ -2765,7 +3215,6 @@ the first, using for that the set_once synchronizer.
 [endsect]
 
 [endsect]
-
 
 
 [endsect]

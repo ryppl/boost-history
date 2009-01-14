@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Vicente J Botet Escriba.
+  (C) Copyright 2008-20009 Vicente J Botet Escriba.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -14,7 +14,8 @@
 [/=======================================================================]
 
 In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
-Kevlin Henney introduce the concept of threader and a function thread that evaluate a function asynchronously and returns a joiner handle.
+Kevlin Henney introduce the concept of threader an asynchronous executor and a function thread that evaluate a function 
+asynchronously and returns an asynchronous completion token joiner, able to join but also to to get the value of the function result.
 
 In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2185.html N2185 - Proposed Text for Parallel Task Execution] 
 Peter Dimov introduce a fork function able to evaluate a function asynchronously and 
@@ -66,7 +67,7 @@ associated an ACT handle to a asynchronous executor.
 
     template <typename AE, typename T>
     struct asynchronous_completion_token {
-        typedef typename AE::handle<T>::type type;
+        typedef typename AE::template handle<T>::type type;
     };    
 
 The result of forking a nullary function by an asynchronous executor is given by the metafunction result_of::fork<AE,F>
@@ -74,15 +75,15 @@ The result of forking a nullary function by an asynchronous executor is given by
     namespace result_of { 
         template <typename AE,typename F>
         struct fork {
-            typedef typename asynchronous_completion_token<AE, 
-                                typename result_of<F()>::type>::type type;
+            typedef typename boost::result_of<F()>::type result_type;
+            typedef typename asynchronous_completion_token<AE, result_type>::type type;
         };   
     }
 
 The default implementation of fork delegates on fork asynchronous executor function.
 
     template< typename AE, typename F > 
-    result_of::fork<AE, F>::type fork( AE& ae, F fn ) {
+    typename result_of::fork<AE, F>::type fork( AE& ae, F fn ) {
         return ae.fork(fn);
     }
 
@@ -90,9 +91,9 @@ Forking n-ary functions relies on the nullary version and bind.
 
     template< typename AE, typename F, typename A1, ..., typename An > 
     typename asynchronous_completion_token<AE, 
-                typename result_of<F(A1,..., An)>::type >::type 
+                typename boost::result_of<F(A1,..., An)>::type >::type 
     fork( AE& ae, F fn, A1 a1, ..., An an ) {
-        return launcher.fork( bind( fn, a1, ..., an ) );
+        return ae.fork( bind( fn, a1, ..., an ) );
     }
 
 We can define a basic_threader which just returns a new thread as follows:
@@ -111,7 +112,7 @@ We can define a basic_threader which just returns a new thread as follows:
         }   
     };
 
-The library includes a launcher class that creates a thread and returns a unique_future when forking.
+The library includes also a launcher class that creates a thread and returns a unique_future when forking 
 
     class launcher {
     public: 
@@ -122,7 +123,7 @@ The library includes a launcher class that creates a thread and returns a unique
         template <typename F>
         unique_future<typename result_of<F()>::type> 
         fork(F f) {
-            typedef typename result_of<F()>::type result_type;
+            typedef typename boost::result_of<F()>::type result_type;
             packaged_task<result_type> tsk(f);
             unique_future<result_type> res = tsk.get_future();
             thread th(boost::move(tsk));
@@ -130,6 +131,7 @@ The library includes a launcher class that creates a thread and returns a unique
         }   
     };
 
+and a shared_launcher class that creates a thread and returns a shared_future when forking 
 
 Given the sequential example:
 
@@ -172,14 +174,14 @@ this library allows a programmer to switch to parallel execution as follows:
 
 The library include also a threader class based on the Kevlin proposal:
 
-    class threader {
+    class unique_threader {
     public: 
         template <typename T>
         struct handle {
-            typedef joiner<T> type;
+            typedef unique_joiner<T> type;
         };
         template <typename F>
-        joiner<typename result_of<F()>::type> 
+        unique_joiner<typename result_of<F()>::type> 
         fork(F f) {
             typedef typename result_of<F()>::type result_type;
             return joiner<result_type>(f);
@@ -191,18 +193,56 @@ The question now is how we can adapt it to an existing asynchronous executor suc
 the Boost.ThreadPool library. We need to specialize the template class 
 asynchronous_completion_token
 
+    namespace boost { namespace interthreads {
+    
     template <typename Channel, typename T>
     struct asynchronous_completion_token<boost::tp::pool<Channel>,T> {
         typedef boost::tp::task<T> type;
     };    
+    
+    }}
 
 and function fork function.
  
+    namespace boost { namespace interthreads {
+    
     template< typename Channel, typename F > 
     result_of::fork<boost::tp::pool<Channel>, F>::type  
     fork<boost::tp::pool<Channel>,F>( boost::tp::pool<Channel>& ae, F fn ) {
         return ae.submit(fn);
     }
+    }
+    }
+    
+As the preceding is ilegal in C++03 we need to use an auxiliary class to define the default behaviour of fork
+
+    namespace boost { namespace interthreads {
+    template< typename AE, typename F > 
+    struct fork_aux {
+        static typename result_of::fork<AE,F>::type fork(AE& ae, F fn ) {
+            return ae.fork(fn);
+        }
+    };
+
+    template< typename AE, typename F > 
+    typename result_of::fork<AE,F>::type 
+    fork( AE& ae, F fn ) {
+        return fork_aux<AE,F>::fork(ae,fn);
+    }
+    }
+    }
+
+And specialize partially the fork_auc class
+
+    template< typename Channel, typename F > 
+    struct fork_aux<boost::tp::pool<Channel>,F> {
+        typename result_of::fork<boost::tp::pool<Channel>, F>::type  
+        fork( boost::tp::pool<Channel>& ae, F fn ) {
+            return ae.submit(fn);
+        }
+    };
+
+
 
 Note that the single fork function that needs specialization is the one taking a nullary 
 function as parameter.
@@ -212,7 +252,7 @@ We can write the preceding main function in a more generic way
     template < typename AE>
     void do(AE& ae)
     {
-        typedef bith::result_of::fork<AE, f, tuple<double, int> >::type auto_type;
+        typedef bith::result_of::fork<AE, int(*)(double, int) >::type auto_type;
         auto_type fm1 = bith::fork(ae, f, 1.0, 1000000 );
         auto_type fm2 = bith::fork(ae, f, 1.0, 5000000 );
         auto_type fm3 = bith::fork(ae, f, 2.2, 1000000 );
@@ -237,7 +277,7 @@ and we can switch from using the launcher or the tp::pool just by changing one l
 
 The library allows also to fork several functions at the same time
 
-    result_of::fork_all<AE, f, g, h>::type handles = bith::fork_all(ae, f, g, h);
+    result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type handles = bith::fork_all(ae, f, g, h);
     std::cout << get<1>(res).get() - get<0>(res).get() + get<2>(res).get() << std::endl;
 
 
@@ -247,7 +287,7 @@ The user can apply any fusion algorithm on this tuple as for example
     bool b = fusion::none(handles, fct::interruption_requested());
 
 The asynchronous completion token models follows two interfaces, the thread interface and the 
-unique_future interface.
+unique_/shared_future interface.
 
 To make common tasks easier the library provide some functors in the name space fct: 
 for the thread interface as 
@@ -280,8 +320,8 @@ Here is an example for get:
         };
     }
 
-In addition the library provides some non member functions that are the result of applying a 
-these functior to the tuple using a fusion algorithm:
+In addition the library provides some non member functions that are the result of applying 
+these functors to the tuple using a fusion algorithm:
 
 * join_all
 * join_all_until
@@ -301,7 +341,7 @@ these functior to the tuple using a fusion algorithm:
 Next follows how get_all is defined.
 
     template <typename MovableTuple>
-    typename result_of::get_all<MovableTuple>::type
+    typename result_of::get_all<Sequence>::type
     get_all(Sequence& t) {
         return fusion::transform(t, fct::get());
     }
@@ -319,13 +359,13 @@ does.
 
 So the user can do the following
 
-    result_of::fork_all<AE, f, g, h>::type res = bith::fork_all(ae, f, g, h);
-    result_of::get_all<result_of::fork_all<AE, f, g, h>::type>::type values 
+    result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type res = bith::fork_all(ae, f, g, h);
+    result_of::get_all<result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type>::type values 
         = bith::get_all(handles);
 
 or using a typedef
 
-    typedef result_of::fork_all<AE, f, g, h>::type auto_type;
+    typedef result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type auto_type;
     auto_type handles = bith::fork_all(ae, f, g, h);
     result_of::get_all<auto_type>::type values= bith::get_all(handles);
 
@@ -337,15 +377,29 @@ Note that the notation can be shortened by using the C++0x auto keyword.
 Last but not least the library provides also some sugaring functions like 
 wait_for_all that forks and wait for the result.
 
-    result_of::wait_for_all<AE, f, g, h>::type res = bith::wait_for_all(ae, f, g, h);
+    result_of::wait_for_all<AE, int(*)(), int(*)(), int(*)()>::type res = bith::wait_for_all(ae, f, g, h);
     std::cout << get<1>(res) - get<0>(res) + get<2>(res) << std::endl;
 
 and wait_for_any which works with functions that return the same type or are convertible to the same type.
 
-    result_of::wait_for_any<AE, f, g, h>::type res = bith::wait_for_any(ae, f, g, h);
+    result_of::wait_for_any<AE, int(*)(), int(*)(), int(*)()>::type res = bith::wait_for_any(ae, f, g, h);
     std::cout << "function " << res.first << " finshed first with result=" << res.second << std::endl;
 
-So the simple way to define a new AsynchronousExecutor is to define a class as
+The current implementation use the wait_for_any function so any AE must provide a way to get a 
+unique|shared_future from its ACT.
+
+The library defines a functor allowing the user to specialize it
+
+    template <typename AE>
+    struct get_future {
+        template <typename T>
+        shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) 
+        { return act.get_future(); }
+    };
+
+Future versions will use the set_once synchronization.
+
+Resuming a simple way to define a new AsynchronousExecutor is to define a class as
 
     struct AsynchronousExecutor {
         template <typename T>
@@ -366,132 +420,11 @@ So the simple way to define a new AsynchronousExecutor is to define a class as
 [section Threader/Joiner]
 [/=============================================================================]
 
-Boost.Threads does offer a
-starting point, and with only a few considerations and changes it is relatively
-easy to evolve to the design described below from it.
+See the [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
+where Kevlin Henney introduce the concept of threader an asynchronous executor and a function thread that evaluate a function 
+asynchronously and returns an asynchronous completion token joiner, able to join but also to to get the value of the function result.
 
-Threading in Boost.Threads is currently based on the idea that a thread is
-identified with an object that launches it. This notion is somewhat confused by
-the idea that on destruction the thread object is destroyed but the thread is not
-- in other words the thread is not identified the thread object... except when it
-is.
-
-Another appropriate separation is the distinction between initialization and
-execution. These are significantly different concepts but they are conflated in
-the existing thread-launching interface: the constructor is responsible both for
-preparing the thread and launching it, which means that it is not possible for
-one piece of code to set up a thread and another to initiate it separately at its
-own discretion, e.g. thread pools. Separating the two roles into constructor and
-executor function clears up both the technical and the conceptual issue. The
-executor function can be reasonably expressed as an overloaded function-call
-operator, or a start function.
-
-    void task();
-    ...
-    thread async_function;
-    ... 
-    asynch_functiont(task);
-
-The separation also offers a simple and non-intrusive avenue for platform specific
-extension of how a thread is to execute: configuration details such as
-scheduling policy, stack size, security attributes, etc, can be added as
-parameters to t without intruding on the signatures of any other function in the
-threading interface:
-
-    size_t stack_size = ...;
-    security_attributes security(...);
-    thread async_function(stack_size, security);
-    
-The default constructor could be the feature standardized, and the Boost 
-implementation could add additional constructors as appropriate.
-
-Given that the same configuration might be used to launch other threads, and
-given the identity confusion of a thread being an object except when it's not, we
-can consider the interface not to be the interface of a thread but to be the
-interface of a thread launcher, i.e. an executor. A thread initiator can submit
-zero-argument functions and function objects to an executor for execution:
-
-    threader run;
-    ...
-    run(first_task);
-    run(second_task);
-
-Boost.InterThreads offers several asynchronous executors types and variables, but as
-a concept an asynchronous executor could be implemented in a variety of ways that still
-conform to the same basic launching interface, i.e. the function-call operator..
-
-Given that a threader can be used to launch multiple threads, there is the
-obvious question of how to join with each separately run thread. Instead of
-returning void, the threader returns an object whose primary purpose is to
-represent the ability to join with the completion of a separately executing thread
-of control.
-
-    joiner wait = run(first_task);
-
-The role played by the joiner in this fragment is that of an asynchronous
-completion token, a common pattern for synchronizing with and controlling
-asynchronous tasks. Via the joiner the initiator can poll or wait
-for the completion of the running thread, and control it in other ways, some of
-which may be platform specific extensions.
-
-joiner is Movable. Its principal action, the act of joining, can be expressed as a function
-call:
-joiner join = run(first_task);
-...
-join();
-
-If there are no joiners for a given thread, that thread is considered detached, a
-role currently played in Boost.Threads by the thread destructor:
-
-    run(second_task); // runs detached because return value ignored
-
-Boost.Threads does
-not return a value from a completed thread when joined. For many threaded
-tasks this makes sense, but where a thread is working towards a result then the
-idea that an asynchronously executed function can return a value for later
-collection should not be discarded. With a void-returning interface the
-programmer is forced to set up an arrangement for the threaded task to
-communicate a value to the party that wants the one-time result. This is tedious
-for such a simple case, and can be readily catered for by making the joiner a
-proper future variable that proxies the result. This leads to the threader
-interface looking like the following:
-
-    class threader
-    {
-    public:
-    threader();
-    
-    template<typename nullary_function>
-    joiner<result_of<nullary_function()>::type> operator()(nullary_function);
-    ...
-    };
-    
-For the common default configured threader, a wrapper function, fork, can be
-provided:
-
-    template<typename nullary_function>
-    joiner<result_of<nullary_function>::type> fork(nullary_function);
-
-And use it as follows:
-
-    void void_task();
-    int int_task();
-    ...
-    joiner<void> t1 = fork(void_task);
-    joiner<int> t2 = fork(int_task);
-    ...
-    int result = t1.get();
-    t2.join();
-    
-The benefit of programming with futures is that for a certain class of code that
-would use end-of-thread synchronization to pick up results, programmers are
-not presented with unnecessarily low-level synchronization APIs. The function based
-model is applied consistently.
-
-When the application needs only the result it seems interesting to return only 
-the future value associated to the unary function result..
-
-    unique_future<int> t3 = launch(int_task);
+The main specifcities is that here we make a difference between unique_joiner (move-only) and shared_joiner and as consequence unique_threader and shared_threader.
 
 
 [endsect]

@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2008 Vicente J. Botet Escriba
+  (C) Copyright 2008-20009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -9,8 +9,9 @@
 [article InterThreads
     [quickbook 1.4]
     [authors [Botet Escriba, Vicente J.]]
-    [copyright 2008 Vicente J. Botet Escriba]
+    [copyright 2008-20009 Vicente J. Botet Escriba]
     [purpose C++ Library extending the Boost.Thread library adding some inter threads mechanisms as 
+    asynchronous executors and asyncronous completion tokes framework with threaders/joiners, launcher. 
     thread decorator, specific shared pointers and keep alive mechanism]
     [category text]
     [license
