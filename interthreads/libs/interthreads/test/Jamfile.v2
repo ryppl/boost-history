@@ -46,7 +46,6 @@ rule interthreads-run ( sources * )
 {
     test-suite "tests"
         : 
-          [ interthreads-run move_test.cpp ]
           [ interthreads-run test_basic_threader.cpp ]
           [ interthreads-run test_launcher.cpp ]
           [ interthreads-run test_threader.cpp ]
