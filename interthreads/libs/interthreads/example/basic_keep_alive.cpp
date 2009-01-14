@@ -26,66 +26,65 @@ void sleep(int sec)
 
 //    #include <boost/interthreads/threader.hpp>
 //    #include <boost/interthreads/joiner_tuple.hpp>
-    #include <boost/interthreads/thread_decorator.hpp>
-    #include <boost/interthreads/thread_keep_alive.hpp>
-//    #include "./async_ostream.cpp"
-    #include "./async_ostream.hpp"
-    #include <boost/thread/thread.hpp>
-    #include <iostream>
-    #include <sstream>
+#include <boost/interthreads/thread_decorator.hpp>
+#include <boost/interthreads/thread_keep_alive.hpp>
+
+#include <boost/interthreads/typeof/threader_decorator.hpp>
+#include <boost/interthreads/wait_for_all.hpp>
+//#include <boost/type_traits.hpp>
+
+#include "./async_ostream.hpp"
+#include <boost/thread/thread.hpp>
+#include <boost/static_assert.hpp>
+#include <iostream>
+#include <sstream>
         
-    namespace bith = boost::interthreads;
+namespace bith = boost::interthreads;
 
-    int my_thread1() {
-        sleep(2);
-        return 1;
-    }
-    void my_thread() {
-        bith::this_thread::enable_keep_alive enabler;
-        for (int i=0; i<10; i++) {
-            bith::this_thread::keep_alive_point();            
+int my_thread1() {
+    sleep(2);
+    return 0;
+}
+int my_thread() {
+    bith::this_thread::enable_keep_alive enabler;
+    for (int i=0; i<10; i++) {
+        bith::this_thread::keep_alive_point();            
 
-            boost::thread::id id= boost::this_thread::get_id();
-            std::stringstream sss;
+        boost::thread::id id= boost::this_thread::get_id();
+        std::stringstream sss;
 #define COUT_
 #ifdef COUT_
-            bith::cout_ << "TID=" << i << " " << id << std::endl;
-            bith::cout_.flush();
+        bith::cout_ << "TID=" << i << " " << id << std::endl;
+        bith::cout_.flush();
 #else
-            {
-                boost::lock_guard<boost::mutex> lock(out_global_mutex2);
-                std::cout << "TID=" << i << " " << id << std::endl;
-            }
+        {
+            boost::lock_guard<boost::mutex> lock(out_global_mutex2);
+            std::cout << "TID=" << i << " " << id << std::endl;
+        }
 #endif            
-            boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-        }
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
+    return 0;
+}
     
-    int main() {
-        #if 0
-        bith::threader MyThreader;
-        {
-        bith::joiner<void> MyJoiner(MyThreader.fork(my_thread));
-        MyJoiner.join();
-        std::cout << "end" << std::endl;
-        }
-        {
-        bith::joiner<int> MyJoiner(MyThreader.fork(my_thread1));
-        int i = MyJoiner.get();
-            std::cout << "i=" << i << std::endl;
-        }
-        #endif
-        boost::thread th1(bith::make_decorator(my_thread));
-        boost::thread th2(bith::make_decorator(my_thread));
-        boost::thread th3(bith::make_decorator(my_thread));
-        boost::thread th4(bith::make_decorator(my_thread));
-        boost::thread th5(bith::make_decorator(my_thread));
-
-        th1.join();
-        th2.join();
-        th3.join();
-        th4.join();
-        th5.join();
-        sleep(2);
-        return 0;
+int main() {
+    {
+    bith::shared_threader_decorator ae;
+    bith::wait_for_all(ae, my_thread, my_thread);
     }
+    #if 0
+    boost::thread th1(bith::make_decorator(my_thread));
+    boost::thread th2(bith::make_decorator(my_thread));
+    boost::thread th3(bith::make_decorator(my_thread));
+    boost::thread th4(bith::make_decorator(my_thread));
+    boost::thread th5(bith::make_decorator(my_thread));
+    th1.join();
+    th2.join();
+    th3.join();
+    th4.join();
+    th5.join();
+    #endif
+
+        
+    return 0;
+}
