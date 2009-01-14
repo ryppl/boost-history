@@ -14,10 +14,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/interthreads/detail/config.hpp>
+//#include <boost/interthreads/detail/config.hpp>
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/thread.hpp>
-//#include <boost/tuple/tuple.hpp>
 #include <boost/futures/future.hpp>
 #include <boost/utility/result_of.hpp>
 
@@ -57,11 +56,7 @@ public:
 #else
         thread th(boost::move(tsk));
 #endif        
-        //detail::thread_move_t<boost::unique_future<result_type> > resm(res);
-        //return res;
-        return unique_future<result_type>(detail::thread_move_t<unique_future<result_type> >(res));
-
-        //return detail::thread_move_t<boost::unique_future<result_type> >(res);
+        return boost::move(res);        
     }   
 };
 
@@ -87,17 +82,13 @@ public:
     fork(F f) {
         typedef typename boost::result_of<F()>::type result_type;
         packaged_task<result_type> tsk(f);
-        shared_future<result_type> res = tsk.get_future();
+        shared_future<result_type> res(tsk.get_future());
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR    
         thread th(attr(), boost::move(tsk));
 #else
         thread th(boost::move(tsk));
 #endif        
-        //detail::thread_move_t<boost::unique_future<result_type> > resm(res);
-        //return res;
-        return shared_future<result_type>(detail::thread_move_t<shared_future<result_type> >(res));
-
-        //return detail::thread_move_t<boost::unique_future<result_type> >(res);
+        return res;
     }   
 };
 

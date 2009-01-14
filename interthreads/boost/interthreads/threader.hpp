@@ -14,7 +14,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//#include <boost/interthreads/detail/config.hpp>
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/thread.hpp>
@@ -59,9 +58,12 @@ private:
         unique_joiner_data(Nullary f) {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
-            //th_ = boost::move(tsk);
+#if 0            
+            th_ = boost::move(tsk);
+#else            
             thread th(boost::move(tsk));
             th_ = boost::move(th);
+#endif            
         }
 #endif        
 
@@ -73,7 +75,7 @@ private:
     unique_joiner(unique_joiner& other);
     this_type& operator=(unique_joiner& other);
 
-protected:
+public:
     friend class unique_threader;
     template <typename Nullary> 
     // requires result_of<Nullary>::type  is convertible to ResultType
@@ -268,9 +270,12 @@ private:
         shared_joiner_data(Nullary f) {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
-            //th_ = boost::move(tsk);
+#if 0            
+            th_ = boost::move(tsk);
+#else            
             thread th(boost::move(tsk));
             th_ = boost::move(th);
+#endif            
         }
 #endif        
 
@@ -279,10 +284,8 @@ private:
     typedef shared_joiner_data this_impl_type;
     typedef shared_joiner this_type;
 
-    shared_joiner(shared_joiner& other);
-    this_type& operator=(shared_joiner& other);
-
-protected:
+//protected:
+public:
     friend class shared_threader;
     template <typename Nullary> 
     // requires result_of<Nullary>::type  is convertible to ResultType
@@ -464,20 +467,12 @@ struct get_future<shared_threader> {
         return t;
     }
 #else
-#if 1    
     template <typename T>
     inline boost::detail::thread_move_t<interthreads::unique_joiner<T> >
     move(boost::interthreads::unique_joiner<T>&  t)
     {
         return boost::detail::thread_move_t<interthreads::unique_joiner<T> >(t);
     }
-#else
-    template <typename T>
-    inline interthreads::unique_joiner<T> move(boost::detail::thread_move_t<boost::interthreads::unique_joiner<T> > t)
-    {
-        return interthreads::unique_joiner<T>(t);
-    }
-#endif    
 #endif
 #ifdef BOOST_HAS_RVALUE_REFS
     template <typename T>
@@ -486,20 +481,12 @@ struct get_future<shared_threader> {
         return t;
     }
 #else
-#if 1    
     template <typename T>
     inline boost::detail::thread_move_t<interthreads::shared_joiner<T> > 
     move(boost::interthreads::shared_joiner<T>& t)
     {
         return boost::detail::thread_move_t<interthreads::shared_joiner<T> >(t);
     }
-#else
-    template <typename T>
-    inline interthreads::shared_joiner<T> move(boost::detail::thread_move_t<boost::interthreads::shared_joiner<T> > t)
-    {
-        return interthreads::shared_joiner<T>(t);
-    }
-#endif    
 #endif
 }
 

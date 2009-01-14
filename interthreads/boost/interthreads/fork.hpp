@@ -38,13 +38,26 @@ namespace result_of {
     };
 }
 
+//template <typename AE>
+//struct get_future;
 template <typename AE>
-struct get_future;
+struct get_future {
+    template <typename T>
+    shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) { return act.get_future(); }
+};
+    
+
+template< typename AE, typename F > 
+struct fork_aux {
+    static typename result_of::fork<AE,F>::type fork(AE& ae, F fn ) {
+        return ae.fork(fn);
+    }
+};
 
 template< typename AE, typename F > 
 typename result_of::fork<AE,F>::type 
 fork( AE& ae, F fn ) {
-    return ae.fork(fn);
+    return fork_aux<AE,F>::fork(ae,fn);
 }
 
 template< typename AE, typename F, typename A1 > 

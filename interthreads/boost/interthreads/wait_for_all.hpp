@@ -15,6 +15,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/interthreads/fork_all.hpp>
+#include <boost/interthreads/algorithm/get_all.hpp>
 #include <boost/fusion/include/tuple.hpp>
 #include <boost/futures/future.hpp>
 #include <boost/utility/result_of.hpp>
@@ -47,18 +48,22 @@ namespace result_of {
 }
 
 
-template< typename Launcher, typename F1, typename F2> 
-typename result_of::wait_for_all<Launcher, fusion::tuple<F1,F2> >::type
-wait_for_all( Launcher& launcher, F1 f1, F2 f2 ) {
-    typename result_of::fork_all<Launcher, fusion::tuple<F1,F2> >::type tmp=fork_all(launcher, f1, f2);
-    return get_all(tmp);
+template< typename AE, typename F1, typename F2> 
+typename result_of::wait_for_all<AE, fusion::tuple<F1,F2> >::type
+wait_for_all( AE& ae, F1 f1, F2 f2 ) {
+    typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type handles(fork_all(ae, f1, f2));
+    typename result_of::wait_for_all<AE, fusion::tuple<F1,F2> >::type values;
+    set_all(handles,values);
+    return values;
 }
 
-template< typename Launcher, typename F1, typename F2, typename F3> 
-typename result_of::wait_for_all<Launcher, fusion::tuple<F1,F2,F3> >::type
-wait_for_all( Launcher& launcher, F1 f1, F2 f2 , F3 f3 ) {
-    typename result_of::fork_all<Launcher, fusion::tuple<F1,F2> >::type tmp=fork_all(launcher, f1, f2, f3);
-    return get_all(tmp);
+template< typename AE, typename F1, typename F2, typename F3> 
+typename result_of::wait_for_all<AE, fusion::tuple<F1,F2,F3> >::type
+wait_for_all( AE& ae, F1 f1, F2 f2 , F3 f3 ) {
+    typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type handles(fork_all(ae, f1, f2, f3));
+    typename result_of::wait_for_all<AE, fusion::tuple<F1,F2,F3> >::type values;
+    set_all(handles,values);
+    return values;
 }
 
 }

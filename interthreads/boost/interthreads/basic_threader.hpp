@@ -51,7 +51,8 @@ public:
 #else
         thread th(f);
 #endif        
-        return thread(detail::thread_move_t<thread>(th));
+        return boost::move(th);        
+        //return thread(boost::detail::thread_move_t<thread>(th));
     }   
 };
 

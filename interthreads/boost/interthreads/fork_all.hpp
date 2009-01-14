@@ -14,7 +14,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//#include <boost/interthreads/fork.hpp>
+#include <boost/interthreads/fork.hpp>
 #include <boost/thread/detail/move.hpp>
 #include <boost/fusion/include/tuple.hpp>
 #include <boost/utility/result_of.hpp>
@@ -54,7 +54,7 @@ fork_all( AE& ae, F1 f1, F2 f2 ) {
     typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type type;
     typename result_of::fork<AE, F1>::type j1 =ae.fork(f1);
     typename result_of::fork<AE, F2>::type j2 =ae.fork(f2);
-    return type(j1.move(),j2.move());
+    return type(j1,j2);
 }
 
 template< typename AE, typename F1, typename F2, typename F3> 
