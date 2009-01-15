@@ -221,20 +221,20 @@ namespace boost{namespace itl
             not exist in the map.    
             If \c value_pairs's key value exists in the map, it's data
             value is added to the data value already found in the map. */
-        iterator add(const value_type& value_pair) { return add<codomain_combine>(value_pair); }
-
-        template<class Combiner>
-        iterator add(const value_type& value_pair);
-
-        iterator operator += (const value_type& value_pair) { return add(value_pair); }
+        map& add(const value_type& value_pair) { return add<codomain_combine>(value_pair); }
 
         /** If the \c value_pair's key value is in the map, it's data value is
             subtraced from the data value stored in the map. */
-        iterator subtract(const value_type& value_pair);
+        map& subtract(const value_type& value_pair)
+		{
+			if(Traits::emits_neutrons && !is_set<codomain_type>::value)
+				this->template add<inverse_codomain_combine>(value_pair); 
+			else 
+				this->template subtract<inverse_codomain_combine>(value_pair); 
+	    
+			return *this;
+		}
 
-        /** Add a map \c x2 to this map. If an element of \c x2 already exists
-            in \c *this, add up the contents using <tt>operator +=</tt>. */
-        map& operator += (const map& x2) { Set::add(*this, x2); return *this; }
 
         /** Subtract a map \c x2 from this map. If an element of \c x2 already exists
             in \c *this, subtract the contents using <tt>operator -=</tt>. */
@@ -250,6 +250,7 @@ namespace boost{namespace itl
         /** Subtract a set \c x2 from this map. Every element of \c this map that
             has a key that is element of \c x2 is deleted from the map. */
         map& operator -= (const set_type& x2) { Set::erase(*this, x2); return *this; }
+
 
         //JODO 
         /** erase the value pair \c pair(key,val) from the map.
@@ -319,80 +320,24 @@ namespace boost{namespace itl
 
         /** Represent this map as string */
         std::string as_string()const;
+
+	public: //JODO private: Problem add<F>(x) is used in set_algo 
+        template<class Combiner>
+        map& add(const value_type& value_pair);
+
+	private:
+        template<class Combiner>
+        map& subtract(const value_type& value_pair);
     };
 
 
-    /** Standard equality, which is lexicographical equality of the sets
-        as sequences, that are given by their Compare order. */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool operator == (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-    {
-        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator==((const base_type&)lhs, (const base_type&)rhs);
-    }
-
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool operator != (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-    { return !(lhs == rhs); }
-
-    //JODO comment... 
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-                                 const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-    {
-        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator==((const base_type&)lhs, (const base_type&)rhs);
-    }
-
-    /** Protonic equality is equality on all elements that do not carry a neutron as content. */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool is_protonic_equal (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-                                   const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-    {
-        //JODO: Efficient implementation.
-        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-
-        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> lhs0 = lhs;
-        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> rhs0 = rhs;
-        lhs0.absorb_neutrons();
-        rhs0.absorb_neutrons();
-        return operator==((const base_type&)lhs0, (const base_type&)rhs0);
-    }
-
-    /** Strict weak less ordering which is given by the Compare order */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool operator < (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-    {
-        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator<((const base_type&)lhs, (const base_type&)rhs);
-    }
-
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool operator > (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-	{ return rhs < lhs; }
-
-    /** Partial ordering which is induced by Compare */
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool operator <= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-	{ return !(lhs > rhs); }
-
-    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    inline bool operator >= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
-        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-	{ return !(lhs < rhs); }
-
     template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
         template <class Combiner>
-    typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
         map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::add(const value_type& val)
     {
         if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
-            return end();
+            *this;
 
         std::pair<iterator, bool> insertion;
         if(Traits::emits_neutrons)
@@ -405,19 +350,16 @@ namespace boost{namespace itl
             insertion = insert(val);
 
         if( insertion.WAS_SUCCESSFUL )
-            return insertion.ITERATOR ;
+            return *this;
         else
         {
             iterator it = insertion.ITERATOR;
             Combiner()((*it).CONT_VALUE, val.CONT_VALUE);
 
             if(Traits::absorbs_neutrons && (*it).CONT_VALUE == Combiner::neutron())
-            {
                 erase(it);
-                return end();
-            }
-            else
-                return it ;
+
+			return *this;
         }
     }
 
@@ -442,28 +384,18 @@ namespace boost{namespace itl
 
 
     template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
+        template <class Combiner>
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
         map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
     {
-        if(Traits::emits_neutrons && !is_set<codomain_type>::value)
-            return add<inverse_codomain_combine>(val);
-        else
+        iterator it_ = find(val.KEY_VALUE);
+        if(it_ != end())
         {
-            iterator it_ = find(val.KEY_VALUE);
-            if(it_ != end())
-            {
-                (*it_).CONT_VALUE -= val.CONT_VALUE;
-
-                if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == codomain_combine::neutron())
-                {
-                    erase(it_);
-                    return end();
-                }
-                else
-                    return it_;
-            }
-            return it_;
+            Combiner()((*it_).CONT_VALUE, val.CONT_VALUE);
+            if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == codomain_combine::neutron())
+                erase(it_);
         }
+        return *this;
     }
 
 
@@ -538,6 +470,109 @@ namespace boost{namespace itl
 
         return object; 
     }
+
+	//-----------------------------------------------------------------------------
+	// non member functions
+	//-----------------------------------------------------------------------------
+
+    /** Standard equality, which is lexicographical equality of the sets
+        as sequences, that are given by their Compare order. */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator == (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+    {
+        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+        return operator==((const base_type&)lhs, (const base_type&)rhs);
+    }
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator != (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+    { return !(lhs == rhs); }
+
+    //JODO comment... 
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                                 const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+    {
+        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+        return operator==((const base_type&)lhs, (const base_type&)rhs);
+    }
+
+    /** Protonic equality is equality on all elements that do not carry a neutron as content. */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool is_protonic_equal (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+                                   const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+    {
+        //JODO: Efficient implementation.
+        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+
+        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> lhs0 = lhs;
+        itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> rhs0 = rhs;
+        lhs0.absorb_neutrons();
+        rhs0.absorb_neutrons();
+        return operator==((const base_type&)lhs0, (const base_type&)rhs0);
+    }
+
+    /** Strict weak less ordering which is given by the Compare order */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator < (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+    {
+        typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+        return operator<((const base_type&)lhs, (const base_type&)rhs);
+    }
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator > (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+	{ return rhs < lhs; }
+
+    /** Partial ordering which is induced by Compare */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator <= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+	{ return !(lhs > rhs); }
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    inline bool operator >= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
+        const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
+	{ return !(lhs < rhs); }
+
+	//-----------------------------------------------------------------------------
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
+    { return object.add(operand); }
+	
+
+    /** Add a map \c operand to map \c object. If an element of \c operand already exists
+        in \c object, add up the contents. */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    { Set::add(object, operand); return object; }
+
+
+
+
+        /** Subtract a map \c x2 from this map. If an element of \c x2 already exists
+            in \c *this, subtract the contents using <tt>operator -=</tt>. */
+   //     map& operator -= (const map& x2) 
+   //     { 
+			//if(Traits::emits_neutrons && !is_set<codomain_type>::value)
+   //             const_FORALL(typename map, it_, x2)
+   //                 this->add<inverse_codomain_combine>(*it_);
+   //         else Set::subtract(*this, x2); 
+   //         return *this; 
+   //     }
+
+        /** Subtract a set \c x2 from this map. Every element of \c this map that
+            has a key that is element of \c x2 is deleted from the map. */
+   //     map& operator -= (const set_type& x2) { Set::erase(*this, x2); return *this; }
+
 
 	//-----------------------------------------------------------------------------
 	// type traits

@@ -475,7 +475,6 @@ public:
     */
     SubType& subtract(const value_type& x)
     {
-		//CL typedef typename inverse<Combine<CodomainT> >::type InverseCombine;
 		if(Traits::emits_neutrons && !is_set<codomain_type>::value)
 			that()->template add_<inverse_codomain_combine>(x); 
         else 
