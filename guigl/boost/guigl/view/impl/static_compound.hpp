@@ -178,8 +178,7 @@ public:
     
     bool operator()(const movement_event &event_info) const
     {
-        detail::accumulate(view.children(), false, propagate_movement_event<static_compound_event_visitor>(*this, event_info));
-        return true;
+        return detail::accumulate(view.children(), false, propagate_movement_event<static_compound_event_visitor>(*this, event_info));
     }
 
     bool operator()(const entry_exit_event &event_info) const

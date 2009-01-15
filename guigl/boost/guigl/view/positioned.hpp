@@ -63,7 +63,10 @@ public:
             root = p_view->m_parent;
         return root;
     }
-
+    const base &parent() const
+    {
+        return *m_parent;
+    }
 protected:
     void draw_prologue();
     void draw_epilogue();
@@ -81,7 +84,32 @@ template<typename BaseView>
 struct is_positioned<positioned<BaseView> > : public mpl::true_
 {};
 
+/** Returns the topmost ancestor, as defined by following the parent pointer
+as long as the parent is also a positioned<> view. */
+template<typename View>
+inline const base *root(const positioned<View> &view)
+{
+    const base *root = view;
+    const positioned<> *p_view;
+    while((p_view = dynamic_cast<const positioned<> *>(root)))
+        root = p_view->parent();
+    return root;
+}
 
-}}}
+/** Returns the position relative to topmost ancestor,
+    as defined by following the parent pointer
+    as long as the parent is also a positioned<> view. */
+inline position_type root_position(const positioned<> &view)
+{
+    const positioned<> *p_view = &view;
+    position_type position = view.position();
+    while((p_view = dynamic_cast<const positioned<> *>(&p_view->parent())))
+        position += p_view->position();
+    return position;
+}
+    
+} // namespace view
+
+}}
 
 #endif // BOOST__GUIGL__VIEW__POSITIONED_HPP

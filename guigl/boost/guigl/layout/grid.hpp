@@ -50,8 +50,9 @@ namespace detail {
         template<typename View>
         void operator()(View &view) const
         {
-            view.set_position(layout.next_position());
-            view.set_size(layout.next_size());
+            view.set_position(layout.position());
+            view.set_size(layout.size());
+            layout.next();
         }
         Layout &layout;
     };
@@ -70,17 +71,19 @@ public:
         m_dimensions[1] = args[_vertical];
         m_next[0] = m_next[1] = 0;
     }
-    position_type next_position()
+    void next()
     {
-        position_type result(m_element_size.x * m_next[0], m_element_size.y * m_next[1]);
         if(++m_next[m_direction] >= m_dimensions[m_direction])
         {
             m_next[m_direction] = 0;
             m_next[!m_direction]++;
         }
-        return result;
     }
-    const size_type &next_size()
+    position_type position()
+    {
+        return position_type(m_element_size.x * m_next[0], m_element_size.y * m_next[1]);
+    }
+    const size_type &size()
     {
         return m_element_size;
     }
@@ -95,9 +98,10 @@ public:
     {
         T *element(new T((
             args,
-            _size = next_size(),
-            _position = next_position()
+            _size = size(),
+            _position = position()
         )) );
+        next();
         return element;
     }
 private:

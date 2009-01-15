@@ -23,6 +23,12 @@ position_type midpoint(const View &view)
     return view.position() + view.size() / 2;
 }
 
+template<typename View>
+position_type root_midpoint(const View &view)
+{
+    return root_position(view) + view.size() / 2;
+}
+
 }
 
 }}
