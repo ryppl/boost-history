@@ -28,7 +28,7 @@ project boost/guigl
         <define>BOOST_ALL_NO_LIB=1
     ;
 
-feature.feature guigl_binding : glut fltk : propagated ;
+feature.feature guigl_binding : glut fltk ;
 feature.set-default guigl_binding : glut ;
 
 SOURCES =
