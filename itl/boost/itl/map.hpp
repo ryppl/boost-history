@@ -235,41 +235,10 @@ namespace boost{namespace itl
 			return *this;
 		}
 
-
-        /** Subtract a map \c x2 from this map. If an element of \c x2 already exists
-            in \c *this, subtract the contents using <tt>operator -=</tt>. */
-        map& operator -= (const map& x2) 
-        { 
-			if(Traits::emits_neutrons && !is_set<codomain_type>::value)
-                const_FORALL(typename map, it_, x2)
-                    this->add<inverse_codomain_combine>(*it_);
-            else Set::subtract(*this, x2); 
-            return *this; 
-        }
-
-        /** Subtract a set \c x2 from this map. Every element of \c this map that
-            has a key that is element of \c x2 is deleted from the map. */
-        map& operator -= (const set_type& x2) { Set::erase(*this, x2); return *this; }
-
-
         //JODO 
         /** erase the value pair \c pair(key,val) from the map.
             Erase only if, the exact value content \c val is stored at key \key. */
         size_type erase(const value_type& value);
-
-        //JODO
-        /** Intersect map \c x2 and \c *this.
-            So \c *this becomes the intersection of \c *this and \c x2 */
-        map& operator &= (const map& x2) 
-        {
-			if(Traits::emits_neutrons) return *this += x2;
-			else{ Map::intersect(*this, x2); return *this; }
-		}
-
-        /** Intersect set \c x2 and \c *this.
-            So \c *this becomes the intersection of \c *this and \c x2 */
-        map& operator &= (const set_type& x2) 
-        { Map::intersect(*this, x2); return *this; }
 
         /** \c key_value allows for a uniform access to \c key_values which is
             is used for common algorithms on sets and maps. */
@@ -539,12 +508,21 @@ namespace boost{namespace itl
         const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
 	{ return !(lhs < rhs); }
 
-	//-----------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
     template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
 	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
     { return object.add(operand); }
+	
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator + ( const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
+    {
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) += operand; 
+	}
 	
 
     /** Add a map \c operand to map \c object. If an element of \c operand already exists
@@ -556,22 +534,133 @@ namespace boost{namespace itl
     { Set::add(object, operand); return object; }
 
 
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator +  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    {
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) += operand; 
+	}
+
+	//--------------------------------------------------------------------------
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator |= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
+    { return object.add(operand); }
+	
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator | ( const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
+    {
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) |= operand; 
+	}
+	
+
+    /** Add a map \c operand to map \c object. If an element of \c operand already exists
+        in \c object, add up the contents. */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator |= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    { Set::add(object, operand); return object; }
 
 
-        /** Subtract a map \c x2 from this map. If an element of \c x2 already exists
-            in \c *this, subtract the contents using <tt>operator -=</tt>. */
-   //     map& operator -= (const map& x2) 
-   //     { 
-			//if(Traits::emits_neutrons && !is_set<codomain_type>::value)
-   //             const_FORALL(typename map, it_, x2)
-   //                 this->add<inverse_codomain_combine>(*it_);
-   //         else Set::subtract(*this, x2); 
-   //         return *this; 
-   //     }
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator |  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    {
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) |= operand; 
+	}
 
-        /** Subtract a set \c x2 from this map. Every element of \c this map that
-            has a key that is element of \c x2 is deleted from the map. */
-   //     map& operator -= (const set_type& x2) { Set::erase(*this, x2); return *this; }
+	//--------------------------------------------------------------------------
+
+    /** Subtract a map \c x2 from this map. If an element of \c x2 already exists
+        in \c *this, subtract the contents using <tt>operator -=</tt>. */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator -= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    { 
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		if(Traits::emits_neutrons && !is_set<typename ObjectT::codomain_type>::value)
+            const_FORALL(typename ObjectT, it_, operand)
+				object.template add<ObjectT::inverse_codomain_combine>(*it_);
+        else Set::subtract(object, operand); 
+        return object; 
+    }
+
+	template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator -  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    { 
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) -= operand; 
+    }
+
+    /** Subtract a set \c x2 from this map. Every element of \c this map that
+        has a key that is element of \c x2 is deleted from the map. */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator -= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
+    { Set::erase(object, operand); return object; }
+
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator -  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
+    { 
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) -= operand; 
+    }
+
+
+    /** Intersect map \c x2 and \c *this.
+        So \c *this becomes the intersection of \c *this and \c x2 */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    {
+		if(Traits::emits_neutrons) return object += operand;
+		else{ Map::intersect(object, operand); return object; }
+	}
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    { 
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) &= operand; 
+    }
+
+    /** Intersect set \c x2 and \c *this.
+        So \c *this becomes the intersection of \c *this and \c x2 */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
+    { Map::intersect(object, operand); return object; }
+
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
+    { 
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) &= operand; 
+    }
 
 
 	//-----------------------------------------------------------------------------

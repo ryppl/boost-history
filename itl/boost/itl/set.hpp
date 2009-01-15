@@ -157,22 +157,11 @@ namespace boost{namespace itl
         /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
         bool disjoint(const set& x2)const { return disjoint(*this, x2); }
 
-        iterator add(const value_type& vp) { return insert(vp).ITERATOR; } 
-        set& operator += (const value_type& vp) { insert(vp); return *this; } 
+		/** Add an element \c value to the set. */
+        set& add(const value_type& value) { insert(value); return *this; } 
 
-        // Default subtract-function using -= on CodomTV
-        iterator subtract(const value_type& vp);
-        set& operator -= (const value_type& vp) { subtract(vp); return *this; } 
-
-        /// Add a set \c x2 to this set.
-        set& operator += (const set& x2) { Set::add(*this, x2); return *this; }
-
-        /// Subtract a set \c x2 from this set.
-        set& operator -= (const set& x2) { Set::subtract(*this, x2); return *this; }
-
-        /** Intersect set \c x2 \c *this.
-            So \c *this becomes the intersection of \c *this and \c x2 */
-        set& operator &= (const set& x) { Set::intersect(*this, x); return *this; }
+		/** Subtract an element \c value from the set. */
+        set& subtract(const value_type& value);
 
         /** \c key_value allows for a uniform access to \c key_values which is
             is used for common algorithms on sets and maps. */
@@ -217,65 +206,16 @@ namespace boost{namespace itl
     };
 
 
-    /** Standard equality, which is lexicographical equality of the sets
-        as sequences, that are given by their Compare order. */
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator == (const itl::set<DomainT,Compare,Alloc>& lhs,
-                             const itl::set<DomainT,Compare,Alloc>& rhs)
-    {
-        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator==((const base_type&)lhs, (const base_type&)rhs);
-    }
 
     template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator != (const itl::set<DomainT,Compare,Alloc>& lhs,
-                             const itl::set<DomainT,Compare,Alloc>& rhs)
-	{ return !(lhs == rhs); }
-
-    /** Element equality. Two sets are equal if they contain the same elements */
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool is_element_equal(const itl::set<DomainT,Compare,Alloc>& lhs,
-                                 const itl::set<DomainT,Compare,Alloc>& rhs)
-    {
-        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator==((const base_type&)lhs, (const base_type&)rhs);
-    }
-
-    /** Strict weak less ordering which is given by the Compare order */
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator < (const itl::set<DomainT,Compare,Alloc>& lhs,
-                            const itl::set<DomainT,Compare,Alloc>& rhs)
-    {
-        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-        return operator<((const base_type&)lhs, (const base_type&)rhs);
-    }
-
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator > (const itl::set<DomainT,Compare,Alloc>& lhs,
-                            const itl::set<DomainT,Compare,Alloc>& rhs)
-	{ return rhs < lhs; }
-
-    /** Partial ordering which is induced by Compare */
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator <= (const itl::set<DomainT,Compare,Alloc>& lhs,
-        const itl::set<DomainT,Compare,Alloc>& rhs)
-	{ return !(lhs > rhs); }
-
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    inline bool operator >= (const itl::set<DomainT,Compare,Alloc>& lhs,
-        const itl::set<DomainT,Compare,Alloc>& rhs)
-	{ return !(lhs < rhs); }
-
-
-    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    typename set<DomainT,Compare,Alloc>::iterator
+    set<DomainT,Compare,Alloc>&
         set<DomainT,Compare,Alloc>::subtract(const value_type& val)
     {
         iterator it_ = find(val);
         if(it_ != end())
             erase(it_);
 
-        return end();
+        return *this;
     }
 
 
@@ -322,24 +262,191 @@ namespace boost{namespace itl
         return *this;
     }
 
-    //-------------------------------------------------------------------------
-    template <typename DomainT,
-              ITL_COMPARE Compare, ITL_ALLOC Alloc>
-    set<DomainT,Compare,Alloc>& 
-        insert(      set<DomainT,Compare,Alloc>& object, 
-               const set<DomainT,Compare,Alloc>& insertee) 
+	//-----------------------------------------------------------------------------
+	// non member functions
+	//-----------------------------------------------------------------------------
+    /** Standard equality, which is lexicographical equality of the sets
+        as sequences, that are given by their Compare order. */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator == (const itl::set<DomainT,Compare,Alloc>& lhs,
+                             const itl::set<DomainT,Compare,Alloc>& rhs)
     {
-        return object += insertee; 
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+        return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename DomainT,
-              ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator != (const itl::set<DomainT,Compare,Alloc>& lhs,
+                             const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return !(lhs == rhs); }
+
+    /** Element equality. Two sets are equal if they contain the same elements */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool is_element_equal(const itl::set<DomainT,Compare,Alloc>& lhs,
+                                 const itl::set<DomainT,Compare,Alloc>& rhs)
+    {
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+        return operator==((const base_type&)lhs, (const base_type&)rhs);
+    }
+
+    /** Strict weak less ordering which is given by the Compare order */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator < (const itl::set<DomainT,Compare,Alloc>& lhs,
+                            const itl::set<DomainT,Compare,Alloc>& rhs)
+    {
+        typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+        return operator<((const base_type&)lhs, (const base_type&)rhs);
+    }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator > (const itl::set<DomainT,Compare,Alloc>& lhs,
+                            const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return rhs < lhs; }
+
+    /** Partial ordering which is induced by Compare */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator <= (const itl::set<DomainT,Compare,Alloc>& lhs,
+                             const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return !(lhs > rhs); }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline bool operator >= (const itl::set<DomainT,Compare,Alloc>& lhs,
+                             const itl::set<DomainT,Compare,Alloc>& rhs)
+	{ return !(lhs < rhs); }
+
+	//--------------------------------------------------------------------------
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator += (      itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return object.add(operand); } 
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator +  (const itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) += operand; }
+
+	/// Add a set \c operand to this set \object.
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator += (      itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { Set::add(object, operand); return object; }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator +  (const itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) += operand; }
+
+	//--------------------------------------------------------------------------
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator |= (      itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return object.add(operand); } 
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator |  (const itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) |= operand; }
+
+	/// Add a set \c operand to this set \object.
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator |= (      itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { Set::add(object, operand); return object; }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator |  (const itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) |= operand; }
+
+	//--------------------------------------------------------------------------
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator -= (      itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return object.subtract(operand); } 
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator -  (const itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) -= operand; }
+
+
+    /// Subtract a set \c x2 from this set.
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator -= (      itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { Set::subtract(object, operand); return object; }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator -  (const itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) -= operand; }
+	
+	//--------------------------------------------------------------------------
+	// itl::set::intersection operators &=, &
+	//--------------------------------------------------------------------------
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator &= (      itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    {
+		typedef itl::set<DomainT,Compare,Alloc> ObjectT;
+		typename ObjectT::const_iterator element_ = object.find(operand);
+		ObjectT intersection = element_ == object.end() ? ObjectT() 
+			                                            : ObjectT(*element_);
+		object.swap(intersection);
+		return object; 
+	} 
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator &  (const itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+
+
+
+    /** Intersect set \c object with \c operand. 
+	    So \c object becomes the intersection of \c object and \c operand */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator &= (      itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { Set::intersect(object, operand); return object; }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator &  (const itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+
+
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    set<DomainT,Compare,Alloc>& 
+        insert(      set<DomainT,Compare,Alloc>& object, 
+               const set<DomainT,Compare,Alloc>& operand) 
+    { return object += operand; }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
     set<DomainT,Compare,Alloc>& 
         erase(      set<DomainT,Compare,Alloc>& object, 
-              const set<DomainT,Compare,Alloc>& erasee) 
-    {
-        return object -= erasee; 
-    }
+              const set<DomainT,Compare,Alloc>& operand) 
+    { return object -= operand; }
 
 
 
