@@ -9,6 +9,7 @@
 #ifndef BOOST__GUIGL__PARAMETER_MAP_HPP
 #define BOOST__GUIGL__PARAMETER_MAP_HPP
 
+#include <boost/guigl/event.hpp>
 #include <boost/guigl/types.hpp>
 #include <boost/parameter/typed_name.hpp>
 
