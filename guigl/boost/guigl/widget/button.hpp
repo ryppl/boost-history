@@ -48,8 +48,8 @@ public:
     }
     boost::signal<void()> on_click;
 protected:
-    BOOST_EXPORT_SYMBOLS BOOST_GUIGL_WIDGET_DRAW
-    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
+    BOOST_GUIGL_WIDGET_DRAW
+    bool BOOST_EXPORT_SYMBOLS on_event(const event_type &event_info);
 
 private:
     void clickable_button_down(bool state);

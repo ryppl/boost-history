@@ -32,7 +32,7 @@ public:
 
 protected:
     BOOST_EXPORT_SYMBOLS void draw();
-    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
+    bool BOOST_EXPORT_SYMBOLS on_event(const event_type &event_info);
     friend class guigl::access;
 };
 

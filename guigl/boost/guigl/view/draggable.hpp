@@ -50,7 +50,7 @@ public:
     {   return Button::value; }
 
 protected:
-    bool on_event(const event_type &event_info);
+    bool BOOST_EXPORT_SYMBOLS on_event(const event_type &event_info);
     const position_type &drag_origin() const
     {   return m_drag_origin; }
     void set_drag_origin(const position_type &origin)

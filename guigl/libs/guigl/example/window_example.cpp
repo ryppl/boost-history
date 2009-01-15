@@ -56,10 +56,10 @@ int main()
 
     widget::labeled_button *b1 = new widget::labeled_button((
         _size=size_type(100,30),
-        _position(50, 50),
-        _background(1,1,1),
-        _active_color(1,0,0),
-        _color(0,0,0),
+        _position=position_type(50, 50),
+        _background=color_type(1,1,1),
+        _active_color=color_type(1,0,0),
+        _color=color_type(0,0,0),
         _label="Button"));
     test_window1 << b1;
     

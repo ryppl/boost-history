@@ -11,6 +11,7 @@
 
 #include <boost/guigl/access.hpp>
 #include <boost/guigl/event.hpp>
+#include <boost/guigl/export_symbols.hpp>
 #include <boost/guigl/parameters.hpp>
 
 namespace boost { namespace guigl {
@@ -56,7 +57,7 @@ protected:
 
 #define BOOST_GUIGL_WIDGET_DRAW             \
     friend class ::boost::guigl::access;    \
-    void draw();                            \
+    void BOOST_EXPORT_SYMBOLS draw();                            \
     void draw_prologue();                   \
     void draw_epilogue();                   \
 

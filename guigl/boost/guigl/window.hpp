@@ -36,7 +36,7 @@ public:
     BOOST_EXPORT_SYMBOLS window(const argument_pack_type &args);
     BOOST_EXPORT_SYMBOLS ~window();
 
-    static void redraw(const view::positioned<> &v);
+    static void BOOST_EXPORT_SYMBOLS redraw(const view::positioned<> &v);
     
     class impl;
 private:

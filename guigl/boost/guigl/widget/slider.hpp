@@ -47,10 +47,10 @@ public:
     {   return m_value; }
     
     /// Sets the value of the slider.
-    void set_value(double value);
+    void BOOST_EXPORT_SYMBOLS set_value(double value);
 protected:
-    BOOST_EXPORT_SYMBOLS BOOST_GUIGL_WIDGET_DRAW
-    BOOST_EXPORT_SYMBOLS bool on_event(const event_type &event_info);
+    BOOST_GUIGL_WIDGET_DRAW
+    bool BOOST_EXPORT_SYMBOLS on_event(const event_type &event_info);
 
 private:
     double m_value;

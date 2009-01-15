@@ -43,7 +43,7 @@ public:
     button::enum_type clickable_button()
     {   return Button::value; }
 protected:
-    bool on_event(const event_type &event_info);
+    bool BOOST_EXPORT_SYMBOLS on_event(const event_type &event_info);
 
     bool button_down()
     {   return m_button_down; }

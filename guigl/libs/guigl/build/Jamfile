@@ -9,6 +9,9 @@
 import feature ;
 
 lib glut : : <name>glut <link>shared ;
+lib glut32 : : <name>glut32 <link>shared ;
+lib opengl32 : : <name>opengl32 <link>shared ;
+lib glu32 : : <name>glu32 <link>shared ;
 
 project boost/guigl 
     : source-location ../src
@@ -18,6 +21,9 @@ project boost/guigl
     : usage-requirements
     	<toolset>gcc:<library>glut
         <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <toolset>msvc:<library>glut32
+        <toolset>msvc:<library>opengl32
+        <toolset>msvc:<library>glu32
         <library>/boost/signals//boost_signals
         <define>BOOST_ALL_NO_LIB=1
     ;
