@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -16,27 +16,26 @@ void mp_int<A,T>::add_digit(digit_type b)
   }
   else
   {
-    if (digits_[0] >= b) // example: -16 + 5 = -11; or -5 + 5 = 0
-    {
+    if (digits_[0] > b) // example: -16 + 5 = -11
       digits_[0] -= b;
-      if (!*this)
-        set_sign(1);
-    }
     else
     {
-      if (size_ == 1) // example: -1 + 5 = 4
-        digits_[0] = b - digits_[0];
-      else            // example -11 + 5 = -6
+      if (size_ == 1) // example: -1 + 5 = 4, or -5 + 5 = 0
       {
+        digits_[0] = b - digits_[0];
         set_sign(1);
-        sub_digit(b);
-        set_sign(-1);
+      }
+      else            // example -1000 + 5 = -995
+      {
+        ops_type::subtract_single_digit(digits_, digits_, size_, b);
+        if (!digits_[size_-1])
+          --size_;
       }
     }
   }
 }
 
-/* low level addition, based on HAC pp.594, Algorithm 14.7 */
+// low level addition, based on HAC pp.594, Algorithm 14.7
 // does not handle sign
 template<class A, class T>
 void mp_int<A,T>::add_magnitude(const mp_int& rhs)

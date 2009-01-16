@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -8,9 +8,10 @@ void mp_int<A,T>::sub_digit(digit_type b)
 {
   if (is_negative())
   {
-    set_sign(1);
-    add_digit(b);
-    set_sign(-1);
+    const digit_type carry =
+      ops_type::add_single_digit(digits_, digits_, size_, b);
+    if (carry)
+      push(carry);
     return;
   }
 

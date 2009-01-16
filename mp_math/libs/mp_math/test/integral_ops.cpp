@@ -82,6 +82,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(add_signed_integral2, mp_int_type, mp_int_types)
   BOOST_CHECK_EQUAL(z, "987776");
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(add_signed_integral3, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("-1");
+  const mp_int_type z = x + 5;
+  BOOST_CHECK_EQUAL(z, "4");
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(add_unsigned_integral1, mp_int_type, mp_int_types)
 {
   const mp_int_type x("9999999");
