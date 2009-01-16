@@ -161,7 +161,7 @@ namespace path_traits
   inline void append( const charT * begin,   // requires: null termination
     string_type & target, system::error_code & ec )
   {
-    path_traits::append<charT>( begin, 0, target, ec );
+    path_traits::append<charT>( begin, static_cast<const charT *>(0), target, ec );
   }
 
   template< class charT >   // specialization required
@@ -180,20 +180,20 @@ namespace path_traits
 namespace detail
 {
 #ifdef BOOST_WINDOWS_API
-  typedef std::string   extern_string_type; 
+  typedef std::string   interface_string_type; 
 #else 
-  typedef std::wstring  extern_string_type; 
+  typedef std::wstring  interface_string_type; 
 #endif
 
-  typedef extern_string_type::value_type  extern_value_type;
+  typedef interface_string_type::value_type  interface_value_type;
 
   BOOST_FILESYSTEM_DECL
-  void append( const extern_value_type * begin,
-               const extern_value_type * end,      // 0 for null terminated MBCS
+  void append( const interface_value_type * begin,
+               const interface_value_type * end,      // 0 for null terminated MBCS
                path_traits::string_type & target, system::error_code & ec );
 
   BOOST_FILESYSTEM_DECL
-  extern_string_type convert_to_string( const path_traits::string_type & src,
+  interface_string_type convert_to_string( const path_traits::string_type & src,
                                  system::error_code & ec ); 
 
 }  // namespace detail
@@ -240,22 +240,22 @@ namespace path_traits
   }
 
   template<>
-  inline void append<char>( const detail::extern_value_type * begin,
-    const detail::extern_value_type * end,
+  inline void append<detail::interface_value_type>( const detail::interface_value_type * begin,
+    const detail::interface_value_type * end,
     string_type & target, system::error_code & ec )
   {
     detail::append( begin, end, target, ec );
   }
 
   template<>
-  inline void append<char>( const detail::extern_value_type * begin,
+  inline void append<detail::interface_value_type>( const detail::interface_value_type * begin,
     string_type & target, system::error_code & ec )
   { 
     detail::append( begin, 0, target, ec );
   }
 
   template<>
-  inline detail::extern_string_type convert<std::string>( const string_type & s,
+  inline detail::interface_string_type convert<detail::interface_string_type>( const string_type & s,
     system::error_code & ec )
   {
     return detail::convert_to_string( s, ec );
@@ -508,7 +508,7 @@ namespace path_traits
     //  return formatted "as input"
 
     operator const string_type&() const  { return m_path; }
-    operator const detail::extern_string_type() const
+    operator const detail::interface_string_type() const
     { 
       return detail::convert_to_string( m_path, system::throws );
     }

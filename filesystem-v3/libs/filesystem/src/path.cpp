@@ -17,7 +17,10 @@
 #include <cstddef>
 #include <cstring>
 #include <cassert>
-#include <windows.h>
+
+#ifdef BOOST_WINDOWS_PATH
+#  include <windows.h>
+#endif
 
 namespace fs = boost::filesystem;
 
@@ -678,7 +681,7 @@ namespace
     return loc;
 # else
     // ISO C calls this "the locale-specific native environment":
-    return std::locale loc("");
+    return std::locale("");
 # endif
   }
 
@@ -757,12 +760,12 @@ namespace detail
   //  actual append done here to factor it out from messy buffer management code;
   //  this function just assumes the buffer is large enough.
   inline void do_append(
-                   const extern_value_type * from, const extern_value_type * from_end,
+                   const interface_value_type * from, const interface_value_type * from_end,
                    value_type * to, value_type * to_end,
                    string_type & target, error_code & ec )
   {
     std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const extern_value_type * from_next;
+    const interface_value_type * from_next;
     value_type * to_next;
 
     if ( wchar_t_codecvt_facet()->APPEND_DIRECTION( state, from, from_end, from_next,
@@ -776,11 +779,15 @@ namespace detail
   }
 
   BOOST_FILESYSTEM_DECL
-  void append( const extern_value_type * begin, const extern_value_type * end,
+  void append( const interface_value_type * begin, const interface_value_type * end,
   string_type & target, error_code & ec )
   {
-    if ( !end ) 
-      end = begin + std::strlen(begin);
+    if ( !end )
+    {
+      // compute strlen by hand since interface_value_type may not be char
+      end = begin;
+      while (*end) ++end;
+    }
 
     if ( begin == end )
     {
@@ -793,7 +800,7 @@ namespace detail
     //  dynamically allocate a buffer only if source is unusually large
     if ( buf_size > default_codecvt_buf_size )
     {
-      boost::scoped_array< wchar_t > buf( new wchar_t [buf_size] );
+      boost::scoped_array< value_type > buf( new value_type [buf_size] );
       do_append( begin, end, buf.get(), buf.get()+buf_size, target, ec );
     }
     else
@@ -809,12 +816,14 @@ namespace detail
 
   //  actual convert done here to factor it out from messy buffer management code;
   //  this function just assumes the buffer is large enough.
-  inline string  do_convert( const wchar_t * from, const wchar_t * from_end,
-                            char * to, char * to_end, error_code & ec )
+  inline interface_string_type  do_convert(
+    const value_type * from, const value_type * from_end,
+    interface_value_type * to, interface_value_type * to_end,
+    error_code & ec )
   {
     std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const wchar_t * from_next;
-    char * to_next;
+    const value_type * from_next;
+    interface_value_type * to_next;
 
     if ( wchar_t_codecvt_facet()->CONVERT_DIRECTION( state, from, from_end,
           from_next, to, to_end, to_next ) != std::codecvt_base::ok )
@@ -823,16 +832,16 @@ namespace detail
       throw "convert error handling not implemented yet";
     }
     if ( &ec != &system::throws ) ec.clear();
-    return string( to, to_next ); 
+    return interface_string_type( to, to_next ); 
   }
 
   BOOST_FILESYSTEM_DECL
-  extern_string_type convert_to_string( const string_type & src, error_code & ec )
+  interface_string_type convert_to_string( const string_type & src, error_code & ec )
   {
     if ( src.empty() )
     {
       if ( &ec != &system::throws ) ec.clear();
-      return std::string();
+      return interface_string_type();
     }
 
     //  The codecvt length functions may not be implemented, and I don't reall
@@ -845,13 +854,13 @@ namespace detail
     //  dynamically allocate a buffer only if source is unusually large
     if ( buf_size > default_codecvt_buf_size )
     {
-      boost::scoped_array< char > buf( new extern_value_type [buf_size] );
+      boost::scoped_array< interface_value_type > buf( new interface_value_type [buf_size] );
       return do_convert( src.c_str(), src.c_str()+src.size(),
         buf.get(), buf.get()+buf_size, ec );
     }
     else
     {
-      extern_value_type buf[default_codecvt_buf_size];
+      interface_value_type buf[default_codecvt_buf_size];
       return do_convert( src.c_str(), src.c_str()+src.size(), buf, buf+buf_size, ec );
     }
   }

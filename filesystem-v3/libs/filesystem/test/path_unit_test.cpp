@@ -604,11 +604,11 @@ namespace
     user_string::value_type usr_c_str[] = { 'a', 'b', 'c', 0 };
     user_string usr( usr_c_str );
 
-    path p1( usr_c_str );
-    CHECK( p1 == path("bcd") );
-    CHECK( p1 == "bcd" );
-    user_string s1( p1.string<user_string>() );
-    CHECK( s1 == usr );
+    //path p1( usr_c_str );
+    //CHECK( p1 == path("bcd") );
+    //CHECK( p1 == "bcd" );
+    //user_string s1( p1.string<user_string>() );
+    //CHECK( s1 == usr );
   }
 
 }  // unnamed namespace
