@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>mp_int reference</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../index.html" title="Chapter 1. mp_int">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="Chapter 1. mp_int">
 <link rel="up" href="../index.html" title="Chapter 1. mp_int">
 <link rel="prev" href="implementation_notes.html" title="Implementation notes">
 <link rel="next" href="mp_int_traits_reference.html" title="mp_int_traits reference">
@@ -24,11 +24,11 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="mp_int_.mp_int_reference"></a><a class="link" href="mp_int_reference.html" title="mp_int reference">mp_int reference</a>
+<a name="mp_int.mp_int_reference"></a><a class="link" href="mp_int_reference.html" title="mp_int reference">mp_int reference</a>
 </h2></div></div></div>
-<a name="mp_int_.mp_int_reference.synopsis"></a><h4>
-<a name="id2745751"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.synopsis">Synopsis</a>
+<a name="mp_int.mp_int_reference.synopsis"></a><h4>
+<a name="id3153688"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.synopsis">Synopsis</a>
     </h4>
 <pre class="programlisting"><span class="comment">// &lt;boost/mp_math/mp_int.hpp&gt;
 </span><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -40,40 +40,54 @@
 <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">mp_int</span>
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <span class="identifier">Allocator</span> <span class="identifier">allocator_type</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">Traits</span>    <span class="identifier">traits_type</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">traits_type</span><span class="special">::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">Allocator</span>                               <span class="identifier">allocator_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">Traits</span>                                  <span class="identifier">traits_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">base_allocator_type</span><span class="special">::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
 
   <span class="comment">// ctor/cctor/dtor/assign
 </span>  <span class="identifier">mp_int</span><span class="special">();</span>
 
+  <span class="keyword">explicit</span> <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">);</span>
+
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IntegralT</span><span class="special">&gt;</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_integral</span><span class="special">&lt;</span><span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="identifier">dummy</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
-  
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">IntegralT</span><span class="special">,</span>
+         <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">(),</span>
+         <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_integral</span><span class="special">&lt;</span><span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="identifier">dummy</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span>
+         <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span><span class="special">,</span>
+         <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">);</span>
-  
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">);</span>
-  
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;,</span>
+         <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
-  
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;,</span>
+         <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span><span class="special">,</span>
+         <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
+
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
-  <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span>
+         <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span>
+         <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
+  <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span>
+         <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span>
+         <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">,</span>
+         <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 
   <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="identifier">copy</span><span class="special">);</span>
 
   <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_RVALUE_REFS</span>
   <span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">mp_int</span><span class="special">&amp;&amp;</span> <span class="identifier">copy</span><span class="special">);</span>
   <span class="preprocessor">#endif</span>
-  
+
   <span class="special">~</span><span class="identifier">mp_int</span><span class="special">();</span>
 
   <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
@@ -81,26 +95,26 @@
   <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_RVALUE_REFS</span>
   <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">mp_int</span><span class="special">&amp;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
   <span class="preprocessor">#endif</span>
-  
+
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IntegralT</span><span class="special">&gt;</span>
   <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">rhs</span><span class="special">);</span>
 
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">);</span>
+  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;);</span>
 
-  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
-
-  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span><span class="special">);</span>
 
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>  
-  
+  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;,</span>
+              <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span><span class="special">);</span>
+
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
-  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+  <span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span>
+              <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span><span class="special">);</span>
 
   <span class="comment">// modifiers
 </span>  <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_RVALUE_REFS</span>
@@ -144,25 +158,15 @@
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">x</span><span class="special">);</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">x</span><span class="special">);</span>
 
-  <span class="comment">// operators involving char strings
-</span>  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">*=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">/=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">%=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-
-  <span class="comment">// operators involving wchar_t strings
-</span>  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">*=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">/=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">%=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-  <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+  <span class="comment">// operators involving character strings
+</span>  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">*=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">/=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">%=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
   <span class="comment">// operators involving std::basic_string
 </span>  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
@@ -204,11 +208,9 @@
 </span>  <span class="keyword">typedef</span> <span class="identifier">traits_type</span><span class="special">::</span><span class="identifier">digit_type</span> <span class="identifier">digit_type</span><span class="special">;</span>
   <span class="keyword">typedef</span> <span class="identifier">traits_type</span><span class="special">::</span><span class="identifier">word_type</span>  <span class="identifier">word_type</span><span class="special">;</span>
 
-  <span class="keyword">bool</span> <span class="identifier">is_zero</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-
   <span class="identifier">digit_type</span><span class="special">&amp;</span>       <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">size_type</span> <span class="identifier">i</span><span class="special">);</span>
   <span class="keyword">const</span> <span class="identifier">digit_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">size_type</span> <span class="identifier">i</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  
+
   <span class="identifier">digit_type</span><span class="special">&amp;</span>       <span class="identifier">at</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">i</span><span class="special">);</span>
   <span class="keyword">const</span> <span class="identifier">digit_type</span><span class="special">&amp;</span> <span class="identifier">at</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">i</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
@@ -228,6 +230,9 @@
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="special">&gt;&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">typename</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="special">-</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
@@ -338,85 +343,45 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">Traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
-<span class="comment">// Comparison between mp_int and const char*
+<span class="comment">// Comparison between mp_int and const charT*
 </span>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
-<span class="comment">// Comparison between const char* and mp_int
+<span class="comment">// Comparison between const charT* and mp_int
 </span>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="comment">// Comparison between mp_int and const wchar_t*
-</span>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="comment">// Comparison between const wchar_t* and mp_int
-</span>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="comment">// Comparison between mp_int and integral type
 </span>
@@ -488,6 +453,9 @@
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">pow</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">digit_type</span> <span class="identifier">n</span><span class="special">);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">pow</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">n</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">modpow</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">base</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">exp</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">mod</span><span class="special">);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
@@ -496,13 +464,16 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">nth_root</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">digit_type</span> <span class="identifier">n</span><span class="special">);</span>
 
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">nth_root</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">n</span><span class="special">);</span>
+
 
 <span class="special">}</span> <span class="comment">// namespace mp_math
 </span><span class="special">}</span> <span class="comment">// namespace boost
 </span></pre>
-<a name="mp_int_.mp_int_reference.construction_from___assignment_to_a_string_object"></a><h4>
-<a name="id2762818"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.construction_from___assignment_to_a_string_object">Construction
+<a name="mp_int.mp_int_reference.construction_from___assignment_to_a_string_object"></a><h4>
+<a name="id3169608"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.construction_from___assignment_to_a_string_object">Construction
       from / assignment to a string object</a>
     </h4>
 <p>
@@ -525,9 +496,9 @@
 <li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">hex</span></code></li>
 <li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">oct</span></code></li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.construct_copy_destroy_assign"></a><h4>
-<a name="id2763067"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.construct_copy_destroy_assign">Construct/Copy/Destroy/Assign</a>
+<a name="mp_int.mp_int_reference.construct_copy_destroy_assign"></a><h4>
+<a name="id3169858"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.construct_copy_destroy_assign">Construct/Copy/Destroy/Assign</a>
     </h4>
 <pre class="programlisting"><span class="identifier">mp_int</span><span class="special">();</span>
 </pre>
@@ -543,8 +514,26 @@
 <span class="bold"><strong>Throws:</strong></span> Nothing.
       </li>
 </ul></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">);</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>Effects:</strong></span> Constructs an empty <code class="computeroutput"><span class="identifier">mp_int</span></code> object and initializes its allocator
+        with <code class="computeroutput"><span class="identifier">a</span></code>, such an uninitialized
+        <code class="computeroutput"><span class="identifier">mp_int</span></code> has no value, i.e.
+        it is <span class="emphasis"><em>not</em></span> zero.
+      </li>
+<li>
+<span class="bold"><strong>Complexity:</strong></span> O(1).
+      </li>
+<li>
+<span class="bold"><strong>Throws:</strong></span> Nothing.
+      </li>
+</ul></div>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IntegralT</span><span class="special">&gt;</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_integral</span><span class="special">&lt;</span><span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="identifier">dummy</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">x</span><span class="special">,</span>
+       <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">(),</span>
+       <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_integral</span><span class="special">&lt;</span><span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="identifier">dummy</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -560,8 +549,8 @@
 <span class="bold"><strong>Throws: </strong></span><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code>.
       </li>
 </ul></div>
-<pre class="programlisting"><span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -582,54 +571,10 @@
 </ul></div>
 </li>
 </ul></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">);</span>
-</pre>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">s</span></code>
-        contains a valid number formatted as string or <code class="computeroutput"><span class="identifier">s</span></code>
-        is an empty string.
-      </li>
-<li>
-<span class="bold"><strong>Effects:</strong></span> Constructs an <code class="computeroutput"><span class="identifier">mp_int</span></code>
-        object from a string.
-      </li>
-<li>
-<span class="bold"><strong>Throws:</strong></span><div class="itemizedlist"><ul type="circle">
-<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
-<li>
-<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code> if the string contains
-            an invalid character.
-          </li>
-</ul></div>
-</li>
-</ul></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">);</span>
-</pre>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">first</span></code>
-        and <code class="computeroutput"><span class="identifier">last</span></code> are iterators into
-        a string.
-      </li>
-<li>
-<span class="bold"><strong>Effects:</strong></span> Constructs an <code class="computeroutput"><span class="identifier">mp_int</span></code>
-        object from two iterators.
-      </li>
-<li>
-<span class="bold"><strong>Throws:</strong></span><div class="itemizedlist"><ul type="circle">
-<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
-<li>
-<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code> if the string contains
-            an invalid character.
-          </li>
-</ul></div>
-</li>
-</ul></div>
-<pre class="programlisting"><span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span>
+       <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">,</span>
+       <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -652,7 +597,33 @@
 </li>
 </ul></div>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span>
+       <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">s</span></code>
+        contains a valid number formatted as string or <code class="computeroutput"><span class="identifier">s</span></code>
+        is an empty string.
+      </li>
+<li>
+<span class="bold"><strong>Effects:</strong></span> Constructs an <code class="computeroutput"><span class="identifier">mp_int</span></code>
+        object from a string.
+      </li>
+<li>
+<span class="bold"><strong>Throws:</strong></span><div class="itemizedlist"><ul type="circle">
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
+<li>
+<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code> if the string contains
+            an invalid character.
+          </li>
+</ul></div>
+</li>
+</ul></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span>
+       <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">,</span>
+       <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -675,7 +646,35 @@
 </li>
 </ul></div>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
-<span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span>
+       <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span>
+       <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">first</span></code>
+        and <code class="computeroutput"><span class="identifier">last</span></code> are iterators into
+        a string.
+      </li>
+<li>
+<span class="bold"><strong>Effects:</strong></span> Constructs an <code class="computeroutput"><span class="identifier">mp_int</span></code>
+        object from two iterators.
+      </li>
+<li>
+<span class="bold"><strong>Throws:</strong></span><div class="itemizedlist"><ul type="circle">
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
+<li>
+<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code> if the string contains
+            an invalid character.
+          </li>
+</ul></div>
+</li>
+</ul></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RandomAccessIterator</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">(</span><span class="identifier">RandomAccessIterator</span> <span class="identifier">first</span><span class="special">,</span>
+       <span class="identifier">RandomAccessIterator</span> <span class="identifier">last</span><span class="special">,</span>
+       <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">,</span>
+       <span class="keyword">const</span> <span class="identifier">allocator_type</span><span class="special">&amp;</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">allocator_type</span><span class="special">());</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -790,8 +789,8 @@
 <span class="bold"><strong>Exception safety:</strong></span> basic.
       </li>
 </ul></div>
-<pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -838,8 +837,8 @@
 <span class="bold"><strong>Exception safety:</strong></span> basic.
       </li>
 </ul></div>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
-<span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -865,7 +864,7 @@
       </li>
 </ul></div>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>  
+<span class="keyword">void</span> <span class="identifier">assign</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">fmtflags</span> <span class="identifier">f</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -916,9 +915,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> basic.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.modifiers"></a><h4>
-<a name="id2766915"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.modifiers">Modifiers</a>
+<a name="mp_int.mp_int_reference.modifiers"></a><h4>
+<a name="id3173944"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.modifiers">Modifiers</a>
     </h4>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">mp_int</span><span class="special">&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
 </pre>
@@ -946,9 +945,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> nothrow.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.increment_decrement"></a><h4>
-<a name="id2767133"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.increment_decrement">Increment/decrement</a>
+<a name="mp_int.mp_int_reference.increment_decrement"></a><h4>
+<a name="id3174161"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.increment_decrement">Increment/decrement</a>
     </h4>
 <pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">++();</span>
 </pre>
@@ -1040,9 +1039,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> strong.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.shifting"></a><h4>
-<a name="id2767861"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.shifting">Shifting</a>
+<a name="mp_int.mp_int_reference.shifting"></a><h4>
+<a name="id3174889"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.shifting">Shifting</a>
     </h4>
 <pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&lt;&lt;=</span> <span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">x</span><span class="special">);</span>
 </pre>
@@ -1084,9 +1083,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> strong.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.unary_negate"></a><h4>
-<a name="id2768196"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.unary_negate">Unary negate</a>
+<a name="mp_int.mp_int_reference.unary_negate"></a><h4>
+<a name="id3175224"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.unary_negate">Unary negate</a>
     </h4>
 <pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-</span> <span class="special">();</span>
 </pre>
@@ -1104,9 +1103,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> nothrow.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.arithmetic_operators"></a><h4>
-<a name="id2768321"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.arithmetic_operators">Arithmetic operators</a>
+<a name="mp_int.mp_int_reference.arithmetic_operators"></a><h4>
+<a name="id3175350"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.arithmetic_operators">Arithmetic operators</a>
     </h4>
 <pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">);</span>
 </pre>
@@ -1234,9 +1233,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> strong.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.bitwise_operators"></a><h4>
-<a name="id2769381"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.bitwise_operators">Bitwise operators</a>
+<a name="mp_int.mp_int_reference.bitwise_operators"></a><h4>
+<a name="id3176409"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.bitwise_operators">Bitwise operators</a>
     </h4>
 <pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">);</span>
 </pre>
@@ -1295,9 +1294,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> strong.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.operators_involving_integral_types"></a><h4>
-<a name="id2769904"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.operators_involving_integral_types">Operators
+<a name="mp_int.mp_int_reference.operators_involving_integral_types"></a><h4>
+<a name="id3176932"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.operators_involving_integral_types">Operators
       involving integral types</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IntegralT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="identifier">IntegralT</span> <span class="identifier">x</span><span class="special">);</span>
@@ -1436,31 +1435,23 @@
 <span class="bold"><strong>Exception safety:</strong></span> strong.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.operators_involving_char_wchar_t_strings"></a><h4>
-<a name="id2771318"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.operators_involving_char_wchar_t_strings">Operators
-      involving char/wchar_t strings</a>
+<a name="mp_int.mp_int_reference.operators_involving_chart_strings"></a><h4>
+<a name="id3178345"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.operators_involving_chart_strings">Operators
+      involving charT strings</a>
     </h4>
-<pre class="programlisting"><span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">*=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">*=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">/=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">/=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">%=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">%=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
-<span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">+=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">-=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">*=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">/=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">%=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">|=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">&amp;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span> <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
 </pre>
-<a name="mp_int_.mp_int_reference.operators_involving_std__basic_string"></a><h4>
-<a name="id2772175"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.operators_involving_std__basic_string">Operators
+<a name="mp_int.mp_int_reference.operators_involving_std__basic_string"></a><h4>
+<a name="id3178991"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.operators_involving_std__basic_string">Operators
       involving std::basic_string</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
@@ -1480,9 +1471,9 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">^=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span><span class="identifier">traits</span><span class="special">,</span><span class="identifier">Alloc</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">);</span>
 </pre>
-<a name="mp_int_.mp_int_reference.observers"></a><h4>
-<a name="id2773367"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.observers">Observers</a>
+<a name="mp_int.mp_int_reference.observers"></a><h4>
+<a name="id3180185"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.observers">Observers</a>
     </h4>
 <pre class="programlisting"><span class="identifier">allocator_type</span> <span class="identifier">get_allocator</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
@@ -1611,9 +1602,9 @@
 <span class="bold"><strong>Exception safety:</strong></span> strong.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.non_member_functions"></a><h4>
-<a name="id2774432"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.non_member_functions">Non-member functions</a>
+<a name="mp_int.mp_int_reference.non_member_functions"></a><h4>
+<a name="id3181249"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.non_member_functions">Non-member functions</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;&amp;,</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;&amp;);</span>
@@ -1623,6 +1614,9 @@
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="special">&gt;&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">typename</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="special">-</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
@@ -1675,9 +1669,9 @@
 <p>
       These functions are implemented in terms of their respective member functions.
     </p>
-<a name="mp_int_.mp_int_reference.comparison_operators"></a><h4>
-<a name="id2777278"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.comparison_operators">Comparison operators</a>
+<a name="mp_int.mp_int_reference.comparison_operators"></a><h4>
+<a name="id3184214"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.comparison_operators">Comparison operators</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
@@ -1774,23 +1768,23 @@
 </ul></div>
 </li>
 </ul></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -1808,91 +1802,23 @@
 </ul></div>
 </li>
 </ul></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-</pre>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<span class="bold"><strong>Effects:</strong></span> Converts the string argument to
-        an <code class="computeroutput"><span class="identifier">mp_int</span></code> object and compares
-        it to the object on the right side of the expression.
-      </li>
-<li>
-<span class="bold"><strong>Throws:</strong></span><div class="itemizedlist"><ul type="circle">
-<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
-<li>
-<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code> if the string contains
-            an invalid character.
-          </li>
-</ul></div>
-</li>
-</ul></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*);</span>
-</pre>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<span class="bold"><strong>Effects:</strong></span> Converts the string argument to
-        an <code class="computeroutput"><span class="identifier">mp_int</span></code> object and compares
-        it to the object on the left side of the expression.
-      </li>
-<li>
-<span class="bold"><strong>Throws:</strong></span><div class="itemizedlist"><ul type="circle">
-<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
-<li>
-<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code> if the string contains
-            an invalid character.
-          </li>
-</ul></div>
-</li>
-</ul></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -1966,9 +1892,9 @@
 <span class="bold"><strong>Throws: </strong></span><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code>.
       </li>
 </ul></div>
-<a name="mp_int_.mp_int_reference.stream_i_o"></a><h4>
-<a name="id2785287"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.stream_i_o">Stream I/O</a>
+<a name="mp_int.mp_int_reference.stream_i_o"></a><h4>
+<a name="id3190887"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.stream_i_o">Stream I/O</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">&gt;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">&gt;&amp;</span>
@@ -1978,9 +1904,9 @@
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">&gt;&amp;</span>
 <span class="keyword">operator</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">&gt;&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">);</span>
 </pre>
-<a name="mp_int_.mp_int_reference.special_functions"></a><h4>
-<a name="id2785746"></a>
-      <a class="link" href="mp_int_reference.html#mp_int_.mp_int_reference.special_functions">Special functions</a>
+<a name="mp_int.mp_int_reference.special_functions"></a><h4>
+<a name="id3191347"></a>
+      <a class="link" href="mp_int_reference.html#mp_int.mp_int_reference.special_functions">Special functions</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">abs</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">);</span>
@@ -2044,6 +1970,9 @@
 </ul></div>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">pow</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">digit_type</span> <span class="identifier">n</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">pow</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">n</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -2087,6 +2016,9 @@
 </ul></div>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">nth_root</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">digit_type</span> <span class="identifier">n</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">nth_root</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">n</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -2110,8 +2042,10 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Kevin Sopp<p>
-        All code and documentation is in the public domain
+<td align="right"><div class="copyright-footer">Copyright © 2008 - 2009 Kevin Sopp<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>
+        [source-mode c++
       </p>
 </div></td>
 </tr></table>

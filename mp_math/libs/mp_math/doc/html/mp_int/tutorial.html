@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Tutorial</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../index.html" title="Chapter 1. mp_int">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="Chapter 1. mp_int">
 <link rel="up" href="../index.html" title="Chapter 1. mp_int">
 <link rel="prev" href="../index.html" title="Chapter 1. mp_int">
 <link rel="next" href="performance.html" title="Performance">
@@ -24,19 +24,19 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="mp_int_.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+<a name="mp_int.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#mp_int_.tutorial.general_use">General use</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#mp_int_.tutorial.random_number_generation">Random number
+<dt><span class="section"><a href="tutorial.html#mp_int.tutorial.general_use">General use</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#mp_int.tutorial.random_number_generation">Random number
       generation</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#mp_int_.tutorial.primality_testing">Primality testing</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#mp_int_.tutorial.prime_number_generation">Prime number
+<dt><span class="section"><a href="tutorial.html#mp_int.tutorial.primality_testing">Primality testing</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#mp_int.tutorial.prime_number_generation">Prime number
       generation</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.tutorial.general_use"></a><a class="link" href="tutorial.html#mp_int_.tutorial.general_use" title="General use">General use</a>
+<a name="mp_int.tutorial.general_use"></a><a class="link" href="tutorial.html#mp_int.tutorial.general_use" title="General use">General use</a>
 </h3></div></div></div>
 <p>
         The only header you need to include to use the library is <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">mp_math</span><span class="special">/</span><span class="identifier">mp_int</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>.
@@ -87,7 +87,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.tutorial.random_number_generation"></a><a class="link" href="tutorial.html#mp_int_.tutorial.random_number_generation" title="Random number generation">Random number
+<a name="mp_int.tutorial.random_number_generation"></a><a class="link" href="tutorial.html#mp_int.tutorial.random_number_generation" title="Random number generation">Random number
       generation</a>
 </h3></div></div></div>
 <p>
@@ -119,13 +119,13 @@
 <span class="identifier">mp_int</span><span class="special">&lt;&gt;</span> <span class="identifier">r</span> <span class="special">=</span> <span class="identifier">generator</span><span class="special">(</span><span class="identifier">e</span><span class="special">);</span>
 </pre>
 <p>
-        Note that the numbers will always be 2048 bits large, i.e. the most significant
-        bit is always set to 1.
+        Note that the numbers will always be 2048 bits large, i.e. the 2048th bit
+        is always set to 1.
       </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.tutorial.primality_testing"></a><a class="link" href="tutorial.html#mp_int_.tutorial.primality_testing" title="Primality testing">Primality testing</a>
+<a name="mp_int.tutorial.primality_testing"></a><a class="link" href="tutorial.html#mp_int.tutorial.primality_testing" title="Primality testing">Primality testing</a>
 </h3></div></div></div>
 <p>
         Currently all primality tests in this library are probabilistic. A probabilistic
@@ -159,16 +159,16 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.tutorial.prime_number_generation"></a><a class="link" href="tutorial.html#mp_int_.tutorial.prime_number_generation" title="Prime number generation">Prime number
+<a name="mp_int.tutorial.prime_number_generation"></a><a class="link" href="tutorial.html#mp_int.tutorial.prime_number_generation" title="Prime number generation">Prime number
       generation</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#mp_int_.tutorial.prime_number_generation.prime_generator">prime_generator</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#mp_int_.tutorial.prime_number_generation.safe_prime_generator">safe_prime_generator</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#mp_int.tutorial.prime_number_generation.prime_generator">prime_generator</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#mp_int.tutorial.prime_number_generation.safe_prime_generator">safe_prime_generator</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="mp_int_.tutorial.prime_number_generation.prime_generator"></a><a class="link" href="tutorial.html#mp_int_.tutorial.prime_number_generation.prime_generator" title="prime_generator">prime_generator</a>
+<a name="mp_int.tutorial.prime_number_generation.prime_generator"></a><a class="link" href="tutorial.html#mp_int.tutorial.prime_number_generation.prime_generator" title="prime_generator">prime_generator</a>
 </h4></div></div></div>
 <p>
           First we will look at how to generate prime numbers using a simple trial
@@ -188,7 +188,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="mp_int_.tutorial.prime_number_generation.safe_prime_generator"></a><a class="link" href="tutorial.html#mp_int_.tutorial.prime_number_generation.safe_prime_generator" title="safe_prime_generator">safe_prime_generator</a>
+<a name="mp_int.tutorial.prime_number_generation.safe_prime_generator"></a><a class="link" href="tutorial.html#mp_int.tutorial.prime_number_generation.safe_prime_generator" title="safe_prime_generator">safe_prime_generator</a>
 </h4></div></div></div>
 <p>
           A safe prime is a prime <code class="computeroutput"><span class="identifier">p</span></code>
@@ -249,8 +249,10 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Kevin Sopp<p>
-        All code and documentation is in the public domain
+<td align="right"><div class="copyright-footer">Copyright © 2008 - 2009 Kevin Sopp<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>
+        [source-mode c++
       </p>
 </div></td>
 </tr></table>

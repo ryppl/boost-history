@@ -3,9 +3,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Chapter 1. mp_int</title>
 <link rel="stylesheet" href="boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="Chapter 1. mp_int">
-<link rel="next" href="mp_int_/tutorial.html" title="Tutorial">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="Chapter 1. mp_int">
+<link rel="next" href="mp_int/tutorial.html" title="Tutorial">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,62 +17,64 @@
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="mp_int_/tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="mp_int/tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
 <div class="chapter" lang="en">
 <div class="titlepage"><div>
 <div><h2 class="title">
-<a name="mp_int"></a>Chapter 1. mp_int </h2></div>
+<a name="mp_int"></a>Chapter 1. mp_int</h2></div>
 <div><div class="author"><h3 class="author">
 <span class="firstname">Kevin</span> <span class="surname">Sopp</span>
 </h3></div></div>
-<div><p class="copyright">Copyright © 2008 Kevin Sopp</p></div>
+<div><p class="copyright">Copyright © 2008 - 2009 Kevin Sopp</p></div>
 <div><div class="legalnotice">
-<a name="id2693145"></a><p>
-        All code and documentation is in the public domain
+<a name="id3102140"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>
+        [source-mode c++
       </p>
 </div></div>
 </div></div>
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="index.html#mp_int_.introduction">Introduction</a></span></dt>
-<dt><span class="section"><a href="mp_int_/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="index.html#mp_int.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="mp_int/tutorial.html">Tutorial</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="mp_int_/tutorial.html#mp_int_.tutorial.general_use">General use</a></span></dt>
-<dt><span class="section"><a href="mp_int_/tutorial.html#mp_int_.tutorial.random_number_generation">Random number
+<dt><span class="section"><a href="mp_int/tutorial.html#mp_int.tutorial.general_use">General use</a></span></dt>
+<dt><span class="section"><a href="mp_int/tutorial.html#mp_int.tutorial.random_number_generation">Random number
       generation</a></span></dt>
-<dt><span class="section"><a href="mp_int_/tutorial.html#mp_int_.tutorial.primality_testing">Primality testing</a></span></dt>
-<dt><span class="section"><a href="mp_int_/tutorial.html#mp_int_.tutorial.prime_number_generation">Prime number
+<dt><span class="section"><a href="mp_int/tutorial.html#mp_int.tutorial.primality_testing">Primality testing</a></span></dt>
+<dt><span class="section"><a href="mp_int/tutorial.html#mp_int.tutorial.prime_number_generation">Prime number
       generation</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="mp_int_/performance.html">Performance</a></span></dt>
+<dt><span class="section"><a href="mp_int/performance.html">Performance</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="mp_int_/performance.html#mp_int_.performance.tips">Tips</a></span></dt>
-<dt><span class="section"><a href="mp_int_/performance.html#mp_int_.performance.measurements">Measurements</a></span></dt>
+<dt><span class="section"><a href="mp_int/performance.html#mp_int.performance.tips">Tips</a></span></dt>
+<dt><span class="section"><a href="mp_int/performance.html#mp_int.performance.measurements">Measurements</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="mp_int_/implementation_notes.html">Implementation notes</a></span></dt>
+<dt><span class="section"><a href="mp_int/implementation_notes.html">Implementation notes</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="mp_int_/implementation_notes.html#mp_int_.implementation_notes.mp_int_structure">mp_int
+<dt><span class="section"><a href="mp_int/implementation_notes.html#mp_int.implementation_notes.mp_int_structure">mp_int
       structure</a></span></dt>
-<dt><span class="section"><a href="mp_int_/implementation_notes.html#mp_int_.implementation_notes.semantics">Semantics</a></span></dt>
+<dt><span class="section"><a href="mp_int/implementation_notes.html#mp_int.implementation_notes.semantics">Semantics</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="mp_int_/mp_int_reference.html">mp_int reference</a></span></dt>
-<dt><span class="section"><a href="mp_int_/mp_int_traits_reference.html">mp_int_traits reference</a></span></dt>
-<dt><span class="section"><a href="mp_int_/uniform_mp_int_reference.html">uniform_mp_int reference</a></span></dt>
-<dt><span class="section"><a href="mp_int_/uniform_mp_int_bits_reference.html">uniform_mp_int_bits
+<dt><span class="section"><a href="mp_int/mp_int_reference.html">mp_int reference</a></span></dt>
+<dt><span class="section"><a href="mp_int/mp_int_traits_reference.html">mp_int_traits reference</a></span></dt>
+<dt><span class="section"><a href="mp_int/uniform_mp_int_reference.html">uniform_mp_int reference</a></span></dt>
+<dt><span class="section"><a href="mp_int/uniform_mp_int_bits_reference.html">uniform_mp_int_bits
     reference</a></span></dt>
-<dt><span class="section"><a href="mp_int_/primality_tests_reference.html">Primality Tests reference</a></span></dt>
+<dt><span class="section"><a href="mp_int/primality_tests_reference.html">Primality Tests reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="mp_int_/primality_tests_reference.html#mp_int_.primality_tests_reference.primality_division_test">primality_division_test</a></span></dt>
-<dt><span class="section"><a href="mp_int_/primality_tests_reference.html#mp_int_.primality_tests_reference.primality_fermat_test">primality_fermat_test</a></span></dt>
-<dt><span class="section"><a href="mp_int_/primality_tests_reference.html#mp_int_.primality_tests_reference.primality_miller_rabin_test">primality_miller_rabin_test</a></span></dt>
+<dt><span class="section"><a href="mp_int/primality_tests_reference.html#mp_int.primality_tests_reference.primality_division_test">primality_division_test</a></span></dt>
+<dt><span class="section"><a href="mp_int/primality_tests_reference.html#mp_int.primality_tests_reference.primality_fermat_test">primality_fermat_test</a></span></dt>
+<dt><span class="section"><a href="mp_int/primality_tests_reference.html#mp_int.primality_tests_reference.primality_miller_rabin_test">primality_miller_rabin_test</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="mp_int_/bibliography.html">Bibliography</a></span></dt>
+<dt><span class="section"><a href="mp_int/bibliography.html">Bibliography</a></span></dt>
 </dl>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="mp_int_.introduction"></a><a class="link" href="index.html#mp_int_.introduction" title="Introduction">Introduction</a>
+<a name="mp_int.introduction"></a><a class="link" href="index.html#mp_int.introduction" title="Introduction">Introduction</a>
 </h2></div></div></div>
 <p>
       This library provides the <code class="computeroutput"><span class="identifier">mp_int</span></code>
@@ -81,9 +83,9 @@
       for the implementation of public key cryptography such as prime generation
       are provided.
     </p>
-<a name="mp_int_.introduction.acknowledgement"></a><h4>
-<a name="id2733685"></a>
-      <a class="link" href="index.html#mp_int_.introduction.acknowledgement">Acknowledgement</a>
+<a name="mp_int.introduction.acknowledgement"></a><h4>
+<a name="id3141691"></a>
+      <a class="link" href="index.html#mp_int.introduction.acknowledgement">Acknowledgement</a>
     </h4>
 <p>
       This library originally started as a port of the C code of libtommath. Without
@@ -96,14 +98,12 @@
       domain</strong></span> as well.
     </p>
 </div>
-<p>
-  </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: October 06, 2008 at 11:40:14 GMT</small></p></td>
+<td align="left"><p><small>Last revised: January 16, 2009 at 23:54:32 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="mp_int_/tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="mp_int/tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
 </body>
 </html>

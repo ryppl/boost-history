@@ -1,4 +1,4 @@
-[/ Copyright Kevin Sopp 2008.
+[/ Copyright Kevin Sopp 2008 - 2009.
  / Distributed under the Boost Software License, Version 1.0.
  / (See accompanying file LICENSE_1_0.txt or copy at
  / http://www.boost.org/LICENSE_1_0.txt)]
@@ -118,7 +118,7 @@ object will use the recommended number of rounds.
   template<class Engine, class A, class T>
   bool operator()(Engine& e, const mp_int<A,T>& p) const;
 
-* [*Requires:] `p` is odd.
+* [*Requires: ] `p` is odd.
 * [*Effects:] Returns true if `p` is probably prime. Returns false if `p`
 is definitely composite.
 

@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Performance</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../index.html" title="Chapter 1. mp_int">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="Chapter 1. mp_int">
 <link rel="up" href="../index.html" title="Chapter 1. mp_int">
 <link rel="prev" href="tutorial.html" title="Tutorial">
 <link rel="next" href="implementation_notes.html" title="Implementation notes">
@@ -24,15 +24,15 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="mp_int_.performance"></a><a class="link" href="performance.html" title="Performance">Performance</a>
+<a name="mp_int.performance"></a><a class="link" href="performance.html" title="Performance">Performance</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="performance.html#mp_int_.performance.tips">Tips</a></span></dt>
-<dt><span class="section"><a href="performance.html#mp_int_.performance.measurements">Measurements</a></span></dt>
+<dt><span class="section"><a href="performance.html#mp_int.performance.tips">Tips</a></span></dt>
+<dt><span class="section"><a href="performance.html#mp_int.performance.measurements">Measurements</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.performance.tips"></a><a class="link" href="performance.html#mp_int_.performance.tips" title="Tips">Tips</a>
+<a name="mp_int.performance.tips"></a><a class="link" href="performance.html#mp_int.performance.tips" title="Tips">Tips</a>
 </h3></div></div></div>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -60,9 +60,9 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.performance.measurements"></a><a class="link" href="performance.html#mp_int_.performance.measurements" title="Measurements">Measurements</a>
+<a name="mp_int.performance.measurements"></a><a class="link" href="performance.html#mp_int.performance.measurements" title="Measurements">Measurements</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_">AMD
+<div class="toc"><dl><dt><span class="section"><a href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_">AMD
         Athlon XP 2000+</a></span></dt></dl></div>
 <p>
         A benchmark program is supplied with Boost.Mp_math under libs/mp_math/tools/benchmark.
@@ -79,7 +79,7 @@ benchmark --ops="add subtract multiply" --libs="boost.mp_math libtommath"
 </pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_"></a><a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_" title="AMD Athlon XP 2000+">AMD
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_"></a><a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_" title="AMD Athlon XP 2000+">AMD
         Athlon XP 2000+</a>
 </h4></div></div></div>
 <pre class="programlisting">Operating System: Arch Linux (i686), Kernel 2.6.26, glibc 2.8
@@ -90,7 +90,7 @@ Compiler: gcc-4.3.2
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Boost.Mp_math-1_36
+            Boost.Mp_math-1_37
             <div class="itemizedlist"><ul type="circle"><li>
                 switches used: -ftemplate-depth-128 -O3 -finline-functions -march=i686
                 -mtune=generic -std=c++0x
@@ -111,9 +111,9 @@ Compiler: gcc-4.3.2
               </li></ul></div>
 </li>
 </ul></div>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.input_vectors"></a><h4>
-<a name="id2744932"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.input_vectors">Input
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.input_vectors"></a><h4>
+<a name="id3152872"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.input_vectors">Input
           vectors</a>
         </h4>
 <p>
@@ -126,83 +126,83 @@ Compiler: gcc-4.3.2
           While input operand 1 grows linearly, input operand 2's size is determined
           by a modified sine function.
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.construct_from_decimal_string"></a><h4>
-<a name="id2744980"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.construct_from_decimal_string">Construct
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.construct_from_decimal_string"></a><h4>
+<a name="id3152920"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.construct_from_decimal_string">Construct
           from decimal string</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/ctor_dec.png" alt="ctor_dec"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.construct_from_hex_string"></a><h4>
-<a name="id2745020"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.construct_from_hex_string">Construct
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.construct_from_hex_string"></a><h4>
+<a name="id3152959"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.construct_from_hex_string">Construct
           from hex string</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/ctor_hex.png" alt="ctor_hex"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.conversion_to_decimal_string"></a><h4>
-<a name="id2745059"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.conversion_to_decimal_string">Conversion
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.conversion_to_decimal_string"></a><h4>
+<a name="id3152999"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.conversion_to_decimal_string">Conversion
           to decimal string</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/to_dec.png" alt="to_dec"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.conversion_to_hex_string"></a><h4>
-<a name="id2745099"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.conversion_to_hex_string">Conversion
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.conversion_to_hex_string"></a><h4>
+<a name="id3153038"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.conversion_to_hex_string">Conversion
           to hex string</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/to_hex.png" alt="to_hex"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.add"></a><h4>
-<a name="id2745137"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.add">Add</a>
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.add"></a><h4>
+<a name="id3153077"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.add">Add</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/add.png" alt="add"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.subtract"></a><h4>
-<a name="id2745173"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.subtract">Subtract</a>
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.subtract"></a><h4>
+<a name="id3153113"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.subtract">Subtract</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/subtract.png" alt="subtract"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.multiply"></a><h4>
-<a name="id2745210"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.multiply">Multiply</a>
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.multiply"></a><h4>
+<a name="id3153150"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.multiply">Multiply</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/multiply.png" alt="multiply"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.divide"></a><h4>
-<a name="id2745246"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.divide">Divide</a>
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.divide"></a><h4>
+<a name="id3153186"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.divide">Divide</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/divide.png" alt="divide"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.modulo"></a><h4>
-<a name="id2745283"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.modulo">Modulo</a>
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.modulo"></a><h4>
+<a name="id3153223"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.modulo">Modulo</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/modulo.png" alt="modulo"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.square"></a><h4>
-<a name="id2745319"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.square">Square</a>
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.square"></a><h4>
+<a name="id3153259"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.square">Square</a>
         </h4>
 <p>
           <span class="inlinemediaobject"><img src="../benchmark_imgs/k7/square.png" alt="square"></span>
         </p>
-<a name="mp_int_.performance.measurements.amd_athlon_xp_2000_.modular_power"></a><h4>
-<a name="id2745356"></a>
-          <a class="link" href="performance.html#mp_int_.performance.measurements.amd_athlon_xp_2000_.modular_power">Modular
+<a name="mp_int.performance.measurements.amd_athlon_xp_2000_.modular_power"></a><h4>
+<a name="id3153296"></a>
+          <a class="link" href="performance.html#mp_int.performance.measurements.amd_athlon_xp_2000_.modular_power">Modular
           Power</a>
         </h4>
 <p>
@@ -215,8 +215,10 @@ Compiler: gcc-4.3.2
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Kevin Sopp<p>
-        All code and documentation is in the public domain
+<td align="right"><div class="copyright-footer">Copyright © 2008 - 2009 Kevin Sopp<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>
+        [source-mode c++
       </p>
 </div></td>
 </tr></table>

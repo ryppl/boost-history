@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -32,7 +32,7 @@ operator < (const mp_int<A,T>& lhs, const mp_int<A,T>& rhs)
     return true;
   if (lhs.size() > rhs.size())
     return false;
-  
+
   if (lhs.is_negative())
     return std::lexicographical_compare(
       rhs.rbegin(), rhs.rend(), lhs.rbegin(), lhs.rend());
@@ -136,7 +136,7 @@ template<class A, class T, typename charT>
 inline bool
 operator >= (const mp_int<A,T>& lhs, const charT* rhs) { return lhs >= mp_int<A,T>(rhs); }
 
-// compare const char* to mp_int
+// compare const charT* to mp_int
 template<class A, class T, typename charT>
 inline bool
 operator == (const charT* lhs, const mp_int<A,T>& rhs) { return mp_int<A,T>(lhs) == rhs; }
@@ -260,7 +260,7 @@ mp_int<A,T>& mp_int<A,T>::operator <<= (size_type b)
 
   /* shift any bit count < valid_bits */
   const digit_type d = static_cast<digit_type>(b % valid_bits);
-  
+
   if (d)
   {
     /* bitmask for carries */
@@ -281,7 +281,7 @@ mp_int<A,T>& mp_int<A,T>::operator <<= (size_type b)
       /* set the carry to the carry bits of the current word */
       carry = carry_cur;
     }
-    
+
     if (carry)
       push(carry);
   }
@@ -368,16 +368,16 @@ mp_int<A,T>& mp_int<A,T>::operator -= (const mp_int<A,T>& rhs)
     {
       grow_capacity(rhs.size_);
       // result has opposite sign from *this
-      set_sign(is_positive() ? -1 : 1); 
+      set_sign(is_positive() ? -1 : 1);
       x = &rhs;
       y = this;
     }
-    
+
     ops_type::sub_smaller_magnitude(digits_, x->digits_, x->size_,
                                              y->digits_, y->size_);
 
     size_ = x->size_;
-    
+
     clamp();
 
     if (!*this)
@@ -394,7 +394,7 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
     sqr();
     return *this;
   }
-  
+
   const int neg = (sign() == rhs.sign()) ? 1 : -1;
   const size_type min = std::min(size_, rhs.size_);
 
@@ -406,7 +406,7 @@ mp_int<A,T>& mp_int<A,T>::operator *= (const mp_int<A,T>& rhs)
   {
     mp_int tmp;
     tmp.grow_capacity(size_ + rhs.size_);
-    
+
     if (size_ == rhs.size_)
       ops_type::comba_mul(tmp.digits(), digits(), rhs.digits(), size_);
     else
@@ -466,13 +466,13 @@ mp_int<A,T>& mp_int<A,T>::operator |= (const mp_int<A,T>& rhs)
     px = size_;
     x = this;
   }
-  
+
   for (size_type i = 0; i < px; ++i)
     tmp[i] |= (*x)[i];
-  
+
   tmp.clamp();
   swap(tmp);
-  
+
   return *this;
 }
 
@@ -498,12 +498,12 @@ mp_int<A,T>& mp_int<A,T>::operator &= (const mp_int<A,T>& rhs)
 
   for (size_type i = 0; i < px; ++i)
     tmp[i] &= (*x)[i];
-  
+
   /* zero digits above the last from the smallest mp_int */
   std::memset(tmp.digits_ + px, 0, (tmp.size_ - px) * sizeof(digit_type));
   tmp.clamp();
   swap(tmp);
-  
+
   return *this;
 }
 
@@ -529,10 +529,10 @@ mp_int<A,T>& mp_int<A,T>::operator ^= (const mp_int<A,T>& rhs)
 
   for (size_type i = 0; i < px; ++i)
     tmp[i] ^= (*x)[i];
-  
+
   tmp.clamp();
   swap(tmp);
-  
+
   return *this;
 }
 

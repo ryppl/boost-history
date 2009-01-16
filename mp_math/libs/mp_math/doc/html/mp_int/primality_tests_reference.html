@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Primality Tests reference</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../index.html" title="Chapter 1. mp_int">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="Chapter 1. mp_int">
 <link rel="up" href="../index.html" title="Chapter 1. mp_int">
 <link rel="prev" href="uniform_mp_int_bits_reference.html" title="uniform_mp_int_bits reference">
 <link rel="next" href="bibliography.html" title="Bibliography">
@@ -24,16 +24,16 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="mp_int_.primality_tests_reference"></a><a class="link" href="primality_tests_reference.html" title="Primality Tests reference">Primality Tests reference</a>
+<a name="mp_int.primality_tests_reference"></a><a class="link" href="primality_tests_reference.html" title="Primality Tests reference">Primality Tests reference</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_division_test">primality_division_test</a></span></dt>
-<dt><span class="section"><a href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_fermat_test">primality_fermat_test</a></span></dt>
-<dt><span class="section"><a href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_miller_rabin_test">primality_miller_rabin_test</a></span></dt>
+<dt><span class="section"><a href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_division_test">primality_division_test</a></span></dt>
+<dt><span class="section"><a href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_fermat_test">primality_fermat_test</a></span></dt>
+<dt><span class="section"><a href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_miller_rabin_test">primality_miller_rabin_test</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.primality_tests_reference.primality_division_test"></a><a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_division_test" title="primality_division_test">primality_division_test</a>
+<a name="mp_int.primality_tests_reference.primality_division_test"></a><a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_division_test" title="primality_division_test">primality_division_test</a>
 </h3></div></div></div>
 <p>
         This function object tests a candidate <code class="computeroutput"><span class="identifier">p</span></code>
@@ -43,9 +43,9 @@
         54% of all numbers, testing for all primes less than 100 eliminates 70%,
         for all primes less than 256 it is 80%.
       </p>
-<a name="mp_int_.primality_tests_reference.primality_division_test.synopsis"></a><h5>
-<a name="id2789739"></a>
-        <a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_division_test.synopsis">Synopsis</a>
+<a name="mp_int.primality_tests_reference.primality_division_test.synopsis"></a><h5>
+<a name="id3099918"></a>
+        <a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_division_test.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="comment">// &lt;boost/mp_math/mp_int.hpp&gt;
 </span><span class="keyword">struct</span> <span class="identifier">primality_division_test</span>
@@ -56,9 +56,9 @@
   <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<a name="mp_int_.primality_tests_reference.primality_division_test.members"></a><h4>
-<a name="id2789926"></a>
-        <a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_division_test.members">Members</a>
+<a name="mp_int.primality_tests_reference.primality_division_test.members"></a><h4>
+<a name="id3195994"></a>
+        <a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_division_test.members">Members</a>
       </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">A</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
@@ -70,7 +70,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.primality_tests_reference.primality_fermat_test"></a><a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_fermat_test" title="primality_fermat_test">primality_fermat_test</a>
+<a name="mp_int.primality_tests_reference.primality_fermat_test"></a><a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_fermat_test" title="primality_fermat_test">primality_fermat_test</a>
 </h3></div></div></div>
 <p>
         This test is based on Fermat's little theorem which states that if an integer
@@ -97,9 +97,9 @@
         carmichael numbers which are less likely though not impossible with enough
         rounds to be detected by this test.
       </p>
-<a name="mp_int_.primality_tests_reference.primality_fermat_test.synopsis"></a><h5>
-<a name="id2790306"></a>
-        <a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_fermat_test.synopsis">Synopsis</a>
+<a name="mp_int.primality_tests_reference.primality_fermat_test.synopsis"></a><h5>
+<a name="id3196375"></a>
+        <a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_fermat_test.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="comment">// &lt;boost/mp_math/mp_int.hpp&gt;
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Distribution</span> <span class="special">=</span> <span class="identifier">uniform_mp_int</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span>
@@ -114,9 +114,9 @@
   <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">Engine</span><span class="special">&amp;</span> <span class="identifier">e</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">mp_int</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<a name="mp_int_.primality_tests_reference.primality_fermat_test.members"></a><h4>
-<a name="id2790631"></a>
-        <a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_fermat_test.members">Members</a>
+<a name="mp_int.primality_tests_reference.primality_fermat_test.members"></a><h4>
+<a name="id3196700"></a>
+        <a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_fermat_test.members">Members</a>
       </h4>
 <pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">primality_fermat_test</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
@@ -134,15 +134,15 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="mp_int_.primality_tests_reference.primality_miller_rabin_test"></a><a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_miller_rabin_test" title="primality_miller_rabin_test">primality_miller_rabin_test</a>
+<a name="mp_int.primality_tests_reference.primality_miller_rabin_test"></a><a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_miller_rabin_test" title="primality_miller_rabin_test">primality_miller_rabin_test</a>
 </h3></div></div></div>
 <p>
         This test is an improved version of the Fermat primality test that will also
         detect carmichael numbers.
       </p>
-<a name="mp_int_.primality_tests_reference.primality_miller_rabin_test.synopsis"></a><h5>
-<a name="id2790943"></a>
-        <a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_miller_rabin_test.synopsis">Synopsis</a>
+<a name="mp_int.primality_tests_reference.primality_miller_rabin_test.synopsis"></a><h5>
+<a name="id3197010"></a>
+        <a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_miller_rabin_test.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="comment">// &lt;boost/mp_math/mp_int.hpp&gt;
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Distribution</span> <span class="special">=</span> <span class="identifier">uniform_mp_int</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span>
@@ -159,9 +159,9 @@
   <span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">recommended_number_of_rounds</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">bits</span><span class="special">);</span>
 <span class="special">};</span>
 </pre>
-<a name="mp_int_.primality_tests_reference.primality_miller_rabin_test.members"></a><h4>
-<a name="id2791319"></a>
-        <a class="link" href="primality_tests_reference.html#mp_int_.primality_tests_reference.primality_miller_rabin_test.members">Members</a>
+<a name="mp_int.primality_tests_reference.primality_miller_rabin_test.members"></a><h4>
+<a name="id3197388"></a>
+        <a class="link" href="primality_tests_reference.html#mp_int.primality_tests_reference.primality_miller_rabin_test.members">Members</a>
       </h4>
 <pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">primality_miller_rabin_test</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">r</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
 </pre>
@@ -177,7 +177,7 @@
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<span class="bold"><strong>Requires:</strong></span><code class="computeroutput"><span class="identifier">p</span></code>
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">p</span></code>
           is odd.
         </li>
 <li>
@@ -196,8 +196,10 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Kevin Sopp<p>
-        All code and documentation is in the public domain
+<td align="right"><div class="copyright-footer">Copyright © 2008 - 2009 Kevin Sopp<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>
+        [source-mode c++
       </p>
 </div></td>
 </tr></table>

@@ -146,6 +146,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral3, mp_int_type, mp_int_typ
   BOOST_CHECK_EQUAL(z, "123495198423");
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral4, mp_int_type, mp_int_types)
+{
+  const mp_int_type x("1");
+  const mp_int_type z = x - 2;
+  BOOST_CHECK_EQUAL(z, "-1");
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_unsigned_char1, mp_int_type, mp_int_types)
 {
   const unsigned char y = 14;
