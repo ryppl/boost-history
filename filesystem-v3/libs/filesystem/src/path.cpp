@@ -18,6 +18,11 @@
 #include <cstring>
 #include <cassert>
 
+#ifdef BOOST_FILESYSTEM_DEBUG
+# include <iostream>
+# include <iomanip>
+#endif
+
 #ifdef BOOST_WINDOWS_PATH
 #  include <windows.h>
 #endif
@@ -764,13 +769,23 @@ namespace detail
                    value_type * to, value_type * to_end,
                    string_type & target, error_code & ec )
   {
+    //std::cout << std::hex
+    //          << " from=" << std::size_t(from)
+    //          << " from_end=" << std::size_t(from_end)
+    //          << " to=" << std::size_t(to)
+    //          << " to_end=" << std::size_t(to_end)
+    //          << std::endl;
+
     std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
     const interface_value_type * from_next;
     value_type * to_next;
 
-    if ( wchar_t_codecvt_facet()->APPEND_DIRECTION( state, from, from_end, from_next,
-           to, to_end, to_next ) != std::codecvt_base::ok )
+    std::codecvt_base::result res;
+
+    if ( (res=wchar_t_codecvt_facet()->APPEND_DIRECTION( state, from, from_end, from_next,
+           to, to_end, to_next )) != std::codecvt_base::ok )
     {
+      //std::cout << " result is " << static_cast<int>(res) << std::endl;
       assert( 0 && "append error handling not implemented yet" );
       throw "append error handling not implemented yet";
     }
@@ -795,7 +810,7 @@ namespace detail
       return;
     }
 
-    std::size_t buf_size = end - begin;  // perhaps too large, but that's OK
+    std::size_t buf_size = (end - begin) * 3;  // perhaps too large, but that's OK
 
     //  dynamically allocate a buffer only if source is unusually large
     if ( buf_size > default_codecvt_buf_size )
@@ -806,7 +821,7 @@ namespace detail
     else
     {
       value_type buf[default_codecvt_buf_size];
-      do_append( begin, end, buf, buf+buf_size, target, ec );
+      do_append( begin, end, buf, buf+default_codecvt_buf_size, target, ec );
     }
   }
 
@@ -844,8 +859,8 @@ namespace detail
       return interface_string_type();
     }
 
-    //  The codecvt length functions may not be implemented, and I don't reall
-    //  understand them either. Thus this code is really just a guess; it it turns
+    //  The codecvt length functions may not be implemented, and I don't really
+    //  understand them either. Thus this code is just a guess; if it turns
     //  out the buffer is too small then an error will be reported and the code
     //  will have to be fixed.
     std::size_t buf_size = src.size() * 4;

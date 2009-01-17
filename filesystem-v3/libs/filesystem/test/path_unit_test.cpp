@@ -49,14 +49,6 @@ using std::string;
 #define PATH_IS( a, b ) check_path( a, b, __FILE__, __LINE__ )
 #define IS( a,b ) check_equal( a, b, __FILE__, __LINE__ )
 
-//  It is convenient for editing to have these ready to copy and paste
-# ifdef BOOST_WINDOWS_PATH
-# else  // BOOST_POSIX_PATH
-# endif
-
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
-# endif  // narrow only
-
 namespace
 {
   int errors;
@@ -138,28 +130,30 @@ namespace
     path x2(x1);                                       // #2
     PATH_IS(x2, BOO_LIT("path x1"));
 
-    path x4(string("std::string::iterator").begin());  // #3
-    PATH_IS(x4, BOO_LIT("std::string::iterator"));
-
-    path x7(s.begin(), s.end());                       // #4
-    PATH_IS(x7, BOO_LIT("string iterators"));
-
-    path x10(string("std::string"));                   // #5
-    PATH_IS(x10, BOO_LIT("std::string"));
-
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
     path x3(L"const wchar_t *");                       // #3
     PATH_IS(x3, L"const wchar_t *");
+
+    string s3a( "s3a.c_str()" );
+    path x3a( s3a.c_str() );                           // #3
+    PATH_IS(x3a, BOO_LIT("s3a.c_str()"));
+
+    path x4(string("std::string::iterator").begin());  // #3
+    PATH_IS(x4, BOO_LIT("std::string::iterator"));
 
     path x5(wstring(L"std::wstring::iterator").begin()); // #3
     PATH_IS(x5, L"std::wstring::iterator");
 
+    path x7(s.begin(), s.end());                       // #4
+    PATH_IS(x7, BOO_LIT("string iterators"));
+
     path x8(ws.begin(), ws.end());                     // #4
     PATH_IS(x8, L"wstring iterators");
 
+    path x10(string("std::string"));                   // #5
+    PATH_IS(x10, BOO_LIT("std::string"));
+
     path x11(wstring(L"std::wstring"));                // #5
     PATH_IS(x11, L"std::wstring");
-# endif
   }
 
   //  test_use_cases  ------------------------------------------------------------------//
@@ -201,7 +195,6 @@ namespace
     s2 = p;
     CHECK( s2 == "foo" );
 
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
     wstring ws1( p );
     CHECK( ws1 == L"foo" );
 
@@ -211,7 +204,6 @@ namespace
     ws2.clear();
     ws2 = p;
     CHECK( ws2 == L"foo" );
-# endif
 
   }
 
@@ -520,30 +512,44 @@ namespace
 
     //  \u2722 and \xE2\x9C\xA2 are UTF-16 and UTF-8 FOUR TEARDROP-SPOKED ASTERISK
 
+    std::cout << "  testing p0 ..." << std::endl;
     path p0( L"\u2722" );  // for tests that depend on detail::convert_to_string
+#   ifdef BOOST_WINDOWS_PATH
     CHECK( p0.string() != "\xE2\x9C\xA2" );
+#   endif
     string p0_string( p0.string() );
 
+    std::cout << "  testing p1 ..." << std::endl;
     path p1( "\xE2\x9C\xA2" );
+#   ifdef BOOST_WINDOWS_PATH
     CHECK( p1 != L"\u2722" );
+#   endif
     wstring p1_wstring( p1.wstring() );
 
     // So that tests are run with known encoding, use Boost UTF-8 codecvt
     std::locale global_loc = std::locale();
     std::locale loc( global_loc, new fs::detail::utf8_codecvt_facet );
+    std::cout << "  imbuing locale ..." << std::endl;
     std::locale old_loc = path::imbue( loc );
 
+    std::cout << "  testing with the imbued locale ..." << std::endl;
     CHECK( p0.string() == "\xE2\x9C\xA2" );
     path p2( "\xE2\x9C\xA2" );
     CHECK( p2 == L"\u2722" );
     CHECK( p2.wstring() == L"\u2722" );
 
+    std::cout << "  imbuing the original locale ..." << std::endl;
     path::imbue( old_loc );
 
+    std::cout << "  testing with the original locale ..." << std::endl;
     CHECK( p0.string() == p0_string );
     path p3( "\xE2\x9C\xA2" );
+#   ifdef BOOST_WINDOWS_PATH
     CHECK( p3 != L"\u2722" );
+#   endif
     CHECK( p3.wstring() == p1_wstring );
+
+    std::cout << "  locale testing complete" << std::endl;
   }
 
 //  //  test_locales  --------------------------------------------------------------------//
@@ -580,6 +586,18 @@ namespace filesystem
         target += *begin + 1;  // change so that results distinguishable from char cvts
     }
 
+#  ifdef __GNUC__
+    //  This specialization shouldn't be needed, and VC++, Intel, and others work
+    //  fine without it. But gcc 4.3.2, and presumably other versions, need it.
+    template<>
+    void append<user_string::value_type>( const user_string::value_type * begin,
+      string_type & target, system::error_code & ec )
+    {
+      path_traits::append<user_string::value_type>( begin,
+        static_cast<const user_string::value_type *>(0), target, ec );
+    }
+#  endif
+
     template<>
     user_string convert<user_string>( const string_type & source,
       system::error_code & ec )
@@ -604,11 +622,11 @@ namespace
     user_string::value_type usr_c_str[] = { 'a', 'b', 'c', 0 };
     user_string usr( usr_c_str );
 
-    //path p1( usr_c_str );
-    //CHECK( p1 == path("bcd") );
-    //CHECK( p1 == "bcd" );
-    //user_string s1( p1.string<user_string>() );
-    //CHECK( s1 == usr );
+    path p1( usr.c_str() );
+    CHECK( p1 == path("bcd") );
+    CHECK( p1 == "bcd" );
+    user_string s1( p1.string<user_string>() );
+    CHECK( s1 == usr );
   }
 
 }  // unnamed namespace

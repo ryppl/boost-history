@@ -17,7 +17,6 @@
                               TO DO
 
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
-   * Windows, POSIX, conversions for user-defined types.
    * Fix inserter/extractor problems; see comments in commented out code below.
    * Need an error category for codecvt errors. Seed path.cpp detail::append, etc.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
@@ -34,7 +33,7 @@
    * path.cpp: locale and detail append/convert need error handling.
    * path_unit_test needs to probe error handling, verify exceptions are thrown when
      requested.
-   * Provide the name check functions for more character types. Templatize?
+   * Provide the name check functions for more character types? Templatize?
      
                          Design Questions
 
