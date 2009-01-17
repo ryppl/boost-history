@@ -118,7 +118,7 @@ class fake_descending_binary_cursor
     >
 {
 public:
-    typedef fake_descending_binary_cursor<T>cursor;
+    typedef fake_descending_binary_cursor<T> cursor;
     typedef fake_descending_binary_cursor<T/* const*/> const_cursor;
 
     typedef typename fake_descending_binary_cursor<T>::cursor_facade_::size_type size_type;
@@ -134,7 +134,6 @@ public:
         m_pos = other.m_pos;
         return *this;
     }
-    
 
     fake_binary_tree<T>& m_tree;
     typename fake_binary_tree<T>::size_type m_pos;
@@ -142,6 +141,10 @@ public:
 private:
     friend class boost::iterator_core_access;
     friend class boost::tree::cursor_core_access;
+
+    static const 
+    typename fake_descending_binary_cursor<T>::cursor_facade_::value_type def_val
+    = typename fake_descending_binary_cursor<T>::cursor_facade_::value_type();
 
     typename fake_descending_binary_cursor<T>::cursor_facade_::reference
     dereference() const
@@ -183,7 +186,7 @@ private:
             return true;
         if (m_pos == 0)
             return false;
-        return (m_tree.m_data[m_pos] == 0);
+        return (m_tree.m_data[m_pos] == def_val);
     }
 
     size_type const idx() const

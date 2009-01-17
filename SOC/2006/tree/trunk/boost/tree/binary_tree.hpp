@@ -24,9 +24,6 @@
 namespace boost {
 namespace tree {
 
-using detail::ascending_node;
-using detail::ascending_nary_cursor;
-
 // TODO: Remove shoot() remains (was m_header->m_parent)
 
 /** 
@@ -43,7 +40,7 @@ class binary_tree {
     typedef typename Alloc::template rebind<value_type>::other allocator_type;
 
  private:        
-    typedef ascending_node<value_type> node_type;
+    typedef detail::ascending_node<value_type> node_type;
     
     typedef typename Alloc::template rebind<node_type>::other 
         node_allocator_type;
@@ -51,9 +48,9 @@ class binary_tree {
     typedef node_base_type* node_base_pointer;
     typedef typename detail::node_traits<node_type>::node_pointer node_pointer;
     
- public:
-    typedef ascending_nary_cursor<node_type> cursor;
-    typedef ascending_nary_cursor<node_type const> const_cursor;
+public:
+    typedef detail::ascending_nary_cursor<node_type> cursor;
+    typedef detail::ascending_nary_cursor<node_type const> const_cursor;
 
     typedef typename allocator_type::pointer pointer;
     typedef typename allocator_type::reference reference;
@@ -112,7 +109,7 @@ class binary_tree {
     }
     
     template <class InputCursor>
-        void assign(InputCursor subtree)
+    void assign(InputCursor subtree)
     {
         clear();
         insert(this->root(), subtree);

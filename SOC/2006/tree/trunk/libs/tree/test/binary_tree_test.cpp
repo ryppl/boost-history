@@ -74,7 +74,14 @@ BOOST_AUTO_TEST_CASE( subtree_constructor_test )
 BOOST_AUTO_TEST_CASE( insert_subtree_test )
 {
     binary_tree<int> bt0;
-    binary_tree<int>::cursor c = bt0.insert(bt0.root(), fbt1.root());    
+    bt0.insert(bt0.root(), fbt1.root());    
+    validate_test_dataset1_tree(bt0.root());
+}
+
+BOOST_AUTO_TEST_CASE( assign_subtree_test )
+{
+    binary_tree<int> bt0;
+    bt0.assign(fbt1.root());    
     validate_test_dataset1_tree(bt0.root());
 }
 
@@ -230,6 +237,13 @@ BOOST_AUTO_TEST_CASE( swap_binary_tree_test )
 BOOST_AUTO_TEST_CASE( copy_constructor_test )
 {
     binary_tree<int> bt0(bt);
+    validate_test_dataset1_tree(bt0.root());
+}
+
+BOOST_AUTO_TEST_CASE( assignment_operator_test )
+{
+    binary_tree<int> bt0;
+    bt0 = bt;
     validate_test_dataset1_tree(bt0.root());
 }
 

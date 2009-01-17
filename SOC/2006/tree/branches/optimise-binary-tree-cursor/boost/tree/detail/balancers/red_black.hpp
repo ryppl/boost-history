@@ -11,7 +11,7 @@
 //TODO: lots.
 //templatize with bool add_data?
 
-#include <boost/tree/detail/cursor/nary.hpp>
+#include <boost/tree/detail/nary_cursor.hpp>
 
 namespace boost {
 namespace tree {

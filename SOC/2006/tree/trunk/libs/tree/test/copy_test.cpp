@@ -26,6 +26,26 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_descending, Order, orders)
     test_traversal(Order(), l.begin(), l.end());
 }
 
+BOOST_AUTO_TEST_CASE( alternate_test_copy_descending )
+{
+    std::vector<int> po(11);
+    po[0] = 8;
+    po[1] = 3;
+    po[2] = 1;
+    po[3] = 6;
+    po[4] = 4;
+    po[5] = 7;
+    po[6] = 10;
+    po[7] = 14;
+    po[8] = 13;
+    po[9] = 11;
+    po[10] = 12;
+    std::vector<int>::const_iterator ci = po.begin();
+    mock_cursor< std::vector<int>::const_iterator > mc(ci);
+    
+    boost::tree::copy(preorder(), fbt1.descending_root(), mc);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_ascending, Order, orders)
 {
     boost::tree::copy(Order(), fbt1.ascending_root(), o);

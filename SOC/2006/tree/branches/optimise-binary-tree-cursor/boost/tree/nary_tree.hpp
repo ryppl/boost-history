@@ -16,7 +16,7 @@
 #include <boost/tree/cursor.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
-#include <boost/tree/detail/cursor/nary.hpp>
+#include <boost/tree/detail/nary_cursor.hpp>
 
 #include <memory>
 #include <vector>

@@ -141,6 +141,78 @@ void validate_corresponding_forest(Tree const& t)
     BOOST_CHECK_EQUAL(*++c, 12);
 }
 
+template <class Iter>
+class mock_cursor;
+
+template <class Iter>
+class mock_cursor
+: public boost::tree::cursor_facade<
+        mock_cursor<Iter>
+      , mock_cursor<Iter>
+      , boost::bidirectional_traversal_tag
+      , boost::tree::descending_vertical_traversal_tag
+    >
+{
+private:
+    Iter& m_iter;
+public:
+    typedef mock_cursor<Iter> cursor;
+    typedef mock_cursor<Iter/* const*/> const_cursor;
+
+    typedef typename mock_cursor<Iter>::cursor_facade_::size_type size_type;
+    
+    mock_cursor(Iter& iter)
+    : m_iter(iter)
+    {
+    }
+
+    void operator=(typename Iter::value_type const& val)
+    {
+        BOOST_CHECK_EQUAL(val, *m_iter++);
+    }
+    
+private:
+    friend class boost::iterator_core_access;
+    friend class boost::tree::cursor_core_access;
+    
+    typename mock_cursor<Iter>::cursor_facade_::reference
+    dereference() const
+    {
+        return const_cast< mock_cursor<Iter>& >(*this);
+    }
+
+    bool equal(mock_cursor<Iter> const& other) const
+    {
+        return false;
+    }
+
+    void increment()
+    {
+    }
+    
+    void decrement()
+    {
+    }  
+
+    void left()
+    {
+    }
+
+    void right()
+    {
+    }
+    
+    bool const empty_() const
+    {
+        return true;
+    }
+
+    size_type const idx() const
+    {
+        return 0;
+    }
+};
+
 template <class Iterator>
 void test_traversal(boost::tree::preorder, Iterator a, Iterator b) 
 {
@@ -263,7 +335,7 @@ void test_subtree_traversal(boost::tree::inorder, Iterator a, Iterator b
 template <class Iterator>
 void test_traversal(boost::tree::postorder, Iterator a, Iterator b)
 {    
-    BOOST_CHECK_EQUAL(*a++, 1); 
+    BOOST_CHECK_EQUAL(*a++, 1);
     BOOST_CHECK_EQUAL(*a++, 4);
     BOOST_CHECK_EQUAL(*a++, 7);
     BOOST_CHECK_EQUAL(*a++, 6);
