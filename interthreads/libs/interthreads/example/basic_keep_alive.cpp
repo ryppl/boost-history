@@ -52,7 +52,7 @@ int my_thread() {
 
         boost::thread::id id= boost::this_thread::get_id();
         std::stringstream sss;
-#define COUT_
+//#define COUT_
 #ifdef COUT_
         bith::cout_ << "TID=" << i << " " << id << std::endl;
         bith::cout_.flush();
