@@ -118,11 +118,20 @@ void do_test_wait_for_all() {
     aetst::do_test_wait_for_all(ae);
 }
 
+void do_test_fork_after_wait() {  
+    bith::shared_launcher ae;
+    aetst::do_test_fork_after_wait(ae);
+}    
+void do_test_fork_after_get() {  
+    bith::shared_launcher ae;
+    aetst::do_test_fork_after_get(ae);
+}    
+
 test_suite* init_unit_test_suite(int, char*[])
 {
     test_suite* test = BOOST_TEST_SUITE("launcher");
-    test->add(BOOST_TEST_CASE(&do_test_member_fork_move));
     
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_move));    
     test->add(BOOST_TEST_CASE(&do_test_member_fork));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_move));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
@@ -137,6 +146,10 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
     test->add(BOOST_TEST_CASE(&do_test_set_all));
     test->add(BOOST_TEST_CASE(&do_test_wait_for_all));
+    test->add(BOOST_TEST_CASE(&do_test_fork_after_wait));
+    test->add(BOOST_TEST_CASE(&do_test_fork_after_get));
+    #if 0
+    #endif
     return test;
 }
 

@@ -38,7 +38,7 @@ namespace bfus = boost::fusion;
 
 #define SCHEDULER
 
-#if SCHEDULER
+#ifdef SCHEDULER
 typedef bith::scheduler<
   boost::tp::unbounded_channel< boost::tp::fifo >
 > pool_type;
@@ -107,9 +107,20 @@ void do_test_wait_for_all() {
     aetst::do_test_wait_for_all(ae);
 }
 
+#if 0 // DO NOT COMPILE
+void do_test_fork_after_wait() {  
+    pool_type ae(boost::tp::poolsize(2));
+    aetst::do_test_fork_after_wait(ae);
+}    
+void do_test_fork_after_get() {  
+    pool_type ae(boost::tp::poolsize(2));
+    aetst::do_test_fork_after_get(ae);
+}    
+#endif
+
 test_suite* init_unit_test_suite(int, char*[])
 {
-    test_suite* test = BOOST_TEST_SUITE("shared_threader");
+    test_suite* test = BOOST_TEST_SUITE("scheduler");
     
     test->add(BOOST_TEST_CASE(&do_test_member_fork));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
@@ -119,8 +130,12 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_creation_through_functor));
     test->add(BOOST_TEST_CASE(&do_test_creation_through_reference_wrapper));
     test->add(BOOST_TEST_CASE(&do_test_wait_all));
-    //test->add(BOOST_TEST_CASE(&do_test_wait_for_any));  FAILS
     test->add(BOOST_TEST_CASE(&do_test_set_all));
     test->add(BOOST_TEST_CASE(&do_test_wait_for_all));
+#if 0    
+    test->add(BOOST_TEST_CASE(&do_test_fork_after_wait)); // DO NOT COMPILE
+    test->add(BOOST_TEST_CASE(&do_test_fork_after_get)); // DO NOT COMPILE
+    test->add(BOOST_TEST_CASE(&do_test_wait_for_any));  // FAILS
+#endif    
   return test;
 }

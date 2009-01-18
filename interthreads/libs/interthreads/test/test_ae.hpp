@@ -25,11 +25,20 @@ namespace bith = boost::interthreads;
 namespace bfus = boost::fusion;
 
 int test_value;
+int test_value1;
 int test_value2;
+int test_value3;
 int simple_thread() {
     test_value=999;
     sleep(2);
     return test_value;
+}
+static std::string test_string_value;
+
+std::string simple_string_thread() {
+    test_string_value="999";
+    sleep(5);
+    return test_string_value;
 }
 
 int simple_thread2() {
@@ -50,6 +59,30 @@ bool interruption_point_thread(boost::mutex* m,bool* failed)
     boost::this_thread::interruption_point();
     *failed=true;
     return failed;
+}
+
+int my_simple_thread() {
+    test_value1=111;
+    sleep(2);
+    return test_value1;
+}
+
+int my_simple_thread2() {
+    test_value2=222;
+    sleep(3);
+    return test_value2;
+}
+
+int my_simple_thread3() {
+    test_value3=333;
+    sleep(1);
+    return test_value3;
+}
+
+int my_simple_thread4(int i, std::string s) {
+    test_value3=333;
+    sleep(1);
+    return test_value3;
 }
 
 namespace aetst {
@@ -210,5 +243,65 @@ void do_test_thread_interrupts_at_interruption_point(AE& ae) {
     act.wait();
     BOOST_CHECK(!failed);
 }    
+
+
+template <typename AE>
+void do_test_fork_after_get(AE& ae) {  
+    test_value=0;
+    test_value2=0;
+    test_value3=0;
+	BOOST_AUTO(actT, fork_all(ae, my_simple_thread, my_simple_thread2));
+    
+    #ifndef ACT_WRAPPER
+    typename AE:: template handle<int>::type res;
+	bith::fork_after(ae, my_simple_thread3, actT, res);  
+    sleep(5);
+    #else
+	BOOST_AUTO(act,bith::fork_after(ae, my_simple_thread3, actT));
+    #endif
+    
+    int res =act.get();
+    BOOST_CHECK_EQUAL(test_value3, 333);
+    BOOST_CHECK_EQUAL(res, 333);
+}    
+template <typename AE>
+void do_test_fork_after_wait(AE& ae) {  
+    test_value=0;
+    test_value2=0;
+    test_value3=0;
+    BOOST_AUTO(actT, fork_all(ae, my_simple_thread, my_simple_thread2));
+    
+    #ifndef ACT_WRAPPER
+    typename AE:: template handle<int>::type res;
+	bith::fork_after(ae, my_simple_thread3, actT, res);    
+    sleep(5);
+    #else
+	BOOST_AUTO(act,bith::fork_after(ae, my_simple_thread3, actT));
+    #endif
+    act.wait();
+    
+    BOOST_CHECK_EQUAL(test_value3, 333);
+
+}    
+template <typename AE>
+void do_test_fork_after_join(AE& ae) {  
+    test_value=0;
+    test_value2=0;
+    test_value3=0;
+    BOOST_AUTO(actT, fork_all(ae, my_simple_thread, my_simple_thread2));
+    
+    #ifndef ACT_WRAPPER
+    typename AE:: template handle<int>::type res;
+	bith::fork_after(ae, my_simple_thread3, actT, res);    
+    sleep(5);
+    #else
+	BOOST_AUTO(act,bith::fork_after(ae, my_simple_thread3, actT));
+    #endif
+    act.join();
+    
+    BOOST_CHECK_EQUAL(test_value3, 333);
+
+}    
+
 }
 #endif
