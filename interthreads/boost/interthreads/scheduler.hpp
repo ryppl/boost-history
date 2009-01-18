@@ -57,6 +57,10 @@ public:
 template <typename Channel>
 struct get_future<scheduler<Channel> > {
     template <typename T>
+    struct future_type {
+        typedef shared_future<T> type;
+    };
+    template <typename T>
     shared_future<T>& operator()(tp::task<T>& act) { return act.get_future(); }
 };
 
@@ -68,19 +72,34 @@ struct asynchronous_completion_token<boost::tp::pool<Channel>,T> {
 };    
 
 
+namespace partial_specialization_workaround {
 template< typename Channel, typename F > 
-struct fork_aux<boost::tp::pool<Channel>,F> {
+struct fork<boost::tp::pool<Channel>,F> {
     typename result_of::fork<boost::tp::pool<Channel>, F>::type  
-    fork( boost::tp::pool<Channel>& ae, F fn ) {
+    apply( boost::tp::pool<Channel>& ae, F fn ) {
         return ae.submit(fn);
     }
 };
-
+}
 template <typename C>
 struct get_future<tp::pool<C> > {
     template <typename T>
     shared_future<T>& operator()(tp::task<T>& act) { return act.get_future(); }
 };
+
+template <typename ResultType>
+struct act_value<tp::task<ResultType> > {
+    typedef ResultType type;
+};
+
+template <typename R>
+struct is_movable<tp::task<R> > : mpl::false_{};
+
+template <typename R>
+struct has_future_if<tp::task<R> > : mpl::true_{};
+
+template <typename R>
+struct has_thread_if<tp::task<R> > : mpl::false_{};
 
 }
 }

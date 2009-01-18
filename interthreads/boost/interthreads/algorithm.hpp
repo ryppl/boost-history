@@ -11,6 +11,8 @@
 #ifndef BOOST_INTERTHREADS_ALGORITHM__HPP
 #define BOOST_INTERTHREADS_ALGORITHM__HPP
 
+#include <boost/interthreads/fork.hpp>
+#include <boost/interthreads/fork_after.hpp>
 #include <boost/interthreads/fork_all.hpp>
 #include <boost/interthreads/wait_for_all.hpp>
 #include <boost/interthreads/wait_for_any.hpp>
@@ -20,8 +22,8 @@
 #include <boost/interthreads/algorithm/join_all.hpp>
 #include <boost/interthreads/algorithm/join_all_until.hpp>
 //#include <boost/interthreads/algorithm/join_all_for.hpp>
-#include <boost/interthreads/algorithm/get_all.hpp>
-#include <boost/interthreads/algorithm/get_all_until.hpp>
+//#include <boost/interthreads/algorithm/get_all.hpp>
+//#include <boost/interthreads/algorithm/get_all_until.hpp>
 //#include <boost/interthreads/algorithm/get_all_for.hpp>
 #include <boost/interthreads/algorithm/wait_all.hpp>
 #include <boost/interthreads/algorithm/wait_all_until.hpp>

@@ -52,11 +52,13 @@ public:
         thread th(f);
 #endif        
         return boost::move(th);        
-        //return thread(boost::detail::thread_move_t<thread>(th));
     }   
 };
 
-
+template <>
+struct act_value<thread> {
+    typedef void type;
+};
 }
 }
 

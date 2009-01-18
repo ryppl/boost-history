@@ -29,7 +29,6 @@ namespace interthreads {
             typedef void result_type;
             template<typename ACT>
             void operator()(ACT& act) const {
-                //std::cout << "wait()" << std::endl;
                 act.wait();
             }
         };
@@ -45,7 +44,7 @@ namespace interthreads {
     template <typename Sequence>
     typename result_of::wait_all<Sequence>::type
     wait_all(Sequence& t) {
-        return fusion::for_each(t, fct::wait());
+        fusion::for_each(t, fct::wait());
     }
 
 }    

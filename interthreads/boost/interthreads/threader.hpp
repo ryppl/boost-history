@@ -35,6 +35,7 @@ namespace interthreads {
 template <typename ResultType>
 class unique_joiner;
     
+
 template <typename ResultType>
 class unique_joiner {
 public:
@@ -74,7 +75,7 @@ private:
 
     unique_joiner(unique_joiner& other);
     this_type& operator=(unique_joiner& other);
-
+//protected:
 public:
     friend class unique_threader;
     template <typename Nullary> 
@@ -135,12 +136,10 @@ public:
     
     void join() { 
         data_->th_.join(); 
-//        wait(); 
     }
 
     bool join_until(const system_time& abs_time) {
 		return data_->th_.timed_join(abs_time);
-//        return wait_until(abs_time); 
     }
 
     template<typename TimeDuration>
@@ -148,15 +147,14 @@ public:
     {
         return join_until(get_system_time()+rel_time);
     }
-
+#if 0
     result_type get() const { 
-        //data_->th_.join(); 
         return const_cast<unique_future< result_type >*>(&(data_->fut_))->get(); 
     }
    
     result_type operator()() const { return get(); }
+#endif    
     result_type get()  { 
-        //data_->th_.join(); 
         return data_->fut_.get(); 
     }
     result_type operator()() { return get(); }
@@ -204,7 +202,20 @@ public:
         return data_->fut_; 
     }
 };
+template <typename ResultType>
+struct act_value<unique_joiner<ResultType> > {
+    typedef ResultType type;
+};
 
+template <typename R>
+struct is_movable<unique_joiner<R> > : mpl::true_{};
+
+template <typename R>
+struct has_future_if<unique_joiner<R> > : mpl::true_{};
+
+template <typename R>
+struct has_thread_if<unique_joiner<R> > : mpl::true_{};
+    
 class unique_threader {
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR    
 private: 
@@ -239,6 +250,10 @@ public:
    
 template <>
 struct get_future<unique_threader> {
+    template <typename T>
+    struct future_type {
+        typedef unique_future<T> type;
+    };
     template <typename T>
     unique_future<T>& operator()(unique_joiner<T>& j) { return j.get_future(); }
 };
@@ -296,21 +311,22 @@ public:
     shared_joiner(Nullary f) 
     : data_(new this_impl_type(f))
 #endif        
-    {} 
+    {
+    } 
 
 public:
+    shared_joiner() : data_() {};
     shared_joiner(const shared_joiner& other) : data_(other.data_){
     }
     this_type& operator=(const shared_joiner& other) {
         data_=other.data_;
-        other.data_.reset(new this_impl_type());
         return *this;
     }
 
     // move support
 #ifdef BOOST_HAS_RVALUE_REFS
-    shared_joiner(this_type&& other) {
-        data_.swap(other.data_);
+    shared_joiner(this_type&& other): data_(other.data_) {
+        other.data_.reset(new this_impl_type());
     }
     shared_joiner& operator=(shared_joiner&& other) {
         data_=other.data_;
@@ -353,12 +369,10 @@ public:
     
     void join() { 
         data_->th_.join(); 
-//        wait(); 
     }
 
     bool join_until(const system_time& abs_time) {
 		return data_->th_.timed_join(abs_time);
-//        return wait_until(abs_time); 
     }
 
     template<typename TimeDuration>
@@ -367,12 +381,10 @@ public:
         return join_until(get_system_time()+rel_time);
     }
     result_type get() { 
-        //data_->th_.join(); 
         return data_->fut_.get(); 
     }
     result_type operator()() { return get(); }
     result_type get() const { 
-        //data_->th_.join(); 
         return const_cast<shared_future< result_type >*>(&(data_->fut_))->get(); 
     }
    
@@ -422,6 +434,21 @@ public:
     }
 };
 
+template <typename R>
+struct act_value<shared_joiner<R> > {
+    typedef R type;
+};
+
+template <typename R>
+struct is_movable<shared_joiner<R> > : mpl::true_{};
+
+template <typename R>
+struct has_future_if<shared_joiner<R> > : mpl::true_{};
+
+template <typename R>
+struct has_thread_if<shared_joiner<R> > : mpl::true_{};
+
+
 class shared_threader {
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR    
 private: 
@@ -455,6 +482,10 @@ public:
    
 template <>
 struct get_future<shared_threader> {
+    template <typename T>
+    struct future_type {
+        typedef shared_future<T> type;
+    };
     template <typename T>
     shared_future<T>& operator()(shared_joiner<T>& j) { return j.get_future(); }
 };

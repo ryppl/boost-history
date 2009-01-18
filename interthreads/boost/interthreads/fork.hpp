@@ -17,6 +17,7 @@
 #include <boost/bind.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/futures/future.hpp>
+#include <boost/interthreads/act_traits.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -24,10 +25,6 @@
 namespace boost {
 namespace interthreads {
 
-template <typename AE, typename T>
-struct asynchronous_completion_token {
-    typedef typename AE::template handle<T>::type type;
-};    
 
     
 namespace result_of { 
@@ -37,27 +34,19 @@ namespace result_of {
         typedef typename asynchronous_completion_token<AE, result_type>::type type;
     };
 }
-
-//template <typename AE>
-//struct get_future;
-template <typename AE>
-struct get_future {
-    template <typename T>
-    shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) { return act.get_future(); }
-};
-    
-
+  
+namespace partial_specialization_workaround {
 template< typename AE, typename F > 
-struct fork_aux {
-    static typename result_of::fork<AE,F>::type fork(AE& ae, F fn ) {
+struct fork {
+    static typename result_of::fork<AE,F>::type apply(AE& ae, F fn ) {
         return ae.fork(fn);
     }
 };
-
+}
 template< typename AE, typename F > 
 typename result_of::fork<AE,F>::type 
 fork( AE& ae, F fn ) {
-    return fork_aux<AE,F>::fork(ae,fn);
+    return partial_specialization_workaround::fork<AE,F>::apply(ae,fn);
 }
 
 template< typename AE, typename F, typename A1 > 
@@ -76,6 +65,12 @@ template< typename AE, typename F, typename A1, typename A2, typename A3 >
 typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2,A3)>::type >::type
 fork( AE& ae, F fn, A1 a1, A2 a2, A3 a3 ) {
     return ae.fork( bind( fn, a1, a2, a3 ) );
+}
+
+template< typename AE, typename F, typename A1, typename A2, typename A3, typename A4 >
+typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2,A3,A4)>::type >::type
+fork( AE& ae, F fn, A1 a1, A2 a2, A3 a3, A4 a4 ) {
+    return ae.fork( bind( fn, a1, a2, a3, a4 ) );
 }
 
 }

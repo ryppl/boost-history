@@ -22,6 +22,11 @@ namespace interthreads {
     
     template <typename AE, template <class> class Decorator>
     struct asynchronous_executor_decorator : AE {
+        template <typename T>
+        struct handle {
+            typedef typename AE::template handle<T>::type type;
+        };
+        
         template <typename F>
         typename AE::template handle< typename boost::result_of<F()>::type >::type 
         fork( F fn ) {
@@ -64,8 +69,19 @@ namespace interthreads {
             
     };
 
-    //typedef asynchronous_executor_decorator<threader,thread_decorator> threader_decorator;
     
+    template <typename AE, template <class> class Decorator>
+    struct get_future<asynchronous_executor_decorator<AE, Decorator> > {
+        template <typename T>
+        struct future_type {
+            typedef typename AE::template get_future<AE>::type type;
+        };
+        template <typename T>
+        typename future_type<T>::type& 
+        operator()(typename AE::template handle<T>::type & j) 
+        { return j.get_future(); }
+    };
+
 }
 }
 

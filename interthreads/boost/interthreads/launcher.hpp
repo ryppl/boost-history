@@ -14,7 +14,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//#include <boost/interthreads/detail/config.hpp>
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/futures/future.hpp>
@@ -95,16 +94,52 @@ public:
 template <>
 struct get_future<launcher> {
     template <typename T>
+    struct future_type {
+        typedef unique_future<T> type;
+    };
+    template <typename T>
     unique_future<T>& operator()(unique_future<T>& f) { return f; }
 };
 
 template <>
 struct get_future<shared_launcher> {
     template <typename T>
+    struct future_type {
+        typedef shared_future<T> type;
+    };
+    template <typename T>
     shared_future<T>& operator()(shared_future<T>& f) { return f; }
 };
 
 
+template <typename ResultType>
+struct act_value<unique_future<ResultType> > {
+    typedef ResultType type;
+};
+
+template <typename R>
+struct is_movable<unique_future<R> > : mpl::true_{};
+
+template <typename R>
+struct has_future_if<unique_future<R> > : mpl::true_{};
+
+template <typename R>
+struct has_thread_if<unique_future<R> > : mpl::false_{};
+
+    
+template <typename ResultType>
+struct act_value<shared_future<ResultType> > {
+    typedef ResultType type;
+};
+
+template <typename R>
+struct is_movable<shared_future<R> > : mpl::true_{};
+
+template <typename R>
+struct has_future_if<shared_future<R> > : mpl::true_{};
+
+template <typename R>
+struct has_thread_if<shared_future<R> > : mpl::false_{};
 }
 }
 

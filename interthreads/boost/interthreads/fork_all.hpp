@@ -29,6 +29,12 @@ namespace interthreads {
 namespace result_of { 
     template <typename AE, typename T>
     struct fork_all;
+    template <typename AE, typename F1>
+    struct fork_all<AE, fusion::tuple<F1> > {
+        typedef  fusion::tuple<
+            typename result_of::fork<AE,F1>::type
+        > type;
+    };
     template <typename AE, typename F1, typename F2>
     struct fork_all<AE, fusion::tuple<F1,F2> > {
         typedef  fusion::tuple<
@@ -47,6 +53,14 @@ namespace result_of {
     
 }
 
+
+template< typename AE, typename F1> 
+typename result_of::fork_all<AE, fusion::tuple<F1> >::type
+fork_all( AE& ae, F1 f1 ) {
+    typedef typename result_of::fork_all<AE, fusion::tuple<F1> >::type type;
+    typename result_of::fork<AE, F1>::type j1 =ae.fork(f1);
+    return type(j1);
+}
 
 template< typename AE, typename F1, typename F2> 
 typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type

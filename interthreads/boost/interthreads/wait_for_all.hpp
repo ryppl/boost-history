@@ -29,6 +29,12 @@ namespace interthreads {
 namespace result_of { 
     template <typename L, typename T>
     struct wait_for_all;
+    template <typename L, typename F1>
+    struct wait_for_all<L,fusion::tuple<F1> > {
+        typedef  fusion::tuple<
+            typename boost::result_of<F1()>::type
+        > type;
+    };
     template <typename L, typename F1, typename F2>
     struct wait_for_all<L,fusion::tuple<F1,F2> > {
         typedef  fusion::tuple<
@@ -47,6 +53,14 @@ namespace result_of {
     
 }
 
+template< typename AE, typename F1> 
+typename result_of::wait_for_all<AE, fusion::tuple<F1> >::type
+wait_for_all( AE& ae, F1 f1 ) {
+    typename result_of::fork_all<AE, fusion::tuple<F1> >::type handles(fork_all(ae, f1));
+    typename result_of::wait_for_all<AE, fusion::tuple<F1> >::type values;
+    set_all(handles,values);
+    return values;
+}
 
 template< typename AE, typename F1, typename F2> 
 typename result_of::wait_for_all<AE, fusion::tuple<F1,F2> >::type
