@@ -25,8 +25,19 @@
 [heading Tasks to do before review]
 [variablelist
 
+[[Solve the bugs] [v0.3#1 v0.3#2 v0.3#3 v0.2#1 v0.2#2]]
+
+[[Add polymorph act and adapters] []]
+
+[[Add examples] [ae/act framework.]]
+
+[[Complete the reference] [ae/act framework, typeof.]]
+
+[[Change the rational and implementation sections] []]
+
 [[Use set_once to implement wait_for_any] [The current implementation uses the Boost.Futures 
-wait_for_any to implement this feauture, which add an superflous constraint be able to get a future to all the AE/ACT.]]
+wait_for_any to implement this feauture, which add an superflous constraint be able to get a future to all the AE/ACT. 
+In adition the wait_for_any has now 0(N) complexity.]]
 
 [[Complete the tests] [Even if the current release incluse more test here is yet a long way before been able to review the library.]]
 

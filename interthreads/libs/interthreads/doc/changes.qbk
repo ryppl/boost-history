@@ -7,14 +7,22 @@
 
 [section:changes  Appendix A: History]
 
-[heading [*Version 0.2, December 07, 2009] Asynchronous execution and test on more toolsets]
+[heading [*Version 0.3, January 19, 2009] Asynchronous execution and test on more toolsets]
+
+[*Features:]
+
+* fork_after: request the AE to execute a function asynchronously once each one of ACTs in the dependency tuple parameter are ready.
+* Add act traits, as value type, is movable, has_future_if, has_thread_if
+ 
+
+[heading [*Version 0.2, January 14, 2009] Asynchronous execution and test on more toolsets]
 
 [*Features:]
 
 * Asynchronous executors (AE) and asynchronous completion token (ACT) framework
     * fork and fork_all functions
     * wait_for_all, wait_for_any functions
-    * get_all, join_all, ...
+    * set_all, join_all, ...
 * unique/shared threader (AE) and unique/shared joiner(ACT) classes
 * basic_threader(AE) class
 * unique/shared launcher(AE) class
@@ -30,7 +38,7 @@
 * Tested on Linux gcc 4.1.2.
 * Modification helping Windows (not tested)
 
-[*Bugs:]
+[*Closed Bugs:]
 
 * basic_keep_alive example do not link.
 
@@ -45,9 +53,12 @@
  
 [heading [*Bugs:]]
 
-[*v0.2#2: Some trouble with the use of tp::pool firectly, use scheduler instead.]
+[*v0.3#3: scheduler::do_test_fork_after_wait do not work yet.]
+[*v0.3#2: scheduler::do_test_fork_after_get do not work yet.]
+[*v0.3#1: scheduler::do_test_wait_for_any do not work yet.]
 
-[*v0.2#1: get_all do not work yet, use set_all instead.] 
+[*v0.2#2: Some trouble with the use of tp::pool directly, use scheduler instead.]
+[*v0.2#1: ae::get_all do not work yet, use set_all instead.] 
 get_all do not work because fusion transform sequence function can not take non const sequences.
 Maybe we can emulate it using set_all and a mpl a transformation for a tuple of ACT to a tuple of result_type.
 
