@@ -103,7 +103,37 @@ namespace boost { namespace numeric { namespace bindings {
             W& w_ ;
             WR& wr_ ;
             WI& wi_ ;
-        }; // struct workspace2
+        }; // struct workspace3
+
+        template <typename W, typename WR, typename WI, typename WB>
+        class workspace4 {
+          public:
+            workspace4(W& w, WR& wr, WI& wi, WB& wb)
+            : w_(w)
+            , wr_(wr)
+            , wi_(wi)
+            , wb_(wb)
+            {}
+
+          public:
+            typedef typename traits::vector_traits<W>::value_type w_value_type ;
+            W& select( w_value_type const& ) { return w_ ; }
+
+            typedef typename traits::vector_traits<WR>::value_type wr_value_type ;
+            WR& select( wr_value_type const& ) { return wr_ ; }
+
+            typedef typename traits::vector_traits<WI>::value_type wi_value_type ;
+            WI& select( wi_value_type const& ) { return wi_ ; }
+
+            typedef typename traits::vector_traits<WB>::value_type wb_value_type ;
+            WB& select( wb_value_type const& ) { return wb_ ; }
+
+          private:
+            W& w_ ;
+            WR& wr_ ;
+            WI& wi_ ;
+            WB& wb_ ;
+        }; // struct workspace4
 
      }
 
@@ -127,9 +157,16 @@ namespace boost { namespace numeric { namespace bindings {
      //
      template <typename W, typename WR, typename WI>
      detail::workspace3<W,WR,WI> workspace(W& w, WR& wr, WI& wi) {
-        return detail::workspace3<W,WR,WI>(w, wr,wi) ;
+        return detail::workspace3<W,WR,WI>(w, wr, wi) ;
      } // workspace()
 
+     //
+     //   Complex valued: workspace( complex array, real array, integer array, bool array )
+     //
+     template <typename W, typename WR, typename WI, typename WB>
+     detail::workspace4<W,WR,WI,WB> workspace(W& w, WR& wr, WI& wi, WB& wb) {
+        return detail::workspace4<W,WR,WI,WB>(w, wr, wi, wb) ;
+     } // workspace()
 
      /// Select the number of workspaces depending on the value_type
      template <typename T>
