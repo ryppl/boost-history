@@ -825,5 +825,106 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 }
 
 
+template<class Type>
+void check_neutrality_plus(const Type& a)
+{
+	Type left  = a + neutron<Type>::value();
+	Type right = neutron<Type>::value() + a;
+	BOOST_CHECK_EQUAL(left,right);
+	left  = a + Type();
+	right = Type() + a;
+	BOOST_CHECK_EQUAL(left,right);
+}
+
+template<class Type, class TypeB>
+void check_commutativity_plus(const Type& a, const TypeB& b)
+{
+	Type left  = a + b;
+	Type right = b + a;
+	BOOST_CHECK_EQUAL(left,right);
+}
+
+template<class Type, class TypeB, class TypeC>
+void check_associativity_plus(const Type& a, const TypeB& b, const TypeC& c)
+{
+	Type left  = (a + b) + c;
+	Type right = a + (b + c);
+	BOOST_CHECK_EQUAL(left,right);
+}
+
+template <class T, class U,
+          template<class T, class U,
+                   class Traits = neutron_absorber,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap1, 
+          template<class T, class U,
+                   class Traits = neutron_absorber,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap2 
+          >
+void interval_map_base_laws_plus_4_bicremental_types()
+{
+    typedef IntervalMap1<T,U> IntervalMap1T;
+    typedef IntervalMap2<T,U> IntervalMap2T;
+
+    T v0 = make<T>(0);
+    T v1 = make<T>(1);
+    T v3 = make<T>(3);
+    T v5 = make<T>(5);
+    T v6 = make<T>(6);
+    T v7 = make<T>(7);
+    T v8 = make<T>(8);
+    T v9 = make<T>(9);
+
+    U u1 = make<U>(1);
+    U u2 = make<U>(2);
+
+	interval<T> I0_1D = interval<T>::rightopen(v0,v1);
+    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
+    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
+    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
+    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
+    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
+
+    typename IntervalMap1T::value_type I0_1D_1(I0_1D, u1);
+    typename IntervalMap1T::value_type I1_3D_1(I1_3D, u1);
+    typename IntervalMap1T::value_type I3_6D_1(I3_6D, u1);
+    typename IntervalMap1T::value_type I5_7D_1(I5_7D, u1);
+    typename IntervalMap1T::value_type I6_8D_1(I6_8D, u1);
+    typename IntervalMap1T::value_type I8_9D_1(I8_9D, u1);
+
+	IntervalMap1T map_a, map_b;
+	map_a.add(I3_6D_1).add(I5_7D_1);
+	map_b.add(I1_3D_1).add(I8_9D_1);
+	map_a = map_a;
+	typename IntervalMap1T::value_type val_pair = I8_9D_1;
+
+	IntervalMap2T map2_a, map2_b;
+	map2_a = map_a;
+	map2_a += map_a;
+	IntervalMap2T join_map = map_a + map2_a;
+	//IntervalMap2T splt_map = map_a + map2_a;
+
+	check_commutativity_plus(map_a, map_b);
+	//check_commutativity_plus(map2_a, map_b);
+	check_commutativity_plus(map_a, val_pair);
+	typename IntervalMap1T::mapping_pair_type v5_u2(v5,u2);
+	check_commutativity_plus(map_b, v5_u2);
+
+	check_associativity_plus(map_a, map_b, map_a);
+	check_associativity_plus(map_a, map_b, map_a);
+
+	check_neutrality_plus(map_a);
+}
+
+
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__
 

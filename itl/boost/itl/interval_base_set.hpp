@@ -184,10 +184,7 @@ public:
     /// Assignment operator
     interval_base_set& operator = (const interval_base_set& src) 
     { 
-        if(this==&src) 
-            return *this;
-
-        that()->assign(src);
+        if(this!=&src) that()->assign(src);
         return *this; 
     }
 

@@ -1213,3 +1213,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_if_4_integral_ty
 
     BOOST_CHECK_EQUAL( split_A, split_B );
 }
+

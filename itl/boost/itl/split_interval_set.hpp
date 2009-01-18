@@ -169,7 +169,7 @@ namespace boost{namespace itl
         template<class SubType>
         split_interval_set& operator =
             (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-        { assign(src); return *this; }
+        { BOOST_ASSERT(this != &src); assign(src); return *this; }
 
         /// Assignment from a base interval_set.
         template<class SubType>

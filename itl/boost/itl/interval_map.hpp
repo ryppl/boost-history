@@ -21,6 +21,11 @@ class interval_map
 namespace boost{namespace itl
 {
 
+template<class DomainT, class CodomainT, class Traits, 
+         ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
+         template<class,ITL_COMPARE>class Interval, ITL_ALLOC   Alloc>
+class split_interval_map;
+
 /// implements a map as a map of intervals - on insertion overlapping intervals are split and associated values are combined.
 /** 
     Template-class <b>interval_map</b>
@@ -120,7 +125,8 @@ class interval_map:
 {
 public:
     typedef Traits traits;
-    typedef interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> type;
+    typedef       interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> type;
+    typedef split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> split_type;
     typedef type joint_type;
     typedef interval_base_map <interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
                                DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;

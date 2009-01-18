@@ -10,6 +10,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 #include <boost/itl/interval_base_map.hpp>
 #include <boost/itl/interval_map_algo.hpp>
+#include <boost/itl/operators.hpp>
 
 namespace boost{namespace itl
 {
@@ -51,6 +52,7 @@ ObjectT& operator +=
     return object; 
 }
 
+/*CL?
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits,
@@ -72,6 +74,7 @@ operator +
 	typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
 	return ObjectT(object) += operand; 
 }
+*/
 //-----------------------------------------------------------------------------
 
 template 
@@ -100,10 +103,10 @@ operator +=
     return object; 
 }
 
+/*CL?
 template 
 <
-    class DomainT, class CodomainT, class Traits,
- 
+    class DomainT, class CodomainT, class Traits, 
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template
     <    
@@ -122,13 +125,13 @@ operator +
 	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
 	return ObjectT(object) += operand; 
 }
+*/
 //-----------------------------------------------------------------------------
 
 //--- value_type --------------------------------------------------------------
 template 
 <
     class DomainT, class CodomainT, class Traits,
- 
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template
     <    
@@ -148,10 +151,10 @@ operator +=
     return object.add(operand); 
 }
 
+/*CL
 template 
 <
     class DomainT, class CodomainT, class Traits,
- 
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template
     <    
@@ -163,13 +166,46 @@ template
 IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> 
 operator +
 (
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+             const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
     const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::value_type& operand
 )
 {
 	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
 	return ObjectT(object) += operand; 
 }
+
+template 
+<
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> 
+operator +
+(
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::value_type& operand,
+             const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object
+)
+{
+	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
+	return ObjectT(object) += operand; 
+}
+*/
+/*CL
+template<class ObjectT>
+ObjectT operator + (const ObjectT& object, const typename ObjectT::value_type& operand)
+{ return ObjectT(object) += operand; }
+
+template<class ObjectT>
+ObjectT operator + (const typename ObjectT::value_type& operand, const ObjectT& object)
+{ return ObjectT(object) += operand; }
+*/
+
 //-----------------------------------------------------------------------------
 
 //--- mapping_type ------------------------------------------------------------
@@ -209,6 +245,7 @@ operator +=
     return object.add(operand); 
 }
 
+/*
 template 
 <
     class DomainT, class CodomainT, class Traits,
@@ -231,6 +268,7 @@ operator +
 	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
 	return ObjectT(object) += operand; 
 }
+*/
 //-----------------------------------------------------------------------------
 
 

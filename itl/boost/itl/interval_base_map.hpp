@@ -251,10 +251,7 @@ public:
     /// Assignment operator
     interval_base_map& operator = (const interval_base_map& src) 
     { 
-        if(this==&src) 
-            return *this;
-
-        that()->assign(src);
+        if(this!=&src) that()->assign(src);
         return *this; 
     }
 
