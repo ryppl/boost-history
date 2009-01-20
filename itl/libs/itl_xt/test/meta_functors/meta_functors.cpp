@@ -256,7 +256,12 @@ void assert_test()
 	//double fst = doubItv.first();
 	interval<int> intItv = interval<int>::closed(0, 2);
 	int fst = intItv.first();
-	cout << intItv << endl;
+	cout << "  c: "<< itl::closed_bounded << endl;
+	cout << "c&o: "<< (itl::closed_bounded & itl::open_bounded)<< endl;
+	cout << " !c: "<< !(itl::closed_bounded)<< endl;
+	cout << " !o: "<< !(itl::open_bounded)<< endl;
+	cout << "2>>1: "<< (2 >> 1) << endl;
+	cout << "0>>1: "<< (0 >> 1) << endl;
 }
 
 int main()

@@ -101,10 +101,10 @@ struct map_val
 	}
 };
 
-#define IIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, closed)
+#define IIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, closed_bounded)
 #define IDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, right_open)
 #define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, left_open)
-#define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, open)
+#define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, open_bounded)
 #define K_v(key,val)    map_val<IntervalMapT>::map_pair(key,val)
 
 }} // namespace boost itl

@@ -46,9 +46,8 @@ operator & (const OperandT& operand, const ObjectT& object)
 { return ObjectT(object) &= operand; }
 
 template<class ObjectT>
-ObjectT operator & (const ObjectT& object, const ObjectT& operand)
+ObjectT operator & (const typename ObjectT::type& object, const ObjectT& operand)//JODO: inhibit false overloads!
 { return ObjectT(object) &= operand; }
-
 
 }} // namespace itl boost
 

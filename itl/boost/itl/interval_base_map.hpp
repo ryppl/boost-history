@@ -826,16 +826,15 @@ public:
         <b>Nicht getestet</b> */
     CodomainT sum()const;
 
-    /**  Set interval bounds to the type <tt>bt</tt> for intervals in the map.
+    /** Set all intervals in the map to be of type <tt>bounded</tt>. 
+		Requires Integral<domain_type>.
 
         Interval bounds of different types are created by opeations on
         interval maps. This function allows to reset them uniformly without,
         of course, changing their value. This is only possible for discrete
         domain datatypes.
     */
-    void uniformBounds( typename interval<DomainT>::bound_types bt);
-
-    void closeLeftBounds();
+	void uniform_bounds(itl::bound_type bounded);
 
     template<typename IteratorT>
     static const key_type& key_value(IteratorT& value_){ return (*value_).first; }
@@ -1119,26 +1118,12 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::uniformBounds( typename interval<DomainT>::bound_types bt)
+void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
 {
     // I can do this only, because I am shure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPLMAP(it) const_cast<interval_type&>((*it).KEY_VALUE).transformBounds(bt);
+    FOR_IMPLMAP(it) const_cast<interval_type&>((*it).KEY_VALUE).as(bounded);
 }
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
->
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::closeLeftBounds()
-{
-    // I can do this only, because I am shure that the contents and the
-    // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPLMAP(it) const_cast<interval_type&>((*it).KEY_VALUE).closeLeftBound();
-}
-
-
 
 template 
 <

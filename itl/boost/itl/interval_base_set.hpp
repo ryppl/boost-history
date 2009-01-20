@@ -411,7 +411,7 @@ public:
         of course, changing their value. This is only possible for discrete
         domain datatypes.
     */
-    void uniform_bounds(typename interval<DomainT>::bound_types bt);
+	void uniform_bounds(itl::bound_type bounded);
 
 //@}
 
@@ -578,11 +578,11 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& interval_base_set<Sub
 
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(typename interval<DomainT>::bound_types bt)
+void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
 {
     // I can do this only, because I am shure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPL(it) const_cast<interval_type&>(*it).transform_bounds(bt);
+    FOR_IMPL(it) const_cast<interval_type&>(*it).as(bounded);
 }
 
 

@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_ordered_types, T, ordered
 
     BOOST_CHECK_EQUAL(interval<T>(), interval<T>());
     BOOST_CHECK_EQUAL(interval<T>(), interval<T>(itl::unon<T>::value(), itl::neutron<T>::value()));
-    BOOST_CHECK_EQUAL(interval<T>(), interval<T>(itl::unon<T>::value(), itl::neutron<T>::value(), interval<T>::CLOSED));
+    BOOST_CHECK_EQUAL(interval<T>(), interval<T>(itl::unon<T>::value(), itl::neutron<T>::value(), closed_bounded));
 
 }
 
@@ -50,14 +50,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_bicremental_types, T, bic
 
     T v4 = make<T>(4);
     itl::interval<T> I4_4I(v4);
-    BOOST_CHECK_EQUAL( I4_4I.is_closed(),         true  );
-    BOOST_CHECK_EQUAL( I4_4I.is_leftopen(),       false );
-    BOOST_CHECK_EQUAL( I4_4I.is_rightopen(),      false );
-    BOOST_CHECK_EQUAL( I4_4I.is_open(),           false );
-    BOOST_CHECK_EQUAL( I4_4I.leftbound_closed(),  true  );
-    BOOST_CHECK_EQUAL( I4_4I.rightbound_closed(), true  );
-    BOOST_CHECK_EQUAL( I4_4I.leftbound_open(),    false );
-    BOOST_CHECK_EQUAL( I4_4I.rightbound_open(),   false );
+    BOOST_CHECK_EQUAL( I4_4I.is(closed_bounded),         true  );
+    BOOST_CHECK_EQUAL( I4_4I.is(left_open),       false );
+    BOOST_CHECK_EQUAL( I4_4I.is(right_open),      false );
+    BOOST_CHECK_EQUAL( I4_4I.is(open_bounded),           false );
+    BOOST_CHECK_EQUAL( I4_4I.is_left(closed_bounded),  true  );
+    BOOST_CHECK_EQUAL( I4_4I.is_right(closed_bounded), true  );
+    BOOST_CHECK_EQUAL( I4_4I.is_left(open_bounded),    false );
+    BOOST_CHECK_EQUAL( I4_4I.is_right(open_bounded),   false );
 
     BOOST_CHECK_EQUAL( I4_4I.lower(),             v4    );
     BOOST_CHECK_EQUAL( I4_4I.upper(),             v4    );
@@ -79,38 +79,38 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_bicremental_types, T, bic
 
     T v2 = make<T>(2);
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4) );
-    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4, interval<T>::CLOSED) );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4), interval<T>(v2, v4, interval<T>::RIGHT_OPEN) );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4),  interval<T>(v2, v4, interval<T>::LEFT_OPEN) );
-    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4),      interval<T>(v2, v4, interval<T>::OPEN) );
+    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4, closed_bounded) );
+    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4), interval<T>(v2, v4, right_open) );
+    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4),  interval<T>(v2, v4, left_open) );
+    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4),      interval<T>(v2, v4, open_bounded) );
 
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).lower(),               v2 );
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).upper(),               v4 );
-    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).boundtypes(),          interval<T>::CLOSED );
-    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).is_closed(),           true );
-    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).leftbound_closed(),    true );
-    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).rightbound_closed(),   true );
+    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).boundtype(),           closed_bounded );
+    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).is(closed_bounded),    true );
+    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).is_left(closed_bounded),    true );
+    BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).is_right(closed_bounded),   true );
 
     BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).lower(),            v2 );
     BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).upper(),            v4 );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).boundtypes(),       interval<T>::RIGHT_OPEN );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is_rightopen(),     true );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).leftbound_closed(), true );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).rightbound_open(),  true );
+    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).boundtype(),        right_open );
+    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is(right_open),     true );
+    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is_left(closed_bounded), true );
+    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is_right(open_bounded),  true );
 
     BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).lower(),             v2 );
     BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).upper(),             v4 );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).boundtypes(),        interval<T>::LEFT_OPEN );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is_leftopen(),       true );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).leftbound_open(),    true );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).rightbound_closed(), true );
+    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).boundtype(),         left_open );
+    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is(left_open),       true );
+    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is_left(open_bounded),    true );
+    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is_right(closed_bounded), true );
 
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).lower(),                 v2 );
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).upper(),                 v4 );
-    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).boundtypes(),            interval<T>::OPEN );
-    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is_open(),               true );
-    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).leftbound_open(),        true );
-    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).rightbound_open(),       true );    
+    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).boundtype(),            open_bounded );
+    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is(open_bounded),               true );
+    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is_left(open_bounded),        true );
+    BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is_right(open_bounded),       true );    
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_integral_types, T, integral_types)
@@ -411,5 +411,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
 	diff_2 = I4_7D;
 	diff_2.left_subtract(I0_3D);
     BOOST_CHECK_EQUAL( diff_2, I4_7D );
-
 }

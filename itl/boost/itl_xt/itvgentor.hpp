@@ -46,7 +46,7 @@ public:
     virtual void some(ItvTV& x);
 
     void setValueRange(ItvDomTV low, ItvDomTV up)
-    { m_valueRange.set(low,up, ItvTV::RIGHT_OPEN); }
+    { m_valueRange.set(low,up, itl::right_open); }
 
     void setMaxIntervalLength(ItvDomTV len) { m_maxIntervalLength=len; }
     void setProbDerivation();
@@ -65,7 +65,7 @@ void ItvGentorT<ItvDomTV,ItvTV>::some(ItvTV& x)
 {
     NumberGentorT<unsigned> NATGentor;
     ItvDomTV x1   = m_ItvDomTVGentor(m_valueRange);
-    ITV_BOUNDTYPES bndTypes = NATGentor(4);
+	itl::bound_type bndTypes = NATGentor(4);
     unsigned upOrDown = NATGentor(1);
     unsigned decideEmpty = NATGentor(2);
 

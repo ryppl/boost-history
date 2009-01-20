@@ -85,14 +85,14 @@ class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
     NumberGentorT(): 
-      m_valueRange( NumTV(), unon<NumTV>::value(), interval<NumTV>::RIGHT_OPEN ) {}
+      m_valueRange( NumTV(), unon<NumTV>::value(), right_open ) {}
 
     NumTV operator() (NumTV upb) { return rnd_0_to_excl<NumTV>(upb); }
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }
     NumTV operator() (interval<NumTV> rng) 
     { 
         BOOST_ASSERT(rng.is_rightopen() || rng.is_closed());
-        if(rng.is_rightopen())
+        if(rng.is(right_open))
             return rnd_within_exUpb<NumTV>(rng.lower(), rng.upper());
         else
             return rnd_within<NumTV>(rng.lower(), rng.upper());
