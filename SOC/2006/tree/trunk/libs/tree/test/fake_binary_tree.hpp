@@ -108,6 +108,8 @@ bool operator!=(fake_binary_tree<T> const& x, fake_binary_tree<T> const& y)
     return !(x == y);
 }
 
+// This should be easily extensible to nary by replacing the
+// factor 2 by n in dereference, left, right and idx. 
 template <class T> 
 class fake_descending_binary_cursor
 : public boost::tree::cursor_facade<
@@ -170,14 +172,14 @@ private:
 
     void left()
     {
-        m_pos <<= 1;
+        m_pos *= 2;
         ++m_pos;
     }
 
     void right()
     {
         ++m_pos;
-        m_pos <<= 1;
+        m_pos *= 2;
     }
     
     bool const empty_() const

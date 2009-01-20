@@ -29,20 +29,23 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_descending, Order, orders)
 
 BOOST_AUTO_TEST_CASE( alternate_test_copy_descending )
 {
-    std::vector<int> po(11);
-    po[0] = 8;
-    po[1] = 3;
-    po[2] = 1;
-    po[3] = 6;
-    po[4] = 4;
-    po[5] = 7;
-    po[6] = 10;
-    po[7] = 14;
-    po[8] = 13;
-    po[9] = 11;
-    po[10] = 12;
-    std::vector<int>::const_iterator ci = po.begin();
-    mock_binary_cursor< std::vector<int>::const_iterator > mc(ci);
+    using std::make_pair;
+    typedef std::vector< std::pair<std::size_t, int> > container_type;
+    container_type po(11);
+    po[0] = make_pair(0, 8);
+    po[1] = make_pair(1, 3);
+    po[2] = make_pair(3, 1);
+    po[3] = make_pair(4, 6);
+    po[4] = make_pair(9, 4);
+    po[5] = make_pair(10, 7);
+    po[6] = make_pair(2, 10);
+    po[7] = make_pair(6, 14);
+    po[8] = make_pair(13, 13);
+    po[9] = make_pair(27, 11);
+    po[10] = make_pair(56, 12);
+    container_type::const_iterator ci = po.begin();
+    container_type::const_iterator cie = po.end();
+    mock_binary_cursor< container_type::const_iterator > mc(ci, cie);
     
     boost::tree::copy(preorder(), fbt1.descending_root(), mc);
 }
